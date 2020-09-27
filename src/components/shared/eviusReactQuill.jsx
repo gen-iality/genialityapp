@@ -22,16 +22,17 @@ function EviusReactQuill ( props ) {
 		...toolbarEditor,
 		imageDropAndPaste: {
 			// add an custom image handler
-			handler: imageHandlerInner
+			handler: (imageDataUrl, type, imageData) => {imageHandler( imageDataUrl, type, imageData, reactQuilllRef ) }
 		}
 	}
 
-	//Solo funciona si se define este handler aquí
-	let imageHandlerInner = async ( imageDataUrl, type, imageData ) => { return imageHandler( imageDataUrl, type, imageData, reactQuilllRef ) }
 
+	/* si restringimos el setupToolBarImageUploadInput para que solo se ejecute una vez cuando reactQuilllRef este disponible
+	extranamente deja de funcionar no se porque lo dejamos que se ejecute en cada render y funciona la maravilla
+	*/
 	useEffect( () => {
-		setupImageUploadInput( reactQuilllRef )
-	}, [ reactQuilllRef ] );
+		setupToolBarImageUploadInput( reactQuilllRef )
+	},  );
 
 
 	return (
@@ -65,8 +66,7 @@ let imageHandler = async ( imageDataUrl, type, imageData, reactQuilllRef ) => {
 	editor.insertEmbed( index, 'image', image, 'user' )
 }
 
-let setupImageUploadInput = ( reactQuilllRef ) => {
-
+let setupToolBarImageUploadInput = ( reactQuilllRef ) => {
 	var ImageData = QuillImageDropAndPaste.ImageData
 	let editor = reactQuilllRef.current.getEditor();
 

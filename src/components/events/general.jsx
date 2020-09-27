@@ -107,7 +107,7 @@ class General extends Component {
         this.setState({ valid: !valid, error })
     };
     //Cambio descripción
-    chgTxt = content => {this.setState({ event: { ...this.state.event, description: content } })};
+    chgTxt = content => {console.log("content",content);this.setState({ event: { ...this.state.event, description: content } })};
     //Funciones para manejar el cambio en listas desplegables
     selectCategory = (selectedCategories) => {
         this.setState({ selectedCategories }, this.valid);
