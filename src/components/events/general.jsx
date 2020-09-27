@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Moment from "moment"
-import ReactQuill from "react-quill";
+
 import ImageInput from "../shared/imageInput";
+import EviusReactQuill from "../shared/eviusReactQuill";
 import { Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi } from "../../helpers/request";
-import { BaseUrl, toolbarEditor } from "../../helpers/constants";
+import { BaseUrl} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss'
@@ -56,7 +57,6 @@ class General extends Component {
 
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
-        console.log("informacion del evento", info)
         this.setState({ info })
         this.setState({
             infoApp: [
@@ -66,7 +66,6 @@ class General extends Component {
         })
         try {
             const { event } = this.state;
-            console.log(event.picture)
             // event.picture = (typeof event.picture === 'object') ? event.picture[0] : "";
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
@@ -85,16 +84,12 @@ class General extends Component {
         catch (error) {
             // Error
             if (error.response) {
-                console.log(error.response);
                 const { status } = error.response;
                 if (status === 401) this.setState({ timeout: true, loader: false });
                 else this.setState({ serverError: true, loader: false })
             } else {
-                console.log('Error', error.message);
-                if (error.request) console.log(error.request);
                 this.setState({ serverError: true, loader: false, errorData: { status: 400, message: JSON.stringify(error) } })
             }
-            console.log(error);
         }
     }
 
@@ -112,7 +107,7 @@ class General extends Component {
         this.setState({ valid: !valid, error })
     };
     //Cambio descripción
-    chgTxt = content => this.setState({ event: { ...this.state.event, description: content } });
+    chgTxt = content => {this.setState({ event: { ...this.state.event, description: content } })};
     //Funciones para manejar el cambio en listas desplegables
     selectCategory = (selectedCategories) => {
         this.setState({ selectedCategories }, this.valid);
@@ -137,7 +132,6 @@ class General extends Component {
     };
     //Cambio en el input de imagen
     changeImg = (files) => {
-        console.log(files);
         const file = files[0];
         const url = '/api/files/upload', path = [], self = this;
         if (file) {
@@ -264,13 +258,11 @@ class General extends Component {
             show_banner_footer: event.show_banner_footer || false
         };
 
-        console.log(data);
 
         try {
-            console.log(data)
+
             if (event._id) {
                 const info = await EventsApi.editOne(data, event._id);
-                console.log(info)
                 this.props.updateEvent(info);
                 self.setState({ loading: false });
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
@@ -602,7 +594,9 @@ class General extends Component {
                         <div className="field">
                             <label className="label has-text-grey-light">Descripción</label>
                             <div className="control">
-                                <ReactQuill value={event.description} modules={toolbarEditor} onChange={this.chgTxt} />
+                            
+                                <EviusReactQuill value={event.description} onChange={this.chgTxt} />
+                        
                             </div>
                         </div>
                     </div>
