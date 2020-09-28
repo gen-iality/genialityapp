@@ -46,7 +46,7 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
                         size="large"
                         type="primary"
                         className="buttonVirtualConference"
-                        disabled='true'
+                        disabled={true}
                         >
                         {infoActivity.meeting_id_en ? "Ingreso privado (Español)" : "Ingreso privado"}
                         </Button>
@@ -55,7 +55,7 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
                         size="large"
                         type="primary"
                         className="buttonVirtualConference"
-                        disabled='true'
+                        disabled={true}
                         >
                             Private
                         </Button>)}
