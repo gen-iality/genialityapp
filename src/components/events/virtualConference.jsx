@@ -7,60 +7,67 @@ import Moment from "moment";
 import { Avatar } from "antd";
 
 
-const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado }) => {
+const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado, event }) => {
     const [infoActivity, setInfoActivity] = useState({});
+    const [infoEvent, setInfoEvent] = useState({});
 
     useEffect(() => {
         setInfoActivity(activity);
+        setInfoEvent(event)
     }, [activity]);
 
     switch (infoActivity.habilitar_ingreso) {
         case "open_meeting_room":
             return (
                 <>
-                {usuarioRegistrado ? (
-                    <>
-                        <Button
-                        size="large"
-                        type="primary"
-                        className="buttonVirtualConference"
-                        onClick={() => {
-                            toggleConference(true, infoActivity.meeting_id, infoActivity);
-                        }}>
-                        {infoActivity.meeting_id_en ? "Entrar (Español)" : "Entrar"}
-                        </Button>
-                        {infoActivity.meeting_id_en && (
-                        <Button
-                        size="large"
-                        type="primary"
-                        className="buttonVirtualConference"
-                        onClick={() => {
-                            toggleConference(true, infoActivity.meeting_id_en, infoActivity);
-                        }}>
-                            Join (English)
-                        </Button>)}
-                    </>
-                ):(
-                    <>
-                    <Button
-                        size="large"
-                        type="primary"
-                        className="buttonVirtualConference"
-                        disabled='true'
-                        >
-                        {infoActivity.meeting_id_en ? "Ingreso privado (Español)" : "Ingreso privado"}
-                        </Button>
-                        {infoActivity.meeting_id_en && (
-                        <Button
-                        size="large"
-                        type="primary"
-                        className="buttonVirtualConference"
-                        disabled='true'
-                        >
-                            Private
-                        </Button>)}
-                    </>
-                )}
+                    {event && event.visibility === "ORGANIZATION" ? (                        
+                        usuarioRegistrado ? (
+                            <>
+                                <Button
+                                    size="large"
+                                    type="primary"
+                                    className="buttonVirtualConference"
+                                    onClick={() => {
+                                        toggleConference(true, infoActivity.meeting_id, infoActivity);
+                                    }}>
+                                    {infoActivity.meeting_id_en ? "Entrar (Español)" : "Entrar"}
+                                </Button>
+                                {infoActivity.meeting_id_en && (<Button
+                                    size="large"
+                                    type="primary"
+                                    className="buttonVirtualConference"
+                                    onClick={() => {
+                                        toggleConference(true, infoActivity.meeting_id_en, infoActivity);
+                                    }}>
+                                    Join (English)
+                                </Button>)}
+                            </>
+                        ) : (
+                                <Alert message="No se encuentra registrado en el evento" type="info" showIcon />
+                            )
+                    ) : (                        
+                            <>
+                                <Button
+                                    size="large"
+                                    type="primary"
+                                    className="buttonVirtualConference"
+                                    onClick={() => {
+                                        toggleConference(true, infoActivity.meeting_id, infoActivity);
+                                    }}>
+                                    {infoActivity.meeting_id_en ? "Entrar (Español)" : "Entrar"}
+                                </Button>
+                                {infoActivity.meeting_id_en && (<Button
+                                    size="large"
+                                    type="primary"
+                                    className="buttonVirtualConference"
+                                    onClick={() => {
+                                        toggleConference(true, infoActivity.meeting_id_en, infoActivity);
+                                    }}>
+                                    Join (English)
+                                </Button>)}
+                            </>
+                        )
+                    }
                 </>
             );
             
@@ -82,15 +89,7 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
 
 class VirtualConference extends Component {
     constructor(props) {
-        super(props);
-        console.log(
-            "INNER event",
-            this.props.event,
-            "CurrentUser",
-            this.props.currentUser,
-            "UsuarioRegistrado",
-            this.props.usuarioRegistrado
-        );
+        super(props);        
         this.state = {
             data: [],
             infoAgendaArr: [],
@@ -101,18 +100,18 @@ class VirtualConference extends Component {
         };
     }
 
-    async componentDidUpdate(prevProps) {        
+    async componentDidUpdate(prevProps) {
 
         //Cargamos solamente los espacios virtuales de la agenda
-        
+
         //Si aún no ha cargado el evento no podemos hacer nada más
         if (!this.props.event) return;
 
-        //Revisamos si el evento sigue siendo el mismo, no toca cargar nada 
-        if (prevProps.event &&  this.props.event._id === prevProps.event._id) return;
+        //Revisamos si el evento sigue siendo el mismo, no toca cargar nada
+        if (prevProps.event && this.props.event._id === prevProps.event._id) return;
 
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
-        this.setState({ infoAgendaArr: filteredAgenda }, this.listeningStateMeetingRoom);
+        this.setState({ event: this.props.event, usuarioRegistrado: this.props.usuarioRegistrado, infoAgendaArr: filteredAgenda }, this.listeningStateMeetingRoom);
 
     }
 
@@ -151,7 +150,7 @@ class VirtualConference extends Component {
         for (const prop in infoAgenda.data) {
             if (infoAgenda.data[prop].meeting_id) {
                 infoAgendaArr.push(infoAgenda.data[prop]);
-            }else if((infoAgenda.data[prop].vimeo_id)){
+            } else if ((infoAgenda.data[prop].vimeo_id)) {
                 infoAgendaArr.push(infoAgenda.data[prop]);
             }
         }
@@ -160,8 +159,8 @@ class VirtualConference extends Component {
     }
 
     render() {
-        const { infoAgendaArr} = this.state;
-        const { toggleConference} = this.props;
+        const { infoAgendaArr, event, usuarioRegistrado } = this.state;
+        const { toggleConference } = this.props;
         if (!infoAgendaArr || infoAgendaArr.length <= 0) return null;
         return (
             <Fragment>
@@ -186,22 +185,18 @@ class VirtualConference extends Component {
                                     </p>
 
                                     <div className="Virtual-Conferences">
-                                        { item.hosts.map( ( host, key ) => {
+                                        {item.hosts.map((host, key) => {
                                             return (
-                                                <div style={{margin:"13px 14px"}} key={ key }>
-                                                    <Avatar size={80} src={ host.image } />
-                                                    <div >{ host.name }</div>
+                                                <div style={{ margin: "13px 14px" }} key={key}>
+                                                    <Avatar size={80} src={host.image} />
+                                                    <div >{host.name}</div>
                                                 </div>
 
                                             )
                                         })}
                                     </div>
-                                    <MeetingConferenceButton 
-                                    activity={item} 
-                                    toggleConference={toggleConference}
-                                    usuarioRegistrado={this.props.usuarioRegistrado}
-                                    />
-                                    
+                                    <MeetingConferenceButton activity={item} toggleConference={toggleConference} event={event} usuarioRegistrado={usuarioRegistrado} />
+
                                 </Card>
                             </div>
                         ))}

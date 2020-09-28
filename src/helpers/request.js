@@ -334,7 +334,7 @@ export const TypesApi = {
 };
 export const OrganizationApi = {
   mine: async () => {
-    const resp = await Actions.getAll('api/me/organizations');
+    const resp = await Actions.getAll('api/me/organizations');    
     let data = resp.data.map((item) => {
       return { id: item._id, name: item.name };
     });

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Route, Redirect, Switch, Link } from "react-router-dom";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
@@ -125,7 +125,7 @@ class Event extends Component {
         <Sider className={` menu event-aside is-hidden-touch ${!showMenu ? "is-hidden" : ""}`}>
           <Menu match={match} />
         </Sider>
-        <Content className="column event-main">
+        <Content className="column event-main" style={{width:500}}>
           <Link to={`/landing/${this.state.event._id}`}>
             <h2 className="name-event">Ir a {this.state.event.name}</h2>
           </Link>
@@ -170,7 +170,7 @@ class Event extends Component {
               />
               <Protected
                 path={`${match.url}/checkin-actividad`}
-                component={ReportList}
+                component={ReportList}                
                 event={this.state.event}
                 url={match.url}
               />

@@ -7,7 +7,8 @@ import Highlighter from 'react-highlight-words';
 import { parseData2Excel } from "../../helpers/utils";
 import XLSX from "xlsx";
 import AddUser from "../modal/addUser";
-import ModalAdvise from "./modal"
+import ModalAdvise from "./modal";
+import CreateMessage from "../invitations/send"
 
 class eventUsersList extends Component {
     constructor(props) {

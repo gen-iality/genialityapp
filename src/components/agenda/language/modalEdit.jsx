@@ -1,123 +1,94 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, Form, Button, InputNumber, notification, Input, Modal } from "antd";
 import { AgendaApi } from "../../../helpers/request";
 const { Option } = Select;
 
-export default class ModalEdit extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            visible: false,
-            dataToEdit: {}
-        }        
-    }
+export default ({ visible, data, onFinish }) => {
+    let [visibleModal, setVisibleModal] = useState();
 
-    componentDidMount() {
-        this.setState({
-            visible: this.props.visible,
-            related_meetings: this.props.related_meetings,
-            dataToEdit: this.props.data
-        })
-    }
+    const [form] = Form.useForm();
 
-    componentDidUpdate(prevProps) {
-        if (this.props !== prevProps) {
-            this.setState({
-                visible: this.props.visible,
-                related_meetings: this.props.related_meetings,
-                dataToEdit: this.props.data
-            })
-        }
-    }
+    useEffect(() => {
+        setVisibleModal(visible)
+    }, [visible])
 
-    showModal = () => {
-        this.setState({
-            visible: true,
+    useEffect(() => {
+        form.setFieldsValue({
+            language: data && data.language,
+            state: data && data.state,
+            informative_text: data && data.informative_text,
+            meeting_id: data && data.meeting_id ? data.meeting_id : 0,
+            vimeo_id: data && data.vimeo_id ? data.vimeo_id : 0
         });
+    }, [data, form])
+
+
+    const handleCancel = async (e) => {
+        setVisibleModal(false)
     };
 
-    handleCancel = e => {
-        console.log(e);
-        this.setState({
-            visible: false,
-        });
-    };
+    return (
+        <Modal
+            title="Editar"
+            visible={visibleModal}
+            onCancel={handleCancel}
+            footer={[
+                <Button key="back" onClick={handleCancel}>
+                    Cerrar
+                </Button>
+            ]}
+        >
+            <Form onFinish={onFinish} form={form}>
+                <Form.Item
+                    label="Lenguaje"
+                    name="language"
+                >
+                    <Select>
+                        <Option value="Ingles">Ingles</Option>
+                        <Option value="Español">Español</Option>
+                        <Option value="Frances">Frances</Option>
+                        <Option value="Portugués">Portugués</Option>
+                        <Option value="Aleman"> Aleman</Option>
+                    </Select>
+                </Form.Item>
 
-    render() {
-        const { dataToEdit } = this.state
-        const { onFinish } = this.props
-        return (
-            <Modal 
-                title="Editar" 
-                visible={this.state.visible} 
-                onCancel={this.handleCancel}
-                footer={[
-                    <Button key="back" onClick={this.handleCancel}>
-                      Cerrar
+                <Form.Item
+                    label="Id de conferencia"
+                    name="meeting_id"
+                >
+                    <Input disabled />
+                </Form.Item>
+
+                <Form.Item
+                    label="Id de conferencia"
+                    name="vimeo_id"
+                >
+                    <Input disabled />
+                </Form.Item>
+
+                <Form.Item
+                    label="estado"
+                    name="state"
+                >
+                    <Select >
+                        <Option value="open_meeting_room">Conferencia Abierta</Option>
+                        <Option value="closed_meeting_room">Conferencia no Iniciada</Option>
+                        <Option value="ended_meeting_room">Conferencia Terminada</Option>
+                    </Select>
+                </Form.Item>
+
+                <Form.Item
+                    label="Texto informativo "
+                    name="informative_text"
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                        Guardar
                     </Button>
-                  ]}
-                >
-                <Form
-                    onFinish={onFinish}
-                    initialValues={dataToEdit}
-                >
-                    <Form.Item
-                        label="Lenguaje"
-                        name="language"
-                    >
-                        <Select defaultValue={dataToEdit && dataToEdit.language}>
-                            <Option value="Ingles">Ingles</Option>
-                            <Option value="Español">Español</Option>
-                            <Option value="Frances">Frances</Option>
-                            <Option value="Portugués">Portugués</Option>
-                            <Option value="Aleman"> Aleman</Option>
-                        </Select>
-                    </Form.Item>
-                    {
-                        dataToEdit && dataToEdit.meeting_id && (
-                            <Form.Item
-                                label="Id de conferencia"
-                                name="meeting_id"
-                            >
-                                <Input disabled defaultValue={dataToEdit && dataToEdit.meeting_id} />
-                            </Form.Item>
-                        )
-                    }
-
-                    {
-                        dataToEdit && dataToEdit.vimeo_id && (
-                            <Form.Item
-                                label="Id de conferencia"
-                                name="vimeo_id"
-                            >
-                                <Input disabled defaultValue={dataToEdit && dataToEdit.vimeo_id} />
-                            </Form.Item>
-                        )
-                    }
-                    <Form.Item
-                        label="estado"
-                        name="state"
-                    >
-                        <Select defaultValue={dataToEdit && dataToEdit.state}>
-                            <Option value="open_meeting_room">Conferencia Abierta</Option>
-                            <Option value="closed_meeting_room">Conferencia no Iniciada</Option>
-                            <Option value="ended_meeting_room">Conferencia Terminada</Option>
-                        </Select>
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Texto informativo "
-                        name="informative_text"
-                    >
-                        <Input defaultValue={dataToEdit && dataToEdit.informative_text} />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            Guardar
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
-        )
-    }
+                </Form.Item>
+            </Form>
+        </Modal>
+    )
 }
