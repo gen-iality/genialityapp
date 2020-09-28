@@ -10,7 +10,7 @@ import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
 import DocumentsList from "../documents/documentsList";
 import ModalSpeaker from "./modalSpeakers";
 
-let agendaActividadDetalle = (props) => {
+let AgendaActividadDetalle = (props) => {
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
   let [currentUser, setCurrentUser] = useState(false);
   let [event, setEvent] = useState(false);
@@ -28,11 +28,9 @@ let agendaActividadDetalle = (props) => {
       if (currentUser) return;
 
       let evius_token = Cookie.get("evius_token");
-      console.log("token", evius_token);
       if (!evius_token) return;
 
       const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-      console.log("respuesta status", resp.status !== 202);
       if (resp.status !== 200 && resp.status !== 202) return;
       const data = resp.data;
       setCurrentUser(data);
@@ -41,7 +39,6 @@ let agendaActividadDetalle = (props) => {
 
       try {
         const respuesta = await API.get("api/me/eventusers/event/" + id);
-        console.log("respuesta", respuesta.data.data);
         let surveysData = await SurveysApi.getAll(event._id);
 
         if (surveysData.data.length >= 1) {
@@ -51,8 +48,8 @@ let agendaActividadDetalle = (props) => {
         if (respuesta.data && respuesta.data.data && respuesta.data.data.length) {
           setUsuarioRegistrado(true);
         }
-      } catch (e) {
-
+      } catch (err) {
+        console.error(err)
       }
 
       orderHost()
@@ -79,7 +76,7 @@ let agendaActividadDetalle = (props) => {
         <div className="card agenda_information ">
           <PageHeader
             className="site-page-header"
-            onBack={(e) => {
+            onBack={() => {
               gotoActivityList();
             }}
             title={currentActivity.name}
@@ -113,10 +110,10 @@ let agendaActividadDetalle = (props) => {
                     controls
                   />
                 </div>
-              ):
-              (
-                <img className="activity_image" src={currentActivity.image ? currentActivity.image :image_event} />
-              )}
+              ) :
+                (
+                  <img className="activity_image" src={currentActivity.image ? currentActivity.image : image_event} alt='Activity image' />
+                )}
 
               {currentActivity.secondvideo && (
                 <div className="column is-centered mediaplayer">
@@ -165,7 +162,7 @@ let agendaActividadDetalle = (props) => {
                   url={currentActivity.meeting_video}
                   controls
                 />
-              )} */}              
+              )} */}
             </div>
           </header>
 
@@ -356,7 +353,7 @@ let agendaActividadDetalle = (props) => {
 
               <a
                 className=""
-                onClick={(e) => {
+                onClick={() => {
                   gotoActivityList();
                 }}>
                 <Button>Regresar a la agenda</Button>
@@ -369,4 +366,4 @@ let agendaActividadDetalle = (props) => {
   );
 };
 
-export default withRouter(agendaActividadDetalle);
+export default withRouter(AgendaActividadDetalle);
