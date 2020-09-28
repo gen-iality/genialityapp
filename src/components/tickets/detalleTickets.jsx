@@ -17,9 +17,7 @@ class DetailTickets extends Component {
     componentDidUpdate(prevProps) {
         if (this.props.item !== prevProps.item) {
             const propertiesData = []
-            Object.keys(this.props.item.properties).map((propertyName) => {
-                propertiesData.push(propertyName)
-            })
+            Object.keys(this.props.item.properties).map((propertyName) => propertiesData.push(propertyName))
             this.setState({ propertyName: propertiesData, item: this.props.item, visible: true })
         }
         if (this.props.visible !== prevProps.visible) {

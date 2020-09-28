@@ -70,7 +70,7 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
                     }
                 </>
             );
-            break;
+            
 
         case "closed_meeting_room":
             return <Alert message="El ingreso se habilitará minutos antes del evento" type="warning" showIcon />;

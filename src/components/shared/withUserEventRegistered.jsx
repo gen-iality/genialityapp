@@ -35,7 +35,7 @@ function WithUserEventRegistered(Component) {
 
                         {!currentUser && (event && !event.allow_register) && (
                             <Alert
-                                onClick={() => (window.location.href = "https://eviusauth.netlify.com")}
+                                //onClick={() => (window.location.href = "https://eviusauth.netlify.com")}
                                 message="Evento restringido. requiere usuario"
                                 description={
                                     <p>
@@ -45,9 +45,9 @@ function WithUserEventRegistered(Component) {
                                         debes estar previamente registrado al evento para acceder al espacio en vivo,
                                         si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento,
                                         &nbsp;&nbsp;
-                                        <Button type="primary">
+                                        {/* <Button type="primary">
                                             <a href={AuthUrl}>Ir a Ingreso</a>
-                                        </Button>
+                                        </Button> */}
                                     </p>
                                 }
                                 type="info"

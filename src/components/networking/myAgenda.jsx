@@ -15,7 +15,7 @@ const { TabPane } = Tabs
 const { Meta } = Card
 const { confirm } = Modal
 
-function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers, ...props } ) {
+function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers} ) {
   const [ loading, setLoading ] = useState( true )
   const [ enableMeetings, setEnableMeetings ] = useState( false )
   const [ acceptedAgendas, setAcceptedAgendas ] = useState( [] )
@@ -57,11 +57,6 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers, ...props
                 return agenda
               }
             }, agendas )
-
-            console.log( `#### currentEventUserId >>> '${ currentEventUserId }'` )
-            console.log( '#### agendas >>>', agendas )
-            console.log( '#### newAcceptedAgendas >>>', newAcceptedAgendas )
-            console.log( '#### eventUsers >>>', eventUsers )
             setAcceptedAgendas( newAcceptedAgendas )
           }
         } )
@@ -107,13 +102,14 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers, ...props
             allow="autoplay; fullscreen; camera *;microphone *"
             allowusermedia
             allowFullScreen
+            title='video'
             className="iframe-zoom nuevo">
             <p>Your browser does not support iframes.</p>
           </iframe>
           </div>
           </div>
           
-          {userName && <iframe  style={{position:"fixed",bottom:'5%', right:0, width:"18%",height:"40%",minWidth:"300px",zIndex:999999999}}
+          {userName && <iframe title="chatevius" style={{position:"fixed",bottom:'5%', right:0, width:"18%",height:"40%",minWidth:"300px",zIndex:999999999}}
           src={"https://chatevius.web.app?nombre="+userName+"&chatid="+currentRoom}
           >
             
