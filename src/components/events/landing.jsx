@@ -168,6 +168,8 @@ class Landing extends Component {
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       eventUsers = await EventsApi.getcurrentUserEventUsers(event._id);
+      console.log('eventUser ***', eventUser)
+      console.log('eventUsers ---', eventUsers)
     }
 
     const dateFrom = event.datetime_from.split(" ");
@@ -181,7 +183,7 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
 
-
+    console.log('landing info event', event)
     this.setState({
       event,
       eventUser,
@@ -290,7 +292,7 @@ class Landing extends Component {
           </Col>
           <Col sm={24} md={8} lg={6} xl={6}>
             <VirtualConference
-              event={this.state.event}
+              event={event}
               currentUser={this.state.currentUser}
               usuarioRegistrado={this.state.eventUser}
               toggleConference={this.toggleConference}
