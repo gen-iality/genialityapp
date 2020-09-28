@@ -20,54 +20,49 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
         case "open_meeting_room":
             return (
                 <>
-                    {event && event.visibility === "ORGANIZATION" ? (                        
-                        usuarioRegistrado ? (
-                            <>
-                                <Button
-                                    size="large"
-                                    type="primary"
-                                    className="buttonVirtualConference"
-                                    onClick={() => {
-                                        toggleConference(true, infoActivity.meeting_id, infoActivity);
-                                    }}>
-                                    {infoActivity.meeting_id_en ? "Entrar (Español)" : "Entrar"}
-                                </Button>
-                                {infoActivity.meeting_id_en && (<Button
-                                    size="large"
-                                    type="primary"
-                                    className="buttonVirtualConference"
-                                    onClick={() => {
-                                        toggleConference(true, infoActivity.meeting_id_en, infoActivity);
-                                    }}>
-                                    Join (English)
-                                </Button>)}
-                            </>
-                        ) : (
-                                <Alert message="No se encuentra registrado en el evento" type="info" showIcon />
-                            )
-                    ) : (                        
-                            <>
-                                <Button
-                                    size="large"
-                                    type="primary"
-                                    className="buttonVirtualConference"
-                                    onClick={() => {
-                                        toggleConference(true, infoActivity.meeting_id, infoActivity);
-                                    }}>
-                                    {infoActivity.meeting_id_en ? "Entrar (Español)" : "Entrar"}
-                                </Button>
-                                {infoActivity.meeting_id_en && (<Button
-                                    size="large"
-                                    type="primary"
-                                    className="buttonVirtualConference"
-                                    onClick={() => {
-                                        toggleConference(true, infoActivity.meeting_id_en, infoActivity);
-                                    }}>
-                                    Join (English)
-                                </Button>)}
-                            </>
-                        )
-                    }
+                {(usuarioRegistrado && event.visibility === "ORGANIZATION") || event.visibility !== "ORGANIZATION" ? (
+                    <>
+                        <Button
+                        size="large"
+                        type="primary"
+                        className="buttonVirtualConference"
+                        onClick={() => {
+                            toggleConference(true, infoActivity.meeting_id, infoActivity);
+                        }}>
+                        {infoActivity.meeting_id_en ? "Entrar (Español)" : "Entrar"}
+                        </Button>
+                        {infoActivity.meeting_id_en && (
+                        <Button
+                        size="large"
+                        type="primary"
+                        className="buttonVirtualConference"
+                        onClick={() => {
+                            toggleConference(true, infoActivity.meeting_id_en, infoActivity);
+                        }}>
+                            Join (English)
+                        </Button>)}
+                    </>
+                ):(
+                    <>
+                    <Button
+                        size="large"
+                        type="primary"
+                        className="buttonVirtualConference"
+                        disabled='true'
+                        >
+                        {infoActivity.meeting_id_en ? "Ingreso privado (Español)" : "Ingreso privado"}
+                        </Button>
+                        {infoActivity.meeting_id_en && (
+                        <Button
+                        size="large"
+                        type="primary"
+                        className="buttonVirtualConference"
+                        disabled='true'
+                        >
+                            Private
+                        </Button>)}
+                    </>
+                )}
                 </>
             );
             
