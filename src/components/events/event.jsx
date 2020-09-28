@@ -125,7 +125,7 @@ class Event extends Component {
         <Sider className={` menu event-aside is-hidden-touch ${!showMenu ? "is-hidden" : ""}`}>
           <Menu match={match} />
         </Sider>
-        <Content className="column event-main">
+        <Content className="column event-main" style={{width:500}}>
           <Link to={`/landing/${this.state.event._id}`}>
             <h2 className="name-event">Ir a {this.state.event.name}</h2>
           </Link>

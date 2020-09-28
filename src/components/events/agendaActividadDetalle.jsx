@@ -79,6 +79,7 @@ let agendaActividadDetalle = (props) => {
         <div className="card agenda_information ">
           <PageHeader
             className="site-page-header"
+            style={{overflow:"visible"}}
             onBack={(e) => {
               gotoActivityList();
             }}

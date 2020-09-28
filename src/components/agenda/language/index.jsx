@@ -2,7 +2,9 @@ import React, { Component, Fragment } from "react";
 import { AgendaApi } from "../../../helpers/request";
 import { Typography, Select, Form, Table, Button, InputNumber, notification, Input, Modal } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
-import ModalEdit from "./modalEdit"
+import ModalEdit from "./modalEdit";
+import { firestore } from "../../../helpers/firebase";
+
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -26,11 +28,24 @@ class ActividadLanguage extends Component {
 
     async loadData() {
         const { eventId, activityId } = this.props
+        let related_meetings = await firestore.collection("languageState").doc(eventId)
+            .get()
+            .then(function (doc) {
+                if (doc.exists) {
+                    return doc.data().related_meetings
+                } else {
+                    notification.open({
+                        message: 'No hay información guardada',
+                    })
+                }
+            }).catch(function (error) {
+                // console.log("Error getting document:", error);
+                notification.open({
+                    message: 'Hubo un error, intente mas tarde',
+                })
+            });
         const info = await AgendaApi.getOne(activityId, eventId)
-        if (info.related_meetings) {
-            this.setState({ related_meetings: info.related_meetings })
-        }
-        this.setState({ activity: info })
+        this.setState({ activity: info, related_meetings })
     }
 
     async onFinish(related_meetings_selected) {
@@ -38,14 +53,14 @@ class ActividadLanguage extends Component {
         let related_meetings = this.state.related_meetings
         related_meetings.push(related_meetings_selected)
 
-        let info = ({ related_meetings: related_meetings })
+        let info = ({ event_id: eventId, activity_id: activityId, related_meetings: related_meetings })
         try {
-            await AgendaApi.editOne(info, activityId, eventId)
+            await firestore.collection("languageState").doc(eventId).set(info)
             notification.open({
                 message: 'Información Guardada',
             })
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             notification.open({
                 message: 'Hubo un error',
                 description:
@@ -62,16 +77,16 @@ class ActividadLanguage extends Component {
 
         dataToFilter = dataToFilter.filter(function (i) { return i !== object });
 
-        let info = ({ related_meetings: dataToFilter })
+        let related_meetings = dataToFilter
 
-        this.setState({ related_meetings: dataToFilter });
+        this.setState({ related_meetings });
         try {
-            await AgendaApi.editOne(info, activityId, eventId)
+            await firestore.collection("languageState").doc(eventId).update({ event_id: eventId, activity_id: activityId, related_meetings })
             notification.open({
                 message: 'Dato Eliminado',
             })
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             notification.open({
                 message: 'Hubo un error',
                 description:
@@ -112,15 +127,15 @@ class ActividadLanguage extends Component {
             }
         }
 
-        let info = ({ related_meetings: related_meetings_original })
+        let related_meetings = related_meetings_original
 
         try {
-            await AgendaApi.editOne(info, activityId, eventId)
+            await firestore.collection("languageState").doc(eventId).update({ event_id: eventId, activity_id: activityId, related_meetings })
             notification.open({
                 message: 'Dato Actualizado',
             })
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             notification.open({
                 message: 'Hubo un error',
                 description:

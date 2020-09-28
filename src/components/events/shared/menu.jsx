@@ -60,14 +60,13 @@ class MenuConfig extends Component {
     const { url } = this.state;
     return (
       <Fragment>
-        <div>
           <Menu
             defaultSelectedKeys={["1"]}
             defaultOpenKeys={["sub1"]}
             mode="inline"
             inlineCollapsed={this.state.collapsed}>
             {/* Configuración de contenido */}
-
+           
             <SubMenu
               key="sub1"
               title={
@@ -185,6 +184,7 @@ class MenuConfig extends Component {
             {/* Configuración de Asistentes */}
 
             <SubMenu
+              className="SubMenuCofigASIS"
               key="sub3"
               title={
                 <span>
@@ -356,7 +356,6 @@ class MenuConfig extends Component {
               </Menu.Item>
             </SubMenu>
           </Menu>
-        </div>
       </Fragment>
     );
   }

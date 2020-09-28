@@ -157,6 +157,22 @@ iframe {
   .ant-card-head-title{
     font-weight: 700;
   }
+// estilos de menu del cms //
+
+.ant-menu-inline .ant-menu-submenu-title {
+  padding-right: 20px !important;
+  padding-left: 17px !important;
+}
+
+.ant-menu-sub.ant-menu-inline > .ant-menu-item{
+  height: 45px !important;
+  line-height: 20px !important;
+  list-style-position: inside;
+  list-style-type: disc;
+  overflow: visible;
+  white-space: break-spaces;
+}
+
 
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";

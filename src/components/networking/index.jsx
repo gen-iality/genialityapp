@@ -358,12 +358,12 @@ class ListEventUser extends Component {
                 closeModal={this.closeAppointmentModal}
               />
               <Form>
-              <Row>
-                <Col xs={11} sm={11} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+              <Row justify="space-around" gutter={[16, 16]}>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ margin: "0 auto" }}>
                   <Form.Item 
+                  labelCol={{span:24}}
                   label='Busca aquí las personas que deseas contactar'
-                  name="searchInput"
-                  
+                  name="searchInput"                 
                   >
                     
                     <SearchComponent
@@ -379,16 +379,15 @@ class ListEventUser extends Component {
 
                   </Form.Item>
                 </Col>
-              </Row>
-              <Row>
-                <Col xs={5} sm={5} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
-                  <Form.Item 
-                    label='Tipo de asistente'
-                    name="filterTypeUser"
-                    
-                    >
+                  <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                    <Form.Item 
+                      label='Tipo de asistente'
+                      name="filterTypeUser"  
+                      labelCol={{span:24}}                 
+                      >
                       <Select 
-                      style={{marginBottom: '15px', width: '150px', textAlign: 'left'}} 
+                      style={{ textAlign: 'left'}} 
+                      size={"middle"}
                       defaultValue=''
                       onChange={this.handleSelectTypeUser}
                       id="filterTypeUser"
@@ -399,21 +398,20 @@ class ListEventUser extends Component {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col xs={11} sm={11} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                  <Col xs={24} sm={24} md={10} lg={10} xl={10}>
                     <Form.Item 
                     label='Sector'
                     name="filterSector"
+                    labelCol={{span:24}}    
                     >
                       <FilterNetworking
                         id="filterSector"
                         properties={this.props.event.user_properties}
                         filterProperty={'sector'}
-                        handleSelect={this.handleSelectFilter}
-                       
+                        handleSelect={this.handleSelectFilter}                   
                       />
-
-                  </Form.Item>
-                </Col>
+                    </Form.Item>
+                  </Col>
               </Row>
              </Form>
 
