@@ -26,8 +26,7 @@ class SendRsvp extends Component {
     }
 
     componentDidMount() {
-        let default_header = ' Has sido invitado a: <br /> <span className=\"strong\">' + this.props.event.name + '</span> '
-        console.log("evento", this.props.event);        
+        let default_header = ' Has sido invitado a: <br /> <span className=\"strong\">' + this.props.event.name + '</span> '        
         this.setState({
             rsvp: {
                 ...this.state.rsvp, content_header: default_header, subject: this.props.event.name,
@@ -110,8 +109,8 @@ class SendRsvp extends Component {
 
 
     async submit() {
-        const { event, selection } = this.props;
-        const { rsvp, include_date } = this.state;
+        const { event } = this.props;
+        const { rsvp, include_date, selection } = this.state;
         let users = [];
         selection.map(item => {
             return users.push(item._id)
