@@ -41,6 +41,7 @@ const validationSchema = yup.object().shape({
   name: yup.string()
     .max(NAME_MAX_LENGTH),
   description: yup.string(),
+  short_description: yup.string(),
   stand_image: yup.string(),
   times_and_venues: yup.string(),
   contact_info: yup.object().shape({
@@ -86,6 +87,7 @@ export const defaultInitialValues = {
   list_image: "",
   visible: false,
   description: '',
+  short_description:'',
   times_and_venues: '',
   contact_info: { description: '', image: '' },
   advisor: { name: '', image: '', number: '' },
@@ -166,7 +168,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                       label="Video principal"
                       placeholder="Url video"
                     />
-                    
+
 
                     <ImageField
                       name="stand_image"
@@ -181,6 +183,12 @@ function CrearEditarEmpresa({ event, match, history }) {
                     <RichTextComponentField
                       name="description"
                       label="Descripción"
+                      maxLength={DESCRIPTION_MAX_LENGTH}
+                    />
+
+                    <RichTextComponentField
+                      name="short_description"
+                      label="Descripción Corta"
                       maxLength={DESCRIPTION_MAX_LENGTH}
                     />
 
