@@ -18,7 +18,9 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
         case "open_meeting_room":
             return (
                 <>
-                    <Button
+                {usuarioRegistrado ? (
+                    <>
+                        <Button
                         size="large"
                         type="primary"
                         className="buttonVirtualConference"
@@ -26,21 +28,42 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
                             toggleConference(true, infoActivity.meeting_id, infoActivity);
                         }}>
                         {infoActivity.meeting_id_en ? "Entrar (Español)" : "Entrar"}
-                    </Button>
-                    {infoActivity.meeting_id_en && (<Button
+                        </Button>
+                        {infoActivity.meeting_id_en && (
+                        <Button
                         size="large"
                         type="primary"
                         className="buttonVirtualConference"
                         onClick={() => {
                             toggleConference(true, infoActivity.meeting_id_en, infoActivity);
                         }}>
-                        Join (English)
-                    </Button>)}
-
-
+                            Join (English)
+                        </Button>)}
+                    </>
+                ):(
+                    <>
+                    <Button
+                        size="large"
+                        type="primary"
+                        className="buttonVirtualConference"
+                        disabled='true'
+                        >
+                        {infoActivity.meeting_id_en ? "Ingreso privado (Español)" : "Ingreso privado"}
+                        </Button>
+                        {infoActivity.meeting_id_en && (
+                        <Button
+                        size="large"
+                        type="primary"
+                        className="buttonVirtualConference"
+                        disabled='true'
+                        >
+                            Private
+                        </Button>)}
+                    </>
+                )}
                 </>
             );
-            break;
+            
 
         case "closed_meeting_room":
             return <Alert message="El ingreso se habilitará minutos antes del evento" type="warning" showIcon />;
@@ -173,8 +196,12 @@ class VirtualConference extends Component {
                                             )
                                         })}
                                     </div>
-                                    <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
-
+                                    <MeetingConferenceButton 
+                                    activity={item} 
+                                    toggleConference={toggleConference}
+                                    usuarioRegistrado={this.props.usuarioRegistrado}
+                                    />
+                                    
                                 </Card>
                             </div>
                         ))}
