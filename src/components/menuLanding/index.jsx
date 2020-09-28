@@ -158,7 +158,13 @@ class menuLanding extends Component {
                     checked: false,
                     permissions: "public"
                 },
-
+                partners: {
+                    name: "Patrocinadores",
+                    section: "partners",
+                    icon: "DollarCircleOutlined",
+                    checked: false,
+                    permissions: "public"
+                }
             },
             values: {},
             itemsMenu: {},
@@ -183,7 +189,7 @@ class menuLanding extends Component {
                     this.changePermissions(prop, menuLanding.itemsMenu[prop1].permissions)
                 }
             }
-        }        
+        }
     }
 
     orderItemsMenu(itemsMenu) {
@@ -210,7 +216,7 @@ class menuLanding extends Component {
         const newMenu = { itemsMenu: { ...menu } }
 
         await Actions.put(`api/events/${this.props.event._id}`, newMenu);
-        toast.success("Información guardada")        
+        toast.success("Información guardada")
     }
 
     async mapActiveItemsToAvailable(key) {
@@ -334,7 +340,7 @@ class menuLanding extends Component {
                 </Row> */}
                 <Row>
                     <Button style={{ marginTop: "1%" }} type="primary" size="large" onClick={this.submit}>Guardar</Button>
-                </Row> 
+                </Row>
             </Fragment >
         )
     }
