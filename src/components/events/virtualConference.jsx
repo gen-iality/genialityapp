@@ -18,7 +18,7 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
         case "open_meeting_room":
             return (
                 <>
-                {usuarioRegistrado ? (
+                {usuarioRegistrado  ? (
                     <>
                         <Button
                         size="large"
