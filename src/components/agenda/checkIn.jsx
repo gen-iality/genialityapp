@@ -101,7 +101,7 @@ class CheckAgenda extends Component {
 
     //FN para checkin
     checkIn = ( id ) => {
-        const { eventID, agendaID, attendees } = this.state;
+        const {  attendees } = this.state;
         //Se busca en el listado total con el id
         const user = attendees.find( ( { attendee_id } ) => attendee_id === id );
         //Sino está chequeado se chequea

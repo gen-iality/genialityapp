@@ -25,7 +25,6 @@ class CameraFeed extends Component {
      */
     processDevices(devices) {
         devices.forEach(device => {
-            console.log(device.label);
             this.setDevice(device);
         });
     }
@@ -108,7 +107,7 @@ class CameraFeed extends Component {
                 {/* Imagen capturada  */}
                 <div className="c-camera-feed__stage">
                     <canvas style={{ "maxWidth": "100%" }} width={imageWidh} height={imageheigh} hidden={hidden} ref={ref => (this.canvas = ref)} />
-                    <img width={imageWidh} height={imageheigh} id="getImage" hidden src={image} />
+                    <img  alt="camara" width={imageWidh} height={imageheigh} id="getImage" hidden src={image} />
                 </div>
 
                 <div style={{ textAlign: "center" }}>

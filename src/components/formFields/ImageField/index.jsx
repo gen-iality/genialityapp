@@ -39,11 +39,8 @@ function ImageField ( rawProps ) {
 
 
     const file = files[ 0 ];
-    let imageUrl = null;
     const url = "/api/files/upload";
-
     if ( file ) {
-
       // this.setState( {
       //   imageFile: file,
       //   event: { ...this.state.event, picture: null },
@@ -54,12 +51,8 @@ function ImageField ( rawProps ) {
         let data = new FormData();
         data.append( "file", file );
         return Actions.post( url, data ).then( ( image ) => {
-          console.log( "image", image );
+          
           if ( image ) {            
-
-            imageUrl = image;
-
-
             handleChange( image, form, field );
             handleBlur( form, field );
           }

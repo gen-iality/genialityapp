@@ -63,12 +63,12 @@ export function handleRequestError(error) {
     info.status = 800;
     info.message = error.message;
   }
-  console.log(error);
+  
   return info;
 }
 
 export function parseData2Excel(data, fields) {
-  console.log(fields)
+ 
   let info = [];
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
@@ -103,12 +103,17 @@ export function parseData2Excel(data, fields) {
         default:
           str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : 'undefined';
       }
-      if (typeof str === 'string' && typeof str !== undefined) console.log(str = str.toUpperCase());      
+
+    
       if (type === 'complex' && str) {
+
         Object.keys(str).map((prop) => {
           return (info[key][prop] = Array.isArray(str[prop]) ? str[prop].join() : str[prop]);
         });
       } else return (info[key][label] = str);
+
+      return null;
+      
     });
     if (item.rol)  info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : item.rol.name.toUpperCase();
     info[key]['Tipo asistente'] = item.rol_name ? item.rol_name : '';

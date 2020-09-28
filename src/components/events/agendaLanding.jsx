@@ -3,9 +3,8 @@ import Moment from "moment";
 import * as Cookie from "js-cookie";
 import API, { AgendaApi, SpacesApi, Activity, SurveysApi, DocumentsApi } from "../../helpers/request";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
-import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert, Tabs, notification } from "antd";
+import { Button, Card, Spin, notification } from "antd";
 import { firestore } from "../../helpers/firebase";
-import ReactPlayer from "react-player";
 import AgendaActivityItem from './AgendaActivityItem'
 
 class Agenda extends Component {

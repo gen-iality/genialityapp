@@ -77,19 +77,18 @@ class Home extends Component {
         })
             .catch(error => {
                 if (error.response) {
-                    console.log(error.response);
+
                     const {status,data:{message}} = error.response;
-                    console.log('STATUS',status,status === 401);
+                    
                     if(status === 401) this.setState({timeout:true,loader:false});
                     else this.setState({serverError:true,loader:false,errorData:{status,message}})
                 } else {
                     let errorData = {message:error.message};
-                    console.log('Error', error.message);
-                    if(error.request) console.log('Request Er ',error.request);
+                
                     errorData.status = 520;
                     this.setState({serverError:true,loader:false,errorData})
                 }
-                console.log(error.config);
+             
             });
     }
 
@@ -101,8 +100,8 @@ class Home extends Component {
                 <section className="home">
                     <div className="tabs">
                         <ul>
-                            <li onClick={e=>this.fetchEvent('next')} className={typeEvent==="next"?"is-active":""}><a>Próximos</a></li>
-                            <li onClick={e=>this.fetchEvent('prev')} className={typeEvent==="prev"?"is-active":""}><a>Pasados</a></li>
+                            <li onClick={e=>this.fetchEvent('next')} className={typeEvent==="next"?"is-active":""}><a href="#proximos">Próximos</a></li>
+                            <li onClick={e=>this.fetchEvent('prev')} className={typeEvent==="prev"?"is-active":""}><a href="#pasados">Pasados</a></li>
                         </ul>
                     </div>
                     <div className="dynamic-content">
