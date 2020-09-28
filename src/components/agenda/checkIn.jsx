@@ -48,7 +48,7 @@ class CheckAgenda extends Component {
             this.setState( { eventFields, rolesList, agendaID, eventID: event._id } );
             let newList = [ ...this.state.attendees ];
 
-            newList = await Activity.getActivyAssitants( this.props.event._id, agendaID );
+            newList = await Activity.getActivyAssitantsAdmin( this.props.event._id, agendaID );
             newList = newList.map( ( item ) => {
                 let attendee = item.attendee ? item.attendee : {"properties":{email:item.user.email, names:item.user.displayName}};
                 item = {...item, ...attendee }
@@ -101,7 +101,7 @@ class CheckAgenda extends Component {
 
     //FN para checkin
     checkIn = ( id ) => {
-        const { eventID, agendaID, attendees } = this.state;
+        const {  attendees } = this.state;
         //Se busca en el listado total con el id
         const user = attendees.find( ( { attendee_id } ) => attendee_id === id );
         //Sino está chequeado se chequea

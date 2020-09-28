@@ -63,15 +63,14 @@ class UserModal extends Component {
     }
 
     handleSubmit = async (e) => {
-        const { substractSyncQuantity } = this.props;
+        
 
         e.preventDefault();
         e.stopPropagation();
         const snap = { properties: this.state.user, rol_id: this.state.rol };
-        const self = this;
+
         let message = {};
         this.setState({ create: true });
-        const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         snap.ticket_id = this.state.ticket_id;
 
         try {
@@ -90,11 +89,19 @@ class UserModal extends Component {
             console.error("Error updating document: ", error);
             message.class = 'msg_danger';
             message.content = 'User can`t be updated';
-        };
+        }
 
         this.setState({ message, create: false });
-        return;
+       
+    }
 
+    handleSubmitFireStore() {
+        const { substractSyncQuantity } = this.props;
+        const self = this;
+        let message = {};
+        const snap = { properties: this.state.user, rol_id: this.state.rol };
+      
+        const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         if (!this.state.edit) {
             snap.updated_at = new Date();
             snap.created_at = new Date();
@@ -103,7 +110,7 @@ class UserModal extends Component {
             }
             userRef.add(snap)
                 .then((docRef) => {
-                    console.log("Document written with ID: ", docRef.id);
+                    
                     self.setState({ userId: docRef.id, edit: true });
                     message.class = 'msg_success';
                     message.content = 'USER CREATED';
