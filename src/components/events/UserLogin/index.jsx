@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
-import {  Spin } from "antd";
+import { Spin } from "antd";
 import UserLoginWithEmailPass from "../UserLoginWithEmailPass"
 import UserLoginRecoveryPass from "../UserLoginRecoveryPass"
 
 
 class UserLogin extends Component {
-  constructor(props){
-    super(props);    
+  constructor(props) {
+    super(props);
   }
-  
-  render(){
+
+  render() {
     const {
       eventId,
       FormTags,
@@ -20,32 +20,39 @@ class UserLogin extends Component {
       enabledFormLoginWithEmailPass,
       enabledFormRecoveryPass,
       handleOpenRecoveryPass,
-      handleCloseRecoveryPass
+      handleCloseRecoveryPass,
+      handleRecoveryPass,
+      errorRecovery,
+      successRecovery
     } = this.props
 
-    
-    return(
+
+    return (
       <>
-      {loading && <Spin />}
-      {enabledFormLoginWithEmailPass && (
-        <UserLoginWithEmailPass
-        eventId={eventId}
-        FormTags={FormTags}
-        handleLoginEmailPassword={handleLoginEmailPassword}
-        onFinishFailed={onFinishFailed}
-        loading={loading}
-        errorLogin={errorLogin}
-        handleOpenRecoveryPass={handleOpenRecoveryPass}        
-        />
-      )}
-      {enabledFormRecoveryPass && (
-        <UserLoginRecoveryPass 
-        handleCloseRecoveryPass={handleCloseRecoveryPass}
-        />
-      )}
-    </>
+        {loading && <Spin />}
+        {enabledFormLoginWithEmailPass && (
+          <UserLoginWithEmailPass
+            eventId={eventId}
+            FormTags={FormTags}
+            handleLoginEmailPassword={handleLoginEmailPassword}
+            onFinishFailed={onFinishFailed}
+            loading={loading}
+            errorLogin={errorLogin}
+            handleOpenRecoveryPass={handleOpenRecoveryPass}
+          />
+        )}
+        {enabledFormRecoveryPass && (
+          <UserLoginRecoveryPass
+            handleCloseRecoveryPass={handleCloseRecoveryPass}
+            handleRecoveryPass={handleRecoveryPass}
+            loading={loading}
+            errorRecovery={errorRecovery}
+            successRecovery={successRecovery}
+          />
+        )}
+      </>
     )
-   }
+  }
 }
 
 export default UserLogin;
