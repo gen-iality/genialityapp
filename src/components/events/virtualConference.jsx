@@ -114,8 +114,23 @@ class VirtualConference extends Component {
                     let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
 
                     arr[index] = updatedActivityInfo;
+
+                    arr.forEach((activity, index, arr) => {
+                        firestore
+                            .collection('languageState')
+                            .doc(activity._id)
+                            .onSnapshot((info) => {
+                                if (!info.exists) return;
+                                let { related_meetings } = info.data();
+                                let updatedActivityInfo = { ...arr[index], related_meetings };
+
+                                arr[index] = updatedActivityInfo;
+                                this.setState({ infoAgendaArr: arr });
+                            });
+                    });
                     this.setState({ infoAgendaArr: arr });
                 });
+
         });
     };
 
@@ -174,7 +189,29 @@ class VirtualConference extends Component {
                                         })}
                                     </div>
                                     <MeetingConferenceButton activity={item} toggleConference={toggleConference} event={event} usuarioRegistrado={usuarioRegistrado} />
+                                    {item.related_meetings && item.related_meetings.map((item, key) => (
+                                        <>
+                                            {item.state === 'open_meeting_room' && (
+                                                <Button
+                                                    disabled={item.meeting_id || item.vimeo_id ? false : true}
+                                                    onClick={() =>
+                                                        toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
+                                                    }
+                                                    type='primary'
+                                                    className='button-Agenda'
+                                                    key={key}>
+                                                    {item.informative_text}
+                                                </Button>
+                                            )}
+                                            {item.state === 'closed_meeting_room' && (
+                                                <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
+                                            )}
 
+                                            {item.state === 'ended_meeting_room' && (
+                                                <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
+                                            )}
+                                        </>
+                                    ))}
                                 </Card>
                             </div>
                         ))}
