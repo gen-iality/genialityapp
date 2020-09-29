@@ -33,6 +33,7 @@ class UserLoginContainer extends Component {
   }
 
   async componentDidMount() {
+    this.setState({ successRecovery: false });
     const { eventId } = this.state;
 
     await app.auth().onAuthStateChanged((user) => {

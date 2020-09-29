@@ -28,10 +28,13 @@ export default function AgendaActivityItem({
   }, []);
 
   const listeningStateMeetingRoom = async () => {
-    firestore
+    console.log('listening', item._id);
+    await firestore
       .collection('languageState')
       .doc(item._id)
       .onSnapshot((info) => {
+        const response = info.data();
+        console.log('info data', response);
         if (!info.exists) return;
         let related_meetings = info.data().related_meetings;
         setRelatedMeetings(related_meetings);
@@ -172,32 +175,6 @@ export default function AgendaActivityItem({
                     )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
                     type='warning'
                   />
-                  <Row>
-                    {related_meetings &&
-                      related_meetings.map((item, key) => (
-                        <>
-                          {item.state === 'open_meeting_room' && (
-                            <Button
-                              disabled={item.meeting_id || item.vimeo_id ? false : true}
-                              onClick={() =>
-                                toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
-                              }
-                              type='primary'
-                              className='button-Agenda'
-                              key={key}>
-                              {item.informative_text}
-                            </Button>
-                          )}
-                          {item.state === 'closed_meeting_room' && (
-                            <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
-                          )}
-
-                          {item.state === 'ended_meeting_room' && (
-                            <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
-                          )}
-                        </>
-                      ))}
-                  </Row>
                 </>
               )}
 
@@ -228,6 +205,33 @@ export default function AgendaActivityItem({
                         )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
                         type='info'
                       />
+                      <Row>
+                        {related_meetings &&
+                          related_meetings.map((item, key) => (
+                            <>
+                              <h1>Otras Salas</h1>
+                              {item.state === 'open_meeting_room' && (
+                                <Button
+                                  disabled={item.meeting_id || item.vimeo_id ? false : true}
+                                  onClick={() =>
+                                    toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
+                                  }
+                                  type='primary'
+                                  className='button-Agenda'
+                                  key={key}>
+                                  {item.informative_text}
+                                </Button>
+                              )}
+                              {item.state === 'closed_meeting_room' && (
+                                <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
+                              )}
+
+                              {item.state === 'ended_meeting_room' && (
+                                <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
+                              )}
+                            </>
+                          ))}
+                      </Row>
                     </>
                   )}
                 </>
