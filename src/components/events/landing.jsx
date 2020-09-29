@@ -42,6 +42,7 @@ import Trophies from "./trophies";
 import InformativeSection from "./informativeSections/informativeSection"
 import InformativeSection2 from "./informativeSections/informativeSection2"
 import UserLogin from './UserLogin'
+import Partners from './Partners'
 
 const { Content, Sider } = Layout;
 
@@ -235,7 +236,8 @@ class Landing extends Component {
       my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
-      login: <UserLogin eventId={event._id}/>, 
+      login: <UserLogin eventId={event._id}/>,
+      partners: <Partners eventId={event._id}/>, 
       evento: (
 
         <Row justify="center" >

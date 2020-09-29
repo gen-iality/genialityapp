@@ -30,15 +30,15 @@ export default function AgendaActivityItem({
           <Row>
             <span className='date-activity'>
               {Moment(item.datetime_start).format('DD MMMM YYYY') ===
-              Moment(item.datetime_end).format('DD MMMM YYYY') ? (
-                <>
-                  {Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} -{' '}
-                  {Moment(item.datetime_end).format('h:mm a')}
-                </>
-              ) : (
-                Moment(item.datetime_start).format('DD MMMM YYYY hh:mm') -
-                Moment(item.datetime_end).format('DD MMMM YYYY hh:mm')
-              )}
+                Moment(item.datetime_end).format('DD MMMM YYYY') ? (
+                  <>
+                    {Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} -{' '}
+                    {Moment(item.datetime_end).format('h:mm a')}
+                  </>
+                ) : (
+                  Moment(item.datetime_start).format('DD MMMM YYYY hh:mm') -
+                  Moment(item.datetime_end).format('DD MMMM YYYY hh:mm')
+                )}
             </span>
             <p>
               <span className='card-header-title text-align-card'>{item.name}</span>
@@ -95,54 +95,54 @@ export default function AgendaActivityItem({
                   </Row>
                 </>
               }
-            </div> 
+            </div>
             <Row>
               <Col span={12}>
-               {show_inscription === "true" && (
-                    <Button
-                      type='primary'
-                      onClick={() => registerInActivity(
-                        item._id, 
-                        eventId, 
-                        userId, 
-                        setIsRegistered)}
-                      className='space-align-block'
-                      disabled={isRegistered}>
-                      {isRegistered ? 'Inscrito' : 'Inscribirme'}
-                    </Button>
-                  )}
-
-                  {btnDetailAgenda === true && (
-                    <Button
-                      type='primary'
-                      onClick={() => {
-                        gotoActivity(item);
-                      }}
-                      className='space-align-block button-Agenda'>
-                      Detalle de actividad
-                    </Button>
-                  )}
-                  {Documents.filter((element) => element.activity_id === item._id).length > 0 && (
-                    <Button
-                      type='primary'
-                      onClick={() => {
-                        gotoActivity(item);
-                      }}
-                      className='space-align-block button-Agenda'>
-                      Documentos
-                    </Button>
-                  )}
-                  {Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
-                    <Button
-                      type='primary'
-                      onClick={() => {
-                        gotoActivity(item);
-                      }}
-                      className='space-align-block button-Agenda'>
-                      Encuestas
-                    </Button>
+                {show_inscription === "true" && (
+                  <Button
+                    type='primary'
+                    onClick={() => registerInActivity(
+                      item._id,
+                      eventId,
+                      userId,
+                      setIsRegistered)}
+                    className='space-align-block'
+                    disabled={isRegistered}>
+                    {isRegistered ? 'Inscrito' : 'Inscribirme'}
+                  </Button>
                 )}
-                
+
+                {btnDetailAgenda === true && (
+                  <Button
+                    type='primary'
+                    onClick={() => {
+                      gotoActivity(item);
+                    }}
+                    className='space-align-block button-Agenda'>
+                    Detalle de actividad
+                  </Button>
+                )}
+                {Documents.filter((element) => element.activity_id === item._id).length > 0 && (
+                  <Button
+                    type='primary'
+                    onClick={() => {
+                      gotoActivity(item);
+                    }}
+                    className='space-align-block button-Agenda'>
+                    Documentos
+                  </Button>
+                )}
+                {Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
+                  <Button
+                    type='primary'
+                    onClick={() => {
+                      gotoActivity(item);
+                    }}
+                    className='space-align-block button-Agenda'>
+                    Encuestas
+                  </Button>
+                )}
+
               </Col>
             </Row>
           </Col>
@@ -152,33 +152,12 @@ export default function AgendaActivityItem({
               {item.habilitar_ingreso === 'closed_meeting_room' && (
                 <>
                   <img src={item.image ? item.image : event_image} />
-                  <Alert message={`La sesión inicia: ${Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} ${" - "} ${Moment(item.datetime_end).format('h:mm a')}`} type='warning' />
-                  <Row>
-                    {item.related_meetings &&
-                      item.related_meetings.map((item, key) => (
-                        <>
-                            {item.state === 'open_meeting_room' && (
-                              <Button
-                                disabled={item.meeting_id || item.vimeo_id ? false : true}
-                                onClick={() =>
-                                  toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
-                                }
-                                type='primary'
-                                className='button-Agenda'
-                                key={key}>
-                                Sesión en {item.language}
-                              </Button>
-                            )}
-                            {item.state === 'closed_meeting_room' && (
-                              <Alert message={`La sesión ${item.language} no ha iniciado`} type='info' />
-                            )}
-
-                            {item.state === 'ended_meeting_room' && (
-                              <Alert message={`La sesión en ${item.language} ha terminado`} type='info' />
-                            )}
-                        </>
-                      ))}
-                 </Row>
+                  <Alert
+                    message={`La sesión inicia: ${Moment(item.datetime_start).format(
+                      'DD MMMM YYYY h:mm a'
+                    )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                    type='warning'
+                  />
                 </>
               )}
 
@@ -201,11 +180,16 @@ export default function AgendaActivityItem({
                       </>
                     )
                   ) : (
-                    <>
-                      <img src={item.image ? item.image : event_image} />
-                      <Alert message={`La Conferencia ha Terminado: ${Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} ${" - "} ${Moment(item.datetime_end).format('h:mm a')}`} type='info' />
-                    </>
-                  )}
+                      <>
+                        <img src={item.image ? item.image : event_image} />
+                        <Alert
+                          message={`La Conferencia ha Terminado: ${Moment(item.datetime_start).format(
+                            'DD MMMM YYYY h:mm a'
+                          )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                          type='info'
+                        />
+                      </>
+                    )}
                 </>
               )}
               {item.habilitar_ingreso === 'open_meeting_room' && (
@@ -226,6 +210,29 @@ export default function AgendaActivityItem({
                 </>
               )}
             </div>
+
+            {item.related_meetings &&
+              item.related_meetings.map((item, key) => (
+                <Row style={{ marginTop: '5%' }}>
+                  {item.state === 'open_meeting_room' && (
+                    <Button
+                      disabled={item.meeting_id || item.vimeo_id ? false : true}
+                      onClick={() => toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)}
+                      type='primary'
+                      key={key}
+                      style={{ marginBottom: '3%' }}>
+                      {item.informative_text ? item.informative_text : <>Sesión en {item.language}</>}
+                    </Button>
+                  )}
+                  {item.state === 'closed_meeting_room' && (
+                    <Alert message={`La sesión ${item.language} no ha iniciado`} type='info' />
+                  )}
+
+                  {item.state === 'ended_meeting_room' && (
+                    <Alert message={`La sesión en ${item.language} ha terminado`} type='info' />
+                  )}
+                </Row>
+              ))}
           </Col>
         </Row>
       </div>

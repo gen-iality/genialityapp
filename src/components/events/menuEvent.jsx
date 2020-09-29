@@ -118,6 +118,13 @@ class MenuEvent extends Component {
         icon: "UserOutlined",
         checked: false,
         permissions: "public"
+      },
+      partners: {
+        name: "Patrocinadores",
+        section: "partners",
+        icon:"DollarCircleOutlined",
+        checked: false,
+        permissions: "public"
       }
     }    
   }
