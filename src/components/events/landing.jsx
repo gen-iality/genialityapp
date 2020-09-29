@@ -42,6 +42,7 @@ import Trophies from "./trophies";
 import InformativeSection from "./informativeSections/informativeSection"
 import InformativeSection2 from "./informativeSections/informativeSection2"
 import UserLogin from './UserLogin'
+import Partners from './Partners'
 
 const { Content, Sider } = Layout;
 
@@ -86,7 +87,7 @@ class Landing extends Component {
       loader_page: false,
       show_banner_footer: false,
       event: null,
-      requireValidation: false
+      requireValidation: false      
     };
     this.showLanding = this.showLanding.bind(this)
   }
@@ -161,13 +162,15 @@ class Landing extends Component {
     }
 
     /* Trae la información del evento con la instancia pública*/
-    const event = await EventsApi.landingEvent(id);    
+    const event = await EventsApi.landingEvent(id);
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
     this.loadDynamicEventStyles(id);
 
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       eventUsers = await EventsApi.getcurrentUserEventUsers(event._id);
+      console.log('eventUser ***', eventUser)
+      console.log('eventUsers ---', eventUsers)
     }
 
     const dateFrom = event.datetime_from.split(" ");
@@ -181,7 +184,7 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
 
-
+    console.log('landing info event', event)
     this.setState({
       event,
       eventUser,
@@ -235,7 +238,8 @@ class Landing extends Component {
       my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
-      login: <UserLogin eventId={event._id} />,
+      login: <UserLogin eventId={event._id}/>,
+      partners: <Partners eventId={event._id}/>, 
       evento: (
 
         <Row justify="center" >
@@ -290,10 +294,10 @@ class Landing extends Component {
           </Col>
           <Col sm={24} md={8} lg={6} xl={6}>
             <VirtualConference
+              event={event}
               currentUser={this.state.currentUser}
               usuarioRegistrado={this.state.eventUser}
               toggleConference={this.toggleConference}
-              event={event}
             />
             <MapComponent event={event} />
           </Col>
