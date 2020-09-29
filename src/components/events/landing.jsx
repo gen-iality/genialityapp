@@ -87,7 +87,7 @@ class Landing extends Component {
       loader_page: false,
       show_banner_footer: false,
       event: null,
-      requireValidation: false      
+      requireValidation: false
     };
     this.showLanding = this.showLanding.bind(this)
   }
@@ -235,11 +235,11 @@ class Landing extends Component {
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
       interviews: <MyAgendaIndepend event={event} />,
       trophies: <Trophies event={event} />,
-      my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference} userId={this.state.user._id} />,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
-      login: <UserLogin eventId={event._id}/>,
-      partners: <Partners eventId={event._id}/>, 
+      login: <UserLogin eventId={event._id} />,
+      partners: <Partners eventId={event._id} />,
       evento: (
 
         <Row justify="center" >
