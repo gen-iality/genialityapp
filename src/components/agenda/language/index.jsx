@@ -49,6 +49,7 @@ class ActividadLanguage extends Component {
     }
 
     async onFinish(related_meetings_selected) {
+        console.log('related_meetings_selected*****************************', related_meetings_selected)
         const { eventId, activityId } = this.props
         let related_meetings = this.state.related_meetings ? this.state.related_meetings : []
         related_meetings.push(related_meetings_selected)

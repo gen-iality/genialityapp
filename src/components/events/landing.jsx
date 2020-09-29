@@ -235,7 +235,7 @@ class Landing extends Component {
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
       interviews: <MyAgendaIndepend event={event} />,
       trophies: <Trophies event={event} />,
-      my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference} userId={this.state.user._id} />,
+      my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference} userId={this.state.user ? this.state.user._id : null} />,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
       login: <UserLogin eventId={event._id} />,

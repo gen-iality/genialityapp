@@ -36,6 +36,7 @@ class AgendaInscriptions extends Component {
       .onSnapshot((info) => {
         if (!info.exists) return;
         let related_meetings = info.data().related_meetings;
+        console.log('related_meetings****************', related_meetings)
         this.setState({ related_meetings });
       });
     //Cargamos solamente los espacios virtuales de la agenda
@@ -231,7 +232,7 @@ class AgendaInscriptions extends Component {
                 {/* Contenedor donde se pinta la información de la agenda */}
 
                 {agendaData.map((item, llave) => (
-                  <div className='container_agenda-information'>
+                  <div key={llave} className='container_agenda-information'>
                     <div className='card agenda_information'>
                       <Row align='middle'>
                         <Row>
@@ -408,7 +409,7 @@ class AgendaInscriptions extends Component {
                                 </div>
                               </>
                             )}
-                            <Row>
+                            {/* <Row>
                               {related_meetings.map((item, key) => (
                                 <>
                                   {item.state === 'open_meeting_room' && (
@@ -432,7 +433,7 @@ class AgendaInscriptions extends Component {
                                   )}
                                 </>
                               ))}
-                            </Row>
+                            </Row> */}
                           </div>
                         </Col>
                       </Row>

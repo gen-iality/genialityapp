@@ -133,26 +133,30 @@ export default function AgendaActivityItem({
                     Detalle de actividad
                   </Button>
                 )}
-                {Documents.length > 0 && Documents.filter((element) => element.activity_id === item._id).length > 0 && (
-                  <Button
-                    type='primary'
-                    onClick={() => {
-                      gotoActivity(item);
-                    }}
-                    className='space-align-block button-Agenda'>
-                    Documentos
-                  </Button>
-                )}
-                {Surveys.length > 0 && Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
-                  <Button
-                    type='primary'
-                    onClick={() => {
-                      gotoActivity(item);
-                    }}
-                    className='space-align-block button-Agenda'>
-                    Encuestas
-                  </Button>
-                )}
+                {Documents &&
+                  Documents.length > 0 &&
+                  Documents.filter((element) => element.activity_id === item._id).length > 0 && (
+                    <Button
+                      type='primary'
+                      onClick={() => {
+                        gotoActivity(item);
+                      }}
+                      className='space-align-block button-Agenda'>
+                      Documentos
+                    </Button>
+                  )}
+                {Surveys &&
+                  Surveys.length > 0 &&
+                  Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
+                    <Button
+                      type='primary'
+                      onClick={() => {
+                        gotoActivity(item);
+                      }}
+                      className='space-align-block button-Agenda'>
+                      Encuestas
+                    </Button>
+                  )}
               </Col>
             </Row>
           </Col>
