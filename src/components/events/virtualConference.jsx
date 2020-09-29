@@ -78,6 +78,12 @@ class VirtualConference extends Component {
         };
     }
 
+    async componentDidMount() {
+        if (!this.props.event) return;
+        let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
+        this.setState({ infoAgendaArr: filteredAgenda });
+    }
+
     async componentDidUpdate(prevProps) {
 
         //Cargamos solamente los espacios virtuales de la agenda
@@ -113,12 +119,6 @@ class VirtualConference extends Component {
         });
     };
 
-    async componentDidMount() {
-        if (!this.props.event) return;
-        console.log("componentDidUpdate el componente se monto");
-        let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
-        this.setState({ infoAgendaArr: filteredAgenda });
-    }
 
     async filterVirtualActivities(event_id) {
         let infoAgendaArr = [];
