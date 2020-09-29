@@ -71,7 +71,7 @@ class Headers extends Component {
   async componentDidMount() {
 
     const eventId = this.setEventId()
-    this.setState({eventId})    
+    this.setState({ eventId })
 
     /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
     let evius_token = null;
@@ -95,7 +95,7 @@ class Headers extends Component {
     //Si existe el token consultamos la información del usuario
     try {
       const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
-      
+
       if (resp.status === 200 || resp.status === 201 || resp.status === 202) {
         const data = resp.data;
         const name = data.name ? data.name : data.displayName ? data.displayName : data.email;
@@ -160,23 +160,17 @@ class Headers extends Component {
   }
 
   logout = () => {
-    Cookie.remove("token");
-    Cookie.remove("evius_token");
-    window.indexedDB.deleteDatabase('firebaseLocalStorageDb')
-    window.indexedDB.deleteDatabase('firestore/[DEFAULT]/eviusauth/main')
-    
-    app.auth().signOut().catch(function(error) {
-      // An error happened.
-      console.error(error.message)
-    });
-
-    if(this.state.eventId){
-      window.location.replace(`${BaseUrl}/landing/${this.state.eventId}`);      
-    }
-    else{
-      window.location.replace(`${BaseUrl}`);      
-    }
-    //window.location.replace(`${AuthUrl}/logout`);
+    app.auth().signOut()
+      .then(() => {
+        Cookie.remove("token");
+        Cookie.remove("evius_token");
+        const urlRedirect = this.state.eventId ? `${BaseUrl}/landing/${this.state.eventId}` : `${BaseUrl}`
+        window.location.replace(urlRedirect);
+      }
+      ).catch(function (error) {
+        // An error happened.
+        console.error(error.message)
+      });
   };
 
   openMenu = () => {

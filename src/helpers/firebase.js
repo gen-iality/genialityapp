@@ -21,7 +21,7 @@ firestore.settings({
   cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
 });
 firestore
-  .enablePersistence()
+  .enablePersistence({ synchronizeTabs: true })
   .then(() => {
     window.eviusFailedPersistenceEnabling = false;
   })
