@@ -8,8 +8,7 @@ export default (formType) => {
   switch (formType) {
     case "login":
       return loginForm
-      break;
-
+      
     default:
       break;
   }
