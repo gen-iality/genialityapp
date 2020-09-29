@@ -84,7 +84,6 @@ class Agenda extends Component {
     let documentsData = await DocumentsApi.getAll(event._id)
 
     if (surveysData.data.length >= 1) {
-      console.log("Encuestas", surveysData.data)
       this.setState({ survey: surveysData.data })
     }
     if (documentsData.data.length >= 1) {
@@ -321,7 +320,6 @@ class Agenda extends Component {
     const { userId } = this.state
     try {
       const infoUserAgenda = await Activity.GetUserActivity(event._id, userId)
-      console.log('info user agenda', infoUserAgenda)
       this.setState({ userAgenda: infoUserAgenda.data })
     } catch (e) {
       console.error(e)
@@ -331,7 +329,6 @@ class Agenda extends Component {
 
   checkInscriptionStatus(activityId = '') {
     const { userAgenda } = this.state
-    console.log('check in agenda', userAgenda)
     if (!userAgenda) return false;
     const checkInscription = userAgenda.filter((activity) => activity.activity_id === activityId)
     const statusInscription = checkInscription.length ? true : false

@@ -109,7 +109,6 @@ class VirtualConference extends Component {
                 .doc(activity._id)
                 .onSnapshot((infoActivity) => {
                     if (!infoActivity.exists) return;
-                    console.log("infoActivity:", infoActivity);
                     let { habilitar_ingreso } = infoActivity.data();
                     let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
 

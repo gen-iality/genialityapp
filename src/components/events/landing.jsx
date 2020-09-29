@@ -169,8 +169,6 @@ class Landing extends Component {
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       eventUsers = await EventsApi.getcurrentUserEventUsers(event._id);
-      console.log('eventUser ***', eventUser)
-      console.log('eventUsers ---', eventUsers)
     }
 
     const dateFrom = event.datetime_from.split(" ");
@@ -184,7 +182,6 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
 
-    console.log('landing info event', event)
     this.setState({
       event,
       eventUser,
