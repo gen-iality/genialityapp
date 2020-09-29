@@ -3,7 +3,7 @@ import { Field } from 'formik'
 import { concat, omit, pick } from 'ramda'
 import { isValidNumber, isNotValidNumber } from 'ramda-adjunct'
 import React, { useCallback, useRef } from 'react'
-import ReactQuill from "react-quill";
+import EviusReactQuill from "../../shared/eviusReactQuill";
 
 import { toolbarEditor } from '../../../helpers/constants'
 
@@ -46,13 +46,9 @@ function RichTextComponentField(rawProps) {
             required={formItemProps.required}
             help={fieldError}
             validateStatus={fieldError ? "error" : undefined}
-          >
-            <ReactQuill
-              ref={editorRef}
-              modules={toolbarEditor}
-              {...props}
-              value={field.value}
-              onBlur={() => form.setFieldTouched(field.name, true)}
+          >            
+            <EviusReactQuill              
+              value={field.value}              
               onChange={(newValue, _delta, _source, editor) => {
                 const currentValue = field.value
                 const newLength = editor.getLength() - 1

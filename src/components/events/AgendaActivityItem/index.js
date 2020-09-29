@@ -30,7 +30,7 @@ export default function AgendaActivityItem({
   const listeningStateMeetingRoom = async () => {
     firestore
       .collection('languageState')
-      .doc(eventId)
+      .doc(item._id)
       .onSnapshot((info) => {
         if (!info.exists) return;
         let related_meetings = info.data().related_meetings;
