@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Row, Col, Tag, Avatar, Alert } from 'antd';
+import { Button, Row, Col, Tag, Avatar, Alert, Card } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment';
-import "./style.scss"
+import './style.scss';
+import { firestore } from '../../../helpers/firebase';
+
 export default function AgendaActivityItem({
   item,
   Surveys,
@@ -18,10 +20,23 @@ export default function AgendaActivityItem({
   show_inscription,
 }) {
   const [isRegistered, setIsRegistered] = useState(false);
+  const [related_meetings, setRelatedMeetings] = useState();
 
   useEffect(() => {
     setIsRegistered(registerStatus);
-  }, [registerStatus]);
+    listeningStateMeetingRoom();
+  }, []);
+
+  const listeningStateMeetingRoom = async () => {
+    firestore
+      .collection('languageState')
+      .doc(eventId)
+      .onSnapshot((info) => {
+        if (!info.exists) return;
+        let related_meetings = info.data().related_meetings;
+        setRelatedMeetings(related_meetings);
+      });
+  };
 
   return (
     <div className='container_agenda-information'>
@@ -98,21 +113,17 @@ export default function AgendaActivityItem({
             </div>
             <Row>
               <Col span={12}>
-                {show_inscription === "true" && (
+                {show_inscription === 'true' && (
                   <Button
                     type='primary'
-                    onClick={() => registerInActivity(
-                      item._id,
-                      eventId,
-                      userId,
-                      setIsRegistered)}
-                    className='space-align-block'
+                    onClick={() => registerInActivity(item._id, eventId, userId, setIsRegistered)}
+                    className='space-align-block button-Agenda'
                     disabled={isRegistered}>
                     {isRegistered ? 'Inscrito' : 'Inscribirme'}
                   </Button>
                 )}
 
-                {btnDetailAgenda === true && (
+                {btnDetailAgenda === 'true' && (
                   <Button
                     type='primary'
                     onClick={() => {
@@ -122,7 +133,7 @@ export default function AgendaActivityItem({
                     Detalle de actividad
                   </Button>
                 )}
-                {Documents.filter((element) => element.activity_id === item._id).length > 0 && (
+                {Documents.length > 0 && Documents.filter((element) => element.activity_id === item._id).length > 0 && (
                   <Button
                     type='primary'
                     onClick={() => {
@@ -132,7 +143,7 @@ export default function AgendaActivityItem({
                     Documentos
                   </Button>
                 )}
-                {Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
+                {Surveys.length > 0 && Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
                   <Button
                     type='primary'
                     onClick={() => {
@@ -142,7 +153,6 @@ export default function AgendaActivityItem({
                     Encuestas
                   </Button>
                 )}
-
               </Col>
             </Row>
           </Col>
@@ -158,6 +168,32 @@ export default function AgendaActivityItem({
                     )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
                     type='warning'
                   />
+                  <Row>
+                    {related_meetings &&
+                      related_meetings.map((item, key) => (
+                        <>
+                          {item.state === 'open_meeting_room' && (
+                            <Button
+                              disabled={item.meeting_id || item.vimeo_id ? false : true}
+                              onClick={() =>
+                                toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
+                              }
+                              type='primary'
+                              className='button-Agenda'
+                              key={key}>
+                              {item.informative_text}
+                            </Button>
+                          )}
+                          {item.state === 'closed_meeting_room' && (
+                            <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
+                          )}
+
+                          {item.state === 'ended_meeting_room' && (
+                            <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
+                          )}
+                        </>
+                      ))}
+                  </Row>
                 </>
               )}
 
@@ -210,29 +246,6 @@ export default function AgendaActivityItem({
                 </>
               )}
             </div>
-
-            {item.related_meetings &&
-              item.related_meetings.map((item, key) => (
-                <Row style={{ marginTop: '5%' }}>
-                  {item.state === 'open_meeting_room' && (
-                    <Button
-                      disabled={item.meeting_id || item.vimeo_id ? false : true}
-                      onClick={() => toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)}
-                      type='primary'
-                      key={key}
-                      style={{ marginBottom: '3%' }}>
-                      {item.informative_text ? item.informative_text : <>Sesión en {item.language}</>}
-                    </Button>
-                  )}
-                  {item.state === 'closed_meeting_room' && (
-                    <Alert message={`La sesión ${item.language} no ha iniciado`} type='info' />
-                  )}
-
-                  {item.state === 'ended_meeting_room' && (
-                    <Alert message={`La sesión en ${item.language} ha terminado`} type='info' />
-                  )}
-                </Row>
-              ))}
           </Col>
         </Row>
       </div>

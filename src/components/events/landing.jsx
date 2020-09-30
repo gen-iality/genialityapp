@@ -87,7 +87,7 @@ class Landing extends Component {
       loader_page: false,
       show_banner_footer: false,
       event: null,
-      requireValidation: false      
+      requireValidation: false
     };
     this.showLanding = this.showLanding.bind(this)
   }
@@ -236,8 +236,8 @@ class Landing extends Component {
       my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
-      login: <UserLogin eventId={event._id}/>,
-      partners: <Partners eventId={event._id}/>, 
+      login: <UserLogin eventId={event._id} />,
+      partners: <Partners eventId={event._id} />,
       evento: (
 
         <Row justify="center" >
@@ -292,10 +292,10 @@ class Landing extends Component {
           </Col>
           <Col sm={24} md={8} lg={6} xl={6}>
             <VirtualConference
-              event={this.state.event}
               currentUser={this.state.currentUser}
               usuarioRegistrado={this.state.eventUser}
               toggleConference={this.toggleConference}
+              event={event}
             />
             <MapComponent event={event} />
           </Col>

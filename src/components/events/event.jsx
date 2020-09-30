@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Route, Redirect, Switch, Link } from "react-router-dom";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
@@ -170,7 +170,7 @@ class Event extends Component {
               />
               <Protected
                 path={`${match.url}/checkin-actividad`}
-                component={ReportList}
+                component={ReportList}                
                 event={this.state.event}
                 url={match.url}
               />

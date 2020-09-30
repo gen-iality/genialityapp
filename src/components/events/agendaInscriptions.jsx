@@ -15,7 +15,8 @@ class AgendaInscriptions extends Component {
       agendaData: [],
       hideBtnDetailAgenda: false,
       Surveys: [],
-      Documents: []
+      Documents: [],
+      related_meetings: []
     }
     this.survey = this.survey.bind(this);
     this.gotoActivity = this.gotoActivity.bind(this)
@@ -23,6 +24,48 @@ class AgendaInscriptions extends Component {
 
   async componentDidMount() {
     this.getData()
+  }
+
+  async componentDidUpdate(prevProps) {
+    const { agendaData } = this.state
+    const { event } = this.props
+
+    firestore
+      .collection('languageState')
+      .doc(event._id)
+      .onSnapshot((info) => {
+        if (!info.exists) return;
+        let related_meetings = info.data().related_meetings;
+        this.setState({ related_meetings });
+      });
+    //Cargamos solamente los espacios virtuales de la agenda
+
+    //Si aún no ha cargado el evento no podemos hacer nada más
+    if (!event) return;
+
+    //Revisamos si el evento sigue siendo el mismo, no toca cargar nada 
+    if (prevProps.event && this.props.event._id == prevProps.event._id) return;
+
+
+    this.listeningStateMeetingRoom(agendaData);
+  }
+
+  async listeningStateMeetingRoom(list) {
+    list.forEach((activity, index, arr) => {
+      firestore
+        .collection("events")
+        .doc(this.props.event._id)
+        .collection("activities")
+        .doc(activity._id)
+        .onSnapshot((infoActivity) => {
+          if (!infoActivity.exists) return;
+          let { habilitar_ingreso } = infoActivity.data();
+          let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
+
+          arr[index] = updatedActivityInfo;
+          return arr
+        });
+    });
   }
 
   async getData() {
@@ -42,20 +85,6 @@ class AgendaInscriptions extends Component {
     this.setState({
       hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
     })
-  }
-
-  async componentDidUpdate(prevProps) {
-    const { agendaData } = this.state
-    const { event } = this.props
-    //Cargamos solamente los espacios virtuales de la agenda
-
-    //Si aún no ha cargado el evento no podemos hacer nada más
-    if (!event) return;
-
-    //Revisamos si el evento sigue siendo el mismo, no toca cargar nada 
-    if (prevProps.event && this.props.event._id == prevProps.event._id) return;
-
-    this.listeningStateMeetingRoom(agendaData);
   }
 
   async getAgendaByUser() {
@@ -100,25 +129,6 @@ class AgendaInscriptions extends Component {
     } catch (e) {
       console.log(e)
     }
-  }
-
-  async listeningStateMeetingRoom(list) {
-    list.forEach((activity, index, arr) => {
-      firestore
-        .collection("events")
-        .doc(this.props.event._id)
-        .collection("activities")
-        .doc(activity._id)
-        .onSnapshot((infoActivity) => {
-          if (!infoActivity.exists) return;
-          let { habilitar_ingreso } = infoActivity.data();
-          let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
-
-          arr[index] = updatedActivityInfo;
-          return arr
-        });
-    });
-
   }
 
   getCurrentUser = async () => {
@@ -186,7 +196,7 @@ class AgendaInscriptions extends Component {
 
   render() {
     const { toggleConference } = this.props;
-    const { currentActivity, survey, hideBtnDetailAgenda, loading, Surveys, Documents, agendaData } = this.state;
+    const { currentActivity, survey, hideBtnDetailAgenda, loading, Surveys, Documents, agendaData, related_meetings } = this.state;
     return (
       <div>
         {currentActivity && (
@@ -221,226 +231,208 @@ class AgendaInscriptions extends Component {
                 {/* Contenedor donde se pinta la información de la agenda */}
 
                 {agendaData.map((item, llave) => (
-                  <div key={llave} className="container_agenda-information">
-                    <div className="card agenda_information">
-                      <Row align="middle">
+                  <div className='container_agenda-information'>
+                    <div className='card agenda_information'>
+                      <Row align='middle'>
                         <Row>
-                          <span className="date-activity">
-                            {
-                              Moment(item.datetime_start).format("DD MMMM YYYY") === Moment(item.datetime_end).format("DD MMMM YYYY") ? (
+                          <span className='date-activity'>
+                            {Moment(item.datetime_start).format('DD MMMM YYYY') ===
+                              Moment(item.datetime_end).format('DD MMMM YYYY') ? (
                                 <>
-                                  {Moment(item.datetime_start).format("DD MMMM YYYY h:mm a")} -{" "}
-                                  {Moment(item.datetime_end).format("h:mm a")}
+                                  {Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} -{' '}
+                                  {Moment(item.datetime_end).format('h:mm a')}
                                 </>
                               ) : (
-                                  Moment(item.datetime_start).format("DD MMMM YYYY hh:mm") - Moment(item.datetime_end).format("DD MMMM YYYY hh:mm")
-                                )
-                            }
+                                Moment(item.datetime_start).format('DD MMMM YYYY hh:mm') -
+                                Moment(item.datetime_end).format('DD MMMM YYYY hh:mm')
+                              )}
                           </span>
-                          <div>
-                            <span className="card-header-title text-align-card">{item.name}</span>
-                          </div>
+                          <p>
+                            <span className='card-header-title text-align-card'>{item.name}</span>
+                          </p>
                         </Row>
-                        <hr className="line-head" />
-                        <Col className="has-text-left" xs={24} sm={12} md={12} lg={12} xl={16}>
-                          <div onClick={
-                            (e) => {
-
-                              this.gotoActivity(item)
-                            }} className="text-align-card" style={{ marginBottom: "5%" }}>
-                            {
-                              item.activity_categories.length > 0 && (
-                                <>
-                                  <b>Tags: </b>
-                                  {
-                                    item.activity_categories.map((item, key) => (
-                                      <>
-                                        <Tag key={key} color={item.color ? item.color : "#ffffff"}>{item.name}</Tag>
-                                      </>
-                                    ))
-                                  }
-                                </>
-                              )
-                            }
+                        <hr className='line-head' />
+                        <Col className='has-text-left' xs={24} sm={12} md={12} lg={12} xl={16}>
+                          {/* <span className='tag category_calendar-tag'>
+                          {item.meeting_id || item.vimeo_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
+                        </span> */}
+                          <div
+                            onClick={() => {
+                              this.gotoActivity(item);
+                            }}
+                            className='text-align-card'
+                            style={{ marginBottom: '5%' }}>
+                            {item.activity_categories.length > 0 && (
+                              <>
+                                <b>Tags: </b>
+                                {item.activity_categories.map((item) => (
+                                  <>
+                                    <Tag color={item.color ? item.color : '#ffffff'}>{item.name}</Tag>
+                                  </>
+                                ))}
+                              </>
+                            )}
                           </div>
-                          <div className="text-align-card">
+                          <div className='text-align-card'>
+                            {item.hosts.length > 0 && (
+                              <>
+                                <b>Presenta: </b>
+                                <br />
+                                <br />
+                                <Row>
+                                  {item.hosts.map((speaker, key) => (
+                                    <Col key={key} lg={24} xl={12} xxl={12} style={{ marginBottom: 13 }}>
+                                      <span style={{ fontSize: 20, fontWeight: 500 }}>
+                                        <Avatar size={50} src={speaker.image} /> {speaker.name} &nbsp;
+                                    </span>
+                                    </Col>
+                                  ))}
+                                </Row>
+                              </>
+                            )}
+                          </div>
+                          <div className='text-align-card'>
                             {
                               <>
                                 <Row>
                                   <div
-                                    className="is-size-5-desktop has-margin-top-10 has-margin-bottom-10"
+                                    className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
                                     dangerouslySetInnerHTML={{ __html: item.description }}
                                   />
                                 </Row>
                               </>
                             }
                           </div>
-                          <div className="text-align-card">
-                            {
-                              item.hosts.length > 0 && (
-                                <>
-                                  <b>Presenta: </b>
-                                  <br />
-                                  <br />
-                                  <Row>
-                                    {item.hosts.map((speaker, key) => (
-                                      <Col lg={24} xl={12} xxl={12} style={{ marginBottom: 13 }}>
-                                        <span key={key} style={{ fontSize: 20, fontWeight: 500 }}>
-                                          <Avatar
-                                            size={50}
-                                            src={speaker.image
-                                            } /> {speaker.name} &nbsp;</span>
-                                      </Col>
-                                    ))}
-                                  </Row>
-                                </>
-                              )
-                            }
-                          </div>
                           <Row>
                             <Col span={12}>
-                              <Row>
-                                <Button type="primary" onClick={(e) => { this.deleteRegisterInActivity(item.attendee_id) }} className="space-align-block">
-                                  Eliminar Inscripción
+                              <Button
+                                type='primary'
+                                onClick={() => this.deleteRegisterInActivity(item._id)}
+                                className='space-align-block button-Agenda'>
+                                Eliminar
+                              </Button>
+
+                              {hideBtnDetailAgenda === 'true' && (
+                                <Button
+                                  type='primary'
+                                  onClick={() => {
+                                    this.gotoActivity(item);
+                                  }}
+                                  className='space-align-block button-Agenda'>
+                                  Detalle de actividad
                                 </Button>
-                              </Row>
+                              )}
+                              {Documents.length > 0 && Documents.filter((element) => element.activity_id === item._id).length > 0 && (
+                                <Button
+                                  type='primary'
+                                  onClick={() => {
+                                    this.gotoActivity(item);
+                                  }}
+                                  className='space-align-block button-Agenda'>
+                                  Documentos
+                                </Button>
+                              )}
+                              {Surveys.length > 0 && Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
+                                <Button
+                                  type='primary'
+                                  onClick={() => {
+                                    this.gotoActivity(item);
+                                  }}
+                                  className='space-align-block button-Agenda'>
+                                  Encuestas
+                                </Button>
+                              )}
                             </Col>
-
-                            <Col span={12}>
-                              <Row>
-                                {hideBtnDetailAgenda === true && (
-                                  <Button
-                                    type='primary'
-                                    onClick={() => {
-                                      this.gotoActivity(item);
-                                    }}
-                                    className='space-align-block'>
-                                    Detalle de actividad
-                                  </Button>
-                                )}
-                              </Row>
-                            </Col>
-
-                            <Col span={12}>
-                              <Row>
-                                {Documents.filter((element) => element.activity_id === item._id).length > 0 && (
-                                  <Button
-                                    type='primary'
-                                    onClick={() => {
-                                      this.gotoActivity(item);
-                                    }}
-                                    className='space-align-block'>
-                                    Documentos
-                                  </Button>
-                                )}
-                              </Row>
-                            </Col>
-
-                            <Col span={12}>
-                              <Row>
-                                {Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
-                                  <Button
-                                    type='primary'
-                                    onClick={() => {
-                                      this.gotoActivity(item);
-                                    }}
-                                    className='space-align-block'>
-                                    Encuestas
-                                  </Button>
-                                )}
-                              </Row>
-                            </Col>
-                            {
-                              item.related_meetings && item.related_meetings.map((item, key) => (
-                                <Col span={12}>
-                                  <Row>
-                                    <Button
-                                      disabled={item.meeting_id || item.vimeo_id ? false : true}
-                                      onClick={() => toggleConference(
-                                        true,
-                                        item.meeting_id ? item.meeting_id : item.vimeo_id,
-                                        item
-                                      )}
-                                      type="primary" key={key}>Sesion en {item.language}</Button>
-                                  </Row>
-                                </Col>
-                              ))
-                            }
                           </Row>
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12} xl={8}>
-                          {
-                            !item.habilitar_ingreso && (
-                              <img src={item.image ? item.image : this.props.event.styles.event_image} />
-                            )
-                          }
+                          {!item.habilitar_ingreso && <img src={item.image ? item.image : this.props.event.styles.event_image} />}
                           <div>
-                            {
-                              item.habilitar_ingreso === "closed_meeting_room" && (
-                                <>
-                                  <img src={item.image ? item.image : this.props.event.styles.event_image} />
-                                  <Alert message="La Conferencia iniciará pronto" type="warning" />
-                                </>
-                              )
-                            }
+                            {item.habilitar_ingreso === "closed_meeting_room" && (
+                              <>
+                                <img src={item.image ? item.image : this.props.event.styles.event_image} />
+                                <Alert
+                                  message={`La sesión inicia: ${Moment(item.datetime_start).format(
+                                    'DD MMMM YYYY h:mm a'
+                                  )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                                  type='warning'
+                                />
+                              </>
+                            )}
 
-                            {
-                              item.habilitar_ingreso === "ended_meeting_room" && (
-                                <>
-                                  {item.video ? item.video && (
+                            {item.habilitar_ingreso === "ended_meeting_room" && (
+                              <>
+                                {item.video ? (
+                                  item.video && (
                                     <>
-                                      <Alert message="Conferencia Terminada. Observa el video Aquí" type="success" />
+                                      <Alert message='Conferencia Terminada. Observa el video Aquí' type='success' />
                                       <ReactPlayer
-                                        width={"100%"}
+                                        width={'100%'}
                                         style={{
-                                          display: "block",
-                                          margin: "0 auto",
+                                          display: 'block',
+                                          margin: '0 auto',
                                         }}
                                         url={item.video}
                                         //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                                         controls
                                       />
                                     </>
-                                  ) :
-                                    (
-                                      <>
-                                        <img src={item.image ? item.image : this.props.event.styles.event_image} />
-                                        <Alert message="Conferencia Terminada. Observa el video Mas tarde" type="info" />
-                                      </>
-                                    )}
-
-                                </>
-                              )
-                            }
-                            {
-                              item.habilitar_ingreso === "open_meeting_room" && (
+                                  )
+                                ) : (
+                                    <>
+                                      <img src={item.image ? item.image : this.props.event.styles.event_image} />
+                                      <Alert
+                                        message={`La Conferencia ha Terminado: ${Moment(item.datetime_start).format(
+                                          'DD MMMM YYYY h:mm a'
+                                        )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                                        type='info'
+                                      />
+                                    </>
+                                  )}
+                              </>
+                            )}
+                            {item.habilitar_ingreso === "open_meeting_room" && (
+                              <>
+                                <img
+                                  onClick={() => item.meeting_id && toggleConference(true, item.meeting_id, item)}
+                                  src={item.image ? item.image : this.props.event.styles.event_image}
+                                />
+                                <div>
+                                  <Button
+                                    block
+                                    type='primary'
+                                    disabled={item.meeting_id ? false : true}
+                                    onClick={() => toggleConference(true, item.meeting_id, item)}>
+                                    {item.meeting_id ? 'Observa aquí la Conferencia en Vivo' : 'Aún no empieza Conferencia Virtual'}
+                                  </Button>
+                                </div>
+                              </>
+                            )}
+                            <Row>
+                              {related_meetings.map((item, key) => (
                                 <>
-                                  <img onClick={() =>
-                                    item.meeting_id && toggleConference(
-                                      true,
-                                      item.meeting_id,
-                                      item
-                                    )
-                                  } src={item.image ? item.image : this.props.event.styles.event_image} />
-                                  <div>
+                                  {item.state === 'open_meeting_room' && (
                                     <Button
-                                      block
-                                      type="primary"
-                                      disabled={item.meeting_id ? false : true}
+                                      disabled={item.meeting_id || item.vimeo_id ? false : true}
                                       onClick={() =>
-                                        toggleConference(
-                                          true,
-                                          item.meeting_id,
-                                          item
-                                        )
+                                        toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
                                       }
-                                    >
-                                      {item.meeting_id ? "Observa aquí la Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
+                                      type='primary'
+                                      className='button-Agenda'
+                                      key={key}>
+                                      {item.informative_text}
                                     </Button>
-                                  </div>
+                                  )}
+                                  {item.state === 'closed_meeting_room' && (
+                                    <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
+                                  )}
+
+                                  {item.state === 'ended_meeting_room' && (
+                                    <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
+                                  )}
                                 </>
-                              )
-                            }
+                              ))}
+                            </Row>
                           </div>
                         </Col>
                       </Row>
