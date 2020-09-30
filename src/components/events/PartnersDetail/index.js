@@ -22,7 +22,7 @@ export default function PartnerDetail({ company, handleClosePartnerDetail }) {
       <Row justify='start'>
         <div
           style={{ textAlign: 'left', marginTop: '20px' }}
-          dangerouslySetInnerHTML={{ __html: company.short_description }}
+          dangerouslySetInnerHTML={{ __html: company.description }}
         />
       </Row>
     </div>
