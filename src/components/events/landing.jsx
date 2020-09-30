@@ -419,7 +419,7 @@ class Landing extends Component {
 
       //let urlMeeting = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
       let urlMeeting = 'https://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
-      l
+
       if ( activity.zoomPassword ) {
         urlMeeting += "&password=" + activity.zoomPassword
       }
