@@ -430,10 +430,10 @@ class Landing extends Component {
       if ( this.state.eventUser ) {
         TicketsApi.checkInAttendee( this.state.event._id, this.state.eventUser._id );
         Activity.checkInAttendeeActivity( this.state.event._id, activity._id, this.state.eventUser.account_id );
-        console.log("checkin actividad")
+        console.log( "checkin" )
       }
     } catch ( e ) {
-      alert( "fallo el checkin" )
+      //alert( "fallo el checkin" )
     }
 
   };
