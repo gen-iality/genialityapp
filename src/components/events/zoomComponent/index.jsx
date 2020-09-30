@@ -116,6 +116,7 @@ export default class ZoomComponent extends Component {
   render () {
     const { toggleConference, event, activity } = this.props;
     let { url_conference, meeting_id, isMedium, isFull, isMinimize, displayName, email } = this.state;
+    const platform = activity.platform || this.state.event.event_platform;
     return (
       <div
         className={ `content-zoom ${ isMedium === true ? "mediumScreen" : "" } ${ isMinimize === true ? "minimizeScreen" : ""
@@ -153,12 +154,12 @@ export default class ZoomComponent extends Component {
           }
 
           {
-            this.state.event && ( this.state.event.event_platform === "zoom" ) &&
+            this.state.event && ( platform === "zoom" ) &&
             (
               <iframe
                 src={ url_conference + meeting_id + `&userName=${ displayName }` + `&email=${ email }` }
                 allow="autoplay; fullscreen; camera *;microphone *"
-                allowusermedia
+                allowUserMedia
                 allowFullScreen
                 className="iframe-zoom nuevo">
                 <p>Your browser does not support iframes.</p>
@@ -167,7 +168,7 @@ export default class ZoomComponent extends Component {
           }
           {/* VIMEO LIVESTREAMING */ }
           {
-            this.state.event && ( this.state.event.event_platform === "vimeo" ) &&
+            this.state.event && ( platform === "vimeo" ) &&
             (
               <div style={ { "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" } }>
                 <iframe
@@ -189,7 +190,7 @@ export default class ZoomComponent extends Component {
           }
 
           {/* style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", margin: 0, padding: 0 }}*/ }
-          { ( this.state.event && this.state.event.event_platform === "bigmarker" ) &&
+          { ( this.state.event && platform === "bigmarker" ) &&
             <>
 
               { ( !this.state.error_bigmarker && !this.state.urllogin_bigmarker ) && ( <Spin tip="Loading..."></Spin> ) }
