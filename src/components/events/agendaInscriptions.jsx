@@ -61,10 +61,11 @@ class AgendaInscriptions extends Component {
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
           let { habilitar_ingreso } = infoActivity.data();
+          console.log('habilitar ingreso', habilitar_ingreso)
           let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
 
           arr[index] = updatedActivityInfo;
-          return arr
+          this.setState({ agendaData: arr });
         });
     });
   }
@@ -409,7 +410,7 @@ class AgendaInscriptions extends Component {
                                 </div>
                               </>
                             )}
-                            {/* <Row>
+                            <Row>
                               {related_meetings.map((item, key) => (
                                 <>
                                   {item.state === 'open_meeting_room' && (
@@ -433,7 +434,7 @@ class AgendaInscriptions extends Component {
                                   )}
                                 </>
                               ))}
-                            </Row> */}
+                            </Row>
                           </div>
                         </Col>
                       </Row>
