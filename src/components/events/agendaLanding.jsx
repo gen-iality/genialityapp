@@ -326,8 +326,7 @@ class Agenda extends Component {
     }
   }
 
-
-  checkInscriptionStatus(activityId = '') {
+  checkInscriptionStatus(activityId) {
     const { userAgenda } = this.state
     if (!userAgenda) return false;
     const checkInscription = userAgenda.filter((activity) => activity.activity_id === activityId)
@@ -408,7 +407,7 @@ class Agenda extends Component {
 
                 {/* Contenedor donde se pinta la información de la agenda */}
                 {(event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ? data : toShow).map((item, llave) => {
-                  const isRegistered = this.checkInscriptionStatus(item._id)
+                  const isRegistered = this.checkInscriptionStatus(item._id) && true
 
                   return (
                     <div key={llave} className="container_agenda-information" >

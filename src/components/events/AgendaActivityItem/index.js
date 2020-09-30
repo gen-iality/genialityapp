@@ -23,18 +23,18 @@ export default function AgendaActivityItem({
   const [related_meetings, setRelatedMeetings] = useState();
 
   useEffect(() => {
-    setIsRegistered(registerStatus);
+    if (registerStatus) {
+      setIsRegistered(registerStatus);
+    }
+
     listeningStateMeetingRoom();
-  }, []);
+  }, [registerStatus, listeningStateMeetingRoom]);
 
   const listeningStateMeetingRoom = async () => {
-    console.log('listening', item._id);
     await firestore
       .collection('languageState')
       .doc(item._id)
       .onSnapshot((info) => {
-        const response = info.data();
-        console.log('info data', response);
         if (!info.exists) return;
         let related_meetings = info.data().related_meetings;
         setRelatedMeetings(related_meetings);
