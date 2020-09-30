@@ -10,7 +10,7 @@ import { Layout, Drawer, Button, Col, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
 
 //custom
-import API, { Actions, EventsApi, TicketsApi, fireStoreApi } from "../../helpers/request";
+import API, { Actions, EventsApi, TicketsApi, fireStoreApi, Activity } from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import Loading from "../loaders/loading";
 import { BaseUrl } from "../../helpers/constants";
@@ -410,9 +410,7 @@ class Landing extends Component {
       this.setState( { activity } );
     }
 
-    if ( this.state.eventUser ) {
-      TicketsApi.checkInAttendee( this.state.event._id, this.state.eventUser._id );
-    }
+
 
 
     if ( activity && activity.platform && activity.platform == "zoomExterno" ) {
@@ -427,6 +425,17 @@ class Landing extends Component {
       //Esta instrucción activa la conferencia interna en EVIUS
       this.setState( { toggleConferenceZoom: state } );
     }
+
+    try {
+      if ( this.state.eventUser ) {
+        TicketsApi.checkInAttendee( this.state.event._id, this.state.eventUser._id );
+        Activity.checkInAttendeeActivity( this.state.event._id, activity._id, this.state.eventUser.account_id );
+        console.log("checkin actividad")
+      }
+    } catch ( e ) {
+      alert( "fallo el checkin" )
+    }
+
   };
 
   showLanding () {
