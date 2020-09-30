@@ -416,7 +416,9 @@ class Landing extends Component {
     if ( activity && activity.platform && activity.platform == "zoomExterno" ) {
       //Este link activa a zoom externo para  hacer la conferencia fuera de EVIUS
       let name = ( this.state.eventUser && this.state.eventUser.properties && this.state.eventUser.properties.names ) ? this.state.eventUser.properties.names : "Anónimo";
-      let urlMeeting = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
+
+      //let urlMeeting = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
+      let urlMeeting = ' https://zoom.us/j/96980557266?confno=' + meeting_id + '&uname=' + name;
       if ( activity.zoomPassword ) {
         urlMeeting += "&password=" + activity.zoomPassword
       }
