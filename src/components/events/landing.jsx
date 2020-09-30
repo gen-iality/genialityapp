@@ -418,7 +418,8 @@ class Landing extends Component {
       let name = ( this.state.eventUser && this.state.eventUser.properties && this.state.eventUser.properties.names ) ? this.state.eventUser.properties.names : "Anónimo";
 
       //let urlMeeting = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
-      let urlMeeting = ' https://zoom.us/j/96980557266?confno=' + meeting_id + '&uname=' + name;
+      let urlMeeting = 'https://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
+      l
       if ( activity.zoomPassword ) {
         urlMeeting += "&password=" + activity.zoomPassword
       }
