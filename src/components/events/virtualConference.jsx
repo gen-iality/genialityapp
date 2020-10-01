@@ -20,57 +20,35 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
         case "open_meeting_room":
             return (
                 <>
-                    {event && event.visibility === "ORGANIZATION" ? (                        
-                        usuarioRegistrado ? (
+                    {(usuarioRegistrado && event.visibility === "ORGANIZATION") || event.visibility !== "ORGANIZATION" ? (
+                        <>
+                            <Button
+                                size="large"
+                                type="primary"
+                                className="buttonVirtualConference"
+                                onClick={() => {
+                                    toggleConference(true, infoActivity.meeting_id, infoActivity);
+                                }}>
+                                Entrar
+                        </Button>
+
+                        </>
+                    ) : (
                             <>
                                 <Button
                                     size="large"
                                     type="primary"
                                     className="buttonVirtualConference"
-                                    onClick={() => {
-                                        toggleConference(true, infoActivity.meeting_id, infoActivity);
-                                    }}>
-                                    {infoActivity.meeting_id_en ? "Entrar (Español)" : "Entrar"}
+                                    disabled='true'
+                                >
+                                    Ingreso privado
                                 </Button>
-                                {infoActivity.meeting_id_en && (<Button
-                                    size="large"
-                                    type="primary"
-                                    className="buttonVirtualConference"
-                                    onClick={() => {
-                                        toggleConference(true, infoActivity.meeting_id_en, infoActivity);
-                                    }}>
-                                    Join (English)
-                                </Button>)}
+
                             </>
-                        ) : (
-                                <Alert message="No se encuentra registrado en el evento" type="info" showIcon />
-                            )
-                    ) : (                        
-                            <>
-                                <Button
-                                    size="large"
-                                    type="primary"
-                                    className="buttonVirtualConference"
-                                    onClick={() => {
-                                        toggleConference(true, infoActivity.meeting_id, infoActivity);
-                                    }}>
-                                    {infoActivity.meeting_id_en ? "Entrar (Español)" : "Entrar"}
-                                </Button>
-                                {infoActivity.meeting_id_en && (<Button
-                                    size="large"
-                                    type="primary"
-                                    className="buttonVirtualConference"
-                                    onClick={() => {
-                                        toggleConference(true, infoActivity.meeting_id_en, infoActivity);
-                                    }}>
-                                    Join (English)
-                                </Button>)}
-                            </>
-                        )
-                    }
+                        )}
                 </>
             );
-            
+
 
         case "closed_meeting_room":
             return <Alert message="El ingreso se habilitará minutos antes del evento" type="warning" showIcon />;
@@ -82,14 +60,14 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
             break;
 
         default:
-            return <Alert message="El ingreso se habilitará minutos antes del evento" type="warning" showIcon />;
+            return <Alert message="Cargando..." type="warning" showIcon />;
             break;
     }
 };
 
 class VirtualConference extends Component {
     constructor(props) {
-        super(props);        
+        super(props);
         this.state = {
             data: [],
             infoAgendaArr: [],
@@ -98,6 +76,12 @@ class VirtualConference extends Component {
             event: this.props.event || undefined,
             survey: [],
         };
+    }
+
+    async componentDidMount() {
+        if (!this.props.event) return;
+        let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
+        this.setState({ infoAgendaArr: filteredAgenda });
     }
 
     async componentDidUpdate(prevProps) {
@@ -125,22 +109,30 @@ class VirtualConference extends Component {
                 .doc(activity._id)
                 .onSnapshot((infoActivity) => {
                     if (!infoActivity.exists) return;
-                    console.log("infoActivity:", infoActivity);
                     let { habilitar_ingreso } = infoActivity.data();
                     let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
 
                     arr[index] = updatedActivityInfo;
+
+                    arr.forEach((activity, index, arr) => {
+                        firestore
+                            .collection('languageState')
+                            .doc(activity._id)
+                            .onSnapshot((info) => {
+                                if (!info.exists) return;
+                                let { related_meetings } = info.data();
+                                let updatedActivityInfo = { ...arr[index], related_meetings };
+
+                                arr[index] = updatedActivityInfo;
+                                this.setState({ infoAgendaArr: arr });
+                            });
+                    });
                     this.setState({ infoAgendaArr: arr });
                 });
+
         });
     };
 
-    async componentDidMount() {
-        if (!this.props.event) return;
-        console.log("componentDidUpdate el componente se monto");
-        let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
-        this.setState({ infoAgendaArr: filteredAgenda });
-    }
 
     async filterVirtualActivities(event_id) {
         let infoAgendaArr = [];
@@ -196,7 +188,29 @@ class VirtualConference extends Component {
                                         })}
                                     </div>
                                     <MeetingConferenceButton activity={item} toggleConference={toggleConference} event={event} usuarioRegistrado={usuarioRegistrado} />
+                                    {item.related_meetings && item.related_meetings.map((item, key) => (
+                                        <>
+                                            {item.state === 'open_meeting_room' && (
+                                                <Button
+                                                    disabled={item.meeting_id || item.vimeo_id ? false : true}
+                                                    onClick={() =>
+                                                        toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
+                                                    }
+                                                    type='primary'
+                                                    className='button-Agenda'
+                                                    key={key}>
+                                                    {item.informative_text}
+                                                </Button>
+                                            )}
+                                            {item.state === 'closed_meeting_room' && (
+                                                <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
+                                            )}
 
+                                            {item.state === 'ended_meeting_room' && (
+                                                <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
+                                            )}
+                                        </>
+                                    ))}
                                 </Card>
                             </div>
                         ))}

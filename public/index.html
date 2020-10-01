@@ -30,7 +30,8 @@
     <meta name="description" content="Eventos" />
 
     <script>
-        document.domain = "evius.co";
+        // si esta en producción retorna el dominio evius.co si está en modo desarrollo retorna localhost
+        document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
     </script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
@@ -39,33 +40,32 @@
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk&callback=initMap&libraries=geometry,places"></script>
     <link rel="stylesheet/less" type="text/css" href="%PUBLIC_URL%/color.less" />
     <script>
         window.less = {
             async: true,
             env: 'development',
             javascriptEnabled: true,
-
+            
         };
-    </script>
+        </script>
 
-    <!-- Google Tag Manager -->
-    <script>
-        (function(w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-MQJQCS9');
+<!-- Google Tag Manager -->
+<script>
+    (function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MQJQCS9');
     </script>
     <!-- End Google Tag Manager -->
     <script src="//cdn.jsdelivr.net/npm/less"></script>
@@ -73,49 +73,53 @@
 
 <body>
     <noscript>
-      You need to enable JavaScript to run this app.
+        You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
     <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+        This HTML file is a template.
+        If you open it directly in the browser, you will see an empty page.
+        
+        You can add webfonts, meta tags, or analytics to this file.
+        The build step will place the bundled scripts into the <body> tag.
+            
+            To begin the development, run `npm start` or `yarn start`.
+            To create a production bundle, use `npm run build` or `yarn build`.
+        -->
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-72179148-1"></script>
+        
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            
+            gtag("config", "UA-72179148-1");
+            </script>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-72179148-1"></script>
-
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag("js", new Date());
-
-        gtag("config", "UA-72179148-1");
-    </script>
-
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MQJQCS9"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MQJQCS9"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-
-
-    <!-- Begin of Chaport Live Chat code prueba  chaport.com -->
-<script type="text/javascript">
-    (function(w,d,v3){
-    w.chaportConfig = {
-      appId : '5f63515ef3588379ec577a19'
-    };
     
-    if(w.chaport)return;v3=w.chaport={};v3._q=[];v3._l={};v3.q=function(){v3._q.push(arguments)};v3.on=function(e,fn){if(!v3._l[e])v3._l[e]=[];v3._l[e].push(fn)};var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://app.chaport.com/javascripts/insert.js';var ss=d.getElementsByTagName('script')[0];ss.parentNode.insertBefore(s,ss)})(window, document);
+    
+    <!-- Begin of Chaport Live Chat code prueba  chaport.com -->
+    <script type="text/javascript">
+    (function(w,d,v3){
+        w.chaportConfig = {
+            appId : '5f63515ef3588379ec577a19'
+        };
+        
+        if(w.chaport)return;v3=w.chaport={};v3._q=[];v3._l={};v3.q=function(){v3._q.push(arguments)};v3.on=function(e,fn){if(!v3._l[e])v3._l[e]=[];v3._l[e].push(fn)};var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://app.chaport.com/javascripts/insert.js';var ss=d.getElementsByTagName('script')[0];ss.parentNode.insertBefore(s,ss)})(window, document);
+    </script>
+    <script>
+        function initMap() {return true}
     </script>
     <!-- End of Chaport Live Chat code -->
+    <script  async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk&callback=initMap&libraries=geometry,places"></script>
 </body>
 
 </html>

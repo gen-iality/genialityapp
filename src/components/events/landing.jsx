@@ -10,7 +10,7 @@ import { Layout, Drawer, Button, Col, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
 
 //custom
-import API, { Actions, EventsApi, TicketsApi, fireStoreApi } from "../../helpers/request";
+import API, { Actions, EventsApi, TicketsApi, fireStoreApi, Activity } from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import Loading from "../loaders/loading";
 import { BaseUrl } from "../../helpers/constants";
@@ -41,7 +41,7 @@ import Robapagina from "../shared/Animate_Img/index";
 import Trophies from "./trophies";
 import InformativeSection from "./informativeSections/informativeSection"
 import InformativeSection2 from "./informativeSections/informativeSection2"
-import UserLogin from './UserLogin'
+import UserLogin from './UserLoginContainer'
 import Partners from './Partners'
 
 const { Content, Sider } = Layout;
@@ -182,7 +182,6 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
 
-
     this.setState({
       event,
       eventUser,
@@ -233,7 +232,7 @@ class Landing extends Component {
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
       interviews: <MyAgendaIndepend event={event} />,
       trophies: <Trophies event={event} />,
-      my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference} userId={this.state.user ? this.state.user._id : null} />,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
       login: <UserLogin eventId={event._id} />,
@@ -292,10 +291,10 @@ class Landing extends Component {
           </Col>
           <Col sm={24} md={8} lg={6} xl={6}>
             <VirtualConference
+              event={event}
               currentUser={this.state.currentUser}
               usuarioRegistrado={this.state.eventUser}
               toggleConference={this.toggleConference}
-              event={event}
             />
             <MapComponent event={event} />
           </Col>
@@ -401,7 +400,7 @@ class Landing extends Component {
   };
 
   toggleConference = async (state, meeting_id, activity) => {
-
+    console.log("activity", activity);
     if (meeting_id != undefined) {
       this.setState({ meeting_id });
     }
@@ -411,18 +410,35 @@ class Landing extends Component {
       this.setState({ activity });
     }
 
-    if (this.state.eventUser) {
-      //this.state.eventUser.forEach((eventUser) => {
-      TicketsApi.checkInAttendee(this.state.event._id, this.state.eventUser._id);
-      //});
+
+
+
+    if (activity && activity.platform && activity.platform == "zoomExterno") {
+      //Este link activa a zoom externo para  hacer la conferencia fuera de EVIUS
+      let name = (this.state.eventUser && this.state.eventUser.properties && this.state.eventUser.properties.names) ? this.state.eventUser.properties.names : "Anónimo";
+
+      //let urlMeeting = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
+      let urlMeeting = 'https://zoom.us/j/' + meeting_id + '&uname=' + name;
+
+      if (activity.zoomPassword) {
+        urlMeeting += "&password=" + activity.zoomPassword
+      }
+      window.location.href = urlMeeting
+    } else {
+      //Esta instrucción activa la conferencia interna en EVIUS
+      this.setState({ toggleConferenceZoom: state });
     }
 
-    //Este link activa a zoom externo para  hacer la conferencia fuera de EVIUS
-    //let name = (this.state.eventUser && this.state.eventUser.properties && this.state.eventUser.properties.names) ? this.state.eventUser.properties.names : "Anónimo";
-    //window.location.href = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
+    try {
+      if (this.state.eventUser) {
+        TicketsApi.checkInAttendee(this.state.event._id, this.state.eventUser._id);
+        Activity.checkInAttendeeActivity(this.state.event._id, activity._id, this.state.eventUser.account_id);
+        console.log("checkin")
+      }
+    } catch (e) {
+      //alert( "fallo el checkin" )
+    }
 
-    //Esta instrucción activa la conferencia interna en EVIUS
-    this.setState({ toggleConferenceZoom: state });
   };
 
   showLanding() {

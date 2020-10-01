@@ -28,7 +28,7 @@ class ActividadLanguage extends Component {
 
     async loadData() {
         const { eventId, activityId } = this.props
-        let related_meetings = await firestore.collection("languageState").doc(eventId)
+        let related_meetings = await firestore.collection("languageState").doc(activityId)
             .get()
             .then(function (doc) {
                 if (doc.exists) {
@@ -49,13 +49,14 @@ class ActividadLanguage extends Component {
     }
 
     async onFinish(related_meetings_selected) {
+        console.log('related_meetings_selected*****************************', related_meetings_selected)
         const { eventId, activityId } = this.props
-        let related_meetings = this.state.related_meetings
+        let related_meetings = this.state.related_meetings ? this.state.related_meetings : []
         related_meetings.push(related_meetings_selected)
 
         let info = ({ event_id: eventId, activity_id: activityId, related_meetings: related_meetings })
         try {
-            await firestore.collection("languageState").doc(eventId).set(info)
+            await firestore.collection("languageState").doc(activityId).set(info)
             notification.open({
                 message: 'Información Guardada',
             })
@@ -81,7 +82,7 @@ class ActividadLanguage extends Component {
 
         this.setState({ related_meetings });
         try {
-            await firestore.collection("languageState").doc(eventId).update({ event_id: eventId, activity_id: activityId, related_meetings })
+            await firestore.collection("languageState").doc(activityId).update({ event_id: eventId, activity_id: activityId, related_meetings })
             notification.open({
                 message: 'Dato Eliminado',
             })
@@ -130,7 +131,7 @@ class ActividadLanguage extends Component {
         let related_meetings = related_meetings_original
 
         try {
-            await firestore.collection("languageState").doc(eventId).update({ event_id: eventId, activity_id: activityId, related_meetings })
+            await firestore.collection("languageState").doc(activityId).update({ event_id: eventId, activity_id: activityId, related_meetings })
             notification.open({
                 message: 'Dato Actualizado',
             })

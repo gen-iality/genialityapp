@@ -69,7 +69,7 @@ class Agenda extends Component {
     await this.fetchAgenda();
 
     // Se obtiene informacion del usuario actual
-    this.getCurrentUser();    
+    this.getCurrentUser();
 
     this.setState({ loading: false });
 
@@ -83,9 +83,8 @@ class Agenda extends Component {
     let surveysData = await SurveysApi.getAll(event._id);
     let documentsData = await DocumentsApi.getAll(event._id)
 
-    if (surveysData.data.length >= 1) {      
-      console.log("Encuestas", surveysData.data)
-      this.setState({ survey: surveysData.data})
+    if (surveysData.data.length >= 1) {
+      this.setState({ survey: surveysData.data })
     }
     if (documentsData.data.length >= 1) {
       this.setState({ documents: documentsData.data })
@@ -252,17 +251,17 @@ class Agenda extends Component {
   // Funcion para registrar usuario en la actividad
   registerInActivity = async (activityId, eventId, userId, callback) => {
     Activity.Register(eventId, userId, activityId)
-    .then(() => {
-      notification.open({
-        message: 'Inscripción realizada',
+      .then(() => {
+        notification.open({
+          message: 'Inscripción realizada',
+        });
+        callback(true)
+      })
+      .catch((err) => {
+        notification.open({
+          message: err,
+        });
       });
-      callback(true)
-    })
-    .catch((err) => {
-      notification.open({
-        message: err,
-      });
-    });
   };
 
   //Fn para el resultado de la búsqueda
@@ -318,18 +317,16 @@ class Agenda extends Component {
 
   async getAgendaUser() {
     const { event } = this.props
-    const { uid } = this.state    
+    const { userId } = this.state
     try {
-
-      const infoUserAgenda = await Activity.GetUserActivity(event._id, uid)    
+      const infoUserAgenda = await Activity.GetUserActivity(event._id, userId)
       this.setState({ userAgenda: infoUserAgenda.data })
     } catch (e) {
       console.error(e)
     }
   }
 
-
-  checkInscriptionStatus(activityId = '') {
+  checkInscriptionStatus(activityId) {
     const { userAgenda } = this.state
     if (!userAgenda) return false;
     const checkInscription = userAgenda.filter((activity) => activity.activity_id === activityId)
@@ -410,7 +407,8 @@ class Agenda extends Component {
 
                 {/* Contenedor donde se pinta la información de la agenda */}
                 {(event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ? data : toShow).map((item, llave) => {
-                  const isRegistered = this.checkInscriptionStatus(item._id)
+                  const isRegistered = this.checkInscriptionStatus(item._id) && true
+
                   return (
                     <div key={llave} className="container_agenda-information" >
                       <AgendaActivityItem
@@ -426,7 +424,7 @@ class Agenda extends Component {
                         eventId={this.props.eventId}
                         userId={this.state.userId}
                         btnDetailAgenda={hideBtnDetailAgenda}
-                        show_inscription={show_inscription}                        
+                        show_inscription={show_inscription}
                       />
                     </div>
                   )
