@@ -34,7 +34,6 @@ function ConfirmacionRegistro(props) {
 
     //Cambio descripción
     const chgTxt = content => {
-        console.log(content)
         event.registration_message = content;
         setEvent(event)
     }
