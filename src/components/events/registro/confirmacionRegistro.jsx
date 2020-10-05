@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { message, Button, Row, Col, Checkbox, Tooltip } from 'antd';
-
-import ReactQuill from "react-quill";
-import { toolbarEditor } from "../../../helpers/constants";
-
+import EviusReactQuill from "../../shared/eviusReactQuill";
 import { Actions, EventsApi } from "../../../helpers/request";
 
 const text = <span>Se enviará un correo solo con el texto y/o imagen que adjuntes</span>;
@@ -14,13 +11,13 @@ function ConfirmacionRegistro(props) {
     let [validateEmail, setValidateEmail] = useState();
     let [sendCustomEmail, setSendCustomEmail] = useState();
 
-    
+
 
     //Funcion para cargar los datos al inicio de la carga del componente
     useEffect(() => {
 
         (async (props) => {
-            const dbevent = await Actions.getAll(`/api/events/${props.eventID}`);            
+            const dbevent = await Actions.getAll(`/api/events/${props.eventID}`);
             setEvent(dbevent);
         })(props)
     }, [props.eventID])
@@ -29,14 +26,15 @@ function ConfirmacionRegistro(props) {
 
     //funcion para guardar la inormación
     const saveData = async () => {
-        let data = { registration_message: event.registration_message, validateEmail: validateEmail ? validateEmail : event.validateEmail, send_custom_email: sendCustomEmail ? sendCustomEmail : event.send_custom_email }        
-        const updatedEvent = await EventsApi.editOne(data, event._id);               
+        let data = { registration_message: event.registration_message, validateEmail: validateEmail ? validateEmail : event.validateEmail, send_custom_email: sendCustomEmail ? sendCustomEmail : event.send_custom_email }
+        const updatedEvent = await EventsApi.editOne(data, event._id);
         console.log(updatedEvent)
         message.success('Cotenido guardado');
     }
 
     //Cambio descripción
     const chgTxt = content => {
+        console.log(content)
         event.registration_message = content;
         setEvent(event)
     }
@@ -44,9 +42,10 @@ function ConfirmacionRegistro(props) {
     return (
         <>
             <h1>Mensaje Confirmacion Registro </h1>
-            <p>El siguiene mensaje le llegara a las personas luego de haberse registrado al evento</p>            
+            <p>El siguiene mensaje le llegara a las personas luego de haberse registrado al evento</p>
             <Row gutter={[0, 24]}><Col span={12}>
-                <ReactQuill value={event.registration_message} modules={toolbarEditor} onChange={chgTxt} />
+                {/* <ReactQuill value={event.registration_message} modules={toolbarEditorConfirmRegist} onChange={chgTxt} /> */}
+                <EviusReactQuill value={event.registration_message} onChange={chgTxt} />
             </Col>
             </Row>
             <Row>
