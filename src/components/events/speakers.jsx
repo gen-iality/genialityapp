@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 //custom
-import {SpeakersApi, ActivityBySpeaker } from "../../helpers/request";
+import { SpeakersApi, ActivityBySpeaker } from "../../helpers/request";
 import Moment from "moment";
 import { Card, Avatar, Button, Modal, Row, Col } from "antd";
 import { UserOutlined } from "@ant-design/icons";
@@ -75,15 +75,15 @@ class Speakers extends Component {
                 style={{ paddingTop: "30px" }}
                 cover={
                   speaker.image ? (
-                    <Avatar style={{ display: "block", margin: "0 auto" }} size={130} src={speaker.image} />
+                    <Avatar style={{ display: "block", margin: "0 auto" }} size={210} src={speaker.image} />
                   ) : (
-                      <Avatar style={{ display: "block", margin: "0 auto" }} size={130} icon={<UserOutlined />} />
+                      <Avatar style={{ display: "block", margin: "0 auto" }} size={210} icon={<UserOutlined />} />
                     )
                 }
                 actions={[
                   <Button
                     type="primary"
-                    className="modal-button"                    
+                    className="modal-button"
                     onClick={() =>
                       this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)
                     }
@@ -130,9 +130,9 @@ class Speakers extends Component {
 
             <Col flex="1 1 auto">
               {infoSpeaker.imagen ? (
-                <Avatar style={{ display: "block", margin: "0 auto" }} size={130} src={infoSpeaker.imagen} />
+                <Avatar style={{ display: "block", margin: "0 auto" }} size={210} src={infoSpeaker.imagen} />
               ) : (
-                  <Avatar style={{ display: "block", margin: "0 auto" }} size={130} icon={<UserOutlined />} />
+                  <Avatar style={{ display: "block", margin: "0 auto" }} size={210} icon={<UserOutlined />} />
                 )}
             </Col>
 

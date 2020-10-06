@@ -39,12 +39,12 @@ class ListEventUser extends Component {
       eventUserIdToMakeAppointment: '',
       asistantData: [],
       matches: [],
-      filterSector : null, 
+      filterSector: null,
       typeAssistant: null
     };
-}
+  }
 
-  async componentDidMount () {
+  async componentDidMount() {
     await this.getInfoCurrentUser();
     this.loadData();
   }
@@ -85,7 +85,7 @@ class ListEventUser extends Component {
       matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
     }
 
-    let asistantData = await EventFieldsApi.getAll( event._id )
+    let asistantData = await EventFieldsApi.getAll(event._id)
 
     this.setState((prevState) => {
       return {
@@ -128,10 +128,10 @@ class ListEventUser extends Component {
     let inputSearch = document.getElementById('inputSearch')
     let nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
     nativeInputValueSetter.call(inputSearch, value);
-    let ev2 = new Event('input', { bubbles: true});
+    let ev2 = new Event('input', { bubbles: true });
     inputSearch.dispatchEvent(ev2);
   }
-  
+
   //Search records at third column
   searchResult = (data) => {
     !data ? this.setState({ users: [] }) : this.setState({ users: data });
@@ -159,8 +159,8 @@ class ListEventUser extends Component {
 
         // Se ejecuta el servicio del api de evius
         try {
-          await EventsApi.sendInvitation( this.props.event._id, data );
-          notification.open( {
+          await EventsApi.sendInvitation(this.props.event._id, data);
+          notification.open({
             message: 'Solicitud enviada',
             description:
               'Le llegará un correo a la persona notificandole la solicitud, quién la aceptara o recharaza. Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.',
@@ -183,35 +183,35 @@ class ListEventUser extends Component {
   }
 
   //Método que se ejecuta cuando se selecciona el tipo de usuario
-  handleSelectTypeUser = async (typeUser) => {       
+  handleSelectTypeUser = async (typeUser) => {
 
     const { userReq } = this.state
-    if(typeUser === ''){
-      this.setState({usersFiltered: userReq})
+    if (typeUser === '') {
+      this.setState({ usersFiltered: userReq })
       this.searchResult(userReq)
     }
-    else{
-      const listByTypeuser = await userReq.filter( item => item.properties.asistecomo === typeUser)
-      this.setState({usersFiltered: listByTypeuser})
+    else {
+      const listByTypeuser = await userReq.filter(item => item.properties.asistecomo === typeUser)
+      this.setState({ usersFiltered: listByTypeuser })
       this.searchResult(listByTypeuser)
     }
-    
+
     let inputSearch = document.getElementById('inputSearch')
     let nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
     nativeInputValueSetter.call(inputSearch, '');
-    let ev1 = new Event('input', { bubbles: true});
+    let ev1 = new Event('input', { bubbles: true });
     inputSearch.dispatchEvent(ev1);
-    
+
     // let filterSector = document.getElementById('filterSector')
     // let nativeInputValueSetter2 = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, "value").set;
     // nativeInputValueSetter2.call(filterSector, '');
     // let ev2 = new Event('select', { bubbles: true});
     // filterSector.dispatchEvent(ev2);
-}
+  }
 
   render() {
     const { event } = this.props;
-    
+
     const {
       usersFiltered,
       users,
@@ -273,10 +273,10 @@ class ListEventUser extends Component {
                 ) : (
                     <div className="card-Networking">
                       <div className="container" justify="center">
-                        <Row gutter={[20, 20]}>
+                        <Row justify="space-between">
                           {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                           {matches.map((users, userIndex) => (
-                            <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={18} xl={18} style={{ marginRight: 12 }}>
+                            <Col key={`user-item-${userIndex}`} xs={20} sm={20} md={20} lg={20} xl={18} xxl={12} offset={2}>
                               <Card
                                 extra={
                                   <a
@@ -301,9 +301,9 @@ class ListEventUser extends Component {
                                         : users.properties.names}
                                     </Avatar>
                                   }
-                                  title={ users.properties.names ? users.properties.names : "No registra Nombre" }
-                                  description={ [
-                                    <div key={`ui-${ userIndex }`}>
+                                  title={users.properties.names ? users.properties.names : "No registra Nombre"}
+                                  description={[
+                                    <div key={`ui-${userIndex}`}>
                                       <br />
                                       <Row>
                                         <Col xs={24}>
@@ -358,66 +358,66 @@ class ListEventUser extends Component {
                 closeModal={this.closeAppointmentModal}
               />
               <Form>
-              <Row justify="space-around" gutter={[16, 16]}>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ margin: "0 auto" }}>
-                  <Form.Item 
-                  labelCol={{span:24}}
-                  label='Busca aquí las personas que deseas contactar'
-                  name="searchInput"                 
-                  >
-                    
-                    <SearchComponent
-                      id='searchInput'
-                      placeholder={""}
-                      data={usersFiltered}
-                      kind={"user"}
-                      event={this.props.event._id}
-                      searchResult={this.searchResult}
-                      clear={this.state.clearSearch}
-                      styles={{width: '300px'}}
-                    />
+                <Row justify="space-around" gutter={[16, 16]}>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ margin: "0 auto" }}>
+                    <Form.Item
+                      labelCol={{ span: 24 }}
+                      label='Busca aquí las personas que deseas contactar'
+                      name="searchInput"
+                    >
 
-                  </Form.Item>
-                </Col>
+                      <SearchComponent
+                        id='searchInput'
+                        placeholder={""}
+                        data={usersFiltered}
+                        kind={"user"}
+                        event={this.props.event._id}
+                        searchResult={this.searchResult}
+                        clear={this.state.clearSearch}
+                        styles={{ width: '300px' }}
+                      />
+
+                    </Form.Item>
+                  </Col>
                   <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                    <Form.Item 
+                    <Form.Item
                       label='Tipo de asistente'
-                      name="filterTypeUser"  
-                      labelCol={{span:24}}                 
+                      name="filterTypeUser"
+                      labelCol={{ span: 24 }}
+                    >
+                      <Select
+                        style={{ textAlign: 'left' }}
+                        size={"middle"}
+                        defaultValue=''
+                        onChange={this.handleSelectTypeUser}
+                        id="filterTypeUser"
                       >
-                      <Select 
-                      style={{ textAlign: 'left'}} 
-                      size={"middle"}
-                      defaultValue=''
-                      onChange={this.handleSelectTypeUser}
-                      id="filterTypeUser"
-                      >
-                        <option key={'option1'} value=''>Ver todo</option>                  
+                        <option key={'option1'} value=''>Ver todo</option>
                         <option key={'option2'} value='Empresa'>Empresa</option>
                         <option key={'option3'} value='Persona'>Persona</option>
                       </Select>
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                    <Form.Item 
-                    label='Sector'
-                    name="filterSector"
-                    labelCol={{span:24}}    
+                    <Form.Item
+                      label='Sector'
+                      name="filterSector"
+                      labelCol={{ span: 24 }}
                     >
                       <FilterNetworking
                         id="filterSector"
                         properties={this.props.event.user_properties}
                         filterProperty={'sector'}
-                        handleSelect={this.handleSelectFilter}                   
+                        handleSelect={this.handleSelectFilter}
                       />
                     </Form.Item>
                   </Col>
-              </Row>
-             </Form>
+                </Row>
+              </Form>
 
-              
 
-              <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
+
+              <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
                 <Alert
                   message="Información Adicicional"
                   description="Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
@@ -448,10 +448,10 @@ class ListEventUser extends Component {
                   </Fragment>
                 ) : (
                     <div className="container card-Sugeridos" >
-                      <Row gutter={[12, 24]}>
+                      <Row justify="space-between">
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
+                          <Col key={`user-item-${userIndex}`} xs={20} sm={20} md={20} lg={20} xl={18} xxl={10} offset={2}>
                             <Card
                               extra={
                                 <a
@@ -476,15 +476,15 @@ class ListEventUser extends Component {
                                       : users.properties.names}
                                   </Avatar>
                                 }
-                                title={ users.properties.names ? users.properties.names : "No registra Nombre" }
-                                description={ [
-                                  <div key={`ug-${ userIndex }`}>
+                                title={users.properties.names ? users.properties.names : "No registra Nombre"}
+                                description={[
+                                  <div key={`ug-${userIndex}`}>
                                     <br />
                                     <Row>
                                       <Col xs={24}>
                                         <div>
                                           {
-                                            asistantData.map((data, dataIndex) => (                                              
+                                            asistantData.map((data, dataIndex) => (
                                               !data.visible || !data.visibleByContacts && users.properties[data.name] && (
                                                 <div key={`public-field-${userIndex}-${dataIndex}`}>
                                                   <p><b>{data.label}:</b> {users.properties[data.name]}</p>
