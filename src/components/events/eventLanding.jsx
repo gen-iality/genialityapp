@@ -92,7 +92,6 @@ class eventLanding extends Component {
                 </>
               )
           }
-
           {/* Si event video existe */}
           {
             event.video && (
