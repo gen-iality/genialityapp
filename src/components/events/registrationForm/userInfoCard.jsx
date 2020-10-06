@@ -352,7 +352,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       <br />
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
-          <Card title="Actualizacion de campos" bodyStyle={textLeft}>
+          <Card title="Actualización de campos" bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
             <Form
               form={form}

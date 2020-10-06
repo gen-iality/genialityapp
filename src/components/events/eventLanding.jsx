@@ -92,13 +92,13 @@ class eventLanding extends Component {
                 </>
               )
           }
-
           {/* Si event video existe */}
           {
             event.video && (
               <div className="column is-centered mediaplayer">
                 <ReactPlayer
                   width={"100%"}
+                  height={"500px"}
                   style={{
                     display: "block",
                     margin: "0 auto",

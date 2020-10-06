@@ -29,7 +29,7 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
                                 onClick={() => {
                                     toggleConference(true, infoActivity.meeting_id, infoActivity);
                                 }}>
-                                Entrar
+                                Ingresa aquí
                         </Button>
 
                         </>
