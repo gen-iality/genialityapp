@@ -177,7 +177,6 @@ export default function AgendaActivityItem({
                   />
                 </>
               )}
-
               {item.habilitar_ingreso === 'ended_meeting_room' && (
                 <>
                   {item.video ? (
