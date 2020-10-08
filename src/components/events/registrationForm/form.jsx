@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
+import { UsersApi, TicketsApi, EventsApi, Actions } from "../../../helpers/request";
 import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
-import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Result, Divider } from "antd";
+import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Result, Divider, Upload } from "antd";
+import { UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import InputFile from "./inputFile"
+// import InputFile from "./inputFile"
 
 const { Panel } = Collapse;
 const { TextArea, Password } = Input;
@@ -36,6 +37,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const [country, setCountry] = useState();
   const [region, setRegion] = useState()
   const [password, setPassword] = useState('')
+  const [fileSave, setFileSave] = useState([])
 
   const [form] = Form.useForm();
 
@@ -75,8 +77,8 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   }
 
   const onFinish = async (values) => {
-
     values.password = password
+    values.files = fileSave
 
     setGeneralFormErrorMessageVisible(false);
 
@@ -89,7 +91,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
     let textMessage = {};
     textMessage.key = key;
-
     if (eventUserId) {
       try {
         let resp = await TicketsApi.transferToUser(eventId, eventUserId, snap);
@@ -192,11 +193,31 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     form.setFieldsValue({ password: password })
   };
 
-  const handleChange = info => {
-    if (info.file.status === 'done') {
-      console.log(info.file)
+  const beforeUpload = (file) => {
+    const isJpgOrPng = file.type === 'application/pdf';
+    if (!isJpgOrPng) {
+      message.error('You can only upload PDF file!');
     }
+    const isLt5M = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      message.error('Image must smaller than 5MB!');
+    }
+    return isJpgOrPng && isLt5M;
   };
+
+  const showRequest = async ({ file }) => {
+    if (file) {
+      if (file.response) {
+        const response = file.response.trim();
+        const newArray = fileSave.map((item) => (
+          item
+        ))
+        newArray.push(response)
+        console.log(newArray)
+        setFileSave(newArray)
+      }
+    }
+  }
 
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
@@ -291,7 +312,15 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
       if (type === "file") {
         input = (
-          <InputFile eventId={eventId} name={name} handleChange={handleChange} />
+          <Upload
+            action='https://api.evius.co/api/files/upload/'
+            onChange={showRequest}
+            multiple={false}
+            listType='text'
+            beforeUpload={beforeUpload}
+          >
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
         )
       }
 
