@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
+import { UsersApi, TicketsApi, EventsApi, Actions } from "../../../helpers/request";
 import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
-import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Result, Divider } from "antd";
+import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Result, Divider, Upload } from "antd";
+import { UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+// import InputFile from "./inputFile"
 
 const { Panel } = Collapse;
 const { TextArea, Password } = Input;
@@ -35,19 +37,20 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const [country, setCountry] = useState();
   const [region, setRegion] = useState()
   const [password, setPassword] = useState('')
+  const [fileSave, setFileSave] = useState([])
 
   const [form] = Form.useForm();
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     console.log('form methods', form)
     form.setFields([
       {
         name: 'password',
         errors: ['Ingrese un password'],
       },
-   ]);
-  },[form])
-  
+    ]);
+  }, [form])
+
   useEffect(() => {
     let formType = !eventUserId ? "register" : "transfer";
     setFormMessage(FormTags(formType));
@@ -74,13 +77,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   }
 
   const onFinish = async (values) => {
-    
     values.password = password
-    
+    values.files = fileSave
+
     setGeneralFormErrorMessageVisible(false);
 
     const key = "registerUserService";
-    
+
     // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
     message.loading({ content: formMessage.loadingMessage, key }, 10);
 
@@ -88,7 +91,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
     let textMessage = {};
     textMessage.key = key;
-
     if (eventUserId) {
       try {
         let resp = await TicketsApi.transferToUser(eventId, eventUserId, snap);
@@ -149,7 +151,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   };
 
   const fieldsChange = (changedField) => {
-    
+
   }
 
   const valuesChange = (changedField, allFields) => {
@@ -183,13 +185,39 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     })
 
     setExtraFields(newExtraFields)
- 
+
   }
 
   const handleChangePassword = e => {
     setPassword(e.target.value)
-    form.setFieldsValue({password: password})
+    form.setFieldsValue({ password: password })
   };
+
+  const beforeUpload = (file) => {
+    const isJpgOrPng = file.type === 'application/pdf';
+    if (!isJpgOrPng) {
+      message.error('You can only upload PDF file!');
+    }
+    const isLt5M = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      message.error('Image must smaller than 5MB!');
+    }
+    return isJpgOrPng && isLt5M;
+  };
+
+  const showRequest = async ({ file }) => {
+    if (file) {
+      if (file.response) {
+        const response = file.response.trim();
+        const newArray = fileSave.map((item) => (
+          item
+        ))
+        newArray.push(response)
+        console.log(newArray)
+        setFileSave(newArray)
+      }
+    }
+  }
 
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
@@ -282,6 +310,20 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         );
       }
 
+      if (type === "file") {
+        input = (
+          <Upload
+            action='https://api.evius.co/api/files/upload/'
+            onChange={showRequest}
+            multiple={false}
+            listType='text'
+            beforeUpload={beforeUpload}
+          >
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
+        )
+      }
+
       if (type === "list") {
         input = m.options.map((o, key) => {
           return (
@@ -324,23 +366,23 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
       if (type === "password") {
         input = (
-            <>
-              <Password 
+          <>
+            <Password
               name='password'
-              style={{ margin: '15px'}}
+              style={{ margin: '15px' }}
               placeholder="Ingrese su password"
               onChange={handleChangePassword}
               key={key}
               value={password}
               pattern="(?=^.{10,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
               title="El password debe tener mínimo 10 caracteres, una mayúscula, una minúscula y un número"
-              />
-              
-            </>
+            />
+
+          </>
         )
       }
 
-      
+
 
       let rule = (name == "email" || name == "names") ? { required: true } : { required: mandatory };
 
@@ -352,8 +394,8 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         type: "regexp",
         pattern: new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{10,}$/),
         message: "El formato del password no es valido"
-      }: rule;
-      
+      } : rule;
+
       // let hideFields =
       //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
 
@@ -374,13 +416,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
                 name={name}
                 rules={[rule]}
                 key={"l" + key}
-                htmlFor={key}                
+                htmlFor={key}
               >
                 {input}
               </Form.Item>
               {description && description.length < 500 && <p>{description}</p>}
               {description && description.length > 500 && (
-                <Collapse defaultActiveKey={["0"]} style={{margingBotton: '15px'}}>
+                <Collapse defaultActiveKey={["0"]} style={{ margingBotton: '15px' }}>
                   <Panel header="Política de privacidad, términos y condiciones" key="1">
                     <pre>{description}</pre>
                   </Panel>
