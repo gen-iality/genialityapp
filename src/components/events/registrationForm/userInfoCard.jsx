@@ -65,6 +65,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   }
 
   const onFinish = async (values) => {
+    values.files = fileSave
     setGeneralFormErrorMessageVisible(false);
 
     const key = "registerUserService";
