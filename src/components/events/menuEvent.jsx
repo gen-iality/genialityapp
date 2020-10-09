@@ -202,6 +202,7 @@ class MenuEvent extends Component {
           }
 
           let IconoComponente = iconComponents[this.state.itemsMenu[key].icon];
+
           return (
             <Menu.Item key={this.state.itemsMenu[key].section} onClick={() => this.state.showSection(this.state.itemsMenu[key].section)} >
               <IconoComponente style={this.state.eventId === "5f7e3564cdedb50e4c651602" ? { color: "#FFFFFF" } : { color: "#000000" }} />
