@@ -621,6 +621,7 @@ class Landing extends Component {
                                 }}>
                                 {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                                 <MenuEvent
+                                  eventId={event._id}
                                   user={currentUser}
                                   itemsMenu={this.state.event.itemsMenu}
                                   showSection={this.showSection}
