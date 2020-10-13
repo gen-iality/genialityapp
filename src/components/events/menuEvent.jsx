@@ -201,10 +201,10 @@ class MenuEvent extends Component {
             return null;
           }
 
-          let IconoComponente = iconComponents[this.state.itemsMenu[key].icon];
+          var IconoComponente = iconComponents[this.state.itemsMenu[key].icon];
           return (
             <Menu.Item key={this.state.itemsMenu[key].section} onClick={() => this.state.showSection(this.state.itemsMenu[key].section)} >
-              <IconoComponente style={this.state.eventId === "5f7e3564cdedb50e4c651602" ? { color: "#FFFFFF" } : { color: "#000000" }} />
+              <IconoComponente style={this.state.eventId === "5f7e3564cdedb50e4c651602" ? { fontColor: "#FFFFFF" } : { fontColor: "#000000" }} />
               <span style={this.state.eventId === "5f7e3564cdedb50e4c651602" ? { color: "white" } : { color: "black" }}> {this.state.itemsMenu[key].name}</span>
             </Menu.Item>
           );
