@@ -164,8 +164,14 @@ class Headers extends Component {
       .then(() => {
         Cookie.remove("token");
         Cookie.remove("evius_token");
-        const urlRedirect = this.state.eventId ? `${BaseUrl}/landing/${this.state.eventId}` : `${BaseUrl}`
-        window.location.replace(urlRedirect);
+
+        //const urlRedirect = this.state.eventId ? `${BaseUrl}/landing/${this.state.eventId}` : `${BaseUrl}`
+        //window.location.replace(urlRedirect);
+
+        // Solucion temporal, se esta trabajando un reducer que permita identificar
+        // el eventId sin importar su posición, actualmente se detecta un problema
+        // cuando la url tiene el eventId en una posicion diferente al final
+        window.location.replace('/');
       }
       ).catch(function (error) {
         // An error happened.
