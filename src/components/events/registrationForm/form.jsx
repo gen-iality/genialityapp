@@ -305,7 +305,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
       if (type === "multiplelisttable") {
         input = (
-          <Select options={value} isMulti name={name} />
+          <Select options={m.options} isMulti name={name} />
         )
       }
 

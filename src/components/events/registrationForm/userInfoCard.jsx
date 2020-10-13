@@ -262,6 +262,12 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         );
       }
 
+      if (type === "multiplelisttable") {
+        input = (
+          <Select options={m.options} isMulti name={name} />
+        )
+      }
+
       if (type === "list") {
         input = m.options.map((o, key) => {
           return (
