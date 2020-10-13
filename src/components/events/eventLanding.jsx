@@ -80,8 +80,7 @@ class eventLanding extends Component {
     return (
 
       <div style={{ marginRight: 12, marginBottom: 12 }}>
-
-        <Card className="event-description" bodyStyle={{ padding: "25px 5px" }} bordered={true}>
+        <Card className="event-description" bodyStyle={{ padding: "25px 5px" }} bordered={true} style={event.styles.show_card_banner && event.styles.show_card_banner === true ? { marginTop: "23%" } : { marginTop: "0px" }}>
           {
             event._id === "5f0622f01ce76d5550058c32" ?
               <></> :

@@ -173,6 +173,16 @@ iframe {
   white-space: break-spaces;
 }
 
+//chaport estilos//
+.chaport-container.chaport-container-positioned {
+  right: auto !important;
+  left: 82px !important;
+  bottom: -11px !important;
+}
+.chaport-container.chaport-container-positioned .chaport-window {
+  right: auto !important;
+  left: -52px !important;
+}
 
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";

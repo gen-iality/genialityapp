@@ -16,11 +16,9 @@ section.landing {
     color: white;
   }
 
-  .ant-btn-background-ghost.ant-btn-primary{
-    color:  #1890ff
+  .ant-btn-background-ghost.ant-btn-primary {
+    color: #1890ff;
   }
-
-  
 
   .container-nombre {
     display: block;
@@ -240,13 +238,13 @@ section.landing {
         font-size: 5rem;
 
         .ql-snow {
-          font-family: "Montserrat", sans-serif !important;
+          font-family: 'Montserrat', sans-serif !important;
 
           .ql-editor {
             letter-spacing: 0.2px;
             line-height: 1.5;
             padding: 0px;
-            font-family: "Montserrat", sans-serif !important;
+            font-family: 'Montserrat', sans-serif !important;
 
             h2 {
               text-align: left !important;
@@ -375,7 +373,7 @@ section.landing {
   left: 20px;
   z-index: 1;
 
-  @media screen and (min-width: "1030px") {
+  @media screen and (min-width: '1030px') {
     display: none;
   }
 }
@@ -443,7 +441,6 @@ section.landing {
   }
   @media only screen and (max-width: 500px) {
     overflow-y: visible;
-    margin-bottom: 123px
   }
   .banner-user-elem {
     text-align: left;
@@ -499,7 +496,6 @@ section.landing {
     left: 0;
     overflow: visible;
   }
-
 }
 
 .container-logoBanner {
@@ -513,6 +509,6 @@ section.landing {
   }
 }
 
-ant-btn-primary{
+ant-btn-primary {
   background-color: blue;
 }

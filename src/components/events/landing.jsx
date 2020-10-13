@@ -151,15 +151,20 @@ class Landing extends Component {
     let eventUsers = null;
 
     const id = this.props.match.params.event;
+    const validateCookie = Cookie.get("evius_token")
 
-    try {
-      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-      if (resp.status !== 200 && resp.status !== 202) return;
-      user = resp.data;
-      this.setState({ user: resp.data })
-    } catch (err) {
-      console.error(err)
+    if (validateCookie) {
+      try {
+        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+        if (resp.status !== 200 && resp.status !== 202) return;
+        user = resp.data;
+        this.setState({ user: resp.data })
+      } catch (err) {
+        console.error('Error Landing', err.status)
+        window.location.replace('/')
+      }
     }
+
 
     /* Trae la información del evento con la instancia pública*/
     const event = await EventsApi.landingEvent(id);
@@ -400,7 +405,6 @@ class Landing extends Component {
   };
 
   toggleConference = async (state, meeting_id, activity) => {
-    console.log("activity", activity);
     if (meeting_id != undefined) {
       this.setState({ meeting_id });
     }
@@ -433,12 +437,10 @@ class Landing extends Component {
       if (this.state.eventUser) {
         TicketsApi.checkInAttendee(this.state.event._id, this.state.eventUser._id);
         Activity.checkInAttendeeActivity(this.state.event._id, activity._id, this.state.eventUser.account_id);
-        console.log("checkin")
       }
     } catch (e) {
       //alert( "fallo el checkin" )
     }
-
   };
 
   showLanding() {
