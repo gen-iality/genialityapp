@@ -84,11 +84,11 @@ class Styles extends Component {
         height: 180
       },
       {
-        title: "Elige una imagen para el banner en mobile (opcional en caso de no observar bien el banner superior en celular): (Tamaño recomendado 320x180)",
+        title: "Elige una imagen para el banner en mobile (opcional en caso de no observar bien el banner superior en celular): (Tamaño recomendado 1080x556)",
         imageFieldName: "mobile_banner",
         button: "eliminar banner en mobile",
-        width: 320,
-        height: 180
+        width: 1080,
+        height: 556
       },
       {
         title: "Elige una imagen(textura) para el fondo: (Tamaño recomendado 1920x2160)",

@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from "react"
-import { Typography, Select, Checkbox, Card, Input, Button, Col, Row } from "antd";
+import { Typography, Select, Card, Input, Button, Col, Row } from "antd";
 import { Actions } from "../../helpers/request";
-import { toolbarEditor } from "../../helpers/constants";
-import ReactQuill from "react-quill";
 import { toast } from "react-toastify";
 const { Title } = Typography;
 const { Option } = Select;
@@ -174,6 +172,7 @@ class menuLanding extends Component {
     }
 
     async componentDidMount() {
+        console.log('Menu landing', this.props)
         const menuBase = this.state.menu
         const menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}`)
 

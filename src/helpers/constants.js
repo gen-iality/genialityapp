@@ -96,6 +96,7 @@ export const typeInputs = [
   { value: 'complex', label: 'JSON' },
   { value: 'tituloseccion', label: 'Titulo para indicar campos relacionados' },
   { value: 'password', label: 'Password' },
+  { value: 'multiplelisttable', label: 'Selección multiple con buscar' },
 ];
 export const toolbarEditor = {
   toolbar: [
