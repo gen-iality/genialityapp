@@ -21,7 +21,7 @@ class DatosModal extends Component {
 
     generateFieldNameForLabel(name, value) {
         //.replace(/[\u0300-\u036f]/g, "") = quita unicamente las tildes, normalize("NFD") pasa la cadena de texto a formato utf-8 y el normalize quita caracteres alfanumericos
-        const generatedFieldName = toCapitalizeLower(value).normalize("NFD").replace(/[^a-z0-9_]+/gi, "")        
+        const generatedFieldName = toCapitalizeLower(value).normalize("NFD").replace(/[^a-z0-9_]+/gi, "")
         return generatedFieldName;
     }
 
@@ -170,7 +170,7 @@ class DatosModal extends Component {
                             </div>
                         </div>
                         {
-                            (info.type === 'list' || info.type === 'multiplelist') && (
+                            (info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
                                 <div className="control">
                                     <CreatableSelect
                                         components={{ DropdownIndicator: null, }}
