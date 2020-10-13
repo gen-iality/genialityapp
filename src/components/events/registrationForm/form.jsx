@@ -303,9 +303,9 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         );
       }
 
-      if (type === "multiplelistsearch") {
+      if (type === "multiplelisttable") {
         input = (
-          <Select options={options} isMulti name={name} />
+          <Select options={value} isMulti name={name} />
         )
       }
 
