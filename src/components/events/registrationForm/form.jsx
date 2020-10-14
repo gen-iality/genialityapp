@@ -179,6 +179,33 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const valuesChange = (changedField, allFields) => {
     let newExtraFields = [...extraFieldsOriginal]
     //debugger
+    newExtraFields = newExtraFields.filter((field, key) => {
+      let fieldShouldBeDisplayed = false
+      let fieldHasCondition = false
+      conditionals.map((conditional, key) => {
+        let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1
+        let fulfillConditional = false
+        if (fieldExistInThisCondition) {
+          fieldHasCondition = true
+          Object.keys(allFields).map((changedkey) => {
+            if (changedkey === conditional.fieldToValidate) {
+              fulfillConditional = (conditional.value === allFields[changedkey])
+            }
+          })
+          if (fulfillConditional) {
+            fieldShouldBeDisplayed = true
+          }
+        }
+      })
+      return (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition
+    })
+
+    setExtraFields(newExtraFields)
+  }
+
+  const valuesChangeOld = (changedField, allFields) => {
+    let newExtraFields = [...extraFieldsOriginal]
+    //debugger
     conditionals.map((conditional, key) => {
       let fulfillConditional = true
       Object.keys(allFields).map((changedkey) => {
