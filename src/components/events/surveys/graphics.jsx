@@ -1,6 +1,6 @@
 import 'chartjs-plugin-datalabels';
 import React, { Component } from "react";
-import { Pagination, Spin, Card,  Button } from "antd";
+import { Pagination, Spin, Card, Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import Chart from "chart.js";
@@ -45,9 +45,7 @@ class Graphics extends Component {
 
   loadData = async () => {
     const { idSurvey, eventId } = this.props;
-    let { dataSurvey } = this.state;
-
-    dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
+    const response = await SurveysApi.getOne(eventId, idSurvey);
     const usersRegistered = await UsersApi.getAll(this.props.eventId)
     let totalUsersRegistered = 0
 
@@ -58,7 +56,7 @@ class Graphics extends Component {
       }
     }
 
-    this.setState({ dataSurvey, usersRegistered: totalUsersRegistered }, this.mountChart);
+    this.setState({ dataSurvey: response, usersRegistered: totalUsersRegistered }, this.mountChart);
   };
 
   setCurrentPage = (page) => {
@@ -99,7 +97,7 @@ class Graphics extends Component {
       if (options.correctAnswerIndex) {
         horizontalBar.data.datasets[0].backgroundColor = [];
         horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
-        }      
+      }
 
 
       horizontalBar.options = {
@@ -108,7 +106,7 @@ class Graphics extends Component {
             color: '#777',
           }
         },
-        legend:{
+        legend: {
           display: false
         },
         scales: {
@@ -117,7 +115,7 @@ class Graphics extends Component {
               fontSize: 15,
               fontColor: '#777',
               minor: { display: true },
-            }            
+            }
           }],
           xAxes: [{
             ticks: {
@@ -142,7 +140,7 @@ class Graphics extends Component {
       if (options.correctAnswerIndex) {
         horizontalBar.data.datasets[0].backgroundColor = [];
         horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
-        }      
+      }
       chart.update();
 
       this.setState({ chart });
@@ -151,7 +149,7 @@ class Graphics extends Component {
 
   mountChart = async () => {
     const { idSurvey, eventId } = this.props;
-    let { dataSurvey, currentPage} = this.state;
+    let { dataSurvey, currentPage } = this.state;
     let { questions } = dataSurvey;
 
     // Se ejecuta servicio para tener el conteo de las respuestas
@@ -163,7 +161,7 @@ class Graphics extends Component {
   }
 
   render() {
-    let { dataSurvey, currentPage,  titleQuestion } = this.state;
+    let { dataSurvey, currentPage, titleQuestion } = this.state;
     const { showListSurvey, surveyLabel } = this.props;
 
     if (dataSurvey.questions)
@@ -181,7 +179,7 @@ class Graphics extends Component {
             </Card>
             <br />
             <Pagination
-              defaultCurrent={currentPage}  
+              defaultCurrent={currentPage}
               total={dataSurvey.questions.length * 10}
               onChange={this.setCurrentPage}
             />
