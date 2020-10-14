@@ -46,7 +46,8 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, organizado, place, da
                         backgroundPosition: 'top center'
                     } : {
                             backgroundImage: `url(${bgImage})`,
-                            backgroundSize: 'contain'
+                            backgroundSize: 'contain',
+                            backgroundPosition: 'top center'
                         }}
                 />
                 {
