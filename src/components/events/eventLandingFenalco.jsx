@@ -9,7 +9,7 @@ import { AgendaApi } from '../../helpers/request'
 import { getCurrentUser, getCurrentEventUser, userRequest } from "../networking/services";
 import * as Cookie from "js-cookie";
 import { parseUrl } from '../../helpers/constants'
-import AgendaActividadDetalle from '../../components/events/agendaActividadDetalle'
+import AgendaActividadDetalle from './agendaActividadDetalle'
 
 class eventLanding extends Component {
   constructor( props ) {
@@ -80,7 +80,7 @@ class eventLanding extends Component {
 
     return (
 
-      <div style={ { marginBottom: 12 } }>
+      <div style={ { marginRight: 12, marginBottom: 12 } }>
 
         {( this.state.eventUser && <div className="columns is-centered">
 
