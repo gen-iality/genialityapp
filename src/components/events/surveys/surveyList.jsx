@@ -35,7 +35,7 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
                       }`}
                     onClick={() => showSurvey(survey)}
                     loading={survey.userHasVoted === undefined}>
-                    {console.log("iteracion de voto", survey)}
+                    {/* {console.log("iteracion de voto", survey)} */}
                     {survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
                   </Button>
                 </div>
@@ -56,15 +56,28 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
   );
 };
 
-const surveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
+
+//Componente que renderiza el listado de encuestas publicadas para la actividad
+
+const SurveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
   const [surveyList, setSurveyList] = useState([]);
   const [anonymousSurveyList, setAnonymousSurveyList] = useState([]);
+  const [isASpeaker, setIsASpeaker] = useState(false);
 
   useEffect(() => {
     setSurveyList(jsonData);
     setAnonymousSurveyList(jsonData.filter((item) => item.allow_anonymous_answers === "true"));
-    console.log(usuarioRegistrado);
   }, [jsonData]);
+
+  useEffect(() => {
+    let isASpeaker = false
+    if (usuarioRegistrado.rol) {
+      if (usuarioRegistrado.rol === 'Speaker') {
+        isASpeaker = true
+      }
+    }
+    setIsASpeaker(isASpeaker)
+  }, [usuarioRegistrado])
 
   const pluralToSingular = (char, t1, t2) => {
     if (t1 !== undefined) return `${t1}${t2}`;
@@ -88,6 +101,7 @@ const surveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =>
                   survey.open === "true" ? (
                     <List.Item key={survey._id}>
 
+
                       <Col xs={12} sm={12} md={12} lg={8} xl={8} xxl={24}>
                         <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
                       </Col>
@@ -109,12 +123,20 @@ const surveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =>
                               }`}
                             onClick={() => showSurvey(survey)}
                             loading={survey.userHasVoted === undefined}>
-                            {(!survey.userHasVoted && usuarioRegistrado && usuarioRegistrado.rol && usuarioRegistrado.rol.name !== "Speaker")
+                            {
+                              /*params 
+                              - survey.userHasVoted
+                              
+                              */
+                            }
+
+                            {(!survey.userHasVoted && usuarioRegistrado && !isASpeaker)
                               ? `Ir a ${surveyLabel.name
                                 ? surveyLabel.name.replace(/([^aeiou]{2})?(e)?s\b/gi, pluralToSingular)
                                 : "Encuesta"
                               }`
                               : " Ver Resultados"}
+
                           </Button>
                         </div>
                       </Col>
@@ -146,4 +168,4 @@ const surveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =>
   );
 };
 
-export default surveyList
+export default SurveyList
