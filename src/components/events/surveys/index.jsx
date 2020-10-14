@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import * as Cookie from "js-cookie";
 import { SurveyAnswers } from "./services";
-import API, { Actions, SurveysApi,TicketsApi } from "../../../helpers/request";
+import API, { Actions, SurveysApi, TicketsApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
 import SurveyList from "./surveyList";
 import RootPage from "./rootPage";
@@ -59,7 +59,7 @@ class SurveyForm extends Component {
   }
 
   openSurvey = (currentSurvey) => {
-    console.log("Esta es la encuesta actual:", currentSurvey);
+    //console.log("Esta es la encuesta actual:", currentSurvey);
   };
 
   surveyVisible = () => {
@@ -75,19 +75,16 @@ class SurveyForm extends Component {
 
   async componentDidMount() {
 
-    let {event} = this.props;
+    let { event } = this.props;
     let user = await this.getCurrentUser();
     let eventUser = await this.getCurrentEvenUser(event._id);
 
-    
-
-    console.log("surveydebug eventUser",eventUser);
-    this.setState({ currentUser: user, eventUser:eventUser }, this.listenSurveysData);
+    this.setState({ currentUser: user, eventUser: eventUser }, this.listenSurveysData);
     this.userVote();
     this.getItemsMenu();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     this.listenSurveysData(prevProps);
     if (this.props.usuarioRegistrado !== prevProps.usuarioRegistrado) {
       this.setState({ usuarioRegistrado: this.props.usuarioRegistrado });
@@ -115,14 +112,12 @@ class SurveyForm extends Component {
       let publishedSurveys = [];
       $query.onSnapshot(async (surveySnapShot) => {
 
-        console.log("surveySnapShot", surveySnapShot, surveySnapShot.size);
+        //console.log("surveySnapShot", surveySnapShot, surveySnapShot.size);
 
         if (surveySnapShot.size === 0) {
-          console.log("surveySnapShotINNER");
           this.setState({ selectedSurvey: {}, surveyVisible: false, surveysData: [] });
           return;
         }
-        console.log("surveySnapShotFINAL");
         publishedSurveys = [];
         surveySnapShot.forEach(function (doc) {
           publishedSurveys.push({ ...doc.data(), _id: doc.id });
@@ -151,7 +146,7 @@ class SurveyForm extends Component {
 
 
 
-        this.setState({ surveysData: surveysData, surveyVisible:surveysData && surveysData.length }, this.seeIfUserHasVote);
+        this.setState({ surveysData: surveysData, surveyVisible: surveysData && surveysData.length }, this.seeIfUserHasVote);
       });
     }
   };
@@ -192,7 +187,6 @@ class SurveyForm extends Component {
 
 
     this.setState({ surveysData: stateSurveys });
-    console.log("stateSurveys", stateSurveys);
     // if (stateSurveys.length && stateSurveys.length === 1 && !stateSurveys[0].userHasVoted && this.state.availableSurveysBar) {
     //   this.toggleSurvey(stateSurveys[0]);
     // }
@@ -215,7 +209,7 @@ class SurveyForm extends Component {
   getCurrentEvenUser = async (eventId) => {
     let evius_token = Cookie.get("evius_token");
     let response = await TicketsApi.getByEvent(eventId, evius_token);
-    return (response && response.data.length)?response.data[0]:null;
+    return (response && response.data.length) ? response.data[0] : null;
 
   };
 
@@ -231,13 +225,13 @@ class SurveyForm extends Component {
           const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
           if (resp.status === 200) {
             const data = resp.data;
-            this.setState({ usuarioRegistrado: true });
+            this.setState({ usuarioRegistrado: data });
             // Solo se desea obtener el id del usuario
             resolve(data);
           }
         } catch (error) {
           const { status } = error.response;
-          console.log("STATUS", status, status === 401);
+          console.error("STATUS", status, status === 401);
           reject(error.response);
         }
       }

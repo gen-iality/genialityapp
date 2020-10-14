@@ -57,13 +57,13 @@ class Datos extends Component {
         this.setState({ edit: false, modal: true })
     };
     //Guardar campo en el evento
-    saveField = async(field) => {
+    saveField = async (field) => {
         try {
-            if(this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
+            if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
             else await EventFieldsApi.createOne(field, this.eventID);
             await this.fetchFields();
-            this.setState({modal:false,edit:false,newField:false})
-        }catch (e) {
+            this.setState({ modal: false, edit: false, newField: false })
+        } catch (e) {
             this.showError(e)
         }
     };
@@ -100,7 +100,7 @@ class Datos extends Component {
             let errorData = error.message;
             if (error.request) {
                 errorData = error.request
-            };
+            }
             errorData.status = 708;
             this.setState({ serverError: true, loader: false, errorData })
         }
@@ -139,7 +139,7 @@ class Datos extends Component {
                 align: 'center',
                 render: (record, key) => (
                     key.name !== "email" && key.name !== "names" ? (
-                        <Checkbox name="mandatory" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} name="mandatory" defaultChecked={record} />
+                        <Checkbox name="mandatory" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} defaultChecked={record} />
                     ) : (
                             <Checkbox checked />
                         )
@@ -150,7 +150,7 @@ class Datos extends Component {
                 dataIndex: 'visibleByContacts',
                 align: 'center',
                 render: (record, key) => (
-                    <Checkbox name="visibleByContacts" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} name="visibleByContacts" defaultChecked={record} />
+                    <Checkbox name="visibleByContacts" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} defaultChecked={record} />
                 )
             },
             {
@@ -159,7 +159,7 @@ class Datos extends Component {
                 align: 'center',
                 render: (record, key) => (
                     key.name !== "email" && key.name !== "names" ? (
-                        <Checkbox name="visibleByAdmin" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} name="visibleByAdmin" defaultChecked={record} />
+                        <Checkbox name="visibleByAdmin" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} defaultChecked={record} />
                     ) : (
                             <Checkbox checked />
                         )
