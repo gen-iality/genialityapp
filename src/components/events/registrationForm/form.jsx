@@ -4,6 +4,7 @@ import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
 import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Result, Divider, Upload } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import Select from 'react-select'
 // import InputFile from "./inputFile"
 
 const { Panel } = Collapse;
@@ -24,6 +25,27 @@ const validateMessages = {
     regexp: "malo"
   },
 };
+
+const options = [
+  { value: "Buenos dias 1", label: "Buenos dias 1" },
+  { value: "Buenos dias 2", label: "Buenos dias 2" },
+  { value: "Buenos dias 3", label: "Buenos dias 3" },
+  { value: "Buenos dias 4", label: "Buenos dias 4" },
+  { value: "Buenos dias 5", label: "Buenos dias 5" },
+  { value: "Buenos dias 6", label: "Buenos dias 6" },
+  { value: "Buenos dias 7", label: "Buenos dias 7" },
+  { value: "Buenos dias 8", label: "Buenos dias 8" },
+  { value: "Buenos dias 9", label: "Buenos dias 9" },
+  { value: "Buenos dias 10", label: "Buenos dias 10" },
+  { value: "Buenos dias 11", label: "Buenos dias 11" },
+  { value: "Buenos dias 12", label: "Buenos dias 12" },
+  { value: "Buenos dias 13", label: "Buenos dias 13" },
+  { value: "Buenos dias 14", label: "Buenos dias 14" },
+  { value: "Buenos dias 15", label: "Buenos dias 15" },
+  { value: "Buenos dias 16", label: "Buenos dias 16" },
+  { value: "Buenos dias 17", label: "Buenos dias 17" },
+  { value: "Buenos dias 18", label: "Buenos dias 18" },
+]
 
 export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals }) => {
   const [user, setUser] = useState({});
@@ -157,6 +179,33 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const valuesChange = (changedField, allFields) => {
     let newExtraFields = [...extraFieldsOriginal]
     //debugger
+    newExtraFields = newExtraFields.filter((field, key) => {
+      let fieldShouldBeDisplayed = false
+      let fieldHasCondition = false
+      conditionals.map((conditional, key) => {
+        let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1
+        let fulfillConditional = false
+        if (fieldExistInThisCondition) {
+          fieldHasCondition = true
+          Object.keys(allFields).map((changedkey) => {
+            if (changedkey === conditional.fieldToValidate) {
+              fulfillConditional = (conditional.value === allFields[changedkey])
+            }
+          })
+          if (fulfillConditional) {
+            fieldShouldBeDisplayed = true
+          }
+        }
+      })
+      return (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition
+    })
+
+    setExtraFields(newExtraFields)
+  }
+
+  const valuesChangeOld = (changedField, allFields) => {
+    let newExtraFields = [...extraFieldsOriginal]
+    //debugger
     conditionals.map((conditional, key) => {
       let fulfillConditional = true
       Object.keys(allFields).map((changedkey) => {
@@ -279,6 +328,12 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
             <Divider />
           </React.Fragment>
         );
+      }
+
+      if (type === "multiplelisttable") {
+        input = (
+          <Select options={m.options} isMulti name={name} />
+        )
       }
 
       if (type === "boolean") {
