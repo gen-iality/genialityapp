@@ -239,7 +239,6 @@ class ListEventUser extends Component {
               />
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
                 <h1> Encuentra aquí tus contactos sugeridos, basados en la información de registro al evento.</h1>
-
               </Col>
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
                 <Alert
