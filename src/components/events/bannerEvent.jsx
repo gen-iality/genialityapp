@@ -42,6 +42,7 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, organizado, place, da
                     className="bg"
                     style={(window.innerWidth <= 780) && mobileBanner !== undefined && mobileBanner !== null ? {
                         backgroundImage: `url(${mobileBanner})`,
+                        backgroundSize: 'contain',
                         backgroundPosition: 'center'
                     } : {
                             backgroundImage: `url(${bgImage})`,
