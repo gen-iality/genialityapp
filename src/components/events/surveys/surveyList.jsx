@@ -88,7 +88,7 @@ const SurveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =>
     <Card title={`Lista de ${surveyLabel.name}`} className="survyCard" headStyle={headStyle}>
 
       {usuarioRegistrado ? (
-        <Fragment>
+        <Fragment >
           {surveyList && surveyList.length === 0 && (
             <Result icon={<MehOutlined />} title="Aún no se han publicado encuestas" />
           )}
