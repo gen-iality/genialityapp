@@ -46,20 +46,23 @@ export default function AgendaActivityItem({
       <div className='card agenda_information'>
         <Row align='middle'>
           <Row>
-            {eventId != '5f8099c29564bf4ee44da4f3' && (
-              <span className='date-activity'>
-                {Moment(item.datetime_start).format('DD MMMM YYYY') ===
-                Moment(item.datetime_end).format('DD MMMM YYYY') ? (
-                  <>
-                    {Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} -{' '}
-                    {Moment(item.datetime_end).format('h:mm a')}
-                  </>
-                ) : (
-                  Moment(item.datetime_start).format('DD MMMM YYYY hh:mm') -
-                  Moment(item.datetime_end).format('DD MMMM YYYY hh:mm')
-                )}
-              </span>
-            )}
+            {eventId != '5f80b6c93b4b966dfe7cd012' &&
+              eventId != '5f80b6c93b4b966dfe7cd012' &&
+              eventId != '5f80a9b272ccfd4e0d44b728' &&
+              eventId != '5f8099c29564bf4ee44da4f3' && (
+                <span className='date-activity'>
+                  {Moment(item.datetime_start).format('DD MMMM YYYY') ===
+                  Moment(item.datetime_end).format('DD MMMM YYYY') ? (
+                    <>
+                      {Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} -{' '}
+                      {Moment(item.datetime_end).format('h:mm a')}
+                    </>
+                  ) : (
+                    Moment(item.datetime_start).format('DD MMMM YYYY hh:mm') -
+                    Moment(item.datetime_end).format('DD MMMM YYYY hh:mm')
+                  )}
+                </span>
+              )}
             <p>
               <span className='card-header-title text-align-card'>{item.name}</span>
             </p>
