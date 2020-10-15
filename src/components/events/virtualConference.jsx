@@ -5,8 +5,7 @@ import { AgendaApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
 import Moment from "moment";
 import { Avatar } from "antd";
-import { Col, Row } from "antd";
-const { Meta } = Card;
+//const { Meta } = Card;
 
 const MeetingConferenceButton = ( { activity, toggleConference, usuarioRegistrado, event } ) => {
     const [ infoActivity, setInfoActivity ] = useState( {} );
@@ -53,16 +52,12 @@ const MeetingConferenceButton = ( { activity, toggleConference, usuarioRegistrad
 
         case "closed_meeting_room":
             return <Alert message="El ingreso se habilitará minutos antes del evento" type="warning" showIcon />;
-            break;
 
         case "ended_meeting_room":
             return <Alert message="El evento ha terminado" type="info" showIcon />;
 
-            break;
-
         default:
             return <Alert message="Cargando..." type="warning" showIcon />;
-            break;
     }
 };
 
@@ -168,7 +163,7 @@ class VirtualConference extends Component {
                                 <Card
                                     avatar={ <Avatar src="" /> }
                                     bordered={ true } style={ { marginBottom: "3%" } }>
-                                    {/* <Meta
+                                    {/* Experimento de estilo <Meta
                                         avatar={ <><Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /> <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /></> }
                                         title="Card titlesfas fdas dfa sdf asdf as as as df"
                                         description="This is the description"
