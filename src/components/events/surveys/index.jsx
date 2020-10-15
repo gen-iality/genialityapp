@@ -59,7 +59,8 @@ class SurveyForm extends Component {
   }
 
   openSurvey = (currentSurvey) => {
-    //console.log("Esta es la encuesta actual:", currentSurvey);
+    // eslint-disable-next-line no-console
+    console.log("Esta es la encuesta actual:", currentSurvey);
   };
 
   surveyVisible = () => {
@@ -177,9 +178,6 @@ class SurveyForm extends Component {
 
         if (surveys.length === arr.length) resolve(surveys);
       });
-
-
-
     });
 
     let stateSurveys = await votesUserInSurvey;

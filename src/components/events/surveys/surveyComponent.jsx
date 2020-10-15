@@ -57,7 +57,6 @@ class SurveyComponent extends Component {
     self.setState({ surveyData, idSurvey, survey });
     self.survey = survey;
 
-    console.log("CARGADO todo");
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
 
@@ -84,14 +83,13 @@ class SurveyComponent extends Component {
   }
 
   getRankingList = (list) => {
-    console.log("ranking", list);
+    //console.log("ranking", list);
     this.setState({ rankingList: list });
   };
 
   getCurrentEvenUser = async () => {
     let evius_token = Cookie.get("evius_token");
     let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
-    console.log("response", response);
     if (response.data.length > 0) {
       let vote = 0;
       response.data.forEach((item) => {
@@ -193,7 +191,6 @@ class SurveyComponent extends Component {
     // Asigna puntos si la encuesta tiene
     let surveyPoints = question.points && parseInt(question.points);
     let rankingPoints = 0;
-    console.log(question);
 
     return new Promise((resolve, reject) => {
       // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
@@ -282,7 +279,6 @@ class SurveyComponent extends Component {
   validateIfHasResponse = (survey) => {
     return new Promise((resolve, reject) => {
       survey.currentPage.questions.forEach((question) => {
-        console.log(question, question.value);
         if (question.value === undefined) {
           resolve({ isUndefined: true });
         } else {
@@ -461,7 +457,7 @@ class SurveyComponent extends Component {
 
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
   setFinalMessage = (survey, options) => {
-    let { surveyData , totalPoints } = this.state;
+    let { surveyData, totalPoints } = this.state;
 
     let textOnCompleted = survey.completedHtml;
 
@@ -493,8 +489,8 @@ class SurveyComponent extends Component {
   /* handler cuando la encuesta cambio de pregunta */
   onCurrentPageChanged = (survey, o) => {
 
-    let { surveyData, currentPage } = this.state;    
-    console.log("onCurrentPageChanged", currentPage, "current", survey.currentPageNo)
+    let { surveyData, currentPage } = this.state;
+    //console.log("onCurrentPageChanged", currentPage, "current", survey.currentPageNo)
     if (surveyData.allow_gradable_survey !== "true") return;
 
     /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
@@ -517,7 +513,7 @@ class SurveyComponent extends Component {
   checkCurrentPage = (survey) => {
 
 
-    let { currentPage, surveyData } = this.state;    
+    let { currentPage, surveyData } = this.state;
 
     // Este condicional sirve para retomar la encuesta donde vayan todos los demas usuarios
     if (surveyData.allow_gradable_survey === "true") {
@@ -540,7 +536,7 @@ class SurveyComponent extends Component {
 
     const { showListSurvey, surveyLabel, eventId } = this.props;
 
-    if (!surveyData ) return "Cargando..."
+    if (!surveyData) return "Cargando..."
     return (
 
       <div style={surveyStyle}>

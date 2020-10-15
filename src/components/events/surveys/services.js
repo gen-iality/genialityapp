@@ -1,18 +1,18 @@
-import { firestore } from "../../../helpers/firebase";
-import { SurveysApi } from "../../../helpers/request";
+import { firestore } from '../../../helpers/firebase';
+import { SurveysApi } from '../../../helpers/request';
 
 // Funcion para crear e inicializar la collecion del conteo de las respuestas por preguntas
 const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIndex, voteValue) => {
   return new Promise((resolve, reject) => {
     // Se referencia la colleccion a usar
     const ref_quantity = firestore
-      .collection("surveys")
+      .collection('surveys')
       .doc(surveyId)
-      .collection("answer_count")
+      .collection('answer_count')
       .doc(questionId);
 
     // Se valida si el voto tiene valor de lo contrario sumara 1
-    let vote = typeof voteValue == "number" ? parseFloat(voteValue) : 1;
+    let vote = typeof voteValue == 'number' ? parseFloat(voteValue) : 1;
 
     // Se crea un objeto que se asociara a las opciones de las preguntas
     // Y se inicializan con valores en 0, para luego realizar el conteo
@@ -38,7 +38,7 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
     // Se resuelve la promesa si la coleccion ya existe
     ref_quantity.get().then((data) => {
       if (data.exists) {
-        resolve({ message: "Existe el documento", optionIndex, surveyId, questionId });
+        resolve({ message: 'Existe el documento', optionIndex, surveyId, questionId });
       }
     });
   });
@@ -49,12 +49,12 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
   createAndInitializeCount(surveyId, questionId, optionQuantity, optionIndex, voteValue).then(
     ({ surveyId, message, questionId, optionIndex }) => {
       // Se valida si el voto tiene valor de lo contrario sumara 1
-      let vote = typeof voteValue == "number" ? parseFloat(voteValue) : 1;
+      let vote = typeof voteValue == 'number' ? parseFloat(voteValue) : 1;
 
       const shard_ref = firestore
-        .collection("surveys")
+        .collection('surveys')
         .doc(surveyId)
-        .collection("answer_count")
+        .collection('answer_count')
         .doc(questionId);
 
       // Se obtiene el index de la opcion escogida
@@ -64,7 +64,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
       return firestore.runTransaction((t) => {
         return t.get(shard_ref).then((doc) => {
           // Condiciona si tiene mas de una opcion escogida
-          if (position.length > 1) {
+          if (position.length >= 1) {
             position.forEach((element) => {
               const new_count = doc.data()[element] + vote;
               t.update(shard_ref, { [element]: new_count });
@@ -83,11 +83,12 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
 
 export const SurveyPage = {
   // Obtiene la pagina actual de la encuesta
+  // eslint-disable-next-line no-unused-vars
   getCurrentPage: (surveyId, self) => {
     return new Promise((resolve, reject) => {
       try {
         firestore
-          .collection("surveys")
+          .collection('surveys')
           .doc(surveyId)
           .onSnapshot((survey) => {
             let { currentPage } = survey.data();
@@ -102,7 +103,7 @@ export const SurveyPage = {
   // Actualiza la pagina actual de la encuesta
   setCurrentPage: (surveyId, page) => {
     firestore
-      .collection("surveys")
+      .collection('surveys')
       .doc(surveyId)
       .update({ currentPage: page });
   },
@@ -138,20 +139,20 @@ export const SurveyAnswers = {
 
     return new Promise((resolve, reject) => {
       firestore
-        .collection("surveys")
+        .collection('surveys')
         .doc(surveyId)
-        .collection("answers")
+        .collection('answers')
         .doc(questionId)
-        .collection("responses")
+        .collection('responses')
         .doc(uid)
         .set(data)
         .then(() => {
-          console.log("Document successfully updated!");
+          console.log('Document successfully updated!');
           // resolve("Las respuestas han sido enviadas");
-          resolve("El voto ha sido registrado");
+          resolve('El voto ha sido registrado');
         })
         .catch((err) => {
-          console.log("Document successfully updated!");
+          console.log('Document successfully updated!');
           reject(err);
         });
     });
@@ -181,33 +182,34 @@ export const SurveyAnswers = {
 
     return new Promise((resolve, reject) => {
       firestore
-        .collection("surveys")
+        .collection('surveys')
         .doc(surveyId)
-        .collection("answers")
+        .collection('answers')
         .doc(questionId)
-        .collection("responses")
+        .collection('responses')
         .add(data)
         .then(() => {
-          console.log("Document successfully updated!");
-          resolve("Las respuestas han sido enviadas");
+          console.log('Document successfully updated!');
+          resolve('Las respuestas han sido enviadas');
         })
         .catch((err) => {
-          console.log("Document successfully updated!");
+          console.log('Document successfully updated!');
           reject(err);
         });
     });
   },
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
   getAnswersQuestion: async (surveyId, questionId, eventId, updateData) => {
+    console.log('START get answer question +++++++++++++++++++++++++++++++++');
 
     return new Promise(async (resolve, reject) => {
       let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
       let options = dataSurvey.questions.find((question) => question.id === questionId);
 
       firestore
-        .collection("surveys")
+        .collection('surveys')
         .doc(surveyId)
-        .collection("answer_count")
+        .collection('answer_count')
         .doc(questionId)
         .onSnapshot((listResponse) => {
           updateData({ answer_count: listResponse.data(), options });
@@ -220,9 +222,9 @@ export const SurveyAnswers = {
 
     return new Promise((resolve, reject) => {
       firestore
-        .collectionGroup("responses")
-        .where("id_survey", "==", survey._id)
-        .where("id_user", "==", userId)
+        .collectionGroup('responses')
+        .where('id_survey', '==', survey._id)
+        .where('id_user', '==', userId)
         .get()
         .then((result) => {
           result.forEach(function(doc) {
@@ -266,13 +268,13 @@ export const UserGamification = {
         .get()
         .then((doc) => {
           if (doc.exists) {
-            resolve({ message: "Se encontro un registro", status: true, data: doc.data() });
+            resolve({ message: 'Se encontro un registro', status: true, data: doc.data() });
           }
-          resolve({ message: "No se encontraron registros", status: false });
+          resolve({ message: 'No se encontraron registros', status: false });
         })
         .catch((err) => {
-          console.log("err:", err);
-          reject({ message: "Ha ocurrido un error", err });
+          console.log('err:', err);
+          reject({ message: 'Ha ocurrido un error', err });
         });
     });
   },
@@ -288,10 +290,10 @@ export const UserGamification = {
         .doc(userInfo.user_id)
         .set({ ...userInfo, created_at: new Date(), updated_at: new Date() })
         .then(() => {
-          console.log("Puntos registrados satisfactoriamente");
+          console.log('Puntos registrados satisfactoriamente');
         })
         .catch((err) => {
-          console.log("Ha ocurrido un error", err);
+          console.log('Ha ocurrido un error', err);
         });
     } else {
       let { points } = userInfo;
@@ -304,10 +306,10 @@ export const UserGamification = {
         .doc(userInfo.user_id)
         .update({ points, updated_at: new Date() })
         .then(() => {
-          console.log("Puntos registrados satisfactoriamente");
+          console.log('Puntos registrados satisfactoriamente');
         })
         .catch((err) => {
-          console.log("Ha ocurrido un error", err);
+          console.log('Ha ocurrido un error', err);
         });
     }
   },
