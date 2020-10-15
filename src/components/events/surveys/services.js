@@ -64,7 +64,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
       return firestore.runTransaction((t) => {
         return t.get(shard_ref).then((doc) => {
           // Condiciona si tiene mas de una opcion escogida
-          if (position.length >= 1) {
+          if (position.length > 1) {
             position.forEach((element) => {
               const new_count = doc.data()[element] + vote;
               t.update(shard_ref, { [element]: new_count });
