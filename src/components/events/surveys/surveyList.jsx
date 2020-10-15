@@ -11,20 +11,21 @@ const headStyle = {
 
 //Componente que renderiza el listado de encuestas publicadas para la actividad
 
-const SurveyList = ( { jsonData, showSurvey, usuarioRegistrado, surveyLabel } ) => {
-  const [ surveyList, setSurveyList ] = useState( [] );
+const SurveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
+  const [surveyList, setSurveyList] = useState([]);
   //const [ isASpeaker, setIsASpeaker ] = useState( false );
 
-  useEffect( () => {
+  useEffect(() => {
     let surveyList = jsonData;
+    console.log('survey list ---------------------------------------', surveyList)
     //Los usuarios anónimos solo ven las encuestas que permiten respuestas anónimas
-    if ( !usuarioRegistrado ) {
-      surveyList = jsonData.filter( ( item ) => { return item.allow_anonymous_answers !== "false" } )
+    if (!usuarioRegistrado) {
+      surveyList = jsonData.filter((item) => { return item.allow_anonymous_answers !== "false" })
     }
 
-    setSurveyList( surveyList );
+    setSurveyList(surveyList);
 
-  }, [ jsonData, usuarioRegistrado ] );
+  }, [jsonData, usuarioRegistrado]);
 
   // useEffect( () => {
   //   let isASpeaker = false
@@ -36,43 +37,43 @@ const SurveyList = ( { jsonData, showSurvey, usuarioRegistrado, surveyLabel } ) 
   //   setIsASpeaker( isASpeaker )
   // }, [ usuarioRegistrado ] )
 
-  const pluralToSingular = ( char, t1, t2 ) => {
-    if ( t1 !== undefined ) return `${ t1 }${ t2 }`;
+  const pluralToSingular = (char, t1, t2) => {
+    if (t1 !== undefined) return `${t1}${t2}`;
     return "";
   };
 
   return (
-    <Card title={ `Lista de ${ surveyLabel.name }` } className="survyCard" headStyle={ headStyle }>
+    <Card title={`Lista de ${surveyLabel.name}`} className="survyCard" headStyle={headStyle}>
       <Fragment>
-        { surveyList && surveyList.length === 0 && (
-          <Result icon={ <MehOutlined /> } title="Aún no se han publicado encuestas" />
-        ) }
+        {surveyList && surveyList.length === 0 && (
+          <Result icon={<MehOutlined />} title="Aún no se han publicado encuestas" />
+        )}
 
-        { surveyList && surveyList.length > 0 && (
+        {surveyList && surveyList.length > 0 && (
           <List
-            dataSource={ surveyList }
-            renderItem={ ( survey ) =>
-              <List.Item key={ survey._id }>
-                <List.Item.Meta title={ survey.survey } style={ { textAlign: "left" } } />
-                { survey.userHasVoted && ( <div><Tag color="success">Respondida</Tag></div> ) }
-                { survey.open && ( <div> {survey.open == "true" ? <Tag color="green">Abierta</Tag> : <Tag color="red">Cerrada</Tag> }</div> ) }
+            dataSource={surveyList}
+            renderItem={(survey) =>
+              <List.Item key={survey._id}>
+                <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
+                {survey.userHasVoted && (<div><Tag color="success">Respondida</Tag></div>)}
+                {survey.open && (<div> {survey.open == "true" ? <Tag color="green">Abierta</Tag> : <Tag color="red">Cerrada</Tag>}</div>)}
                 <div>
                   <Button
                     ghost
-                    type={ !survey.userHasVoted ? "primary" : "" }
-                    className={ `${ !survey.userHasVoted ? "animate__animated  animate__pulse animate__slower animate__infinite" : "" }` }
-                    onClick={ () => showSurvey( survey ) }
-                    loading={ survey.userHasVoted === undefined }>
-                    { ( !survey.userHasVoted && survey.open == "true" )
-                      ? `Ir a ${ surveyLabel.name ? surveyLabel.name.replace( /([^aeiou]{2})?(e)?s\b/gi, pluralToSingular ) : "Encuesta"
+                    type={!survey.userHasVoted ? "primary" : ""}
+                    className={`${!survey.userHasVoted ? "animate__animated  animate__pulse animate__slower animate__infinite" : ""}`}
+                    onClick={() => showSurvey(survey)}
+                    loading={survey.userHasVoted === undefined}>
+                    {(!survey.userHasVoted && survey.open == "true")
+                      ? `Ir a ${surveyLabel.name ? surveyLabel.name.replace(/([^aeiou]{2})?(e)?s\b/gi, pluralToSingular) : "Encuesta"
                       }`
-                      : " Ver Resultados" }
+                      : " Ver Resultados"}
                   </Button>
                 </div>
               </List.Item>
             }
           />
-        ) }
+        )}
       </Fragment>
     </Card>
   );
