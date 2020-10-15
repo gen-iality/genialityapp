@@ -8,12 +8,12 @@ import Moment from 'moment';
 const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
-  pushURL: 'https://104.248.125.133:6477/pushNotification'
+  pushURL: 'https://104.248.125.133:6477/pushNotification',
 });
 const privateInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
-  withCredentials: true
+  withCredentials: true,
 });
 
 // const privateInstancePush = axios.create({
@@ -65,9 +65,9 @@ export const fireStoreApi = {
       properties: eventUser.properties,
       updated_at: new Date(),
       checked_in: true,
-      checked_at: new Date()
+      checked_at: new Date(),
     });
-  }
+  },
 };
 export const Actions = {
   create: (url, data, unsafe) => {
@@ -102,7 +102,7 @@ export const Actions = {
   getAll: (url, unsafe) => {
     if (unsafe) return publicInstance.get(`${url}`).then(({ data }) => data);
     return privateInstance.get(`${url}`).then(({ data }) => data);
-  }
+  },
 };
 export const EventsApi = {
   getEventUser: async (user_id, event_id) => {
@@ -116,7 +116,6 @@ export const EventsApi = {
 
   getcurrentUserEventUser: async (event_id) => {
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}`, false);
-    console.log('checkin eventUser', response);
 
     let eventUser = response.data && response.data[0] ? response.data[0] : null;
     return eventUser;
@@ -169,13 +168,13 @@ export const EventsApi = {
   },
   getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`);
-  }
+  },
 };
 
 export const InvitationsApi = {
   getAll: async (id) => {
     return await Actions.getAll(`/api/events/${id}/invitation`);
-  }
+  },
 };
 
 export const UsersApi = {
@@ -209,7 +208,7 @@ export const UsersApi = {
   },
   deleteOne: async (user, id) => {
     return await Actions.delete(`/api/user/events/${id}`, user);
-  }
+  },
 };
 
 export const eventTicketsApi = {
@@ -224,7 +223,7 @@ export const eventTicketsApi = {
   },
   delete: async (eventId, id) => {
     return await Actions.delete(`api/events/${eventId}/tickets`, id);
-  }
+  },
 };
 
 export const TicketsApi = {
@@ -242,7 +241,7 @@ export const TicketsApi = {
     //let data = { checkedin_at: new Date().toISOString() };
     let data = { checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss') };
     return await Actions.put(`/api/events/${event_id}/eventusers/${eventUser_id}`, data);
-  }
+  },
 };
 
 export const EventFieldsApi = {
@@ -260,7 +259,7 @@ export const EventFieldsApi = {
   },
   deleteOne: async (id, event) => {
     return await Actions.delete(`/api/events/${event}/userproperties`, id);
-  }
+  },
 };
 
 export const SurveysApi = {
@@ -292,7 +291,7 @@ export const SurveysApi = {
   },
   editQuestion: async (event, id, index, data) => {
     return await Actions.put(`/api/events/${event}/questionedit/${id}?questionNo=${index}`, data);
-  }
+  },
 };
 
 export const DocumentsApi = {
@@ -317,20 +316,20 @@ export const DocumentsApi = {
   },
   create: async (event, data) => {
     return await Actions.create(`api/events/${event}/documents`, data);
-  }
+  },
 };
 
 export const CategoriesApi = {
   getAll: async () => {
     const resp = await Actions.getAll('api/categories');
     return handleSelect(resp.data);
-  }
+  },
 };
 export const TypesApi = {
   getAll: async () => {
     const resp = await Actions.getAll('api/eventTypes');
     return handleSelect(resp.data);
-  }
+  },
 };
 export const OrganizationApi = {
   mine: async () => {
@@ -363,7 +362,7 @@ export const OrganizationApi = {
   },
   deleteUser: async (org, member) => {
     return await Actions.delete(`/api/organizations/${org}/users/`, member);
-  }
+  },
 };
 export const BadgeApi = {
   create: async (data) => {
@@ -374,7 +373,7 @@ export const BadgeApi = {
   },
   get: async (id) => {
     return await Actions.getOne('/api/escarapelas/', id);
-  }
+  },
 };
 export const HelperApi = {
   listHelper: async (id) => {
@@ -391,7 +390,7 @@ export const HelperApi = {
   },
   removeHelper: async (id, event) => {
     return await Actions.delete(`api/events/${event}/contributors`, id);
-  }
+  },
 };
 export const CertsApi = {
   byEvent: async (event) => {
@@ -416,16 +415,16 @@ export const CertsApi = {
     return new Promise((resolve, reject) => {
       privateInstance
         .post('/api/generatecertificate?download=1', body, {
-          responseType: 'blob'
+          responseType: 'blob',
         })
         .then((response) => {
           resolve({
             type: response.headers['content-type'],
-            blob: response.data
+            blob: response.data,
           });
         });
     });
-  }
+  },
 };
 
 export const NewsFeed = {
@@ -443,7 +442,7 @@ export const NewsFeed = {
   },
   create: async (data, id) => {
     return await Actions.create(`api/events/${id}/newsfeed`, data);
-  }
+  },
 };
 
 export const PushFeed = {
@@ -461,7 +460,7 @@ export const PushFeed = {
   },
   create: async (data, id) => {
     return await Actions.create(`api/events/${id}/sendpush`, data);
-  }
+  },
 };
 
 export const FaqsApi = {
@@ -479,7 +478,7 @@ export const FaqsApi = {
   },
   create: async (data, id) => {
     return await Actions.create(`api/events/${id}/faqs`, data);
-  }
+  },
 };
 
 export const RolAttApi = {
@@ -497,7 +496,7 @@ export const RolAttApi = {
   },
   create: async (data, event) => {
     return await Actions.create(`api/events/${event}/rolesattendees`, data);
-  }
+  },
 };
 export const SpacesApi = {
   byEvent: async (event) => {
@@ -514,7 +513,7 @@ export const SpacesApi = {
   },
   create: async (data, event) => {
     return await Actions.create(`api/events/${event}/spaces`, data);
-  }
+  },
 };
 export const CategoriesAgendaApi = {
   byEvent: async (event) => {
@@ -531,7 +530,7 @@ export const CategoriesAgendaApi = {
   },
   create: async (event, data) => {
     return await Actions.create(`api/events/${event}/categoryactivities`, data);
-  }
+  },
 };
 export const TypesAgendaApi = {
   byEvent: async (event) => {
@@ -548,7 +547,7 @@ export const TypesAgendaApi = {
   },
   create: async (event, data) => {
     return await Actions.create(`api/events/${event}/type`, data);
-  }
+  },
 };
 export const AgendaApi = {
   byEvent: async (event) => {
@@ -574,7 +573,7 @@ export const AgendaApi = {
   },
   zoomConference: async (event, id, data) => {
     return await Actions.create(`api/events/${event}/createmeeting/${id}`, data);
-  }
+  },
 };
 export const SpeakersApi = {
   byEvent: async (event) => {
@@ -591,7 +590,7 @@ export const SpeakersApi = {
   },
   create: async (event, data) => {
     return await Actions.create(`api/events/${event}/host`, data);
-  }
+  },
 };
 
 export const Activity = {
@@ -615,7 +614,7 @@ export const Activity = {
     let data = {
       user_id,
       activity_id,
-      checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss')
+      checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss'),
     };
     let result = await Actions.put(`api/events/${event_id}/activities_attendees/checkin`, data);
     return result;
@@ -623,7 +622,7 @@ export const Activity = {
 
   DeleteRegister: async (event, id) => {
     return await Actions.delete(`api/events/${event}/activities_attendees`, id);
-  }
+  },
 };
 
 export const Networking = {
@@ -638,13 +637,13 @@ export const Networking = {
   },
   getContactList: async (eventId, userId) => {
     return await Actions.getOne(`/api/events/${eventId}/contactlist/`, userId);
-  }
+  },
 };
 
 export const ActivityBySpeaker = {
   byEvent: async (event, idSpeaker) => {
     return await Actions.getOne(`api/events/${event}/activitiesbyhost/`, idSpeaker);
-  }
+  },
 };
 
 export default privateInstance;

@@ -112,6 +112,7 @@ class Graphics extends Component {
         scales: {
           yAxes: [{
             ticks: {
+              beginAtZero: true,
               fontSize: 15,
               fontColor: '#777',
               minor: { display: true },
@@ -119,6 +120,7 @@ class Graphics extends Component {
           }],
           xAxes: [{
             ticks: {
+              beginAtZero: true,
               fontColor: '#777',
             }
           }],
@@ -153,7 +155,7 @@ class Graphics extends Component {
     let { questions } = dataSurvey;
 
     // Se ejecuta servicio para tener el conteo de las respuestas
-    SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId, this.updateData);
+    await SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId, this.updateData)
   };
 
   async componentDidMount() {

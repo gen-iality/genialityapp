@@ -5,7 +5,7 @@ import { SurveyAnswers } from "./services";
 import Graphics from "./graphics";
 import SurveyComponent from "./surveyComponent";
 
-import { Card,  Spin } from "antd";
+import { Card, Spin } from "antd";
 
 export default class RootPage extends Component {
   constructor(props) {
@@ -22,7 +22,6 @@ export default class RootPage extends Component {
 
   loadData = (prevProps) => {
     const { idSurvey, eventId, currentUser, eventUser } = this.props;
-    console.log("surveydebug",currentUser, eventUser);
     if (!prevProps || idSurvey !== prevProps.idSurvey) {
       this.setState({ idSurvey, eventId, currentUser, eventUser }, this.seeIfUserHasVote);
     }
@@ -37,7 +36,7 @@ export default class RootPage extends Component {
   }
 
   seeIfUserHasVote = async () => {
-    let { idSurvey,  eventId, currentUser } = this.state;
+    let { idSurvey, eventId, currentUser } = this.state;
     const { userHasVoted, selectedSurvey } = this.props;
 
     if (currentUser) {
@@ -53,8 +52,6 @@ export default class RootPage extends Component {
       let guestVoteInSurvey = await guestUser;
       this.setState({ guestVoteInSurvey, isLoading: false });
     }
-
-
   };
 
   render() {

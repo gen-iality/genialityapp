@@ -17,7 +17,7 @@ export const getCurrentUser = (token) => {
         }
       } catch (error) {
         const { status } = error.response;
-        console.log('STATUS', status, status === 401);
+        console.error('STATUS', status, status === 401);
       }
     }
   });
@@ -29,7 +29,7 @@ export const getCurrentEventUser = (eventId, userId) => {
     const users = await UsersApi.getAll(eventId, '?pageSize=10000');
 
     let currentEventUser = filterList(users.data, userId);
-    console.log('servicio de validacion de registro de usuario', currentEventUser);
+
     if (currentEventUser) resolve(currentEventUser);
     resolve(false);
   });
@@ -53,7 +53,7 @@ export const userRequest = {
         resolve(docs);
       });
     });
-  }
+  },
 };
 
 export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
@@ -70,7 +70,7 @@ export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
         result.docs.forEach((doc) => {
           data.push({
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
           });
         });
 
@@ -97,7 +97,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
       existingAgendaResult.docs.forEach((doc) => {
         existingAgendas.push({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         });
       });
 
@@ -116,7 +116,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
             type: 'meeting',
             timestamp_start: timetableItem.timestamp_start,
             timestamp_end: timetableItem.timestamp_end,
-            message
+            message,
           });
         // enviamos notificaciones por correo
         let data = {
@@ -127,7 +127,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
           event_id: eventId,
           state: 'send',
           request_type: 'meeting',
-          start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString()
+          start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString(),
         };
 
         EventsApi.sendMeetingRequest(eventId, data);
@@ -240,7 +240,7 @@ export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newSta
       acceptedAgendasAtSameTimeResult.docs.forEach((doc) => {
         const newDataItem = {
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         };
 
         if (newDataItem.owner_id !== currentEventUserId) {
@@ -282,7 +282,7 @@ export const getAcceptedAgendasFromEventUser = (eventId, currentEventUserId) => 
         result.docs.forEach((doc) => {
           const newDataItem = {
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
           };
 
           if (newDataItem.type !== 'reserved') {

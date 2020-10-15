@@ -22,6 +22,7 @@ class Graphics extends Component {
 
 
   componentDidMount() {
+    console.log('<<<<<<<<< start gamification >>>>>>>>>>>>>>>>>')
     this.loadData();
   }
 
@@ -120,7 +121,7 @@ class Graphics extends Component {
   }
 
   render() {
-    let { dataGamification } = this.state;    
+    let { dataGamification } = this.state;
 
     if (dataGamification !== null)
       return (
