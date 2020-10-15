@@ -9,7 +9,7 @@ import { AgendaApi } from '../../helpers/request'
 import { getCurrentUser, getCurrentEventUser, userRequest } from "../networking/services";
 import * as Cookie from "js-cookie";
 import { parseUrl } from '../../helpers/constants'
-import AgendaActividadDetalle from '../../components/events/agendaActividadDetalle'
+import AgendaActividadDetalle from './agendaActividadDetalle'
 
 class eventLanding extends Component {
   constructor( props ) {
@@ -80,7 +80,13 @@ class eventLanding extends Component {
 
     return (
 
-      <div style={ { marginBottom: 12 } }>
+      <div style={ { marginRight: 12, marginBottom: 12 } }>
+
+        {( this.state.eventUser && <div className="columns is-centered">
+
+
+
+        </div> ) }
 
         <Card className="event-description" bodyStyle={ { padding: "25px 5px" } } bordered={ true } style={ event.styles.show_card_banner && event.styles.show_card_banner === true ? { marginTop: "23%" } : { marginTop: "0px" } }>
           {
@@ -201,6 +207,5 @@ class eventLanding extends Component {
     )
   }
 }
-
 
 export default withRouter( eventLanding )

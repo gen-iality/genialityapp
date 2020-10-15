@@ -124,6 +124,11 @@ class SurveyForm extends Component {
           publishedSurveys.push({ ...doc.data(), _id: doc.id });
         });
 
+        //Filtramos las encuestas que  pueden ver los usuarios anónimos
+        if (!this.state.currentUser) {
+          publishedSurveys = publishedSurveys.filter((item) => item.allow_anonymous_answers !== "false");
+        }
+
         let publishedSurveysIds = publishedSurveys.map((item) => item._id);
 
         let surveysData = await SurveysApi.getAll(event._id);
@@ -133,6 +138,9 @@ class SurveyForm extends Component {
         if (activity && activity._id) {
           surveysData = surveysData.filter((item) => item.activity_id === activity._id);
         }
+
+
+
 
         surveysData = surveysData.filter((item) => publishedSurveysIds.indexOf(item._id) !== -1);
         this.setState({ surveyRecentlyChanged: true });
@@ -206,6 +214,7 @@ class SurveyForm extends Component {
 
   getCurrentEvenUser = async (eventId) => {
     let evius_token = Cookie.get("evius_token");
+    if (!evius_token) return null;
     let response = await TicketsApi.getByEvent(eventId, evius_token);
     return (response && response.data.length) ? response.data[0] : null;
 
