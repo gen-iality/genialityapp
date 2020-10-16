@@ -15,7 +15,8 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
             <Col xs={24} sm={24} md={24} lg={0}>
                 <img src={mobileBanner} alt={title} />
             </Col>
-            {!(styles && styles.show_card_banner && styles.show_card_banner === "false")}
+            {!(styles && styles.show_card_banner && styles.show_card_banner === "false") && <HeaderEventInfo title={title} {...props} />}
+
             {/* Imagen opcional para el logo o marca del evento  */}
             {/* <div className="container-logoBanner">
                     <img src="https://storage.googleapis.com/herba-images/evius/events/97XuEjJwHIkAyoAO1PreHOMUKMgFfM6MRmyEB5PS.jpeg" alt="" />
