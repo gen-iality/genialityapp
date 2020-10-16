@@ -151,19 +151,17 @@ class Landing extends Component {
     let eventUsers = null;
 
     const id = this.props.match.params.event;
-    const validateCookie = Cookie.get("evius_token")
 
-    if (validateCookie) {
-      try {
-        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-        if (resp.status !== 200 && resp.status !== 202) return;
-        user = resp.data;
-        this.setState({ user: resp.data })
-      } catch (err) {
-        console.error('Error Landing', err.status)
-        window.location.replace('/')
-      }
+    try {
+      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+      if (resp.status !== 200 && resp.status !== 202) return;
+      user = resp.data;
+      this.setState({ user: resp.data })
+    } catch (err) {
+      console.error('Error Landing', err.status)
+      //window.location.replace('/')
     }
+
 
 
     /* Trae la información del evento con la instancia pública*/
@@ -201,16 +199,6 @@ class Landing extends Component {
       agenda: (<AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />),
       tickets: (
         <>
-          {/* {(this.state.eventUser && <div className="columns is-centered">
-
-            <VirtualConference
-              event={this.state.event}
-              currentUser={this.state.currentUser}
-              usuarioRegistrado={this.state.eventUser}
-              toggleConference={this.toggleConference}
-            />
-
-          </div>)} */}
           <div className="columns is-centered">
             <TicketsForm
               stages={event.event_stages}
@@ -243,67 +231,71 @@ class Landing extends Component {
       login: <UserLogin eventId={event._id} />,
       partners: <Partners eventId={event._id} />,
       evento: (
+        <>
+          <Row justify="center">
+            <Col sm={24} md={16} lg={18} xl={18}>
+              <VirtualConference
+                event={event}
+                currentUser={this.state.currentUser}
+                usuarioRegistrado={this.state.eventUser}
+                toggleConference={this.toggleConference}
+              />
+              <MapComponent event={event} />
+            </Col>
+          </Row>
+          <Row justify="center" >
 
-        <Row justify="center" >
-          <Col sm={24} md={16} lg={18} xl={18}>
-            {(this.state.event && this.state.event._id !== "5f0b95ca34c8116f9b21ebd6") &&
-              <EventLanding event={event} toggleConference={this.toggleConference} showSection={this.showSection} />
-            }
-            {(this.state.event && this.state.event._id === "5f0b95ca34c8116f9b21ebd6") &&
-              <>
-                <ReactPlayer
-                  width={"100%"}
-                  style={{
-                    display: "block",
-                    margin: "0 auto",
-                  }}
-                  url={event.video}
-                  //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-                  controls
-                />
-                <div className="the-lobby-video-column">
-                  <div className="the-lobby-video">
-                    <div className="the-lobby-video-wrap-holder">
-                      <div className="the-lobby-video-holder">
-                        <img src="/lobby/TIRA_PANTALLA.png" alt="" />
+            <Col sm={24} md={16} lg={18} xl={18}>
+              {(this.state.event && this.state.event._id !== "5f0b95ca34c8116f9b21ebd6") &&
+                <EventLanding event={event} currentUser={this.state.currentUser} usuarioRegistrado={this.state.eventUser} toggleConference={this.toggleConference} showSection={this.showSection} />
+              }
+              {(this.state.event && this.state.event._id === "5f0b95ca34c8116f9b21ebd6") &&
+                <>
+                  <ReactPlayer
+                    width={"100%"}
+                    style={{
+                      display: "block",
+                      margin: "0 auto",
+                    }}
+                    url={event.video}
+                    //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                    controls
+                  />
+                  <div className="the-lobby-video-column">
+                    <div className="the-lobby-video">
+                      <div className="the-lobby-video-wrap-holder">
+                        <div className="the-lobby-video-holder">
+                          <img src="/lobby/TIRA_PANTALLA.png" alt="" />
+                        </div>
+                        <div className="the-lobby-video-holder">
+                          <img src="/lobby/TIRA_PANTALLA.png" alt="" />
+                        </div>
                       </div>
-                      <div className="the-lobby-video-holder">
-                        <img src="/lobby/TIRA_PANTALLA.png" alt="" />
+                      <div className="the-lobby-video-wrap">
+                        <div className="the-lobby-video-container">
+                          <ReactPlayer
+
+                            url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
+                            //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                            controls
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className="the-lobby-video-wrap">
-                      <div className="the-lobby-video-container">
-                        <ReactPlayer
-
-                          url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
-                          //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-                          controls
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  {
-                    // Todo: Poner link a listado de empresas
-                  }
-                  {/*
+                    {
+                      // Todo: Poner link a listado de empresas
+                    }
+                    {/*
               <Button onClick={this.showSection('companies')} className="the-lobby-exhibitors-btn">
               <img src="/lobby/BOTON_STANDS.png" alt=""/>
               </Button>
             */}
-                </div>
-              </>
-            }
-          </Col>
-          <Col sm={24} md={8} lg={6} xl={6}>
-            <VirtualConference
-              event={event}
-              currentUser={this.state.currentUser}
-              usuarioRegistrado={this.state.eventUser}
-              toggleConference={this.toggleConference}
-            />
-            <MapComponent event={event} />
-          </Col>
-        </Row>
+                  </div>
+                </>
+              }
+            </Col>
+          </Row>
+        </>
       ),
     };
     //default section is firstone

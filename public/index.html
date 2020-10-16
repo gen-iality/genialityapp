@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="theme-color" content="#000000" />
@@ -30,53 +29,34 @@
     <meta name="description" content="Eventos" />
 
     <script>
-        // si esta en producción retorna el dominio evius.co si está en modo desarrollo retorna localhost
-        document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
+      // si esta en producción retorna el dominio evius.co si está en modo desarrollo retorna localhost
+      document.domain = /(\w+)(.\w+)?$/.exec(location.hostname)[0];
     </script>
-    <link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
-    <link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
     <script src="https://www.gstatic.com/firebasejs/ui/3.5.2/firebase-ui-auth__es.js"></script>
 
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
     <link rel="stylesheet/less" type="text/css" href="%PUBLIC_URL%/color.less" />
     <script>
-        window.less = {
-            async: true,
-            env: 'development',
-            javascriptEnabled: true,
-
-        };
+      window.less = {
+        async: true,
+        env: 'development',
+        javascriptEnabled: true
+      };
     </script>
 
-    <!-- Google Tag Manager -->
-    <script>
-        (function (w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-MQJQCS9');
-    </script>
-    <!-- End Google Tag Manager -->
     <script src="//cdn.jsdelivr.net/npm/less"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <noscript>
-        You need to enable JavaScript to run this app.
+      You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
     <!--
@@ -91,26 +71,28 @@
         -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-72179148-1"></script>
-
     <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag("js", new Date());
-
-        gtag("config", "UA-72179148-1");
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-72179148-1');
     </script>
 
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MQJQCS9" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-MQJQCS9"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      ></iframe
+    ></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-
     <!-- Begin of Chaport Live Chat code prueba  chaport.com -->
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         (function (w, d, v3) {
             w.chaportConfig = {
                 appId: '5f63515ef3588379ec577a19'
@@ -121,10 +103,12 @@
     </script>
     <script>
         function initMap() { return true }
-    </script>
+    </script> -->
     <!-- End of Chaport Live Chat code -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk&callback=initMap&libraries=geometry,places"></script>
-</body>
-
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk&callback=initMap&libraries=geometry,places"
+    ></script>
+  </body>
 </html>

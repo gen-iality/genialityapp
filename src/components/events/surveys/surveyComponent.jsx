@@ -89,17 +89,24 @@ class SurveyComponent extends Component {
   };
 
   getCurrentEvenUser = async () => {
-    let evius_token = Cookie.get("evius_token");
-    let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
-    console.log("response", response);
-    if (response.data.length > 0) {
-      let vote = 0;
-      response.data.forEach((item) => {
-        if (item.properties.pesovoto) vote += parseFloat(item.properties.pesovoto);
-      });
 
-      this.setState({ eventUsers: response.data, voteWeight: vote });
+    let evius_token = Cookie.get("evius_token");
+    let eventUsers = [];
+    let vote = 1;
+    if (evius_token) {
+      let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
+      console.log("response", response);
+
+      if (response.data.length > 0) {
+        vote = 0;
+        eventUsers = response.data;
+        response.data.forEach((item) => {
+          if (item.properties.pesovoto) vote += parseFloat(item.properties.pesovoto);
+        });
+      }
+
     }
+    this.setState({ eventUsers: eventUsers, voteWeight: vote });
   };
 
 
@@ -461,7 +468,7 @@ class SurveyComponent extends Component {
 
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
   setFinalMessage = (survey, options) => {
-    let { surveyData , totalPoints } = this.state;
+    let { surveyData, totalPoints } = this.state;
 
     let textOnCompleted = survey.completedHtml;
 
@@ -493,7 +500,7 @@ class SurveyComponent extends Component {
   /* handler cuando la encuesta cambio de pregunta */
   onCurrentPageChanged = (survey, o) => {
 
-    let { surveyData, currentPage } = this.state;    
+    let { surveyData, currentPage } = this.state;
     console.log("onCurrentPageChanged", currentPage, "current", survey.currentPageNo)
     if (surveyData.allow_gradable_survey !== "true") return;
 
@@ -517,7 +524,7 @@ class SurveyComponent extends Component {
   checkCurrentPage = (survey) => {
 
 
-    let { currentPage, surveyData } = this.state;    
+    let { currentPage, surveyData } = this.state;
 
     // Este condicional sirve para retomar la encuesta donde vayan todos los demas usuarios
     if (surveyData.allow_gradable_survey === "true") {
@@ -540,7 +547,7 @@ class SurveyComponent extends Component {
 
     const { showListSurvey, surveyLabel, eventId } = this.props;
 
-    if (!surveyData ) return "Cargando..."
+    if (!surveyData) return "Cargando..."
     return (
 
       <div style={surveyStyle}>

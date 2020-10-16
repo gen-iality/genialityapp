@@ -5,7 +5,7 @@ import { DocumentsApi } from "../../helpers/request";
 import { Link, Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import firebase from "firebase";
-import { Modal } from 'antd';
+import { Modal, Button } from 'antd';
 
 class documents extends Component {
   constructor(props) {
@@ -68,11 +68,16 @@ class documents extends Component {
     });
     this.setState({ file });
 
+    const data = {
+      name: this.state.fileName,
+      title: this.state.fileName,
+      file: this.state.file,
+      type: "file",
+      format: this.state.format
+    };
 
-    //console.log(uploadTask)
-    //console.log(data)
+    await DocumentsApi.create(this.props.event._id, data);
 
-    //console.log(savedData)
     toast.success("Documento Guardado");
     this.setState({ file: "", fileKey: new Date() });
     this.getDocuments();
@@ -81,13 +86,13 @@ class documents extends Component {
   stateUploadFile = snapshot => {
     //Se valida el estado del archivo si esta en pausa y esta subiendo
     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    console.log("Upload is " + progress + "% done");
+    // console.log("Upload is " + progress + "% done");
     switch (snapshot.state) {
       case firebase.storage.TaskState.PAUSED:
-        console.log("Upload is paused");
+        // console.log("Upload is paused");
         break;
       case firebase.storage.TaskState.RUNNING:
-        console.log("Upload is running");
+        // console.log("Upload is running");
         break;
     }
   };
@@ -109,11 +114,9 @@ class documents extends Component {
   destroy = async (name, id, event) => {
     //console.log(name, id, event)
     let information = await DocumentsApi.deleteOne(event, id);
-    console.log(information);
 
     const ref = firebase.storage().ref(`documents/${event}/`);
     var desertRef = ref.child(`${name}`);
-    console.log(desertRef);
     // // //Delete the file
     desertRef
       .delete()
@@ -130,10 +133,7 @@ class documents extends Component {
   };
 
   destroyFolder = async (event, id_folder) => {
-    console.log(event, id_folder);
-
     const files = await DocumentsApi.getFiles(this.props.event._id, id_folder);
-    console.log(files);
 
     files.data.forEach(element => {
       console.log(element.name);
@@ -153,13 +153,20 @@ class documents extends Component {
         });
     });
 
+    await DocumentsApi.deleteOne(this.props.event._id, id_folder);
 
     toast.success("Information Deleted");
     this.getDocuments();
   };
 
   createFolder = async () => {
-    
+    let value = document.getElementById("folderName").value;
+
+    const data = {
+      type: "folder",
+      title: value
+    };
+    await DocumentsApi.create(this.props.event._id, data);
     this.getDocuments();
     this.setState({
       visible: false,
@@ -179,7 +186,6 @@ class documents extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
@@ -211,7 +217,7 @@ class documents extends Component {
           <EventContent title={"Documentos"} classes={"documents-list"}>
             <div className="column is-12">
               <div key={this.state.fileKey} style={{ float: "right", display: "inline-block" }} className="file has-name">
-                <label className="label file-label">
+                <label className="label" className="file-label">
                   <input className="file-input" type="file" id="file" name="file" onChange={this.saveDocument} />
                   <span className="file-cta">
                     <span className="file-icon">
