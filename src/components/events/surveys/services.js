@@ -24,7 +24,7 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
       if (optionIndex.length > 1) {
         firstData[idResponse] = optionIndex.includes(i) ? vote : 0;
       } else {
-        firstData[idResponse] = optionIndex === idResponse ? vote : 0;
+        firstData[idResponse] = optionIndex == idResponse ? vote : 0;
       }
     }
 
