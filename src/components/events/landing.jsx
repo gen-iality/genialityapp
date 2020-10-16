@@ -159,7 +159,7 @@ class Landing extends Component {
       this.setState({ user: resp.data })
     } catch (err) {
       console.error('Error Landing', err.status)
-      window.location.replace('/')
+      //window.location.replace('/')
     }
 
 
