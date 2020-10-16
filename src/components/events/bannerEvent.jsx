@@ -1,13 +1,116 @@
 import React from "react";
 import Moment from "moment";
-import BannerAnim, { Element } from 'rc-banner-anim';
 import TweenOne from 'rc-tween-one';
 import 'rc-banner-anim/assets/index.css';
 import { EnvironmentOutlined, LaptopOutlined } from "@ant-design/icons";
+import { Col } from 'antd';
 
 
+let bannerEvent = ( { styles, bgImage, mobileBanner, title, ...props } ) => {
+    return (
+        <div className="headerContainer">
+            <Col xs={ 0 } sm={ 24 }>
+                <img src={ bgImage } alt={ title } />
+            </Col>
+            <Col xs={ 24 } sm={ 0 }>
+                <img src={ mobileBanner } alt={ title } />
+            </Col>
 
-const BgElement = Element.BgElement;
+            { !( styles && styles.show_card_banner && styles.show_card_banner === "false" ) && <HeaderEventInfo title={ title } { ...props } /> }
+            <HeaderEventInfo title={ title } { ...props } />
+            {/* Imagen opcional para el logo o marca del evento  */ }
+            {/* <div className="container-logoBanner">
+                    <img src="https://storage.googleapis.com/herba-images/evius/events/97XuEjJwHIkAyoAO1PreHOMUKMgFfM6MRmyEB5PS.jpeg" alt="" />
+                </div> */}
+        </div>
+    )
+}
+
+function HeaderEventInfo ( { title, organizado, place, dateStart, dateEnd, dates, type_event } ) {
+    return (
+        <div className="banner-user-text-container"
+            style={ {
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+
+            } }>
+
+            <TweenOne className="banner-user-text">
+
+                {/* Fecha del evento */ }
+                <div>
+                    {
+                        dates && dates.length > 0 ?
+                            <>
+                                {
+                                    dates.map( ( item, key ) => (
+                                        <span key={ key }>
+                                            {Moment( item ).format( "DD MMMM" ) + ( ( dates.length - 1 > key ) ? ", " : "" ) }
+                                        </span>
+                                    ) )
+                                }
+                            </>
+                            :
+                            <>
+                                {
+                                    dateStart === dateEnd ? (
+                                        <span>{ Moment( dateStart ).format( "DD" ) }{ " de " } { ( Moment( dateEnd ).format( "MMMM YYYY" ) ) }</span>
+                                    )
+                                        : (
+                                            <div>
+                                                {
+                                                    ( Moment( dateStart ).format( "MMMM" ) === Moment( dateEnd ).format( "MMMM" ) ) ? (
+                                                        <>
+                                                            <span>Del { Moment( dateStart ).format( "DD" ) }</span>
+                                                            <span> al { Moment( dateEnd ).format( "DD" ) }{ " de " } { ( Moment( dateEnd ).format( "MMMM YYYY" ) ) }</span>
+                                                        </>
+                                                    ) : (
+                                                            <>
+                                                                <span>Del { Moment( dateStart ).format( "DD" ) }{ " de" } { ( Moment( dateStart ).format( "MMMM" ) ) }</span>
+                                                                <span> al { Moment( dateEnd ).format( "DD" ) }{ " de " } { ( Moment( dateEnd ).format( "MMMM YYYY" ) ) }</span>
+                                                            </>
+                                                        )
+                                                }
+                                            </div>
+                                        )
+                                }
+                            </>
+
+                    }
+                </div>
+            </TweenOne>
+
+            <TweenOne className="banner-user-title" animation={ { y: 30, opacity: 0, type: 'from' } }>
+                {/* Nombre del evento */ }
+                <span>{ title }</span>
+            </TweenOne>
+
+            <TweenOne className="banner-user-text"
+                animation={ { y: 30, opacity: 0, type: 'from', delay: 100 } }
+            >
+
+                {/* Quien lo organiza */ }
+                <div>
+                    <span>Organizado por: { organizado }</span>
+                </div>
+
+                {/* Lugar del evento */ }
+                <div>
+                    {
+                        type_event === "onlineEvent" ?
+                            <div>
+                                <span><LaptopOutlined style={ { marginRight: "2%" } } />Virtual</span>
+                            </div>
+                            :
+                            <span><EnvironmentOutlined /> { place }</span>
+                    }
+
+                </div>
+            </TweenOne>
+        </div>
+    )
+
+}
 
 // function capitalize(val) {
 //     val = Moment(val).format("DD MMMM YYYY")
@@ -27,131 +130,5 @@ const BgElement = Element.BgElement;
 //         .join(' ');
 // }
 
-
-
-let bannerEvent = ({ styles, bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event, eventId }) => {
-    return (
-        <BannerAnim prefixCls="banner-user" style={{ overflow: "visible" }}>
-            <Element
-                prefixCls="banner-user-elem"
-                key="0"
-                style={{ overflow: "visible" }}
-            >
-                <BgElement
-                    key="bg"
-                    className="bg"
-                    style={(window.innerWidth <= 780) && mobileBanner !== undefined && mobileBanner !== null ? {
-                        backgroundImage: `url(${mobileBanner})`,
-                        backgroundSize: 'contain',
-                        backgroundPosition: 'top center'
-                    } : {
-                            backgroundImage: `url(${bgImage})`,
-                            backgroundSize: 'contain',
-                            backgroundPosition: 'top center'
-                        }}
-                />
-                {
-                    styles && styles.show_card_banner && styles.show_card_banner === "false" ? (
-                        <></>
-                    ) : (
-                            <>
-                                <div className="banner-user-text-container"
-                                    style={{
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
-
-                                    }}>
-
-                                    <TweenOne className="banner-user-text">
-
-                                        {/* Fecha del evento */}
-                                        <div>
-                                            {
-                                                dates && dates.length > 0 ?
-                                                    <>
-                                                        {
-                                                            dates.map((item, key) => (
-                                                                <span key={key}>
-                                                                    {Moment(item).format("DD MMMM") + ((dates.length - 1 > key) ? ", " : "")}
-                                                                </span>
-                                                            ))
-                                                        }
-                                                    </>
-                                                    :
-                                                    <>
-                                                        {
-                                                            dateStart === dateEnd ? (
-                                                                console.log("Fechas Iguales"),
-                                                                <span>{Moment(dateStart).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
-                                                            )
-                                                                : (
-                                                                    console.log("Fechas diferentes"),
-                                                                    <div>
-                                                                        {
-                                                                            (Moment(dateStart).format("MMMM") === Moment(dateEnd).format("MMMM")) ? (
-                                                                                <>
-                                                                                    <span>Del {Moment(dateStart).format("DD")}</span>
-                                                                                    <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
-                                                                                </>
-                                                                            ) : (
-                                                                                    <>
-                                                                                        <span>Del {Moment(dateStart).format("DD")}{" de"} {(Moment(dateStart).format("MMMM"))}</span>
-                                                                                        <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
-                                                                                    </>
-                                                                                )
-                                                                        }
-                                                                    </div>
-                                                                )
-                                                        }
-                                                    </>
-
-                                            }
-                                        </div>
-                                    </TweenOne>
-
-                                    <TweenOne className="banner-user-title" animation={{ y: 30, opacity: 0, type: 'from' }}>
-                                        {/* Nombre del evento */}
-                                        <span>{title}</span>
-                                    </TweenOne>
-
-                                    <TweenOne className="banner-user-text"
-                                        animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}
-                                    >
-
-                                        {/* Quien lo organiza */}
-                                        <div>
-                                            <span>Organizado por: {organizado}</span>
-                                        </div>
-
-                                        {/* Lugar del evento */}
-                                        <div>
-                                            {
-                                                console.log(type_event),
-                                                type_event === "onlineEvent" ?
-                                                    <div>
-                                                        <span><LaptopOutlined style={{ marginRight: "2%" }} />Virtual</span>
-                                                    </div>
-                                                    :
-                                                    <span><EnvironmentOutlined /> {place}</span>
-                                            }
-
-                                        </div>
-                                    </TweenOne>
-                                </div>
-                            </>
-                        )
-                }
-
-                {/* Imagen opcional para el logo o marca del evento  */}
-                {/* <div className="container-logoBanner">
-                    <img src="https://storage.googleapis.com/herba-images/evius/events/97XuEjJwHIkAyoAO1PreHOMUKMgFfM6MRmyEB5PS.jpeg" alt="" />
-                </div> */}
-            </Element>
-
-        </BannerAnim>
-
-    );
-
-}
 
 export default bannerEvent
