@@ -47,7 +47,7 @@ export default function AgendaActivityItem({
         <Row align='middle'>
           <Row>
             {eventId != '5f80b6c93b4b966dfe7cd012' &&
-              eventId != '5f80b6c93b4b966dfe7cd012' &&
+              eventId != '5f80a72272ccfd4e0d44b722' &&
               eventId != '5f80a9b272ccfd4e0d44b728' &&
               eventId != '5f8099c29564bf4ee44da4f3' && (
                 <span className='date-activity'>

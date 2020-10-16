@@ -1,21 +1,20 @@
 import React from "react"
 import "react-tabs/style/react-tabs.css"
 
-export default function EvenTable({...props}) {
+export default function EvenTable ( { ...props } ) {
     return (
-         //<Table columns={columns} dataSource={data} size="middle" />
+        //<Table columns={columns} dataSource={data} size="middle" />
         <table>
-            {props.head&&
+            {props.head &&
                 <thead>
-                <tr>
-                    {props.head.map((name,idx)=><th key={idx} style={props.headStyle&&props.headStyle[idx],{with:200}}>{name}</th>)}
-                </tr>
+                    <tr>
+                        { props.head.map( ( name, idx ) => <th key={ idx } style={ props.headStyle && props.headStyle[ idx ] }>{ name }</th> ) }
+                    </tr>
                 </thead>
             }
             <tbody>
-            {props.children}
+                { props.children }
             </tbody>
         </table>
     )
 }
- 

@@ -22,14 +22,14 @@
 
 // }
 
-function updateAttendees(currentAttendees, snapshot) {
-    
-    let newItems = currentAttendees;    
-    
+function updateAttendees ( currentAttendees, snapshot ) {
+
+    let newItems = currentAttendees;
+
     //this.setState({ localChanges });
-    console.log("snapshot", snapshot);
+
     let user, acompanates = 0;
-    snapshot.docChanges().forEach((change) => {
+    snapshot.docChanges().forEach( ( change ) => {
         //console.log("change", change, change.doc.data());
         /* change structure: type: "added",doc:doc,oldIndex: -1,newIndex: 0*/
         // console.log("cambios", change);
@@ -37,11 +37,11 @@ function updateAttendees(currentAttendees, snapshot) {
         //!snapshot.metadata.fromCache && this.setState({ lastUpdate: new Date() });
 
         user = change.doc.data();
-        console.log("userchange", user, change);
+
         user = { ...user, ...user.properties }
 
         //por si acas
-        if (!user._id) {
+        if ( !user._id ) {
             user._id = change.doc.id;
         }
         /*user.rol_name = user.rol_name
@@ -51,32 +51,32 @@ function updateAttendees(currentAttendees, snapshot) {
                 : "";
         */
 
-        user.created_at = (user.created_at && user.created_at.toDate) ? user.created_at.toDate() : null;
-        user.updated_at = (user.updated_at && user.updated_at.toDate) ? user.updated_at.toDate() : null;
-        user.checkedin_at = (user.checkedin_at && user.checkedin_at.toDate) ? user.checkedin_at.toDate() : null;
+        user.created_at = ( user.created_at && user.created_at.toDate ) ? user.created_at.toDate() : null;
+        user.updated_at = ( user.updated_at && user.updated_at.toDate ) ? user.updated_at.toDate() : null;
+        user.checkedin_at = ( user.checkedin_at && user.checkedin_at.toDate ) ? user.checkedin_at.toDate() : null;
 
         //user.tiquete = listTickets.find((ticket) => ticket._id === user.ticket_id);
 
-        switch (change.type) {
+        switch ( change.type ) {
             case "added":
-                change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
-                if (user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/))
-                    acompanates += parseInt(user.properties.acompanates, 10);
+                change.newIndex === 0 ? newItems.unshift( user ) : newItems.push( user );
+                if ( user.properties.acompanates && user.properties.acompanates.match( /^[0-9]*$/ ) )
+                    acompanates += parseInt( user.properties.acompanates, 10 );
                 break;
             case "modified":
 
                 // Removed the information of user updated of newItems array
-                newItems.splice(change.oldIndex, 1);
+                newItems.splice( change.oldIndex, 1 );
                 // Added the information of user of newItems array
-                newItems.splice(change.newIndex, 0, user);
+                newItems.splice( change.newIndex, 0, user );
                 break;
             case "removed":
-                newItems.splice(change.oldIndex, 1);
+                newItems.splice( change.oldIndex, 1 );
                 break;
             default:
                 break;
         }
-    });
+    } );
 
     /*this.setState((prevState) => {
         const usersToShow =

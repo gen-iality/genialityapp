@@ -41,18 +41,18 @@ import updateAttendees from "./eventUserRealTime";
 */
 
 
-const html = document.querySelector("html");
+const html = document.querySelector( "html" );
 class ListEventUser extends Component {
-  constructor(props) {
-    super(props);
+  constructor( props ) {
+    super( props );
     this.state = {
       users: [],
       columns: null,
       usersReq: [],
       pageOfItems: [],
       listTickets: [],
-      usersRef: firestore.collection(`${props.event._id}_event_attendees`),
-      pilaRef: firestore.collection("pila"),
+      usersRef: firestore.collection( `${ props.event._id }_event_attendees` ),
+      pilaRef: firestore.collection( "pila" ),
       total: 0,
       totalCheckedIn: 0,
       totalCheckedInWithWeight: 0,
@@ -91,59 +91,59 @@ class ListEventUser extends Component {
   }
 
 
-  editcomponent = (text, item, index) => {
-    return (<span
-      className="icon has-text-grey action_pointer" data-tooltip={"Editar"}
-      onClick={(e) => {
-        this.openEditModalUser(item);
-      }}>
+  editcomponent = ( text, item, index ) => {
+    return ( <span
+      className="icon has-text-grey action_pointer" data-tooltip={ "Editar" }
+      onClick={ ( e ) => {
+        this.openEditModalUser( item );
+      } }>
       <i className="fas fa-edit" />
-    </span>)
+    </span> )
   }
 
-  checkedincomponent = (text, item, index) => {
+  checkedincomponent = ( text, item, index ) => {
     var self = this;
     //console.log("SELF", self);
     return item.checkedin_at ? (
       <p>
-        {Moment(item.checkedin_at).format("d/MMM/YY h:mm:ss A ")}
+        {Moment( item.checkedin_at ).format( "d/MMM/YY h:mm:ss A " ) }
       </p>
     ) : (
         <div>
           <input
             className="is-checkradio is-primary is-small"
-            id={"checkinUser" + item._id}
-            disabled={item.checkedin_at}
+            id={ "checkinUser" + item._id }
+            disabled={ item.checkedin_at }
             type="checkbox"
-            name={"checkinUser" + item._id}
-            checked={item.checkedin_at}
-            onChange={(e) => {
-              self.checkIn(item._id);
-            }}
+            name={ "checkinUser" + item._id }
+            checked={ item.checkedin_at }
+            onChange={ ( e ) => {
+              self.checkIn( item._id );
+            } }
           />
-          <label htmlFor={"checkinUser" + item._id} />
+          <label htmlFor={ "checkinUser" + item._id } />
         </div>
       )
   };
 
-  addDefaultLabels = (extraFields) => {
-    extraFields = extraFields.map((field) => {
-      field["label"] = field["label"] ? field["label"] : field["name"];
+  addDefaultLabels = ( extraFields ) => {
+    extraFields = extraFields.map( ( field ) => {
+      field[ "label" ] = field[ "label" ] ? field[ "label" ] : field[ "name" ];
       return field;
-    });
+    } );
     return extraFields;
   };
 
-  orderFieldsByWeight = (extraFields) => {
-    extraFields = extraFields.sort((a, b) =>
-      (a.order_weight && !b.order_weight) || (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
+  orderFieldsByWeight = ( extraFields ) => {
+    extraFields = extraFields.sort( ( a, b ) =>
+      ( a.order_weight && !b.order_weight ) || ( a.order_weight && b.order_weight && a.order_weight < b.order_weight )
         ? -1
         : 1
     );
     return extraFields;
   };
 
-  async componentDidMount() {
+  async componentDidMount () {
 
     let self = this;
 
@@ -152,12 +152,12 @@ class ListEventUser extends Component {
     try {
       const { event } = this.props;
       const properties = event.user_properties;
-      const rolesList = await RolAttApi.byEvent(this.props.event._id);
-      const badgeEvent = await BadgeApi.get(this.props.event._id);
+      const rolesList = await RolAttApi.byEvent( this.props.event._id );
+      const badgeEvent = await BadgeApi.get( this.props.event._id );
 
-      let extraFields = fieldNameEmailFirst(properties);
-      extraFields = this.addDefaultLabels(extraFields);
-      extraFields = this.orderFieldsByWeight(extraFields);
+      let extraFields = fieldNameEmailFirst( properties );
+      extraFields = this.addDefaultLabels( extraFields );
+      extraFields = this.orderFieldsByWeight( extraFields );
 
 
 
@@ -173,155 +173,164 @@ class ListEventUser extends Component {
         key: "edit",
         render: self.editcomponent
       }
-      columns.push(editColumn);
-      columns.push(checkInColumn);
+      columns.push( editColumn );
+      columns.push( checkInColumn );
 
-      let extraColumns = extraFields.map((item) => { return { title: item.label, dataIndex: item.name, key: item.name } })
-      columns = [...columns, ...extraColumns];
-      console.log("columns", columns);
+      let extraColumns = extraFields.map( ( item ) => { return { title: item.label, dataIndex: item.name, key: item.name } } )
+      columns = [ ...columns, ...extraColumns ];
 
+      this.setState( { columns: columns } );
 
-      this.setState({ columns: columns });
+      this.setState( { extraFields, rolesList, badgeEvent } );
+      const { usersRef } = this.state;
 
-
-      console.log(extraFields);
-
-      this.setState({ extraFields, rolesList, badgeEvent });
-      const { usersRef} = this.state;
-
-      //eventUserRealTime(usersRef);
-      let userListener = null;//"cKjPCTW5j1sG1Y9nnFeW"
-
-      userListener = usersRef.orderBy("updated_at", "desc").onSnapshot(
+      usersRef.orderBy( "updated_at", "desc" ).onSnapshot(
         {
           // Listen for document metadata changes
           //includeMetadataChanges: true
-        }, (snapshot) => {
-          console.log([...this.state.usersReq])
-          let currentAttendees = [...this.state.usersReq];
-          let updatedAttendees = updateAttendees(currentAttendees, snapshot);
-          let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
+        }, ( snapshot ) => {
 
-          let totalCheckedInWithWeight = Math.round(updatedAttendees.reduce((acc, item) => acc + ((item.checkedin_at) ? parseFloat((item.pesovoto ? item.pesovoto : 1)) : 0), 0) * 100) / 100;
-          this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight })
-          console.log("updatedAttendees", updatedAttendees);
-          for (let i = 0; i < updatedAttendees.length; i++) {
-            if (updatedAttendees[i].payment) {              
-              updatedAttendees[i].payment = 
-              "Status: " + updatedAttendees[i].payment.status + 
-              " Fecha de transaccion: " + updatedAttendees[i].payment.date + 
-              " Referencia PayU: " + updatedAttendees[i].payment.payuReference + 
-              " Transaccion #: " + updatedAttendees[i].payment.transactionID
-            }else{
-              updatedAttendees[i].payment = "No se ha registrado el pago"
+          let currentAttendees = [ ...this.state.usersReq ];
+          let updatedAttendees = updateAttendees( currentAttendees, snapshot );
+          let totalCheckedIn = updatedAttendees.reduce( ( acc, item ) => acc + ( item.checkedin_at ? 1 : 0 ), 0 );
+
+          let totalCheckedInWithWeight = Math.round( updatedAttendees.reduce( ( acc, item ) => acc + ( ( item.checkedin_at ) ? parseFloat( ( item.pesovoto ? item.pesovoto : 1 ) ) : 0 ), 0 ) * 100 ) / 100;
+          this.setState( { totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight } )
+
+          for ( let i = 0; i < updatedAttendees.length; i++ ) {
+
+            //Arreglo temporal para que se muestre el listado de usuarios sin romperse
+            //algunos campos no son string y no se manejan bien
+            Object.keys( updatedAttendees[ i ] ).forEach( function ( key ) {
+              if ( !(
+                ( updatedAttendees[ i ][ key ] && updatedAttendees[ i ][ key ].getMonth )
+                || typeof updatedAttendees[ i ][ key ] == "string"
+                || typeof updatedAttendees[ i ][ key ] == "boolean"
+                || typeof updatedAttendees[ i ][ key ] == "number"
+                || Number( updatedAttendees[ i ][ key ] )
+              ) ) {
+                updatedAttendees[ i ][ key ] = JSON.stringify( updatedAttendees[ i ][ key ] );
+              }
+
+            } );
+
+            if ( updatedAttendees[ i ].payment ) {
+              updatedAttendees[ i ].payment =
+                "Status: " + updatedAttendees[ i ].payment.status +
+                " Fecha de transaccion: " + updatedAttendees[ i ].payment.date +
+                " Referencia PayU: " + updatedAttendees[ i ].payment.payuReference +
+                " Transaccion #: " + updatedAttendees[ i ].payment.transactionID
+            } else {
+              updatedAttendees[ i ].payment = "No se ha registrado el pago"
             }
-          }          
-          this.setState({ users: updatedAttendees, usersReq: updatedAttendees, auxArr: updatedAttendees, loading: false })
+          }
+          console.log( "usuarios", updatedAttendees );
+          this.setState( { users: updatedAttendees, usersReq: updatedAttendees, auxArr: updatedAttendees, loading: false } )
         },
-        (error) => {
-          console.log(error);
+        () => {
+          //console.log( error );
           //this.setState({ timeout: true, errorData: { message: error, status: 708 } });
         }
       );
 
-    } catch (error) {
-      const errorData = handleRequestError(error);
-      this.setState({ timeout: true, errorData });
+    } catch ( error ) {
+      const errorData = handleRequestError( error );
+      this.setState( { timeout: true, errorData } );
     }
   }
 
 
 
-  exportFile = async (e) => {
+  exportFile = async ( e ) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("aqui");
-    const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
-    console.log(attendees)
-    const data = await parseData2Excel(attendees, this.state.extraFields);
-    const ws = XLSX.utils.json_to_sheet(data);
+    console.log( "aqui" );
+    const attendees = [ ...this.state.users ].sort( ( a, b ) => b.created_at - a.created_at );
+    console.log( attendees )
+    const data = await parseData2Excel( attendees, this.state.extraFields );
+    const ws = XLSX.utils.json_to_sheet( data );
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
-    XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
+    XLSX.utils.book_append_sheet( wb, ws, "Asistentes" );
+    XLSX.writeFile( wb, `asistentes_${ this.props.event.name }.xls` );
   };
 
   addUser = () => {
-    html.classList.add("is-clipped");
-    this.setState((prevState) => {
+    html.classList.add( "is-clipped" );
+    this.setState( ( prevState ) => {
       return { editUser: !prevState.editUser, edit: false };
-    });
+    } );
   };
 
   modalUser = () => {
-    html.classList.remove("is-clipped");
-    this.setState((prevState) => {
+    html.classList.remove( "is-clipped" );
+    this.setState( ( prevState ) => {
       return { editUser: !prevState.editUser, edit: undefined };
-    });
+    } );
   };
 
   checkModal = () => {
-    html.classList.add("is-clipped");
-    this.setState((prevState) => {
+    html.classList.add( "is-clipped" );
+    this.setState( ( prevState ) => {
       return { qrModal: !prevState.qrModal };
-    });
+    } );
   };
   closeQRModal = () => {
-    html.classList.add("is-clipped");
-    this.setState((prevState) => {
+    html.classList.add( "is-clipped" );
+    this.setState( ( prevState ) => {
       return { qrModal: !prevState.qrModal };
-    });
+    } );
   };
 
-  checkIn = async (id) => {
+  checkIn = async ( id ) => {
     const { qrData } = this.state;
     const { event } = this.props;
     qrData.another = true;
 
     try {
-      await TicketsApi.checkInAttendee(event._id, id);
-      toast.success("Usuario Chequeado");
-    } catch (e) {
-      toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :(" />);
+      await TicketsApi.checkInAttendee( event._id, id );
+      toast.success( "Usuario Chequeado" );
+    } catch ( e ) {
+      toast.error( <FormattedMessage id="toast.error" defaultMessage="Sry :(" /> );
     }
 
     return;
 
-    const userRef = firestore.collection(`${event._id}_event_attendees`).doc(id);
+    const userRef = firestore.collection( `${ event._id }_event_attendees` ).doc( id );
 
     // Actualiza el usuario en la base de datos
     userRef
-      .update({
+      .update( {
         updated_at: new Date(),
         checkedin_at: new Date(),
         checked_at: new Date(),
-      })
-      .then(() => {
-        toast.success("Usuario Chequeado");
-      })
-      .catch((error) => {
-        console.error("Error updating document: ", error);
-        toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :(" />);
-      });
+      } )
+      .then( () => {
+        toast.success( "Usuario Chequeado" );
+      } )
+      .catch( ( error ) => {
+        console.error( "Error updating document: ", error );
+        toast.error( <FormattedMessage id="toast.error" defaultMessage="Sry :(" /> );
+      } );
 
   };
 
-  onChangePage = (pageOfItems) => {
-    this.setState({ pageOfItems: pageOfItems });
+  onChangePage = ( pageOfItems ) => {
+    this.setState( { pageOfItems: pageOfItems } );
   };
 
   // Funcion para disminuir el contador y pasarlo como prop al modalUser
   substractSyncQuantity = () => {
-    this.setState((prevState) => ({ quantityUsersSync: prevState.quantityUsersSync - 1 }));
-    this.setState({ lastUpdate: new Date() });
+    this.setState( ( prevState ) => ( { quantityUsersSync: prevState.quantityUsersSync - 1 } ) );
+    this.setState( { lastUpdate: new Date() } );
   };
 
-  showMetaData = (value) => {
-    html.classList.add("is-clipped");
+  showMetaData = ( value ) => {
+    html.classList.add( "is-clipped" );
     let content = "";
-    Object.keys(value).map((key) => (content += `<p><b>${key}:</b> ${value[key]}</p>`));
-    sweetAlert.simple("Información", content, "Cerrar", "#1CDCB7", () => {
-      html.classList.remove("is-clipped");
-    });
+    Object.keys( value ).map( ( key ) => ( content += `<p><b>${ key }:</b> ${ value[ key ] }</p>` ) );
+    sweetAlert.simple( "Información", content, "Cerrar", "#1CDCB7", () => {
+      html.classList.remove( "is-clipped" );
+    } );
   };
 
   // Function to check the firebase persistence and load page if this return false
@@ -329,79 +338,79 @@ class ListEventUser extends Component {
     let { disabledPersistence } = this.state;
 
     disabledPersistence = window.eviusFailedPersistenceEnabling;
-    this.setState({ disabledPersistence });
+    this.setState( { disabledPersistence } );
   };
 
-  openEditModalUser = (item) => {
-    html.classList.add("is-clipped");
-    this.setState({ editUser: true, selectedUser: item, edit: true });
+  openEditModalUser = ( item ) => {
+    html.classList.add( "is-clipped" );
+    this.setState( { editUser: true, selectedUser: item, edit: true } );
   };
 
-  changeStage = (e) => {
+  changeStage = ( e ) => {
     const { value } = e.target;
     const {
       event: { tickets },
     } = this.props;
-    if (value === "") {
+    if ( value === "" ) {
       let check = 0,
         acompanates = 0;
-      this.setState({ checkIn: 0, total: 0 }, () => {
+      this.setState( { checkIn: 0, total: 0 }, () => {
         const list = this.state.usersReq;
-        list.forEach((user) => {
-          if (user.checked_in) check += 1;
-          if (user.properties.acompanates && /^\d+$/.test(user.properties.acompanates))
-            acompanates += parseInt(user.properties.acompanates, 10);
-        });
-        this.setState((state) => {
+        list.forEach( ( user ) => {
+          if ( user.checked_in ) check += 1;
+          if ( user.properties.acompanates && /^\d+$/.test( user.properties.acompanates ) )
+            acompanates += parseInt( user.properties.acompanates, 10 );
+        } );
+        this.setState( ( state ) => {
           return {
-            users: state.auxArr.slice(0, 50),
+            users: state.auxArr.slice( 0, 50 ),
             ticket: "",
             stage: value,
             total: list.length + acompanates,
             checkIn: check,
           };
-        });
-      });
+        } );
+      } );
     } else {
-      const options = tickets.filter((ticket) => ticket.stage_id === value);
-      this.setState({ stage: value, ticketsOptions: options });
+      const options = tickets.filter( ( ticket ) => ticket.stage_id === value );
+      this.setState( { stage: value, ticketsOptions: options } );
     }
   };
 
 
-  changeTicket = (e) => {
+  changeTicket = ( e ) => {
     const { value } = e.target;
     let check = 0,
       acompanates = 0;
-    this.setState({ checkIn: 0, total: 0 }, () => {
+    this.setState( { checkIn: 0, total: 0 }, () => {
       const list =
-        value === "" ? this.state.usersReq : [...this.state.usersReq].filter((user) => user.ticket_id === value);
-      list.forEach((user) => {
-        if (user.checked_in) check += 1;
-        if (user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/))
-          acompanates += parseInt(user.properties.acompanates, 10);
-      });
-      const users = value === "" ? [...this.state.auxArr].slice(0, 50) : list;
-      this.setState({ users, ticket: value, checkIn: check, total: list.length + acompanates });
-    });
+        value === "" ? this.state.usersReq : [ ...this.state.usersReq ].filter( ( user ) => user.ticket_id === value );
+      list.forEach( ( user ) => {
+        if ( user.checked_in ) check += 1;
+        if ( user.properties.acompanates && user.properties.acompanates.match( /^[0-9]*$/ ) )
+          acompanates += parseInt( user.properties.acompanates, 10 );
+      } );
+      const users = value === "" ? [ ...this.state.auxArr ].slice( 0, 50 ) : list;
+      this.setState( { users, ticket: value, checkIn: check, total: list.length + acompanates } );
+    } );
   };
 
   //Search records at third column
-  searchResult = (data) => {
-    !data ? this.setState({ users: [] }) : this.setState({ users: data });
+  searchResult = ( data ) => {
+    !data ? this.setState( { users: [] } ) : this.setState( { users: data } );
   };
 
-  handleChange = (e) => {
-    this.setState({ typeScanner: e.target.value });
+  handleChange = ( e ) => {
+    this.setState( { typeScanner: e.target.value } );
     this.checkModal();
   };
 
   // Set options in dropdown list
   clearOption = () => {
-    this.setState({ typeScanner: "options" });
+    this.setState( { typeScanner: "options" } );
   };
 
-  render() {
+  render () {
     const {
       timeout,
       usersReq,
@@ -427,16 +436,16 @@ class ListEventUser extends Component {
 
     return (
       <React.Fragment>
-        {(disabledPersistence &&
-          <div style={{ margin: "5%", textAlign: "center" }}>
+        {( disabledPersistence &&
+          <div style={ { margin: "5%", textAlign: "center" } }>
             <label>
               El almacenamiento local de lso datos esta deshabilitado.
               Cierre otras pestañanas de la plataforma para pode habilitar el almacenamiento local
       </label>
           </div>
-        )}
+        ) }
 
-        <EventContent classes="checkin" title={"Check In"}>
+        <EventContent classes="checkin" title={ "Check In" }>
 
           <div className="checkin-warning ">
             <p className="is-size-7 is-full-mobile">
@@ -447,23 +456,23 @@ class ListEventUser extends Component {
 
           <div className="columns checkin-tags-wrapper is-flex-touch">
             <div>
-              <div className="tags" style={{ flexWrap: "nowrap" }}>
+              <div className="tags" style={ { flexWrap: "nowrap" } }>
 
                 <span className="tag is-white">Total</span>
-                <span className="tag is-light">{usersReq.length || 0}</span>
+                <span className="tag is-light">{ usersReq.length || 0 }</span>
 
                 <span className="tag is-white">Asistido</span>
-                <span className="tag is-light">{totalCheckedIn}</span>
+                <span className="tag is-light">{ totalCheckedIn }</span>
 
                 <span className="tag is-white">% Asistencia</span>
-                <span className="tag is-light">{Math.round(((totalCheckedIn / usersReq.length) * 100) * 100) / 100}</span>
+                <span className="tag is-light">{ Math.round( ( ( totalCheckedIn / usersReq.length ) * 100 ) * 100 ) / 100 }</span>
 
                 {
-                  extraFields.reduce((acc, item) => acc || item.name === "pesovoto", false) &&
+                  extraFields.reduce( ( acc, item ) => acc || item.name === "pesovoto", false ) &&
                   (
                     <>
                       <span className="tag is-white">Total Pesos</span>
-                      <span className="tag is-light">{totalCheckedInWithWeight}</span>
+                      <span className="tag is-light">{ totalCheckedInWithWeight }</span>
                     </>
                   )
                 }
@@ -473,65 +482,65 @@ class ListEventUser extends Component {
             {// localChanges &&
               quantityUsersSync > 0 && localChanges === "Local" && (
                 <div className="is-4 column">
-                  <p className="is-size-7">Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</p>
+                  <p className="is-size-7">Cambios sin sincronizar : { quantityUsersSync < 0 ? 0 : quantityUsersSync }</p>
                 </div>
-              )}
+              ) }
 
           </div>
           <div>
             <div >
               <p className="is-size-7 ">
-                Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+                Última Sincronización : <FormattedDate value={ lastUpdate } /> <FormattedTime value={ lastUpdate } />
               </p>
             </div>
           </div>
           <div className="columns">
             <div className="is-flex-touch columns container-options">
               <div className="column is-narrow has-text-centered button-c is-centered">
-                <button className="button is-primary" onClick={this.addUser}>
+                <button className="button is-primary" onClick={ this.addUser }>
                   <span className="icon">
                     <i className="fas fa-user-plus"></i>
                   </span>
                   <span className="text-button">Agregar Usuario</span>
                 </button>
               </div>
-              {usersReq.length > 0 && (
+              { usersReq.length > 0 && (
                 <div className="column is-narrow has-text-centered export button-c is-centered">
-                  <button className="button" onClick={this.exportFile}>
+                  <button className="button" onClick={ this.exportFile }>
                     <span className="icon">
                       <i className="fas fa-download" />
                     </span>
                     <span className="text-button">Exportar</span>
                   </button>
                 </div>
-              )}
+              ) }
               <div className="column">
                 <div className="select is-primary">
                   <select
-                    name={"type-scanner"}
-                    value={this.state.typeScanner}
-                    defaultValue={this.state.typeScanner}
-                    onChange={this.handleChange}>
-                    <option key={1} value="options">Escanear...</option>
-                    <option key={2} value="scanner-qr">Escanear QR</option>
-                    <option key={3} value="scanner-document">Escanear Documento</option>
+                    name={ "type-scanner" }
+                    value={ this.state.typeScanner }
+                    defaultValue={ this.state.typeScanner }
+                    onChange={ this.handleChange }>
+                    <option key={ 1 } value="options">Escanear...</option>
+                    <option key={ 2 } value="scanner-qr">Escanear QR</option>
+                    <option key={ 3 } value="scanner-document">Escanear Documento</option>
                   </select>
                 </div>
               </div>
             </div>
             <div className="search column is-5 is-four-fifths-mobile has-text-left-tablet">
               <SearchComponent
-                style={{ marginLeft: "40px" }}
-                placeholder={""}
-                data={usersReq}
-                kind={"user"}
-                event={this.props.event._id}
-                searchResult={this.searchResult}
-                clear={this.state.clearSearch}
+                style={ { marginLeft: "40px" } }
+                placeholder={ "" }
+                data={ usersReq }
+                kind={ "user" }
+                event={ this.props.event._id }
+                searchResult={ this.searchResult }
+                clear={ this.state.clearSearch }
               />
             </div>
           </div>
-          {event_stages && event_stages.length > 0 && (
+          { event_stages && event_stages.length > 0 && (
             <div className="filter">
               <button className="button icon-filter">
                 <span className="icon">
@@ -547,15 +556,15 @@ class ListEventUser extends Component {
                       <label className="label">Etapa</label>
                       <div className="control">
                         <div className="select">
-                          <select value={stage} onChange={this.changeStage} name={"stage"}>
-                            <option value={""}>Escoge la etapa...</option>
-                            {event_stages.map((item, key) => {
+                          <select value={ stage } onChange={ this.changeStage } name={ "stage" }>
+                            <option value={ "" }>Escoge la etapa...</option>
+                            { event_stages.map( ( item, key ) => {
                               return (
-                                <option key={key} value={item.stage_id}>
-                                  {item.title}
+                                <option key={ key } value={ item.stage_id }>
+                                  {item.title }
                                 </option>
                               );
-                            })}
+                            } ) }
                           </select>
                         </div>
                       </div>
@@ -566,15 +575,15 @@ class ListEventUser extends Component {
                       <label className="label">Tiquete</label>
                       <div className="control">
                         <div className="select">
-                          <select value={ticket} onChange={this.changeTicket} name={"stage"}>
-                            <option value={""}>Escoge el tiquete...</option>
-                            {ticketsOptions.map((item, key) => {
+                          <select value={ ticket } onChange={ this.changeTicket } name={ "stage" }>
+                            <option value={ "" }>Escoge el tiquete...</option>
+                            { ticketsOptions.map( ( item, key ) => {
                               return (
-                                <option key={key} value={item._id}>
-                                  {item.title}
+                                <option key={ key } value={ item._id }>
+                                  {item.title }
                                 </option>
                               );
-                            })}
+                            } ) }
                           </select>
                         </div>
                       </div>
@@ -583,9 +592,9 @@ class ListEventUser extends Component {
                 </div>
               </div>
             </div>
-          )}
+          ) }
           <div className="checkin-table">
-            {this.state.loading ? (
+            { this.state.loading ? (
               <Fragment>
                 <Loading />
                 <h2 className="has-text-centered">Cargando...</h2>
@@ -593,43 +602,43 @@ class ListEventUser extends Component {
             ) : (
                 <div className="table-wrapper">
                   <div className="table-container">
-                    {this.state.columns && <Table className="table-striped-rows" rowKey="_id" dataSource={users} columns={this.state.columns} />};
+                    { this.state.columns && <Table className="table-striped-rows" rowKey="_id" dataSource={ users } columns={ this.state.columns } /> };
                   </div>
                 </div>
-              )}
+              ) }
           </div>
         </EventContent>
 
         {!this.props.loading && editUser && (
           <UserModal
-            handleModal={this.modalUser}
-            modal={editUser}
-            eventId={this.props.eventId}
-            ticket={ticket}
-            tickets={this.state.listTickets}
-            rolesList={this.state.rolesList}
-            value={this.state.selectedUser}
-            checkIn={this.checkIn}
-            badgeEvent={this.state.badgeEvent}
-            extraFields={this.state.extraFields}
-            spacesEvent={spacesEvent}
-            edit={this.state.edit}
-            substractSyncQuantity={this.substractSyncQuantity}
+            handleModal={ this.modalUser }
+            modal={ editUser }
+            eventId={ this.props.eventId }
+            ticket={ ticket }
+            tickets={ this.state.listTickets }
+            rolesList={ this.state.rolesList }
+            value={ this.state.selectedUser }
+            checkIn={ this.checkIn }
+            badgeEvent={ this.state.badgeEvent }
+            extraFields={ this.state.extraFields }
+            spacesEvent={ spacesEvent }
+            edit={ this.state.edit }
+            substractSyncQuantity={ this.substractSyncQuantity }
           />
-        )}
+        ) }
         {this.state.qrModal && (
           <QrModal
-            fields={extraFields}
-            usersReq={usersReq}
-            typeScanner={this.state.typeScanner}
-            clearOption={this.clearOption}
-            checkIn={this.checkIn}
-            eventID={this.props.event._id}
-            closeModal={this.closeQRModal}
-            openEditModalUser={this.openEditModalUser}
+            fields={ extraFields }
+            usersReq={ usersReq }
+            typeScanner={ this.state.typeScanner }
+            clearOption={ this.clearOption }
+            checkIn={ this.checkIn }
+            eventID={ this.props.event._id }
+            closeModal={ this.closeQRModal }
+            openEditModalUser={ this.openEditModalUser }
           />
-        )}
-        {timeout && <ErrorServe errorData={this.state.errorData} />}
+        ) }
+        {timeout && <ErrorServe errorData={ this.state.errorData } /> }
       </React.Fragment>
     )
   }
