@@ -601,7 +601,7 @@ class ListEventUser extends Component {
               </Fragment>
             ) : (
                 <div className="table-wrapper">
-                  <div className="table-container">
+                  <div className="table-container" style={ { height: "60vh" } }>
                     { this.state.columns && <Table className="table-striped-rows" rowKey="_id" dataSource={ users } columns={ this.state.columns } /> };
                   </div>
                 </div>
