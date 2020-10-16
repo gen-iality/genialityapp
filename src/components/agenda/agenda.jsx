@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import Moment from "moment";
 import EventContent from "../events/shared/content";
-import EvenTable from "../events/shared/table";
-import SearchComponent from "../shared/searchTable";
-import { AgendaApi, EventsApi } from "../../helpers/request";
-import { Tabs, Tab, TabList, TabPanel } from "react-tabs";
-import AgendaLanguage from './language'
+import { AgendaApi } from "../../helpers/request";
+import { Table, Tag, Input, Button, Space } from 'antd';
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined, EditOutlined } from '@ant-design/icons';
 
 class Agenda extends Component {
     constructor(props) {
@@ -23,123 +21,152 @@ class Agenda extends Component {
     }
 
     async componentDidMount() {
-        const { event } = this.props;
-        let days = [];
-
-        try {
-            const info = await EventsApi.getOne(event._id)
-            //Se valida si no existe el array dates del evento para dejar la logica 
-            //que hace push a las fechas respecto a la diferencia de datetime_start y datetime_end
-
-            const init = Moment(event.date_start);
-            const end = Moment(event.date_end);
-            const diff = end.diff(init, 'days');
-            //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-            for (let i = 0; i < diff + 1; i++) {
-                days.push(Moment(init).add(i, 'd'))
-            }
-            this.setState({ days, day: days[0] }, this.fetchAgenda);
-            //Si el array dates del evento existe, envia al estado el array 
-            //days con las fechas del array dates con su respectivo formato
-            if (info.dates && info.dates.length > 0) {
-                let date = info.dates
-
-                Date.parse(date)
-
-                for (var i = 0; i < date.length; i++) {
-                    days.push(Moment(date).format("DD-MM-YYYY"))
-                }
-
-                this.setState({ days: date, day: days[0] }, this.fetchAgenda);
-            }
-
-        } catch (e) {
-            console.log(e)
-        }
+        const { data } = await AgendaApi.byEvent(this.props.event._id);
+        this.setState({ list: data })
     }
 
-    fetchAgenda = async () => {
-        const { data } = await AgendaApi.byEvent(this.props.event._id);
-        //Después de traer la info se filtra por el primer día por defecto
-        const filtered = this.filterByDay(this.state.days[0], data);
-        this.setState({ list: data, toShow: filtered })
-    };
-
-    //Funcion para filtrar las actividades con base a la fecha de inicio
-    filterByDay(day, agenda) {
-        const list = agenda.filter(
-            (agenda) => Moment(agenda.datetime_start, ["YYYY-MM-DD"]).format("YYYY-MM-DD") === Moment(day, ["YYYY-MM-DD"]).format("YYYY-MM-DD"),
-        )
-        return list
-    };
-
-    //Fn para manejar cuando se selecciona un dia, ejecuta el filtrado
-    async selectDay(day) {
-        const filtered = this.filterByDay(day, this.state.list);
-        await this.setState({ filtered, toShow: filtered, day })
-    };
-
-    //Fn para el resultado de la búsqueda
+    //Fn para el resultado de la busqueda
     searchResult = (data) => this.setState({ toShow: !data ? [] : data });
 
     redirect = () => this.setState({ redirect: true });
 
+    getColumnSearchProps = dataIndex => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div style={{ padding: 8 }}>
+                <Input
+                    ref={node => {
+                        this.searchInput = node;
+                    }}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{ width: 188, marginBottom: 8, display: 'block' }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Search
+              </Button>
+                    <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+                        Reset
+              </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        onFilter: (value, record) =>
+            record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+                : '',
+        onFilterDropdownVisibleChange: visible => {
+            if (visible) {
+                setTimeout(() => this.searchInput.select(), 100);
+            }
+        },
+        render: text =>
+            this.state.searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[this.state.searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                    text
+                ),
+    });
+
+    handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        this.setState({
+            searchText: selectedKeys[0],
+            searchedColumn: dataIndex,
+        });
+    };
+
+    handleReset = clearFilters => {
+        clearFilters();
+        this.setState({ searchText: '' });
+    };
+
     render() {
         if (this.state.redirect) return <Redirect to={{ pathname: `${this.props.matchUrl}/actividad`, state: { new: true } }} />;
-        const { days, day, filtered, toShow } = this.state;
+        const { list } = this.state;
+        const columns = [
+            {
+                title: 'Fecha y Hora Inicio',
+                dataIndex: 'datetime_start',
+                width: 100,
+                render: (record, key) => (
+                    <p key={key}>{record}</p>
+                ),
+                ...this.getColumnSearchProps('datetime_start'),
+            },
+            {
+                title: 'Fecha y Hora Fin',
+                dataIndex: 'datetime_end',
+                width: 100,
+                render: (record, key) => (
+                    <p key={key}>{record}</p>
+                ),
+                ...this.getColumnSearchProps('datetime_end'),
+            },
+            {
+                title: 'Actividad',
+                dataIndex: 'name',
+                width: 150,
+                ...this.getColumnSearchProps('name'),
+            },
+            {
+                title: 'Categorias',
+                dataIndex: 'activity_categories',
+                width: 100,
+                render: (record) => (
+                    record.map((item, key) => (
+                        <Tag key={key} color={item.color}>{item.name}</Tag>
+                    ))
+                )
+            },
+            {
+                title: 'Espacios',
+                dataIndex: 'space',
+                width: 50,
+                render: (record) => (
+                    record !== null && (
+                        <p>{record.name}</p>
+                    )
+                )
+            },
+            {
+                title: 'Conferencistas',
+                dataIndex: 'hosts',
+                width: 50,
+                render: (record) => (
+                    record.map((item, key) => (
+                        <p key={key}>{item.name}</p>
+                    ))
+                )
+            },
+            {
+                title: 'Editar',
+                dataIndex: '_id',
+                width: 50,
+                render: (record) => (
+                    <Link to={{ pathname: `${this.props.matchUrl}/actividad`, state: { edit: record } }}>
+                        <EditOutlined />
+                    </Link>
+                )
+            }
+        ];
         return (
-            <Tabs>
-                <TabList>
-                    <Tab>Programación</Tab>
-                    {/* <Tab>Programación en ingles</Tab> */}
-                </TabList>
-                <TabPanel>
-                    <EventContent title={"Programación"} classes={"agenda-list"} addAction={this.redirect} addTitle={"Nueva actividad"}>
-                        <nav className="level">
-                            <div className="level-left">
-                                {
-                                    days.map((date, key) => <div onClick={() => this.selectDay(date)} key={key} className={`level-item date ${date === day ? "active" : ""}`}>
-                                        <p className="subtitle is-5">
-                                            <strong>{
-                                                Moment(date, ["YYYY-MM-DD"]).format("MMMM-DD")
-                                            }</strong>
-                                        </p>
-                                    </div>
-                                    )
-                                }
-                            </div>
-                        </nav>
-                        <SearchComponent data={filtered} placeholder={"por Nombre, Espacio o Conferencista"} kind={'agenda'} classes={"field"} searchResult={this.searchResult} />
-                        <EvenTable head={["Hora", "Actividad", "Categorías", "Espacio", "Conferencista", ""]} headStyle={[{ width: "12%" }, { width: "48%" }, { width: "10%" }, { width: "10%" }, { width: "18%" }, { width: "2%" }]}>
-                            {toShow.map((agenda, key) => (
-                                <tr key={key}>
-                                    <td>{Moment(agenda.datetime_start, "YYYY-MM-DD HH:mm").format("HH:mm")} - {Moment(agenda.datetime_end, "YYYY-MM-DD HH:mm").format("HH:mm")}</td>
-                                    <td>
-                                        <p>{agenda.name}</p>
-                                        <small className="is-italic">{agenda.restriction} {agenda.roles ? agenda.roles.map(rol => rol) : ""}</small>
-                                        {agenda.type && <p><strong>{agenda.type.name}</strong></p>}
-                                    </td>
-                                    <td>
-                                        {agenda.activity_categories.map((cat, keycat) => <span key={keycat} style={{ background: cat.color, color: cat.color ? "white" : "" }} className="tag">{cat.name}</span>)}
-                                    </td>
-                                    <td>{agenda.space ? agenda.space.name : ""}</td>
-                                    <td>{agenda.hosts.map(({ name }, hostkey) => <p key={hostkey}>{name}</p>)}</td>
-                                    <td>
-
-                                        <Link to={{ pathname: `${this.props.matchUrl}/actividad`, state: { edit: agenda._id } }}>
-                                            <button><span className="icon"><i className="fas fa-2x fa-chevron-right" /></span></button>
-                                        </Link>
-
-                                    </td>
-                                </tr>
-                            ))}
-                        </EvenTable>
-                    </EventContent>
-                </TabPanel>
-                <TabPanel>
-                    <AgendaLanguage state={this.props} />
-                </TabPanel>
-            </Tabs>
+            <EventContent title={"Programación"} classes={"agenda-list"} addAction={this.redirect} addTitle={"Nueva actividad"}>
+                <Table columns={columns} dataSource={list} />
+            </EventContent>
         )
     }
 }
