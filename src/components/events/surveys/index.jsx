@@ -36,8 +36,8 @@ const surveyButtons = {
 // }
 
 class SurveyForm extends Component {
-  constructor(props) {
-    super(props);
+  constructor( props ) {
+    super( props );
     this.state = {
       selectedSurvey: {},
       surveysData: undefined,
@@ -47,6 +47,7 @@ class SurveyForm extends Component {
       availableSurveysBar: props.availableSurveysBar || false,
       surveyRecentlyChanged: false,
       userVote: false,
+      forceCheckVoted: false,
       surveyLabel: {},
       defaultSurveyLabel: {
         name: "Encuestas",
@@ -58,9 +59,9 @@ class SurveyForm extends Component {
     };
   }
 
-  openSurvey = (currentSurvey) => {
+  openSurvey = ( currentSurvey ) => {
     // eslint-disable-next-line no-console
-    console.log("Esta es la encuesta actual:", currentSurvey);
+    console.log( "Esta es la encuesta actual:", currentSurvey );
   };
 
   surveyVisible = () => {
@@ -68,27 +69,34 @@ class SurveyForm extends Component {
     //   this.toggleSurvey(this.state.surveysData[0]);
     // }
 
-    this.setState({
+    this.setState( {
       surveyVisible: !this.state.surveyVisible,
-    });
+    } );
 
   };
 
-  async componentDidMount() {
+  async componentDidMount () {
 
     let { event } = this.props;
     let user = await this.getCurrentUser();
-    let eventUser = await this.getCurrentEvenUser(event._id);
+    let eventUser = await this.getCurrentEvenUser( event._id );
 
-    this.setState({ currentUser: user, eventUser: eventUser }, this.listenSurveysData);
+    this.setState( { currentUser: user, eventUser: eventUser }, this.listenSurveysData );
     this.userVote();
     this.getItemsMenu();
   }
 
-  componentDidUpdate(prevProps) {
-    this.listenSurveysData(prevProps);
-    if (this.props.usuarioRegistrado !== prevProps.usuarioRegistrado) {
-      this.setState({ usuarioRegistrado: this.props.usuarioRegistrado });
+  async componentDidUpdate ( prevProps ) {
+    this.listenSurveysData( prevProps );
+    if ( this.props.usuarioRegistrado !== prevProps.usuarioRegistrado ) {
+      this.setState( { usuarioRegistrado: this.props.usuarioRegistrado } );
+    }
+
+    //No es la manera ideal pero aqui forzamos una revisión en la base de datos para asber si el usuario ya voto
+    //mejor tener esto en forma de contexto o algo similar
+    if ( this.state.forceCheckVoted ) {
+      await this.seeIfUserHasVote();
+      this.setState( { forceCheckVoted: false } );
     }
   }
 
@@ -97,102 +105,103 @@ class SurveyForm extends Component {
    * información desde la base de datos principal
    */
 
-  listenSurveysData = async (prevProps) => {
+  listenSurveysData = async ( prevProps ) => {
     const { event, activity } = this.props;
-    if (!prevProps || event !== prevProps.event || activity !== prevProps.activity) {
+    if ( !prevProps || event !== prevProps.event || activity !== prevProps.activity ) {
       //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
-      let $query = firestore.collection("surveys");
-      $query = $query.where("isPublished", "==", "true");
+      let $query = firestore.collection( "surveys" );
+      $query = $query.where( "isPublished", "==", "true" );
 
       //Le agregamos el filtro por evento
-      if (event && event._id) {
-        $query = $query.where("eventId", "==", event._id);
+      if ( event && event._id ) {
+        $query = $query.where( "eventId", "==", event._id );
       }
 
 
       let publishedSurveys = [];
-      $query.onSnapshot(async (surveySnapShot) => {
+      $query.onSnapshot( async ( surveySnapShot ) => {
 
         //console.log("surveySnapShot", surveySnapShot, surveySnapShot.size);
 
-        if (surveySnapShot.size === 0) {
-          this.setState({ selectedSurvey: {}, surveyVisible: false, surveysData: [] });
+        if ( surveySnapShot.size === 0 ) {
+          this.setState( { selectedSurvey: {}, surveyVisible: false, surveysData: [] } );
           return;
         }
         publishedSurveys = [];
-        surveySnapShot.forEach(function (doc) {
-          publishedSurveys.push({ ...doc.data(), _id: doc.id });
-        });
+        surveySnapShot.forEach( function ( doc ) {
+          publishedSurveys.push( { ...doc.data(), _id: doc.id } );
+        } );
 
         //Filtramos las encuestas que  pueden ver los usuarios anónimos
-        if (!this.state.currentUser) {
-          publishedSurveys = publishedSurveys.filter((item) => item.allow_anonymous_answers !== "false");
+        if ( !this.state.currentUser ) {
+          publishedSurveys = publishedSurveys.filter( ( item ) => item.allow_anonymous_answers !== "false" );
         }
 
-        let publishedSurveysIds = publishedSurveys.map((item) => item._id);
+        let publishedSurveysIds = publishedSurveys.map( ( item ) => item._id );
 
-        let surveysData = await SurveysApi.getAll(event._id);
+        let surveysData = await SurveysApi.getAll( event._id );
         surveysData = surveysData.data;
 
         //Filtramos si la encuesta esta relacionada a una actividad y estamos en esa actividad
-        if (activity && activity._id) {
-          surveysData = surveysData.filter((item) => item.activity_id === activity._id);
+        if ( activity && activity._id ) {
+          surveysData = surveysData.filter( ( item ) => item.activity_id === activity._id );
         }
 
 
 
 
-        surveysData = surveysData.filter((item) => publishedSurveysIds.indexOf(item._id) !== -1);
-        this.setState({ surveyRecentlyChanged: true });
+        surveysData = surveysData.filter( ( item ) => publishedSurveysIds.indexOf( item._id ) !== -1 );
+        this.setState( { surveyRecentlyChanged: true } );
 
-        if (surveysData && surveysData.length > 0) {
+        if ( surveysData && surveysData.length > 0 ) {
           //playFrequency(500)
         }
 
-        setTimeout(() => {
-          this.setState({ surveyRecentlyChanged: false });
-        }, 3000);
+        setTimeout( () => {
+          this.setState( { surveyRecentlyChanged: false } );
+        }, 3000 );
 
 
 
-        this.setState({ surveysData: surveysData, surveyVisible: surveysData && surveysData.length }, this.seeIfUserHasVote);
-      });
+        this.setState( { surveysData: surveysData, surveyVisible: surveysData && surveysData.length }, this.seeIfUserHasVote );
+      } );
     }
   };
 
   // Funcion que valida si el usuario ha votado en cada una de las encuestas
   seeIfUserHasVote = async () => {
+    console.log( "VOTO: revisamos si el usuario ya voto" );
     let { currentUser, surveysData } = this.state;
     const { event } = this.props;
 
-    const votesUserInSurvey = new Promise((resolve, reject) => {
+    const votesUserInSurvey = new Promise( ( resolve, reject ) => {
       let surveys = [];
 
       // Se itera surveysData y se ejecuta el servicio que valida las respuestas
       let userHasVoted = false;
-      surveysData.forEach(async (survey, index, arr) => {
-        if (currentUser) {
-          userHasVoted = await SurveyAnswers.getUserById(event._id, survey, currentUser._id);
-          surveys.push({ ...arr[index], userHasVoted });
+      surveysData.forEach( async ( survey, index, arr ) => {
+        if ( currentUser ) {
+          userHasVoted = await SurveyAnswers.getUserById( event._id, survey, currentUser._id );
+          surveys.push( { ...arr[ index ], userHasVoted } );
         } else {
           // Esto solo se ejecuta si no hay algun usuario logeado
-          const guestUser = new Promise((resolve, reject) => {
-            let surveyId = localStorage.getItem(`userHasVoted_${survey._id}`);
-            surveyId ? resolve(true) : resolve(false);
-          });
+          const guestUser = new Promise( ( resolve, reject ) => {
+            let surveyId = localStorage.getItem( `userHasVoted_${ survey._id }` );
+            surveyId ? resolve( true ) : resolve( false );
+          } );
           let guestHasVote = await guestUser;
-          surveys.push({ ...arr[index], userHasVoted: guestHasVote });
+          surveys.push( { ...arr[ index ], userHasVoted: guestHasVote } );
         }
 
-        if (surveys.length === arr.length) resolve(surveys);
-      });
-    });
+        if ( surveys.length === arr.length ) resolve( surveys );
+      } );
+    } );
 
     let stateSurveys = await votesUserInSurvey;
 
 
 
-    this.setState({ surveysData: stateSurveys });
+    this.setState( { surveysData: stateSurveys } );
     // if (stateSurveys.length && stateSurveys.length === 1 && !stateSurveys[0].userHasVoted && this.state.availableSurveysBar) {
     //   this.toggleSurvey(stateSurveys[0]);
     // }
@@ -202,76 +211,76 @@ class SurveyForm extends Component {
 
   userVote = () => {
     const { surveysData } = this.state;
-    for (const i in surveysData) {
-      if (surveysData[i].userHasVoted === true) {
-        this.setState({ userVote: true });
-      } else if (surveysData[i].open === false) {
-        this.setState({ userVote: true });
+    for ( const i in surveysData ) {
+      if ( surveysData[ i ].userHasVoted === true ) {
+        this.setState( { userVote: true } );
+      } else if ( surveysData[ i ].open === false ) {
+        this.setState( { userVote: true } );
       }
     }
   };
 
 
-  getCurrentEvenUser = async (eventId) => {
-    let evius_token = Cookie.get("evius_token");
-    if (!evius_token) return null;
-    let response = await TicketsApi.getByEvent(eventId, evius_token);
-    return (response && response.data.length) ? response.data[0] : null;
+  getCurrentEvenUser = async ( eventId ) => {
+    let evius_token = Cookie.get( "evius_token" );
+    if ( !evius_token ) return null;
+    let response = await TicketsApi.getByEvent( eventId, evius_token );
+    return ( response && response.data.length ) ? response.data[ 0 ] : null;
 
   };
 
 
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = () => {
-    let evius_token = Cookie.get("evius_token");
-    return new Promise(async (resolve, reject) => {
-      if (!evius_token) {
-        resolve(false);
+    let evius_token = Cookie.get( "evius_token" );
+    return new Promise( async ( resolve, reject ) => {
+      if ( !evius_token ) {
+        resolve( false );
       } else {
         try {
-          const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-          if (resp.status === 200) {
+          const resp = await API.get( `/auth/currentUser?evius_token=${ Cookie.get( "evius_token" ) }` );
+          if ( resp.status === 200 ) {
             const data = resp.data;
-            this.setState({ usuarioRegistrado: data });
+            this.setState( { usuarioRegistrado: data } );
             // Solo se desea obtener el id del usuario
-            resolve(data);
+            resolve( data );
           }
-        } catch (error) {
+        } catch ( error ) {
           const { status } = error.response;
-          console.error("STATUS", status, status === 401);
-          reject(error.response);
+          console.error( "STATUS", status, status === 401 );
+          reject( error.response );
         }
       }
-    });
+    } );
   };
 
   getItemsMenu = async () => {
     let { defaultSurveyLabel } = this.state;
     const { event } = this.props;
-    const response = await Actions.getAll(`/api/events/${event._id}`);
+    const response = await Actions.getAll( `/api/events/${ event._id }` );
 
     let surveyLabel = response.itemsMenu.survey || defaultSurveyLabel;
-    this.setState({ surveyLabel });
+    this.setState( { surveyLabel } );
   };
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
-  toggleSurvey = (data, reload) => {
-    if (typeof data === "boolean" || data === undefined) {
-      this.setState({ selectedSurvey: {} });
-      if (data === true) this.listenSurveysData();
-    } else if (data.hasOwnProperty("_id")) {
+  toggleSurvey = ( data, reload ) => {
+    if ( typeof data === "boolean" || data === undefined ) {
+      this.setState( { selectedSurvey: {}, forceCheckVoted: true } );
+      if ( data === true ) this.listenSurveysData();
+    } else if ( data.hasOwnProperty( "_id" ) ) {
       let { _id, open, userHasVoted, questions } = data;
       let selectedSurvey = { _id, open, userHasVoted, questions };
-      this.setState({ selectedSurvey });
+      this.setState( { selectedSurvey } );
     }
   };
 
-  pluralToSingular = (char) => {
+  pluralToSingular = ( char ) => {
     char = char.trim();
-    return `(${char}) `;
+    return `(${ char }) `;
   };
 
-  render() {
+  render () {
     let {
       selectedSurvey,
       surveysData,
@@ -284,54 +293,54 @@ class SurveyForm extends Component {
     } = this.state;
     const { event } = this.props;
 
-    if (selectedSurvey.hasOwnProperty("_id"))
+    if ( selectedSurvey.hasOwnProperty( "_id" ) )
       return (
         <RootPage
-          selectedSurvey={selectedSurvey}
-          userHasVoted={selectedSurvey.userHasVoted}
-          idSurvey={selectedSurvey._id}
-          toggleSurvey={this.toggleSurvey}
-          eventId={event._id}
-          currentUser={currentUser}
-          eventUser={eventUser}
-          openSurvey={selectedSurvey.open}
-          surveyLabel={surveyLabel}
+          selectedSurvey={ selectedSurvey }
+          userHasVoted={ selectedSurvey.userHasVoted }
+          idSurvey={ selectedSurvey._id }
+          toggleSurvey={ this.toggleSurvey }
+          eventId={ event._id }
+          currentUser={ currentUser }
+          eventUser={ eventUser }
+          openSurvey={ selectedSurvey.open }
+          surveyLabel={ surveyLabel }
         />
       );
 
-    if (!surveysData) return <Spin></Spin>;
+    if ( !surveysData ) return <Spin></Spin>;
 
     return (
       <div>
-        {this.state.availableSurveysBar && (surveysData && surveysData.length > 0) && (
+        {this.state.availableSurveysBar && ( surveysData && surveysData.length > 0 ) && (
           <Button
-            className={` ${surveysData && !surveyVisible && !userVote && surveysData.length > 0 ? "parpadea" : ""}`}
-            onClick={this.surveyVisible}>
+            className={ ` ${ surveysData && !surveyVisible && !userVote && surveysData.length > 0 ? "parpadea" : "" }` }
+            onClick={ this.surveyVisible }>
             {!userVote ? (
               surveysData.length > 0 && (
                 <span>
-                  {!surveyVisible ? "Ver" : "Ocultar"}{" "}
-                  <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b>
-                  {surveyLabel.name && surveyLabel.name.replace(/((e)?s)$|(e)?s\s/gi, this.pluralToSingular)}
+                  {!surveyVisible ? "Ver" : "Ocultar" }{ " " }
+                  <b style={ surveyButtons.text }>&nbsp;{ surveysData && surveysData.length }&nbsp;</b>
+                  {surveyLabel.name && surveyLabel.name.replace( /((e)?s)$|(e)?s\s/gi, this.pluralToSingular ) }
                   disponible(s).
                 </span>
               )
             ) : (
-                <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
-              )}
+                <span>{ !surveyVisible ? "Ver" : "Ocultar" } Resultados</span>
+              ) }
           </Button>
-        )}
-        {(this.state.surveyVisible || !this.state.availableSurveysBar) && (
+        ) }
+        {( this.state.surveyVisible || !this.state.availableSurveysBar ) && (
           <Card>
             <SurveyList
-              jsonData={surveysData}
-              usuarioRegistrado={usuarioRegistrado}
-              eventUser={eventUser}
-              showSurvey={this.toggleSurvey}
-              surveyLabel={surveyLabel}
+              jsonData={ surveysData }
+              usuarioRegistrado={ usuarioRegistrado }
+              eventUser={ eventUser }
+              showSurvey={ this.toggleSurvey }
+              surveyLabel={ surveyLabel }
             />
           </Card>
-        )}
+        ) }
       </div>
     );
   }
