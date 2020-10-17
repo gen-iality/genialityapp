@@ -92,7 +92,7 @@ export default function AgendaActivityItem({
             <div className='text-align-card'>
               {item.hosts.length > 0 && (
                 <>
-                  <b>Presenta: </b>
+                  <b>Penalistas: </b>
                   <br />
                   <br />
                   <Row>
