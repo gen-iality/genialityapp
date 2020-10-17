@@ -7,8 +7,8 @@ import API from "../../../helpers/request";
 
 
 export default class ZoomComponent extends Component {
-  constructor( props ) {
-    super( props );
+  constructor(props) {
+    super(props);
     this.state = {
       id_conference: "284693751",
       url_conference: `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`,
@@ -27,15 +27,15 @@ export default class ZoomComponent extends Component {
   }
 
 
-  async setUpUserForConference () {
+  async setUpUserForConference() {
     let { meetingId, userEntered } = this.props;
 
     let displayName = "Anónimo";
     let email = "anonimo@evius.co";
 
-    if ( userEntered ) {
+    if (userEntered) {
       displayName = userEntered.displayName || userEntered.names || displayName;
-      if ( userEntered.properties && userEntered.properties.casa ) {
+      if (userEntered.properties && userEntered.properties.casa) {
         displayName = userEntered.properties.casa + " " + displayName;
       }
       email = userEntered.email || email
@@ -43,9 +43,9 @@ export default class ZoomComponent extends Component {
 
     let urllogin_bigmarker = null;
     let error_bigmarker = null;
-    if ( this.state.event && this.state.event.event_platform === "bigmarker" ) {
+    if (this.state.event && this.state.event.event_platform === "bigmarker") {
 
-      console.log( "activity", this.props.activity )
+      console.log("activity", this.props.activity)
       let data = {
         id: this.props.activity.bigmaker_meeting_id,
         attendee_name: displayName,
@@ -55,11 +55,11 @@ export default class ZoomComponent extends Component {
 
       let callresult = null;
       try {
-        callresult = await API.post( `/api/integration/bigmaker/conferences/enter`, data );
+        callresult = await API.post(`/api/integration/bigmaker/conferences/enter`, data);
         urllogin_bigmarker = callresult.data.enter_uri;
-        console.log( "callresult", callresult.data.enter_uri );
-      } catch ( e ) {
-        if ( e.response && e.response.data && e.response.data.message ) {
+        console.log("callresult", callresult.data.enter_uri);
+      } catch (e) {
+        if (e.response && e.response.data && e.response.data.message) {
           error_bigmarker = e.response.data.message;
         } else {
           error_bigmarker = e.message;
@@ -68,18 +68,18 @@ export default class ZoomComponent extends Component {
 
     }
 
-    this.setState( { meeting_id: meetingId, userEntered, displayName, email, urllogin_bigmarker: urllogin_bigmarker, error_bigmarker: error_bigmarker } );
+    this.setState({ meeting_id: meetingId, userEntered, displayName, email, urllogin_bigmarker: urllogin_bigmarker, error_bigmarker: error_bigmarker });
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     this.setUpUserForConference();
-    console.log( "eventzoom", this.state.event )
+    console.log("eventzoom", this.state.event)
   }
 
 
-  async componentDidUpdate ( prevProps ) {
+  async componentDidUpdate(prevProps) {
 
-    if ( prevProps.meetingId === this.props.meetingId ) { return }
+    if (prevProps.meetingId === this.props.meetingId) { return }
 
     this.setUpUserForConference();
 
@@ -88,39 +88,39 @@ export default class ZoomComponent extends Component {
 
   // Función full screen
   goFull = () => {
-    this.setState( { isFull: true } );
+    this.setState({ isFull: true });
   };
 
   closeFull = () => {
-    this.setState( { isFull: false } );
+    this.setState({ isFull: false });
   };
 
   // Función medium screen
   goMedium = () => {
-    this.setState( {
+    this.setState({
       isMedium: !this.state.isMedium,
       isMinimize: false,
-    } );
+    });
   };
 
   // Función minimize screen
   goMinimize = () => {
-    this.setState( {
+    this.setState({
       isMinimize: !this.state.isMinimize,
       isMedium: false,
-    } );
+    });
   };
 
 
 
-  render () {
+  render() {
     const { toggleConference, event, activity } = this.props;
     let { url_conference, meeting_id, isMedium, isFull, isMinimize, displayName, email } = this.state;
     const platform = activity.platform || this.state.event.event_platform;
     return (
       <div
-        className={ `content-zoom ${ isMedium === true ? "mediumScreen" : "" } ${ isMinimize === true ? "minimizeScreen" : ""
-          }` }>
+        className={`content-zoom ${isMedium === true ? "mediumScreen" : ""} ${isMinimize === true ? "minimizeScreen" : ""
+          }`}>
 
         <div className="buttons-header">
           <div>
@@ -131,33 +131,33 @@ export default class ZoomComponent extends Component {
           </div>
 
           <div>
-            {/* botón pantalla completa */ }
-            <Button className="ant-btn-header" onClick={ this.goFull }>
+            {/* botón pantalla completa */}
+            <Button className="ant-btn-header" onClick={this.goFull}>
               <FullscreenOutlined />
             </Button>
 
-            {/* botón pantalla minimizada */ }
-            <Button className="ant-btn-header" onClick={ this.goMinimize }>
+            {/* botón pantalla minimizada */}
+            <Button className="ant-btn-header" onClick={this.goMinimize}>
               <LineOutlined />
             </Button>
 
-            {/* botón cerrar */ }
-            <Button className="ant-btn-header" onClick={ () => toggleConference( false ) }>
+            {/* botón cerrar */}
+            <Button className="ant-btn-header" onClick={() => toggleConference(false)}>
               <span className="icon-close">&#10006;</span>
             </Button>
           </div>
         </div>
 
-        <Fullscreen enabled={ isFull } onChange={ ( isFull ) => this.setState( { isFull } ) }>
+        <Fullscreen enabled={isFull} onChange={(isFull) => this.setState({ isFull })}>
           {
-            <SurveyComponent event={ event } activity={ activity } availableSurveysBar={ true } />
+            <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
           }
 
           {
-            this.state.event && ( platform === "zoom" ) &&
+            this.state.event && (platform === "zoom") &&
             (
               <iframe
-                src={ url_conference + meeting_id + `&userName=${ displayName }` + `&email=${ email }` }
+                src={url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`}
                 allow="autoplay; fullscreen; camera *;microphone *"
                 allowUserMedia
                 allowFullScreen
@@ -166,47 +166,47 @@ export default class ZoomComponent extends Component {
               </iframe>
             )
           }
-          {/* VIMEO LIVESTREAMING */ }
+          {/* VIMEO LIVESTREAMING */}
           {
-            this.state.event && ( platform === "vimeo" ) &&
+            this.state.event && (platform === "vimeo") &&
             (
-              <div style={ { "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" } }>
+              <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
                 <iframe
-                  src={ `https://player.vimeo.com/video/${ activity.vimeo_id }` }
+                  src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
                   frameBorder="0"
                   allow="autoplay; fullscreen; camera *;microphone *"
                   allowFullScreen
                   allowUserMedia
-                  style={ { "position": "absolute", "top": 0, "left": 0, "width": "70%", "height": "100%" } }
+                  style={{ "position": "absolute", "top": 0, "left": 0, "width": "70%", "height": "100%" }}
                 ></iframe>
 
                 <iframe
-                  src={ `https://vimeo.com/live-chat/${ activity.vimeo_id }` }
-                  style={ { "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" } }
+                  src={`https://vimeo.com/live-chat/${activity.vimeo_id}`}
+                  style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
                   frameBorder="0"
                 ></iframe>
               </div>
             )
           }
 
-          {/* style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", margin: 0, padding: 0 }}*/ }
-          { ( this.state.event && platform === "bigmarker" ) &&
+          {/* style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", margin: 0, padding: 0 }}*/}
+          {(this.state.event && platform === "bigmarker") &&
             <>
 
-              { ( !this.state.error_bigmarker && !this.state.urllogin_bigmarker ) && ( <Spin tip="Loading..."></Spin> ) }
-              { ( this.state.error_bigmarker && <div> <Result
+              {(!this.state.error_bigmarker && !this.state.urllogin_bigmarker) && (<Spin tip="Loading..."></Spin>)}
+              {(this.state.error_bigmarker && <div> <Result
                 status="warning"
-                title={ this.state.error_bigmarker }
-              /></div> ) }
-              { ( !this.state.error_bigmarker && this.state.urllogin_bigmarker ) && <iframe
+                title={this.state.error_bigmarker}
+              /></div>)}
+              {(!this.state.error_bigmarker && this.state.urllogin_bigmarker) && <iframe
                 id="conference"
-                src={ this.state.urllogin_bigmarker } //"https://www.bigmarker.com/conferences/1c3e6af84135/api_attend"
+                src={this.state.urllogin_bigmarker} //"https://www.bigmarker.com/conferences/1c3e6af84135/api_attend"
                 frameborder="0"
                 allow="autoplay; fullscreen; camera *;microphone *"
                 allowfullscreen
                 allowusermedia
                 className="iframe-zoom nuevo"
-              ></iframe> }
+              ></iframe>}
             </>
           }
         </Fullscreen>
