@@ -181,7 +181,7 @@ export default class ZoomComponent extends Component {
                 ></iframe>
 
                 <iframe
-                  src={`https://vimeo.com/live-chat/${activity.vimeo_id}`}
+                  src={`https://vimeo.com/live-chat/469274033`}
                   style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
                   frameBorder="0"
                 ></iframe>
