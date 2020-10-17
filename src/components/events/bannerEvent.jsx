@@ -9,13 +9,14 @@ import { Col } from 'antd';
 let bannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
     return (
         <div className="headerContainer">
-            <Col xs={0} sm={0} md={0} lg={24}>
-                <img src={bgImage} alt={title} style={{ width: "100%" }} />
+            <Col xs={0} sm={24}>
+                <img src={bgImage} alt={title} />
             </Col>
-            <Col xs={24} sm={24} md={24} lg={0}>
+            <Col xs={24} sm={0}>
                 <img src={mobileBanner} alt={title} />
             </Col>
-            {!(styles && styles.show_card_banner && styles.show_card_banner === "false")}
+
+            { !(styles && styles.show_card_banner && styles.show_card_banner === "false") && <HeaderEventInfo title={title} {...props} />}
             {/* Imagen opcional para el logo o marca del evento  */}
             {/* <div className="container-logoBanner">
                     <img src="https://storage.googleapis.com/herba-images/evius/events/97XuEjJwHIkAyoAO1PreHOMUKMgFfM6MRmyEB5PS.jpeg" alt="" />
@@ -26,7 +27,12 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
 
 function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, type_event }) {
     return (
-        <div className="banner-user-text-container">
+        <div className="banner-user-text-container"
+            style={{
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+
+            }}>
 
             <TweenOne className="banner-user-text">
 
@@ -38,7 +44,7 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
                                 {
                                     dates.map((item, key) => (
                                         <span key={key}>
-                                            <strong>{Moment(item).format("DD MMMM") + ((dates.length - 1 > key) ? ", " : "")}</strong>
+                                            {Moment(item).format("DD MMMM") + ((dates.length - 1 > key) ? ", " : "")}
                                         </span>
                                     ))
                                 }
@@ -47,7 +53,7 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
                             <>
                                 {
                                     dateStart === dateEnd ? (
-                                        <span>  <strong>{Moment(dateStart).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</strong></span>
+                                        <span>{Moment(dateStart).format("DD")}{" de "} { (Moment(dateEnd).format("MMMM YYYY"))}</span>
                                     )
                                         : (
                                             <div>
