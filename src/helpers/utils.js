@@ -63,21 +63,23 @@ export function handleRequestError(error) {
     info.status = 800;
     info.message = error.message;
   }
-  
+
   return info;
 }
 
 export function parseData2Excel(data, fields) {
- 
   let info = [];
+  console.log({ fields });
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
   data.map((item, key) => {
+    const propertiesFormat = JSON.parse(item.properties);
+    item.properties = propertiesFormat;
     info[key] = {};
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
     info[key]['checked'] = item.checkedin_at ? 'TRUE' : 'FALSE';
-    
+
     info[key]['Hora checkIn'] = item.checked_at
       ? item.checked_at
         ? item.checked_at.toDate()
@@ -104,18 +106,15 @@ export function parseData2Excel(data, fields) {
           str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : 'undefined';
       }
 
-    
       if (type === 'complex' && str) {
-
         Object.keys(str).map((prop) => {
           return (info[key][prop] = Array.isArray(str[prop]) ? str[prop].join() : str[prop]);
         });
       } else return (info[key][label] = str);
 
       return null;
-      
     });
-    if (item.rol)  info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : item.rol.name.toUpperCase();
+    if (item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : '';
     info[key]['Tipo asistente'] = item.rol_name ? item.rol_name : '';
     info[key]['Actualizado'] = item.updated_at;
     info[key]['Creado'] = item.created_at;
