@@ -105,8 +105,13 @@ class General extends Component {
     valid = () => {
         const error = {};
         const { event, selectedOrganizer, selectedType, selectedCategories } = this.state;
-        const valid = (event.name.length > 0 && !!selectedOrganizer && !!selectedType && selectedCategories.length > 0);
-        this.setState({ valid: !valid, error })
+        const valid = (event.name !== null && event.name.length > 0 && !!selectedOrganizer && !!selectedType && selectedCategories && selectedCategories.length > 0);
+        if (valid) {
+            this.setState({ valid: !valid, error })
+        } else {
+            toast.error('Hubo un error, completa los datos Obligatorios');
+        }
+
     };
     //Cambio descripción
     chgTxt = content => {
