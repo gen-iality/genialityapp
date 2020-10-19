@@ -492,24 +492,28 @@ section.landing {
 //     }
 //   }
 // }
-.banner-user-text-container {
-  position: absolute;
-  top: 32%;
-  left: 2%;
-  background: #dbdbdbe6;
-  padding: 19px;
-  font-size: 20px;
-  @media only screen and (max-width: $breakpoint-mobile) {
-    position: relative;
-    background:#dbdbdb5e;
-    left: 0;
-    margin: 12px;
-    font-size: 14px;
-  }
-  @media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-tablet) {
-    bottom: 78%;
-  }
+.headerContainer{
+  position: relative;
+  .banner-user-text-container {
+    position: absolute;
+    top: 32%;
+    left: 2%;
+    background: #dbdbdbe6;
+    padding: 19px;
+    font-size: 20px;
+    @media only screen and (max-width: $breakpoint-mobile) {
+      position: relative;
+      background:#dbdbdb5e;
+      left: 0;
+      margin: 12px;
+      font-size: 14px;
+    }
+    @media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-tablet) {
+      bottom: 78%;
+    }
+  }  
 }
+
 .container-logoBanner {
   text-align: end;
   img {
