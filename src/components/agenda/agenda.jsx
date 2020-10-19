@@ -165,7 +165,7 @@ class Agenda extends Component {
         ];
         return (
             <EventContent title={"Programación"} classes={"agenda-list"} addAction={this.redirect} addTitle={"Nueva actividad"}>
-                <Table columns={columns} dataSource={list} />
+                <Table columns={columns} dataSource={list} pagination={false} />
             </EventContent>
         )
     }

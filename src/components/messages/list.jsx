@@ -95,8 +95,7 @@ class InvitationsList extends Component {
       }
 
       API.get(
-        `/api/events/${eventId}/messages${query}&page=${
-        page + 1
+        `/api/events/${eventId}/messages${query}&page=${page + 1
         }&pageSize=${pageSize}`
       )
         .then(({ data }) => {

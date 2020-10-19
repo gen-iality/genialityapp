@@ -15,7 +15,6 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
             <Col xs={24} sm={0}>
                 <img src={mobileBanner} alt={title} />
             </Col>
-
             { !(styles && styles.show_card_banner && styles.show_card_banner === "false") && <HeaderEventInfo title={title} {...props} />}
             {/* Imagen opcional para el logo o marca del evento  */}
             {/* <div className="container-logoBanner">
