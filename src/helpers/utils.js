@@ -69,7 +69,6 @@ export function handleRequestError(error) {
 
 export function parseData2Excel(data, fields) {
   let info = [];
-  console.log({ fields });
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
@@ -78,7 +77,7 @@ export function parseData2Excel(data, fields) {
     item.properties = propertiesFormat;
     info[key] = {};
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
-    info[key]['checked'] = item.checkedin_at ? 'TRUE' : 'FALSE';
+    info[key]['checked'] = item.checkedin_at !== 'null' ? 'TRUE' : 'FALSE';
 
     info[key]['Hora checkIn'] = item.checked_at
       ? item.checked_at
@@ -97,10 +96,16 @@ export function parseData2Excel(data, fields) {
           str = item.properties[name] ? 'TRUE' : 'FALSE';
           break;
         case 'complex':
-          str = item.properties[name] ? item.properties[name] : 'undefined';
+          str = item.properties[name] ? item.properties[name].response : 'undefined';
           break;
         case 'multiplelist':
           str = Array.isArray(item.properties[name]) ? item.properties[name].join() : item.properties[name];
+          break;
+        case 'file':
+          str =
+            item.properties[name] && Array.isArray(item.properties.files)
+              ? item.properties.files.length > 0 && item.properties.files.join()
+              : 'invalid file';
           break;
         default:
           str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : 'undefined';
