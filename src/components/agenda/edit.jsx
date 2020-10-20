@@ -587,6 +587,16 @@ class AgendaEdit extends Component {
   selectTickets(tickets) {
     this.setState({ selectedTicket: tickets })
   }
+
+  sendToStateVimeoId(e) {
+    this.setState({ vimeo_id: e.target.value })
+    notification.open({
+      message: 'Ten en cuenta Guardar',
+      description:
+        'Por favor Ten en cuenta Guardar en el boton "Guardar" de la parte superior derecha',
+    });
+
+  }
   render() {
     const {
       loading,
@@ -1089,7 +1099,7 @@ class AgendaEdit extends Component {
                                   <input
                                     type="number"
                                     name="vimeo_id"
-                                    onChange={(e) => this.setState({ vimeo_id: e.target.value })}
+                                    onChange={(e) => this.sendToStateVimeoId(e)}
                                   />
                                 </div>
                               ) : (
