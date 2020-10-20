@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Result, Spin } from "antd";
+import { Button, Result, Spin, Row, Col } from "antd";
 import Fullscreen from "react-full-screen";
 import { FullscreenOutlined, LineOutlined } from "@ant-design/icons";
 import SurveyComponent from "../surveys";
@@ -170,22 +170,25 @@ export default class ZoomComponent extends Component {
           {
             this.state.event && (platform === "vimeo") &&
             (
-              <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
-                <iframe
-                  src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
-                  frameBorder="0"
-                  allow="autoplay; fullscreen; camera *;microphone *"
-                  allowFullScreen
-                  allowUserMedia
-                  style={{ "position": "absolute", "top": 0, "left": 0, "width": "70%", "height": "100%" }}
-                ></iframe>
-
-                <iframe
-                  src={`https://vimeo.com/live-chat/${activity.vimeo_id}`}
-                  style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
-                  frameBorder="0"
-                ></iframe>
-              </div>
+              <Row style={{ "width": "100%", "height": "100vh" }}>
+                <Col sm={24} lg={12}>
+                  <iframe
+                    src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; camera *;microphone *"
+                    allowFullScreen
+                    allowUserMedia
+                    style={{ "width": "99vw", "height": "100%" }}
+                  ></iframe>
+                </Col>
+                <Col sm={24} lg={12}>
+                  <iframe
+                    src={`https://vimeo.com/live-chat/${activity.vimeo_id}`}
+                    style={{ "width": "99vw", "height": "100%" }}
+                    frameBorder="0"
+                  ></iframe>
+                </Col>
+              </Row>
             )
           }
 
