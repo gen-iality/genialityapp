@@ -84,8 +84,9 @@ class AgendaEdit extends Component {
     this.createConference = this.createConference.bind(this);
     this.removeConference = this.removeConference.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.selectTickets = this.selectTickets.bind(this)
-    this.removeVimeoId = this.removeVimeoId.bind(this)
+    this.selectTickets = this.selectTickets.bind(this);
+    this.removeVimeoId = this.removeVimeoId.bind(this);
+    this.saveVimeoId = this.saveVimeoId.bind(this);
   }
 
   async componentDidMount() {
@@ -208,10 +209,17 @@ class AgendaEdit extends Component {
   };
 
   //FN general para cambio en input
-  handleChange = (e) => {
-    const { name } = e.target;
-    const { value } = e.target;
+  handleChange = async (e) => {
+    const { name, value } = e.target;
+    const { info } = this.state;
+    const { event } = this.props;
+
     this.setState({ [name]: value, host_id: e.target.value });
+
+    if (name === "platform") {
+      info.platform = e.target.value
+      await AgendaApi.editOne(info, this.props.location.state.edit, event._id);
+    }
   };
   //FN para cambio en campo de fecha
   handleDate = (value, name) => {
@@ -588,15 +596,23 @@ class AgendaEdit extends Component {
     this.setState({ selectedTicket: tickets })
   }
 
-  sendToStateVimeoId(e) {
+  async saveVimeoId(e) {
+    let info = this.state.info;
+    const { event } = this.props;
+
+    info.vimeo_id = e.target.value
     this.setState({ vimeo_id: e.target.value })
+
+    await AgendaApi.editOne(info, this.props.location.state.edit, event._id);
+
     notification.open({
-      message: 'Ten en cuenta Guardar',
+      message: 'Id de vimeo Guardado correctamente',
       description:
-        'Por favor Ten en cuenta Guardar en el boton "Guardar" de la parte superior derecha',
+        'Dato Guardado Correctamente',
     });
 
   }
+
   render() {
     const {
       loading,
@@ -1093,13 +1109,13 @@ class AgendaEdit extends Component {
                         platform === "vimeo" && this.props.location.state.edit && (
                           <>
                             {
-                              vimeo_id === "" ? (
+                              !vimeo_id ? (
                                 <div className="control">
                                   <label>Ingrese id de videoconferencia Vimeo</label>
                                   <input
                                     type="number"
                                     name="vimeo_id"
-                                    onChange={(e) => this.sendToStateVimeoId(e)}
+                                    onChange={(e) => this.saveVimeoId(e)}
                                   />
                                 </div>
                               ) : (
