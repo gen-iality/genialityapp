@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 
-import { List, Button, Card, Tag, Result, Row, Col } from "antd";
+import { List, Button, Card, Tag, Result } from "antd";
 import { MehOutlined } from "@ant-design/icons";
 const headStyle = {
   fontWeight: 300,
@@ -17,7 +17,6 @@ const SurveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =>
 
   useEffect(() => {
     let surveyList = jsonData;
-    console.log('survey list ---------------------------------------', surveyList)
     //Los usuarios anónimos solo ven las encuestas que permiten respuestas anónimas
     if (!usuarioRegistrado) {
       surveyList = jsonData.filter((item) => { return item.allow_anonymous_answers !== "false" })

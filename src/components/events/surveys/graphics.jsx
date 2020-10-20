@@ -67,7 +67,7 @@ class Graphics extends Component {
     let { graphicsFrame, chartCreated, chart } = this.state;
     let { horizontalBar } = graphicsFrame;
 
-    let totalPercentResponse = new Object()
+    let totalPercentResponse = {}
     //se realiza iteracion para calcular porcentaje
     for (let i in answer_count) {
       totalPercentResponse[i] = answer_count[i];//parseFloat((answer_count[i] * 100 / usersRegistered).toFixed(1))
