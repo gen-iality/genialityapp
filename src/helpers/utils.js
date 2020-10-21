@@ -73,7 +73,7 @@ export function parseData2Excel(data, fields) {
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
   data.map((item, key) => {
-    const propertiesFormat = JSON.parse(item.properties);
+    const propertiesFormat = JSON.parse(item.properties ? item.properties : '');
     item.properties = propertiesFormat;
     info[key] = {};
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
@@ -103,9 +103,9 @@ export function parseData2Excel(data, fields) {
           break;
         case 'file':
           str =
-            item.properties[name] && Array.isArray(item.properties.files)
-              ? item.properties.files.length > 0 && item.properties.files.join()
-              : 'invalid file';
+            item.properties[name] && item.properties[name].file
+              ? item.properties[name].file.response
+              : 'Not files saved';
           break;
         default:
           str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : 'undefined';
