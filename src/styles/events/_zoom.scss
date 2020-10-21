@@ -113,8 +113,18 @@
   height: 95%;
   display: flex;
   background-color: white;
+  .parpadea{
+    position: absolute;
+    right: 6px;
+  }
   @media only screen and (max-width: $breakpoint-mobile) {
     display: block;
+    height: 100%;
+    .parpadea{
+      position: absolute;
+      right:6px;
+      top: 12%;
+    }
   }
 }
 
@@ -155,6 +165,13 @@
   @media screen and (max-width: $breakpoint-mobile){ 
     height: 100%;
   }
+  // @media (orientation: landscape){
+  //   .ant-col-md-24 {
+  //     display: flex;
+  //     flex: 0 0 50%;
+  //     max-width: 100%;
+  //   }
+  // }
 }
 
 
@@ -178,11 +195,6 @@
   }
 }
 
-.fullscreen {
-  .parpadea{
-    position: absolute;
-  }
-}
 // Boton de encuestas
 
 .parpadea {

@@ -150,10 +150,6 @@ export default class ZoomComponent extends Component {
 
         <Fullscreen enabled={isFull} onChange={(isFull) => this.setState({ isFull })}>
           {
-            <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
-          }
-
-          {
             this.state.event && (platform === "zoom") &&
             (
               <iframe
@@ -171,7 +167,7 @@ export default class ZoomComponent extends Component {
             this.state.event && (platform === "vimeo") &&
             (
               <Row className="platform-vimeo">
-                <Col xs={24} sm={24} md={24} lg={16}>
+                <Col className="col-xs" xs={24} sm={24} md={24} lg={16}>
                   <iframe
                     src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
                     frameBorder="0"
@@ -181,7 +177,7 @@ export default class ZoomComponent extends Component {
                     style={{ "width": "99vw", "height": "100%" }}
                   ></iframe>
                 </Col>
-                <Col xs={24} sm={24} md={24} lg={8}>
+                <Col className="col-xs" xs={24} sm={24} md={24} lg={8}>
                   <iframe
                     src={`https://vimeo.com/live-chat/${activity.vimeo_id}`}
                     style={{ "width": "99vw", "height": "100%", "padding": "2px" }}
@@ -211,6 +207,9 @@ export default class ZoomComponent extends Component {
                 className="iframe-zoom nuevo"
               ></iframe>}
             </>
+          }
+          {
+            <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
           }
         </Fullscreen>
       </div>
