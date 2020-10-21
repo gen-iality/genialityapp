@@ -102,18 +102,10 @@ export function parseData2Excel(data, fields) {
           str = Array.isArray(item.properties[name]) ? item.properties[name].join() : item.properties[name];
           break;
         case 'file':
-          /*Cuando se termine el evento de Ucronion dejar unicamente la linea 112 
-            ya que se estandariza para los campos unicos del array tipo archivo
-            Dejar unicamente la linea 112 para el case 'file'          
-          */
-          if (item.properties.files) {
-            str =
-              item.properties[name] && Array.isArray(item.properties.files)
-                ? item.properties.files.length > 0 && item.properties.files.toString()
-                : '';
-          } else {
-            str = item.properties[name] && item.properties[name].file ? item.properties[name].file.response : '';
-          }
+          str =
+            item.properties[name] && item.properties[name].file
+              ? item.properties[name].file.response
+              : item.properties[name];
           break;
         default:
           str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : 'undefined';
