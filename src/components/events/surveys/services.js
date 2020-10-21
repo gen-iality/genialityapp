@@ -21,7 +21,7 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
       let idResponse = i.toString();
 
       // Se valida si se escogio mas de una opcion en la pregunta o no
-      if (optionIndex.length > 1) {
+      if (optionIndex && optionIndex.length && optionIndex.length > 1) {
         firstData[idResponse] = optionIndex.includes(i) ? vote : 0;
       } else {
         firstData[idResponse] = optionIndex == idResponse ? vote : 0;
@@ -64,7 +64,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
       return firestore.runTransaction((t) => {
         return t.get(shard_ref).then((doc) => {
           // Condiciona si tiene mas de una opcion escogida
-          if (position.length > 1) {
+          if (position && position.length && position.length > 1) {
             position.forEach((element) => {
               const new_count = doc.data()[element] + vote;
               t.update(shard_ref, { [element]: new_count });
@@ -267,7 +267,7 @@ export const SurveyAnswers = {
             resolve(counterDocuments);
           }
 
-          if (counterDocuments > 0 && counterDocuments === survey.questions.length) {
+          if (counterDocuments > 0 && survey.questions && counterDocuments === survey.questions.length) {
             resolve(true);
           } else {
             resolve(false);
