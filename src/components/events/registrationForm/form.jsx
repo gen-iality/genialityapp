@@ -81,7 +81,7 @@ export default ( { initialValues, eventId, extraFieldsOriginal, eventUserId, clo
     getEventData( eventId )
     form.resetFields();
 
-    if ( window.fbq ) { window.fbq( 'track', 'Lead' ); }
+    if ( window.fbq ) { window.fbq( 'track', 'CompleteRegistration' ); }
   }, [ eventUserId, initialValues ] );
 
   const showGeneralMessage = () => {
