@@ -315,7 +315,6 @@ class SurveyComponent extends Component {
           subTitle: `Has ganado ${questionPoints} puntos, respondiendo correctamente la pregunta.`,
           icon: <SmileOutlined />,
         };
-        break;
 
       case "error":
         return {
@@ -324,7 +323,6 @@ class SurveyComponent extends Component {
           subTitle: "Debido a que no respondiste correctamente no has ganado puntos.",
           icon: <FrownOutlined />,
         };
-        break;
 
       case "warning":
         return {
@@ -341,11 +339,10 @@ class SurveyComponent extends Component {
           subTitle: `El juego se encuentra en pausa. Espera hasta el moderador reanude el juego`,
           icon: <MehOutlined />,
         };
-        break;
 
       default:
         return { type: state };
-        break;
+
     }
   };
 
@@ -545,7 +542,7 @@ class SurveyComponent extends Component {
   render() {
     let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete, eventUsers } = this.state;
 
-    const { showListSurvey, surveyLabel, eventId } = this.props;
+    const { showListSurvey, surveyLabel, eventId, operation } = this.props;
 
     if (!surveyData) return "Cargando..."
     return (
@@ -574,7 +571,7 @@ class SurveyComponent extends Component {
           ))}
 
         {
-          this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+          this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} operation={operation}/>
         }
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
