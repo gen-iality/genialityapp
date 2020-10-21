@@ -494,6 +494,9 @@ section.landing {
 // }
 .headerContainer{
   position: relative;
+  img{
+    width: -webkit-fill-available;
+  }
   .banner-user-text-container {
     position: absolute;
     top: 32%;

@@ -149,7 +149,13 @@
     }
   }
 }
-// list survey
+// vimeo
+.platform-vimeo{
+  width: 100%;
+  @media screen and (max-width: $breakpoint-mobile){ 
+    height: 100%;
+  }
+}
 
 
 
