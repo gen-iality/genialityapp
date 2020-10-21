@@ -199,9 +199,7 @@ export const SurveyAnswers = {
     });
   },
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
-  getAnswersQuestion: async (surveyId, questionId, eventId, updateData) => {
-    console.log('START get answer question +++++++++++++++++++++++++++++++++');
-
+  getAnswersQuestion: async (surveyId, questionId, eventId, updateData, operation) => {
     return new Promise(async (resolve, reject) => {
       let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
       let options = dataSurvey.questions.find((question) => question.id === questionId);
@@ -212,7 +210,38 @@ export const SurveyAnswers = {
         .collection('answer_count')
         .doc(questionId)
         .onSnapshot((listResponse) => {
-          updateData({ answer_count: listResponse.data(), options });
+          let result = listResponse.data();
+
+          let total = 0;
+
+          switch (operation) {
+            case 'onlyCount':
+              result = listResponse.data();
+
+              Object.keys(result).map((item) => {
+                result[item] = [result[item]];
+              });
+
+              break;
+
+            case 'participationPercentage':
+              Object.keys(result).map((item) => {
+                total = total + result[item];
+              });
+
+              Object.keys(result).map((item) => {
+                const calcPercentage = Math.round((result[item] / total) * 100);
+                result[item] = [result[item], calcPercentage];
+              });
+
+              break;
+
+            case 'registeredPercentage':
+              result = listResponse.data();
+              break;
+          }
+
+          updateData({ answer_count: result, options });
         });
     });
   },

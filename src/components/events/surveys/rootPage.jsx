@@ -59,7 +59,13 @@ export default class RootPage extends Component {
     const { toggleSurvey, openSurvey, surveyLabel } = this.props;
     if (!isLoading)
       return ((eventUser && eventUser.rol && eventUser.rol.name === "Speaker") || openSurvey === "false" || hasVote || guestVoteInSurvey) ? (
-        <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} surveyLabel={surveyLabel} />
+        <Graphics
+          idSurvey={idSurvey}
+          showListSurvey={toggleSurvey}
+          eventId={eventId}
+          surveyLabel={surveyLabel}
+          operation='participationPercentage' //onlyCount, participationPercentage
+        />
       ) : (
           <Card className="survyCard">
             <SurveyComponent
