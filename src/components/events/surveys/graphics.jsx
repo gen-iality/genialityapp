@@ -66,18 +66,36 @@ class Graphics extends Component {
   updateData = ({ options, answer_count }) => {
     let { graphicsFrame, chartCreated, chart } = this.state;
     let { horizontalBar } = graphicsFrame;
+    const { operation } = this.props
 
-    let totalPercentResponse = new Object()
+    let totalPercentResponse = {}
     //se realiza iteracion para calcular porcentaje
     for (let i in answer_count) {
-      totalPercentResponse[i] = answer_count[i];//parseFloat((answer_count[i] * 100 / usersRegistered).toFixed(1))
+
+      switch (operation) {
+        case 'onlyCount':
+          totalPercentResponse[i] = answer_count[i][0];
+          break
+        case 'participationPercentage':
+          totalPercentResponse[i] = answer_count[i][1];
+          break
+
+      }      
     }
 
     let generatedlabels = [];
     //Se iguala options.choices[a] a una cadena string dinamica para agregar la cantidad de votos de la respuesta
     for (let a = 0; options.choices.length > a; a++) {
       // options.choices[a] = `${options.choices[a]}:` + `${answer_count[a]} Voto(s): ${totalPercentResponse[a]} %`
-      generatedlabels[a] = options.choices[a] + ` ${answer_count[a]} Voto(s)`;
+      switch (operation) {
+        case 'onlyCount':
+          generatedlabels[a] = options.choices[a] + ` ${answer_count[a][0]} Voto(s)`;
+          break
+        case 'participationPercentage':
+          generatedlabels[a] = options.choices[a] + ` ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}%`;
+          break
+
+      }
     }
 
     let formatterTitle = options.title;
@@ -104,6 +122,10 @@ class Graphics extends Component {
         plugins: {
           datalabels: {
             color: '#777',
+            formatter: function (value, context) {
+              return value + '%';
+            }
+
           }
         },
         legend: {
@@ -150,12 +172,12 @@ class Graphics extends Component {
   };
 
   mountChart = async () => {
-    const { idSurvey, eventId } = this.props;
+    const { idSurvey, eventId, operation } = this.props;
     let { dataSurvey, currentPage } = this.state;
     let { questions } = dataSurvey;
 
     // Se ejecuta servicio para tener el conteo de las respuestas
-    await SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId, this.updateData)
+    await SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId, this.updateData, operation)
   };
 
   async componentDidMount() {
