@@ -1,6 +1,6 @@
 import React, { useState, useEffect, forwardRef } from "react";
 
-import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from "./constants";
+import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex, operationType } from "./constants";
 
 import { SurveysApi } from "../../helpers/request";
 
@@ -323,6 +323,17 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
             );
           }}
         </Form.List>
+        {/* <Form.List>
+          <Select>
+            {
+              operationType.map((item, index) => {
+                return <Option key={`operation${index}`} value={item.value}>{item.text}</Option>
+              }
+              )
+            }
+
+          </Select>
+        </Form.List> */}
       </Form>
     );
 

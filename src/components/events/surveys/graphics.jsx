@@ -80,8 +80,7 @@ class Graphics extends Component {
           totalPercentResponse[i] = answer_count[i][1];
           break
 
-      }
-      //parseFloat((answer_count[i] * 100 / usersRegistered).toFixed(1))
+      }      
     }
 
     let generatedlabels = [];
@@ -123,6 +122,10 @@ class Graphics extends Component {
         plugins: {
           datalabels: {
             color: '#777',
+            formatter: function (value, context) {
+              return value + '%';
+            }
+
           }
         },
         legend: {

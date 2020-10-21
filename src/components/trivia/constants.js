@@ -1,20 +1,20 @@
 // Lista de los tipos de pregunta posibles para la encuesta
 export const selectOptions = [
   {
-    value: "radiogroup",
-    text: "Selección Unica",
+    value: 'radiogroup',
+    text: 'Selección Unica',
   },
   {
-    value: "checkbox",
-    text: "Selección Multiple",
+    value: 'checkbox',
+    text: 'Selección Multiple',
   },
   {
-    value: "comment",
-    text: "Comentarios",
+    value: 'comment',
+    text: 'Comentarios',
   },
   {
-    value: "text",
-    text: "Texto",
+    value: 'text',
+    text: 'Texto',
   },
 ];
 
@@ -25,32 +25,32 @@ const filterBy = (data, field, exclude) =>
 // Lista de los campos para la creacion de una pregunta
 export const fieldsFormQuestion = [
   {
-    label: "Pregunta",
-    type: "text",
-    name: "title",
+    label: 'Pregunta',
+    type: 'text',
+    name: 'title',
   },
   {
-    label: "Tipo de Pregunta",
-    selectOptions: filterBy(selectOptions, ["checkbox", "radiogroup", "text"]),
-    name: "type",
+    label: 'Tipo de Pregunta',
+    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text']),
+    name: 'type',
   },
 ];
 
 export const fieldsFormQuestionWithPoints = [
   {
-    label: "Pregunta",
-    type: "text",
-    name: "title",
+    label: 'Pregunta',
+    type: 'text',
+    name: 'title',
   },
   {
-    label: "Tipo de Pregunta",
-    selectOptions: filterBy(selectOptions, ["checkbox", "radiogroup", "text"]),
-    name: "type",
+    label: 'Tipo de Pregunta',
+    selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text']),
+    name: 'type',
   },
   {
-    label: "Puntos de pregunta",
-    type: "number",
-    name: "points",
+    label: 'Puntos de pregunta',
+    type: 'number',
+    name: 'points',
   },
 ];
 
@@ -58,7 +58,7 @@ export const fieldsFormQuestionWithPoints = [
 export const initValues = () => {
   let valuesFields = {};
   fieldsFormQuestion.forEach(({ name }) => {
-    valuesFields[name] = "";
+    valuesFields[name] = '';
   });
   return valuesFields;
 };
@@ -70,3 +70,14 @@ export const searchWithMultipleIndex = (arr, arrIndex) => {
   }
   return response;
 };
+
+export const operationType = [
+  {
+    value: 'onlyCount',
+    text: 'Mostrar cuenta',
+  },
+  {
+    value: 'participationPercentage',
+    text: 'Mostrar porcentaje de participacion',
+  },
+];

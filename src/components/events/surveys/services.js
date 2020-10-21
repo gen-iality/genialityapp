@@ -200,6 +200,7 @@ export const SurveyAnswers = {
   },
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
   getAnswersQuestion: async (surveyId, questionId, eventId, updateData, operation) => {
+    console.log('get Answer question', { surveyId, questionId, eventId, updateData, operation });
     return new Promise(async (resolve, reject) => {
       let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
       let options = dataSurvey.questions.find((question) => question.id === questionId);
@@ -302,7 +303,7 @@ export const UserGamification = {
           resolve({ message: 'No se encontraron registros', status: false });
         })
         .catch((err) => {
-          console.log('err:', err);
+          console.error('err:', err);
           reject({ message: 'Ha ocurrido un error', err });
         });
     });

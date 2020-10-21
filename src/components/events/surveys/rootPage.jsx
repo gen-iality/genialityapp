@@ -44,6 +44,7 @@ export default class RootPage extends Component {
       this.setState({ hasVote: userHasVoted, isLoading: false, responseCounter });
     } else {
       // Esto solo se ejecuta si no hay algun usuario logeado
+      // eslint-disable-next-line no-unused-vars
       const guestUser = new Promise((resolve, reject) => {
         let surveyId = localStorage.getItem(`userHasVoted_${idSurvey}`);
         surveyId ? resolve(true) : resolve(false);
@@ -76,6 +77,7 @@ export default class RootPage extends Component {
               currentUser={currentUser}
               singlePage={true}
               surveyLabel={surveyLabel}
+              operation='participationPercentage'
             />
           </Card>
         );

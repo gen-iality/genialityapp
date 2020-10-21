@@ -542,7 +542,7 @@ class SurveyComponent extends Component {
   render() {
     let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete, eventUsers } = this.state;
 
-    const { showListSurvey, surveyLabel, eventId } = this.props;
+    const { showListSurvey, surveyLabel, eventId, operation } = this.props;
 
     if (!surveyData) return "Cargando..."
     return (
@@ -571,7 +571,7 @@ class SurveyComponent extends Component {
           ))}
 
         {
-          this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+          this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} operation={operation}/>
         }
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
