@@ -185,7 +185,7 @@ class Graphics extends Component {
             },
             textAlign: 'left',
             anchor: 'start',
-            align: 15
+            align: 5
           }
         },
         legend: {
