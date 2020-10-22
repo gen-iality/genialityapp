@@ -1,7 +1,7 @@
 import 'chartjs-plugin-datalabels';
 import React, { Component } from "react";
 import { Pagination, Spin, Card, Button } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, LeftCircleFilled } from "@ant-design/icons";
 
 import Chart from "chart.js";
 
@@ -64,6 +64,8 @@ class Graphics extends Component {
   };
 
   updateData = ({ options, answer_count }) => {
+
+
     let { graphicsFrame, chartCreated, chart } = this.state;
     let { horizontalBar } = graphicsFrame;
     const { operation } = this.props
@@ -80,7 +82,7 @@ class Graphics extends Component {
           totalPercentResponse[i] = answer_count[i][1];
           break
 
-      }      
+      }
     }
 
     let generatedlabels = [];
@@ -92,7 +94,7 @@ class Graphics extends Component {
           generatedlabels[a] = options.choices[a] + ` ${answer_count[a][0]} Voto(s)`;
           break
         case 'participationPercentage':
-          generatedlabels[a] = options.choices[a] + ` ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}%`;
+          generatedlabels[a] = ` ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n ${options.choices[a]}`;
           break
 
       }
@@ -117,15 +119,73 @@ class Graphics extends Component {
         horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
       }
 
+      /* El siguiente codigo actuamlente no se esta usando pero se deja como referencia
+        para implementar el servicio para acceder a los métodos de la API de chart      
+      */
+
+      //Formatear etiqueta de datos sobre la barra horizontal
+
+      // const customPlugin = {
+
+      //   beforeInit: function (a, b, c) {
+      //     console.log('antes de pintar el grafico')
+      //     console.log({ a, b, c })
+      //   },
+      //   afterDatasetsDraw: function (context, easing) {
+
+      //     console.log('--- start format data label hbar ---')
+      //     console.log('hbar', horizontalBar)
+      //     //context.clearRect(0, 0, canvas.width, canvas.height);
+
+      //     var ctx = context.chart.ctx;
+
+      //     context.data.datasets.forEach(function (dataset) {
+      //       for (var i = 0; i < dataset.data.length; i++) {
+      //         if (dataset.data[i] != 0) {
+      //           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
+      //           var textY = model.y + (dataset.type == "line" ? -3 : 15);
+
+
+      //           console.log('soy ctx', ctx)
+      //           ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
+      //           ctx.textAlign = 'start';
+      //           ctx.textBaseline = 'middle';
+      //           ctx.fillStyle = dataset.type == "line" ? "black" : "black";
+      //           ctx.save();
+      //           //ctx.translate(model.x, textY - 15);
+      //           //ctx.translate(21, textY - 50);
+      //           ctx.translate(21, textY - 15);
+
+      //           ctx.rotate(0);
+
+      //           const formatDataLabel = generatedlabels[i]
+
+      //           console.log({ dataset })
+      //           //ctx.clear()
+      //           ctx.fillText(formatDataLabel, 0, 0);
+      //           ctx.restore();
+      //         }
+      //       }
+      //     });
+      //   }
+      // }
+
+      //Chart.pluginService.register(customPlugin);
+
+      /* Fin del codigo de referencia para registrar la configuracion
+        de lo métodos de la API  de ChartJS
+      */
 
       horizontalBar.options = {
         plugins: {
           datalabels: {
-            color: '#777',
+            color: '#333',
             formatter: function (value, context) {
-              return value + '%';
-            }
-
+              return context.chart.data.labels[context.dataIndex];
+            },
+            textAlign: 'left',
+            anchor: 'start',
+            align: 15
           }
         },
         legend: {
@@ -138,6 +198,7 @@ class Graphics extends Component {
               fontSize: 15,
               fontColor: '#777',
               minor: { display: true },
+              display: false
             }
           }],
           xAxes: [{
@@ -149,9 +210,12 @@ class Graphics extends Component {
         }
       }
 
+
+
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
       const canvas = document.getElementById("chart").getContext("2d");
       const chart = new Chart(canvas, horizontalBar);
+
 
       this.setState({ horizontalBar, chart, chartCreated: true });
     } else {
