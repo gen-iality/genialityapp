@@ -23,7 +23,7 @@ const validateMessages = {
   types: {
     email: "${label} no válido!",
     regexp: "malo"
-  },
+  }
 };
 
 const options = [
@@ -81,7 +81,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     getEventData(eventId)
     form.resetFields();
 
-    if (window.fbq) { window.fbq('track', 'Lead'); }
+    if (window.fbq) { window.fbq('track', 'CompleteRegistration'); }
   }, [eventUserId, initialValues]);
 
   const showGeneralMessage = () => {
@@ -253,7 +253,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     if (!isLt5M) {
       message.error('Image must smaller than 5MB!');
     }
-    return isJpgOrPng && isLt5M;
+    return (isJpgOrPng && isLt5M) ? true : false;
   };
 
   /**
@@ -356,6 +356,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       if (type === "file") {
         input = (
           <Upload
+            accept="application/pdf"
             action='https://api.evius.co/api/files/upload/'
             multiple={false}
             listType='text'
