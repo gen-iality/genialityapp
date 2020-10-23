@@ -178,7 +178,7 @@ class Landing extends Component {
 
     if ( event && user ) {
       eventUser = await EventsApi.getcurrentUserEventUser( event._id );
-      eventUsers = await EventsApi.getcurrentUserEventUsers( event._id );
+      eventUsers = [];//await EventsApi.getcurrentUserEventUsers( event._id );
     }
 
     const dateFrom = event.datetime_from.split( " " );
