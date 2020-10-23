@@ -295,7 +295,7 @@ class SurveyForm extends Component {
 
     if ( selectedSurvey.hasOwnProperty( "_id" ) )
       return (
-        <RootPage
+        ( this.state.surveyVisible != false && <RootPage
           selectedSurvey={ selectedSurvey }
           userHasVoted={ selectedSurvey.userHasVoted }
           idSurvey={ selectedSurvey._id }
@@ -305,7 +305,7 @@ class SurveyForm extends Component {
           eventUser={ eventUser }
           openSurvey={ selectedSurvey.open }
           surveyLabel={ surveyLabel }
-        />
+        /> )
       );
 
     if ( !surveysData ) return <Spin></Spin>;
