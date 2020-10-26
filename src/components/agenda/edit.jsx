@@ -4,6 +4,7 @@ import { ApiEviusZoomServer } from "../../helpers/constants";
 import { Redirect, withRouter, Link } from "react-router-dom";
 import Moment from "moment";
 import ReactQuill from "react-quill";
+//import EviusReactQuill from '../shared/eviusReactQuill'
 import { DateTimePicker } from "react-widgets";
 import Select from "react-select";
 import Creatable from "react-select";
