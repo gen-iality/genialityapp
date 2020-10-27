@@ -10,8 +10,8 @@ import AddUser from "../modal/addUser";
 import ModalAdvise from "./modal";
 
 class eventUsersList extends Component {
-    constructor( props ) {
-        super( props );
+    constructor(props) {
+        super(props);
         this.state = {
             attendees: [],
             attendeesFormatedForTable: [],
@@ -19,38 +19,54 @@ class eventUsersList extends Component {
             selectedRowKeys: [], //Contiene los id de los usuarios, se llama de esta manera el array por funcionalidad de la tabla
             tickets: []
         }
-        this.createTableColumns = this.createTableColumns.bind( this )
-        this.onSelectChange = this.onSelectChange.bind( this )
+        this.createTableColumns = this.createTableColumns.bind(this)
+        this.onSelectChange = this.onSelectChange.bind(this)
     }
 
-    async componentDidMount () {
+    async componentDidMount() {
         const { eventID, event } = this.props
-        let attendees = await UsersApi.getAll( eventID )
-        let tickets = await eventTicketsApi.getAll( eventID )
-        this.setState( { tickets } )
-        let attendeesFormatedForTable = this.formatAttendeesForTable( attendees.data )
-        let columnsTable = this.createTableColumns( event )
+        let attendees = await UsersApi.getAll(eventID)
+        let tickets = await eventTicketsApi.getAll(eventID)
+        this.setState({ tickets })
+        let attendeesFormatedForTable = this.formatAttendeesForTable(attendees.data)
+        let columnsTable = this.createTableColumns(event)
 
-        this.setState( { attendees: attendees.data, attendeesFormatedForTable, columnsTable } )
+        this.setState({ attendees: attendees.data, attendeesFormatedForTable, columnsTable })
     }
 
     /*  Se aplanan los datos del array attendes para filtrar desde un solo array 
         y de esta manera no romper la logica del filtro traida desde ant
     */
-    formatAttendeesForTable ( attendees ) {
+    formatAttendeesForTable(attendees) {
         let attendeesFormatedForTable = []
-        for ( let i = 0; attendees.length > i; i++ ) {
-            let attendeeFlattenedData = attendees[ i ].properties
+        for (let i = 0; attendees.length > i; i++) {
+            let attendeeFlattenedData = attendees[i].properties
+            attendeeFlattenedData.key = attendees[i]._id
+            attendeeFlattenedData.ticket = attendees[i].ticket ? attendees[i].ticket.title : ""
+            attendeeFlattenedData.checkedin_at = attendees[i].checkedin_at ? attendees[i].checkedin_at : ""
+            attendeeFlattenedData.created_at = attendees[i].created_at
+            attendeeFlattenedData.updated_at = attendees[i].updated_at
 
-            attendeeFlattenedData.key = attendees[ i ]._id
-            attendeeFlattenedData.ticket = attendees[ i ].ticket ? attendees[ i ].ticket.title : ""
-            attendeeFlattenedData.checkedin_at = attendees[ i ].checkedin_at ? attendees[ i ].checkedin_at : ""
-            attendeeFlattenedData.created_at = attendees[ i ].created_at
-            attendeeFlattenedData.updated_at = attendees[ i ].updated_at
+            Object.keys(attendeeFlattenedData).map((item) => {
+                const validationType = typeof (attendeeFlattenedData[item])
+                if (validationType === 'object') {
+                    if (!((attendeeFlattenedData[item] === null))) {
+                        if ((Array.isArray(attendeeFlattenedData[item]))) {
+                            attendeeFlattenedData[item] = attendeeFlattenedData[item].toString()
+                        }
+                        else {
+                            attendeeFlattenedData[item] = JSON.stringify(attendeeFlattenedData[item])
+                        }
+                    }
+                }
+            })
+
             attendeesFormatedForTable.push(
                 attendeeFlattenedData
             )
         }
+
+        //verificacion del tipo de dato de los campos, si se recibe un {...} entonces se pasa a array para evitar errores en la renderizacion de la tabla
         return attendeesFormatedForTable
     }
 
@@ -58,45 +74,45 @@ class eventUsersList extends Component {
         diferentes propiedades dinamicas en formato JSON para poder mostrar esto en una tabla nos toca aplanar el eventUser
         es decir aplanar los valores del campo properties
     */
-    createTableColumns ( event ) {
+    createTableColumns(event) {
         const { tickets } = this.state
 
         let filterTickets = []
         let propertiesTable = event.user_properties
         let columnsTable = []
 
-        columnsTable.push( {
+        columnsTable.push({
             title: "Chequeado",
             dataIndex: "checkedin_at",
-            ...this.getColumnSearchProps( "checkedin_at" )
-        } )
+            ...this.getColumnSearchProps("checkedin_at")
+        })
 
-        if ( tickets.length > 0 ) {
-            for ( let i = 0; tickets.length > i; i++ ) {
-                filterTickets.push( {
-                    text: tickets[ i ].title,
-                    value: tickets[ i ].title,
-                } )
+        if (tickets.length > 0) {
+            for (let i = 0; tickets.length > i; i++) {
+                filterTickets.push({
+                    text: tickets[i].title,
+                    value: tickets[i].title,
+                })
             }
         }
 
-        columnsTable.push( {
+        columnsTable.push({
             title: "Tiquete",
             dataIndex: "ticket",
             filters: filterTickets,
-            onFilter: ( value, record ) => record.ticket.indexOf( value ) === 0,
+            onFilter: (value, record) => record.ticket.indexOf(value) === 0,
 
-        } )
+        })
 
 
         // Se iteran las propiedades del usuario (campos a recolectar) para mostrar la información 
         // que el usuario diligenció para registrarse al event
-        for ( let i = 0; propertiesTable.length > i; i++ ) {
-            columnsTable.push( {
-                title: propertiesTable[ i ].label ? propertiesTable[ i ].label : propertiesTable[ i ].name,
-                dataIndex: propertiesTable[ i ].name,
-                ...this.getColumnSearchProps( propertiesTable[ i ].name )
-            } )
+        for (let i = 0; propertiesTable.length > i; i++) {
+            columnsTable.push({
+                title: propertiesTable[i].label ? propertiesTable[i].label : propertiesTable[i].name,
+                dataIndex: propertiesTable[i].name,
+                ...this.getColumnSearchProps(propertiesTable[i].name)
+            })
         }
 
         //Se hace push al final de la iteracion anterior para crear al final del array de columnsTable los campos de timestamp
@@ -104,143 +120,143 @@ class eventUsersList extends Component {
             {
                 title: "Creado",
                 dataIndex: "created_at",
-                ...this.getColumnSearchProps( "created_at" )
+                ...this.getColumnSearchProps("created_at")
             },
             {
                 title: "Actualizado",
                 dataIndex: "updated_at",
-                ...this.getColumnSearchProps( "updated_at" )
+                ...this.getColumnSearchProps("updated_at")
             }
         )
-        console.log( columnsTable )
+        console.log(columnsTable)
         return columnsTable
     }
 
     //Funcion que reune los id de los usuarios para enviar al estado
-    onSelectChange ( idEventUsers ) {
+    onSelectChange(idEventUsers) {
         const { attendees } = this.state
         let attendeesForSendMessage = []
 
-        for ( let i = 0; idEventUsers.length > i; i++ ) {
+        for (let i = 0; idEventUsers.length > i; i++) {
             attendeesForSendMessage = attendees.filter(
-                item => idEventUsers.indexOf( item._id ) !== -1
+                item => idEventUsers.indexOf(item._id) !== -1
             )
         }
 
-        this.setState( { selectedRowKeys: idEventUsers, attendeesForSendMessage } )
+        this.setState({ selectedRowKeys: idEventUsers, attendeesForSendMessage })
     };
 
     //Funcion para filtrar los usuarios de la tabla
-    getColumnSearchProps = dataIndex => ( {
-        filterDropdown: ( { setSelectedKeys, selectedKeys, confirm, clearFilters } ) => (
-            <div style={ { padding: 8 } }>
+    getColumnSearchProps = dataIndex => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div style={{ padding: 8 }}>
                 <Input
-                    ref={ node => {
+                    ref={node => {
                         this.searchInput = node;
-                    } }
-                    placeholder={ `Search ${ dataIndex }` }
-                    value={ selectedKeys[ 0 ] }
-                    onChange={ e => setSelectedKeys( e.target.value ? [ e.target.value ] : [] ) }
-                    onPressEnter={ () => this.handleSearch( selectedKeys, confirm, dataIndex ) }
-                    style={ { width: 188, marginBottom: 8, display: 'block' } }
+                    }}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{ width: 188, marginBottom: 8, display: 'block' }}
                 />
                 <Space>
                     <Button
                         type="primary"
-                        onClick={ () => this.handleSearch( selectedKeys, confirm, dataIndex ) }
-                        icon={ <SearchOutlined /> }
+                        onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                        icon={<SearchOutlined />}
                         size="small"
-                        style={ { width: 90 } }
+                        style={{ width: 90 }}
                     >
                         Search
               </Button>
-                    <Button onClick={ () => this.handleReset( clearFilters ) } size="small" style={ { width: 90 } }>
+                    <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
                         Reset
               </Button>
                 </Space>
             </div>
         ),
-        filterIcon: filtered => <SearchOutlined style={ { color: filtered ? '#1890ff' : undefined } } />,
-        onFilter: ( value, record ) => record[ dataIndex ] ? record[ dataIndex ].toString().toLowerCase().includes( value.toLowerCase() ) : '',
+        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        onFilter: (value, record) => record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '',
         onFilterDropdownVisibleChange: visible => {
-            if ( visible ) {
-                setTimeout( () => this.searchInput.select(), 100 );
+            if (visible) {
+                setTimeout(() => this.searchInput.select(), 100);
             }
         },
         render: text =>
             this.state.searchedColumn === dataIndex ? (
                 <Highlighter
-                    highlightStyle={ { backgroundColor: '#ffc069', padding: 0 } }
-                    searchWords={ [ this.state.searchText ] }
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[this.state.searchText]}
                     autoEscape
-                    textToHighlight={ text ? text.toString() : '' }
+                    textToHighlight={text ? text.toString() : ''}
                 />
             ) : (
                     text
                 ),
-    } );
+    });
 
-    handleSearch = ( selectedKeys, confirm, dataIndex ) => {
+    handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
-        this.setState( {
-            searchText: selectedKeys[ 0 ],
+        this.setState({
+            searchText: selectedKeys[0],
             searchedColumn: dataIndex,
-        } );
+        });
     };
 
     handleReset = clearFilters => {
         clearFilters();
-        this.setState( { searchText: '' } );
+        this.setState({ searchText: '' });
     };
 
     exportFile = async () => {
         const columnsKey = this.props.event.user_properties
         const { attendees } = this.state
 
-        const data = await parseData2Excel( attendees, columnsKey );
+        const data = await parseData2Excel(attendees, columnsKey);
 
-        const ws = XLSX.utils.json_to_sheet( data );
+        const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet( wb, ws, "Asistentes" );
-        XLSX.writeFile( wb, `asistentes_${ this.props.event.name }.xls` );
+        XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
+        XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
     };
 
     modalUser = () => {
-        const html = document.querySelector( "html" );
-        html.classList.add( "is-clipped" );
-        this.setState( prevState => {
+        const html = document.querySelector("html");
+        html.classList.add("is-clipped");
+        this.setState(prevState => {
             return { addUser: !prevState.addUser, edit: false };
-        } );
+        });
     };
 
     closeModal = () => {
-        const html = document.querySelector( "html" );
-        html.classList.remove( "is-clipped" );
-        this.setState( prevState => {
+        const html = document.querySelector("html");
+        html.classList.remove("is-clipped");
+        this.setState(prevState => {
             return { addUser: !prevState.addUser, edit: undefined };
-        } );
+        });
     };
 
     //Funcion para enviar la data de los usuarios al componente send.jsx
     goToSendMessage = () => {
         const { attendeesForSendMessage, modalVisible } = this.state
         //Actualizar el estado del padre
-        if ( attendeesForSendMessage && attendeesForSendMessage.length > 0 ) {
-            this.props.setGuestSelected( attendeesForSendMessage );
-            this.props.history.push( `${ this.props.matchUrl }/createmessage` );
+        if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
+            this.props.setGuestSelected(attendeesForSendMessage);
+            this.props.history.push(`${this.props.matchUrl}/createmessage`);
         } else {
-            this.setState( { modalVisible: modalVisible === true ? false : true } )
+            this.setState({ modalVisible: modalVisible === true ? false : true })
         }
     };
 
-    render () {
+    render() {
         const menu = (
             <Menu >
-                <Menu.Item key="1" icon={ <UserOutlined /> } onClick={ this.modalUser }>
+                <Menu.Item key="1" icon={<UserOutlined />} onClick={this.modalUser}>
                     Crear Usuario
                 </Menu.Item>
-                <Link className="dropdown-item" to={ `${ this.props.matchUrl }/importar-excel` }>
-                    <Menu.Item key="2" icon={ <UserOutlined /> }>
+                <Link className="dropdown-item" to={`${this.props.matchUrl}/importar-excel`}>
+                    <Menu.Item key="2" icon={<UserOutlined />}>
                         Importar usuarios de Excel
                     </Menu.Item>
                 </Link>
@@ -258,25 +274,26 @@ class eventUsersList extends Component {
                     width: '30%',
                     onSelect: () => {
                         let newSelectedRowKeys = [];
-                        this.setState( { selectedRowKeys: newSelectedRowKeys } );
+                        this.setState({ selectedRowKeys: newSelectedRowKeys });
                     },
                 },
             ],
         };
         return (
+
             <>
                 <Row justify="center">
-                    <Col span={ 8 }>
-                        <Button onClick={ () => this.goToSendMessage() }>
+                    <Col span={8}>
+                        <Button onClick={() => this.goToSendMessage()}>
                             Enviar comunicación / Correo
                         </Button>
-                        <ModalAdvise visible={ this.state.modalVisible } />
+                        <ModalAdvise visible={this.state.modalVisible} />
                     </Col>
-                    <Col span={ 8 }>
-                        <Button onClick={ this.exportFile }>Exportar</Button>
+                    <Col span={8}>
+                        <Button onClick={this.exportFile}>Exportar</Button>
                     </Col>
-                    <Col span={ 8 }>
-                        <Dropdown overlay={ menu }>
+                    <Col span={8}>
+                        <Dropdown overlay={menu}>
                             <Button>
                                 Agregar Usuario <DownOutlined />
                             </Button>
@@ -284,26 +301,28 @@ class eventUsersList extends Component {
                     </Col>
                 </Row>
                 <Fragment>
-                    <p style={ { marginTop: "2%" } }>Seleccionados: { selectedRowKeys.length }</p>
+                    {console.log('rowSelection', rowSelection)}
+                    <p style={{ marginTop: "2%" }}>Seleccionados: {selectedRowKeys.length}</p>
                     <Table
-                        //style={{width:"67px"}}
-                        scroll={ { x: 1500 } }
+                        //style={{ width: '100%' }}
+                        scroll={{ x: 1500 }}
                         sticky
-                        pagination={ { position: [ "bottomCenter" ] } }
+                        pagination={{ position: ["bottomCenter"] }}
                         size="small"
-                        rowSelection={ rowSelection }
-                        columns={ columnsTable }
-                        dataSource={ attendeesFormatedForTable } />
+                        rowSelection={rowSelection}
+                        columns={columnsTable}
+                        dataSource={attendeesFormatedForTable}
+                    />
                 </Fragment>
                 {
                     this.state.addUser && (
                         <AddUser
-                            handleModal={ this.closeModal }
-                            modal={ this.state.addUser }
-                            eventId={ this.props.eventID }
-                            value={ this.state.selectedUser }
-                            extraFields={ this.props.event.user_properties }
-                            edit={ this.state.edit }
+                            handleModal={this.closeModal}
+                            modal={this.state.addUser}
+                            eventId={this.props.eventID}
+                            value={this.state.selectedUser}
+                            extraFields={this.props.event.user_properties}
+                            edit={this.state.edit}
                         />
                     )
                 }
@@ -312,4 +331,4 @@ class eventUsersList extends Component {
     }
 }
 
-export default withRouter( eventUsersList )
+export default withRouter(eventUsersList)

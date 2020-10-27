@@ -5,7 +5,7 @@ import { toolbarEditor } from "../../helpers/constants";
 import { Actions } from "../../helpers/request";
 
 const { Quill } = ReactQuill;
-Quill.register( 'modules/imageDropAndPaste', QuillImageDropAndPaste )
+Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 
 
 /**
@@ -15,89 +15,95 @@ Quill.register( 'modules/imageDropAndPaste', QuillImageDropAndPaste )
  * @param {*} props 
  */
 
-function EviusReactQuill ( props ) {
-	const reactQuilllRef = useRef( null )
+function EviusReactQuill(props) {
+	const reactQuilllRef = useRef(null)
 
 	let quillModules = {
 		...toolbarEditor,
 		imageDropAndPaste: {
 			// add an custom image handler
-			handler: (imageDataUrl, type, imageData) => {imageHandler( imageDataUrl, type, imageData, reactQuilllRef ) }
+			handler: (imageDataUrl, type, imageData) => { imageHandler(imageDataUrl, type, imageData, reactQuilllRef) }
 		}
 	}
+	// useEffect(() => {
+	// 	console.log('React Quill', props)
+	// }, [])
 
 
 	/* si restringimos el setupToolBarImageUploadInput para que solo se ejecute una vez cuando reactQuilllRef este disponible
 	extranamente deja de funcionar no se porque lo dejamos que se ejecute en cada render y funciona la maravilla
 	*/
-	useEffect( () => {
-		setupToolBarImageUploadInput( reactQuilllRef )
-	},  );
+	useEffect(() => {
+		setupToolBarImageUploadInput(reactQuilllRef)
+	});
 
 
 	return (
-		<ReactQuill ref={ reactQuilllRef } { ...props } modules={ quillModules } />
+		<ReactQuill
+			ref={reactQuilllRef}
+			{...props}
+			modules={quillModules} />
 	)
 }
 
-let imageHandler = async ( imageDataUrl, type, imageData, reactQuilllRef ) => {
+let imageHandler = async (imageDataUrl, type, imageData, reactQuilllRef) => {
 	let editor = reactQuilllRef.current.getEditor();
 	//no se cómo definir el nombre de la imagen
 	var filename = 'default.png'
 	var blob = imageData.toBlob()
-	var file = imageData.toFile( filename )
+	var file = imageData.toFile(filename)
 
 	// generate a form data
 	var formData = new FormData()
 
 	// append blob data
-	formData.append( 'filename', filename )
-	formData.append( 'file', blob )
+	formData.append('filename', filename)
+	formData.append('file', blob)
 
 	// or just append the file
-	formData.append( 'file', file )
+	formData.append('file', file)
 
 	const url = '/api/files/upload'
 	// upload image to your server
 
-	let image = await Actions.post( url, formData );
+	let image = await Actions.post(url, formData);
 
-	let index = ( editor.getSelection() || {} ).index;
-	editor.insertEmbed( index, 'image', image, 'user' )
+	let index = (editor.getSelection() || {}).index;
+	editor.insertEmbed(index, 'image', image, 'user')
 }
 
-let setupToolBarImageUploadInput = ( reactQuilllRef ) => {
+let setupToolBarImageUploadInput = (reactQuilllRef) => {
 	var ImageData = QuillImageDropAndPaste.ImageData
 	let editor = reactQuilllRef.current.getEditor();
 
-	editor.getModule( 'toolbar' ).addHandler( 'image', function ( clicked ) {
-		if ( clicked ) {
+	editor.getModule('toolbar').addHandler('image', function (clicked) {
+		if (clicked) {
 
-			var fileInput = this.container.querySelector( 'input.ql-image[type=file]' )
-			if ( fileInput == null ) {
-				fileInput = document.createElement( 'input' )
-				fileInput.setAttribute( 'type', 'file' )
-				fileInput.setAttribute( 'accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon' )
-				fileInput.classList.add( 'ql-image' )
-				fileInput.addEventListener( 'change', function ( e ) {
+			var fileInput = this.container.querySelector('input.ql-image[type=file]')
+			if (fileInput == null) {
+				fileInput = document.createElement('input')
+				fileInput.setAttribute('type', 'file')
+				fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon')
+				fileInput.classList.add('ql-image')
+				fileInput.addEventListener('change', function (e) {
 					var files = e.target.files, file
-					if ( files.length > 0 ) {
-						file = files[ 0 ]
+					if (files.length > 0) {
+						file = files[0]
 						var type = file.type
 						var reader = new FileReader()
-						reader.onload = ( e ) => {
+						reader.onload = (e) => {
 							// handle the inserted image
 							var dataUrl = e.target.result
-							imageHandler( dataUrl, type, new ImageData( dataUrl, type ), reactQuilllRef )
+							imageHandler(dataUrl, type, new ImageData(dataUrl, type), reactQuilllRef)
 							fileInput.value = ''
 						}
-						reader.readAsDataURL( file )
+						reader.readAsDataURL(file)
 					}
-				} )
+				})
 			}
 			fileInput.click()
 		}
-	} )
+	})
 }
 
 export default EviusReactQuill;

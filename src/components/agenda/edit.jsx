@@ -4,6 +4,7 @@ import { ApiEviusZoomServer } from "../../helpers/constants";
 import { Redirect, withRouter, Link } from "react-router-dom";
 import Moment from "moment";
 import ReactQuill from "react-quill";
+//import EviusReactQuill from '../shared/eviusReactQuill'
 import { DateTimePicker } from "react-widgets";
 import Select from "react-select";
 import Creatable from "react-select";
@@ -35,8 +36,8 @@ import AgendaLanguaje from "./language/index";
 const { TabPane } = Tabs;
 
 class AgendaEdit extends Component {
-  constructor(props) {
-    super(props);
+  constructor( props ) {
+    super( props );
     this.state = {
       loading: true,
       redirect: false,
@@ -79,17 +80,17 @@ class AgendaEdit extends Component {
       tickets: [],
       selectedTicket: [],
       platform: "",
-      vimeo_id: ""
+      vimeo_id: "",
     };
-    this.createConference = this.createConference.bind(this);
-    this.removeConference = this.removeConference.bind(this);
-    this.onChange = this.onChange.bind(this);
-    this.selectTickets = this.selectTickets.bind(this);
-    this.removeVimeoId = this.removeVimeoId.bind(this);
-    this.saveVimeoId = this.saveVimeoId.bind(this);
+    this.createConference = this.createConference.bind( this );
+    this.removeConference = this.removeConference.bind( this );
+    this.onChange = this.onChange.bind( this );
+    this.selectTickets = this.selectTickets.bind( this );
+    this.removeVimeoId = this.removeVimeoId.bind( this );
+    this.saveVimeoId = this.saveVimeoId.bind( this );
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     const {
       event,
       location: { state },
@@ -98,101 +99,103 @@ class AgendaEdit extends Component {
     const ticketEvent = []
     let vimeo_id = ""
     try {
-      const info = await EventsApi.getOne(event._id)
-      const tickets = await eventTicketsApi.getAll(event._id)
-      for (let i = 0; tickets.length > i; i++) {
-        ticketEvent.push({
-          item: tickets[i],
-          label: tickets[i].title,
-          value: tickets[i]._id
-        })
+      const info = await EventsApi.getOne( event._id )
+      const tickets = await eventTicketsApi.getAll( event._id )
+      for ( let i = 0; tickets.length > i; i++ ) {
+        ticketEvent.push( {
+          item: tickets[ i ],
+          label: tickets[ i ].title,
+          value: tickets[ i ]._id
+        } )
       }
 
       vimeo_id = info.vimeo_id ? info.vimeo_id : ""
-      this.setState({ tickets: ticketEvent, platform: info.event_platform, vimeo_id: vimeo_id })
+      this.setState( { tickets: ticketEvent, platform: info.event_platform, vimeo_id: vimeo_id } )
 
       //Si existe dates, itera sobre el array de fechas especificas, dandole el formato especifico
-      if (info.dates && info.dates.length > 0) {
+      if ( info.dates && info.dates.length > 0 ) {
         let date = info.dates
-        Date.parse(date)
+        Date.parse( date )
 
-        for (var i = 0; i < date.length; i++) {
-          days.push(Moment(date[i], ["YYYY-MM-DD"]).format("YYYY-MM-DD"))
+        for ( var i = 0; i < date.length; i++ ) {
+          days.push( Moment( date[ i ], [ "YYYY-MM-DD" ] ).format( "YYYY-MM-DD" ) )
         }
         //Si no, recibe la fecha inicio y la fecha fin y le da el formato especifico a mostrar
       } else {
-        const init = Moment(event.date_start);
-        const end = Moment(event.date_end);
-        const diff = end.diff(init, "days");
+        const init = Moment( event.date_start );
+        const end = Moment( event.date_end );
+        const diff = end.diff( init, "days" );
         //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-        for (let i = 0; i < diff + 1; i++) {
+        for ( let i = 0; i < diff + 1; i++ ) {
           days.push(
-            Moment(init)
-              .add(i, "d")
-              .format("YYYY-MM-DD")
+            Moment( init )
+              .add( i, "d" )
+              .format( "YYYY-MM-DD" )
           );
         }
       }
-    } catch (e) {
-      console.log(e)
+    } catch ( e ) {
+      console.log( e )
     }
 
 
-    let documents = await DocumentsApi.byEvent(this.props.event._id);
+    let documents = await DocumentsApi.byEvent( this.props.event._id );
     let hostAvailable = await EventsApi.hostAvailable();
     let nameDocuments = [];
-    for (var i = 0; i < documents.length; i += 1) {
-      nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
+    for ( var i = 0; i < documents.length; i += 1 ) {
+      nameDocuments.push( { ...documents[ i ], value: documents[ i ].title, label: documents[ i ].title } );
     }
-    this.setState({ nameDocuments, hostAvailable });
+    this.setState( { nameDocuments, hostAvailable } );
 
     // getHostList(this.loadHostAvailable);
 
-    let spaces = await SpacesApi.byEvent(this.props.event._id);
-    let hosts = await SpeakersApi.byEvent(this.props.event._id);
+    let spaces = await SpacesApi.byEvent( this.props.event._id );
+    let hosts = await SpeakersApi.byEvent( this.props.event._id );
 
-    let roles = await RolAttApi.byEvent(this.props.event._id);
-    let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
-    let types = await TypesAgendaApi.byEvent(this.props.event._id);
+    let roles = await RolAttApi.byEvent( this.props.event._id );
+    let categories = await CategoriesAgendaApi.byEvent( this.props.event._id );
+    let types = await TypesAgendaApi.byEvent( this.props.event._id );
     //La información se neceista de tipo [{label,value}] para los select
-    spaces = handleSelect(spaces);
-    hosts = handleSelect(hosts);
-    roles = handleSelect(roles);
-    categories = handleSelect(categories);
-    types = handleSelect(types);
+    spaces = handleSelect( spaces );
+    hosts = handleSelect( hosts );
+    roles = handleSelect( roles );
+    categories = handleSelect( categories );
+    types = handleSelect( types );
 
-    if (state.edit) {
-      const info = await AgendaApi.getOne(state.edit, event._id);
-      const videoConferenceState = await getConfiguration(event._id, state.edit)
+    if ( state.edit ) {
+      const info = await AgendaApi.getOne( state.edit, event._id );
+      const videoConferenceState = await getConfiguration( event._id, state.edit )
 
 
-      this.setState({
+      this.setState( {
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
         platform: info.platform || event.event_platform,
         availableText: videoConferenceState ? videoConferenceState.habilitar_ingreso : "ended_meeting_room",
-        info: info
-      });
-      Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ""));
-      const { date, hour_start, hour_end } = handleDate(info);
-      this.setState({
+        info: info,
+        video: info.video
+      } );
+      Object.keys( this.state ).map( ( key ) => ( info[ key ] ? this.setState( { [ key ]: info[ key ] } ) : "" ) );
+      const { date, hour_start, hour_end } = handleDate( info );
+      this.setState( {
         deleteID: state.edit,
         date,
         hour_start,
         hour_end,
-        selectedHosts: fieldsSelect(info.host_ids, hosts),
+        selectedHosts: fieldsSelect( info.host_ids, hosts ),
         selectedTickets: info.selectedTicket ? info.selectedTicket : [],
-        selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
-        selectedType: fieldsSelect(info.type_id, types),
-        selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
-      });
+        selectedRol: fieldsSelect( info.access_restriction_rol_ids, roles ),
+        selectedType: fieldsSelect( info.type_id, types ),
+        selectedCategories: fieldsSelect( info.activity_categories_ids, categories ),
+
+      } );
     } else {
-      this.setState({ days });
+      this.setState( { days } );
     }
 
     const isLoading = { types: false, categories: false };
-    this.setState({
+    this.setState( {
       days,
       spaces,
       hosts,
@@ -201,99 +204,99 @@ class AgendaEdit extends Component {
       roles,
       loading: false,
       isLoading,
-    });
+    } );
   }
 
-  loadHostAvailable = (list) => {
-    this.setState({ hostAvailable: list });
+  loadHostAvailable = ( list ) => {
+    this.setState( { hostAvailable: list } );
   };
 
   //FN general para cambio en input
-  handleChange = async (e) => {
+  handleChange = async ( e ) => {
     const { name, value } = e.target;
     const { info } = this.state;
     const { event } = this.props;
 
-    this.setState({ [name]: value, host_id: e.target.value });
+    this.setState( { [ name ]: value, host_id: e.target.value } );
 
-    if (name === "platform") {
+    if ( name === "platform" ) {
       info.platform = e.target.value
-      await AgendaApi.editOne(info, this.props.location.state.edit, event._id);
+      await AgendaApi.editOne( info, this.props.location.state.edit, event._id );
     }
   };
   //FN para cambio en campo de fecha
-  handleDate = (value, name) => {
-    this.setState({ [name]: value });
+  handleDate = ( value, name ) => {
+    this.setState( { [ name ]: value } );
   };
   //Cada select tiene su propia función para evitar errores y asegurar la información correcta
-  selectType = (value) => {
-    this.setState({ selectedType: value });
+  selectType = ( value ) => {
+    this.setState( { selectedType: value } );
   };
-  selectCategory = (selectedCategories) => {
-    this.setState({ selectedCategories });
+  selectCategory = ( selectedCategories ) => {
+    this.setState( { selectedCategories } );
   };
-  selectHost = (selectedHosts) => {
-    this.setState({ selectedHosts });
+  selectHost = ( selectedHosts ) => {
+    this.setState( { selectedHosts } );
   };
-  selectRol = (selectedRol) => {
-    this.setState({ selectedRol });
+  selectRol = ( selectedRol ) => {
+    this.setState( { selectedRol } );
   };
 
-  selectDocuments = (selected_document) => {
-    this.setState({ selected_document });
+  selectDocuments = ( selected_document ) => {
+    this.setState( { selected_document } );
   };
   //FN para los select que permiten crear opción
-  handleCreate = async (value, name) => {
+  handleCreate = async ( value, name ) => {
     try {
-      this.setState({ isLoading: { ...this.isLoading, [name]: true } });
+      this.setState( { isLoading: { ...this.isLoading, [ name ]: true } } );
       //Se revisa a que ruta apuntar
       const item =
         name === "types"
-          ? await TypesAgendaApi.create(this.props.event._id, { name: value })
-          : await CategoriesAgendaApi.create(this.props.event._id, { name: value });
+          ? await TypesAgendaApi.create( this.props.event._id, { name: value } )
+          : await CategoriesAgendaApi.create( this.props.event._id, { name: value } );
       const newOption = { label: value, value: item._id, item };
       this.setState(
-        (prevState) => ({
-          isLoading: { ...prevState.isLoading, [name]: false },
-          [name]: [...prevState[name], newOption],
-        }),
+        ( prevState ) => ( {
+          isLoading: { ...prevState.isLoading, [ name ]: false },
+          [ name ]: [ ...prevState[ name ], newOption ],
+        } ),
         () => {
-          if (name === "types") this.setState({ selectedType: newOption });
-          else this.setState((state) => ({ selectedCategories: [...state.selectedCategories, newOption] }));
+          if ( name === "types" ) this.setState( { selectedType: newOption } );
+          else this.setState( ( state ) => ( { selectedCategories: [ ...state.selectedCategories, newOption ] } ) );
         }
       );
-    } catch (e) {
-      this.setState((prevState) => ({ isLoading: { ...prevState.isLoading, [name]: false } }));
-      sweetAlert.showError(handleRequestError(e));
+    } catch ( e ) {
+      this.setState( ( prevState ) => ( { isLoading: { ...prevState.isLoading, [ name ]: false } } ) );
+      sweetAlert.showError( handleRequestError( e ) );
     }
   };
   //FN manejo de imagen input, la carga al sistema y la guarda en base64
-  changeImg = async (files) => {
+  changeImg = async ( files ) => {
     try {
-      const file = files[0];
-      if (file) {
-        const image = await uploadImage(file);
-        this.setState({ image });
+      const file = files[ 0 ];
+      if ( file ) {
+        const image = await uploadImage( file );
+        this.setState( { image } );
       } else {
-        this.setState({ errImg: "Only images files allowed. Please try again :)" });
+        this.setState( { errImg: "Only images files allowed. Please try again :)" } );
       }
-    } catch (e) {
-      sweetAlert.showError(handleRequestError(e));
+    } catch ( e ) {
+      sweetAlert.showError( handleRequestError( e ) );
     }
   };
 
   //FN para el editor enriquecido
-  chgTxt = (content) => this.setState({ description: content });
+  chgTxt = ( content ) => this.setState( { description: content } );
 
-  registrationMessage = (content) => {
-    this.setState({ registration_message: content })
+  registrationMessage = ( content ) => {
+    this.setState( { registration_message: content } )
   }
   //Envío de información
   submit = async () => {
-    if (this.validForm()) {
+    if ( this.validForm() ) {
       try {
         const info = this.buildInfo();
-        sweetAlert.showLoading("Espera (:", "Guardando...");
+        sweetAlert.showLoading( "Espera (:", "Guardando..." );
         const {
           event,
           location: { state },
@@ -301,54 +304,54 @@ class AgendaEdit extends Component {
         const {
           selected_document
         } = this.state
-        this.setState({ isLoading: true });
+        this.setState( { isLoading: true } );
 
-        if (state.edit) {
+        if ( state.edit ) {
           const data = {
             activity_id: state.edit
           }
-          await AgendaApi.editOne(info, state.edit, event._id);
+          await AgendaApi.editOne( info, state.edit, event._id );
 
-          for (let i = 0; i < selected_document.length; i++) {
-            const documentsUpdate = await DocumentsApi.editOne(event._id, data, selected_document[i]._id)
+          for ( let i = 0; i < selected_document.length; i++ ) {
+            const documentsUpdate = await DocumentsApi.editOne( event._id, data, selected_document[ i ]._id )
           }
         }
         else {
-          const agenda = await AgendaApi.create(event._id, info);
-          this.setState({ deleteID: agenda._id });
+          const agenda = await AgendaApi.create( event._id, info );
+          this.setState( { deleteID: agenda._id } );
         }
         //if (this.state.hostSelected) await setHostState(this.state.hostSelected, false);
         //if (this.state.host_id) await setHostState(this.state.host_id, false);
 
         sweetAlert.hideLoading();
-        sweetAlert.showSuccess("Información guardada");
-      } catch (e) {
-        sweetAlert.showError(handleRequestError(e));
-        console.log(e);
+        sweetAlert.showSuccess( "Información guardada" );
+      } catch ( e ) {
+        sweetAlert.showError( handleRequestError( e ) );
+        console.log( e );
       }
     }
   };
 
   submit2 = async () => {
-    if (this.validForm()) {
+    if ( this.validForm() ) {
       try {
         const info = this.buildInfoLanguage();
 
-        sweetAlert.showLoading("Espera (:", "Guardando...");
+        sweetAlert.showLoading( "Espera (:", "Guardando..." );
         const {
           event,
           location: { state },
         } = this.props;
-        this.setState({ isLoading: true });
-        if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
+        this.setState( { isLoading: true } );
+        if ( state.edit ) await AgendaApi.editOne( info, state.edit, event._id );
         else {
-          const agenda = await AgendaApi.create(event._id, info);
-          this.setState({ deleteID: agenda._id });
+          const agenda = await AgendaApi.create( event._id, info );
+          this.setState( { deleteID: agenda._id } );
         }
         sweetAlert.hideLoading();
-        sweetAlert.showSuccess("Información guardada");
-      } catch (e) {
-        sweetAlert.showError(handleRequestError(e));
+        sweetAlert.showSuccess( "Información guardada" );
+      } catch ( e ) {
+        sweetAlert.showError( handleRequestError( e ) );
       }
     }
   };
@@ -374,11 +377,11 @@ class AgendaEdit extends Component {
       selected_document,
       image,
     } = this.state;
-    const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
-    const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
-    const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
-    const access_restriction_rol_ids = access_restriction_type !== "OPEN" ? selectedRol.map(({ value }) => value) : [];
-    const host_ids = selectedHosts >= 0 ? [] : selectedHosts.map(({ value }) => value);
+    const datetime_start = date + " " + Moment( hour_start ).format( "HH:mm" );
+    const datetime_end = date + " " + Moment( hour_end ).format( "HH:mm" );
+    const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map( ( { value } ) => value ) : [];
+    const access_restriction_rol_ids = access_restriction_type !== "OPEN" ? selectedRol.map( ( { value } ) => value ) : [];
+    const host_ids = selectedHosts >= 0 ? [] : selectedHosts.map( ( { value } ) => value );
 
     const type_id = selectedType.value;
     return {
@@ -391,7 +394,7 @@ class AgendaEdit extends Component {
       image,
       description,
       registration_message,
-      capacity: parseInt(capacity, 10),
+      capacity: parseInt( capacity, 10 ),
       activity_categories_ids,
       access_restriction_type,
       access_restriction_rol_ids,
@@ -429,13 +432,13 @@ class AgendaEdit extends Component {
       vimeo_id,
       platform
     } = this.state;
-    const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
-    const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
+    const datetime_start = date + " " + Moment( hour_start ).format( "HH:mm" );
+    const datetime_end = date + " " + Moment( hour_end ).format( "HH:mm" );
 
-    const activity_categories_ids = selectedCategories[0] === undefined ? [] : selectedCategories.map(({ value }) => value);
+    const activity_categories_ids = selectedCategories[ 0 ] === undefined ? [] : selectedCategories.map( ( { value } ) => value );
 
-    const access_restriction_rol_ids = access_restriction_type !== "OPEN" ? selectedRol.map(({ value }) => value) : [];
-    const host_ids = selectedHosts >= 0 ? [] : selectedHosts.map(({ value }) => value);
+    const access_restriction_rol_ids = access_restriction_type !== "OPEN" ? selectedRol.map( ( { value } ) => value ) : [];
+    const host_ids = selectedHosts >= 0 ? [] : selectedHosts.map( ( { value } ) => value );
 
     const type_id = selectedType === undefined ? "" : selectedType.value;
     return {
@@ -448,7 +451,7 @@ class AgendaEdit extends Component {
       image,
       description,
       registration_message,
-      capacity: parseInt(capacity, 10),
+      capacity: parseInt( capacity, 10 ),
       activity_categories_ids,
       access_restriction_type,
       access_restriction_rol_ids,
@@ -465,40 +468,40 @@ class AgendaEdit extends Component {
     };
   };
 
-  async removeVimeoId() {
-    if (window.confirm("Esta seguro?")) {
-      this.setState({ vimeo_id: null }, function () {
+  async removeVimeoId () {
+    if ( window.confirm( "Esta seguro?" ) ) {
+      this.setState( { vimeo_id: null }, function () {
         this.submit();
-      });
+      } );
     }
   }
 
-  async removeConference() {
-    if (window.confirm("Esta seguro?")) {
-      this.setState({ meeting_id: null }, function () {
+  async removeConference () {
+    if ( window.confirm( "Esta seguro?" ) ) {
+      this.setState( { meeting_id: null }, function () {
         this.submit();
-      });
+      } );
     }
   }
 
-  async createConference() {
+  async createConference () {
     const { hostAvailable } = this.state
     const host_name = []
 
-    for (let i = 0; hostAvailable.length > i; i++) {
-      if (this.state.host_id === hostAvailable[i].id) {
-        host_name.push(hostAvailable[i].first_name)
+    for ( let i = 0; hostAvailable.length > i; i++ ) {
+      if ( this.state.host_id === hostAvailable[ i ].id ) {
+        host_name.push( hostAvailable[ i ].first_name )
       }
     }
 
-    this.setState({ creatingConference: true });
+    this.setState( { creatingConference: true } );
     const zoomData = {
       activity_id: this.props.location.state.edit,
       activity_name: this.state.name,
       event_id: this.props.event._id,
       agenda: this.state.name,//this.props.event.description,
       host_id: this.state.host_id,
-      host_name: host_name[0]
+      host_name: host_name[ 0 ]
     };
 
     const options = {
@@ -513,107 +516,107 @@ class AgendaEdit extends Component {
 
     axios.defaults.timeout = 10000;
     try {
-      response = await axios(options);
-      toast.success("Conferencia Creada");
-      let result = await setHostState(this.state.host_id, true);
+      response = await axios( options );
+      toast.success( "Conferencia Creada" );
+      let result = await setHostState( this.state.host_id, true );
 
       const {
         location: { state },
       } = this.props;
 
-      const info = await AgendaApi.getOne(state.edit, this.props.event._id);
-      this.setState({
+      const info = await AgendaApi.getOne( state.edit, this.props.event._id );
+      this.setState( {
         meeting_id: info.meeting_id,
         start_url: info.start_url,
         join_url: info.join_url,
         name_host: info.name_host,
         key: new Date(),
-      });
-    } catch (error) {
-      if (error.response) {
-        response = JSON.stringify(error.response.data);
+      } );
+    } catch ( error ) {
+      if ( error.response ) {
+        response = JSON.stringify( error.response.data );
       }
-      console.log(error);
-      this.setState({ creatingConference: false });
+      console.log( error );
+      this.setState( { creatingConference: false } );
     }
-    this.setState({ creatingConference: false });
+    this.setState( { creatingConference: false } );
   }
 
   //FN para eliminar la actividad
   remove = () => {
-    if (this.state.deleteID) {
-      sweetAlert.twoButton(`Está seguro de borrar esta actividad`, "warning", true, "Borrar", async (result) => {
+    if ( this.state.deleteID ) {
+      sweetAlert.twoButton( `Está seguro de borrar esta actividad`, "warning", true, "Borrar", async ( result ) => {
         try {
-          if (result.value) {
-            sweetAlert.showLoading("Espera (:", "Borrando...");
-            await AgendaApi.deleteOne(this.state.deleteID, this.props.event._id);
-            this.setState({ redirect: true });
+          if ( result.value ) {
+            sweetAlert.showLoading( "Espera (:", "Borrando..." );
+            await AgendaApi.deleteOne( this.state.deleteID, this.props.event._id );
+            this.setState( { redirect: true } );
             sweetAlert.hideLoading();
           }
-        } catch (e) {
-          sweetAlert.showError(handleRequestError(e));
+        } catch ( e ) {
+          sweetAlert.showError( handleRequestError( e ) );
         }
-      });
-    } else this.setState({ redirect: true });
+      } );
+    } else this.setState( { redirect: true } );
   };
 
   //Validación de campos
 
   validForm = () => {
     let title = "";
-    if (this.state.name.length <= 0) title = "El Nombre es requerido";
+    if ( this.state.name.length <= 0 ) title = "El Nombre es requerido";
 
-    if (title.length > 0) {
+    if ( title.length > 0 ) {
       //   sweetAlert.twoButton(title, "warning", false, "OK", () => { });
       //   return false;
     } else return true;
   };
 
   //FN para ir a una ruta específica (ruedas en los select)
-  goSection = (path, state) => {
-    this.props.history.push(path, state);
+  goSection = ( path, state ) => {
+    this.props.history.push( path, state );
   };
 
   //FN agrega todos los roles
   addRoles = () => {
-    if (this.state.roles.length !== this.state.selectedRol)
-      this.setState((prevState) => ({ selectedRol: prevState.roles }));
+    if ( this.state.roles.length !== this.state.selectedRol )
+      this.setState( ( prevState ) => ( { selectedRol: prevState.roles } ) );
   };
 
-  goBack = () => this.setState({ redirect: true });
+  goBack = () => this.setState( { redirect: true } );
 
-  async onChange(e) {
-    this.setState({ availableText: e.target.value })
+  async onChange ( e ) {
+    this.setState( { availableText: e.target.value } )
 
-    let result = await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, e.target.value)
+    let result = await createOrUpdateActivity( this.props.location.state.edit, this.props.event._id, e.target.value )
 
-    notification.open({
+    notification.open( {
       message: result.message
-    });
+    } );
   };
 
-  selectTickets(tickets) {
-    this.setState({ selectedTicket: tickets })
+  selectTickets ( tickets ) {
+    this.setState( { selectedTicket: tickets } )
   }
 
-  async saveVimeoId(e) {
+  async saveVimeoId ( e ) {
     let info = this.state.info;
     const { event } = this.props;
 
     info.vimeo_id = e.target.value
-    this.setState({ vimeo_id: e.target.value })
+    this.setState( { vimeo_id: e.target.value } )
 
-    await AgendaApi.editOne(info, this.props.location.state.edit, event._id);
+    await AgendaApi.editOne( info, this.props.location.state.edit, event._id );
 
-    notification.open({
+    notification.open( {
       message: 'Id de vimeo Guardado correctamente',
       description:
         'Dato Guardado Correctamente',
-    });
+    } );
 
   }
 
-  render() {
+  render () {
     const {
       loading,
       name,
@@ -647,12 +650,12 @@ class AgendaEdit extends Component {
       selectedTickets,
       platform } = this.state;
     const { matchUrl } = this.props;
-    if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
+    if ( !this.props.location.state || this.state.redirect ) return <Redirect to={ matchUrl } />;
     return (
       <Tabs defaultActiveKey="1">
         <TabPane tab="Agenda" key="1">
-          <EventContent title="Actividad" closeAction={this.goBack}>
-            {loading ? (
+          <EventContent title="Actividad" closeAction={ this.goBack }>
+            { loading ? (
               <Loading />
             ) : (
                 <div className="columns">
@@ -663,9 +666,9 @@ class AgendaEdit extends Component {
                         <input
                           className="input"
                           type="text"
-                          name={"name"}
-                          value={name}
-                          onChange={this.handleChange}
+                          name={ "name" }
+                          value={ name }
+                          onChange={ this.handleChange }
                           placeholder="Nombre de la actividad"
                         />
                       </div>
@@ -677,9 +680,9 @@ class AgendaEdit extends Component {
                         <input
                           className="input"
                           type="text"
-                          name={"subtitle"}
-                          value={subtitle}
-                          onChange={this.handleChange}
+                          name={ "subtitle" }
+                          value={ subtitle }
+                          onChange={ this.handleChange }
                           placeholder="Ej: Salón 1, Zona Norte, Área de juegos"
                         />
                       </div>
@@ -687,22 +690,22 @@ class AgendaEdit extends Component {
                     <div className="field">
                       <label className="label">Día</label>
                       <div className="columns">
-                        {this.state.days.map((day, key) => {
+                        { this.state.days.map( ( day, key ) => {
                           return (
-                            <div key={key} className="column">
+                            <div key={ key } className="column">
                               <input
                                 type="radio"
                                 name="date"
-                                id={`radioDay${key}`}
+                                id={ `radioDay${ key }` }
                                 className="is-checkradio"
-                                checked={day === date}
-                                value={day}
-                                onChange={this.handleChange}
+                                checked={ day === date }
+                                value={ day }
+                                onChange={ this.handleChange }
                               />
-                              <label htmlFor={`radioDay${key}`}>{Moment(day, ["YYYY-MM-DD"]).format("MMMM-DD")}</label>
+                              <label htmlFor={ `radioDay${ key }` }>{ Moment( day, [ "YYYY-MM-DD" ] ).format( "MMMM-DD" ) }</label>
                             </div>
                           );
-                        })}
+                        } ) }
                       </div>
                     </div>
                     <div className="columns">
@@ -711,11 +714,11 @@ class AgendaEdit extends Component {
                         <div className="field">
                           <label className="label">Hora Inicio</label>
                           <DateTimePicker
-                            value={hour_start}
+                            value={ hour_start }
                             dropUp
-                            step={15}
-                            date={false}
-                            onChange={(value) => this.handleDate(value, "hour_start")}
+                            step={ 15 }
+                            date={ false }
+                            onChange={ ( value ) => this.handleDate( value, "hour_start" ) }
                           />
                         </div>
                       </div>
@@ -724,11 +727,11 @@ class AgendaEdit extends Component {
                         <div className="field">
                           <label className="label">Hora Fin</label>
                           <DateTimePicker
-                            value={hour_end}
+                            value={ hour_end }
                             dropUp
-                            step={15}
-                            date={false}
-                            onChange={(value) => this.handleDate(value, "hour_end")}
+                            step={ 15 }
+                            date={ false }
+                            onChange={ ( value ) => this.handleDate( value, "hour_end" ) }
                           />
                         </div>
                       </div>
@@ -739,15 +742,15 @@ class AgendaEdit extends Component {
                         <Select
                           isClearable
                           isMulti
-                          styles={creatableStyles}
-                          onChange={this.selectHost}
-                          options={hosts}
-                          value={selectedHosts}
+                          styles={ creatableStyles }
+                          onChange={ this.selectHost }
+                          options={ hosts }
+                          value={ selectedHosts }
                         />
                       </div>
                       <div className="column is-2">
                         <button
-                          onClick={() => this.goSection(matchUrl.replace("agenda", "speakers"), { child: true })}
+                          onClick={ () => this.goSection( matchUrl.replace( "agenda", "speakers" ), { child: true } ) }
                           className="button">
                           <FaWhmcs />
                         </button>
@@ -757,20 +760,20 @@ class AgendaEdit extends Component {
                     <div className="field has-addons">
                       <div className="control">
                         <div className="select">
-                          <select name={"space_id"} value={space_id} onChange={this.handleChange}>
-                            <option value={""}>Seleccione un lugar/salón ...</option>
-                            {spaces.map((space) => {
+                          <select name={ "space_id" } value={ space_id } onChange={ this.handleChange }>
+                            <option value={ "" }>Seleccione un lugar/salón ...</option>
+                            { spaces.map( ( space ) => {
                               return (
-                                <option key={space.value} value={space.value}>
-                                  {space.label}
+                                <option key={ space.value } value={ space.value }>
+                                  {space.label }
                                 </option>
                               );
-                            })}
+                            } ) }
                           </select>
                         </div>
                       </div>
                       <div className="control">
-                        <Link to={matchUrl.replace("agenda", "espacios")}>
+                        <Link to={ matchUrl.replace( "agenda", "espacios" ) }>
                           <button className="button">
                             <FaWhmcs />
                           </button>
@@ -778,55 +781,55 @@ class AgendaEdit extends Component {
                       </div>
                     </div>
                     <div className="field">
-                      <label className={`label`}>Clasificar actividad como:</label>
+                      <label className={ `label` }>Clasificar actividad como:</label>
                       <div className="control">
                         <input
                           type="radio"
-                          id={"radioOpen"}
+                          id={ "radioOpen" }
                           name="access_restriction_type"
-                          checked={access_restriction_type === "OPEN"}
+                          checked={ access_restriction_type === "OPEN" }
                           className="is-checkradio"
-                          value={"OPEN"}
-                          onChange={this.handleChange}
+                          value={ "OPEN" }
+                          onChange={ this.handleChange }
                         />
-                        <label htmlFor={"radioOpen"}>
+                        <label htmlFor={ "radioOpen" }>
                           <strong>ABIERTA</strong>: Todos los asistentes (roles) pueden participar en la actividad
                   </label>
                       </div>
                       <div className="control">
                         <input
                           type="radio"
-                          id={"radioSuggested"}
+                          id={ "radioSuggested" }
                           name="access_restriction_type"
-                          checked={access_restriction_type === "SUGGESTED"}
+                          checked={ access_restriction_type === "SUGGESTED" }
                           className="is-checkradio"
-                          value={"SUGGESTED"}
-                          onChange={this.handleChange}
+                          value={ "SUGGESTED" }
+                          onChange={ this.handleChange }
                         />
-                        <label htmlFor={"radioSuggested"}>
+                        <label htmlFor={ "radioSuggested" }>
                           <strong>RECOMENDADA</strong>: Actividad sugerida para algunos asistentes (roles)
                   </label>
                       </div>
                       <div className="control">
                         <input
                           type="radio"
-                          id={"radioExclusive"}
+                          id={ "radioExclusive" }
                           name="access_restriction_type"
-                          checked={access_restriction_type === "EXCLUSIVE"}
+                          checked={ access_restriction_type === "EXCLUSIVE" }
                           className="is-checkradio"
-                          value={"EXCLUSIVE"}
-                          onChange={this.handleChange}
+                          value={ "EXCLUSIVE" }
+                          onChange={ this.handleChange }
                         />
-                        <label htmlFor={"radioExclusive"}>
+                        <label htmlFor={ "radioExclusive" }>
                           <strong>EXCLUSIVA</strong>: Solo algunos asistentes (roles) pueden participar en la actividad
                   </label>
                       </div>
                     </div>
-                    {access_restriction_type !== "OPEN" && (
+                    { access_restriction_type !== "OPEN" && (
                       <Fragment>
-                        <div style={{ display: "flex" }}>
+                        <div style={ { display: "flex" } }>
                           <label className="label required">Asginar a :</label>
-                          <button className="button is-text is-small" onClick={this.addRoles}>
+                          <button className="button is-text is-small" onClick={ this.addRoles }>
                             todos los roles
                     </button>
                         </div>
@@ -835,32 +838,32 @@ class AgendaEdit extends Component {
                             <Select
                               isClearable
                               isMulti
-                              styles={creatableStyles}
-                              onChange={this.selectRol}
-                              options={roles}
-                              placeholder={"Seleccione al menos un rol..."}
-                              value={selectedRol}
+                              styles={ creatableStyles }
+                              onChange={ this.selectRol }
+                              options={ roles }
+                              placeholder={ "Seleccione al menos un rol..." }
+                              value={ selectedRol }
                             />
                           </div>
                           <div className="column is-2">
                             <button
-                              onClick={() => this.goSection(matchUrl.replace("agenda", "tipo-asistentes"))}
+                              onClick={ () => this.goSection( matchUrl.replace( "agenda", "tipo-asistentes" ) ) }
                               className="button">
                               <FaWhmcs />
                             </button>
                           </div>
                         </div>
                       </Fragment>
-                    )}
+                    ) }
                     <div className="field">
                       <label className="label">Documentos</label>
                       <Select
                         isClearable
                         isMulti
-                        styles={creatableStyles}
-                        onChange={this.selectDocuments}
-                        options={nameDocuments}
-                        value={selected_document}
+                        styles={ creatableStyles }
+                        onChange={ this.selectDocuments }
+                        options={ nameDocuments }
+                        value={ selected_document }
                       />
                     </div>
                     {/* <label className="label">Ticket</label>
@@ -877,34 +880,34 @@ class AgendaEdit extends Component {
 
                     <div className="field">
                       <label className="label">Link del video</label>
-                      <input className="input" name="video" type="text" value={video} onChange={this.handleChange} />
+                      <input className="input" name="video" type="text" value={ video } onChange={ this.handleChange } />
                     </div>
 
                     <div className="field">
                       <label className="label">Texto de email para confirmación de registro </label>
                       <div className="control">
-                        <ReactQuill value={this.state.registration_message} modules={toolbarEditor} onChange={this.registrationMessage} />
+                        <ReactQuill value={ this.state.registration_message } modules={ toolbarEditor } onChange={ this.registrationMessage } />
                       </div>
                     </div>
 
                     <div className="field">
                       <label className="label">Descripción</label>
                       <div className="control">
-                        <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt} />
+                        <ReactQuill value={ this.state.description } modules={ toolbarEditor } onChange={ this.chgTxt } />
                       </div>
                     </div>
                   </div>
                   <div className="column is-4 general">
                     <div className="field is-grouped">
-                      <button className="button is-text" onClick={this.remove}>
+                      <button className="button is-text" onClick={ this.remove }>
                         x Eliminar actividad
                 </button>
-                      <button onClick={this.submit} className="button is-primary">
+                      <button onClick={ this.submit } className="button is-primary">
                         Guardar
                 </button>
                     </div>
                     <div className="field is-grouped">
-                      <button onClick={this.submit2} className="button is-primary">
+                      <button onClick={ this.submit2 } className="button is-primary">
                         Duplicar para traducir
                 </button>
                     </div>
@@ -913,21 +916,21 @@ class AgendaEdit extends Component {
                       <div className="field">
                         <label className="label has-text-grey-light">Imagen</label>
                         <p>Dimensiones: 1000px x 278px</p>
-                        <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
-                          <button className="button is-text">{image ? "Cambiar imagen" : "Subir imagen"}</button>
+                        <Dropzone onDrop={ this.changeImg } accept="image/*" className="zone">
+                          <button className="button is-text">{ image ? "Cambiar imagen" : "Subir imagen" }</button>
                         </Dropzone>
-                        {image && <img src={image} alt={`activity_${name}`} />}
+                        { image && <img src={ image } alt={ `activity_${ name }` } /> }
                       </div>
                       <div className="field">
-                        <label className={`label`}>Capacidad</label>
+                        <label className={ `label` }>Capacidad</label>
                         <div className="control">
                           <input
                             className="input"
                             type="number"
-                            min={0}
-                            name={"capacity"}
-                            value={capacity}
-                            onChange={this.handleChange}
+                            min={ 0 }
+                            name={ "capacity" }
+                            value={ capacity }
+                            onChange={ this.handleChange }
                             placeholder="Cupo total"
                           />
                         </div>
@@ -937,19 +940,19 @@ class AgendaEdit extends Component {
                         <div className="column is-10">
                           <Creatable
                             isClearable
-                            styles={catStyles}
-                            onChange={this.selectCategory}
-                            onCreateOption={(value) => this.handleCreate(value, "categories")}
-                            isDisabled={isLoading.categories}
-                            isLoading={isLoading.categories}
+                            styles={ catStyles }
+                            onChange={ this.selectCategory }
+                            onCreateOption={ ( value ) => this.handleCreate( value, "categories" ) }
+                            isDisabled={ isLoading.categories }
+                            isLoading={ isLoading.categories }
                             isMulti
-                            options={categories}
-                            placeholder={"Sin categoría...."}
-                            value={selectedCategories}
+                            options={ categories }
+                            placeholder={ "Sin categoría...." }
+                            value={ selectedCategories }
                           />
                         </div>
                         <div className="column is-2">
-                          <button onClick={() => this.goSection(`${matchUrl}/categorias`)} className="button">
+                          <button onClick={ () => this.goSection( `${ matchUrl }/categorias` ) } className="button">
                             <FaWhmcs />
                           </button>
                         </div>
@@ -959,19 +962,19 @@ class AgendaEdit extends Component {
                         <div className="control column is-10">
                           <Creatable
                             isClearable
-                            styles={creatableStyles}
+                            styles={ creatableStyles }
                             className="basic-multi-select"
                             classNamePrefix="select"
-                            isDisabled={isLoading.types}
-                            isLoading={isLoading.types}
-                            onChange={this.selectType}
-                            onCreateOption={(value) => this.handleCreate(value, "types")}
-                            options={types}
-                            value={selectedType}
+                            isDisabled={ isLoading.types }
+                            isLoading={ isLoading.types }
+                            onChange={ this.selectType }
+                            onCreateOption={ ( value ) => this.handleCreate( value, "types" ) }
+                            options={ types }
+                            value={ selectedType }
                           />
                         </div>
                         <div className="column is-2">
-                          <Link to={`${matchUrl}/tipos`}>
+                          <Link to={ `${ matchUrl }/tipos` }>
                             <button className="button">
                               <FaWhmcs />
                             </button>
@@ -980,8 +983,8 @@ class AgendaEdit extends Component {
                       </div>
                     </div>
 
-                    <Card style={{ marginTop: "4%" }} title="Conferencia virtual">
-                      {!this.props.location.state.edit ? (
+                    <Card style={ { marginTop: "4%" } } title="Conferencia virtual">
+                      { !this.props.location.state.edit ? (
                         <div>Primero cree la actividad y luego podrá crear una conferencia virtual asociada</div>
                       ) : (
                           <>
@@ -989,7 +992,7 @@ class AgendaEdit extends Component {
                             <div>
                               <label className="label">Plataforma Streaming del evento</label>
                               <div className="select is-primary">
-                                <select defaultValue={platform} name="platform" onChange={this.handleChange}>
+                                <select defaultValue={ platform } name="platform" onChange={ this.handleChange }>
                                   <option value="">Seleccionar...</option>
                                   <option value="zoom">Zoom</option>
                                   <option value="zoomExterno">ZoomExterno</option>
@@ -999,85 +1002,85 @@ class AgendaEdit extends Component {
                               </div>
                             </div>
                           </>
-                        )}
+                        ) }
 
-                      {(platform === "zoom" || platform === "zoomExterno") && (
+                      { ( platform === "zoom" || platform === "zoomExterno" ) && (
                         <>
-                          {this.props.location.state.edit && (
+                          { this.props.location.state.edit && (
                             <>
-                              {!this.state.meeting_id && (
+                              { !this.state.meeting_id && (
                                 <Fragment>
                                   <div className="control">
                                     <div className="select">
-                                      <select name={"host_id"} value={this.state.host_id} onChange={this.handleChange}>
+                                      <select name={ "host_id" } value={ this.state.host_id } onChange={ this.handleChange }>
                                         <option>Seleccione host</option>
-                                        {this.state.hostAvailable.length > 0 &&
-                                          this.state.hostAvailable.map((host) => {
+                                        { this.state.hostAvailable.length > 0 &&
+                                          this.state.hostAvailable.map( ( host ) => {
                                             return (
                                               host.state &&
                                               host.state === "available" && (
-                                                <option value={host.id} key={host.id}>
-                                                  {host.email}
+                                                <option value={ host.id } key={ host.id }>
+                                                  {host.email }
                                                 </option>
                                               )
                                             );
-                                          })}
+                                          } ) }
                                       </select>
                                     </div>
                                   </div>
                                   <div>
-                                    {!this.state.creatingConference && (
+                                    { !this.state.creatingConference && (
                                       <button
-                                        style={{ marginTop: "2%" }}
+                                        style={ { marginTop: "2%" } }
                                         className="button is-primary"
-                                        disabled={!this.state.host_id}
-                                        onClick={this.createConference}>
+                                        disabled={ !this.state.host_id }
+                                        onClick={ this.createConference }>
                                         Crear espacio virtual
                                       </button>
-                                    )}
-                                    {this.state.creatingConference && <Spin tip="Creando..." />}
+                                    ) }
+                                    { this.state.creatingConference && <Spin tip="Creando..." /> }
                                   </div>
                                 </Fragment>
-                              )}
+                              ) }
                               <div className="field">
                                 <label className="label">bigmaker_meeting_id</label>
                                 <div className="control">
                                   <input
                                     className="input"
                                     type="text"
-                                    name={"bigmaker_meeting_id"}
-                                    value={bigmaker_meeting_id}
-                                    onChange={this.handleChange}
+                                    name={ "bigmaker_meeting_id" }
+                                    value={ bigmaker_meeting_id }
+                                    onChange={ this.handleChange }
                                     placeholder=""
                                   />
                                 </div>
                               </div>
 
 
-                              {this.state.meeting_id && (
+                              { this.state.meeting_id && (
                                 <div>
-                                  <div style={{ marginTop: "2%" }}>
+                                  <div style={ { marginTop: "2%" } }>
                                     <div>
                                       <p>El id de la conferencia virtual es:</p>
-                                      <p>{this.state.meeting_id}</p>
+                                      <p>{ this.state.meeting_id }</p>
                                     </div>
 
                                     <div>
                                       <p>El host encargado es:</p>
-                                      <p>{this.state.name_host}</p>
+                                      <p>{ this.state.name_host }</p>
                                     </div>
-                                    <div key={this.state.key}>
+                                    <div key={ this.state.key }>
                                       <p>
                                         <b>Accessos</b>
                                       </p>
                                       <hr />
                                       <p>
-                                        <a target="_blank" href={start_url}>
+                                        <a target="_blank" href={ start_url }>
                                           Acceso para hosts
                               </a>
                                       </p>
                                       <p>
-                                        <a target="_blank" href={join_url}>
+                                        <a target="_blank" href={ join_url }>
                                           Acceso para asistentes
                               </a>
                                       </p>
@@ -1086,7 +1089,7 @@ class AgendaEdit extends Component {
                                   <div>
                                     <label className="label">Estado de videoconferencia</label>
                                     <div className="select">
-                                      <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
+                                      <select defaultValue={ availableText } styles={ creatableStyles } onChange={ this.onChange }>
                                         <option value="open_meeting_room">Conferencia Abierta</option>
                                         <option value="closed_meeting_room">Conferencia no Iniciada</option>
                                         <option value="ended_meeting_room">Conferencia Terminada</option>
@@ -1094,17 +1097,17 @@ class AgendaEdit extends Component {
                                     </div>
                                   </div>
                                   <button
-                                    style={{ marginTop: "2%" }}
+                                    style={ { marginTop: "2%" } }
                                     className="button is-primary"
-                                    onClick={this.removeConference}>
+                                    onClick={ this.removeConference }>
                                     Eliminar espacio virtual
                         </button>
                                 </div>
-                              )}
+                              ) }
                             </>
-                          )}
+                          ) }
                         </>
-                      )}
+                      ) }
                       {
                         platform === "vimeo" && this.props.location.state.edit && (
                           <>
@@ -1115,28 +1118,28 @@ class AgendaEdit extends Component {
                                   <input
                                     type="number"
                                     name="vimeo_id"
-                                    onChange={(e) => this.saveVimeoId(e)}
+                                    onChange={ ( e ) => this.saveVimeoId( e ) }
                                   />
                                 </div>
                               ) : (
                                   <>
                                     <div className="control">
                                       <label>id de videoconferencia Vimeo</label>
-                                      <p>{vimeo_id}</p>
+                                      <p>{ vimeo_id }</p>
                                     </div>
                                     <div>
                                       <label className="label">Estado de videoconferencia</label>
                                       <div className="select">
-                                        <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
+                                        <select defaultValue={ availableText } styles={ creatableStyles } onChange={ this.onChange }>
                                           <option value="open_meeting_room">Conferencia Abierta</option>
                                           <option value="closed_meeting_room">Conferencia no Iniciada</option>
                                           <option value="ended_meeting_room">Conferencia Terminada</option>
                                         </select>
                                       </div>
                                       <button
-                                        style={{ marginTop: "2%" }}
+                                        style={ { marginTop: "2%" } }
                                         className="button is-primary"
-                                        onClick={this.removeVimeoId}>
+                                        onClick={ this.removeVimeoId }>
                                         Eliminar espacio virtual
                                   </button>
                                     </div>
@@ -1149,13 +1152,13 @@ class AgendaEdit extends Component {
                     </Card>
                   </div>
                 </div>
-              )}
+              ) }
           </EventContent>
         </TabPane>
         <TabPane tab="Seleccion de lenguaje" key="2">
           {
             this.props.location.state.edit ? (
-              <AgendaLanguaje platform={platform} eventId={this.props.event._id} activityId={this.props.location.state.edit} />
+              <AgendaLanguaje platform={ platform } eventId={ this.props.event._id } activityId={ this.props.location.state.edit } />
             ) : (
                 <p>Por favor primero crear la actividad, paso seguido edite la misma para crear las conferencias en diferentes idiomas</p>
               )
@@ -1167,21 +1170,21 @@ class AgendaEdit extends Component {
 }
 
 //FN manejo/parseo de fechas
-function handleDate(info) {
+function handleDate ( info ) {
   let date, hour_start, hour_end;
-  hour_start = Moment(info.datetime_start, "YYYY-MM-DD HH:mm").toDate();
-  hour_end = Moment(info.datetime_end, "YYYY-MM-DD HH:mm").toDate();
-  date = Moment(info.datetime_end, "YYYY-MM-DD HH:mm").format("YYYY-MM-DD");
+  hour_start = Moment( info.datetime_start, "YYYY-MM-DD HH:mm" ).toDate();
+  hour_end = Moment( info.datetime_end, "YYYY-MM-DD HH:mm" ).toDate();
+  date = Moment( info.datetime_end, "YYYY-MM-DD HH:mm" ).format( "YYYY-MM-DD" );
   return { date, hour_start, hour_end };
 }
 
 //Estilos de algunos select
 const creatableStyles = {
-  menu: (styles) => ({ ...styles, maxHeight: "inherit" }),
+  menu: ( styles ) => ( { ...styles, maxHeight: "inherit" } ),
 };
 
 //Estilos para el tipo
-const dot = (color = "transparent") => ({
+const dot = ( color = "transparent" ) => ( {
   alignItems: "center",
   display: "flex",
   ":before": {
@@ -1192,12 +1195,12 @@ const dot = (color = "transparent") => ({
     height: 10,
     width: 10,
   },
-});
+} );
 
 //Estilos de algunos otros select
 const catStyles = {
-  menu: (styles) => ({ ...styles, maxHeight: "inherit" }),
-  multiValue: (styles, { data }) => ({ ...styles, ...dot(data.item.color) }),
+  menu: ( styles ) => ( { ...styles, maxHeight: "inherit" } ),
+  multiValue: ( styles, { data } ) => ( { ...styles, ...dot( data.item.color ) } ),
 };
 
-export default withRouter(AgendaEdit);
+export default withRouter( AgendaEdit );
