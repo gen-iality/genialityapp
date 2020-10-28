@@ -14,6 +14,7 @@ import FilterNetworking from './FilterNetworking'
 
 import * as Cookie from "js-cookie";
 import { EventsApi, EventFieldsApi } from "../../helpers/request";
+import { formatDataToString } from "../../helpers/utils";
 
 import { getCurrentUser, getCurrentEventUser, userRequest } from "./services";
 import ContactList from "./contactList";
@@ -483,12 +484,13 @@ class ListEventUser extends Component {
                                       <Col xs={24}>
                                         <div>
                                           {/* {!data.visible || !data.visibleByContacts && */
-                                            (asistantData.map((data, dataIndex) => (
-                                              (!data.visibleByAdmin && !data.visibleByContacts) && users.properties[data.name] && (
-                                                <div key={`public-field-${userIndex}-${dataIndex}`}>
-                                                  <p><b>{data.label}:</b>
-                                                    {data.type == "file" && JSON.stringify(users.properties[data.name].file)}
-                                                    {data.type != "file" && JSON.stringify(users.properties[data.name])}
+                                            (asistantData.map((property, propertyIndex) => (
+                                              (!property.visibleByAdmin && !property.visibleByContacts) && users.properties[property.name] && (
+                                                <div key={`public-field-${userIndex}-${propertyIndex}`}>
+                                                  <p><b>{`${property.label}: `}</b>
+                                                    {console.log('data', users.properties[property.name])}
+                                                    {console.log('property', property)}
+                                                    {formatDataToString(users.properties[property.name], property)}
                                                   </p>
                                                 </div>
                                               )

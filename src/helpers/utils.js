@@ -1,4 +1,5 @@
 //Función para generar UUID
+import React from 'react';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import { Actions } from './request';
@@ -171,4 +172,44 @@ export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-M
   }
 
   return [];
+}
+
+export function formatDataToString(data, property) {
+  const validationType = typeof data;
+  let result = '';
+  if (validationType === 'object') {
+    if (!(data === null)) {
+      if (Array.isArray(data)) {
+        for (let i = 0; i < data.length; i++) {
+          result += data[i] + '\n';
+        }
+      } else {
+        // start object
+
+        if (property) {
+          if (property.type === 'file') {
+            const { fileList } = data;
+            result = (
+              <ul>
+                {fileList.map((item, index) => {
+                  return (
+                    <li key={'item-files-' + index}>
+                      <a href={item.response} target='_blank' rel='noreferrer'>
+                        {item.name}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            );
+          }
+        } else {
+          result = JSON.stringify(data);
+        }
+      }
+    }
+  } else {
+    result = data;
+  }
+  return result;
 }
