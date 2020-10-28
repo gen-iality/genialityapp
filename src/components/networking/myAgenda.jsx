@@ -15,7 +15,7 @@ const { TabPane } = Tabs
 const { Meta } = Card
 const { confirm } = Modal
 
-function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers} ) {
+function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers } ) {
   const [ loading, setLoading ] = useState( true )
   const [ enableMeetings, setEnableMeetings ] = useState( false )
   const [ acceptedAgendas, setAcceptedAgendas ] = useState( [] )
@@ -32,7 +32,7 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers} ) {
       .collection( 'events' )
       .doc( event._id )
       .onSnapshot( function ( doc ) {
-       
+
         setEnableMeetings( ( doc.data() && doc.data().enableMeetings ) ? true : false );
       } );
   }, [ event ] )
@@ -81,7 +81,7 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers} ) {
   }
 
   if ( currentRoom ) {
-    let userName = (eventUser && eventUser.properties)?eventUser.properties.names: "Anonimo"+new Date().getTime()
+    let userName = ( eventUser && eventUser.properties ) ? eventUser.properties.names : "Anonimo" + new Date().getTime()
     //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=2877841496
     //console.log("params",eventUser,currentRoom );
 
@@ -96,26 +96,26 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers} ) {
             </Button>
 
           <div className="aspect-ratio-box">
-          <div className="aspect-ratio-box-inside">
-          <iframe style={ { border: "2px solid blue" } }
-            src={ "https://video-app-1496-dev.twil.io?UserName="+userName+"&URLRoomName="+currentRoom+"&passcode=2683021496" }
-            allow="autoplay; fullscreen; camera *;microphone *"
-            allowusermedia
-            allowFullScreen
-            title='video'
-            className="iframe-zoom nuevo">
-            <p>Your browser does not support iframes.</p>
-          </iframe>
+            <div className="aspect-ratio-box-inside">
+              <iframe style={ { border: "2px solid blue" } }
+                src={ "https://video-app-1496-dev.twil.io?UserName=" + userName + "&URLRoomName=" + currentRoom + "&passcode=9301601496" }
+                allow="autoplay; fullscreen; camera *;microphone *"
+                allowusermedia
+                allowFullScreen
+                title='video'
+                className="iframe-zoom nuevo">
+                <p>Your browser does not support iframes.</p>
+              </iframe>
+            </div>
           </div>
-          </div>
-          
-          {userName && <iframe title="chatevius" style={{position:"fixed",bottom:'5%', right:0, width:"18%",height:"40%",minWidth:"300px",zIndex:999999999}}
-          src={"https://chatevius.web.app?nombre="+userName+"&chatid="+currentRoom}
+
+          { userName && <iframe title="chatevius" style={ { position: "fixed", bottom: '5%', right: 0, width: "18%", height: "40%", minWidth: "300px", zIndex: 999999999 } }
+            src={ "https://chatevius.web.app?nombre=" + userName + "&chatid=" + currentRoom }
           >
-            
-            </iframe>}
-            
-          
+
+          </iframe> }
+
+
 
         </Col>
       </Row>
@@ -177,7 +177,7 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers} ) {
                     <Card>{ 'No tienes citas agendadas para esta fecha' }</Card>
                   ) }
 
-                  
+
               </TabPane>
             )
           } ) }
@@ -205,7 +205,7 @@ function AcceptedCard ( { data, eventId, eventUser, enableMeetings, setCurrentRo
     if ( !eventUser ) {
       alert( "Tenemos problemas con tu usuario, itenta recargar la página" );
       return;
-    }    
+    }
     let roomName = data.id;
 
     setCurrentRoom( roomName )
