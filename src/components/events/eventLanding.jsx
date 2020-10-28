@@ -201,7 +201,7 @@ class eventLanding extends Component {
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={8} xl={4}>
                       <div className="imagen">
-                        <img onClick={() => this.onChangePage("networking ")} style={{ cursor: 'pointer' }} alt="agendate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranja%2F2020-10-27.png?alt=media&token=1d99a1ac-4353-45a8-80f7-7aae6ed441f9" />
+                        <img onClick={() => this.onChangePage("networking")} style={{ cursor: 'pointer' }} alt="agendate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranja%2F2020-10-27.png?alt=media&token=1d99a1ac-4353-45a8-80f7-7aae6ed441f9" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={8} xl={4}>
