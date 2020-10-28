@@ -196,7 +196,7 @@ class eventLanding extends Component {
                   <Row gutter={[8, 16]} justify="center">
                     <Col xs={24} sm={12} md={12} lg={8} xl={4}>
                       <div className="imagen">
-                        <img onClick={() => this.onChangePage("informativeSection1")} style={{ cursor: 'pointer' }} alt="preparate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranja%2F2020-10-27%20(3).png?alt=media&token=fe3e47b7-a4e1-4b73-bd48-573f9361389e" />
+                        <img onClick={() => this.onChangePage("informativeSection")} style={{ cursor: 'pointer' }} alt="preparate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranja%2F2020-10-27%20(3).png?alt=media&token=fe3e47b7-a4e1-4b73-bd48-573f9361389e" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={8} xl={4}>
