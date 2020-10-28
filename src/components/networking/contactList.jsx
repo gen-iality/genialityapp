@@ -22,7 +22,6 @@ const ContactList = ({ eventId }) => {
 
       // Servicio que trae los contactos
       Networking.getContactList(eventId, eventUser._id).then((result) => {
-        console.log("response:", result);
         if (typeof result == "object") setContactsList(result);
         if (typeof result == "string") setMessageService(result);
       });
