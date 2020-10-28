@@ -18,7 +18,6 @@ class DatosModal extends Component {
         if (this.props.edit) this.setState({ info: this.props.info }, this.validForm);
     }
 
-
     generateFieldNameForLabel(name, value) {
         //.replace(/[\u0300-\u036f]/g, "") = quita unicamente las tildes, normalize("NFD") pasa la cadena de texto a formato utf-8 y el normalize quita caracteres alfanumericos
         const generatedFieldName = toCapitalizeLower(value).normalize("NFD").replace(/[^a-z0-9_]+/gi, "")
@@ -27,7 +26,6 @@ class DatosModal extends Component {
 
     handleChange = (e) => {
         let { name, value } = e.target;
-
         let tmpInfo = { ...this.state.info };
 
         //Generamos el nombre del campo para la base de datos(name) a partir del  label solo si el campo se esta creando
@@ -35,42 +33,48 @@ class DatosModal extends Component {
             tmpInfo["name"] = this.generateFieldNameForLabel(name, value)
         }
         tmpInfo[name] = value;
-
         this.setState({ info: tmpInfo }, this.validForm);
-
     };
 
     validForm = () => {
         const { name, label, type, options } = this.state.info;
         let valid = !(name.length > 0 && label.length > 0 && type !== "");
-        if (type === "list") valid = !(!valid && options.length > 0);
+        if (type === "list") {
+            valid = !(!valid && options && options.length > 0)
+            if (!options) {
+                this.setState({ info: { ...this.state.info, options: [] }, })
+            }
+        }
         this.setState({ valid })
     };
     //Cambiar mandatory del campo del evento o lista
-    changeFieldCheck = (e) => {
+    changeFieldCheck = () => {
         this.setState(prevState => {
             return { info: { ...this.state.info, mandatory: !prevState.info.mandatory } }
         })
     };
 
-    changeFieldCheckVisibleByContacts = (e) => {
+    changeFieldCheckVisibleByContacts = () => {
         this.setState(prevState => {
             return { info: { ...this.state.info, visibleByContacts: !prevState.info.visibleByContacts } }
         })
     };
 
-    changeFieldCheckVisibleByAdmin = (e) => {
+    changeFieldCheckVisibleByAdmin = () => {
         this.setState(prevState => {
             return { info: { ...this.state.info, visibleByAdmin: !prevState.info.visibleByAdmin } }
         })
     };
+
     //Funciones para lista de opciones del campo
     handleInputChange = (inputValue) => {
         this.setState({ inputValue });
     };
+
     changeOption = (option) => {
         this.setState({ info: { ...this.state.info, options: option } }, this.validForm);
     };
+
     handleKeyDown = (event) => {
         const { inputValue } = this.state;
         const value = inputValue;
@@ -81,16 +85,17 @@ class DatosModal extends Component {
                 this.setState({ inputValue: '', info: { ...this.state.info, options: [...this.state.info.options, createOption(value)] } }, this.validForm);
                 event.preventDefault();
                 break;
+            // eslint-disable-next-line no-empty
             default: { }
         }
     };
+
     //Guardar campo en el evento
     saveField = () => {
         html.classList.remove('is-clipped');
         const info = Object.assign({}, this.state.info);
         info.name = toCapitalizeLower(info.name);
         if (info.type !== "list" && info.type !== "multiplelist") delete info.options;
-        console.log(info)
         this.props.action(info);
         const initModal = { name: '', mandatory: false, visibleByContacts: false, label: '', description: '', type: '', options: [] };
         this.setState({ info: initModal });
@@ -183,6 +188,7 @@ class DatosModal extends Component {
                                         onKeyDown={(e) => { this.handleKeyDown(e) }}
                                         placeholder="Escribe la opción y presiona Enter o Tab..."
                                         value={info.options}
+                                    //required={true}
                                     />
                                 </div>
                             )

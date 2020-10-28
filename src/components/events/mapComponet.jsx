@@ -53,17 +53,19 @@ class mapComponent extends Component {
                       </div>
                     </div>
                   </Card>
-                  <div style={{ width: "100%", height: '250px' }}>
-                    <GoogleMapReact
-                      bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
-                      defaultCenter={{
-                        lat: event.location.Latitude,
-                        lng: event.location.Longitude,
-                      }}
-                      defaultZoom={15}>
-                      <AnyReactComponent lat={event.location.Latitude} lng={event.location.Longitude} text='⭐' />
-                    </GoogleMapReact>
-                  </div>
+                  { event.location.Latitude && event.location.Longitude(
+                    <div style={{ width: "100%", height: '250px' }}>
+                      <GoogleMapReact
+                        bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
+                        defaultCenter={{
+                          lat: event.location.Latitude,
+                          lng: event.location.Longitude,
+                        }}
+                        defaultZoom={15}>
+                        <AnyReactComponent lat={event.location.Latitude} lng={event.location.Longitude} text='⭐' />
+                      </GoogleMapReact>
+                    </div>
+                  )}
                 </div>
               ))
         }
