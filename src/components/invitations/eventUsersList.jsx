@@ -8,6 +8,7 @@ import { parseData2Excel } from "../../helpers/utils";
 import XLSX from "xlsx";
 import AddUser from "../modal/addUser";
 import ModalAdvise from "./modal";
+import { formatDataToString } from '../../helpers/utils'
 
 class eventUsersList extends Component {
     constructor(props) {
@@ -48,17 +49,8 @@ class eventUsersList extends Component {
             attendeeFlattenedData.updated_at = attendees[i].updated_at
 
             Object.keys(attendeeFlattenedData).map((item) => {
-                const validationType = typeof (attendeeFlattenedData[item])
-                if (validationType === 'object') {
-                    if (!((attendeeFlattenedData[item] === null))) {
-                        if ((Array.isArray(attendeeFlattenedData[item]))) {
-                            attendeeFlattenedData[item] = attendeeFlattenedData[item].toString()
-                        }
-                        else {
-                            attendeeFlattenedData[item] = JSON.stringify(attendeeFlattenedData[item])
-                        }
-                    }
-                }
+
+                attendeeFlattenedData[item] = formatDataToString(attendeeFlattenedData[item])
             })
 
             attendeesFormatedForTable.push(
@@ -301,10 +293,10 @@ class eventUsersList extends Component {
                     </Col>
                 </Row>
                 <Fragment>
-                    {console.log('rowSelection', rowSelection)}
+
                     <p style={{ marginTop: "2%" }}>Seleccionados: {selectedRowKeys.length}</p>
                     <Table
-                        //style={{ width: '100%' }}
+                        style={{ height: '50px' }}
                         scroll={{ x: 1500 }}
                         sticky
                         pagination={{ position: ["bottomCenter"] }}

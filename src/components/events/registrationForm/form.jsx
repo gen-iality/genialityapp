@@ -272,9 +272,9 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       let target = name;
       let value = user[target];
 
-      if (m.visibleByAdmin === false) {
-        return (<div></div>);
-      }
+      // if ( m.visibleByAdmin === true ) {
+      //   return ( <div></div> );
+      // }
 
       if (conditionals.state === "enabled") {
         if (label === conditionals.field) {

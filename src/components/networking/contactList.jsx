@@ -7,7 +7,7 @@ import { EventFieldsApi } from "../../helpers/request";
 
 const { Meta } = Card;
 
-export default ({ eventId }) => {
+const ContactList = ({ eventId }) => {
   const [contactsList, setContactsList] = useState([]);
   const [messageService, setMessageService] = useState("");
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -22,7 +22,6 @@ export default ({ eventId }) => {
 
       // Servicio que trae los contactos
       Networking.getContactList(eventId, eventUser._id).then((result) => {
-        console.log("response:", result);
         if (typeof result == "object") setContactsList(result);
         if (typeof result == "string") setMessageService(result);
       });
@@ -59,8 +58,7 @@ export default ({ eventId }) => {
     ) : contactsList.length > 0 ? (
       <div>
         {contactsList.map((user, key) => (
-          console.log("datos de usuario", user),
-          <Row key={key} justify="center">
+          <Row key={'contactlist' + key} justify="center">
             <Card
               extra={
                 user.properties.numerodecelular !== null && (
@@ -81,13 +79,13 @@ export default ({ eventId }) => {
                   </Avatar>
                 }
                 title={user.properties.names ? user.properties.names : "No registra Nombre"}
-                description={[
-                  <div>
+                description={[(
+                  <div key={'contact' + key}>
                     <br />
                     {
                       userProperties.map((property, key) => (
                         user.properties[property.name] !== undefined && (
-                          <div key={key}>
+                          <div key={'contact-property' + key}>
                             {
                               <p><strong>{property.label}</strong>: {user.properties[property.name]}</p>
                             }
@@ -95,7 +93,10 @@ export default ({ eventId }) => {
                         )
                       ))
                     }
-                  </div>,
+                  </div>
+
+                )
+
                 ]}
               />
             </Card>
@@ -110,3 +111,4 @@ export default ({ eventId }) => {
 
   return <Spin></Spin>;
 };
+export default ContactList
