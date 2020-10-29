@@ -488,8 +488,6 @@ class ListEventUser extends Component {
                                               (!property.visibleByAdmin && !property.visibleByContacts) && users.properties[property.name] && (
                                                 <div key={`public-field-${userIndex}-${propertyIndex}`}>
                                                   <p><b>{`${property.label}: `}</b>
-                                                    {console.log('data', users.properties[property.name])}
-                                                    {console.log('property', property)}
                                                     {formatDataToString(users.properties[property.name], property)}
                                                   </p>
                                                 </div>
