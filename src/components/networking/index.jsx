@@ -23,6 +23,129 @@ import RequestList from "./requestList";
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
+/* Constante temporal - utilizada en ruedas naranja */
+const Actividades = [{
+  name: 'seleccionalaactividadserviciooproductoalcualpertenecesdentrodelasindustriascreativasyculturales',
+  options: [
+    {
+      "label": "Artesanías",
+      "value": "Artesanías"
+    },
+    {
+      "label": "Festivales",
+      "value": "Festivales"
+    },
+    {
+      "label": "Arte, Pintura y Escultura",
+      "value": "Arte, Pintura y Escultura"
+    },
+    {
+      "label": "Música en vivo",
+      "value": "Música en vivo"
+    },
+    {
+      "label": "Teatro",
+      "value": "Teatro"
+    },
+    {
+      "label": "Danza",
+      "value": "Danza"
+    },
+    {
+      "label": "Circo",
+      "value": "Circo"
+    },
+    {
+      "label": "Audiovisuales - Películas y video",
+      "value": "Audiovisuales - Películas y video"
+    },
+    {
+      "label": "Audiovisuales - Televisión y Radio",
+      "value": "Audiovisuales - Televisión y Radio"
+    },
+    {
+      "label": "Musica grabaciones discográficas",
+      "value": "Musica grabaciones discográficas"
+    },
+    {
+      "label": "Música actuaciones musicales",
+      "value": "Música actuaciones musicales"
+    },
+    {
+      "label": "Libros y medios impresos",
+      "value": "Libros y medios impresos"
+    },
+    {
+      "label": "Contenido editorial - revistas",
+      "value": "Contenido editorial - revistas"
+    },
+    {
+      "label": "Diseño de modas",
+      "value": "Diseño de modas"
+    },
+    {
+      "label": "Diseño gráfico",
+      "value": "Diseño gráfico"
+    },
+    {
+      "label": "Diseño de interiores",
+      "value": "Diseño de interiores"
+    },
+    {
+      "label": "Diseño de joyeria y bisuteria",
+      "value": "Diseño de joyeria y bisuteria"
+    },
+    {
+      "label": "Diseño de juguetes",
+      "value": "Diseño de juguetes"
+    },
+    {
+      "label": "Educación",
+      "value": "Educación"
+    },
+    {
+      "label": "Arquitectura",
+      "value": "Arquitectura"
+    },
+    {
+      "label": "Software y sus manufacturas",
+      "value": "Software y sus manufacturas"
+    },
+    {
+      "label": "Video juegos",
+      "value": "Video juegos"
+    },
+    {
+      "label": "Contenido creativo digitalizado",
+      "value": "Contenido creativo digitalizado"
+    },
+    {
+      "label": "Publicidad",
+      "value": "Publicidad"
+    },
+    {
+      "label": "Eventos",
+      "value": "Eventos"
+    },
+    {
+      "label": "Portales web",
+      "value": "Portales web"
+    },
+    {
+      "label": "Turismo cultural",
+      "value": "Turismo cultural"
+    },
+    {
+      "label": "Gastronomia cultural",
+      "value": "Gastronomia cultural"
+    },
+    {
+      "label": "Otro",
+      "value": "Otro"
+    }
+  ]
+}]
+
 class ListEventUser extends Component {
   constructor(props) {
     super(props);
@@ -192,7 +315,7 @@ class ListEventUser extends Component {
       this.searchResult(userReq)
     }
     else {
-      const listByTypeuser = await userReq.filter(item => item.properties.asistecomo === typeUser)
+      const listByTypeuser = await userReq.filter(item => item.properties.participacomo === typeUser)
       this.setState({ usersFiltered: listByTypeuser })
       this.searchResult(listByTypeuser)
     }
@@ -393,21 +516,22 @@ class ListEventUser extends Component {
                         id="filterTypeUser"
                       >
                         <option key={'option1'} value=''>Ver todo</option>
-                        <option key={'option2'} value='Empresa'>Empresa</option>
+                        <option key={'option2'} value='Empresa/ESAL'>Empresa/ESAL</option>
                         <option key={'option3'} value='Persona'>Persona</option>
                       </Select>
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={10} lg={10} xl={10}>
                     <Form.Item
-                      label='Sector'
+                      label='Actividad, servicio o producto'
                       name="filterSector"
                       labelCol={{ span: 24 }}
                     >
+                      {console.log('this.props.event', this.props.event.user_properties)}
                       <FilterNetworking
                         id="filterSector"
-                        properties={this.props.event.user_properties}
-                        filterProperty={'sector'}
+                        properties={Actividades}
+                        filterProperty={'seleccionalaactividadserviciooproductoalcualpertenecesdentrodelasindustriascreativasyculturales'}
                         handleSelect={this.handleSelectFilter}
                       />
                     </Form.Item>
