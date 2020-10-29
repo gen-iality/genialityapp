@@ -186,7 +186,15 @@ class Datos extends Component {
                     <TabPane tab="Configuración General" key="1">
                         <Fragment>
                             <EventContent title={"Recopilación de datos"} description={"Configure los datos que desea recolectar de los asistentes del evento"} addAction={this.addField} addTitle={"Agregar dato"}>
-                                <Table columns={columns} dataSource={fields} />
+                                <Table
+                                    columns={columns}
+                                    dataSource={fields}
+                                    pagination={{
+                                        total: fields.length,
+                                        pageSize: fields.length,
+                                        hideOnSinglePage: true
+                                    }}
+                                />
                             </EventContent>
                             {
                                 modal &&
