@@ -206,8 +206,7 @@ class ListEventUser extends Component {
     let matches = [];
     if (this.state.eventUser) {
       let meproperties = this.state.eventUser.properties;
-      console.log('me properties', meproperties)
-      console.log('me event user lsit', eventUserList)
+
 
       const prospectos = eventUserList.filter(asistente => (asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces))
 
@@ -462,7 +461,6 @@ class ListEventUser extends Component {
                                       <Row>
                                         <Col xs={24}>
                                           <div>
-                                            {console.log('asistantData', asistantData)}
                                             {
                                               asistantData.map((data, dataIndex) => (
                                                 /*Condicion !data.visible para poder tener en cuenta el campo visible en los datos que llegan, 
