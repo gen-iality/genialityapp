@@ -157,9 +157,10 @@ export default ( { initialValues, eventId, extraFieldsOriginal, eventUserId, clo
           message.success( textMessage );
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado, esta quemado el token por pruebas
           if ( event.validateEmail && resp.data.user.initial_token ) {
+
             setTimeout( function () {
               window.location.replace( `/landing/${ eventId }?token=${ resp.data.user.initial_token }` );
-            }, 2000 );
+            }, 3000 );
           }
 
         } else {
@@ -543,6 +544,7 @@ export default ( { initialValues, eventId, extraFieldsOriginal, eventUserId, clo
         ) : (
             <Card>
               <Result status="success" title={ formMessage.resultTitle } subTitle=''>
+
                 <div
                   dangerouslySetInnerHTML={ {
                     __html: successMessage
