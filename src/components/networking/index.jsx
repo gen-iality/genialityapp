@@ -206,7 +206,40 @@ class ListEventUser extends Component {
     let matches = [];
     if (this.state.eventUser) {
       let meproperties = this.state.eventUser.properties;
-      matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
+      console.log('me properties', meproperties)
+      console.log('me event user lsit', eventUserList)
+
+      const prospectos = eventUserList.filter(asistente => (asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces))
+
+
+      prospectos.map((prospecto) => {
+        if (prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && Array.isArray(prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones) && prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.length > 0) {
+
+          prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.map((interes) => {
+            const matchOk = interes.label.match(new RegExp(meproperties.queproductooservicioofreces, 'gi'))
+            if (matchOk !== null) {
+              matches.push(prospecto)
+
+            }
+          })
+        }
+
+
+
+
+        //   if (prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones) {
+        //     prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.map((interes) => {
+        //       console.log('interes', interes)
+        //     })
+        //   }
+      }
+      )
+
+
+      // matches = eventUserList.filter(asistente => (asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces && (meproperties.queproductooservicioofreces.match(new RegExp(asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones, 'gi')) || asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.match(new RegExp(meproperties.queproductooservicioofreces, 'gi')))))
+
+
+      // matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
     }
 
     let asistantData = await EventFieldsApi.getAll(event._id)
@@ -278,8 +311,6 @@ class ListEventUser extends Component {
           event_id: this.props.event._id,
           state: "send",
         };
-
-        // console.log("data:", data);
 
         // Se ejecuta el servicio del api de evius
         try {
@@ -431,14 +462,15 @@ class ListEventUser extends Component {
                                       <Row>
                                         <Col xs={24}>
                                           <div>
+                                            {console.log('asistantData', asistantData)}
                                             {
-                                              !asistantData.map((data, dataIndex) => (
+                                              asistantData.map((data, dataIndex) => (
                                                 /*Condicion !data.visible para poder tener en cuenta el campo visible en los datos que llegan, 
                                                   esto ya que visibleByContacst es variable nueva, ambas realizan la misma funcionalidad
                                                 */
-                                                !data.visible || !data.visibleByContacts && data.visibleByContacts !== undefined && users.properties[data.name] && (
+                                                !data.visibleByAdmin && users.properties[data.name] && (
                                                   <div key={`public-field-${userIndex}-${dataIndex}`}>
-                                                    <p><b>{data.label}:</b> {users.properties[data.name]}</p>
+                                                    <p><b>{data.label}:</b> {formatDataToString(users.properties[data.name], data)}</p>
                                                   </div>
                                                 )
                                               ))
@@ -527,7 +559,6 @@ class ListEventUser extends Component {
                       name="filterSector"
                       labelCol={{ span: 24 }}
                     >
-                      {console.log('this.props.event', this.props.event.user_properties)}
                       <FilterNetworking
                         id="filterSector"
                         properties={Actividades}
