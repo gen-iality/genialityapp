@@ -12,6 +12,7 @@ import { getCurrentUser, getCurrentEventUser } from "./services";
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
   const [invitationsReceived, setInvitationsReceived] = useState([]);
+  const [visibleItem, setVisibleItem] = useState(true);
 
   useEffect(() => {
     setInvitationsReceived(list);
@@ -24,7 +25,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
           <List
             dataSource={invitationsReceived}
             renderItem={(item) => (
-              <List.Item
+              < List.Item
                 key={item._id}
                 actions={[
                   <Button key='btn-aceptar' onClick={() => sendResponseToInvitation(item._id, true)}>Aceptar</Button>,
@@ -41,6 +42,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
                   title={item.user_name_requested || item._id}
                   style={{ textAlign: "left" }}
                 />
+                { console.log('item of list', item)}
               </List.Item>
             )}
           />
@@ -171,7 +173,8 @@ export default function RequestList({ eventId }) {
     let data = { response: state ? "accepted" : "rejected" };
 
     Networking.acceptOrDeclineInvitation(eventId, requestId, data)
-      .then(() => {
+      .then((response) => {
+        console.log('respuesta de la invitacion ', response)
         toast.success("Respuesta enviada");
       })
       .catch((err) => {
