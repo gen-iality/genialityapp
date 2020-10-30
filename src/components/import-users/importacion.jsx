@@ -9,6 +9,7 @@ momentLocalizer();
 class Importacion extends Component {
     constructor( props ) {
         super( props );
+        console.log( "pr", props );
         this.state = {
             showMsg: false
         };
@@ -71,7 +72,9 @@ class Importacion extends Component {
         data[ 0 ][ 'tiquete' ] = '';
         const ws = XLSX.utils.json_to_sheet( data );
         const wb = XLSX.utils.book_new();
-        const name = this.props.organization ? 'usersorganizationtemplate' : 'attendeestemplate';
+        let name = this.props.organization ? 'usersorganization_template' : 'attendees_template';
+        name = this.props.event ? name + "_" + this.props.event.name : name;
+
         XLSX.utils.book_append_sheet( wb, ws, "Template" );
         XLSX.writeFile( wb, `${ name }${ Moment().format( 'DDMMYY' ) }.xls` );
     };
