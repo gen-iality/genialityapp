@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag } from "antd";
+import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from "antd";
 import { ScheduleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -42,7 +42,6 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
                   title={item.user_name_requested || item._id}
                   style={{ textAlign: "left" }}
                 />
-                { console.log('item of list', item)}
               </List.Item>
             )}
           />
@@ -120,7 +119,6 @@ export default function RequestList({ eventId }) {
 
       // Servicio que trae las invitaciones / solicitudes recibidas
       Networking.getInvitationsReceived(eventId, eventUser._id).then(({ data }) => {
-        console.log("estas son las invitaciones recibidas :", data);
         setCurrentUserId(user._id);
 
         // Solo se obtendran las invitaciones que no tengan respuesta
@@ -132,8 +130,6 @@ export default function RequestList({ eventId }) {
 
       // Servicio que trae las invitaciones / solicitudes enviadas
       Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
-        console.log("estas son las invitaciones enviadas :", data);
-
         if (data.length > 0) setRequestListSent(data.filter((item) => !item.response || item.response === "rejected"));
       });
     });
@@ -174,17 +170,20 @@ export default function RequestList({ eventId }) {
 
     Networking.acceptOrDeclineInvitation(eventId, requestId, data)
       .then((response) => {
+        getInvitationsList();
+
         console.log('respuesta de la invitacion ', response)
-        toast.success("Respuesta enviada");
+        message.success("Respuesta enviada");
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Hubo un problema", err);
+        message.error("Hubo un problema", err);
       });
   };
 
   useEffect(() => {
     getInvitationsList();
+
   }, [eventId]);
 
   if (currentUserId)
