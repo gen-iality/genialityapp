@@ -145,13 +145,9 @@ export default ( { initialValues, eventId, extraFieldsOriginal, eventUserId, clo
           // textMessage.content = "Usuario " + statusMessage;
           textMessage.content = "Usuario " + formMessage.successMessage;
 
-          let $msg = event.registration_message || `Fuiste registrado al evento con el correo ${ values.email }, revisa tu correo para confirmar.`
+          let $msg = event.registration_message || `Fuiste registrado al evento  ${ values.email || "" }, revisa tu correo para confirmar.`
 
-          setSuccessMessage(
-            Object.entries( initialValues ).length > 0
-              ? `Fuiste registrado al evento exitosamente`
-              : $msg
-          );
+          setSuccessMessage( Object.entries( $msg ) )
 
           setSubmittedForm( true );
           message.success( textMessage );
