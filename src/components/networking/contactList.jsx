@@ -65,11 +65,12 @@ const ContactList = ({ eventId }) => {
               <Card
                 extra={
                   (
+                    (user.telefono && user.telefono !== null && user.telefono.length === 10) ||
                     (user.nodewhatsapp && user.nodewhatsapp !== null && user.nodewhatsapp.length === 10) ||
                     (user.nodecelular && user.nodecelular !== null && user.nodecelular.length === 10) ||
                     (user.numerodecelular && user.numerodecelular !== null && user.numerodecelular.length === 10)
                   ) && (
-                    <a href={"https://api.whatsapp.com/send?phone=57" + (user.nodewhatsapp ? user.nodewhatsapp : user.nodecelular ? user.nodecelular : user.numerodecelular)} target="_blank" rel="noreferrer">
+                    <a href={"https://api.whatsapp.com/send?phone=57" + (user.nodewhatsapp ? user.nodewhatsapp : user.nodecelular ? user.nodecelular : user.numerodecelular ? user.numerodecelular : user.telefono)} target="_blank" rel="noreferrer">
                       <span>Hola soy {user.names}, <br />Escribeme por WhatsApp</span>
                     </a>)}
                 style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
