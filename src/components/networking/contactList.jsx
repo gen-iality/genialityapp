@@ -58,7 +58,8 @@ const ContactList = ({ eventId }) => {
     ) : contactsList.length > 0 ? (
       <div>
         {contactsList.map((contact, key) => {
-          const { user } = contact
+
+          const user = contact.properties ? contact.properties : contact.user
           return (
             <Row key={'contactlist' + key} justify="center">
               <Card
