@@ -196,19 +196,19 @@ class eventLanding extends Component {
                   <Row gutter={[8, 16]} justify="center">
                     <Col xs={24} sm={12} md={12} lg={8} xl={4}>
                       <div className="imagen">
-                        <img onClick={() => this.onChangePage("networking")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranja%2F2020-10-27%20(3).png?alt=media&token=fe3e47b7-a4e1-4b73-bd48-573f9361389e" alt="agendate" />
+                        <img onClick={() => this.onChangePage("informativeSection")} style={{ cursor: 'pointer' }} alt="preparate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranja%2F2020-10-27%20(3).png?alt=media&token=fe3e47b7-a4e1-4b73-bd48-573f9361389e" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={8} xl={4}>
                       <div className="imagen">
-                        <img onClick={() => this.onChangePage("informativeSection1")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranja%2F2020-10-27.png?alt=media&token=1d99a1ac-4353-45a8-80f7-7aae6ed441f9" alt="preparate" />
+                        <img onClick={() => this.onChangePage("networking")} style={{ cursor: 'pointer' }} alt="agendate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranja%2F2020-10-27.png?alt=media&token=1d99a1ac-4353-45a8-80f7-7aae6ed441f9" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={8} xl={4}>
-                      <img onClick={() => this.onChangePage("agenda")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranja%2F2020-10-27%20(2).png?alt=media&token=45f1e902-c9d8-4565-a346-27182ec80cf7" alt="inspirate" />
+                      <img onClick={() => this.onChangePage("interviews")} style={{ cursor: 'pointer' }} alt="negocia" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranja%2F2020-10-27%20(2).png?alt=media&token=45f1e902-c9d8-4565-a346-27182ec80cf7" />
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={8} xl={4}>
-                      <img onClick={() => this.onChangePage("interviews")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ruedasNaranja%2F2020-10-27%20(1).png?alt=media&token=70c15313-9fde-4a8c-ae77-41a657e95415" alt="negocia" />
+                      <img onClick={() => this.onChangePage("agenda")} style={{ cursor: 'pointer' }} alt="inspirate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ruedasNaranja%2F2020-10-27%20(1).png?alt=media&token=70c15313-9fde-4a8c-ae77-41a657e95415" />
                     </Col>
                   </Row>
                 </div>
