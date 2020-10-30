@@ -26,7 +26,7 @@ class MenuEvent extends Component {
       showSection: this.props.showSection,
       logged: false,
       email: false,
-      section: 'evento'
+      section: 'evento',
     }
     this.menuDefault = {
       evento: {
@@ -205,8 +205,9 @@ class MenuEvent extends Component {
 
           return (
             <Menu.Item key={this.state.itemsMenu[key].section} onClick={() => this.state.showSection(this.state.itemsMenu[key].section)} >
-              <IconoComponente style={this.state.eventId === "5f7e3564cdedb50e4c651602" || this.state.eventId === "5f7b31866df71d13c2782153" ? { fontColor: "#FFFFFF" } : { fontColor: "#000000" }} />
-              <span style={this.state.eventId === "5f7e3564cdedb50e4c651602" || this.state.eventId === "5f7b31866df71d13c2782153" ? { color: "white" } : { color: "black" }}> {this.state.itemsMenu[key].name}</span>
+              <IconoComponente style={
+                this.state.eventId === "5f7e3564cdedb50e4c651602" || this.state.eventId === "5f7b31866df71d13c2782153" || this.state.eventId === "5f99a20378f48e50a571e3b6" ? { fontColor: "#FFFFFF" } : { fontColor: "#000000" }} />
+              <span style={this.state.eventId === "5f7e3564cdedb50e4c651602" || this.state.eventId === "5f7b31866df71d13c2782153" || this.state.eventId === "5f99a20378f48e50a571e3b6" ? { color: "white" } : { color: "black" }}>{this.state.itemsMenu[key].name}</span>
             </Menu.Item>
           );
         })}
