@@ -175,13 +175,18 @@ export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-M
 }
 
 export function formatDataToString(data, property) {
+  //console.log('format', data, property);
   const validationType = typeof data;
   let result = '';
   if (validationType === 'object') {
     if (!(data === null)) {
       if (Array.isArray(data)) {
         for (let i = 0; i < data.length; i++) {
-          result += data[i] + '\n';
+          if (data[i].label) {
+            result += data[i].label + '\n';
+          } else {
+            result += data[i] + '\n';
+          }
         }
       } else {
         // start object
