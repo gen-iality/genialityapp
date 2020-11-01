@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { message, Button, Row, Col, Checkbox, Tooltip } from 'antd';
+import { message, Button, Row, Col, Checkbox } from 'antd';
 import EviusReactQuill from "../../shared/eviusReactQuill";
 import { Actions, EventsApi } from "../../../helpers/request";
 
