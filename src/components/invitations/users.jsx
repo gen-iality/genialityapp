@@ -381,7 +381,7 @@ class UsersRsvp extends Component {
   }
 
   filterByTicket(ticket) {
-    toString(ticket)    
+    toString(ticket)
     const { resp } = this.state
     console.log(resp)
     const filter = []
@@ -578,7 +578,7 @@ class UsersRsvp extends Component {
               )} */}
             <div className="table-invite-asistente">
               <EvenTable head={columns}>
-                {pageOfItems.map((user,key) => (
+                {pageOfItems.map((user, key) => (
                   <tr key={key}>
                     {/* <td>
                       {"checkinUser" + user.id}
