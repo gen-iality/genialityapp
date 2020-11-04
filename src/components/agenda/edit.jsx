@@ -3,7 +3,7 @@ import axios from "axios";
 import { ApiEviusZoomServer } from "../../helpers/constants";
 import { Redirect, withRouter, Link } from "react-router-dom";
 import Moment from "moment";
-//import ReactQuill from "react-quill";
+import ReactQuill from "react-quill";
 import EviusReactQuill from '../shared/eviusReactQuill'
 import { DateTimePicker } from "react-widgets";
 import Select from "react-select";
@@ -49,6 +49,7 @@ class AgendaEdit extends Component {
       has_date: "",
       description: "",
       registration_message: "",
+      registration_message_default: "",
       hour_start: new Date(),
       hour_end: new Date(),
       key: new Date(),
@@ -165,7 +166,6 @@ class AgendaEdit extends Component {
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
       const videoConferenceState = await getConfiguration(event._id, state.edit)
-
 
       this.setState({
         selected_document: info.selected_document,
@@ -292,10 +292,13 @@ class AgendaEdit extends Component {
     this.setState({ registration_message: content })
   }
   //Envío de información
+  
   submit = async () => {
     if (this.validForm()) {
       try {
         const info = this.buildInfo();
+        window.sessionStorage.clear()
+
         sweetAlert.showLoading("Espera (:", "Guardando...");
         const {
           event,
@@ -327,7 +330,6 @@ class AgendaEdit extends Component {
         sweetAlert.showSuccess("Información guardada");
       } catch (e) {
         sweetAlert.showError(handleRequestError(e));
-        console.log(e);
       }
     }
   };
@@ -407,6 +409,7 @@ class AgendaEdit extends Component {
 
   //FN para construir la información a enviar al api
   buildInfo = () => {
+
     const {
       name,
       subtitle,
@@ -432,6 +435,9 @@ class AgendaEdit extends Component {
       vimeo_id,
       platform
     } = this.state;
+
+    const registration_message_storage = window.sessionStorage.getItem('registration_message')
+
     const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
     const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
 
@@ -450,7 +456,7 @@ class AgendaEdit extends Component {
       space_id,
       image,
       description,
-      registration_message,
+      registration_message: registration_message_storage,
       capacity: parseInt(capacity, 10),
       activity_categories_ids,
       access_restriction_type,
@@ -886,8 +892,9 @@ class AgendaEdit extends Component {
                     <div className="field">
                       <label className="label">Texto de email para confirmación de registro </label>
                       <div className="control">
+                        {/* <ReactQuill value={'this.state.registration_message'} modules={toolbarEditor} onChange={this.registrationMessage} /> */}
                         {/* <ReactQuill value={ this.state.registration_message } modules={ toolbarEditor } onChange={ this.registrationMessage } /> */}
-                        <EviusReactQuill />
+                        <EviusReactQuill data={this.state.registration_message} inputName='registration_message' />
                       </div>
                     </div>
 

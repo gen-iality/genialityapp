@@ -608,7 +608,7 @@ class General extends Component {
                         }
                         <div className="field">
                             <label className="label has-text-grey-light">Descripción</label>
-                            <ReactQuill value={event.description} modules={toolbarEditor} onChange={this.chgTxt} />
+                            {/* <ReactQuill value={event.description} modules={toolbarEditor} onChange={this.chgTxt} /> */}
                         </div>
                     </div>
                     <div className="column is-4">
