@@ -104,7 +104,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
   }
 
   const onFinish = async (values) => {
-    debugger
     values.password = password
     // values.files = fileSave
 
@@ -216,7 +215,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
       })
       return (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition
     })
-    console.log("newExtraFields",newExtraFields, allFields);
+    console.log("newExtraFields",newExtraFields, "allFields", allFields, "conditionals", conditionals);
     setExtraFields(newExtraFields)
   }
 

@@ -135,12 +135,11 @@ class VirtualConference extends Component {
         if ( !event_id ) return infoAgendaArr;
         const infoAgenda = await AgendaApi.byEvent( event_id );
 
+        //Mostramos solamente las conferencias que tengan una sala virtual asignada
         for ( const prop in infoAgenda.data ) {
-            if ( infoAgenda.data[ prop ].meeting_id ) {
+            if ( infoAgenda.data[ prop ].meeting_id ||  infoAgenda.data[ prop ].vimeo_id) {
                 infoAgendaArr.push( infoAgenda.data[ prop ] );
-            } else if ( ( infoAgenda.data[ prop ].vimeo_id ) ) {
-                infoAgendaArr.push( infoAgenda.data[ prop ] );
-            }
+            } 
         }
 
         return infoAgendaArr;
@@ -158,7 +157,7 @@ class VirtualConference extends Component {
                             <span>Sesiones</span>
                         </Card> */}
 
-                        { infoAgendaArr.map( ( item, key ) => (
+                        { infoAgendaArr.filter((item)=> {return item.habilitar_ingreso && (item.habilitar_ingreso == "open_meeting_room" ||item.habilitar_ingreso == "closed_meeting_room" ) }).map( ( item, key ) => ( 
                             <div key={ key } >
                                 <Card
                                     avatar={ <Avatar src="" /> }
@@ -219,6 +218,8 @@ class VirtualConference extends Component {
                                     ) ) }
                                 </Card>
                             </div>
+                        
+                                            
                         ) ) }
                     </div>
                 }
