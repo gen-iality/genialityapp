@@ -153,6 +153,7 @@ class AgendaEdit extends Component {
     let roles = await RolAttApi.byEvent(this.props.event._id);
     let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
     let types = await TypesAgendaApi.byEvent(this.props.event._id);
+
     //La información se neceista de tipo [{label,value}] para los select
     spaces = handleSelect(spaces);
     hosts = handleSelect(hosts);
@@ -295,7 +296,7 @@ class AgendaEdit extends Component {
   submit = async () => {
     if (this.validForm()) {
       try {
-        const info = this.buildInfo();        
+        const info = this.buildInfo();
 
         sweetAlert.showLoading("Espera (:", "Guardando...");
         const {
