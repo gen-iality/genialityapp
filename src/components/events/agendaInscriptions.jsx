@@ -405,7 +405,7 @@ class AgendaInscriptions extends Component {
                                     type='primary'
                                     disabled={item.meeting_id ? false : true}
                                     onClick={() => toggleConference(true, item.meeting_id, item)}>
-                                    {item.meeting_id ? 'Observa aquí la Conferencia en Vivo' : 'Aún no empieza Conferencia Virtual'}
+                                    {item.meeting_id ? 'Conéctate a la conferencia en vivo' : 'Aún no empieza Conferencia Virtual'}
                                   </Button>
                                 </div>
                               </>
