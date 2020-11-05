@@ -231,7 +231,7 @@ export default function AgendaActivityItem({
                         toggleConference(true, item.meeting_id || item.vimeo_id ? item.meeting_id : item.vimeo_id, item)
                       }>
                       {item.meeting_id || item.vimeo_id
-                        ? 'Observa aquí la Conferencia en Vivo'
+                        ? 'Conéctate a la conferencia en vivo'
                         : 'Aún no empieza Conferencia Virtual'}
                     </Button>
                   </div>
