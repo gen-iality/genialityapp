@@ -16,11 +16,13 @@ Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
  */
 
 function EviusReactQuill(props) {
-	const reactQuilllRef = useRef()
+	const reactQuilllRef = useRef(null)
 
-	// const [data, setData] = useState(() => {
-	// 	return props.data ? props.data : ''
-	// })
+	const [data, setData] = useState(() => {
+		const defaultDataValue = props.data && props.data !== '' ? props.data : ''
+		window.sessionStorage.setItem(props.inputName, defaultDataValue)
+		return defaultDataValue
+	})
 
 	let quillModules = {
 		...toolbarEditor,
@@ -29,17 +31,11 @@ function EviusReactQuill(props) {
 			handler: (imageDataUrl, type, imageData) => { imageHandler(imageDataUrl, type, imageData, reactQuilllRef) }
 		}
 	}
-	// useEffect(() => {
-	// 	reactQuilllRef.current.state.value = 'test'
-	// }, [])
 
 	const handleChange = () => {
-		window.sessionStorage.setItem(props.inputName, reactQuilllRef.current.state.value)
+		const inputData = reactQuilllRef.current ? reactQuilllRef.current.state.value : ''
+		window.sessionStorage.setItem(props.inputName, inputData)
 	}
-
-	// useEffect(() => {
-
-	// }, [reactQuilllRef.current.state.value])
 
 	/* si restringimos el setupToolBarImageUploadInput para que solo se ejecute una vez cuando reactQuilllRef este disponible
 	extranamente deja de funcionar no se porque lo dejamos que se ejecute en cada render y funciona la maravilla
@@ -52,36 +48,40 @@ function EviusReactQuill(props) {
 		<ReactQuill
 			ref={reactQuilllRef}
 			modules={quillModules}
-			defaultValue={props.data && props.data !== '' ? props.data : ''}
+			//defaultValue={props.data && props.data !== '' ? props.data : ''}
+			defaultValue={data}
 			onChange={handleChange}
 		/>
 	)
 }
 
 let imageHandler = async (imageDataUrl, type, imageData, reactQuilllRef) => {
-	let editor = reactQuilllRef.current.getEditor();
-	//no se cómo definir el nombre de la imagen
-	var filename = 'default.png'
-	var blob = imageData.toBlob()
-	var file = imageData.toFile(filename)
+	if (reactQuilllRef.current.getEditor) {
+		let editor = reactQuilllRef.current.getEditor();
+		//no se cómo definir el nombre de la imagen
+		var filename = 'default.png'
+		var blob = imageData.toBlob()
+		var file = imageData.toFile(filename)
 
-	// generate a form data
-	var formData = new FormData()
+		// generate a form data
+		var formData = new FormData()
 
-	// append blob data
-	formData.append('filename', filename)
-	formData.append('file', blob)
+		// append blob data
+		formData.append('filename', filename)
+		formData.append('file', blob)
 
-	// or just append the file
-	formData.append('file', file)
+		// or just append the file
+		formData.append('file', file)
 
-	const url = '/api/files/upload'
-	// upload image to your server
+		const url = '/api/files/upload'
+		// upload image to your server
 
-	let image = await Actions.post(url, formData);
+		let image = await Actions.post(url, formData);
 
-	let index = (editor.getSelection() || {}).index;
-	editor.insertEmbed(index, 'image', image, 'user')
+		let index = (editor.getSelection() || {}).index;
+		editor.insertEmbed(index, 'image', image, 'user')
+
+	}
 }
 
 let setupToolBarImageUploadInput = (reactQuilllRef) => {
