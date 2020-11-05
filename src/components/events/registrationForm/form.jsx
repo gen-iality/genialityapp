@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { UsersApi, TicketsApi, EventsApi, Actions } from "../../../helpers/request";
 import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
-import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Result, Divider, Upload } from "antd";
+import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Result, Divider, Upload, Select } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import Select from 'react-select'
+import ReactSelect from 'react-select'
 // import InputFile from "./inputFile"
-
+const { Option } = Select;
 const { Panel } = Collapse;
 const { TextArea, Password } = Input;
 
@@ -47,7 +47,7 @@ const options = [
   { value: "Buenos dias 18", label: "Buenos dias 18" },
 ]
 
-export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals }) => {
+export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventUserId, closeModal, conditionals }) => {
   const [user, setUser] = useState({});
   const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
   const [validateEmail, setValidateEmail] = useState(false);
@@ -63,7 +63,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   // const [ fileSave, setFileSave ] = useState( [] )
 
   const [form] = Form.useForm();
-
+  console.log("eventUser",eventUser);
   useEffect(() => {
     console.log('form methods', form)
     form.setFields([
@@ -78,12 +78,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     let formType = !eventUserId ? "register" : "transfer";
     setFormMessage(FormTags(formType));
     setSubmittedForm(false);
-    hideConditionalFieldsToDefault();
+    hideConditionalFieldsToDefault(conditionals, eventUser);
+
     getEventData(eventId)
     form.resetFields();
 
     if (window.fbq) { window.fbq('track', 'CompleteRegistration'); }
-  }, [eventUserId, initialValues]);
+  }, [eventUser, eventUserId, initialValues,conditionals]);
 
   const showGeneralMessage = () => {
     setGeneralFormErrorMessageVisible(true);
@@ -177,60 +178,54 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   };
 
   const fieldsChange = (changedField) => {
-
+    console.log("fieldsChange");
   }
 
+
   const valuesChange = (changedField, allFields) => {
+    console.log("valuesChange");
+    updateFieldsVisibility(conditionals, allFields);
+  }
+
+  const updateFieldsVisibility = (conditionals, allFields) => {
     let newExtraFields = [...extraFieldsOriginal]
     //debugger
-    newExtraFields = newExtraFields.filter((field, key) => {
+    newExtraFields = newExtraFields.filter((field) => {
       let fieldShouldBeDisplayed = false
       let fieldHasCondition = false
-      conditionals.map((conditional, key) => {
+
+      //para cada campo revisamos si se cumplen todas las condiciones para mostrarlo
+      conditionals.map((conditional) => {
         let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1
+        if (!fieldExistInThisCondition) return;
+
+        fieldHasCondition = true
+
+        //Revisamos si las condiciones del campo tienen los valores adecuados para que se muestre
         let fulfillConditional = false
-        if (fieldExistInThisCondition) {
-          fieldHasCondition = true
-          Object.keys(allFields).map((changedkey) => {
-            if (changedkey === conditional.fieldToValidate) {
-              fulfillConditional = (conditional.value === allFields[changedkey])
-            }
-          })
-          if (fulfillConditional) {
-            fieldShouldBeDisplayed = true
+        Object.keys(allFields).map((changedkey) => {
+          if (changedkey === conditional.fieldToValidate) {
+            fulfillConditional = (conditional.value === allFields[changedkey])
           }
+        })
+        
+        if (fulfillConditional) {
+          fieldShouldBeDisplayed = true
         }
+        
       })
       return (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition
     })
-
+    console.log("newExtraFields",newExtraFields, allFields);
     setExtraFields(newExtraFields)
   }
 
-  const valuesChangeOld = (changedField, allFields) => {
+  const hideConditionalFieldsToDefault = (conditionals, eventUser) => {
+    let allFields = (eventUser && eventUser["properties"])?eventUser["properties"]:[];
+    updateFieldsVisibility(conditionals, allFields);
     let newExtraFields = [...extraFieldsOriginal]
-    //debugger
-    conditionals.map((conditional, key) => {
-      let fulfillConditional = true
-      Object.keys(allFields).map((changedkey) => {
-        if (changedkey === conditional.fieldToValidate) {
-          fulfillConditional = (conditional.value === allFields[changedkey])
-        }
-      })
-      if (fulfillConditional) {
-        //Campos ocultados por la condicion
-        newExtraFields = newExtraFields.filter((field, key) => {
-          return conditional.fields.indexOf(field.name) === -1
-        })
-      }
-    })
-
-    setExtraFields(newExtraFields)
-  }
-
-  const hideConditionalFieldsToDefault = () => {
-    let newExtraFields = [...extraFieldsOriginal]
-
+    setExtraFields(newExtraFields);
+    return;
     conditionals.map((conditional, key) => {
       newExtraFields = newExtraFields.filter((field, key) => {
         return conditional.fields.indexOf(field.name) === -1
@@ -247,21 +242,22 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   };
 
   const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === 'application/pdf';
-    if (!isJpgOrPng) {
-      message.error('You can only upload PDF file!');
-    }
+    // const isJpgOrPng = file.type === 'application/pdf';
+    // if (!isJpgOrPng) {
+    //   message.error('You can only upload PDF file!');
+    // }
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
       message.error('Image must smaller than 5MB!');
     }
-    return (isJpgOrPng && isLt5M) ? true : false;
+    return (isLt5M) ? true : false;
   };
 
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
   const renderForm = () => {
+    console.log("renderForm", eventUser);
     if (!extraFields) return ""
     let formUI = extraFields.map((m, key) => {
       let type = m.type || "text";
@@ -272,15 +268,15 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       let description = m.description;
       let labelPosition = m.labelPosition;
       let target = name;
-      let value = user[target];
+      let value = eventUser && eventUser["properties"]?eventUser["properties"][target]:"";
 
       // if ( m.visibleByAdmin === true ) {
       //   return ( <div></div> );
       // }
-
+      //no entiendo b esto para que funciona
       if (conditionals.state === "enabled") {
         if (label === conditionals.field) {
-          if (value === [conditionals.value]) {
+          if (true == true || (value === [conditionals.value])) {
             label = conditionals.field
           } else {
             return
@@ -288,6 +284,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         }
       }
       let input = (
+        <>
         <Input
           {...props}
           addonBefore={
@@ -307,8 +304,9 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
           type={type}
           key={key}
           name={name}
-          value={value}
+          defaultValue={value}
         />
+        </>
       );
 
       if (type === "tituloseccion") {
@@ -327,27 +325,29 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
       if (type === "multiplelisttable") {
         input = (
-          <Select options={m.options} isMulti name={name} />
+          <ReactSelect options={m.options} isMulti name={name} />
         )
       }
 
       if (type === "boolean") {
         input = (
-          <Checkbox {...props} key={key} name={name}>
+          <>
+          <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value)}>
             {mandatory ? (
               <span>
                 <span style={{ color: "red" }}>* </span>
                 <strong>{label}</strong>
               </span>
             ) : (
-                label
+                label 
               )}
           </Checkbox>
+          </>
         );
       }
 
       if (type === "longtext") {
-        input = <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} />;
+      input = <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} defaultValue = {value}/>;
       }
 
       if (type === "multiplelist") {
@@ -355,6 +355,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         input = (
           <Checkbox.Group
             options={m.options}
+            defaultValue={value}
             onChange={(checkedValues) => { value = JSON.stringify(checkedValues); }}
           />
         );
@@ -363,11 +364,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       if (type === "file") {
         input = (
           <Upload
-            accept="application/pdf"
+            //accept="application/pdf"
             action='https://api.evius.co/api/files/upload/'
             multiple={false}
             listType='text'
             beforeUpload={beforeUpload}
+            defaultFileList = {(value && value.fileList)?value.fileList.map((file) => {file.url = file.response || null;return file}):[]}
+            fileList = {(value && value.fileList)?value.fileList.map((file) => {file.url = file.response || null;return file}):[]}
           >
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
@@ -376,19 +379,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
       if (type === "list") {
         input = m.options.map((o, key) => {
-          return (
-            <option key={key} value={o.value}>
-              {o.value}
-            </option>
-          );
+          return (<Option key={key} value={o.value}>{o.value}</Option>);
         });
         input = (
-          <div className="select" style={{ width: "100%" }}>
-            <select style={{ width: "100%" }} name={name} value={value}>
-              <option value={""}>Seleccione...</option>
+            <Select style={{ width: "100%" }} name={name} defaultValue={value}>
+              <Option value={""}>Seleccione...</Option>
               {input}
-            </select>
-          </div>
+            </Select>
         );
       }
 
@@ -455,6 +452,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       }
 
       return (
+
         <div key={"g" + key} name="field">
           {type === "tituloseccion" && input}
           {type !== "tituloseccion" && (
@@ -464,12 +462,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
                 valuePropName={type === "boolean" ? "checked" : "value"}
                 label={(labelPosition !== "izquierda" || !labelPosition) && type !== "tituloseccion" ? label : "" && (labelPosition !== "arriba" || !labelPosition)}
                 name={name}
-                rules={[rule]}
+                rules={eventUser?[]:[rule]}
                 key={"l" + key}
                 htmlFor={key}
               >
                 {input}
               </Form.Item>
+
               {description && description.length < 500 && <p>{description}</p>}
               {description && description.length > 500 && (
                 <Collapse defaultActiveKey={["0"]} style={{ margingBotton: '15px' }}>
@@ -531,7 +530,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
                 <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
-                      {formMessage.formButton}
+                      {eventUser ? "Actualizar": formMessage.formButton}
                     </Button>
                   </Form.Item>
                 </Col>
@@ -546,8 +545,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
                   dangerouslySetInnerHTML={{
                     __html: successMessage
                   }}>
-                  {console.log('hola', successMessage)}
-
                 </div>
               </Result>
             </Card>
