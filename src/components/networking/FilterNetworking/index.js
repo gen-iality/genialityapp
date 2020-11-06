@@ -4,10 +4,11 @@ const { Option } = Select;
 
 export default function FilterNetWorking({ properties, filterProperty, handleSelect }) {
   const [options, setOptions] = useState([]);
-
+  properties = properties || [];
   useEffect(() => {
     const propertySelected = properties.filter((property) => property.name === filterProperty);
     const options = propertySelected[0] ? propertySelected[0].options : [];
+
     setOptions(options);
   }, [properties, filterProperty]);
 
