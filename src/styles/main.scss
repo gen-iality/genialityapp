@@ -185,6 +185,7 @@ iframe {
 // ant desing
 //@import "~antd/dist/antd.css";
 
+@import "./Animate_Img";
 @import "./chaport";
 @import "./loading";
 @import "./tickets";
@@ -212,4 +213,3 @@ iframe {
 @import "./agenda/agenda";
 @import "./landing/landing";
 @import "./landing/lobby";
-@import "../components/shared/Animate_Img/index.scss"

@@ -125,16 +125,16 @@ class eventLanding extends Component {
                   <Row gutter={[8, 16]} justify="center">
                     <Col xs={24} sm={12} md={12} lg={12} xl={8}>
                       <div className="imagen">
-                        <img onClick={() => this.onChangePage("interviews")} alt="interviews" style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
+                        <img onClick={() => this.onChangePage("interviews")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={12} xl={8}>
                       <div className="imagen">
-                        <img onClick={() => this.onChangePage("networking")} alt="networking" style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
+                        <img onClick={() => this.onChangePage("networking")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={12} xl={8}>
-                      <img onClick={() => this.onChangePage("agenda")} alt="agenda" style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-C3.png?alt=media&token=615fb718-af55-478f-b444-d8486edfc24a" />
+                      <img onClick={() => this.onChangePage("agenda")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-C3.png?alt=media&token=615fb718-af55-478f-b444-d8486edfc24a" />
                     </Col>
                   </Row>
                 </div>
@@ -148,16 +148,16 @@ class eventLanding extends Component {
                   <Row gutter={[8, 16]} justify="center">
                     <Col xs={24} sm={12} md={12} lg={12} xl={8}>
                       <div className="imagen">
-                        <img onClick={() => this.onChangePage("interviews")} alt="interviews" style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
+                        <img onClick={() => this.onChangePage("interviews")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={12} xl={8}>
                       <div className="imagen">
-                        <img onClick={() => this.onChangePage("networking")} alt="networking" style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
+                        <img onClick={() => this.onChangePage("networking")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={12} xl={8}>
-                      <img onClick={() => this.onChangePage("agenda")} alt="agenda" style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-C3.png?alt=media&token=615fb718-af55-478f-b444-d8486edfc24a" />
+                      <img onClick={() => this.onChangePage("agenda")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-C3.png?alt=media&token=615fb718-af55-478f-b444-d8486edfc24a" />
                     </Col>
                   </Row>
                 </div>
@@ -209,32 +209,6 @@ class eventLanding extends Component {
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={8} xl={4}>
                       <img onClick={() => this.onChangePage("agenda")} style={{ cursor: 'pointer' }} alt="inspirate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ruedasNaranja%2F2020-10-27%20(1).png?alt=media&token=70c15313-9fde-4a8c-ae77-41a657e95415" />
-                    </Col>
-                  </Row>
-                </div>
-              </div>
-            )
-          }
-          {
-            event._id === "5f92d0cee5e2552f1b7c8ea2" && (
-              <div>
-                <div className="containerRuedaNaranja">
-                  <Row gutter={[8, 16]} justify="center">
-                    <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-                      <div className="imagen">
-                        <img onClick={() => this.onChangePage("informativeSection")} style={{ cursor: 'pointer' }} alt="preparate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ruedas%2F2020-11-03.png?alt=media&token=89b5273c-6953-4075-84dd-065898b7cecf" />
-                      </div>
-                    </Col>
-                    <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-                      <div className="imagen">
-                        <img onClick={() => this.onChangePage("networking")} style={{ cursor: 'pointer' }} alt="agendate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ruedas%2F2020-11-03%20(2).png?alt=media&token=0d553093-91eb-4946-9aa0-5bd8003f414a" />
-                      </div>
-                    </Col>
-                    <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-                      <img onClick={() => this.onChangePage("interviews")} style={{ cursor: 'pointer' }} alt="negocia" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ruedas%2F2020-11-03%20(1).png?alt=media&token=0745d9ee-62d1-4c41-9a98-574d58182407" />
-                    </Col>
-                    <Col span={24}>
-                      <img style={{ cursor: 'pointer' }} alt="negocia" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranjaVideojuegos%2F2020-11-05.jpg?alt=media&token=78022560-59e8-40ab-9094-bce4f9e2a6ba" />
                     </Col>
                   </Row>
                 </div>
