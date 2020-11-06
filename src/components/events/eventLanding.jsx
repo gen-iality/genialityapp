@@ -215,6 +215,32 @@ class eventLanding extends Component {
               </div>
             )
           }
+          {
+            event._id === "5f92d0cee5e2552f1b7c8ea2" && (
+              <div>
+                <div className="containerRuedaNaranja">
+                  <Row gutter={[8, 16]} justify="center">
+                    <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+                      <div className="imagen">
+                        <img onClick={() => this.onChangePage("informativeSection")} style={{ cursor: 'pointer' }} alt="preparate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ruedas%2F2020-11-03.png?alt=media&token=89b5273c-6953-4075-84dd-065898b7cecf" />
+                      </div>
+                    </Col>
+                    <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+                      <img onClick={() => this.onChangePage("interviews")} style={{ cursor: 'pointer' }} alt="negocia" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ruedas%2F2020-11-03%20(1).png?alt=media&token=0745d9ee-62d1-4c41-9a98-574d58182407" />
+                    </Col>
+                    <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+                      <div className="imagen">
+                        <img onClick={() => this.onChangePage("networking")} style={{ cursor: 'pointer' }} alt="agendate" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/ruedas%2F2020-11-03%20(2).png?alt=media&token=0d553093-91eb-4946-9aa0-5bd8003f414a" />
+                      </div>
+                    </Col>
+                    <Col span={24}>
+                      <img style={{ cursor: 'pointer' }} alt="negocia" src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/RuedaNaranjaVideojuegos%2F2020-11-05.jpg?alt=media&token=78022560-59e8-40ab-9094-bce4f9e2a6ba" />
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+            )
+          }
         </Card>
         {/*Contenedor personalizado COMPENSAR - Detalle de la actividad del evento*/}
         {

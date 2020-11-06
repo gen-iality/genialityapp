@@ -529,8 +529,23 @@ class ListEventUser extends Component {
                         clear={this.state.clearSearch}
                         styles={{ width: '300px' }}
                       />
-
                     </Form.Item>
+                    {/*Alerta quemado para el eventop de finanzas de clima*/}
+                    {
+                      event._id === "5f9708a2e4c9eb75713f8cc6" && (
+                        <Alert
+                          message="Sugerencias de Busqueda"
+                          description="Te recomendamos buscar de acuerdo a las 
+                          siguientes palabras claves: Adaptación, Mitigación, 
+                          Energía, Agropecuario, Industria, Circular, TIC, Residuos, 
+                          Turismo, Transporte, Forestal,  Vivienda, Start Up, Pyme, Entes territoriales, 
+                          Gran empresa, Pública, Privada, Mixta, ONG"
+                          type="info"
+                          showIcon
+                          closable
+                        />
+                      )
+                    }
                   </Col>
                   <Col xs={24} sm={24} md={10} lg={10} xl={10}>
                     <Form.Item
