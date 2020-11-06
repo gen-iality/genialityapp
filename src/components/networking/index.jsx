@@ -23,128 +23,6 @@ import RequestList from "./requestList";
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
-/* Constante temporal - utilizada en ruedas naranja */
-const Actividades = [ {
-  name: 'seleccionalaactividadserviciooproductoalcualpertenecesdentrodelasindustriascreativasyculturales',
-  options: [
-    {
-      "label": "Artesanías",
-      "value": "Artesanías"
-    },
-    {
-      "label": "Festivales",
-      "value": "Festivales"
-    },
-    {
-      "label": "Arte, Pintura y Escultura",
-      "value": "Arte, Pintura y Escultura"
-    },
-    {
-      "label": "Música en vivo",
-      "value": "Música en vivo"
-    },
-    {
-      "label": "Teatro",
-      "value": "Teatro"
-    },
-    {
-      "label": "Danza",
-      "value": "Danza"
-    },
-    {
-      "label": "Circo",
-      "value": "Circo"
-    },
-    {
-      "label": "Audiovisuales - Películas y video",
-      "value": "Audiovisuales - Películas y video"
-    },
-    {
-      "label": "Audiovisuales - Televisión y Radio",
-      "value": "Audiovisuales - Televisión y Radio"
-    },
-    {
-      "label": "Musica grabaciones discográficas",
-      "value": "Musica grabaciones discográficas"
-    },
-    {
-      "label": "Música actuaciones musicales",
-      "value": "Música actuaciones musicales"
-    },
-    {
-      "label": "Libros y medios impresos",
-      "value": "Libros y medios impresos"
-    },
-    {
-      "label": "Contenido editorial - revistas",
-      "value": "Contenido editorial - revistas"
-    },
-    {
-      "label": "Diseño de modas",
-      "value": "Diseño de modas"
-    },
-    {
-      "label": "Diseño gráfico",
-      "value": "Diseño gráfico"
-    },
-    {
-      "label": "Diseño de interiores",
-      "value": "Diseño de interiores"
-    },
-    {
-      "label": "Diseño de joyeria y bisuteria",
-      "value": "Diseño de joyeria y bisuteria"
-    },
-    {
-      "label": "Diseño de juguetes",
-      "value": "Diseño de juguetes"
-    },
-    {
-      "label": "Educación",
-      "value": "Educación"
-    },
-    {
-      "label": "Arquitectura",
-      "value": "Arquitectura"
-    },
-    {
-      "label": "Software y sus manufacturas",
-      "value": "Software y sus manufacturas"
-    },
-    {
-      "label": "Video juegos",
-      "value": "Video juegos"
-    },
-    {
-      "label": "Contenido creativo digitalizado",
-      "value": "Contenido creativo digitalizado"
-    },
-    {
-      "label": "Publicidad",
-      "value": "Publicidad"
-    },
-    {
-      "label": "Eventos",
-      "value": "Eventos"
-    },
-    {
-      "label": "Portales web",
-      "value": "Portales web"
-    },
-    {
-      "label": "Turismo cultural",
-      "value": "Turismo cultural"
-    },
-    {
-      "label": "Gastronomia cultural",
-      "value": "Gastronomia cultural"
-    },
-    {
-      "label": "Otro",
-      "value": "Otro"
-    }
-  ]
-} ]
 
 class ListEventUser extends Component {
   constructor( props ) {
@@ -195,12 +73,11 @@ class ListEventUser extends Component {
      */
     let destacados = [];
     destacados = eventUserList.filter( asistente => ( asistente.destacado && asistente.destacado == true ) )
-
     if ( destacados && destacados.length >= 0 ) {
       eventUserList = [ ...destacados, ...eventUserList ]
     }
-
     //Finaliza destacados
+
 
     //Búscamos usuarios sugeridos según el campo sector esto es para el proyecto FENALCO
     let matches = [];
@@ -208,40 +85,38 @@ class ListEventUser extends Component {
       let meproperties = this.state.eventUser.properties;
 
 
-      const prospectos = eventUserList.filter( asistente => ( asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces ) )
+      //
+      //const prospectos = eventUserList.filter( asistente => ( asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces ) )
+      const prospectos = eventUserList.filter( asistente => ( asistente.properties.participacomo ) )
 
 
       prospectos.map( ( prospecto ) => {
-        if ( prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && Array.isArray( prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones ) && prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.length > 0 ) {
-
-          prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.map( ( interes ) => {
-            const matchOk = interes.label.match( new RegExp( meproperties.queproductooservicioofreces, 'gi' ) )
-            if ( matchOk !== null ) {
-              matches.push( prospecto )
-
-            }
-          } )
+        if ( prospecto.properties.participacomo == "Financiador" ) {
+          matches.push( prospecto )
         }
-
-
-
-
-        //   if (prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones) {
-        //     prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.map((interes) => {
-        //       console.log('interes', interes)
-        //     })
-        //   }
-      }
-      )
-
-
-      // matches = eventUserList.filter(asistente => (asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces && (meproperties.queproductooservicioofreces.match(new RegExp(asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones, 'gi')) || asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.match(new RegExp(meproperties.queproductooservicioofreces, 'gi')))))
-
-
-      // matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
+      } )
     }
 
+
+
+
+    //   if (prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones) {
+    //     prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.map((interes) => {
+    //       console.log('interes', interes)
+    //     })
+    //   }
+
+
+
+
+    // matches = eventUserList.filter(asistente => (asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces && (meproperties.queproductooservicioofreces.match(new RegExp(asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones, 'gi')) || asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.match(new RegExp(meproperties.queproductooservicioofreces, 'gi')))))
+
+
+    // matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
+
+
     let asistantData = await EventFieldsApi.getAll( event._id )
+    console.log( "asistantData", eventUserList );
 
     this.setState( ( prevState ) => {
       return {
@@ -538,33 +413,28 @@ class ListEventUser extends Component {
                       name="filterTypeUser"
                       labelCol={ { span: 24 } }
                     >
-                      <Select
-                        style={ { textAlign: 'left' } }
-                        size={ "middle" }
-                        defaultValue=''
-                        onChange={ this.handleSelectTypeUser }
-                        id="filterTypeUser"
-                      >
-                        <option key={ 'option1' } value=''>Ver todo</option>
-                        <option key={ 'option2' } value='Empresa/ESAL'>Empresa/ESAL</option>
-                        <option key={ 'option3' } value='Persona'>Persona</option>
-                      </Select>
+                      <FilterNetworking
+                        id="filterSector"
+                        properties={ this.props.event.user_properties || [] }
+                        filterProperty={ 'participacomo' }
+                        handleSelect={ this.handleSelectFilter }
+                      />
                     </Form.Item>
                   </Col>
-                  {/* <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                  { <Col xs={ 24 } sm={ 24 } md={ 10 } lg={ 10 } xl={ 10 }>
                     <Form.Item
-                      label='Actividad, servicio o producto'
+                      label='Sector'
                       name="filterSector"
-                      labelCol={{ span: 24 }}
+                      labelCol={ { span: 24 } }
                     >
                       <FilterNetworking
                         id="filterSector"
-                        properties={Actividades}
-                        filterProperty={'seleccionalaactividadserviciooproductoalcualpertenecesdentrodelasindustriascreativasyculturales'}
-                        handleSelect={this.handleSelectFilter}
+                        properties={ this.props.event.user_properties || [] }
+                        filterProperty={ 'sector' }
+                        handleSelect={ this.handleSelectFilter }
                       />
                     </Form.Item>
-                  </Col> */}
+                  </Col> }
                 </Row>
               </Form>
 
