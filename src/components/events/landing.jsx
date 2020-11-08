@@ -359,7 +359,7 @@ class Landing extends Component {
       localStorage.setItem( "stage", stage );
       localStorage.setItem( "ticket", ticket );
       window.location.replace(
-        `https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${ user.ra }&refresh_token=${ user.refreshToken }&destination=${ BaseUrl }/landing/${ event._id }`
+        `https://api.evius.co/api/users/loginorcreatefromtoken?evius_token=${ user.ra }&refresh_token=${ user.refreshToken }&destination=${ BaseUrl }/landing/${ event._id }`
       );
     }
   };
