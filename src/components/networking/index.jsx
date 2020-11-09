@@ -78,9 +78,12 @@ class ListEventUser extends Component {
     }
     //Finaliza destacados
 
+    //INICIO CONTACTOS SUGERIDOS
+
+    // Arreglo para almacenar los matches resultantes segun los campos que se indiquen para este fin 
+    let matches = [];
 
     //Búscamos usuarios sugeridos según el campo sector esto es para el proyecto FENALCO
-    let matches = [];
     if (this.state.eventUser) {
       let meproperties = this.state.eventUser.properties;
 
@@ -116,7 +119,6 @@ class ListEventUser extends Component {
 
 
     let asistantData = await EventFieldsApi.getAll(event._id)
-    console.log("asistantData", eventUserList);
 
     this.setState((prevState) => {
       return {

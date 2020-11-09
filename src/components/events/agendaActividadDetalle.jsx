@@ -25,24 +25,28 @@ let AgendaActividadDetalle = (props) => {
       const event = await EventsApi.landingEvent(id);
       setEvent(event);
 
-      if (currentUser) return;
+      if (!currentUser) {
+        let evius_token = Cookie.get("evius_token");
+        if (!evius_token) return;
 
-      let evius_token = Cookie.get("evius_token");
-      if (!evius_token) return;
-
-      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-      if (resp.status !== 200 && resp.status !== 202) return;
-      const data = resp.data;
-      setCurrentUser(data);
-
-      //      me / eventusers / event / { event_id }
+        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+        if (resp.status !== 200 && resp.status !== 202) return;
+        const data = resp.data;
+        setCurrentUser(data);
+      }
 
       try {
         const respuesta = await API.get("api/me/eventusers/event/" + id);
         let surveysData = await SurveysApi.getAll(event._id);
+        const currentActivityId = props.currentActivity._id
 
-        if (surveysData.data.length >= 1) {
-          setShowSurvey(true)
+        if (surveysData.data.length > 0) {
+          //Si hay una actividad que haga match con el listado de encuestas entonces habilitamos el componente survey
+          surveysData.data.map((item) => {
+            if (item.activity_id === currentActivityId) {
+              setShowSurvey(true)
+            }
+          })
         }
 
         if (respuesta.data && respuesta.data.data && respuesta.data.data.length) {
@@ -52,21 +56,19 @@ let AgendaActividadDetalle = (props) => {
         console.error(err)
       }
 
+      function orderHost() {
+        let hosts = props.currentActivity.hosts
+        hosts.sort(function (a, b) {
+          return a.order - b.order
+        })
+        setOrderedHost(hosts)
+      }
       orderHost()
-
     })();
-  }, [props.match.params.event]);
+  }, [props.match.params.event, props.currentActivity, currentUser]);
 
   async function getSpeakers(idSpeaker) {
     setIdSpeaker(idSpeaker);
-  }
-
-  function orderHost() {
-    let hosts = props.currentActivity.hosts
-    hosts.sort(function (a, b) {
-      return a.order - b.order
-    })
-    setOrderedHost(hosts)
   }
 
   const { currentActivity, gotoActivityList, toggleConference, image_event } = props;
