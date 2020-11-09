@@ -101,9 +101,20 @@ class ListEventUser extends Component {
     </span> )
   }
 
+  created_at_component = ( text, item, index ) => {
+    return ( <p>
+      { Moment( item.created_at ).format( "d/MMM/YY h:mm:ss A " ) }
+    </p> )
+  }
+
+  updated_at_component = ( text, item, index ) => {
+    return ( <p>
+      { Moment( item.updated_at ).format( "d/MMM/YY h:mm:ss A " ) }
+    </p> )
+  }
   checkedincomponent = ( text, item, index ) => {
     var self = this;
-    //console.log("SELF", self);
+
     return item.checkedin_at ? (
       <p>
         {Moment( item.checkedin_at ).format( "d/MMM/YY h:mm:ss A " ) }
@@ -176,10 +187,27 @@ class ListEventUser extends Component {
       columns.push( editColumn );
       columns.push( checkInColumn );
 
-      let extraColumns = extraFields.map( ( item ) => { return { title: item.label, dataIndex: item.name, key: item.name } } )
+      let extraColumns = extraFields.filter( ( item ) => { return item.type != "tituloseccion" } ).map( ( item ) => { return { title: item.label, dataIndex: item.name, key: item.name } } )
       columns = [ ...columns, ...extraColumns ];
 
+      let created_at = {
+        title: "Creado",
+        dataIndex: "created_at",
+        key: "created_at",
+        render: self.created_at_component
+      }
+      let updated_at = {
+        title: "Actualizado",
+        dataIndex: "updated_at",
+        key: "updated_at",
+        render: self.updated_at_component
+      }
+
+      columns.push( created_at );
+      columns.push( updated_at );
+
       this.setState( { columns: columns } );
+
 
       this.setState( { extraFields, rolesList, badgeEvent } );
       const { usersRef } = this.state;
@@ -199,18 +227,21 @@ class ListEventUser extends Component {
 
           for ( let i = 0; i < updatedAttendees.length; i++ ) {
 
-            //Arreglo temporal para que se muestre el listado de usuarios sin romperse
-            //algunos campos no son string y no se manejan bien
-            Object.keys( updatedAttendees[ i ] ).forEach( function ( key ) {
-              if ( !(
-                ( updatedAttendees[ i ][ key ] && updatedAttendees[ i ][ key ].getMonth )
+            // Arreglo temporal para que se muestre el listado de usuarios sin romperse
+            // algunos campos no son string y no se manejan bien
+            Object.keys( updatedAttendees[ i ].properties ).forEach( function ( key ) {
+              if ( !( ( updatedAttendees[ i ][ key ] && updatedAttendees[ i ][ key ].getMonth )
                 || typeof updatedAttendees[ i ][ key ] == "string"
                 || typeof updatedAttendees[ i ][ key ] == "boolean"
                 || typeof updatedAttendees[ i ][ key ] == "number"
                 || Number( updatedAttendees[ i ][ key ] )
+                || updatedAttendees[ i ][ key ] === null
               ) ) {
-                updatedAttendees[ i ][ key ] = JSON.stringify( updatedAttendees[ i ][ key ] );
+                updatedAttendees[ i ][ 'properties' ][ key ] = JSON.stringify( updatedAttendees[ i ][ key ] );
+
               }
+              updatedAttendees[ i ][ key ] = updatedAttendees[ i ][ 'properties' ][ key ];
+
 
             } );
 
@@ -224,11 +255,11 @@ class ListEventUser extends Component {
               updatedAttendees[ i ].payment = "No se ha registrado el pago"
             }
           }
-          console.log( "usuarios", updatedAttendees );
+
           this.setState( { users: updatedAttendees, usersReq: updatedAttendees, auxArr: updatedAttendees, loading: false } )
         },
         () => {
-          //console.log( error );
+
           //this.setState({ timeout: true, errorData: { message: error, status: 708 } });
         }
       );
@@ -244,9 +275,9 @@ class ListEventUser extends Component {
   exportFile = async ( e ) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log( "aqui" );
+
     const attendees = [ ...this.state.users ].sort( ( a, b ) => b.created_at - a.created_at );
-    console.log( attendees )
+
     const data = await parseData2Excel( attendees, this.state.extraFields );
     const ws = XLSX.utils.json_to_sheet( data );
     const wb = XLSX.utils.book_new();
