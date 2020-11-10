@@ -78,7 +78,7 @@ class ListEventUser extends Component {
     }
     //Finaliza destacados
 
-    //INICIO CONTACTOS SUGERIDOS
+    /*** INICIO CONTACTOS SUGERIDOS ***/
 
     // Arreglo para almacenar los matches resultantes segun los campos que se indiquen para este fin 
     let matches = [];
@@ -87,33 +87,115 @@ class ListEventUser extends Component {
     if (this.state.eventUser) {
       let meproperties = this.state.eventUser.properties;
 
+      //Finanzas del clima
+      if (event._id === '5f9708a2e4c9eb75713f8cc6') {
+        let prospectos = eventUserList.filter(asistente => (asistente.properties.participacomo))
+        prospectos.map((prospecto) => {
+          if (prospecto.properties.participacomo == "Financiador") {
+            matches.push(prospecto)
+          }
+        })
+      }
+      // Rueda de negocio naranja videojuegos
+      else if (event._id === '5f92d0cee5e2552f1b7c8ea2') {
+        console.log('inico macht RNN video juegos')
+        console.log('mis propiedades', meproperties)
+        let prospectos = []
 
-      //
-      //const prospectos = eventUserList.filter( asistente => ( asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces ) )
-      const prospectos = eventUserList.filter(asistente => (asistente.properties.participacomo))
-
-
-      prospectos.map((prospecto) => {
-        if (prospecto.properties.participacomo == "Financiador") {
-          matches.push(prospecto)
+        if (meproperties.tipodeparticipante === 'Oferente') {
+          prospectos = eventUserList.filter(asistente => (asistente.properties.tipodeparticipante === 'Comprador'))
         }
-      })
+        else if (meproperties.tipodeparticipante === 'Comprador') {
+          prospectos = eventUserList.filter(asistente => (asistente.properties.tipodeparticipante === 'Oferente'))
+        }
+        else {
+          return
+        }
+
+        //Seleccion del campo en funcion del tipo de asistente del evento que consulta sus sugeridos
+        let myInterest = []
+
+        if (meproperties.participacomo === "Empresa / ESAL/ Agremiación") {
+          if (typeof meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria === 'string') {
+            myInterest = [meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria]
+          }
+          else {
+            myInterest = meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria
+          }
+        }
+        else if (meproperties.participascomo === "Persona Natural") {
+          if (typeof meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa === 'string') {
+            myInterest = [meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa]
+          }
+          else {
+            myInterest = meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa
+          }
+        }
+        else {
+          return
+        }
+
+        console.log('my interest', myInterest)
+
+        //recorrido sobre los asistentes del evento  para ajustar el tipo de dato de los  intereses 
+        prospectos.map((prospecto) => {
+          if (prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria || prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa) {
+
+            if (prospecto.properties.participascomo === "Empresa / ESAL/ Agremiación") {
+              if (typeof prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria === 'string') {
+                prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria = [prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria]
+              }
+
+              prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria.map((interes) => {
+                console.log('ultima parte empresa', interes)
+                // const matchOk = interes.label.match(new RegExp(myInterest, 'gi'))
+                // if (matchOk !== null) {
+                //   matches.push(prospecto)
+
+                // }
+              })
+            }
+            else if (prospecto.properties.participascomo === "Persona Natural") {
+
+              if (typeof prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa === 'string') {
+                prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa = [prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa]
+              }
+
+              prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa.map((interes) => {
+                console.log('ultima parte persona', interes)
+                // const matchOk = interes.label.match(new RegExp(myInterest, 'gi'))
+                // if (matchOk !== null) {
+                //   matches.push(prospecto)
+
+                // }
+              })
+            }
+            else { return }
+          }
+
+        })
+
+      }
+      // Rueda de negocio naranja
+      else if (event._id === '5f7f21217828e17d80642856') {
+        let prospectos = eventUserList.filter(asistente => (asistente.properties.participacomo))
+        prospectos.map((prospecto) => {
+          if (prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && Array.isArray(prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones) && prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.length > 0) {
+
+            prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.map((interes) => {
+              const matchOk = interes.label.match(new RegExp(meproperties.queproductooservicioofreces, 'gi'))
+              if (matchOk !== null) {
+                matches.push(prospecto)
+
+              }
+            })
+          }
+
+        })
+      }
     }
 
-
-
-
-    //   if (prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones) {
-    //     prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.map((interes) => {
-    //       console.log('interes', interes)
-    //     })
-    //   }
-
-
-
-
     // matches = eventUserList.filter(asistente => (asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces && (meproperties.queproductooservicioofreces.match(new RegExp(asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones, 'gi')) || asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.match(new RegExp(meproperties.queproductooservicioofreces, 'gi')))))
-
 
     // matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
 
