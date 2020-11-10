@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Row, Col, Tag, Avatar, Alert, Card } from 'antd';
+import { Button, Row, Col, Tag, Avatar, Alert } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment';
 import './style.scss';
@@ -23,8 +23,6 @@ export default function AgendaActivityItem({
   const [related_meetings, setRelatedMeetings] = useState();
 
   useEffect(() => {
-    console.log('agenda props ******************************** ', item._id);
-
     if (registerStatus) {
       setIsRegistered(registerStatus);
     }
