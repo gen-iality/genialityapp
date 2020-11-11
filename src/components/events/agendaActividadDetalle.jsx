@@ -80,6 +80,7 @@ let AgendaActividadDetalle = (props) => {
               gotoActivityList();
             }}
             title={currentActivity.name}
+
           />
           <header className="card-header columns has-padding-left-7">
             <div className="is-block is-11 column is-paddingless">

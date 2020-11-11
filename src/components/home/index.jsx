@@ -9,6 +9,7 @@ import { EventsApi } from "../../helpers/request";
 import API from "../../helpers/request";
 import LogOut from "../shared/logOut";
 import ErrorServe from "../modal/serverError";
+
 Moment.locale('es');
 momentLocalizer();
 
@@ -93,6 +94,7 @@ class Home extends Component {
 
     render() {
         const { timeout, typeEvent, serverError, errorData, events, loading } = this.state;
+
         return (
             <React.Fragment>
                 <h2 className="is-size-2 bold-text">Eventos</h2>

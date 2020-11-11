@@ -239,8 +239,7 @@ class AgendaListadoActividades extends Component {
                   className="is-active tab-day_calendar"
                 >
                   <a
-                    className={`${
-                      date === day ? " select-day" : " unselect-day"
+                    className={`${date === day ? " select-day" : " unselect-day"
                       }`}
                   >
                     <span className="level-item date">
@@ -310,7 +309,7 @@ class AgendaListadoActividades extends Component {
                         {/* Conferencistas del evento */}
                         <p className="has-text-left is-size-6-desktop">
                           {/* <b>Conferencista:</b> &nbsp; */}
-                      {agenda.hosts.map((speaker, key) => (
+                          {agenda.hosts.map((speaker, key) => (
                             <span key={key}>
                               {speaker.name}, &nbsp;
                             </span>

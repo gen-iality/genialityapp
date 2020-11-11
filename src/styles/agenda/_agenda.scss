@@ -78,28 +78,41 @@
       padding: 20px;
       border: none;
       border-radius: 10px;
-      .card-header {
-        box-shadow: none;
+      .ant-card-head-title {
+        flex: initial;
+        font-weight: 500;
+        font-size: 24px;
       }
+      h4{
+        color: black;
+        font-size: larger;
+        margin-bottom: 22px;
+      }
+      .Agenda-Penalistas{
+        height: 230px;
+      }
+      // .card-header {
+      //   box-shadow: none;
+      // }
 
-      .card-header-date {
-        color: $title-agenda;
-        justify-content: start;
-        font-weight: 600;
-      }
+      // .card-header-date {
+      //   color: $title-agenda;
+      //   justify-content: start;
+      //   font-weight: 600;
+      // }
       .date-activity {
         display: block;
-        margin-right: 10%;
-        margin-bottom: 5%;
-        margin-left: 4%;
-        font-weight: 700;
+        margin-right: 10%;     
+        margin-left: 32%;
+        font-weight: 300;
+        color: #949494
       }
-      .card-header-title {
-        justify-content: start;
-        font-weight: bolder;
-        font: normal normal 500 23px/25px $family-sans-serif;
-        text-align: initial;
-      }
+      // .card-header-title {
+      //   justify-content: start;
+      //   font-weight: bolder;
+      //   font: normal normal 500 23px/25px $family-sans-serif;
+      //   text-align: initial;
+      // }
 
       .container_calendar-description {
         .calendar-description {
@@ -114,6 +127,28 @@
         .category_calendar-tag {
           margin-right: 2%;
           font-size: 0.9rem;
+        }
+      }
+      @media screen and (max-width:$breakpoint-mobile) {
+        .Agenda-Penalistas {
+          height: auto;
+        }
+        .ant-card-head-title {
+          overflow: visible;
+          font-size: 16px;
+        }  
+        .date-activity {
+          display: block;
+          margin-right: 0%;
+          margin-left: 20%;
+          font-weight: 300;
+          color: #949494;
+          font-size: 11px;
+        }   
+      }
+      @media screen and (max-width:$breakpoint-tablet) {
+        .Agenda-Penalistas {
+          height: auto;
         }
       }
     }

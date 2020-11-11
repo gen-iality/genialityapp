@@ -4,6 +4,7 @@ import ReactPlayer from 'react-player';
 import Moment from 'moment';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
+import { TagOutlined } from '@ant-design/icons';
 
 export default function AgendaActivityItem({
   item,
@@ -43,9 +44,226 @@ export default function AgendaActivityItem({
 
   return (
     <div className='container_agenda-information'>
-      <div className='card agenda_information'>
-        <Row align='middle'>
-          <Row>
+      <Card className='agenda_information'
+       title={item.name} 
+       extra={eventId != '5f80b6c93b4b966dfe7cd012' &&
+              eventId != '5f80a72272ccfd4e0d44b722' &&
+              eventId != '5f80a9b272ccfd4e0d44b728' &&
+              eventId != '5f8099c29564bf4ee44da4f3' && (
+                <span className='date-activity'>
+                  {Moment(item.datetime_start).format('DD MMMM YYYY') ===
+                  Moment(item.datetime_end).format('DD MMMM YYYY') ? (
+                    <>
+                      {Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} -{' '}
+                      {Moment(item.datetime_end).format('h:mm a')}
+                    </>
+                  ) : (
+                    Moment(item.datetime_start).format('DD MMMM YYYY   hh:mm') -
+                    Moment(item.datetime_end).format('DD MMMM YYYY     hh:mm')
+                  )}
+                </span>
+       )}
+      >
+        <Row justify="space-around">
+          {/*Imagen del evento*/}
+          <Col xs={24} sm={24} md={12} xl={8} xxl={8}>
+            <div>
+            {!item.habilitar_ingreso && <img src={item.image ? item.image : event_image} />}
+              {item.habilitar_ingreso === 'closed_meeting_room' && (
+                <>
+                  <img src={item.image ? item.image : event_image} />
+                  <Alert
+                    message={`La sesión inicia: ${Moment(item.datetime_start).format(
+                      'DD MMMM YYYY h:mm a'
+                    )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                    type='warning'
+                  />
+                </>
+              )}
+              {item.habilitar_ingreso === 'ended_meeting_room' && (
+                <>
+                  {item.video ? (
+                    item.video && (
+                      <>
+                        <Alert message='Conferencia Terminada. Observa el video Aquí' type='success' />
+                        <ReactPlayer
+                          width={'100%'}
+                          style={{
+                            display: 'block',
+                            margin: '0 auto'
+                          }}
+                          url={item.video}
+                          //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                          controls
+                          config={{
+                            file: { attributes: { controlsList: 'nodownload' } }
+                          }}
+                        />
+                      </>
+                    )
+                  ) : (
+                    <>
+                      <img src={item.image ? item.image : event_image} />
+                      <Alert
+                        message={`La Conferencia ha Terminado: ${Moment(item.datetime_start).format(
+                          'DD MMMM YYYY h:mm a'
+                        )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                        type='info'
+                      />
+                    </>
+                  )}
+                </>
+              )}
+              {item.habilitar_ingreso === 'open_meeting_room' && (
+                <>
+                  <img
+                    onClick={() => item.meeting_id && toggleConference(true, item.meeting_id, item)}
+                    src={item.image ? item.image : event_image}
+                  />
+                  <div>
+                    <Button
+                      block
+                      type='primary'
+                      disabled={item.meeting_id || item.vimeo_id ? false : true}
+                      onClick={() =>
+                        toggleConference(true, item.meeting_id || item.vimeo_id ? item.meeting_id : item.vimeo_id, item)
+                      }>
+                      {item.meeting_id || item.vimeo_id
+                        ? 'Conéctate a la conferencia en vivo'
+                        : 'Aún no empieza Conferencia Virtual'}
+                    </Button>
+                  </div>
+                  <br />
+                  <Row>
+                    {related_meetings &&
+                      related_meetings.map((item, key) => (
+                        <>
+                          {item.state === 'open_meeting_room' && (
+                            <Button
+                              disabled={item.meeting_id || item.vimeo_id ? false : true}
+                              onClick={() =>
+                                toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
+                              }
+                              type='primary'
+                              className='button-Agenda'
+                              key={key}>
+                              {item.informative_text}
+                            </Button>
+                          )}
+                          {item.state === 'closed_meeting_room' && (
+                            <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
+                          )}
+
+                          {item.state === 'ended_meeting_room' && (
+                            <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
+                          )}
+                        </>
+                      ))}
+                  </Row>
+                </>
+              )}
+            </div>
+            {/* Tags del evento*/}
+            <Row justify="start">
+              <div
+                onClick={() => {
+                  gotoActivity(item);
+                }}
+                className='text-align-card'
+                style={{ marginBottom: '5%' }}>
+                <TagOutlined />  {item.activity_categories.length > 0 && (
+                  <>
+                    {item.activity_categories.map((item) => (
+                      <>
+                        <Tag>{item.name}</Tag>
+                      </>
+                    ))}
+                  </>
+                )}
+              </div>
+            </Row>           
+          </Col>
+          {/*Informacion acerca del evento */}
+          <Col xs={24} sm={24} md={12} xl={16} xxl={16}>
+            <div className='text-align-card'>
+              {
+                <>
+                  <Row>
+                    <div
+                      className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
+                      dangerouslySetInnerHTML={{ __html: item.description }}
+                    />
+                  </Row>
+                </>
+              }
+            </div>
+            <div className='text-align-card'>
+              {item.hosts.length > 0 && (
+                <>
+                  <Row justify="start"><h4>Panelistas:</h4></Row>
+                  <Row justify="start" className="Agenda-Penalistas">
+                    {item.hosts.map((speaker, key) => (
+                      <Col key={key} lg={24} xl={8} xxl={8} style={{ marginBottom: 13 }}>
+                        <span style={{ fontSize: 20, fontWeight: 500 }}>
+                          <Avatar size={30} src={speaker.image} /> {speaker.name} &nbsp;
+                        </span>
+                      </Col>
+                    ))}
+                  </Row>
+                </>
+              )}
+            </div>
+            <Row justify="end" align="bottom">
+              <Col xs={24} sm={24} md={12} xl={12} xxl={12}>
+                {show_inscription === 'true' && (
+                  <Button
+                    type='primary'
+                    onClick={() => registerInActivity(item._id, eventId, userId, setIsRegistered)}
+                    className='space-align-block button-Agenda'
+                    disabled={isRegistered}>
+                    {isRegistered ? 'Inscrito' : 'Inscribirme'}
+                  </Button>
+                )}
+
+                {btnDetailAgenda === 'true' && (
+                  <Button
+                    type='primary'
+                    onClick={() => {
+                      gotoActivity(item);
+                    }}
+                    className='space-align-block button-Agenda'>
+                    Detalle de actividad
+                  </Button>
+                )}
+                {Documents &&
+                  Documents.length > 0 &&
+                  Documents.filter((element) => element.activity_id === item._id).length > 0 && (
+                    <Button
+                      type='primary'
+                      onClick={() => {
+                        gotoActivity(item);
+                      }}
+                      className='space-align-block button-Agenda'>
+                      Documentos
+                    </Button>
+                  )}
+                {Surveys &&
+                  Surveys.length > 0 &&
+                  Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
+                    <Button
+                      type='primary'
+                      onClick={() => {
+                        gotoActivity(item);
+                      }}
+                      className='space-align-block button-Agenda'>
+                      Encuestas
+                    </Button>
+                  )}
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+          {/* <Row>
             {eventId != '5f80b6c93b4b966dfe7cd012' &&
               eventId != '5f80a72272ccfd4e0d44b722' &&
               eventId != '5f80a9b272ccfd4e0d44b728' &&
@@ -67,11 +285,11 @@ export default function AgendaActivityItem({
               <span className='card-header-title text-align-card'>{item.name}</span>
             </p>
           </Row>
-          <hr className='line-head' />
-          <Col className='has-text-left' xs={24} sm={12} md={12} lg={12} xl={16}>
-            {/* <span className='tag category_calendar-tag'>
+          <hr className='line-head' /> */}
+          {/* <Col className='has-text-left' xs={24} sm={12} md={12} lg={12} xl={16}>
+            <span className='tag category_calendar-tag'>
               {item.meeting_id || item.vimeo_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
-            </span> */}
+            </span> 
             <div
               onClick={() => {
                 gotoActivity(item);
@@ -265,9 +483,8 @@ export default function AgendaActivityItem({
                 </>
               )}
             </div>
-          </Col>
-        </Row>
-      </div>
+          </Col> */}
+      </Card>
     </div>
   );
 }
