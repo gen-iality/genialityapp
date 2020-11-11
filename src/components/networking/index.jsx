@@ -47,6 +47,7 @@ class ListEventUser extends Component {
   }
 
   async componentDidMount() {
+    console.log('***********************************************', this.props)
     await this.getInfoCurrentUser();
     this.loadData();
   }
@@ -98,10 +99,15 @@ class ListEventUser extends Component {
       }
       // Rueda de negocio naranja videojuegos
       else if (event._id === '5f92d0cee5e2552f1b7c8ea2') {
-        console.log('inico macht RNN video juegos')
-        console.log('mis propiedades', meproperties)
-        let prospectos = []
 
+
+        eventUserList.map((user) => {
+          console.log('---', user.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria)
+        })
+
+
+
+        let prospectos = []
         if (meproperties.tipodeparticipante === 'Oferente') {
           prospectos = eventUserList.filter(asistente => (asistente.properties.tipodeparticipante === 'Comprador'))
         }
@@ -116,16 +122,22 @@ class ListEventUser extends Component {
         let myInterest = []
 
         if (meproperties.participacomo === "Empresa / ESAL/ Agremiación") {
+
+          console.log('mis propiedades', meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria)
+
           if (typeof meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria === 'string') {
-            myInterest = [meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria]
+
+
+
+            // myInterest.push(meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria)
           }
           else {
-            myInterest = meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria
+            // myInterest = meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria
           }
         }
         else if (meproperties.participascomo === "Persona Natural") {
           if (typeof meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa === 'string') {
-            myInterest = [meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa]
+            myInterest.push(meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa)
           }
           else {
             myInterest = meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa
@@ -142,18 +154,23 @@ class ListEventUser extends Component {
           if (prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria || prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa) {
 
             if (prospecto.properties.participascomo === "Empresa / ESAL/ Agremiación") {
+
+              console.log('propiedades del otro', prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria)
+
               if (typeof prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria === 'string') {
+
                 prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria = [prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria]
               }
 
               prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria.map((interes) => {
-                console.log('ultima parte empresa', interes)
-                // const matchOk = interes.label.match(new RegExp(myInterest, 'gi'))
-                // if (matchOk !== null) {
-                //   matches.push(prospecto)
+                //console.log('ultima parte empresa', interes)
+                const matchOk = myInterest.includes(interes)
+                if (matchOk) {
+                  matches.push(prospecto)
 
-                // }
+                }
               })
+              //console.log(matches)
             }
             else if (prospecto.properties.participascomo === "Persona Natural") {
 
@@ -162,7 +179,7 @@ class ListEventUser extends Component {
               }
 
               prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa.map((interes) => {
-                console.log('ultima parte persona', interes)
+                //console.log('ultima parte persona', interes)
                 // const matchOk = interes.label.match(new RegExp(myInterest, 'gi'))
                 // if (matchOk !== null) {
                 //   matches.push(prospecto)
