@@ -99,99 +99,12 @@ class ListEventUser extends Component {
       }
       // Rueda de negocio naranja videojuegos
       else if (event._id === '5f92d0cee5e2552f1b7c8ea2') {
-
-
-        eventUserList.map((user) => {
-          console.log('---', user.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria)
-        })
-
-
-
-        let prospectos = []
         if (meproperties.tipodeparticipante === 'Oferente') {
-          prospectos = eventUserList.filter(asistente => (asistente.properties.tipodeparticipante === 'Comprador'))
+          matches = eventUserList.filter(asistente => (asistente.properties.tipodeparticipante === 'Comprador'))
         }
         else if (meproperties.tipodeparticipante === 'Comprador') {
-          prospectos = eventUserList.filter(asistente => (asistente.properties.tipodeparticipante === 'Oferente'))
+          matches = eventUserList.filter(asistente => (asistente.properties.tipodeparticipante === 'Oferente'))
         }
-        else {
-          return
-        }
-
-        //Seleccion del campo en funcion del tipo de asistente del evento que consulta sus sugeridos
-        let myInterest = []
-
-        if (meproperties.participacomo === "Empresa / ESAL/ Agremiación") {
-
-          console.log('mis propiedades', meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria)
-
-          if (typeof meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria === 'string') {
-
-
-
-            // myInterest.push(meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria)
-          }
-          else {
-            // myInterest = meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria
-          }
-        }
-        else if (meproperties.participascomo === "Persona Natural") {
-          if (typeof meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa === 'string') {
-            myInterest.push(meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa)
-          }
-          else {
-            myInterest = meproperties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa
-          }
-        }
-        else {
-          return
-        }
-
-        console.log('my interest', myInterest)
-
-        //recorrido sobre los asistentes del evento  para ajustar el tipo de dato de los  intereses 
-        prospectos.map((prospecto) => {
-          if (prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria || prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa) {
-
-            if (prospecto.properties.participascomo === "Empresa / ESAL/ Agremiación") {
-
-              console.log('propiedades del otro', prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria)
-
-              if (typeof prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria === 'string') {
-
-                prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria = [prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria]
-              }
-
-              prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoria.map((interes) => {
-                //console.log('ultima parte empresa', interes)
-                const matchOk = myInterest.includes(interes)
-                if (matchOk) {
-                  matches.push(prospecto)
-
-                }
-              })
-              //console.log(matches)
-            }
-            else if (prospecto.properties.participascomo === "Persona Natural") {
-
-              if (typeof prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa === 'string') {
-                prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa = [prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa]
-              }
-
-              prospecto.properties.queserviciosestariasinteresadoenconocerdurantelaruedapuedesseleccionarmasdeunacategoriaEmpresa.map((interes) => {
-                //console.log('ultima parte persona', interes)
-                // const matchOk = interes.label.match(new RegExp(myInterest, 'gi'))
-                // if (matchOk !== null) {
-                //   matches.push(prospecto)
-
-                // }
-              })
-            }
-            else { return }
-          }
-
-        })
-
       }
       // Rueda de negocio naranja
       else if (event._id === '5f7f21217828e17d80642856') {
@@ -207,15 +120,9 @@ class ListEventUser extends Component {
               }
             })
           }
-
         })
       }
     }
-
-    // matches = eventUserList.filter(asistente => (asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces && (meproperties.queproductooservicioofreces.match(new RegExp(asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones, 'gi')) || asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.match(new RegExp(meproperties.queproductooservicioofreces, 'gi')))))
-
-    // matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
-
 
     let asistantData = await EventFieldsApi.getAll(event._id)
 
