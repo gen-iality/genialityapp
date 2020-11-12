@@ -1,6 +1,12 @@
 //Esto me preocupa diana que hubieramos agregado estos breakpoints toca quitarlos
 
 .container_imgLoading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 99999;
   img {
     margin-top: -55px;
     height: 100vh;
@@ -45,8 +51,7 @@
     font-size: 150px;
   }
 
-
-  @media only screen and (max-width:768px) {
+  @media only screen and (max-width: 768px) {
     img {
       margin-top: 0px;
       height: 45vh;
@@ -63,7 +68,7 @@
       height: 42px;
       margin-left: -67px;
     }
-    .anticon{
+    .anticon {
       position: absolute;
       top: 108px;
       margin-left: 8px;
@@ -73,8 +78,8 @@
       font-size: 50px;
     }
   }
-  
-  @media only screen and (max-width:768px) and (orientation: landscape)  {
+
+  @media only screen and (max-width: 768px) and (orientation: landscape) {
     img {
       margin-top: 0px;
       height: 85vh;
@@ -82,8 +87,8 @@
       margin-bottom: 0px;
     }
   }
-  
-   @media (min-width: 800px) and (max-width:1024px){
+
+  @media (min-width: 800px) and (max-width: 1024px) {
     img {
       margin-top: 0px;
       height: 80vh;
@@ -100,7 +105,7 @@
       height: 42px;
       margin-left: -67px;
     }
-    .anticon{
+    .anticon {
       position: absolute;
       top: 118px;
       margin-left: 8px;
@@ -111,4 +116,3 @@
     }
   }
 }
-

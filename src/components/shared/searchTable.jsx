@@ -45,9 +45,9 @@ class SearchComponent extends Component {
   //   }
   // }
 
-  componentDidUpdate = (prevProps, prevState)=>{
+  componentDidUpdate = (prevProps, prevState) => {
     if (this.props.data !== prevProps.data) {
-      console.log('las props cambiaron')
+      //console.log('las props cambiaron')
     }
   }
 
@@ -114,7 +114,7 @@ class SearchComponent extends Component {
       else this.setState({ showMessage: true, message: "not" });
       this.props.searchResult(filtered);
     }
-    
+
     if (value.length <= 2) {
       if (value.length === 0) {
         this.setState({ showMessage: false, message: "" });

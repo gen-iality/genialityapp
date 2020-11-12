@@ -45,9 +45,9 @@ import UserLogin from './UserLoginContainer'
 import Partners from './Partners'
 
 import {
-  BrowserView,
-  MobileView,
-  isBrowser,
+  // BrowserView,
+  // MobileView,
+  // isBrowser,
   isMobile
 } from "react-device-detect";
 
@@ -359,7 +359,7 @@ class Landing extends Component {
       localStorage.setItem("stage", stage);
       localStorage.setItem("ticket", ticket);
       window.location.replace(
-        `https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/${event._id}`
+        `https://api.evius.co/api/users/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/${event._id}`
       );
     }
   };
@@ -633,8 +633,7 @@ class Landing extends Component {
                                   user={currentUser}
                                   itemsMenu={this.state.event.itemsMenu}
                                   showSection={this.showSection}
-                                  collapsed={this.state.collapsed}
-                                />
+                                  collapsed={this.state.collapsed} />
                               </Drawer>
 
                               {/* Contenedor donde se mapea la información de cada seccion */}

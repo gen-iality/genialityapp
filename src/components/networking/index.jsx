@@ -23,128 +23,6 @@ import RequestList from "./requestList";
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
-/* Constante temporal - utilizada en ruedas naranja */
-const Actividades = [{
-  name: 'seleccionalaactividadserviciooproductoalcualpertenecesdentrodelasindustriascreativasyculturales',
-  options: [
-    {
-      "label": "Artesanías",
-      "value": "Artesanías"
-    },
-    {
-      "label": "Festivales",
-      "value": "Festivales"
-    },
-    {
-      "label": "Arte, Pintura y Escultura",
-      "value": "Arte, Pintura y Escultura"
-    },
-    {
-      "label": "Música en vivo",
-      "value": "Música en vivo"
-    },
-    {
-      "label": "Teatro",
-      "value": "Teatro"
-    },
-    {
-      "label": "Danza",
-      "value": "Danza"
-    },
-    {
-      "label": "Circo",
-      "value": "Circo"
-    },
-    {
-      "label": "Audiovisuales - Películas y video",
-      "value": "Audiovisuales - Películas y video"
-    },
-    {
-      "label": "Audiovisuales - Televisión y Radio",
-      "value": "Audiovisuales - Televisión y Radio"
-    },
-    {
-      "label": "Musica grabaciones discográficas",
-      "value": "Musica grabaciones discográficas"
-    },
-    {
-      "label": "Música actuaciones musicales",
-      "value": "Música actuaciones musicales"
-    },
-    {
-      "label": "Libros y medios impresos",
-      "value": "Libros y medios impresos"
-    },
-    {
-      "label": "Contenido editorial - revistas",
-      "value": "Contenido editorial - revistas"
-    },
-    {
-      "label": "Diseño de modas",
-      "value": "Diseño de modas"
-    },
-    {
-      "label": "Diseño gráfico",
-      "value": "Diseño gráfico"
-    },
-    {
-      "label": "Diseño de interiores",
-      "value": "Diseño de interiores"
-    },
-    {
-      "label": "Diseño de joyeria y bisuteria",
-      "value": "Diseño de joyeria y bisuteria"
-    },
-    {
-      "label": "Diseño de juguetes",
-      "value": "Diseño de juguetes"
-    },
-    {
-      "label": "Educación",
-      "value": "Educación"
-    },
-    {
-      "label": "Arquitectura",
-      "value": "Arquitectura"
-    },
-    {
-      "label": "Software y sus manufacturas",
-      "value": "Software y sus manufacturas"
-    },
-    {
-      "label": "Video juegos",
-      "value": "Video juegos"
-    },
-    {
-      "label": "Contenido creativo digitalizado",
-      "value": "Contenido creativo digitalizado"
-    },
-    {
-      "label": "Publicidad",
-      "value": "Publicidad"
-    },
-    {
-      "label": "Eventos",
-      "value": "Eventos"
-    },
-    {
-      "label": "Portales web",
-      "value": "Portales web"
-    },
-    {
-      "label": "Turismo cultural",
-      "value": "Turismo cultural"
-    },
-    {
-      "label": "Gastronomia cultural",
-      "value": "Gastronomia cultural"
-    },
-    {
-      "label": "Otro",
-      "value": "Otro"
-    }
-  ]
-}]
 
 class ListEventUser extends Component {
   constructor(props) {
@@ -195,19 +73,50 @@ class ListEventUser extends Component {
      */
     let destacados = [];
     destacados = eventUserList.filter(asistente => (asistente.destacado && asistente.destacado == true))
-
     if (destacados && destacados.length >= 0) {
       eventUserList = [...destacados, ...eventUserList]
     }
-
     //Finaliza destacados
 
-    //Búscamos usuarios sugeridos según el campo sector esto es para el proyecto FENALCO
+    //INICIO CONTACTOS SUGERIDOS
+
+    // Arreglo para almacenar los matches resultantes segun los campos que se indiquen para este fin 
     let matches = [];
+
+    //Búscamos usuarios sugeridos según el campo sector esto es para el proyecto FENALCO
     if (this.state.eventUser) {
       let meproperties = this.state.eventUser.properties;
-      matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
+
+
+      //
+      //const prospectos = eventUserList.filter( asistente => ( asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces ) )
+      const prospectos = eventUserList.filter(asistente => (asistente.properties.participacomo))
+
+
+      prospectos.map((prospecto) => {
+        if (prospecto.properties.participacomo == "Financiador") {
+          matches.push(prospecto)
+        }
+      })
     }
+
+
+
+
+    //   if (prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones) {
+    //     prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.map((interes) => {
+    //       console.log('interes', interes)
+    //     })
+    //   }
+
+
+
+
+    // matches = eventUserList.filter(asistente => (asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces && (meproperties.queproductooservicioofreces.match(new RegExp(asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones, 'gi')) || asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.match(new RegExp(meproperties.queproductooservicioofreces, 'gi')))))
+
+
+    // matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
+
 
     let asistantData = await EventFieldsApi.getAll(event._id)
 
@@ -278,8 +187,6 @@ class ListEventUser extends Component {
           event_id: this.props.event._id,
           state: "send",
         };
-
-        // console.log("data:", data);
 
         // Se ejecuta el servicio del api de evius
         try {
@@ -432,13 +339,13 @@ class ListEventUser extends Component {
                                         <Col xs={24}>
                                           <div>
                                             {
-                                              !asistantData.map((data, dataIndex) => (
+                                              asistantData.map((data, dataIndex) => (
                                                 /*Condicion !data.visible para poder tener en cuenta el campo visible en los datos que llegan, 
                                                   esto ya que visibleByContacst es variable nueva, ambas realizan la misma funcionalidad
                                                 */
-                                                !data.visible || !data.visibleByContacts && data.visibleByContacts !== undefined && users.properties[data.name] && (
+                                                !data.visibleByAdmin && users.properties[data.name] && (
                                                   <div key={`public-field-${userIndex}-${dataIndex}`}>
-                                                    <p><b>{data.label}:</b> {users.properties[data.name]}</p>
+                                                    <p><b>{data.label}:</b> {formatDataToString(users.properties[data.name], data)}</p>
                                                   </div>
                                                 )
                                               ))
@@ -499,48 +406,134 @@ class ListEventUser extends Component {
                         clear={this.state.clearSearch}
                         styles={{ width: '300px' }}
                       />
-
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                    <Form.Item
-                      label='Tipo de asistente'
-                      name="filterTypeUser"
-                      labelCol={{ span: 24 }}
-                    >
-                      <Select
-                        style={{ textAlign: 'left' }}
-                        size={"middle"}
-                        defaultValue=''
-                        onChange={this.handleSelectTypeUser}
-                        id="filterTypeUser"
-                      >
-                        <option key={'option1'} value=''>Ver todo</option>
-                        <option key={'option2'} value='Empresa/ESAL'>Empresa/ESAL</option>
-                        <option key={'option3'} value='Persona'>Persona</option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                    <Form.Item
-                      label='Actividad, servicio o producto'
-                      name="filterSector"
-                      labelCol={{ span: 24 }}
-                    >
-                      {console.log('this.props.event', this.props.event.user_properties)}
-                      <FilterNetworking
-                        id="filterSector"
-                        properties={Actividades}
-                        filterProperty={'seleccionalaactividadserviciooproductoalcualpertenecesdentrodelasindustriascreativasyculturales'}
-                        handleSelect={this.handleSelectFilter}
-                      />
                     </Form.Item>
                   </Col>
                 </Row>
+
+                <Row justify="space-around" gutter={[16, 16]}>
+
+                  {/*Alerta quemado para el eventop de finanzas de clima*/}
+                  {
+                    event._id === "5f9708a2e4c9eb75713f8cc6" && (
+                      <>
+                        <Alert
+                          message="Sugerencias de Busqueda"
+                          description="Te recomendamos buscar de acuerdo a las 
+                          siguientes palabras claves: Adaptación, Mitigación, 
+                          Energía, Agropecuario, Industria, Circular, TIC, Residuos, 
+                          Turismo, Transporte, Forestal,  Vivienda, Start Up, Pyme, Entes territoriales, 
+                          Gran empresa, Pública, Privada, Mixta, ONG"
+                          type="info"
+                          showIcon
+                          closable
+                        />
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item
+                            label='Tipo de asistente'
+                            name="filterTypeUser"
+                            labelCol={{ span: 24 }}
+                          >
+                            <FilterNetworking
+                              id="filterSector"
+                              properties={this.props.event.user_properties || []}
+                              filterProperty={'participacomo'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item
+                            label='Sector'
+                            name="filterSector"
+                            labelCol={{ span: 24 }}
+                          >
+                            <FilterNetworking
+                              id="filterSector"
+                              properties={this.props.event.user_properties || []}
+                              filterProperty={'sector'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                      </>
+                    )
+                  }
+
+                  {/*Ruedas de negocio naranja videojuegos*/}
+                  {
+                    event._id === "5f92d0cee5e2552f1b7c8ea2" && (
+                      <>
+
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item
+                            label='Tipo de asistente'
+                            name="filterTypeUser"
+                            labelCol={{ span: 24 }}
+                          >
+                            <FilterNetworking
+                              id="filterSector"
+                              properties={this.props.event.user_properties || []}
+                              filterProperty={'participascomo'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item
+                            label='Tipo de participante'
+                            name="filterSector"
+                            labelCol={{ span: 24 }}
+                          >
+                            <FilterNetworking
+                              id="filterSector"
+                              properties={this.props.event.user_properties || []}
+                              filterProperty={'tipodeparticipante'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                      </>
+                    )
+                  }
+
+                  {/*Ruedas de negocio naranja*/}
+                  {
+                    event._id === "5f7f21217828e17d80642856" && (
+                      <>
+
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item
+                            label='Tipo de asistente'
+                            name="filterTypeUser"
+                            labelCol={{ span: 24 }}
+                          >
+                            <FilterNetworking
+                              id="filterSector"
+                              properties={this.props.event.user_properties || []}
+                              filterProperty={'participacomo'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item
+                            label='Sector'
+                            name="filterSector"
+                            labelCol={{ span: 24 }}
+                          >
+                            <FilterNetworking
+                              id="filterSector"
+                              properties={this.props.event.user_properties || []}
+                              filterProperty={'queproductooservicioofreces'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                      </>
+                    )
+                  }
+                </Row>
               </Form>
-
-
-
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
                 <Alert
                   message="Información Adicicional"

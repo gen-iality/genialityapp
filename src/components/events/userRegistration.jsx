@@ -7,10 +7,10 @@ import FormComponent from "./registrationForm/form";
 import { Spin } from "antd";
 
 class UserRegistration extends Component {
-  constructor(props) {
-    super(props);
+  constructor( props ) {
+    super( props );
     this.state = {
-      eventUsers: [],
+      eventUser: undefined,
       currentUser: {},
       loading: true,
       registeredUser: false,
@@ -20,17 +20,17 @@ class UserRegistration extends Component {
     };
   }
 
-  addDefaultLabels = (extraFields) => {
-    extraFields = extraFields.map((field) => {
-      field["label"] = field["label"] ? field["label"] : field["name"];
+  addDefaultLabels = ( extraFields ) => {
+    extraFields = extraFields.map( ( field ) => {
+      field[ "label" ] = field[ "label" ] ? field[ "label" ] : field[ "name" ];
       return field;
-    });
+    } );
     return extraFields;
   };
 
-  orderFieldsByWeight = (extraFields) => {
-    extraFields = extraFields.sort((a, b) =>
-      (a.order_weight && !b.order_weight) || (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
+  orderFieldsByWeight = ( extraFields ) => {
+    extraFields = extraFields.sort( ( a, b ) =>
+      ( a.order_weight && !b.order_weight ) || ( a.order_weight && b.order_weight && a.order_weight < b.order_weight )
         ? -1
         : 1
     );
@@ -39,70 +39,62 @@ class UserRegistration extends Component {
 
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = async () => {
-    let { eventUsers } = this.state;
 
-    let evius_token = Cookie.get("evius_token");
-
-    if (!evius_token) {
-      this.setState({ currentUser: "guest", loading: false });
+    let evius_token = Cookie.get( "evius_token" );
+    let eventUser = null;
+    console.log("DEV",  evius_token);
+    if ( !evius_token ) {
+      this.setState( { currentUser: "guest", loading: false } );
     } else {
       try {
-        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-        if (resp.status === 200) {
+        const resp = await API.get( `/auth/currentUser?evius_token=${ Cookie.get( "evius_token" ) }` );
+        if ( resp.status === 200 ) {
+
           const data = resp.data;
+          eventUser = await EventsApi.getcurrentUserEventUser( this.props.eventId );
+          console.log("eventUser",eventUser);
+          const tickets = await TicketsApi.getByEvent( this.props.eventId, evius_token );
 
-          const tickets = await TicketsApi.getByEvent(this.props.eventId, evius_token);
-          //   Se valida si el usuario ya se encuentra registrado al evento
-          let existUser = eventUsers.find((user) => user.properties.email === data.email);
-
-          this.setState({
+          this.setState( {
             currentUser: data,
+            eventUser: eventUser,
             userTickets: tickets && tickets.data,
             loading: false,
-            registeredUser: existUser ? true : false,
+            registeredUser: eventUser ? true : false,
             initialValues: { names: data.names, email: data.email },
-          });
+          } );
         }
-      } catch (error) {
-        console.error(error)
+      } catch ( error ) {
+        console.error( error )
       }
     }
   };
 
-  async componentDidMount() {
+  async componentDidMount () {
     // Trae la informacion del evento
-    const event = await EventsApi.getOne(this.props.eventId);
-
-    const eventUsers = await UsersApi.getAll(this.props.eventId, "?pageSize=10000");
+    const event = await EventsApi.getOne( this.props.eventId );
 
     const properties = event.user_properties;
     const conditionals = event.fields_conditions ? event.fields_conditions : []
 
     // Trae la informacion para los input
-    let extraFields = fieldNameEmailFirst(properties);
-    extraFields = this.addDefaultLabels(extraFields);
-    extraFields = this.orderFieldsByWeight(extraFields);
-    this.setState({ extraFields, eventUsers: eventUsers.data, conditionals }, this.getCurrentUser);
+    let extraFields = fieldNameEmailFirst( properties );
+    extraFields = this.addDefaultLabels( extraFields );
+    extraFields = this.orderFieldsByWeight( extraFields );
+    this.setState( { extraFields, conditionals }, this.getCurrentUser );
   }
 
-  render() {
-    let { registeredUser, loading, initialValues, extraFields, currentUser, userTickets, conditionals } = this.state;
+  render () {
+    let { registeredUser, loading, initialValues, extraFields, eventUser, userTickets, conditionals } = this.state;
     const { eventId } = this.props;
-    if (!loading)
+    if ( !loading )
       return !registeredUser ? (
         <React.Fragment>
-          {/* <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
-            <SurveyComponent
-              idSurvey={`5ed591dacbc54a2c1d787ac2`}
-              eventId={eventId}
-              currentUser={currentUser}
-              singlePage={true}
-            />
-          </Col> */}
-          <FormComponent initialValues={initialValues} eventId={eventId} extraFieldsOriginal={extraFields} conditionals={conditionals} />
+          {/* initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals } */}
+          <FormComponent initialValues={ initialValues } eventId={ eventId } eventUser={eventUser} extraFieldsOriginal={ extraFields } conditionals={ conditionals } />
         </React.Fragment>
       ) : (
-          <FormComponent initialValues={initialValues} eventId={eventId} extraFieldsOriginal={extraFields} conditionals={conditionals} />
+          <FormComponent initialValues={ initialValues } eventId={ eventId } eventUser={eventUser} extraFieldsOriginal={ extraFields } conditionals={ conditionals } />
           // <UserInforCard
           //   initialValues={currentUser} eventId={eventId} extraFieldsOriginal={extraFields} conditionals={conditionals}
           // />

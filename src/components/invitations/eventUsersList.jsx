@@ -76,6 +76,7 @@ class eventUsersList extends Component {
         columnsTable.push({
             title: "Chequeado",
             dataIndex: "checkedin_at",
+            ellipsis: true,
             ...this.getColumnSearchProps("checkedin_at")
         })
 
@@ -92,6 +93,7 @@ class eventUsersList extends Component {
             title: "Tiquete",
             dataIndex: "ticket",
             filters: filterTickets,
+            ellipsis: true,
             onFilter: (value, record) => record.ticket.indexOf(value) === 0,
 
         })
@@ -103,6 +105,8 @@ class eventUsersList extends Component {
             columnsTable.push({
                 title: propertiesTable[i].label ? propertiesTable[i].label : propertiesTable[i].name,
                 dataIndex: propertiesTable[i].name,
+                width: 300,
+                ellipsis: true,
                 ...this.getColumnSearchProps(propertiesTable[i].name)
             })
         }
@@ -112,11 +116,16 @@ class eventUsersList extends Component {
             {
                 title: "Creado",
                 dataIndex: "created_at",
+                width: 300,
+                ellipsis: true,
                 ...this.getColumnSearchProps("created_at")
             },
             {
                 title: "Actualizado",
                 dataIndex: "updated_at",
+                width: 300,
+                ellipsis: true,
+
                 ...this.getColumnSearchProps("updated_at")
             }
         )
@@ -263,7 +272,7 @@ class eventUsersList extends Component {
                 {
                     key: 'deselect',
                     text: 'Deselect all Data',
-                    width: '30%',
+                    width: '50%',
                     onSelect: () => {
                         let newSelectedRowKeys = [];
                         this.setState({ selectedRowKeys: newSelectedRowKeys });
@@ -297,7 +306,7 @@ class eventUsersList extends Component {
                     <p style={{ marginTop: "2%" }}>Seleccionados: {selectedRowKeys.length}</p>
                     <Table
                         style={{ height: '50px' }}
-                        scroll={{ x: 1500 }}
+                        scroll={{ x: 3500 }}
                         sticky
                         pagination={{ position: ["bottomCenter"] }}
                         size="small"

@@ -3,92 +3,83 @@ import XLSX from "xlsx";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Dropzone from 'react-dropzone';
-Moment.locale('es');
+Moment.locale( 'es' );
 momentLocalizer();
 
 class Importacion extends Component {
-    constructor(props) {
-        super(props);
+    constructor( props ) {
+        super( props );
+        console.log( "pr", props );
         this.state = {
             showMsg: false
         };
-        this.handleXlsFile = this.handleXlsFile.bind(this) // properly bound once
+        this.handleXlsFile = this.handleXlsFile.bind( this ) // properly bound once
     }
 
-    handleXlsFile(files) {
-        let abc = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-        const f = files[0];
+    handleXlsFile ( files ) {
+        let abc = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" ];
+        const f = files[ 0 ];
         const reader = new FileReader();
         const self = this;
-        reader.onload = (e) => {
+        reader.onload = ( e ) => {
             const data = e.target.result;
-            const workbook = XLSX.read(data, { type: "binary" });
-            const sheetName = workbook.SheetNames[0];
-            const sheetObj = workbook.Sheets[sheetName];
-            if (sheetObj["!ref"]) {
-                const dimension = sheetObj["!ref"].split(":");
-                let inicio = dimension[0].substring(0, 1);
-                let fin = dimension[1].substring(0, 1);
-                let finN = parseInt(dimension[1].substring(1), 10);
-                inicio = abc.indexOf(inicio);
-                fin = abc.indexOf(fin);
+            const workbook = XLSX.read( data, { type: "binary" } );
+            const sheetName = workbook.SheetNames[ 0 ];
+            const sheetObj = workbook.Sheets[ sheetName ];
+            if ( sheetObj[ "!ref" ] ) {
+                var range = XLSX.utils.decode_range( sheetObj[ '!ref' ] );
+
+
                 let fields = [];
 
+                for ( let colNum = range.s.c; colNum <= range.e.c; colNum++ ) {
 
-                for (let i = inicio; i < fin + 1; i++) {
+                    const keyCell = sheetObj[ XLSX.utils.encode_cell( { r: range.s.r, c: colNum } ) ];
+                    let key = keyCell ? ( keyCell.v.trim() ) : undefined;
+                    //columna vacia continuamos
+                    if ( !key ) continue;
 
-                    if (!sheetObj[abc[i] + 1] || !sheetObj[abc[i] + 1].w) {
-                        this.setState({ errMsg: 'Excel sin formato adecuado' });
-                        break;
+                    fields[ colNum ] = { key: key, list: [], used: false };
+
+                    for ( let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++ ) {
+                        const secondCell = sheetObj[ XLSX.utils.encode_cell( { r: rowNum, c: colNum } ) ];
+                        let val = secondCell ? ( secondCell.v ) : undefined;
+                        fields[ colNum ].list.push( val )
                     }
-
-                    let key = sheetObj[abc[i] + 1].w.trim();
-                    fields[i] = { key: key, list: [], used: false };
-
-                    //Se itera sobre la segunda columna ya que las primeras indican los headers y revisamos si estan llenas las filas
-                    for (let j = 2; j < finN + 1; j++) {
-                        if (sheetObj[abc[i] + j] &&
-                            sheetObj[abc[i] + j].w &&
-                            sheetObj[abc[i] + j].w.trim().length >= 0) {
-                            let fieldValue = sheetObj[abc[i] + j].w.trim();
-                            fields[i].list.push(fieldValue)
-                        } else {
-                            fields[i].list.push(undefined)
-                        }
-                    }
-
-                    //Se condiciona si en el array la key tiene como propiedad "email", 
-                    //si es así, convierte en muniscula el correo e iguala el array list de fields al nuevo campo 
-                    if (fields[i].key === "email") {
-                        fields[i].list[0].toLowerCase()
-                        let email = fields[i].list[0].toLowerCase()
-                        fields[i].list[0] = email
-                    }
-                    console.log(fields[i])
-                    fields[i].list.slice(0, finN - 1);
                 }
-                self.props.handleXls(fields)
+
+                //por si no pudimos agregar ningún dato
+                if ( !fields.length ) {
+                    this.setState( { errMsg: 'Excel en blanco, o algún problema con el archivo o el formato' } );
+                    return;
+                }
+
+                self.props.handleXls( fields )
+                return;
+
             } else {
-                this.setState({ errMsg: 'Excel en blanco' })
+                this.setState( { errMsg: 'Excel en blanco' } )
             }
         };
-        reader.readAsBinaryString(f);
+        reader.readAsBinaryString( f );
     }
 
     downloadExcel = () => {
-        let data = [{}];
-        this.props.extraFields.map((extra) => {
-            return data[0][extra.name] = ''
-        });
-        data[0]['tiquete'] = '';
-        const ws = XLSX.utils.json_to_sheet(data);
+        let data = [ {} ];
+        this.props.extraFields.map( ( extra ) => {
+            return data[ 0 ][ extra.name ] = ''
+        } );
+        data[ 0 ][ 'tiquete' ] = '';
+        const ws = XLSX.utils.json_to_sheet( data );
         const wb = XLSX.utils.book_new();
-        const name = this.props.organization ? 'usersorganizationtemplate' : 'attendeestemplate';
-        XLSX.utils.book_append_sheet(wb, ws, "Template");
-        XLSX.writeFile(wb, `${name}${Moment().format('DDMMYY')}.xls`);
+        let name = this.props.organization ? 'usersorganization_template' : 'attendees_template';
+        name = this.props.event ? name + "_" + this.props.event.name : name;
+
+        XLSX.utils.book_append_sheet( wb, ws, "Template" );
+        XLSX.writeFile( wb, `${ name }${ Moment().format( 'DDMMYY' ) }.xls` );
     };
 
-    render() {
+    render () {
         return (
             <React.Fragment>
                 <div className="importacion-txt">
@@ -101,21 +92,21 @@ class Importacion extends Component {
                         </div>
                         <div className="column is-12 is-paddingless">
                             <div className="ejm-tabla columns is-mobile is-gapless">
-                                {this.props.extraFields.map((extra, key) => {
-                                    return <div className="column" key={key}>
-                                        <span className="has-text-grey-light">{extra.name}</span>
+                                { this.props.extraFields.map( ( extra, key ) => {
+                                    return <div className="column" key={ key }>
+                                        <span className="has-text-grey-light">{ extra.name }</span>
                                     </div>
-                                })}
+                                } ) }
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="importacion-btns has-text-centered">
-                    <Dropzone onDrop={this.handleXlsFile} accept=".xls,.xlsx" className="zone">
+                    <Dropzone onDrop={ this.handleXlsFile } accept=".xls,.xlsx" className="zone">
                         <button className="button is-primary">Importar Excel</button>
                     </Dropzone>
-                    <p className="help is-danger">{this.state.errMsg}</p>
-                    <button className="button is-text" onClick={this.downloadExcel}>
+                    <p className="help is-danger">{ this.state.errMsg }</p>
+                    <button className="button is-text" onClick={ this.downloadExcel }>
                         <span className="icon"><i className="fas fa-cloud-download-alt" aria-hidden="true" /></span>
                         <span><ins>Descargar Template</ins></span>
                     </button>

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { RolAttApi } from "../../helpers/request";
 import EventContent from "../events/shared/content";
 import SearchComponent from "../shared/searchTable";

@@ -74,8 +74,6 @@ export function parseData2Excel(data, fields) {
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
   data.map((item, key) => {
-    const propertiesFormat = JSON.parse(item.properties ? item.properties : []);
-    item.properties = propertiesFormat;
     info[key] = {};
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
     info[key]['checked'] = item.checkedin_at !== 'null' ? 'TRUE' : 'FALSE';
@@ -136,7 +134,7 @@ export const sweetAlert = {
       text,
       onBeforeOpen: () => {
         Swal.showLoading();
-      },
+      }
     }),
   hideLoading: () => Swal.close(),
   twoButton: (title, type, showCancelButton, confirmButtonText, cb) =>
@@ -148,7 +146,7 @@ export const sweetAlert = {
   simple: (title, html, confirmLabel, confirmColor, cb) =>
     Swal.fire({ title, html, confirmButtonColor: confirmColor, confirmButtonAriaLabel: confirmLabel }).then((result) =>
       cb(result)
-    ),
+    )
 };
 
 export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-MM-DD') {
@@ -175,13 +173,18 @@ export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-M
 }
 
 export function formatDataToString(data, property) {
+  //console.log('format', data, property);
   const validationType = typeof data;
   let result = '';
   if (validationType === 'object') {
     if (!(data === null)) {
       if (Array.isArray(data)) {
         for (let i = 0; i < data.length; i++) {
-          result += data[i] + '\n';
+          if (data[i].label) {
+            result += data[i].label + '\n';
+          } else {
+            result += data[i] + '\n';
+          }
         }
       } else {
         // start object

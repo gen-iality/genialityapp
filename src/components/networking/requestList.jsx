@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag } from "antd";
+import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from "antd";
 import { ScheduleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,6 +12,7 @@ import { getCurrentUser, getCurrentEventUser } from "./services";
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
   const [invitationsReceived, setInvitationsReceived] = useState([]);
+  const [visibleItem, setVisibleItem] = useState(true);
 
   useEffect(() => {
     setInvitationsReceived(list);
@@ -24,7 +25,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
           <List
             dataSource={invitationsReceived}
             renderItem={(item) => (
-              <List.Item
+              < List.Item
                 key={item._id}
                 actions={[
                   <Button key='btn-aceptar' onClick={() => sendResponseToInvitation(item._id, true)}>Aceptar</Button>,
@@ -118,7 +119,6 @@ export default function RequestList({ eventId }) {
 
       // Servicio que trae las invitaciones / solicitudes recibidas
       Networking.getInvitationsReceived(eventId, eventUser._id).then(({ data }) => {
-        console.log("estas son las invitaciones recibidas :", data);
         setCurrentUserId(user._id);
 
         // Solo se obtendran las invitaciones que no tengan respuesta
@@ -130,8 +130,6 @@ export default function RequestList({ eventId }) {
 
       // Servicio que trae las invitaciones / solicitudes enviadas
       Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
-        console.log("estas son las invitaciones enviadas :", data);
-
         if (data.length > 0) setRequestListSent(data.filter((item) => !item.response || item.response === "rejected"));
       });
     });
@@ -171,17 +169,21 @@ export default function RequestList({ eventId }) {
     let data = { response: state ? "accepted" : "rejected" };
 
     Networking.acceptOrDeclineInvitation(eventId, requestId, data)
-      .then(() => {
-        toast.success("Respuesta enviada");
+      .then((response) => {
+        getInvitationsList();
+
+        console.log('respuesta de la invitacion ', response)
+        message.success("Respuesta enviada");
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Hubo un problema", err);
+        message.error("Hubo un problema", err);
       });
   };
 
   useEffect(() => {
     getInvitationsList();
+
   }, [eventId]);
 
   if (currentUserId)

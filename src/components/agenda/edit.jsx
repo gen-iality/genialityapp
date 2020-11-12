@@ -3,8 +3,7 @@ import axios from "axios";
 import { ApiEviusZoomServer } from "../../helpers/constants";
 import { Redirect, withRouter, Link } from "react-router-dom";
 import Moment from "moment";
-import ReactQuill from "react-quill";
-//import EviusReactQuill from '../shared/eviusReactQuill'
+import EviusReactQuill from '../shared/eviusReactQuill'
 import { DateTimePicker } from "react-widgets";
 import Select from "react-select";
 import Creatable from "react-select";
@@ -24,7 +23,6 @@ import {
   EventsApi,
   eventTicketsApi
 } from "../../helpers/request";
-import { toolbarEditor } from "../../helpers/constants";
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from "../../helpers/utils";
 import Dropzone from "react-dropzone";
 import { Spin, Card } from "antd";
@@ -135,14 +133,14 @@ class AgendaEdit extends Component {
         }
       }
     } catch ( e ) {
-      console.log( e )
+      console.error( e )
     }
 
 
     let documents = await DocumentsApi.byEvent( this.props.event._id );
     let hostAvailable = await EventsApi.hostAvailable();
     let nameDocuments = [];
-    for ( var i = 0; i < documents.length; i += 1 ) {
+    for ( let i = 0; i < documents.length; i += 1 ) {
       nameDocuments.push( { ...documents[ i ], value: documents[ i ].title, label: documents[ i ].title } );
     }
     this.setState( { nameDocuments, hostAvailable } );
@@ -155,6 +153,7 @@ class AgendaEdit extends Component {
     let roles = await RolAttApi.byEvent( this.props.event._id );
     let categories = await CategoriesAgendaApi.byEvent( this.props.event._id );
     let types = await TypesAgendaApi.byEvent( this.props.event._id );
+
     //La información se neceista de tipo [{label,value}] para los select
     spaces = handleSelect( spaces );
     hosts = handleSelect( hosts );
@@ -166,7 +165,6 @@ class AgendaEdit extends Component {
       const info = await AgendaApi.getOne( state.edit, event._id );
       const videoConferenceState = await getConfiguration( event._id, state.edit )
 
-
       this.setState( {
         selected_document: info.selected_document,
         start_url: info.start_url,
@@ -176,6 +174,7 @@ class AgendaEdit extends Component {
         info: info,
         video: info.video
       } );
+
       Object.keys( this.state ).map( ( key ) => ( info[ key ] ? this.setState( { [ key ]: info[ key ] } ) : "" ) );
       const { date, hour_start, hour_end } = handleDate( info );
       this.setState( {
@@ -288,14 +287,17 @@ class AgendaEdit extends Component {
   //FN para el editor enriquecido
   chgTxt = ( content ) => this.setState( { description: content } );
 
-  registrationMessage = ( content ) => {
-    this.setState( { registration_message: content } )
-  }
+  // registrationMessage = (content) => {
+  //   this.setState({ registration_message: content })
+  // }
+
   //Envío de información
+
   submit = async () => {
     if ( this.validForm() ) {
       try {
         const info = this.buildInfo();
+
         sweetAlert.showLoading( "Espera (:", "Guardando..." );
         const {
           event,
@@ -313,7 +315,7 @@ class AgendaEdit extends Component {
           await AgendaApi.editOne( info, state.edit, event._id );
 
           for ( let i = 0; i < selected_document.length; i++ ) {
-            const documentsUpdate = await DocumentsApi.editOne( event._id, data, selected_document[ i ]._id )
+            await DocumentsApi.editOne( event._id, data, selected_document[ i ]._id )
           }
         }
         else {
@@ -327,7 +329,6 @@ class AgendaEdit extends Component {
         sweetAlert.showSuccess( "Información guardada" );
       } catch ( e ) {
         sweetAlert.showError( handleRequestError( e ) );
-        console.log( e );
       }
     }
   };
@@ -407,6 +408,7 @@ class AgendaEdit extends Component {
 
   //FN para construir la información a enviar al api
   buildInfo = () => {
+
     const {
       name,
       subtitle,
@@ -422,8 +424,8 @@ class AgendaEdit extends Component {
       selectedHosts,
       selectedType,
       selectedRol,
-      description,
-      registration_message,
+      // description,
+      // registration_message,
       selected_document,
       image,
       meeting_id,
@@ -432,6 +434,10 @@ class AgendaEdit extends Component {
       vimeo_id,
       platform
     } = this.state;
+
+    const registration_message_storage = window.sessionStorage.getItem( 'registration_message' )
+    const description_storage = window.sessionStorage.getItem( 'description' )
+
     const datetime_start = date + " " + Moment( hour_start ).format( "HH:mm" );
     const datetime_end = date + " " + Moment( hour_end ).format( "HH:mm" );
 
@@ -449,8 +455,8 @@ class AgendaEdit extends Component {
       datetime_end,
       space_id,
       image,
-      description,
-      registration_message,
+      description: description_storage,
+      registration_message: registration_message_storage,
       capacity: parseInt( capacity, 10 ),
       activity_categories_ids,
       access_restriction_type,
@@ -536,7 +542,7 @@ class AgendaEdit extends Component {
       if ( error.response ) {
         response = JSON.stringify( error.response.data );
       }
-      console.log( error );
+      console.error( error );
       this.setState( { creatingConference: false } );
     }
     this.setState( { creatingConference: false } );
@@ -593,7 +599,7 @@ class AgendaEdit extends Component {
     notification.open( {
       message: result.message
     } );
-  };
+  }
 
   selectTickets ( tickets ) {
     this.setState( { selectedTicket: tickets } )
@@ -641,13 +647,11 @@ class AgendaEdit extends Component {
       categories,
       types,
       roles,
-      documents,
       isLoading,
       start_url,
       join_url,
       availableText,
       vimeo_id,
-      selectedTickets,
       platform } = this.state;
     const { matchUrl } = this.props;
     if ( !this.props.location.state || this.state.redirect ) return <Redirect to={ matchUrl } />;
@@ -886,14 +890,14 @@ class AgendaEdit extends Component {
                     <div className="field">
                       <label className="label">Texto de email para confirmación de registro </label>
                       <div className="control">
-                        <ReactQuill value={ this.state.registration_message } modules={ toolbarEditor } onChange={ this.registrationMessage } />
+                        <EviusReactQuill data={ this.state.registration_message } inputName='registration_message' />
                       </div>
                     </div>
 
                     <div className="field">
                       <label className="label">Descripción</label>
                       <div className="control">
-                        <ReactQuill value={ this.state.description } modules={ toolbarEditor } onChange={ this.chgTxt } />
+                        <EviusReactQuill data={ this.state.description } inputName='description' />
                       </div>
                     </div>
                   </div>
@@ -1075,12 +1079,10 @@ class AgendaEdit extends Component {
                                       </p>
                                       <hr />
                                       <p>
-                                        <a target="_blank" href={ start_url }>
-                                          Acceso para hosts
-                              </a>
+                                        <a href={ start_url } rel="noopener noreferrer" target="_blank" >Acceso para hosts</a>
                                       </p>
                                       <p>
-                                        <a target="_blank" href={ join_url }>
+                                        <a href={ join_url } rel="noopener noreferrer" target="_blank" >
                                           Acceso para asistentes
                               </a>
                                       </p>

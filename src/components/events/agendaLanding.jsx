@@ -31,7 +31,6 @@ class Agenda extends Component {
       disabled: false,
       generalTab: true,
       loading: false,
-      survey: [],
       documents: [],
       show_inscription: false,
       status: "in_progress",
@@ -46,6 +45,7 @@ class Agenda extends Component {
   }
 
   async componentDidUpdate(prevProps) {
+
     const { data } = this.state
     //Cargamos solamente los espacios virtuales de la agenda
 
@@ -58,9 +58,7 @@ class Agenda extends Component {
     this.listeningStateMeetingRoom(data);
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     const filtered = this.filterByDay(this.state.days[0], this.state.list);
-
     this.setState({ data, filtered, toShow: filtered });
-
   }
 
   async componentDidMount() {
@@ -86,6 +84,7 @@ class Agenda extends Component {
     if (surveysData.data.length >= 1) {
       this.setState({ survey: surveysData.data })
     }
+
     if (documentsData.data.length >= 1) {
       this.setState({ documents: documentsData.data })
     }
@@ -110,6 +109,7 @@ class Agenda extends Component {
       for (var i = 0; i < date.length; i++) {
         days.push(Moment(date[i]).format("YYYY-MM-DD"));
       }
+
       this.setState({ days, day: days[0] }, this.fetchAgenda);
     }
     this.getAgendaUser()
@@ -151,6 +151,8 @@ class Agenda extends Component {
         }
       } catch (error) {
         const { status } = error.response;
+        console.error(error)
+        console.error('Status Error:', status)
       }
     }
   };
@@ -225,6 +227,7 @@ class Agenda extends Component {
   }
 
   //Funcion que realiza el filtro por espacio, teniendo en cuenta el dia
+  // eslint-disable-next-line no-unused-vars
   filterBySpace = (space, dates) => {
     //Se filta la lista anterior para esta vez filtrar por espacio
     const list = this.state.listDay.filter((a) => a.space.name === space);
@@ -295,11 +298,11 @@ class Agenda extends Component {
     });
   };
 
-  handleOk = (e) => {
+  handleOk = () => {
     this.setState({ visible: false });
   };
 
-  onClose = (e) => {
+  onClose = () => {
     this.setState({
       visible: false,
     });
@@ -393,7 +396,7 @@ class Agenda extends Component {
 
                 {/* Contenedor donde se iteran los tabs de las fechas */}
                 {
-                  event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "false" && (
+                  event.styles && event.styles.hideDatesAgenda && (event.styles.hideDatesAgenda === "false" || event.styles.hideDatesAgenda === false) && (
                     <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
                       {days.map((date, key) => (
                         <Button key={key} onClick={() => this.selectDay(date)} size={"large"} type={`${date === day ? "primary" : ""}`}>
@@ -406,29 +409,32 @@ class Agenda extends Component {
                 }
 
                 {/* Contenedor donde se pinta la información de la agenda */}
-                {(event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ? data : toShow).map((item, llave) => {
-                  const isRegistered = this.checkInscriptionStatus(item._id) && true
+                {(
+                  event.styles &&
+                    event.styles.hideDatesAgenda &&
+                    (event.styles.hideDatesAgenda === "true" || event.styles.hideDatesAgenda === true) ? data : toShow).map((item, llave) => {
+                      const isRegistered = this.checkInscriptionStatus(item._id) && true
 
-                  return (
-                    <div key={llave} className="container_agenda-information" >
-                      <AgendaActivityItem
-                        item={item}
-                        key={llave}
-                        Documents={documents}
-                        Surveys={survey}
-                        toggleConference={toggleConference}
-                        event_image={this.props.event.styles.event_image}
-                        gotoActivity={this.gotoActivity}
-                        registerInActivity={this.registerInActivity}
-                        registerStatus={isRegistered}
-                        eventId={this.props.eventId}
-                        userId={this.state.userId}
-                        btnDetailAgenda={hideBtnDetailAgenda}
-                        show_inscription={show_inscription}
-                      />
-                    </div>
-                  )
-                })}
+                      return (
+                        <div key={llave} className="container_agenda-information" >
+                          <AgendaActivityItem
+                            item={item}
+                            key={llave}
+                            Documents={documents}
+                            Surveys={survey}
+                            toggleConference={toggleConference}
+                            event_image={this.props.event.styles.event_image}
+                            gotoActivity={this.gotoActivity}
+                            registerInActivity={this.registerInActivity}
+                            registerStatus={isRegistered}
+                            eventId={this.props.eventId}
+                            userId={this.state.userId}
+                            btnDetailAgenda={hideBtnDetailAgenda}
+                            show_inscription={show_inscription}
+                          />
+                        </div>
+                      )
+                    })}
               </div>
             </div>
           </div>
