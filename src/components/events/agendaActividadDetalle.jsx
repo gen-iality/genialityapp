@@ -18,6 +18,10 @@ let AgendaActividadDetalle = (props) => {
   let [showSurvey, setShowSurvey] = useState(false);
   let [orderedHost, setOrderedHost] = useState([])
 
+  useEffect((params) => {
+    console.log('actividad detalle', props)
+  }, [])
+
   useEffect(() => {
     (async () => {
       //Id del evento
@@ -285,6 +289,7 @@ let AgendaActividadDetalle = (props) => {
 
             {currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
               <div>
+                {console.log('selected document', currentActivity.selected_document)}
                 <div style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
                   <b>Documentos:</b> &nbsp;
                   <div>

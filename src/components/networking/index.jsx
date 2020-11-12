@@ -47,6 +47,7 @@ class ListEventUser extends Component {
   }
 
   async componentDidMount() {
+    console.log('***********************************************', this.props)
     await this.getInfoCurrentUser();
     this.loadData();
   }
@@ -78,7 +79,7 @@ class ListEventUser extends Component {
     }
     //Finaliza destacados
 
-    //INICIO CONTACTOS SUGERIDOS
+    /*** INICIO CONTACTOS SUGERIDOS ***/
 
     // Arreglo para almacenar los matches resultantes segun los campos que se indiquen para este fin 
     let matches = [];
@@ -87,36 +88,41 @@ class ListEventUser extends Component {
     if (this.state.eventUser) {
       let meproperties = this.state.eventUser.properties;
 
-
-      //
-      //const prospectos = eventUserList.filter( asistente => ( asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces ) )
-      const prospectos = eventUserList.filter(asistente => (asistente.properties.participacomo))
-
-
-      prospectos.map((prospecto) => {
-        if (prospecto.properties.participacomo == "Financiador") {
-          matches.push(prospecto)
+      //Finanzas del clima
+      if (event._id === '5f9708a2e4c9eb75713f8cc6') {
+        let prospectos = eventUserList.filter(asistente => (asistente.properties.participacomo))
+        prospectos.map((prospecto) => {
+          if (prospecto.properties.participacomo == "Financiador") {
+            matches.push(prospecto)
+          }
+        })
+      }
+      // Rueda de negocio naranja videojuegos
+      else if (event._id === '5f92d0cee5e2552f1b7c8ea2') {
+        if (meproperties.tipodeparticipante === 'Oferente') {
+          matches = eventUserList.filter(asistente => (asistente.properties.tipodeparticipante === 'Comprador'))
         }
-      })
+        else if (meproperties.tipodeparticipante === 'Comprador') {
+          matches = eventUserList.filter(asistente => (asistente.properties.tipodeparticipante === 'Oferente'))
+        }
+      }
+      // Rueda de negocio naranja
+      else if (event._id === '5f7f21217828e17d80642856') {
+        let prospectos = eventUserList.filter(asistente => (asistente.properties.participacomo))
+        prospectos.map((prospecto) => {
+          if (prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && Array.isArray(prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones) && prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.length > 0) {
+
+            prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.map((interes) => {
+              const matchOk = interes.label.match(new RegExp(meproperties.queproductooservicioofreces, 'gi'))
+              if (matchOk !== null) {
+                matches.push(prospecto)
+
+              }
+            })
+          }
+        })
+      }
     }
-
-
-
-
-    //   if (prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones) {
-    //     prospecto.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.map((interes) => {
-    //       console.log('interes', interes)
-    //     })
-    //   }
-
-
-
-
-    // matches = eventUserList.filter(asistente => (asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones && asistente.properties && meproperties && meproperties.queproductooservicioofreces && (meproperties.queproductooservicioofreces.match(new RegExp(asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones, 'gi')) || asistente.properties.queproductooserviciodeseacomprarpuedeseleccionarvariasopciones.match(new RegExp(meproperties.queproductooservicioofreces, 'gi')))))
-
-
-    // matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
-
 
     let asistantData = await EventFieldsApi.getAll(event._id)
 
