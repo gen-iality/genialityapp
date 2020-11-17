@@ -172,7 +172,7 @@ class CertificadoLanding extends Component {
         return (
             <>
                 {
-                    currentUser._id && ( checkedInUsers ) && checkedInUsers.length > 0 && (
+                    currentUser && currentUser._id && ( checkedInUsers ) && checkedInUsers.length > 0 && (
 
                         <Col xs={ 22 } sm={ 22 } md={ 8 } lg={ 8 } xl={ 8 } style={ { margin: "0 auto" } }           >
                             <Card>
