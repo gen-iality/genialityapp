@@ -200,19 +200,19 @@ class CertificadoLanding extends Component {
                     )
                 }
 
-                {!currentUser._id && (
+                {!currentUser || !currentUser._id && (
                     <p>Debes ingresar con tu usuario para descargar el certificado</p>
                 )
                 }
 
                 {
-                    currentUser._id && ( checkedInUsers ) && checkedInUsers.length <= 0 && (
+                    currentUser && currentUser._id && ( checkedInUsers ) && checkedInUsers.length <= 0 && (
                         <p>Debes estar registrado en el evento para poder descargar tu certificado </p>
                     )
                 }
 
                 {
-                    currentUser._id && ( checkedInUsers ) && checkedInUsers.length <= 0 && (
+                    currentUser && currentUser._id && ( checkedInUsers ) && checkedInUsers.length <= 0 && (
                         <p>Debes Haber asistido para descargar el certificado </p>
                     )
                 }
