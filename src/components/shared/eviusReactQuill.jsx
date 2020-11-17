@@ -16,70 +16,8 @@ Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
 
 function EviusReactQuill(props) {
   let reactQuilllRef = useRef(null);
+  const [modules, setModules] = useState({});
 
-  // const [data, setData] = useState(() => {
-  //   const defaultDataValue = props.data && props.data !== '' ? props.data : '';
-  //   window.sessionStorage.setItem(props.inputName, defaultDataValue);
-  //   return defaultDataValue;
-  // });
-
-  let quillModules = {
-    ...toolbarEditor,
-    imageDropAndPaste: {
-      // add an custom image handler
-      //
-      handler: (imageDataUrl, type, imageData) => {
-        imageHandler(imageDataUrl, type, imageData, reactQuilllRef);
-      },
-      //handler: imageHandler,
-    },
-  };
-
-  useEffect(
-    (params) => {
-      console.log('evius ---------', props.data);
-    },
-    [props.data]
-  );
-
-  // const handleChange = (e) => {
-  //   console.log(e);
-  //   setData(e);
-  //   // const inputData = reactQuilllRef.current ? reactQuilllRef.current.state.value : ''
-  //   // window.sessionStorage.setItem(props.inputName, inputData)
-  //};
-
-  let imageHandler = async (imageDataUrl, type, imageData, reactQuilllRef) => {
-    if (reactQuilllRef.current.getEditor) {
-      let editor = reactQuilllRef.current.getEditor();
-      //no se cómo definir el nombre de la imagen
-      var filename = 'default.png';
-      var blob = imageData.toBlob();
-      var file = imageData.toFile(filename);
-
-      // generate a form data
-      var formData = new FormData();
-
-      // append blob data
-      formData.append('filename', filename);
-      formData.append('file', blob);
-
-      // or just append the file
-      formData.append('file', file);
-
-      const url = '/api/files/upload';
-      // upload image to your server
-
-      let image = await Actions.post(url, formData);
-
-      let index = (editor.getSelection() || {}).index;
-      editor.insertEmbed(index, 'image', image, 'user');
-    }
-  };
-
-  /* si restringimos el setupToolBarImageUploadInput para que solo se ejecute una vez cuando reactQuilllRef este disponible
-  extranamente deja de funcionar no se porque lo dejamos que se ejecute en cada render y funciona la maravilla
-  */
   useEffect(() => {
     let setupToolBarImageUploadInput = (reactQuilllRef) => {
       var ImageData = QuillImageDropAndPaste.ImageData;
@@ -114,18 +52,49 @@ function EviusReactQuill(props) {
         }
       });
     };
+
     setupToolBarImageUploadInput(reactQuilllRef);
+
+    let imageHandler = async (imageDataUrl, type, imageData, reactQuilllRef) => {
+      if (reactQuilllRef.current.getEditor) {
+        let editor = reactQuilllRef.current.getEditor();
+        //no se cómo definir el nombre de la imagen
+        var filename = 'default.png';
+        var blob = imageData.toBlob();
+        var file = imageData.toFile(filename);
+
+        // generate a form data
+        var formData = new FormData();
+
+        // append blob data
+        formData.append('filename', filename);
+        formData.append('file', blob);
+
+        // or just append the file
+        formData.append('file', file);
+
+        const url = '/api/files/upload';
+        // upload image to your server
+
+        let image = await Actions.post(url, formData);
+
+        let index = (editor.getSelection() || {}).index;
+        editor.insertEmbed(index, 'image', image, 'user');
+      }
+    };
+
+    setModules({
+      ...toolbarEditor,
+      imageDropAndPaste: {
+        // add an custom image handler
+        handler: (imageDataUrl, type, imageData) => {
+          imageHandler(imageDataUrl, type, imageData, reactQuilllRef);
+        },
+      },
+    });
   }, []);
 
-  return (
-    <ReactQuill
-      ref={reactQuilllRef}
-      modules={quillModules}
-      //defaultValue={data}
-      onChange={props.handleChange}
-      value={props.data}
-    />
-  );
+  return <ReactQuill ref={reactQuilllRef} modules={modules} onChange={props.handleChange} value={props.data} />;
 }
 
 export default EviusReactQuill;

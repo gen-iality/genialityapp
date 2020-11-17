@@ -619,6 +619,8 @@ class AgendaEdit extends Component {
   handleChangeReactQuill = (e, label) => {
     if (label === 'description') {
       this.setState({ description: e });
+    } else if (label === 'registration_message') {
+      this.setState({ registration_message: e });
     }
   };
 
@@ -891,13 +893,17 @@ class AgendaEdit extends Component {
                     <label className='label'>Texto de email para confirmación de registro </label>
                     <div className='control'>
                       {/* <EviusReactQuill data={ this.state.registration_message } inputName='registration_message' /> */}
+                      <EviusReactQuill
+                        name='registration_message'
+                        data={this.state.registration_message}
+                        handleChange={(e) => this.handleChangeReactQuill(e, 'registration_message')}
+                      />
                     </div>
                   </div>
 
                   <div className='field'>
                     <label className='label'>Descripción</label>
                     <div className='control'>
-                      {/* <EviusReactQuill data={ this.state.description } inputName='description' /> */}
                       <EviusReactQuill
                         name='description'
                         data={this.state.description}
