@@ -31,7 +31,7 @@ class UserLogin extends Component {
 
 
     let enabledOneTimeLoginLink = true;
-    let enabledWithEmailPass = true;
+    let enabledWithEmailPass = false;
 
     return (
       <>
