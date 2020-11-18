@@ -22,13 +22,15 @@ export default class UserOneTimeLoginLinkForm extends Component {
                 <h3>{successMsg}</h3>
               </Col>
             </Row>
-            <Row style={{ marginTop: '30px', marginBottom: '30px' }}>
-              <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-                <Button onClick={handleCloseRecoveryPass} type='primary' style={{ marginRight: '15px' }}>
-                  Volver
-                </Button>
-              </Col>
-            </Row>
+            {handleCloseRecoveryPass && (
+              <Row style={{ marginTop: '30px', marginBottom: '30px' }}>
+                <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  <Button onClick={handleCloseRecoveryPass} type='primary' style={{ marginRight: '15px' }}>
+                    Volver
+                  </Button>
+                </Col>
+              </Row>
+            )}
           </>
         ) : (
           <Form onFinish={handleRecoveryPass}>
@@ -60,9 +62,11 @@ export default class UserOneTimeLoginLinkForm extends Component {
                   <Spin />
                 ) : (
                   <>
-                    <Button onClick={handleCloseRecoveryPass} type='default' style={{ marginRight: '15px' }}>
-                      Cancelar
-                    </Button>
+                    {handleCloseRecoveryPass && (
+                      <Button onClick={handleCloseRecoveryPass} type='default' style={{ marginRight: '15px' }}>
+                        Cancelar
+                      </Button>
+                    )}
                     <Button type='primary' htmlType='submit'>
                       {actionMsg}
                     </Button>
