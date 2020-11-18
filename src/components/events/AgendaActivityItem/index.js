@@ -45,7 +45,9 @@ export default function AgendaActivityItem({
   return (
     <div
       className='container_agenda-information'
-      onClick={userRegistered === null ? handleOpenModal : () => gotoActivity(item)}>
+      onClick={
+        userRegistered === null && eventId === '5f99a20378f48e50a571e3b6' ? handleOpenModal : () => gotoActivity(item)
+      }>
       <div className='card agenda_information'>
         <Row align='middle'>
           <Row>
@@ -76,9 +78,11 @@ export default function AgendaActivityItem({
               {item.meeting_id || item.vimeo_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
             </span> */}
             <div
-              onClick={() => {
-                gotoActivity(item);
-              }}
+              onClick={
+                userRegistered === null && eventId === '5f99a20378f48e50a571e3b6'
+                  ? handleOpenModal
+                  : () => gotoActivity(item)
+              }
               className='text-align-card'
               style={{ marginBottom: '5%' }}>
               {item.activity_categories.length > 0 && (
@@ -137,9 +141,11 @@ export default function AgendaActivityItem({
                 {btnDetailAgenda === 'true' && (
                   <Button
                     type='primary'
-                    onClick={() => {
-                      gotoActivity(item);
-                    }}
+                    onClick={
+                      userRegistered === null && eventId === '5f99a20378f48e50a571e3b6'
+                        ? handleOpenModal
+                        : () => gotoActivity(item)
+                    }
                     className='space-align-block button-Agenda'>
                     Detalle de actividad
                   </Button>
@@ -161,9 +167,11 @@ export default function AgendaActivityItem({
                   Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
                     <Button
                       type='primary'
-                      onClick={() => {
-                        gotoActivity(item);
-                      }}
+                      onClick={
+                        userRegistered === null && eventId === '5f99a20378f48e50a571e3b6'
+                          ? handleOpenModal
+                          : () => gotoActivity(item)
+                      }
                       className='space-align-block button-Agenda'>
                       Encuestas
                     </Button>
