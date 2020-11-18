@@ -26,7 +26,7 @@ class Agenda extends Component {
       currentActivity: null,
       survey: [],
       visible: false,
-      visibleModal: true,
+      visibleModal: false,
       redirect: false,
       disabled: false,
       generalTab: true,
@@ -341,9 +341,11 @@ class Agenda extends Component {
     this.setState({ visibleModal: false });
   };
 
-  handleClickActivity = () => {
+  handleOpenModal = () => {
     this.setState({ visibleModal: true });
   };
+
+  //End modal methods
 
   render() {
     const { toggleConference, eventId, event } = this.props;
@@ -369,10 +371,10 @@ class Agenda extends Component {
           onCancel={this.handleCancelModal}
           onClose={this.handleCancelModal}
           footer={[
-            <Button key='back' onClick={this.handleCancelModal}>
+            <Button key='cancel' onClick={this.handleCancelModal}>
               Cancelar
             </Button>,
-            <Button key='back' onClick={this.handleLogin}>
+            <Button key='login' onClick={this.props.handleOpenLogin}>
               Iniciar sesión
             </Button>,
             <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
@@ -477,6 +479,8 @@ class Agenda extends Component {
                         userId={this.state.userId}
                         btnDetailAgenda={hideBtnDetailAgenda}
                         show_inscription={show_inscription}
+                        userRegistered={this.props.userRegistered}
+                        handleOpenModal={this.handleOpenModal}
                       />
                     </div>
                   );

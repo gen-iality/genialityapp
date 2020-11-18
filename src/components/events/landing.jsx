@@ -157,6 +157,12 @@ class Landing extends Component {
     this.setState({ section: 'tickets' });
   };
 
+  handleOpenLogin = () => {
+    this.setState({ section: 'login' });
+  };
+
+  // End methods for modal private activities
+
   async componentDidMount() {
     let user = null;
     let eventUser = null;
@@ -212,6 +218,8 @@ class Landing extends Component {
           eventId={event._id}
           toggleConference={this.toggleConference}
           handleOpenRegisterForm={this.handleOpenRegisterForm}
+          handleOpenLogin={this.handleOpenLogin}
+          userRegistered={this.state.eventUser}
         />
       ),
       tickets: (
