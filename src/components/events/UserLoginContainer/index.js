@@ -28,7 +28,7 @@ class UserLoginContainer extends Component {
       errorValidation: false,
       errorRecovery: false,
       successRecovery: false,
-      eventId: this.props.eventId,
+      eventId: this.props.eventId
     };
   }
 
@@ -83,7 +83,7 @@ class UserLoginContainer extends Component {
     setTimeout(() => {
       this.setState({
         enabledFormRecoveryPass: true,
-        loading: false,
+        loading: false
       });
     }, 500);
   };
@@ -93,14 +93,15 @@ class UserLoginContainer extends Component {
     setTimeout(() => {
       this.setState({
         enabledFormLoginWithEmailPass: true,
-        loading: false,
+        loading: false
       });
     }, 500);
   };
 
   handleRecoveryPass = async ({ email }) => {
     this.setState({ loading: true, errorRecovery: false, successRecovery: false });
-    const urlRequest = `https://api.evius.co/api/events/${this.state.eventId}/changeUserPassword`;
+    const urlRequest =
+      `https://api.evius.co/api/events/${this.state.eventId}/changeUserPassword?destination=` + window.location.origin;
     await Actions.put(urlRequest, { email })
       .then(() => {
         this.setState({ loading: false, successRecovery: true });
@@ -119,7 +120,7 @@ class UserLoginContainer extends Component {
       enabledFormLoginWithEmailPass,
       enabledFormRecoveryPass,
       errorRecovery,
-      successRecovery,
+      successRecovery
     } = this.state;
 
     return (
