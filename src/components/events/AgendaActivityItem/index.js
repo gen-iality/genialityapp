@@ -18,6 +18,8 @@ export default function AgendaActivityItem({
   eventId,
   userId,
   show_inscription,
+  userRegistered,
+  handleOpenModal,
 }) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
@@ -41,7 +43,9 @@ export default function AgendaActivityItem({
   }, [registerStatus, item]);
 
   return (
-    <div className='container_agenda-information'>
+    <div
+      className='container_agenda-information'
+      onClick={userRegistered === null ? handleOpenModal : () => gotoActivity(item)}>
       <div className='card agenda_information'>
         <Row align='middle'>
           <Row>
