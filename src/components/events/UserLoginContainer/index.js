@@ -101,7 +101,9 @@ class UserLoginContainer extends Component {
   handleRecoveryPass = async ({ email }) => {
     this.setState({ loading: true, errorRecovery: false, successRecovery: false });
     const urlRequest =
-      `https://api.evius.co/api/events/${this.state.eventId}/changeUserPassword?destination=` + window.location.origin;
+      `https://api.evius.co/api/events/${this.state.eventId}/changeUserPassword?destination=` +
+      window.location.origin +
+      '&onlylink=true';
     await Actions.put(urlRequest, { email })
       .then(() => {
         this.setState({ loading: false, successRecovery: true });
