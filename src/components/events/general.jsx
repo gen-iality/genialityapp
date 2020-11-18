@@ -67,7 +67,6 @@ class General extends Component {
       const categories = await CategoriesApi.getAll();
       const types = await TypesApi.getAll();
       let organizers = await OrganizationApi.mine();
-      console.log(organizers);
       organizers = organizers.map((item) => {
         return { value: item.id, label: item.name };
       });
@@ -174,15 +173,14 @@ class General extends Component {
         let data = new FormData();
         data.append('file', file);
         return Actions.post(url, data).then((image) => {
-          console.log(image);
           if (image) path.push(image);
         });
       });
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
+
+      // eslint-disable-next-line no-unused-vars
       axios.all(uploaders).then((data) => {
-        console.log(path);
-        console.log('SUCCESSFULL DONE');
         self.setState({
           event: {
             ...self.state.event,
@@ -201,7 +199,6 @@ class General extends Component {
   };
 
   banner_image = (files) => {
-    console.log(files);
     const file = files;
     const url = '/api/files/upload',
       banner_image = [],
@@ -217,15 +214,14 @@ class General extends Component {
         let data = new FormData();
         data.append('file', file);
         return Actions.post(url, data).then((image) => {
-          console.log(image);
           if (image) banner_image.push(image);
         });
       });
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
+
+      // eslint-disable-next-line no-unused-vars
       axios.all(uploaders).then((data) => {
-        console.log(this.banner_image);
-        console.log('SUCCESSFULL DONE');
         self.setState({
           event: {
             ...self.state.event,
@@ -278,7 +274,8 @@ class General extends Component {
       visibility: event.visibility ? event.visibility : 'PUBLIC',
       description: event.description,
       category_ids: categories,
-      organizer_id: this.state.selectedOrganizer.value,
+      organizer_id:
+        this.state.selectedOrganizer && this.state.selectedOrganizer.value ? this.state.selectedOrganizer.value : null,
       event_type_id: this.state.selectedType.value,
       app_configuration: this.state.info.app_configuration,
       banner_image: this.state.banner_image,
@@ -334,8 +331,7 @@ class General extends Component {
   async deleteEvent() {
     this.setState({ isLoading: 'Cargando....' });
     try {
-      const result = await EventsApi.deleteOne(this.state.event._id);
-      console.log(result);
+      await EventsApi.deleteOne(this.state.event._id);
       this.setState({
         message: { ...this.state.message, class: 'msg_success', content: 'Evento borrado' },
         isLoading: false,
@@ -346,16 +342,16 @@ class General extends Component {
       }, 500);
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
+        console.error(error.response);
         this.setState({
           message: { ...this.state.message, class: 'msg_error', content: JSON.stringify(error.response) },
           isLoading: false,
         });
       } else if (error.request) {
-        console.log(error.request);
+        console.error(error.request);
         this.setState({ serverError: true, errorData: { message: error.request, status: 708 } });
       } else {
-        console.log('Error', error.message);
+        console.error('Error', error.message);
         this.setState({ serverError: true, errorData: { message: error.message, status: 708 } });
       }
     }
@@ -377,9 +373,7 @@ class General extends Component {
         dates: {},
       };
 
-      console.log(properties);
-      const info = await EventsApi.editOne(properties, this.props.eventId);
-      console.log(info);
+      await EventsApi.editOne(properties, this.props.eventId);
     }
   }
 

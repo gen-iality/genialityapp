@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste';
-import { toolbarEditor } from '../../helpers/constants';
 import { Actions } from '../../helpers/request';
 
 const { Quill } = ReactQuill;
