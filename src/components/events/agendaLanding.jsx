@@ -26,7 +26,7 @@ class Agenda extends Component {
       currentActivity: null,
       survey: [],
       visible: false,
-      visibleModal: false,
+      visibleModal: true,
       redirect: false,
       disabled: false,
       generalTab: true,
@@ -365,7 +365,7 @@ class Agenda extends Component {
         <Modal
           visible={this.state.visibleModal}
           title='Información'
-          onOk={this.handleOk}
+          // onOk={this.handleOk}
           onCancel={this.handleCancelModal}
           onClose={this.handleCancelModal}
           footer={[
@@ -375,7 +375,7 @@ class Agenda extends Component {
             <Button key='back' onClick={this.handleLogin}>
               Iniciar sesión
             </Button>,
-            <Button key='submit' type='primary' loading={loading} onClick={this.handleOk}>
+            <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
               Registrarme
             </Button>,
           ]}>
