@@ -25,7 +25,7 @@ class UserLogin extends Component {
       handleCloseRecoveryPass,
       handleRecoveryPass,
       errorRecovery,
-      successRecovery,
+      successRecovery
     } = this.props;
 
     let enabledOneTimeLoginLink = true;
@@ -62,7 +62,6 @@ class UserLogin extends Component {
 
         {enabledOneTimeLoginLink && (
           <UserOneTimeLoginLink
-            handleCloseRecoveryPass={handleCloseRecoveryPass}
             handleRecoveryPass={handleRecoveryPass}
             loading={loading}
             errorRecovery={errorRecovery}
