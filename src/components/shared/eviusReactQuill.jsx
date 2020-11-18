@@ -19,6 +19,10 @@ function EviusReactQuill(props) {
   const [modules, setModules] = useState({});
 
   useEffect(() => {
+    console.log('general', props.data);
+  }, [props.data]);
+
+  useEffect(() => {
     let setupToolBarImageUploadInput = (reactQuilllRef) => {
       var ImageData = QuillImageDropAndPaste.ImageData;
       let editor = reactQuilllRef.current.getEditor();
@@ -85,12 +89,18 @@ function EviusReactQuill(props) {
 
     setModules({
       ...toolbarEditor,
-      imageDropAndPaste: {
-        // add an custom image handler
-        handler: (imageDataUrl, type, imageData) => {
-          imageHandler(imageDataUrl, type, imageData, reactQuilllRef);
-        },
-      },
+      // toolbar: {
+      //   // handlers: {
+      //   //   image: imageHandler,
+      //   // },
+      // },
+      imageDropAndPaste: imageHandler,
+      // imageDropAndPaste: {
+      //   // add an custom image handler
+      //   handler: (imageDataUrl, type, imageData) => {
+      //     imageHandler(imageDataUrl, type, imageData, reactQuilllRef);
+      //   },
+      // },
     });
   }, []);
 
