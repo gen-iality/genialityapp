@@ -79,7 +79,7 @@ let AgendaActividadDetalle = (props) => {
   return (
     <div className="columns container-calendar-section is-centered">
       <div className=" container_agenda-information container-calendar is-three-fifths">
-        <div className="card agenda_information ">
+        <Card className={event._id === "5f99a20378f48e50a571e3b6" ? 'magicland-agenda_information':'agenda_information'}>
           <PageHeader
             className="site-page-header"
             onBack={() => {
@@ -123,12 +123,9 @@ let AgendaActividadDetalle = (props) => {
                 {/*logo quemado de aval para el evento de magicland */}
                 {
                 event._id === "5f99a20378f48e50a571e3b6" && (
-                  <Row justify="center">
-                    <Col xs={12} sm={12} lg={8}>
+                  <Row justify="center" style={{marginBottom:"12px"}}>
+                    <Col span={24}>
                       <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fbanner.jpg?alt=media&token=4aab5da2-bbba-4a44-9bdd-d2161ea58b0f" alt="aval"/>
-                    </Col>
-                    <Col xs={12} sm={12} lg={8}>
-                      <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fgrupo-aval.gif?alt=media&token=5fd99d79-3d24-483c-b280-a495b0315b84" alt="aval"/>
                     </Col>
                   </Row>
                 )
@@ -379,7 +376,7 @@ let AgendaActividadDetalle = (props) => {
               </a>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </div >
   );

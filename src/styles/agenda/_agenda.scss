@@ -74,6 +74,29 @@
         white-space: normal;
       }
     }
+    .magicland-agenda_information{
+      background: rgb(20, 20, 20);
+      color: white;
+      p{
+        color: white;
+      }
+      .card-header-title {
+        justify-content: center;
+        font-size: initial;
+        color: white;
+      }
+      .ant-page-header-heading-title {
+        color: white;
+      }
+      .ant-tag-geekblue {
+        color: #f5f5f5;
+        background: #b5b5b5;
+        border-color: #adc6ff;
+      }
+      section.landing *:not(span) {
+        color: #fafafa;
+      }
+    }
     .agenda_information {
       padding: 20px;
       border: none;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Row, Col, Tag, Avatar, Alert } from 'antd';
+import { Button, Row, Col, Tag, Avatar, Alert, Card } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment';
 import './style.scss';
@@ -42,7 +42,7 @@ export default function AgendaActivityItem({
 
   return (
     <div className='container_agenda-information'>
-      <div className='card agenda_information'>
+      <Card className={eventId === "5f99a20378f48e50a571e3b6" ? 'magicland-agenda_information':'agenda_information'}>
         <Row align='middle'>
           <Row>
             {eventId != '5f80b6c93b4b966dfe7cd012' &&
@@ -268,18 +268,18 @@ export default function AgendaActivityItem({
           {/* quemado de baner para magicland */}
           {
             eventId === "5f99a20378f48e50a571e3b6" && (
-              <Row>
-                <Col span={8}>
+              <>
+              <br/> 
+              <Row style={{marginTop:"12px"}}> 
+                <Col span={24}>
                   <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fbanner.jpg?alt=media&token=4aab5da2-bbba-4a44-9bdd-d2161ea58b0f" alt="aval"/>
                 </Col>
-                <Col span={8}>
-                  <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fgrupo-aval.gif?alt=media&token=5fd99d79-3d24-483c-b280-a495b0315b84" alt="aval"/>
-                </Col>
               </Row>
+              </>
             )
           }
         </Row>
-      </div>
+      </Card>
     </div>
   );
 }
