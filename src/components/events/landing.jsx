@@ -10,8 +10,7 @@ import { Layout, Drawer, Button, Col, Row } from 'antd';
 import { MenuOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
 
 //custom
-import API, { Actions, EventsApi, TicketsApi, fireStoreApi, Activity } from '../../helpers/request';
-import * as Cookie from 'js-cookie';
+import { Actions, EventsApi, TicketsApi, fireStoreApi, Activity, getCurrentUser } from '../../helpers/request';
 import Loading from '../loaders/loading';
 import { BaseUrl } from '../../helpers/constants';
 import Dialog from '../modal/twoAction';
@@ -151,34 +150,14 @@ class Landing extends Component {
     /* Fin Carga */
   }
 
-  // Start methods for modal private activities
-
-  handleOpenRegisterForm = () => {
-    this.setState({ section: 'tickets' });
-  };
-
-  handleOpenLogin = () => {
-    this.setState({ section: 'login' });
-  };
-
-  // End methods for modal private activities
-
   async componentDidMount() {
-    let user = null;
     let eventUser = null;
     let eventUsers = null;
 
     const id = this.props.match.params.event;
 
-    try {
-      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
-      if (resp.status !== 200 && resp.status !== 202) return;
-      user = resp.data;
-      this.setState({ user: resp.data });
-    } catch (err) {
-      console.error('Error Landing', err.status);
-      //window.location.replace('/')
-    }
+    const user = await getCurrentUser();
+    this.setState({ user, currentUser: user });
 
     /* Trae la información del evento con la instancia pública*/
     const event = await EventsApi.landingEvent(id);
@@ -220,6 +199,7 @@ class Landing extends Component {
           handleOpenRegisterForm={this.handleOpenRegisterForm}
           handleOpenLogin={this.handleOpenLogin}
           userRegistered={this.state.eventUser}
+          currentUser={user}
         />
       ),
       tickets: (
@@ -238,7 +218,7 @@ class Landing extends Component {
           </div>
         </>
       ),
-      survey: <SurveyForm event={event} />,
+      survey: <SurveyForm event={event} currentUser={this.state.currenUser} />,
       certs: (
         <CertificadoLanding
           event={event}
@@ -251,7 +231,14 @@ class Landing extends Component {
       wall: <WallForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id} />,
-      networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      networking: (
+        <NetworkingForm
+          event={event}
+          eventId={event._id}
+          toggleConference={this.toggleConference}
+          currentUser={this.state.currentUser}
+        />
+      ),
       my_section: <MySection event={event} eventId={event._id} />,
       companies: (
         <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />

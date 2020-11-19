@@ -6,6 +6,7 @@ const filterList = (list, currentUser) => list.find((item) => item.account_id ==
 
 // Funcion para consultar la informacion del actual usuario -------------------------------------------
 export const getCurrentUser = (token) => {
+  // eslint-disable-next-line no-unused-vars
   return new Promise(async (resolve, reject) => {
     if (!token) {
       resolve('guestUser');
@@ -25,6 +26,7 @@ export const getCurrentUser = (token) => {
 
 // Funcion que obtiene el eventUserId del usuario actual
 export const getCurrentEventUser = (eventId, userId) => {
+  // eslint-disable-next-line no-unused-vars
   return new Promise(async (resolve, reject) => {
     const users = await UsersApi.getAll(eventId, '?pageSize=10000');
 
@@ -38,21 +40,17 @@ export const getCurrentEventUser = (eventId, userId) => {
 // User services
 export const userRequest = {
   //   Obtiene la lista de los asistentes al evento -------------------------------------------
-  getEventUserList: async (eventId, token) => {
-    return new Promise((resolve) => {
-      // Se obtiene el id del token recibido
-      getCurrentUser(token).then(async (currentUser) => {
-        let docs = [];
-        const users = await UsersApi.getAll(eventId, '?pageSize=10000');
-
-        if (!users) {
-          resolve(docs);
-        }
-
+  getEventUserList: async (eventId, token, currentUser) => {
+    let docs = [];
+    try {
+      const users = await UsersApi.getAll(eventId, '?pageSize=10000');
+      if (users) {
         docs = users.data.filter((user) => user.account_id !== currentUser._id);
-        resolve(docs);
-      });
-    });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    return docs;
   },
 };
 
