@@ -141,6 +141,7 @@ let AgendaActividadDetalle = (props) => {
                     disabled={currentActivity.meeting_id ? false : true}
                     onClick={() => toggleConference(true, currentActivity.meeting_id, currentActivity)}>
                     {currentActivity.meeting_id ? 'Ir Conferencia en Vivo' : 'Aún no empieza Conferencia Virtual'}
+                    
                   </Button>
                 )}
               </p>
