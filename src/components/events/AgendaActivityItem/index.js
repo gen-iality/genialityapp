@@ -163,25 +163,7 @@ export default function AgendaActivityItem({
                 </>
               )}
             </div>
-            {/* Tags del evento*/}
-            <Row justify="start">
-              <div
-                onClick={() => {
-                  gotoActivity(item);
-                }}
-                className='text-align-card'
-                style={{ marginBottom: '5%' }}>
-                <TagOutlined />  {item.activity_categories.length > 0 && (
-                  <>
-                    {item.activity_categories.map((item) => (
-                      <>
-                        <Tag>{item.name}</Tag>
-                      </>
-                    ))}
-                  </>
-                )}
-              </div>
-            </Row>           
+            {/* Tags del evento*/}          
           </Col>
           {/*Informacion acerca del evento */}
           <Col xs={24} sm={24} md={12} xl={16} xxl={16}>
@@ -213,6 +195,29 @@ export default function AgendaActivityItem({
                 </>
               )}
             </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8}>
+            <Row justify="start">
+              <div
+              onClick={() => { gotoActivity(item);}}
+              className='text-align-card'
+              style={{ marginBottom: '5%' }}>
+                <TagOutlined />  
+                  {item.activity_categories.length > 0 && (
+                    <>
+                      {item.activity_categories.map((item) => (
+                        <>
+                        <Tag>{item.name}</Tag>
+                        </>
+                      ))}
+                    </>
+                  )}
+                </div>  
+            </Row>
+          </Col>
+          <Col span={16}>
             <Row justify="end" align="bottom">
               <Col xs={24} sm={24} md={12} xl={12} xxl={12}>
                 {show_inscription === 'true' && (
@@ -224,15 +229,12 @@ export default function AgendaActivityItem({
                     {isRegistered ? 'Inscrito' : 'Inscribirme'}
                   </Button>
                 )}
-
                 {btnDetailAgenda === 'true' && (
                   <Button
                     type='primary'
-                    onClick={() => {
-                      gotoActivity(item);
-                    }}
+                    onClick={() => {gotoActivity(item);}}
                     className='space-align-block button-Agenda'>
-                    Detalle de actividad
+                      Detalle de actividad
                   </Button>
                 )}
                 {Documents &&
@@ -240,29 +242,25 @@ export default function AgendaActivityItem({
                   Documents.filter((element) => element.activity_id === item._id).length > 0 && (
                     <Button
                       type='primary'
-                      onClick={() => {
-                        gotoActivity(item);
-                      }}
+                      onClick={() => {gotoActivity(item);}}
                       className='space-align-block button-Agenda'>
-                      Documentos
+                        Documentos
                     </Button>
-                  )}
+                )}
                 {Surveys &&
                   Surveys.length > 0 &&
                   Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
                     <Button
                       type='primary'
-                      onClick={() => {
-                        gotoActivity(item);
-                      }}
+                      onClick={() => {gotoActivity(item);}}
                       className='space-align-block button-Agenda'>
-                      Encuestas
-                    </Button>
-                  )}
-              </Col>
-            </Row>
+                       Encuestas
+                   </Button>
+                )}
           </Col>
         </Row>
+      </Col>
+    </Row> 
           {/* <Row>
             {eventId != '5f80b6c93b4b966dfe7cd012' &&
               eventId != '5f80a72272ccfd4e0d44b722' &&
