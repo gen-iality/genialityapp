@@ -18,6 +18,10 @@ let AgendaActividadDetalle = (props) => {
   let [showSurvey, setShowSurvey] = useState(false);
   let [orderedHost, setOrderedHost] = useState([])
 
+  useEffect((params) => {
+    console.log('actividad detalle', props)
+  }, [])
+
   useEffect(() => {
     (async () => {
       //Id del evento
@@ -25,24 +29,28 @@ let AgendaActividadDetalle = (props) => {
       const event = await EventsApi.landingEvent(id);
       setEvent(event);
 
-      if (currentUser) return;
+      if (!currentUser) {
+        let evius_token = Cookie.get("evius_token");
+        if (!evius_token) return;
 
-      let evius_token = Cookie.get("evius_token");
-      if (!evius_token) return;
-
-      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-      if (resp.status !== 200 && resp.status !== 202) return;
-      const data = resp.data;
-      setCurrentUser(data);
-
-      //      me / eventusers / event / { event_id }
+        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+        if (resp.status !== 200 && resp.status !== 202) return;
+        const data = resp.data;
+        setCurrentUser(data);
+      }
 
       try {
         const respuesta = await API.get("api/me/eventusers/event/" + id);
         let surveysData = await SurveysApi.getAll(event._id);
+        const currentActivityId = props.currentActivity._id
 
-        if (surveysData.data.length >= 1) {
-          setShowSurvey(true)
+        if (surveysData.data.length > 0) {
+          //Si hay una actividad que haga match con el listado de encuestas entonces habilitamos el componente survey
+          surveysData.data.map((item) => {
+            if (item.activity_id === currentActivityId) {
+              setShowSurvey(true)
+            }
+          })
         }
 
         if (respuesta.data && respuesta.data.data && respuesta.data.data.length) {
@@ -52,28 +60,26 @@ let AgendaActividadDetalle = (props) => {
         console.error(err)
       }
 
+      function orderHost() {
+        let hosts = props.currentActivity.hosts
+        hosts.sort(function (a, b) {
+          return a.order - b.order
+        })
+        setOrderedHost(hosts)
+      }
       orderHost()
-
     })();
-  }, [props.match.params.event]);
+  }, [props.match.params.event, props.currentActivity, currentUser]);
 
   async function getSpeakers(idSpeaker) {
     setIdSpeaker(idSpeaker);
-  }
-
-  function orderHost() {
-    let hosts = props.currentActivity.hosts
-    hosts.sort(function (a, b) {
-      return a.order - b.order
-    })
-    setOrderedHost(hosts)
   }
 
   const { currentActivity, gotoActivityList, toggleConference, image_event } = props;
   return (
     <div className="columns container-calendar-section is-centered">
       <div className=" container_agenda-information container-calendar is-three-fifths">
-        <div className="card agenda_information ">
+        <Card className={event._id === "5f99a20378f48e50a571e3b6" ? 'magicland-agenda_information':'agenda_information'}>
           <PageHeader
             className="site-page-header"
             onBack={() => {
@@ -114,7 +120,16 @@ let AgendaActividadDetalle = (props) => {
                 (
                   <img className="activity_image" src={currentActivity.image ? currentActivity.image : image_event} alt='Activity' />
                 )}
-
+                {/*logo quemado de aval para el evento de magicland */}
+                {
+                event._id === "5f99a20378f48e50a571e3b6" && (
+                  <Row justify="center" style={{marginBottom:"12px"}}>
+                    <Col span={24}>
+                      <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fbanner.jpg?alt=media&token=4aab5da2-bbba-4a44-9bdd-d2161ea58b0f" alt="aval"/>
+                    </Col>
+                  </Row>
+                )
+              }
               {currentActivity.secondvideo && (
                 <div className="column is-centered mediaplayer">
                   <strong>Pt. 2</strong>
@@ -283,6 +298,7 @@ let AgendaActividadDetalle = (props) => {
 
             {currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
               <div>
+                {console.log('selected document', currentActivity.selected_document)}
                 <div style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
                   <b>Documentos:</b> &nbsp;
                   <div>
@@ -360,7 +376,7 @@ let AgendaActividadDetalle = (props) => {
               </a>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </div >
   );

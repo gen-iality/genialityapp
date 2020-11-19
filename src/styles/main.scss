@@ -1,8 +1,8 @@
-@import url("https://fonts.googleapis.com/css?family=Montserrat:100,300,400,700,900");
+@import url('https://fonts.googleapis.com/css?family=Montserrat:100,300,400,700,900');
 
-$font-path: "~react-widgets/lib/fonts";
-$img-path: "~react-widgets/lib/img";
-$family-sans-serif: "Montserrat", sans-serif;
+$font-path: '~react-widgets/lib/fonts';
+$img-path: '~react-widgets/lib/img';
+$family-sans-serif: 'Montserrat', sans-serif;
 $color-evius: #1cdcb7;
 $evius-secundary: #009fd9;
 // $evius-secundary: #0e1c35;
@@ -36,7 +36,7 @@ body {
   display: -ms-flexbox;
   display: flex;
   -ms-flex: auto;
-  
+
   flex: auto;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -115,7 +115,6 @@ iframe {
   text-align: center;
 }
 
-
 // Botón de la conferencia en el home
 .buttonVirtualConference {
   height: 70px;
@@ -125,38 +124,33 @@ iframe {
   }
 }
 
-.table-invite-asistente{
+.table-invite-asistente {
   overflow-x: scroll;
 }
 
-.line-head{
+.line-head {
   width: 100% !important;
   background-color: gray !important;
   border-bottom-color: gray !important;
   height: 2px !important;
-  margin-bottom:2% !important;
+  margin-bottom: 2% !important;
 }
 
-.ant-table-selection {
-  position: relative;
-  width: 67px;
-  }
-
 .countryCity-styles {
-    border-color: #d9d9d9;
-    background-color: white;
-    padding: 1%;
-    color: gray;
-    width: 100%;
-    border-radius: 3px;
-  }
+  border-color: #d9d9d9;
+  background-color: white;
+  padding: 1%;
+  color: gray;
+  width: 100%;
+  border-radius: 3px;
+}
 // personalizacion de registro //
-  .ant-form-item-label{
-    font-weight: 700;
-  }
-  .ant-card-head-title{
-    font-weight: 700;
-  }
+.ant-form-item-label {
+  font-weight: 700;
+}
+.ant-card-head-title {
+  font-weight: 700;
+}
 // estilos de menu del cms //
 
 .ant-menu-inline .ant-menu-submenu-title {
@@ -164,7 +158,7 @@ iframe {
   padding-left: 17px !important;
 }
 
-.ant-menu-sub.ant-menu-inline > .ant-menu-item{
+.ant-menu-sub.ant-menu-inline > .ant-menu-item {
   height: 45px !important;
   line-height: 20px !important;
   list-style-position: inside;
@@ -173,14 +167,13 @@ iframe {
   white-space: break-spaces;
 }
 
-
-@import "~bulma/bulma";
-@import "~react-widgets/lib/scss/react-widgets";
-@import "~bulma-extensions/bulma-switch/src/sass/index";
-@import "~bulma-extensions/bulma-steps/src/sass/index";
-@import "~bulma-extensions/bulma-checkradio/src/sass/index";
-@import "~react-quill/dist/quill.snow.css";
-@import "~react-quill/dist/quill.bubble.css";
+@import '~bulma/bulma';
+@import '~react-widgets/lib/scss/react-widgets';
+@import '~bulma-extensions/bulma-switch/src/sass/index';
+@import '~bulma-extensions/bulma-steps/src/sass/index';
+@import '~bulma-extensions/bulma-checkradio/src/sass/index';
+@import '~react-quill/dist/quill.snow.css';
+@import '~react-quill/dist/quill.bubble.css';
 
 // ant desing
 //@import "~antd/dist/antd.css";

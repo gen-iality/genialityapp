@@ -82,7 +82,7 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers } ) {
 
   if ( currentRoom ) {
     let userName = ( eventUser && eventUser.properties ) ? eventUser.properties.names : "Anonimo" + new Date().getTime()
-    //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=2877841496
+    //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=2360621496
     //console.log("params",eventUser,currentRoom );
 
     return (
@@ -98,7 +98,7 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers } ) {
           <div className="aspect-ratio-box">
             <div className="aspect-ratio-box-inside">
               <iframe style={ { border: "2px solid blue" } }
-                src={ "https://video-app-1496-dev.twil.io?UserName=" + userName + "&URLRoomName=" + currentRoom + "&passcode=9301601496" }
+                src={ "https://video-app-1496-dev.twil.io?UserName=" + userName + "&URLRoomName=" + currentRoom + "&passcode=7521411496" }
                 allow="autoplay; fullscreen; camera *;microphone *"
                 allowusermedia
                 allowFullScreen
