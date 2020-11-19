@@ -135,13 +135,15 @@ let AgendaActividadDetalle = (props) => {
               )}
 
               <p className='has-text-left is-size-6-desktop'>
+
                 {usuarioRegistrado && (
+                  
                   <Button
                     type='primary'
                     disabled={currentActivity.meeting_id ? false : true}
                     onClick={() => toggleConference(true, currentActivity.meeting_id, currentActivity)}>
                     {currentActivity.meeting_id ? 'Ir Conferencia en Vivo' : 'Aún no empieza Conferencia Virtual'}
-                    
+
                   </Button>
                 )}
               </p>
@@ -178,7 +180,7 @@ let AgendaActividadDetalle = (props) => {
                 </span>
               ))}
 
-              <span className='tag category_calendar-tag'>
+              <span className='tag category_calendar-tag'>               
                 {currentActivity.meeting_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
               </span>
             </div>

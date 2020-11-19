@@ -76,13 +76,12 @@
         white-space: normal;
       }
     }
+    
     .magicland-agenda_information{
       background: rgb(20, 20, 20);
       color: white;
-      
       p{
         color: white;
-        float: left;
       }
       .card-header-title {
         font-size: initial;
@@ -90,7 +89,7 @@
       }
       .ant-page-header-heading-title {
         color: white;
-        float: left;
+        float: left !important;
       }
       
       .ant-tag-geekblue {
