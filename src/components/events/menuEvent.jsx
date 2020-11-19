@@ -1,18 +1,17 @@
-import React from "react";
-import WithLoading from "./../shared/withLoading";
-import { Menu, Spin } from "antd";
+import React from 'react';
+import WithLoading from './../shared/withLoading';
+import { Menu, Spin } from 'antd';
 
 //Se importan todos los iconos a  un Objeto para llamarlos dinámicamente
-import * as iconComponents from "@ant-design/icons";
-import { Component } from "react";
-import * as Cookie from "js-cookie";
-
+import * as iconComponents from '@ant-design/icons';
+import { Component } from 'react';
+import * as Cookie from 'js-cookie';
 
 const stylesMenuItems = {
-  height: "100%",
-  padding: "30px 0",
-  backgroundColor: "transparent",
-}
+  height: '100%',
+  padding: '30px 0',
+  backgroundColor: 'transparent',
+};
 
 class MenuEvent extends Component {
   constructor(props) {
@@ -27,200 +26,212 @@ class MenuEvent extends Component {
       logged: false,
       email: false,
       section: 'evento',
-    }
+    };
     this.menuDefault = {
       evento: {
-        name: "Evento",
-        section: "evento",
-        icon: "CalendarOutlined",
+        name: 'Evento',
+        section: 'evento',
+        icon: 'CalendarOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       agenda: {
-        name: "Agenda",
-        section: "agenda",
-        icon: "ReadOutlined",
+        name: 'Agenda',
+        section: 'agenda',
+        icon: 'ReadOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       speakers: {
-        name: "Conferencistas",
-        section: "speakers",
-        icon: "AudioOutlined",
+        name: 'Conferencistas',
+        section: 'speakers',
+        icon: 'AudioOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       tickets: {
-        name: "Boletería",
-        section: "tickets",
-        icon: "CreditCardOutlined",
+        name: 'Boletería',
+        section: 'tickets',
+        icon: 'CreditCardOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       certs: {
-        name: "Certificados",
-        section: "certs",
-        icon: "FileDoneOutlined",
+        name: 'Certificados',
+        section: 'certs',
+        icon: 'FileDoneOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       documents: {
-        name: "Documentos",
-        section: "documents",
-        icon: "FolderOutlined",
+        name: 'Documentos',
+        section: 'documents',
+        icon: 'FolderOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       wall: {
-        name: "Muro",
-        section: "wall",
-        icon: "TeamOutlined",
+        name: 'Muro',
+        section: 'wall',
+        icon: 'TeamOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       survey: {
-        name: "Encuestas",
-        section: "survey",
-        icon: "FileUnknownOutlined",
+        name: 'Encuestas',
+        section: 'survey',
+        icon: 'FileUnknownOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       faqs: {
-        name: "Preguntas Frecuentes",
-        section: "faqs",
-        icon: "QuestionOutlined",
+        name: 'Preguntas Frecuentes',
+        section: 'faqs',
+        icon: 'QuestionOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       networking: {
-        name: "Networking",
-        section: "networking",
-        icon: "LaptopOutlined",
+        name: 'Networking',
+        section: 'networking',
+        icon: 'LaptopOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       my_section: {
-        name: "Seccion Personalizada",
-        section: "my_section",
-        icon: "EnterOutlined",
+        name: 'Seccion Personalizada',
+        section: 'my_section',
+        icon: 'EnterOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       companies: {
-        name: "Empresas",
-        section: "companies",
-        icon: "ApartmentOutlined", // ApartmentOutlined
+        name: 'Empresas',
+        section: 'companies',
+        icon: 'ApartmentOutlined', // ApartmentOutlined
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       interviews: {
-        name: "Vende / Mi agenda",
-        section: "interviews",
-        icon: "UserOutlined",
+        name: 'Vende / Mi agenda',
+        section: 'interviews',
+        icon: 'UserOutlined',
         checked: false,
-        permissions: "public"
+        permissions: 'public',
       },
       partners: {
-        name: "Patrocinadores",
-        section: "partners",
-        icon: "DollarCircleOutlined",
+        name: 'Patrocinadores',
+        section: 'partners',
+        icon: 'DollarCircleOutlined',
         checked: false,
-        permissions: "public"
-      }
-    }
+        permissions: 'public',
+      },
+    };
   }
 
   async componentDidMount() {
-
     const isExistCookie = Cookie.get('evius_token');
 
     if (isExistCookie) {
-      this.setState({ isEnabledLogin: false })
+      this.setState({ isEnabledLogin: false });
     }
 
     if (this.props.user) {
-      this.setState({ user: this.props.user })
+      this.setState({ user: this.props.user });
     }
 
     this.setState({ loading: true });
 
-    await this.handleInitialSection()
+    await this.handleInitialSection();
 
     this.setState({ loading: false });
 
-    this.state.showSection(this.state.section)
-
+    this.state.showSection(this.state.section);
   }
 
   handleInitialSection() {
-    let itemsMenu = this.state.itemsMenu || {}
+    let itemsMenu = this.state.itemsMenu || {};
 
     itemsMenu = Object.keys(itemsMenu).map((key) => {
+      if (this.state.itemsMenu[key] && this.state.itemsMenu[key].permissions == 'assistants' && !this.state.user) {
+        return null;
+      }
 
-      if ((this.state.itemsMenu[key] && this.state.itemsMenu[key].permissions == "assistants") && !this.state.user) { return null; }
+      return this.state.itemsMenu[key].section;
+    });
 
-      return this.state.itemsMenu[key].section
-    })
-
-    const initialSection = itemsMenu.filter(item => item !== null)
-    this.setState({ section: initialSection[0] })
-
+    const initialSection = itemsMenu.filter((item) => item !== null);
+    this.setState({ section: initialSection[0] });
   }
-
 
   async componentDidUpdate(prevProps, prevState) {
-
     if (this.props.user && !this.state.user) {
-      this.setState({ user: this.props.user })
+      this.setState({ user: this.props.user });
     }
     if (prevState.section !== this.state.section) {
-      this.handleInitialSection()
+      this.handleInitialSection();
     }
-
   }
 
-
   render() {
-    const { loading } = this.state
+    const { loading } = this.state;
     return (
       <Menu
-        mode="inline"
+        mode='inline'
         // theme="dark"
-        defaultSelectedKeys={["1"]}
+        defaultSelectedKeys={['1']}
         // defaultOpenKeys={['sub1']}
-        style={stylesMenuItems}
-      >
+        style={stylesMenuItems}>
+        {loading && (
+          <div className='columns is-centered'>
+            <Spin tip='Cargando Menú...'></Spin>
+          </div>
+        )}
+        {this.state.itemsMenu &&
+          Object.keys(this.state.itemsMenu).map((key) => {
+            if (
+              this.state.itemsMenu[key] &&
+              this.state.itemsMenu[key].permissions == 'assistants' &&
+              !this.state.user
+            ) {
+              return null;
+            }
 
-        { loading && (<div className="columns is-centered"><Spin tip="Cargando Menú..."></Spin></div>)}
-        {this.state.itemsMenu && Object.keys(this.state.itemsMenu).map((key) => {
-          if ((this.state.itemsMenu[key] && this.state.itemsMenu[key].permissions == "assistants") && !this.state.user) {
-            return null;
-          }
+            if (this.state.itemsMenu[key].section === 'login' && !this.state.isEnabledLogin) {
+              return null;
+            }
 
-          if (this.state.itemsMenu[key].section === 'login' && !this.state.isEnabledLogin) {
-            return null;
-          }
+            let IconoComponente = iconComponents[this.state.itemsMenu[key].icon];
 
-          let IconoComponente = iconComponents[this.state.itemsMenu[key].icon];
-
-          return (
-            <Menu.Item key={this.state.itemsMenu[key].section} onClick={() => this.state.showSection(this.state.itemsMenu[key].section)} >
-              <IconoComponente style={
-                this.state.eventId === "5faae7381fc1d06d3b28fca2" ||
-                  this.state.eventId === "5f7e3564cdedb50e4c651602" ||
-                  this.state.eventId === "5f7b31866df71d13c2782153" ||
-                  this.state.eventId === "5f99a20378f48e50a571e3b6" ? { fontColor: "#FFFFFF" } : { fontColor: "#000000" }} />
-              <span style={this.state.eventId === "5faae7381fc1d06d3b28fca2" ||
-                this.state.eventId === "5f7e3564cdedb50e4c651602" ||
-                this.state.eventId === "5f7b31866df71d13c2782153" ||
-                this.state.eventId === "5f99a20378f48e50a571e3b6 " ? { color: "white" } : { color: "black" }}> {this.state.itemsMenu[key].name}</span>
-            </Menu.Item>
-          );
-        })}
+            return (
+              <Menu.Item
+                key={this.state.itemsMenu[key].section}
+                onClick={() => this.state.showSection(this.state.itemsMenu[key].section)}>
+                <IconoComponente
+                // style={
+                //   this.state.eventId === '5faae7381fc1d06d3b28fca2' ||
+                //   this.state.eventId === '5f7e3564cdedb50e4c651602' ||
+                //   this.state.eventId === '5f7b31866df71d13c2782153' ||
+                //   this.state.eventId === '5f99a20378f48e50a571e3b6'
+                //     ? { color: '#FFFFFF !important' }
+                //     : { color: '#000000 !important' }
+                // }
+                //style={color:'#FFFFFF'}
+                />
+                {this.state.eventId === '5faae7381fc1d06d3b28fca2' ||
+                this.state.eventId === '5f7e3564cdedb50e4c651602' ||
+                this.state.eventId === '5f7b31866df71d13c2782153' ||
+                this.state.eventId === '5f99a20378f48e50a571e3b6' ? (
+                  <span style={{ color: '#FFFFFF' }}>{` ${this.state.itemsMenu[key].name}`}</span>
+                ) : (
+                  <span style={{ color: '#222222' }}>{` ${this.state.itemsMenu[key].name}`}</span>
+                )}
+              </Menu.Item>
+            );
+          })}
       </Menu>
     );
   }
-
 }
 
 export default WithLoading(MenuEvent);

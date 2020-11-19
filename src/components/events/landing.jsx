@@ -477,6 +477,18 @@ class Landing extends Component {
     this.setState({ loader_page: false });
   }
 
+  // Start methods for modal private activities
+
+  handleOpenRegisterForm = () => {
+    this.setState({ section: 'tickets' });
+  };
+
+  handleOpenLogin = () => {
+    this.setState({ section: 'login' });
+  };
+
+  // End methods for modal private activities
+
   render() {
     const {
       event,
