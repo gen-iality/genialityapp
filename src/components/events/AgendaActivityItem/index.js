@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Row, Col, Tag, Avatar, Alert } from 'antd';
+import { Button, Row, Col, Tag, Avatar, Alert, Card } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment';
 import './style.scss';
@@ -18,6 +18,8 @@ export default function AgendaActivityItem({
   eventId,
   userId,
   show_inscription,
+  userRegistered,
+  handleOpenModal
 }) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
@@ -41,8 +43,12 @@ export default function AgendaActivityItem({
   }, [registerStatus, item]);
 
   return (
-    <div className='container_agenda-information'>
-      <div className='card agenda_information'>
+    <div
+      className='container_agenda-information'
+      onClick={
+        userRegistered === null && eventId === '5f99a20378f48e50a571e3b6' ? handleOpenModal : () => gotoActivity(item)
+      }>
+      <Card className={eventId === '5f99a20378f48e50a571e3b6' ? 'magicland-agenda_information' : 'agenda_information'}>
         <Row align='middle'>
           <Row>
             {eventId != '5f80b6c93b4b966dfe7cd012' &&
@@ -72,9 +78,11 @@ export default function AgendaActivityItem({
               {item.meeting_id || item.vimeo_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
             </span> */}
             <div
-              onClick={() => {
-                gotoActivity(item);
-              }}
+              onClick={
+                userRegistered === null && eventId === '5f99a20378f48e50a571e3b6'
+                  ? handleOpenModal
+                  : () => gotoActivity(item)
+              }
               className='text-align-card'
               style={{ marginBottom: '5%' }}>
               {item.activity_categories.length > 0 && (
@@ -133,9 +141,11 @@ export default function AgendaActivityItem({
                 {btnDetailAgenda === 'true' && (
                   <Button
                     type='primary'
-                    onClick={() => {
-                      gotoActivity(item);
-                    }}
+                    onClick={
+                      userRegistered === null && eventId === '5f99a20378f48e50a571e3b6'
+                        ? handleOpenModal
+                        : () => gotoActivity(item)
+                    }
                     className='space-align-block button-Agenda'>
                     Detalle de actividad
                   </Button>
@@ -157,9 +167,11 @@ export default function AgendaActivityItem({
                   Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
                     <Button
                       type='primary'
-                      onClick={() => {
-                        gotoActivity(item);
-                      }}
+                      onClick={
+                        userRegistered === null && eventId === '5f99a20378f48e50a571e3b6'
+                          ? handleOpenModal
+                          : () => gotoActivity(item)
+                      }
                       className='space-align-block button-Agenda'>
                       Encuestas
                     </Button>
@@ -191,13 +203,13 @@ export default function AgendaActivityItem({
                           width={'100%'}
                           style={{
                             display: 'block',
-                            margin: '0 auto',
+                            margin: '0 auto'
                           }}
                           url={item.video}
                           //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                           controls
                           config={{
-                            file: { attributes: { controlsList: 'nodownload' } },
+                            file: { attributes: { controlsList: 'nodownload' } }
                           }}
                         />
                       </>
@@ -265,8 +277,22 @@ export default function AgendaActivityItem({
               )}
             </div>
           </Col>
+          {/* quemado de baner para magicland */}
+          {eventId === '5f99a20378f48e50a571e3b6' && (
+            <>
+              <br />
+              <Row style={{ marginTop: '12px' }}>
+                <Col span={24}>
+                  <img
+                    src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fbanner.jpg?alt=media&token=4aab5da2-bbba-4a44-9bdd-d2161ea58b0f'
+                    alt='aval'
+                  />
+                </Col>
+              </Row>
+            </>
+          )}
         </Row>
-      </div>
+      </Card>
     </div>
   );
 }
