@@ -1,23 +1,23 @@
-import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
-import { app } from '../helpers/firebase'
-import * as Cookie from "js-cookie";
-import { ApiUrl, BaseUrl } from "../helpers/constants";
-import API, { OrganizationApi } from "../helpers/request";
-import LogOut from "../components/shared/logOut";
-import ErrorServe from "../components/modal/serverError";
-import UserStatusAndMenu from "../components/shared/userStatusAndMenu";
-import { connect } from "react-redux";
-import { addLoginInformation, showMenu } from "../redux/user/actions";
-import MenuOld from "../components/events/shared/menu";
-import { Menu, Drawer, Button, Col, Row, Layout } from "antd";
-import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { parseUrl } from "../helpers/constants";
+import React, { Component } from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import { app } from '../helpers/firebase';
+import * as Cookie from 'js-cookie';
+import { ApiUrl, BaseUrl } from '../helpers/constants';
+import API, { OrganizationApi, getCurrentUser } from '../helpers/request';
+import LogOut from '../components/shared/logOut';
+import ErrorServe from '../components/modal/serverError';
+import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
+import { connect } from 'react-redux';
+import { addLoginInformation, showMenu } from '../redux/user/actions';
+import MenuOld from '../components/events/shared/menu';
+import { Menu, Drawer, Button, Col, Row, Layout } from 'antd';
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { parseUrl } from '../helpers/constants';
 
 const { Header } = Layout;
 const zIndex = {
-  zIndex: "1"
-}
+  zIndex: '1',
+};
 
 class Headers extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class Headers extends Component {
     this.state = {
       selection: [],
       organizations: [],
-      name: "user",
+      name: 'user',
       user: false,
       menuOpen: false,
       timeout: false,
@@ -42,46 +42,44 @@ class Headers extends Component {
       showEventMenu: false,
       tabEvtType: true,
       tabEvtCat: true,
-      eventId: null
-
+      eventId: null,
     };
 
-    this.setEventId = this.setEventId.bind(this)
-    this.logout = this.logout.bind(this)
+    this.setEventId = this.setEventId.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   showDrawer = () => {
     this.setState({
-      showEventMenu: true
+      showEventMenu: true,
     });
   };
 
   onClose = () => {
     this.setState({
-      showEventMenu: false
+      showEventMenu: false,
     });
   };
 
   setEventId = () => {
-    const path = window.location.pathname.split('/')
-    const eventId = path[path.length - 1]
-    return eventId
-  }
+    const path = window.location.pathname.split('/');
+    const eventId = path[path.length - 1];
+    return eventId;
+  };
 
   async componentDidMount() {
-
-    const eventId = this.setEventId()
-    this.setState({ eventId })
+    const eventId = this.setEventId();
+    this.setState({ eventId });
 
     /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
     let evius_token = null;
     let dataUrl = parseUrl(document.URL);
     if (dataUrl && dataUrl.token) {
-      Cookie.set("evius_token", dataUrl.token);
+      Cookie.set('evius_token', dataUrl.token);
       evius_token = dataUrl.token;
     }
     if (!evius_token) {
-      evius_token = await Cookie.get("evius_token");
+      evius_token = await Cookie.get('evius_token');
     }
 
     // Si no tenemos token, significa que no tenemos usuario.
@@ -90,55 +88,32 @@ class Headers extends Component {
       return;
     }
 
-
-
     //Si existe el token consultamos la información del usuario
-    try {
-      const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
+    const data = await getCurrentUser();
 
-      if (resp.status === 200 || resp.status === 201 || resp.status === 202) {
-        const data = resp.data;
-        const name = data.name ? data.name : data.displayName ? data.displayName : data.email;
-        const photo = data.photoUrl ? data.photoUrl : data.picture;
-        const organizations = await OrganizationApi.mine();
+    if (data) {
+      const name = data.name ? data.name : data.displayName ? data.displayName : data.email;
+      const photo = data.photoUrl ? data.photoUrl : data.picture;
+      const organizations = await OrganizationApi.mine();
 
-        this.setState(
-          { name, photo, uid: data.uid, id: data._id, user: true, cookie: evius_token, loader: false, organizations },
-          () => {
-            this.props.dispatch(addLoginInformation(data));
-          }
-        );
-        this.handleMenu(this.props.location);
-      } else {
-        //Problemas
-        this.setState({ timeout: true, loader: false });
-      }
-    } catch (error) {
-      if (error.response) {
-        const { status, data } = error.response;
-        if (status === 401) this.setState({ timeout: true, loader: false });
-        else this.setState({ serverError: true, loader: false, errorData: data });
-      } else {
-        let errorData = {};
-        console.error("Error", error.message);
-        if (error.message) {
-          errorData.message = error.message;
-        } else if (error.request) {
-          console.error(error.request);
-          errorData.message = JSON.stringify(error.request);
+      this.setState(
+        { name, photo, uid: data.uid, id: data._id, user: true, cookie: evius_token, loader: false, organizations },
+        () => {
+          this.props.dispatch(addLoginInformation(data));
         }
-        errorData.status = 708;
-        this.setState({ serverError: true, loader: false, errorData });
-      }
-      console.error(error.config);
+      );
+      this.handleMenu(this.props.location);
+    } else {
+      //Problemas
+      this.setState({ timeout: true, loader: false });
     }
   }
 
-  handleMenu = location => {
-    const splited = location.pathname.split("/");
-    if (splited[1] === "") {
+  handleMenu = (location) => {
+    const splited = location.pathname.split('/');
+    if (splited[1] === '') {
       this.setState({ showAdmin: false, menuOpen: false });
-    } else if (splited[1] === "event") {
+    } else if (splited[1] === 'event') {
       this.setState({ showAdmin: true, showEventMenu: false, menuOpen: false });
       window.scrollTo(0, 0);
     }
@@ -160,10 +135,12 @@ class Headers extends Component {
   }
 
   logout = () => {
-    app.auth().signOut()
+    app
+      .auth()
+      .signOut()
       .then(() => {
-        Cookie.remove("token");
-        Cookie.remove("evius_token");
+        Cookie.remove('token');
+        Cookie.remove('evius_token');
 
         //const urlRedirect = this.state.eventId ? `${BaseUrl}/landing/${this.state.eventId}` : `${BaseUrl}`
         //window.location.replace(urlRedirect);
@@ -172,20 +149,20 @@ class Headers extends Component {
         // el eventId sin importar su posición, actualmente se detecta un problema
         // cuando la url tiene el eventId en una posicion diferente al final
         window.location.replace('/');
-      }
-      ).catch(function (error) {
+      })
+      .catch(function(error) {
         // An error happened.
-        console.error(error.message)
+        console.error(error.message);
       });
   };
 
   openMenu = () => {
-    this.setState(menuState => {
+    this.setState((menuState) => {
       return { menuOpen: !menuState.menuOpen, filterOpen: false };
     });
   };
 
-  goReport = e => {
+  goReport = (e) => {
     e.preventDefault();
     window.location.replace(`${ApiUrl}/events/reports`);
   };
@@ -201,25 +178,22 @@ class Headers extends Component {
     const { eventMenu, location } = this.props;
     return (
       <React.Fragment>
-        <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
-          <Menu theme="light" mode="horizontal">
-            <Row justify="space-between" align="middle">
-
+        <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
+          <Menu theme='light' mode='horizontal'>
+            <Row justify='space-between' align='middle'>
               {/*evius LOGO */}
 
-              <Row className="logo-header" justify="space-between" align="middle">
-                <Link to={"/"}>
-                  {/* <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} /> */}
-                </Link>
+              <Row className='logo-header' justify='space-between' align='middle'>
+                <Link to={'/'}>{/* <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} /> */}</Link>
 
                 {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
                 {showAdmin && (
-                  <Col span={2} offset={3} data-target="navbarBasicExample">
-                    <span className="icon icon-menu" onClick={this.handleMenuEvent}>
+                  <Col span={2} offset={3} data-target='navbarBasicExample'>
+                    <span className='icon icon-menu' onClick={this.handleMenuEvent}>
                       <Button style={zIndex} onClick={this.showDrawer}>
                         {React.createElement(this.state.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                          className: "trigger",
-                          onClick: this.toggle
+                          className: 'trigger',
+                          onClick: this.toggle,
                         })}
                       </Button>
                     </span>
@@ -247,13 +221,13 @@ class Headers extends Component {
         {/* Menu mobile */}
 
         {showAdmin && showEventMenu && (
-          <div id="navbarBasicExample" className={`${eventMenu ? "is-active" : ""}`}>
+          <div id='navbarBasicExample' className={`${eventMenu ? 'is-active' : ''}`}>
             <Drawer
-              className="hiddenMenuMobile_Landing"
-              title="Administrar evento"
+              className='hiddenMenuMobile_Landing'
+              title='Administrar evento'
               maskClosable={true}
-              bodyStyle={{ padding: "0px" }}
-              placement="left"
+              bodyStyle={{ padding: '0px' }}
+              placement='left'
               closable={true}
               onClose={this.onClose}
               visible={this.state.showEventMenu}>
@@ -269,13 +243,13 @@ class Headers extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   categories: state.categories.items,
   types: state.types.items,
   loginInfo: state.user.data,
   eventMenu: state.user.menu,
   permissions: state.permissions,
-  error: state.categories.error
+  error: state.categories.error,
 });
 
 export default connect(mapStateToProps)(withRouter(Headers));
