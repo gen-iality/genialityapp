@@ -120,7 +120,19 @@ let AgendaActividadDetalle = (props) => {
                 (
                   <img className="activity_image" src={currentActivity.image ? currentActivity.image : image_event} alt='Activity' />
                 )}
-
+                {/*logo quemado de aval para el evento de magicland */}
+                {
+                event._id === "5f99a20378f48e50a571e3b6" && (
+                  <Row justify="center">
+                    <Col span={8}>
+                      <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fbanner.jpg?alt=media&token=4aab5da2-bbba-4a44-9bdd-d2161ea58b0f" alt="aval"/>
+                    </Col>
+                    <Col span={8}>
+                      <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fgrupo-aval.gif?alt=media&token=5fd99d79-3d24-483c-b280-a495b0315b84" alt="aval"/>
+                    </Col>
+                  </Row>
+                )
+              }
               {currentActivity.secondvideo && (
                 <div className="column is-centered mediaplayer">
                   <strong>Pt. 2</strong>
