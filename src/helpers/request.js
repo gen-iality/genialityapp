@@ -105,6 +105,7 @@ export const Actions = {
   },
 };
 
+//BACKLOG --> ajustar a la nueva estructura el setState que se comentó para evitar fallos por no contar con el estado
 export const getCurrentUser = () => {
   let token = Cookie.get('evius_token');
 
@@ -127,8 +128,11 @@ export const getCurrentUser = () => {
       } catch (error) {
         if (error.response) {
           const { status, data } = error.response;
-          if (status === 401) this.setState({ timeout: true, loader: false });
-          else this.setState({ serverError: true, loader: false, errorData: data });
+          if (status === 401) {
+            //this.setState({ timeout: true, loader: false })
+          } else {
+            //this.setState({ serverError: true, loader: false, errorData: data })
+          }
         } else {
           let errorData = {};
           console.error('Error', error.message);
@@ -139,7 +143,7 @@ export const getCurrentUser = () => {
             errorData.message = JSON.stringify(error.request);
           }
           errorData.status = 708;
-          this.setState({ serverError: true, loader: false, errorData });
+          //this.setState({ serverError: true, loader: false, errorData });
         }
         console.error(error.config);
       }

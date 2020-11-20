@@ -25,7 +25,7 @@ import {
 } from '../../helpers/request';
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from '../../helpers/utils';
 import Dropzone from 'react-dropzone';
-import { Spin, Card } from 'antd';
+import { Spin, Card, Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
 import { setHostState } from './fireHost';
@@ -625,7 +625,7 @@ class AgendaEdit extends Component {
   };
 
   handleChangeDate = (e) => {
-    this.setState({ date: e.value });
+    this.setState({ date: e });
   };
 
   render() {
@@ -700,30 +700,14 @@ class AgendaEdit extends Component {
                   </div>
                   <div className='field'>
                     <label className='label'>Día</label>
-                    <Select
+                    {console.log('lo que llega por date', date)}
+                    <SelectAntd
+                      name='date'
                       options={this.state.days}
-                      //defaultInputValue={'2020-10-18'}
-                      defaultInputValue={date}
+                      style={{ width: '100%' }}
+                      defaultValue={date}
                       onChange={this.handleChangeDate}
                     />
-                    {/* <div className='columns'>
-                      {this.state.days.map((day, key) => {
-                        return (
-                          <div key={key} className='column'>
-                            <input
-                              type='radio'
-                              name='date'
-                              id={`radioDay${key}`}
-                              className='is-checkradio'
-                              checked={day === date}
-                              value={day}
-                              onChange={this.handleChange}
-                            />
-                            <label htmlFor={`radioDay${key}`}>{Moment(day, ['YYYY-MM-DD']).format('MMMM-DD')}</label>
-                          </div>
-                        );
-                      })}
-                    </div> */}
                   </div>
                   <div className='columns'>
                     <div className='column'>
