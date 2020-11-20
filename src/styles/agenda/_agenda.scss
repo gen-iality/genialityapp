@@ -64,30 +64,38 @@
   .text-align-card {
     padding: 0 0.75rem;
   }
-
+  .ant-card-bordered {
+    border: 1px solid #f0f0f000;
+  }
+  .ant-page-header {
+    padding: 16px 14px;
+  } 
   .container_agenda-information {
     margin-bottom: 3%;
     .site-page-header {
-      border: 1px solid rgb(255, 255, 255);
+      border: 1px solid #ffffff00;
       .ant-page-header-heading-title {
         overflow: visible;
         white-space: normal;
       }
     }
+    
     .magicland-agenda_information{
       background: rgb(20, 20, 20);
       color: white;
       p{
         color: white;
+        float: left !important;
       }
       .card-header-title {
-        justify-content: center;
         font-size: initial;
         color: white;
       }
       .ant-page-header-heading-title {
         color: white;
+        float: left !important;
       }
+      
       .ant-tag-geekblue {
         color: #f5f5f5;
         background: #b5b5b5;
@@ -122,6 +130,9 @@
         font-weight: bolder;
         font: normal normal 500 23px/25px $family-sans-serif;
         text-align: initial;
+        p{
+          margin-bottom: 0px;
+        }
       }
 
       .container_calendar-description {
