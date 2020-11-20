@@ -65,21 +65,25 @@ let AgendaActividadDetalle = (props) => {
     <div className='columns container-calendar-section is-centered'>
       <div className=' container_agenda-information container-calendar is-three-fifths'>
         <Card
-          className={event._id === '5f99a20378f48e50a571e3b6' ? 'magicland-agenda_information' : 'agenda_information'}>
-          <PageHeader
+          title={<PageHeader
             className='site-page-header'
             onBack={() => {
               gotoActivityList();
             }}
             title={currentActivity.name}
-          />
+          /> }
+          extra={<p className='card-header-title has-padding-left-0 '>
+          {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
+          {Moment(currentActivity.datetime_end).format('h:mm a')}
+        </p>}
+          className={event._id === '5f99a20378f48e50a571e3b6' ? 'magicland-agenda_information' : 'agenda_information'}>
           <header className='card-header columns has-padding-left-7'>
             <div className='is-block is-11 column is-paddingless'>
               {/* Hora del evento */}
-              <p className='card-header-title has-padding-left-0 '>
+              {/* <p className='card-header-title has-padding-left-0 '>
                 {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
                 {Moment(currentActivity.datetime_end).format('h:mm a')}
-              </p>
+              </p> */}
               {currentActivity.space && (
                 /* Lugar del evento */
                 <p className='has-text-left is-size-6-desktop'>
