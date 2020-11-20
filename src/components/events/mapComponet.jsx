@@ -52,7 +52,8 @@ class mapComponent extends Component {
                 )}
               </div>
             </Card>
-            {event.location.Latitude &&
+            {event.location &&
+              event.location.Latitude &&
               event.location.Longitude(
                 <div style={{ width: '100%', height: '250px' }}>
                   <GoogleMapReact
