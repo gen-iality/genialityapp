@@ -116,7 +116,8 @@ class AgendaEdit extends Component {
         Date.parse(date);
 
         for (var i = 0; i < date.length; i++) {
-          days.push(Moment(date[i], ['YYYY-MM-DD']).format('YYYY-MM-DD'));
+          let formatDate = Moment(date[i], ['YYYY-MM-DD']).format('YYYY-MM-DD');
+          days.push({ value: formatDate, label: formatDate });
         }
         //Si no, recibe la fecha inicio y la fecha fin y le da el formato especifico a mostrar
       } else {
@@ -125,11 +126,10 @@ class AgendaEdit extends Component {
         const diff = end.diff(init, 'days');
         //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
         for (let i = 0; i < diff + 1; i++) {
-          days.push(
-            Moment(init)
-              .add(i, 'd')
-              .format('YYYY-MM-DD')
-          );
+          let formatDate = Moment(init)
+            .add(i, 'd')
+            .format('YYYY-MM-DD');
+          days.push({ value: formatDate, label: formatDate });
         }
       }
     } catch (e) {
@@ -624,6 +624,10 @@ class AgendaEdit extends Component {
     }
   };
 
+  handleChangeDate = (e) => {
+    this.setState({ date: e.value });
+  };
+
   render() {
     const {
       loading,
@@ -696,7 +700,13 @@ class AgendaEdit extends Component {
                   </div>
                   <div className='field'>
                     <label className='label'>Día</label>
-                    <div className='columns'>
+                    <Select
+                      options={this.state.days}
+                      //defaultInputValue={'2020-10-18'}
+                      defaultInputValue={date}
+                      onChange={this.handleChangeDate}
+                    />
+                    {/* <div className='columns'>
                       {this.state.days.map((day, key) => {
                         return (
                           <div key={key} className='column'>
@@ -713,7 +723,7 @@ class AgendaEdit extends Component {
                           </div>
                         );
                       })}
-                    </div>
+                    </div> */}
                   </div>
                   <div className='columns'>
                     <div className='column'>
@@ -1059,19 +1069,6 @@ class AgendaEdit extends Component {
                                 </div>
                               </Fragment>
                             )}
-                            <div className='field'>
-                              <label className='label'>bigmaker_meeting_id</label>
-                              <div className='control'>
-                                <input
-                                  className='input'
-                                  type='text'
-                                  name={'bigmaker_meeting_id'}
-                                  value={bigmaker_meeting_id}
-                                  onChange={this.handleChange}
-                                  placeholder=''
-                                />
-                              </div>
-                            </div>
 
                             {this.state.meeting_id && (
                               <div>
