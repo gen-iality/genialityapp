@@ -42,7 +42,6 @@ class General extends Component {
       serverError: false,
       loading: true,
       info: {},
-      infoApp: [],
       specificDates: false,
       dates: [],
       data_loader_page: '',
@@ -55,14 +54,13 @@ class General extends Component {
   }
 
   async componentDidMount() {
-    const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
+    const info = this.props.event
     this.setState({ info });
     this.setState({
-      infoApp: [this.state.info.app_configuration],
       checked: info.initial_page ? true : false,
     });
     try {
-      const { event } = this.state;
+      const { event } = this.props;
       // event.picture = (typeof event.picture === 'object') ? event.picture[0] : "";
       const categories = await CategoriesApi.getAll();
       const types = await TypesApi.getAll();
@@ -700,7 +698,7 @@ class General extends Component {
                 </div>
               </div>
             ) : (
-              <DateEvent eventId={this.props.event._id} />
+              <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent}/>
             )}
             <div className='field'>
               <label className='label has-text-grey-light'>Descripción</label>
@@ -748,6 +746,7 @@ class General extends Component {
                   </div>
                 </div>
               </div>
+              
               <SelectInput
                 name={'Organizado por:'}
                 isMulti={false}

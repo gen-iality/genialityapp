@@ -74,6 +74,7 @@ class Agenda extends Component {
       this.setState({ documents: documentsData.data });
     }
 
+    // Valida si el evento no tiene fechas especififcas, en ese caso se generan los dias que hay en el rango desde la fecha inicial hasta la fecha final del evento.
     if (!event.dates || event.dates.length === 0) {
       let days = [];
       const init = Moment(event.date_start);

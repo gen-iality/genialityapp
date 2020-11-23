@@ -97,7 +97,6 @@ class AgendaEdit extends Component {
     const ticketEvent = [];
     let vimeo_id = '';
     try {
-      const info = await EventsApi.getOne(event._id);
       const tickets = await eventTicketsApi.getAll(event._id);
       for (let i = 0; tickets.length > i; i++) {
         ticketEvent.push({
@@ -107,12 +106,13 @@ class AgendaEdit extends Component {
         });
       }
 
-      vimeo_id = info.vimeo_id ? info.vimeo_id : '';
-      this.setState({ tickets: ticketEvent, platform: info.event_platform, vimeo_id: vimeo_id });
+      vimeo_id = event.vimeo_id ? event.vimeo_id : '';
+      this.setState({ tickets: ticketEvent, platform: event.event_platform, vimeo_id: vimeo_id });
 
       //Si existe dates, itera sobre el array de fechas especificas, dandole el formato especifico
-      if (info.dates && info.dates.length > 0) {
-        let date = info.dates;
+      if (event.dates && event.dates.length > 0) {
+        
+        let date = event.dates;
         Date.parse(date);
 
         for (var i = 0; i < date.length; i++) {
@@ -136,7 +136,7 @@ class AgendaEdit extends Component {
       console.error(e);
     }
 
-    let documents = await DocumentsApi.byEvent(this.props.event._id);
+    let documents = await DocumentsApi.byEvent(event._id);
     let hostAvailable = await EventsApi.hostAvailable();
     let nameDocuments = [];
     for (let i = 0; i < documents.length; i += 1) {
@@ -700,7 +700,7 @@ class AgendaEdit extends Component {
                   </div>
                   <div className='field'>
                     <label className='label'>Día</label>
-                    {console.log('lo que llega por date', date)}
+                    
                     <SelectAntd
                       name='date'
                       options={this.state.days}
