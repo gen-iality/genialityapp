@@ -4,7 +4,7 @@ import ReactPlayer from 'react-player';
 import Moment from 'moment';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
-import { TagOutlined } from '@ant-design/icons';
+import { TagOutlined, CaretRightFilled } from '@ant-design/icons';
 
 export default function AgendaActivityItem({
   item,
@@ -18,7 +18,9 @@ export default function AgendaActivityItem({
   registerInActivity,
   eventId,
   userId,
-  show_inscription
+  show_inscription,
+  userRegistered,
+  handleOpenModal
 }) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
@@ -27,20 +29,19 @@ export default function AgendaActivityItem({
     if (registerStatus) {
       setIsRegistered(registerStatus);
     }
+    const listeningStateMeetingRoom = async () => {
+      await firestore
+        .collection('languageState')
+        .doc(item._id)
+        .onSnapshot((info) => {
+          if (!info.exists) return;
+          let related_meetings = info.data().related_meetings;
+          setRelatedMeetings(related_meetings);
+        });
+    };
 
     listeningStateMeetingRoom();
-  }, [registerStatus, listeningStateMeetingRoom]);
-
-  const listeningStateMeetingRoom = async () => {
-    await firestore
-      .collection('languageState')
-      .doc(item._id)
-      .onSnapshot((info) => {
-        if (!info.exists) return;
-        let related_meetings = info.data().related_meetings;
-        setRelatedMeetings(related_meetings);
-      });
-  };
+  }, [registerStatus, item]);
 
   return (
     <div className='container_agenda-information'>
@@ -65,13 +66,15 @@ export default function AgendaActivityItem({
        )}
       >
         <Row justify="space-around">
-          {/*Imagen del evento*/}
-          <Col xs={24} sm={24} md={12} xl={8} xxl={8}>
-            <div>
+
+          { item.description === null || item.hosts.length === 0 ? (
+           <>
+            <Col xs={24} sm={24} md={24} xl={24} xxl={24}>
+            <div className="img-agenda-event">
             {!item.habilitar_ingreso && <img src={item.image ? item.image : event_image} />}
               {item.habilitar_ingreso === 'closed_meeting_room' && (
                 <>
-                  <img src={item.image ? item.image : event_image} />
+                  <img src={item.image ? item.image : event_image}/>
                   <Alert
                     message={`La sesión inicia: ${Moment(item.datetime_start).format(
                       'DD MMMM YYYY h:mm a'
@@ -162,11 +165,110 @@ export default function AgendaActivityItem({
                   </Row>
                 </>
               )}
-            </div>
-            {/* Tags del evento*/}          
+            </div>        
           </Col>
-          {/*Informacion acerca del evento */}
-          <Col xs={24} sm={24} md={12} xl={16} xxl={16}>
+           </>
+          ):(
+            <> 
+            <Col xs={24} sm={24} md={12} xl={8} xxl={8}>
+            <div className="img-agenda-event">
+            {!item.habilitar_ingreso && <img src={item.image ? item.image : event_image} />}
+              {item.habilitar_ingreso === 'closed_meeting_room' && (
+                <>
+                  <img src={item.image ? item.image : event_image}/>
+                  <Alert
+                    message={`La sesión inicia: ${Moment(item.datetime_start).format(
+                      'DD MMMM YYYY h:mm a'
+                    )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                    type='warning'
+                  />
+                </>
+              )}
+              {item.habilitar_ingreso === 'ended_meeting_room' && (
+                <>
+                  {item.video ? (
+                    item.video && (
+                      <>
+                        <Alert message='Conferencia Terminada. Observa el video Aquí' type='success' />
+                        <ReactPlayer
+                          width={'100%'}
+                          style={{
+                            display: 'block',
+                            margin: '0 auto'
+                          }}
+                          url={item.video}
+                          //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                          controls
+                          config={{
+                            file: { attributes: { controlsList: 'nodownload' } }
+                          }}
+                        />
+                      </>
+                    )
+                  ) : (
+                    <>
+                      <img src={item.image ? item.image : event_image} />
+                      <Alert
+                        message={`La Conferencia ha Terminado: ${Moment(item.datetime_start).format(
+                          'DD MMMM YYYY h:mm a'
+                        )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                        type='info'
+                      />
+                    </>
+                  )}
+                </>
+              )}
+              {item.habilitar_ingreso === 'open_meeting_room' && (
+                <>
+                  <img
+                    onClick={() => item.meeting_id && toggleConference(true, item.meeting_id, item)}
+                    src={item.image ? item.image : event_image}
+                  />
+                  <div>
+                    <Button
+                      block
+                      type='primary'
+                      disabled={item.meeting_id || item.vimeo_id ? false : true}
+                      onClick={() =>
+                        toggleConference(true, item.meeting_id || item.vimeo_id ? item.meeting_id : item.vimeo_id, item)
+                      }>
+                      {item.meeting_id || item.vimeo_id
+                        ? 'Conéctate a la conferencia en vivo'
+                        : 'Aún no empieza Conferencia Virtual'}
+                    </Button>
+                  </div>
+                  <br />
+                  <Row>
+                    {related_meetings &&
+                      related_meetings.map((item, key) => (
+                        <>
+                          {item.state === 'open_meeting_room' && (
+                            <Button
+                              disabled={item.meeting_id || item.vimeo_id ? false : true}
+                              onClick={() =>
+                                toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
+                              }
+                              type='primary'
+                              className='button-Agenda'
+                              key={key}>
+                              {item.informative_text}
+                            </Button>
+                          )}
+                          {item.state === 'closed_meeting_room' && (
+                            <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
+                          )}
+
+                          {item.state === 'ended_meeting_room' && (
+                            <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
+                          )}
+                        </>
+                      ))}
+                  </Row>
+                </>
+              )}
+            </div>      
+          </Col>
+            <Col xs={24} sm={24} md={12} xl={16} xxl={16}>
             <div className='text-align-card'>
               {
                 <>
@@ -196,16 +298,21 @@ export default function AgendaActivityItem({
               )}
             </div>
           </Col>
+            </>
+          )
+
+          }
+         
         </Row>
         <Row>
-          <Col span={8}>
+          <Col xs={24} sm={24} md={24} lg={8} xxl={8} xl={8}>
             <Row justify="start">
               <div
               onClick={() => { gotoActivity(item);}}
               className='text-align-card'
               style={{ marginBottom: '5%' }}>
-                <TagOutlined />  
-                  {item.activity_categories.length > 0 && (
+                <TagOutlined style={{marginRigh:"2px" }} />  
+                   {item.activity_categories.length > 0 && (
                     <>
                       {item.activity_categories.map((item) => (
                         <>
@@ -217,7 +324,7 @@ export default function AgendaActivityItem({
                 </div>  
             </Row>
           </Col>
-          <Col span={16}>
+          <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
             <Row justify="end" align="bottom">
               <Col xs={24} sm={24} md={12} xl={12} xxl={12}>
                 {show_inscription === 'true' && (
@@ -289,9 +396,11 @@ export default function AgendaActivityItem({
               {item.meeting_id || item.vimeo_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
             </span> 
             <div
-              onClick={() => {
-                gotoActivity(item);
-              }}
+              onClick={
+                userRegistered === null && eventId === '5f99a20378f48e50a571e3b6'
+                  ? handleOpenModal
+                  : () => gotoActivity(item)
+              }
               className='text-align-card'
               style={{ marginBottom: '5%' }}>
               {item.activity_categories.length > 0 && (
@@ -350,9 +459,11 @@ export default function AgendaActivityItem({
                 {btnDetailAgenda === 'true' && (
                   <Button
                     type='primary'
-                    onClick={() => {
-                      gotoActivity(item);
-                    }}
+                    onClick={
+                      userRegistered === null && eventId === '5f99a20378f48e50a571e3b6'
+                        ? handleOpenModal
+                        : () => gotoActivity(item)
+                    }
                     className='space-align-block button-Agenda'>
                     Detalle de actividad
                   </Button>
@@ -374,9 +485,11 @@ export default function AgendaActivityItem({
                   Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
                     <Button
                       type='primary'
-                      onClick={() => {
-                        gotoActivity(item);
-                      }}
+                      onClick={
+                        userRegistered === null && eventId === '5f99a20378f48e50a571e3b6'
+                          ? handleOpenModal
+                          : () => gotoActivity(item)
+                      }
                       className='space-align-block button-Agenda'>
                       Encuestas
                     </Button>

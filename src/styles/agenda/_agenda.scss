@@ -64,14 +64,59 @@
   .text-align-card {
     padding: 0 0.75rem;
   }
-
+  .ant-card-bordered {
+    border: 1px solid #f0f0f000;
+  }
+  .ant-page-header {
+    padding: 16px 14px;
+  } 
   .container_agenda-information {
     margin-bottom: 3%;
     .site-page-header {
-      border: 1px solid rgb(255, 255, 255);
+      border: 1px solid #ffffff00;
       .ant-page-header-heading-title {
         overflow: visible;
         white-space: normal;
+      }
+    }
+    
+    .magicland-agenda_information{
+      background: rgb(20, 20, 20);
+      color: white;
+      p{
+        color: white;
+        float: left !important;
+      }
+      .card-header-title {
+        font-size: initial;
+        color: white;
+      }
+      .ant-page-header-heading-title {
+        color: white;
+        float: left !important;
+      }
+      
+      .ant-tag-geekblue {
+        color: #f5f5f5;
+        background: #b5b5b5;
+        border-color: #adc6ff;
+      }
+      section.landing *:not(span) {
+        color: #fafafa;
+      }
+    }
+    .img-agenda-event{
+      margin-bottom: 5px;
+      width: 100%;
+    }
+    .icono_play-agenda{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      cursor: pointer;
+      .anticon svg {
+        display: inline-block;
+        font-size: 43px;
       }
     }
     .agenda_information {
@@ -99,10 +144,20 @@
       // }
       .date-activity {
         display: block;
-        margin-right: 10%;     
-        margin-left: 32%;
-        font-weight: 300;
-        color: #949494
+        margin-right: 10%;
+        margin-bottom: 5%;
+        margin-left: 4%;
+        font-weight: 400;
+        color: #b5b5b5;
+      }
+      .card-header-title {
+        justify-content: start;
+        font-weight: bolder;
+        font: normal normal 500 23px/25px $family-sans-serif;
+        text-align: initial;
+        p{
+          margin-bottom: 0px;
+        }
       }
       // .card-header-title {
       //   justify-content: start;
@@ -142,6 +197,9 @@
           color: #949494;
           font-size: 11px;
         }   
+        .button-Agenda{
+          width: 100%;
+        }
       }
     }
   }

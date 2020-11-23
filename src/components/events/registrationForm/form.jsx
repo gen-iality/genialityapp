@@ -63,7 +63,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
   // const [ fileSave, setFileSave ] = useState( [] )
 
   const [form] = Form.useForm();
-  console.log("eventUser",eventUser);
+  console.log("eventUser", eventUser);
   useEffect(() => {
     console.log('form methods', form)
     form.setFields([
@@ -84,7 +84,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
     form.resetFields();
 
     if (window.fbq) { window.fbq('track', 'CompleteRegistration'); }
-  }, [eventUser, eventUserId, initialValues,conditionals]);
+  }, [eventUser, eventUserId, initialValues, conditionals]);
 
   const showGeneralMessage = () => {
     setGeneralFormErrorMessageVisible(true);
@@ -104,7 +104,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
   }
 
   const onFinish = async (values) => {
-    debugger
     values.password = password
     // values.files = fileSave
 
@@ -189,7 +188,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
 
   const updateFieldsVisibility = (conditionals, allFields) => {
     let newExtraFields = [...extraFieldsOriginal]
-    //debugger
     newExtraFields = newExtraFields.filter((field) => {
       let fieldShouldBeDisplayed = false
       let fieldHasCondition = false
@@ -208,32 +206,21 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
             fulfillConditional = (conditional.value === allFields[changedkey])
           }
         })
-        
+
         if (fulfillConditional) {
           fieldShouldBeDisplayed = true
         }
-        
+
       })
       return (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition
     })
-    console.log("newExtraFields",newExtraFields, allFields);
+    console.log("newExtraFields", newExtraFields, "allFields", allFields, "conditionals", conditionals);
     setExtraFields(newExtraFields)
   }
 
   const hideConditionalFieldsToDefault = (conditionals, eventUser) => {
-    let allFields = (eventUser && eventUser["properties"])?eventUser["properties"]:[];
+    let allFields = (eventUser && eventUser["properties"]) ? eventUser["properties"] : [];
     updateFieldsVisibility(conditionals, allFields);
-    let newExtraFields = [...extraFieldsOriginal]
-    setExtraFields(newExtraFields);
-    return;
-    conditionals.map((conditional, key) => {
-      newExtraFields = newExtraFields.filter((field, key) => {
-        return conditional.fields.indexOf(field.name) === -1
-      })
-    })
-
-    setExtraFields(newExtraFields)
-
   }
 
   const handleChangePassword = e => {
@@ -268,11 +255,8 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
       let description = m.description;
       let labelPosition = m.labelPosition;
       let target = name;
-      let value = eventUser && eventUser["properties"]?eventUser["properties"][target]:"";
+      let value = eventUser && eventUser["properties"] ? eventUser["properties"][target] : "";
 
-      // if ( m.visibleByAdmin === true ) {
-      //   return ( <div></div> );
-      // }
       //no entiendo b esto para que funciona
       if (conditionals.state === "enabled") {
         if (label === conditionals.field) {
@@ -284,29 +268,14 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
         }
       }
       let input = (
-        <>
         <Input
           {...props}
-          addonBefore={
-            labelPosition === "izquierda" ? (
-              <span>
-                {
-                  mandatory && (
-                    <span style={{ color: "red" }}>* </span>
-                  )
-                }
-                <strong>{label}</strong>
-              </span>
-            ) : (
-                ""
-              )
-          }
+          addonBefore={labelPosition === "izquierda" && (<span>{mandatory && (<span style={{ color: "red" }}>* </span>)}<strong>{label}</strong></span>)}
           type={type}
           key={key}
           name={name}
           defaultValue={value}
         />
-        </>
       );
 
       if (type === "tituloseccion") {
@@ -331,27 +300,24 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
 
       if (type === "boolean") {
         input = (
-          <>
           <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value)}>
-            {mandatory ? (
+            { mandatory ? (
               <span>
                 <span style={{ color: "red" }}>* </span>
                 <strong>{label}</strong>
               </span>
             ) : (
-                label 
+                label
               )}
           </Checkbox>
-          </>
         );
       }
 
       if (type === "longtext") {
-      input = <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} defaultValue = {value}/>;
+        input = <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} value={value} defaultValue={value} />;
       }
 
       if (type === "multiplelist") {
-
         input = (
           <Checkbox.Group
             options={m.options}
@@ -364,13 +330,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
       if (type === "file") {
         input = (
           <Upload
-            //accept="application/pdf"
+            accept="application/pdf"
             action='https://api.evius.co/api/files/upload/'
             multiple={false}
             listType='text'
             beforeUpload={beforeUpload}
-            defaultFileList = {(value && value.fileList)?value.fileList.map((file) => {file.url = file.response || null;return file}):[]}
-            fileList = {(value && value.fileList)?value.fileList.map((file) => {file.url = file.response || null;return file}):[]}
+            defaultFileList={(value && value.fileList) ? value.fileList.map((file) => { file.url = file.response || null; return file }) : []}
+
           >
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
@@ -382,10 +348,10 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
           return (<Option key={key} value={o.value}>{o.value}</Option>);
         });
         input = (
-            <Select style={{ width: "100%" }} name={name} defaultValue={value}>
-              <Option value={""}>Seleccione...</Option>
-              {input}
-            </Select>
+          <Select style={{ width: "100%" }} name={name} defaultValue={value}>
+            <Option value={""}>Seleccione...</Option>
+            {input}
+          </Select>
         );
       }
 
@@ -413,19 +379,16 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
 
       if (type === "password") {
         input = (
-          <>
-            <Password
-              name='password'
-              style={{ margin: '15px' }}
-              placeholder="Ingrese su password"
-              onChange={handleChangePassword}
-              key={key}
-              value={password}
-              pattern="(?=^.{10,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
-              title="El password debe tener mínimo 10 caracteres, una mayúscula, una minúscula y un número"
-            />
-
-          </>
+          <Password
+            name='password'
+            style={{ margin: '15px' }}
+            placeholder="Ingrese su password"
+            onChange={handleChangePassword}
+            key={key}
+            value={password}
+            pattern="(?=^.{10,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
+            title="El password debe tener mínimo 10 caracteres, una mayúscula, una minúscula y un número"
+          />
         )
       }
 
@@ -462,9 +425,10 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
                 valuePropName={type === "boolean" ? "checked" : "value"}
                 label={(labelPosition !== "izquierda" || !labelPosition) && type !== "tituloseccion" ? label : "" && (labelPosition !== "arriba" || !labelPosition)}
                 name={name}
-                rules={eventUser?[]:[rule]}
+                rules={[rule]}
                 key={"l" + key}
                 htmlFor={key}
+                initialValue={value}
               >
                 {input}
               </Form.Item>
@@ -530,7 +494,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
                 <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
-                      {eventUser ? "Actualizar": formMessage.formButton}
+                      {eventUser ? "Actualizar" : eventId === '5f9824fc1f8ccc414e33bec2' ? 'Votar y Enviar' : formMessage.formButton}
                     </Button>
                   </Form.Item>
                 </Col>
