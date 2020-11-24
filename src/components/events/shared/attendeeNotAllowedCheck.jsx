@@ -35,7 +35,7 @@ const AttendeeNotAllowedCheck = (props) => {
         />
       )}
 
-      {currentUser && !usuarioRegistrado && (
+      {currentUser && !usuarioRegistrado && !event.allow_register && (
         <Alert
           message='Evento restringido. requiere registro previo'
           description={
