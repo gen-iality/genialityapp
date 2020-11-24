@@ -65,17 +65,21 @@ let AgendaActividadDetalle = (props) => {
     <div className='columns container-calendar-section is-centered'>
       <div className=' container_agenda-information container-calendar is-three-fifths'>
         <Card
-          title={<PageHeader
-            className='site-page-header'
-            onBack={() => {
-              gotoActivityList();
-            }}
-            title={currentActivity.name}
-          /> }
-          extra={<p className='card-header-title has-padding-left-0 '>
-          {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
-          {Moment(currentActivity.datetime_end).format('h:mm a')}
-        </p>}
+          title={
+            <PageHeader
+              className='site-page-header'
+              onBack={() => {
+                gotoActivityList();
+              }}
+              title={currentActivity.name}
+            />
+          }
+          extra={
+            <p className='card-header-title has-padding-left-0 '>
+              {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
+              {Moment(currentActivity.datetime_end).format('h:mm a')}
+            </p>
+          }
           className={event._id === '5f99a20378f48e50a571e3b6' ? 'magicland-agenda_information' : 'agenda_information'}>
           <header className='card-header columns has-padding-left-7'>
             <div className='is-block is-11 column is-paddingless'>
@@ -138,12 +142,10 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               )}
               {event._id === '5f99a20378f48e50a571e3b6' ? (
-                <>
-                </>
-              ) :
-              (
+                <></>
+              ) : (
                 <p className='has-text-left is-size-6-desktop'>
-                  {usuarioRegistrado && (                   
+                  {usuarioRegistrado && (
                     <Button
                       type='primary'
                       disabled={currentActivity.meeting_id ? false : true}
@@ -151,9 +153,8 @@ let AgendaActividadDetalle = (props) => {
                       {currentActivity.meeting_id ? 'Ir Conferencia en Vivo' : 'Aún no empieza Conferencia Virtual'}
                     </Button>
                   )}
-               </p>         
-              )
-              }
+                </p>
+              )}
               {/* <p className='has-text-left is-size-6-desktop'>
 
                 {usuarioRegistrado && (
@@ -184,32 +185,29 @@ let AgendaActividadDetalle = (props) => {
               )} */}
             </div>
           </header>
-          
+
           {event._id === '5f99a20378f48e50a571e3b6' ? (
-                <>
-                </>
-              ) :
-              (
-                <div className='calendar-category has-margin-top-7'>
-                {/* Tags de categorias */}
-                {currentActivity.activity_categories.map((cat, key) => (
-                  <span
-                    key={key}
-                    style={{
-                      background: cat.color,
-                      color: cat.color ? 'white' : '',
-                    }}
-                    className='tag category_calendar-tag'>
-                    {cat.name}
-                  </span>
-                ))}
-  
-                <span className='tag category_calendar-tag'>               
-                  {currentActivity.meeting_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
+            <></>
+          ) : (
+            <div className='calendar-category has-margin-top-7'>
+              {/* Tags de categorias */}
+              {currentActivity.activity_categories.map((cat, key) => (
+                <span
+                  key={key}
+                  style={{
+                    background: cat.color,
+                    color: cat.color ? 'white' : '',
+                  }}
+                  className='tag category_calendar-tag'>
+                  {cat.name}
                 </span>
-              </div>       
-              )
-          }
+              ))}
+
+              <span className='tag category_calendar-tag'>
+                {currentActivity.meeting_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
+              </span>
+            </div>
+          )}
           <div className='card-content has-text-left container_calendar-description'>
             <div className='calendar-category has-margin-top-7'>
               {/* Tags de categorias */}
@@ -245,39 +243,33 @@ let AgendaActividadDetalle = (props) => {
                 comunicate con el organizador del evento
               
              */}
-            
+
             {event._id === '5f99a20378f48e50a571e3b6' ? (
-                <>
-                </>
-              ) :
-              (
-                <div
+              <></>
+            ) : (
+              <div
                 className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
                 dangerouslySetInnerHTML={{ __html: currentActivity.description }}
-              />     
-              )
-            }
+              />
+            )}
             {/* <div
               className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
               dangerouslySetInnerHTML={{ __html: currentActivity.description }}
             /> */}
             {event._id === '5f99a20378f48e50a571e3b6' ? (
-                <>
-                </>
-              ) :
-              (
-                <Row>
-              <Col span={24}>
-                <AttendeeNotAllowedCheck
-                  event={event}
-                  currentUser={props.currentUser}
-                  usuarioRegistrado={usuarioRegistrado}
-                  currentActivity={currentActivity}
-                />
-              </Col>
-            </Row>     
-              )
-            }
+              <></>
+            ) : (
+              <Row>
+                <Col span={24}>
+                  <AttendeeNotAllowedCheck
+                    event={event}
+                    currentUser={props.currentUser}
+                    usuarioRegistrado={usuarioRegistrado}
+                    currentActivity={currentActivity}
+                  />
+                </Col>
+              </Row>
+            )}
             {/* <Row>
               <Col span={24}>
                 <AttendeeNotAllowedCheck
@@ -367,7 +359,7 @@ let AgendaActividadDetalle = (props) => {
               </div>
             )}
 
-            {props.currentUser.names ? (
+            {props.currentUser && props.currentUser.names ? (
               <div />
             ) : (
               <div>
