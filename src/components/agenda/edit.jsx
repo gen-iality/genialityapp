@@ -111,7 +111,6 @@ class AgendaEdit extends Component {
 
       //Si existe dates, itera sobre el array de fechas especificas, dandole el formato especifico
       if (event.dates && event.dates.length > 0) {
-        
         let date = event.dates;
         Date.parse(date);
 
@@ -633,7 +632,6 @@ class AgendaEdit extends Component {
       loading,
       name,
       subtitle,
-      bigmaker_meeting_id,
       nameDocuments,
       selected_document,
       date,
@@ -700,7 +698,7 @@ class AgendaEdit extends Component {
                   </div>
                   <div className='field'>
                     <label className='label'>Día</label>
-                    
+
                     <SelectAntd
                       name='date'
                       options={this.state.days}
