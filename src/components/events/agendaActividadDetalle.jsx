@@ -109,11 +109,15 @@ let AgendaActividadDetalle = (props) => {
                   />
                 </div>
               ) : (
-                <img
-                  className='activity_image'
-                  src={currentActivity.image ? currentActivity.image : image_event}
-                  alt='Activity'
-                />
+                <>
+                  {(currentActivity.image || image_event) && (
+                    <img
+                      className='activity_image'
+                      src={currentActivity.image ? currentActivity.image : image_event}
+                      alt='Activity'
+                    />
+                  )}
+                </>
               )}
               {/*logo quemado de aval para el evento de magicland */}
               {event._id === '5f99a20378f48e50a571e3b6' && (
@@ -204,7 +208,9 @@ let AgendaActividadDetalle = (props) => {
               ))}
 
               <span className='tag category_calendar-tag'>
-                {currentActivity.meeting_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
+                {currentActivity.meeting_id || currentActivity.vimeo_id
+                  ? 'Tiene espacio virtual'
+                  : 'No tiene espacio Virtual'}
               </span>
             </div>
           )}

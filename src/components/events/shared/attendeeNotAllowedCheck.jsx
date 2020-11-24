@@ -16,7 +16,7 @@ const AttendeeNotAllowedCheck = (props) => {
       <Tag color='geekblue'>{currentUser ? 'Usuario Autenticado' : 'Usuario Anónimo'}</Tag>
       <Tag color='geekblue'>{usuarioRegistrado ? 'Usuario Registrado' : 'Usuario sin Registrar'}</Tag>
 
-      {!currentUser && (
+      {!currentUser && !event.allow_register && (
         <Alert
           //onClick={() => (window.location.href = "https://eviusauth.netlify.com")}
           message='Evento restringido. requiere usuario'
