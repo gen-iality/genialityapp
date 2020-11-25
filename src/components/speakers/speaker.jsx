@@ -5,9 +5,11 @@ import ReactQuill from "react-quill";
 import { FaChevronLeft } from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
-import { handleRequestError, sweetAlert, uploadImage } from "../../helpers/utils";
+import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from "../../helpers/utils";
 import { imageBox, toolbarEditor } from "../../helpers/constants";
-import { SpeakersApi } from "../../helpers/request";
+import { CategoriesAgendaApi, SpeakersApi } from "../../helpers/request";
+import { FaWhmcs } from "react-icons/fa";
+import Creatable from "react-select";
 
 class Speaker extends Component {
     constructor(props) {
@@ -22,19 +24,31 @@ class Speaker extends Component {
             image: "",
             imageData: "",
             networks: [],
-            order:""
+            order:"",
+            selectedCategories: [],
+            categories: [],
+            isloadingSelect:{ types: true, categories: true }
         }
         this.descriptionActivity = this.descriptionActivity.bind(this)
     }
 
     async componentDidMount() {
+        
         const { eventID, location: { state } } = this.props;
+        let categories = await CategoriesAgendaApi.byEvent(this.props.eventID);
+            
+        categories = handleSelect(categories);
         if (state.edit) {
             const info = await SpeakersApi.getOne(state.edit, eventID);
             console.log(info)
             Object.keys(this.state).map(key => info[key] ? this.setState({ [key]: info[key] }) : "");
+            
+            
+            this.setState({selectedCategories: fieldsSelect(info.category_id, categories)})
         }
-        this.setState({ loading: false });
+        const isloadingSelect = { types: false, categories: false };
+        this.setState({ loading: false, isloadingSelect, categories });
+        console.log(this.state.selectedCategories)
     }
 
     handleChange = (e) => {
@@ -63,8 +77,9 @@ class Speaker extends Component {
             sweetAlert.showLoading("Espera (:", "Guardando...");
             const { eventID, location: { state } } = this.props;
             this.setState({ isLoading: true });
-            const { name, profession, description_activity, description, image, order} = this.state;
-            const info = { name, image, description_activity, description, profession, order: parseInt(order) };
+            const { name, profession, description_activity, description, image, order, selectedCategories} = this.state;
+            
+            const info = { name, image, description_activity, description, profession, category_id:selectedCategories.value, order: parseInt(order),  };
             console.log(info)
             if (state.edit) await SpeakersApi.editOne(info, state.edit, eventID);
             else await SpeakersApi.create(eventID, info);
@@ -98,9 +113,21 @@ class Speaker extends Component {
         this.setState({ description_activity: e.target.value })
     }
 
+    //FN para guardar en el estado la opcion seleccionada
+    selectCategory = (selectedCategories) => {
+        this.setState({ selectedCategories });
+        console.log(this.state.selectedCategories)
+    };
+
+    //FN para ir a una ruta específica (ruedas en los select)
+    goSection = (path, state) => {
+        this.props.history.push(path, state)
+    };
+
     render() {
         const { matchUrl } = this.props;
-        const { redirect, loading, name, profession, description, image,order } = this.state;
+        const newCategoryUrl = "/event/" +this.props.eventID // Ruta creada para el boton de nueva categoria /event/[eventID]
+        const { redirect, loading, name, profession, description, image,order,categories,selectedCategories, isloadingSelect } = this.state;
         if (!this.props.location.state || redirect) return <Redirect to={matchUrl} />;
         return (
             <EventContent title={<span><Link to={matchUrl}><FaChevronLeft /></Link>Conferencista</span>}>
@@ -168,6 +195,30 @@ class Speaker extends Component {
                                         </div>
                                     </div>
                                 </div>
+                                <label className="label has-text-grey-light">Categoria</label>
+                               <div className="columns">
+                                    <div className="column is-10">
+                                        <Creatable
+                                            isClearable
+                                            styles={catStyles}
+                                            onChange={this.selectCategory}
+                                            isDisabled={isloadingSelect.categories}
+                                            isLoading={isloadingSelect.categories}
+                                            options={categories}
+                                            placeholder={"Sin categoría...."}
+                                            value={selectedCategories}
+                                        />
+                                    </div>
+                                    <div className="column is-2">
+                                        <button onClick={() => this.goSection(`${newCategoryUrl}/agenda/categorias`)} className="button"><FaWhmcs /></button>
+                                    </div> 
+
+                               </div>
+                                
+                                
+
+                                                             
+
                             </div>
                         </div>
                     </div>
@@ -176,5 +227,24 @@ class Speaker extends Component {
         )
     }
 }
+
+//Estilos para el tipo
+const dot = (color = 'transparent') => ({
+    alignItems: 'center',
+    display: 'flex',
+    ':before': {
+        backgroundColor: color,
+        content: '" "',
+        display: 'block',
+        margin: 8,
+        height: 10,
+        width: 10,
+    },
+});
+
+const catStyles = {
+    menu: styles => ({ ...styles, maxHeight: "inherit" }),
+    multiValue: (styles, { data }) => ({ ...styles, ...dot(data.item.color) })
+};
 
 export default withRouter(Speaker)
