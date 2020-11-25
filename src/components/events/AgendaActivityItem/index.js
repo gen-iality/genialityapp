@@ -65,7 +65,7 @@ export default function AgendaActivityItem({
                 </span>
        )}
       >
-        <Row justify="space-around">
+        <Row justify="space-between">
 
           { item.description === null || item.hosts.length === 0 ? (
            <>
@@ -136,7 +136,6 @@ export default function AgendaActivityItem({
                         : 'Aún no empieza Conferencia Virtual'}
                     </Button>
                   </div>
-                  <br />
                   <Row>
                     {related_meetings &&
                       related_meetings.map((item, key) => (
@@ -237,7 +236,6 @@ export default function AgendaActivityItem({
                         : 'Aún no empieza Conferencia Virtual'}
                     </Button>
                   </div>
-                  <br />
                   <Row>
                     {related_meetings &&
                       related_meetings.map((item, key) => (
@@ -268,26 +266,26 @@ export default function AgendaActivityItem({
               )}
             </div>      
           </Col>
-            <Col xs={24} sm={24} md={12} xl={16} xxl={16}>
-            <div>
+          <Col xs={24} sm={24} md={12} xl={16} xxl={16}>
+            <div className="description-agenda">
               {
                 <>
-                  <Row justify="start">
-                    <div style={{textAlign:"left"}}
+                  <Row>
+                    <div 
                       dangerouslySetInnerHTML={{ __html: item.description }}
                     />
                   </Row>
                 </>
               }
             </div>
-            <div className='text-align-card'>
+            <div>
               {item.hosts.length > 0 && (
                 <>
-                  <Row justify="start"><h4>Panelistas:</h4></Row>
-                  <Row justify="start" className="Agenda-Penalistas">
+                  <Row justify="start"  className='txt-agenda-Panelistas'><h4>Panelistas:</h4></Row>
+                  <Row justify="start" className="Agenda-Panelistas">
                     {item.hosts.map((speaker, key) => (
-                      <Col key={key} lg={24} xl={8} xxl={8} style={{ marginBottom: 13 }}>
-                        <span style={{ fontSize: 20, fontWeight: 500 }}>
+                      <Col lg={24} xl={10} xxl={10}>
+                        <span key={key}className="Agenda-speaker">
                           <Avatar size={30} src={speaker.image} /> {speaker.name} &nbsp;
                         </span>
                       </Col>
@@ -305,12 +303,12 @@ export default function AgendaActivityItem({
         </Row>
         <Row>
           <Col xs={24} sm={24} md={24} lg={8} xxl={8} xl={8}>
-            <Row justify="start">
+            <Row justify="start" align="middle">
               <div
               onClick={() => { gotoActivity(item);}}
-              className='text-align-card'
+              className='tag-agenda'
               style={{ marginBottom: '5%' }}>
-                <TagOutlined style={{marginRigh:"2px" }} />  
+                <TagOutlined style={{marginRight:"12px", fontSize:"15px" }} />  
                    {item.activity_categories.length > 0 && (
                     <>
                       {item.activity_categories.map((item) => (
@@ -325,7 +323,6 @@ export default function AgendaActivityItem({
           </Col>
           <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
             <Row justify="end" align="bottom">
-              <Col xs={24} sm={24} md={12} xl={12} xxl={12}>
                 {show_inscription === 'true' && (
                   <Button
                     type='primary'
@@ -363,7 +360,6 @@ export default function AgendaActivityItem({
                        Encuestas
                    </Button>
                 )}
-          </Col>
         </Row>
       </Col>
     </Row> 
