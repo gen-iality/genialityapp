@@ -269,12 +269,11 @@ export default function AgendaActivityItem({
             </div>      
           </Col>
             <Col xs={24} sm={24} md={12} xl={16} xxl={16}>
-            <div className='text-align-card'>
+            <div>
               {
                 <>
-                  <Row>
-                    <div
-                      className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
+                  <Row justify="start">
+                    <div style={{textAlign:"left"}}
                       dangerouslySetInnerHTML={{ __html: item.description }}
                     />
                   </Row>
