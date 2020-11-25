@@ -5,7 +5,6 @@ import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../helpe
 import Moment from 'moment';
 import { Card, Avatar, Button, Modal, Row, Col } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { Background } from 'react-parallax';
 
 const { Meta } = Card;
 
@@ -21,6 +20,7 @@ class Speakers extends Component {
       speakersWithCategory: [],
       speakersWithoutCategory: [],
       speakerCategories: [],
+      renderSpeakerCategories: false,
     };
   }
 
@@ -42,9 +42,15 @@ class Speakers extends Component {
 
     // se crea un array de arrays posicionados segun el orden de la categoria
     // en caso que dos categorias tengan el mismo orden podrian colisionar o perderse los datos
+
+    //console.table(categories);
     categories.map((category) => {
       speakersWithCategory[category.order] = [];
     });
+
+    const renderSpeakerCategories = categories.length ? true : false;
+
+    this.setState({ renderSpeakerCategories });
 
     speakers.map((speaker, index) => {
       //Solo funciona si la relacion es uno a uno -> a un speaker una categoria
@@ -98,10 +104,11 @@ class Speakers extends Component {
       speakerCategories,
       speakersWithCategory,
       speakersWithoutCategory,
+      renderSpeakerCategories,
     } = this.state;
     return (
       <>
-        {speakerCategories.length && (
+        {renderSpeakerCategories && speakerCategories.length && (
           <>
             {speakerCategories.map((category) => {
               return (
