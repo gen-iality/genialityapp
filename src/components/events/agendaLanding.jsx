@@ -139,7 +139,7 @@ class Agenda extends Component {
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
     const { data } = await AgendaApi.byEvent(this.props.eventId);
-    console.log('datos de la agenda', data);
+
     //se consulta la api de espacios para
     let space = await SpacesApi.byEvent(this.props.event._id);
 
@@ -365,7 +365,6 @@ class Agenda extends Component {
           ]}>
           <p>Para poder disfrutar de este contenido debes estar registrado e iniciar sesión</p>
         </Modal>
-        {console.log('currentActivity', currentActivity)}
         {currentActivity && (
           <AgendaActividadDetalle
             visible={this.state.visible}
