@@ -19,7 +19,7 @@ export default function AgendaActivityItem({
   userId,
   show_inscription,
   userRegistered,
-  handleOpenModal
+  handleOpenModal,
 }) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
@@ -69,7 +69,7 @@ export default function AgendaActivityItem({
                 </span>
               )}
             <p>
-              <span className='card-header-title text-align-card'>{item.name}</span>
+                  <span className='card-header-title text-align-card'>{item.name}{}</span>
             </p>
           </Row>
           <hr className='line-head' />
@@ -147,7 +147,15 @@ export default function AgendaActivityItem({
                         : () => gotoActivity(item)
                     }
                     className='space-align-block button-Agenda'>
-                    Detalle de actividad
+                    {eventId === '5f99a20378f48e50a571e3b6'?(
+                     <>
+                     VER AHORA 
+                     </>
+                    ):(
+                     <>
+                     Detalle de actividad
+                     </>
+                    )}
                   </Button>
                 )}
                 {Documents &&
@@ -203,13 +211,13 @@ export default function AgendaActivityItem({
                           width={'100%'}
                           style={{
                             display: 'block',
-                            margin: '0 auto'
+                            margin: '0 auto',
                           }}
                           url={item.video}
                           //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                           controls
                           config={{
-                            file: { attributes: { controlsList: 'nodownload' } }
+                            file: { attributes: { controlsList: 'nodownload' } },
                           }}
                         />
                       </>
@@ -238,9 +246,14 @@ export default function AgendaActivityItem({
                       block
                       type='primary'
                       disabled={item.meeting_id || item.vimeo_id ? false : true}
-                      onClick={() =>
-                        toggleConference(true, item.meeting_id || item.vimeo_id ? item.meeting_id : item.vimeo_id, item)
-                      }>
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleConference(
+                          true,
+                          item.meeting_id || item.vimeo_id ? item.meeting_id : item.vimeo_id,
+                          item
+                        );
+                      }}>
                       {item.meeting_id || item.vimeo_id
                         ? 'Conéctate a la conferencia en vivo'
                         : 'Aún no empieza Conferencia Virtual'}

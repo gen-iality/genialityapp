@@ -78,8 +78,10 @@ class Event extends Component {
       NewsApp: true,
       SurveysCreate: true,
       FAQS: true,
-      Trivia: true
+      Trivia: true,
+      event: null
     };
+    this.addNewFieldsToEvent = this.addNewFieldsToEvent.bind(this)
   }
 
   async componentDidMount() {
@@ -88,19 +90,39 @@ class Event extends Component {
       let eventId = this.props.match.params.event;
       await this.props.dispatch(fetchPermissions(eventId));
       const event = await EventsApi.getOne(eventId);
-      const dateFrom = event.datetime_from.split(" ");
-      const dateTo = event.datetime_to.split(" ");
-      event.hour_start = Moment(dateFrom[1], "HH:mm").toDate();
-      event.hour_end = Moment(dateTo[1], "HH:mm").toDate();
-      event.date_start = Moment(dateFrom[0], "YYYY-MM-DD").toDate();
-      event.date_end = Moment(dateTo[0], "YYYY-MM-DD").toDate();
-      event.address = event.address ? event.address : "";
-      this.setState({ event, loading: false });
+      const eventWithExtraFields = this.addNewFieldsToEvent(event)
+      this.setState({ event: eventWithExtraFields, loading: false });
     } catch (e) {
       console.error(e.response);
       this.setState({ timeout: true, loading: false });
     }
   }
+
+  componentDidUpdate(prevProps, prevState){
+
+    if(prevState.event !== this.state.event){
+
+      const {event} = this.state
+      const eventWithExtraFields = this.addNewFieldsToEvent(event)
+      this.setState({ event: eventWithExtraFields});
+      
+    }
+  }
+
+
+  addNewFieldsToEvent(event){
+    const dateFrom = event.datetime_from.split(" ");
+    const dateTo = event.datetime_to.split(" ");
+    event.hour_start = Moment(dateFrom[1], "HH:mm").toDate();
+    event.hour_end = Moment(dateTo[1], "HH:mm").toDate();
+    event.date_start = Moment(dateFrom[0], "YYYY-MM-DD").toDate();
+    event.date_end = Moment(dateTo[0], "YYYY-MM-DD").toDate();
+    event.address = event.address ? event.address : "";
+
+    return event
+  }
+
+
 
   componentWillUnmount() {
     this.setState({ newEvent: false });
@@ -145,7 +167,7 @@ class Event extends Component {
                 render={() => <Wall event={this.state.event} eventId={this.state.event._id} />}
               />
               <Route path={`${match.url}/datos`} render={() => <Datos eventID={this.state.event._id} />} />
-              <Route path={`${match.url}/agenda`} render={() => <AgendaRoutes event={this.state.event} />} />
+              <Route path={`${match.url}/agenda`} render={() => <AgendaRoutes event={this.state.event} updateEvent={this.updateEvent}/>} />
               <Route path={`${match.url}/empresas`}>
                 <EmpresasRoutes event={this.state.event} />
               </Route>

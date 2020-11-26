@@ -25,7 +25,7 @@ import {
 } from '../../helpers/request';
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from '../../helpers/utils';
 import Dropzone from 'react-dropzone';
-import { Spin, Card } from 'antd';
+import { Spin, Card, Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
 import { setHostState } from './fireHost';
@@ -97,7 +97,6 @@ class AgendaEdit extends Component {
     const ticketEvent = [];
     let vimeo_id = '';
     try {
-      const info = await EventsApi.getOne(event._id);
       const tickets = await eventTicketsApi.getAll(event._id);
       for (let i = 0; tickets.length > i; i++) {
         ticketEvent.push({
@@ -107,16 +106,17 @@ class AgendaEdit extends Component {
         });
       }
 
-      vimeo_id = info.vimeo_id ? info.vimeo_id : '';
-      this.setState({ tickets: ticketEvent, platform: info.event_platform, vimeo_id: vimeo_id });
+      vimeo_id = event.vimeo_id ? event.vimeo_id : '';
+      this.setState({ tickets: ticketEvent, platform: event.event_platform, vimeo_id: vimeo_id });
 
       //Si existe dates, itera sobre el array de fechas especificas, dandole el formato especifico
-      if (info.dates && info.dates.length > 0) {
-        let date = info.dates;
+      if (event.dates && event.dates.length > 0) {
+        let date = event.dates;
         Date.parse(date);
 
         for (var i = 0; i < date.length; i++) {
-          days.push(Moment(date[i], ['YYYY-MM-DD']).format('YYYY-MM-DD'));
+          let formatDate = Moment(date[i], ['YYYY-MM-DD']).format('YYYY-MM-DD');
+          days.push({ value: formatDate, label: formatDate });
         }
         //Si no, recibe la fecha inicio y la fecha fin y le da el formato especifico a mostrar
       } else {
@@ -125,18 +125,17 @@ class AgendaEdit extends Component {
         const diff = end.diff(init, 'days');
         //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
         for (let i = 0; i < diff + 1; i++) {
-          days.push(
-            Moment(init)
-              .add(i, 'd')
-              .format('YYYY-MM-DD')
-          );
+          let formatDate = Moment(init)
+            .add(i, 'd')
+            .format('YYYY-MM-DD');
+          days.push({ value: formatDate, label: formatDate });
         }
       }
     } catch (e) {
       console.error(e);
     }
 
-    let documents = await DocumentsApi.byEvent(this.props.event._id);
+    let documents = await DocumentsApi.byEvent(event._id);
     let hostAvailable = await EventsApi.hostAvailable();
     let nameDocuments = [];
     for (let i = 0; i < documents.length; i += 1) {
@@ -624,12 +623,15 @@ class AgendaEdit extends Component {
     }
   };
 
+  handleChangeDate = (e) => {
+    this.setState({ date: e });
+  };
+
   render() {
     const {
       loading,
       name,
       subtitle,
-      bigmaker_meeting_id,
       nameDocuments,
       selected_document,
       date,
@@ -696,24 +698,14 @@ class AgendaEdit extends Component {
                   </div>
                   <div className='field'>
                     <label className='label'>Día</label>
-                    <div className='columns'>
-                      {this.state.days.map((day, key) => {
-                        return (
-                          <div key={key} className='column'>
-                            <input
-                              type='radio'
-                              name='date'
-                              id={`radioDay${key}`}
-                              className='is-checkradio'
-                              checked={day === date}
-                              value={day}
-                              onChange={this.handleChange}
-                            />
-                            <label htmlFor={`radioDay${key}`}>{Moment(day, ['YYYY-MM-DD']).format('MMMM-DD')}</label>
-                          </div>
-                        );
-                      })}
-                    </div>
+
+                    <SelectAntd
+                      name='date'
+                      options={this.state.days}
+                      style={{ width: '100%' }}
+                      defaultValue={date}
+                      onChange={this.handleChangeDate}
+                    />
                   </div>
                   <div className='columns'>
                     <div className='column'>
@@ -892,7 +884,6 @@ class AgendaEdit extends Component {
                   <div className='field'>
                     <label className='label'>Texto de email para confirmación de registro </label>
                     <div className='control'>
-                      {/* <EviusReactQuill data={ this.state.registration_message } inputName='registration_message' /> */}
                       <EviusReactQuill
                         name='registration_message'
                         data={this.state.registration_message}
@@ -1059,19 +1050,6 @@ class AgendaEdit extends Component {
                                 </div>
                               </Fragment>
                             )}
-                            <div className='field'>
-                              <label className='label'>bigmaker_meeting_id</label>
-                              <div className='control'>
-                                <input
-                                  className='input'
-                                  type='text'
-                                  name={'bigmaker_meeting_id'}
-                                  value={bigmaker_meeting_id}
-                                  onChange={this.handleChange}
-                                  placeholder=''
-                                />
-                              </div>
-                            </div>
 
                             {this.state.meeting_id && (
                               <div>

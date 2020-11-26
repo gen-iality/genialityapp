@@ -16,6 +16,8 @@ const privateInstance = axios.create({
   withCredentials: true,
 });
 
+var currentUser = null;
+
 // const privateInstancePush = axios.create({
 //   // pushURL: 'https://104.248.125.133:6477/pushNotification',
 //   withCredentials: false,
@@ -46,7 +48,6 @@ if (evius_token) {
 privateInstance.interceptors.response.use((response) => {
   const { headers } = response;
   if (headers.new_token) {
-    console.log('Se acab� la moneda');
     Cookie.set('evius_token', headers.new_token);
     privateInstance.defaults.params = {};
     privateInstance.defaults.params['evius_token'] = headers.new_token;
@@ -57,7 +58,6 @@ privateInstance.interceptors.response.use((response) => {
 export const fireStoreApi = {
   createOrUpdate: (eventId, activityId, eventUser) => {
     let agendaRef = firestore.collection(`event_activity_attendees/${eventId}/activities/${activityId}/attendees`);
-    console.log('alerta', eventId, activityId, eventUser);
     return agendaRef.add({
       activity_id: activityId,
       attendee_id: eventUser._id,
@@ -104,6 +104,53 @@ export const Actions = {
     return privateInstance.get(`${url}`).then(({ data }) => data);
   },
 };
+
+//BACKLOG --> ajustar a la nueva estructura el setState que se comentó para evitar fallos por no contar con el estado
+export const getCurrentUser = () => {
+  let token = Cookie.get('evius_token');
+
+  // eslint-disable-next-line no-unused-vars
+  return new Promise(async (resolve, reject) => {
+    if (currentUser) {
+      resolve(currentUser);
+      return;
+    }
+
+    if (!token) {
+      resolve(null);
+    } else {
+      try {
+        const resp = await privateInstance.get(`/auth/currentUser?evius_token=${token}`);
+        if (resp.status === 200) {
+          currentUser = resp.data;
+          resolve(resp.data);
+        }
+      } catch (error) {
+        if (error.response) {
+          const { status, data } = error.response;
+          if (status === 401) {
+            //this.setState({ timeout: true, loader: false })
+          } else {
+            //this.setState({ serverError: true, loader: false, errorData: data })
+          }
+        } else {
+          let errorData = {};
+          console.error('Error', error.message);
+          if (error.message) {
+            errorData.message = error.message;
+          } else if (error.request) {
+            console.error(error.request);
+            errorData.message = JSON.stringify(error.request);
+          }
+          errorData.status = 708;
+          //this.setState({ serverError: true, loader: false, errorData });
+        }
+        console.error(error.config);
+      }
+    }
+  });
+};
+
 export const EventsApi = {
   getEventUser: async (user_id, event_id) => {
     const snapshot = await firestore
@@ -412,6 +459,7 @@ export const CertsApi = {
     return await Actions.create(`api/certificates`, data);
   },
   generateCert: async (body) => {
+    // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
       privateInstance
         .post('/api/generatecertificate?download=1', body, {

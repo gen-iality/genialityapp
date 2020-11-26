@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
-import * as Cookie from 'js-cookie';
-import API, { AgendaApi, SpacesApi, Activity, SurveysApi, DocumentsApi } from '../../helpers/request';
+import { AgendaApi, SpacesApi, Activity, SurveysApi, DocumentsApi } from '../../helpers/request';
 import AgendaActividadDetalle from './agendaActividadDetalle';
 import { Modal, Button, Card, Spin, notification } from 'antd';
 import { firestore } from '../../helpers/firebase';
@@ -44,29 +43,16 @@ class Agenda extends Component {
     this.gotoActivityList = this.gotoActivityList.bind(this);
   }
 
-  async componentDidUpdate(prevProps) {
-    const { data } = this.state;
-    //Cargamos solamente los espacios virtuales de la agenda
-
-    //Si aún no ha cargado el evento no podemos hacer nada más
-    if (!this.props.event) return;
-
-    //Revisamos si el evento sigue siendo el mismo, no toca cargar nada
-    if (prevProps.event && this.props.event._id === prevProps.event._id) return;
-
-    this.listeningStateMeetingRoom(data);
-    //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
-    const filtered = this.filterByDay(this.state.days[0], this.state.list);
-    this.setState({ data, filtered, toShow: filtered });
-  }
-
   async componentDidMount() {
     //Se carga esta funcion para cargar los datos
     this.setState({ loading: true });
     await this.fetchAgenda();
 
-    // Se obtiene informacion del usuario actual
-    this.getCurrentUser();
+    //Si hay currentUser pasado por props entonces inicializamos el estado userId
+    if (this.props.currentUser) {
+      let { currentUser } = this.props;
+      this.setState({ userId: currentUser._id });
+    }
 
     this.setState({ loading: false });
 
@@ -88,6 +74,7 @@ class Agenda extends Component {
       this.setState({ documents: documentsData.data });
     }
 
+    // Valida si el evento no tiene fechas especififcas, en ese caso se generan los dias que hay en el rango desde la fecha inicial hasta la fecha final del evento.
     if (!event.dates || event.dates.length === 0) {
       let days = [];
       const init = Moment(event.date_start);
@@ -114,6 +101,22 @@ class Agenda extends Component {
     this.getAgendaUser();
   }
 
+  async componentDidUpdate(prevProps) {
+    const { data } = this.state;
+    //Cargamos solamente los espacios virtuales de la agenda
+
+    //Si aún no ha cargado el evento no podemos hacer nada más
+    if (!this.props.event) return;
+
+    //Revisamos si el evento sigue siendo el mismo, no toca cargar nada
+    if (prevProps.event && this.props.event._id === prevProps.event._id) return;
+
+    this.listeningStateMeetingRoom(data);
+    //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
+    const filtered = this.filterByDay(this.state.days[0], this.state.list);
+    this.setState({ data, filtered, toShow: filtered });
+  }
+
   async listeningStateMeetingRoom(list) {
     list.forEach((activity, index, arr) => {
       firestore
@@ -132,32 +135,11 @@ class Agenda extends Component {
         });
     });
   }
-  // Funcion para consultar la informacion del actual usuario
-  getCurrentUser = async () => {
-    let evius_token = Cookie.get('evius_token');
-
-    if (!evius_token) {
-      this.setState({ user: false });
-    } else {
-      try {
-        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
-        if (resp.status === 200) {
-          const data = resp.data;
-          // Solo se desea obtener el id del usuario
-          this.setState({ uid: data._id });
-          this.setState({ userId: data._id });
-        }
-      } catch (error) {
-        const { status } = error.response;
-        console.error(error);
-        console.error('Status Error:', status);
-      }
-    }
-  };
 
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
     const { data } = await AgendaApi.byEvent(this.props.eventId);
+    console.log('datos de la agenda', data);
     //se consulta la api de espacios para
     let space = await SpacesApi.byEvent(this.props.event._id);
 
@@ -348,7 +330,7 @@ class Agenda extends Component {
   //End modal methods
 
   render() {
-    const { toggleConference, eventId, event } = this.props;
+    const { toggleConference, event } = this.props;
     const {
       days,
       day,
@@ -383,7 +365,7 @@ class Agenda extends Component {
           ]}>
           <p>Para poder disfrutar de este contenido debes estar registrado e iniciar sesión</p>
         </Modal>
-
+        {console.log('currentActivity', currentActivity)}
         {currentActivity && (
           <AgendaActividadDetalle
             visible={this.state.visible}
@@ -395,6 +377,7 @@ class Agenda extends Component {
             image_event={this.props.event.styles.event_image}
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
+            currentUser={this.props.currentUser}
           />
         )}
 

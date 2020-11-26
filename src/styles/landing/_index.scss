@@ -393,6 +393,12 @@ section.landing {
 .ql-editor blockquote,
 .ql-editor {
   font-size: 1rem !important;
+  .ql-video {
+    display: block;
+    max-width: 100%;
+    width: 100%;
+    height: -webkit-fill-available;
+  }
 
   @media only screen and (min-width: $breakpoint-mobile) {
     font-size: 1.3rem !important;
@@ -467,8 +473,6 @@ section.landing {
 //     }
 //   }
 
-  
-
 //   .banner-user-elem .banner-user-title {
 //     font-size: 2rem;
 //     padding: 0% 6% 0%;
@@ -492,9 +496,9 @@ section.landing {
 //     }
 //   }
 // }
-.headerContainer{
+.headerContainer {
   position: relative;
-  img{
+  img {
     width: 100%;
   }
   .banner-user-text-container {
@@ -506,7 +510,7 @@ section.landing {
     font-size: 20px;
     @media only screen and (max-width: $breakpoint-mobile) {
       position: relative;
-      background:#dbdbdb5e;
+      background: #dbdbdb5e;
       left: 0;
       margin: 12px;
       font-size: 14px;
@@ -514,7 +518,7 @@ section.landing {
     @media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-tablet) {
       bottom: 78%;
     }
-  }  
+  }
 }
 
 .container-logoBanner {
