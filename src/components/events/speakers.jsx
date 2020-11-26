@@ -28,33 +28,52 @@ class Speakers extends Component {
     const { eventId } = this.props;
     //Se hace la consulta a la api de speakers
     let speakers = await SpeakersApi.byEvent(eventId);
-    //Se envia al estado para acceder desde ahí a los datos
 
-    //Se comprueban los datos desde el estado
-    // console.log(this.state.speakers)
-
-    const speakersWithCategory = [];
-    const speakersWithoutCategory = [];
-
+    //consultamos las categorias del evento
     let categories = await CategoriesAgendaApi.byEvent(eventId);
 
-    this.setState({ speakerCategories: categories });
+    //Recorremos las categorias si tienen el campo orden
+    //en caso que no lo tengan le asignamos el ultimo orden basado en el maximo valor que exista
+
+    const categoriesFixedOrder = categories.map((category, index) => {
+      const maxOrder = this.calcMaxOrder(categories);
+      if (!category.order) {
+        categories[index].order = maxOrder + 1;
+      }
+      return category;
+    });
+
+    const categoriesOrderByOrder = categoriesFixedOrder.sort((a, b) => a.order - b.order);
+
+    //Constantes donde vamos a almacenar a los speakers que tengan asignada una categoria o no tenga categoria
+    const speakersWithCategory = [];
+    const speakersWithoutCategory = [];
 
     // se crea un array de arrays posicionados segun el orden de la categoria
     // en caso que dos categorias tengan el mismo orden podrian colisionar o perderse los datos
 
-    //console.table(categories);
-    categories.map((category) => {
+    categoriesOrderByOrder.map((category, index) => {
       speakersWithCategory[category.order] = [];
+
+      const hasSpeaker = speakers.filter((speaker) => speaker.category_id === category._id);
+      if (hasSpeaker.length) {
+        categoriesOrderByOrder[index].hasSpeaker = true;
+      } else {
+        categoriesOrderByOrder[index].hasSpeaker = false;
+      }
     });
 
+    this.setState({ speakerCategories: categoriesOrderByOrder });
+
+    // Si hay speakers con categorias entonces habilitamos el render agrupado de los speakers
+    // sino entonces mostrasmos solo los spakers sin categorias
     const renderSpeakerCategories = categories.length ? true : false;
 
     this.setState({ renderSpeakerCategories });
 
     speakers.map((speaker, index) => {
       //Solo funciona si la relacion es uno a uno -> a un speaker una categoria
-      const categorySpeaker = categories.filter((category) => category._id === speaker.category_id);
+      const categorySpeaker = categoriesOrderByOrder.filter((category) => category._id === speaker.category_id);
 
       if (categorySpeaker.length > 0) {
         speakers[index].category = categorySpeaker[0].name;
@@ -65,6 +84,17 @@ class Speakers extends Component {
     });
     this.setState({ speakersWithCategory });
     this.setState({ speakersWithoutCategory });
+  }
+
+  //funcion para obtener el valor maximo del orden de una categoria
+  calcMaxOrder(data) {
+    const arrayWithOrderField = data.filter((category) => category.order);
+    let maxOrder = 0;
+    if (arrayWithOrderField.length) {
+      const arrayToCalcMaxOrder = arrayWithOrderField.map((category) => parseInt(category.order));
+      maxOrder = Math.max(...arrayToCalcMaxOrder);
+    }
+    return maxOrder;
   }
 
   async activitySpeakers(id) {
@@ -110,97 +140,100 @@ class Speakers extends Component {
       <>
         {renderSpeakerCategories && speakerCategories.length && (
           <>
-            {speakerCategories.map((category) => {
-              return (
-                <>
-                  <div
-                    style={{
-                      width: '90%',
-                      margin: '30px auto',
-                      padding: '5px',
-                      borderRadius: '5px',
-                      backgroundColor: '#FFFFFF',
-                    }}>
-                    <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
-                  </div>
+            {speakerCategories.map((category) => (
+              <>
+                {category.hasSpeaker && (
+                  <>
+                    <div
+                      style={{
+                        width: '98%',
+                        margin: '30px auto',
+                        padding: '5px',
+                        borderRadius: '5px',
+                        backgroundColor: '#FFFFFF',
+                        boxSizing: 'border-box',
+                      }}>
+                      <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
+                    </div>
 
-                  {speakersWithCategory.length && (
-                    <>
-                      {speakersWithCategory[category.order].length && (
-                        <div className='container-calendar-speaker calendar-speakers'>
-                          <div className='calendar-speakers'>
-                            {speakersWithCategory[category.order].map((speaker, key) => (
-                              <div key={key}>
-                                <Card
-                                  onClick={() =>
-                                    this.modal(
-                                      speaker._id,
-                                      speaker.image,
-                                      speaker.name,
-                                      speaker.profession,
-                                      speaker.description,
-                                      speaker.category
-                                    )
-                                  }
-                                  hoverable
-                                  style={{ paddingTop: '30px' }}
-                                  cover={
-                                    speaker.image ? (
-                                      <Avatar
-                                        style={{ display: 'block', margin: '0 auto' }}
-                                        size={210}
-                                        src={speaker.image}
-                                      />
-                                    ) : (
-                                      <Avatar
-                                        style={{ display: 'block', margin: '0 auto' }}
-                                        size={210}
-                                        icon={<UserOutlined />}
-                                      />
-                                    )
-                                  }
-                                  actions={[
-                                    <Button
-                                      type='primary'
-                                      className='modal-button'
-                                      onClick={() =>
-                                        this.modal(
-                                          speaker._id,
-                                          speaker.image,
-                                          speaker.name,
-                                          speaker.profession,
-                                          speaker.description
-                                        )
-                                      }
-                                      key={key}
-                                      data-target='#myModal'
-                                      aria-haspopup='true'>
-                                      Ver más...
-                                    </Button>,
-                                  ]}>
-                                  <Meta
-                                    title={[
-                                      <div key={'speaker-name' + key}>
-                                        <span>{speaker.name}</span>
-                                      </div>,
-                                    ]}
-                                    description={[
-                                      <div style={{ minHeight: '100px' }} key={'speaker-description' + key}>
-                                        <p>{speaker.profession}</p>
-                                      </div>,
-                                    ]}
-                                  />
-                                </Card>
-                              </div>
-                            ))}
+                    {speakersWithCategory.length && (
+                      <>
+                        {speakersWithCategory[category.order].length && (
+                          <div className='container-calendar-speaker calendar-speakers'>
+                            <div className='calendar-speakers'>
+                              {speakersWithCategory[category.order].map((speaker, key) => (
+                                <div key={key}>
+                                  <Card
+                                    onClick={() =>
+                                      this.modal(
+                                        speaker._id,
+                                        speaker.image,
+                                        speaker.name,
+                                        speaker.profession,
+                                        speaker.description,
+                                        speaker.category
+                                      )
+                                    }
+                                    hoverable
+                                    style={{ paddingTop: '30px' }}
+                                    cover={
+                                      speaker.image ? (
+                                        <Avatar
+                                          style={{ display: 'block', margin: '0 auto' }}
+                                          size={210}
+                                          src={speaker.image}
+                                        />
+                                      ) : (
+                                        <Avatar
+                                          style={{ display: 'block', margin: '0 auto' }}
+                                          size={210}
+                                          icon={<UserOutlined />}
+                                        />
+                                      )
+                                    }
+                                    actions={[
+                                      <Button
+                                        type='primary'
+                                        className='modal-button'
+                                        onClick={() =>
+                                          this.modal(
+                                            speaker._id,
+                                            speaker.image,
+                                            speaker.name,
+                                            speaker.profession,
+                                            speaker.description
+                                          )
+                                        }
+                                        key={key}
+                                        data-target='#myModal'
+                                        aria-haspopup='true'>
+                                        Ver más...
+                                      </Button>,
+                                    ]}>
+                                    <Meta
+                                      title={[
+                                        <div key={'speaker-name' + key}>
+                                          <span>{speaker.name}</span>
+                                        </div>,
+                                      ]}
+                                      description={[
+                                        <div style={{ minHeight: '100px' }} key={'speaker-description' + key}>
+                                          <p>{speaker.profession}</p>
+                                        </div>,
+                                      ]}
+                                    />
+                                  </Card>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </>
-              );
-            })}
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </>
+            ))}
           </>
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
