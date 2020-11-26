@@ -161,7 +161,17 @@ export default class ZoomComponent extends Component {
           {/* VIMEO LIVESTREAMING */}
           {this.state.event && platform === 'vimeo' && (
             <Row className='platform-vimeo'>
-              <Col className='col-xs' xs={24} sm={24} md={24} lg={16}>
+              <Col
+                className='col-xs'
+                xs={24}
+                sm={24}
+                md={24}
+                lg={
+                  this.state.event._id !== '5f456bef532c8416b97e9c82' &&
+                  this.state.event._id !== '5f9824fc1f8ccc414e33bec2'
+                    ? 16
+                    : 24
+                }>
                 <iframe
                   src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
                   frameBorder='0'
@@ -173,14 +183,15 @@ export default class ZoomComponent extends Component {
 
               {/* Retiro temporal del chat se ajusta video a pantalla completa*/}
 
-              {this.state.event._id !== '5f456bef532c8416b97e9c82' && (
-                <Col className='col-xs' xs={24} sm={24} md={24} lg={8}>
-                  <iframe
-                    src={`https://vimeo.com/live-chat/${activity.vimeo_id}`}
-                    style={{ width: '99vw', height: '100%', padding: '2px' }}
-                    frameBorder='0'></iframe>
-                </Col>
-              )}
+              {this.state.event._id !== '5f456bef532c8416b97e9c82' &&
+                this.state.event._id !== '5f9824fc1f8ccc414e33bec2' && (
+                  <Col className='col-xs' xs={24} sm={24} md={24} lg={8}>
+                    <iframe
+                      src={`https://vimeo.com/live-chat/${activity.vimeo_id}`}
+                      style={{ width: '99vw', height: '100%', padding: '2px' }}
+                      frameBorder='0'></iframe>
+                  </Col>
+                )}
             </Row>
           )}
 
