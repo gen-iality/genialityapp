@@ -161,7 +161,7 @@ export default class ZoomComponent extends Component {
           {/* VIMEO LIVESTREAMING */}
           {this.state.event && platform === 'vimeo' && (
             <Row className='platform-vimeo'>
-              <Col className='col-xs' xs={24} sm={24} md={24} lg={16}>
+              <Col className='col-xs' xs={24} sm={24} md={24} lg={24}>
                 <iframe
                   src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
                   frameBorder='0'
