@@ -214,7 +214,7 @@ export const EventsApi = {
     return await Actions.delete('/api/events/', id);
   },
   getStyles: async (id) => {
-    return await Actions.get(`/api/events/${id}/stylestemp`);
+    return await Actions.get(`/api/events/${id}/stylestemp`, true);
   },
 };
 
@@ -368,13 +368,13 @@ export const DocumentsApi = {
 
 export const CategoriesApi = {
   getAll: async () => {
-    const resp = await Actions.getAll('api/categories');
+    const resp = await Actions.getAll('api/categories', true);
     return handleSelect(resp.data);
   },
 };
 export const TypesApi = {
   getAll: async () => {
-    const resp = await Actions.getAll('api/eventTypes');
+    const resp = await Actions.getAll('api/eventTypes', true);
     return handleSelect(resp.data);
   },
 };
@@ -599,7 +599,7 @@ export const TypesAgendaApi = {
 };
 export const AgendaApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/activities`);
+    return await Actions.getAll(`api/events/${event}/activities`, true);
   },
   usersByActivities: async (event) => {
     return await Actions.getAll(`api/events/${event}/activities_attendees`);
