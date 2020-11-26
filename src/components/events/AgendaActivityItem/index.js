@@ -69,7 +69,7 @@ export default function AgendaActivityItem({
                 </span>
               )}
             <p>
-              <span className='card-header-title text-align-card'>{item.name}</span>
+                  <span className='card-header-title text-align-card'>{item.name}{}</span>
             </p>
           </Row>
           <hr className='line-head' />
@@ -147,7 +147,15 @@ export default function AgendaActivityItem({
                         : () => gotoActivity(item)
                     }
                     className='space-align-block button-Agenda'>
-                    Detalle de actividad
+                    {eventId === '5f99a20378f48e50a571e3b6'?(
+                     <>
+                     VER AHORA 
+                     </>
+                    ):(
+                     <>
+                     Detalle de actividad
+                     </>
+                    )}
                   </Button>
                 )}
                 {Documents &&

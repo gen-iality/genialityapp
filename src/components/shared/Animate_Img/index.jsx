@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Row, Button } from 'antd';
 import { PlayCircleTwoTone } from '@ant-design/icons'
 import ReactPlayer from 'react-player'
-import './index.scss';
+
 
 class AnimateImg extends React.Component {
     constructor(props) {
@@ -54,7 +54,7 @@ class AnimateImg extends React.Component {
                                         autoplay ? (
                                             <></>
                                         ) : (
-                                                <PlayCircleTwoTone className="icono-play" twoToneColor="#1cdcb7" style={{ position: "absolute", top: 270, marginLeft: 8, backgroundColor: "#f5f5f500" }} onClick={this.autoplayVideo} />
+                                                <PlayCircleTwoTone className="icono-play" twoToneColor="#1cdcb7" style={{ position: "absolute", top: "50%", left: "45%", backgroundColor: "#f5f5f500" }} onClick={this.autoplayVideo} />
                                             )
 
                                     }
