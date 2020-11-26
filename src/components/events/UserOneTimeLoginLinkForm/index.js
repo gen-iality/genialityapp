@@ -45,7 +45,7 @@ export default class UserOneTimeLoginLinkForm extends Component {
                       message: 'Ingrese su correo electrónico',
                     },
                   ]}>
-                  <Input type='email' />
+                  <Input />
                 </Form.Item>
               </Col>
             </Row>
