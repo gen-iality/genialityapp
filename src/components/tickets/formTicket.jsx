@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import "moment/locale/es";
-import { Actions } from "../../helpers/request";
-import * as Cookie from "js-cookie";
-import { toast } from "react-toastify";
-import UserRegistration from "../events/userRegistration";
+import React, { Component } from 'react';
+import 'moment/locale/es';
+import { Actions } from '../../helpers/request';
+import * as Cookie from 'js-cookie';
+import { toast } from 'react-toastify';
+import UserRegistration from '../events/userRegistration';
 
 class TicketsForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       step: 0,
-      active: "",
-      code_discount: "",
+      active: '',
+      code_discount: '',
       tickets: [],
       ticketstoshow: [],
       selectValues: {},
@@ -23,16 +23,16 @@ class TicketsForm extends Component {
       disabled: false,
       loading: false,
       total: 0,
-      currencyFormatConfig: { style: "currency", minimumFractionDigits: 0, maximumFractionDigits: 0 },
-      isVisible: false,
+      currencyFormatConfig: { style: 'currency', minimumFractionDigits: 0, maximumFractionDigits: 0 },
+      isVisible: false
     };
     this.chart = [];
     this.request = this.request.bind(this);
   }
 
   componentDidMount() {
-    const haspayments = !!this.props.tickets.find((item) => item.price !== "0");
-    const evius_token = Cookie.get("evius_token");
+    const haspayments = !!this.props.tickets.find((item) => item.price !== '0');
+    const evius_token = Cookie.get('evius_token');
 
     //Arreglo de tiquetes
     const tickets = this.props.tickets.map((ticket) => {
@@ -40,23 +40,23 @@ class TicketsForm extends Component {
       const stage = !this.props.stages ? null : this.props.stages.find((stage) => stage.stage_id === ticket.stage_id);
       //Lista de opciones para el select
       ticket.options =
-        stage && (stage.status === "ended" || stage.status === "notstarted")
+        stage && (stage.status === 'ended' || stage.status === 'notstarted')
           ? []
           : Array.from(Array(parseInt(ticket.max_per_person, 10) || 1)).map((e, i) => i + 1);
       return ticket;
     });
 
     //Se encunetra el primer stage que esté activo para mostrarlo
-    let stage = !this.props.stages ? null : this.props.stages.find((stage) => stage.status === "active");
+    let stage = !this.props.stages ? null : this.props.stages.find((stage) => stage.status === 'active');
     //por si ninguna etapa se encuetra activa
     stage = !stage && this.props.stages && this.props.stages[0] ? this.props.stages[0] : null;
 
-    const id = stage ? stage.stage_id : ""; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
+    const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
     const ticketstoshow = tickets.filter((ticket) => ticket.stage_id == id); //Filtrar los tiquetes del stage activo
-    
+
     //"5e835d9fd74d5c6cfd379992"
     //Persistencia de tiquetes seleccionados después de login
-    let info = localStorage.getItem("info"); //Se trae info
+    let info = localStorage.getItem('info'); //Se trae info
     if (info && evius_token) {
       info = JSON.parse(info);
       const values = {};
@@ -68,7 +68,7 @@ class TicketsForm extends Component {
 
   //Al salir del landing se limpia la informacion de los tiquetes seleccionados.
   componentWillUnmount() {
-    localStorage.removeItem("info");
+    localStorage.removeItem('info');
   }
 
   changeStep = (step) => {
@@ -87,9 +87,9 @@ class TicketsForm extends Component {
   //Función para el select tiquetes
   handleQuantity = (e) => {
     let { name, value } = e.target;
-    name = name.split("_")[1];
+    name = name.split('_')[1];
     const ticketsadded = Object.assign(this.state.ticketsadded);
-    if (value === "0") this.removeTicket(name);
+    if (value === '0') this.removeTicket(name);
     else {
       ticketsadded[name] = value;
       const list = this.props.seatsConfig ? [...this.state.ticketstoshow].map((i) => i._id) : [];
@@ -106,17 +106,17 @@ class TicketsForm extends Component {
     const summaryList = [...this.state.summaryList];
     const pos = summaryList.map((item) => item.id).indexOf(id);
     const info = summaryList[pos];
-    const price = parseInt(info.price.replace(/[^0-9]/g, ""), 10);
+    const price = parseInt(info.price.replace(/[^0-9]/g, ''), 10);
     summaryList.splice(pos, 1);
     delete ticketsadded[id];
     this.setState((prevState) => {
       return {
         ticketsadded,
         summaryList,
-        selectValues: { ...this.state.selectValues, [id]: "0" },
+        selectValues: { ...this.state.selectValues, [id]: '0' },
         total: prevState.total - price,
         step: 0,
-        disabledSelect: [],
+        disabledSelect: []
       };
     });
   };
@@ -129,20 +129,20 @@ class TicketsForm extends Component {
     Object.keys(this.state.ticketsadded).map((key) => {
       const info = tickets.find((ticket) => ticket._id === key);
       const amount = this.state.ticketsadded[key];
-      const price = info.price === "Gratis" ? 0 : parseInt(info.price.replace(/[^0-9]/g, ""), 10) * amount;
+      const price = info.price === 'Gratis' ? 0 : parseInt(info.price.replace(/[^0-9]/g, ''), 10) * amount;
       total += price;
       const cost =
         price <= 0
-          ? "Gratis"
-          : new Intl.NumberFormat("es-CO", {
-            style: "currency",
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-            currency: info.currency,
-          }).format(price);
+          ? 'Gratis'
+          : new Intl.NumberFormat('es-CO', {
+              style: 'currency',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+              currency: info.currency
+            }).format(price);
       return show.push({ name: info.title, quantity: amount, id: info._id, price: cost });
     });
-    if (!this.state.auth) localStorage.setItem("info", JSON.stringify({ total, show }));
+    if (!this.state.auth) localStorage.setItem('info', JSON.stringify({ total, show }));
     this.setState({ summaryList: show, total });
   };
 
@@ -155,7 +155,7 @@ class TicketsForm extends Component {
     //Construyo body de acuerdo a peticiones de api
     let tienesilla = false;
     this.state.summaryList.map((item) => {
-      if (item.name !== "General") {
+      if (item.name !== 'General') {
         tienesilla = true;
       }
     });
@@ -200,8 +200,8 @@ class TicketsForm extends Component {
     try {
       data.code_discount = this.state.code_discount;
       const resp = await Actions.post(`/es/e/${this.props.eventId}/checkout`, data);
-      
-      if (resp.status === "success") {
+
+      if (resp.status === 'success') {
         //Si la peteción es correcta redirijo a la url que enviaron
         window.location.replace(resp.redirectUrl);
       } else {
@@ -248,7 +248,7 @@ class TicketsForm extends Component {
       <>
         {/* Componente de registro gratis */}
 
-        <UserRegistration extraFields={[]} eventId={this.props.eventId} />
+        <UserRegistration extraFields={[]} eventId={this.props.eventId} showSection={this.props.showSection} />
 
         {/* fin del componente */}
 
