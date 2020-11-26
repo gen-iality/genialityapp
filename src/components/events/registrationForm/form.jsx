@@ -118,6 +118,8 @@ export default ({
   const [region, setRegion] = useState();
   const [password, setPassword] = useState('');
   const [event, setEvent] = useState(null);
+  const [loggedurl, setLogguedurl] = useState(null);
+
   // const [ fileSave, setFileSave ] = useState( [] )
 
   const [form] = Form.useForm();
@@ -197,7 +199,7 @@ export default ({
     } else {
       try {
         let resp = await UsersApi.createOne(snap, eventId);
-
+        console.log('resp', resp);
         if (resp.message === 'OK') {
           setSuccessMessageInRegisterForm(resp.status);
           // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
@@ -212,8 +214,9 @@ export default ({
 
           setSubmittedForm(true);
           message.success(textMessage);
-          //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado, esta quemado el token por pruebas
+          //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
           if (event.validateEmail && resp.data.user.initial_token) {
+            setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
               window.location.replace(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             }, 3000);
@@ -586,6 +589,11 @@ export default ({
                     __html: successMessage
                   }}></div>
               </OutsideAlerter>
+              {loggedurl && (
+                <a className='ant-btn  ant-btn-primary ant-btn-lg' href={loggedurl}>
+                  INGRESAR
+                </a>
+              )}
             </Result>
           </Card>
         )}
