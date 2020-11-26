@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Card, Form, Input, Col, Row, Button, Spin } from 'antd';
 import UserOneTimeLoginLinKForm from '../UserOneTimeLoginLinkForm';
 
 export default class UserOneTimeLoginLink extends Component {
@@ -7,7 +6,7 @@ export default class UserOneTimeLoginLink extends Component {
     //const { handleCloseRecoveryPass, handleRecoveryPass, loading, errorRecovery, successRecovery } = this.props;
     return (
       <UserOneTimeLoginLinKForm
-        title='Solicitar un ingreso al  correo'
+        title='Si yá se encuentra registrado, ingrese su correo para enviarle un enlace de ingreso'
         successMsg='Se ha enviado un ingreso a su correo'
         actionMsg='Solicitar ingreso'
         {...this.props}

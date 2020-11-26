@@ -11,7 +11,7 @@ export default class UserOneTimeLoginLinkForm extends Component {
       handleRecoveryPass,
       loading,
       errorRecovery,
-      successRecovery
+      successRecovery,
     } = this.props;
     return (
       <Card title={title}>
@@ -42,17 +42,17 @@ export default class UserOneTimeLoginLinkForm extends Component {
                   rules={[
                     {
                       required: true,
-                      message: 'Ingrese su correo electrónico'
-                    }
+                      message: 'Ingrese su correo electrónico',
+                    },
                   ]}>
-                  <Input />
+                  <Input type='email' />
                 </Form.Item>
               </Col>
             </Row>
             {errorRecovery && (
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-                  <span style={{ color: 'red' }}>Verifique el correo ingresado</span>
+                  <span style={{ color: 'red' }}>El correo ingresado no se encuentra registrado</span>
                 </Col>
               </Row>
             )}

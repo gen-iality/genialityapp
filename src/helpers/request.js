@@ -127,6 +127,7 @@ export const getCurrentUser = () => {
         }
       } catch (error) {
         if (error.response) {
+          // eslint-disable-next-line no-unused-vars
           const { status, data } = error.response;
           if (status === 401) {
             //this.setState({ timeout: true, loader: false })
