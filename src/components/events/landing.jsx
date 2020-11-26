@@ -47,7 +47,7 @@ import {
   // BrowserView,
   // MobileView,
   // isBrowser,
-  isMobile,
+  isMobile
 } from 'react-device-detect';
 
 const { Content, Sider } = Layout;
@@ -60,14 +60,14 @@ const html = document.querySelector('html');
 const drawerButton = {
   height: '46px',
   padding: '7px 10px',
-  fontSize: '10px',
+  fontSize: '10px'
 };
 
 const imageCenter = {
   maxWidth: '100%',
   minWidth: '66.6667%',
   margin: '0 auto',
-  display: 'block',
+  display: 'block'
 };
 
 class Landing extends Component {
@@ -93,39 +93,39 @@ class Landing extends Component {
       loader_page: false,
       show_banner_footer: false,
       event: null,
-      requireValidation: false,
+      requireValidation: false
     };
     this.showLanding = this.showLanding.bind(this);
   }
 
   toggle = () => {
     this.setState({
-      collapsed: !this.state.collapsed,
+      collapsed: !this.state.collapsed
     });
   };
 
   hideHeader = () => {
     this.setState({
-      headerVisible: false,
+      headerVisible: false
     });
   };
 
   showDrawer = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
     this.hideHeader();
   };
 
   onClose = () => {
     this.setState({
-      visible: false,
+      visible: false
     });
   };
 
   onChange = (e) => {
     this.setState({
-      placement: e.target.value,
+      placement: e.target.value
     });
   };
 
@@ -188,7 +188,7 @@ class Landing extends Component {
       data: user,
       currentUser: user,
       namesUser: namesUser,
-      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false,
+      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false
     });
     const sections = {
       agenda: (
@@ -214,6 +214,7 @@ class Landing extends Component {
               event={this.state.event}
               seatsConfig={event.seats_configuration}
               handleModal={this.handleModal}
+              showSection={this.showSection}
             />
           </div>
         </>
@@ -287,7 +288,7 @@ class Landing extends Component {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={event.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -329,7 +330,7 @@ class Landing extends Component {
             </Col>
           </Row>
         </>
-      ),
+      )
     };
     //default section is firstone
     this.setState({ loading: false, sections }, () => {
@@ -360,14 +361,14 @@ class Landing extends Component {
           const user = authResult.user;
           this.closeLogin(user);
           return false;
-        },
+        }
       },
       //Disabled accountchooser
       credentialHelper: 'none',
       // Terms of service url.
       tosUrl: `${BaseUrl}/terms`,
       // Privacy policy url.
-      privacyPolicyUrl: `${BaseUrl}/privacy`,
+      privacyPolicyUrl: `${BaseUrl}/privacy`
     };
     ui.start('#firebaseui-auth-container', uiConfig);
   };
@@ -498,7 +499,7 @@ class Landing extends Component {
       toggleConferenceZoom,
       meeting_id,
       currentUser,
-      loader_page,
+      loader_page
     } = this.state;
 
     return (
@@ -605,7 +606,7 @@ class Landing extends Component {
                           className='containerMenu_Landing'
                           style={{
                             backgroundColor:
-                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
                           }}
                           trigger={null}
                           collapsible
@@ -632,7 +633,7 @@ class Landing extends Component {
                             <Button onClick={this.toggle}>
                               {React.createElement(this.state.collapsed ? RightOutlined : LeftOutlined, {
                                 className: 'trigger',
-                                onClick: this.toggle,
+                                onClick: this.toggle
                               })}
                             </Button>
                           </div>
@@ -656,7 +657,7 @@ class Landing extends Component {
                             bodyStyle={{
                               padding: '0px',
                               backgroundColor:
-                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
                             }}>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                             <MenuEvent
@@ -702,7 +703,7 @@ class Landing extends Component {
               first={{
                 title: 'Iniciar Sesión o Registrarse',
                 class: 'is-info',
-                action: this.openLogin,
+                action: this.openLogin
               }}
               second={{ title: 'Cancelar', class: '', action: this.closeModal }}
             />

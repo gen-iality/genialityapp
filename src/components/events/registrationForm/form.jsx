@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { UsersApi, TicketsApi, EventsApi } from '../../../helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 import {
@@ -15,7 +15,7 @@ import {
   Result,
   Divider,
   Upload,
-  Select,
+  Select
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -26,19 +26,19 @@ const { Panel } = Collapse;
 const { TextArea, Password } = Input;
 
 const textLeft = {
-  textAlign: 'left',
+  textAlign: 'left'
 };
 
 const center = {
-  margin: '0 auto',
+  margin: '0 auto'
 };
 
 const validateMessages = {
   required: 'Este campo ${label} es obligatorio para completar el registro.',
   types: {
     email: '${label} no válido!',
-    regexp: 'malo',
-  },
+    regexp: 'malo'
+  }
 };
 
 const options = [
@@ -59,10 +59,53 @@ const options = [
   { value: 'Buenos dias 15', label: 'Buenos dias 15' },
   { value: 'Buenos dias 16', label: 'Buenos dias 16' },
   { value: 'Buenos dias 17', label: 'Buenos dias 17' },
-  { value: 'Buenos dias 18', label: 'Buenos dias 18' },
+  { value: 'Buenos dias 18', label: 'Buenos dias 18' }
 ];
 
-export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventUserId, closeModal, conditionals }) => {
+/**
+ * Hook that alerts clicks outside of the passed ref
+ */
+function useOutsideAlerter(props) {
+  useEffect(() => {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event) {
+      if (props.wrapperRef.current && props.wrapperRef.current.contains(event.target)) {
+        if (event.target.id) {
+          props.showSection(event.target.id);
+        }
+      }
+    }
+    // Bind the event listener
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [props]);
+}
+
+/**
+ * Component that alerts if you click outside of it
+ */
+function OutsideAlerter(props) {
+  const wrapperRef = useRef(null);
+  useOutsideAlerter({ wrapperRef: wrapperRef, ...props });
+
+  return <div ref={wrapperRef}>{props.children}</div>;
+}
+
+export default ({
+  initialValues,
+  eventId,
+  extraFieldsOriginal,
+  eventUser,
+  eventUserId,
+  closeModal,
+  conditionals,
+  showSection
+}) => {
   const [user, setUser] = useState({});
   const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
   const [validateEmail, setValidateEmail] = useState(false);
@@ -82,8 +125,8 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
     form.setFields([
       {
         name: 'password',
-        errors: ['Ingrese un password'],
-      },
+        errors: ['Ingrese un password']
+      }
     ]);
   }, [form]);
 
@@ -301,7 +344,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
             <div style={{ fontSize: '1.3em' }} className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
               <div
                 dangerouslySetInnerHTML={{
-                  __html: label,
+                  __html: label
                 }}></div>
             </div>
             <Divider />
@@ -430,7 +473,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
               required: true,
               type: 'regexp',
               pattern: new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{10,}$/),
-              message: 'El formato del password no es valido',
+              message: 'El formato del password no es valido'
             }
           : rule;
 
@@ -537,10 +580,12 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUser, eventU
         ) : (
           <Card>
             <Result status='success' title={formMessage.resultTitle} subTitle=''>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: successMessage,
-                }}></div>
+              <OutsideAlerter showSection={showSection}>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: successMessage
+                  }}></div>
+              </OutsideAlerter>
             </Result>
           </Card>
         )}
