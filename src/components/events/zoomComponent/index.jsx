@@ -171,7 +171,7 @@ export default class ZoomComponent extends Component {
                   style={{ width: '99vw', height: '100%' }}></iframe>
               </Col>
 
-              {/* Retiro temporal */}
+              {/* Retiro temporal del chat se ajusta video a pantalla completa*/}
 
               {/* <Col className="col-xs" xs={24} sm={24} md={24} lg={8}>
                   <iframe
