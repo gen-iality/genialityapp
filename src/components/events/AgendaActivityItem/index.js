@@ -20,6 +20,7 @@ export default function AgendaActivityItem({
   show_inscription,
   userRegistered,
   handleOpenModal,
+  event
 }) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
@@ -127,7 +128,9 @@ export default function AgendaActivityItem({
                   <Row>
                     <div
                       className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
-                      dangerouslySetInnerHTML={{ __html: item.description }}
+                      dangerouslySetInnerHTML={{
+                        __html: event.styles && !event.styles.hideBtnDetailAgenda ? item.description : item.subtitle
+                      }}
                     />
                   </Row>
                 </>
@@ -210,13 +213,13 @@ export default function AgendaActivityItem({
                           width={'100%'}
                           style={{
                             display: 'block',
-                            margin: '0 auto',
+                            margin: '0 auto'
                           }}
                           url={item.video}
                           //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                           controls
                           config={{
-                            file: { attributes: { controlsList: 'nodownload' } },
+                            file: { attributes: { controlsList: 'nodownload' } }
                           }}
                         />
                       </>
