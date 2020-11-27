@@ -272,18 +272,10 @@ let AgendaActividadDetalle = (props) => {
               
              */}
 
-            {event._id === '5f99a20378f48e50a571e3b6' ? (
-              <></>
-            ) : (
-              <div
-                className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
-                dangerouslySetInnerHTML={{ __html: currentActivity.description }}
-              />
-            )}
-            {/* <div
+            <div
               className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
               dangerouslySetInnerHTML={{ __html: currentActivity.description }}
-            /> */}
+            /> 
             {event._id === '5f99a20378f48e50a571e3b6' ? (
               <></>
             ) : (
