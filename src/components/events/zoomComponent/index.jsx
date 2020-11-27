@@ -42,7 +42,6 @@ export default class ZoomComponent extends Component {
     let urllogin_bigmarker = null;
     let error_bigmarker = null;
     if (this.state.event && this.state.event.event_platform === 'bigmarker') {
-      console.log('activity', this.props.activity);
       let data = {
         id: this.props.activity.bigmaker_meeting_id,
         attendee_name: displayName,
@@ -54,7 +53,6 @@ export default class ZoomComponent extends Component {
       try {
         callresult = await API.post(`/api/integration/bigmaker/conferences/enter`, data);
         urllogin_bigmarker = callresult.data.enter_uri;
-        console.log('callresult', callresult.data.enter_uri);
       } catch (e) {
         if (e.response && e.response.data && e.response.data.message) {
           error_bigmarker = e.response.data.message;
@@ -76,7 +74,6 @@ export default class ZoomComponent extends Component {
 
   async componentDidMount() {
     this.setUpUserForConference();
-    console.log('eventzoom', this.state.event);
   }
 
   async componentDidUpdate(prevProps) {
@@ -168,7 +165,7 @@ export default class ZoomComponent extends Component {
                 md={24}
                 lg={
                   this.state.event._id !== '5f456bef532c8416b97e9c82' &&
-                  this.state.event._id !== '5f9824fc1f8ccc414e33bec2'
+                  this.state.event._id !== '5f8a0fa58a97e06e371538b4'
                     ? 16
                     : 24
                 }>
@@ -184,7 +181,7 @@ export default class ZoomComponent extends Component {
               {/* Retiro temporal del chat se ajusta video a pantalla completa*/}
 
               {this.state.event._id !== '5f456bef532c8416b97e9c82' &&
-                this.state.event._id !== '5f9824fc1f8ccc414e33bec2' && (
+                this.state.event._id !== '5f8a0fa58a97e06e371538b4' && (
                   <Col className='col-xs' xs={24} sm={24} md={24} lg={8}>
                     <iframe
                       src={`https://vimeo.com/live-chat/${activity.vimeo_id}`}
