@@ -206,9 +206,9 @@ export default class ZoomComponent extends Component {
                 <iframe
                   id='conference'
                   src={this.state.urllogin_bigmarker} //"https://www.bigmarker.com/conferences/1c3e6af84135/api_attend"
-                  frameborder='0'
+                  frameBorder='0'
                   allow='autoplay; fullscreen; camera *;microphone *'
-                  allowfullscreen
+                  allowFullscreen
                   allowusermedia
                   className='iframe-zoom nuevo'></iframe>
               )}
