@@ -373,6 +373,7 @@ class InfoGeneral extends Component {
               {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
             </div>
             <div className='field'>
+              <label className='label has-text-grey-light'>Visibilidad del evento</label>
               <div className='control'>
                 <div className='select'>
                   <select value={event.visibility} onChange={this.handleChange} name={'visibility'}>
