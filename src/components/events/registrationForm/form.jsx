@@ -199,8 +199,8 @@ export default ({
     } else {
       try {
         let resp = await UsersApi.createOne(snap, eventId);
-        console.log('resp', resp);
-        if (resp.message === 'OK') {
+
+        if (resp.status !== 'UPDATED') {
           setSuccessMessageInRegisterForm(resp.status);
           // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
           // textMessage.content = "Usuario " + statusMessage;
@@ -222,7 +222,13 @@ export default ({
             }, 3000);
           }
         } else {
-          textMessage.content = resp;
+          let msg =
+            'Ya se ha realizado previamente el registro con el correo: ' +
+            values.email +
+            ', se ha enviado un nuevo correo con enlace de ingreso.';
+          textMessage.content = msg;
+
+          setSuccessMessage(msg);
           // Retorna un mensaje en caso de que ya se encuentre registrado el correo
           setNotLoggedAndRegister(true);
           message.success(textMessage);
@@ -527,20 +533,13 @@ export default ({
 
   return (
     <>
-      {notLoggedAndRegister && (
-        <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
-          <Alert
-            message='Ya se encuentra registrado'
-            description='Ya has realizado previamente el registro al evento, por favor revisa tu correo.'
-            type='info'
-            showIcon
-            closable
-          />
-        </Col>
-      )}
-
       <br />
+
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
+        {notLoggedAndRegister && (
+          <Alert message='Ya se encuentra registrado' description={successMessage} type='warning' showIcon closable />
+        )}
+
         {!submittedForm ? (
           <Card title={eventUser !== undefined ? 'Actualizar mis datos' : formMessage.titleModal} bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
