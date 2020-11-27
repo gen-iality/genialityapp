@@ -273,7 +273,7 @@ let AgendaActividadDetalle = (props) => {
             <div
               className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
               dangerouslySetInnerHTML={{ __html: currentActivity.description }}
-            /> 
+            />
             {event._id === '5f99a20378f48e50a571e3b6' ? (
               <></>
             ) : (
@@ -399,6 +399,7 @@ let AgendaActividadDetalle = (props) => {
             <hr></hr>
             <br />
             <br />
+
             {/* Descripción del evento */}
 
             <div
@@ -429,15 +430,16 @@ let AgendaActividadDetalle = (props) => {
           >
             Inscribirme
           </button> */}
-
-              <a
-                className=''
-                onClick={() => {
-                  gotoActivityList();
-                }}>
-                <Button>Regresar a la agenda</Button>
-              </a>
             </div>
+          </div>
+          <div style={{ clear: 'both' }}>
+            <a
+              className=''
+              onClick={() => {
+                gotoActivityList();
+              }}>
+              <Button>Regresar a la agenda</Button>
+            </a>
           </div>
         </Card>
       </div>
