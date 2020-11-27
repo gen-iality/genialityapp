@@ -591,17 +591,17 @@ export default ({
         ) : (
           <Card>
             <Result status='success' title={formMessage.resultTitle} subTitle=''>
+              {loggedurl && (
+                <a className='ant-btn  ant-btn-primary ant-btn-lg' href={loggedurl}>
+                  INGRESAR
+                </a>
+              )}
               <OutsideAlerter showSection={showSection}>
                 <div
                   dangerouslySetInnerHTML={{
                     __html: successMessage ? successMessage.replace(/\[.*\]/gi, '') : ''
                   }}></div>
               </OutsideAlerter>
-              {loggedurl && (
-                <a className='ant-btn  ant-btn-primary ant-btn-lg' href={loggedurl}>
-                  INGRESAR
-                </a>
-              )}
             </Result>
           </Card>
         )}
