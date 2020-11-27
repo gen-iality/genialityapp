@@ -1107,25 +1107,6 @@ class AgendaEdit extends Component {
                                 <button
                                   style={{ marginTop: '2%' }}
                                   className='button is-primary'
-                                  onClick={() => {
-                                    this.toggleConference(true);
-                                  }}>
-                                  Ver Conferencia(vista previa)
-                                </button>
-
-                                {this.state.conferenceVisible && (
-                                  <ZoomComponent
-                                    toggleConference={this.toggleConference}
-                                    meetingId={this.state.meeting_id}
-                                    userEntered={this.state.currentUser}
-                                    event={this.props.event}
-                                    activity={this.state.info}
-                                  />
-                                )}
-
-                                <button
-                                  style={{ marginTop: '2%' }}
-                                  className='button is-primary'
                                   onClick={this.removeConference}>
                                   Eliminar espacio virtual
                                 </button>
@@ -1167,6 +1148,27 @@ class AgendaEdit extends Component {
                           </>
                         )}
                       </>
+                    )}
+
+                    {(this.state.meeting_id || this.state.vimeo_id) && (
+                      <button
+                        style={{ marginTop: '2%' }}
+                        className='button is-primary'
+                        onClick={() => {
+                          this.toggleConference(true);
+                        }}>
+                        Ver Conferencia(vista previa)
+                      </button>
+                    )}
+
+                    {this.state.conferenceVisible && (
+                      <ZoomComponent
+                        toggleConference={this.toggleConference}
+                        meetingId={this.state.meeting_id || this.state.vimeo_id}
+                        userEntered={this.state.currentUser}
+                        event={this.props.event}
+                        activity={this.state.info}
+                      />
                     )}
                   </Card>
                 </div>
