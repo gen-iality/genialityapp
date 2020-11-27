@@ -168,6 +168,7 @@ export default ({
     // values.files = fileSave
 
     setGeneralFormErrorMessageVisible(false);
+    setNotLoggedAndRegister(false);
 
     const key = 'registerUserService';
 
@@ -214,7 +215,9 @@ export default ({
 
           setSubmittedForm(true);
           message.success(textMessage);
+
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
+          //todo el proceso de logueo depende del token en la url por eso se recarga la página
           if (event.validateEmail && resp.data.user.initial_token) {
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
@@ -222,6 +225,7 @@ export default ({
             }, 3000);
           }
         } else {
+          //Usuario ACTUALIZADO
           let msg =
             'Ya se ha realizado previamente el registro con el correo: ' +
             values.email +
@@ -536,10 +540,6 @@ export default ({
       <br />
 
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
-        {notLoggedAndRegister && (
-          <Alert message='Ya se encuentra registrado' description={successMessage} type='warning' showIcon closable />
-        )}
-
         {!submittedForm ? (
           <Card title={eventUser !== undefined ? 'Actualizar mis datos' : formMessage.titleModal} bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
@@ -553,8 +553,6 @@ export default ({
               onFieldsChange={fieldsChange}
               onValuesChange={valuesChange}>
               {renderForm()}
-              <br />
-              <br />
 
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
@@ -565,6 +563,17 @@ export default ({
               </Row>
 
               <Row gutter={[24, 24]}>
+                <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                  {notLoggedAndRegister && (
+                    <Alert
+                      message='Ya se encuentra registrado'
+                      description={successMessage}
+                      type='warning'
+                      showIcon
+                      closable
+                    />
+                  )}
+                </Col>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <Form.Item>
                     <Button type='primary' htmlType='submit'>
@@ -585,7 +594,7 @@ export default ({
               <OutsideAlerter showSection={showSection}>
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: successMessage
+                    __html: successMessage ? successMessage.replace(/\[.*\]/gi, '') : ''
                   }}></div>
               </OutsideAlerter>
               {loggedurl && (
