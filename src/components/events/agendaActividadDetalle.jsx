@@ -438,7 +438,7 @@ let AgendaActividadDetalle = (props) => {
               onClick={() => {
                 gotoActivityList();
               }}>
-              <Button>Regresar a la agenda</Button>
+              <Button>Regresar</Button>
             </a>
           </div>
         </Card>
