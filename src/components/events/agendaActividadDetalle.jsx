@@ -68,39 +68,37 @@ let AgendaActividadDetalle = (props) => {
           title={
             event._id === '5f99a20378f48e50a571e3b6' ? (
               <>
-              <PageHeader
-              className='site-page-header'
-              onBack={() => {
-                gotoActivityList();
-              }}
-              title="MAGICLAND – PRIMER EPISODIO"
-            />
+                <PageHeader
+                  className='site-page-header'
+                  onBack={() => {
+                    gotoActivityList();
+                  }}
+                  title='MAGICLAND – PRIMER EPISODIO'
+                />
               </>
-            ):(
+            ) : (
               <>
-              <PageHeader
-              className='site-page-header'
-              onBack={() => {
-                gotoActivityList();
-              }}
-              title={currentActivity.name}
-            />
+                <PageHeader
+                  className='site-page-header'
+                  onBack={() => {
+                    gotoActivityList();
+                  }}
+                  title={currentActivity.name}
+                />
               </>
             )
-            
           }
-          extra={event._id === '5f99a20378f48e50a571e3b6' ? (
-            <>
-            </>
-          ):(
-            <> 
-              <p className='card-header-title has-padding-left-0 '>
-                {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
-                {Moment(currentActivity.datetime_end).format('h:mm a')}
-              </p>
-            </>
-          )
-           
+          extra={
+            event._id === '5f99a20378f48e50a571e3b6' ? (
+              <></>
+            ) : (
+              <>
+                <p className='card-header-title has-padding-left-0 '>
+                  {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
+                  {Moment(currentActivity.datetime_end).format('h:mm a')}
+                </p>
+              </>
+            )
           }
           className={event._id === '5f99a20378f48e50a571e3b6' ? 'magicland-agenda_information' : 'agenda_information'}>
           <header className='card-header columns has-padding-left-7'>
@@ -123,7 +121,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -159,7 +157,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -222,7 +220,7 @@ let AgendaActividadDetalle = (props) => {
                   key={key}
                   style={{
                     background: cat.color,
-                    color: cat.color ? 'white' : '',
+                    color: cat.color ? 'white' : ''
                   }}
                   className='tag category_calendar-tag'>
                   {cat.name}
@@ -408,7 +406,7 @@ let AgendaActividadDetalle = (props) => {
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end',
+                alignItems: 'flex-end'
               }}>
               {/* <button
                   <div

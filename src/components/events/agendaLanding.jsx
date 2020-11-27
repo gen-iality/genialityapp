@@ -34,7 +34,7 @@ class Agenda extends Component {
       show_inscription: false,
       status: 'in_progress',
       hideBtnDetailAgenda: true,
-      userId: null,
+      userId: null
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -60,7 +60,7 @@ class Agenda extends Component {
 
     this.setState({
       show_inscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
-      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true,
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
     });
 
     let surveysData = await SurveysApi.getAll(event._id);
@@ -236,13 +236,13 @@ class Agenda extends Component {
     Activity.Register(eventId, userId, activityId)
       .then(() => {
         notification.open({
-          message: 'Inscripción realizada',
+          message: 'Inscripción realizada'
         });
         callback(true);
       })
       .catch((err) => {
         notification.open({
-          message: err,
+          message: err
         });
       });
   };
@@ -274,7 +274,7 @@ class Agenda extends Component {
 
   showDrawer = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
   };
 
@@ -284,7 +284,7 @@ class Agenda extends Component {
 
   onClose = () => {
     this.setState({
-      visible: false,
+      visible: false
     });
   };
 
@@ -342,7 +342,7 @@ class Agenda extends Component {
       currentActivity,
       loading,
       survey,
-      documents,
+      documents
     } = this.state;
     return (
       <div>
@@ -361,7 +361,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
               Registrarme
-            </Button>,
+            </Button>
           ]}>
           <p>Para poder disfrutar de este contenido debes estar registrado e iniciar sesión</p>
         </Modal>
@@ -458,6 +458,7 @@ class Agenda extends Component {
                         registerInActivity={this.registerInActivity}
                         registerStatus={isRegistered}
                         eventId={this.props.eventId}
+                        event={this.props.event}
                         userId={this.state.userId}
                         btnDetailAgenda={hideBtnDetailAgenda}
                         show_inscription={show_inscription}
