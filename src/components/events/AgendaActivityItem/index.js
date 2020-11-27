@@ -25,6 +25,10 @@ export default function AgendaActivityItem({
   const [related_meetings, setRelatedMeetings] = useState();
 
   useEffect(() => {
+    console.log({ userId, userRegistered });
+  }, []);
+
+  useEffect(() => {
     if (registerStatus) {
       setIsRegistered(registerStatus);
     }
@@ -69,7 +73,10 @@ export default function AgendaActivityItem({
                 </span>
               )}
             <p>
-                  <span className='card-header-title text-align-card'>{item.name}{}</span>
+              <span className='card-header-title text-align-card'>
+                {item.name}
+                {}
+              </span>
             </p>
           </Row>
           <hr className='line-head' />
@@ -128,7 +135,7 @@ export default function AgendaActivityItem({
             </div>
             <Row>
               <Col span={12}>
-                {show_inscription === 'true' && (
+                {userId && show_inscription === 'true' && (
                   <Button
                     type='primary'
                     onClick={() => registerInActivity(item._id, eventId, userId, setIsRegistered)}
@@ -147,15 +154,7 @@ export default function AgendaActivityItem({
                         : () => gotoActivity(item)
                     }
                     className='space-align-block button-Agenda'>
-                    {eventId === '5f99a20378f48e50a571e3b6'?(
-                     <>
-                     VER AHORA 
-                     </>
-                    ):(
-                     <>
-                     Detalle de actividad
-                     </>
-                    )}
+                    {eventId === '5f99a20378f48e50a571e3b6' ? <>VER AHORA</> : <>Detalle de actividad</>}
                   </Button>
                 )}
                 {Documents &&
