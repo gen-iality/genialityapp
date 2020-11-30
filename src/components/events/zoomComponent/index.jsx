@@ -4,6 +4,7 @@ import Fullscreen from 'react-full-screen';
 import { FullscreenOutlined, LineOutlined } from '@ant-design/icons';
 import SurveyComponent from '../surveys';
 import API from '../../../helpers/request';
+import ConferenceTabs from './conferenceTabs';
 
 export default class ZoomComponent extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ export default class ZoomComponent extends Component {
       activity: props.activity,
       urllogin_bigmarker: null,
       error_bigmarker: null,
+      contentDisplayed: null
     };
   }
 
@@ -46,7 +48,7 @@ export default class ZoomComponent extends Component {
         id: this.props.activity.bigmaker_meeting_id,
         attendee_name: displayName,
         attendee_email: email,
-        exit_uri: 'https://evius.co/landing/' + this.state.event._id,
+        exit_uri: 'https://evius.co/landing/' + this.state.event._id
       };
 
       let callresult = null;
@@ -68,7 +70,7 @@ export default class ZoomComponent extends Component {
       displayName,
       email,
       urllogin_bigmarker: urllogin_bigmarker,
-      error_bigmarker: error_bigmarker,
+      error_bigmarker: error_bigmarker
     });
   }
 
@@ -97,7 +99,7 @@ export default class ZoomComponent extends Component {
   goMedium = () => {
     this.setState({
       isMedium: !this.state.isMedium,
-      isMinimize: false,
+      isMinimize: false
     });
   };
 
@@ -105,7 +107,13 @@ export default class ZoomComponent extends Component {
   goMinimize = () => {
     this.setState({
       isMinimize: !this.state.isMinimize,
-      isMedium: false,
+      isMedium: false
+    });
+  };
+
+  changeContentDisplayed = (contentName) => {
+    this.setState({
+      contentDisplayed: contentName
     });
   };
 
@@ -169,26 +177,39 @@ export default class ZoomComponent extends Component {
                     ? 16
                     : 24
                 }>
-                <iframe
-                  src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
-                  frameBorder='0'
-                  allow='autoplay; fullscreen; camera *;microphone *'
-                  allowFullScreen
-                  allowUserMedia
-                  style={{ width: '99vw', height: '100%' }}></iframe>
+                {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
+                  <iframe
+                    src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
+                    frameBorder='0'
+                    allow='autoplay; fullscreen; camera *;microphone *'
+                    allowFullScreen
+                    allowusermedia
+                    style={{ width: '99vw', height: '100%' }}></iframe>
+                )}
+
+                {this.state.contentDisplayed && this.state.contentDisplayed == 'game' && (
+                  <iframe
+                    src={
+                      `https://castrolgame.netlify.app` +
+                      (this.props.userEntered ? '?uid=' + this.props.userEntered._id : '')
+                    }
+                    frameBorder='0'
+                    allow='autoplay; fullscreen; camera *;microphone *'
+                    allowFullScreen
+                    allowusermedia
+                    style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
+                )}
               </Col>
 
               {/* Retiro temporal del chat se ajusta video a pantalla completa*/}
-
-              {this.state.event._id !== '5f456bef532c8416b97e9c82' &&
-                this.state.event._id !== '5f8a0fa58a97e06e371538b4' && (
-                  <Col className='col-xs' xs={24} sm={24} md={24} lg={8}>
-                    <iframe
-                      src={`https://vimeo.com/live-chat/${activity.vimeo_id}`}
-                      style={{ width: '99vw', height: '100%', padding: '2px' }}
-                      frameBorder='0'></iframe>
-                  </Col>
-                )}
+              <Col className='col-xs' xs={24} sm={24} md={24} lg={8}>
+                <ConferenceTabs
+                  activity={activity}
+                  event={event}
+                  eventUser={this.props.userEntered}
+                  changeContentDisplayed={this.changeContentDisplayed}
+                />
+              </Col>
             </Row>
           )}
 
