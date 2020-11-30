@@ -19,6 +19,7 @@ export default function ListadoJuegos(props) {
     <>
       <ul>
         <li onClick={() => props.changeContentDisplayed('game')}>Juego 1</li>
+        <li onClick={() => props.changeContentDisplayed('game2')}>Juego 2</li>
         <li onClick={() => props.changeContentDisplayed('conference')}>Conferencia</li>
       </ul>
       <h2>Ranking</h2>

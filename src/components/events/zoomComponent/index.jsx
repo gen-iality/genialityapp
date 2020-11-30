@@ -199,9 +199,22 @@ export default class ZoomComponent extends Component {
                     allowusermedia
                     style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
                 )}
+
+                {this.state.contentDisplayed && this.state.contentDisplayed == 'game2' && (
+                  <iframe
+                    src={
+                      `https://juegocastrol2.netlify.app/` +
+                      (this.props.userEntered ? '?uid=' + this.props.userEntered._id : '')
+                    }
+                    frameBorder='0'
+                    allow='autoplay; fullscreen; camera *;microphone *'
+                    allowFullScreen
+                    allowusermedia
+                    style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
+                )}
               </Col>
 
-              {/* Retiro temporal del chat se ajusta video a pantalla completa*/}
+              {/* Retiro temporal del chat se ajusta video a pantalla completa */}
               <Col className='col-xs' xs={24} sm={24} md={24} lg={8}>
                 <ConferenceTabs
                   activity={activity}
