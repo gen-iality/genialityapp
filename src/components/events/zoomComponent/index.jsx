@@ -214,7 +214,7 @@ export default class ZoomComponent extends Component {
                 )}
               </Col>
 
-              {/* Retiro temporal del chat se ajusta video a pantalla completa*/}
+              {/* Retiro temporal del chat se ajusta video a pantalla completa */}
               <Col className='col-xs' xs={24} sm={24} md={24} lg={8}>
                 <ConferenceTabs
                   activity={activity}
