@@ -169,7 +169,7 @@ export default function AgendaActivityItem({
            </>
           ):(
             <> 
-            <Col xs={24} sm={24} md={12} xl={8} xxl={8}>
+            <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
             <div className="img-agenda-event">
             {!item.habilitar_ingreso && <img src={item.image ? item.image : event_image} />}
               {item.habilitar_ingreso === 'closed_meeting_room' && (
@@ -266,7 +266,7 @@ export default function AgendaActivityItem({
               )}
             </div>      
           </Col>
-          <Col xs={24} sm={24} md={12} xl={16} xxl={16}>
+          <Col xs={24} sm={24} md={24} lg={12} xl={16} xxl={16}>
             <div className="description-agenda">
               {
                 <>
@@ -284,11 +284,12 @@ export default function AgendaActivityItem({
                   <Row justify="start"  className='txt-agenda-Panelistas'><h4>Panelistas:</h4></Row>
                   <Row justify="start" className="Agenda-Panelistas">
                     {item.hosts.map((speaker, key) => (
-                      <Col lg={24} xl={10} xxl={10}>
+                      
                         <span key={key}className="Agenda-speaker">
-                          <Avatar size={30} src={speaker.image} /> {speaker.name} &nbsp;
+                          <Col lg={24} xl={24} xxl={24}>
+                          <Avatar size={30} src={speaker.image} /> {speaker.name} &nbsp;</Col>
                         </span>
-                      </Col>
+                      
                     ))}
                   </Row>
                 </>
