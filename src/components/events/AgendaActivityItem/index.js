@@ -278,7 +278,6 @@ export default function AgendaActivityItem({
                 </>
               }
             </div>
-            <div>
               {item.hosts.length > 0 && (
                 <>
                   <Row justify="start"  className='txt-agenda-Panelistas'><h4>Panelistas:</h4></Row>
@@ -294,7 +293,6 @@ export default function AgendaActivityItem({
                   </Row>
                 </>
               )}
-            </div>
           </Col>
             </>
           )
