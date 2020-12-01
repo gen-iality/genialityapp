@@ -9,7 +9,7 @@ export default function LiveChat(props) {
           {props.activity && props.activity.vimeo_id && (
             <iframe
               src={`https://vimeo.com/live-chat/${props.activity.vimeo_id}`}
-              style={{ width: '99vw', height: '100%', padding: '2px' }}
+              style={{ width: '27vw', height: '100%', padding: '2px' }}
               frameBorder='0'></iframe>
           )}
         </>

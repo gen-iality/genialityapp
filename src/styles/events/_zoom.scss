@@ -173,7 +173,29 @@
   //   }
   // }
 }
-
+//estilo de zoom de collapsed
+.zoom-collapsed{
+  position: relative;
+  .zoom-collapsed_button{
+    position: absolute;
+    right: 103%;
+  }
+  .zoom-collapsed_tabs{
+    padding: 0% 7%;
+    width: 400px;
+  }
+  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #333F44;
+    font-weight: 500;
+    margin-left: 13px;
+  }
+  .ant-tabs > .ant-tabs-nav .ant-tabs-nav-list, .ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-list {
+    position: relative;
+    display: flex;
+    transition: transform 0.3s;
+    margin-left: 12%;
+  }
+}
 
 
 // Estilos para pantalla media
