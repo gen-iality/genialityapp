@@ -6,6 +6,8 @@ import SurveyComponent from '../surveys';
 import API from '../../../helpers/request';
 import ConferenceTabs from './conferenceTabs';
 
+import { firestore } from '../../../helpers/firebase';
+import { surveyStrings } from 'survey-react';
 export default class ZoomComponent extends Component {
   constructor(props) {
     super(props);
@@ -23,7 +25,15 @@ export default class ZoomComponent extends Component {
       activity: props.activity,
       urllogin_bigmarker: null,
       error_bigmarker: null,
-      contentDisplayed: null
+      contentDisplayed: null,
+
+      //parametros de la actividad almacenados en firestore
+      habilitar_ingreso: 'close_metting_room',
+      chat: false,
+      surveys: false,
+      games: false,
+      attendees: false,
+      videoConferenceSize: 16,
     };
   }
 
@@ -48,7 +58,7 @@ export default class ZoomComponent extends Component {
         id: this.props.activity.bigmaker_meeting_id,
         attendee_name: displayName,
         attendee_email: email,
-        exit_uri: 'https://evius.co/landing/' + this.state.event._id
+        exit_uri: 'https://evius.co/landing/' + this.state.event._id,
       };
 
       let callresult = null;
@@ -70,12 +80,38 @@ export default class ZoomComponent extends Component {
       displayName,
       email,
       urllogin_bigmarker: urllogin_bigmarker,
-      error_bigmarker: error_bigmarker
+      error_bigmarker: error_bigmarker,
     });
   }
 
   async componentDidMount() {
     this.setUpUserForConference();
+
+    firestore
+      .collection('events')
+      .doc(this.state.event._id)
+      .collection('activities')
+      .doc(this.state.activity._id)
+      .onSnapshot((response) => {
+        const videoConference = response.data();
+
+        this.setState({
+          habilitar_ingreso: videoConference.habilitar_ingreso
+            ? videoConference.habilitar_ingreso
+            : 'close_metting_room',
+          chat: videoConference.tabs && videoConference.tabs.chat ? videoConference.tabs.chat : false,
+          surveys: videoConference.tabs && videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
+          games: videoConference.tabs && videoConference.tabs.games ? videoConference.tabs.games : false,
+          attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
+          videoConferenceSize:
+            (videoConference.tabs && videoConference.tabs.chat) ||
+            videoConference.tabs.surveys ||
+            videoConference.tabs.games ||
+            videoConference.tabs.attendees
+              ? 16
+              : 24,
+        });
+      });
   }
 
   async componentDidUpdate(prevProps) {
@@ -99,7 +135,7 @@ export default class ZoomComponent extends Component {
   goMedium = () => {
     this.setState({
       isMedium: !this.state.isMedium,
-      isMinimize: false
+      isMinimize: false,
     });
   };
 
@@ -107,19 +143,31 @@ export default class ZoomComponent extends Component {
   goMinimize = () => {
     this.setState({
       isMinimize: !this.state.isMinimize,
-      isMedium: false
+      isMedium: false,
     });
   };
 
   changeContentDisplayed = (contentName) => {
     this.setState({
-      contentDisplayed: contentName
+      contentDisplayed: contentName,
     });
   };
 
   render() {
     const { toggleConference, event, activity } = this.props;
-    let { url_conference, meeting_id, isMedium, isFull, isMinimize, displayName, email } = this.state;
+    let {
+      url_conference,
+      meeting_id,
+      isMedium,
+      isFull,
+      isMinimize,
+      displayName,
+      email,
+      chat,
+      surveys,
+      games,
+      attendees,
+    } = this.state;
     const platform = activity.platform || this.state.event.event_platform;
     return (
       <div
@@ -166,17 +214,7 @@ export default class ZoomComponent extends Component {
           {/* VIMEO LIVESTREAMING */}
           {this.state.event && platform === 'vimeo' && (
             <Row className='platform-vimeo'>
-              <Col
-                className='col-xs'
-                xs={24}
-                sm={24}
-                md={24}
-                lg={
-                  this.state.event._id !== '5f456bef532c8416b97e9c82' &&
-                  this.state.event._id !== '5f8a0fa58a97e06e371538b4'
-                    ? 16
-                    : 24
-                }>
+              <Col className='col-xs' xs={24} sm={24} md={24} lg={this.state.videoConferenceSize}>
                 {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
                   <iframe
                     src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
@@ -212,6 +250,10 @@ export default class ZoomComponent extends Component {
                     allowusermedia
                     style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
                 )}
+
+                {this.state.contentDisplayed && this.state.contentDisplayed == 'surveys' && (
+                  <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
+                )}
               </Col>
 
               {/* Retiro temporal del chat se ajusta video a pantalla completa */}
@@ -221,6 +263,10 @@ export default class ZoomComponent extends Component {
                   event={event}
                   eventUser={this.props.userEntered}
                   changeContentDisplayed={this.changeContentDisplayed}
+                  chat={chat}
+                  surveys={surveys}
+                  games={games}
+                  attendees={attendees}
                 />
               </Col>
             </Row>
@@ -240,15 +286,14 @@ export default class ZoomComponent extends Component {
                 <iframe
                   id='conference'
                   src={this.state.urllogin_bigmarker} //"https://www.bigmarker.com/conferences/1c3e6af84135/api_attend"
-                  frameborder='0'
+                  frameBorder='0'
                   allow='autoplay; fullscreen; camera *;microphone *'
-                  allowfullscreen
+                  allowFullScreen
                   allowusermedia
                   className='iframe-zoom nuevo'></iframe>
               )}
             </>
           )}
-          {<SurveyComponent event={event} activity={activity} availableSurveysBar={true} />}
         </Fullscreen>
       </div>
     );
