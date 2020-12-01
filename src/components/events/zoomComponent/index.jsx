@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Result, Spin, Row, Col } from 'antd';
+import { Button, Result, Spin, Row } from 'antd';
 import Fullscreen from 'react-full-screen';
 import { FullscreenOutlined, LineOutlined } from '@ant-design/icons';
 import SurveyComponent from '../surveys';
@@ -7,7 +7,6 @@ import API from '../../../helpers/request';
 import ConferenceTabs from './conferenceTabs';
 
 import { firestore } from '../../../helpers/firebase';
-import { surveyStrings } from 'survey-react';
 export default class ZoomComponent extends Component {
   constructor(props) {
     super(props);
@@ -21,6 +20,7 @@ export default class ZoomComponent extends Component {
       isMinimize: false,
       displayName: '',
       email: null,
+      collapsed: false,
       event: props.event,
       activity: props.activity,
       urllogin_bigmarker: null,
@@ -213,62 +213,69 @@ export default class ZoomComponent extends Component {
           )}
           {/* VIMEO LIVESTREAMING */}
           {this.state.event && platform === 'vimeo' && (
-            <Row className='platform-vimeo'>
-              <Col className='col-xs' xs={24} sm={24} md={24} lg={this.state.videoConferenceSize}>
-                {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
-                  <iframe
-                    src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
-                    frameBorder='0'
-                    allow='autoplay; fullscreen; camera *;microphone *'
-                    allowFullScreen
-                    allowusermedia
-                    style={{ width: '99vw', height: '100%' }}></iframe>
-                )}
+            <Row className='platform-vimeo' style={{ display: 'contents' }}>
+              {/* <Col
+                className='col-xs'
+                xs={24}
+                sm={24}
+                md={24}
+                lg={
+                  this.state.event._id !== '5f456bef532c8416b97e9c82' &&
+                  this.state.event._id !== '5f8a0fa58a97e06e371538b4'
+                    ? 16
+                    : 24
+                }> */}
+              {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
+                <iframe
+                  src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
+                  frameBorder='0'
+                  allow='autoplay; fullscreen; camera *;microphone *'
+                  allowFullScreen
+                  allowusermedia
+                  style={{ width: '99vw', height: '100%' }}></iframe>
+              )}
 
-                {this.state.contentDisplayed && this.state.contentDisplayed == 'game' && (
-                  <iframe
-                    src={
-                      `https://castrolgame.netlify.app` +
-                      (this.props.userEntered ? '?uid=' + this.props.userEntered._id : '')
-                    }
-                    frameBorder='0'
-                    allow='autoplay; fullscreen; camera *;microphone *'
-                    allowFullScreen
-                    allowusermedia
-                    style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
-                )}
+              {this.state.contentDisplayed && this.state.contentDisplayed == 'game' && (
+                <iframe
+                  src={
+                    `https://castrolgame.netlify.app` +
+                    (this.props.userEntered ? '?uid=' + this.props.userEntered._id : '')
+                  }
+                  frameBorder='0'
+                  allow='autoplay; fullscreen; camera *;microphone *'
+                  allowFullScreen
+                  allowusermedia
+                  style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
+              )}
 
-                {this.state.contentDisplayed && this.state.contentDisplayed == 'game2' && (
-                  <iframe
-                    src={
-                      `https://juegocastrol2.netlify.app/` +
-                      (this.props.userEntered ? '?uid=' + this.props.userEntered._id : '')
-                    }
-                    frameBorder='0'
-                    allow='autoplay; fullscreen; camera *;microphone *'
-                    allowFullScreen
-                    allowusermedia
-                    style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
-                )}
+              {this.state.contentDisplayed && this.state.contentDisplayed == 'game2' && (
+                <iframe
+                  src={
+                    `https://juegocastrol2.netlify.app/` +
+                    (this.props.userEntered ? '?uid=' + this.props.userEntered._id : '')
+                  }
+                  frameBorder='0'
+                  allow='autoplay; fullscreen; camera *;microphone *'
+                  allowFullScreen
+                  allowusermedia
+                  style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
+              )}
 
-                {this.state.contentDisplayed && this.state.contentDisplayed == 'surveys' && (
-                  <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
-                )}
-              </Col>
+              {this.state.contentDisplayed && this.state.contentDisplayed == 'surveys' && (
+                <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
+              )}
 
               {/* Retiro temporal del chat se ajusta video a pantalla completa */}
-              <Col className='col-xs' xs={24} sm={24} md={24} lg={8}>
-                <ConferenceTabs
-                  activity={activity}
-                  event={event}
-                  eventUser={this.props.userEntered}
-                  changeContentDisplayed={this.changeContentDisplayed}
-                  chat={chat}
-                  surveys={surveys}
-                  games={games}
-                  attendees={attendees}
-                />
-              </Col>
+              <ConferenceTabs
+                activity={activity}
+                event={event}
+                eventUser={this.props.userEntered}
+                changeContentDisplayed={this.changeContentDisplayed}
+                chat={chat}
+                surveys={surveys}
+                games={games}
+                attendees={attendees}
+              />
             </Row>
           )}
 
