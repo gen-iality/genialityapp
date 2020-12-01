@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Result, Spin, Row, Col } from 'antd';
+import { Button, Result, Spin, Row, Col, Menu } from 'antd';
 import Fullscreen from 'react-full-screen';
-import { FullscreenOutlined, LineOutlined } from '@ant-design/icons';
+import { FullscreenOutlined, LineOutlined, RightOutlined, LeftOutlined, } from '@ant-design/icons';
 import SurveyComponent from '../surveys';
 import API from '../../../helpers/request';
 import ConferenceTabs from './conferenceTabs';
@@ -19,6 +19,7 @@ export default class ZoomComponent extends Component {
       isMinimize: false,
       displayName: '',
       email: null,
+      collapsed: false,
       event: props.event,
       activity: props.activity,
       urllogin_bigmarker: null,
@@ -117,6 +118,7 @@ export default class ZoomComponent extends Component {
     });
   };
 
+
   render() {
     const { toggleConference, event, activity } = this.props;
     let { url_conference, meeting_id, isMedium, isFull, isMinimize, displayName, email } = this.state;
@@ -165,8 +167,8 @@ export default class ZoomComponent extends Component {
           )}
           {/* VIMEO LIVESTREAMING */}
           {this.state.event && platform === 'vimeo' && (
-            <Row className='platform-vimeo'>
-              <Col
+            <Row className='platform-vimeo' style={{display:"contents"}}>
+              {/* <Col
                 className='col-xs'
                 xs={24}
                 sm={24}
@@ -176,7 +178,7 @@ export default class ZoomComponent extends Component {
                   this.state.event._id !== '5f8a0fa58a97e06e371538b4'
                     ? 16
                     : 24
-                }>
+                }> */}
                 {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
                   <iframe
                     src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
@@ -212,17 +214,15 @@ export default class ZoomComponent extends Component {
                     allowusermedia
                     style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
                 )}
-              </Col>
+
 
               {/* Retiro temporal del chat se ajusta video a pantalla completa */}
-              <Col className='col-xs' xs={24} sm={24} md={24} lg={8}>
-                <ConferenceTabs
+               <ConferenceTabs
                   activity={activity}
                   event={event}
                   eventUser={this.props.userEntered}
                   changeContentDisplayed={this.changeContentDisplayed}
                 />
-              </Col>
             </Row>
           )}
 
