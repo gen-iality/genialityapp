@@ -103,13 +103,13 @@ export default class ZoomComponent extends Component {
           surveys: videoConference.tabs && videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
           games: videoConference.tabs && videoConference.tabs.games ? videoConference.tabs.games : false,
           attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
-          videoConferenceSize:
-            (videoConference.tabs && videoConference.tabs.chat) ||
-            videoConference.tabs.surveys ||
-            videoConference.tabs.games ||
-            videoConference.tabs.attendees
-              ? 16
-              : 24,
+          // videoConferenceSize:
+          //   (videoConference.tabs && videoConference.tabs.chat) ||
+          //   videoConference.tabs.surveys ||
+          //   videoConference.tabs.games ||
+          //   videoConference.tabs.attendees
+          //     ? 16
+          //     : 24,
         });
       });
   }
