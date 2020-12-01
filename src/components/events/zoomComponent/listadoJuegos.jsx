@@ -41,10 +41,10 @@ export default function ListadoJuegos(props) {
         onClick={() => props.changeContentDisplayed('game')} 
         style={{cursor:'pointer', marginTop:'12px'}}>
         <Row justify='space-between'>
-          <Col lg={6}>
+          <Col span={6}>
            <Avatar size={38} icon={<BuildOutlined />} style={{ backgroundColor: '#87d068' }}/>
          </Col>
-         <Col lg={18}>
+         <Col span={18}>
           <h2 style={{fontWeight:'700'}}>Juego 1</h2>
          </Col>  
         </Row>  
@@ -54,10 +54,10 @@ export default function ListadoJuegos(props) {
         onClick={() => props.changeContentDisplayed('game2')} 
         style={{cursor:'pointer', marginTop:'12px'}}>
         <Row justify='space-between'>
-          <Col lg={6}>
+          <Col span={6}>
            <Avatar size={38} icon={<BuildOutlined />} style={{ backgroundColor: '#87d068' }}/>
          </Col>
-         <Col lg={18}>
+         <Col span={18}>
           <h2 style={{fontWeight:'700'}}>Juego 2</h2>
          </Col>  
         </Row>  
@@ -67,10 +67,10 @@ export default function ListadoJuegos(props) {
        <h2 hoverable style={{fontSize:'19px', fontWeight:'700'}}>Ranking de jugadores</h2>
        <Card style={{width:'354px', padding:'5px'}}>
          <Row justify='space-between'>
-          <Col lg={6}>
+          <Col span={6}>
            <Avatar size={38}>26</Avatar>
          </Col>
-         <Col lg={18}>
+         <Col span={18}>
           <h3 style={{fontWeight:'700'}}>TU</h3>
           <h4>112.123 Pts</h4>
          </Col>  
@@ -79,10 +79,10 @@ export default function ListadoJuegos(props) {
        {ranking.map((item, key) => (
        <Card hoverable style={{width:'354px', padding:'5px'}} key={'item' + key}>        
            <Row justify='space-between'>
-            <Col lg={6}>
+            <Col span={6}>
               <Avatar size={38}> 1 </Avatar>
             </Col>
-            <Col lg={18}>
+            <Col span={18}>
               <h3>Nombre del jugador</h3>
               <h4>{item.puntaje} Pts</h4>
             </Col>  
