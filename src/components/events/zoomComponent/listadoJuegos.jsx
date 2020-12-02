@@ -118,10 +118,7 @@ export default function ListadoJuegos(props) {
       </Card>
       {/*RANKING*/}
       <Row justify='center'>
-        <h2 style={{ fontSize: '19px', fontWeight: '700' }}>
-          Ranking de jugadores
-        </h2>
-        <div className='container-ranking'>
+        <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi Puntaje</h3>
         {myName !== '' && myScore !== '' && (
           <Card className='card-games-ranking ranking-user'>
             <Row justify='space-between'>
@@ -133,29 +130,31 @@ export default function ListadoJuegos(props) {
               </Col>
               <Col span={18}>
                 <h3 style={{ fontWeight: '700' }}>{props.currentUser.displayName}</h3>
-                <h4>{myScore} Mis puntos</h4>
+                <h4>{myScore} pts</h4>
               </Col>
             </Row>
           </Card>
         )}
-
-        {ranking.length &&
-          ranking.map((item, key) => (
-            <Card hoverable className='card-games-ranking' key={'item' + key}>
-              <Row justify='space-between'>
-                <Col span={6}>
-                  <Avatar size={38}>
-                    {item.name && item.name.charAt(0).toUpperCase()}
-                    {item.name && item.name.substring(item.name.indexOf(' ') + 1, item.name.indexOf(' ') + 2)}
-                  </Avatar>
-                </Col>
-                <Col span={18}>
-                  <h3>{item.name}</h3>
-                  <h4>{item.puntaje} Mis puntos</h4>
-                </Col>
-              </Row>
-            </Card>
-          ))}</div>
+        <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Ranking de jugadores</h3>
+        <div className='container-ranking'>
+          {ranking.length &&
+            ranking.map((item, key) => (
+              <Card hoverable className='card-games-ranking' key={'item' + key}>
+                <Row justify='space-between'>
+                  <Col span={6}>
+                    <Avatar size={38}>
+                      {item.name && item.name.charAt(0).toUpperCase()}
+                      {item.name && item.name.substring(item.name.indexOf(' ') + 1, item.name.indexOf(' ') + 2)}
+                    </Avatar>
+                  </Col>
+                  <Col span={18}>
+                    <h3>{item.name}</h3>
+                    <h4>{item.puntaje} Pts</h4>
+                  </Col>
+                </Row>
+              </Card>
+            ))}
+        </div>
       </Row>
     </>
   );
