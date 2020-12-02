@@ -78,7 +78,7 @@ export default function ConferenceTabsComponent(props) {
               </TabPane>
             )}
             {games && (
-              <TabPane tab={<><BuildOutlined style={{fontSize:'26px', textAlign:'center'}}/><p style={{marginBottom:'0px'}}>Juegos</p></>} key='games'>
+              <TabPane tab={<><img src="https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png" style={{width:'32px'}}/><p style={{marginBottom:'0px'}}>Juegos</p></>} key='games'>
                 <ListadoJuegos {...props} />
               </TabPane>
             )}
