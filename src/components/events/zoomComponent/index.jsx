@@ -40,6 +40,8 @@ export default class ZoomComponent extends Component {
   async setUpUserForConference() {
     let { meetingId, userEntered } = this.props;
 
+    console.log('*********************** user entered', userEntered);
+
     let displayName = 'Anónimo';
     let email = 'anonimo@evius.co';
 
@@ -262,14 +264,19 @@ export default class ZoomComponent extends Component {
               )}
 
               {this.state.contentDisplayed && this.state.contentDisplayed == 'surveys' && (
-                <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
+                <SurveyComponent
+                  event={event}
+                  activity={activity}
+                  availableSurveysBar={true}
+                  style={{ zIndex: 9999, width: '99vw', height: '100%' }}
+                />
               )}
 
               {/* Retiro temporal del chat se ajusta video a pantalla completa */}
               <ConferenceTabs
                 activity={activity}
                 event={event}
-                eventUser={this.props.userEntered}
+                currentUser={this.props.userEntered}
                 changeContentDisplayed={this.changeContentDisplayed}
                 chat={chat}
                 surveys={surveys}

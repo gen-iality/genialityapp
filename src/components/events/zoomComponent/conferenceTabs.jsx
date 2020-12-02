@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Row, Button, Menu } from 'antd';
+import { Tabs, Button, Menu, Row, Col, Card, Avatar } from 'antd';
 import {
   CommentOutlined,
   PieChartOutlined,
@@ -7,6 +7,8 @@ import {
   RightOutlined,
   LeftOutlined,
   BuildOutlined,
+  ArrowLeftOutlined,
+  VideoCameraOutlined,
 } from '@ant-design/icons';
 import ListadoJuegos from './listadoJuegos';
 import LiveChat from './liveChat';
@@ -40,14 +42,37 @@ export default function ConferenceTabsComponent(props) {
                 <LiveChat {...props} />
               </TabPane>
             )}
-            {attendees && (
+            {surveys && (
               <TabPane tab={<PieChartOutlined style={{ fontSize: '26px' }} />} key='3'>
-                Asistentes
+                <Row justify='space-between'>
+                  <Col span={4}>
+                    <ArrowLeftOutlined onClick={() => props.changeContentDisplayed('conference')} />
+                  </Col>
+                  <Col span={14}>
+                    <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
+                  </Col>
+                  <Col span={4}>
+                    <VideoCameraOutlined />
+                  </Col>
+                </Row>
+                <Card
+                  hoverable
+                  onClick={() => props.changeContentDisplayed('surveys')}
+                  style={{ cursor: 'pointer', marginTop: '12px' }}>
+                  <Row justify='space-between'>
+                    <Col span={6}>
+                      <Avatar size={38} icon={<PieChartOutlined />} style={{ backgroundColor: '#87d068' }} />
+                    </Col>
+                    <Col span={18}>
+                      <h2 style={{ fontWeight: '700' }}>Ir a encuestas</h2>
+                    </Col>
+                  </Row>
+                </Card>
               </TabPane>
             )}
-            {surveys && (
+            {attendees && (
               <TabPane tab={<TeamOutlined style={{ fontSize: '26px' }} />} key='4'>
-                Encuestas
+                Asistentes
               </TabPane>
             )}
           </Tabs>
