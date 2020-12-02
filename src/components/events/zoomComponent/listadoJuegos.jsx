@@ -109,7 +109,7 @@ export default function ListadoJuegos(props) {
         style={{ cursor: 'pointer', marginTop: '12px' }}>
         <Row justify='space-between'>
           <Col span={6}>
-            <Avatar size={38} icon={<BuildOutlined />} style={{ backgroundColor: '#87d068' }} />
+            <Avatar size={38} style={{ backgroundColor: '#87d068' }}> <img src="https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png" style={{width:'40px'}}/></Avatar>
           </Col>
           <Col span={18}>
             <h2 style={{ fontWeight: '700' }}>Juego 1</h2>
