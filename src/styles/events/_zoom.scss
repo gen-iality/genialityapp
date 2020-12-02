@@ -195,6 +195,10 @@
     display: flex;
     transition: transform 0.3s;
     margin-left: 12%;
+    text-align: center;
+  }
+  .ant-tabs-ink-bar {
+    width: 67px !important;
   }
 }
 //estilo del chat vimeo
@@ -206,6 +210,35 @@
     width: 80vw;
   }
 }
+
+//estilos del ranking-listadojuegos
+.container-ranking{
+  overflow-y:scroll;
+  height: 400px;
+  .ranking-user{
+  border: 2px solid #8ce1f0;
+  }
+}
+.container-ranking::-webkit-scrollbar{
+  width:9px;
+}
+.container-ranking::-webkit-scrollbar-thumb {
+  background-color: rgb(140, 225, 240);
+  border-radius: 20px;
+  border: 2px solid #f1f2f3;
+}
+.container-ranking::-webkit-scrollbar-track-piece{
+  background-color: #f5f5f5;
+}
+.card-games-ranking{
+  width: 304px;
+  padding: 5px;
+  .ant-card-body {
+    padding: 10px;
+  }
+  
+}
+
 
 
 // Estilos para pantalla media
