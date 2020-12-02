@@ -118,11 +118,12 @@ export default function ListadoJuegos(props) {
       </Card>
       {/*RANKING*/}
       <Row justify='center'>
-        <h2 hoverable style={{ fontSize: '19px', fontWeight: '700' }}>
+        <h2 style={{ fontSize: '19px', fontWeight: '700' }}>
           Ranking de jugadores
         </h2>
+        <div className='container-ranking'>
         {myName !== '' && myScore !== '' && (
-          <Card style={{ width: '354px', padding: '5px' }}>
+          <Card className='card-games-ranking ranking-user'>
             <Row justify='space-between'>
               <Col span={6}>
                 <Avatar size={38}>
@@ -132,7 +133,7 @@ export default function ListadoJuegos(props) {
               </Col>
               <Col span={18}>
                 <h3 style={{ fontWeight: '700' }}>{props.currentUser.displayName}</h3>
-                <h4>{myScore} Pts</h4>
+                <h4>{myScore} Mis puntos</h4>
               </Col>
             </Row>
           </Card>
@@ -140,7 +141,7 @@ export default function ListadoJuegos(props) {
 
         {ranking.length &&
           ranking.map((item, key) => (
-            <Card hoverable style={{ width: '354px', padding: '5px' }} key={'item' + key}>
+            <Card hoverable className='card-games-ranking' key={'item' + key}>
               <Row justify='space-between'>
                 <Col span={6}>
                   <Avatar size={38}>
@@ -150,11 +151,11 @@ export default function ListadoJuegos(props) {
                 </Col>
                 <Col span={18}>
                   <h3>{item.name}</h3>
-                  <h4>{item.puntaje} Pts</h4>
+                  <h4>{item.puntaje} Mis puntos</h4>
                 </Col>
               </Row>
             </Card>
-          ))}
+          ))}</div>
       </Row>
     </>
   );

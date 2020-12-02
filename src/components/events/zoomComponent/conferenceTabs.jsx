@@ -39,12 +39,12 @@ export default function ConferenceTabsComponent(props) {
         <div className='zoom-collapsed_tabs'>
           <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={callback}>
             {chat && (
-              <TabPane tab={<CommentOutlined style={{ fontSize: '26px' }} />} key='chat'>
+              <TabPane tab={<><CommentOutlined style={{fontSize:'26px', textAlign:'center'}}/><p style={{marginBottom:'0px'}}>Chat</p></>} key='chat'>
                 <LiveChat {...props} />
               </TabPane>
             )}
             {surveys && (
-              <TabPane tab={<PieChartOutlined style={{ fontSize: '26px' }} />} key='surveys'>
+              <TabPane tab={<><PieChartOutlined style={{fontSize:'26px', textAlign:'center'}}/><p style={{marginBottom:'0px'}}>Encuestas</p></>} key='surveys'>
                 <Row justify='space-between'>
                   <Col span={4}>
                     <ArrowLeftOutlined onClick={() => props.changeContentDisplayed('conference')} />
@@ -73,12 +73,12 @@ export default function ConferenceTabsComponent(props) {
             )}
 
             {attendees && (
-              <TabPane tab={<TeamOutlined style={{ fontSize: '26px' }} />} key='attendees'>
+              <TabPane tab={<><TeamOutlined style={{fontSize:'26px', textAlign:'center'}}/><p style={{marginBottom:'0px'}}>Asistentes</p></>} key='attendees'>
                 Asistentes
               </TabPane>
             )}
             {games && (
-              <TabPane tab={<BuildOutlined style={{ fontSize: '26px' }} />} key='games'>
+              <TabPane tab={<><BuildOutlined style={{fontSize:'26px', textAlign:'center'}}/><p style={{marginBottom:'0px'}}>Juegos</p></>} key='games'>
                 <ListadoJuegos {...props} />
               </TabPane>
             )}
