@@ -40,6 +40,8 @@ export default function ListadoJuegos(props) {
   const [myScore, setMyScore] = useState('');
 
   useEffect(() => {
+    props.changeContentDisplayed('games');
+
     let gameId = '0biWfCwWbUGhbZmfhkvu';
 
     //Consulta del puntaje del currentUser
@@ -49,20 +51,24 @@ export default function ListadoJuegos(props) {
       .onSnapshot(function(response) {
         const myScore = response.data();
 
-        if (Object.keys(myScore).length) {
+        if (myScore) {
           setMyName(myScore.name);
           setMyScore(myScore.puntaje);
         }
       });
 
     //Consulta de todos los puntajes
-    firestore.collection('juegos/' + gameId + '/puntajes/').onSnapshot(function(querySnapshot) {
-      var puntajes = [];
-      querySnapshot.forEach(function(doc) {
-        puntajes.push(doc.data());
+    firestore
+      .collection('juegos/' + gameId + '/puntajes/')
+      .orderBy('puntaje', 'desc')
+      .limit(10)
+      .onSnapshot(function(querySnapshot) {
+        var puntajes = [];
+        querySnapshot.forEach(function(doc) {
+          puntajes.push(doc.data());
+        });
+        setRanking(puntajes);
       });
-      setRanking(puntajes);
-    });
   }, [props.currentUser]);
 
   return (
@@ -84,7 +90,7 @@ export default function ListadoJuegos(props) {
         </Col>
       </Row>
       {/*JUEGOS*/}
-      <Card
+      {/* <Card
         hoverable
         onClick={() => props.changeContentDisplayed('game')}
         style={{ cursor: 'pointer', marginTop: '12px' }}>
@@ -96,17 +102,17 @@ export default function ListadoJuegos(props) {
             <h2 style={{ fontWeight: '700' }}>Juego 1</h2>
           </Col>
         </Row>
-      </Card>
+      </Card> */}
       <Card
         hoverable
-        onClick={() => props.changeContentDisplayed('game2')}
+        onClick={() => props.changeContentDisplayed('games')}
         style={{ cursor: 'pointer', marginTop: '12px' }}>
         <Row justify='space-between'>
           <Col span={6}>
             <Avatar size={38} icon={<BuildOutlined />} style={{ backgroundColor: '#87d068' }} />
           </Col>
           <Col span={18}>
-            <h2 style={{ fontWeight: '700' }}>Juego 2</h2>
+            <h2 style={{ fontWeight: '700' }}>Juego 1</h2>
           </Col>
         </Row>
       </Card>

@@ -17,7 +17,7 @@ const { TabPane } = Tabs;
 
 export default function ConferenceTabsComponent(props) {
   function callback(key) {
-    console.log(key);
+    props.handleActiveTab(key);
   }
   let [collapsed, setCollapsed] = useState(false);
   const { chat, surveys, games, attendees } = props;
@@ -31,19 +31,19 @@ export default function ConferenceTabsComponent(props) {
       </Button>
       {collapsed === true ? (
         <div className='zoom-collapsed_tabs'>
-          <Tabs defaultActiveKey='1' onChange={callback}>
+          <Tabs defaultActiveKey={props.activeTab} activeKey={props.activeTab} onChange={callback}>
             {games && (
-              <TabPane tab={<BuildOutlined style={{ fontSize: '26px' }} />} key='1'>
+              <TabPane tab={<BuildOutlined style={{ fontSize: '26px' }} />} key='games'>
                 <ListadoJuegos {...props} />
               </TabPane>
             )}
             {chat && (
-              <TabPane tab={<CommentOutlined style={{ fontSize: '26px' }} />} key='2'>
+              <TabPane tab={<CommentOutlined style={{ fontSize: '26px' }} />} key='chat'>
                 <LiveChat {...props} />
               </TabPane>
             )}
             {surveys && (
-              <TabPane tab={<PieChartOutlined style={{ fontSize: '26px' }} />} key='3'>
+              <TabPane tab={<PieChartOutlined style={{ fontSize: '26px' }} />} key='surveys'>
                 <Row justify='space-between'>
                   <Col span={4}>
                     <ArrowLeftOutlined onClick={() => props.changeContentDisplayed('conference')} />
@@ -71,7 +71,7 @@ export default function ConferenceTabsComponent(props) {
               </TabPane>
             )}
             {attendees && (
-              <TabPane tab={<TeamOutlined style={{ fontSize: '26px' }} />} key='4'>
+              <TabPane tab={<TeamOutlined style={{ fontSize: '26px' }} />} key='attendees'>
                 Asistentes
               </TabPane>
             )}

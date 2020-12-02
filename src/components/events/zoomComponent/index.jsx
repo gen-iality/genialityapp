@@ -33,14 +33,13 @@ export default class ZoomComponent extends Component {
       surveys: false,
       games: false,
       attendees: false,
-      videoConferenceSize: 16
+      videoConferenceSize: 16,
+      activeTab: 'chat',
     };
   }
 
   async setUpUserForConference() {
     let { meetingId, userEntered } = this.props;
-
-    console.log('*********************** user entered', userEntered);
 
     let displayName = 'Anónimo';
     let email = 'anonimo@evius.co';
@@ -60,7 +59,7 @@ export default class ZoomComponent extends Component {
         id: this.props.activity.bigmaker_meeting_id,
         attendee_name: displayName,
         attendee_email: email,
-        exit_uri: 'https://evius.co/landing/' + this.state.event._id
+        exit_uri: 'https://evius.co/landing/' + this.state.event._id,
       };
 
       let callresult = null;
@@ -82,7 +81,7 @@ export default class ZoomComponent extends Component {
       displayName,
       email,
       urllogin_bigmarker: urllogin_bigmarker,
-      error_bigmarker: error_bigmarker
+      error_bigmarker: error_bigmarker,
     });
   }
 
@@ -101,10 +100,10 @@ export default class ZoomComponent extends Component {
           habilitar_ingreso: videoConference.habilitar_ingreso
             ? videoConference.habilitar_ingreso
             : 'close_metting_room',
-          chat: videoConference.tabs && videoConference.tabs.chat ? videoConference.tabs.chat : false,
-          surveys: videoConference.tabs && videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
+          chat: videoConference.tabs && videoConference.tabs.chat ? videoConference.tabs.chat : true,
+          surveys: videoConference.tabs && videoConference.tabs.surveys ? videoConference.tabs.surveys : true,
           games: videoConference.tabs && videoConference.tabs.games ? videoConference.tabs.games : false,
-          attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false
+          attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
           // videoConferenceSize:
           //   (videoConference.tabs && videoConference.tabs.chat) ||
           //   videoConference.tabs.surveys ||
@@ -116,7 +115,21 @@ export default class ZoomComponent extends Component {
       });
   }
 
-  async componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.games !== this.state.games) {
+      console.log('el estado del juego cambio');
+      if (this.state.games) {
+        this.changeContentDisplayed('games');
+        this.handleActiveTab('games');
+      } else {
+        this.changeContentDisplayed('conference');
+      }
+    }
+
+    if (prevState.activeTab !== this.state.activeTab) {
+      console.log('cambio active tab', this.state.activeTab);
+    }
+
     if (prevProps.meetingId === this.props.meetingId) {
       return;
     }
@@ -137,7 +150,7 @@ export default class ZoomComponent extends Component {
   goMedium = () => {
     this.setState({
       isMedium: !this.state.isMedium,
-      isMinimize: false
+      isMinimize: false,
     });
   };
 
@@ -145,14 +158,18 @@ export default class ZoomComponent extends Component {
   goMinimize = () => {
     this.setState({
       isMinimize: !this.state.isMinimize,
-      isMedium: false
+      isMedium: false,
     });
   };
 
   changeContentDisplayed = (contentName) => {
     this.setState({
-      contentDisplayed: contentName
+      contentDisplayed: contentName,
     });
+  };
+
+  handleActiveTab = (tabKey) => {
+    this.setState({ activeTab: tabKey });
   };
 
   render() {
@@ -168,7 +185,7 @@ export default class ZoomComponent extends Component {
       chat,
       surveys,
       games,
-      attendees
+      attendees,
     } = this.state;
     const platform = activity.platform || this.state.event.event_platform;
     return (
@@ -250,7 +267,7 @@ export default class ZoomComponent extends Component {
                   style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
               )}
 
-              {this.state.contentDisplayed && this.state.contentDisplayed == 'game2' && (
+              {this.state.contentDisplayed && this.state.contentDisplayed == 'games' && (
                 <iframe
                   src={
                     `https://juegocastrol2.netlify.app/` +
@@ -284,6 +301,7 @@ export default class ZoomComponent extends Component {
                 surveys={surveys}
                 games={games}
                 attendees={attendees}
+                handleActiveTab={this.handleActiveTab}
               />
             </Row>
           )}
