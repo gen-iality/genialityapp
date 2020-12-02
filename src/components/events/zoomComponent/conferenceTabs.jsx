@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Button, Menu, Row, Col, Card, Avatar } from 'antd';
+import { Tabs, Button, Menu, Row, Col, Card, Avatar, Tooltip } from 'antd';
 import {
   CommentOutlined,
   PieChartOutlined,
@@ -32,11 +32,6 @@ export default function ConferenceTabsComponent(props) {
       {collapsed === true ? (
         <div className='zoom-collapsed_tabs'>
           <Tabs defaultActiveKey={props.activeTab} activeKey={props.activeTab} onChange={callback}>
-            {games && (
-              <TabPane tab={<BuildOutlined style={{ fontSize: '26px' }} />} key='games'>
-                <ListadoJuegos {...props} />
-              </TabPane>
-            )}
             {chat && (
               <TabPane tab={<CommentOutlined style={{ fontSize: '26px' }} />} key='chat'>
                 <LiveChat {...props} />
@@ -70,19 +65,67 @@ export default function ConferenceTabsComponent(props) {
                 </Card>
               </TabPane>
             )}
+
             {attendees && (
               <TabPane tab={<TeamOutlined style={{ fontSize: '26px' }} />} key='attendees'>
                 Asistentes
               </TabPane>
             )}
+            {games && (
+              <TabPane tab={<BuildOutlined style={{ fontSize: '26px' }} />} key='games'>
+                <ListadoJuegos {...props} />
+              </TabPane>
+            )}
           </Tabs>
         </div>
       ) : (
-        <Menu defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline'>
-          {games && <Menu.Item key='game' icon={<BuildOutlined style={{ fontSize: '21px' }} />} />}
-          {chat && <Menu.Item key='chat' icon={<CommentOutlined style={{ fontSize: '21px' }} />}></Menu.Item>}
-          {surveys && <Menu.Item key='surveys' icon={<PieChartOutlined style={{ fontSize: '21px' }} />}></Menu.Item>}
-          {attendees && <Menu.Item key='atteendes' icon={<TeamOutlined style={{ fontSize: '21px' }} />}></Menu.Item>}
+        <Menu>
+          {chat && (
+            <Menu.Item
+              key='chat'
+              icon={
+                <Tooltip placement='leftTop' title='Chat'>
+                  <CommentOutlined style={{ fontSize: '21px' }} />
+                </Tooltip>
+              }
+              onClick={() => setCollapsed(collapsed === false ? true : false)}
+            />
+          )}
+          {surveys && (
+            <Menu.Item
+              key='surveys'
+              icon={
+                <Tooltip placement='leftTop' title='Surveys'>
+                  <PieChartOutlined style={{ fontSize: '21px' }} />
+                </Tooltip>
+              }
+              onClick={() => setCollapsed(collapsed === false ? true : false)}
+            />
+          )}
+          {attendees && (
+            <Menu.Item
+              key='atteendes'
+              icon={
+                <Tooltip placement='leftTop' title='Atteendes'>
+                  <TeamOutlined style={{ fontSize: '21px' }} />
+                </Tooltip>
+              }
+              onClick={() => setCollapsed(collapsed === false ? true : false)}
+            />
+          )}
+          {games && (
+            <Menu.Item
+              key='game'
+              icon={
+                <Tooltip placement='leftTop' title='Games'>
+                  <BuildOutlined
+                    style={{ fontSize: '21px' }}
+                    onClick={() => setCollapsed(collapsed === false ? true : false)}
+                  />
+                </Tooltip>
+              }
+            />
+          )}
         </Menu>
       )}
     </div>

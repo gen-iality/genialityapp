@@ -283,12 +283,15 @@ export default class ZoomComponent extends Component {
               )}
 
               {this.state.contentDisplayed && this.state.contentDisplayed == 'surveys' && (
-                <SurveyComponent
-                  event={event}
-                  activity={activity}
-                  availableSurveysBar={true}
-                  style={{ zIndex: 9999, width: '99vw', height: '100%' }}
-                />
+                <div style={{width:'100%'}}>
+                  <SurveyComponent
+                    event={event}
+                    activity={activity}
+                    availableSurveysBar={true}
+                    style={{ zIndex: 9999, width: '99vw', height: '100%' }}
+                  /> 
+                </div>
+                
               )}
 
               {/* Retiro temporal del chat se ajusta video a pantalla completa */}
