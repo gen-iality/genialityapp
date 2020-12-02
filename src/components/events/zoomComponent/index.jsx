@@ -33,7 +33,7 @@ export default class ZoomComponent extends Component {
       surveys: false,
       games: false,
       attendees: false,
-      videoConferenceSize: 16,
+      videoConferenceSize: 16
     };
   }
 
@@ -60,7 +60,7 @@ export default class ZoomComponent extends Component {
         id: this.props.activity.bigmaker_meeting_id,
         attendee_name: displayName,
         attendee_email: email,
-        exit_uri: 'https://evius.co/landing/' + this.state.event._id,
+        exit_uri: 'https://evius.co/landing/' + this.state.event._id
       };
 
       let callresult = null;
@@ -82,7 +82,7 @@ export default class ZoomComponent extends Component {
       displayName,
       email,
       urllogin_bigmarker: urllogin_bigmarker,
-      error_bigmarker: error_bigmarker,
+      error_bigmarker: error_bigmarker
     });
   }
 
@@ -104,7 +104,7 @@ export default class ZoomComponent extends Component {
           chat: videoConference.tabs && videoConference.tabs.chat ? videoConference.tabs.chat : false,
           surveys: videoConference.tabs && videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
           games: videoConference.tabs && videoConference.tabs.games ? videoConference.tabs.games : false,
-          attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
+          attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false
           // videoConferenceSize:
           //   (videoConference.tabs && videoConference.tabs.chat) ||
           //   videoConference.tabs.surveys ||
@@ -137,7 +137,7 @@ export default class ZoomComponent extends Component {
   goMedium = () => {
     this.setState({
       isMedium: !this.state.isMedium,
-      isMinimize: false,
+      isMinimize: false
     });
   };
 
@@ -145,13 +145,13 @@ export default class ZoomComponent extends Component {
   goMinimize = () => {
     this.setState({
       isMinimize: !this.state.isMinimize,
-      isMedium: false,
+      isMedium: false
     });
   };
 
   changeContentDisplayed = (contentName) => {
     this.setState({
-      contentDisplayed: contentName,
+      contentDisplayed: contentName
     });
   };
 
@@ -168,7 +168,7 @@ export default class ZoomComponent extends Component {
       chat,
       surveys,
       games,
-      attendees,
+      attendees
     } = this.state;
     const platform = activity.platform || this.state.event.event_platform;
     return (
@@ -254,7 +254,9 @@ export default class ZoomComponent extends Component {
                 <iframe
                   src={
                     `https://juegocastrol2.netlify.app/` +
-                    (this.props.userEntered ? '?uid=' + this.props.userEntered._id : '')
+                    (this.props.userEntered
+                      ? '?uid=' + this.props.userEntered._id + '&displayName=' + displayName + '&email' + email
+                      : '')
                   }
                   frameBorder='0'
                   allow='autoplay; fullscreen; camera *;microphone *'
