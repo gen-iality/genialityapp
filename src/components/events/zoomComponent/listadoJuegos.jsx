@@ -118,22 +118,24 @@ export default function ListadoJuegos(props) {
       </Card>
       {/*RANKING*/}
       <Row justify='center'>
-        <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi Puntaje</h3>
         {myName !== '' && myScore !== '' && (
-          <Card className='card-games-ranking ranking-user'>
-            <Row justify='space-between'>
-              <Col span={6}>
-                <Avatar size={38}>
-                  {myName && myName.charAt(0).toUpperCase()}
-                  {myName && myName.substring(myName.indexOf(' ') + 1, myName.indexOf(' ') + 2)}
-                </Avatar>
-              </Col>
-              <Col span={18}>
-                <h3 style={{ fontWeight: '700' }}>{props.currentUser.displayName}</h3>
-                <h4>{myScore} pts</h4>
-              </Col>
-            </Row>
-          </Card>
+          <>
+            <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi Puntaje</h3>
+            <Card className='card-games-ranking ranking-user'>
+              <Row justify='space-between'>
+                <Col span={6}>
+                  <Avatar size={38}>
+                    {myName && myName.charAt(0).toUpperCase()}
+                    {myName && myName.substring(myName.indexOf(' ') + 1, myName.indexOf(' ') + 2)}
+                  </Avatar>
+                </Col>
+                <Col span={18}>
+                  <h3 style={{ fontWeight: '700' }}>{props.currentUser.displayName}</h3>
+                  <h4>{myScore} pts</h4>
+                </Col>
+              </Row>
+            </Card>
+          </>
         )}
         <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Ranking de jugadores</h3>
         <div className='container-ranking'>
