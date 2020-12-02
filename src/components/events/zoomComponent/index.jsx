@@ -104,30 +104,34 @@ export default class ZoomComponent extends Component {
           surveys: videoConference.tabs && videoConference.tabs.surveys ? videoConference.tabs.surveys : true,
           games: videoConference.tabs && videoConference.tabs.games ? videoConference.tabs.games : false,
           attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
-          // videoConferenceSize:
-          //   (videoConference.tabs && videoConference.tabs.chat) ||
-          //   videoConference.tabs.surveys ||
-          //   videoConference.tabs.games ||
-          //   videoConference.tabs.attendees
-          //     ? 16
-          //     : 24,
         });
       });
   }
 
   async componentDidUpdate(prevProps, prevState) {
     if (prevState.games !== this.state.games) {
-      console.log('el estado del juego cambio');
       if (this.state.games) {
         this.changeContentDisplayed('games');
         this.handleActiveTab('games');
       } else {
         this.changeContentDisplayed('conference');
+        this.handleActiveTab('chat');
       }
     }
 
-    if (prevState.activeTab !== this.state.activeTab) {
-      console.log('cambio active tab', this.state.activeTab);
+    if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'surveys') {
+      this.changeContentDisplayed('surveys');
+    }
+
+    if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'games') {
+      this.changeContentDisplayed('games');
+    }
+
+    if (
+      prevState.activeTab !== this.state.activeTab &&
+      (this.state.activeTab === 'chat' || this.state.activeTab === 'attendees')
+    ) {
+      this.changeContentDisplayed('conference');
     }
 
     if (prevProps.meetingId === this.props.meetingId) {
@@ -186,6 +190,7 @@ export default class ZoomComponent extends Component {
       surveys,
       games,
       attendees,
+      activeTab,
     } = this.state;
     const platform = activity.platform || this.state.event.event_platform;
     return (
@@ -233,17 +238,6 @@ export default class ZoomComponent extends Component {
           {/* VIMEO LIVESTREAMING */}
           {this.state.event && platform === 'vimeo' && (
             <Row className='platform-vimeo' style={{ display: 'contents' }}>
-              {/* <Col
-                className='col-xs'
-                xs={24}
-                sm={24}
-                md={24}
-                lg={
-                  this.state.event._id !== '5f456bef532c8416b97e9c82' &&
-                  this.state.event._id !== '5f8a0fa58a97e06e371538b4'
-                    ? 16
-                    : 24
-                }> */}
               {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
                 <iframe
                   src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
@@ -283,15 +277,14 @@ export default class ZoomComponent extends Component {
               )}
 
               {this.state.contentDisplayed && this.state.contentDisplayed == 'surveys' && (
-                <div style={{width:'100%'}}>
+                <div style={{ width: '100%' }}>
                   <SurveyComponent
                     event={event}
                     activity={activity}
                     availableSurveysBar={true}
                     style={{ zIndex: 9999, width: '99vw', height: '100%' }}
-                  /> 
+                  />
                 </div>
-                
               )}
 
               {/* Retiro temporal del chat se ajusta video a pantalla completa */}
@@ -304,6 +297,7 @@ export default class ZoomComponent extends Component {
                 surveys={surveys}
                 games={games}
                 attendees={attendees}
+                activeTab={activeTab}
                 handleActiveTab={this.handleActiveTab}
               />
             </Row>

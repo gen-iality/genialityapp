@@ -16,11 +16,17 @@ import LiveChat from './liveChat';
 const { TabPane } = Tabs;
 
 export default function ConferenceTabsComponent(props) {
+  let [collapsed, setCollapsed] = useState(false);
+
   function callback(key) {
     props.handleActiveTab(key);
   }
-  let [collapsed, setCollapsed] = useState(false);
-  const { chat, surveys, games, attendees } = props;
+
+  function handleClick(key) {
+    props.handleActiveTab(key);
+  }
+
+  const { chat, surveys, games, attendees, activeTab } = props;
   return (
     <div className='zoom-collapsed'>
       <Button onClick={() => setCollapsed(collapsed === false ? true : false)} className='zoom-collapsed_button'>
@@ -29,9 +35,9 @@ export default function ConferenceTabsComponent(props) {
           onClick: () => setCollapsed(collapsed === false ? true : false),
         })}
       </Button>
-      {collapsed === true ? (
+      {collapsed === false ? (
         <div className='zoom-collapsed_tabs'>
-          <Tabs defaultActiveKey={props.activeTab} activeKey={props.activeTab} onChange={callback}>
+          <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={callback}>
             {chat && (
               <TabPane tab={<CommentOutlined style={{ fontSize: '26px' }} />} key='chat'>
                 <LiveChat {...props} />
@@ -88,7 +94,10 @@ export default function ConferenceTabsComponent(props) {
                   <CommentOutlined style={{ fontSize: '21px' }} />
                 </Tooltip>
               }
-              onClick={() => setCollapsed(collapsed === false ? true : false)}
+              onClick={() => {
+                setCollapsed(collapsed === false ? true : false);
+                handleClick('chat');
+              }}
             />
           )}
           {surveys && (
@@ -99,7 +108,10 @@ export default function ConferenceTabsComponent(props) {
                   <PieChartOutlined style={{ fontSize: '21px' }} />
                 </Tooltip>
               }
-              onClick={() => setCollapsed(collapsed === false ? true : false)}
+              onClick={() => {
+                setCollapsed(collapsed === false ? true : false);
+                handleClick('surveys');
+              }}
             />
           )}
           {attendees && (
@@ -110,7 +122,10 @@ export default function ConferenceTabsComponent(props) {
                   <TeamOutlined style={{ fontSize: '21px' }} />
                 </Tooltip>
               }
-              onClick={() => setCollapsed(collapsed === false ? true : false)}
+              onClick={() => {
+                setCollapsed(collapsed === false ? true : false);
+                handleClick('attendees');
+              }}
             />
           )}
           {games && (
@@ -120,7 +135,10 @@ export default function ConferenceTabsComponent(props) {
                 <Tooltip placement='leftTop' title='Games'>
                   <BuildOutlined
                     style={{ fontSize: '21px' }}
-                    onClick={() => setCollapsed(collapsed === false ? true : false)}
+                    onClick={() => {
+                      setCollapsed(collapsed === false ? true : false);
+                      handleClick('games');
+                    }}
                   />
                 </Tooltip>
               }

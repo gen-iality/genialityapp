@@ -24,7 +24,7 @@ import {
   DocumentsApi,
   EventsApi,
   eventTicketsApi,
-  getCurrentUser
+  getCurrentUser,
 } from '../../helpers/request';
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from '../../helpers/utils';
 import Dropzone from 'react-dropzone';
@@ -81,7 +81,13 @@ class AgendaEdit extends Component {
       tickets: [],
       selectedTicket: [],
       platform: '',
-      vimeo_id: ''
+      vimeo_id: '',
+
+      //administracion tabs de video conferencia en Vimeo
+      chat: false,
+      surveys: false,
+      games: false,
+      attendees: false,
     };
     this.createConference = this.createConference.bind(this);
     this.removeConference = this.removeConference.bind(this);
@@ -98,7 +104,7 @@ class AgendaEdit extends Component {
   async componentDidMount() {
     const {
       event,
-      location: { state }
+      location: { state },
     } = this.props;
     let days = [];
     const ticketEvent = [];
@@ -109,7 +115,7 @@ class AgendaEdit extends Component {
         ticketEvent.push({
           item: tickets[i],
           label: tickets[i].title,
-          value: tickets[i]._id
+          value: tickets[i]._id,
         });
       }
 
@@ -170,6 +176,8 @@ class AgendaEdit extends Component {
       const info = await AgendaApi.getOne(state.edit, event._id);
       const videoConferenceState = await getConfiguration(event._id, state.edit);
 
+      console.log('video conference info', videoConferenceState);
+
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
@@ -177,7 +185,23 @@ class AgendaEdit extends Component {
         platform: info.platform || event.event_platform,
         availableText: videoConferenceState ? videoConferenceState.habilitar_ingreso : 'ended_meeting_room',
         info: info,
-        video: info.video
+        video: info.video,
+        chat:
+          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.chat
+            ? videoConferenceState.tabs.chat
+            : false,
+        surveys:
+          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.surveys
+            ? videoConferenceState.tabs.surveys
+            : false,
+        games:
+          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.games
+            ? videoConferenceState.tabs.games
+            : false,
+        attendees:
+          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.attendees
+            ? videoConferenceState.tabs.attendees
+            : false,
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
@@ -194,7 +218,7 @@ class AgendaEdit extends Component {
         selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
         selectedType: fieldsSelect(info.type_id, types),
         selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
-        cunrretUser: cunrretUser
+        cunrretUser: cunrretUser,
       });
     } else {
       this.setState({ days });
@@ -209,7 +233,7 @@ class AgendaEdit extends Component {
       types,
       roles,
       loading: false,
-      isLoading
+      isLoading,
     });
   }
 
@@ -265,7 +289,7 @@ class AgendaEdit extends Component {
       this.setState(
         (prevState) => ({
           isLoading: { ...prevState.isLoading, [name]: false },
-          [name]: [...prevState[name], newOption]
+          [name]: [...prevState[name], newOption],
         }),
         () => {
           if (name === 'types') this.setState({ selectedType: newOption });
@@ -309,14 +333,14 @@ class AgendaEdit extends Component {
         sweetAlert.showLoading('Espera (:', 'Guardando...');
         const {
           event,
-          location: { state }
+          location: { state },
         } = this.props;
         const { selected_document } = this.state;
         this.setState({ isLoading: true });
 
         if (state.edit) {
           const data = {
-            activity_id: state.edit
+            activity_id: state.edit,
           };
           await AgendaApi.editOne(info, state.edit, event._id);
 
@@ -346,7 +370,7 @@ class AgendaEdit extends Component {
         sweetAlert.showLoading('Espera (:', 'Guardando...');
         const {
           event,
-          location: { state }
+          location: { state },
         } = this.props;
         this.setState({ isLoading: true });
         if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
@@ -381,7 +405,7 @@ class AgendaEdit extends Component {
       description,
       registration_message,
       selected_document,
-      image
+      image,
     } = this.state;
     const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
@@ -407,7 +431,7 @@ class AgendaEdit extends Component {
       host_ids,
       type_id,
       has_date,
-      selected_document
+      selected_document,
     };
   };
 
@@ -436,7 +460,11 @@ class AgendaEdit extends Component {
       video,
       selectedTicket,
       vimeo_id,
-      platform
+      platform,
+      chat,
+      surveys,
+      games,
+      attendees,
     } = this.state;
 
     //const registration_message_storage = window.sessionStorage.getItem('registration_message');
@@ -475,7 +503,11 @@ class AgendaEdit extends Component {
       vimeo_id: vimeo_id,
       video,
       selectedTicket,
-      platform
+      platform,
+      chat,
+      surveys,
+      games,
+      attendees,
     };
   };
 
@@ -512,16 +544,16 @@ class AgendaEdit extends Component {
       event_id: this.props.event._id,
       agenda: this.state.name, //this.props.event.description,
       host_id: this.state.host_id,
-      host_name: host_name[0]
+      host_name: host_name[0],
     };
 
     const options = {
       method: 'POST',
       headers: {
-        'Content-type': 'application/json'
+        'Content-type': 'application/json',
       },
       data: zoomData,
-      url: ApiEviusZoomServer
+      url: ApiEviusZoomServer,
     };
     let response = null;
 
@@ -532,7 +564,7 @@ class AgendaEdit extends Component {
       await setHostState(this.state.host_id, true);
 
       const {
-        location: { state }
+        location: { state },
       } = this.props;
 
       const info = await AgendaApi.getOne(state.edit, this.props.event._id);
@@ -541,7 +573,7 @@ class AgendaEdit extends Component {
         start_url: info.start_url,
         join_url: info.join_url,
         name_host: info.name_host,
-        key: new Date()
+        key: new Date(),
       });
     } catch (error) {
       if (error.response) {
@@ -602,7 +634,7 @@ class AgendaEdit extends Component {
     let result = await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, e.target.value);
 
     notification.open({
-      message: result.message
+      message: result.message,
     });
   }
 
@@ -621,7 +653,7 @@ class AgendaEdit extends Component {
 
     notification.open({
       message: 'Id de vimeo Guardado correctamente',
-      description: 'Dato Guardado Correctamente'
+      description: 'Dato Guardado Correctamente',
     });
   }
 
@@ -635,6 +667,10 @@ class AgendaEdit extends Component {
 
   handleChangeDate = (e) => {
     this.setState({ date: e });
+  };
+
+  handleVideoConference = () => {
+    //Verificar si existe el campo si no se crea
   };
 
   render() {
@@ -666,7 +702,11 @@ class AgendaEdit extends Component {
       join_url,
       availableText,
       vimeo_id,
-      platform
+      platform,
+      chat,
+      games,
+      surveys,
+      attendees,
     } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
@@ -1144,6 +1184,27 @@ class AgendaEdit extends Component {
                                 onClick={this.removeVimeoId}>
                                 Eliminar espacio virtual
                               </button>
+                              {console.log('info ** ** ** ', availableText)}
+                              <label className='label'>Habilitar Chat</label>
+                              <select defaultValue={chat} styles={creatableStyles}>
+                                <option value='true'>Si</option>
+                                <option value='false'>No</option>
+                              </select>
+                              <label className='label'>Habilitar Encuestas</label>
+                              <select defaultValue={surveys}>
+                                <option value='true'>Si</option>
+                                <option value='false'>No</option>
+                              </select>
+                              <label className='label'>Habilitar Juegos</label>
+                              <select defaultValue={games}>
+                                <option value='true'>Si</option>
+                                <option value='false'>No</option>
+                              </select>
+                              <label className='label'>Habilitar Listado de asistentes</label>
+                              <select defaultValue={attendees}>
+                                <option value='true'>Si</option>
+                                <option value='false'>No</option>
+                              </select>
                             </div>
                           </>
                         )}
@@ -1151,14 +1212,16 @@ class AgendaEdit extends Component {
                     )}
 
                     {(this.state.meeting_id || this.state.vimeo_id) && (
-                      <button
-                        style={{ marginTop: '2%' }}
-                        className='button is-primary'
-                        onClick={() => {
-                          this.toggleConference(true);
-                        }}>
-                        Ver Conferencia(vista previa)
-                      </button>
+                      <>
+                        <button
+                          style={{ marginTop: '2%' }}
+                          className='button is-primary'
+                          onClick={() => {
+                            this.toggleConference(true);
+                          }}>
+                          Ver Conferencia (Vista previa)
+                        </button>
+                      </>
                     )}
 
                     {this.state.conferenceVisible && (
@@ -1206,7 +1269,7 @@ function handleDate(info) {
 
 //Estilos de algunos select
 const creatableStyles = {
-  menu: (styles) => ({ ...styles, maxHeight: 'inherit' })
+  menu: (styles) => ({ ...styles, maxHeight: 'inherit' }),
 };
 
 //Estilos para el tipo
@@ -1219,14 +1282,14 @@ const dot = (color = 'transparent') => ({
     display: 'block',
     margin: 8,
     height: 10,
-    width: 10
-  }
+    width: 10,
+  },
 });
 
 //Estilos de algunos otros select
 const catStyles = {
   menu: (styles) => ({ ...styles, maxHeight: 'inherit' }),
-  multiValue: (styles, { data }) => ({ ...styles, ...dot(data.item.color) })
+  multiValue: (styles, { data }) => ({ ...styles, ...dot(data.item.color) }),
 };
 
 export default withRouter(AgendaEdit);
