@@ -173,6 +173,71 @@
   //   }
   // }
 }
+//estilo de zoom de collapsed
+.zoom-collapsed{
+  position: relative;
+  .zoom-collapsed_button{
+    position: absolute;
+    right: 103%;
+    z-index: 100000;
+  }
+  .zoom-collapsed_tabs{
+    padding: 0% 7%;
+    width: 400px;
+  }
+  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #333F44;
+    font-weight: 500;
+    margin-left: 13px;
+  }
+  .ant-tabs > .ant-tabs-nav .ant-tabs-nav-list, .ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-list {
+    position: relative;
+    display: flex;
+    transition: transform 0.3s;
+    margin-left: 12%;
+    text-align: center;
+  }
+  .ant-tabs-ink-bar {
+    width: 67px !important;
+  }
+}
+//estilo del chat vimeo
+.chat-vimeo{
+  width: 100vw;
+  height: 100%; 
+  padding: 2px;
+  @media screen and (max-width: $breakpoint-mobile){ 
+    width: 80vw;
+  }
+}
+
+//estilos del ranking-listadojuegos
+.container-ranking{
+  overflow-y:scroll;
+  height: 400px;
+  .ranking-user{
+  border: 2px solid #8ce1f0;
+  }
+}
+.container-ranking::-webkit-scrollbar{
+  width:9px;
+}
+.container-ranking::-webkit-scrollbar-thumb {
+  background-color: rgb(140, 225, 240);
+  border-radius: 20px;
+  border: 2px solid #f1f2f3;
+}
+.container-ranking::-webkit-scrollbar-track-piece{
+  background-color: #f5f5f5;
+}
+.card-games-ranking{
+  width: 304px;
+  padding: 5px;
+  .ant-card-body {
+    padding: 10px;
+  }
+  
+}
 
 
 

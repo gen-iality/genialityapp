@@ -83,6 +83,12 @@ class AgendaEdit extends Component {
       platform: '',
       vimeo_id: '',
       name_host: '',
+
+      //administracion tabs de video conferencia en Vimeo
+      chat: false,
+      surveys: false,
+      games: false,
+      attendees: false,
     };
     this.createConference = this.createConference.bind(this);
     this.removeConference = this.removeConference.bind(this);
@@ -173,6 +179,8 @@ class AgendaEdit extends Component {
       const info = await AgendaApi.getOne(state.edit, event._id);
       const videoConferenceState = await getConfiguration(event._id, state.edit);
 
+      console.log('video conference info', videoConferenceState);
+
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
@@ -182,6 +190,22 @@ class AgendaEdit extends Component {
         info: info,
         video: info.video,
         name_host: info.name_host,
+        chat:
+          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.chat
+            ? videoConferenceState.tabs.chat
+            : false,
+        surveys:
+          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.surveys
+            ? videoConferenceState.tabs.surveys
+            : false,
+        games:
+          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.games
+            ? videoConferenceState.tabs.games
+            : false,
+        attendees:
+          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.attendees
+            ? videoConferenceState.tabs.attendees
+            : false,
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
@@ -445,6 +469,10 @@ class AgendaEdit extends Component {
       join_url,
       name_host,
       key,
+      chat,
+      surveys,
+      games,
+      attendees,
     } = this.state;
 
     //const registration_message_storage = window.sessionStorage.getItem('registration_message');
@@ -488,6 +516,10 @@ class AgendaEdit extends Component {
       join_url,
       name_host,
       key,
+      chat,
+      surveys,
+      games,
+      attendees,
     };
   };
 
@@ -664,6 +696,10 @@ class AgendaEdit extends Component {
     this.setState({ date: e });
   };
 
+  handleVideoConference = () => {
+    //Verificar si existe el campo si no se crea
+  };
+
   render() {
     const {
       loading,
@@ -694,6 +730,10 @@ class AgendaEdit extends Component {
       availableText,
       vimeo_id,
       platform,
+      chat,
+      games,
+      surveys,
+      attendees,
     } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
@@ -1169,6 +1209,27 @@ class AgendaEdit extends Component {
                                 onClick={this.removeVimeoId}>
                                 Eliminar espacio virtual
                               </button>
+
+                              <label className='label'>Habilitar Chat</label>
+                              <select defaultValue={chat} styles={creatableStyles}>
+                                <option value='true'>Si</option>
+                                <option value='false'>No</option>
+                              </select>
+                              <label className='label'>Habilitar Encuestas</label>
+                              <select defaultValue={surveys}>
+                                <option value='true'>Si</option>
+                                <option value='false'>No</option>
+                              </select>
+                              <label className='label'>Habilitar Juegos</label>
+                              <select defaultValue={games}>
+                                <option value='true'>Si</option>
+                                <option value='false'>No</option>
+                              </select>
+                              <label className='label'>Habilitar Listado de asistentes</label>
+                              <select defaultValue={attendees}>
+                                <option value='true'>Si</option>
+                                <option value='false'>No</option>
+                              </select>
                             </div>
                           </>
                         )}
@@ -1176,14 +1237,16 @@ class AgendaEdit extends Component {
                     )}
 
                     {(this.state.meeting_id || this.state.vimeo_id) && (
-                      <button
-                        style={{ marginTop: '2%' }}
-                        className='button is-primary'
-                        onClick={() => {
-                          this.toggleConference(true);
-                        }}>
-                        Ver Conferencia(vista previa)
-                      </button>
+                      <>
+                        <button
+                          style={{ marginTop: '2%' }}
+                          className='button is-primary'
+                          onClick={() => {
+                            this.toggleConference(true);
+                          }}>
+                          Ver Conferencia (Vista previa)
+                        </button>
+                      </>
                     )}
 
                     {this.state.conferenceVisible && (

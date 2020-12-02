@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Result, Spin, Row, Col } from 'antd';
+import { Button, Result, Spin, Row } from 'antd';
 import Fullscreen from 'react-full-screen';
 import { FullscreenOutlined, LineOutlined } from '@ant-design/icons';
 import SurveyComponent from '../surveys';
 import API from '../../../helpers/request';
+import ConferenceTabs from './conferenceTabs';
 
+import { firestore } from '../../../helpers/firebase';
 export default class ZoomComponent extends Component {
   constructor(props) {
     super(props);
@@ -18,10 +20,21 @@ export default class ZoomComponent extends Component {
       isMinimize: false,
       displayName: '',
       email: null,
+      collapsed: false,
       event: props.event,
       activity: props.activity,
       urllogin_bigmarker: null,
       error_bigmarker: null,
+      contentDisplayed: null,
+
+      //parametros de la actividad almacenados en firestore
+      habilitar_ingreso: 'close_metting_room',
+      chat: false,
+      surveys: false,
+      games: false,
+      attendees: false,
+      videoConferenceSize: 16,
+      activeTab: 'chat',
     };
   }
 
@@ -74,9 +87,53 @@ export default class ZoomComponent extends Component {
 
   async componentDidMount() {
     this.setUpUserForConference();
+
+    firestore
+      .collection('events')
+      .doc(this.state.event._id)
+      .collection('activities')
+      .doc(this.state.activity._id)
+      .onSnapshot((response) => {
+        const videoConference = response.data();
+
+        this.setState({
+          habilitar_ingreso: videoConference.habilitar_ingreso
+            ? videoConference.habilitar_ingreso
+            : 'close_metting_room',
+          chat: videoConference.tabs && videoConference.tabs.chat ? videoConference.tabs.chat : true,
+          surveys: videoConference.tabs && videoConference.tabs.surveys ? videoConference.tabs.surveys : true,
+          games: videoConference.tabs && videoConference.tabs.games ? videoConference.tabs.games : false,
+          attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
+        });
+      });
   }
 
-  async componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.games !== this.state.games) {
+      if (this.state.games) {
+        this.changeContentDisplayed('games');
+        this.handleActiveTab('games');
+      } else {
+        this.changeContentDisplayed('conference');
+        this.handleActiveTab('chat');
+      }
+    }
+
+    if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'surveys') {
+      this.changeContentDisplayed('surveys');
+    }
+
+    if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'games') {
+      this.changeContentDisplayed('games');
+    }
+
+    if (
+      prevState.activeTab !== this.state.activeTab &&
+      (this.state.activeTab === 'chat' || this.state.activeTab === 'attendees')
+    ) {
+      this.changeContentDisplayed('conference');
+    }
+
     if (prevProps.meetingId === this.props.meetingId) {
       return;
     }
@@ -109,9 +166,32 @@ export default class ZoomComponent extends Component {
     });
   };
 
+  changeContentDisplayed = (contentName) => {
+    this.setState({
+      contentDisplayed: contentName,
+    });
+  };
+
+  handleActiveTab = (tabKey) => {
+    this.setState({ activeTab: tabKey });
+  };
+
   render() {
     const { toggleConference, event, activity } = this.props;
-    let { url_conference, meeting_id, isMedium, isFull, isMinimize, displayName, email } = this.state;
+    let {
+      url_conference,
+      meeting_id,
+      isMedium,
+      isFull,
+      isMinimize,
+      displayName,
+      email,
+      chat,
+      surveys,
+      games,
+      attendees,
+      activeTab,
+    } = this.state;
     const platform = activity.platform || this.state.event.event_platform;
     return (
       <div
@@ -157,38 +237,69 @@ export default class ZoomComponent extends Component {
           )}
           {/* VIMEO LIVESTREAMING */}
           {this.state.event && platform === 'vimeo' && (
-            <Row className='platform-vimeo'>
-              <Col
-                className='col-xs'
-                xs={24}
-                sm={24}
-                md={24}
-                lg={
-                  this.state.event._id !== '5f456bef532c8416b97e9c82' &&
-                  this.state.event._id !== '5f8a0fa58a97e06e371538b4'
-                    ? 16
-                    : 24
-                }>
+            <Row className='platform-vimeo' style={{ display: 'contents' }}>
+              {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
                 <iframe
                   src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
                   frameBorder='0'
                   allow='autoplay; fullscreen; camera *;microphone *'
                   allowFullScreen
-                  allowUserMedia
+                  allowusermedia
                   style={{ width: '99vw', height: '100%' }}></iframe>
-              </Col>
+              )}
 
-              {/* Retiro temporal del chat se ajusta video a pantalla completa*/}
+              {this.state.contentDisplayed && this.state.contentDisplayed == 'game' && (
+                <iframe
+                  src={
+                    `https://castrolgame.netlify.app` +
+                    (this.props.userEntered ? '?uid=' + this.props.userEntered._id : '')
+                  }
+                  frameBorder='0'
+                  allow='autoplay; fullscreen; camera *;microphone *'
+                  allowFullScreen
+                  allowusermedia
+                  style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
+              )}
 
-              {this.state.event._id !== '5f456bef532c8416b97e9c82' &&
-                this.state.event._id !== '5f8a0fa58a97e06e371538b4' && (
-                  <Col className='col-xs' xs={24} sm={24} md={24} lg={8}>
-                    <iframe
-                      src={`https://vimeo.com/live-chat/${activity.vimeo_id}`}
-                      style={{ width: '99vw', height: '100%', padding: '2px' }}
-                      frameBorder='0'></iframe>
-                  </Col>
-                )}
+              {this.state.contentDisplayed && this.state.contentDisplayed == 'games' && (
+                <iframe
+                  src={
+                    `https://juegocastrol2.netlify.app/` +
+                    (this.props.userEntered
+                      ? '?uid=' + this.props.userEntered._id + '&displayName=' + displayName + '&email' + email
+                      : '')
+                  }
+                  frameBorder='0'
+                  allow='autoplay; fullscreen; camera *;microphone *'
+                  allowFullScreen
+                  allowusermedia
+                  style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
+              )}
+
+              {this.state.contentDisplayed && this.state.contentDisplayed == 'surveys' && (
+                <div style={{ width: '100%' }}>
+                  <SurveyComponent
+                    event={event}
+                    activity={activity}
+                    availableSurveysBar={true}
+                    style={{ zIndex: 9999, width: '99vw', height: '100%' }}
+                  />
+                </div>
+              )}
+
+              {/* Retiro temporal del chat se ajusta video a pantalla completa */}
+              <ConferenceTabs
+                activity={activity}
+                event={event}
+                currentUser={this.props.userEntered}
+                changeContentDisplayed={this.changeContentDisplayed}
+                chat={chat}
+                surveys={surveys}
+                games={games}
+                attendees={attendees}
+                activeTab={activeTab}
+                handleActiveTab={this.handleActiveTab}
+              />
             </Row>
           )}
 
@@ -208,13 +319,12 @@ export default class ZoomComponent extends Component {
                   src={this.state.urllogin_bigmarker} //"https://www.bigmarker.com/conferences/1c3e6af84135/api_attend"
                   frameBorder='0'
                   allow='autoplay; fullscreen; camera *;microphone *'
-                  allowFullscreen
+                  allowFullScreen
                   allowusermedia
                   className='iframe-zoom nuevo'></iframe>
               )}
             </>
           )}
-          {<SurveyComponent event={event} activity={activity} availableSurveysBar={true} />}
         </Fullscreen>
       </div>
     );
