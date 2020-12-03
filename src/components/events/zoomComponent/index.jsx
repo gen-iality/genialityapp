@@ -131,8 +131,33 @@ export default class ZoomComponent extends Component {
       }
     }
 
+    if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'games') {
+      this.setState({
+        conferenceStyles: {
+          zIndex: '90000',
+          position: 'fixed',
+          left: '0',
+          bottom: '0',
+          width: '170px',
+        },
+      });
+    }
+
+    if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'chat') {
+      this.setState({ conferenceStyles: { zIndex: '9', width: '99vw', height: '100%' } });
+    }
+
     if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'surveys') {
       this.changeContentDisplayed('surveys');
+      this.setState({
+        conferenceStyles: {
+          zIndex: '90000',
+          position: 'fixed',
+          left: '0',
+          bottom: '0',
+          width: '170px',
+        },
+      });
     }
 
     if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'games') {
@@ -186,6 +211,11 @@ export default class ZoomComponent extends Component {
 
   handleActiveTab = (tabKey) => {
     this.setState({ activeTab: tabKey });
+  };
+
+  handleConferenceStyles = () => {
+    this.setState({ conferenceStyles: { zIndex: '9', width: '99vw', height: '100%' } });
+    this.changeContentDisplayed(null);
   };
 
   render() {
@@ -320,6 +350,7 @@ export default class ZoomComponent extends Component {
                 attendees={attendees}
                 activeTab={activeTab}
                 handleActiveTab={this.handleActiveTab}
+                handleConferenceStyles={this.handleConferenceStyles}
               />
             </Row>
           )}
