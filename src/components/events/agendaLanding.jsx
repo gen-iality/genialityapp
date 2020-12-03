@@ -455,7 +455,10 @@ class Agenda extends Component {
               Canjear código
             </Button>
           ]}>
-          <p>Para poder disfrutar de este contenido debes haber pagado</p>
+          <p>
+            Para poder disfrutar de este contenido debes haber pagado y tener un código porfavor ingresalo a
+            continuación.
+          </p>
         </Modal>
 
         <Modal
