@@ -39,12 +39,26 @@ export default function ConferenceTabsComponent(props) {
         <div className='zoom-collapsed_tabs'>
           <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={callback}>
             {chat && (
-              <TabPane tab={<><CommentOutlined style={{fontSize:'26px', textAlign:'center'}}/><p style={{marginBottom:'0px'}}>Chat</p></>} key='chat'>
+              <TabPane
+                tab={
+                  <>
+                    <CommentOutlined style={{ fontSize: '26px', textAlign: 'center' }} />
+                    <p style={{ marginBottom: '0px' }}>Chat</p>
+                  </>
+                }
+                key='chat'>
                 <LiveChat {...props} />
               </TabPane>
             )}
             {surveys && (
-              <TabPane tab={<><PieChartOutlined style={{fontSize:'26px', textAlign:'center'}}/><p style={{marginBottom:'0px'}}>Encuestas</p></>} key='surveys'>
+              <TabPane
+                tab={
+                  <>
+                    <PieChartOutlined style={{ fontSize: '26px', textAlign: 'center' }} />
+                    <p style={{ marginBottom: '0px' }}>Encuestas</p>
+                  </>
+                }
+                key='surveys'>
                 <Row justify='space-between'>
                   <Col span={4}>
                     <ArrowLeftOutlined onClick={() => props.changeContentDisplayed('conference')} />
@@ -73,12 +87,29 @@ export default function ConferenceTabsComponent(props) {
             )}
 
             {attendees && (
-              <TabPane tab={<><TeamOutlined style={{fontSize:'26px', textAlign:'center'}}/><p style={{marginBottom:'0px'}}>Asistentes</p></>} key='attendees'>
+              <TabPane
+                tab={
+                  <>
+                    <TeamOutlined style={{ fontSize: '26px', textAlign: 'center' }} />
+                    <p style={{ marginBottom: '0px' }}>Asistentes</p>
+                  </>
+                }
+                key='attendees'>
                 Asistentes
               </TabPane>
             )}
             {games && (
-              <TabPane tab={<><img src="https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png" style={{width:'32px'}}/><p style={{marginBottom:'0px'}}>Juegos</p></>} key='games'>
+              <TabPane
+                tab={
+                  <>
+                    <img
+                      src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
+                      style={{ width: '32px' }}
+                    />
+                    <p style={{ marginBottom: '0px' }}>Juego</p>
+                  </>
+                }
+                key='games'>
                 <ListadoJuegos {...props} />
               </TabPane>
             )}

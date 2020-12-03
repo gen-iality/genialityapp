@@ -68,9 +68,16 @@ class Speaker extends Component {
       sweetAlert.showError(handleRequestError(e));
     }
   };
-  chgTxt = (content) => this.setState({ description: content });
+
+  chgTxt = (content) => {
+    console.log(content);
+    this.setState({ description: content });
+  };
 
   submit = async () => {
+    console.log('inicio submit', this.props);
+
+    console.log('inicio submit  -----------------', this.state);
     try {
       sweetAlert.showLoading('Espera (:', 'Guardando...');
       const {
@@ -86,9 +93,10 @@ class Speaker extends Component {
         description_activity,
         description,
         profession,
-        category_id: selectedCategories.value,
+        //category_id: selectedCategories.length ? selectedCategories.value : null,
         order: parseInt(order),
       };
+      console.log('antes de guardar', info);
       if (state.edit) await SpeakersApi.editOne(info, state.edit, eventID);
       else await SpeakersApi.create(eventID, info);
       sweetAlert.hideLoading();
@@ -125,6 +133,7 @@ class Speaker extends Component {
 
   //FN para guardar en el estado la opcion seleccionada
   selectCategory = (selectedCategories) => {
+    //console.log()
     this.setState({ selectedCategories });
   };
 

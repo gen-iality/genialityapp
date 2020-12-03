@@ -82,6 +82,7 @@ class AgendaEdit extends Component {
       selectedTicket: [],
       platform: '',
       vimeo_id: '',
+      name_host: '',
 
       //administracion tabs de video conferencia en Vimeo
       chat: false,
@@ -150,6 +151,8 @@ class AgendaEdit extends Component {
 
     let documents = await DocumentsApi.byEvent(event._id);
     let hostAvailable = await EventsApi.hostAvailable();
+
+    console.log('host available', hostAvailable);
     let nameDocuments = [];
     for (let i = 0; i < documents.length; i += 1) {
       nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
@@ -186,6 +189,7 @@ class AgendaEdit extends Component {
         availableText: videoConferenceState ? videoConferenceState.habilitar_ingreso : 'ended_meeting_room',
         info: info,
         video: info.video,
+        name_host: info.name_host,
         chat:
           videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.chat
             ? videoConferenceState.tabs.chat
@@ -461,6 +465,10 @@ class AgendaEdit extends Component {
       selectedTicket,
       vimeo_id,
       platform,
+      start_url,
+      join_url,
+      name_host,
+      key,
       chat,
       surveys,
       games,
@@ -504,6 +512,10 @@ class AgendaEdit extends Component {
       video,
       selectedTicket,
       platform,
+      start_url,
+      join_url,
+      name_host,
+      key,
       chat,
       surveys,
       games,
@@ -555,26 +567,41 @@ class AgendaEdit extends Component {
       data: zoomData,
       url: ApiEviusZoomServer,
     };
+
     let response = null;
 
     axios.defaults.timeout = 10000;
     try {
       response = await axios(options);
       toast.success('Conferencia Creada');
-      await setHostState(this.state.host_id, true);
 
-      const {
-        location: { state },
-      } = this.props;
+      console.log('response zoom ', response);
+      //await setHostState(this.state.host_id, true);
 
-      const info = await AgendaApi.getOne(state.edit, this.props.event._id);
-      this.setState({
-        meeting_id: info.meeting_id,
-        start_url: info.start_url,
-        join_url: info.join_url,
-        name_host: info.name_host,
-        key: new Date(),
-      });
+      const activityId = this.props.location.state.edit;
+
+      const { data } = response;
+      const info = await AgendaApi.editOne(
+        {
+          meeting_id: data.id,
+          start_url: data.start_url,
+          join_url: data.join_url,
+          name_host: data.host_email,
+          key: new Date(),
+        },
+        activityId,
+        this.props.event._id
+      );
+
+      //const info = await AgendaApi.getOne(activityId, this.props.event._id);
+      console.log('************info', info);
+      // this.setState({
+      //   meeting_id: info.meeting_id,
+      //   start_url: info.start_url,
+      //   join_url: info.join_url,
+      //   name_host: info.name_host,
+      //   key: new Date(),
+      // });
     } catch (error) {
       if (error.response) {
         response = JSON.stringify(error.response.data);
@@ -1064,96 +1091,94 @@ class AgendaEdit extends Component {
 
                     {(platform === 'zoom' || platform === 'zoomExterno') && (
                       <>
-                        {this.props.location.state.edit && (
-                          <>
-                            {!this.state.meeting_id && (
-                              <Fragment>
-                                <div className='control'>
-                                  <div className='select'>
-                                    <select name={'host_id'} value={this.state.host_id} onChange={this.handleChange}>
-                                      <option>Seleccione host</option>
-                                      {this.state.hostAvailable.length > 0 &&
-                                        this.state.hostAvailable.map((host) => {
-                                          return (
-                                            host.state &&
-                                            host.state === 'available' && (
-                                              <option value={host.id} key={host.id}>
-                                                {host.email}
-                                              </option>
-                                            )
-                                          );
-                                        })}
-                                    </select>
-                                  </div>
+                        <>
+                          {!this.state.meeting_id && (
+                            <Fragment>
+                              <div className='control'>
+                                <div className='select'>
+                                  <select name={'host_id'} value={this.state.host_id} onChange={this.handleChange}>
+                                    <option>Seleccione host</option>
+                                    {this.state.hostAvailable.length > 0 &&
+                                      this.state.hostAvailable.map((host) => {
+                                        return (
+                                          host.state &&
+                                          host.state === 'available' && (
+                                            <option value={host.id} key={host.id}>
+                                              {host.email}
+                                            </option>
+                                          )
+                                        );
+                                      })}
+                                  </select>
                                 </div>
-                                <div>
-                                  {!this.state.creatingConference && (
-                                    <button
-                                      style={{ marginTop: '2%' }}
-                                      className='button is-primary'
-                                      disabled={!this.state.host_id}
-                                      onClick={this.createConference}>
-                                      Crear espacio virtual
-                                    </button>
-                                  )}
-                                  {this.state.creatingConference && <Spin tip='Creando...' />}
-                                </div>
-                              </Fragment>
-                            )}
-
-                            {this.state.meeting_id && (
-                              <div>
-                                <div style={{ marginTop: '2%' }}>
-                                  <div>
-                                    <p>El id de la conferencia virtual es:</p>
-                                    <p>{this.state.meeting_id}</p>
-                                  </div>
-
-                                  <div>
-                                    <p>El host encargado es:</p>
-                                    <p>{this.state.name_host}</p>
-                                  </div>
-                                  <div key={this.state.key}>
-                                    <p>
-                                      <b>Accessos</b>
-                                    </p>
-                                    <hr />
-                                    <p>
-                                      <a href={start_url} rel='noopener noreferrer' target='_blank'>
-                                        Acceso para hosts
-                                      </a>
-                                    </p>
-                                    <p>
-                                      <a href={join_url} rel='noopener noreferrer' target='_blank'>
-                                        Acceso para asistentes
-                                      </a>
-                                    </p>
-                                  </div>
-                                </div>
-                                <div>
-                                  <label className='label'>Estado de videoconferencia</label>
-                                  <div className='select'>
-                                    <select
-                                      defaultValue={availableText}
-                                      styles={creatableStyles}
-                                      onChange={this.onChange}>
-                                      <option value='open_meeting_room'>Conferencia Abierta</option>
-                                      <option value='closed_meeting_room'>Conferencia no Iniciada</option>
-                                      <option value='ended_meeting_room'>Conferencia Terminada</option>
-                                    </select>
-                                  </div>
-                                </div>
-
-                                <button
-                                  style={{ marginTop: '2%' }}
-                                  className='button is-primary'
-                                  onClick={this.removeConference}>
-                                  Eliminar espacio virtual
-                                </button>
                               </div>
-                            )}
-                          </>
-                        )}
+                              <div>
+                                {!this.state.creatingConference && (
+                                  <button
+                                    style={{ marginTop: '2%' }}
+                                    className='button is-primary'
+                                    disabled={!this.state.host_id}
+                                    onClick={this.createConference}>
+                                    Crear espacio virtual
+                                  </button>
+                                )}
+                                {this.state.creatingConference && <Spin tip='Creando...' />}
+                              </div>
+                            </Fragment>
+                          )}
+
+                          {this.state.meeting_id && (
+                            <div>
+                              <div style={{ marginTop: '2%' }}>
+                                <div>
+                                  <p>El id de la conferencia virtual es:</p>
+                                  <p>{this.state.meeting_id}</p>
+                                </div>
+
+                                <div>
+                                  <p>El host encargado es:</p>
+                                  <p>{this.state.name_host}</p>
+                                </div>
+                                <div key={this.state.key}>
+                                  <p>
+                                    <b>Accessos</b>
+                                  </p>
+                                  <hr />
+                                  <p>
+                                    <a href={start_url} rel='noopener noreferrer' target='_blank'>
+                                      Acceso para hosts
+                                    </a>
+                                  </p>
+                                  <p>
+                                    <a href={join_url} rel='noopener noreferrer' target='_blank'>
+                                      Acceso para asistentes
+                                    </a>
+                                  </p>
+                                </div>
+                              </div>
+                              <div>
+                                <label className='label'>Estado de videoconferencia</label>
+                                <div className='select'>
+                                  <select
+                                    defaultValue={availableText}
+                                    styles={creatableStyles}
+                                    onChange={this.onChange}>
+                                    <option value='open_meeting_room'>Conferencia Abierta</option>
+                                    <option value='closed_meeting_room'>Conferencia no Iniciada</option>
+                                    <option value='ended_meeting_room'>Conferencia Terminada</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <button
+                                style={{ marginTop: '2%' }}
+                                className='button is-primary'
+                                onClick={this.removeConference}>
+                                Eliminar espacio virtual
+                              </button>
+                            </div>
+                          )}
+                        </>
                       </>
                     )}
                     {platform === 'vimeo' && this.props.location.state.edit && (
@@ -1184,7 +1209,7 @@ class AgendaEdit extends Component {
                                 onClick={this.removeVimeoId}>
                                 Eliminar espacio virtual
                               </button>
-                              {console.log('info ** ** ** ', availableText)}
+
                               <label className='label'>Habilitar Chat</label>
                               <select defaultValue={chat} styles={creatableStyles}>
                                 <option value='true'>Si</option>

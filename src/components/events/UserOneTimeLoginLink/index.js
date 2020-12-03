@@ -6,7 +6,7 @@ export default class UserOneTimeLoginLink extends Component {
     //const { handleCloseRecoveryPass, handleRecoveryPass, loading, errorRecovery, successRecovery } = this.props;
     return (
       <UserOneTimeLoginLinKForm
-        title='Si yá se encuentra registrado, ingrese su correo para enviarle un enlace de ingreso'
+        title='Si ya estás registrado, digita tu email para iniciar sesión, luego podrás dar clic en episodios y ver el capítulo'
         successMsg='Se ha enviado un ingreso a su correo'
         actionMsg='Solicitar ingreso'
         {...this.props}
