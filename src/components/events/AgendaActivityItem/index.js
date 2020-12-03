@@ -153,7 +153,7 @@ export default function AgendaActivityItem({
             </div>
             <Row>
               <Col span={12}>
-                {userId && show_inscription === 'true' && (
+                {userId && show_inscription === 'true' && event && !event.paid && (
                   <Button
                     type='primary'
                     onClick={() => registerInActivity(item._id, eventId, userId, setIsRegistered)}
