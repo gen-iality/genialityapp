@@ -1,10 +1,26 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
-import { AgendaApi, SpacesApi, Activity, SurveysApi, DocumentsApi } from '../../helpers/request';
+import {
+  AgendaApi,
+  SpacesApi,
+  Activity,
+  SurveysApi,
+  DocumentsApi,
+  AttendeeApi,
+  discountCodesApi
+} from '../../helpers/request';
 import AgendaActividadDetalle from './agendaActividadDetalle';
-import { Modal, Button, Card, Spin, notification } from 'antd';
+import { Modal, Button, Card, Spin, notification, Input, Alert } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';
+
+let attendee_states = {
+  STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
+  STATE_INVITED: '5ba8d213aac5b12a5a8ce749', //"INVITED";
+  STATE_RESERVED: '5ba8d200aac5b12a5a8ce748', //"RESERVED";
+  ROL_ATTENDEE: '5d7ac3f56b364a4042de9b08', //"rol id";
+  STATE_BOOKED: '5b859ed02039276ce2b996f0' //"BOOKED";
+};
 
 class Agenda extends Component {
   constructor(props) {
@@ -26,6 +42,11 @@ class Agenda extends Component {
       survey: [],
       visible: false,
       visibleModal: false,
+      visibleModalRestricted: false,
+      visibleModalExchangeCode: false,
+      discountCode: '',
+      exchangeCodeMessage: null,
+
       redirect: false,
       disabled: false,
       generalTab: true,
@@ -34,7 +55,7 @@ class Agenda extends Component {
       show_inscription: false,
       status: 'in_progress',
       hideBtnDetailAgenda: true,
-      userId: null,
+      userId: null
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -60,7 +81,7 @@ class Agenda extends Component {
 
     this.setState({
       show_inscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
-      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true,
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
     });
 
     let surveysData = await SurveysApi.getAll(event._id);
@@ -135,6 +156,42 @@ class Agenda extends Component {
         });
     });
   }
+
+  exchangeCode = async () => {
+    //this.state.discountCode
+    let code = this.state.discountCode;
+    let codeTemplateId = '5fc93d5eccba7b16a74bd538';
+
+    try {
+      let result = await discountCodesApi.exchangeCode(codeTemplateId, { code: code, event_id: this.props.event._id });
+      let eventUser = this.props.userRegistered;
+      let eventId = this.props.event._id;
+      let data = { state_id: attendee_states.STATE_BOOKED };
+      AttendeeApi.update(eventId, data, eventUser._id);
+
+      this.setState({
+        exchangeCodeMessage: {
+          type: 'success',
+          message: 'Código canjeado, habilitando el acceso...'
+        }
+      });
+      setTimeout(() => window.location.reload(), 500);
+    } catch (e) {
+      const { status, data } = e.response;
+      let msg = 'Tuvimos un problema canjenado el código intenta nuevamente';
+      if (status == '404') {
+        msg = 'Código no encontrado';
+      } else {
+        msg = 'Código ya fue usado';
+      }
+      this.setState({
+        exchangeCodeMessage: {
+          type: 'error',
+          message: msg
+        }
+      });
+    }
+  };
 
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
@@ -236,13 +293,13 @@ class Agenda extends Component {
     Activity.Register(eventId, userId, activityId)
       .then(() => {
         notification.open({
-          message: 'Inscripción realizada',
+          message: 'Inscripción realizada'
         });
         callback(true);
       })
       .catch((err) => {
         notification.open({
-          message: err,
+          message: err
         });
       });
   };
@@ -255,10 +312,15 @@ class Agenda extends Component {
   async selected() {}
 
   gotoActivity(activity) {
-    this.setState({ currentActivity: activity });
+    let eventUser = this.props.userRegistered;
+    if (eventUser && eventUser.state_id === attendee_states.STATE_BOOKED) {
+      this.setState({ currentActivity: activity });
 
-    //Se trae la funcion survey para pasarle el objeto activity y asi retornar los datos que consulta la funcion survey
-    this.survey(activity);
+      //Se trae la funcion survey para pasarle el objeto activity y asi retornar los datos que consulta la funcion survey
+      this.survey(activity);
+    } else {
+      this.handleOpenModalRestricted();
+    }
   }
 
   gotoActivityList = () => {
@@ -274,7 +336,7 @@ class Agenda extends Component {
 
   showDrawer = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
   };
 
@@ -284,7 +346,7 @@ class Agenda extends Component {
 
   onClose = () => {
     this.setState({
-      visible: false,
+      visible: false
     });
   };
 
@@ -322,9 +384,22 @@ class Agenda extends Component {
   handleCancelModal = () => {
     this.setState({ visibleModal: false });
   };
+  handleCancelModalRestricted = () => {
+    this.setState({ visibleModalRestricted: false });
+  };
+  handleCancelModalExchangeCode = () => {
+    this.setState({ visibleModalExchangeCode: false });
+  };
 
   handleOpenModal = () => {
     this.setState({ visibleModal: true });
+  };
+
+  handleOpenModalRestricted = () => {
+    this.setState({ visibleModalRestricted: true });
+  };
+  handleOpenModalExchangeCode = () => {
+    this.setState({ visibleModalExchangeCode: true });
   };
 
   //End modal methods
@@ -342,7 +417,7 @@ class Agenda extends Component {
       currentActivity,
       loading,
       survey,
-      documents,
+      documents
     } = this.state;
     return (
       <div>
@@ -361,10 +436,56 @@ class Agenda extends Component {
             </Button>,
             <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
               Registrarme
-            </Button>,
+            </Button>
           ]}>
           <p>Para poder disfrutar de este contenido debes estar registrado e iniciar sesión</p>
         </Modal>
+
+        <Modal
+          visible={this.state.visibleModalRestricted}
+          title='Información'
+          // onOk={this.handleOk}
+          onCancel={this.handleCancelModalRestricted}
+          onClose={this.handleCancelModalRestricted}
+          footer={[
+            <Button key='cancel' onClick={this.handleCancelModalRestricted}>
+              Cancelar
+            </Button>,
+            <Button key='login' onClick={this.handleOpenModalExchangeCode}>
+              Canjear código
+            </Button>
+          ]}>
+          <p>Para poder disfrutar de este contenido debes haber pagado</p>
+        </Modal>
+
+        <Modal
+          visible={this.state.visibleModalExchangeCode}
+          title='Información'
+          // onOk={this.handleOk}
+          onCancel={this.handleCancelModalExchangeCode}
+          onClose={this.handleCancelModalExchangeCode}
+          footer={[
+            <Button key='cancel' onClick={this.handleCancelModalExchangeCode}>
+              Cancelar
+            </Button>,
+            <Button key='login' onClick={this.exchangeCode}>
+              Canjear código
+            </Button>
+          ]}>
+          <div>
+            {this.state.exchangeCodeMessage && (
+              <Alert
+                message={this.state.exchangeCodeMessage.message}
+                type={this.state.exchangeCodeMessage.type}
+                showIcon
+              />
+            )}
+            {/* <Alert message="" type="info" /> */}
+            <p>Ingresa el código de pago</p>
+            <Input value={this.state.discountCode} onChange={(e) => this.setState({ discountCode: e.target.value })} />
+          </div>
+        </Modal>
+
         {currentActivity && (
           <AgendaActividadDetalle
             visible={this.state.visible}
