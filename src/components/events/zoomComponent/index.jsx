@@ -238,7 +238,7 @@ export default class ZoomComponent extends Component {
           {/* VIMEO LIVESTREAMING */}
           {this.state.event && platform === 'vimeo' && (
             <Row className='platform-vimeo' style={{ display: 'contents' }}>
-              {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
+              <div style={{ zIndex: '9' }}>
                 <iframe
                   src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
                   frameBorder='0'
@@ -246,19 +246,30 @@ export default class ZoomComponent extends Component {
                   allowFullScreen
                   allowusermedia
                   style={{ width: '99vw', height: '100%' }}></iframe>
-              )}
-
-              {this.state.contentDisplayed && this.state.contentDisplayed == 'game' && (
+              </div>
+              {/* {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
                 <iframe
-                  src={
-                    `https://castrolgame.netlify.app` +
-                    (this.props.userEntered ? '?uid=' + this.props.userEntered._id : '')
-                  }
+                  src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
                   frameBorder='0'
                   allow='autoplay; fullscreen; camera *;microphone *'
                   allowFullScreen
                   allowusermedia
-                  style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
+                  style={{ width: '99vw', height: '100%' }}></iframe>
+              )} */}
+
+              {this.state.contentDisplayed && this.state.contentDisplayed == 'game' && (
+                <div style={{ zIndex: '999999' }}>
+                  <iframe
+                    src={
+                      `https://castrolgame.netlify.app` +
+                      (this.props.userEntered ? '?uid=' + this.props.userEntered._id : '')
+                    }
+                    frameBorder='0'
+                    allow='autoplay; fullscreen; camera *;microphone *'
+                    allowFullScreen
+                    allowusermedia
+                    style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
+                </div>
               )}
 
               {this.state.contentDisplayed && this.state.contentDisplayed == 'games' && (
