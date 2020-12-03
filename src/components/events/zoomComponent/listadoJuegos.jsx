@@ -121,7 +121,7 @@ export default function ListadoJuegos(props) {
         {myName !== '' && myScore !== '' && (
           <>
             <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi Puntaje</h3>
-            <Card className='card-games-ranking ranking-user'>
+            <div className='card-games-ranking ranking-user'>
               <Row justify='space-between'>
                 <Col span={6}>
                   <Avatar size={38}>
@@ -129,32 +129,38 @@ export default function ListadoJuegos(props) {
                     {myName && myName.substring(myName.indexOf(' ') + 1, myName.indexOf(' ') + 2)}
                   </Avatar>
                 </Col>
-                <Col span={18}>
-                  <h3 style={{ fontWeight: '700' }}>{props.currentUser.displayName}</h3>
+                <Col span={12}>
+                  <h3 style={{ fontWeight: '700' }}>{props.currentUser.displayName}</h3>              
+                </Col>
+                <Col span={6}>
                   <h4>{myScore} pts</h4>
                 </Col>
               </Row>
-            </Card>
+            </div>
           </>
         )}
         <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Ranking de jugadores</h3>
         <div className='container-ranking'>
           {ranking.length &&
             ranking.map((item, key) => (
-              <Card hoverable className='card-games-ranking' key={'item' + key}>
+              <>
+              <div className='card-games-ranking' key={'item' + key}>
                 <Row justify='space-between'>
                   <Col span={6}>
-                    <Avatar size={38}>
+                    <Avatar size={35}>
                       {item.name && item.name.charAt(0).toUpperCase()}
                       {item.name && item.name.substring(item.name.indexOf(' ') + 1, item.name.indexOf(' ') + 2)}
                     </Avatar>
                   </Col>
-                  <Col span={18}>
-                    <h3>{item.name}</h3>
+                  <Col span={12}>
+                    <h3>{item.name}</h3>              
+                  </Col>
+                  <Col span={6}>
                     <h4>{item.puntaje} Pts</h4>
                   </Col>
                 </Row>
-              </Card>
+                </div>
+              </>
             ))}
         </div>
       </Row>
