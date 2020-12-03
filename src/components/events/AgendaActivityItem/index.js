@@ -183,7 +183,7 @@ export default function AgendaActivityItem({
 
                 {event && event.paid && (
                   <div className='text-align-card'>
-                    {userRegistered && userRegistered.status_id == '5b859ed02039276ce2b996f0'
+                    {userRegistered && userRegistered.state_id == '5b859ed02039276ce2b996f0'
                       ? 'Comprada'
                       : 'Contenido Pago'}
                   </div>

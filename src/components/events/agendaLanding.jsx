@@ -457,7 +457,10 @@ class Agenda extends Component {
           ]}>
           <p>
             Para poder disfrutar de este contenido debes haber pagado y tener un código porfavor ingresalo a
-            continuación.
+            continuación, Si aún no has comprado el código lo puedes comprar en el siguiente link
+            <a href='https://www.eticketablanca.com/evento/magic-land/'>
+              https://www.eticketablanca.com/evento/magic-land/
+            </a>
           </p>
         </Modal>
 
