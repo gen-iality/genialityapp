@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { firestore } from '../../../helpers/firebase';
 import { Row, Col, Card, Avatar } from 'antd';
-import { BuildOutlined, ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
 
 // const rankingDemo = [
 //   {
@@ -71,6 +71,11 @@ export default function ListadoJuegos(props) {
       });
   }, [props.currentUser]);
 
+  function formatName(name) {
+    const result = decodeURIComponent(name);
+    return result;
+  }
+
   return (
     <>
       {/* <ul>
@@ -109,7 +114,13 @@ export default function ListadoJuegos(props) {
         style={{ cursor: 'pointer', marginTop: '12px' }}>
         <Row justify='space-between' onClick={() => props.changeContentDisplayed('games')}>
           <Col span={6}>
-            <Avatar size={38} style={{ backgroundColor: '#87d068' }}> <img src="https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png" style={{width:'40px'}}/></Avatar>
+            <Avatar size={38} style={{ backgroundColor: '#87d068' }}>
+              {' '}
+              <img
+                src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
+                style={{ width: '40px' }}
+              />
+            </Avatar>
           </Col>
           <Col span={18}>
             <h2 style={{ fontWeight: '700' }}>Juego 1</h2>
@@ -142,6 +153,7 @@ export default function ListadoJuegos(props) {
           {ranking.length &&
             ranking.map((item, key) => (
               <Card hoverable className='card-games-ranking' key={'item' + key}>
+                {console.log('listado juegos user info', item)}
                 <Row justify='space-between'>
                   <Col span={6}>
                     <Avatar size={38}>
@@ -150,7 +162,7 @@ export default function ListadoJuegos(props) {
                     </Avatar>
                   </Col>
                   <Col span={18}>
-                    <h3>{item.name}</h3>
+                    <h3>{formatName(item.name)}</h3>
                     <h4>{item.puntaje} Pts</h4>
                   </Col>
                 </Row>
