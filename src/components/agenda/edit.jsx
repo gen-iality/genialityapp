@@ -85,7 +85,7 @@ class AgendaEdit extends Component {
       name_host: '',
 
       //administracion tabs de video conferencia en Vimeo
-      chat: false,
+      chat: true,
       surveys: false,
       games: false,
       attendees: false,
@@ -93,6 +93,7 @@ class AgendaEdit extends Component {
     this.createConference = this.createConference.bind(this);
     this.removeConference = this.removeConference.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.handleTabs = this.handleTabs.bind(this);
     this.selectTickets = this.selectTickets.bind(this);
     this.removeVimeoId = this.removeVimeoId.bind(this);
     this.saveVimeoId = this.saveVimeoId.bind(this);
@@ -152,7 +153,6 @@ class AgendaEdit extends Component {
     let documents = await DocumentsApi.byEvent(event._id);
     let hostAvailable = await EventsApi.hostAvailable();
 
-    console.log('host available', hostAvailable);
     let nameDocuments = [];
     for (let i = 0; i < documents.length; i += 1) {
       nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
@@ -178,8 +178,6 @@ class AgendaEdit extends Component {
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
       const videoConferenceState = await getConfiguration(event._id, state.edit);
-
-      console.log('video conference info', videoConferenceState);
 
       this.setState({
         selected_document: info.selected_document,
@@ -592,16 +590,6 @@ class AgendaEdit extends Component {
         activityId,
         this.props.event._id
       );
-
-      //const info = await AgendaApi.getOne(activityId, this.props.event._id);
-      console.log('************info', info);
-      // this.setState({
-      //   meeting_id: info.meeting_id,
-      //   start_url: info.start_url,
-      //   join_url: info.join_url,
-      //   name_host: info.name_host,
-      //   key: new Date(),
-      // });
     } catch (error) {
       if (error.response) {
         response = JSON.stringify(error.response.data);
@@ -657,12 +645,47 @@ class AgendaEdit extends Component {
 
   async onChange(e) {
     this.setState({ availableText: e.target.value });
+    const tabs = {
+      chat: this.state.chat,
+      surveys: this.state.surveys,
+      games: this.state.games,
+      attendees: this.state.attendees,
+    };
 
-    let result = await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, e.target.value);
+    let result = await createOrUpdateActivity(
+      this.props.location.state.edit,
+      this.props.event._id,
+      e.target.value,
+      tabs
+    );
 
     notification.open({
       message: result.message,
     });
+  }
+
+  async handleTabs(e, tab) {
+    const valueTab = e.target.value === 'true' ? true : false;
+    const tabs = {
+      chat: this.state.chat,
+      surveys: this.state.surveys,
+      games: this.state.games,
+      attendees: this.state.attendees,
+    };
+    if (tab === 'chat') {
+      tabs.chat = valueTab;
+      this.setState({ chat: valueTab });
+    } else if (tab === 'surveys') {
+      tabs.surveys = valueTab;
+      this.setState({ surveys: valueTab });
+    } else if (tab === 'games') {
+      tabs.games = valueTab;
+      this.setState({ games: valueTab });
+    } else if (tab === 'attendees') {
+      tabs.attendees = valueTab;
+      this.setState({ attendees: valueTab });
+    }
+    await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, this.state.availableText, tabs);
   }
 
   selectTickets(tickets) {
@@ -1211,22 +1234,22 @@ class AgendaEdit extends Component {
                               </button>
 
                               <label className='label'>Habilitar Chat</label>
-                              <select defaultValue={chat} styles={creatableStyles}>
+                              <select defaultValue={chat} onChange={(e) => this.handleTabs(e, 'chat')}>
                                 <option value='true'>Si</option>
                                 <option value='false'>No</option>
                               </select>
                               <label className='label'>Habilitar Encuestas</label>
-                              <select defaultValue={surveys}>
+                              <select defaultValue={surveys} onChange={(e) => this.handleTabs(e, 'surveys')}>
                                 <option value='true'>Si</option>
                                 <option value='false'>No</option>
                               </select>
                               <label className='label'>Habilitar Juegos</label>
-                              <select defaultValue={games}>
+                              <select defaultValue={games} onChange={(e) => this.handleTabs(e, 'games')}>
                                 <option value='true'>Si</option>
                                 <option value='false'>No</option>
                               </select>
                               <label className='label'>Habilitar Listado de asistentes</label>
-                              <select defaultValue={attendees}>
+                              <select defaultValue={attendees} onChange={(e) => this.handleTabs(e, 'attendees')}>
                                 <option value='true'>Si</option>
                                 <option value='false'>No</option>
                               </select>

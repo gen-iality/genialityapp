@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { firestore } from '../../../helpers/firebase';
 import { Row, Col, Card, Avatar } from 'antd';
-import { BuildOutlined, ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
 
 // const rankingDemo = [
 //   {
@@ -71,6 +71,11 @@ export default function ListadoJuegos(props) {
       });
   }, [props.currentUser]);
 
+  function formatName(name) {
+    const result = decodeURIComponent(name);
+    return result;
+  }
+
   return (
     <>
       {/* <ul>
@@ -80,7 +85,7 @@ export default function ListadoJuegos(props) {
       </ul> */}
       <Row justify='space-between'>
         <Col span={4}>
-          <ArrowLeftOutlined onClick={() => props.changeContentDisplayed('conference')} />
+          <ArrowLeftOutlined onClick={() => props.handleConferenceStyles()} />
         </Col>
         <Col span={14}>
           <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
@@ -107,9 +112,15 @@ export default function ListadoJuegos(props) {
         hoverable
         onClick={() => props.changeContentDisplayed('games')}
         style={{ cursor: 'pointer', marginTop: '12px' }}>
-        <Row justify='space-between'>
+        <Row justify='space-between' onClick={() => props.changeContentDisplayed('games')}>
           <Col span={6}>
-            <Avatar size={38} style={{ backgroundColor: '#87d068' }}> <img src="https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png" style={{width:'40px'}}/></Avatar>
+            <Avatar size={38} style={{ backgroundColor: '#87d068' }}>
+              {' '}
+              <img
+                src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
+                style={{ width: '40px' }}
+              />
+            </Avatar>
           </Col>
           <Col span={18}>
             <h2 style={{ fontWeight: '700' }}>Juego 1</h2>
@@ -121,7 +132,7 @@ export default function ListadoJuegos(props) {
         {myName !== '' && myScore !== '' && (
           <>
             <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi Puntaje</h3>
-            <Card className='card-games-ranking ranking-user'>
+            <div className='card-games-ranking ranking-user'>
               <Row justify='space-between'>
                 <Col span={6}>
                   <Avatar size={38}>
@@ -129,32 +140,38 @@ export default function ListadoJuegos(props) {
                     {myName && myName.substring(myName.indexOf(' ') + 1, myName.indexOf(' ') + 2)}
                   </Avatar>
                 </Col>
-                <Col span={18}>
+                <Col span={12}>
                   <h3 style={{ fontWeight: '700' }}>{props.currentUser.displayName}</h3>
+                </Col>
+                <Col span={6}>
                   <h4>{myScore} pts</h4>
                 </Col>
               </Row>
-            </Card>
+            </div>
           </>
         )}
         <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Ranking de jugadores</h3>
         <div className='container-ranking'>
           {ranking.length &&
             ranking.map((item, key) => (
-              <Card hoverable className='card-games-ranking' key={'item' + key}>
-                <Row justify='space-between'>
-                  <Col span={6}>
-                    <Avatar size={38}>
-                      {item.name && item.name.charAt(0).toUpperCase()}
-                      {item.name && item.name.substring(item.name.indexOf(' ') + 1, item.name.indexOf(' ') + 2)}
-                    </Avatar>
-                  </Col>
-                  <Col span={18}>
-                    <h3>{item.name}</h3>
-                    <h4>{item.puntaje} Pts</h4>
-                  </Col>
-                </Row>
-              </Card>
+              <>
+                <div className='card-games-ranking' key={'item' + key}>
+                  <Row justify='space-between'>
+                    <Col span={6}>
+                      <Avatar size={35}>
+                        {item.name && item.name.charAt(0).toUpperCase()}
+                        {item.name && item.name.substring(item.name.indexOf(' ') + 1, item.name.indexOf(' ') + 2)}
+                      </Avatar>
+                    </Col>
+                    <Col span={12}>
+                      <h3>{formatName(item.name)}</h3>
+                    </Col>
+                    <Col span={6}>
+                      <h4>{item.puntaje} Pts</h4>
+                    </Col>
+                  </Row>
+                </div>
+              </>
             ))}
         </div>
       </Row>

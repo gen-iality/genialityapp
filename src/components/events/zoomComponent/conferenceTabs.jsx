@@ -61,7 +61,7 @@ export default function ConferenceTabsComponent(props) {
                 key='surveys'>
                 <Row justify='space-between'>
                   <Col span={4}>
-                    <ArrowLeftOutlined onClick={() => props.changeContentDisplayed('conference')} />
+                    <ArrowLeftOutlined onClick={() => props.handleConferenceStyles()} />
                   </Col>
                   <Col span={14}>
                     <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>

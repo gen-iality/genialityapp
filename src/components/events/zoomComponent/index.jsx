@@ -35,6 +35,9 @@ export default class ZoomComponent extends Component {
       attendees: false,
       videoConferenceSize: 16,
       activeTab: 'chat',
+
+      //Conference styles
+      conferenceStyles: { zIndex: '9', width: '99vw', height: '100%' },
     };
   }
 
@@ -100,7 +103,7 @@ export default class ZoomComponent extends Component {
           habilitar_ingreso: videoConference.habilitar_ingreso
             ? videoConference.habilitar_ingreso
             : 'close_metting_room',
-          chat: videoConference.tabs && videoConference.tabs.chat ? videoConference.tabs.chat : true,
+          chat: videoConference.tabs && videoConference.tabs.chat ? videoConference.tabs.chat : false,
           surveys: videoConference.tabs && videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
           games: videoConference.tabs && videoConference.tabs.games ? videoConference.tabs.games : false,
           attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
@@ -113,14 +116,48 @@ export default class ZoomComponent extends Component {
       if (this.state.games) {
         this.changeContentDisplayed('games');
         this.handleActiveTab('games');
+        this.setState({
+          conferenceStyles: {
+            zIndex: '90000',
+            position: 'fixed',
+            left: '0',
+            bottom: '0',
+            width: '170px',
+          },
+        });
       } else {
-        this.changeContentDisplayed('conference');
         this.handleActiveTab('chat');
+        this.setState({ conferenceStyles: { zIndex: '9', width: '99vw', height: '100%' } });
       }
+    }
+
+    if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'games') {
+      this.setState({
+        conferenceStyles: {
+          zIndex: '90000',
+          position: 'fixed',
+          left: '0',
+          bottom: '0',
+          width: '170px',
+        },
+      });
+    }
+
+    if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'chat') {
+      this.setState({ conferenceStyles: { zIndex: '9', width: '99vw', height: '100%' } });
     }
 
     if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'surveys') {
       this.changeContentDisplayed('surveys');
+      this.setState({
+        conferenceStyles: {
+          zIndex: '90000',
+          position: 'fixed',
+          left: '0',
+          bottom: '0',
+          width: '170px',
+        },
+      });
     }
 
     if (prevState.activeTab !== this.state.activeTab && this.state.activeTab === 'games') {
@@ -176,6 +213,11 @@ export default class ZoomComponent extends Component {
     this.setState({ activeTab: tabKey });
   };
 
+  handleConferenceStyles = () => {
+    this.setState({ conferenceStyles: { zIndex: '9', width: '99vw', height: '100%' } });
+    this.changeContentDisplayed(null);
+  };
+
   render() {
     const { toggleConference, event, activity } = this.props;
     let {
@@ -191,6 +233,7 @@ export default class ZoomComponent extends Component {
       games,
       attendees,
       activeTab,
+      conferenceStyles,
     } = this.state;
     const platform = activity.platform || this.state.event.event_platform;
     return (
@@ -238,7 +281,15 @@ export default class ZoomComponent extends Component {
           {/* VIMEO LIVESTREAMING */}
           {this.state.event && platform === 'vimeo' && (
             <Row className='platform-vimeo' style={{ display: 'contents' }}>
-              {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
+              <iframe
+                src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
+                frameBorder='0'
+                allow='autoplay; fullscreen; camera *;microphone *'
+                allowFullScreen
+                allowusermedia
+                style={conferenceStyles}></iframe>
+
+              {/* {(!this.state.contentDisplayed || this.state.contentDisplayed == 'conference') && (
                 <iframe
                   src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
                   frameBorder='0'
@@ -246,7 +297,7 @@ export default class ZoomComponent extends Component {
                   allowFullScreen
                   allowusermedia
                   style={{ width: '99vw', height: '100%' }}></iframe>
-              )}
+              )} */}
 
               {this.state.contentDisplayed && this.state.contentDisplayed == 'game' && (
                 <iframe
@@ -258,7 +309,7 @@ export default class ZoomComponent extends Component {
                   allow='autoplay; fullscreen; camera *;microphone *'
                   allowFullScreen
                   allowusermedia
-                  style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
+                  style={{ zIndex: '9999', width: '150px', height: '100%' }}></iframe>
               )}
 
               {this.state.contentDisplayed && this.state.contentDisplayed == 'games' && (
@@ -273,7 +324,7 @@ export default class ZoomComponent extends Component {
                   allow='autoplay; fullscreen; camera *;microphone *'
                   allowFullScreen
                   allowusermedia
-                  style={{ zIndex: 9999, width: '99vw', height: '100%' }}></iframe>
+                  style={{ zIndex: '10', width: '99vw', height: '100%' }}></iframe>
               )}
 
               {this.state.contentDisplayed && this.state.contentDisplayed == 'surveys' && (
@@ -299,6 +350,7 @@ export default class ZoomComponent extends Component {
                 attendees={attendees}
                 activeTab={activeTab}
                 handleActiveTab={this.handleActiveTab}
+                handleConferenceStyles={this.handleConferenceStyles}
               />
             </Row>
           )}

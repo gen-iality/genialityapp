@@ -1,36 +1,46 @@
-import { firestore } from "../../helpers/firebase";
+import { firestore } from '../../helpers/firebase';
 
-const refActivity = firestore.collection("events");
+const refActivity = firestore.collection('events');
 
-export const validateActivityCreated = (activityId) => {
+export const validateActivityCreated = (activityId, event_id) => {
   return new Promise((resolve, reject) => {
-    refActivity.doc(activityId).onSnapshot((survey) => {
-      if (!survey.exists) {
-        resolve(false);
-      }
-      resolve(true);
-    });
+    refActivity
+      .doc(event_id)
+      .collection('activities')
+      .doc(activityId)
+      .onSnapshot((survey) => {
+        if (!survey.exists) {
+          resolve(false);
+        }
+        resolve(true);
+      });
   });
 };
 
-export const createOrUpdateActivity = (activityId, event_id, activityInfo) => {
-  console.log(activityId, activityInfo);
+export const createOrUpdateActivity = (activityId, event_id, activityInfo, tabs) => {
+  const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
   return new Promise((resolve, reject) => {
-    validateActivityCreated(activityId).then((existSurvey) => {
+    validateActivityCreated(activityId, event_id).then((existSurvey) => {
       if (existSurvey) {
         refActivity
           .doc(event_id)
-          .collection("activities")
+          .collection('activities')
           .doc(activityId)
-          .update({ habilitar_ingreso: activityInfo })
-          .then(() => resolve({ message: "Configuracion actualizada", state: "updated" }));
+          .update({
+            habilitar_ingreso: activityInfo,
+            tabs: tabs,
+          })
+          .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
       } else {
         refActivity
           .doc(event_id)
-          .collection("activities")
+          .collection('activities')
           .doc(activityId)
-          .set({ habilitar_ingreso: activityInfo })
-          .then(() => resolve({ message: "Configuracion Creada", state: "created" }));
+          .set({
+            habilitar_ingreso: activityInfo,
+            tabs: tabsSchema,
+          })
+          .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
       }
     });
   });
@@ -40,7 +50,7 @@ export const getConfiguration = (event_id, activityId) => {
   return new Promise((resolve, reject) => {
     refActivity
       .doc(event_id)
-      .collection("activities")
+      .collection('activities')
       .doc(activityId)
       .get()
       .then((result) => {
@@ -51,7 +61,7 @@ export const getConfiguration = (event_id, activityId) => {
         }
       })
       .catch((err) => {
-        reject("Hubo un problema ", err);
+        reject('Hubo un problema ', err);
       });
   });
 };
