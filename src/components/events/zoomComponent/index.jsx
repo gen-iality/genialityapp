@@ -316,9 +316,14 @@ export default class ZoomComponent extends Component {
                 <iframe
                   src={
                     `https://juegocastrol2.netlify.app/` +
-                    (this.props.userEntered
-                      ? '?uid=' + this.props.userEntered._id + '&displayName=' + displayName + '&email' + email
-                      : '')
+                    ('?uid=' +
+                      (this.props.userEntered && this.props.userEntered._id
+                        ? this.props.userEntered._id
+                        : '5e9caaa1d74d5c2f6a02a3c2') +
+                      '&displayName=' +
+                      (displayName ? displayName : 'anonimo') +
+                      '&email=' +
+                      (email ? email : 'evius@evius.co'))
                   }
                   frameBorder='0'
                   allow='autoplay; fullscreen; camera *;microphone *'
