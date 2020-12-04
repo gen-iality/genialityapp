@@ -10,7 +10,7 @@ import * as Cookie from 'js-cookie';
 const stylesMenuItems = {
   height: '100%',
   padding: '30px 0',
-  backgroundColor: 'transparent',
+  backgroundColor: 'transparent'
 };
 
 class MenuEvent extends Component {
@@ -25,7 +25,7 @@ class MenuEvent extends Component {
       showSection: this.props.showSection,
       logged: false,
       email: false,
-      section: 'evento',
+      section: 'evento'
     };
     this.menuDefault = {
       evento: {
@@ -33,99 +33,99 @@ class MenuEvent extends Component {
         section: 'evento',
         icon: 'CalendarOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       agenda: {
         name: 'Agenda',
         section: 'agenda',
         icon: 'ReadOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       speakers: {
         name: 'Conferencistas',
         section: 'speakers',
         icon: 'AudioOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       tickets: {
         name: 'Boletería',
         section: 'tickets',
         icon: 'CreditCardOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       certs: {
         name: 'Certificados',
         section: 'certs',
         icon: 'FileDoneOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       documents: {
         name: 'Documentos',
         section: 'documents',
         icon: 'FolderOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       wall: {
         name: 'Muro',
         section: 'wall',
         icon: 'TeamOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       survey: {
         name: 'Encuestas',
         section: 'survey',
         icon: 'FileUnknownOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       faqs: {
         name: 'Preguntas Frecuentes',
         section: 'faqs',
         icon: 'QuestionOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       networking: {
         name: 'Networking',
         section: 'networking',
         icon: 'LaptopOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       my_section: {
         name: 'Seccion Personalizada',
         section: 'my_section',
         icon: 'EnterOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       companies: {
         name: 'Empresas',
         section: 'companies',
         icon: 'ApartmentOutlined', // ApartmentOutlined
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       interviews: {
         name: 'Vende / Mi agenda',
         section: 'interviews',
         icon: 'UserOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
       partners: {
         name: 'Patrocinadores',
         section: 'partners',
         icon: 'DollarCircleOutlined',
         checked: false,
-        permissions: 'public',
-      },
+        permissions: 'public'
+      }
     };
   }
 
@@ -221,7 +221,8 @@ class MenuEvent extends Component {
                 {this.state.eventId === '5faae7381fc1d06d3b28fca2' ||
                 this.state.eventId === '5f7e3564cdedb50e4c651602' ||
                 this.state.eventId === '5f7b31866df71d13c2782153' ||
-                this.state.eventId === '5f99a20378f48e50a571e3b6' ? (
+                this.state.eventId === '5f99a20378f48e50a571e3b6' ||
+                this.state.eventId === '5fca68b7e2f869277cfa31b0' ? (
                   <span style={{ color: '#FFFFFF' }}>{` ${this.state.itemsMenu[key].name}`}</span>
                 ) : (
                   <span style={{ color: '#222222' }}>{` ${this.state.itemsMenu[key].name}`}</span>

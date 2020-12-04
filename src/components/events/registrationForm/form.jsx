@@ -593,7 +593,9 @@ export default ({
             <Result status='success' title={formMessage.resultTitle} subTitle=''>
               {loggedurl && (
                 <a className='ant-btn  ant-btn-primary ant-btn-lg' href={loggedurl}>
-                  {eventId == '5f99a20378f48e50a571e3b6' ? 'VER CAPÍTULO' : 'INGRESAR'}
+                  {eventId == '5fca68b7e2f869277cfa31b0' || eventId == '5f99a20378f48e50a571e3b6'
+                    ? 'VER CAPÍTULO'
+                    : 'INGRESAR'}
                 </a>
               )}
               <OutsideAlerter showSection={showSection}>

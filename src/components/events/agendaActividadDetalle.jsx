@@ -66,7 +66,7 @@ let AgendaActividadDetalle = (props) => {
       <div className=' container_agenda-information container-calendar is-three-fifths'>
         <Card
           title={
-            event._id === '5f99a20378f48e50a571e3b6' ? (
+            event._id === '5f99a20378f48e50a571e3b6' || event._id === '5fca68b7e2f869277cfa31b0' ? (
               <>
                 <PageHeader
                   className='site-page-header'
@@ -89,7 +89,7 @@ let AgendaActividadDetalle = (props) => {
             )
           }
           extra={
-            event._id === '5f99a20378f48e50a571e3b6' ? (
+            event._id === '5f99a20378f48e50a571e3b6' || event._id === '5fca68b7e2f869277cfa31b0' ? (
               <></>
             ) : (
               <>
@@ -100,7 +100,11 @@ let AgendaActividadDetalle = (props) => {
               </>
             )
           }
-          className={event._id === '5f99a20378f48e50a571e3b6' ? 'magicland-agenda_information' : 'agenda_information'}>
+          className={
+            event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6'
+              ? 'magicland-agenda_information'
+              : 'agenda_information'
+          }>
           <header className='card-header columns has-padding-left-7'>
             <div className='is-block is-11 column is-paddingless'>
               {/* Hora del evento */}
@@ -140,7 +144,7 @@ let AgendaActividadDetalle = (props) => {
                 </>
               )}
               {/*logo quemado de aval para el evento de magicland */}
-              {event._id === '5f99a20378f48e50a571e3b6' && (
+              {(event._id === '5f99a20378f48e50a571e3b6' || event._id === '5fca68b7e2f869277cfa31b0') && (
                 <Row justify='center' style={{ marginTop: '6%' }}>
                   <Col span={24}>
                     <img
@@ -165,7 +169,7 @@ let AgendaActividadDetalle = (props) => {
                   />
                 </div>
               )}
-              {event._id === '5f99a20378f48e50a571e3b6' ? (
+              {event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6' ? (
                 <></>
               ) : (
                 <p className='has-text-left is-size-6-desktop'>
@@ -210,7 +214,7 @@ let AgendaActividadDetalle = (props) => {
             </div>
           </header>
 
-          {event._id === '5f99a20378f48e50a571e3b6' ? (
+          {event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6' ? (
             <></>
           ) : (
             <div className='calendar-category has-margin-top-7'>
@@ -274,7 +278,7 @@ let AgendaActividadDetalle = (props) => {
               className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
               dangerouslySetInnerHTML={{ __html: currentActivity.description }}
             />
-            {event._id === '5f99a20378f48e50a571e3b6' ? (
+            {event._id === '5f99a20378f48e50a571e3b6' || event._id === '5fca68b7e2f869277cfa31b0' ? (
               <></>
             ) : (
               <Row>

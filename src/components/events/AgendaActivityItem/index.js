@@ -52,13 +52,18 @@ export default function AgendaActivityItem({
     <div
       className='container_agenda-information'
       onClick={
-        userRegistered === null && (eventId === '5f99a20378f48e50a571e3b6' || eventId === '5ea23acbd74d5c4b360ddde2')
+        userRegistered === null &&
+        (eventId === '5f99a20378f48e50a571e3b6' ||
+          eventId === '5ea23acbd74d5c4b360ddde2' ||
+          eventId === '5fca68b7e2f869277cfa31b0')
           ? handleOpenModal
           : () => gotoActivity(item)
       }>
       <Card
         className={
-          eventId === '5f99a20378f48e50a571e3b6' || eventId === '5ea23acbd74d5c4b360ddde2'
+          event._id === '5fca68b7e2f869277cfa31b0' ||
+          eventId === '5f99a20378f48e50a571e3b6' ||
+          eventId === '5ea23acbd74d5c4b360ddde2'
             ? 'magicland-agenda_information'
             : 'agenda_information'
         }>
@@ -104,7 +109,9 @@ export default function AgendaActivityItem({
             <div
               onClick={
                 userRegistered === null &&
-                (eventId === '5f99a20378f48e50a571e3b6' || eventId === '5ea23acbd74d5c4b360ddde2')
+                (eventId === '5f99a20378f48e50a571e3b6' ||
+                  eventId === '5ea23acbd74d5c4b360ddde2' ||
+                  eventId === '5fca68b7e2f869277cfa31b0')
                   ? handleOpenModal
                   : () => gotoActivity(item)
               }
@@ -168,12 +175,16 @@ export default function AgendaActivityItem({
                     type='primary'
                     onClick={
                       userRegistered === null &&
-                      (eventId === '5f99a20378f48e50a571e3b6' || eventId === '5ea23acbd74d5c4b360ddde2')
+                      (eventId === '5f99a20378f48e50a571e3b6' ||
+                        eventId === '5ea23acbd74d5c4b360ddde2' ||
+                        eventId === '5fca68b7e2f869277cfa31b0')
                         ? handleOpenModal
                         : () => gotoActivity(item)
                     }
                     className='space-align-block button-Agenda'>
-                    {eventId === '5f99a20378f48e50a571e3b6' || eventId === '5ea23acbd74d5c4b360ddde2' ? (
+                    {event._id === '5fca68b7e2f869277cfa31b0' ||
+                    eventId === '5f99a20378f48e50a571e3b6' ||
+                    eventId === '5ea23acbd74d5c4b360ddde2' ? (
                       <>VER AHORA</>
                     ) : (
                       <>Detalle de actividad</>
@@ -207,7 +218,9 @@ export default function AgendaActivityItem({
                       type='primary'
                       onClick={
                         userRegistered === null &&
-                        (eventId === '5f99a20378f48e50a571e3b6' || eventId === '5ea23acbd74d5c4b360ddde2')
+                        (eventId === '5f99a20378f48e50a571e3b6' ||
+                          eventId === '5ea23acbd74d5c4b360ddde2' ||
+                          eventId === '5fca68b7e2f869277cfa31b0')
                           ? handleOpenModal
                           : () => gotoActivity(item)
                       }
@@ -322,7 +335,10 @@ export default function AgendaActivityItem({
             </div>
           </Col>
           {/* quemado de baner para magicland */}
-          {(eventId === '5f99a20378f48e50a571e3b6' || eventId === '5ea23acbd74d5c4b360ddde2') && (
+          {(event._id === '5fca68b7e2f869277cfa31b0' ||
+            eventId === '5f99a20378f48e50a571e3b6' ||
+            eventId === '5ea23acbd74d5c4b360ddde2' ||
+            eventId === '5fca68b7e2f869277cfa31b0') && (
             <>
               <br />
               <Row style={{ marginTop: '12px' }}>
