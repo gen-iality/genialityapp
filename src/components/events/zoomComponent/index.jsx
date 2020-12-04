@@ -103,7 +103,7 @@ export default class ZoomComponent extends Component {
           habilitar_ingreso: videoConference.habilitar_ingreso
             ? videoConference.habilitar_ingreso
             : 'close_metting_room',
-          chat: videoConference.tabs && videoConference.tabs.chat ? videoConference.tabs.chat : true,
+          chat: videoConference.tabs && videoConference.tabs.chat ? videoConference.tabs.chat : false,
           surveys: videoConference.tabs && videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
           games: videoConference.tabs && videoConference.tabs.games ? videoConference.tabs.games : false,
           attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
