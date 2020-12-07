@@ -166,7 +166,7 @@ class Agenda extends Component {
     let codeTemplateId = '5fc93d5eccba7b16a74bd538';
 
     try {
-      let result = await discountCodesApi.exchangeCode(codeTemplateId, { code: code, event_id: this.props.event._id });
+      await discountCodesApi.exchangeCode(codeTemplateId, { code: code, event_id: this.props.event._id });
       let eventUser = this.props.userRegistered;
       let eventId = this.props.event._id;
       let data = { state_id: attendee_states.STATE_BOOKED };
@@ -180,7 +180,7 @@ class Agenda extends Component {
       });
       setTimeout(() => window.location.reload(), 500);
     } catch (e) {
-      const { status, data } = e.response;
+      const { status } = e.response;
       let msg = 'Tuvimos un problema canjenado el código intenta nuevamente';
       if (status == '404') {
         msg = 'Código no encontrado';
@@ -315,15 +315,10 @@ class Agenda extends Component {
   async selected() {}
 
   gotoActivity(activity) {
-    let eventUser = this.props.userRegistered;
-    if (eventUser && eventUser.state_id === attendee_states.STATE_BOOKED) {
-      this.setState({ currentActivity: activity });
+    this.setState({ currentActivity: activity });
 
-      //Se trae la funcion survey para pasarle el objeto activity y asi retornar los datos que consulta la funcion survey
-      this.survey(activity);
-    } else {
-      this.handleOpenModalRestricted();
-    }
+    //Se trae la funcion survey para pasarle el objeto activity y asi retornar los datos que consulta la funcion survey
+    this.survey(activity);
   }
 
   gotoActivityList = () => {
@@ -405,21 +400,25 @@ class Agenda extends Component {
     this.setState({ visibleModalExchangeCode: true });
   };
 
-  validationRegisterAndExchangeCode = () => {
-    const { userRegistered, eventId } = this.props;
+  validationRegisterAndExchangeCode = (activity) => {
+    const { userRegistered, event } = this.props;
+    const hasPayment = event.has_payment ? event.has_payment : false;
 
     // Listado de eventos que requieren validación
-    const requireValidation =
-      eventId === '5f99a20378f48e50a571e3b6' ||
-      eventId === '5ea23acbd74d5c4b360ddde2' ||
-      eventId === '5fca68b7e2f869277cfa31b0';
-
-    if (requireValidation) {
-      console.log('user registered', this.props.userRegistered);
+    if (hasPayment) {
       if (userRegistered === null) {
         this.handleOpenModal();
         return false;
       }
+
+      if (userRegistered.state_id !== attendee_states.STATE_BOOKED) {
+        this.handleOpenModalRestricted();
+        return false;
+      }
+
+      this.gotoActivity(activity);
+    } else {
+      this.gotoActivity(activity);
     }
   };
 
@@ -613,7 +612,7 @@ class Agenda extends Component {
                         userRegistered={this.props.userRegistered}
                         handleOpenModal={this.handleOpenModal}
                         hideHours={event.styles.hideHoursAgenda}
-                        handleUserValidation={this.validationRegisterAndExchangeCode}
+                        handleValidatePayment={this.validationRegisterAndExchangeCode}
                       />
                     </div>
                   );

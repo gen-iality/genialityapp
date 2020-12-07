@@ -46,6 +46,7 @@ class General extends Component {
       dates: [],
       data_loader_page: '',
       checked: false,
+      has_payment: false,
     };
     this.specificDates = this.specificDates.bind(this);
     this.submit = this.submit.bind(this);
@@ -54,7 +55,8 @@ class General extends Component {
   }
 
   async componentDidMount() {
-    const info = this.props.event
+    const info = this.props.event;
+    console.log('informacion del evento', info);
     this.setState({ info });
     this.setState({
       checked: info.initial_page ? true : false,
@@ -104,6 +106,7 @@ class General extends Component {
   //Cambio en los input
   handleChange = (e) => {
     const { name, value } = e.target;
+    console.log('name', name, 'value', value);
     this.setState({ event: { ...this.state.event, [name]: value } }, this.valid);
   };
   //Validación
@@ -286,6 +289,7 @@ class General extends Component {
       data_loader_page: this.state.data_loader_page || '',
       show_banner: event.show_banner || true,
       show_banner_footer: event.show_banner_footer || false,
+      has_payment: event.has_payment ? event.has_payment : false,
     };
 
     try {
@@ -459,6 +463,21 @@ class General extends Component {
               </div>
             </div>
 
+            <div className='field'>
+              <label className='label required'>El acceso a las actividades del evento requieren pago?</label>
+
+              <div className='select is-primary'>
+                <select
+                  name={'has_payment'}
+                  defaultValue={event.has_payment ? event.has_payment : false}
+                  value={event.has_payment}
+                  onChange={this.handleChange}>
+                  <option value={true}>Si</option>
+                  <option value={false}>No</option>
+                </select>
+              </div>
+            </div>
+
             {/* <div className="field">
                             <label className="label required">Desea observar el detalle de la agenda ?</label>
                             <div className="select is-primary">
@@ -555,7 +574,7 @@ class General extends Component {
             <div>
               <label className='label'>Tipo de evento</label>
               <div className='select is-primary'>
-                <select defaultValue={event.type_event} name='type_event' onChange={this.handleChange}>
+                <select value={event.type_event} name='type_event' onChange={this.handleChange}>
                   <option value=''>Seleccionar...</option>
                   <option value='physicalEvent'>Evento Fisico</option>
                   <option value='onlineEvent'>Evento Virtual</option>
@@ -698,7 +717,7 @@ class General extends Component {
                 </div>
               </div>
             ) : (
-              <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent}/>
+              <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
             )}
             <div className='field'>
               <label className='label has-text-grey-light'>Descripción</label>
@@ -746,7 +765,7 @@ class General extends Component {
                   </div>
                 </div>
               </div>
-              
+
               <SelectInput
                 name={'Organizado por:'}
                 isMulti={false}

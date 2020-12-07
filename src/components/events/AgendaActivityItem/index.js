@@ -12,24 +12,18 @@ export default function AgendaActivityItem({
   btnDetailAgenda,
   toggleConference,
   event_image,
-  gotoActivity,
   registerStatus,
   registerInActivity,
   eventId,
   userId,
   show_inscription,
   userRegistered,
-  handleOpenModal,
-  handleUserValidation,
+  handleValidatePayment,
   event,
   hideHours,
 }) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
-
-  useEffect(() => {
-    console.log({ userId, userRegistered, event });
-  }, []);
 
   useEffect(() => {
     if (registerStatus) {
@@ -52,18 +46,7 @@ export default function AgendaActivityItem({
   return (
     <>
       {/* Se habilita para Ideartes, magicland y magiclan test al hacer click sobre la actividad de la agenda*/}
-      {console.log('event ID', eventId, 'userRegistered', userRegistered)}
-      <div
-        className='container_agenda-information'
-        onClick={handleUserValidation}
-        // onClick={
-        //   (userRegistered === null && eventId === '5f99a20378f48e50a571e3b6') ||
-        //   eventId === '5ea23acbd74d5c4b360ddde2' ||
-        //   eventId === '5fca68b7e2f869277cfa31b0'
-        //     ? handleOpenModal
-        //     : () => gotoActivity(item)
-        // }
-      >
+      <div className='container_agenda-information' onClick={() => handleValidatePayment(item)}>
         <Card
           className={
             eventId === '5fca68b7e2f869277cfa31b0' ||
@@ -112,13 +95,7 @@ export default function AgendaActivityItem({
               {item.meeting_id || item.vimeo_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
             </span> */}
               <div
-                onClick={
-                  (userRegistered === null && eventId === '5f99a20378f48e50a571e3b6') ||
-                  eventId === '5ea23acbd74d5c4b360ddde2' ||
-                  eventId === '5fca68b7e2f869277cfa31b0'
-                    ? handleOpenModal
-                    : () => gotoActivity(item)
-                }
+                onClick={() => handleValidatePayment(item)}
                 className='text-align-card'
                 style={{ marginBottom: '5%' }}>
                 {item.activity_categories.length > 0 && (
@@ -177,14 +154,7 @@ export default function AgendaActivityItem({
                   {btnDetailAgenda === 'true' && (
                     <Button
                       type='primary'
-                      onClick={
-                        userRegistered === null &&
-                        (eventId === '5f99a20378f48e50a571e3b6' ||
-                          eventId === '5ea23acbd74d5c4b360ddde2' ||
-                          eventId === '5fca68b7e2f869277cfa31b0')
-                          ? handleOpenModal
-                          : () => gotoActivity(item)
-                      }
+                      onClick={() => handleValidatePayment(item)}
                       className='space-align-block button-Agenda'>
                       {eventId === '5fca68b7e2f869277cfa31b0' ||
                       eventId === '5f99a20378f48e50a571e3b6' ||
@@ -209,7 +179,7 @@ export default function AgendaActivityItem({
                       <Button
                         type='primary'
                         onClick={() => {
-                          gotoActivity(item);
+                          handleValidatePayment(item);
                         }}
                         className='space-align-block button-Agenda'>
                         Documentos
@@ -220,14 +190,7 @@ export default function AgendaActivityItem({
                     Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
                       <Button
                         type='primary'
-                        onClick={
-                          userRegistered === null &&
-                          (eventId === '5f99a20378f48e50a571e3b6' ||
-                            eventId === '5ea23acbd74d5c4b360ddde2' ||
-                            eventId === '5fca68b7e2f869277cfa31b0')
-                            ? handleOpenModal
-                            : () => gotoActivity(item)
-                        }
+                        onClick={() => handleValidatePayment(item)}
                         className='space-align-block button-Agenda'>
                         Encuestas
                       </Button>
