@@ -141,7 +141,7 @@ export default function AgendaActivityItem({
               </div>
               <Row>
                 <Col span={12}>
-                  {userId && show_inscription === 'true' && event && !event.paid && (
+                  {userId && show_inscription === 'true' && event && !event.has_payment && (
                     <Button
                       type='primary'
                       onClick={() => registerInActivity(item._id, eventId, userId, setIsRegistered)}
@@ -166,7 +166,7 @@ export default function AgendaActivityItem({
                     </Button>
                   )}
 
-                  {event && event.paid && (
+                  {event && event.has_payment && (
                     <div className='text-align-card'>
                       {userRegistered && userRegistered.state_id == '5b859ed02039276ce2b996f0'
                         ? 'Comprada'
