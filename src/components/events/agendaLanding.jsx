@@ -7,7 +7,7 @@ import {
   SurveysApi,
   DocumentsApi,
   AttendeeApi,
-  discountCodesApi
+  discountCodesApi,
 } from '../../helpers/request';
 import AgendaActividadDetalle from './agendaActividadDetalle';
 import { Modal, Button, Card, Spin, notification, Input, Alert } from 'antd';
@@ -19,7 +19,7 @@ let attendee_states = {
   STATE_INVITED: '5ba8d213aac5b12a5a8ce749', //"INVITED";
   STATE_RESERVED: '5ba8d200aac5b12a5a8ce748', //"RESERVED";
   ROL_ATTENDEE: '5d7ac3f56b364a4042de9b08', //"rol id";
-  STATE_BOOKED: '5b859ed02039276ce2b996f0' //"BOOKED";
+  STATE_BOOKED: '5b859ed02039276ce2b996f0', //"BOOKED";
 };
 
 class Agenda extends Component {
@@ -41,7 +41,10 @@ class Agenda extends Component {
       currentActivity: null,
       survey: [],
       visible: false,
+
+      //Modal en caso que el usuario no este registrado
       visibleModal: false,
+
       visibleModalRestricted: false,
       visibleModalExchangeCode: false,
       discountCode: '',
@@ -55,7 +58,7 @@ class Agenda extends Component {
       show_inscription: false,
       status: 'in_progress',
       hideBtnDetailAgenda: true,
-      userId: null
+      userId: null,
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -81,7 +84,7 @@ class Agenda extends Component {
 
     this.setState({
       show_inscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
-      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true,
     });
 
     let surveysData = await SurveysApi.getAll(event._id);
@@ -172,8 +175,8 @@ class Agenda extends Component {
       this.setState({
         exchangeCodeMessage: {
           type: 'success',
-          message: 'Código canjeado, habilitando el acceso...'
-        }
+          message: 'Código canjeado, habilitando el acceso...',
+        },
       });
       setTimeout(() => window.location.reload(), 500);
     } catch (e) {
@@ -187,8 +190,8 @@ class Agenda extends Component {
       this.setState({
         exchangeCodeMessage: {
           type: 'error',
-          message: msg
-        }
+          message: msg,
+        },
       });
     }
   };
@@ -293,13 +296,13 @@ class Agenda extends Component {
     Activity.Register(eventId, userId, activityId)
       .then(() => {
         notification.open({
-          message: 'Inscripción realizada'
+          message: 'Inscripción realizada',
         });
         callback(true);
       })
       .catch((err) => {
         notification.open({
-          message: err
+          message: err,
         });
       });
   };
@@ -336,7 +339,7 @@ class Agenda extends Component {
 
   showDrawer = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
   };
 
@@ -346,7 +349,7 @@ class Agenda extends Component {
 
   onClose = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
@@ -402,6 +405,24 @@ class Agenda extends Component {
     this.setState({ visibleModalExchangeCode: true });
   };
 
+  validationRegisterAndExchangeCode = () => {
+    const { userRegistered, eventId } = this.props;
+
+    // Listado de eventos que requieren validación
+    const requireValidation =
+      eventId === '5f99a20378f48e50a571e3b6' ||
+      eventId === '5ea23acbd74d5c4b360ddde2' ||
+      eventId === '5fca68b7e2f869277cfa31b0';
+
+    if (requireValidation) {
+      console.log('user registered', this.props.userRegistered);
+      if (userRegistered === null) {
+        this.handleOpenModal();
+        return false;
+      }
+    }
+  };
+
   //End modal methods
 
   render() {
@@ -417,7 +438,7 @@ class Agenda extends Component {
       currentActivity,
       loading,
       survey,
-      documents
+      documents,
     } = this.state;
     return (
       <div>
@@ -436,7 +457,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
               Registrarme
-            </Button>
+            </Button>,
           ]}>
           <p>Para poder disfrutar de este contenido debes estar registrado e iniciar sesión</p>
         </Modal>
@@ -453,7 +474,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='login' onClick={this.handleOpenModalExchangeCode}>
               Canjear código
-            </Button>
+            </Button>,
           ]}>
           <p>
             Para poder disfrutar de este contenido debes haber pagado y tener un código porfavor ingresalo a
@@ -476,7 +497,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='login' onClick={this.exchangeCode}>
               Canjear código
-            </Button>
+            </Button>,
           ]}>
           <div>
             {this.state.exchangeCodeMessage && (
@@ -592,6 +613,7 @@ class Agenda extends Component {
                         userRegistered={this.props.userRegistered}
                         handleOpenModal={this.handleOpenModal}
                         hideHours={event.styles.hideHoursAgenda}
+                        handleUserValidation={this.validationRegisterAndExchangeCode}
                       />
                     </div>
                   );
