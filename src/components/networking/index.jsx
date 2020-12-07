@@ -150,9 +150,9 @@ class ListEventUser extends Component {
     if (currentUser) {
       const eventUser = await EventsApi.getcurrentUserEventUser(event._id);
 
-      // Servicio que trae la lista de asistentes excluyendo el usuario logeado
-      //let eventUserList = await userRequest.getEventUserList( event._id, Cookie.get( "evius_token" ) );
-      this.setState({ eventUser, eventUserId: eventUser._id, currentUserName: eventUser.names || eventUser.email });
+      if (eventUser !== null) {
+        this.setState({ eventUser, eventUserId: eventUser._id, currentUserName: eventUser.names || eventUser.email });
+      }
     }
   };
 
@@ -363,15 +363,17 @@ class ListEventUser extends Component {
                                           )}
                                         </div>
                                       </Col>
-                                      <Col xs={24}>
-                                        <Button
-                                          type='primary'
-                                          onClick={() => {
-                                            this.setState({ eventUserIdToMakeAppointment: users._id });
-                                          }}>
-                                          {'Agendar cita'}
-                                        </Button>
-                                      </Col>
+                                      {eventUserId !== null && (
+                                        <Col xs={24}>
+                                          <Button
+                                            type='primary'
+                                            onClick={() => {
+                                              this.setState({ eventUserIdToMakeAppointment: users._id });
+                                            }}>
+                                            {'Agendar cita'}
+                                          </Button>
+                                        </Col>
+                                      )}
                                     </Row>
                                     <br />
                                   </div>,
@@ -592,25 +594,27 @@ class ListEventUser extends Component {
                                         )}
                                       </div>
                                     </Col>
-                                    <Col xs={24}>
-                                      <Button
-                                        style={{ backgroundColor: '#363636', color: 'white' }}
-                                        onClick={() => {
-                                          this.setState({ eventUserIdToMakeAppointment: users._id });
-                                        }}>
-                                        {'Agendar cita'}
-                                      </Button>
-                                      <Button
-                                        style={{ backgroundColor: '#363636', color: 'white' }}
-                                        onClick={() => {
-                                          this.SendFriendship({
-                                            eventUserIdReceiver: users._id,
-                                            userName: users.properties.names || users.properties.email,
-                                          });
-                                        }}>
-                                        {'Enviar solicitud de Contacto'}
-                                      </Button>
-                                    </Col>
+                                    {eventUserId !== null && (
+                                      <Col xs={24}>
+                                        <Button
+                                          style={{ backgroundColor: '#363636', color: 'white' }}
+                                          onClick={() => {
+                                            this.setState({ eventUserIdToMakeAppointment: users._id });
+                                          }}>
+                                          {'Agendar cita'}
+                                        </Button>
+                                        <Button
+                                          style={{ backgroundColor: '#363636', color: 'white' }}
+                                          onClick={() => {
+                                            this.SendFriendship({
+                                              eventUserIdReceiver: users._id,
+                                              userName: users.properties.names || users.properties.email,
+                                            });
+                                          }}>
+                                          {'Enviar solicitud de Contacto'}
+                                        </Button>
+                                      </Col>
+                                    )}
                                   </Row>
                                   <br />
                                 </div>,
