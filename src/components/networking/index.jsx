@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Select, Form } from 'antd';
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Form } from 'antd';
 
 import { SmileOutlined } from '@ant-design/icons';
 import AppointmentModal from './appointmentModal';
@@ -16,7 +16,7 @@ import * as Cookie from 'js-cookie';
 import { EventsApi, EventFieldsApi } from '../../helpers/request';
 import { formatDataToString } from '../../helpers/utils';
 
-import { getCurrentUser, getCurrentEventUser, userRequest } from './services';
+import { userRequest } from './services';
 import ContactList from './contactList';
 import RequestList from './requestList';
 
@@ -46,7 +46,6 @@ class ListEventUser extends Component {
   }
 
   async componentDidMount() {
-    console.log('***********************************************', this.props);
     await this.getInfoCurrentUser();
     this.loadData();
   }
@@ -149,10 +148,7 @@ class ListEventUser extends Component {
     const { event, currentUser } = this.props;
 
     if (currentUser) {
-      //let token = Cookie.get("evius_token");
-      //let user = await getCurrentUser(token);
-
-      const eventUser = await getCurrentEventUser(event._id, currentUser._id);
+      const eventUser = await EventsApi.getcurrentUserEventUser(event._id);
 
       // Servicio que trae la lista de asistentes excluyendo el usuario logeado
       //let eventUserList = await userRequest.getEventUserList( event._id, Cookie.get( "evius_token" ) );
