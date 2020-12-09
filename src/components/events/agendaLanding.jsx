@@ -402,7 +402,7 @@ class Agenda extends Component {
 
   validationRegisterAndExchangeCode = (activity) => {
     const { userRegistered, event } = this.props;
-    const hasPayment = event.has_payment ? event.has_payment : false;
+    const hasPayment = event.has_payment === true || event.has_payment === 'true' ? true : false;
 
     // Listado de eventos que requieren validación
     if (hasPayment) {
