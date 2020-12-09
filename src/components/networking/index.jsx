@@ -13,7 +13,7 @@ import EventContent from '../events/shared/content';
 import FilterNetworking from './FilterNetworking';
 
 import * as Cookie from 'js-cookie';
-import { EventsApi, EventFieldsApi } from '../../helpers/request';
+import { EventsApi, EventFieldsApi, UsersApi } from '../../helpers/request';
 import { formatDataToString } from '../../helpers/utils';
 
 import { userRequest } from './services';
@@ -62,7 +62,15 @@ class ListEventUser extends Component {
     let { changeItem } = this.state;
     const { event } = this.props;
 
-    // Servicio que trae la lista de asistentes excluyendo el usuario logeado
+    // NO BORRAR ES UN AVANCE  PARA OPTIMIZAR LAS PETICIONES A LA API DE LA SECCION NETWORKING
+    // let eventUserList = []
+    // const response = await UsersApi.getAll(event._id);
+
+    // if(response.data){
+    //   eventUserList = response.data.filter(user => user.account_id !== )
+    // }
+
+    //Servicio que trae la lista de asistentes excluyendo el usuario logeado
     let eventUserList = await userRequest.getEventUserList(
       event._id,
       Cookie.get('evius_token'),
@@ -633,7 +641,7 @@ class ListEventUser extends Component {
             </TabPane>
 
             <TabPane tab='Mis Contactos' key='mis-contactos'>
-              <ContactList eventId={this.props.event._id} />
+              <ContactList eventId={this.props.event._id} section={this.props.section} />
             </TabPane>
 
             <TabPane tab='Solicitudes de Contacto' key='solicitudes'>
