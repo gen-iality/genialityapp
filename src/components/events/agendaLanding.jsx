@@ -7,7 +7,7 @@ import {
   SurveysApi,
   DocumentsApi,
   AttendeeApi,
-  discountCodesApi
+  discountCodesApi,
 } from '../../helpers/request';
 import AgendaActividadDetalle from './agendaActividadDetalle';
 import { Modal, Button, Card, Spin, notification, Input, Alert } from 'antd';
@@ -19,7 +19,7 @@ let attendee_states = {
   STATE_INVITED: '5ba8d213aac5b12a5a8ce749', //"INVITED";
   STATE_RESERVED: '5ba8d200aac5b12a5a8ce748', //"RESERVED";
   ROL_ATTENDEE: '5d7ac3f56b364a4042de9b08', //"rol id";
-  STATE_BOOKED: '5b859ed02039276ce2b996f0' //"BOOKED";
+  STATE_BOOKED: '5b859ed02039276ce2b996f0', //"BOOKED";
 };
 
 class Agenda extends Component {
@@ -41,7 +41,10 @@ class Agenda extends Component {
       currentActivity: null,
       survey: [],
       visible: false,
+
+      //Modal en caso que el usuario no este registrado
       visibleModal: false,
+
       visibleModalRestricted: false,
       visibleModalExchangeCode: false,
       discountCode: '',
@@ -55,7 +58,7 @@ class Agenda extends Component {
       show_inscription: false,
       status: 'in_progress',
       hideBtnDetailAgenda: true,
-      userId: null
+      userId: null,
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -81,7 +84,7 @@ class Agenda extends Component {
 
     this.setState({
       show_inscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
-      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true,
     });
 
     let surveysData = await SurveysApi.getAll(event._id);
@@ -163,7 +166,7 @@ class Agenda extends Component {
     let codeTemplateId = '5fc93d5eccba7b16a74bd538';
 
     try {
-      let result = await discountCodesApi.exchangeCode(codeTemplateId, { code: code, event_id: this.props.event._id });
+      await discountCodesApi.exchangeCode(codeTemplateId, { code: code, event_id: this.props.event._id });
       let eventUser = this.props.userRegistered;
       let eventId = this.props.event._id;
       let data = { state_id: attendee_states.STATE_BOOKED };
@@ -172,12 +175,12 @@ class Agenda extends Component {
       this.setState({
         exchangeCodeMessage: {
           type: 'success',
-          message: 'Código canjeado, habilitando el acceso...'
-        }
+          message: 'Código canjeado, habilitando el acceso...',
+        },
       });
       setTimeout(() => window.location.reload(), 500);
     } catch (e) {
-      const { status, data } = e.response;
+      const { status } = e.response;
       let msg = 'Tuvimos un problema canjenado el código intenta nuevamente';
       if (status == '404') {
         msg = 'Código no encontrado';
@@ -187,8 +190,8 @@ class Agenda extends Component {
       this.setState({
         exchangeCodeMessage: {
           type: 'error',
-          message: msg
-        }
+          message: msg,
+        },
       });
     }
   };
@@ -293,13 +296,13 @@ class Agenda extends Component {
     Activity.Register(eventId, userId, activityId)
       .then(() => {
         notification.open({
-          message: 'Inscripción realizada'
+          message: 'Inscripción realizada',
         });
         callback(true);
       })
       .catch((err) => {
         notification.open({
-          message: err
+          message: err,
         });
       });
   };
@@ -312,15 +315,10 @@ class Agenda extends Component {
   async selected() {}
 
   gotoActivity(activity) {
-    let eventUser = this.props.userRegistered;
-    if (eventUser && eventUser.state_id === attendee_states.STATE_BOOKED) {
-      this.setState({ currentActivity: activity });
+    this.setState({ currentActivity: activity });
 
-      //Se trae la funcion survey para pasarle el objeto activity y asi retornar los datos que consulta la funcion survey
-      this.survey(activity);
-    } else {
-      this.handleOpenModalRestricted();
-    }
+    //Se trae la funcion survey para pasarle el objeto activity y asi retornar los datos que consulta la funcion survey
+    this.survey(activity);
   }
 
   gotoActivityList = () => {
@@ -336,7 +334,7 @@ class Agenda extends Component {
 
   showDrawer = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
   };
 
@@ -346,7 +344,7 @@ class Agenda extends Component {
 
   onClose = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
@@ -402,6 +400,28 @@ class Agenda extends Component {
     this.setState({ visibleModalExchangeCode: true });
   };
 
+  validationRegisterAndExchangeCode = (activity) => {
+    const { userRegistered, event } = this.props;
+    const hasPayment = event.has_payment === true || event.has_payment === 'true' ? true : false;
+
+    // Listado de eventos que requieren validación
+    if (hasPayment) {
+      if (userRegistered === null) {
+        this.handleOpenModal();
+        return false;
+      }
+
+      if (userRegistered.state_id !== attendee_states.STATE_BOOKED) {
+        this.handleOpenModalRestricted();
+        return false;
+      }
+
+      this.gotoActivity(activity);
+    } else {
+      this.gotoActivity(activity);
+    }
+  };
+
   //End modal methods
 
   render() {
@@ -417,7 +437,7 @@ class Agenda extends Component {
       currentActivity,
       loading,
       survey,
-      documents
+      documents,
     } = this.state;
     return (
       <div>
@@ -436,7 +456,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
               Registrarme
-            </Button>
+            </Button>,
           ]}>
           <p>Para poder disfrutar de este contenido debes estar registrado e iniciar sesión</p>
         </Modal>
@@ -453,7 +473,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='login' onClick={this.handleOpenModalExchangeCode}>
               Canjear código
-            </Button>
+            </Button>,
           ]}>
           <p>
             Para poder disfrutar de este contenido debes haber pagado y tener un código porfavor ingresalo a
@@ -476,7 +496,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='login' onClick={this.exchangeCode}>
               Canjear código
-            </Button>
+            </Button>,
           ]}>
           <div>
             {this.state.exchangeCodeMessage && (
@@ -592,6 +612,7 @@ class Agenda extends Component {
                         userRegistered={this.props.userRegistered}
                         handleOpenModal={this.handleOpenModal}
                         hideHours={event.styles.hideHoursAgenda}
+                        handleValidatePayment={this.validationRegisterAndExchangeCode}
                       />
                     </div>
                   );
