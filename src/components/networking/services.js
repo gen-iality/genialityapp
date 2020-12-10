@@ -43,7 +43,7 @@ export const userRequest = {
   getEventUserList: async (eventId, token, currentUser) => {
     let docs = [];
     try {
-      const users = await UsersApi.getAll(eventId, '?pageSize=1500');
+      const users = await UsersApi.getAll(eventId, '?pageSize=1700');
       if (users) {
         docs = users.data.filter((user) => user.account_id !== currentUser._id);
       }

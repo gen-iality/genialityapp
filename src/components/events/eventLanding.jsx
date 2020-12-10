@@ -5,9 +5,7 @@ import { Card } from 'antd';
 import ReactQuill from 'react-quill';
 import ReactPlayer from 'react-player';
 import { Row, Col } from 'antd';
-import { AgendaApi } from '../../helpers/request';
-import { getCurrentEventUser, userRequest } from '../networking/services';
-import * as Cookie from 'js-cookie';
+import { EventsApi, AgendaApi } from '../../helpers/request';
 import { parseUrl } from '../../helpers/constants';
 import AgendaActividadDetalle from '../../components/events/agendaActividadDetalle';
 
@@ -25,19 +23,15 @@ class eventLanding extends Component {
   async componentDidMount() {
     const { event } = this.props;
 
-    if (this.props.currentUser) {
-      let token = Cookie.get('evius_token');
-      let { currentUser } = this.props;
-      let eventUserList = await userRequest.getEventUserList(event._id, token, currentUser);
-
-      const eventUser = await getCurrentEventUser(event._id, currentUser._id);
-
-      this.setState({
-        users: eventUserList,
-        eventUser,
-        eventUserId: eventUser._id,
-        currentUserName: eventUser.names || eventUser.email,
-      });
+    if (this.props.currentUser !== null) {
+      const eventUser = await EventsApi.getcurrentUserEventUser(event._id);
+      if (eventUser !== null) {
+        this.setState({
+          eventUser,
+          eventUserId: eventUser._id,
+          currentUserName: eventUser.names || eventUser.email,
+        });
+      }
     } else {
       this.setState({ onPage: 'event' });
     }

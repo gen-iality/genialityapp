@@ -66,27 +66,13 @@ let AgendaActividadDetalle = (props) => {
       <div className=' container_agenda-information container-calendar is-three-fifths'>
         <Card
           title={
-            event._id === '5f99a20378f48e50a571e3b6' || event._id === '5fca68b7e2f869277cfa31b0' ? (
-              <>
-                <PageHeader
-                  className='site-page-header'
-                  onBack={() => {
-                    gotoActivityList();
-                  }}
-                  title='MAGICLAND – PRIMER EPISODIO'
-                />
-              </>
-            ) : (
-              <>
-                <PageHeader
-                  className='site-page-header'
-                  onBack={() => {
-                    gotoActivityList();
-                  }}
-                  title={currentActivity.name}
-                />
-              </>
-            )
+            <PageHeader
+              className='site-page-header'
+              onBack={() => {
+                gotoActivityList();
+              }}
+              title={currentActivity.name}
+            />
           }
           extra={
             event._id === '5f99a20378f48e50a571e3b6' || event._id === '5fca68b7e2f869277cfa31b0' ? (
@@ -125,7 +111,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -161,7 +147,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -224,7 +210,7 @@ let AgendaActividadDetalle = (props) => {
                   key={key}
                   style={{
                     background: cat.color,
-                    color: cat.color ? 'white' : ''
+                    color: cat.color ? 'white' : '',
                   }}
                   className='tag category_calendar-tag'>
                   {cat.name}
@@ -411,7 +397,7 @@ let AgendaActividadDetalle = (props) => {
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end'
+                alignItems: 'flex-end',
               }}>
               {/* <button
                   <div
