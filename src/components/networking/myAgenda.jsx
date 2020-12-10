@@ -1,130 +1,139 @@
-import { Avatar, Button, Card, Col, Modal, notification, Row, Spin, Tabs } from 'antd'
-import {
-  withRouter
-} from "react-router-dom";
-import moment from 'moment'
-import { find, map, mergeRight, path, pathOr, propEq } from 'ramda'
-import { isNonEmptyArray } from 'ramda-adjunct'
-import React, { useEffect, useMemo, useState } from 'react'
+import { Avatar, Button, Card, Col, Modal, notification, Row, Spin, Tabs } from 'antd';
+import { withRouter } from 'react-router-dom';
+import moment from 'moment';
+import { find, map, mergeRight, path, pathOr, propEq } from 'ramda';
+import { isNonEmptyArray } from 'ramda-adjunct';
+import React, { useEffect, useMemo, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
 
-import { getDatesRange } from "../../helpers/utils"
-import { deleteAgenda, getAcceptedAgendasFromEventUser } from "./services";
+import { getDatesRange } from '../../helpers/utils';
+import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
 
-const { TabPane } = Tabs
-const { Meta } = Card
-const { confirm } = Modal
+const { TabPane } = Tabs;
+const { Meta } = Card;
+const { confirm } = Modal;
 
-function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers } ) {
-  const [ loading, setLoading ] = useState( true )
-  const [ enableMeetings, setEnableMeetings ] = useState( false )
-  const [ acceptedAgendas, setAcceptedAgendas ] = useState( [] )
-  const [ currentRoom, setCurrentRoom ] = useState( null )
+function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
+  const [loading, setLoading] = useState(true);
+  const [enableMeetings, setEnableMeetings] = useState(false);
+  const [acceptedAgendas, setAcceptedAgendas] = useState([]);
+  const [currentRoom, setCurrentRoom] = useState(null);
 
-  const eventDatesRange = useMemo( () => {
-    return getDatesRange( event.date_start, event.date_end );
-  }, [ event.date_start, event.date_end ] );
+  const eventDatesRange = useMemo(() => {
+    return getDatesRange(event.date_start, event.date_end);
+  }, [event.date_start, event.date_end]);
 
-  useEffect( () => {
-    if ( !event || !event._id ) return;
+  useEffect(() => {
+    if (!event || !event._id) return;
 
     firestore
-      .collection( 'events' )
-      .doc( event._id )
-      .onSnapshot( function ( doc ) {
+      .collection('events')
+      .doc(event._id)
+      .onSnapshot(function(doc) {
+        setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
+      });
+  }, [event]);
 
-        setEnableMeetings( ( doc.data() && doc.data().enableMeetings ) ? true : false );
-      } );
-  }, [ event ] )
+  useEffect(() => {
+    if (event._id && currentEventUserId && isNonEmptyArray(eventUsers)) {
+      setLoading(true);
+      getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
+        .then((agendas) => {
+          if (isNonEmptyArray(agendas)) {
+            const newAcceptedAgendas = map((agenda) => {
+              const agendaAttendees = path(['attendees'], agenda);
+              const otherAttendeeId = isNonEmptyArray(agendaAttendees)
+                ? find((attendeeId) => attendeeId !== currentEventUserId, agendaAttendees)
+                : null;
 
-
-  useEffect( () => {
-    if ( event._id && currentEventUserId && isNonEmptyArray( eventUsers ) ) {
-      setLoading( true )
-      getAcceptedAgendasFromEventUser( event._id, currentEventUserId )
-        .then( ( agendas ) => {
-          if ( isNonEmptyArray( agendas ) ) {
-            const newAcceptedAgendas = map( ( agenda ) => {
-              const agendaAttendees = path( [ 'attendees' ], agenda )
-              const otherAttendeeId = isNonEmptyArray( agendaAttendees )
-                ? find( attendeeId => attendeeId !== currentEventUserId, agendaAttendees )
-                : null
-
-              if ( otherAttendeeId ) {
-                const otherEventUser = find( propEq( '_id', otherAttendeeId ), eventUsers )
-                return mergeRight( agenda, { otherEventUser } )
+              if (otherAttendeeId) {
+                const otherEventUser = find(propEq('_id', otherAttendeeId), eventUsers);
+                return mergeRight(agenda, { otherEventUser });
               } else {
-                return agenda
+                return agenda;
               }
-            }, agendas )
-            setAcceptedAgendas( newAcceptedAgendas )
+            }, agendas);
+            setAcceptedAgendas(newAcceptedAgendas);
           }
-        } )
-        .catch( ( error ) => {
-          console.error( error )
-          notification.error( {
+        })
+        .catch((error) => {
+          console.error(error);
+          notification.error({
             message: 'Error',
             description: 'Obteniendo las citas del usuario'
-          } )
-        } )
-        .finally( () => setLoading( false ) )
+          });
+        })
+        .finally(() => setLoading(false));
     }
-  }, [ event._id, currentEventUserId, eventUsers ] )
+  }, [event._id, currentEventUserId, eventUsers]);
 
-  if ( loading ) {
+  if (loading) {
     return (
-      <Row align="middle" justify="center" style={ { height: 100 } }>
+      <Row align='middle' justify='center' style={{ height: 100 }}>
         <Spin />
         <p>Aun no se encuentran reuniones activas, vuelve mas tarde</p>
       </Row>
-    )
+    );
   }
 
-  if ( currentRoom ) {
-    let userName = ( eventUser && eventUser.properties ) ? eventUser.properties.names : "Anonimo" + new Date().getTime()
-    //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=2360621496
+  if (currentRoom) {
+    let userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
+    //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=8816111496
     //console.log("params",eventUser,currentRoom );
 
     return (
-      <Row align="middle" justify="center" >
-        <Col span={ 18 }>
+      <Row align='middle' justify='center'>
+        <Col span={18}>
           <Button
-            type="primary"
-            onClick={ () => { setCurrentRoom( null ) } }
-          >
+            type='primary'
+            onClick={() => {
+              setCurrentRoom(null);
+            }}>
             Regresar al listado de citas
-            </Button>
+          </Button>
 
-          <div className="aspect-ratio-box">
-            <div className="aspect-ratio-box-inside">
-              <iframe style={ { border: "2px solid blue" } }
-                src={ "https://video-app-1496-dev.twil.io?UserName=" + userName + "&URLRoomName=" + currentRoom + "&passcode=7521411496" }
-                allow="autoplay; fullscreen; camera *;microphone *"
+          <div className='aspect-ratio-box'>
+            <div className='aspect-ratio-box-inside'>
+              <iframe
+                style={{ border: '2px solid blue' }}
+                src={
+                  'https://video-app-1496-dev.twil.io?UserName=' +
+                  userName +
+                  '&URLRoomName=' +
+                  currentRoom +
+                  '&passcode=8816111496'
+                }
+                allow='autoplay; fullscreen; camera *;microphone *'
                 allowusermedia
                 allowFullScreen
                 title='video'
-                className="iframe-zoom nuevo">
+                className='iframe-zoom nuevo'>
                 <p>Your browser does not support iframes.</p>
               </iframe>
             </div>
           </div>
 
-          { userName && <iframe title="chatevius" style={ { position: "fixed", bottom: '5%', right: 0, width: "18%", height: "40%", minWidth: "300px", zIndex: 999999999 } }
-            src={ "https://chatevius.web.app?nombre=" + userName + "&chatid=" + currentRoom }
-          >
-
-          </iframe> }
-
-
-
+          {userName && (
+            <iframe
+              title='chatevius'
+              style={{
+                position: 'fixed',
+                bottom: '5%',
+                right: 0,
+                width: '18%',
+                height: '40%',
+                minWidth: '300px',
+                zIndex: 999999999
+              }}
+              src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
+          )}
         </Col>
       </Row>
-    )
+    );
   }
 
   return (
     <div>
-
       {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
       {/* <Switch>
@@ -142,180 +151,149 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers } ) {
             )} />
         </Switch> */}
 
-
-
-
-      { isNonEmptyArray( eventDatesRange ) ? (
+      {isNonEmptyArray(eventDatesRange) ? (
         <Tabs>
-          { eventDatesRange.map( ( eventDate, eventDateIndex ) => {
-            const dayAgendas = acceptedAgendas.filter( ( { timestamp_start } ) => {
-              const agendaDate = moment( timestamp_start ).format( 'YYYY-MM-DD' )
-              return agendaDate === eventDate
-            } )
+          {eventDatesRange.map((eventDate, eventDateIndex) => {
+            const dayAgendas = acceptedAgendas.filter(({ timestamp_start }) => {
+              const agendaDate = moment(timestamp_start).format('YYYY-MM-DD');
+              return agendaDate === eventDate;
+            });
 
             return (
               <TabPane
                 tab={
-                  <div style={ { textTransform: 'capitalize', fontWeight: 'bold' } }>
-                    { moment( eventDate ).format( 'MMMM DD' ) }
-                  </div> }
-                key={ `event-date-${ eventDateIndex }-${ eventDate }` }
-              >
-                { isNonEmptyArray( dayAgendas )
-                  ? dayAgendas.map( ( acceptedAgenda ) => (
+                  <div style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
+                    {moment(eventDate).format('MMMM DD')}
+                  </div>
+                }
+                key={`event-date-${eventDateIndex}-${eventDate}`}>
+                {isNonEmptyArray(dayAgendas) ? (
+                  dayAgendas.map((acceptedAgenda) => (
                     <>
                       <AcceptedCard
-                        key={ `accepted-${ acceptedAgenda.id }` }
-                        eventId={ event._id }
-                        eventUser={ eventUser }
-                        data={ acceptedAgenda }
-                        enableMeetings={ enableMeetings }
-                        setCurrentRoom={ setCurrentRoom }
+                        key={`accepted-${acceptedAgenda.id}`}
+                        eventId={event._id}
+                        eventUser={eventUser}
+                        data={acceptedAgenda}
+                        enableMeetings={enableMeetings}
+                        setCurrentRoom={setCurrentRoom}
                       />
                     </>
-                  ) ) : (
-                    <Card>{ 'No tienes citas agendadas para esta fecha' }</Card>
-                  ) }
-
-
+                  ))
+                ) : (
+                  <Card>{'No tienes citas agendadas para esta fecha'}</Card>
+                )}
               </TabPane>
-            )
-          } ) }
+            );
+          })}
         </Tabs>
       ) : (
-          <Card>{ 'No tienes citas actualmente' }</Card>
-        ) }
+        <Card>{'No tienes citas actualmente'}</Card>
+      )}
     </div>
-  )
+  );
 }
 
-function AcceptedCard ( { data, eventId, eventUser, enableMeetings, setCurrentRoom } ) {
-  const [ loading, setLoading ] = useState( false )
-  const [ deleted, setDeleted ] = useState( false )
+function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom }) {
+  const [loading, setLoading] = useState(false);
+  const [deleted, setDeleted] = useState(false);
 
+  const userName = pathOr('', ['otherEventUser', 'properties', 'names'], data);
+  const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
 
-  const userName = pathOr( '', [ 'otherEventUser', 'properties', 'names' ], data )
-  const userEmail = pathOr( '', [ 'otherEventUser', 'properties', 'email' ], data )
-
-  /** Entramos a la sala 1 a 1 de la reunión 
-   * 
-  */
-  const accessMeetRoom = ( data, eventUser ) => {
-
-    if ( !eventUser ) {
-      alert( "Tenemos problemas con tu usuario, itenta recargar la página" );
+  /** Entramos a la sala 1 a 1 de la reunión
+   *
+   */
+  const accessMeetRoom = (data, eventUser) => {
+    if (!eventUser) {
+      alert('Tenemos problemas con tu usuario, itenta recargar la página');
       return;
     }
     let roomName = data.id;
 
-    setCurrentRoom( roomName )
-
-  }
-
-
+    setCurrentRoom(roomName);
+  };
 
   const deleteThisAgenda = () => {
-    if ( !loading ) {
-      setLoading( true )
-      deleteAgenda( eventId, data.id )
-        .then( () => setDeleted( true ) )
-        .catch( ( error ) => {
-          console.error( error )
-          notification.error( {
+    if (!loading) {
+      setLoading(true);
+      deleteAgenda(eventId, data.id)
+        .then(() => setDeleted(true))
+        .catch((error) => {
+          console.error(error);
+          notification.error({
             message: 'Error',
             description: 'Error eliminando la cita'
-          } )
-        } )
-        .finally( () => setLoading( false ) )
+          });
+        })
+        .finally(() => setLoading(false));
     }
-  }
+  };
 
   return (
-    <Row justify="center" style={ { marginBottom: "20px" } }>
-      <Card
-        style={ { width: 600, textAlign: "left" } }
-        bordered={ true }
-      >
-        <div style={ { marginBottom: '10px' } }>
-          { 'Cita con: ' }
-        </div>
+    <Row justify='center' style={{ marginBottom: '20px' }}>
+      <Card style={{ width: 600, textAlign: 'left' }} bordered={true}>
+        <div style={{ marginBottom: '10px' }}>{'Cita con: '}</div>
         <Meta
-          avatar={
-            <Avatar>
-              { userName
-                ? userName.charAt( 0 ).toUpperCase()
-                : userName }
-            </Avatar>
-          }
-          title={ userName || "No registra nombre" }
+          avatar={<Avatar>{userName ? userName.charAt(0).toUpperCase() : userName}</Avatar>}
+          title={userName || 'No registra nombre'}
           description={
             <div>
               <Row>
-                <Col xs={ 18 }>
-                  <p>
-                    { userEmail || "No registra correo" }
-                  </p>
-                  { !!data.message && (
-                    <p style={ { paddingRight: '20px' } }>
-                      { 'Mensaje: ' }
-                      { data.message }
+                <Col xs={18}>
+                  <p>{userEmail || 'No registra correo'}</p>
+                  {!!data.message && (
+                    <p style={{ paddingRight: '20px' }}>
+                      {'Mensaje: '}
+                      {data.message}
                     </p>
-                  ) }
+                  )}
                 </Col>
-                <Col xs={ 6 }>
-                  <div style={ { textTransform: 'capitalize' } }>
-                    { moment( data.timestamp_start ).format( 'MMMM DD' ) }
-                  </div>
-                  <div>
-                    { moment( data.timestamp_start ).format( 'hh:mm a' ) }
-                  </div>
-                  <div>
-                    { moment( data.timestamp_end ).format( 'hh:mm a' ) }
-                  </div>
+                <Col xs={6}>
+                  <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div>
+                  <div>{moment(data.timestamp_start).format('hh:mm a')}</div>
+                  <div>{moment(data.timestamp_end).format('hh:mm a')}</div>
                 </Col>
               </Row>
-              { !deleted ? (
+              {!deleted ? (
                 <Row>
                   <Col>
                     <Button
-
-                      type="primary"
-                      disabled={ loading || !enableMeetings }
-                      loading={ loading }
-                      onClick={ () => { accessMeetRoom( data, eventUser ) } }
-                    >
-                      { enableMeetings ? 'Ingresar a reunión' : 'Reunión Cerrada' }
+                      type='primary'
+                      disabled={loading || !enableMeetings}
+                      loading={loading}
+                      onClick={() => {
+                        accessMeetRoom(data, eventUser);
+                      }}>
+                      {enableMeetings ? 'Ingresar a reunión' : 'Reunión Cerrada'}
                     </Button>
 
                     <Button
-                      type="danger"
-                      disabled={ loading }
-                      loading={ loading }
-                      onClick={ () => {
-                        confirm( {
+                      type='danger'
+                      disabled={loading}
+                      loading={loading}
+                      onClick={() => {
+                        confirm({
                           title: 'Confirmar cancelación',
                           content: '¿Desea cancelar/eliminar esta cita?',
                           okText: 'Si',
                           cancelText: 'No',
                           onOk: deleteThisAgenda
-                        } )
-                      } }
-                    >
-                      { 'Cancelar' }
+                        });
+                      }}>
+                      {'Cancelar'}
                     </Button>
                   </Col>
                 </Row>
               ) : (
-                  <Row>
-                    { `Cita cancelada.` }
-                  </Row>
-                ) }
+                <Row>{`Cita cancelada.`}</Row>
+              )}
             </div>
           }
         />
       </Card>
     </Row>
-  )
+  );
 }
 
-export default withRouter( MyAgenda )
+export default withRouter(MyAgenda);
