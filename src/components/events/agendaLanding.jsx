@@ -47,6 +47,7 @@ class Agenda extends Component {
 
       visibleModalRestricted: false,
       visibleModalExchangeCode: false,
+      visibleModalRegisteredDevices: false,
       discountCode: '',
       exchangeCodeMessage: null,
 
@@ -403,6 +404,10 @@ class Agenda extends Component {
     this.setState({ visibleModalExchangeCode: true });
   };
 
+  handleCloseModalRestrictedDevices = () => {
+    this.setState({ visibleModalRegisteredDevices: false });
+  };
+
   validationRegisterAndExchangeCode = (activity) => {
     const { userRegistered, event } = this.props;
     const hasPayment = event.has_payment === true || event.has_payment === 'true' ? true : false;
@@ -417,6 +422,26 @@ class Agenda extends Component {
       if (userRegistered.state_id !== attendee_states.STATE_BOOKED) {
         this.handleOpenModalRestricted();
         return false;
+      }
+
+      if (userRegistered.registered_devices) {
+        const checkRegisterDevice = window.localStorage.getItem('event_id');
+        if (userRegistered.registered_devices < 2) {
+          if (!checkRegisterDevice || checkRegisterDevice !== event._id) {
+            userRegistered.registered_devices = userRegistered.registered_devices + 1;
+            window.localStorage.setItem('event_id', event._id);
+            AttendeeApi.update(event._id, userRegistered, userRegistered._id);
+          }
+        } else {
+          if (!checkRegisterDevice) {
+            this.setState({ visibleModalRegisteredDevices: true });
+            return false;
+          }
+        }
+      } else {
+        userRegistered.registered_devices = 1;
+        window.localStorage.setItem('event_id', event._id);
+        AttendeeApi.update(event._id, userRegistered, userRegistered._id);
       }
 
       this.gotoActivity(activity);
@@ -485,6 +510,20 @@ class Agenda extends Component {
               https://www.eticketablanca.com/evento/magic-land/
             </a>
           </p>
+        </Modal>
+
+        <Modal
+          visible={this.state.visibleModalRegisteredDevices}
+          title='Información'
+          // onOk={this.handleOk}
+          onCancel={this.handleCloseModalRestrictedDevices}
+          onClose={this.handleCloseModalRestrictedDevices}
+          footer={[
+            <Button key='cancel' onClick={this.handleCloseModalRestrictedDevices}>
+              Cancelar
+            </Button>,
+          ]}>
+          <p>Has excedido el número de dispositivos permitido</p>
         </Modal>
 
         <Modal
