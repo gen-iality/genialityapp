@@ -425,11 +425,11 @@ class Agenda extends Component {
       }
 
       if (userRegistered.registered_devices) {
-        const checkRegisterDevice = window.localStorage.getItem('event_id');
+        const checkRegisterDevice = window.localStorage.getItem('eventUser_id');
         if (userRegistered.registered_devices < 2) {
-          if (!checkRegisterDevice || checkRegisterDevice !== event._id) {
+          if (!checkRegisterDevice || checkRegisterDevice !== userRegistered._id) {
             userRegistered.registered_devices = userRegistered.registered_devices + 1;
-            window.localStorage.setItem('event_id', event._id);
+            window.localStorage.setItem('eventUser_id', userRegistered._id);
             AttendeeApi.update(event._id, userRegistered, userRegistered._id);
           }
         } else {
@@ -440,7 +440,7 @@ class Agenda extends Component {
         }
       } else {
         userRegistered.registered_devices = 1;
-        window.localStorage.setItem('event_id', event._id);
+        window.localStorage.setItem('eventUser_id', userRegistered._id);
         AttendeeApi.update(event._id, userRegistered, userRegistered._id);
       }
 
