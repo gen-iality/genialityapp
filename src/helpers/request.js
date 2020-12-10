@@ -364,10 +364,10 @@ export const SurveysApi = {
 
 export const DocumentsApi = {
   getAll: async (event) => {
-    return await Actions.getAll(`api/events/${event}/documents`);
+    return await Actions.getAll(`api/events/${event}/documents`, true);
   },
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/documents`).then(({ data }) => data);
+    return await Actions.getAll(`api/events/${event}/documents`, true).then(({ data }) => data);
   },
 
   getFiles: async (event, id) => {
@@ -577,7 +577,7 @@ export const RolAttApi = {
 };
 export const SpacesApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/spaces`).then(({ data }) => data);
+    return await Actions.getAll(`api/events/${event}/spaces`, true).then(({ data }) => data);
   },
   getOne: async (event, id) => {
     return await Actions.get(`api/events/${event}/spaces/`, id);
