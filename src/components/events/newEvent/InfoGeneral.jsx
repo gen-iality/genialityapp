@@ -85,6 +85,7 @@ class InfoGeneral extends Component {
     const { event, selectedOrganizer, selectedType, selectedCategories } = this.state,
       valid =
         event.name.length > 0 &&
+        event.allow_register !== '' &&
         ((event.type_event === 'physicalEvent' && event.venue.length > 0) || event.type_event === 'onlineEvent') &&
         !!selectedOrganizer &&
         !!selectedType &&
@@ -181,6 +182,7 @@ class InfoGeneral extends Component {
       event_type_id: this.state.selectedType.value,
       address: event.address,
       type_event: event.type_event,
+      allow_register: event.allow_register,
     };
     this.props.nextStep('info', data, 'attendees');
   };
@@ -373,13 +375,30 @@ class InfoGeneral extends Component {
               {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
             </div>
             <div className='field'>
+              <label className='label has-text-grey-light'>El evento acepta registros o es privado</label>
+              <p>
+                En un evento privado no se aceptan registros externos, la personas que asisten al evento han sido
+                añadidas por un administrador u organizador del evento
+              </p>
+              <div className='control'>
+                <div className='select'>
+                  <select value={event.allow_register} onChange={this.handleChange} name={'allow_register'}>
+                    <option value=''>Seleccionar...</option>
+                    <option value={true}>Público</option>
+                    <option value={false}>Privado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className='field'>
               <label className='label has-text-grey-light'>Visibilidad del evento</label>
+              <p>Determina si es visible desde el listado general de eventos de Evius</p>
               <div className='control'>
                 <div className='select'>
                   <select value={event.visibility} onChange={this.handleChange} name={'visibility'}>
                     <option value=''>Seleccionar...</option>
-                    <option value={'PUBLIC'}>Crear un evento público</option>
-                    <option value={'ORGANIZATION'}>Crear un evento privado</option>
+                    <option value={'PUBLIC'}>Público</option>
+                    <option value={'ORGANIZATION'}>Privado</option>
                   </select>
                 </div>
               </div>
