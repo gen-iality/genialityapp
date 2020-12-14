@@ -56,7 +56,6 @@ class General extends Component {
 
   async componentDidMount() {
     const info = this.props.event;
-    console.log('informacion del evento', info);
     this.setState({ info });
     this.setState({
       checked: info.initial_page ? true : false,
@@ -106,7 +105,6 @@ class General extends Component {
   //Cambio en los input
   handleChange = (e) => {
     const { name, value } = e.target;
-    console.log('name', name, 'value', value);
     this.setState({ event: { ...this.state.event, [name]: value } }, this.valid);
   };
   //Validación
@@ -376,8 +374,7 @@ class General extends Component {
         dates: {},
       };
 
-      const result = await EventsApi.editOne(properties, this.props.eventId);
-      console.log('despues de la edicion', result);
+      await EventsApi.editOne(properties, this.props.eventId);
     }
   }
 
