@@ -78,6 +78,7 @@ export default class RootPage extends Component {
         guestVoteInSurvey ? (
         <>
           {/*Preparacion componente para los resultados*/}
+          {console.log('graficos desde rootpage')}
           <Card className='survyCard'>
             <h1>fin de la encuesta</h1>
           </Card>

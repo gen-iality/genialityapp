@@ -56,6 +56,10 @@ class SurveyForm extends Component {
         checked: false,
         permissions: 'public',
       },
+      //Contador encuestas calificables
+      counterQuestions: 0,
+      counterOkAnswers: 0,
+      scoreMinimumForWin: 10,
     };
   }
 
