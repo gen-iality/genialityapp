@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import Moment from "moment";
-import { Result, Button } from "antd";
-import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import * as Cookie from "js-cookie";
-import { SurveysApi, TicketsApi } from "../../../helpers/request";
-import { firestore } from "../../../helpers/firebase";
-import { SurveyAnswers, UserGamification } from "./services";
-import Graphics from "./graphics"
-import * as Survey from "survey-react";
-import "survey-react/modern.css";
-Survey.StylesManager.applyTheme("modern");
+import React, { Component } from 'react';
+import Moment from 'moment';
+import { Result, Button } from 'antd';
+import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import * as Cookie from 'js-cookie';
+import { SurveysApi, TicketsApi } from '../../../helpers/request';
+import { firestore } from '../../../helpers/firebase';
+import { SurveyAnswers, UserGamification } from './services';
+import Graphics from './graphics';
+import * as Survey from 'survey-react';
+import 'survey-react/modern.css';
+Survey.StylesManager.applyTheme('modern');
 
 const surveyStyle = {
-  overFlowX: "hidden",
-  overFlowY: "scroll",
+  overFlowX: 'hidden',
+  overFlowY: 'scroll',
 };
 
 class SurveyComponent extends Component {
@@ -48,7 +48,7 @@ class SurveyComponent extends Component {
     let survey = new Survey.Model(surveyData);
     //console.log("CARGADO surveyData");
     await this.listenAndUpdateStateSurveyRealTime(idSurvey);
-    //console.log("CARGADO surveyRealTime");    
+    //console.log("CARGADO surveyRealTime");
 
     /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
     que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
@@ -57,7 +57,7 @@ class SurveyComponent extends Component {
     self.setState({ surveyData, idSurvey, survey });
     self.survey = survey;
 
-    console.log("CARGADO todo");
+    console.log('CARGADO todo');
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
 
@@ -70,32 +70,30 @@ class SurveyComponent extends Component {
    * la pregunta en la que deberian ir todos
    */
   componentWillUnmount() {
-    console.log("***DESMONTANDO componentWillUnmount");
+    console.log('***DESMONTANDO componentWillUnmount');
     if (this.state.survey) {
-      console.log("***DESMONTANDO componentWillUnmount LIMDIANDO stopTimer");
+      console.log('***DESMONTANDO componentWillUnmount LIMDIANDO stopTimer');
       this.state.survey.stopTimer();
     }
 
     if (this.state.timerPausa) {
-      console.log("***DESMONTANDO componentWillUnmount LIMDIANDO timerPausa");
+      console.log('***DESMONTANDO componentWillUnmount LIMDIANDO timerPausa');
       clearInterval(this.state.timerPausa);
     }
-
   }
 
   getRankingList = (list) => {
-    console.log("ranking", list);
+    console.log('ranking', list);
     this.setState({ rankingList: list });
   };
 
   getCurrentEvenUser = async () => {
-
-    let evius_token = Cookie.get("evius_token");
+    let evius_token = Cookie.get('evius_token');
     let eventUsers = [];
     let vote = 1;
     if (evius_token) {
       let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
-      console.log("response", response);
+      console.log('response', response);
 
       if (response.data.length > 0) {
         vote = 0;
@@ -104,11 +102,9 @@ class SurveyComponent extends Component {
           if (item.properties.pesovoto) vote += parseFloat(item.properties.pesovoto);
         });
       }
-
     }
     this.setState({ eventUsers: eventUsers, voteWeight: vote });
   };
-
 
   listenAndUpdateStateSurveyRealTime = async (idSurvey) => {
     var self = this;
@@ -116,28 +112,33 @@ class SurveyComponent extends Component {
     const promiseA = new Promise((resolve, reject) => {
       try {
         firestore
-          .collection("surveys")
+          .collection('surveys')
           .doc(idSurvey)
           .onSnapshot((doc) => {
             let surveyRealTime = doc.data();
 
-            surveyRealTime.currentPage = (surveyRealTime.currentPage) ? surveyRealTime.currentPage : 0;
-            self.setState({ surveyRealTime, freezeGame: surveyRealTime.freezeGame, currentPage: surveyRealTime.currentPage });
+            surveyRealTime.currentPage = surveyRealTime.currentPage ? surveyRealTime.currentPage : 0;
+            self.setState({
+              surveyRealTime,
+              freezeGame: surveyRealTime.freezeGame,
+              currentPage: surveyRealTime.currentPage,
+            });
             resolve(surveyRealTime);
           });
-      } catch (e) { reject(e) }
+      } catch (e) {
+        reject(e);
+      }
     });
 
     return promiseA;
-  }
+  };
   // Funcion para cargar datos de la encuesta seleccionada
   loadSurvey = async (eventId, idSurvey) => {
-
     let { surveyData } = this.state;
 
     // Esto permite que el json pueda asignar el id a cada pregunta
-    Survey.JsonObject.metaData.addProperty("question", "id");
-    Survey.JsonObject.metaData.addProperty("question", "points");
+    Survey.JsonObject.metaData.addProperty('question', 'id');
+    Survey.JsonObject.metaData.addProperty('question', 'points');
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
@@ -146,43 +147,43 @@ class SurveyComponent extends Component {
     // Se igual title al valor de survey
     dataSurvey.title = dataSurvey.survey;
     // Se muestra una barra de progreso en la parte superior
-    dataSurvey.showProgressBar = "bottom";
+    dataSurvey.showProgressBar = 'bottom';
     // Esto permite que se envie los datos al pasar cada pagina con el evento onPartialSend
     dataSurvey.sendResultOnPageNext = true;
     // Esto permite ocultar el boton de devolver en la encuesta
     dataSurvey.showPrevButton = false;
     // Asigna textos al completar encuesta y al ver la encuesta vacia
-    dataSurvey.completedHtml = "Gracias por completar la encuesta!";
+    dataSurvey.completedHtml = 'Gracias por completar la encuesta!';
 
-    if (dataSurvey.allow_gradable_survey === "true" && dataSurvey.initialMessage) {
+    if (dataSurvey.allow_gradable_survey === 'true' && dataSurvey.initialMessage) {
       // Permite mostrar el contador y asigna el tiempo limite de la encuesta y por pagina
-      dataSurvey.showTimerPanel = "top";
+      dataSurvey.showTimerPanel = 'top';
 
       // Temporalmente quemado el tiempo por pregunta. El valor es en segundos
       // dataSurvey.maxTimeToFinish = 10;
-      dataSurvey.maxTimeToFinishPage = 60;
+      dataSurvey.maxTimeToFinishPage = 5;
 
       // Permite usar la primera pagina como instroduccion
       dataSurvey.firstPageIsStarted = true;
-      dataSurvey.startSurveyText = "Iniciar Cuestionario";
+      dataSurvey.startSurveyText = 'Iniciar Cuestionario';
       let textMessage = dataSurvey.initialMessage;
-      dataSurvey["questions"].unshift({
-        type: "html",
+      dataSurvey['questions'].unshift({
+        type: 'html',
         html: `<div style='width: 90%; margin: 0 auto;'>${textMessage}</div>`,
       });
     }
 
-    if (dataSurvey["questions"] === undefined) return;
+    if (dataSurvey['questions'] === undefined) return;
 
     // El {page, ...rest} es temporal
     // Debido a que se puede setear la pagina de la pregunta si la pregunta tiene la propiedad 'page'
 
     // Aqui se itera cada pregunta y se asigna a una pagina
-    dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
+    dataSurvey['questions'].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
         key: `page${index + 1}`,
-        questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey === "true" ? false : true }],
+        questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey === 'true' ? false : true }],
       };
     });
 
@@ -211,10 +212,10 @@ class SurveyComponent extends Component {
       // Valida si se marco alguna opcion
       if (question) {
         //Hack rÃƒÂ¡pido para permitir preguntas tipo texto (abiertas)
-        if (question.inputType === "text") {
+        if (question.inputType === 'text') {
         } else {
           // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
-          if (typeof question.value === "object") {
+          if (typeof question.value === 'object') {
             correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
 
             if (correctAnswer) rankingPoints += surveyPoints;
@@ -233,7 +234,7 @@ class SurveyComponent extends Component {
         }
 
         let infoOptionQuestion =
-          surveyData.allow_gradable_survey === "true"
+          surveyData.allow_gradable_survey === 'true'
             ? { optionQuantity, optionIndex, correctAnswer }
             : { optionQuantity, optionIndex };
 
@@ -250,7 +251,7 @@ class SurveyComponent extends Component {
                 uid: infoUser._id,
                 email: infoUser.email,
                 names: infoUser.names || infoUser.displayName,
-                voteValue: surveyData.allow_vote_value_per_user === "true" && eventUsers.length > 0 && voteWeight,
+                voteValue: surveyData.allow_vote_value_per_user === 'true' && eventUsers.length > 0 && voteWeight,
               },
               infoOptionQuestion
             )
@@ -270,7 +271,7 @@ class SurveyComponent extends Component {
               {
                 responseData: question.value,
                 date: new Date(),
-                uid: "guest",
+                uid: 'guest',
               },
               infoOptionQuestion
             )
@@ -302,60 +303,54 @@ class SurveyComponent extends Component {
   // Funcion que muestra el feedback dependiendo del estado
   showStateMessage = (state, questionPoints) => {
     const objMessage = {
-      title: "",
-      subTitle: "",
+      title: '',
+      subTitle: '',
       status: state,
     };
 
     switch (state) {
-      case "success":
+      case 'success':
         return {
           ...objMessage,
-          title: "Has respondido correctamente",
+          title: 'Has respondido correctamente',
           subTitle: `Has ganado ${questionPoints} puntos, respondiendo correctamente la pregunta.`,
           icon: <SmileOutlined />,
         };
 
-      case "error":
+      case 'error':
         return {
           ...objMessage,
-          title: "No has respondido correctamente",
-          subTitle: "Debido a que no respondiste correctamente no has ganado puntos.",
+          title: 'No has respondido correctamente',
+          subTitle: 'Debido a que no respondiste correctamente no has ganado puntos.',
           icon: <FrownOutlined />,
         };
 
-      case "warning":
+      case 'warning':
         return {
           ...objMessage,
-          title: "No has escogido ninguna opción",
+          title: 'No has escogido ninguna opción',
           subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opciónn.`,
           icon: <MehOutlined />,
         };
 
-      case "info":
+      case 'info':
         return {
           ...objMessage,
-          title: "Estamos en una pausa",
+          title: 'Estamos en una pausa',
           subTitle: `El juego se encuentra en pausa. Espera hasta el moderador reanude el juego`,
           icon: <MehOutlined />,
         };
 
       default:
         return { type: state };
-
     }
   };
 
-
-
   onSurveyCompleted = async (values) => {
     this.sendData(values);
-  }
+  };
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
   sendData = async (values) => {
-
-
-
     const { eventId, currentUser } = this.props;
     let { surveyData, questionsAnswered, aux } = this.state;
 
@@ -365,8 +360,7 @@ class SurveyComponent extends Component {
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
     if (aux > 0) return;
 
-    if (surveyData.allow_gradable_survey === "true") {
-
+    if (surveyData.allow_gradable_survey === 'true') {
       if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
 
       if (!isLastPage)
@@ -383,7 +377,7 @@ class SurveyComponent extends Component {
       if (response.isUndefined) {
         let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
-        let result = this.showStateMessage("warning");
+        let result = this.showStateMessage('warning');
         this.setIntervalToWaitBeforeNextQuestion(values, result, secondsToGo);
       }
     }
@@ -413,17 +407,15 @@ class SurveyComponent extends Component {
 
       // Solo intenta registrar puntos si la encuesta es calificable
       // Actualiza puntos del usuario
-      if (surveyData.allow_gradable_survey === "true") {
-
+      if (surveyData.allow_gradable_survey === 'true') {
         // Muestra modal de retroalimentacion
         if (rankingPoints !== undefined) {
           let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
-          let typeMessage = rankingPoints > 0 ? "success" : "error";
+          let typeMessage = rankingPoints > 0 ? 'success' : 'error';
           let result = this.showStateMessage(typeMessage, rankingPoints);
 
           this.setIntervalToWaitBeforeNextQuestion(values, result, secondsToGo);
-
         }
         // Ejecuta serivicio para registrar puntos
         UserGamification.registerPoints(eventId, {
@@ -437,7 +429,7 @@ class SurveyComponent extends Component {
   };
 
   setIntervalToWaitBeforeNextQuestion(survey, result, secondsToGo) {
-    console.log("setIntervalToWaitBeforeNextQuestion iniciando");
+    console.log('setIntervalToWaitBeforeNextQuestion iniciando');
     secondsToGo = secondsToGo ? secondsToGo : 0;
 
     let mensaje_espera = `${result.subTitle} Espera el tiempo indicado para seguir con el cuestionario.`;
@@ -448,7 +440,7 @@ class SurveyComponent extends Component {
 
     const timer = setInterval(() => {
       secondsToGo -= 1;
-      result.subTitle = secondsToGo > 0 ? mensaje_espera + " " + secondsToGo : mensaje_congelado;
+      result.subTitle = secondsToGo > 0 ? mensaje_espera + ' ' + secondsToGo : mensaje_congelado;
       this.setState({ feedbackMessage: result });
 
       if (secondsToGo <= 0 && !this.state.freezeGame) {
@@ -459,8 +451,6 @@ class SurveyComponent extends Component {
     }, 1000);
 
     this.setState({ timerPausa: timer });
-
-
   }
 
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
@@ -474,8 +464,8 @@ class SurveyComponent extends Component {
       if (correctAnswer) totalPoints += parseInt(question.points);
     });
 
-    if (surveyData.allow_gradable_survey === "true") {
-      let text = "";
+    if (surveyData.allow_gradable_survey === 'true') {
+      let text = '';
       //totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : "No has obtenido puntos. Suerte para la prÃƒÂ³xima";
       survey.completedHtml = `${textOnCompleted}<br>${text}`;
     }
@@ -488,49 +478,43 @@ class SurveyComponent extends Component {
     // let timeTotal = Moment.utc(survey.maxTimeToFinish * 1000).format("mm:ss");
 
     // Aqui se obtiene el tiempo limite por pregunta
-    let countDown = Moment.utc((survey.maxTimeToFinishPage - survey.currentPage.timeSpent) * 1000).format("mm:ss");
-    let timeTotal = Moment.utc(survey.maxTimeToFinishPage * 1000).format("mm:ss");
+    let countDown = Moment.utc((survey.maxTimeToFinishPage - survey.currentPage.timeSpent) * 1000).format('mm:ss');
+    let timeTotal = Moment.utc(survey.maxTimeToFinishPage * 1000).format('mm:ss');
 
     options.text = `Tienes ${timeTotal} para responder la pregunta. Quedan ${countDown}`;
   };
 
   /* handler cuando la encuesta cambio de pregunta */
   onCurrentPageChanged = (survey, o) => {
-
     let { surveyData, currentPage } = this.state;
-    console.log("onCurrentPageChanged", currentPage, "current", survey.currentPageNo)
-    if (surveyData.allow_gradable_survey !== "true") return;
+    console.log('onCurrentPageChanged', currentPage, 'current', survey.currentPageNo);
+    if (surveyData.allow_gradable_survey !== 'true') return;
 
     /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
      * se caiga del sistema y vuelva a conectarse la idea es que se conecte a esta pregunta.
      * va a tener el valor de la pregunta mÃƒÂ¡s adealantda que se haay contestado.
-     * 
-     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la ÃƒÂºltima pÃƒÂ¡gina si esto pasa vuelve e inicia la encuesta 
+     *
+     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la ÃƒÂºltima pÃƒÂ¡gina si esto pasa vuelve e inicia la encuesta
      *  cuando una persona entre a respodner una pregunta colocamos el currentPage en la siguiente pregunta por si me salgo y entro que no me vuelva a repetir
      *  la pregunta en la que ya estaba.
      */
 
-
     //Se comentarea if para evitar regresar a la pagina en que quedó el usuario al desconectarse
-
 
     // if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
     //   SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
-  }
+  };
 
   checkCurrentPage = (survey) => {
-
-
     let { currentPage, surveyData } = this.state;
 
     // Este condicional sirve para retomar la encuesta donde vayan todos los demas usuarios
-    if (surveyData.allow_gradable_survey === "true") {
-
+    if (surveyData.allow_gradable_survey === 'true') {
       if (currentPage !== 0) survey.currentPageNo = currentPage;
 
       if (this.state.freezeGame) {
         survey.stopTimer();
-        let result = this.showStateMessage("info");
+        let result = this.showStateMessage('info');
         this.setIntervalToWaitBeforeNextQuestion(survey, result, 0);
       }
     }
@@ -544,42 +528,49 @@ class SurveyComponent extends Component {
 
     const { showListSurvey, surveyLabel, eventId, operation } = this.props;
 
-    if (!surveyData) return "Cargando..."
+    if (!surveyData) return 'Cargando...';
     return (
-
       <div style={surveyStyle}>
-        {
-          this.state.survey && this.state.survey.state !== "completed" && (
-            <div style={{ marginTop: 5 }}>
-              <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
-                <ArrowLeftOutlined /> Volver a  {surveyLabel ? surveyLabel.name : "encuestas"}
-              </Button>
-            </div>
-          )
-        }
-        {(surveyData && surveyData.allow_gradable_survey === "true") && (surveyData.show_horizontal_bar ? (
-          <>
-            {/* < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/> */}
-            {
-              // this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
-            }
-          </>
-        ) : (
-            <>{
-              // this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
-            }</>
+        {this.state.survey && this.state.survey.state !== 'completed' && (
+          <div style={{ marginTop: 5 }}>
+            <Button ghost shape='round' onClick={() => showListSurvey(sentSurveyAnswers)}>
+              <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
+            </Button>
+          </div>
+        )}
+        {surveyData &&
+          surveyData.allow_gradable_survey === 'true' &&
+          (surveyData.show_horizontal_bar ? (
+            <>
+              {/* < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/> */}
+              {
+                // this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+              }
+            </>
+          ) : (
+            <>
+              {
+                // this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+              }
+            </>
           ))}
 
-        {
-          this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} operation={operation}/>
-        }
-        {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
+        {this.state.survey && this.state.survey.state === 'completed' && (
+          <Graphics
+            idSurvey={this.props.idSurvey}
+            eventId={eventId}
+            surveyLabel={surveyLabel}
+            showListSurvey={showListSurvey}
+            operation={operation}
+          />
+        )}
+        {feedbackMessage.hasOwnProperty('title') && <Result {...feedbackMessage} extra={null} />}
 
-        {
-          //Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
-          surveyData && (surveyData.allow_anonymous_answers === "true" || surveyData.publish === "true") ? (
-            <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
-              {(this.state.survey && <Survey.Survey
+        {//Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
+        surveyData && (surveyData.allow_anonymous_answers === 'true' || surveyData.publish === 'true') ? (
+          <div style={{ display: feedbackMessage.hasOwnProperty('title') || showMessageOnComplete ? 'none' : 'block' }}>
+            {this.state.survey && (
+              <Survey.Survey
                 model={this.state.survey}
                 onComplete={this.sendData}
                 onPartialSend={this.sendData}
@@ -587,32 +578,37 @@ class SurveyComponent extends Component {
                 onTimerPanelInfoText={this.setCounterMessage}
                 onStarted={this.checkCurrentPage}
                 onCurrentPageChanged={this.onCurrentPageChanged}
-              />)}
-            </div>
-          ) : (
-              //Si no es verdadera la variable anterior, 
-              //entonces validará si el ticket del usuario existe para despues validar la variable allowed_to_vote en verdadero 
-              //para poder responder la encuesta
-              eventUsers.map((eventUser) => {
-                return eventUser.ticket && (
-                  eventUser.ticket.allowed_to_vote === "true" && (
-                    <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
-                      {(this.state.survey && <Survey.Survey
-                        model={this.state.survey}
-                        onComplete={this.onSurveyCompleted}
-                        onPartialSend={this.sendData}
-                        onCompleting={this.setFinalMessage}
-                        onTimerPanelInfoText={this.setCounterMessage}
-                        onStarted={this.checkCurrentPage}
-                        onCurrentPageChanged={this.onCurrentPageChanged}
-                      />)}
-                    </div>
-                  )
-                )
-              })
-            )
-        }
-
+              />
+            )}
+          </div>
+        ) : (
+          //Si no es verdadera la variable anterior,
+          //entonces validará si el ticket del usuario existe para despues validar la variable allowed_to_vote en verdadero
+          //para poder responder la encuesta
+          eventUsers.map((eventUser) => {
+            return (
+              eventUser.ticket &&
+              eventUser.ticket.allowed_to_vote === 'true' && (
+                <div
+                  style={{
+                    display: feedbackMessage.hasOwnProperty('title') || showMessageOnComplete ? 'none' : 'block',
+                  }}>
+                  {this.state.survey && (
+                    <Survey.Survey
+                      model={this.state.survey}
+                      onComplete={this.onSurveyCompleted}
+                      onPartialSend={this.sendData}
+                      onCompleting={this.setFinalMessage}
+                      onTimerPanelInfoText={this.setCounterMessage}
+                      onStarted={this.checkCurrentPage}
+                      onCurrentPageChanged={this.onCurrentPageChanged}
+                    />
+                  )}
+                </div>
+              )
+            );
+          })
+        )}
       </div>
     );
   }
