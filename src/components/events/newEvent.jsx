@@ -26,6 +26,7 @@ class NewEvent extends Component {
         date_end: Moment().toDate(),
         address: '',
         type_event: '',
+        allow_register: '',
       },
       fields: [],
       tickets: {},
@@ -74,6 +75,7 @@ class NewEvent extends Component {
       organizer_id: info.organizer_id,
       event_type_id: info.event_type_id,
       user_properties: [...fields],
+      allow_register: info.allow_register,
       styles: {
         buttonColor: '#FFF',
         banner_color: '#FFF',

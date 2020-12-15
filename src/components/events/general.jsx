@@ -56,7 +56,6 @@ class General extends Component {
 
   async componentDidMount() {
     const info = this.props.event;
-    console.log('informacion del evento', info);
     this.setState({ info });
     this.setState({
       checked: info.initial_page ? true : false,
@@ -106,7 +105,6 @@ class General extends Component {
   //Cambio en los input
   handleChange = (e) => {
     const { name, value } = e.target;
-    console.log('name', name, 'value', value);
     this.setState({ event: { ...this.state.event, [name]: value } }, this.valid);
   };
   //Validación
@@ -267,10 +265,11 @@ class General extends Component {
       venue: event.venue,
       analytics: event.analytics,
       address: event.address,
-      has_date: event.has_date === 'true' ? true : false,
-      allow_register: event.allow_register === 'true' ? true : false,
-      allow_detail_calendar: event.allow_detail_calendar === 'true' ? true : false,
-      enable_language: event.enable_language === 'true' ? true : false,
+      has_date: event.has_date === 'true' || event.has_date === true ? true : false,
+      allow_register: event.allow_register === 'true' || event.allow_register === true ? true : false,
+      allow_detail_calendar:
+        event.allow_detail_calendar === 'true' || event.allow_detail_calendar === true ? true : false,
+      enable_language: event.enable_language === 'true' || event.enable_language === true ? true : false,
       homeSelectedScreen: event.homeSelectedScreen,
       visibility: event.visibility ? event.visibility : 'PUBLIC',
       description: event.description,
@@ -740,7 +739,8 @@ class General extends Component {
             </div>
             <div className='section-gray'>
               <div className='field'>
-                <label className='label'>Evento</label>
+                <label className='label'>Visibilidad del evento</label>
+                <p>Determina si es visible desde el listado general de eventos</p>
                 <div className='control toggle-switch has-text-centered'>
                   <input
                     type='radio'

@@ -397,7 +397,10 @@ class SurveyComponent extends Component {
 
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
       let { totalPoints } = this.state;
+
+      console.log('total ranking', rankingPoints);
       if (rankingPoints !== undefined) totalPoints += rankingPoints;
+      console.log('total points', totalPoints);
 
       this.setState({ totalPoints });
 
@@ -466,8 +469,8 @@ class SurveyComponent extends Component {
     });
 
     if (surveyData.allow_gradable_survey === 'true') {
-      let text = '';
-      //totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : "No has obtenido puntos. Suerte para la prÃƒÂ³xima";
+      let text =
+        totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : 'No has obtenido puntos. Suerte para la próxima';
       survey.completedHtml = `${textOnCompleted}<br>${text}`;
     }
   };
@@ -557,13 +560,19 @@ class SurveyComponent extends Component {
           ))}
 
         {this.state.survey && this.state.survey.state === 'completed' && (
-          <Graphics
-            idSurvey={this.props.idSurvey}
-            eventId={eventId}
-            surveyLabel={surveyLabel}
-            showListSurvey={showListSurvey}
-            operation={operation}
-          />
+          <>
+            {surveyData && surveyData.allow_gradable_survey !== 'true' ? (
+              <Graphics
+                idSurvey={this.props.idSurvey}
+                eventId={eventId}
+                surveyLabel={surveyLabel}
+                showListSurvey={showListSurvey}
+                operation={operation}
+              />
+            ) : (
+              <></>
+            )}
+          </>
         )}
         {feedbackMessage.hasOwnProperty('title') && <Result {...feedbackMessage} extra={null} />}
 
