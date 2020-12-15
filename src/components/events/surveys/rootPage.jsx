@@ -78,9 +78,9 @@ export default class RootPage extends Component {
         guestVoteInSurvey ? (
         <>
           {/*Preparacion componente para los resultados*/}
-          <Card className='survyCard'>
+          {/* <Card className='survyCard'>
             <h1>fin de la encuesta</h1>
-          </Card>
+          </Card> */}
           <Graphics
             idSurvey={idSurvey}
             showListSurvey={toggleSurvey}

@@ -65,7 +65,7 @@ class SurveyComponent extends Component {
 
   /**
    * El quiztiene unos timers para controlar el tiempo por pregunta
-   * aqui detenemos los timers o el quiz sigue avanzando y dana la lÃƒÂ³gica cambiando
+   * aqui detenemos los timers o el quiz sigue avanzando y dana la lÃƒÆ’Ã‚Â³gica cambiando
    * la pregunta en la que deberian ir todos
    */
   componentWillUnmount() {
@@ -110,7 +110,9 @@ class SurveyComponent extends Component {
           .doc(idSurvey)
           .onSnapshot((doc) => {
             let surveyRealTime = doc.data();
+
             surveyRealTime.currentPage = surveyRealTime.currentPage ? surveyRealTime.currentPage : 0;
+
             self.setState({
               surveyRealTime,
               freezeGame: surveyRealTime.freezeGame,
@@ -171,6 +173,8 @@ class SurveyComponent extends Component {
     // Debido a que se puede setear la pagina de la pregunta si la pregunta tiene la propiedad 'page'
 
     // Aqui se itera cada pregunta y se asigna a una pagina
+
+    // eslint-disable-next-line no-unused-vars
     dataSurvey['questions'].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
@@ -180,6 +184,7 @@ class SurveyComponent extends Component {
     });
 
     // Se excluyen las propiedades
+    // eslint-disable-next-line no-unused-vars
     const exclude = ({ survey, id, questions, ...rest }) => rest;
 
     surveyData = exclude(dataSurvey);
@@ -202,7 +207,8 @@ class SurveyComponent extends Component {
 
       // Valida si se marco alguna opcion
       if (question) {
-        //Hack rÃƒÂ¡pido para permitir preguntas tipo texto (abiertas)
+        //Hack rÃƒÆ’Ã‚Â¡pido para permitir preguntas tipo texto (abiertas)
+        // eslint-disable-next-line no-empty
         if (question.inputType === 'text') {
         } else {
           // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
@@ -279,6 +285,7 @@ class SurveyComponent extends Component {
 
   // Funcion que valida si la pregunta se respondio
   validateIfHasResponse = (survey) => {
+    // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
       survey.currentPage.questions.forEach((question) => {
         if (question.value === undefined) {
@@ -318,8 +325,8 @@ class SurveyComponent extends Component {
       case 'warning':
         return {
           ...objMessage,
-          title: 'No has escogido ninguna opción',
-          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opciónn.`,
+          title: 'No has escogido ninguna opciÃ³n',
+          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opciÃ³nn.`,
           icon: <MehOutlined />,
         };
 
@@ -384,6 +391,7 @@ class SurveyComponent extends Component {
     questionName = questionName[questionName.length - 1];
     let question = values.getQuestionByName(questionName, true);
 
+    // eslint-disable-next-line no-unused-vars
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
       let { totalPoints } = this.state;
 
@@ -444,14 +452,15 @@ class SurveyComponent extends Component {
   }
 
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
+  // eslint-disable-next-line no-unused-vars
   setFinalMessage = (survey, options) => {
     let { surveyData, totalPoints } = this.state;
 
-    // Número total de preguntas, se resta uno porque la primer página es informativa
+    // NÃºmero total de preguntas, se resta uno porque la primer pÃ¡gina es informativa
     let totalQuestions = surveyData.pages.length - 1;
 
-    // Umbral de exito, esta variable indica apartir de cuantos aciertos se completa con éxito el cuestionario
-    // Por el momento el valor esta quemado y debería venir de un parámetro del CMS
+    // Umbral de exito, esta variable indica apartir de cuantos aciertos se completa con Ã©xito el cuestionario
+    // Por el momento el valor esta quemado y deberÃ­a venir de un parÃ¡metro del CMS
     let scoreMinimumForWin = 10;
 
     let textOnCompleted = survey.completedHtml;
@@ -508,14 +517,14 @@ class SurveyComponent extends Component {
 
     /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
      * se caiga del sistema y vuelva a conectarse la idea es que se conecte a esta pregunta.
-     * va a tener el valor de la pregunta mÃƒÂ¡s adealantda que se haay contestado.
+     * va a tener el valor de la pregunta mÃƒÆ’Ã‚Â¡s adealantda que se haay contestado.
      *
-     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la ÃƒÂºltima pÃƒÂ¡gina si esto pasa vuelve e inicia la encuesta
+     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la ÃƒÆ’Ã‚Âºltima pÃƒÆ’Ã‚Â¡gina si esto pasa vuelve e inicia la encuesta
      *  cuando una persona entre a respodner una pregunta colocamos el currentPage en la siguiente pregunta por si me salgo y entro que no me vuelva a repetir
      *  la pregunta en la que ya estaba.
      */
 
-    //Se comentarea if para evitar regresar a la pagina en que quedó el usuario al desconectarse
+    //Se comentarea if para evitar regresar a la pagina en que quedÃ³ el usuario al desconectarse
 
     // if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
     //   SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
@@ -605,7 +614,7 @@ class SurveyComponent extends Component {
           </div>
         ) : (
           //Si no es verdadera la variable anterior,
-          //entonces validará si el ticket del usuario existe para despues validar la variable allowed_to_vote en verdadero
+          //entonces validarÃ¡ si el ticket del usuario existe para despues validar la variable allowed_to_vote en verdadero
           //para poder responder la encuesta
           eventUsers.map((eventUser) => {
             return (
