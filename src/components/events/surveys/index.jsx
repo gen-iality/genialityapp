@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as Cookie from 'js-cookie';
 import { SurveyAnswers } from './services';
-import API, { Actions, SurveysApi, TicketsApi } from '../../../helpers/request';
+import { Actions, SurveysApi, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
 import SurveyList from './surveyList';
 import RootPage from './rootPage';
@@ -56,6 +56,10 @@ class SurveyForm extends Component {
         checked: false,
         permissions: 'public',
       },
+      //Contador encuestas calificables
+      counterQuestions: 0,
+      counterOkAnswers: 0,
+      scoreMinimumForWin: 10,
     };
   }
 
@@ -76,8 +80,6 @@ class SurveyForm extends Component {
 
   async componentDidMount() {
     let { event, currentUser } = this.props;
-    console.log('survery current user', currentUser);
-    //let user = await this.getCurrentUser();
     let eventUser = await this.getCurrentEvenUser(event._id);
 
     this.setState({ currentUser: currentUser, eventUser: eventUser }, this.listenSurveysData);
@@ -165,10 +167,10 @@ class SurveyForm extends Component {
 
   // Funcion que valida si el usuario ha votado en cada una de las encuestas
   seeIfUserHasVote = async () => {
-    console.log('VOTO: revisamos si el usuario ya voto');
     let { currentUser, surveysData } = this.state;
     const { event } = this.props;
 
+    // eslint-disable-next-line no-unused-vars
     const votesUserInSurvey = new Promise((resolve, reject) => {
       let surveys = [];
 
@@ -180,6 +182,7 @@ class SurveyForm extends Component {
           surveys.push({ ...arr[index], userHasVoted });
         } else {
           // Esto solo se ejecuta si no hay algun usuario logeado
+          // eslint-disable-next-line no-unused-vars
           const guestUser = new Promise((resolve, reject) => {
             let surveyId = localStorage.getItem(`userHasVoted_${survey._id}`);
             surveyId ? resolve(true) : resolve(false);
@@ -220,30 +223,6 @@ class SurveyForm extends Component {
     return response && response.data.length ? response.data[0] : null;
   };
 
-  // Funcion para consultar la informacion del actual usuario
-  getCurrentUser = () => {
-    let evius_token = Cookie.get('evius_token');
-    return new Promise(async (resolve, reject) => {
-      if (!evius_token) {
-        resolve(false);
-      } else {
-        try {
-          const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
-          if (resp.status === 200) {
-            const data = resp.data;
-            this.setState({ usuarioRegistrado: data });
-            // Solo se desea obtener el id del usuario
-            resolve(data);
-          }
-        } catch (error) {
-          const { status } = error.response;
-          console.error('STATUS', status, status === 401);
-          reject(error.response);
-        }
-      }
-    });
-  };
-
   getItemsMenu = async () => {
     let { defaultSurveyLabel } = this.state;
     const { event } = this.props;
@@ -254,6 +233,7 @@ class SurveyForm extends Component {
   };
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
+  // eslint-disable-next-line no-unused-vars
   toggleSurvey = (data, reload) => {
     if (typeof data === 'boolean' || data === undefined) {
       this.setState({ selectedSurvey: {}, forceCheckVoted: true });
@@ -271,16 +251,7 @@ class SurveyForm extends Component {
   };
 
   render() {
-    let {
-      selectedSurvey,
-      surveysData,
-      currentUser,
-      usuarioRegistrado,
-      eventUser,
-      userVote,
-      surveyVisible,
-      surveyLabel,
-    } = this.state;
+    let { selectedSurvey, surveysData, currentUser, eventUser, userVote, surveyVisible, surveyLabel } = this.state;
     const { event } = this.props;
 
     if (selectedSurvey.hasOwnProperty('_id'))
@@ -326,7 +297,7 @@ class SurveyForm extends Component {
           <Card>
             <SurveyList
               jsonData={surveysData}
-              usuarioRegistrado={usuarioRegistrado}
+              usuarioRegistrado={currentUser}
               eventUser={eventUser}
               showSurvey={this.toggleSurvey}
               surveyLabel={surveyLabel}

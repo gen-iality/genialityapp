@@ -3,6 +3,7 @@ import { SurveysApi } from '../../../helpers/request';
 
 // Funcion para crear e inicializar la collecion del conteo de las respuestas por preguntas
 const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIndex, voteValue) => {
+  // eslint-disable-next-line no-unused-vars
   return new Promise((resolve, reject) => {
     // Se referencia la colleccion a usar
     const ref_quantity = firestore

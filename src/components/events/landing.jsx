@@ -219,7 +219,7 @@ class Landing extends Component {
           </div>
         </>
       ),
-      survey: <SurveyForm event={event} currentUser={this.state.currenUser} />,
+      survey: <SurveyForm event={event} currentUser={this.state.currentUser} />,
       certs: (
         <CertificadoLanding
           event={event}
