@@ -37,6 +37,9 @@ class triviaEdit extends Component {
       initialMessage: null,
       freezeGame: true,
       time_limit: 0,
+      win_Message: null,
+      neutral_Message: null,
+      lose_Message: null,
     };
     this.submit = this.submit.bind(this);
     this.submitWithQuestions = this.submitWithQuestions.bind(this);
@@ -75,6 +78,9 @@ class triviaEdit extends Component {
         points: Update.points ? Update.points : 1,
         initialMessage: Update.initialMessage ? Update.initialMessage.replace(/<br \/>/g, '\n') : null,
         time_limit: Update.time_limit ? parseInt(Update.time_limit) : 0,
+        win_Message: Update.win_Message ? Update.win_Message : '',
+        neutral_Message: Update.neutral_Message ? Update.neutral_Message : '',
+        lose_Message: Update.lose_Message ? Update.lose_Message : '',
       });
 
       this.getQuestions();
@@ -117,6 +123,9 @@ class triviaEdit extends Component {
       points: this.state.points ? parseInt(this.state.points) : 1,
       initialMessage: this.state.initialMessage,
       time_limit: parseInt(this.state.time_limit),
+      win_Message: this.state.win_Message,
+      neutral_Message: this.state.neutral_Message,
+      lose_Message: this.state.lose_Message,
     };
     console.log(data);
     // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
@@ -152,6 +161,9 @@ class triviaEdit extends Component {
       initialMessage: this.state.initialMessage,
       freezeGame: this.state.freezeGame === 'true' ? true : false,
       time_limit: parseInt(this.state.time_limit),
+      win_Message: this.state.win_Message,
+      neutral_Message: this.state.neutral_Message,
+      lose_Message: this.state.lose_Message,
     };
     console.log(data);
 
@@ -282,6 +294,22 @@ class triviaEdit extends Component {
       this.setState({ points: value });
     }
   };
+
+  // Funcion para guardar en el estado el mensaje cuando se gana la encuesta
+  onChangeWin = (e) => {
+    if (typeof e === 'string') return this.setState({ win_Message: e });
+  };
+
+  // Funcion para guardar en el estado el mensaje neutral de la encuesta
+  onChangeNeutral = (e) => {
+    if (typeof e === 'string') return this.setState({ neutral_Message: e });
+  };
+
+  // Funcion para guardar en el estado el mensaje cuando se pierde la encuesta
+  onChangeLose = (e) => {
+    if (typeof e === 'string') return this.setState({ lose_Message: e });
+  };
+
   // Funcion usada para determinar el tiempo limite en segundos de la emcuesta
   setTime_limit = (e) => {
     const { value } = e.target;
@@ -469,6 +497,28 @@ class triviaEdit extends Component {
                   Texto de muestra para la pantalla inicial de la encuesta
                 </label>
                 <ReactQuill value={this.state.initialMessage} modules={toolbarEditor} onChange={this.onChange} />
+              </div>
+              <div>
+                <label style={{ marginTop: '3%' }} className='label'>
+                  Mensaje al ganar
+                </label>
+                <ReactQuill value={this.state.win_Message} modules={toolbarEditor} onChange={this.onChangeWin} />
+              </div>
+              <div>
+                <label style={{ marginTop: '3%' }} className='label'>
+                  Mensaje neutral
+                </label>
+                <ReactQuill
+                  value={this.state.neutral_Message}
+                  modules={toolbarEditor}
+                  onChange={this.onChangeNeutral}
+                />
+              </div>
+              <div>
+                <label style={{ marginTop: '3%' }} className='label'>
+                  Mensaje al perder
+                </label>
+                <ReactQuill value={this.state.lose_Message} modules={toolbarEditor} onChange={this.onChangeLose} />
               </div>
             </Fragment>
           )}
