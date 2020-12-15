@@ -57,7 +57,6 @@ class SurveyComponent extends Component {
     self.setState({ surveyData, idSurvey, survey });
     self.survey = survey;
 
-    console.log('CARGADO todo');
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
 
@@ -70,20 +69,16 @@ class SurveyComponent extends Component {
    * la pregunta en la que deberian ir todos
    */
   componentWillUnmount() {
-    console.log('***DESMONTANDO componentWillUnmount');
     if (this.state.survey) {
-      console.log('***DESMONTANDO componentWillUnmount LIMDIANDO stopTimer');
       this.state.survey.stopTimer();
     }
 
     if (this.state.timerPausa) {
-      console.log('***DESMONTANDO componentWillUnmount LIMDIANDO timerPausa');
       clearInterval(this.state.timerPausa);
     }
   }
 
   getRankingList = (list) => {
-    console.log('ranking', list);
     this.setState({ rankingList: list });
   };
 
@@ -93,7 +88,6 @@ class SurveyComponent extends Component {
     let vote = 1;
     if (evius_token) {
       let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
-      console.log('response', response);
 
       if (response.data.length > 0) {
         vote = 0;
@@ -118,6 +112,8 @@ class SurveyComponent extends Component {
             let surveyRealTime = doc.data();
 
             surveyRealTime.currentPage = surveyRealTime.currentPage ? surveyRealTime.currentPage : 0;
+
+            console.log('survey real time', surveyRealTime);
             self.setState({
               surveyRealTime,
               freezeGame: surveyRealTime.freezeGame,
@@ -136,16 +132,20 @@ class SurveyComponent extends Component {
   loadSurvey = async (eventId, idSurvey) => {
     let { surveyData } = this.state;
 
+    console.log('load survey', surveyData);
+
     // Esto permite que el json pueda asignar el id a cada pregunta
     Survey.JsonObject.metaData.addProperty('question', 'id');
     Survey.JsonObject.metaData.addProperty('question', 'points');
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
+    console.log('data survey', dataSurvey);
+
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];
     // Se igual title al valor de survey
-    dataSurvey.title = dataSurvey.survey;
+    //dataSurvey.title = dataSurvey.survey;
     // Se muestra una barra de progreso en la parte superior
     dataSurvey.showProgressBar = 'bottom';
     // Esto permite que se envie los datos al pasar cada pagina con el evento onPartialSend
@@ -162,7 +162,7 @@ class SurveyComponent extends Component {
       // Temporalmente quemado el tiempo por pregunta. El valor es en segundos
       dataSurvey.maxTimeToFinishPage = 10;
 
-      // Permite usar la primera pagina como instroduccion
+      // Permite usar la primera pagina como introduccion
       dataSurvey.firstPageIsStarted = true;
       dataSurvey.startSurveyText = 'Iniciar Cuestionario';
       let textMessage = dataSurvey.initialMessage;
@@ -396,9 +396,7 @@ class SurveyComponent extends Component {
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
       let { totalPoints } = this.state;
 
-      console.log('total ranking', rankingPoints);
       if (rankingPoints !== undefined) totalPoints += rankingPoints;
-      console.log('total points', totalPoints);
 
       this.setState({ totalPoints });
 
@@ -431,7 +429,6 @@ class SurveyComponent extends Component {
   };
 
   setIntervalToWaitBeforeNextQuestion(survey, result, secondsToGo) {
-    console.log('setIntervalToWaitBeforeNextQuestion iniciando');
     secondsToGo = secondsToGo ? secondsToGo : 0;
 
     let mensaje_espera = `${result.subTitle} Espera el tiempo indicado para seguir con el cuestionario.`;
@@ -459,7 +456,33 @@ class SurveyComponent extends Component {
   setFinalMessage = (survey, options) => {
     let { surveyData, totalPoints } = this.state;
 
+    // Número total de preguntas, se resta uno porque la primer página es informativa
+    let totalQuestions = surveyData.pages.length - 1;
+
+    // Umbral de exito, esta variable indica apartir de cuantos aciertos se completa con éxito el cuestionario
+    // Por el momento el valor esta quemado y debería venir de un parámetro del CMS
+    let scoreMinimumForWin = 10;
+
     let textOnCompleted = survey.completedHtml;
+
+    let winMessage = `¡Muy bien!<br/>
+    Lo lograste, pronto te haremos llegar tu premio a la dirección que registraste.<br/>
+    Te invitamos a #ImprimirEsperanza con #EpsonSerieP
+    `;
+
+    let neutralMessage = `<div style='margin-top:15px'>
+    ¿Te gusta Epson?<br/>
+    Si estás interesado en adquirir productos Epson dale click aquí y conoce las ofertas disponibles y los datos de nuestros asesores.<br/>
+
+
+    <a href='https://epson.com.co/evento-fotografico' target='_blank' rel='noreferrer' class='ant-btn animate__animated  animate__pulse animate__slower animate__infinite ant-btn-primary ant-btn-background-ghost'>
+    Compra aquí
+    </a>
+  </div>`;
+
+    let loseMessage = `¡Ouch! casi lo logras <br/>
+  Te invitamos a #ImprimirEsperanza con #EpsonSerieP 
+  `;
 
     survey.currentPage.questions.forEach((question) => {
       let correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
@@ -467,9 +490,10 @@ class SurveyComponent extends Component {
     });
 
     if (surveyData.allow_gradable_survey === 'true') {
-      let text =
-        totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : 'No has obtenido puntos. Suerte para la próxima';
-      survey.completedHtml = `${textOnCompleted}<br>${text}`;
+      let text = `Has obtenido ${totalPoints} de ${totalQuestions} puntos </br>`;
+      text += totalPoints >= scoreMinimumForWin ? `${winMessage}` : `${loseMessage}`;
+
+      survey.completedHtml = `${textOnCompleted}<br>${text}<br>${neutralMessage}`;
     }
   };
 
@@ -487,9 +511,8 @@ class SurveyComponent extends Component {
   };
 
   /* handler cuando la encuesta cambio de pregunta */
-  onCurrentPageChanged = (survey, o) => {
-    let { surveyData, currentPage } = this.state;
-    console.log('onCurrentPageChanged', currentPage, 'current', survey.currentPageNo);
+  onCurrentPageChanged = () => {
+    let { surveyData } = this.state;
     if (surveyData.allow_gradable_survey !== 'true') return;
 
     /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
