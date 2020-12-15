@@ -57,7 +57,6 @@ class SurveyComponent extends Component {
     self.setState({ surveyData, idSurvey, survey });
     self.survey = survey;
 
-    console.log('CARGADO todo');
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
 
@@ -66,24 +65,20 @@ class SurveyComponent extends Component {
 
   /**
    * El quiztiene unos timers para controlar el tiempo por pregunta
-   * aqui detenemos los timers o el quiz sigue avanzando y dana la lÃƒÂ³gica cambiando
+   * aqui detenemos los timers o el quiz sigue avanzando y dana la lÃƒÆ’Ã‚Â³gica cambiando
    * la pregunta en la que deberian ir todos
    */
   componentWillUnmount() {
-    console.log('***DESMONTANDO componentWillUnmount');
     if (this.state.survey) {
-      console.log('***DESMONTANDO componentWillUnmount LIMDIANDO stopTimer');
       this.state.survey.stopTimer();
     }
 
     if (this.state.timerPausa) {
-      console.log('***DESMONTANDO componentWillUnmount LIMDIANDO timerPausa');
       clearInterval(this.state.timerPausa);
     }
   }
 
   getRankingList = (list) => {
-    console.log('ranking', list);
     this.setState({ rankingList: list });
   };
 
@@ -93,7 +88,6 @@ class SurveyComponent extends Component {
     let vote = 1;
     if (evius_token) {
       let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
-      console.log('response', response);
 
       if (response.data.length > 0) {
         vote = 0;
@@ -118,6 +112,7 @@ class SurveyComponent extends Component {
             let surveyRealTime = doc.data();
 
             surveyRealTime.currentPage = surveyRealTime.currentPage ? surveyRealTime.currentPage : 0;
+
             self.setState({
               surveyRealTime,
               freezeGame: surveyRealTime.freezeGame,
@@ -160,11 +155,9 @@ class SurveyComponent extends Component {
       dataSurvey.showTimerPanel = 'top';
 
       // Temporalmente quemado el tiempo por pregunta. El valor es en segundos
-      // dataSurvey.maxTimeToFinish = 10;
-      dataSurvey.maxTimeToFinishPage = dataSurvey.time_limit;
-      console.log(dataSurvey); ///////////////////////////////////////////
+      dataSurvey.maxTimeToFinishPage = dataSurvey.time_limit ? dataSurvey.time_limit : 10;
 
-      // Permite usar la primera pagina como instroduccion
+      // Permite usar la primera pagina como introduccion
       dataSurvey.firstPageIsStarted = true;
       dataSurvey.startSurveyText = 'Iniciar Cuestionario';
       let textMessage = dataSurvey.initialMessage;
@@ -180,6 +173,8 @@ class SurveyComponent extends Component {
     // Debido a que se puede setear la pagina de la pregunta si la pregunta tiene la propiedad 'page'
 
     // Aqui se itera cada pregunta y se asigna a una pagina
+
+    // eslint-disable-next-line no-unused-vars
     dataSurvey['questions'].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
@@ -189,6 +184,7 @@ class SurveyComponent extends Component {
     });
 
     // Se excluyen las propiedades
+    // eslint-disable-next-line no-unused-vars
     const exclude = ({ survey, id, questions, ...rest }) => rest;
 
     surveyData = exclude(dataSurvey);
@@ -202,7 +198,6 @@ class SurveyComponent extends Component {
     // Asigna puntos si la encuesta tiene
     let surveyPoints = question.points && parseInt(question.points);
     let rankingPoints = 0;
-    console.log(question);
 
     return new Promise((resolve, reject) => {
       // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
@@ -212,7 +207,8 @@ class SurveyComponent extends Component {
 
       // Valida si se marco alguna opcion
       if (question) {
-        //Hack rÃƒÂ¡pido para permitir preguntas tipo texto (abiertas)
+        //Hack rÃƒÆ’Ã‚Â¡pido para permitir preguntas tipo texto (abiertas)
+        // eslint-disable-next-line no-empty
         if (question.inputType === 'text') {
         } else {
           // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
@@ -289,9 +285,9 @@ class SurveyComponent extends Component {
 
   // Funcion que valida si la pregunta se respondio
   validateIfHasResponse = (survey) => {
+    // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
       survey.currentPage.questions.forEach((question) => {
-        console.log(question, question.value);
         if (question.value === undefined) {
           resolve({ isUndefined: true });
         } else {
@@ -329,8 +325,8 @@ class SurveyComponent extends Component {
       case 'warning':
         return {
           ...objMessage,
-          title: 'No has escogido ninguna opción',
-          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opciónn.`,
+          title: 'No has escogido ninguna opciÃ³n',
+          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opciÃ³nn.`,
           icon: <MehOutlined />,
         };
 
@@ -395,12 +391,11 @@ class SurveyComponent extends Component {
     questionName = questionName[questionName.length - 1];
     let question = values.getQuestionByName(questionName, true);
 
+    // eslint-disable-next-line no-unused-vars
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
       let { totalPoints } = this.state;
 
-      console.log('total ranking', rankingPoints);
       if (rankingPoints !== undefined) totalPoints += rankingPoints;
-      console.log('total points', totalPoints);
 
       this.setState({ totalPoints });
 
@@ -433,7 +428,6 @@ class SurveyComponent extends Component {
   };
 
   setIntervalToWaitBeforeNextQuestion(survey, result, secondsToGo) {
-    console.log('setIntervalToWaitBeforeNextQuestion iniciando');
     secondsToGo = secondsToGo ? secondsToGo : 0;
 
     let mensaje_espera = `${result.subTitle} Espera el tiempo indicado para seguir con el cuestionario.`;
@@ -458,10 +452,37 @@ class SurveyComponent extends Component {
   }
 
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
+  // eslint-disable-next-line no-unused-vars
   setFinalMessage = (survey, options) => {
     let { surveyData, totalPoints } = this.state;
 
+    // NÃºmero total de preguntas, se resta uno porque la primer pÃ¡gina es informativa
+    let totalQuestions = surveyData.pages.length - 1;
+
+    // Umbral de exito, esta variable indica apartir de cuantos aciertos se completa con Ã©xito el cuestionario
+    // Por el momento el valor esta quemado y deberÃ­a venir de un parÃ¡metro del CMS
+    let scoreMinimumForWin = 10;
+
     let textOnCompleted = survey.completedHtml;
+
+    let winMessage = `¡Muy bien!<br/>
+    Lo lograste, pronto te haremos llegar tu premio a la dirección que registraste.<br/>
+    Te invitamos a #ImprimirEsperanza con #EpsonSerieP
+    `;
+
+    let neutralMessage = `<div style='margin-top:15px'>
+    ¿Te gusta Epson?<br/>
+    Si estás interesado en adquirir productos Epson dale click aquí y conoce las ofertas disponibles y los datos de nuestros asesores.<br/>
+
+
+    <a href='https://epson.com.co/evento-fotografico' target='_blank' rel='noreferrer' class='ant-btn animate__animated  animate__pulse animate__slower animate__infinite ant-btn-primary ant-btn-background-ghost'>
+    Compra aquí
+    </a>
+  </div>`;
+
+    let loseMessage = `¡Ouch! casi lo logras <br/>
+  Te invitamos a #ImprimirEsperanza con #EpsonSerieP 
+  `;
 
     survey.currentPage.questions.forEach((question) => {
       let correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
@@ -469,9 +490,10 @@ class SurveyComponent extends Component {
     });
 
     if (surveyData.allow_gradable_survey === 'true') {
-      let text =
-        totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : 'No has obtenido puntos. Suerte para la próxima';
-      survey.completedHtml = `${textOnCompleted}<br>${text}`;
+      let text = `Has obtenido ${totalPoints} de ${totalQuestions} puntos </br>`;
+      text += totalPoints >= scoreMinimumForWin ? `${winMessage}` : `${loseMessage}`;
+
+      survey.completedHtml = `${textOnCompleted}<br>${text}<br>${neutralMessage}`;
     }
   };
 
@@ -489,21 +511,20 @@ class SurveyComponent extends Component {
   };
 
   /* handler cuando la encuesta cambio de pregunta */
-  onCurrentPageChanged = (survey, o) => {
-    let { surveyData, currentPage } = this.state;
-    console.log('onCurrentPageChanged', currentPage, 'current', survey.currentPageNo);
+  onCurrentPageChanged = () => {
+    let { surveyData } = this.state;
     if (surveyData.allow_gradable_survey !== 'true') return;
 
     /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
      * se caiga del sistema y vuelva a conectarse la idea es que se conecte a esta pregunta.
-     * va a tener el valor de la pregunta mÃƒÂ¡s adealantda que se haay contestado.
+     * va a tener el valor de la pregunta mÃƒÆ’Ã‚Â¡s adealantda que se haay contestado.
      *
-     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la ÃƒÂºltima pÃƒÂ¡gina si esto pasa vuelve e inicia la encuesta
+     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la ÃƒÆ’Ã‚Âºltima pÃƒÆ’Ã‚Â¡gina si esto pasa vuelve e inicia la encuesta
      *  cuando una persona entre a respodner una pregunta colocamos el currentPage en la siguiente pregunta por si me salgo y entro que no me vuelva a repetir
      *  la pregunta en la que ya estaba.
      */
 
-    //Se comentarea if para evitar regresar a la pagina en que quedó el usuario al desconectarse
+    //Se comentarea if para evitar regresar a la pagina en que quedÃ³ el usuario al desconectarse
 
     // if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
     //   SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
@@ -593,7 +614,7 @@ class SurveyComponent extends Component {
           </div>
         ) : (
           //Si no es verdadera la variable anterior,
-          //entonces validará si el ticket del usuario existe para despues validar la variable allowed_to_vote en verdadero
+          //entonces validarÃ¡ si el ticket del usuario existe para despues validar la variable allowed_to_vote en verdadero
           //para poder responder la encuesta
           eventUsers.map((eventUser) => {
             return (

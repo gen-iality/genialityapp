@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as Cookie from 'js-cookie';
 import { SurveyAnswers } from './services';
-import API, { Actions, SurveysApi, TicketsApi } from '../../../helpers/request';
+import { Actions, SurveysApi, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
 import SurveyList from './surveyList';
 import RootPage from './rootPage';
