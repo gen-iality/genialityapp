@@ -102,6 +102,17 @@ iframe {
 
 .sv-root-modern .sv-completedpage {
   background-color: transparent !important;
+  font-family: Raleway;
+  font-size: 20px;
+  font-weight: bold;
+  box-sizing: border-box;
+  height: 23em;
+  padding-top: 1.5em;
+  padding-bottom: 0.5em;
+  text-align: center;
+  @media screen and (max-width:870px) {
+    font-size: 20px;
+  }
 }
 
 .sv-selectbase__label {

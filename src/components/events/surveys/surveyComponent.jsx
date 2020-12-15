@@ -465,7 +465,8 @@ class SurveyComponent extends Component {
 
     let textOnCompleted = survey.completedHtml;
 
-    let winMessage = `¡Muy bien!<br/>
+    let winMessage = `<div style='color: #40a9ff;
+    margin: 12px;'>¡Muy bien!</div><br/>
     Lo lograste, pronto te haremos llegar tu premio a la dirección que registraste.<br/>
     Te invitamos a #ImprimirEsperanza con #EpsonSerieP
     `;
@@ -475,13 +476,14 @@ class SurveyComponent extends Component {
     Si estás interesado en adquirir productos Epson dale click aquí y conoce las ofertas disponibles y los datos de nuestros asesores.<br/>
 
 
-    <a href='https://epson.com.co/evento-fotografico' target='_blank' rel='noreferrer' class='ant-btn animate__animated  animate__pulse animate__slower animate__infinite ant-btn-primary ant-btn-background-ghost'>
+    <a href='https://epson.com.co/evento-fotografico' target='_blank' rel='noreferrer' style='margin-top:15px' class='ant-btn animate__animated  animate__pulse animate__slower animate__infinite ant-btn-primary ant-btn-background-ghost'>
     Compra aquí
     </a>
   </div>`;
 
-    let loseMessage = `¡Ouch! casi lo logras <br/>
-  Te invitamos a #ImprimirEsperanza con #EpsonSerieP 
+    let loseMessage = `<div style='color:red;
+    margin: 12px;'>¡Ouch! casi lo logras</div>
+    Te invitamos a #ImprimirEsperanza con #EpsonSerieP 
   `;
 
     survey.currentPage.questions.forEach((question) => {
