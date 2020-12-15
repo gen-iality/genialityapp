@@ -110,10 +110,7 @@ class SurveyComponent extends Component {
           .doc(idSurvey)
           .onSnapshot((doc) => {
             let surveyRealTime = doc.data();
-
             surveyRealTime.currentPage = surveyRealTime.currentPage ? surveyRealTime.currentPage : 0;
-
-            console.log('survey real time', surveyRealTime);
             self.setState({
               surveyRealTime,
               freezeGame: surveyRealTime.freezeGame,
@@ -132,20 +129,16 @@ class SurveyComponent extends Component {
   loadSurvey = async (eventId, idSurvey) => {
     let { surveyData } = this.state;
 
-    console.log('load survey', surveyData);
-
     // Esto permite que el json pueda asignar el id a cada pregunta
     Survey.JsonObject.metaData.addProperty('question', 'id');
     Survey.JsonObject.metaData.addProperty('question', 'points');
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
-    console.log('data survey', dataSurvey);
-
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];
     // Se igual title al valor de survey
-    //dataSurvey.title = dataSurvey.survey;
+    dataSurvey.title = dataSurvey.survey;
     // Se muestra una barra de progreso en la parte superior
     dataSurvey.showProgressBar = 'bottom';
     // Esto permite que se envie los datos al pasar cada pagina con el evento onPartialSend
@@ -160,7 +153,7 @@ class SurveyComponent extends Component {
       dataSurvey.showTimerPanel = 'top';
 
       // Temporalmente quemado el tiempo por pregunta. El valor es en segundos
-      dataSurvey.maxTimeToFinishPage = 10;
+      dataSurvey.maxTimeToFinishPage = dataSurvey.time_limit ? dataSurvey.time_limit : 10;
 
       // Permite usar la primera pagina como introduccion
       dataSurvey.firstPageIsStarted = true;
@@ -200,7 +193,6 @@ class SurveyComponent extends Component {
     // Asigna puntos si la encuesta tiene
     let surveyPoints = question.points && parseInt(question.points);
     let rankingPoints = 0;
-    console.log(question);
 
     return new Promise((resolve, reject) => {
       // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
@@ -289,7 +281,6 @@ class SurveyComponent extends Component {
   validateIfHasResponse = (survey) => {
     return new Promise((resolve, reject) => {
       survey.currentPage.questions.forEach((question) => {
-        console.log(question, question.value);
         if (question.value === undefined) {
           resolve({ isUndefined: true });
         } else {

@@ -17,7 +17,6 @@ const SurveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =>
 
   useEffect(() => {
     let surveyList = jsonData;
-    console.log('survey list', surveyList);
     //Los usuarios anónimos solo ven las encuestas que permiten respuestas anónimas
     if (!usuarioRegistrado) {
       surveyList = jsonData.filter((item) => {
