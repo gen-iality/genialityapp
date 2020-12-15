@@ -373,7 +373,7 @@ class triviaEdit extends Component {
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: '3%' }} className='label'>
-                Tiempo límite por pregunta
+                Tiempo límite en segundos por pregunta
               </label>
               <input type='number' name='time' id='time' value={time_limit} onChange={this.setTime_limit} />
             </div>
