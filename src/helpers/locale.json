@@ -37,7 +37,9 @@
     "toast.user_cant_edited": "Attendee can not be edited",
     "toast.user_deleted": "Attendee deleted successfully",
     "toast.ticket_sent": "Ticket sent successfully",
-    "toast.email_sent": "Email sent successfully"
+    "toast.email_sent": "Email sent successfully",
+    "live.join": "Join live",
+    "live.private_access": "Private access"
   },
   "es": {
     "header.help": "Ayuda",
@@ -77,6 +79,8 @@
     "toast.user_cant_edited": "Asistente no puede ser editado",
     "toast.user_deleted": "Asistente borrado correctamente",
     "toast.ticket_sent": "Tiquete enviado correctamente",
-    "toast.email_sent": "Tiquete enviado correctamente"
+    "toast.email_sent": "Tiquete enviado correctamente",
+    "live.join": "Ingresa aquí",
+    "live.private_access": "Acceso privado"
   }
 }
