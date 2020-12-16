@@ -137,6 +137,8 @@ class SurveyComponent extends Component {
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
+    console.log('data', dataSurvey);
+
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];
     // Se igual title al valor de survey
@@ -325,8 +327,8 @@ class SurveyComponent extends Component {
       case 'warning':
         return {
           ...objMessage,
-          title: 'No has escogido ninguna opciÃ³n',
-          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opciÃ³nn.`,
+          title: 'No has escogido ninguna opción',
+          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opción.`,
           icon: <MehOutlined />,
         };
 
@@ -465,27 +467,6 @@ class SurveyComponent extends Component {
 
     let textOnCompleted = survey.completedHtml;
 
-    let winMessage = `<div style='color: #40a9ff;
-    margin: 12px;'>¡Muy bien!</div><br/>
-    Lo lograste, pronto te haremos llegar tu premio a la dirección que registraste.<br/>
-    Te invitamos a #ImprimirEsperanza con #EpsonSerieP
-    `;
-
-    let neutralMessage = `<div style='margin-top:15px; font-weight: initial;'>
-    ¿Te gusta Epson?<br/>
-    Si estás interesado en adquirir productos Epson dale click aquí y conoce las ofertas disponibles y los datos de nuestros asesores.<br/>
-
-
-    <a href='https://epson.com.co/evento-fotografico' target='_blank' rel='noreferrer' style='margin-top:15px' class='ant-btn animate__animated  animate__pulse animate__slower animate__infinite ant-btn-primary ant-btn-background-ghost'>
-    Compra aquí
-    </a>
-  </div>`;
-
-    let loseMessage = `<div style='color:red;
-    margin: 12px;'>¡Ouch! casi lo logras</div>
-    Te invitamos a #ImprimirEsperanza con #EpsonSerieP 
-  `;
-
     survey.currentPage.questions.forEach((question) => {
       let correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
       if (correctAnswer) totalPoints += parseInt(question.points);
@@ -493,9 +474,14 @@ class SurveyComponent extends Component {
 
     if (surveyData.allow_gradable_survey === 'true') {
       let text = `Has obtenido ${totalPoints} de ${totalQuestions} puntos </br>`;
-      text += totalPoints >= scoreMinimumForWin ? `${winMessage}` : `${loseMessage}`;
+      text +=
+        totalPoints >= scoreMinimumForWin
+          ? `${surveyData.win_Message ? surveyData.win_Message : ''}`
+          : `${surveyData.lose_Message ? surveyData.lose_Message : ''}`;
 
-      survey.completedHtml = `${textOnCompleted}<br>${text}<br>${neutralMessage}`;
+      survey.completedHtml = `${textOnCompleted}<br>${text}<br>${
+        surveyData.neutral_Message ? surveyData.neutral_Message : ''
+      }`;
     }
   };
 
