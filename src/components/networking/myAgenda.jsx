@@ -85,6 +85,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       <Row align='middle' justify='center'>
         <Col span={18}>
           <Button
+            className="button_regresar"
             type='primary'
             onClick={() => {
               setCurrentRoom(null);
@@ -116,15 +117,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
           {userName && (
             <iframe
               title='chatevius'
-              style={{
-                position: 'fixed',
-                bottom: '5%',
-                right: 0,
-                width: '18%',
-                height: '40%',
-                minWidth: '300px',
-                zIndex: 999999999
-              }}
+              className='ChatEvius'
               src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
           )}
         </Col>
