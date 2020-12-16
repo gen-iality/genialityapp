@@ -100,8 +100,21 @@ iframe {
   font-weight: bold;
 }
 
+// style de la respuestas del survey
 .sv-root-modern .sv-completedpage {
   background-color: transparent !important;
+  font-family: Raleway;
+  font-size: 20px;
+  font-weight: bold;
+  box-sizing: border-box;
+  height: 23em;
+  padding-top: 1.5em;
+  padding-bottom: 0.5em;
+  text-align: center;
+  @media screen and (max-width:$breakpoint-mobile) {
+    font-size: 20px;
+    height: 28em;
+  }
 }
 
 .sv-selectbase__label {
@@ -178,6 +191,7 @@ iframe {
 // ant desing
 //@import "~antd/dist/antd.css";
 
+<<<<<<< HEAD
 @import "./Animate_Img";
 @import "./chaport";
 @import "./loading";
@@ -207,3 +221,33 @@ iframe {
 @import "./landing/landing";
 @import "./landing/lobby";
 @import "./chatevius"
+=======
+@import './Animate_Img';
+@import './chaport';
+@import './loading';
+@import './tickets';
+@import './msg';
+@import './accordion';
+@import './commons';
+@import './home/index';
+@import './home/header';
+@import './landing/index';
+@import './landing/speakers';
+@import './landing/wall';
+@import './events/aside';
+@import './events/event';
+@import './events/card';
+@import './events/general';
+@import './events/zoom';
+@import './events/datos';
+@import './users/import';
+@import './invitations/send';
+@import './invitations/invitations';
+@import './organization/profile';
+@import './register/register.scss';
+@import './certificados/editor';
+@import './certificados/points';
+@import './agenda/agenda';
+@import './landing/landing';
+@import './landing/lobby';
+>>>>>>> 08119a5368f697303cd817908ffaf60dbd5a9a56
