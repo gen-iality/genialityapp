@@ -471,7 +471,7 @@ class SurveyComponent extends Component {
     Te invitamos a #ImprimirEsperanza con #EpsonSerieP
     `;
 
-    let neutralMessage = `<div style='margin-top:15px'>
+    let neutralMessage = `<div style='margin-top:15px; font-weight: initial;'>
     ¿Te gusta Epson?<br/>
     Si estás interesado en adquirir productos Epson dale click aquí y conoce las ofertas disponibles y los datos de nuestros asesores.<br/>
 
