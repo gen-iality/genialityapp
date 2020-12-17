@@ -5,7 +5,7 @@ import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from '@a
 import * as Cookie from 'js-cookie';
 import { SurveysApi, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
-import { SurveyAnswers, UserGamification } from './services';
+import { SurveyAnswers, UserGamification, Trivia } from './services';
 import Graphics from './graphics';
 import * as Survey from 'survey-react';
 import 'survey-react/modern.css';
@@ -136,8 +136,6 @@ class SurveyComponent extends Component {
     Survey.JsonObject.metaData.addProperty('question', 'points');
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
-
-    console.log('data', dataSurvey);
 
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];
@@ -473,6 +471,7 @@ class SurveyComponent extends Component {
     });
 
     if (surveyData.allow_gradable_survey === 'true') {
+      const { idSurvey, currentUser } = this.props;
       let text = `Has obtenido ${totalPoints} de ${totalQuestions} puntos </br>`;
       text +=
         totalPoints >= scoreMinimumForWin
@@ -482,6 +481,12 @@ class SurveyComponent extends Component {
       survey.completedHtml = `${textOnCompleted}<br>${text}<br>${
         surveyData.neutral_Message ? surveyData.neutral_Message : ''
       }`;
+
+      const score = {
+        totalPoints,
+        totalQuestions,
+      };
+      Trivia.setTriviaRanking(idSurvey, currentUser, score);
     }
   };
 
