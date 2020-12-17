@@ -1,13 +1,12 @@
-import React, { Component, Fragment } from "react";
-import { Redirect, Link } from "react-router-dom";
-import EventContent from "../events/shared/content";
-import { SurveysApi, AgendaApi } from "../../helpers/request";
-import { deleteSurvey } from "./services";
-import "react-tabs/style/react-tabs.css";
+import React, { Component, Fragment } from 'react';
+import { Redirect, Link } from 'react-router-dom';
+import EventContent from '../events/shared/content';
+import { SurveysApi, AgendaApi } from '../../helpers/request';
+import { deleteSurvey } from './services';
+import 'react-tabs/style/react-tabs.css';
 import { Table } from 'antd';
-import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { message, Space, Button } from "antd";
-
+import { SearchOutlined, EditOutlined, DeleteOutlined, CrownOutlined } from '@ant-design/icons';
+import { message, Space, Button } from 'antd';
 
 class trivia extends Component {
   constructor(props) {
@@ -16,10 +15,10 @@ class trivia extends Component {
       redirect: false,
       data: [],
       dataAgenda: [],
-      activity_id: "",
-      survey: "",
-      publish: "",
-      shareholders: [{ name: "" }],
+      activity_id: '',
+      survey: '',
+      publish: '',
+      shareholders: [{ name: '' }],
     };
     this.destroy = this.destroy.bind(this);
   }
@@ -30,7 +29,7 @@ class trivia extends Component {
   // Se realiza la funcion para obtener todos los datos necesarios tanto para encuesta como para agenda
   getInformation = async () => {
     const info = await SurveysApi.getAll(this.props.event._id);
-    console.log(info.data)
+    console.log(info.data);
     const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
     //Se envía al estado la data obtenida de las api
     this.setState({
@@ -49,13 +48,13 @@ class trivia extends Component {
 
   //Funcion para eliminar un dato de la lista
   destroy(idTrivia) {
-    message.loading({ content: "Eliminando Encuesta", key: "deleting" });
+    message.loading({ content: 'Eliminando Encuesta', key: 'deleting' });
 
     SurveysApi.deleteOne(this.props.event._id, idTrivia).then(async (TriviaDestroy) => {
       console.log(TriviaDestroy);
       let deleteSurveyInFire = await deleteSurvey(idTrivia);
-      console.log("Fire:", deleteSurveyInFire);
-      message.success({ content: deleteSurveyInFire.message, key: "deleting" });
+      console.log('Fire:', deleteSurveyInFire);
+      message.success({ content: deleteSurveyInFire.message, key: 'deleting' });
       this.getInformation();
     });
   }
@@ -76,9 +75,12 @@ class trivia extends Component {
         title: 'Action',
         key: 'action',
         render: (text, record) => (
-          <Space size="middle">
+          <Space size='middle'>
             <Link to={{ pathname: `${this.props.matchUrl}/report`, state: { report: record._id } }}>
               <SearchOutlined />
+            </Link>
+            <Link to={{ pathname: `${this.props.matchUrl}/ranking`, state: { report: record._id } }}>
+              <CrownOutlined alt='ranking' />
             </Link>
             <Link to={{ pathname: `${this.props.matchUrl}/encuesta`, state: { edit: record._id } }}>
               <EditOutlined />
@@ -92,21 +94,19 @@ class trivia extends Component {
     const { data } = this.state;
     if (this.state.redirect) return <Redirect to={{ pathname: `${matchUrl}`, state: { new: true } }} />;
     return (
-      <Fragment >
-        <div className="columns is-12">
-        <Link to={{ pathname: `${matchUrl}/encuesta` }}>
-          <Button style={{ float: "right" }}>
-            <span className="icon">
-              <i className="fas fa-plus-circle" />
-            </span>
-            <spa>Nueva Encuesta</spa>
-          </Button >
-        </Link>
-        <EventContent title={"Encuestas"}>
-          <Table
-            dataSource={data}
-            columns={columns} />
-        </EventContent>
+      <Fragment>
+        <div className='columns is-12'>
+          <Link to={{ pathname: `${matchUrl}/encuesta` }}>
+            <Button style={{ float: 'right' }}>
+              <span className='icon'>
+                <i className='fas fa-plus-circle' />
+              </span>
+              <spa>Nueva Encuesta</spa>
+            </Button>
+          </Link>
+          <EventContent title={'Encuestas'}>
+            <Table dataSource={data} columns={columns} />
+          </EventContent>
         </div>
       </Fragment>
     );

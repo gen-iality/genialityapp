@@ -198,6 +198,7 @@ export const SurveyAnswers = {
   },
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
   getAnswersQuestion: async (surveyId, questionId, eventId, updateData, operation) => {
+    // eslint-disable-next-line no-unused-vars
     return new Promise(async (resolve, reject) => {
       let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
       let options = dataSurvey.questions.find((question) => question.id === questionId);
@@ -247,6 +248,7 @@ export const SurveyAnswers = {
   getUserById: async (eventId, survey, userId, onlyQuantityDocs) => {
     let counterDocuments = 0;
 
+    // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
       firestore
         .collectionGroup('responses')
