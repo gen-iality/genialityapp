@@ -41,6 +41,7 @@ class SurveyComponent extends Component {
   }
 
   async componentDidMount() {
+    console.log('currentuser survey component', this.props);
     var self = this;
     const { eventId, idSurvey } = this.props;
     //console.log("CARGANDO INICIAL");
@@ -136,8 +137,6 @@ class SurveyComponent extends Component {
     Survey.JsonObject.metaData.addProperty('question', 'points');
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
-
-    console.log('data', dataSurvey);
 
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];

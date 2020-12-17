@@ -105,6 +105,7 @@ export default function ConferenceTabsComponent(props) {
                     <img
                       src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
                       style={{ width: '32px' }}
+                      alt='Games'
                     />
                     <p style={{ marginBottom: '0px' }}>Juego</p>
                   </>
