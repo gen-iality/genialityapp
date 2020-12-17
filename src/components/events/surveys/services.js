@@ -275,15 +275,20 @@ export const SurveyAnswers = {
 };
 
 export const Trivia = {
-  setTriviaRanking: (surveyId, userId) => {
+  setTriviaRanking: (surveyId, user, score) => {
+    const { name, email, _id } = user;
+
+    const { totalPoints, totalQuestions } = score;
     firestore
       .collection('surveys')
       .doc(surveyId)
       .collection('ranking')
-      .doc(userId)
+      .doc(_id)
       .set({
-        userName: '',
-        correctAnswers: '',
+        userName: name,
+        userEmail: email,
+        totalQuestions: totalQuestions,
+        correctAnswers: totalPoints,
         registerDate: new Date(),
       });
   },
