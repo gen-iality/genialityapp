@@ -31,7 +31,6 @@ class UserModal extends Component {
   }
 
   async componentDidMount() {
-    console.log('los props de modal user', this.props);
     const self = this;
     const { rolesList } = this.props;
     self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : '' });
@@ -57,7 +56,6 @@ class UserModal extends Component {
     } else {
       this.props.extraFields.map((obj) => {
         user[obj.name] = obj.type === 'boolean' ? false : obj.type === 'number' ? 0 : '';
-        console.log('user add', user);
         return user;
       });
       this.setState({ found: 1, user, edit: false, ticket_id: this.props.ticket });
@@ -77,13 +75,14 @@ class UserModal extends Component {
     this.setState({ create: true });
     snap.ticket_id = this.state.ticket_id;
 
-    console.log('stado modal user', this.state);
-    console.log('el snap', snap);
     try {
       if (!this.state.edit) {
         if (this.state.confirmCheck) {
           let checkedin_at = new Date();
-          snap.checkedin_at = Moment(checkedin_at).format('d/MMM/YY h:mm:ss A ');
+          checkedin_at = Moment(checkedin_at)
+            .add(5, 'hours')
+            .format('YYYY-MM-D H:mm:ss');
+          snap.checkedin_at = checkedin_at;
         }
         await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
         toast.success(<FormattedMessage id='toast.user_saved' defaultMessage='Ok!' />);
@@ -146,7 +145,6 @@ class UserModal extends Component {
         .doc(this.state.userId)
         .update(snap)
         .then(() => {
-          console.log('Document successfully updated!');
           message.class = 'msg_warning';
           message.content = 'USER UPDATED';
           toast.info(<FormattedMessage id='toast.user_edited' defaultMessage='Ok!' />);
@@ -182,7 +180,6 @@ class UserModal extends Component {
       oDoc.write('<body onload="window.print()"><div>');
       // Datos
       let i = 0;
-      console.log(badge);
       for (; i < badge.length; ) {
         if (badge[i].line) {
           if (badge[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
@@ -385,9 +382,7 @@ class UserModal extends Component {
     const self = this;
     const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
     try {
-      let resultado = await Actions.delete(`/api/events/${this.props.eventId}/eventusers`, this.state.userId);
-      console.log('resultado', resultado);
-
+      await Actions.delete(`/api/events/${this.props.eventId}/eventusers`, this.state.userId);
       message = { class: 'msg_warning', content: 'USER DELETED' };
       toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
     } catch (e) {
@@ -412,7 +407,6 @@ class UserModal extends Component {
       .doc(this.state.userId)
       .delete()
       .then(function() {
-        console.log('Document successfully deleted!');
         message.class = 'msg_warning';
         message.content = 'USER DELETED';
         toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
@@ -447,7 +441,6 @@ class UserModal extends Component {
       .then(() => {
         this.setState({ uncheck: false });
         this.closeModal();
-        console.log('Document successfully updated!');
 
         //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
         substractSyncQuantity();
