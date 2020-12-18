@@ -93,6 +93,7 @@ class ListEventUser extends Component {
       <span
         className='icon has-text-grey action_pointer'
         data-tooltip={'Editar'}
+        // eslint-disable-next-line no-unused-vars
         onClick={(e) => {
           this.openEditModalUser(item);
         }}>
@@ -134,6 +135,7 @@ class ListEventUser extends Component {
           type='checkbox'
           name={'checkinUser' + item._id}
           checked={item.checkedin_at}
+          // eslint-disable-next-line no-unused-vars
           onChange={(e) => {
             self.checkIn(item._id);
           }}
@@ -228,7 +230,6 @@ class ListEventUser extends Component {
           let currentAttendees = [...this.state.usersReq];
           let updatedAttendees = updateAttendees(currentAttendees, snapshot);
           let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
-          console.log('nuevos', updatedAttendees);
           let totalCheckedInWithWeight =
             Math.round(
               updatedAttendees.reduce(
