@@ -1,0 +1,29 @@
+.ChatEvius{
+    position: fixed;
+    bottom: 5%;
+    right: 0;
+    width: 18%;
+    height: 40%;
+    min-width: 300px;
+    z-index: 999999999;
+    .mdl-card__supporting-text {
+      width: 223px;
+      height: 100%;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+}
+.button_regresar{
+  margin-bottom: 12px;
+}
+
+@media screen and (max-width:$breakpoint-mobile){
+  .ChatEvius{
+   position: relative;
+   height: 277px;
+   min-width: 308px;
+   z-index: 999999999;
+   margin-top: 36px;
+   left: -11px;
+  }
+}

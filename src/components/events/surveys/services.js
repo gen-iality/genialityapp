@@ -48,6 +48,7 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
 // Funcion para realizar conteo de las opciones por pregunta
 const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteValue) => {
   createAndInitializeCount(surveyId, questionId, optionQuantity, optionIndex, voteValue).then(
+    // eslint-disable-next-line no-unused-vars
     ({ surveyId, message, questionId, optionIndex }) => {
       // Se valida si el voto tiene valor de lo contrario sumara 1
       let vote = typeof voteValue == 'number' ? parseFloat(voteValue) : 1;
@@ -148,12 +149,10 @@ export const SurveyAnswers = {
         .doc(uid)
         .set(data)
         .then(() => {
-          console.log('Document successfully updated!');
           // resolve("Las respuestas han sido enviadas");
           resolve('El voto ha sido registrado');
         })
         .catch((err) => {
-          console.log('Document successfully updated!');
           reject(err);
         });
     });
@@ -190,18 +189,15 @@ export const SurveyAnswers = {
         .collection('responses')
         .add(data)
         .then(() => {
-          console.log('Document successfully updated!');
           resolve('Las respuestas han sido enviadas');
         })
         .catch((err) => {
-          console.log('Document successfully updated!');
           reject(err);
         });
     });
   },
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
   getAnswersQuestion: async (surveyId, questionId, eventId, updateData, operation) => {
-    console.log('get Answer question', { surveyId, questionId, eventId, updateData, operation });
     return new Promise(async (resolve, reject) => {
       let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
       let options = dataSurvey.questions.find((question) => question.id === questionId);
@@ -278,6 +274,26 @@ export const SurveyAnswers = {
   },
 };
 
+export const Trivia = {
+  setTriviaRanking: (surveyId, user, score) => {
+    const { email, _id } = user;
+    const userName = user.name ? user.name : user.names ? user.names : 'Anonymous';
+    const { totalPoints, totalQuestions } = score;
+    firestore
+      .collection('surveys')
+      .doc(surveyId)
+      .collection('ranking')
+      .doc(_id)
+      .set({
+        userName: userName,
+        userEmail: email,
+        totalQuestions: totalQuestions,
+        correctAnswers: totalPoints,
+        registerDate: new Date(),
+      });
+  },
+};
+
 export const UserGamification = {
   getListPoints: (eventId, getRankingList) => {
     firestore.collection(`${eventId}_users_gamification`).onSnapshot((docs) => {
@@ -324,7 +340,7 @@ export const UserGamification = {
           console.log('Puntos registrados satisfactoriamente');
         })
         .catch((err) => {
-          console.log('Ha ocurrido un error', err);
+          console.error('Ha ocurrido un error', err);
         });
     } else {
       let { points } = userInfo;
@@ -340,7 +356,7 @@ export const UserGamification = {
           console.log('Puntos registrados satisfactoriamente');
         })
         .catch((err) => {
-          console.log('Ha ocurrido un error', err);
+          console.error('Ha ocurrido un error', err);
         });
     }
   },

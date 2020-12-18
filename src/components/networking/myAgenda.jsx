@@ -85,6 +85,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       <Row align='middle' justify='center'>
         <Col span={18}>
           <Button
+            className="button_regresar"
             type='primary'
             onClick={() => {
               setCurrentRoom(null);
@@ -116,15 +117,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
           {userName && (
             <iframe
               title='chatevius'
-              style={{
-                position: 'fixed',
-                bottom: '5%',
-                right: 0,
-                width: '18%',
-                height: '40%',
-                minWidth: '300px',
-                zIndex: 999999999
-              }}
+              className='ChatEvius'
               src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
           )}
         </Col>
@@ -237,10 +230,11 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
         <Meta
           avatar={<Avatar>{userName ? userName.charAt(0).toUpperCase() : userName}</Avatar>}
           title={userName || 'No registra nombre'}
+          style={{width:'300px'}}
           description={
             <div>
-              <Row>
-                <Col xs={18}>
+              <Row className='mi_agenda' justify='space-around'>
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <p>{userEmail || 'No registra correo'}</p>
                   {!!data.message && (
                     <p style={{ paddingRight: '20px' }}>
@@ -249,15 +243,18 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                     </p>
                   )}
                 </Col>
-                <Col xs={6}>
+                <Col xs={24} sm={24} md={12} xl={12}>
+                  <Row justify='center'>
                   <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div>
                   <div>{moment(data.timestamp_start).format('hh:mm a')}</div>
                   <div>{moment(data.timestamp_end).format('hh:mm a')}</div>
+                  </Row>                  
                 </Col>
               </Row>
+              <br/>
               {!deleted ? (
-                <Row>
-                  <Col>
+                <Row justify='center'>
+                  <Col xs={24} sm={24} md={12} xl={12}>
                     <Button
                       type='primary'
                       disabled={loading || !enableMeetings}
@@ -267,7 +264,9 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                       }}>
                       {enableMeetings ? 'Ingresar a reunión' : 'Reunión Cerrada'}
                     </Button>
-
+                    <br/>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} xl={12}>
                     <Button
                       type='danger'
                       disabled={loading}

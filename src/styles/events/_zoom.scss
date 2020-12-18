@@ -74,6 +74,9 @@
   height: 0;
   border:1px solid green;
   background-color:#31d871;
+  @media only screen and (min-width: $breakpoint-mobile) {
+    width: 275px;
+  }
 }
 .aspect-ratio-box-inside {
   position: absolute;
