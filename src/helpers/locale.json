@@ -39,7 +39,9 @@
     "toast.ticket_sent": "Ticket sent successfully",
     "toast.email_sent": "Email sent successfully",
     "live.join": "Join live",
-    "live.private_access": "Private access"
+    "live.private_access": "Private access",
+    "live.hosts": "Hosts",
+    "live.starts_in": "activity starts in"
   },
   "es": {
     "header.help": "Ayuda",
@@ -81,6 +83,8 @@
     "toast.ticket_sent": "Tiquete enviado correctamente",
     "toast.email_sent": "Tiquete enviado correctamente",
     "live.join": "Ingresa aquí",
-    "live.private_access": "Acceso privado"
+    "live.private_access": "Acceso privado",
+    "live.hosts": "Anfitriones",
+    "live.starts_in": "La sesión inicia en"
   }
 }
