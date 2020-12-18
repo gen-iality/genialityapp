@@ -101,7 +101,6 @@ class ListEventUser extends Component {
   };
 
   created_at_component = (text, item, index) => {
-    console.log('la data de created', item.created_at);
     if (item.created_at !== null) {
       return <p>{Moment(item.created_at).format('d/MMM/YY h:mm:ss A ')}</p>;
     } else {
@@ -332,7 +331,7 @@ class ListEventUser extends Component {
 
     try {
       await TicketsApi.checkInAttendee(event._id, id);
-      toast.success('Usuario Chequeado');
+      //toast.success('Usuario Chequeado');
     } catch (e) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
     }
