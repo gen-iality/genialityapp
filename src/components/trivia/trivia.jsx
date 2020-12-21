@@ -79,7 +79,7 @@ class trivia extends Component {
             <Link to={{ pathname: `${this.props.matchUrl}/report`, state: { report: record._id } }}>
               <SearchOutlined />
             </Link>
-            <Link to={{ pathname: `${this.props.matchUrl}/ranking`, state: { report: record._id } }}>
+            <Link to={{ pathname: `${this.props.matchUrl}/ranking/${record._id}`, state: { report: record._id } }}>
               <CrownOutlined alt='ranking' />
             </Link>
             <Link to={{ pathname: `${this.props.matchUrl}/encuesta`, state: { edit: record._id } }}>

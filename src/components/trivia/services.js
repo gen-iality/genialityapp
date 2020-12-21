@@ -1,7 +1,8 @@
-import { firestore } from "../../helpers/firebase";
-import Moment from "moment";
+import { firestore } from '../../helpers/firebase';
+import Moment from 'moment';
+import { resolve } from 'core-js/fn/promise';
 
-const refSurvey = firestore.collection("surveys");
+const refSurvey = firestore.collection('surveys');
 
 export const validateSurveyCreated = (surveyId) => {
   return new Promise((resolve, reject) => {
@@ -21,12 +22,12 @@ export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
         refSurvey
           .doc(surveyId)
           .update({ ...status })
-          .then(() => resolve({ message: "Encuesta Actualizada", state: "updated" }));
+          .then(() => resolve({ message: 'Encuesta Actualizada', state: 'updated' }));
       } else {
         refSurvey
           .doc(surveyId)
           .set({ ...surveyInfo, ...status })
-          .then(() => resolve({ message: "Encuesta Creada", state: "created" }));
+          .then(() => resolve({ message: 'Encuesta Creada', state: 'created' }));
       }
     });
   });
@@ -37,7 +38,7 @@ export const deleteSurvey = (surveyId) => {
     refSurvey
       .doc(surveyId)
       .delete()
-      .then(() => resolve({ message: "Encuesta Eliminada", state: "deleted" }));
+      .then(() => resolve({ message: 'Encuesta Eliminada', state: 'deleted' }));
   });
 };
 
@@ -53,7 +54,7 @@ export const getTotalVotes = (surveyId, question) => {
         resolve({ ...question, quantityResponses: result.size });
       })
       .catch((err) => {
-        reject("Hubo un problema ", err);
+        reject('Hubo un problema ', err);
       });
   });
 };
@@ -63,20 +64,45 @@ export const getAnswersByQuestion = (surveyId, questionId) => {
     let docs = [];
     firestore
       .collection(`surveys/${surveyId}/answers/${questionId}/responses`)
-      .orderBy("created", "desc")
+      .orderBy('created', 'desc')
       .get()
       .then((result) => {
         if (result.empty) {
           resolve(false);
         }
         result.forEach((infoDoc) => {
-          let creation_date_text = Moment.unix(infoDoc.data().created.seconds).format("DD MMM YYYY hh:mm a");
+          let creation_date_text = Moment.unix(infoDoc.data().created.seconds).format('DD MMM YYYY hh:mm a');
           docs.push({ ...infoDoc.data(), _id: infoDoc.id, creation_date_text });
         });
         resolve(docs);
       })
       .catch((err) => {
-        reject("Hubo un problema ", err);
+        reject('Hubo un problema ', err);
+      });
+  });
+};
+
+export const getTriviaRanking = (surveyId) => {
+  return new Promise((resolve, reject) => {
+    const list = [];
+    firestore
+      .collection('surveys')
+      .doc(surveyId)
+      .collection('ranking')
+      .get()
+      .then((result) => {
+        if (!result.empty) {
+          result.forEach((item) => {
+            let registerDate = Moment.unix(item.data().registerDate.seconds).format('DD MMM YYYY hh:mm a');
+
+            list.push({ ...item.data(), _id: item.id, registerDate });
+          });
+
+          resolve(list);
+        }
+      })
+      .catch((err) => {
+        reject(err);
       });
   });
 };
