@@ -4,6 +4,7 @@ import ReactPlayer from 'react-player';
 import Moment from 'moment';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 export default function AgendaActivityItem({
   item,
@@ -20,10 +21,11 @@ export default function AgendaActivityItem({
   userRegistered,
   handleValidatePayment,
   event,
-  hideHours,
+  hideHours
 }) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
+  const intl = useIntl();
 
   useEffect(() => {
     if (registerStatus) {
@@ -112,7 +114,9 @@ export default function AgendaActivityItem({
               <div className='text-align-card'>
                 {item.hosts.length > 0 && (
                   <>
-                    <b>Panelistas: </b>
+                    <b>
+                      <FormattedMessage id='live.hosts' defaultMessage='Anfitriones' />
+                    </b>
                     <br />
                     <br />
                     <Row>
@@ -205,9 +209,12 @@ export default function AgendaActivityItem({
                   <>
                     <img src={item.image ? item.image : event_image} />
                     <Alert
-                      message={`La sesión inicia: ${Moment(item.datetime_start).format(
-                        'DD MMMM YYYY h:mm a'
-                      )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                      message={
+                        intl.formatMessage({ id: 'live.starts_in' }) +
+                        `La sesión inicia: ${Moment(item.datetime_start).format(
+                          'DD MMMM YYYY h:mm a'
+                        )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`
+                      }
                       type='warning'
                     />
                   </>
@@ -222,13 +229,13 @@ export default function AgendaActivityItem({
                             width={'100%'}
                             style={{
                               display: 'block',
-                              margin: '0 auto',
+                              margin: '0 auto'
                             }}
                             url={item.video}
                             //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                             controls
                             config={{
-                              file: { attributes: { controlsList: 'nodownload' } },
+                              file: { attributes: { controlsList: 'nodownload' } }
                             }}
                           />
                         </>

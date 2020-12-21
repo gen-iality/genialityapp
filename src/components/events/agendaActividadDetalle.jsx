@@ -8,6 +8,7 @@ import { PageHeader, Row, Col, Button, List, Avatar, Card } from 'antd';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import DocumentsList from '../documents/documentsList';
 import ModalSpeaker from './modalSpeakers';
+import { FormattedMessage } from 'react-intl';
 
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
@@ -111,7 +112,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -147,7 +148,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -210,7 +211,7 @@ let AgendaActividadDetalle = (props) => {
                   key={key}
                   style={{
                     background: cat.color,
-                    color: cat.color ? 'white' : '',
+                    color: cat.color ? 'white' : ''
                   }}
                   className='tag category_calendar-tag'>
                   {cat.name}
@@ -310,7 +311,9 @@ let AgendaActividadDetalle = (props) => {
                   {orderedHost.length > 0 ? (
                     <>
                       <p>
-                        <b>Panelistas:</b>
+                        <b>
+                          <FormattedMessage id='live.hosts' defaultMessage='Anfitriones' />
+                        </b>
                       </p>
                       <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: '0 auto' }}>
                         <Card style={{ textAlign: 'left', paddingBottom: 17 }}>
@@ -397,7 +400,7 @@ let AgendaActividadDetalle = (props) => {
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end',
+                alignItems: 'flex-end'
               }}>
               {/* <button
                   <div

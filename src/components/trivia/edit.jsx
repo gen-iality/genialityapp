@@ -39,7 +39,7 @@ class triviaEdit extends Component {
       time_limit: 0,
       win_Message: null,
       neutral_Message: null,
-      lose_Message: null,
+      lose_Message: null
     };
     this.submit = this.submit.bind(this);
     this.submitWithQuestions = this.submitWithQuestions.bind(this);
@@ -80,14 +80,14 @@ class triviaEdit extends Component {
         time_limit: Update.time_limit ? parseInt(Update.time_limit) : 0,
         win_Message: Update.win_Message ? Update.win_Message : '',
         neutral_Message: Update.neutral_Message ? Update.neutral_Message : '',
-        lose_Message: Update.lose_Message ? Update.lose_Message : '',
+        lose_Message: Update.lose_Message ? Update.lose_Message : ''
       });
 
       this.getQuestions();
     } else {
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
       this.setState({
-        dataAgenda: dataAgenda.data,
+        dataAgenda: dataAgenda.data
       });
     }
   }
@@ -125,7 +125,7 @@ class triviaEdit extends Component {
       time_limit: parseInt(this.state.time_limit),
       win_Message: this.state.win_Message,
       neutral_Message: this.state.neutral_Message,
-      lose_Message: this.state.lose_Message,
+      lose_Message: this.state.lose_Message
     };
     console.log(data);
     // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
@@ -163,7 +163,7 @@ class triviaEdit extends Component {
       time_limit: parseInt(this.state.time_limit),
       win_Message: this.state.win_Message,
       neutral_Message: this.state.neutral_Message,
-      lose_Message: this.state.lose_Message,
+      lose_Message: this.state.lose_Message
     };
     console.log(data);
 
@@ -177,7 +177,7 @@ class triviaEdit extends Component {
             isPublished: data.publish,
             isOpened: data.open,
             allow_anonymous_answers: data.allow_anonymous_answers,
-            freezeGame: data.freezeGame,
+            freezeGame: data.freezeGame
           },
           { eventId: this.props.event._id, name: data.survey, category: 'none' }
         );
@@ -353,18 +353,18 @@ class triviaEdit extends Component {
       show_horizontal_bar,
       allow_vote_value_per_user,
       freezeGame,
-      time_limit,
+      time_limit
     } = this.state;
     const columns = [
       {
         title: 'Pregunta',
         dataIndex: 'title',
-        key: 'title',
+        key: 'title'
       },
       {
         title: 'Tipo de Pregunta',
         dataIndex: 'type',
-        key: 'type',
+        key: 'type'
       },
       {
         title: 'Acciones',
@@ -383,8 +383,8 @@ class triviaEdit extends Component {
               </span>
             </Button>
           </div>
-        ),
-      },
+        )
+      }
     ];
     return (
       <Fragment>
@@ -577,7 +577,7 @@ class triviaEdit extends Component {
                   </Button>,
                   <Button key='submit' type='primary' loading={confirmLoading} onClick={this.sendForm}>
                     Guardar
-                  </Button>,
+                  </Button>
                 ]}>
                 {this.state.idSurvey && Object.entries(currentQuestion).length !== 0 && (
                   <FormQuestionEdit

@@ -1,70 +1,69 @@
-import React, { useState, useEffect, Fragment } from "react"
-import { withRouter } from "react-router"
-import { Modal, Row, Col, Avatar, Button } from "antd"
-import { SpeakersApi } from "../../helpers/request";
-import { UserOutlined } from "@ant-design/icons";
+import React, { useState, useEffect, Fragment } from 'react';
+import { withRouter } from 'react-router';
+import { Modal, Row, Col, Avatar, Button } from 'antd';
+import { SpeakersApi } from '../../helpers/request';
+import { UserOutlined } from '@ant-design/icons';
 
-let modalSpeakers = (props) => {
-    let [speakers, setSpeakers] = useState({});
-    let [modalVisible, setModalVisible] = useState(false)
+let ModalSpeakers = (props) => {
+  let [speakers, setSpeakers] = useState({});
+  let [modalVisible, setModalVisible] = useState(false);
 
-    useEffect(() => {
-        (async () => {
-            const speakers = await SpeakersApi.getOne(props.speakerId, props.eventId)
-            setSpeakers(speakers)
-            setModalVisible(true)
-        })();
-    }, [props.speakerId])
+  useEffect(() => {
+    (async () => {
+      const speakers = await SpeakersApi.getOne(props.speakerId, props.eventId);
+      setSpeakers(speakers);
+      setModalVisible(true);
+    })();
+  }, [props.speakerId]);
 
-    function clearStates() {
-        setSpeakers({})
-        setModalVisible(false)
-    }
-    console.log(speakers)
-    return (
-        <Fragment>
-            <Modal
-                title="Conferencista"
-                centered
-                width={1000}
-                visible={modalVisible}
-                onCancel={() => clearStates()}
-                onOk={() => clearStates()}
-                footer={[
-                    <Button key="cerrar" type="primary" onClick={() => clearStates()}>
-                        Cerrar
-                    </Button>
-                ]}
-            >
-                <Row>
-                    {/* Imagen del conferencista */}
+  function clearStates() {
+    setSpeakers({});
+    setModalVisible(false);
+  }
+  console.log(speakers);
+  return (
+    <Fragment>
+      <Modal
+        title='Conferencista'
+        centered
+        width={1000}
+        visible={modalVisible}
+        onCancel={() => clearStates()}
+        onOk={() => clearStates()}
+        footer={[
+          <Button key='cerrar' type='primary' onClick={() => clearStates()}>
+            Cerrar
+          </Button>
+        ]}>
+        <Row>
+          {/* Imagen del conferencista */}
 
-                    <Col flex="1 1 auto">
-                        {speakers.image ? (
-                            <Avatar style={{ display: "block", margin: "0 auto" }} size={130} src={speakers.image} />
-                        ) : (
-                                <Avatar style={{ display: "block", margin: "0 auto" }} size={130} icon={<UserOutlined />} />
-                            )}
-                    </Col>
+          <Col flex='1 1 auto'>
+            {speakers.image ? (
+              <Avatar style={{ display: 'block', margin: '0 auto' }} size={130} src={speakers.image} />
+            ) : (
+              <Avatar style={{ display: 'block', margin: '0 auto' }} size={130} icon={<UserOutlined />} />
+            )}
+          </Col>
 
-                    {/* Descripción del conferencista */}
-                    <Col flex="1 1 600px">
-                        <span>
-                            <b>{speakers.name}</b>
-                        </span>
-                        <p>
-                            <span>
-                                <b>{speakers.profession}</b>
-                            </span>
-                            <br />
-                            <br />
-                            <div style={{ width: "90%" }} dangerouslySetInnerHTML={{ __html: speakers.description }} />
-                        </p>
-                    </Col>
-                </Row>
-            </Modal>
-        </Fragment>
-    )
-}
+          {/* Descripción del conferencista */}
+          <Col flex='1 1 600px'>
+            <span>
+              <b>{speakers.name}</b>
+            </span>
+            <p>
+              <span>
+                <b>{speakers.profession}</b>
+              </span>
+              <br />
+              <br />
+              <div style={{ width: '90%' }} dangerouslySetInnerHTML={{ __html: speakers.description }} />
+            </p>
+          </Col>
+        </Row>
+      </Modal>
+    </Fragment>
+  );
+};
 
-export default withRouter(modalSpeakers)
+export default withRouter(ModalSpeakers);
