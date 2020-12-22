@@ -1,65 +1,65 @@
-import React, { Component } from "react";
-import { Route, Redirect, Switch, Link } from "react-router-dom";
-import Moment from "moment";
-import momentLocalizer from "react-widgets-moment";
-import Loading from "../loaders/loading";
-import { EventsApi } from "../../helpers/request";
-import { rolPermissions } from "../../helpers/constants";
-import ListEventUser from "../event-users";
-import LogOut from "../shared/logOut";
-import { fetchRol } from "../../redux/rols/actions";
-import { fetchPermissions } from "../../redux/permissions/actions";
-import connect from "react-redux/es/connect/connect";
-import asyncComponent from "../../containers/AsyncComponent";
-import Espacios from "../espacios";
-import Menu from "./shared/menu";
-import Datos from "./datos";
-import TipoAsistentes from "./tipoUsers";
-import ConfirmacionRegistro from "./registro/confirmacionRegistro";
-import ErrorServe from "../modal/serverError";
-import AgendaRoutes from "../agenda";
-import EmpresasRoutes from "../empresas";
-import TriviaRoutes from "../trivia";
-import DocumentsRoutes from "../documents";
-import Speakers from "../speakers";
-import MenuLanding from "../menuLanding"
-import CheckAgenda from "../agenda/checkIn";
-import ReportList from "../agenda/report";
-import ConferenceRoute from "../zoom/index";
-import ReportNetworking from "../networking/report"
+import React, { Component } from 'react';
+import { Route, Redirect, Switch, Link } from 'react-router-dom';
+import Moment from 'moment';
+import momentLocalizer from 'react-widgets-moment';
+import Loading from '../loaders/loading';
+import { EventsApi } from '../../helpers/request';
+import { rolPermissions } from '../../helpers/constants';
+import ListEventUser from '../event-users';
+import LogOut from '../shared/logOut';
+import { fetchRol } from '../../redux/rols/actions';
+import { fetchPermissions } from '../../redux/permissions/actions';
+import connect from 'react-redux/es/connect/connect';
+import asyncComponent from '../../containers/AsyncComponent';
+import Espacios from '../espacios';
+import Menu from './shared/menu';
+import Datos from './datos';
+import TipoAsistentes from './tipoUsers';
+import ConfirmacionRegistro from './registro/confirmacionRegistro';
+import ErrorServe from '../modal/serverError';
+import AgendaRoutes from '../agenda';
+import EmpresasRoutes from '../empresas';
+import TriviaRoutes from '../trivia';
+import DocumentsRoutes from '../documents';
+import Speakers from '../speakers';
+import MenuLanding from '../menuLanding';
+import CheckAgenda from '../agenda/checkIn';
+import ReportList from '../agenda/report';
+import ConferenceRoute from '../zoom/index';
+import ReportNetworking from '../networking/report';
 //import Test from "../events/testButton"
-import { Layout } from "antd";
+import { Layout } from 'antd';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
 
 //Code Splitting
-const General = asyncComponent(() => import("./general"));
-const Badge = asyncComponent(() => import("../badge"));
+const General = asyncComponent(() => import('./general'));
+const Badge = asyncComponent(() => import('../badge'));
 
 //invitations
-const InvitedUsers = asyncComponent(() => import("../invitations"));
+const InvitedUsers = asyncComponent(() => import('../invitations'));
 
 //Messages
-const Messages = asyncComponent(() => import("../messages"));
+const Messages = asyncComponent(() => import('../messages'));
 
-const AdminRol = asyncComponent(() => import("./staff"));
-const TicketInfo = asyncComponent(() => import("../tickets"));
-const Styles = asyncComponent(() => import("../App/styles"));
-const DashboardEvent = asyncComponent(() => import("../dashboard"));
-const OrdersEvent = asyncComponent(() => import("../orders"));
-const Pages = asyncComponent(() => import("../pages"));
-const ListCertificados = asyncComponent(() => import("../certificados"));
-const ReporteCertificados = asyncComponent(() => import("../certificados/reporte"));
-const ConfigurationApp = asyncComponent(() => import("../App/configuration"));
-const NotificationsApp = asyncComponent(() => import("../pushNotifications/index"));
-const Wall = asyncComponent(() => import("../wall/index"));
-const NewsApp = asyncComponent(() => import("../news/news"));
+const AdminRol = asyncComponent(() => import('./staff'));
+const TicketInfo = asyncComponent(() => import('../tickets'));
+const Styles = asyncComponent(() => import('../App/styles'));
+const DashboardEvent = asyncComponent(() => import('../dashboard'));
+const OrdersEvent = asyncComponent(() => import('../orders'));
+const Pages = asyncComponent(() => import('../pages'));
+const ListCertificados = asyncComponent(() => import('../certificados'));
+const ReporteCertificados = asyncComponent(() => import('../certificados/reporte'));
+const ConfigurationApp = asyncComponent(() => import('../App/configuration'));
+const NotificationsApp = asyncComponent(() => import('../pushNotifications/index'));
+const Wall = asyncComponent(() => import('../wall/index'));
+const NewsApp = asyncComponent(() => import('../news/news'));
 
-const FAQS = asyncComponent(() => import("../faqs"));
-const EventsTicket = asyncComponent(() => import("../ticketsEvent/index"));
+const FAQS = asyncComponent(() => import('../faqs'));
+const EventsTicket = asyncComponent(() => import('../ticketsEvent/index'));
 
-Moment.locale("es");
+Moment.locale('es');
 momentLocalizer();
 
 class Event extends Component {
@@ -79,9 +79,9 @@ class Event extends Component {
       SurveysCreate: true,
       FAQS: true,
       Trivia: true,
-      event: null
+      event: null,
     };
-    this.addNewFieldsToEvent = this.addNewFieldsToEvent.bind(this)
+    this.addNewFieldsToEvent = this.addNewFieldsToEvent.bind(this);
   }
 
   async componentDidMount() {
@@ -90,7 +90,7 @@ class Event extends Component {
       let eventId = this.props.match.params.event;
       await this.props.dispatch(fetchPermissions(eventId));
       const event = await EventsApi.getOne(eventId);
-      const eventWithExtraFields = this.addNewFieldsToEvent(event)
+      const eventWithExtraFields = this.addNewFieldsToEvent(event);
       this.setState({ event: eventWithExtraFields, loading: false });
     } catch (e) {
       console.error(e.response);
@@ -98,41 +98,35 @@ class Event extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState){
-
-    if(prevState.event !== this.state.event){
-
-      const {event} = this.state
-      const eventWithExtraFields = this.addNewFieldsToEvent(event)
-      this.setState({ event: eventWithExtraFields});
-      
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.event !== this.state.event) {
+      const { event } = this.state;
+      const eventWithExtraFields = this.addNewFieldsToEvent(event);
+      this.setState({ event: eventWithExtraFields });
     }
   }
 
+  addNewFieldsToEvent(event) {
+    const dateFrom = event.datetime_from.split(' ');
+    const dateTo = event.datetime_to.split(' ');
+    event.hour_start = Moment(dateFrom[1], 'HH:mm').toDate();
+    event.hour_end = Moment(dateTo[1], 'HH:mm').toDate();
+    event.date_start = Moment(dateFrom[0], 'YYYY-MM-DD').toDate();
+    event.date_end = Moment(dateTo[0], 'YYYY-MM-DD').toDate();
+    event.address = event.address ? event.address : '';
 
-  addNewFieldsToEvent(event){
-    const dateFrom = event.datetime_from.split(" ");
-    const dateTo = event.datetime_to.split(" ");
-    event.hour_start = Moment(dateFrom[1], "HH:mm").toDate();
-    event.hour_end = Moment(dateTo[1], "HH:mm").toDate();
-    event.date_start = Moment(dateFrom[0], "YYYY-MM-DD").toDate();
-    event.date_end = Moment(dateTo[0], "YYYY-MM-DD").toDate();
-    event.address = event.address ? event.address : "";
-
-    return event
+    return event;
   }
-
-
 
   componentWillUnmount() {
     this.setState({ newEvent: false });
   }
 
-  handleClick = e => {
+  handleClick = (e) => {
     if (!navigator.onLine) e.preventDefault();
   };
 
-  updateEvent = event => {
+  updateEvent = (event) => {
     this.setState({ event });
   };
 
@@ -143,15 +137,15 @@ class Event extends Component {
     if (this.props.error || permissions.error) return <ErrorServe errorData={permissions.error} />;
     if (timeout) return <LogOut />;
     return (
-      <Layout className="columns">
-        <Sider className={` menu event-aside is-hidden-touch ${!showMenu ? "is-hidden" : ""}`}>
+      <Layout className='columns'>
+        <Sider className={` menu event-aside is-hidden-touch ${!showMenu ? 'is-hidden' : ''}`}>
           <Menu match={match} />
         </Sider>
-        <Content className="column event-main" style={{ width: 500 }}>
+        <Content className='column event-main' style={{ width: 500 }}>
           <Link to={`/landing/${this.state.event._id}`}>
-            <h2 className="name-event">Ir a {this.state.event.name}</h2>
+            <h2 className='name-event'>Ir a {this.state.event.name}</h2>
           </Link>
-          <section className="section event-wrapper">
+          <section className='section event-wrapper'>
             <Switch>
               <Route exact path={`${match.url}/`} render={() => <Redirect to={`${match.url}/agenda`} />} />
               <Route
@@ -167,7 +161,10 @@ class Event extends Component {
                 render={() => <Wall event={this.state.event} eventId={this.state.event._id} />}
               />
               <Route path={`${match.url}/datos`} render={() => <Datos eventID={this.state.event._id} />} />
-              <Route path={`${match.url}/agenda`} render={() => <AgendaRoutes event={this.state.event} updateEvent={this.updateEvent}/>} />
+              <Route
+                path={`${match.url}/agenda`}
+                render={() => <AgendaRoutes event={this.state.event} updateEvent={this.updateEvent} />}
+              />
               <Route path={`${match.url}/empresas`}>
                 <EmpresasRoutes event={this.state.event} />
               </Route>
@@ -175,7 +172,10 @@ class Event extends Component {
               <Route path={`${match.url}/documents`} render={() => <DocumentsRoutes event={this.state.event} />} />
               <Route path={`${match.url}/conference`} render={() => <ConferenceRoute event={this.state.event} />} />
               <Route path={`${match.url}/menuLanding`} render={() => <MenuLanding event={this.state.event} />} />
-              <Route path={`${match.url}/reportNetworking`} render={() => <ReportNetworking event={this.state.event} />} />
+              <Route
+                path={`${match.url}/reportNetworking`}
+                render={() => <ReportNetworking event={this.state.event} />}
+              />
               {/* <Route path={`${match.url}/test`} render={() => <Test event={this.state.event} ></Test>} /> */}
               <Protected
                 path={`${match.url}/assistants`}
@@ -218,7 +218,7 @@ class Event extends Component {
               )}
               <Route
                 path={`${match.url}/confirmacion-registro`}
-                render={() => <ConfirmacionRegistro eventID={this.state.event._id} />}
+                render={() => <ConfirmacionRegistro eventID={this.state.event._id} event={this.state.event} />}
               />
               <Route
                 path={`${match.url}/tipo-asistentes`}
@@ -245,8 +245,6 @@ class Event extends Component {
                   render={() => <NotificationsApp eventId={this.state.event._id} />}
                 />
               )}
-
-
 
               {permissions.data.ids.includes(rolPermissions._id) && (
                 <Route path={`${match.url}/news`} render={() => <NewsApp eventId={this.state.event._id} />} />
@@ -281,7 +279,10 @@ class Event extends Component {
               />
               <Route path={`${match.url}/news`} render={() => <NewsApp eventId={this.state.event._id} />} />
               <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} />} />
-              <Route path={`${match.url}/ticketsEvent`} render={() => <EventsTicket eventId={this.state.event._id} />} />
+              <Route
+                path={`${match.url}/ticketsEvent`}
+                render={() => <EventsTicket eventId={this.state.event._id} />}
+              />
               {/* <Route path={`${match.url}/trivia`} render={()=><Trivia eventId={this.state.event._id}/>}/> */}
               <Route component={NoMatch} />
             </Switch>
@@ -305,21 +306,21 @@ function NoMatch({ location }) {
 const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
   <Route
     {...rest}
-    render={props =>
+    render={(props) =>
       event.user_properties && event.user_properties.length > 0 ? (
         <Component {...props} event={event} eventId={eventId} url={url} />
       ) : (
-          <Redirect push to={`${url}/main`} />
-        )
+        <Redirect push to={`${url}/main`} />
+      )
     }
   />
 );
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   loading: state.rols.loading,
   permissions: state.permissions,
   showMenu: state.user.menu,
-  error: state.rols.error
+  error: state.rols.error,
 });
 
 export default connect(mapStateToProps)(Event);
