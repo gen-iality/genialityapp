@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import API, { EventsApi, UsersApi, TicketsApi } from '../../helpers/request';
+import API, { EventsApi, TicketsApi } from '../../helpers/request';
 import { fieldNameEmailFirst } from '../../helpers/utils';
 import * as Cookie from 'js-cookie';
-import UserInforCard from './registrationForm/userInfoCard';
 import FormComponent from './registrationForm/form';
 import { Spin } from 'antd';
 
@@ -16,7 +15,7 @@ class UserRegistration extends Component {
       registeredUser: false,
       extraFields: [],
       initialValues: {},
-      conditionals: []
+      conditionals: [],
     };
   }
 
@@ -41,7 +40,6 @@ class UserRegistration extends Component {
   getCurrentUser = async () => {
     let evius_token = Cookie.get('evius_token');
     let eventUser = null;
-    console.log('DEV', evius_token);
     if (!evius_token) {
       this.setState({ currentUser: 'guest', loading: false });
     } else {
@@ -50,7 +48,6 @@ class UserRegistration extends Component {
         if (resp.status === 200) {
           const data = resp.data;
           eventUser = await EventsApi.getcurrentUserEventUser(this.props.eventId);
-          console.log('eventUser', eventUser);
           const tickets = await TicketsApi.getByEvent(this.props.eventId, evius_token);
 
           this.setState({
@@ -59,7 +56,7 @@ class UserRegistration extends Component {
             userTickets: tickets && tickets.data,
             loading: false,
             registeredUser: eventUser ? true : false,
-            initialValues: { names: data.names, email: data.email }
+            initialValues: { names: data.names, email: data.email },
           });
         }
       } catch (error) {
@@ -83,7 +80,7 @@ class UserRegistration extends Component {
   }
 
   render() {
-    let { registeredUser, loading, initialValues, extraFields, eventUser, userTickets, conditionals } = this.state;
+    let { registeredUser, loading, initialValues, extraFields, eventUser, conditionals } = this.state;
     const { eventId } = this.props;
     if (!loading)
       return !registeredUser ? (
