@@ -74,7 +74,6 @@
     "react-render-html": "^0.6.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-script": "^2.0.5",
     "react-scripts": "3",
     "react-select": "^2.4.4",
     "react-slick": "^0.23.2",
