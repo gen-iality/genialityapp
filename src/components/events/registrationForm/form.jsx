@@ -282,12 +282,6 @@ export default ({
     updateFieldsVisibility(conditionals, allFields);
   };
 
-  const handleChangePassword = (e) => {
-    console.log('handle password', e);
-    setPassword(e.target.value);
-    form.setFieldsValue({ password: password });
-  };
-
   const beforeUpload = (file) => {
     // const isJpgOrPng = file.type === 'application/pdf';
     // if (!isJpgOrPng) {
