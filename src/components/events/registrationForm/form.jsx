@@ -123,14 +123,6 @@ export default ({
   // const [ fileSave, setFileSave ] = useState( [] )
 
   const [form] = Form.useForm();
-  useEffect(() => {
-    form.setFields([
-      {
-        name: 'password',
-        errors: ['Ingrese un password'],
-      },
-    ]);
-  }, [form]);
 
   useEffect(() => {
     let formType = !eventUserId ? 'register' : 'transfer';
@@ -467,7 +459,7 @@ export default ({
             name='password'
             style={{ margin: '15px' }}
             placeholder='Ingrese su password'
-            // onChange={handleChangePassword}
+            onChange={(e) => setPassword(e.target.value)}
             key={key}
             value={password}
             pattern='(?=^.{10,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$'
