@@ -9,6 +9,20 @@ import UserOneTimeLoginLink from '../UserOneTimeLoginLink';
 class UserLogin extends Component {
   constructor(props) {
     super(props);
+    // Estado provisional para el manejo de los sistemas de autenticación
+    this.state = {
+      enabledWithEmailPass: false,
+      enabledOneTimeLoginLink: false,
+      UserLoginRecoveryPass: false,
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+      enabledWithEmailPass: this.props.eventId === '5fdb975f2f82e93507305ac2' && true,
+      UserLoginRecoveryPass: this.props.eventId === '5fdb975f2f82e93507305ac2' && true,
+      enabledOneTimeLoginLink: this.props.eventId === '5f99a20378f48e50a571e3b6' && true,
+    });
   }
 
   render() {
@@ -25,12 +39,10 @@ class UserLogin extends Component {
       handleCloseRecoveryPass,
       handleRecoveryPass,
       errorRecovery,
-      successRecovery
+      successRecovery,
     } = this.props;
 
-    let enabledOneTimeLoginLink = true;
-    let enabledWithEmailPass = false;
-
+    const { enabledOneTimeLoginLink, enabledWithEmailPass } = this.state;
     return (
       <>
         {loading && <Spin />}
