@@ -535,7 +535,9 @@ class Landing extends Component {
                 <Robapagina event={event} eventId={event._id} showLanding={this.showLanding} />
               ) : (
                 <>
-                  {event.styles && event.styles.show_banner && event.styles.show_banner === 'true' ? (
+                  {event.styles &&
+                  event.styles.show_banner &&
+                  (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
                     <BannerEvent
                       bgImage={
                         event.styles && event.styles.banner_image
