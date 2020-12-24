@@ -57,7 +57,7 @@ export default function AgendaActivityItem({
               ? 'magicland-agenda_information'
               : 'agenda_information'
           }>
-          <Row align='middle'>
+          <Row align='top'>
             <Row>
               {eventId != '5f80b6c93b4b966dfe7cd012' &&
                 eventId != '5f80a72272ccfd4e0d44b722' &&
@@ -134,7 +134,7 @@ export default function AgendaActivityItem({
               <div className='text-align-card'>
                 {
                   <>
-                    <Row>
+                    <Row align='top'>
                       <div
                         className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
                         dangerouslySetInnerHTML={{ __html: item.description }}
