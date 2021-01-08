@@ -127,6 +127,22 @@ class Speakers extends Component {
     this.setState({ modalVisible });
   }
 
+  btnViewMore = (speaker) => {
+    if (speaker.description !== '<p><br></p>' && speaker.description !== undefined && speaker.description !== null) {
+      return (
+        <Button
+          type='primary'
+          className='modal-button'
+          onClick={() => this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)}
+          key={'sp' + speaker._id}
+          data-target='#myModal'
+          aria-haspopup='true'>
+          Ver más...
+        </Button>
+      );
+    }
+  };
+
   render() {
     const {
       infoSpeaker,
@@ -164,16 +180,22 @@ class Speakers extends Component {
                               {speakersWithCategory[category.order].map((speaker, key) => (
                                 <div key={key}>
                                   <Card
-                                    onClick={() =>
-                                      this.modal(
-                                        speaker._id,
-                                        speaker.image,
-                                        speaker.name,
-                                        speaker.profession,
-                                        speaker.description,
-                                        speaker.category
-                                      )
-                                    }
+                                    onClick={() => {
+                                      if (
+                                        speaker.description !== '<p><br></p>' &&
+                                        speaker.description !== undefined &&
+                                        speaker.description !== null
+                                      ) {
+                                        this.modal(
+                                          speaker._id,
+                                          speaker.image,
+                                          speaker.name,
+                                          speaker.profession,
+                                          speaker.description,
+                                          speaker.category
+                                        );
+                                      }
+                                    }}
                                     hoverable
                                     style={{ paddingTop: '30px' }}
                                     cover={
@@ -191,25 +213,7 @@ class Speakers extends Component {
                                         />
                                       )
                                     }
-                                    actions={[
-                                      <Button
-                                        type='primary'
-                                        className='modal-button'
-                                        onClick={() =>
-                                          this.modal(
-                                            speaker._id,
-                                            speaker.image,
-                                            speaker.name,
-                                            speaker.profession,
-                                            speaker.description
-                                          )
-                                        }
-                                        key={key}
-                                        data-target='#myModal'
-                                        aria-haspopup='true'>
-                                        Ver más...
-                                      </Button>,
-                                    ]}>
+                                    actions={[this.btnViewMore(speaker)]}>
                                     <Meta
                                       title={[
                                         <div key={'speaker-name' + key}>
@@ -244,9 +248,22 @@ class Speakers extends Component {
               speakersWithoutCategory.map((speaker, key) => (
                 <div key={key}>
                   <Card
-                    onClick={() =>
-                      this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)
-                    }
+                    onClick={() => {
+                      if (
+                        speaker.description !== '<p><br></p>' &&
+                        speaker.description !== undefined &&
+                        speaker.description !== null
+                      ) {
+                        this.modal(
+                          speaker._id,
+                          speaker.image,
+                          speaker.name,
+                          speaker.profession,
+                          speaker.description,
+                          speaker.category
+                        );
+                      }
+                    }}
                     hoverable
                     style={{ paddingTop: '30px' }}
                     cover={
@@ -256,19 +273,7 @@ class Speakers extends Component {
                         <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} icon={<UserOutlined />} />
                       )
                     }
-                    actions={[
-                      <Button
-                        type='primary'
-                        className='modal-button'
-                        onClick={() =>
-                          this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)
-                        }
-                        key={key}
-                        data-target='#myModal'
-                        aria-haspopup='true'>
-                        Ver más...
-                      </Button>,
-                    ]}>
+                    actions={[this.btnViewMore(speaker)]}>
                     <Meta
                       title={[
                         <div key={'speaker-name' + key}>
