@@ -1,11 +1,12 @@
-.container-wall{
-    .ant-list-vertical .ant-list-item-meta-title{
-        margin-bottom: 0px !important;
-        color: rgba(0, 0, 0, 0.85);
-        font-size: 16px;
-        line-height: 24px;
-    }
-    .ant-card-body{
-        padding: 18px !important; 
-    }
+.container-wall {
+  .ant-list-vertical .ant-list-item-meta-title {
+    margin-bottom: 0px !important;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 16px;
+    line-height: 32px;
+    text-align: left;
+  }
+  .ant-card-body {
+    padding: 18px !important;
+  }
 }
