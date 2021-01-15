@@ -128,6 +128,7 @@ class SurveyForm extends Component {
         }
         publishedSurveys = [];
         surveySnapShot.forEach(function(doc) {
+          console.log('listen surveys', doc.data());
           publishedSurveys.push({ ...doc.data(), _id: doc.id });
         });
 
@@ -292,6 +293,14 @@ class SurveyForm extends Component {
               <span>{!surveyVisible ? 'Ver' : 'Ocultar'} Resultados</span>
             )}
           </Button>
+        )}
+        {console.log(
+          'surveyVisible',
+          this.state.surveyVisible,
+          'this.state.availableSurveysBar',
+          this.state.availableSurveysBar,
+          'surveysData',
+          surveysData
         )}
         {(this.state.surveyVisible || !this.state.availableSurveysBar) && (
           <Card>
