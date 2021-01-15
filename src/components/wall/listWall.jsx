@@ -68,8 +68,13 @@ class WallList extends Component {
 
   innerDeletePost = async (postId) => {
     await this.setState({ deleting: postId });
+    let eventId = this.state.event._id;
+    const dataPostOld = this.state.dataPost;
+    await saveFirebase.deletePost(postId, eventId);
     await this.setState({ deleting: null });
     message.success('Publicación eliminada.');
+    const dataPost = dataPostOld.filter((item) => item.id !== postId); //crea un nuevo array de objetos sin el post eliminado
+    this.setState({ dataPost }); // asigan el nuevo array al estado para que se actualice el componente
   };
 
   componentDidUpdate(prevProps) {
