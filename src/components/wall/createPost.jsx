@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import CameraFeed from './cameraFeed';
-import * as Cookie from 'js-cookie';
 
 //custom
 import { AuthUrl } from '../../helpers/constants';
@@ -34,7 +33,7 @@ class CreatePost extends Component {
       inputKey: Date.now(),
       keyImage: Date.now(),
       keyList: Date.now(),
-      user: undefined,
+
       submitting: false,
       value: '',
       hidden: true,
@@ -42,7 +41,7 @@ class CreatePost extends Component {
       showInfo: false,
       loading: false,
       visible: false,
-      user: false,
+      user: null,
       image: '',
     };
     this.savePost = this.savePost.bind(this);
@@ -51,25 +50,21 @@ class CreatePost extends Component {
     this.getImage = this.getImage.bind(this);
   }
 
-  async componentDidMount() {
-    let evius_token = Cookie.get('evius_token');
-
-    if (!evius_token) {
-      this.setState({ user: false });
-    } else {
-      try {
-        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
-        if (resp.status === 200) {
-          const data = resp.data;
-          // Solo se desea obtener el id del usuario
-          this.setState({ user: data });
-        }
-      } catch (error) {
-        const { status } = error.response;
-        console.log(status);
-      }
+  componentDidMount() {
+    console.log('create', this.props);
+    if (this.props.user) {
+      const { user } = this.props;
+      this.setState({ user });
     }
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.user !== this.props.user) {
+      const { user } = this.props;
+      this.setState({ user });
+    }
+  }
+
   //Funcion para guardar el post y enviar el mensaje de publicacion
   async savePost() {
     let data = {
@@ -77,6 +72,11 @@ class CreatePost extends Component {
       post: this.state.value,
       author: this.state.user._id,
       datePost: new Date(),
+      authorName: this.state.user.names
+        ? this.state.user.names
+        : this.state.user.name
+        ? this.state.user.name
+        : this.state.user.email,
     };
 
     //savepost se realiza para publicar el post
