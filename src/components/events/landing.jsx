@@ -229,7 +229,7 @@ class Landing extends Component {
         />
       ),
       speakers: <SpeakersForm eventId={event._id} event={event} />,
-      wall: <WallForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      wall: <WallForm event={event} eventId={event._id} toggleConference={this.toggleConference} currentUser={user} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: (

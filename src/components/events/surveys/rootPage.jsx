@@ -72,37 +72,47 @@ export default class RootPage extends Component {
     } = this.state;
     const { toggleSurvey, openSurvey, surveyLabel } = this.props;
     if (!isLoading)
-      return (eventUser && eventUser.rol && eventUser.rol.name === 'Speaker') ||
-        openSurvey === 'false' ||
-        hasVote ||
-        guestVoteInSurvey ? (
-        <>
-          {/*Preparacion componente para los resultados*/}
-          {/* <Card className='survyCard'>
+      return (
+        <div
+          style={{
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundImage:
+              'url("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Milonario_El_Salvador.jpg/800px-Milonario_El_Salvador.jpg")',
+          }}>
+          {(eventUser && eventUser.rol && eventUser.rol.name === 'Speaker') ||
+          openSurvey === 'false' ||
+          hasVote ||
+          guestVoteInSurvey ? (
+            <>
+              {/*Preparacion componente para los resultados*/}
+              {/* <Card className='survyCard'>
             <h1>fin de la encuesta</h1>
           </Card> */}
-          <Graphics
-            idSurvey={idSurvey}
-            showListSurvey={toggleSurvey}
-            eventId={eventId}
-            surveyLabel={surveyLabel}
-            operation='participationPercentage' //onlyCount, participationPercentage
-            handleResults={this.getResults}
-          />
-        </>
-      ) : (
-        <Card className='survyCard'>
-          <SurveyComponent
-            responseCounter={responseCounter}
-            idSurvey={idSurvey}
-            showListSurvey={toggleSurvey}
-            eventId={eventId}
-            currentUser={currentUser}
-            singlePage={true}
-            surveyLabel={surveyLabel}
-            operation='participationPercentage'
-          />
-        </Card>
+              <Graphics
+                idSurvey={idSurvey}
+                showListSurvey={toggleSurvey}
+                eventId={eventId}
+                surveyLabel={surveyLabel}
+                operation='participationPercentage' //onlyCount, participationPercentage
+                handleResults={this.getResults}
+              />
+            </>
+          ) : (
+            <Card className='survyCard' style={{ background: 'rgba(255,255,255,0.7) !important' }}>
+              <SurveyComponent
+                responseCounter={responseCounter}
+                idSurvey={idSurvey}
+                showListSurvey={toggleSurvey}
+                eventId={eventId}
+                currentUser={currentUser}
+                singlePage={true}
+                surveyLabel={surveyLabel}
+                operation='participationPercentage'
+              />
+            </Card>
+          )}
+        </div>
       );
 
     return <Spin></Spin>;

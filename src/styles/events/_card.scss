@@ -11,14 +11,14 @@
     align-items: center;
     justify-content: space-between;
     margin-left: 1rem;
-    time{
+    time {
       text-transform: uppercase;
       font-weight: 900;
     }
     .vertical-line {
       background-color: #ffffff;
       margin: 0 0.75em;
-      height: 20PX;
+      height: 20px;
       width: 1px;
     }
   }
@@ -40,7 +40,7 @@
 }
 
 // style card of events/virtualCoferences
-.Virtual-Conferences{
+.Virtual-Conferences {
   display: flex;
   flex-flow: wrap;
   justify-content: center;
@@ -54,23 +54,25 @@
 //responsive del card de networking
 
 @media only screen and (max-width: $breakpoint-mobile) {
-  .card-Sugeridos{
-    .ant-card-body{
-    width: 304px;
-    font-size: 12px;
-    padding-right: 32px;
-    .ant-card-meta-detail {
-      overflow: visible;
+  .card-Sugeridos {
+    .ant-card-body {
+      width: 304px;
+      font-size: 12px;
+      padding-right: 32px;
+      .ant-card-meta-detail {
+        overflow: visible;
+      }
     }
+    .ant-card {
+      width: 360px;
     }
-    .ant-card{
-    width: 360px;
-    }
-    .ant-btn{
+    .ant-btn {
       font-size: 9px;
       left: -3px;
     }
-    
   }
 }
 
+.survyCard {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+}

@@ -161,6 +161,7 @@ class triviaEdit extends Component {
       lose_Message: this.state.lose_Message,
     };
 
+    console.log('survey edit', data);
     // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
     SurveysApi.editOne(data, this.state.idSurvey, this.props.event._id)
       .then(async () => {
