@@ -204,6 +204,8 @@ iframe {
   white-space: break-spaces;
 }
 
+
+
 @import '~bulma/bulma';
 @import '~react-widgets/lib/scss/react-widgets';
 @import '~bulma-extensions/bulma-switch/src/sass/index';
@@ -214,7 +216,7 @@ iframe {
 
 // ant desing
 //@import "~antd/dist/antd.css";
-
+@import './chartjs';
 @import './Animate_Img';
 @import './chaport';
 @import './loading';
