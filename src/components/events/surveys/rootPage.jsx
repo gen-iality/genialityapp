@@ -76,7 +76,8 @@ export default class RootPage extends Component {
         <div
           style={{
             backgroundSize: 'cover',
-            background:
+            backgroundRepeat: 'no-repeat',
+            backgroundImage:
               'url("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Milonario_El_Salvador.jpg/800px-Milonario_El_Salvador.jpg")',
           }}>
           {(eventUser && eventUser.rol && eventUser.rol.name === 'Speaker') ||
