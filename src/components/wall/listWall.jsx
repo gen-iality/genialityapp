@@ -99,7 +99,8 @@ class WallList extends Component {
   }
 
   render() {
-    const { dataPost, user } = this.state;
+    const { dataPost, user, event } = this.state;
+
     return (
       <Fragment>
         <div>
@@ -135,7 +136,7 @@ class WallList extends Component {
                           text={(item.likes || 0) + ' Me gusta'}
                           key='list-vertical-like-o'
                           onSubmit={(e) => {
-                            this.props.increaseLikes(item.id);
+                            this.props.increaseLikes(item.id, event._id, user._id);
                           }}
                         />,
                         <IconText

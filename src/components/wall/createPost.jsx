@@ -72,6 +72,8 @@ class CreatePost extends Component {
       post: this.state.value,
       author: this.state.user._id,
       datePost: new Date(),
+      likes: 0,
+      usersLikes: [],
       authorName: this.state.user.names
         ? this.state.user.names
         : this.state.user.name

@@ -33,21 +33,44 @@ export const saveFirebase = {
     }
   },
 
-  async increaseLikes(postId, eventId) {
+  async increaseLikes(postId, eventId, userId) {
     var docRef = await firestore
       .collection('adminPost')
       .doc(eventId)
       .collection('posts')
       .doc(postId);
 
+    
     var docSnap = await docRef.get();
-
     var doc = docSnap.data();
 
-    doc['likes'] = doc.likes ? doc.likes + 1 : 1;
-    doc['id'] = docRef.id;
-    await docRef.update(doc);
+    
+    var count = doc['userLikes'].length; //cuenta la cantidad de usuarios que han dado like
+    const array = doc['userLikes']; //asigna a un array los uauruarios que han dado like  
+    
+    // si el usuario actual no se encuntra en el array, lo guarda y suma al contador de like
+    if(array.filter(user => user == userId).length == 0){
+      array.push(userId)
+     
+      doc['userLikes'] = array
+      doc['likes'] = count + 1;
+      doc['id'] = docRef.id;
+      await docRef.update(doc);
+     
+    }
+    // si el usuario actual se encuentra en el array lo elimina y reduce el contador de like
+    else{
+      const newArray = array.filter(user => user !== userId)
+      
+      doc['userLikes'] = newArray
+      doc['likes'] = count - 1;
+      doc['id'] = docRef.id;
+      await docRef.update(doc);
+
+    }
+
     return doc;
+
   },
 
   async createComment(postId, eventId, comment, author) {

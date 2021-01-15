@@ -48,8 +48,8 @@ class Wall extends Component {
     return true;
   };
 
-  increaseLikes = async (postId) => {
-    var updatedPost = await saveFirebase.increaseLikes(postId, this.props.event._id);
+  increaseLikes = async (postId, eventId, userId) => {
+    var updatedPost = await saveFirebase.increaseLikes(postId, this.props.event._id, userId);
     //se actualiza local
     var updatedPost = this.state.dataPost.map(function(value, index, arr) {
       return value.id !== postId ? value : updatedPost;
