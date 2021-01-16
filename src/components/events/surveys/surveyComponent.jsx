@@ -377,6 +377,10 @@ class SurveyComponent extends Component {
     let isLastPage = values.isLastPage;
     let countDown = isLastPage ? 3 : 0;
 
+    // Variable utilizada para encuestas calificables que requieren determinar si no se ha contestado la pregunta para crear una respuesta vacia
+
+    let isUndefined = null;
+
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
     if (aux > 0) return;
 
@@ -396,47 +400,46 @@ class SurveyComponent extends Component {
 
       let response = await this.validateIfHasResponse(values);
 
-      if (response.isUndefined) {
+      isUndefined = response.isUndefined;
+
+      if (isUndefined) {
         let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
         let result = this.showStateMessage('warning');
         this.setIntervalToWaitBeforeNextQuestion(values, result, secondsToGo);
       }
+      console.log('is Undefined', isUndefined);
     }
 
     let questionName = Object.keys(values.data);
 
     console.log('+++++++++++++++++++ HERE *************************');
-    console.log('+++++++++++++++++++ HERE *************************');
-
-    // console.log('values', values);
-    // console.log('values data', values.data);
-    // console.log('values currentPage', values.currentPage);
 
     //Se verifica si la pregunta no fue contestada
 
-    // Validacion para evitar que se registre respuesta de la misma pregunta
-    //if (questionsAnswered === questionName.length) return;
+    const incrementQuestionsAnswered = questionsAnswered + 1;
 
-    // Se obtiene el numero de preguntas respondidas actualmente
-    //this.setState({ questionsAnswered: questionName.length });
-    console.log('questionsAns', questionsAnswered + 1);
-    this.setState({ questionsAnswered: questionsAnswered + 1 });
+    console.log('Current question', surveyData.pages[incrementQuestionsAnswered].questions[0]);
 
-    console.log('surveyData', surveyData);
+    this.setState({ questionsAnswered: incrementQuestionsAnswered });
 
-    console.log('question', questionName);
+    // variable que se envia con la respuesta
+    let question = null;
+
+    //Si es una encuesta calificable y la respuesta no es contestada se crea una respuesta vacia para guardar
+    if (surveyData.allow_gradable_survey === 'true' && isUndefined) {
+      question = null;
+    } else {
+      questionName = questionName[questionName.length - 1];
+      question = values.getQuestionByName(questionName, true);
+    }
+
     // Permite obtener el nombre de la ultima pregunta respondida y usarlo para consultar informacion de la misma
-    questionName = questionName[questionName.length - 1];
-    let question = values.getQuestionByName(questionName, true);
     console.log('question', question);
 
     // eslint-disable-next-line no-unused-vars
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
-      console.log('start execute /*/*/*/*/*/*');
       let { totalPoints } = this.state;
-
-      console.log('ranking points', rankingPoints);
 
       if (rankingPoints !== undefined) totalPoints += rankingPoints;
 
