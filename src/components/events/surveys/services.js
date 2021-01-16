@@ -117,6 +117,7 @@ export const SurveyAnswers = {
     const { responseData, date, uid, email, names, voteValue } = dataAnswer;
     const { optionQuantity, optionIndex, correctAnswer } = counter;
 
+    console.log('registro de respuesta ------------------');
     let data =
       correctAnswer !== undefined
         ? {
@@ -278,6 +279,7 @@ export const SurveyAnswers = {
 
 export const Trivia = {
   setTriviaRanking: (surveyId, user, score) => {
+    console.log('setTriviaRanking ---------- start');
     const { email, _id } = user;
     const userName = user.name ? user.name : user.names ? user.names : 'Anonymous';
     const { totalPoints, totalQuestions } = score;
