@@ -72,7 +72,15 @@ class CommentsList extends Component {
             renderItem={(item) => (
               <List.Item key={item.id}>
                 <List.Item.Meta
-                  avatar={<Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />}
+                  avatar={
+                    item.authorName ? (
+                      <Avatar>
+                        {item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
+                      </Avatar>
+                    ) : (
+                      <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
+                    )
+                  }
                   title={<span>{item.authorName}</span>}
                   description={<TimeStamp date={item.date.seconds} />}
                 />

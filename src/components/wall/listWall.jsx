@@ -165,7 +165,9 @@ class WallList extends Component {
                           item.avatar ? (
                             <Avatar src={item.avatar} />
                           ) : (
-                            <Avatar>{item.authorName.charAt(0).toUpperCase()}</Avatar>
+                            <Avatar>
+                              {item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
+                            </Avatar>
                           )
                         }
                         title={<span>{item.authorName}</span>}
