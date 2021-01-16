@@ -45,14 +45,14 @@ export const saveFirebase = {
     var doc = docSnap.data();
 
     
-    var count = doc['userLikes'].length; //cuenta la cantidad de usuarios que han dado like
-    const array = doc['userLikes']; //asigna a un array los uauruarios que han dado like  
+    var count = doc['usersLikes'].length; //cuenta la cantidad de usuarios que han dado like
+    const array = doc['usersLikes']; //asigna a un array los uauruarios que han dado like  
     
     // si el usuario actual no se encuntra en el array, lo guarda y suma al contador de like
     if(array.filter(user => user == userId).length == 0){
       array.push(userId)
      
-      doc['userLikes'] = array
+      doc['usersLikes'] = array
       doc['likes'] = count + 1;
       doc['id'] = docRef.id;
       await docRef.update(doc);
@@ -62,7 +62,7 @@ export const saveFirebase = {
     else{
       const newArray = array.filter(user => user !== userId)
       
-      doc['userLikes'] = newArray
+      doc['usersLikes'] = newArray
       doc['likes'] = count - 1;
       doc['id'] = docRef.id;
       await docRef.update(doc);
@@ -74,30 +74,33 @@ export const saveFirebase = {
   },
 
   async createComment(postId, eventId, comment, author) {
-    // const data = {
-    //   author: '',
-    //   authorName: author.names ? author.names : author.name ? author.names : author.email,
-    // };
-    // var docRef = await firestore
-    //   .collection('adminPost')
-    //   .doc(eventId)
-    //   .collection('posts')
-    //   .doc(postId);
-    // var docSnap = await docRef.get();
-    // var doc = docSnap.data();
-    // console.log('comments', doc);
-    // doc['comments'] = doc.comments ? doc.comments + 1 : 1;
-    // doc['id'] = docRef.id;
-    // await docRef.update(doc);
-    // let result = await firestore
-    //   .collection("adminPost")
-    //   .doc(eventId)
-    //   .collection("comment")
-    //   .doc(postId)
-    //   .collection("comments")
-    //   .add(data);
+    const data = {
+      author: '',
+      authorName: author.names ? author.names : author.name ? author.names : author.email,
+      comment: comment,
+      date:new Date(),
+      idPost:postId,
+    };
+    var docRef = await firestore
+      .collection('adminPost')
+      .doc(eventId)
+      .collection('posts')
+      .doc(postId);
+    var docSnap = await docRef.get();
+    var doc = docSnap.data();
+    console.log('comments', doc);
+    doc['comments'] = doc.comments ? doc.comments + 1 : 1;
+    doc['id'] = docRef.id;
+    await docRef.update(doc);
+    let result = await firestore
+      .collection("adminPost")
+      .doc(eventId)
+      .collection("comment")
+      .doc(postId)
+      .collection("comments")
+      .add(data);
     //return result;
-    //return doc;
+    return doc;
   },
 
   async deletePost(postId, eventId) {
@@ -116,11 +119,19 @@ export const saveFirebase = {
         .doc(postId)
         .collection('comments');
 
+      var queryPostId = firestore
+        .collection('adminPost')
+        .doc(eventId)
+        .collection('comment')
+        .doc(postId)
+
       var querySnapshot = await query.get();
+      var querySnapshotPostId = await queryPostId.get();
       if (querySnapshot) {
         querySnapshot.forEach(async function(doc) {
           await doc.ref.delete();
         });
+        queryPostId.delete();
       }
       return true;
     } catch (e) {

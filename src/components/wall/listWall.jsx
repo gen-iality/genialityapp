@@ -39,11 +39,11 @@ class WallList extends Component {
   }
 
   innerCreateComment = async (post, comment) => {
-    //await this.setState({ commenting: post.id });
-    //await this.setState({ commenting: null });
+    await this.setState({ commenting: post.id });
+    await this.setState({ commenting: null });
     message.success('Comentario creado.');
-    saveFirebase.createComment(post.id, this.state.event._id);
-    //this.innershowComments(post.id, post.comments + 1);
+    await saveFirebase.createComment(post.id, this.state.event._id, comment, this.state.user);
+    this.innershowComments(post.id, post.comments + 1);
   };
 
   innershowComments = async (postId, commentsCount) => {
@@ -165,7 +165,7 @@ class WallList extends Component {
                           item.avatar ? (
                             <Avatar src={item.avatar} />
                           ) : (
-                            <Avatar>{item.author.charAt(0).toUpperCase()}</Avatar>
+                            <Avatar>{item.authorName.charAt(0).toUpperCase()}</Avatar>
                           )
                         }
                         title={<span>{item.authorName}</span>}
