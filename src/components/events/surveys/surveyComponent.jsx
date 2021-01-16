@@ -409,9 +409,9 @@ class SurveyComponent extends Component {
     console.log('+++++++++++++++++++ HERE *************************');
     console.log('+++++++++++++++++++ HERE *************************');
 
-    console.log('values', values);
-    console.log('values data', values.data);
-    console.log('values currentPage', values.currentPage);
+    // console.log('values', values);
+    // console.log('values data', values.data);
+    // console.log('values currentPage', values.currentPage);
 
     //Se verifica si la pregunta no fue contestada
 
@@ -420,8 +420,12 @@ class SurveyComponent extends Component {
 
     // Se obtiene el numero de preguntas respondidas actualmente
     //this.setState({ questionsAnswered: questionName.length });
+    console.log('questionsAns', questionsAnswered + 1);
     this.setState({ questionsAnswered: questionsAnswered + 1 });
 
+    console.log('surveyData', surveyData);
+
+    console.log('question', questionName);
     // Permite obtener el nombre de la ultima pregunta respondida y usarlo para consultar informacion de la misma
     questionName = questionName[questionName.length - 1];
     let question = values.getQuestionByName(questionName, true);
