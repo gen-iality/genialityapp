@@ -26,7 +26,6 @@ class SurveyComponent extends Component {
       rankingList: [],
       sentSurveyAnswers: false,
       feedbackMessage: {},
-      questionsAnswered: 0,
       totalPoints: 0,
       eventUsers: [],
       voteWeight: 0,
@@ -357,13 +356,12 @@ class SurveyComponent extends Component {
 
   /*
     surveyData: (Object) Informacio general de la encuesta
-    questionsAnswered: (int) Numero total de preguntas contestadas
     aux: (0 || 1) Se utliza para saber si ya pasamos por la ultima pagina, si es mayor a 0 retornamos null para para detener el hilo de ejecución del método
     */
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
   sendData = async (surveyModel, partialSend) => {
     const { eventId, currentUser } = this.props;
-    let { surveyData, questionsAnswered, aux } = this.state;
+    let { surveyData, aux } = this.state;
 
     //console.log('values', values.currentPage, values.currentPage.questions, values.data, values);
 
@@ -373,9 +371,6 @@ class SurveyComponent extends Component {
       let { responseMessage, rankingPoints } = await this.executePartialService(surveyData, question, currentUser);
 
       this.registerRankingPoints(rankingPoints, surveyModel, surveyData, countDown, currentUser, eventId);
-      //Aún no se para que se usa
-      const incrementQuestionsAnswered = questionsAnswered + 1;
-      this.setState({ questionsAnswered: incrementQuestionsAnswered });
 
       console.log(partialSend, question.name, question.value, question);
     });
