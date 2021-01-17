@@ -81,6 +81,7 @@ export const saveFirebase = {
       date:new Date(),
       idPost:postId,
     };
+    const dataPost = [];
     var docRef = await firestore
       .collection('adminPost')
       .doc(eventId)
@@ -88,7 +89,7 @@ export const saveFirebase = {
       .doc(postId);
     var docSnap = await docRef.get();
     var doc = docSnap.data();
-    console.log('comments', doc);
+    
     doc['comments'] = doc.comments ? doc.comments + 1 : 1;
     doc['id'] = docRef.id;
     await docRef.update(doc);
@@ -99,8 +100,22 @@ export const saveFirebase = {
       .doc(postId)
       .collection("comments")
       .add(data);
+    let posts = await firestore
+      .collection('adminPost')
+      .doc(eventId)
+      .collection('posts')
+      .orderBy('datePost', 'desc');
+
+    let snapshot = await posts.get();
+    snapshot.forEach((doc) => {
+      var data = doc.data();
+      data.id = doc.id;
+
+      dataPost.push(data);
+    });
     //return result;
-    return doc;
+    //return doc;
+    return dataPost
   },
 
   async deletePost(postId, eventId) {

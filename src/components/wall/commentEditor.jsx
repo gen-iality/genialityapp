@@ -37,6 +37,7 @@ const CommentEditor = ({ onSubmit, user }) => {
                 value={comment}
                 autoSize
                 id='comment'
+                allowClear
               />
             </Col>
             <Button

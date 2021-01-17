@@ -42,7 +42,9 @@ class WallList extends Component {
     await this.setState({ commenting: post.id });
     await this.setState({ commenting: null });
     message.success('Comentario creado.');
-    await saveFirebase.createComment(post.id, this.state.event._id, comment, this.state.user);
+    const dataPost = await saveFirebase.createComment(post.id, this.state.event._id, comment, this.state.user);
+    this.setState({ dataPost });
+
     this.innershowComments(post.id, post.comments + 1);
   };
 
