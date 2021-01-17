@@ -5,7 +5,7 @@ import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from '@a
 import * as Cookie from 'js-cookie';
 import { SurveysApi, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
-import { SurveyAnswers, UserGamification, Trivia } from './services';
+import { SurveyAnswers, SurveyPage, UserGamification, Trivia } from './services';
 import Graphics from './graphics';
 import * as Survey from 'survey-react';
 import 'survey-react/modern.css';
@@ -54,6 +54,7 @@ class SurveyComponent extends Component {
     que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
     sino se presentar comportamientos raros.
     */
+    console.log('surveyData', surveyData);
     self.setState({ surveyData, idSurvey, survey });
     self.survey = survey;
 
@@ -102,16 +103,22 @@ class SurveyComponent extends Component {
 
   listenAndUpdateStateSurveyRealTime = async (idSurvey) => {
     var self = this;
+    const { eventId, currentUser } = this.props;
+    let currentPageNo = 0;
 
     const promiseA = new Promise((resolve, reject) => {
       try {
         firestore
           .collection('surveys')
           .doc(idSurvey)
-          .onSnapshot((doc) => {
+          .onSnapshot(async (doc) => {
             let surveyRealTime = doc.data();
 
-            surveyRealTime.currentPage = surveyRealTime.currentPage ? surveyRealTime.currentPage : 0;
+            //revisando si estamos retomando la encuesta en alguna página particular
+            if (currentUser && currentUser._id) {
+              currentPageNo = await SurveyPage.getCurrentPage(idSurvey, currentUser._id);
+              surveyRealTime.currentPage = currentPageNo;
+            }
 
             self.setState({
               surveyRealTime,
@@ -195,9 +202,7 @@ class SurveyComponent extends Component {
   executePartialService = (surveyData, question, infoUser) => {
     let { eventUsers, voteWeight } = this.state;
 
-    // Asigna puntos si la encuesta tiene
-    let surveyPoints = question.points && parseInt(question.points);
-    let rankingPoints = 0;
+    console.log('execute question', question);
 
     return new Promise((resolve, reject) => {
       // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
@@ -207,6 +212,10 @@ class SurveyComponent extends Component {
 
       // Valida si se marco alguna opcion
       if (question) {
+        // Asigna puntos si la encuesta tiene
+        let surveyPoints = question.points ? parseInt(question.points) : 0;
+        let rankingPoints = 0;
+
         //Hack rÃƒÆ’Ã‚Â¡pido para permitir preguntas tipo texto (abiertas)
         // eslint-disable-next-line no-empty
         if (question.inputType === 'text') {
@@ -284,7 +293,7 @@ class SurveyComponent extends Component {
   };
 
   // Funcion que valida si la pregunta se respondio
-  validateIfHasResponse = (survey) => {
+  validateIfHasResponse = async (survey) => {
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
       survey.currentPage.questions.forEach((question) => {
@@ -295,6 +304,22 @@ class SurveyComponent extends Component {
         }
       });
     });
+  };
+
+  setRanking = () => {
+    const { surveyData, totalPoints } = this.state;
+    const { idSurvey, currentUser } = this.props;
+
+    if (surveyData.allow_gradable_survey) {
+      // NÃºmero total de preguntas, se resta uno porque la primer pÃ¡gina es informativa
+      let totalQuestions = surveyData.pages.length - 1;
+
+      const score = {
+        totalPoints,
+        totalQuestions,
+      };
+      Trivia.setTriviaRanking(idSurvey, currentUser, score);
+    }
   };
 
   // Funcion que muestra el feedback dependiendo del estado
@@ -343,19 +368,35 @@ class SurveyComponent extends Component {
     }
   };
 
-  onSurveyCompleted = async (values) => {
+  onSurveyCompleted = (values) => {
     this.sendData(values);
   };
+
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
   sendData = async (values) => {
     const { eventId, currentUser } = this.props;
+
+    /*
+    surveyData: (Object) Informacio general de la encuesta
+    questionsAnswered: (int) Numero total de preguntas contestadas
+    aux: (0 || 1) Se utliza para saber si ya pasamos por la ultima pagina, si es mayor a 0 retornamos null para para detener el hilo de ejecución del método
+    */
+
     let { surveyData, questionsAnswered, aux } = this.state;
+
+    //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
+    SurveyPage.setCurrentPage(surveyData._id, currentUser._id, values.currentPageNo);
 
     let isLastPage = values.isLastPage;
     let countDown = isLastPage ? 3 : 0;
 
+    // Variable utilizada para encuestas calificables que requieren determinar si no se ha contestado la pregunta para crear una respuesta vacia
+
+    let isUndefined = null;
+
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
     if (aux > 0) return;
+    console.log('+++++++++++++++++++ HERE *************************');
 
     if (surveyData.allow_gradable_survey === 'true') {
       if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
@@ -365,31 +406,59 @@ class SurveyComponent extends Component {
         values.onCurrentPageChanged.add((sender, options) => {
           // Se obtiene el tiempo restante para poder usarlo en el modal
           countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+
           // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
-          // if (countDown > 0)
+          //if (countDown > 0)
           sender.stopTimer();
         });
 
       let response = await this.validateIfHasResponse(values);
-      if (response.isUndefined) {
+
+      isUndefined = response.isUndefined;
+
+      if (isUndefined) {
         let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
         let result = this.showStateMessage('warning');
-        this.setIntervalToWaitBeforeNextQuestion(values, result, secondsToGo);
+        await this.setIntervalToWaitBeforeNextQuestion(values, result, secondsToGo);
       }
+      console.log('is Undefined', isUndefined);
     }
 
     let questionName = Object.keys(values.data);
 
-    // Validacion para evitar que se registre respuesta de la misma pregunta
-    if (questionsAnswered === questionName.length) return;
+    //Se verifica si la pregunta no fue contestada
 
-    // Se obtiene el numero de preguntas respondidas actualmente
-    this.setState({ questionsAnswered: questionName.length });
+    const incrementQuestionsAnswered = questionsAnswered + 1;
+
+    this.setState({ questionsAnswered: incrementQuestionsAnswered });
+
+    // variable que se envia con la respuesta
+    let question = null;
 
     // Permite obtener el nombre de la ultima pregunta respondida y usarlo para consultar informacion de la misma
     questionName = questionName[questionName.length - 1];
-    let question = values.getQuestionByName(questionName, true);
+    question = values.getQuestionByName(questionName, true);
+
+    //Si es una encuesta calificable y la respuesta no es contestada se crea una respuesta vacia para guardar
+    if (surveyData.allow_gradable_survey === 'true' && isUndefined) {
+      const currentQuestion = surveyData.pages[incrementQuestionsAnswered].questions[0];
+      const { idSurvey, currentUser } = this.props;
+
+      const dataAnswer = {
+        responseData: '',
+        date: new Date(),
+        uid: currentUser._id,
+        email: currentUser.email,
+        names: currentUser.names ? currentUser.names : currentUser.name,
+        voteValue: 0,
+      };
+
+      const counter = { optionQuantity: null, optionIndex: null, correctAnswer: false };
+      // Guardado de preguntas sin contestar de usuarios registrados
+      await SurveyAnswers.registerWithUID(idSurvey, currentQuestion.id, dataAnswer, counter, true);
+      return;
+    }
 
     // eslint-disable-next-line no-unused-vars
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
@@ -397,7 +466,11 @@ class SurveyComponent extends Component {
 
       if (rankingPoints !== undefined) totalPoints += rankingPoints;
 
-      this.setState({ totalPoints });
+      // Se guarda el total de puntos y se ejecuta un callback que verifica si la encuesta es calificable para guardar el score en el ranking
+      this.setState({ totalPoints }, () => {
+        // Si la encuesta es calificable va guardando el ranking del usuario
+        this.setRanking();
+      });
 
       // message.success({ content: responseMessage });
 
@@ -471,7 +544,6 @@ class SurveyComponent extends Component {
     });
 
     if (surveyData.allow_gradable_survey === 'true') {
-      const { idSurvey, currentUser } = this.props;
       let text = `Has obtenido ${totalPoints} de ${totalQuestions} puntos </br>`;
       text +=
         totalPoints >= scoreMinimumForWin
@@ -481,12 +553,6 @@ class SurveyComponent extends Component {
       survey.completedHtml = `${textOnCompleted}<br>${text}<br>${
         surveyData.neutral_Message ? surveyData.neutral_Message : ''
       }`;
-
-      const score = {
-        totalPoints,
-        totalQuestions,
-      };
-      Trivia.setTriviaRanking(idSurvey, currentUser, score);
     }
   };
 
@@ -508,6 +574,7 @@ class SurveyComponent extends Component {
     let { surveyData } = this.state;
     if (surveyData.allow_gradable_survey !== 'true') return;
 
+    console.log('ON CURRENT PAGE CHANGED', this.state);
     /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
      * se caiga del sistema y vuelva a conectarse la idea es que se conecte a esta pregunta.
      * va a tener el valor de la pregunta mÃƒÆ’Ã‚Â¡s adealantda que se haay contestado.

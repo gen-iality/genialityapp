@@ -79,6 +79,7 @@ class SurveyForm extends Component {
   };
 
   async componentDidMount() {
+    console.log('props ///////////', this.props);
     let { event, currentUser } = this.props;
     let eventUser = await this.getCurrentEvenUser(event._id);
 
@@ -87,10 +88,14 @@ class SurveyForm extends Component {
     this.getItemsMenu();
   }
 
-  async componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps, prevState) {
     this.listenSurveysData(prevProps);
     if (this.props.usuarioRegistrado !== prevProps.usuarioRegistrado) {
       this.setState({ usuarioRegistrado: this.props.usuarioRegistrado });
+    }
+
+    if (prevState.selectedSurvey !== this.state.selectedSurvey) {
+      this.props.mountCurrentSurvey(this.state.selectedSurvey);
     }
 
     //No es la manera ideal pero aqui forzamos una revisión en la base de datos para asber si el usuario ya voto
@@ -128,7 +133,6 @@ class SurveyForm extends Component {
         }
         publishedSurveys = [];
         surveySnapShot.forEach(function(doc) {
-          console.log('listen surveys', doc.data());
           publishedSurveys.push({ ...doc.data(), _id: doc.id });
         });
 
@@ -294,14 +298,7 @@ class SurveyForm extends Component {
             )}
           </Button>
         )}
-        {console.log(
-          'surveyVisible',
-          this.state.surveyVisible,
-          'this.state.availableSurveysBar',
-          this.state.availableSurveysBar,
-          'surveysData',
-          surveysData
-        )}
+
         {(this.state.surveyVisible || !this.state.availableSurveysBar) && (
           <Card>
             <SurveyList
