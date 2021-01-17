@@ -126,7 +126,7 @@ class Graphics extends Component {
     if (dataGamification !== null)
       return (
         <Card style={{ backgroundColor: "rgba(227, 227, 227,0.3)", marginTop: "2%" }}>
-          <canvas id="chart"></canvas>
+          <canvas style={{width:"100%"}} id="chart"></canvas>
         </Card>
       );
 

@@ -263,7 +263,7 @@ class Graphics extends Component {
             </div>
             <Card>
               <strong>{titleQuestion}</strong>
-              <canvas id="chart"></canvas>
+              <canvas style={{width:'100%'}} id="chart"></canvas>
             </Card>
             <br />
             <Pagination
