@@ -86,15 +86,22 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
 export const SurveyPage = {
   // Obtiene la pagina actual de la encuesta
   // eslint-disable-next-line no-unused-vars
-  getCurrentPage: (surveyId, self) => {
+  getCurrentPage: (surveyId, uid) => {
     return new Promise((resolve, reject) => {
       try {
         firestore
           .collection('surveys')
           .doc(surveyId)
-          .onSnapshot((survey) => {
-            let { currentPage } = survey.data();
-            resolve(currentPage);
+          .collection('userProgress')
+          .doc(uid)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              let { currentPageNo } = doc.data();
+              resolve(currentPageNo);
+            } else {
+              resolve(0);
+            }
           });
       } catch (e) {
         reject(e);
@@ -103,12 +110,23 @@ export const SurveyPage = {
   },
 
   // Actualiza la pagina actual de la encuesta
-  setCurrentPage: (surveyId, page) => {
-    firestore
-      .collection('surveys')
-      .doc(surveyId)
-      .update({ currentPage: page });
-  },
+  setCurrentPage: (surveyId, uid, currentPageNo) => {
+    return new Promise((resolve, reject) => {
+      let metaData = { currentPageNo: currentPageNo };
+      firestore
+        .collection('surveys')
+        .doc(surveyId)
+        .collection('userProgress')
+        .doc(uid)
+        .set(metaData, { merge: true })
+        .then(() => {
+          resolve(currentPageNo);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
 };
 
 export const SurveyAnswers = {
@@ -126,7 +144,7 @@ export const SurveyAnswers = {
             user_email: email,
             user_name: names,
             id_survey: surveyId,
-            correctAnswer,
+            correctAnswer
           }
         : {
             response: responseData,
@@ -134,7 +152,7 @@ export const SurveyAnswers = {
             id_user: uid,
             user_email: email,
             user_name: names,
-            id_survey: surveyId,
+            id_survey: surveyId
           };
 
     if (!isEmpty) {
@@ -171,13 +189,13 @@ export const SurveyAnswers = {
             created: date,
             id_user: uid,
             id_survey: surveyId,
-            correctAnswer,
+            correctAnswer
           }
         : {
             response: responseData,
             created: date,
             id_user: uid,
-            id_survey: surveyId,
+            id_survey: surveyId
           };
 
     countAnswers(surveyId, questionId, optionQuantity, optionIndex);
@@ -275,7 +293,7 @@ export const SurveyAnswers = {
           }
         });
     });
-  },
+  }
 };
 
 export const Trivia = {
@@ -294,9 +312,9 @@ export const Trivia = {
         userEmail: email,
         totalQuestions: totalQuestions,
         correctAnswers: totalPoints,
-        registerDate: new Date(),
+        registerDate: new Date()
       });
-  },
+  }
 };
 
 export const UserGamification = {
@@ -364,12 +382,12 @@ export const UserGamification = {
           console.error('Ha ocurrido un error', err);
         });
     }
-  },
+  }
 };
 
 export const Users = {
   getUsers: async (eventId) => {
     const snapshot = await firestore.collection(`${eventId}_event_attendees`).get();
     return snapshot.docs.map((doc) => doc.data());
-  },
+  }
 };
