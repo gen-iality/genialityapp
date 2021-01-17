@@ -336,6 +336,7 @@ export default class ZoomComponent extends Component {
                 <div style={{ width: '100%' }}>
                   <SurveyComponent
                     event={event}
+                    currentUser={this.props.userEntered}
                     activity={activity}
                     availableSurveysBar={true}
                     style={{ zIndex: 9999, width: '99vw', height: '100%' }}

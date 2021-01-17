@@ -41,6 +41,7 @@ class SurveyComponent extends Component {
   }
 
   async componentDidMount() {
+    console.log('this props survey', this.props);
     var self = this;
     const { eventId, idSurvey } = this.props;
     //console.log("CARGANDO INICIAL");
@@ -383,6 +384,7 @@ class SurveyComponent extends Component {
 
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
     if (aux > 0) return;
+    console.log('+++++++++++++++++++ HERE *************************');
 
     if (surveyData.allow_gradable_survey === 'true') {
       if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
@@ -395,7 +397,7 @@ class SurveyComponent extends Component {
 
           // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
           //if (countDown > 0)
-          //sender.stopTimer();
+          sender.stopTimer();
         });
 
       let response = await this.validateIfHasResponse(values);
@@ -406,36 +408,45 @@ class SurveyComponent extends Component {
         let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
         let result = this.showStateMessage('warning');
-        this.setIntervalToWaitBeforeNextQuestion(values, result, secondsToGo);
+        await this.setIntervalToWaitBeforeNextQuestion(values, result, secondsToGo);
       }
       console.log('is Undefined', isUndefined);
     }
 
     let questionName = Object.keys(values.data);
 
-    console.log('+++++++++++++++++++ HERE *************************');
-
     //Se verifica si la pregunta no fue contestada
 
     const incrementQuestionsAnswered = questionsAnswered + 1;
-
-    console.log('Current question', surveyData.pages[incrementQuestionsAnswered].questions[0]);
 
     this.setState({ questionsAnswered: incrementQuestionsAnswered });
 
     // variable que se envia con la respuesta
     let question = null;
 
+    // Permite obtener el nombre de la ultima pregunta respondida y usarlo para consultar informacion de la misma
+    questionName = questionName[questionName.length - 1];
+    question = values.getQuestionByName(questionName, true);
+
     //Si es una encuesta calificable y la respuesta no es contestada se crea una respuesta vacia para guardar
     if (surveyData.allow_gradable_survey === 'true' && isUndefined) {
-      question = null;
-    } else {
-      questionName = questionName[questionName.length - 1];
-      question = values.getQuestionByName(questionName, true);
-    }
+      const currentQuestion = surveyData.pages[incrementQuestionsAnswered].questions[0];
+      const { idSurvey, currentUser } = this.props;
 
-    // Permite obtener el nombre de la ultima pregunta respondida y usarlo para consultar informacion de la misma
-    console.log('question', question);
+      const dataAnswer = {
+        responseData: '',
+        date: new Date(),
+        uid: currentUser._id,
+        email: currentUser.email,
+        names: currentUser.names ? currentUser.names : currentUser.name,
+        voteValue: 0,
+      };
+
+      const counter = { optionQuantity: null, optionIndex: null, correctAnswer: false };
+      // Guardado de preguntas sin contestar de usuarios registrados
+      await SurveyAnswers.registerWithUID(idSurvey, currentQuestion.id, dataAnswer, counter, true);
+      return;
+    }
 
     // eslint-disable-next-line no-unused-vars
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {

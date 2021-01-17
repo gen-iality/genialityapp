@@ -113,11 +113,10 @@ export const SurveyPage = {
 
 export const SurveyAnswers = {
   // Servicio para registrar votos para un usuario logeado
-  registerWithUID: async (surveyId, questionId, dataAnswer, counter) => {
+  registerWithUID: async (surveyId, questionId, dataAnswer, counter, isEmpty) => {
     const { responseData, date, uid, email, names, voteValue } = dataAnswer;
     const { optionQuantity, optionIndex, correctAnswer } = counter;
 
-    console.log('registro de respuesta ------------------');
     let data =
       correctAnswer !== undefined
         ? {
@@ -138,7 +137,9 @@ export const SurveyAnswers = {
             id_survey: surveyId,
           };
 
-    countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue);
+    if (!isEmpty) {
+      countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue);
+    }
 
     return new Promise((resolve, reject) => {
       firestore
