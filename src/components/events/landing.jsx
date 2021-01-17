@@ -94,6 +94,7 @@ class Landing extends Component {
       show_banner_footer: false,
       event: null,
       requireValidation: false,
+      currentSurvey: null,
     };
     this.showLanding = this.showLanding.bind(this);
   }
@@ -219,7 +220,14 @@ class Landing extends Component {
           </div>
         </>
       ),
-      survey: <SurveyForm event={event} currentUser={this.state.currentUser} />,
+      survey: (
+        <SurveyForm
+          event={event}
+          currentUser={this.state.currentUser}
+          mountCurrentSurvey={this.mountCurrentSurvey}
+          unMountCurrentSurvey={this.mountCurrentSurvey}
+        />
+      ),
       certs: (
         <CertificadoLanding
           event={event}
@@ -485,6 +493,13 @@ class Landing extends Component {
     this.setState({ section: 'login' });
   };
 
+  mountCurrentSurvey = (survey) => {
+    this.setState({ currentSurvey: survey });
+  };
+  unMountCurrentSurvey = () => {
+    this.setState({ currentSurvey: null });
+  };
+
   // End methods for modal private activities
 
   render() {
@@ -525,6 +540,9 @@ class Landing extends Component {
                   userEntered={currentUser}
                   event={event}
                   activity={activity}
+                  currentSurvey={this.state.currentSurvey}
+                  mountCurrentSurvey={this.mountCurrentSurvey}
+                  unMountCurrentSurvey={this.mountCurrentSurvey}
                 />
               )}
 

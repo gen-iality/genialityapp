@@ -29,6 +29,7 @@ export default class RootPage extends Component {
 
   componentDidMount() {
     this.loadData();
+    console.log('survey selected', this.props);
   }
 
   componentDidUpdate(prevProps) {

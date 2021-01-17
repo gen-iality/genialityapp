@@ -175,6 +175,10 @@ export default class ZoomComponent extends Component {
       return;
     }
 
+    if (prevProps.currentSurvey === this.props.currentSurvey) {
+      console.log('IN ZOOM COMPONENT', this.props.currentSurvey);
+    }
+
     this.setUpUserForConference();
   }
 
@@ -340,6 +344,7 @@ export default class ZoomComponent extends Component {
                     activity={activity}
                     availableSurveysBar={true}
                     style={{ zIndex: 9999, width: '99vw', height: '100%' }}
+                    mountCurrentSurvey={this.props.mountCurrentSurvey}
                   />
                 </div>
               )}
@@ -357,6 +362,7 @@ export default class ZoomComponent extends Component {
                 activeTab={activeTab}
                 handleActiveTab={this.handleActiveTab}
                 handleConferenceStyles={this.handleConferenceStyles}
+                currentSurvey={this.props.currentSurvey}
               />
             </Row>
           )}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, Button, Menu, Row, Col, Card, Avatar, Tooltip } from 'antd';
 import {
   CommentOutlined,
@@ -12,6 +12,7 @@ import {
 } from '@ant-design/icons';
 import ListadoJuegos from './listadoJuegos';
 import LiveChat from './liveChat';
+import RankingTrivia from '../../events/surveys/rankingTrivia';
 
 const { TabPane } = Tabs;
 
@@ -25,6 +26,9 @@ export default function ConferenceTabsComponent(props) {
   function handleClick(key) {
     props.handleActiveTab(key);
   }
+  useEffect(() => {
+    console.log('las props', props);
+  }, [props]);
 
   const { chat, surveys, games, attendees, activeTab } = props;
   return (
@@ -83,6 +87,7 @@ export default function ConferenceTabsComponent(props) {
                     </Col>
                   </Row>
                 </Card>
+                <RankingTrivia currentSurvey={props.currentSurvey} />
               </TabPane>
             )}
 
