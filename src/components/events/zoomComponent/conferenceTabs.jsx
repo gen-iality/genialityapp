@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, Button, Menu, Row, Col, Card, Avatar, Tooltip } from 'antd';
 import {
   CommentOutlined,
@@ -26,6 +26,10 @@ export default function ConferenceTabsComponent(props) {
   function handleClick(key) {
     props.handleActiveTab(key);
   }
+
+  useEffect(() => {
+    console.log('conference tabs', props);
+  }, []);
 
   const { chat, surveys, games, attendees, activeTab } = props;
   return (
@@ -73,7 +77,7 @@ export default function ConferenceTabsComponent(props) {
                 </Row>
 
                 {props.currentSurvey && Object.keys(props.currentSurvey).length > 0 && (
-                  <RankingTrivia currentSurvey={props.currentSurvey} />
+                  <RankingTrivia currentSurvey={props.currentSurvey} currentUser={props.currentUser} />
                 )}
               </TabPane>
             )}

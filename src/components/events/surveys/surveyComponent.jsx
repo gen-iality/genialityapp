@@ -115,7 +115,7 @@ class SurveyComponent extends Component {
             //revisando si estamos retomando la encuesta en alguna página particular
             if (currentUser && currentUser._id) {
               currentPageNo = await SurveyPage.getCurrentPage(idSurvey, currentUser._id);
-              surveyRealTime.currentPage = currentPageNo;
+              surveyRealTime.currentPage = currentPageNo ? currentPageNo : 0;
             }
 
             self.setState({
@@ -296,16 +296,21 @@ class SurveyComponent extends Component {
       case 'success':
         return {
           ...objMessage,
-          title: 'Has respondido correctamente',
-          subTitle: `Has ganado ${questionPoints} puntos, respondiendo correctamente la pregunta.`,
+          title: (
+            <div>
+              Has ganado <span style={{ fontWeight: 'bold', fontSize: '130%' }}>{questionPoints} punto(s)</span>,
+              respondiendo correctamente la pregunta.
+            </div>
+          ),
+          subTitle: '',
           icon: <SmileOutlined />
         };
 
       case 'error':
         return {
           ...objMessage,
-          title: 'No has respondido correctamente',
-          subTitle: 'Debido a que no respondiste correctamente no has ganado puntos.',
+          title: <div>Debido a que no respondiste correctamente no has ganado puntos.</div>,
+          subTitle: '',
           icon: <FrownOutlined />
         };
 
@@ -342,7 +347,7 @@ class SurveyComponent extends Component {
   sendData = async (surveyModel) => {
     const { eventId, currentUser } = this.props;
     let { surveyData } = this.state;
-
+    this.setState({ rankingPoints: 0 });
     let rankingPointsThisPage;
     await Promise.all(
       surveyModel.currentPage.questions.map(async (question) => {
@@ -555,13 +560,15 @@ class SurveyComponent extends Component {
             )}
           </>
         )}
-        {feedbackMessage.hasOwnProperty('title') && <Result {...feedbackMessage} extra={null} />}
+        {feedbackMessage.hasOwnProperty('title') && (
+          <Result className='animate__animated animate__rubberBand' {...feedbackMessage} extra={null} />
+        )}
 
         {//Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
         surveyData && (surveyData.allow_anonymous_answers === 'true' || surveyData.publish === 'true') ? (
           <div style={{ display: feedbackMessage.hasOwnProperty('title') || showMessageOnComplete ? 'none' : 'block' }}>
             {this.state.survey && (
-              <>
+              <div className='animate__animated animate__bounceInDown'>
                 {surveyData.allow_gradable_survey === 'true' && !this.state.fiftyfitfyused && (
                   <div className="survy-comodin" onClick={this.useFiftyFifty}><Button> 50 / 50 <BulbOutlined /></Button></div>
                 )}
@@ -574,7 +581,7 @@ class SurveyComponent extends Component {
                   onStarted={this.checkCurrentPage}
                   onCurrentPageChanged={this.onCurrentPageChanged}
                 />
-              </>
+              </div>
             )}
           </div>
         ) : (

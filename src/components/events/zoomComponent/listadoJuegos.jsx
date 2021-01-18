@@ -2,38 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { firestore } from '../../../helpers/firebase';
 import { Row, Col, Card, Avatar } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import RankingList from './RankingList';
-
-// const rankingDemo = [
-//   {
-//     name: 'Iván Sánchez',
-//     puntaje: 85,
-//   },
-//   {
-//     name: 'Juan Lopez',
-//     puntaje: 78,
-//   },
-//   {
-//     name: 'Diana Silva',
-//     puntaje: 79,
-//   },
-//   {
-//     name: 'Beatriz Pinzón',
-//     puntaje: 100,
-//   },
-//   {
-//     name: 'Felipe Casas',
-//     puntaje: 5,
-//   },
-//   {
-//     name: 'Jorge Jiménez',
-//     puntaje: 15,
-//   },
-//   {
-//     name: 'Nicolas Gomez',
-//     puntaje: 100,
-//   },
-// ];
+import RankingList from './rankingList';
 
 export default function ListadoJuegos(props) {
   const [ranking, setRanking] = useState([]);
