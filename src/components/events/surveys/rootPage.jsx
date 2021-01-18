@@ -79,12 +79,13 @@ export default class RootPage extends Component {
     if (!isLoading)
       return (
         <div
-          style={{
-            backgroundSize: '100% 100%',
-            backgroundRepeat: 'no-repeat',
-            backgroundImage:
-              'url("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Milonario_El_Salvador.jpg/800px-Milonario_El_Salvador.jpg")',
-          }}>
+        // style={{
+        //   backgroundSize: '100% 100%',
+        //   backgroundRepeat: 'no-repeat',
+        //   backgroundImage:
+        //     'url("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Milonario_El_Salvador.jpg/800px-Milonario_El_Salvador.jpg")',
+        // }}
+        >
           {(eventUser && eventUser.rol && eventUser.rol.name === 'Speaker') ||
           openSurvey === 'false' ||
           hasVote ||
