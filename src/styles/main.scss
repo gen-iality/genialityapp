@@ -92,6 +92,13 @@ iframe {
   }
 }
 
+.sv-container-modern{
+  @media screen and (max-width: $breakpoint-mobile) {
+    overflow-y: scroll;
+    height: 67vh;
+  }
+}
+
 .sv-progress__text{
   left: 50%;
   transform: translateX(-50%);

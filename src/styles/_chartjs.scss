@@ -1,7 +1,7 @@
 .chartjs-render-monitor {
     animation: chartjs-render-animation 0.001s;
     width: 100% !important;
-    height: 570px !important ;
+    height: 350px !important ;
     @media screen and (max-width: $breakpoint-mobile) {
       height: auto !important ;
     }
