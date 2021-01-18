@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { Result, Button } from 'antd';
-import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined, BulbOutlined  } from '@ant-design/icons';
 import * as Cookie from 'js-cookie';
 import { SurveysApi, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
@@ -460,8 +460,20 @@ class SurveyComponent extends Component {
   setFinalMessage = (survey, options) => {
     let { surveyData, totalPoints } = this.state;
 
-    // NÃºmero total de preguntas, se resta uno porque la primer pÃ¡gina es informativa
-    let totalQuestions = surveyData.pages.length - 1;
+    let totalQuestions = 0;
+
+    let questions = surveyData.pages;
+
+    questions.forEach((item) => {
+      if (item.questions[0].points) {
+        totalQuestions += parseInt(item.questions[0].points);
+      }
+    });
+
+    if (totalQuestions === 0) {
+      //Número total de preguntas, se resta uno porque la primer pÃ¡gina es informativa
+      totalQuestions = surveyData.pages.length - 1;
+    }
 
     // Umbral de exito, esta variable indica apartir de cuantos aciertos se completa con Ã©xito el cuestionario
     // Por el momento el valor esta quemado y deberÃ­a venir de un parÃ¡metro del CMS
@@ -572,7 +584,7 @@ class SurveyComponent extends Component {
             {this.state.survey && (
               <div className='animate__animated animate__bounceInDown'>
                 {surveyData.allow_gradable_survey === 'true' && !this.state.fiftyfitfyused && (
-                  <div onClick={this.useFiftyFifty}>50/50</div>
+                  <div className="survy-comodin" onClick={this.useFiftyFifty}><Button> 50 / 50 <BulbOutlined /></Button></div>
                 )}
                 <Survey.Survey
                   model={this.state.survey}
