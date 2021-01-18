@@ -296,16 +296,21 @@ class SurveyComponent extends Component {
       case 'success':
         return {
           ...objMessage,
-          title: 'Has respondido correctamente',
-          subTitle: `Has ganado ${questionPoints} puntos, respondiendo correctamente la pregunta.`,
+          title: (
+            <div>
+              Has ganado <span style={{ fontWeight: 'bold', fontSize: '130%' }}>{questionPoints} punto(s)</span>,
+              respondiendo correctamente la pregunta.
+            </div>
+          ),
+          subTitle: '',
           icon: <SmileOutlined />
         };
 
       case 'error':
         return {
           ...objMessage,
-          title: 'No has respondido correctamente',
-          subTitle: 'Debido a que no respondiste correctamente no has ganado puntos.',
+          title: <div>Debido a que no respondiste correctamente no has ganado puntos.</div>,
+          subTitle: '',
           icon: <FrownOutlined />
         };
 
