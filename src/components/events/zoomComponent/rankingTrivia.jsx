@@ -5,6 +5,28 @@ import RankingMyScore from './rankingMyScore';
 
 export default function RankingTrivia({ currentSurvey, currentUser }) {
   const [ranking, setRanking] = useState([]);
+  const [myScore, setMyScore] = useState({ name: '', score: 0 });
+
+  useEffect(() => {
+    const initialValues = {
+      name: currentUser.names ? currentUser.names : currentUser.name,
+      score: 0,
+    };
+
+    firestore
+      .collection('surveys')
+      .doc(currentSurvey._id)
+      .collection('ranking')
+      .doc(currentUser._id)
+      .onSnapshot(function(result) {
+        if (result.exists) {
+          const data = result.data();
+          setMyScore({ ...initialValues, score: data.correctAnswers });
+        } else {
+          setMyScore(initialValues);
+        }
+      });
+  }, [currentUser, currentSurvey]);
 
   useEffect(() => {
     firestore
@@ -34,7 +56,7 @@ export default function RankingTrivia({ currentSurvey, currentUser }) {
 
   return (
     <>
-      <RankingMyScore currentUser={currentUser} />
+      <RankingMyScore myScore={myScore} />
       <RankingList data={ranking} />
     </>
   );
