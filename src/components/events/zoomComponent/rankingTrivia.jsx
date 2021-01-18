@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { firestore } from '../../../helpers/firebase';
-import RankingList from './RankingList';
+import RankingList from './rankingList';
+import RankingMyScore from './rankingMyScore';
 
-export default function RankingTrivia({ currentSurvey }) {
+export default function RankingTrivia({ currentSurvey, currentUser }) {
   const [ranking, setRanking] = useState([]);
 
   useEffect(() => {
@@ -31,5 +32,10 @@ export default function RankingTrivia({ currentSurvey }) {
       });
   }, [currentSurvey]);
 
-  return <RankingList data={ranking} />;
+  return (
+    <>
+      <RankingMyScore currentUser={currentUser} />
+      <RankingList data={ranking} />
+    </>
+  );
 }
