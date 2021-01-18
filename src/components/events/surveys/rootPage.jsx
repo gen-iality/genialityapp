@@ -83,7 +83,7 @@ export default class RootPage extends Component {
             backgroundSize: '100% 100%',
             backgroundRepeat: 'no-repeat',
             backgroundImage:
-              'url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/convencion_corona%2FBG-Millonaire.jpg?alt=media&token=2c3dd454-10b1-4d0d-9c56-76e0440b5da9")',
+              'url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/convencion_corona%2Fbg-QQSM2.jpg?alt=media&token=a13a7c60-6e42-4eb0-8ddb-01e4582ed8af")',
           }}>
           {(eventUser && eventUser.rol && eventUser.rol.name === 'Speaker') ||
           openSurvey === 'false' ||
