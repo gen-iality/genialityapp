@@ -555,13 +555,15 @@ class SurveyComponent extends Component {
             )}
           </>
         )}
-        {feedbackMessage.hasOwnProperty('title') && <Result {...feedbackMessage} extra={null} />}
+        {feedbackMessage.hasOwnProperty('title') && (
+          <Result className='animate__animated animate__rubberBand' {...feedbackMessage} extra={null} />
+        )}
 
         {//Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
         surveyData && (surveyData.allow_anonymous_answers === 'true' || surveyData.publish === 'true') ? (
           <div style={{ display: feedbackMessage.hasOwnProperty('title') || showMessageOnComplete ? 'none' : 'block' }}>
             {this.state.survey && (
-              <>
+              <div className='animate__animated animate__bounceInDown'>
                 {surveyData.allow_gradable_survey === 'true' && !this.state.fiftyfitfyused && (
                   <div onClick={this.useFiftyFifty}>50/50</div>
                 )}
@@ -574,7 +576,7 @@ class SurveyComponent extends Component {
                   onStarted={this.checkCurrentPage}
                   onCurrentPageChanged={this.onCurrentPageChanged}
                 />
-              </>
+              </div>
             )}
           </div>
         ) : (
