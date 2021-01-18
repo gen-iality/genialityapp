@@ -131,7 +131,7 @@ export const SurveyPage = {
 
 export const SurveyAnswers = {
   // Servicio para registrar votos para un usuario logeado
-  registerWithUID: async (surveyId, questionId, dataAnswer, counter, isEmpty) => {
+  registerWithUID: async (surveyId, questionId, dataAnswer, counter) => {
     const { responseData, date, uid, email, names, voteValue } = dataAnswer;
     const { optionQuantity, optionIndex, correctAnswer } = counter;
 
@@ -148,7 +148,7 @@ export const SurveyAnswers = {
       data['correctAnswer'] = correctAnswer;
     }
 
-    if (!isEmpty) {
+    if (typeof responseData !== 'undefined') {
       countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue);
     }
 
@@ -222,35 +222,36 @@ export const SurveyAnswers = {
         .collection('answer_count')
         .doc(questionId)
         .onSnapshot((listResponse) => {
-          let result = listResponse.data();
-
+          let result = [];
           let total = 0;
 
-          switch (operation) {
-            case 'onlyCount':
-              result = listResponse.data();
+          if (listResponse.exists) {
+            result = listResponse.data();
+            switch (operation) {
+              case 'onlyCount':
+                result = listResponse.data();
+                Object.keys(result).map((item) => {
+                  result[item] = [result[item]];
+                });
 
-              Object.keys(result).map((item) => {
-                result[item] = [result[item]];
-              });
+                break;
 
-              break;
+              case 'participationPercentage':
+                Object.keys(result).map((item) => {
+                  total = total + result[item];
+                });
 
-            case 'participationPercentage':
-              Object.keys(result).map((item) => {
-                total = total + result[item];
-              });
+                Object.keys(result).map((item) => {
+                  const calcPercentage = Math.round((result[item] / total) * 100);
+                  result[item] = [result[item], calcPercentage];
+                });
 
-              Object.keys(result).map((item) => {
-                const calcPercentage = Math.round((result[item] / total) * 100);
-                result[item] = [result[item], calcPercentage];
-              });
+                break;
 
-              break;
-
-            case 'registeredPercentage':
-              result = listResponse.data();
-              break;
+              case 'registeredPercentage':
+                //result = result;
+                break;
+            }
           }
 
           updateData({ answer_count: result, options });

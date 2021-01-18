@@ -244,7 +244,6 @@ class SurveyComponent extends Component {
 
       // Se envia al servicio el id de la encuesta, de la pregunta y los datos
       // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
-
       if (infoUser) {
         SurveyAnswers.registerWithUID(
           surveyData._id,
