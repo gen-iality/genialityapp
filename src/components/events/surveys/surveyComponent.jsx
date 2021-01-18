@@ -429,19 +429,19 @@ class SurveyComponent extends Component {
   }
 
   useFiftyFifty = () => {
-    //console.log(this.state.survey, this.state.survey.currentPage, this.state.survey.currentPage.questions[0]);
-
     let question = this.state.survey.currentPage.questions[0];
-    //console.log('question', question, question.choices);
+
     if (!(question.correctAnswer && question.choices && question.choices.length > 2)) {
       alert('Menos de dos opciones no podemos borrar alguna');
       return;
     }
     let choices = question.choices;
+    //Determinamos la cantidad de opciones a borrar (la mitad de las opciones)
     let cuantasParaBorrar = Math.floor(choices.length / 2);
-    //console.log('se cumplen las condiciones', cuantasParaBorrar);
+
     choices = choices.filter((choice) => {
-      return question.correctAnswer === choice.value || cuantasParaBorrar-- > 0;
+      let noBorrar = question.correctAnswer === choice.value || cuantasParaBorrar-- <= 0;
+      return noBorrar;
     });
     question.choices = choices;
     this.setState({ fiftyfitfyused: true });
@@ -562,7 +562,9 @@ class SurveyComponent extends Component {
           <div style={{ display: feedbackMessage.hasOwnProperty('title') || showMessageOnComplete ? 'none' : 'block' }}>
             {this.state.survey && (
               <>
-                {!this.state.fiftyfitfyused && <div onClick={this.useFiftyFifty}>50/50</div>}
+                {surveyData.allow_gradable_survey === 'true' && !this.state.fiftyfitfyused && (
+                  <div onClick={this.useFiftyFifty}>50/50</div>
+                )}
                 <Survey.Survey
                   model={this.state.survey}
                   onComplete={(surveyModel) => this.sendData(surveyModel, 'completed')}
