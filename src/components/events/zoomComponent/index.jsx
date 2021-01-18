@@ -345,6 +345,7 @@ export default class ZoomComponent extends Component {
                     availableSurveysBar={true}
                     style={{ zIndex: 9999, width: '99vw', height: '100%' }}
                     mountCurrentSurvey={this.props.mountCurrentSurvey}
+                    unMountCurrentSurvey={this.props.unMountCurrentSurvey}
                   />
                 </div>
               )}

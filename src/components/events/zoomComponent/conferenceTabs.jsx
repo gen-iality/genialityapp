@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Tabs, Button, Menu, Row, Col, Card, Avatar, Tooltip } from 'antd';
 import {
   CommentOutlined,
@@ -12,7 +12,7 @@ import {
 } from '@ant-design/icons';
 import ListadoJuegos from './listadoJuegos';
 import LiveChat from './liveChat';
-import RankingTrivia from '../../events/surveys/rankingTrivia';
+import RankingTrivia from './rankingTrivia';
 
 const { TabPane } = Tabs;
 
@@ -26,9 +26,6 @@ export default function ConferenceTabsComponent(props) {
   function handleClick(key) {
     props.handleActiveTab(key);
   }
-  useEffect(() => {
-    console.log('las props', props);
-  }, [props]);
 
   const { chat, surveys, games, attendees, activeTab } = props;
   return (
@@ -74,20 +71,10 @@ export default function ConferenceTabsComponent(props) {
                     <VideoCameraOutlined />
                   </Col>
                 </Row>
-                <Card
-                  hoverable
-                  onClick={() => props.changeContentDisplayed('surveys')}
-                  style={{ cursor: 'pointer', marginTop: '12px' }}>
-                  <Row justify='space-between'>
-                    <Col span={6}>
-                      <Avatar size={38} icon={<PieChartOutlined />} style={{ backgroundColor: '#87d068' }} />
-                    </Col>
-                    <Col span={18}>
-                      <h2 style={{ fontWeight: '700' }}>Ir a encuestas</h2>
-                    </Col>
-                  </Row>
-                </Card>
-                <RankingTrivia currentSurvey={props.currentSurvey} />
+
+                {props.currentSurvey && Object.keys(props.currentSurvey).length > 0 && (
+                  <RankingTrivia currentSurvey={props.currentSurvey} />
+                )}
               </TabPane>
             )}
 

@@ -94,7 +94,7 @@ class Landing extends Component {
       show_banner_footer: false,
       event: null,
       requireValidation: false,
-      currentSurvey: null,
+      currentSurvey: {},
     };
     this.showLanding = this.showLanding.bind(this);
   }
@@ -225,7 +225,7 @@ class Landing extends Component {
           event={event}
           currentUser={this.state.currentUser}
           mountCurrentSurvey={this.mountCurrentSurvey}
-          unMountCurrentSurvey={this.mountCurrentSurvey}
+          unMountCurrentSurvey={this.unMountCurrentSurvey}
         />
       ),
       certs: (
@@ -542,7 +542,7 @@ class Landing extends Component {
                   activity={activity}
                   currentSurvey={this.state.currentSurvey}
                   mountCurrentSurvey={this.mountCurrentSurvey}
-                  unMountCurrentSurvey={this.mountCurrentSurvey}
+                  unMountCurrentSurvey={this.unMountCurrentSurvey}
                 />
               )}
 

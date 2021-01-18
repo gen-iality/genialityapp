@@ -29,7 +29,7 @@ export default class RootPage extends Component {
 
   componentDidMount() {
     this.loadData();
-    console.log('survey selected', this.props);
+    console.log('root page', this.props);
   }
 
   componentDidUpdate(prevProps) {
@@ -59,6 +59,10 @@ export default class RootPage extends Component {
     // eslint-disable-next-line no-console
     console.log('los resultados', surveyData);
   };
+
+  componentWillUnmount() {
+    this.props.unMountCurrentSurvey();
+  }
 
   render() {
     let {

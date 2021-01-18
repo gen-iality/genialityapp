@@ -13,7 +13,7 @@ Survey.StylesManager.applyTheme('modern');
 
 const surveyStyle = {
   overFlowX: 'hidden',
-  overFlowY: 'scroll'
+  overFlowY: 'scroll',
 };
 
 class SurveyComponent extends Component {
@@ -36,11 +36,12 @@ class SurveyComponent extends Component {
       currentPage: null,
       surveyRealTime: null,
       timerPausa: null,
-      survey: null
+      survey: null,
     };
   }
 
   async componentDidMount() {
+    console.log('this props surveyComponent', this.props);
     var self = this;
     const { eventId, idSurvey } = this.props;
     //console.log("CARGANDO INICIAL");
@@ -54,7 +55,6 @@ class SurveyComponent extends Component {
     que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
     sino se presentar comportamientos raros.
     */
-    console.log('surveyData', surveyData);
     self.setState({ surveyData, idSurvey, survey });
     self.survey = survey;
 
@@ -123,7 +123,7 @@ class SurveyComponent extends Component {
             self.setState({
               surveyRealTime,
               freezeGame: surveyRealTime.freezeGame,
-              currentPage: surveyRealTime.currentPage
+              currentPage: surveyRealTime.currentPage,
             });
             resolve(surveyRealTime);
           });
@@ -170,7 +170,7 @@ class SurveyComponent extends Component {
       let textMessage = dataSurvey.initialMessage;
       dataSurvey['questions'].unshift({
         type: 'html',
-        html: `<div style='width: 90%; margin: 0 auto;'>${textMessage}</div>`
+        html: `<div style='width: 90%; margin: 0 auto;'>${textMessage}</div>`,
       });
     }
 
@@ -186,7 +186,7 @@ class SurveyComponent extends Component {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
         key: `page${index + 1}`,
-        questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey === 'true' ? false : true }]
+        questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey === 'true' ? false : true }],
       };
     });
 
@@ -255,7 +255,7 @@ class SurveyComponent extends Component {
             uid: infoUser._id,
             email: infoUser.email,
             names: infoUser.names || infoUser.displayName,
-            voteValue: surveyData.allow_vote_value_per_user === 'true' && eventUsers.length > 0 && voteWeight
+            voteValue: surveyData.allow_vote_value_per_user === 'true' && eventUsers.length > 0 && voteWeight,
           },
           infoOptionQuestion
         )
@@ -275,7 +275,7 @@ class SurveyComponent extends Component {
           {
             responseData: question.value || '',
             date: new Date(),
-            uid: 'guest'
+            uid: 'guest',
           },
           infoOptionQuestion
         )
@@ -299,7 +299,7 @@ class SurveyComponent extends Component {
 
       const score = {
         totalPoints,
-        totalQuestions
+        totalQuestions,
       };
       Trivia.setTriviaRanking(idSurvey, currentUser, score);
     }
@@ -310,7 +310,7 @@ class SurveyComponent extends Component {
     const objMessage = {
       title: '',
       subTitle: '',
-      status: state
+      status: state,
     };
 
     switch (state) {
@@ -319,7 +319,7 @@ class SurveyComponent extends Component {
           ...objMessage,
           title: 'Has respondido correctamente',
           subTitle: `Has ganado ${questionPoints} puntos, respondiendo correctamente la pregunta.`,
-          icon: <SmileOutlined />
+          icon: <SmileOutlined />,
         };
 
       case 'error':
@@ -327,7 +327,7 @@ class SurveyComponent extends Component {
           ...objMessage,
           title: 'No has respondido correctamente',
           subTitle: 'Debido a que no respondiste correctamente no has ganado puntos.',
-          icon: <FrownOutlined />
+          icon: <FrownOutlined />,
         };
 
       case 'warning':
@@ -335,7 +335,7 @@ class SurveyComponent extends Component {
           ...objMessage,
           title: 'No has escogido ninguna opción',
           subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opción.`,
-          icon: <MehOutlined />
+          icon: <MehOutlined />,
         };
 
       case 'info':
@@ -343,7 +343,7 @@ class SurveyComponent extends Component {
           ...objMessage,
           title: 'Estamos en una pausa',
           subTitle: `El juego se encuentra en pausa. Espera hasta el moderador reanude el juego`,
-          icon: <MehOutlined />
+          icon: <MehOutlined />,
         };
 
       default:
@@ -437,7 +437,7 @@ class SurveyComponent extends Component {
         user_id: currentUser._id,
         user_name: currentUser.names,
         user_email: currentUser.email,
-        points: rankingPoints
+        points: rankingPoints,
       });
     }
   };
@@ -624,7 +624,7 @@ class SurveyComponent extends Component {
               eventUser.ticket.allowed_to_vote === 'true' && (
                 <div
                   style={{
-                    display: feedbackMessage.hasOwnProperty('title') || showMessageOnComplete ? 'none' : 'block'
+                    display: feedbackMessage.hasOwnProperty('title') || showMessageOnComplete ? 'none' : 'block',
                   }}>
                   {this.state.survey && (
                     <Survey.Survey
