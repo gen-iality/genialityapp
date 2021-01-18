@@ -19,7 +19,7 @@ export default function RankingList({ data }) {
       <div className='container-ranking' style={{ marginTop: 16 }}>
         {list.length > 0 ? (
           list.map((item, key) => (
-            <div className='card-games-ranking' key={'item' + key}>
+            <div className='card-games-ranking animate__animated animate__bounce' key={'item' + key}>
               <Row justify='space-between' align='middle'>
                 <Col span={6}>
                   <Avatar size={35}>
