@@ -34,7 +34,7 @@ class WallList extends Component {
       user: undefined,
       commenting: null,
       displayedComments: {},
-      event: this.props.event || {},
+      event: this.props.event || {}
     };
   }
 
@@ -160,7 +160,7 @@ class WallList extends Component {
                               {this.state.deleting === item.id && <Spin />}
                             </>
                           )}
-                        </>,
+                        </>
                       ]}>
                       <List.Item.Meta
                         avatar={
@@ -168,7 +168,8 @@ class WallList extends Component {
                             <Avatar src={item.avatar} />
                           ) : (
                             <Avatar>
-                              {item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
+                              {item.authorName &&
+                                item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
                             </Avatar>
                           )
                         }
@@ -189,7 +190,7 @@ class WallList extends Component {
                           width={'100%'}
                           style={{
                             display: 'block',
-                            margin: '0 auto',
+                            margin: '0 auto'
                           }}
                           alt='logo'
                           src={item.urlImage}

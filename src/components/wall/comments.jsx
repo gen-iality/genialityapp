@@ -13,7 +13,7 @@ class CommentsList extends Component {
       dataComment: undefined,
       postId: this.props.postId,
       eventId: this.props.eventId,
-      commentsCount: this.props.commentsCount || 0,
+      commentsCount: this.props.commentsCount || 0
     };
   }
 
@@ -75,7 +75,8 @@ class CommentsList extends Component {
                   avatar={
                     item.authorName ? (
                       <Avatar>
-                        {item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
+                        {item.authorName &&
+                          item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
                       </Avatar>
                     ) : (
                       <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />

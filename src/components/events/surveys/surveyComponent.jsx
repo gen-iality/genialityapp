@@ -9,6 +9,7 @@ import { SurveyAnswers, SurveyPage, UserGamification, Trivia } from './services'
 import Graphics from './graphics';
 import * as Survey from 'survey-react';
 import 'survey-react/modern.css';
+import { cosh } from 'core-js/fn/math';
 Survey.StylesManager.applyTheme('modern');
 
 const surveyStyle = {
@@ -31,11 +32,11 @@ class SurveyComponent extends Component {
       voteWeight: 0,
       freezeGame: false,
       showMessageOnComplete: false,
-      aux: 0,
       currentPage: null,
       surveyRealTime: null,
       timerPausa: null,
-      survey: null
+      survey: null,
+      rankingPoints: 0
     };
   }
 
@@ -201,7 +202,7 @@ class SurveyComponent extends Component {
   executePartialService = (surveyData, question, infoUser) => {
     let { eventUsers, voteWeight } = this.state;
 
-    console.log('execute question', question);
+    console.log('execute question', question.value, question.correctAnswer);
 
     return new Promise((resolve, reject) => {
       // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
@@ -210,7 +211,7 @@ class SurveyComponent extends Component {
       let correctAnswer = false;
 
       // Asigna puntos si la encuesta tiene
-      let surveyPoints = question.points ? parseInt(question.points) : 0;
+      let surveyPoints = question.points ? parseInt(question.points) : 1;
       let rankingPoints = 0;
 
       //Hack rÃƒÆ’Ã‚Â¡pido para permitir preguntas tipo texto (abiertas)
@@ -288,22 +289,6 @@ class SurveyComponent extends Component {
     });
   };
 
-  setRanking = () => {
-    const { surveyData, totalPoints } = this.state;
-    const { idSurvey, currentUser } = this.props;
-
-    if (surveyData.allow_gradable_survey) {
-      // NÃºmero total de preguntas, se resta uno porque la primer pÃ¡gina es informativa
-      let totalQuestions = surveyData.pages.length - 1;
-
-      const score = {
-        totalPoints,
-        totalQuestions
-      };
-      Trivia.setTriviaRanking(idSurvey, currentUser, score);
-    }
-  };
-
   // Funcion que muestra el feedback dependiendo del estado
   showStateMessage = (state, questionPoints) => {
     const objMessage = {
@@ -356,100 +341,85 @@ class SurveyComponent extends Component {
 
   /*
     surveyData: (Object) Informacio general de la encuesta
-    aux: (0 || 1) Se utliza para saber si ya pasamos por la ultima pagina, si es mayor a 0 retornamos null para para detener el hilo de ejecución del método
+    retornamos null para para detener el hilo de ejecución del método
     */
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
-  sendData = async (surveyModel, partialSend) => {
+  sendData = async (surveyModel) => {
+    console.log('surveyModel', surveyModel);
     const { eventId, currentUser } = this.props;
-    let { surveyData, aux } = this.state;
+    let { surveyData } = this.state;
 
-    //console.log('values', values.currentPage, values.currentPage.questions, values.data, values);
+    let rankingPointsThisPage;
+    await Promise.all(
+      surveyModel.currentPage.questions.map(async (question) => {
+        let { rankingPoints } = await this.executePartialService(surveyData, question, currentUser);
 
-    surveyModel.currentPage.questions.forEach(async (question) => {
-      //store each question
-      // eslint-disable-next-line no-unused-vars
-      let { responseMessage, rankingPoints } = await this.executePartialService(surveyData, question, currentUser);
-
-      this.registerRankingPoints(rankingPoints, surveyModel, surveyData, countDown, currentUser, eventId);
-
-      console.log(partialSend, question.name, question.value, question);
-    });
+        if (rankingPoints)
+          rankingPointsThisPage = rankingPointsThisPage ? rankingPointsThisPage + rankingPoints : rankingPoints;
+        this.registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId);
+        return rankingPoints;
+      })
+    );
 
     //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
     SurveyPage.setCurrentPage(surveyData._id, currentUser._id, surveyModel.currentPageNo);
 
     let isLastPage = surveyModel.isLastPage;
-    let countDown = isLastPage ? 3 : 0;
-
-    // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
-    //if (aux > 0) return;
-    console.log('+++++++++++++++++++ HERE *************************');
 
     if (surveyData.allow_gradable_survey === 'true') {
-      if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
-
-      if (!isLastPage)
-        // Evento que se ejecuta al cambiar de pagina
-        surveyModel.onCurrentPageChanged.add((sender, options) => {
-          // Se obtiene el tiempo restante para poder usarlo en el modal
-          countDown = surveyModel.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
-          // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
-          if (countDown > 0) sender.stopTimer();
-        });
+      if (isLastPage) {
+        this.setState((prevState) => ({ showMessageOnComplete: false }));
+      } else {
+        this.setState({ rankingPoints: rankingPointsThisPage });
+      }
     }
-  };
-
-  registerRankingPoints = (rankingPoints, surveyModel, surveyData, countDown, currentUser, eventId) => {
-    let { totalPoints } = this.state;
-
-    if (rankingPoints !== undefined) totalPoints += rankingPoints;
-
-    // Se guarda el total de puntos y se ejecuta un callback que verifica si la encuesta es calificable para guardar el score en el ranking
-    this.setState({ totalPoints }, () => {
-      // Si la encuesta es calificable va guardando el ranking del usuario
-      this.setRanking();
-    });
-
-    // message.success({ content: responseMessage });
 
     // Permite asignar un estado para que actualice la lista de las encuestas si el usuario respondio la encuesta
     if (this.props.showListSurvey) this.setState({ sentSurveyAnswers: true });
-
-    // Solo intenta registrar puntos si la encuesta es calificable
-    // Actualiza puntos del usuario
-    if (surveyData.allow_gradable_survey === 'true') {
-      // Muestra modal de retroalimentacion
-      if (rankingPoints !== undefined) {
-        let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
-
-        let typeMessage = rankingPoints > 0 ? 'success' : 'error';
-        let result = this.showStateMessage(typeMessage, rankingPoints);
-
-        this.setIntervalToWaitBeforeNextQuestion(surveyModel, result, secondsToGo);
-      }
-      // Ejecuta serivicio para registrar puntos
-      UserGamification.registerPoints(eventId, {
-        user_id: currentUser._id,
-        user_name: currentUser.names,
-        user_email: currentUser.email,
-        points: rankingPoints
-      });
-    }
   };
 
-  setIntervalToWaitBeforeNextQuestion(survey, result, secondsToGo) {
+  registerRankingPoints = (rankingPoints, surveyModel, surveyData, currentUser, eventId) => {
+    if (rankingPoints == undefined || rankingPoints == 0) return;
+    if (surveyData.allow_gradable_survey !== 'true') return;
+
+    //para guardar el score en el ranking
+    let { totalPoints } = this.state;
+    totalPoints += rankingPoints;
+    this.setState({ totalPoints });
+
+    // Ejecuta serivicio para registrar puntos
+    UserGamification.registerPoints(eventId, {
+      user_id: currentUser._id,
+      user_name: currentUser.names,
+      user_email: currentUser.email,
+      points: rankingPoints
+    });
+
+    Trivia.setTriviaRanking(surveyData._id, currentUser, totalPoints, surveyModel.getAllQuestions().length - 1);
+    // message.success({ content: responseMessage });
+  };
+
+  /* handler cuando la encuesta cambio de pregunta */
+  onCurrentPageChanged = (sender, options) => {
+    if (!options.oldCurrentPage) return;
+    let secondsToGo = sender.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+    if (secondsToGo > 0) sender.stopTimer();
+    this.setIntervalToWaitBeforeNextPage(sender, secondsToGo);
+  };
+
+  setIntervalToWaitBeforeNextPage(survey, secondsToGo) {
     secondsToGo = secondsToGo ? secondsToGo : 0;
-
-    let mensaje_espera = `${result.subTitle} Espera el tiempo indicado para seguir con el cuestionario.`;
-    let mensaje_congelado = `El juego se encuentra en pausa. Espera hasta que el moderador  reanude el juego`;
-
-    result.subTitle = secondsToGo > 0 ? mensaje_espera : mensaje_congelado;
-    this.setState({ feedbackMessage: result });
 
     const timer = setInterval(() => {
       secondsToGo -= 1;
-      result.subTitle = secondsToGo > 0 ? mensaje_espera + ' ' + secondsToGo : mensaje_congelado;
-      this.setState({ feedbackMessage: result });
+      let { rankingPoints } = this.state;
+      rankingPoints = !rankingPoints ? 0 : rankingPoints;
+      let typeMessage = rankingPoints > 0 ? 'success' : 'error';
+      let mensaje = this.showStateMessage(typeMessage, rankingPoints);
+      let mensaje_espera = `${mensaje.subTitle} Espera el tiempo indicado para seguir con el cuestionario.`;
+      let mensaje_congelado = `El juego se encuentra en pausa. Espera hasta que el moderador  reanude el juego`;
+      mensaje.subTitle = secondsToGo > 0 ? mensaje_espera + ' ' + secondsToGo : mensaje_congelado;
+      this.setState({ feedbackMessage: mensaje });
 
       if (secondsToGo <= 0 && !this.state.freezeGame) {
         clearInterval(timer);
@@ -506,33 +476,12 @@ class SurveyComponent extends Component {
     options.text = `Tienes ${timeTotal} para responder la pregunta. Quedan ${countDown}`;
   };
 
-  /* handler cuando la encuesta cambio de pregunta */
-  onCurrentPageChanged = () => {
-    let { surveyData } = this.state;
-    if (surveyData.allow_gradable_survey !== 'true') return;
-
-    console.log('ON CURRENT PAGE CHANGED', this.state);
-    /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
-     * se caiga del sistema y vuelva a conectarse la idea es que se conecte a esta pregunta.
-     * va a tener el valor de la pregunta mÃƒÆ’Ã‚Â¡s adealantda que se haay contestado.
-     *
-     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la ÃƒÆ’Ã‚Âºltima pÃƒÆ’Ã‚Â¡gina si esto pasa vuelve e inicia la encuesta
-     *  cuando una persona entre a respodner una pregunta colocamos el currentPage en la siguiente pregunta por si me salgo y entro que no me vuelva a repetir
-     *  la pregunta en la que ya estaba.
-     */
-
-    //Se comentarea if para evitar regresar a la pagina en que quedÃ³ el usuario al desconectarse
-
-    // if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
-    //   SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
-  };
-
   checkCurrentPage = (survey) => {
     let { currentPage, surveyData } = this.state;
 
     // Este condicional sirve para retomar la encuesta donde vayan todos los demas usuarios
     if (surveyData.allow_gradable_survey === 'true') {
-      if (currentPage !== 0) survey.currentPageNo = currentPage;
+      //if (currentPage !== 0) survey.currentPageNo = currentPage;
 
       if (this.state.freezeGame) {
         survey.stopTimer();
@@ -540,9 +489,6 @@ class SurveyComponent extends Component {
         this.setIntervalToWaitBeforeNextQuestion(survey, result, 0);
       }
     }
-
-    // Este condicional sirve para retomar la encuesta dependiendo de las respuestas registradas
-    // if (responseCounter > 0 && responseCounter < pages.length) return survey.currentPageNo = responseCounter;
   };
 
   render() {
