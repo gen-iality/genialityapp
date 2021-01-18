@@ -41,6 +41,7 @@ class SurveyComponent extends Component {
   }
 
   async componentDidMount() {
+    console.log('this props surveyComponent', this.props);
     var self = this;
     const { eventId, idSurvey } = this.props;
     //console.log("CARGANDO INICIAL");
@@ -54,7 +55,6 @@ class SurveyComponent extends Component {
     que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
     sino se presentar comportamientos raros.
     */
-    console.log('surveyData', surveyData);
     self.setState({ surveyData, idSurvey, survey });
     self.survey = survey;
 
@@ -499,7 +499,7 @@ class SurveyComponent extends Component {
     if (!surveyData) return 'Cargando...';
     return (
       <div style={surveyStyle}>
-        {this.state.survey && this.state.survey.state !== 'completed' && (
+        {this.state.survey && (
           <div style={{ marginTop: 5 }}>
             <Button ghost shape='round' onClick={() => showListSurvey(sentSurveyAnswers)}>
               <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}

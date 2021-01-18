@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { firestore } from '../../../helpers/firebase';
 import { Row, Col, Card, Avatar } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import RankingList from './RankingList';
 
 // const rankingDemo = [
 //   {
@@ -65,16 +66,13 @@ export default function ListadoJuegos(props) {
       .onSnapshot(function(querySnapshot) {
         var puntajes = [];
         querySnapshot.forEach(function(doc) {
-          puntajes.push(doc.data());
+          const result = doc.data();
+          result['score'] = result.puntaje;
+          puntajes.push(result);
         });
         setRanking(puntajes);
       });
   }, [props.currentUser]);
-
-  function formatName(name) {
-    const result = decodeURIComponent(name);
-    return result;
-  }
 
   return (
     <>
@@ -150,30 +148,7 @@ export default function ListadoJuegos(props) {
             </div>
           </>
         )}
-        <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Ranking de jugadores</h3>
-        <div className='container-ranking'>
-          {ranking.length &&
-            ranking.map((item, key) => (
-              <>
-                <div className='card-games-ranking' key={'item' + key}>
-                  <Row justify='space-between'>
-                    <Col span={6}>
-                      <Avatar size={35}>
-                        {item.name && item.name.charAt(0).toUpperCase()}
-                        {item.name && item.name.substring(item.name.indexOf(' ') + 1, item.name.indexOf(' ') + 2)}
-                      </Avatar>
-                    </Col>
-                    <Col span={12}>
-                      <h3>{formatName(item.name)}</h3>
-                    </Col>
-                    <Col span={6}>
-                      <h4>{item.puntaje} Pts</h4>
-                    </Col>
-                  </Row>
-                </div>
-              </>
-            ))}
-        </div>
+        <RankingList data={ranking} />
       </Row>
     </>
   );

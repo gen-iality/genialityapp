@@ -29,7 +29,7 @@ export default class RootPage extends Component {
 
   componentDidMount() {
     this.loadData();
-    console.log('survey selected', this.props);
+    console.log('root page', this.props);
   }
 
   componentDidUpdate(prevProps) {
@@ -60,6 +60,10 @@ export default class RootPage extends Component {
     console.log('los resultados', surveyData);
   };
 
+  componentWillUnmount() {
+    this.props.unMountCurrentSurvey();
+  }
+
   render() {
     let {
       idSurvey,
@@ -75,12 +79,13 @@ export default class RootPage extends Component {
     if (!isLoading)
       return (
         <div
-          style={{
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            backgroundImage:
-              'url("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Milonario_El_Salvador.jpg/800px-Milonario_El_Salvador.jpg")',
-          }}>
+        // style={{
+        //   backgroundSize: '100% 100%',
+        //   backgroundRepeat: 'no-repeat',
+        //   backgroundImage:
+        //     'url("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Milonario_El_Salvador.jpg/800px-Milonario_El_Salvador.jpg")',
+        // }}
+        >
           {(eventUser && eventUser.rol && eventUser.rol.name === 'Speaker') ||
           openSurvey === 'false' ||
           hasVote ||

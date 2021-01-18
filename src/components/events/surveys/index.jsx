@@ -79,7 +79,6 @@ class SurveyForm extends Component {
   };
 
   async componentDidMount() {
-    console.log('props ///////////', this.props);
     let { event, currentUser } = this.props;
     let eventUser = await this.getCurrentEvenUser(event._id);
 
@@ -272,6 +271,7 @@ class SurveyForm extends Component {
             eventUser={eventUser}
             openSurvey={selectedSurvey.open}
             surveyLabel={surveyLabel}
+            unMountCurrentSurvey={this.props.unMountCurrentSurvey}
           />
         )
       );
