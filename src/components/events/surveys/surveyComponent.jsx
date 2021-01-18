@@ -458,8 +458,20 @@ class SurveyComponent extends Component {
   setFinalMessage = (survey, options) => {
     let { surveyData, totalPoints } = this.state;
 
-    // NÃºmero total de preguntas, se resta uno porque la primer pÃ¡gina es informativa
-    let totalQuestions = surveyData.pages.length - 1;
+    let totalQuestions = 0;
+
+    let questions = surveyData.pages;
+
+    questions.forEach((item) => {
+      if (item.questions[0].points) {
+        totalQuestions += parseInt(item.questions[0].points);
+      }
+    });
+
+    if (totalQuestions === 0) {
+      //Número total de preguntas, se resta uno porque la primer pÃ¡gina es informativa
+      totalQuestions = surveyData.pages.length - 1;
+    }
 
     // Umbral de exito, esta variable indica apartir de cuantos aciertos se completa con Ã©xito el cuestionario
     // Por el momento el valor esta quemado y deberÃ­a venir de un parÃ¡metro del CMS
