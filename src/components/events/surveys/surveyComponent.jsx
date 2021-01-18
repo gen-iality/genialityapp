@@ -12,6 +12,7 @@ import 'survey-react/modern.css';
 import { cosh } from 'core-js/fn/math';
 Survey.StylesManager.applyTheme('modern');
 
+const MIN_ANSWER_FEEDBACK_TIME = 5;
 const surveyStyle = {
   overFlowX: 'hidden',
   overFlowY: 'scroll'
@@ -42,15 +43,11 @@ class SurveyComponent extends Component {
   }
 
   async componentDidMount() {
-    console.log('this props surveyComponent', this.props);
     var self = this;
     const { eventId, idSurvey } = this.props;
-    //console.log("CARGANDO INICIAL");
     let surveyData = await this.loadSurvey(eventId, idSurvey);
     let survey = new Survey.Model(surveyData);
-    //console.log("CARGADO surveyData");
     await this.listenAndUpdateStateSurveyRealTime(idSurvey);
-    //console.log("CARGADO surveyRealTime");
 
     /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
     que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
@@ -203,8 +200,6 @@ class SurveyComponent extends Component {
   executePartialService = (surveyData, question, infoUser) => {
     let { eventUsers, voteWeight } = this.state;
 
-    console.log('execute question', question.value, question.correctAnswer);
-
     return new Promise((resolve, reject) => {
       // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
       let optionIndex = [];
@@ -345,7 +340,6 @@ class SurveyComponent extends Component {
     */
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
   sendData = async (surveyModel) => {
-    console.log('surveyModel', surveyModel);
     const { eventId, currentUser } = this.props;
     let { surveyData } = this.state;
 
@@ -403,12 +397,15 @@ class SurveyComponent extends Component {
   onCurrentPageChanged = (sender, options) => {
     if (!options.oldCurrentPage) return;
     let secondsToGo = sender.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
-    if (secondsToGo > 0) sender.stopTimer();
+
+    //if (secondsToGo > 0) sender.stopTimer();
+    sender.stopTimer();
     this.setIntervalToWaitBeforeNextPage(sender, secondsToGo);
   };
 
   setIntervalToWaitBeforeNextPage(survey, secondsToGo) {
     secondsToGo = secondsToGo ? secondsToGo : 0;
+    secondsToGo += MIN_ANSWER_FEEDBACK_TIME;
 
     const timer = setInterval(() => {
       secondsToGo -= 1;
@@ -432,17 +429,17 @@ class SurveyComponent extends Component {
   }
 
   useFiftyFifty = () => {
-    console.log(this.state.survey, this.state.survey.currentPage, this.state.survey.currentPage.questions[0]);
+    //console.log(this.state.survey, this.state.survey.currentPage, this.state.survey.currentPage.questions[0]);
 
     let question = this.state.survey.currentPage.questions[0];
-    console.log('question', question, question.choices);
+    //console.log('question', question, question.choices);
     if (!(question.correctAnswer && question.choices && question.choices.length > 2)) {
       alert('Menos de dos opciones no podemos borrar alguna');
       return;
     }
     let choices = question.choices;
     let cuantasParaBorrar = Math.floor(choices.length / 2);
-    console.log('se cumplen las condiciones', cuantasParaBorrar);
+    //console.log('se cumplen las condiciones', cuantasParaBorrar);
     choices = choices.filter((choice) => {
       return question.correctAnswer === choice.value || cuantasParaBorrar-- > 0;
     });
