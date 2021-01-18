@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { Result, Button } from 'antd';
-import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined, BulbOutlined  } from '@ant-design/icons';
 import * as Cookie from 'js-cookie';
 import { SurveysApi, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
@@ -563,7 +563,7 @@ class SurveyComponent extends Component {
             {this.state.survey && (
               <>
                 {surveyData.allow_gradable_survey === 'true' && !this.state.fiftyfitfyused && (
-                  <div onClick={this.useFiftyFifty}>50/50</div>
+                  <div className="survy-comodin" onClick={this.useFiftyFifty}><Button> 50 / 50 <BulbOutlined /></Button></div>
                 )}
                 <Survey.Survey
                   model={this.state.survey}

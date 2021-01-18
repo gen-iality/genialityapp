@@ -91,11 +91,20 @@ iframe {
     margin-right: 4%;
   }
 }
-
+.survy-comodin{
+  margin: 2%;
+  .ant-btn {
+    background: rgba(0, 0, 0, 0.45);
+  }
+}
 .sv-container-modern{
+  overflow-y: scroll;
+  height: 77vh;
+  margin-top: 2%;
   @media screen and (max-width: $breakpoint-mobile) {
     overflow-y: scroll;
     height: 67vh;
+    margin-top: 2%;
   }
 }
 
