@@ -229,7 +229,6 @@ export const SurveyAnswers = {
             result = listResponse.data();
             switch (operation) {
               case 'onlyCount':
-                result = listResponse.data();
                 Object.keys(result).map((item) => {
                   result[item] = [result[item]];
                 });

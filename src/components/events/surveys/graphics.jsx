@@ -88,11 +88,11 @@ class Graphics extends Component {
       switch (operation) {
         case 'onlyCount':
           generatedlabels[a] =
-            answer_count && answer_count.length ? options.choices[a] + ` ${answer_count[a][0]} Voto(s)` : '0 Votos';
+            answer_count && answer_count[a] ? options.choices[a] + ` ${answer_count[a][0]} Voto(s)` : '0 Votos';
           break;
         case 'participationPercentage':
           generatedlabels[a] =
-            answer_count && answer_count.length
+            answer_count && answer_count[a]
               ? ` ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n ${options.choices[a]}`
               : '0 Votos';
           break;

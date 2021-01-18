@@ -36,7 +36,8 @@ class SurveyComponent extends Component {
       surveyRealTime: null,
       timerPausa: null,
       survey: null,
-      rankingPoints: 0
+      rankingPoints: 0,
+      fiftyfitfyused: false
     };
   }
 
@@ -430,6 +431,26 @@ class SurveyComponent extends Component {
     this.setState({ timerPausa: timer });
   }
 
+  useFiftyFifty = () => {
+    console.log(this.state.survey, this.state.survey.currentPage, this.state.survey.currentPage.questions[0]);
+
+    let question = this.state.survey.currentPage.questions[0];
+    console.log('question', question, question.choices);
+    if (!(question.correctAnswer && question.choices && question.choices.length > 2)) {
+      alert('Menos de dos opciones no podemos borrar alguna');
+      return;
+    }
+    let choices = question.choices;
+    let cuantasParaBorrar = Math.floor(choices.length / 2);
+    console.log('se cumplen las condiciones', cuantasParaBorrar);
+    choices = choices.filter((choice) => {
+      return question.correctAnswer === choice.value || cuantasParaBorrar-- > 0;
+    });
+    question.choices = choices;
+    this.setState({ fiftyfitfyused: true });
+    alert('has usado la ayuda  del 50/50');
+  };
+
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
   // eslint-disable-next-line no-unused-vars
   setFinalMessage = (survey, options) => {
@@ -543,15 +564,18 @@ class SurveyComponent extends Component {
         surveyData && (surveyData.allow_anonymous_answers === 'true' || surveyData.publish === 'true') ? (
           <div style={{ display: feedbackMessage.hasOwnProperty('title') || showMessageOnComplete ? 'none' : 'block' }}>
             {this.state.survey && (
-              <Survey.Survey
-                model={this.state.survey}
-                onComplete={(surveyModel) => this.sendData(surveyModel, 'completed')}
-                onPartialSend={(surveyModel) => this.sendData(surveyModel, 'partial')}
-                onCompleting={this.setFinalMessage}
-                onTimerPanelInfoText={this.setCounterMessage}
-                onStarted={this.checkCurrentPage}
-                onCurrentPageChanged={this.onCurrentPageChanged}
-              />
+              <>
+                {!this.state.fiftyfitfyused && <div onClick={this.useFiftyFifty}>50/50</div>}
+                <Survey.Survey
+                  model={this.state.survey}
+                  onComplete={(surveyModel) => this.sendData(surveyModel, 'completed')}
+                  onPartialSend={(surveyModel) => this.sendData(surveyModel, 'partial')}
+                  onCompleting={this.setFinalMessage}
+                  onTimerPanelInfoText={this.setCounterMessage}
+                  onStarted={this.checkCurrentPage}
+                  onCurrentPageChanged={this.onCurrentPageChanged}
+                />
+              </>
             )}
           </div>
         ) : (
