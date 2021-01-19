@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { Result, Button } from 'antd';
-import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined, BulbOutlined  } from '@ant-design/icons';
+import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined, BulbOutlined } from '@ant-design/icons';
 import * as Cookie from 'js-cookie';
 import { SurveysApi, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
@@ -347,19 +347,23 @@ class SurveyComponent extends Component {
   sendData = async (surveyModel) => {
     const { eventId, currentUser } = this.props;
     let { surveyData } = this.state;
+
     this.setState({ rankingPoints: 0 });
+
     let rankingPointsThisPage;
     await Promise.all(
       surveyModel.currentPage.questions.map(async (question) => {
         let { rankingPoints } = await this.executePartialService(surveyData, question, currentUser);
-
+        console.log('puntos', rankingPoints);
         if (rankingPoints)
           rankingPointsThisPage = rankingPointsThisPage ? rankingPointsThisPage + rankingPoints : rankingPoints;
         this.registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId);
         return rankingPoints;
       })
     );
+    this.setState({ rankingPoints: rankingPointsThisPage });
 
+    console.log('--> intermedio--rankingPoints', rankingPointsThisPage, surveyModel.isLastPage);
     //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
     SurveyPage.setCurrentPage(surveyData._id, currentUser._id, surveyModel.currentPageNo);
 
@@ -368,8 +372,6 @@ class SurveyComponent extends Component {
     if (surveyData.allow_gradable_survey === 'true') {
       if (isLastPage) {
         this.setState((prevState) => ({ showMessageOnComplete: false }));
-      } else {
-        this.setState({ rankingPoints: rankingPointsThisPage });
       }
     }
 
@@ -408,7 +410,7 @@ class SurveyComponent extends Component {
     this.setIntervalToWaitBeforeNextPage(sender, secondsToGo);
   };
 
-  setIntervalToWaitBeforeNextPage(survey, secondsToGo) {
+  setIntervalToWaitBeforeNextPage(survey, secondsToGo, messageType) {
     secondsToGo = secondsToGo ? secondsToGo : 0;
     secondsToGo += MIN_ANSWER_FEEDBACK_TIME;
 
@@ -416,8 +418,12 @@ class SurveyComponent extends Component {
       secondsToGo -= 1;
       let { rankingPoints } = this.state;
       rankingPoints = !rankingPoints ? 0 : rankingPoints;
-      let typeMessage = rankingPoints > 0 ? 'success' : 'error';
-      let mensaje = this.showStateMessage(typeMessage, rankingPoints);
+
+      if (!messageType) {
+        messageType = rankingPoints > 0 ? 'success' : 'error';
+      }
+
+      let mensaje = this.showStateMessage(messageType, rankingPoints);
       let mensaje_espera = `${mensaje.subTitle} Espera el tiempo indicado para seguir con el cuestionario.`;
       let mensaje_congelado = `El juego se encuentra en pausa. Espera hasta que el moderador  reanude el juego`;
       mensaje.subTitle = secondsToGo > 0 ? mensaje_espera + ' ' + secondsToGo : mensaje_congelado;
@@ -519,8 +525,7 @@ class SurveyComponent extends Component {
 
       if (this.state.freezeGame) {
         survey.stopTimer();
-        let result = this.showStateMessage('info');
-        this.setIntervalToWaitBeforeNextQuestion(survey, result, 0);
+        this.setIntervalToWaitBeforeNextPage(survey, 0, 'info');
       }
     }
   };
@@ -582,7 +587,12 @@ class SurveyComponent extends Component {
             {this.state.survey && (
               <div className='animate__animated animate__bounceInDown'>
                 {surveyData.allow_gradable_survey === 'true' && !this.state.fiftyfitfyused && (
-                  <div className="survy-comodin" onClick={this.useFiftyFifty}><Button> 50 / 50 <BulbOutlined /></Button></div>
+                  <div className='survy-comodin' onClick={this.useFiftyFifty}>
+                    <Button>
+                      {' '}
+                      50 / 50 <BulbOutlined />
+                    </Button>
+                  </div>
                 )}
                 <Survey.Survey
                   model={this.state.survey}
