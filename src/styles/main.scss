@@ -109,12 +109,12 @@ iframe {
 }
 .sv-container-modern{
   overflow-y: scroll;
-  height: 77vh;
+  height: 50vh;
   margin-top: 2%;
   margin-bottom: 10%;
   @media screen and (max-width: $breakpoint-mobile) {
     overflow-y: scroll;
-    height: 67vh;
+    height: 55vh;
     margin-top: 2%;
   }
 }
