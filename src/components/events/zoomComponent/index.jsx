@@ -175,10 +175,6 @@ export default class ZoomComponent extends Component {
       return;
     }
 
-    if (prevProps.currentSurvey === this.props.currentSurvey) {
-      console.log('IN ZOOM COMPONENT', this.props.currentSurvey);
-    }
-
     this.setUpUserForConference();
   }
 

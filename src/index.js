@@ -22,7 +22,7 @@ const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 const messages = localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
 
 ReactDOM.render(
-  <IntlProvider locale={language} messages={messages} defaultLocale='es'>
+  <IntlProvider locale={languageWithoutRegionCode} messages={messages} defaultLocale='es'>
     <App />
   </IntlProvider>,
   document.getElementById('root')

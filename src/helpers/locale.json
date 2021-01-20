@@ -38,10 +38,22 @@
     "toast.user_deleted": "Attendee deleted successfully",
     "toast.ticket_sent": "Ticket sent successfully",
     "toast.email_sent": "Email sent successfully",
-    "live.join": "Join live",
-    "live.private_access": "Private access",
     "live.hosts": "Hosts",
-    "live.starts_in": "activity starts in"
+    "live.private_access": "Private access",
+
+    "live.join": "Join live",
+    "live.join.disabled": "The event is starting soon",
+    "live.starts_in": "activity starts in",
+
+    "live.ended": "Event ended",
+    "live.ended.video": "Event ended. Watch the video here",
+    "live.closed": "Event haven't started yet",
+    "registration.title.create": "Register",
+    "registration.title.update": "Update my profile",
+    "registration.button.create": "Register",
+    "registration.button.update": "Update",
+    "registration.message.success": "You have been registered",
+    "registration.message.success.subtitle": "Please check your email to find the access link"
   },
   "es": {
     "header.help": "Ayuda",
@@ -86,7 +98,7 @@
     "live.hosts": "Anfitriones",
 
     "live.join": "Conéctate al evento en vivo",
-    "live.join.disabled": "El evento iniciará pronto ",
+    "live.join.disabled": "El evento iniciará pronto",
     "live.starts_in": "La sesión inicia en",
     "live.ended": "Evento Terminado.",
     "live.ended.video": "Evento Terminado. Observa el video Aquí",
