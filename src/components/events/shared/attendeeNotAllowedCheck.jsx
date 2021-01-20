@@ -12,9 +12,9 @@ const AttendeeNotAllowedCheck = (props) => {
   }, []);
   return (
     <>
-      <Tag color='geekblue'>{event && event.allow_register ? 'El Evento permite registro' : 'Es Evento Privado'}</Tag>
+      {/* <Tag color='geekblue'>{event && event.allow_register ? 'El Evento permite registro' : 'Es Evento Privado'}</Tag>
       <Tag color='geekblue'>{currentUser ? 'Usuario Autenticado' : 'Usuario Anónimo'}</Tag>
-      <Tag color='geekblue'>{usuarioRegistrado ? 'Usuario Registrado' : 'Usuario sin Registrar'}</Tag>
+      <Tag color='geekblue'>{usuarioRegistrado ? 'Usuario Registrado' : 'Usuario sin Registrar'}</Tag> */}
 
       {!currentUser && !event.allow_register && (
         <Alert

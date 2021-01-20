@@ -59,7 +59,8 @@ export default function AgendaActivityItem({
           }>
           <Row align='top'>
             <Row>
-              {eventId != '5f80b6c93b4b966dfe7cd012' &&
+              {eventId !== '60061bfac8c0284c432069c8' &&
+                eventId != '5f80b6c93b4b966dfe7cd012' &&
                 eventId != '5f80a72272ccfd4e0d44b722' &&
                 eventId != '5f80a9b272ccfd4e0d44b728' &&
                 eventId != '5f8099c29564bf4ee44da4f3' && (

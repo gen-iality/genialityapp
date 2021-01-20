@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Tabs, Button, Menu, Row, Col, Card, Avatar, Tooltip } from 'antd';
+import { Tabs, Button, Menu, Row, Col, Tooltip } from 'antd';
 import {
   CommentOutlined,
   PieChartOutlined,
@@ -26,10 +26,6 @@ export default function ConferenceTabsComponent(props) {
   function handleClick(key) {
     props.handleActiveTab(key);
   }
-
-  useEffect(() => {
-    console.log('conference tabs', props);
-  }, []);
 
   const { chat, surveys, games, attendees, activeTab } = props;
   return (

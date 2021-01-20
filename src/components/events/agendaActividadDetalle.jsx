@@ -8,7 +8,7 @@ import { PageHeader, Row, Col, Button, List, Avatar, Card } from 'antd';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import DocumentsList from '../documents/documentsList';
 import ModalSpeaker from './modalSpeakers';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
@@ -17,6 +17,7 @@ let AgendaActividadDetalle = (props) => {
   let [idSpeaker, setIdSpeaker] = useState(false);
   let [showSurvey, setShowSurvey] = useState(false);
   let [orderedHost, setOrderedHost] = useState([]);
+  const intl = useIntl();
 
   useEffect(() => {
     (async () => {
@@ -76,7 +77,9 @@ let AgendaActividadDetalle = (props) => {
             />
           }
           extra={
-            event._id === '5f99a20378f48e50a571e3b6' || event._id === '5fca68b7e2f869277cfa31b0' ? (
+            event._id === '5f99a20378f48e50a571e3b6' ||
+            event._id === '5fca68b7e2f869277cfa31b0' ||
+            event.id === '60061bfac8c0284c432069c8' ? (
               <></>
             ) : (
               <>
@@ -112,7 +115,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -148,7 +151,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -165,7 +168,9 @@ let AgendaActividadDetalle = (props) => {
                       type='primary'
                       disabled={currentActivity.meeting_id ? false : true}
                       onClick={() => toggleConference(true, currentActivity.meeting_id, currentActivity)}>
-                      {currentActivity.meeting_id ? 'Ir Conferencia en Vivo' : 'Aún no empieza Conferencia Virtual'}
+                      {currentActivity.meeting_id
+                        ? intl.formatMessage({ id: 'live.join' })
+                        : intl.formatMessage({ id: 'live.closed' })}
                     </Button>
                   )}
                 </p>
@@ -211,18 +216,18 @@ let AgendaActividadDetalle = (props) => {
                   key={key}
                   style={{
                     background: cat.color,
-                    color: cat.color ? 'white' : ''
+                    color: cat.color ? 'white' : '',
                   }}
                   className='tag category_calendar-tag'>
                   {cat.name}
                 </span>
               ))}
 
-              <span className='tag category_calendar-tag'>
+              {/* <span className='tag category_calendar-tag'>
                 {currentActivity.meeting_id || currentActivity.vimeo_id
                   ? 'Tiene espacio virtual'
                   : 'No tiene espacio Virtual'}
-              </span>
+              </span> */}
             </div>
           )}
           <div className='card-content has-text-left container_calendar-description'>
@@ -400,7 +405,7 @@ let AgendaActividadDetalle = (props) => {
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end'
+                alignItems: 'flex-end',
               }}>
               {/* <button
                   <div
@@ -431,7 +436,7 @@ let AgendaActividadDetalle = (props) => {
               onClick={() => {
                 gotoActivityList();
               }}>
-              <Button>Regresar</Button>
+              <Button>{intl.formatMessage({ id: 'button.return' })}</Button>
             </a>
           </div>
         </Card>
