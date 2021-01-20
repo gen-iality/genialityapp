@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Result, Spin, Row } from 'antd';
 import Fullscreen from 'react-full-screen';
 import { FullscreenOutlined, LineOutlined } from '@ant-design/icons';
-import SurveyComponent from '../surveys';
+import SurveyForm from '../surveys';
 import API from '../../../helpers/request';
 import ConferenceTabs from './conferenceTabs';
 
@@ -38,6 +38,10 @@ export default class ZoomComponent extends Component {
 
       //Conference styles
       conferenceStyles: { zIndex: '9', width: '99vw', height: '100%' },
+
+      //Encuesta seleccionada actualmente
+      //Se deben pasar los metodos para set y unset del estado al componente SurveyForm
+      currentSurvey: {},
     };
   }
 
@@ -89,6 +93,7 @@ export default class ZoomComponent extends Component {
   }
 
   async componentDidMount() {
+    console.log('start zoom component', this.props);
     this.setUpUserForConference();
 
     firestore
@@ -218,6 +223,14 @@ export default class ZoomComponent extends Component {
     this.changeContentDisplayed(null);
   };
 
+  mountCurrentSurvey = (survey) => {
+    this.setState({ currentSurvey: survey });
+  };
+
+  unMountCurrentSurvey = () => {
+    this.setState({ currentSurvey: null });
+  };
+
   render() {
     const { toggleConference, event, activity } = this.props;
     let {
@@ -334,14 +347,14 @@ export default class ZoomComponent extends Component {
 
               {this.state.contentDisplayed && this.state.contentDisplayed == 'surveys' && (
                 <div style={{ width: '100%' }}>
-                  <SurveyComponent
+                  <SurveyForm
                     event={event}
                     currentUser={this.props.userEntered}
                     activity={activity}
                     availableSurveysBar={true}
                     style={{ zIndex: 9999, width: '99vw', height: '100%' }}
-                    mountCurrentSurvey={this.props.mountCurrentSurvey}
-                    unMountCurrentSurvey={this.props.unMountCurrentSurvey}
+                    mountCurrentSurvey={this.mountCurrentSurvey}
+                    unMountCurrentSurvey={this.unMountCurrentSurvey}
                   />
                 </div>
               )}
@@ -359,7 +372,7 @@ export default class ZoomComponent extends Component {
                 activeTab={activeTab}
                 handleActiveTab={this.handleActiveTab}
                 handleConferenceStyles={this.handleConferenceStyles}
-                currentSurvey={this.props.currentSurvey}
+                currentSurvey={this.state.currentSurvey}
               />
             </Row>
           )}

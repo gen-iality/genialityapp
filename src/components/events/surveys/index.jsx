@@ -79,6 +79,7 @@ class SurveyForm extends Component {
   };
 
   async componentDidMount() {
+    console.log('star survey root', this.props);
     let { event, currentUser } = this.props;
     let eventUser = await this.getCurrentEvenUser(event._id);
 
@@ -93,6 +94,7 @@ class SurveyForm extends Component {
       this.setState({ usuarioRegistrado: this.props.usuarioRegistrado });
     }
 
+    //Método que permite al componente conectar con un componente superior y subir el estado  de la encuesta actual seleccionada
     if (prevState.selectedSurvey !== this.state.selectedSurvey) {
       this.props.mountCurrentSurvey(this.state.selectedSurvey);
     }
@@ -174,6 +176,8 @@ class SurveyForm extends Component {
     let { currentUser, surveysData } = this.state;
     const { event } = this.props;
 
+    console.log('--------------------- index survey', this.state, this.props);
+
     // eslint-disable-next-line no-unused-vars
     const votesUserInSurvey = new Promise((resolve, reject) => {
       let surveys = [];
@@ -194,6 +198,8 @@ class SurveyForm extends Component {
           let guestHasVote = await guestUser;
           surveys.push({ ...arr[index], userHasVoted: guestHasVote });
         }
+
+        console.log('/*/**/*/*/*', surveys);
 
         if (surveys.length === arr.length) resolve(surveys);
       });
@@ -271,6 +277,7 @@ class SurveyForm extends Component {
             eventUser={eventUser}
             openSurvey={selectedSurvey.open}
             surveyLabel={surveyLabel}
+            //Metodo que permite reasignar el estado (currentSurvey) del componente superior al desmontar el componente SurveyComponent
             unMountCurrentSurvey={this.props.unMountCurrentSurvey}
           />
         )

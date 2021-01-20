@@ -540,9 +540,6 @@ class Landing extends Component {
                   userEntered={currentUser}
                   event={event}
                   activity={activity}
-                  currentSurvey={this.state.currentSurvey}
-                  mountCurrentSurvey={this.mountCurrentSurvey}
-                  unMountCurrentSurvey={this.unMountCurrentSurvey}
                 />
               )}
 

@@ -209,7 +209,7 @@ class AgendaEdit extends Component {
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
       const { date, hour_start, hour_end } = handleDate(info);
 
-      let currentUser = getCurrentUser();
+      let currentUser = await getCurrentUser();
       this.setState({
         deleteID: state.edit,
         date,

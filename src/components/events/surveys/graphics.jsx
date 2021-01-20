@@ -19,7 +19,7 @@ class Graphics extends Component {
       chart: {},
       chartCreated: false,
       usersRegistered: 0,
-      titleQuestion: ''
+      titleQuestion: '',
     };
   }
 
@@ -183,11 +183,11 @@ class Graphics extends Component {
             },
             textAlign: 'left',
             anchor: 'start',
-            align: 5
-          }
+            align: 5,
+          },
         },
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           yAxes: [
@@ -197,19 +197,19 @@ class Graphics extends Component {
                 fontSize: 15,
                 fontColor: '#777',
                 minor: { display: true },
-                display: false
-              }
-            }
+                display: false,
+              },
+            },
           ],
           xAxes: [
             {
               ticks: {
                 beginAtZero: true,
-                fontColor: '#777'
-              }
-            }
-          ]
-        }
+                fontColor: '#777',
+              },
+            },
+          ],
+        },
       };
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
@@ -262,7 +262,7 @@ class Graphics extends Component {
         <>
           <Card className='survyCard'>
             <div style={{ marginTop: 5 }}>
-              <Button ghost shape='round' onClick={() => showListSurvey()}>
+              <Button type='ghost primary' shape='round' onClick={() => showListSurvey()}>
                 <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
               </Button>
             </div>

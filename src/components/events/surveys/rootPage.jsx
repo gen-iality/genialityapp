@@ -40,6 +40,8 @@ export default class RootPage extends Component {
     let { idSurvey, eventId, currentUser } = this.state;
     const { userHasVoted, selectedSurvey } = this.props;
 
+    console.log('ROOT PAGE', eventId, selectedSurvey, currentUser._id);
+
     if (currentUser) {
       let responseCounter = await SurveyAnswers.getUserById(eventId, selectedSurvey, currentUser._id, true);
       this.setState({ hasVote: userHasVoted, isLoading: false, responseCounter });
