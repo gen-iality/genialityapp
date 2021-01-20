@@ -28,7 +28,7 @@ import {
 } from '../../helpers/request';
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from '../../helpers/utils';
 import Dropzone from 'react-dropzone';
-import { Spin, Card, Select as SelectAntd } from 'antd';
+import { Spin, Card, Row, Col, Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
 import { setHostState } from './fireHost';
@@ -209,7 +209,7 @@ class AgendaEdit extends Component {
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
       const { date, hour_start, hour_end } = handleDate(info);
 
-      let cunrretUser = getCurrentUser();
+      let currentUser = getCurrentUser();
       this.setState({
         deleteID: state.edit,
         date,
@@ -220,7 +220,7 @@ class AgendaEdit extends Component {
         selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
         selectedType: fieldsSelect(info.type_id, types),
         selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
-        cunrretUser: cunrretUser,
+        currentUser: currentUser,
       });
     } else {
       this.setState({ days });
@@ -1232,27 +1232,44 @@ class AgendaEdit extends Component {
                                 onClick={this.removeVimeoId}>
                                 Eliminar espacio virtual
                               </button>
-
-                              <label className='label'>Habilitar Chat</label>
-                              <select defaultValue={chat} onChange={(e) => this.handleTabs(e, 'chat')}>
-                                <option value='true'>Si</option>
-                                <option value='false'>No</option>
-                              </select>
-                              <label className='label'>Habilitar Encuestas</label>
-                              <select defaultValue={surveys} onChange={(e) => this.handleTabs(e, 'surveys')}>
-                                <option value='true'>Si</option>
-                                <option value='false'>No</option>
-                              </select>
-                              <label className='label'>Habilitar Juegos</label>
-                              <select defaultValue={games} onChange={(e) => this.handleTabs(e, 'games')}>
-                                <option value='true'>Si</option>
-                                <option value='false'>No</option>
-                              </select>
-                              <label className='label'>Habilitar Listado de asistentes</label>
-                              <select defaultValue={attendees} onChange={(e) => this.handleTabs(e, 'attendees')}>
-                                <option value='true'>Si</option>
-                                <option value='false'>No</option>
-                              </select>
+                              <Card>
+                                <Row style={{ marginBottom: 16 }}>
+                                  <Col>
+                                    <label className='label'>Habilitar Chat</label>
+                                    <select defaultValue={chat} onChange={(e) => this.handleTabs(e, 'chat')}>
+                                      <option value='true'>Si</option>
+                                      <option value='false'>No</option>
+                                    </select>
+                                  </Col>
+                                </Row>
+                                <Row style={{ marginBottom: 16 }}>
+                                  <Col>
+                                    <label className='label'>Habilitar Encuestas</label>
+                                    <select defaultValue={surveys} onChange={(e) => this.handleTabs(e, 'surveys')}>
+                                      <option value='true'>Si</option>
+                                      <option value='false'>No</option>
+                                    </select>
+                                  </Col>
+                                </Row>
+                                <Row style={{ marginBottom: 16 }}>
+                                  <Col>
+                                    <label className='label'>Habilitar Juegos</label>
+                                    <select defaultValue={games} onChange={(e) => this.handleTabs(e, 'games')}>
+                                      <option value='true'>Si</option>
+                                      <option value='false'>No</option>
+                                    </select>
+                                  </Col>
+                                </Row>
+                                <Row style={{ marginBottom: 16 }}>
+                                  <Col>
+                                    <label className='label'>Habilitar Listado de asistentes</label>
+                                    <select defaultValue={attendees} onChange={(e) => this.handleTabs(e, 'attendees')}>
+                                      <option value='true'>Si</option>
+                                      <option value='false'>No</option>
+                                    </select>
+                                  </Col>
+                                </Row>
+                              </Card>
                             </div>
                           </>
                         )}

@@ -10,22 +10,28 @@ export default function ListadoJuegos(props) {
   const [myScore, setMyScore] = useState('');
 
   useEffect(() => {
+    console.log('listado de juegos', props);
+  }, []);
+
+  useEffect(() => {
     props.changeContentDisplayed('games');
 
     let gameId = '0biWfCwWbUGhbZmfhkvu';
 
     //Consulta del puntaje del currentUser
-    firestore
-      .collection('juegos/' + gameId + '/puntajes/')
-      .doc(props.currentUser._id)
-      .onSnapshot(function(response) {
-        const myScore = response.data();
+    if (props.currentUser._id !== undefined) {
+      firestore
+        .collection('juegos/' + gameId + '/puntajes/')
+        .doc(props.currentUser._id)
+        .onSnapshot(function(response) {
+          const myScore = response.data();
 
-        if (myScore) {
-          setMyName(myScore.name);
-          setMyScore(myScore.puntaje);
-        }
-      });
+          if (myScore) {
+            setMyName(myScore.name);
+            setMyScore(myScore.puntaje);
+          }
+        });
+    }
 
     //Consulta de todos los puntajes
     firestore
