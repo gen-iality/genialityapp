@@ -112,5 +112,19 @@
     "registration.button.update": "Atualizar",
     "registration.message.success": "Você foi registrado com sucesso!!",
     "registration.message.success.subtitle": "Você foi registrado para o evento, verifique seu e-mail para confirmar sua inscrição."
+  },
+  "pt": {
+    "live.join": "Evento ao vivo",
+    "live.join.disabled": "O evento irá iniciar em breve",
+    "live.starts_in": "O evento começa as",
+    "live.ended": "Evento encerrado.",
+    "live.ended.video": "Evento encerrado. Assista a gravação aqui",
+    "live.closed": "O evento não começou",
+    "registration.title.create": "Formulário de Registro",
+    "registration.title.update": "Atualizar meus dados",
+    "registration.button.create": "Registrar",
+    "registration.button.update": "Atualizar",
+    "registration.message.success": "Você foi registrado com sucesso!!",
+    "registration.message.success.subtitle": "Você foi registrado para o evento, verifique seu e-mail para confirmar sua inscrição."
   }
 }
