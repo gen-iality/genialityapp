@@ -54,6 +54,7 @@
     "registration.button.update": "Update",
     "registration.message.success": "You have been registered",
     "registration.message.success.subtitle": "Please check your email to find the access link",
+    "registration.message.policy": "Privacy policy, terms and conditions",
 
     "button.return": "Back"
   },
@@ -112,6 +113,7 @@
     "registration.button.update": "Actualizar",
     "registration.message.success": "Ha sido registrado exitosamente!",
     "registration.message.success.subtitle": "Fuiste registrado al evento, revisa tu correo para encontrar el enlace de ingreso.",
+    "registration.message.policy": "Política de privacidad, términos y condiciones",
 
     "button.return": "Regresar"
   },
@@ -129,6 +131,7 @@
     "registration.button.update": "Atualizar",
     "registration.message.success": "Você foi registrado com sucesso!!",
     "registration.message.success.subtitle": "Você foi registrado para o evento, verifique seu e-mail para confirmar sua inscrição.",
+    "registration.message.policy": "Política de privacidade, termos e condições",
 
     "button.return": "Para retornar"
   }

@@ -512,7 +512,7 @@ export default ({
               {description && description.length < 500 && <p>{description}</p>}
               {description && description.length > 500 && (
                 <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
-                  <Panel header='Política de privacidad, términos y condiciones' key='1'>
+                  <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
                     <pre>{description}</pre>
                   </Panel>
                 </Collapse>
