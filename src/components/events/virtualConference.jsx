@@ -5,12 +5,13 @@ import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment';
 import { Avatar } from 'antd';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 //const { Meta } = Card;
 
 const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado, event }) => {
   const [infoActivity, setInfoActivity] = useState({});
   const [infoEvent, setInfoEvent] = useState({});
+  const intl = useIntl();
 
   useEffect(() => {
     setInfoActivity(activity);
@@ -44,7 +45,7 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
       );
 
     case 'closed_meeting_room':
-      return <Alert message='El ingreso se habilitará minutos antes del evento' type='warning' showIcon />;
+      return <Alert message={intl.formatMessage({ id: 'live.join.disabled' })} type='warning' showIcon />;
 
     case 'ended_meeting_room':
       return <Alert message='El evento ha terminado' type='info' showIcon />;
@@ -63,7 +64,7 @@ class VirtualConference extends Component {
       currentUser: this.props.currentUser || undefined,
       usuarioRegistrado: this.props.usuarioRegistrado || undefined,
       event: this.props.event || undefined,
-      survey: []
+      survey: [],
     };
   }
 

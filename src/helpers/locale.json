@@ -82,9 +82,35 @@
     "toast.user_deleted": "Asistente borrado correctamente",
     "toast.ticket_sent": "Tiquete enviado correctamente",
     "toast.email_sent": "Tiquete enviado correctamente",
-    "live.join": "Ingresa aquí",
     "live.private_access": "Acceso privado",
     "live.hosts": "Anfitriones",
-    "live.starts_in": "La sesión inicia en"
+
+    "live.join": "Conéctate al evento en vivo",
+    "live.join.disabled": "El evento iniciará pronto ",
+    "live.starts_in": "La sesión inicia en",
+    "live.ended": "Evento Terminado.",
+    "live.ended.video": "Evento Terminado. Observa el video Aquí",
+    "live.closed": "El evento no ha iniciado",
+
+    "registration.title.create": "Fomulario de Registro",
+    "registration.title.update": "Actualizar mis datos",
+    "registration.button.create": "Registrar",
+    "registration.button.update": "Actualizar",
+    "registration.message.success": "Ha sido registrado exitosamente!",
+    "registration.message.success.subtitle": "Fuiste registrado al evento, revisa tu correo para encontrar el enlace de ingreso."
+  },
+  "pt-BR": {
+    "live.join": "Evento ao vivo",
+    "live.join.disabled": "O evento irá iniciar em breve",
+    "live.starts_in": "O evento começa as",
+    "live.ended": "Evento encerrado.",
+    "live.ended.video": "Evento encerrado. Assista a gravação aqui",
+    "live.closed": "O evento não começou",
+    "registration.title.create": "Formulário de Registro",
+    "registration.title.update": "Atualizar meus dados",
+    "registration.button.create": "Registrar",
+    "registration.button.update": "Atualizar",
+    "registration.message.success": "Você foi registrado com sucesso!!",
+    "registration.message.success.subtitle": "Você foi registrado para o evento, verifique seu e-mail para confirmar sua inscrição."
   }
 }

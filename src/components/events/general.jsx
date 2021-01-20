@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss';
 import ErrorServe from '../modal/serverError';
 import Dialog from '../modal/twoAction';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import LogOut from '../shared/logOut';
 import axios from 'axios/index';
 import { DateTimePicker } from 'react-widgets';
@@ -18,6 +18,7 @@ import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';
 import { Switch } from 'antd';
+import { cssNumber } from 'jquery';
 Moment.locale('es');
 
 class General extends Component {
@@ -55,6 +56,7 @@ class General extends Component {
   }
 
   async componentDidMount() {
+    //console.log(this.props.intl.formatMessage({ id: 'live.join.disabled' }));
     const info = this.props.event;
     this.setState({ info });
     this.setState({
@@ -105,6 +107,7 @@ class General extends Component {
   //Cambio en los input
   handleChange = (e) => {
     const { name, value } = e.target;
+    //console.log('name', name, 'value', value);
     this.setState({ event: { ...this.state.event, [name]: value } }, this.valid);
   };
   //Validación
@@ -289,6 +292,7 @@ class General extends Component {
       show_banner: event.show_banner || true,
       show_banner_footer: event.show_banner_footer || false,
       has_payment: event.has_payment ? event.has_payment : false,
+      language: event.language ? event.language : 'es',
     };
 
     try {
@@ -327,6 +331,7 @@ class General extends Component {
       }
       console.error(error.config);
     }
+    console.log('data que se guarda del evento ', data);
   }
   //Delete event
   async deleteEvent() {
@@ -718,6 +723,18 @@ class General extends Component {
             ) : (
               <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
             )}
+
+            <div className='field'>
+              <label className='label'>Idioma del evento</label>
+              <div className='select is-primary'>
+                <select value={event.language} name='language' onChange={this.handleChange}>
+                  <option value='es'>Español</option>
+                  <option value='en'>English</option>
+                  <option value='pt'>Portuguese</option>
+                </select>
+              </div>
+            </div>
+
             <div className='field'>
               <label className='label has-text-grey-light'>Descripción</label>
               <EviusReactQuill name='description' data={event.description} handleChange={this.chgTxt} />
@@ -900,4 +917,4 @@ function handleFields(organizers, types, categories, event) {
   return { selectedOrganizer, selectedCategories, selectedType };
 }
 
-export default General;
+export default injectIntl(General);

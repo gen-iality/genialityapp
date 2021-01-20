@@ -20,6 +20,8 @@ import {
 import { UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
+import { useIntl } from 'react-intl';
+
 // import InputFile from "./inputFile"
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -106,6 +108,7 @@ export default ({
   conditionals,
   showSection,
 }) => {
+  const intl = useIntl();
   const [user, setUser] = useState({});
   const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
   const [validateEmail, setValidateEmail] = useState(false);
@@ -528,7 +531,13 @@ export default ({
 
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
-          <Card title={eventUser !== undefined ? 'Actualizar mis datos' : formMessage.titleModal} bodyStyle={textLeft}>
+          <Card
+            title={
+              eventUser !== undefined
+                ? intl.formatMessage({ id: 'registration.title.update' })
+                : intl.formatMessage({ id: 'registration.title.create' })
+            }
+            bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
             <Form
               form={form}
@@ -565,10 +574,10 @@ export default ({
                   <Form.Item>
                     <Button type='primary' htmlType='submit'>
                       {eventUser
-                        ? 'Actualizar'
+                        ? intl.formatMessage({ id: 'registration.button.update' })
                         : eventId === '5f9824fc1f8ccc414e33bec2'
                         ? 'Votar y Enviar'
-                        : formMessage.formButton}
+                        : intl.formatMessage({ id: 'registration.button.create' })}
                     </Button>
                   </Form.Item>
                 </Col>
@@ -577,7 +586,10 @@ export default ({
           </Card>
         ) : (
           <Card>
-            <Result status='success' title={formMessage.resultTitle} subTitle=''>
+            <Result
+              status='success'
+              title={intl.formatMessage({ id: 'registration.message.success' })}
+              subTitle={intl.formatMessage({ id: 'registration.message.success.subtitle' })}>
               {loggedurl && (
                 <a className='ant-btn  ant-btn-primary ant-btn-lg' href={loggedurl}>
                   {eventId == '5fca68b7e2f869277cfa31b0' || eventId == '5f99a20378f48e50a571e3b6'
