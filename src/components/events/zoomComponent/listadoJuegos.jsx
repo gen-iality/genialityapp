@@ -10,10 +10,6 @@ export default function ListadoJuegos(props) {
   const [myScore, setMyScore] = useState('');
 
   useEffect(() => {
-    console.log('listado de juegos', props);
-  }, []);
-
-  useEffect(() => {
     props.changeContentDisplayed('games');
 
     let gameId = '0biWfCwWbUGhbZmfhkvu';

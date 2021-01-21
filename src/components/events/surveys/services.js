@@ -126,7 +126,7 @@ export const SurveyPage = {
           reject(err);
         });
     });
-  }
+  },
 };
 
 export const SurveyAnswers = {
@@ -141,7 +141,7 @@ export const SurveyAnswers = {
       id_user: uid,
       user_email: email,
       user_name: names,
-      id_survey: surveyId
+      id_survey: surveyId,
     };
 
     if (correctAnswer !== undefined) {
@@ -182,13 +182,13 @@ export const SurveyAnswers = {
             created: date,
             id_user: uid,
             id_survey: surveyId,
-            correctAnswer
+            correctAnswer,
           }
         : {
             response: responseData,
             created: date,
             id_user: uid,
-            id_survey: surveyId
+            id_survey: surveyId,
           };
 
     countAnswers(surveyId, questionId, optionQuantity, optionIndex);
@@ -286,14 +286,13 @@ export const SurveyAnswers = {
           }
         });
     });
-  }
+  },
 };
 
 export const Trivia = {
   setTriviaRanking: (surveyId, user, totalPoints, totalQuestions) => {
-    console.log('setTriviaRanking ---------- start');
     const { email, _id } = user;
-    const userName = user.name ? user.name : user.names ? user.names : 'Anonymous';
+    const userName = user.names ? user.names : user.name ? user.name : 'Anonymous';
     firestore
       .collection('surveys')
       .doc(surveyId)
@@ -304,9 +303,9 @@ export const Trivia = {
         userEmail: email,
         totalQuestions: totalQuestions,
         correctAnswers: totalPoints,
-        registerDate: new Date()
+        registerDate: new Date(),
       });
-  }
+  },
 };
 
 export const UserGamification = {
@@ -374,12 +373,12 @@ export const UserGamification = {
           console.error('Ha ocurrido un error', err);
         });
     }
-  }
+  },
 };
 
 export const Users = {
   getUsers: async (eventId) => {
     const snapshot = await firestore.collection(`${eventId}_event_attendees`).get();
     return snapshot.docs.map((doc) => doc.data());
-  }
+  },
 };

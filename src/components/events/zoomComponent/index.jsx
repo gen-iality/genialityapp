@@ -93,7 +93,6 @@ export default class ZoomComponent extends Component {
   }
 
   async componentDidMount() {
-    console.log('start zoom component', this.props);
     this.setUpUserForConference();
 
     firestore

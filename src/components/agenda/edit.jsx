@@ -573,7 +573,6 @@ class AgendaEdit extends Component {
       response = await axios(options);
       toast.success('Conferencia Creada');
 
-      console.log('response zoom ', response);
       //await setHostState(this.state.host_id, true);
 
       const activityId = this.props.location.state.edit;
