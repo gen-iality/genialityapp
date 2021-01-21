@@ -63,9 +63,9 @@ class SurveyForm extends Component {
     };
   }
 
+  // eslint-disable-next-line no-unused-vars
   openSurvey = (currentSurvey) => {
     // eslint-disable-next-line no-console
-    console.log('Esta es la encuesta actual:', currentSurvey);
   };
 
   surveyVisible = () => {
@@ -79,7 +79,6 @@ class SurveyForm extends Component {
   };
 
   async componentDidMount() {
-    console.log('star survey root', this.props);
     let { event, currentUser } = this.props;
     let eventUser = await this.getCurrentEvenUser(event._id);
 
@@ -176,8 +175,6 @@ class SurveyForm extends Component {
     let { currentUser, surveysData } = this.state;
     const { event } = this.props;
 
-    console.log('--------------------- index survey', this.state, this.props);
-
     // eslint-disable-next-line no-unused-vars
     const votesUserInSurvey = new Promise((resolve, reject) => {
       let surveys = [];
@@ -198,8 +195,6 @@ class SurveyForm extends Component {
           let guestHasVote = await guestUser;
           surveys.push({ ...arr[index], userHasVoted: guestHasVote });
         }
-
-        console.log('/*/**/*/*/*', surveys);
 
         if (surveys.length === arr.length) resolve(surveys);
       });

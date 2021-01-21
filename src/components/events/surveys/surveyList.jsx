@@ -16,10 +16,6 @@ const SurveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =>
   //const [ isASpeaker, setIsASpeaker ] = useState( false );
 
   useEffect(() => {
-    console.log('survey list', { jsonData, showSurvey, usuarioRegistrado, surveyLabel });
-  }, []);
-
-  useEffect(() => {
     let surveyList = jsonData;
     //Los usuarios anónimos solo ven las encuestas que permiten respuestas anónimas
     if (!usuarioRegistrado) {
@@ -82,7 +78,6 @@ const SurveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =>
                     }`}
                     onClick={() => showSurvey(survey)}
                     loading={survey.userHasVoted === undefined}>
-                    {console.log('survey CHECK */*/*/*/*/*', survey)}
                     {!survey.userHasVoted && survey.open == 'true'
                       ? `Ir a ${
                           surveyLabel.name

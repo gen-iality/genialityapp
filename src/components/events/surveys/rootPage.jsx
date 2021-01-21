@@ -29,7 +29,6 @@ export default class RootPage extends Component {
 
   componentDidMount() {
     this.loadData();
-    console.log('root page', this.props);
   }
 
   componentDidUpdate(prevProps) {
@@ -39,8 +38,6 @@ export default class RootPage extends Component {
   seeIfUserHasVote = async () => {
     let { idSurvey, eventId, currentUser } = this.state;
     const { userHasVoted, selectedSurvey } = this.props;
-
-    console.log('ROOT PAGE', eventId, selectedSurvey, currentUser._id);
 
     if (currentUser) {
       let responseCounter = await SurveyAnswers.getUserById(eventId, selectedSurvey, currentUser._id, true);
@@ -59,7 +56,6 @@ export default class RootPage extends Component {
 
   getResults = (surveyData) => {
     // eslint-disable-next-line no-console
-    console.log('los resultados', surveyData);
   };
 
   componentWillUnmount() {

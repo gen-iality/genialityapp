@@ -354,7 +354,7 @@ class SurveyComponent extends Component {
     await Promise.all(
       surveyModel.currentPage.questions.map(async (question) => {
         let { rankingPoints } = await this.executePartialService(surveyData, question, currentUser);
-        console.log('puntos', rankingPoints);
+
         if (rankingPoints)
           rankingPointsThisPage = rankingPointsThisPage ? rankingPointsThisPage + rankingPoints : rankingPoints;
         this.registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId);
@@ -363,7 +363,6 @@ class SurveyComponent extends Component {
     );
     this.setState({ rankingPoints: rankingPointsThisPage });
 
-    console.log('--> intermedio--rankingPoints', rankingPointsThisPage, surveyModel.isLastPage);
     //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
     SurveyPage.setCurrentPage(surveyData._id, currentUser._id, surveyModel.currentPageNo);
 
