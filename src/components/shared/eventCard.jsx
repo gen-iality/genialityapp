@@ -15,7 +15,17 @@ class EventCard extends Component {
                 {event.picture ? (
                   <img src={typeof event.picture === 'object' ? event.picture[0] : event.picture} alt='Evius.co' />
                 ) : (
-                  <img src={event.styles.banner_image ? event.styles.banner_image : EventImage} alt='Evius.co' />
+                  <img
+                    src={
+                      (console.log(event),
+                      event.styles
+                        ? event.styles.banner_image && event.styles.banner_image !== undefined
+                          ? event.styles.banner_image
+                          : EventImage
+                        : EventImage)
+                    }
+                    alt='Evius.co'
+                  />
                 )}
               </figure>
               <div className='header-event'>

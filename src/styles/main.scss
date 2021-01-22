@@ -180,6 +180,12 @@ iframe {
   white-space: break-spaces;
 }
 
+.ant-button-see-more {
+  background-color: $color-evius !important;
+  color: white !important;
+  border: none !important;
+}
+
 @import '~bulma/bulma';
 @import '~react-widgets/lib/scss/react-widgets';
 @import '~bulma-extensions/bulma-switch/src/sass/index';
