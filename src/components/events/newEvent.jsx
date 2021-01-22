@@ -105,6 +105,7 @@ class NewEvent extends Component {
         show_card_banner: true,
         show_inscription: false,
         hideDatesAgenda: true,
+        hideDatesAgendaItem: false,
         hideHoursAgenda: false,
         hideBtnDetailAgenda: true,
         loader_page: 'no',

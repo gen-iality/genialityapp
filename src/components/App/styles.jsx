@@ -189,7 +189,7 @@ class Styles extends Component {
         ],
       },
       {
-        label: 'Ocultar fechas de la seccion de agenda',
+        label: 'Ocultar la sección de fechas agrupadas ',
         name: 'hideDatesAgenda',
         defaultValue: false,
         options: [
@@ -204,7 +204,22 @@ class Styles extends Component {
         ],
       },
       {
-        label: 'Ocultar horas de la seccion de agenda',
+        label: 'Ocultar fechas de las actividades de la agenda',
+        name: 'hideDatesAgendaItem',
+        defaultValue: false,
+        options: [
+          {
+            label: 'Si',
+            value: true,
+          },
+          {
+            label: 'No',
+            value: false,
+          },
+        ],
+      },
+      {
+        label: 'Ocultar horas de las actividades de la agenda',
         name: 'hideHoursAgenda',
         defaultValue: false,
         options: [
@@ -239,7 +254,6 @@ class Styles extends Component {
   async componentDidMount() {
     const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
     info.styles = info.styles ? info.styles : {};
-    console.log(info.styles);
 
     if (info.styles) {
       this.setState({
@@ -270,10 +284,13 @@ class Styles extends Component {
           show_card_banner: info.styles.show_card_banner || true,
           show_inscription: info.show_inscription || false,
           hideDatesAgenda: info.styles.hideDatesAgenda || false,
-          hideHoursAgenda: info.styles.hideHoursAgenda || false,
           hideBtnDetailAgenda: info.styles.hideBtnDetailAgenda || true,
           loader_page: info.styles.loader_page || 'no',
           data_loader_page: info.styles.data_loader_page || '',
+
+          // Estilos de las actividades de la agenda
+          hideDatesAgendaItem: info.styles.hideDatesAgendaItem || false,
+          hideHoursAgenda: info.styles.hideHoursAgenda || false,
         },
       });
     }
@@ -281,7 +298,6 @@ class Styles extends Component {
 
   //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
   async saveEventImage(files, imageFieldName) {
-    console.log(files);
     const file = files[0];
     let imageUrl = null;
     const url = '/api/files/upload',
@@ -297,7 +313,6 @@ class Styles extends Component {
         let data = new FormData();
         data.append('file', file);
         return Actions.post(url, data).then((image) => {
-          console.log(image);
           if (image) imageUrl = image;
         });
       });
@@ -354,10 +369,10 @@ class Styles extends Component {
     const { eventId } = this.state;
 
     this.state.data = { styles: this.state.styles };
-    console.log(this.state);
+
     try {
       const info = await Actions.put(`/api/events/${eventId}`, this.state.data);
-      console.log(this.state.data);
+
       this.setState({ loading: false });
       if (info._id) {
         toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
@@ -368,24 +383,22 @@ class Styles extends Component {
     } catch (error) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       if (error.response) {
-        console.log(this.state.data);
-        console.log(error.response);
+        console.error(error.response);
         const { status, data } = error.response;
-        console.log('STATUS', status, status === 401);
+        console.error('STATUS', status, status === 401);
         if (status === 401) this.setState({ timeout: true, loader: false });
         else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
-        console.log('Error', error.message);
-        console.log(this.state.styles);
+        console.error('Error', error.message);
         if (error.request) {
-          console.log(error.request);
+          console.error(error.request);
           errorData = error.request;
         }
 
         this.setState({ serverError: true, loader: false, errorData });
       }
-      console.log(error.config);
+      console.error(error.config);
     }
   }
 
@@ -411,12 +424,11 @@ class Styles extends Component {
     styles[value] = empty;
 
     const stylesToSave = { styles };
-    console.log(stylesToSave);
 
     this.setState({ styles: styles });
 
     const info = await Actions.put(`/api/events/${this.state.eventId}`, stylesToSave);
-    console.log(info);
+
     this.setState({ loading: false });
 
     if (info._id) {

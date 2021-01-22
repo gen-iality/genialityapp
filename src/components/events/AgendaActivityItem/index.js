@@ -59,32 +59,32 @@ export default function AgendaActivityItem({
           }>
           <Row align='top'>
             <Row>
-              {eventId !== '60061bfac8c0284c432069c8' &&
-                eventId != '5f80b6c93b4b966dfe7cd012' &&
-                eventId != '5f80a72272ccfd4e0d44b722' &&
-                eventId != '5f80a9b272ccfd4e0d44b728' &&
-                eventId != '5f8099c29564bf4ee44da4f3' && (
-                  <span className='date-activity'>
-                    {Moment(item.datetime_start).format('DD MMMM YYYY') ===
-                    Moment(item.datetime_end).format('DD MMMM YYYY') ? (
-                      <>
-                        {`${Moment(item.datetime_start).format('DD MMMM YYYY')} ${
-                          !hideHours || hideHours === 'false'
-                            ? Moment(item.datetime_start).format('h:mm a') +
-                              ' - ' +
-                              Moment(item.datetime_end).format('h:mm a')
-                            : ''
-                        }`}
-                      </>
-                    ) : (
-                      <>{`${Moment(item.datetime_start).format('DD MMMM YYYY')} ${
-                        !hideHours || hideHours === 'false' ? Moment(item.datetime_start).format('hh:mm') + ' - ' : ' '
-                      } - ${Moment(item.datetime_end).format('DD MMMM YYYY')} ${
-                        !hideHours || hideHours === 'false' ? Moment(item.datetime_end).format('hh:mm') + ' - ' : ' '
-                      }`}</>
-                    )}
-                  </span>
-                )}
+              {!(
+                event.styles.hideDatesAgendaItem &&
+                (event.styles.hideDatesAgendaItem === 'true' || event.styles.hideDatesAgendaItem === true)
+              ) && (
+                <span className='date-activity'>
+                  {Moment(item.datetime_start).format('DD MMMM YYYY') ===
+                  Moment(item.datetime_end).format('DD MMMM YYYY') ? (
+                    <>
+                      {`${Moment(item.datetime_start).format('DD MMMM YYYY')} ${
+                        !hideHours || hideHours === 'false'
+                          ? Moment(item.datetime_start).format('h:mm a') +
+                            ' - ' +
+                            Moment(item.datetime_end).format('h:mm a')
+                          : ''
+                      }`}
+                    </>
+                  ) : (
+                    <>{`${Moment(item.datetime_start).format('DD MMMM YYYY')} ${
+                      !hideHours || hideHours === 'false' ? Moment(item.datetime_start).format('hh:mm') + ' - ' : ' '
+                    } - ${Moment(item.datetime_end).format('DD MMMM YYYY')} ${
+                      !hideHours || hideHours === 'false' ? Moment(item.datetime_end).format('hh:mm') + ' - ' : ' '
+                    }`}</>
+                  )}
+                </span>
+              )}
+
               <p>
                 <span className='card-header-title text-align-card'>
                   {item.name}
