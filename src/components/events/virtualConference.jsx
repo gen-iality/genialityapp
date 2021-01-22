@@ -16,7 +16,7 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
   useEffect(() => {
     setInfoActivity(activity);
     setInfoEvent(event);
-  }, [activity]);
+  }, [activity, event]);
 
   switch (infoActivity.habilitar_ingreso) {
     case 'open_meeting_room':

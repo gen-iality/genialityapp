@@ -9,6 +9,7 @@ import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import DocumentsList from '../documents/documentsList';
 import ModalSpeaker from './modalSpeakers';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { firestore } from '../../helpers/firebase';
 
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
@@ -17,7 +18,22 @@ let AgendaActividadDetalle = (props) => {
   let [idSpeaker, setIdSpeaker] = useState(false);
   let [showSurvey, setShowSurvey] = useState(false);
   let [orderedHost, setOrderedHost] = useState([]);
+  const [meetingState, setMeetingState] = useState(null);
+
   const intl = useIntl();
+
+  async function listeningStateMeetingRoom(event_id, activity_id) {
+    firestore
+      .collection('events')
+      .doc(event_id)
+      .collection('activities')
+      .doc(activity_id)
+      .onSnapshot((infoActivity) => {
+        if (!infoActivity.exists) return;
+        const habilitar_ingreso = infoActivity.data().habilitar_ingreso;
+        setMeetingState(habilitar_ingreso);
+      });
+  }
 
   useEffect(() => {
     (async () => {
@@ -25,6 +41,8 @@ let AgendaActividadDetalle = (props) => {
       var id = props.match.params.event;
       const event = await EventsApi.landingEvent(id);
       setEvent(event);
+
+      await listeningStateMeetingRoom(event._id, props.currentActivity._id);
 
       try {
         const respuesta = await API.get('api/me/eventusers/event/' + id);
@@ -163,14 +181,24 @@ let AgendaActividadDetalle = (props) => {
                 <></>
               ) : (
                 <p className='has-text-left is-size-6-desktop'>
-                  {usuarioRegistrado && (
+                  {usuarioRegistrado && meetingState && (
                     <Button
                       type='primary'
-                      disabled={currentActivity.meeting_id ? false : true}
+                      disabled={
+                        meetingState === 'open_meeting_room' && (currentActivity.meeting_id || currentActivity.vimeo_id)
+                          ? false
+                          : true
+                      }
                       onClick={() => toggleConference(true, currentActivity.meeting_id, currentActivity)}>
-                      {currentActivity.meeting_id
-                        ? intl.formatMessage({ id: 'live.join' })
-                        : intl.formatMessage({ id: 'live.closed' })}
+                      {currentActivity.meeting_id &&
+                        meetingState === 'open_meeting_room' &&
+                        intl.formatMessage({ id: 'live.join' })}
+                      {currentActivity.meeting_id &&
+                        meetingState === 'closed_meeting_room' &&
+                        intl.formatMessage({ id: 'live.closed' })}
+                      {currentActivity.meeting_id &&
+                        meetingState === 'ended_meeting_room' &&
+                        intl.formatMessage({ id: 'live.ended' })}
                     </Button>
                   )}
                 </p>
