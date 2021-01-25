@@ -12,7 +12,7 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
         <img src={bgImage} alt={title} />
       </Col>
       <Col xs={24} sm={0}>
-        <img src={mobileBanner} alt={title} />
+        <img src={mobileBanner == null ? bgImage : mobileBanner  } alt={title} />
       </Col>
       {styles && styles.show_card_banner && styles.show_card_banner === 'true' && (
         <HeaderEventInfo title={title} {...props} />
