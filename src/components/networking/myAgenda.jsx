@@ -85,7 +85,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       <Row align='middle' justify='center'>
         <Col span={18}>
           <Button
-            className="button_regresar"
+            className='button_regresar'
             type='primary'
             onClick={() => {
               setCurrentRoom(null);
@@ -102,7 +102,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                   userName +
                   '&URLRoomName=' +
                   currentRoom +
-                  '&passcode=8816111496'
+                  '&passcode=7241521496'
                 }
                 allow='autoplay; fullscreen; camera *;microphone *'
                 allowusermedia
@@ -230,7 +230,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
         <Meta
           avatar={<Avatar>{userName ? userName.charAt(0).toUpperCase() : userName}</Avatar>}
           title={userName || 'No registra nombre'}
-          style={{width:'300px'}}
+          style={{ width: '300px' }}
           description={
             <div>
               <Row className='mi_agenda' justify='space-around'>
@@ -245,13 +245,13 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                 </Col>
                 <Col xs={24} sm={24} md={12} xl={12}>
                   <Row justify='center'>
-                  <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div>
-                  <div>{moment(data.timestamp_start).format('hh:mm a')}</div>
-                  <div>{moment(data.timestamp_end).format('hh:mm a')}</div>
-                  </Row>                  
+                    <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div>
+                    <div>{moment(data.timestamp_start).format('hh:mm a')}</div>
+                    <div>{moment(data.timestamp_end).format('hh:mm a')}</div>
+                  </Row>
                 </Col>
               </Row>
-              <br/>
+              <br />
               {!deleted ? (
                 <Row justify='center'>
                   <Col xs={24} sm={24} md={12} xl={12}>
@@ -264,9 +264,9 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                       }}>
                       {enableMeetings ? 'Ingresar a reunión' : 'Reunión Cerrada'}
                     </Button>
-                    <br/>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} xl={12}>
+                    <br />
+                  </Col>
+                  <Col xs={24} sm={24} md={12} xl={12}>
                     <Button
                       type='danger'
                       disabled={loading}
