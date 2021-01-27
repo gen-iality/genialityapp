@@ -17,12 +17,11 @@ class EventCard extends Component {
                 ) : (
                   <img
                     src={
-                      (console.log(event),
                       event.styles
                         ? event.styles.banner_image && event.styles.banner_image !== undefined
                           ? event.styles.banner_image
                           : EventImage
-                        : EventImage)
+                        : EventImage
                     }
                     alt='Evius.co'
                   />
@@ -61,15 +60,23 @@ class EventCard extends Component {
                 <div className='media-content'>
                   <div className=''>
                     <h2 className='title is-size-6 is-medium has-text-grey-dark'>{event.name}</h2>
+                    <span className='subtitle is-size-6 has-text-grey-dark'>
+                      {event.organizer.name
+                        ? event.organizer.name
+                        : event.author.displayName
+                        ? event.author.displayName
+                        : event.author.names}
+                    </span>
                   </div>
-                  {event.location && (
+                  {event.venue && (
                     <div className='subtitle'>
                       <span className='icon is-small has-text-grey'>
-                        <i className='fas fa-map-marker-alt' />
+                        {event.venue.length !== '' ? <i className='fas fa-map-marker-alt' /> : ''}
                       </span>
 
                       <span className='is-size-7 is-small has-text-grey-dark subt-location'>
-                        {event.location ? event.location.FormattedAddress : ''}
+                        {event.venue ? event.venue : ''} <br></br>
+                        {event.address ? event.address : ''}
                       </span>
                     </div>
                   )}

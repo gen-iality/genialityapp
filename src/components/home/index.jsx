@@ -42,7 +42,7 @@ class Home extends Component {
     try {
       this.setState({ events: [] });
       let { pageSize } = this.state;
-      pageSize > 100 ? this.setState({ hasMore: false, pageSize: 30 }) : this.setState({ hasMore: true });
+      pageSize > 300 ? this.setState({ hasMore: false, pageSize: 30 }) : this.setState({ hasMore: true });
       this.setState({ loading: true, typeEvent: type });
       const resp =
         type === 'next'
@@ -117,10 +117,10 @@ class Home extends Component {
           <div className='tabs'>
             <ul>
               <li onClick={(e) => this.fetchEvent('next')} className={typeEvent === 'next' ? 'is-active' : ''}>
-                <a href='#proximos'>Próximos</a>
+                <a>Próximos</a>
               </li>
               <li onClick={(e) => this.fetchEvent('prev')} className={typeEvent === 'prev' ? 'is-active' : ''}>
-                <a href='#pasados'>Pasados</a>
+                <a>Pasados</a>
               </li>
             </ul>
           </div>
@@ -173,7 +173,7 @@ class Home extends Component {
                 block
                 loading={loading}
                 onClick={() => this.seeMore(10, typeEvent)}>
-                Ver más eventos
+                {'Ver más'.toUpperCase()}
               </Button>
             ) : typeEvent === 'next' ? (
               ''
