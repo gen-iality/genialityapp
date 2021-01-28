@@ -12,6 +12,7 @@ import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
 import { Tabs, notification } from 'antd';
 import { createOrUpdateActivity, getConfiguration } from './services';
+import RoomManager from './roomManager';
 
 import ZoomComponent from '../events/zoomComponent';
 import {
@@ -104,6 +105,7 @@ class AgendaEdit extends Component {
   };
 
   async componentDidMount() {
+    console.log('edit ', this.props);
     const {
       event,
       location: { state },
@@ -767,7 +769,7 @@ class AgendaEdit extends Component {
               <Loading />
             ) : (
               <div className='columns'>
-                <div className='column is-8'>
+                <div className='column is-6'>
                   <div className='field'>
                     <label className='label required'>Nombre</label>
                     <div className='control'>
@@ -964,16 +966,16 @@ class AgendaEdit extends Component {
                     />
                   </div>
                   {/* <label className="label">Ticket</label>
-                <div>
-                  <Select
-                    isClearable
-                    isMulti
-                    styles={creatableStyles}
-                    onChange={this.selectTickets}
-                    options={tickets}
-                    value={selectedTickets}
-                  />
-                </div> */}
+                  <div>
+                    <Select
+                      isClearable
+                      isMulti
+                      styles={creatableStyles}
+                      onChange={this.selectTickets}
+                      options={tickets}
+                      value={selectedTickets}
+                    />
+                  </div> */}
 
                   <div className='field'>
                     <label className='label'>Link del video</label>
@@ -1002,7 +1004,8 @@ class AgendaEdit extends Component {
                     </div>
                   </div>
                 </div>
-                <div className='column is-4 general'>
+
+                <div className='column is-6 general'>
                   <div className='field is-grouped'>
                     <button className='button is-text' onClick={this.remove}>
                       x Eliminar actividad
@@ -1016,8 +1019,9 @@ class AgendaEdit extends Component {
                       Duplicar para traducir
                     </button>
                   </div>
-
                   <div className='section-gray'>
+                    <RoomManager event_id={this.props.event._id} activity_id={this.props.location.state.edit} />
+
                     <div className='field'>
                       <label className='label has-text-grey-light'>Imagen</label>
                       <p>Dimensiones: 1000px x 278px</p>
