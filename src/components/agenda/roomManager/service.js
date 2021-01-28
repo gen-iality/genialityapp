@@ -47,13 +47,13 @@ export const createOrUpdateActivity = (event_id, activity_id, activityInfo, tabs
   });
 };
 
-export const getConfiguration = (event_id, activityId) => {
+export const getConfiguration = (event_id, activity_id) => {
   return new Promise((resolve, reject) => {
     firestore
       .collection('events')
       .doc(event_id)
       .collection('activities')
-      .doc(activityId)
+      .doc(activity_id)
       .get()
       .then((result) => {
         if (result.exists) {

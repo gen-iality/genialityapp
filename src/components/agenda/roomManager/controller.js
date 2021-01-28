@@ -6,7 +6,7 @@ export default class RoomController extends Component {
     console.log('room controller', this.props);
   };
   render() {
-    const { handleRoomState, handleTabsController } = this.props;
+    const { handleRoomState, handleTabsController, roomStatus } = this.props;
     return (
       <>
         <Card>
@@ -14,9 +14,7 @@ export default class RoomController extends Component {
             <Col span={24}>
               <label className='label'>Estado de videoconferencia</label>
               <div className='select is-primary'>
-                <select
-                  //defaultValue={} styles={}
-                  onChange={handleRoomState}>
+                <select defaultValue={roomStatus} onChange={handleRoomState}>
                   <option value='open_meeting_room'>Conferencia Abierta</option>
                   <option value='closed_meeting_room'>Conferencia no Iniciada</option>
                   <option value='ended_meeting_room'>Conferencia Terminada</option>

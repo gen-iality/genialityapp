@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Card, Tabs, Alert } from 'antd';
 import RoomController from './controller';
 import RoomConfig from './config';
-import { validateHasVideoconference, createOrUpdateActivity } from './service';
+import { validateHasVideoconference, createOrUpdateActivity, getConfiguration } from './service';
 
 const { TabPane } = Tabs;
 
@@ -37,6 +37,17 @@ class RoomManager extends Component {
 
     if (hasVideoconference) {
       this.setState({ hasVideoconference: true, activeTab: 'controller' });
+
+      const configuration = await getConfiguration(event_id, activity_id);
+      console.log(configuration);
+
+      this.setState({
+        roomStatus: configuration.habilitar_ingreso,
+        chat: configuration.tabs.chat ? configuration.tabs.chat : false,
+        surveys: configuration.tabs.surveys ? configuration.tabs.surveys : false,
+        games: configuration.tabs.games ? configuration.tabs.games : false,
+        attendees: configuration.tabs.games ? configuration.tabs.games : false,
+      });
     }
   };
 
@@ -84,7 +95,7 @@ class RoomManager extends Component {
   };
 
   render() {
-    const { activeTab, hasVideoconference, platform, host_id } = this.state;
+    const { activeTab, hasVideoconference, platform, host_id, roomStatus } = this.state;
     const { event_id, activity_id } = this.props;
     return (
       <Card title='Administrador de salas'>
@@ -106,6 +117,7 @@ class RoomManager extends Component {
                   platform={platform}
                   handleRoomState={this.handleRoomState}
                   handleTabsController={this.handleTabsController}
+                  roomStatus={roomStatus}
                 />
               </TabPane>
             )}
