@@ -13,7 +13,7 @@ export default class RoomController extends Component {
           <Row style={{ marginBottom: 24 }}>
             <Col span={24}>
               <label className='label'>Estado de videoconferencia</label>
-              <div className='select'>
+              <div className='select is-primary'>
                 <select
                   //defaultValue={} styles={}
                   onChange={handleRoomState}>
@@ -28,33 +28,41 @@ export default class RoomController extends Component {
           <Row style={{ marginBottom: 24 }}>
             <Col span={12}>
               <label className='label'>Habilitar Chat</label>
-              <select>
-                <option value='true'>Si</option>
-                <option value='false'>No</option>
-              </select>
+              <div className='select is-primary'>
+                <select>
+                  <option value='true'>Si</option>
+                  <option value='false'>No</option>
+                </select>
+              </div>
             </Col>
             <Col span={12}>
               <label className='label'>Habilitar Encuestas</label>
-              <select>
-                <option value='true'>Si</option>
-                <option value='false'>No</option>
-              </select>
+              <div className='select is-primary'>
+                <select>
+                  <option value='true'>Si</option>
+                  <option value='false'>No</option>
+                </select>
+              </div>
             </Col>
           </Row>
           <Row style={{ marginBottom: 24 }}>
             <Col span={12}>
               <label className='label'>Habilitar Juegos</label>
-              <select>
-                <option value='true'>Si</option>
-                <option value='false'>No</option>
-              </select>
+              <div className='select is-primary'>
+                <select>
+                  <option value='true'>Si</option>
+                  <option value='false'>No</option>
+                </select>
+              </div>
             </Col>
             <Col span={12}>
               <label className='label'>Habilitar Asistentes</label>
-              <select>
-                <option value='true'>Si</option>
-                <option value='false'>No</option>
-              </select>
+              <div className='select is-primary'>
+                <select>
+                  <option value='true'>Si</option>
+                  <option value='false'>No</option>
+                </select>
+              </div>
             </Col>
           </Row>
         </Card>
