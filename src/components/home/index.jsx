@@ -116,10 +116,14 @@ class Home extends Component {
         <section className='home'>
           <div className='tabs'>
             <ul>
-              <li onClick={(e) => this.fetchEvent('next')} className={typeEvent === 'next' ? 'is-active' : ''}>
+              <li
+                onClick={!loading ? (e) => this.fetchEvent('next') : ''}
+                className={typeEvent === 'next' ? 'is-active' : ''}>
                 <a>Próximos</a>
               </li>
-              <li onClick={(e) => this.fetchEvent('prev')} className={typeEvent === 'prev' ? 'is-active' : ''}>
+              <li
+                onClick={!loading ? (e) => this.fetchEvent('prev') : ''}
+                className={typeEvent === 'prev' ? 'is-active' : ''}>
                 <a>Pasados</a>
               </li>
             </ul>
@@ -138,7 +142,9 @@ class Home extends Component {
                         key={event._id}
                         event={event}
                         action={{ name: 'Ver', url: `landing/${event._id}` }}
-                        size={'column is-one-third'}
+                        size={
+                          'column is-one-thirds-mobile is-two-thirds-tablet is-half-desktop is-one-third-widescreen '
+                        }
                         right={
                           <div className='actions'>
                             <p className='is-size-7'>
@@ -167,13 +173,15 @@ class Home extends Component {
                 )}
               </div>
             )}
+
             {hasMore === true && typeEvent === 'prev' ? (
               <Button
-                className='ant-button-see-more'
+                className='button is-primary is-medium is-fullwidth is-outlined'
+                size='large'
                 block
                 loading={loading}
                 onClick={() => this.seeMore(10, typeEvent)}>
-                {'Ver más'.toUpperCase()}
+                {!loading ? 'Ver más'.toUpperCase() : 'Cargando...'.toUpperCase()}
               </Button>
             ) : typeEvent === 'next' ? (
               ''
