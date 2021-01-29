@@ -34,6 +34,7 @@ import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
 import { setHostState } from './fireHost';
 import AgendaLanguaje from './language/index';
+import { firestore } from '../../helpers/firebase';
 
 const { TabPane } = Tabs;
 
@@ -1020,7 +1021,11 @@ class AgendaEdit extends Component {
                     </button>
                   </div>
                   <div className='section-gray'>
-                    <RoomManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
+                    <RoomManager
+                      event_id={this.props.event._id}
+                      activity_id={this.state.activity_id}
+                      firestore={firestore}
+                    />
 
                     <div className='field'>
                       <label className='label has-text-grey-light'>Imagen</label>

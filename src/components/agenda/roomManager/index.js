@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Card, Tabs, Alert, Spin } from 'antd';
+import { Card, Tabs, Alert, Spin, message as Message } from 'antd';
 import RoomController from './controller';
 import RoomConfig from './config';
-import { validateHasVideoconference, createOrUpdateActivity, getConfiguration } from './service';
+import Service from './service';
 
 const { TabPane } = Tabs;
 
@@ -10,6 +10,9 @@ class RoomManager extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      //Servicio de firebase
+      service: new Service(this.props.firestore),
+
       // Configuracion del gestor de salas
       hasVideoconference: false,
       activeTab: 'config',
@@ -49,14 +52,14 @@ class RoomManager extends Component {
   // validacion de existencia de sala e inicializacion de estado
   validationRoom = async () => {
     const { event_id, activity_id } = this.props;
+    const { service } = this.state;
 
-    const hasVideoconference = await validateHasVideoconference(event_id, activity_id);
+    const hasVideoconference = await service.validateHasVideoconference(event_id, activity_id);
 
     if (hasVideoconference) {
       this.setState({ hasVideoconference: true, activeTab: 'controller' });
 
-      const configuration = await getConfiguration(event_id, activity_id);
-      console.log('configuration', configuration);
+      const configuration = await service.getConfiguration(event_id, activity_id);
 
       this.setState({
         platform: configuration.platform ? configuration.platform : null,
@@ -117,15 +120,14 @@ class RoomManager extends Component {
   handleSaveConfig = async () => {
     const { roomInfo, tabs } = this.prepareData();
     const { event_id, activity_id } = this.props;
-    const result = await createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
-    console.log('el resultado', result);
+    const { service } = this.state;
+    const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
+
+    if (result) Message.success(result.message);
 
     if (result.state && result.state === 'created') {
       this.setState({ hasVideoconference: true });
     }
-    // notification.open({
-    //   message: result.message,
-    // });
   };
 
   render() {

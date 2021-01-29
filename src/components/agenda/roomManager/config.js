@@ -72,7 +72,8 @@ export default function RoomConfig(props) {
           <Col span={16}>
             <button
               onClick={() => {
-                console.log('start');
+                // eslint-disable-next-line no-console
+                console.log('create virtual room');
               }}
               className='button is-primary'>
               Crear transmisión
