@@ -16,8 +16,11 @@ export const validateHasVideoconference = (event_id, activity_id) => {
   });
 };
 
-export const createOrUpdateActivity = (event_id, activity_id, activityInfo, tabs) => {
+export const createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
   const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
+  const { roomStatus, platform, meeting_id } = roomInfo;
+  console.log('Create or Update', event_id, activity_id, roomInfo, tabs);
+
   return new Promise((resolve, reject) => {
     validateHasVideoconference(event_id, activity_id).then((existSurvey) => {
       if (existSurvey) {
@@ -27,8 +30,10 @@ export const createOrUpdateActivity = (event_id, activity_id, activityInfo, tabs
           .collection('activities')
           .doc(activity_id)
           .update({
-            habilitar_ingreso: activityInfo,
-            tabs: tabs,
+            habilitar_ingreso: roomStatus,
+            platform,
+            meeting_id,
+            tabs,
           })
           .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
       } else {
@@ -38,7 +43,9 @@ export const createOrUpdateActivity = (event_id, activity_id, activityInfo, tabs
           .collection('activities')
           .doc(activity_id)
           .set({
-            habilitar_ingreso: activityInfo,
+            habilitar_ingreso: roomStatus,
+            platform,
+            meeting_id,
             tabs: tabsSchema,
           })
           .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));

@@ -1,8 +1,13 @@
-import React from 'react';
-import { Card, Row, Col } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, Row, Col, Alert } from 'antd';
 
 export default function RoomConfig(props) {
-  const { platform, handleChange, host_id } = props;
+  const [requiresCreateRoom, setRequiresCreateRoom] = useState(false);
+  const { platform, handleChange, host_id, handleSaveConfig, meeting_id } = props;
+  useEffect(() => {
+    setRequiresCreateRoom(platform === 'zoom' || platform === 'zoomExterno');
+  }, [platform]);
+
   return (
     <Card>
       <Row style={{ marginBottom: 24 }}>
@@ -19,11 +24,22 @@ export default function RoomConfig(props) {
           </div>
         </Col>
       </Row>
+      {}
+      {requiresCreateRoom && (
+        <Alert
+          message='Si ya tiene creada una  transmisión ingrese los datos solicitados y haga click en Guardar, en caso que no haga click sobre el boton Crear transmisión'
+          type='info'
+          showIcon
+          style={{ marginBottom: 24 }}
+          closable
+        />
+      )}
+
       <Row style={{ marginBottom: 24 }}>
         <Col span={24}>
           <div className='control'>
             <label className='label'>Ingrese id de videoconferencia</label>
-            <input type='number' name='meeting_id' onChange={handleChange} />
+            <input type='number' name='meeting_id' onChange={handleChange} value={meeting_id} />
           </div>
         </Col>
       </Row>
@@ -52,12 +68,19 @@ export default function RoomConfig(props) {
         </Row>
       )}
       <Row>
-        <Col>
-          <button
-            onClick={() => {
-              console.log('start');
-            }}
-            className='button is-primary'>
+        {requiresCreateRoom && (
+          <Col span={16}>
+            <button
+              onClick={() => {
+                console.log('start');
+              }}
+              className='button is-primary'>
+              Crear transmisión
+            </button>
+          </Col>
+        )}
+        <Col span={8}>
+          <button onClick={handleSaveConfig} className='button is-primary'>
             Guardar
           </button>
         </Col>

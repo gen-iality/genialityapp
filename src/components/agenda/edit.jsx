@@ -43,7 +43,7 @@ class AgendaEdit extends Component {
     this.state = {
       loading: true,
       redirect: false,
-      deleteID: false,
+      activity_id: false,
       isLoading: { types: true, categories: true },
       name: '',
       subtitle: '',
@@ -213,7 +213,7 @@ class AgendaEdit extends Component {
 
       let currentUser = await getCurrentUser();
       this.setState({
-        deleteID: state.edit,
+        activity_id: state.edit,
         date,
         hour_start,
         hour_end,
@@ -353,7 +353,7 @@ class AgendaEdit extends Component {
           }
         } else {
           const agenda = await AgendaApi.create(event._id, info);
-          this.setState({ deleteID: agenda._id });
+          this.setState({ activity_id: agenda._id });
         }
         //if (this.state.hostSelected) await setHostState(this.state.hostSelected, false);
         //if (this.state.host_id) await setHostState(this.state.host_id, false);
@@ -380,7 +380,7 @@ class AgendaEdit extends Component {
         if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
         else {
           const agenda = await AgendaApi.create(event._id, info);
-          this.setState({ deleteID: agenda._id });
+          this.setState({ activity_id: agenda._id });
         }
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
@@ -603,12 +603,12 @@ class AgendaEdit extends Component {
 
   //FN para eliminar la actividad
   remove = () => {
-    if (this.state.deleteID) {
+    if (this.state.activity_id) {
       sweetAlert.twoButton(`Está seguro de borrar esta actividad`, 'warning', true, 'Borrar', async (result) => {
         try {
           if (result.value) {
             sweetAlert.showLoading('Espera (:', 'Borrando...');
-            await AgendaApi.deleteOne(this.state.deleteID, this.props.event._id);
+            await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id);
             this.setState({ redirect: true });
             sweetAlert.hideLoading();
           }
@@ -769,7 +769,7 @@ class AgendaEdit extends Component {
               <Loading />
             ) : (
               <div className='columns'>
-                <div className='column is-6'>
+                <div className='column is-7'>
                   <div className='field'>
                     <label className='label required'>Nombre</label>
                     <div className='control'>
@@ -1005,7 +1005,7 @@ class AgendaEdit extends Component {
                   </div>
                 </div>
 
-                <div className='column is-6 general'>
+                <div className='column is-5 general'>
                   <div className='field is-grouped'>
                     <button className='button is-text' onClick={this.remove}>
                       x Eliminar actividad
@@ -1020,7 +1020,7 @@ class AgendaEdit extends Component {
                     </button>
                   </div>
                   <div className='section-gray'>
-                    <RoomManager event_id={this.props.event._id} activity_id={this.props.location.state.edit} />
+                    <RoomManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
 
                     <div className='field'>
                       <label className='label has-text-grey-light'>Imagen</label>

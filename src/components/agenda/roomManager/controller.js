@@ -5,8 +5,13 @@ export default class RoomController extends Component {
   componentDidMount = () => {
     console.log('room controller', this.props);
   };
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevProps !== this.props) {
+      console.log('room controller update', this.props);
+    }
+  };
   render() {
-    const { handleRoomState, handleTabsController, roomStatus } = this.props;
+    const { handleRoomState, handleTabsController, roomStatus, chat, surveys, games, attendees } = this.props;
     return (
       <>
         <Card>
@@ -15,6 +20,7 @@ export default class RoomController extends Component {
               <label className='label'>Estado de videoconferencia</label>
               <div className='select is-primary'>
                 <select defaultValue={roomStatus} onChange={handleRoomState}>
+                  <option value=''>Seleccionar...</option>
                   <option value='open_meeting_room'>Conferencia Abierta</option>
                   <option value='closed_meeting_room'>Conferencia no Iniciada</option>
                   <option value='ended_meeting_room'>Conferencia Terminada</option>
@@ -27,7 +33,7 @@ export default class RoomController extends Component {
             <Col span={12}>
               <label className='label'>Habilitar Chat</label>
               <div className='select is-primary'>
-                <select>
+                <select defaultValue={chat} onChange={(e) => handleTabsController(e, 'chat')}>
                   <option value='true'>Si</option>
                   <option value='false'>No</option>
                 </select>
@@ -36,7 +42,7 @@ export default class RoomController extends Component {
             <Col span={12}>
               <label className='label'>Habilitar Encuestas</label>
               <div className='select is-primary'>
-                <select>
+                <select defaultValue={surveys} onChange={(e) => handleTabsController(e, 'surveys')}>
                   <option value='true'>Si</option>
                   <option value='false'>No</option>
                 </select>
@@ -47,7 +53,7 @@ export default class RoomController extends Component {
             <Col span={12}>
               <label className='label'>Habilitar Juegos</label>
               <div className='select is-primary'>
-                <select>
+                <select defaultValue={games} onChange={(e) => handleTabsController(e, 'games')}>
                   <option value='true'>Si</option>
                   <option value='false'>No</option>
                 </select>
@@ -56,7 +62,7 @@ export default class RoomController extends Component {
             <Col span={12}>
               <label className='label'>Habilitar Asistentes</label>
               <div className='select is-primary'>
-                <select>
+                <select defaultValue={attendees} onChange={(e) => handleTabsController(e, 'attendees')}>
                   <option value='true'>Si</option>
                   <option value='false'>No</option>
                 </select>
