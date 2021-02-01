@@ -11,7 +11,7 @@ class EventCard extends Component {
         <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
           <div className='card'>
             <div className='card-image'>
-              <figure className='image is-3by2'>
+              <figure className='image is-16by9'>
                 {event.picture ? (
                   <img src={typeof event.picture === 'object' ? event.picture[0] : event.picture} alt='Evius.co' />
                 ) : (
@@ -59,7 +59,7 @@ class EventCard extends Component {
               <div className='media'>
                 <div className='media-content'>
                   <div className=''>
-                    <h2 className='title is-size-6 is-medium has-text-grey-dark'>{event.name}</h2>
+                    <h2 className='title is-size-6 is-normal has-text-grey-dark'>{event.name}</h2>
                     <span className='subtitle is-size-6 has-text-grey-dark'>
                       {event.organizer.name
                         ? event.organizer.name

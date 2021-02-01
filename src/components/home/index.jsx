@@ -142,9 +142,7 @@ class Home extends Component {
                         key={event._id}
                         event={event}
                         action={{ name: 'Ver', url: `landing/${event._id}` }}
-                        size={
-                          'column is-one-thirds-mobile is-two-thirds-tablet is-half-desktop is-one-third-widescreen '
-                        }
+                        size={'column is-one-thirds-mobile is-two-thirds-tablet is-one-quarter-widescreen '}
                         right={
                           <div className='actions'>
                             <p className='is-size-7'>
