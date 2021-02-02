@@ -357,7 +357,19 @@ section.landing {
     position: sticky;
     top: 9%;
   }
-
+  .MenuItem_event{
+    display:grid; 
+    margin-bottom:12%; 
+    height: 65px !important;
+    padding-left:15px !important
+  }
+  .menuEvent_section-text{ 
+    margin:-3px auto;
+    white-space: normal;
+    line-height: 16px;
+    text-align:center; 
+    font-size:10px; 
+  }
   @media only screen and (max-width: $breakpoint-mobile) {
     display: none;
   }

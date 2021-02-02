@@ -206,8 +206,11 @@ class MenuEvent extends Component {
             return (
               <Menu.Item
                 key={this.state.itemsMenu[key].section}
-                onClick={() => this.state.showSection(this.state.itemsMenu[key].section)}>
+                className='MenuItem_event'
+                onClick={() => this.state.showSection(this.state.itemsMenu[key].section)}
+                /*style={{display:'grid', marginBottom:'12%', height:'63px', paddingLeft:'15px !important'}}*/ >
                 <IconoComponente
+                style={{ margin:'0 auto',fontSize:'22px' }}
                 // style={
                 //   this.state.eventId === '5faae7381fc1d06d3b28fca2' ||
                 //   this.state.eventId === '5f7e3564cdedb50e4c651602' ||
@@ -223,10 +226,10 @@ class MenuEvent extends Component {
                 this.state.eventId === '5f7b31866df71d13c2782153' ||
                 this.state.eventId === '5f99a20378f48e50a571e3b6' ||
                 this.state.eventId === '5fca68b7e2f869277cfa31b0' ? (
-                  <span style={{ color: '#FFFFFF' }}>{` ${this.state.itemsMenu[key].name}`}</span>
-                ) : (
-                  <span style={{ color: '#222222' }}>{` ${this.state.itemsMenu[key].name}`}</span>
-                )}
+                  <span className='menuEvent_section-text' style={{ color: '#FFFFFF'}}>{` ${this.state.itemsMenu[key].name}`}</span>
+                  ) : (
+                    <span className='menuEvent_section-text' style={{ color: '#222222' }}>{` ${this.state.itemsMenu[key].name}`}</span>
+                  )}
               </Menu.Item>
             );
           })}

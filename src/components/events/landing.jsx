@@ -620,12 +620,12 @@ class Landing extends Component {
                           className='containerMenu_Landing'
                           style={{
                             backgroundColor:
-                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                            event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
                           }}
                           trigger={null}
                           collapsible
                           collapsed={this.state.collapsed}
-                          width={250}>
+                          width={110}>
                           <div className='items-menu_Landing '>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                             <MenuEvent
