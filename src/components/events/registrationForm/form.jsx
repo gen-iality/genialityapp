@@ -221,16 +221,23 @@ export default ({
           }
         } else {
           //Usuario ACTUALIZADO
+          // let msg =
+          //   'Ya se ha realizado previamente el registro con el correo: ' +
+          //   values.email +
+          //   ', se ha enviado un nuevo correo con enlace de ingreso.';
+          // textMessage.content = msg;
+
           let msg =
-            'Ya se ha realizado previamente el registro con el correo: ' +
-            values.email +
-            ', se ha enviado un nuevo correo con enlace de ingreso.';
+            intl.formatMessage({ id: 'registration.already.registered.' }) +
+            ' ' +
+            intl.formatMessage({ id: 'registration.message.success.subtitle' });
+
           textMessage.content = msg;
 
           setSuccessMessage(msg);
           // Retorna un mensaje en caso de que ya se encuentre registrado el correo
           setNotLoggedAndRegister(true);
-          message.success(textMessage);
+          message.success(msg);
         }
       } catch (err) {
         // textMessage.content = "Error... Intentalo mas tarde";
@@ -561,7 +568,7 @@ export default ({
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   {generalFormErrorMessageVisible && (
-                    <Alert message='Falto por completar algunos campos. ' type='warning' />
+                    <Alert message={intl.formatMessage({ id: 'form.missing.required.fields' })} type='warning' />
                   )}
                 </Col>
               </Row>
@@ -570,8 +577,8 @@ export default ({
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   {notLoggedAndRegister && (
                     <Alert
-                      message='Ya se encuentra registrado'
-                      description={successMessage}
+                      message={intl.formatMessage({ id: 'registration.already.registered' })}
+                      description={intl.formatMessage({ id: 'registration.message.success.subtitle' })}
                       type='warning'
                       showIcon
                       closable

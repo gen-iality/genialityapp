@@ -58,13 +58,15 @@
     "registration.message.loading": "Registering user",
     "registration.message.created": "Registered user",
     "registration.message.updated": "Updated user",
+    "registration.already.registered": "You are already registered.",
 
     "button.return": "Back",
     "button.go.event": "Go to event",
 
     "form.field.required": "This field is required",
     "form.validate.message.password": "The password must contain at least 8 characters, an uppercase, a lowercase and a number",
-    "form.validate.message.email": "Invalid email"
+    "form.validate.message.email": "Invalid email",
+    "form.missing.required.fields": "Missing required fields"
   },
   "es": {
     "header.help": "Ayuda",
@@ -125,13 +127,15 @@
     "registration.message.loading": "Registrando usuario",
     "registration.message.created": "Usuario Registrado",
     "registration.message.updated": "Usuario Actualizado",
+    "registration.already.registered": "Ya se encuentra registrado.",
 
     "button.return": "Regresar",
     "button.go.event": "Ir al evento",
 
     "form.field.required": "Este campo es obligatorio",
     "form.validate.message.password": "El password debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número",
-    "form.validate.message.email": "E-mail inválido"
+    "form.validate.message.email": "E-mail inválido",
+    "form.missing.required.fields": "Faltan por completar algunos campos"
   },
 
   "pt": {
@@ -151,12 +155,14 @@
     "registration.message.loading": "Registrando usuário",
     "registration.message.created": "Usuário Registrado",
     "registration.message.updated": "Atualizado pelo usuário",
+    "registration.already.registered": "Você já está registrado.",
 
     "button.return": "Para retornar",
     "button.go.event": "Ir ao evento",
 
     "form.field.required": "Este campo é obrigatório",
     "form.validate.message.password": "A senha deve ter pelo menos 8 caracteres, uma maiúscula, uma minúscula e um número",
-    "form.validate.message.email": "E-mail inválido"
+    "form.validate.message.email": "E-mail inválido",
+    "form.missing.required.fields": "Campos obrigatórios ausentes"
   }
 }
