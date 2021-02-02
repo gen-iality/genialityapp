@@ -644,12 +644,12 @@ class Landing extends Component {
                         <Content className='site-layout-background'>
                           {/* Boton que abre el menu para dispositivos > tablet  */}
                           <div className='hiddenMenu_Landing'>
-                            <Button onClick={this.toggle}>
+                            {/* <Button onClick={this.toggle}>
                               {React.createElement(this.state.collapsed ? RightOutlined : LeftOutlined, {
                                 className: 'trigger',
                                 onClick: this.toggle,
                               })}
-                            </Button>
+                            </Button> */}
                           </div>
 
                           {/*Aqui empieza el menu para dispositivos < tablet*/}
