@@ -11,8 +11,8 @@ class Service {
         .doc(event_id)
         .collection('activities')
         .doc(activity_id)
-        .onSnapshot((survey) => {
-          if (!survey.exists) {
+        .onSnapshot((activity) => {
+          if (!activity.exists) {
             resolve(false);
           }
           resolve(true);
@@ -22,11 +22,12 @@ class Service {
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
     const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
-    const { roomStatus, platform, meeting_id } = roomInfo;
+    const { roomStatus, platform, meeting_id, isPublished } = roomInfo;
+    console.log('room info', roomInfo);
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
-      this.validateHasVideoconference(event_id, activity_id).then((existSurvey) => {
-        if (existSurvey) {
+      this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
+        if (existActivity) {
           this.firestore
             .collection('events')
             .doc(event_id)
@@ -37,6 +38,7 @@ class Service {
               platform,
               meeting_id,
               tabs,
+              isPublished,
             })
             .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
         } else {
@@ -49,6 +51,7 @@ class Service {
               habilitar_ingreso: roomStatus,
               platform,
               meeting_id,
+              isPublished,
               tabs: tabsSchema,
             })
             .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));

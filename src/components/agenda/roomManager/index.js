@@ -14,6 +14,7 @@ class RoomManager extends Component {
       service: new Service(this.props.firestore),
 
       // Configuracion del gestor de salas
+      isPublished: true,
       hasVideoconference: false,
       activeTab: 'config',
       loading: false,
@@ -57,11 +58,10 @@ class RoomManager extends Component {
     const hasVideoconference = await service.validateHasVideoconference(event_id, activity_id);
 
     if (hasVideoconference) {
-      this.setState({ hasVideoconference: true, activeTab: 'controller' });
-
       const configuration = await service.getConfiguration(event_id, activity_id);
 
       this.setState({
+        isPublished: configuration.platform ? configuration.platform : true,
         platform: configuration.platform ? configuration.platform : null,
         meeting_id: configuration.meeting_id ? configuration.meeting_id : null,
         roomStatus: configuration.habilitar_ingreso,
@@ -70,6 +70,13 @@ class RoomManager extends Component {
         games: configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false,
         attendees: configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false,
       });
+
+      // Si en firebase ya esta inicializado el campo platfom y meeting_id se habilita el tab controller
+      if (configuration.platform !== null && configuration.meeting_id !== null) {
+        this.setState({ hasVideoconference: true, activeTab: 'controller' });
+      }
+    } else {
+      await this.handleSaveConfig();
     }
   };
 
@@ -105,13 +112,18 @@ class RoomManager extends Component {
 
   // Encargado de recibir los cambios de los input y select
   handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+    if (e.target.name === 'isPublished') {
+      const isPublished = e.target.value === 'true' ? true : false;
+      this.setState({ [e.target.name]: isPublished }, async () => await this.handleSaveConfig());
+    } else {
+      this.setState({ [e.target.name]: e.target.value });
+    }
   };
 
   //Preparacion de la data para guardar en firebase
   prepareData = () => {
-    const { roomStatus, platform, meeting_id, chat, surveys, games, attendees } = this.state;
-    const roomInfo = { roomStatus, platform, meeting_id };
+    const { roomStatus, platform, meeting_id, chat, surveys, games, attendees, isPublished } = this.state;
+    const roomInfo = { roomStatus, platform, meeting_id, isPublished };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };
   };
@@ -125,7 +137,7 @@ class RoomManager extends Component {
 
     if (result) Message.success(result.message);
 
-    if (result.state && result.state === 'created') {
+    if (result.state && result.state === 'updated' && roomInfo.meeting_id !== null && roomInfo.platform !== null) {
       this.setState({ hasVideoconference: true });
     }
   };
@@ -143,6 +155,7 @@ class RoomManager extends Component {
       games,
       attendees,
       meeting_id,
+      isPublished,
     } = this.state;
     const { event_id, activity_id } = this.props;
     return (
@@ -166,6 +179,7 @@ class RoomManager extends Component {
                   meeting_id={meeting_id}
                   host_id={host_id}
                   handleSaveConfig={this.handleSaveConfig}
+                  isPublished={isPublished}
                 />
               )}
             </TabPane>

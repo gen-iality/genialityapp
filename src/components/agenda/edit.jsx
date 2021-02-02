@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import axios from 'axios';
-import { ApiEviusZoomServer } from '../../helpers/constants';
+import { ApiEviusZoomServer, ApiEviusZoomHosts } from '../../helpers/constants';
 import { Redirect, withRouter, Link } from 'react-router-dom';
 import Moment from 'moment';
 import EviusReactQuill from '../shared/eviusReactQuill';
@@ -1025,6 +1025,7 @@ class AgendaEdit extends Component {
                       event_id={this.props.event._id}
                       activity_id={this.state.activity_id}
                       firestore={firestore}
+                      ApiEviusZoomHosts={ApiEviusZoomHosts}
                     />
 
                     <div className='field'>

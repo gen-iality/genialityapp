@@ -3,13 +3,25 @@ import { Card, Row, Col, Alert } from 'antd';
 
 export default function RoomConfig(props) {
   const [requiresCreateRoom, setRequiresCreateRoom] = useState(false);
-  const { platform, handleChange, host_id, handleSaveConfig, meeting_id } = props;
+  const { platform, handleChange, host_id, handleSaveConfig, meeting_id, isPublished } = props;
   useEffect(() => {
     setRequiresCreateRoom(platform === 'zoom' || platform === 'zoomExterno');
   }, [platform]);
 
   return (
     <Card>
+      <Row style={{ marginBottom: 24 }}>
+        <Col span={24}>
+          <label className='label'>Habilitar Actividad</label>
+          <div className='select is-primary'>
+            <select defaultValue={isPublished} value={isPublished} name='isPublished' onChange={handleChange}>
+              <option value={true}>Si</option>
+              <option value={false}>No</option>
+            </select>
+          </div>
+        </Col>
+      </Row>
+
       <Row style={{ marginBottom: 24 }}>
         <Col span={24}>
           <label className='label'>Plataforma Streaming del evento</label>
@@ -24,7 +36,7 @@ export default function RoomConfig(props) {
           </div>
         </Col>
       </Row>
-      {}
+
       {requiresCreateRoom && (
         <Alert
           message='Si ya tiene creada una  transmisión ingrese los datos solicitados y haga click en Guardar, en caso que no haga click sobre el boton Crear transmisión'
