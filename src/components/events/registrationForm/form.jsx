@@ -228,7 +228,7 @@ export default ({
           // textMessage.content = msg;
 
           let msg =
-            intl.formatMessage({ id: 'registration.already.registered.' }) +
+            intl.formatMessage({ id: 'registration.already.registered' }) +
             ' ' +
             intl.formatMessage({ id: 'registration.message.success.subtitle' });
 
