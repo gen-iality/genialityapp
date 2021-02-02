@@ -3,7 +3,7 @@ import { Card, Row, Col, Alert } from 'antd';
 
 export default function RoomConfig(props) {
   const [requiresCreateRoom, setRequiresCreateRoom] = useState(false);
-  const { platform, handleChange, host_id, handleSaveConfig, meeting_id, isPublished } = props;
+  const { platform, handleChange, host_id, handleSaveConfig, meeting_id, isPublished, createZoomRomm } = props;
   useEffect(() => {
     setRequiresCreateRoom(platform === 'zoom' || platform === 'zoomExterno');
   }, [platform]);
@@ -82,12 +82,7 @@ export default function RoomConfig(props) {
       <Row>
         {requiresCreateRoom && (
           <Col span={16}>
-            <button
-              onClick={() => {
-                // eslint-disable-next-line no-console
-                console.log('create virtual room');
-              }}
-              className='button is-primary'>
+            <button onClick={createZoomRomm} className='button is-primary'>
               Crear transmisión
             </button>
           </Col>

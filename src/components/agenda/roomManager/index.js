@@ -61,7 +61,7 @@ class RoomManager extends Component {
       const configuration = await service.getConfiguration(event_id, activity_id);
 
       this.setState({
-        isPublished: configuration.platform ? configuration.platform : true,
+        isPublished: typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true,
         platform: configuration.platform ? configuration.platform : null,
         meeting_id: configuration.meeting_id ? configuration.meeting_id : null,
         roomStatus: configuration.habilitar_ingreso,
@@ -142,6 +142,34 @@ class RoomManager extends Component {
     }
   };
 
+  // Create Room Zoom
+  createZoomRomm = async () => {
+    console.log('create room zoom', this.props);
+
+    console.log('create room zoom', typeof this.props.hour_start);
+    const { activity_id, activity_name, event_id } = this.props;
+    const body = {
+      activity_id,
+      activity_name,
+      event_id: event_id,
+      agenda: 'spacios2',
+      date_start_zoom: '2021-02-03T13:00:00',
+      date_end_zoom: '2021-02-03T14:00:00',
+    };
+    this.validateForCreateZoomRoom();
+  };
+
+  validateForCreateZoomRoom = () => {
+    if (this.props.date_activity === '' || this.props.date_activity === 'Invalid date') {
+      Message.error('La actividad no tiene una fecha seleccionada');
+      return false;
+    }
+    // if (this.props.hour_end === '' || this.props.date_activity === 'Invalid date') {
+    //   Message.error('La actividad no tiene una fecha seleccionada');
+    //   return false;
+    // }
+  };
+
   render() {
     const {
       activeTab,
@@ -180,6 +208,8 @@ class RoomManager extends Component {
                   host_id={host_id}
                   handleSaveConfig={this.handleSaveConfig}
                   isPublished={isPublished}
+                  createZoomRomm={this.createZoomRomm}
+                  date_activity={this.props.date}
                 />
               )}
             </TabPane>

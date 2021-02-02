@@ -106,7 +106,6 @@ class AgendaEdit extends Component {
   };
 
   async componentDidMount() {
-    console.log('edit ', this.props);
     const {
       event,
       location: { state },
@@ -1024,8 +1023,12 @@ class AgendaEdit extends Component {
                     <RoomManager
                       event_id={this.props.event._id}
                       activity_id={this.state.activity_id}
+                      activity_name={this.state.name}
                       firestore={firestore}
                       ApiEviusZoomHosts={ApiEviusZoomHosts}
+                      date_activity={this.state.date}
+                      hour_start={this.state.hour_start}
+                      hour_end={this.state.hour_end}
                     />
 
                     <div className='field'>
