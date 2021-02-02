@@ -168,7 +168,7 @@ export default ({
     const key = 'registerUserService';
 
     // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
-    message.loading({ content: formMessage.loadingMessage, key }, 10);
+    message.loading({ content: intl.formatMessage({ id: 'registration.message.loading' }), key }, 10);
 
     const snap = { properties: values };
 
@@ -209,7 +209,7 @@ export default ({
           setSuccessMessage($msg);
 
           setSubmittedForm(true);
-          message.success(textMessage);
+          message.success(intl.formatMessage({ id: 'registration.message.created' }));
 
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
           //todo el proceso de logueo depende del token en la url por eso se recarga la página
@@ -221,16 +221,23 @@ export default ({
           }
         } else {
           //Usuario ACTUALIZADO
+          // let msg =
+          //   'Ya se ha realizado previamente el registro con el correo: ' +
+          //   values.email +
+          //   ', se ha enviado un nuevo correo con enlace de ingreso.';
+          // textMessage.content = msg;
+
           let msg =
-            'Ya se ha realizado previamente el registro con el correo: ' +
-            values.email +
-            ', se ha enviado un nuevo correo con enlace de ingreso.';
+            intl.formatMessage({ id: 'registration.already.registered.' }) +
+            ' ' +
+            intl.formatMessage({ id: 'registration.message.success.subtitle' });
+
           textMessage.content = msg;
 
           setSuccessMessage(msg);
           // Retorna un mensaje en caso de que ya se encuentre registrado el correo
           setNotLoggedAndRegister(true);
-          message.success(textMessage);
+          message.success(msg);
         }
       } catch (err) {
         // textMessage.content = "Error... Intentalo mas tarde";
@@ -459,8 +466,10 @@ export default ({
             onChange={(e) => setPassword(e.target.value)}
             key={key}
             value={password}
-            pattern='(?=^.{10,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$'
-            title='El password debe tener mínimo 10 caracteres, una mayúscula, una minúscula y un número'
+            pattern='(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$'
+            title={intl.formatMessage({ id: 'form.validate.message.password' })}
+            required={true}
+            message={intl.formatMessage({ id: 'form.field.required' })}
           />
         );
       }
@@ -484,7 +493,7 @@ export default ({
       //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
 
       if (type === 'boolean' && mandatory) {
-        let textoError = 'Debes llenar este  campo es obligatorio';
+        let textoError = intl.formatMessage({ id: 'form.field.required' });
         rule = { validator: (_, value) => (value ? Promise.resolve() : Promise.reject(textoError)) };
       }
 
@@ -543,7 +552,13 @@ export default ({
               form={form}
               layout='vertical'
               onFinish={onFinish}
-              validateMessages={validateMessages}
+              validateMessages={{
+                required: intl.formatMessage({ id: 'form.field.required' }),
+                types: {
+                  email: intl.formatMessage({ id: 'form.validate.message.email' }),
+                  regexp: 'malo',
+                },
+              }}
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
               onFieldsChange={fieldsChange}
@@ -553,7 +568,7 @@ export default ({
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   {generalFormErrorMessageVisible && (
-                    <Alert message='Falto por completar algunos campos. ' type='warning' />
+                    <Alert message={intl.formatMessage({ id: 'form.missing.required.fields' })} type='warning' />
                   )}
                 </Col>
               </Row>
@@ -562,8 +577,8 @@ export default ({
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   {notLoggedAndRegister && (
                     <Alert
-                      message='Ya se encuentra registrado'
-                      description={successMessage}
+                      message={intl.formatMessage({ id: 'registration.already.registered' })}
+                      description={intl.formatMessage({ id: 'registration.message.success.subtitle' })}
                       type='warning'
                       showIcon
                       closable
@@ -594,7 +609,7 @@ export default ({
                 <a className='ant-btn  ant-btn-primary ant-btn-lg' href={loggedurl}>
                   {eventId == '5fca68b7e2f869277cfa31b0' || eventId == '5f99a20378f48e50a571e3b6'
                     ? 'VER CAPÍTULO'
-                    : 'INGRESAR'}
+                    : intl.formatMessage({ id: 'button.go.event' })}
                 </a>
               )}
               <OutsideAlerter showSection={showSection}>
