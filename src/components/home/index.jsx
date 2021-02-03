@@ -9,7 +9,7 @@ import { EventsApi } from '../../helpers/request';
 import API from '../../helpers/request';
 import LogOut from '../shared/logOut';
 import ErrorServe from '../modal/serverError';
-import { Button } from 'antd';
+import { Button, Row, Col } from 'antd';
 
 Moment.locale('es');
 momentLocalizer();
@@ -132,44 +132,47 @@ class Home extends Component {
             {loading ? (
               <LoadingEvent />
             ) : (
-              <div className='columns home is-multiline'>
+              <Row gutter={[16, 16]}>
                 {events.length <= 0 ? (
                   <p className='sin-evento'>No hay eventos próximos</p>
                 ) : (
                   events.map((event, key) => {
                     return (
-                      <EventCard
-                        key={event._id}
-                        event={event}
-                        action={{ name: 'Ver', url: `landing/${event._id}` }}
-                        size={'column is-one-thirds-mobile is-two-thirds-tablet is-one-quarter-widescreen '}
-                        right={
-                          <div className='actions'>
-                            <p className='is-size-7'>
-                              <span className='icon is-small has-text-grey'>
-                                <i className='fas fa-share' />
-                              </span>
-                              <span>Compartir</span>
-                            </p>
-                            <p className='is-size-7'>
-                              <span className='icon is-small has-text-grey'>
-                                <i className='fas fa-check' />
-                              </span>
-                              <span>Asistiré</span>
-                            </p>
-                            <p className='is-size-7'>
-                              <span className='icon is-small has-text-grey'>
-                                <i className='fas fa-heart' />
-                              </span>
-                              <span>Me interesa</span>
-                            </p>
-                          </div>
-                        }
-                      />
+                      <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                        <EventCard
+                          bordered={false}
+                          loading={loading}
+                          key={event._id}
+                          event={event}
+                          action={{ name: 'Ver', url: `landing/${event._id}` }}
+                          right={
+                            <div className='actions'>
+                              <p className='is-size-7'>
+                                <span className='icon is-small has-text-grey'>
+                                  <i className='fas fa-share' />
+                                </span>
+                                <span>Compartir</span>
+                              </p>
+                              <p className='is-size-7'>
+                                <span className='icon is-small has-text-grey'>
+                                  <i className='fas fa-check' />
+                                </span>
+                                <span>Asistiré</span>
+                              </p>
+                              <p className='is-size-7'>
+                                <span className='icon is-small has-text-grey'>
+                                  <i className='fas fa-heart' />
+                                </span>
+                                <span>Me interesa</span>
+                              </p>
+                            </div>
+                          }
+                        />
+                      </Col>
                     );
                   })
                 )}
-              </div>
+              </Row>
             )}
 
             {hasMore === true && typeEvent === 'prev' ? (

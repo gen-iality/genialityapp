@@ -2,20 +2,45 @@ import React, { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
 import EventImage from '../../eventimage.png';
+import { Badge, Card, Space } from 'antd';
 
 class EventCard extends Component {
   render() {
-    const { event, action, size, right } = this.props;
+    const { event, action, bordered, right, loading } = this.props;
+    const { Meta } = Card;
+    console.log('Marlon aqui', event);
     return (
-      <div className={size}>
-        <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
-          <div className='card'>
-            <div className='card-image'>
-              <figure className='image is-16by9'>
-                {event.picture ? (
-                  <img src={typeof event.picture === 'object' ? event.picture[0] : event.picture} alt='Evius.co' />
+      <div>
+        <Badge.Ribbon
+          text={
+            <span style={{ fontSize: '12px' }}>
+              <div>
+                <Space>
+                  <span>
+                    <i className='fas fa-map-marker-alt' />
+                  </span>
+                  <span>{event.venue ? event.venue : 'Virtual'}</span>
+                </Space>
+              </div>
+            </span>
+          }>
+          <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+            <Card
+              bordered={bordered}
+              loading={loading}
+              style={{ width: '100%' }}
+              cover={
+                event.picture ? (
+                  <img
+                    loading='lazy'
+                    style={{ objectFit: 'cover', height: 180 }}
+                    src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
+                    alt='Evius.co'
+                  />
                 ) : (
                   <img
+                    loading='lazy'
+                    style={{ objectFit: 'cover', height: 180 }}
                     src={
                       event.styles
                         ? event.styles.banner_image && event.styles.banner_image !== undefined
@@ -25,42 +50,21 @@ class EventCard extends Component {
                     }
                     alt='Evius.co'
                   />
-                )}
-              </figure>
-              <div className='header-event'>
-                <div className='is-pulled-left dates'>
-                  <p className='is-size-7 has-text-white'>
-                    <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD')}</time>
-                    <br />
-                    <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('MMM YYYY')}</time>
-                  </p>
-                  <div className='vertical-line'></div>
-                  <p className='is-size-7 has-text-white'>
-                    <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD')}</time>
-                    <br />
-                    <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('MMM YYYY')}</time>
-                  </p>
-                </div>
-                <div className='is-pulled-right cats'>
-                  {event.categories.length >= 1 && <p># {event.categories[0].name}</p>}
-                  {event.event_type && <p># {event.event_type.name}</p>}
-                </div>
-              </div>
-              {action && (
-                <button className='img-see button is-white is-small has-text-weight-bold'>
-                  {action.name}
-                  <span className='icon is-small'>
-                    <i className='fas fa-angle-right'></i>
-                  </span>
-                </button>
-              )}
-            </div>
-            <div className='card-content'>
-              <div className='media'>
-                <div className='media-content'>
-                  <div className=''>
-                    <h2 className='title is-size-6 is-normal has-text-grey-dark'>{event.name}</h2>
-                    <span className='subtitle is-size-6 has-text-grey-dark'>
+                )
+              }
+              actions={right}>
+              <Meta
+                description={
+                  <div>
+                    <span style={{ fontSize: '12px' }}>
+                      <Space>
+                        <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
+                        {'-'}
+                        <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
+                      </Space>
+                    </span>
+                    <h3 style={{ fontWeight: 'bold' }}>{event.name}</h3>
+                    <span>
                       {event.organizer.name
                         ? event.organizer.name
                         : event.author.displayName
@@ -68,25 +72,11 @@ class EventCard extends Component {
                         : event.author.names}
                     </span>
                   </div>
-                  {event.venue && (
-                    <div className='subtitle'>
-                      <span className='icon is-small has-text-grey'>
-                        {event.venue.length !== '' ? <i className='fas fa-map-marker-alt' /> : ''}
-                      </span>
-
-                      <span className='is-size-7 is-small has-text-grey-dark subt-location'>
-                        {event.venue ? event.venue : ''} <br></br>
-                        {event.address ? event.address : ''}
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <div className='vertical-line'></div>
-                <div className='media-right'>{right}</div>
-              </div>
-            </div>
-          </div>
-        </Link>
+                }
+              />
+            </Card>
+          </Link>
+        </Badge.Ribbon>
       </div>
     );
   }
