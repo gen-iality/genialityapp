@@ -4,6 +4,7 @@ import RoomController from './controller';
 import RoomConfig from './config';
 import Service from './service';
 import Moment from 'moment';
+import * as Cookie from 'js-cookie';
 
 const { TabPane } = Tabs;
 
@@ -145,29 +146,33 @@ class RoomManager extends Component {
 
   // Create Room Zoom
   createZoomRomm = async () => {
-    const { activity_id, activity_name, event_id } = this.props;
+    this.validateForCreateZoomRoom();
+    const evius_token = Cookie.get('evius_token');
+    const { activity_id, activity_name, event_id, date_start_zoom, date_end_zoom } = this.props;
     const body = {
+      token: evius_token,
       activity_id,
       activity_name,
       event_id: event_id,
-      agenda: 'spacios2',
-      date_start_zoom: '2021-02-03T13:00:00',
-      date_end_zoom: '2021-02-03T14:00:00',
+      agenda: activity_name,
+      date_start_zoom,
+      date_end_zoom,
     };
-    this.validateForCreateZoomRoom();
+    const response = await this.state.service.setZoomRoom(evius_token, body);
+    console.log('create room response', response);
   };
 
   validateForCreateZoomRoom = () => {
-    if (this.props.date_activity === '' || this.props.date_activity === 'Invalid date') {
-      Message.error('La actividad no tiene una fecha seleccionada');
+    // if (this.props.date_activity === '' || this.props.date_activity === 'Invalid date') {
+    //   Message.error('La actividad no tiene una fecha seleccionada');
+    //   return false;
+    // }
+    if (!Moment(this.props.date_start_zoom).isValid()) {
+      Message.error('La fecha de inicio no es valida');
       return false;
     }
-    if (!Moment(this.props.hour_start).isValid()) {
-      Message.error('La hora de inicio no es valida');
-      return false;
-    }
-    if (!Moment(this.props.hour_end).isValid()) {
-      Message.error('La hora de finalización no es valida');
+    if (!Moment(this.props.date_end_zoom).isValid()) {
+      Message.error('La fecha de finalización no es valida');
       return false;
     }
   };

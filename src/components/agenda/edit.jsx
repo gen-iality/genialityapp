@@ -91,6 +91,10 @@ class AgendaEdit extends Component {
       surveys: false,
       games: false,
       attendees: false,
+
+      // Fechas de la actividad con formato para la creacion de sala en zoom
+      date_start_zoom: null,
+      date_end_zoom: null,
     };
     this.createConference = this.createConference.bind(this);
     this.removeConference = this.removeConference.bind(this);
@@ -1026,6 +1030,10 @@ class AgendaEdit extends Component {
                       activity_name={this.state.name}
                       firestore={firestore}
                       ApiEviusZoomHosts={ApiEviusZoomHosts}
+                      // date_start_zoom={this.state.date_start_zoom}
+                      // date_end_zoom={this.state.date_end_zoom}
+                      date_start_zoom={'2021-02-03T13:00:00'}
+                      date_end_zoom={'2021-02-03T14:00:00'}
                       date_activity={this.state.date}
                       hour_start={this.state.hour_start}
                       hour_end={this.state.hour_end}

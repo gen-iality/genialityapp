@@ -1,3 +1,5 @@
+import * as Cookie from 'js-cookie';
+
 class Service {
   constructor(instance) {
     this.firestore = instance;
@@ -78,6 +80,28 @@ class Service {
         .catch((err) => {
           reject('Hubo un problema ', err);
         });
+    });
+  };
+
+  setZoomRoom = (token, data) => {
+    const url = `https://apimeetings.evius.co:6490/crearroom?token=${token}`;
+
+    return new Promise((resolve, reject) => {
+      try {
+        fetch(url, {
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(data),
+          method: 'POST',
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            resolve(data);
+          });
+      } catch (err) {
+        console.error('Error: ' + err);
+      }
     });
   };
 }
