@@ -3,6 +3,7 @@ import { Card, Tabs, Alert, Spin, message as Message } from 'antd';
 import RoomController from './controller';
 import RoomConfig from './config';
 import Service from './service';
+import Moment from 'moment';
 
 const { TabPane } = Tabs;
 
@@ -144,9 +145,6 @@ class RoomManager extends Component {
 
   // Create Room Zoom
   createZoomRomm = async () => {
-    console.log('create room zoom', this.props);
-
-    console.log('create room zoom', typeof this.props.hour_start);
     const { activity_id, activity_name, event_id } = this.props;
     const body = {
       activity_id,
@@ -164,10 +162,14 @@ class RoomManager extends Component {
       Message.error('La actividad no tiene una fecha seleccionada');
       return false;
     }
-    // if (this.props.hour_end === '' || this.props.date_activity === 'Invalid date') {
-    //   Message.error('La actividad no tiene una fecha seleccionada');
-    //   return false;
-    // }
+    if (!Moment(this.props.hour_start).isValid()) {
+      Message.error('La hora de inicio no es valida');
+      return false;
+    }
+    if (!Moment(this.props.hour_end).isValid()) {
+      Message.error('La hora de finalización no es valida');
+      return false;
+    }
   };
 
   render() {
