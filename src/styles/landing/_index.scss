@@ -366,9 +366,10 @@ section.landing {
   .menuEvent_section-text{ 
     margin:-3px auto;
     white-space: normal;
-    line-height: 16px;
+    line-height: 13px;
     text-align:center; 
     font-size:10px; 
+    margin-bottom: 15px;
   }
   @media only screen and (max-width: $breakpoint-mobile) {
     display: none;
