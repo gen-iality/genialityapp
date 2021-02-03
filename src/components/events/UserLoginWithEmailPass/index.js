@@ -1,87 +1,84 @@
-import React, { Component } from 'react'
-import { Card, Form, Input, Col, Row, Button, Spin } from "antd";
+import React, { Component } from 'react';
+import { Card, Form, Input, Col, Row, Button, Spin } from 'antd';
+import { injectIntl } from 'react-intl';
 
 class UserLoginWithEmailPass extends Component {
-
-  constructor(props){
-    super(props)
-    this.state={
-      formTexts: this.props.FormTags('login')
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      formTexts: this.props.FormTags('login'),
+    };
   }
-  
-  render(){
-    const {formTexts} = this.state
-    const {
-      handleLoginEmailPassword,
-      onFinishFailed,
-      errorLogin,
-      loading,
-      handleOpenRecoveryPass
-    } = this.props
+
+  render() {
+    const { formTexts } = this.state;
+    const { handleLoginEmailPassword, onFinishFailed, errorLogin, loading, handleOpenRecoveryPass, intl } = this.props;
     return (
-      <Card title={formTexts.titleForm}>
+      <Card title={intl.formatMessage({ id: 'login.title' })}>
         <Form onFinish={handleLoginEmailPassword} onFinishFailed={onFinishFailed}>
           <Row gutter={[24, 24]}>
-            <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+            <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
               <Form.Item
-                label="E-Mail"
-                name="email"
+                label='E-Mail'
+                name='email'
                 rules={[
-                    {
+                  {
                     required: true,
-                    message: 'Ingrese E-Mail',
-                    },
-                ]}
-                >
-                  <Input style={{ width: "300px" }} />
-                </Form.Item>
+                    message: intl.formatMessage({ id: 'form.field.required' }),
+                  },
+                ]}>
+                <Input style={{ width: '300px' }} />
+              </Form.Item>
             </Col>
           </Row>
           <Row gutter={[24, 24]}>
-              <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-                <Form.Item
-                label="Contraseña"
-                name="password"
+            <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+              <Form.Item
+                label={intl.formatMessage({ id: 'form.label.password' })}
+                name='password'
                 rules={[
-                    {
+                  {
                     required: true,
-                    message: 'Ingrese su contraseña',
-                    
-                    },
-                ]}
-                >
-                  <Input type='password' style={{ width: "300px" }}/>
-                </Form.Item>
-              </Col>
-          </Row>  
+                    message: intl.formatMessage({ id: 'form.field.required' }),
+                  },
+                ]}>
+                <Input type='password' style={{ width: '300px' }} />
+              </Form.Item>
+            </Col>
+          </Row>
           {errorLogin && (
-          <Row gutter={[24, 24]}>
-              <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-              <span style={{color: 'red'}}>{formTexts.errorLoginEmailPassword}</span>
+            <Row gutter={[24, 24]}>
+              <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                <span style={{ color: 'red' }}>
+                  {intl.formatMessage({ id: 'form.validate.message.email.password.error' })}
+                </span>
               </Col>
-          </Row> 
-          )}    
+            </Row>
+          )}
           <Row gutter={[24, 24]}>
-              <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-                <Form.Item>
-                {loading ?  <Spin /> : (
-                <Button type="primary" htmlType="submit">
-                Ingresar
-                </Button>
+            <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+              <Form.Item>
+                {loading ? (
+                  <Spin />
+                ) : (
+                  <Button type='primary' htmlType='submit'>
+                    {intl.formatMessage({ id: 'button.login' })}
+                  </Button>
                 )}
-                </Form.Item>
-              </Col>
+              </Form.Item>
+            </Col>
           </Row>
           <Row gutter={[24, 24]}>
-            <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-              <Button type="default" htmlType="button" onClick={handleOpenRecoveryPass}>Olvidé mi contraseña</Button>
+            <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+              <Button type='default' htmlType='button' onClick={handleOpenRecoveryPass}>
+                {intl.formatMessage({ id: 'button.forget.password' })}
+              </Button>
             </Col>
           </Row>
         </Form>
       </Card>
-    )
+    );
   }
 }
 
-export default UserLoginWithEmailPass;
+export default injectIntl(UserLoginWithEmailPass);

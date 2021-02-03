@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import { Card, Form, Input, Col, Row, Button, Spin } from 'antd';
 import UserOneTimeLoginLinKForm from '../UserOneTimeLoginLinkForm';
+import { injectIntl } from 'react-intl';
 
-export default class UserLoginRecoveryPass extends Component {
+class UserLoginRecoveryPass extends Component {
   render() {
+    const { intl } = this.props;
     //const { handleCloseRecoveryPass, handleRecoveryPass, loading, errorRecovery, successRecovery } = this.props;
     return (
       <UserOneTimeLoginLinKForm
-        title='Restablecimiento de contraseña'
-        successMsg='Se ha enviado una nueva contraseña a su correo'
-        actionMsg='Solicitar una contraseña'
+        title={intl.formatMessage({ id: 'restore.login.title' })}
+        successMsg={intl.formatMessage({ id: 'restore.login.success' })}
+        actionMsg={intl.formatMessage({ id: 'button.restore.password' })}
         {...this.props}
       />
     );
   }
 }
+
+export default injectIntl(UserLoginRecoveryPass);
