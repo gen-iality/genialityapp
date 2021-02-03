@@ -62,11 +62,22 @@
 
     "button.return": "Back",
     "button.go.event": "Go to event",
+    "button.login": "Login",
+    "button.forget.password": "I forgot my password",
+    "button.restore.password": "Request a password",
+    "button.cancel": "Cancel",
 
     "form.field.required": "This field is required",
     "form.validate.message.password": "The password must contain at least 8 characters, an uppercase, a lowercase and a number",
     "form.validate.message.email": "Invalid email",
-    "form.missing.required.fields": "Missing required fields"
+    "form.missing.required.fields": "Missing required fields",
+    "form.label.password": "Password",
+    "form.validate.message.email.password.error": "Email or password was not correct",
+
+    "login.title": "Login",
+    "restore.login.title": "Restore password",
+    "restore.login.success": "A new password has been sent to your email",
+    "restore.email.not.registered": "The email entered is not registered"
   },
   "es": {
     "header.help": "Ayuda",
@@ -131,11 +142,22 @@
 
     "button.return": "Regresar",
     "button.go.event": "Ir al evento",
+    "button.login": "Ingresar",
+    "button.forget.password": "Olvidé mi contraseña",
+    "button.restore.password": "Solicitar una contraseña",
+    "button.cancel": "Cancelar",
 
     "form.field.required": "Este campo es obligatorio",
     "form.validate.message.password": "El password debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número",
     "form.validate.message.email": "E-mail inválido",
-    "form.missing.required.fields": "Faltan por completar algunos campos"
+    "form.missing.required.fields": "Faltan por completar algunos campos",
+    "form.label.password": "Contraseña",
+    "form.validate.message.email.password.error": "Email o Contraseña incorrecta",
+
+    "login.title": "Iniciar sesión",
+    "restore.login.title": "Restablecer contraseña",
+    "restore.login.success": "Se ha enviado una nueva contraseña a su correo",
+    "restore.email.not.registered": "El correo ingresado no se encuentra registrado"
   },
 
   "pt": {
@@ -159,10 +181,21 @@
 
     "button.return": "Para retornar",
     "button.go.event": "Ir ao evento",
+    "button.login": "Iniciar sessão",
+    "button.forget.password": "Esqueci a minha senha",
+    "button.restore.password": "Solicite uma senha",
+    "button.cancel": "Cancelar",
 
     "form.field.required": "Este campo é obrigatório",
     "form.validate.message.password": "A senha deve ter pelo menos 8 caracteres, uma maiúscula, uma minúscula e um número",
     "form.validate.message.email": "E-mail inválido",
-    "form.missing.required.fields": "Campos obrigatórios ausentes"
+    "form.missing.required.fields": "Campos obrigatórios ausentes",
+    "form.label.password": "Senha",
+    "form.validate.message.email.password.error": "Email ou senha incorretos",
+
+    "login.title": "Iniciar sessão",
+    "restore.login.title": "Restaurar senha",
+    "restore.login.success": "Uma nova senha foi enviada para o seu e-mail",
+    "restore.email.not.registered": "O email inserido não está registrado"
   }
 }

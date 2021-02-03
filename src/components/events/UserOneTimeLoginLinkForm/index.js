@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Card, Form, Input, Col, Row, Button, Spin } from 'antd';
+import { injectIntl } from 'react-intl';
 
-export default class UserOneTimeLoginLinkForm extends Component {
+class UserOneTimeLoginLinkForm extends Component {
   render() {
     const {
       title,
@@ -12,6 +13,7 @@ export default class UserOneTimeLoginLinkForm extends Component {
       loading,
       errorRecovery,
       successRecovery,
+      intl,
     } = this.props;
     return (
       <Card title={title}>
@@ -26,7 +28,7 @@ export default class UserOneTimeLoginLinkForm extends Component {
               <Row style={{ marginTop: '30px', marginBottom: '30px' }}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <Button onClick={handleCloseRecoveryPass} type='primary' style={{ marginRight: '15px' }}>
-                    Volver
+                    {intl.formatMessage({ id: 'button.return' })}
                   </Button>
                 </Col>
               </Row>
@@ -42,7 +44,7 @@ export default class UserOneTimeLoginLinkForm extends Component {
                   rules={[
                     {
                       required: true,
-                      message: 'Ingrese su correo electrónico',
+                      message: intl.formatMessage({ id: 'form.field.required' }),
                     },
                   ]}>
                   <Input />
@@ -52,7 +54,7 @@ export default class UserOneTimeLoginLinkForm extends Component {
             {errorRecovery && (
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-                  <span style={{ color: 'red' }}>El correo ingresado no se encuentra registrado</span>
+                  <span style={{ color: 'red' }}>{intl.formatMessage({ id: 'restore.email.not.registered' })}</span>
                 </Col>
               </Row>
             )}
@@ -64,7 +66,7 @@ export default class UserOneTimeLoginLinkForm extends Component {
                   <>
                     {handleCloseRecoveryPass && (
                       <Button onClick={handleCloseRecoveryPass} type='default' style={{ marginRight: '15px' }}>
-                        Cancelar
+                        {intl.formatMessage({ id: 'button.cancel' })}
                       </Button>
                     )}
                     <Button type='primary' htmlType='submit'>
@@ -80,3 +82,5 @@ export default class UserOneTimeLoginLinkForm extends Component {
     );
   }
 }
+
+export default injectIntl(UserOneTimeLoginLinkForm);
