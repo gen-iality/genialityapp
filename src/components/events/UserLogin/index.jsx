@@ -21,9 +21,13 @@ class UserLogin extends Component {
     this.setState({
       enabledWithEmailPass:
         this.props.eventId === '5fdb975f2f82e93507305ac2' ||
+        '601470367711a513cc7061c2' ||
+        '5ea23acbd74d5c4b360ddde2' ||
         (this.props.eventId === '5fb69178cb4e49174574ed12' && true),
       UserLoginRecoveryPass:
         this.props.eventId === '5fdb975f2f82e93507305ac2' ||
+        '601470367711a513cc7061c2' ||
+        '5ea23acbd74d5c4b360ddde2' ||
         (this.props.eventId === '5fb69178cb4e49174574ed12' && true),
       enabledOneTimeLoginLink: this.props.eventId === '5f99a20378f48e50a571e3b6' && true,
     });

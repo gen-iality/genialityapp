@@ -306,7 +306,7 @@ class eventUsersList extends Component {
                     <p style={{ marginTop: "2%" }}>Seleccionados: {selectedRowKeys.length}</p>
                     <Table
                         style={{ height: '50px' }}
-                        scroll={{ x: 3500 }}
+                        scroll={{ x: 2100 }}
                         sticky
                         pagination={{ position: ["bottomCenter"] }}
                         size="small"

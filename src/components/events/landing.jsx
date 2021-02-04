@@ -550,7 +550,7 @@ class Landing extends Component {
                 <Robapagina event={event} eventId={event._id} showLanding={this.showLanding} />
               ) : (
                 <>
-                  {event.styles &&
+                  {/* {event.styles &&
                   event.styles.show_banner &&
                   (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
                     <BannerEvent
@@ -611,7 +611,7 @@ class Landing extends Component {
                         />
                       )}
                     </div>
-                  )}
+                  )} */}
                   <Content>
                     <Layout className='site-layout'>
                       {/*Aqui empieza el menu para dispositivos >  */}
@@ -620,12 +620,12 @@ class Landing extends Component {
                           className='containerMenu_Landing'
                           style={{
                             backgroundColor:
-                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                            event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
                           }}
                           trigger={null}
                           collapsible
                           collapsed={this.state.collapsed}
-                          width={250}>
+                          width={110}>
                           <div className='items-menu_Landing '>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                             <MenuEvent
@@ -644,12 +644,12 @@ class Landing extends Component {
                         <Content className='site-layout-background'>
                           {/* Boton que abre el menu para dispositivos > tablet  */}
                           <div className='hiddenMenu_Landing'>
-                            <Button onClick={this.toggle}>
+                            {/* <Button onClick={this.toggle}>
                               {React.createElement(this.state.collapsed ? RightOutlined : LeftOutlined, {
                                 className: 'trigger',
                                 onClick: this.toggle,
                               })}
-                            </Button>
+                            </Button> */}
                           </div>
 
                           {/*Aqui empieza el menu para dispositivos < tablet*/}
@@ -683,19 +683,73 @@ class Landing extends Component {
                             />
                           </Drawer>
 
-                          {/* Contenedor donde se mapea la información de cada seccion */}
-
-                          <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>
+                         
+                           {event.styles &&
+                            event.styles.show_banner &&
+                            (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
+                              <BannerEvent
+                                bgImage={
+                                  event.styles && event.styles.banner_image
+                                    ? event.styles.banner_image
+                                    : event.picture
+                                    ? event.picture
+                                    : 'https://bulma.io/images/placeholders/1280x960.png'
+                                }
+                                mobileBanner={event.styles && event.styles.mobile_banner && event.styles.mobile_banner}
+                                bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
+                                title={event.name}
+                                eventId={event._id}
+                                styles={event.styles}
+                                organizado={
+                                  <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                                    {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                  </Link>
+                                }
+                                place={
+                                  <span>
+                                    {event.venue} {event.location.FormattedAddress}
+                                  </span>
+                                }
+                                dateStart={event.date_start}
+                                dateEnd={event.date_end}
+                                dates={event.dates}
+                                type_event={event.type_event}
+                              />
+                            ) : (
+                              <div>
+                                {event.styles && event.styles.show_banner === undefined && this.state.headerVisible && (
+                                  <BannerEvent
+                                    bgImage={
+                                      event.styles && event.styles.banner_image
+                                        ? event.styles.banner_image
+                                        : event.picture
+                                        ? event.picture
+                                        : 'https://bulma.io/images/placeholders/1280x960.png'
+                                    }
+                                    bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
+                                    title={event.name}
+                                    organizado={
+                                      <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                                        {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                      </Link>
+                                    }
+                                    place={
+                                      <span>
+                                        {event.venue} {event.location.FormattedAddress}
+                                      </span>
+                                    }
+                                    dateStart={event.date_start}
+                                    dateEnd={event.date_end}
+                                    dates={event.dates}
+                                    type_event={event.type_event}
+                                  />
+                                )}
+                              </div>
+                            )}                       
+                          <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>                     
                             {this.state.sections[this.state.section]}
                           </div>
-                        </Content>
-                      </Layout>
-                    </Layout>
-                  </Content>
-                </>
-              )}
-            </div>
-            <div className={`modal ${modal ? 'is-active' : ''}`}>
+                          <div className={`modal ${modal ? 'is-active' : ''}`}>
               <div className='modal-background'></div>
               <div className='modal-content'>
                 <div id='firebaseui-auth-container' />
@@ -726,6 +780,13 @@ class Landing extends Component {
                 <img alt='image-dialog' src={event.styles.banner_footer} />
               </div>
             )}
+                        </Content>
+                      </Layout>
+                    </Layout>
+                  </Content>
+                </>
+              )}
+            </div>
           </React.Fragment>
         )}
       </section>
