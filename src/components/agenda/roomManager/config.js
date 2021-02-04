@@ -3,7 +3,7 @@ import { Card, Row, Col, Alert } from 'antd';
 
 export default function RoomConfig(props) {
   const [requiresCreateRoom, setRequiresCreateRoom] = useState(false);
-  const { platform, handleChange, host_id, handleSaveConfig, meeting_id, isPublished, createZoomRomm } = props;
+  const { platform, handleChange, host_name, handleSaveConfig, meeting_id, isPublished, createZoomRomm } = props;
   useEffect(() => {
     setRequiresCreateRoom(platform === 'zoom' || platform === 'zoomExterno');
   }, [platform]);
@@ -55,6 +55,16 @@ export default function RoomConfig(props) {
           </div>
         </Col>
       </Row>
+      {requiresCreateRoom && host_name !== null && (
+        <Row style={{ marginBottom: 24 }}>
+          <Col span={24}>
+            <div className='control'>
+              <label className='label'>Host</label>
+              <p>{host_name}</p>
+            </div>
+          </Col>
+        </Row>
+      )}
 
       <Row>
         {requiresCreateRoom && (
@@ -65,7 +75,7 @@ export default function RoomConfig(props) {
           </Col>
         )}
         <Col span={8}>
-          <button onClick={handleSaveConfig} className='button is-primary'>
+          <button onClick={() => handleSaveConfig(true)} className='button is-primary'>
             Guardar
           </button>
         </Col>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Tabs, Alert, Spin, message as Message } from 'antd';
+import { Card, Tabs, Alert, Spin, message as Message, message } from 'antd';
 import RoomController from './controller';
 import RoomConfig from './config';
 import Service from './service';
@@ -62,7 +62,6 @@ class RoomManager extends Component {
 
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(event_id, activity_id);
-      console.log('configuration room:', configuration);
 
       this.setState({
         isPublished: typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true,
@@ -118,7 +117,6 @@ class RoomManager extends Component {
 
   // Encargado de recibir los cambios de los input y select
   handleChange = (e) => {
-    console.log('handle change');
     if (e.target.name === 'isPublished') {
       const isPublished = e.target.value === 'true' ? true : false;
       this.setState({ [e.target.name]: isPublished }, async () => await this.handleSaveConfig());
@@ -147,10 +145,34 @@ class RoomManager extends Component {
   };
 
   // Método para guarda la información de la configuración
-  handleSaveConfig = async () => {
+  handleSaveConfig = async (operation) => {
     const { roomInfo, tabs } = this.prepareData();
     const { event_id, activity_id } = this.props;
-    const { service } = this.state;
+    const { service, platform, meeting_id } = this.state;
+
+    // Se utiliza solo cuando el usuario guarda de manera manual el id del evento en zoom o zoomExterno
+    if (platform === 'zoom' || (platform === 'zoomExterno' && operation)) {
+      const data = {
+        event_id,
+        activity_id,
+        meeting_id,
+      };
+      const response = await service.getZoomRoom(data);
+      console.log('get', response);
+      if (
+        Object.keys(response).length > 0 &&
+        typeof response.meeting_id !== 'undefined' &&
+        typeof response.zoom_host_id !== 'undefined' &&
+        typeof response.zoom_host_name !== 'undefined'
+      ) {
+        roomInfo['host_id'] = response.zoom_host_id;
+        roomInfo['host_name'] = response.zoom_host_name;
+        this.setState({ host_id: response.zoom_host_id, host_name: response.zoom_host_name });
+      } else {
+        message.error('El id de conferencia no existe');
+        return false;
+      }
+    }
     const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
 
     if (result) Message.success(result.message);
@@ -175,12 +197,12 @@ class RoomManager extends Component {
       date_end_zoom,
     };
     const response = await this.state.service.setZoomRoom(evius_token, body);
-    console.log('Response:', response);
+    console.log('set response:', response);
     if (
       Object.keys(response).length > 0 &&
       typeof response.meeting_id !== 'undefined' &&
       typeof response.zoom_host_id !== 'undefined' &&
-      response.zoom_host_name !== 'undefined'
+      typeof response.zoom_host_name !== 'undefined'
     ) {
       console.log('Request Success!!');
       const { meeting_id, zoom_host_id, zoom_host_name } = response;
@@ -192,6 +214,8 @@ class RoomManager extends Component {
         },
         async () => await this.handleSaveConfig()
       );
+    } else {
+      message.warning('Hubo un problema, espere unos segundos y vuelva a intentarlo');
     }
   };
 
@@ -215,7 +239,7 @@ class RoomManager extends Component {
       activeTab,
       hasVideoconference,
       platform,
-      host_id,
+      host_name,
       roomStatus,
       loading,
       chat,
@@ -245,7 +269,7 @@ class RoomManager extends Component {
                   handleChange={this.handleChange}
                   platform={platform}
                   meeting_id={meeting_id}
-                  host_id={host_id}
+                  host_name={host_name}
                   handleSaveConfig={this.handleSaveConfig}
                   isPublished={isPublished}
                   createZoomRomm={this.createZoomRomm}

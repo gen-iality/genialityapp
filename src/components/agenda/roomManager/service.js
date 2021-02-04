@@ -23,7 +23,6 @@ class Service {
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
     const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
     const { roomStatus, platform, meeting_id, isPublished, host_id, host_name } = roomInfo;
-    console.log('room info', roomInfo);
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
       this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
@@ -88,10 +87,33 @@ class Service {
   setZoomRoom = (token, data) => {
     const url = `https://apimeetings.evius.co:6490/crearroom?token=${token}`;
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       try {
-        console.log('fetch start');
-        await fetch(url, {
+        console.log('fetch set zoom room');
+        fetch(url, {
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(data),
+          method: 'POST',
+        })
+          .then(async (response) => await response.json())
+          .then((data) => {
+            resolve(data);
+          });
+      } catch (err) {
+        console.error('Error: ' + err);
+      }
+    });
+  };
+
+  getZoomRoom = (data) => {
+    const url = `https://apimeetings.evius.co:6490/obtenerMeeting`;
+
+    return new Promise((resolve, reject) => {
+      try {
+        console.log('fetch get zoom room');
+        fetch(url, {
           headers: {
             'content-type': 'application/json',
           },
