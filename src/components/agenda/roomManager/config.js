@@ -56,29 +56,6 @@ export default function RoomConfig(props) {
         </Col>
       </Row>
 
-      {(platform === 'zoom' || platform === 'zoomExterno') && (
-        <Row style={{ marginBottom: 24 }}>
-          <Col span={24}>
-            <label className='label'>Seleccione un host</label>
-
-            <div className='select is-primary'>
-              <select name={'host_id'} value={host_id} onChange={handleChange}>
-                <option>Seleccione host</option>
-                {[{ id: 1, email: 'host1@evius.co', state: 'available' }].map((host) => {
-                  return (
-                    host.state &&
-                    host.state === 'available' && (
-                      <option value={host.id} key={host.id}>
-                        {host.email}
-                      </option>
-                    )
-                  );
-                })}
-              </select>
-            </div>
-          </Col>
-        </Row>
-      )}
       <Row>
         {requiresCreateRoom && (
           <Col span={16}>

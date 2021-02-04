@@ -26,6 +26,7 @@ class RoomManager extends Component {
       meeting_id: null,
       roomStatus: null,
       host_id: null,
+      host_name: null,
 
       // Estado de los tabs
       chat: true,
@@ -61,6 +62,7 @@ class RoomManager extends Component {
 
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(event_id, activity_id);
+      console.log('configuration room:', configuration);
 
       this.setState({
         isPublished: typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true,
@@ -71,6 +73,8 @@ class RoomManager extends Component {
         surveys: configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false,
         games: configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false,
         attendees: configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false,
+        host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
+        host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null,
       });
 
       // Si en firebase ya esta inicializado el campo platfom y meeting_id se habilita el tab controller
@@ -114,6 +118,7 @@ class RoomManager extends Component {
 
   // Encargado de recibir los cambios de los input y select
   handleChange = (e) => {
+    console.log('handle change');
     if (e.target.name === 'isPublished') {
       const isPublished = e.target.value === 'true' ? true : false;
       this.setState({ [e.target.name]: isPublished }, async () => await this.handleSaveConfig());
@@ -124,8 +129,19 @@ class RoomManager extends Component {
 
   //Preparacion de la data para guardar en firebase
   prepareData = () => {
-    const { roomStatus, platform, meeting_id, chat, surveys, games, attendees, isPublished } = this.state;
-    const roomInfo = { roomStatus, platform, meeting_id, isPublished };
+    const {
+      roomStatus,
+      platform,
+      meeting_id,
+      chat,
+      surveys,
+      games,
+      attendees,
+      isPublished,
+      host_id,
+      host_name,
+    } = this.state;
+    const roomInfo = { roomStatus, platform, meeting_id, isPublished, host_id, host_name };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };
   };
@@ -159,7 +175,24 @@ class RoomManager extends Component {
       date_end_zoom,
     };
     const response = await this.state.service.setZoomRoom(evius_token, body);
-    console.log('create room response', response);
+    console.log('Response:', response);
+    if (
+      Object.keys(response).length > 0 &&
+      typeof response.meeting_id !== 'undefined' &&
+      typeof response.zoom_host_id !== 'undefined' &&
+      response.zoom_host_name !== 'undefined'
+    ) {
+      console.log('Request Success!!');
+      const { meeting_id, zoom_host_id, zoom_host_name } = response;
+      this.setState(
+        {
+          meeting_id,
+          host_id: zoom_host_id,
+          host_name: zoom_host_name,
+        },
+        async () => await this.handleSaveConfig()
+      );
+    }
   };
 
   validateForCreateZoomRoom = () => {

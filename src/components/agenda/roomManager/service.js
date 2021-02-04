@@ -1,5 +1,3 @@
-import * as Cookie from 'js-cookie';
-
 class Service {
   constructor(instance) {
     this.firestore = instance;
@@ -24,7 +22,7 @@ class Service {
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
     const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
-    const { roomStatus, platform, meeting_id, isPublished } = roomInfo;
+    const { roomStatus, platform, meeting_id, isPublished, host_id, host_name } = roomInfo;
     console.log('room info', roomInfo);
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
@@ -41,6 +39,8 @@ class Service {
               meeting_id,
               tabs,
               isPublished,
+              host_id,
+              host_name,
             })
             .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
         } else {
@@ -54,6 +54,8 @@ class Service {
               platform,
               meeting_id,
               isPublished,
+              host_id,
+              host_name,
               tabs: tabsSchema,
             })
             .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
@@ -86,16 +88,17 @@ class Service {
   setZoomRoom = (token, data) => {
     const url = `https://apimeetings.evius.co:6490/crearroom?token=${token}`;
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
-        fetch(url, {
+        console.log('fetch start');
+        await fetch(url, {
           headers: {
             'content-type': 'application/json',
           },
           body: JSON.stringify(data),
           method: 'POST',
         })
-          .then((response) => response.json())
+          .then(async (response) => await response.json())
           .then((data) => {
             resolve(data);
           });
