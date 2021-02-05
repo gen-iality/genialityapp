@@ -1,38 +1,37 @@
-import React, { Component, Fragment } from "react";
-import { withRouter } from "react-router-dom";
-import Moment from "moment";
-import XLSX from "xlsx";
+import React, { Component, Fragment } from 'react';
+import { withRouter } from 'react-router-dom';
+import Moment from 'moment';
+import XLSX from 'xlsx';
 
-import { getAnswersByQuestion } from "./services";
+import { getAnswersByQuestion } from './services';
 
-import EventContent from "../events/shared/content";
+import EventContent from '../events/shared/content';
 
-import { Table, Divider, Button } from "antd";
-
+import { Table, Divider, Button } from 'antd';
 
 const columns = [
   {
-    title: "Creado",
-    dataIndex: "creation_date_text",
-    key: "creation_date_text",
+    title: 'Creado',
+    dataIndex: 'creation_date_text',
+    key: 'creation_date_text',
   },
   {
-    title: "Nombre",
-    dataIndex: "user_name",
-    key: "user_name",
+    title: 'Nombre',
+    dataIndex: 'user_name',
+    key: 'user_name',
     render: (name) => (!name ? <span>Usuario Invitado</span> : <span>{name}</span>),
   },
   {
-    title: "Respuesta",
-    dataIndex: "response",
-    key: "response",
+    title: 'Respuesta',
+    dataIndex: 'response',
+    key: 'response',
   },
 ];
 class ReportQuestion extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nameQuestion: "",
+      nameQuestion: '',
       listOfUserResponse: [],
     };
   }
@@ -57,19 +56,20 @@ class ReportQuestion extends Component {
 
     const exclude = ({ created, id_survey, id_user, _id, ...rest }) => rest;
 
-    let data = listOfUserResponse.map((item) => exclude(item));    
+    let data = listOfUserResponse.map((item) => exclude(item));
 
     for (let i = 0; data.length > i; i++) {
       if (Array.isArray(data[i].response)) {
-        data[i].response = data[i].response.toString()
+        data[i].response = data[i].response.toString();
       }
     }
     const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();    
-    XLSX.utils.book_append_sheet(wb, ws, `${nameQuestion}`);
+    const wb = XLSX.utils.book_new();
+    const sheetName = nameQuestion.replace(/[.*+¿?^${}()|[\]\\]/g, '');
+    XLSX.utils.book_append_sheet(wb, ws, `${sheetName}`);
     const name = `${match.params.id}`;
 
-    XLSX.writeFile(wb, `${nameQuestion}-${name}${Moment().format("DDMMYY")}.xls`);
+    XLSX.writeFile(wb, `${sheetName}-${name}${Moment().format('DDMMYY')}.xls`);
   };
 
   goBack = () => this.props.history.goBack();
@@ -79,7 +79,7 @@ class ReportQuestion extends Component {
     return (
       <Fragment>
         <EventContent title={nameQuestion} closeAction={this.goBack}>
-          <Divider orientation="right">Reporte</Divider>
+          <Divider orientation='right'>Reporte</Divider>
           <Button onClick={this.exportReport}>Exportar resultados </Button>
           <Table dataSource={listOfUserResponse} columns={columns} />;
         </EventContent>
