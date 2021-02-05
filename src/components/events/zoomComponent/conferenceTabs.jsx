@@ -27,7 +27,7 @@ export default function ConferenceTabsComponent(props) {
     props.handleActiveTab(key);
   }
 
-  const { chat, surveys, games, attendees, activeTab } = props;
+  const { chat, surveys, games, attendees, activeTab, meeting_id } = props;
   return (
     <div className='zoom-collapsed'>
       <Button onClick={() => setCollapsed(collapsed === false ? true : false)} className='zoom-collapsed_button'>

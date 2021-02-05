@@ -151,8 +151,10 @@ class Agenda extends Component {
         .doc(activity._id)
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
-          let { habilitar_ingreso } = infoActivity.data();
-          let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
+          const data = infoActivity.data();
+          console.log('data', data);
+          let { habilitar_ingreso, isPublished } = data;
+          let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished };
 
           arr[index] = updatedActivityInfo;
           const filtered = this.filterByDay(this.state.days[0], arr);

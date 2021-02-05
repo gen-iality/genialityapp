@@ -110,6 +110,7 @@ class AgendaEdit extends Component {
   };
 
   async componentDidMount() {
+    console.log('-- START Edit --');
     const {
       event,
       location: { state },

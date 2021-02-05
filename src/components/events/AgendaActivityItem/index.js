@@ -45,6 +45,10 @@ export default function AgendaActivityItem({
     listeningStateMeetingRoom();
   }, [registerStatus, item]);
 
+  useEffect(() => {
+    console.log('item', item);
+  }, []);
+
   return (
     <>
       {/* Se habilita para Ideartes, magicland y magiclan test al hacer click sobre la actividad de la agenda*/}

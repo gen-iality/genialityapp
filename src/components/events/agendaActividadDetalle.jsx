@@ -19,6 +19,7 @@ let AgendaActividadDetalle = (props) => {
   let [showSurvey, setShowSurvey] = useState(false);
   let [orderedHost, setOrderedHost] = useState([]);
   const [meetingState, setMeetingState] = useState(null);
+  const [meeting_id, setMeeting_id] = useState(null);
 
   const intl = useIntl();
 
@@ -30,8 +31,9 @@ let AgendaActividadDetalle = (props) => {
       .doc(activity_id)
       .onSnapshot((infoActivity) => {
         if (!infoActivity.exists) return;
-        const habilitar_ingreso = infoActivity.data().habilitar_ingreso;
+        const { habilitar_ingreso, meeting_id } = infoActivity.data();
         setMeetingState(habilitar_ingreso);
+        setMeeting_id(meeting_id);
       });
   }
 
@@ -184,21 +186,13 @@ let AgendaActividadDetalle = (props) => {
                   {usuarioRegistrado && meetingState && (
                     <Button
                       type='primary'
-                      disabled={
-                        meetingState === 'open_meeting_room' && (currentActivity.meeting_id || currentActivity.vimeo_id)
-                          ? false
-                          : true
-                      }
-                      onClick={() => toggleConference(true, currentActivity.meeting_id, currentActivity)}>
-                      {currentActivity.meeting_id &&
-                        meetingState === 'open_meeting_room' &&
-                        intl.formatMessage({ id: 'live.join' })}
-                      {currentActivity.meeting_id &&
+                      disabled={meetingState === 'open_meeting_room' && meeting_id ? false : true}
+                      onClick={() => toggleConference(true, meeting_id, currentActivity)}>
+                      {meeting_id && meetingState === 'open_meeting_room' && intl.formatMessage({ id: 'live.join' })}
+                      {meeting_id &&
                         meetingState === 'closed_meeting_room' &&
                         intl.formatMessage({ id: 'live.closed' })}
-                      {currentActivity.meeting_id &&
-                        meetingState === 'ended_meeting_room' &&
-                        intl.formatMessage({ id: 'live.ended' })}
+                      {meeting_id && meetingState === 'ended_meeting_room' && intl.formatMessage({ id: 'live.ended' })}
                     </Button>
                   )}
                 </p>
@@ -407,12 +401,12 @@ let AgendaActividadDetalle = (props) => {
               <div />
             ) : (
               <div>
-                {currentActivity.meeting_id ? (
+                {meeting_id ? (
                   <div>
                     <Button
                       type='primary'
-                      disabled={currentActivity.meeting_id ? false : true}
-                      onClick={() => toggleConference(true, currentActivity.meeting_id, currentActivity)}>
+                      disabled={meeting_id ? false : true}
+                      onClick={() => toggleConference(true, meeting_id, currentActivity)}>
                       Conferencia en Vivo en anónimo
                     </Button>
                   </div>

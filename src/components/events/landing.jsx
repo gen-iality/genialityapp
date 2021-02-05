@@ -237,14 +237,13 @@ class Landing extends Component {
         />
       ),
       speakers: <SpeakersForm eventId={event._id} event={event} />,
-      wall: <WallForm event={event} eventId={event._id} toggleConference={this.toggleConference} currentUser={user} />,
+      wall: <WallForm event={event} eventId={event._id} currentUser={user} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: (
         <NetworkingForm
           event={event}
           eventId={event._id}
-          toggleConference={this.toggleConference}
           currentUser={this.state.currentUser}
           section={this.state.section}
         />
@@ -620,7 +619,7 @@ class Landing extends Component {
                           className='containerMenu_Landing'
                           style={{
                             backgroundColor:
-                            event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
                           }}
                           trigger={null}
                           collapsible
@@ -683,103 +682,104 @@ class Landing extends Component {
                             />
                           </Drawer>
 
-                         
-                           {event.styles &&
-                            event.styles.show_banner &&
-                            (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
-                              <BannerEvent
-                                bgImage={
-                                  event.styles && event.styles.banner_image
-                                    ? event.styles.banner_image
-                                    : event.picture
-                                    ? event.picture
-                                    : 'https://bulma.io/images/placeholders/1280x960.png'
-                                }
-                                mobileBanner={event.styles && event.styles.mobile_banner && event.styles.mobile_banner}
-                                bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                                title={event.name}
-                                eventId={event._id}
-                                styles={event.styles}
-                                organizado={
-                                  <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                                    {event.organizer.name ? event.organizer.name : event.organizer.email}
-                                  </Link>
-                                }
-                                place={
-                                  <span>
-                                    {event.venue} {event.location.FormattedAddress}
-                                  </span>
-                                }
-                                dateStart={event.date_start}
-                                dateEnd={event.date_end}
-                                dates={event.dates}
-                                type_event={event.type_event}
-                              />
-                            ) : (
-                              <div>
-                                {event.styles && event.styles.show_banner === undefined && this.state.headerVisible && (
-                                  <BannerEvent
-                                    bgImage={
-                                      event.styles && event.styles.banner_image
-                                        ? event.styles.banner_image
-                                        : event.picture
-                                        ? event.picture
-                                        : 'https://bulma.io/images/placeholders/1280x960.png'
-                                    }
-                                    bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                                    title={event.name}
-                                    organizado={
-                                      <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                                        {event.organizer.name ? event.organizer.name : event.organizer.email}
-                                      </Link>
-                                    }
-                                    place={
-                                      <span>
-                                        {event.venue} {event.location.FormattedAddress}
-                                      </span>
-                                    }
-                                    dateStart={event.date_start}
-                                    dateEnd={event.date_end}
-                                    dates={event.dates}
-                                    type_event={event.type_event}
-                                  />
-                                )}
-                              </div>
-                            )}                       
-                          <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>                     
+                          {event.styles &&
+                          event.styles.show_banner &&
+                          (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
+                            <BannerEvent
+                              bgImage={
+                                event.styles && event.styles.banner_image
+                                  ? event.styles.banner_image
+                                  : event.picture
+                                  ? event.picture
+                                  : 'https://bulma.io/images/placeholders/1280x960.png'
+                              }
+                              mobileBanner={event.styles && event.styles.mobile_banner && event.styles.mobile_banner}
+                              bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
+                              title={event.name}
+                              eventId={event._id}
+                              styles={event.styles}
+                              organizado={
+                                <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                                  {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                </Link>
+                              }
+                              place={
+                                <span>
+                                  {event.venue} {event.location.FormattedAddress}
+                                </span>
+                              }
+                              dateStart={event.date_start}
+                              dateEnd={event.date_end}
+                              dates={event.dates}
+                              type_event={event.type_event}
+                            />
+                          ) : (
+                            <div>
+                              {event.styles && event.styles.show_banner === undefined && this.state.headerVisible && (
+                                <BannerEvent
+                                  bgImage={
+                                    event.styles && event.styles.banner_image
+                                      ? event.styles.banner_image
+                                      : event.picture
+                                      ? event.picture
+                                      : 'https://bulma.io/images/placeholders/1280x960.png'
+                                  }
+                                  bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
+                                  title={event.name}
+                                  organizado={
+                                    <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                                      {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                    </Link>
+                                  }
+                                  place={
+                                    <span>
+                                      {event.venue} {event.location.FormattedAddress}
+                                    </span>
+                                  }
+                                  dateStart={event.date_start}
+                                  dateEnd={event.date_end}
+                                  dates={event.dates}
+                                  type_event={event.type_event}
+                                />
+                              )}
+                            </div>
+                          )}
+                          <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>
                             {this.state.sections[this.state.section]}
                           </div>
                           <div className={`modal ${modal ? 'is-active' : ''}`}>
-              <div className='modal-background'></div>
-              <div className='modal-content'>
-                <div id='firebaseui-auth-container' />
-              </div>
-              <button
-                className='modal-close is-large'
-                aria-label='close'
-                onClick={() => {
-                  this.closeLogin();
-                }}
-              />
-            </div>
-            <Dialog
-              modal={modalTicket}
-              title={'Atención!!'}
-              content={
-                <p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>
-              }
-              first={{
-                title: 'Iniciar Sesión o Registrarse',
-                class: 'is-info',
-                action: this.openLogin,
-              }}
-              second={{ title: 'Cancelar', class: '', action: this.closeModal }}
-            />
-            {event.styles && event.styles.banner_footer && (
-              <div style={{ textAlign: 'center' }}>
-                <img alt='image-dialog' src={event.styles.banner_footer} />
-              </div>
-            )}
+                            <div className='modal-background'></div>
+                            <div className='modal-content'>
+                              <div id='firebaseui-auth-container' />
+                            </div>
+                            <button
+                              className='modal-close is-large'
+                              aria-label='close'
+                              onClick={() => {
+                                this.closeLogin();
+                              }}
+                            />
+                          </div>
+                          <Dialog
+                            modal={modalTicket}
+                            title={'Atención!!'}
+                            content={
+                              <p className='has-text-weight-bold'>
+                                Para seleccionar tiquetes debes iniciar sesión o registrarse !!
+                              </p>
+                            }
+                            first={{
+                              title: 'Iniciar Sesión o Registrarse',
+                              class: 'is-info',
+                              action: this.openLogin,
+                            }}
+                            second={{ title: 'Cancelar', class: '', action: this.closeModal }}
+                          />
+                          {event.styles && event.styles.banner_footer && (
+                            <div style={{ textAlign: 'center' }}>
+                              <img alt='image-dialog' src={event.styles.banner_footer} />
+                            </div>
+                          )}
                         </Content>
                       </Layout>
                     </Layout>
