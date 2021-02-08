@@ -10,11 +10,13 @@ import Creatable from 'react-select';
 import { FaWhmcs } from 'react-icons/fa';
 import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import { Tabs, notification } from 'antd';
+import { Tabs, notification, message } from 'antd';
 import { createOrUpdateActivity, getConfiguration } from './services';
 import RoomManager from './roomManager';
 
-import ZoomComponent from '../events/zoomComponent';
+// En revision vista previa
+//import ZoomComponent from '../events/zoomComponent';
+
 import {
   AgendaApi,
   CategoriesAgendaApi,
@@ -29,10 +31,9 @@ import {
 } from '../../helpers/request';
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from '../../helpers/utils';
 import Dropzone from 'react-dropzone';
-import { Spin, Card, Row, Col, Select as SelectAntd } from 'antd';
+import { Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
-import { setHostState } from './fireHost';
 import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
 
@@ -211,6 +212,8 @@ class AgendaEdit extends Component {
           videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.attendees
             ? videoConferenceState.tabs.attendees
             : false,
+        date_start_zoom: info.date_start_zoom,
+        date_end_zoom: info.date_end_zoom,
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
@@ -265,7 +268,8 @@ class AgendaEdit extends Component {
     }
   };
   //FN para cambio en campo de fecha
-  handleDate = (value, name) => {
+  handleChangeDate = (value, name) => {
+    console.log(value, name);
     this.setState({ [name]: value });
   };
   //Cada select tiene su propia función para evitar errores y asegurar la información correcta
@@ -335,7 +339,8 @@ class AgendaEdit extends Component {
   //Envío de información
 
   submit = async () => {
-    if (this.validForm()) {
+    const validation = this.validForm();
+    if (validation) {
       try {
         const info = this.buildInfo();
 
@@ -351,14 +356,25 @@ class AgendaEdit extends Component {
           const data = {
             activity_id: state.edit,
           };
-          await AgendaApi.editOne(info, state.edit, event._id);
+          const result = await AgendaApi.editOne(info, state.edit, event._id);
+
+          //Se actualizan los estados date_start_zoom y date_end_zoom para que componente de administracion actualice el valor pasado por props
+          this.setState({
+            date_start_zoom: result.date_start_zoom,
+            date_end_zoom: result.date_end_zoom,
+          });
 
           for (let i = 0; i < selected_document.length; i++) {
             await DocumentsApi.editOne(event._id, data, selected_document[i]._id);
           }
         } else {
           const agenda = await AgendaApi.create(event._id, info);
-          this.setState({ activity_id: agenda._id });
+          // Al crear una actividad de la agenda se inicializa el id de la actividad y las fechas de inicio y finalizacion como requisito del componente de administrador de salas
+          this.setState({
+            activity_id: agenda._id,
+            date_start_zoom: agenda.date_start_zoom,
+            date_end_zoom: agenda.date_end_zoom,
+          });
         }
         //if (this.state.hostSelected) await setHostState(this.state.hostSelected, false);
         //if (this.state.host_id) await setHostState(this.state.host_id, false);
@@ -627,12 +643,16 @@ class AgendaEdit extends Component {
   //Validación de campos
 
   validForm = () => {
-    let title = '';
-    if (this.state.name.length <= 0) title = 'El Nombre es requerido';
+    let title = [];
+    if (this.state.name.length <= 0) title.push('El nombre es requerido');
+
+    if (this.state.date === '') title.push('Seleccione el día');
 
     if (title.length > 0) {
       //   sweetAlert.twoButton(title, "warning", false, "OK", () => { });
-      //   return false;
+      title.map((item) => {
+        message.warning(item);
+      });
     } else return true;
   };
 
@@ -721,10 +741,6 @@ class AgendaEdit extends Component {
     }
   };
 
-  handleChangeDate = (e) => {
-    this.setState({ date: e });
-  };
-
   handleVideoConference = () => {
     //Verificar si existe el campo si no se crea
   };
@@ -763,6 +779,8 @@ class AgendaEdit extends Component {
       games,
       surveys,
       attendees,
+      date_start_zoom,
+      date_end_zoom,
     } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
@@ -810,7 +828,7 @@ class AgendaEdit extends Component {
                       options={this.state.days}
                       style={{ width: '100%' }}
                       defaultValue={date}
-                      onChange={this.handleChangeDate}
+                      onChange={(value) => this.handleChangeDate(value, 'date')}
                     />
                   </div>
                   <div className='columns'>
@@ -822,7 +840,7 @@ class AgendaEdit extends Component {
                           dropUp
                           step={15}
                           date={false}
-                          onChange={(value) => this.handleDate(value, 'hour_start')}
+                          onChange={(value) => this.handleChangeDate(value, 'hour_start')}
                         />
                       </div>
                     </div>
@@ -835,7 +853,7 @@ class AgendaEdit extends Component {
                           dropUp
                           step={15}
                           date={false}
-                          onChange={(value) => this.handleDate(value, 'hour_end')}
+                          onChange={(value) => this.handleChangeDate(value, 'hour_end')}
                         />
                       </div>
                     </div>
@@ -1031,13 +1049,9 @@ class AgendaEdit extends Component {
                       activity_name={this.state.name}
                       firestore={firestore}
                       ApiEviusZoomHosts={ApiEviusZoomHosts}
-                      // date_start_zoom={this.state.date_start_zoom}
-                      // date_end_zoom={this.state.date_end_zoom}
-                      date_start_zoom={'2021-02-03T13:00:00'}
-                      date_end_zoom={'2021-02-03T14:00:00'}
+                      date_start_zoom={date_start_zoom}
+                      date_end_zoom={date_end_zoom}
                       date_activity={this.state.date}
-                      hour_start={this.state.hour_start}
-                      hour_end={this.state.hour_end}
                     />
 
                     <div className='field'>
@@ -1110,216 +1124,30 @@ class AgendaEdit extends Component {
                     </div>
                   </div>
 
-                  <Card style={{ marginTop: '4%' }} title='Conferencia virtual'>
-                    {!this.props.location.state.edit ? (
-                      <div>Primero cree la actividad y luego podrá crear una conferencia virtual asociada</div>
-                    ) : (
-                      <>
-                        <p>
-                          <strong>Recuerda Salvar la información en el botón Guardar de la parte superior</strong>
-                        </p>
-                        <div>
-                          <label className='label'>Plataforma Streaming del evento</label>
-                          <div className='select is-primary'>
-                            <select defaultValue={platform} name='platform' onChange={this.handleChange}>
-                              <option value=''>Seleccionar...</option>
-                              <option value='zoom'>Zoom</option>
-                              <option value='zoomExterno'>ZoomExterno</option>
-                              <option value='vimeo'>Vimeo</option>
-                              <option value='bigmarker'>BigMaker</option>
-                            </select>
-                          </div>
-                        </div>
-                      </>
-                    )}
+                  {/* componente de vista previa en revision, por firebase se tiene problemas si se deja como un modal y al mismo tiempo si se abre otra ventana para su administracion, se soluciona si se abre en una pestaña nueva */}
 
-                    {(platform === 'zoom' || platform === 'zoomExterno') && (
-                      <>
-                        <>
-                          {!this.state.meeting_id && (
-                            <Fragment>
-                              <div className='control'>
-                                <div className='select'>
-                                  <select name={'host_id'} value={this.state.host_id} onChange={this.handleChange}>
-                                    <option>Seleccione host</option>
-                                    {this.state.hostAvailable.length > 0 &&
-                                      this.state.hostAvailable.map((host) => {
-                                        return (
-                                          host.state &&
-                                          host.state === 'available' && (
-                                            <option value={host.id} key={host.id}>
-                                              {host.email}
-                                            </option>
-                                          )
-                                        );
-                                      })}
-                                  </select>
-                                </div>
-                              </div>
-                              <div>
-                                {!this.state.creatingConference && (
-                                  <button
-                                    style={{ marginTop: '2%' }}
-                                    className='button is-primary'
-                                    disabled={!this.state.host_id}
-                                    onClick={this.createConference}>
-                                    Crear espacio virtual
-                                  </button>
-                                )}
-                                {this.state.creatingConference && <Spin tip='Creando...' />}
-                              </div>
-                            </Fragment>
-                          )}
+                  {/* {(this.state.meeting_id || this.state.vimeo_id) && (
+                    <>
+                      <button
+                        style={{ marginTop: '2%' }}
+                        className='button is-primary'
+                        onClick={() => {
+                          this.toggleConference(true);
+                        }}>
+                        Ver Conferencia (Vista previa)
+                      </button>
+                    </>
+                  )}
 
-                          {this.state.meeting_id && (
-                            <div>
-                              <div style={{ marginTop: '2%' }}>
-                                <div>
-                                  <p>El id de la conferencia virtual es:</p>
-                                  <p>{this.state.meeting_id}</p>
-                                </div>
-
-                                <div>
-                                  <p>El host encargado es:</p>
-                                  <p>{this.state.name_host}</p>
-                                </div>
-                                <div key={this.state.key}>
-                                  <p>
-                                    <b>Accessos</b>
-                                  </p>
-                                  <hr />
-                                  <p>
-                                    <a href={start_url} rel='noopener noreferrer' target='_blank'>
-                                      Acceso para hosts
-                                    </a>
-                                  </p>
-                                  <p>
-                                    <a href={join_url} rel='noopener noreferrer' target='_blank'>
-                                      Acceso para asistentes
-                                    </a>
-                                  </p>
-                                </div>
-                              </div>
-                              <div>
-                                <label className='label'>Estado de videoconferencia</label>
-                                <div className='select'>
-                                  <select
-                                    defaultValue={availableText}
-                                    styles={creatableStyles}
-                                    onChange={this.onChange}>
-                                    <option value='open_meeting_room'>Conferencia Abierta</option>
-                                    <option value='closed_meeting_room'>Conferencia no Iniciada</option>
-                                    <option value='ended_meeting_room'>Conferencia Terminada</option>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <button
-                                style={{ marginTop: '2%' }}
-                                className='button is-primary'
-                                onClick={this.removeConference}>
-                                Eliminar espacio virtual
-                              </button>
-                            </div>
-                          )}
-                        </>
-                      </>
-                    )}
-                    {platform === 'vimeo' && this.props.location.state.edit && (
-                      <>
-                        {!vimeo_id ? (
-                          <div className='control'>
-                            <label>Ingrese id de videoconferencia Vimeo</label>
-                            <input type='number' name='vimeo_id' onChange={(e) => this.saveVimeoId(e)} />
-                          </div>
-                        ) : (
-                          <>
-                            <div className='control'>
-                              <label>id de videoconferencia Vimeo</label>
-                              <p>{vimeo_id}</p>
-                            </div>
-                            <div>
-                              <label className='label'>Estado de videoconferencia</label>
-                              <div className='select'>
-                                <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
-                                  <option value='open_meeting_room'>Conferencia Abierta</option>
-                                  <option value='closed_meeting_room'>Conferencia no Iniciada</option>
-                                  <option value='ended_meeting_room'>Conferencia Terminada</option>
-                                </select>
-                              </div>
-                              <button
-                                style={{ marginTop: '2%' }}
-                                className='button is-primary'
-                                onClick={this.removeVimeoId}>
-                                Eliminar espacio virtual
-                              </button>
-                              <Card>
-                                <Row style={{ marginBottom: 16 }}>
-                                  <Col>
-                                    <label className='label'>Habilitar Chat</label>
-                                    <select defaultValue={chat} onChange={(e) => this.handleTabs(e, 'chat')}>
-                                      <option value='true'>Si</option>
-                                      <option value='false'>No</option>
-                                    </select>
-                                  </Col>
-                                </Row>
-                                <Row style={{ marginBottom: 16 }}>
-                                  <Col>
-                                    <label className='label'>Habilitar Encuestas</label>
-                                    <select defaultValue={surveys} onChange={(e) => this.handleTabs(e, 'surveys')}>
-                                      <option value='true'>Si</option>
-                                      <option value='false'>No</option>
-                                    </select>
-                                  </Col>
-                                </Row>
-                                <Row style={{ marginBottom: 16 }}>
-                                  <Col>
-                                    <label className='label'>Habilitar Juegos</label>
-                                    <select defaultValue={games} onChange={(e) => this.handleTabs(e, 'games')}>
-                                      <option value='true'>Si</option>
-                                      <option value='false'>No</option>
-                                    </select>
-                                  </Col>
-                                </Row>
-                                <Row style={{ marginBottom: 16 }}>
-                                  <Col>
-                                    <label className='label'>Habilitar Listado de asistentes</label>
-                                    <select defaultValue={attendees} onChange={(e) => this.handleTabs(e, 'attendees')}>
-                                      <option value='true'>Si</option>
-                                      <option value='false'>No</option>
-                                    </select>
-                                  </Col>
-                                </Row>
-                              </Card>
-                            </div>
-                          </>
-                        )}
-                      </>
-                    )}
-
-                    {(this.state.meeting_id || this.state.vimeo_id) && (
-                      <>
-                        <button
-                          style={{ marginTop: '2%' }}
-                          className='button is-primary'
-                          onClick={() => {
-                            this.toggleConference(true);
-                          }}>
-                          Ver Conferencia (Vista previa)
-                        </button>
-                      </>
-                    )}
-
-                    {this.state.conferenceVisible && (
-                      <ZoomComponent
-                        toggleConference={this.toggleConference}
-                        meetingId={this.state.meeting_id || this.state.vimeo_id}
-                        userEntered={this.state.currentUser}
-                        event={this.props.event}
-                        activity={this.state.info}
-                      />
-                    )}
-                  </Card>
+                  {this.state.conferenceVisible && (
+                    <ZoomComponent
+                      toggleConference={this.toggleConference}
+                      meetingId={this.state.meeting_id || this.state.vimeo_id}
+                      userEntered={this.state.currentUser}
+                      event={this.props.event}
+                      activity={this.state.info}
+                    />
+                  )} */}
                 </div>
               </div>
             )}
