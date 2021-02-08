@@ -6,7 +6,7 @@ import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row } from 'antd';
+import { Layout, Drawer, Button, Col, Row, Tabs, Menu } from 'antd';
 import { MenuOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
 
 //custom
@@ -42,6 +42,16 @@ import InformativeSection from './informativeSections/informativeSection';
 import InformativeSection2 from './informativeSections/informativeSection2';
 import UserLogin from './UserLoginContainer';
 import Partners from './Partners';
+import {
+  AppstoreOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  PieChartOutlined,
+  DesktopOutlined,
+  ContainerOutlined,
+  MailOutlined,
+  EnterOutlined
+} from '@ant-design/icons';
 
 import {
   // BrowserView,
@@ -51,6 +61,8 @@ import {
 } from 'react-device-detect';
 
 const { Content, Sider } = Layout;
+const { TabPane } = Tabs;
+const { SubMenu } = Menu;
 
 Moment.locale('es');
 momentLocalizer();
@@ -100,6 +112,11 @@ class Landing extends Component {
   }
 
   toggle = () => {
+    this.setState({
+      collapsed: !this.state.collapsed,
+    });
+  };
+  toggleCollapsed = () => {
     this.setState({
       collapsed: !this.state.collapsed,
     });
@@ -550,68 +567,6 @@ class Landing extends Component {
                 <Robapagina event={event} eventId={event._id} showLanding={this.showLanding} />
               ) : (
                 <>
-                  {/* {event.styles &&
-                  event.styles.show_banner &&
-                  (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
-                    <BannerEvent
-                      bgImage={
-                        event.styles && event.styles.banner_image
-                          ? event.styles.banner_image
-                          : event.picture
-                          ? event.picture
-                          : 'https://bulma.io/images/placeholders/1280x960.png'
-                      }
-                      mobileBanner={event.styles && event.styles.mobile_banner && event.styles.mobile_banner}
-                      bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                      title={event.name}
-                      eventId={event._id}
-                      styles={event.styles}
-                      organizado={
-                        <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                          {event.organizer.name ? event.organizer.name : event.organizer.email}
-                        </Link>
-                      }
-                      place={
-                        <span>
-                          {event.venue} {event.location.FormattedAddress}
-                        </span>
-                      }
-                      dateStart={event.date_start}
-                      dateEnd={event.date_end}
-                      dates={event.dates}
-                      type_event={event.type_event}
-                    />
-                  ) : (
-                    <div>
-                      {event.styles && event.styles.show_banner === undefined && this.state.headerVisible && (
-                        <BannerEvent
-                          bgImage={
-                            event.styles && event.styles.banner_image
-                              ? event.styles.banner_image
-                              : event.picture
-                              ? event.picture
-                              : 'https://bulma.io/images/placeholders/1280x960.png'
-                          }
-                          bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                          title={event.name}
-                          organizado={
-                            <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                              {event.organizer.name ? event.organizer.name : event.organizer.email}
-                            </Link>
-                          }
-                          place={
-                            <span>
-                              {event.venue} {event.location.FormattedAddress}
-                            </span>
-                          }
-                          dateStart={event.date_start}
-                          dateEnd={event.date_end}
-                          dates={event.dates}
-                          type_event={event.type_event}
-                        />
-                      )}
-                    </div>
-                  )} */}
                   <Content>
                     <Layout className='site-layout'>
                       {/*Aqui empieza el menu para dispositivos >  */}
@@ -623,8 +578,6 @@ class Landing extends Component {
                             event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
                           }}
                           trigger={null}
-                          collapsible
-                          collapsed={this.state.collapsed}
                           width={110}>
                           <div className='items-menu_Landing '>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
@@ -633,7 +586,6 @@ class Landing extends Component {
                               user={currentUser}
                               eventId={event._id}
                               showSection={this.showSection}
-                              collapsed={this.state.collapsed}
                             />
                           </div>
                         </Sider>
@@ -660,7 +612,6 @@ class Landing extends Component {
                               <div>Menu</div>
                             </Button>
                           </div>
-
                           <Drawer
                             title={event.name}
                             placement={this.state.placement}
@@ -679,7 +630,6 @@ class Landing extends Component {
                               user={currentUser}
                               itemsMenu={this.state.event.itemsMenu}
                               showSection={this.showSection}
-                              collapsed={this.state.collapsed}
                             />
                           </Drawer>
 
@@ -750,38 +700,90 @@ class Landing extends Component {
                             {this.state.sections[this.state.section]}
                           </div>
                           <div className={`modal ${modal ? 'is-active' : ''}`}>
-              <div className='modal-background'></div>
-              <div className='modal-content'>
-                <div id='firebaseui-auth-container' />
-              </div>
-              <button
-                className='modal-close is-large'
-                aria-label='close'
-                onClick={() => {
-                  this.closeLogin();
-                }}
-              />
-            </div>
-            <Dialog
-              modal={modalTicket}
-              title={'Atención!!'}
-              content={
-                <p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>
-              }
-              first={{
-                title: 'Iniciar Sesión o Registrarse',
-                class: 'is-info',
-                action: this.openLogin,
-              }}
-              second={{ title: 'Cancelar', class: '', action: this.closeModal }}
-            />
-            {event.styles && event.styles.banner_footer && (
-              <div style={{ textAlign: 'center' }}>
-                <img alt='image-dialog' src={event.styles.banner_footer} />
-              </div>
-            )}
+                              <div className='modal-background'></div>
+                              <div className='modal-content'>
+                                <div id='firebaseui-auth-container' />
+                              </div>
+                              <button
+                                className='modal-close is-large'
+                                aria-label='close'
+                                onClick={() => {
+                                  this.closeLogin();
+                                }}
+                              />
+                            </div>
+                            <Dialog
+                              modal={modalTicket}
+                              title={'Atención!!'}
+                              content={
+                                <p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>
+                              }
+                              first={{
+                                title: 'Iniciar Sesión o Registrarse',
+                                class: 'is-info',
+                                action: this.openLogin,
+                              }}
+                              second={{ title: 'Cancelar', class: '', action: this.closeModal }}
+                            />
+                            {event.styles && event.styles.banner_footer && (
+                              <div style={{ textAlign: 'center' }}>
+                                <img alt='image-dialog' src={event.styles.banner_footer} />
+                              </div>
+                            )}
                         </Content>
+                        <Sider trigger={null} 
+                          collapsible 
+                          collapsed={this.state.collapsed}
+                          width={300} 
+                          style={{
+                            backgroundColor:
+                            event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                            position:'stick'
+                          }}>
+                        <div type="primary" onClick={this.toggleCollapsed} style={{ marginBottom: 16, margin: '0px auto' }}>
+                        <Row justify='center'>
+                           <EnterOutlined />
+                        </Row>
+                        </div>
+                        {this.state.collapsed ? (
+                         <>
+                         <Menu
+                            defaultSelectedKeys={['1']}
+                            defaultOpenKeys={['sub1']}
+                            style={{
+                              backgroundColor:
+                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                            }}>                       
+                              <Menu.Item key="1" icon={<PieChartOutlined />} onClick={this.toggleCollapsed}>
+                                Option 1
+                              </Menu.Item>
+                              <Menu.Item key="2" icon={<DesktopOutlined />} onClick={this.toggleCollapsed}>
+                                Option 2
+                              </Menu.Item>
+                              <Menu.Item key="3" icon={<ContainerOutlined />} onClick={this.toggleCollapsed}>
+                                Option 3
+                              </Menu.Item>
+                            </Menu>
+                         </>
+                        ) : (
+                          <>
+                          <Tabs defaultActiveKey="1" >
+                            <TabPane tab="Tab 1" key="1">
+                              Content of Tab Pane 1
+                            </TabPane>
+                            <TabPane tab="Tab 2" key="2">
+                              Content of Tab Pane 2
+                            </TabPane>
+                            <TabPane tab="Tab 3" key="3">
+                              Content of Tab Pane 3
+                            </TabPane>
+                          </Tabs>
+                         </>
+                        )
+                        }
+                        </Sider>
                       </Layout>
+                    
                     </Layout>
                   </Content>
                 </>
