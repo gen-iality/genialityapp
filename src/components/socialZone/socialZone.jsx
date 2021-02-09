@@ -12,10 +12,15 @@ let SocialZone = function(props) {
   //let { event_id } = useParams();
   /***** STATE ****/
   const [attendeeList, setAttendeeList] = useState([]);
-  const [currentChat, setCurrentChat] = useState(null);
+  const [currentChat, setCurrentChatInner] = useState(null);
+  const [currentTab, setcurrentTab] = useState('1');
   let userName = 'LuisXXX';
   /***********/
   let event_id = props.match.params.event_id;
+  let setCurrentChat = (id) => {
+    setcurrentTab('2'); //chats tab
+    setCurrentChatInner(id);
+  };
   useEffect(() => {
     if (!event_id) return;
 
@@ -32,15 +37,12 @@ let SocialZone = function(props) {
   }, [event_id]);
 
   return (
-    <Tabs defaultActiveKey='1' onChange={callback}>
+    <Tabs defaultActiveKey='1' onChange={callback} activeKey={currentTab} onTabClick={(key) => setcurrentTab(key)}>
       <TabPane tab='Asistentes' key='1'>
         <AttendeList event_id={event_id} setCurrentChat={setCurrentChat} currentChat={currentChat} />
       </TabPane>
       <TabPane tab='Chats' key='2'>
         <ChatList setCurrentChat={setCurrentChat} currentChat={currentChat} />
-      </TabPane>
-      <TabPane tab='Tab 3' key='3'>
-        aaaa
       </TabPane>
     </Tabs>
   );
@@ -64,7 +66,7 @@ let ChatList = function(props) {
       </a>
       <iframe
         title='chatevius'
-        className='ChatEviusx'
+        className='ChatEvius'
         src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + props.currentChat}></iframe>
     </>
   ) : (
