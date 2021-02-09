@@ -15,8 +15,10 @@ let SocialZone = function(props) {
   const [currentChat, setCurrentChat] = useState(null);
   let userName = 'LuisXXX';
   /***********/
-  let event_id = props.match.params.event_id;
+  // let event_id = props.match.params.event_id;
+  let event_id = '5ea23acbd74d5c4b360ddde2';
   useEffect(() => {
+    console.log('event_id', event_id);
     if (!event_id) return;
 
     let colletion_name = event_id + '_event_attendees';
@@ -47,19 +49,14 @@ export default withRouter(SocialZone);
 
 let ChatList = function(props) {
   let userName = 'LuisXXX';
-  const data = [
-    'Racing car sprays burning fuel into crowd.',
-    'Japanese princess to wed commoner.',
-    'Australian walks 100km after outback crash.',
-    'Man charged over missing wedding girl.',
-    'Los Angeles battles huge wildfires.',
-  ];
+  const data = ['Diana', 'Luis', 'Jorge', 'Dario', 'Nicolas'];
   return props.currentChat ? (
     <>
       <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(null)}>
         Listado
       </a>
       <iframe
+        style={{ height: 350 }}
         title='chatevius'
         className='ChatEviusx'
         src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + props.currentChat}></iframe>
