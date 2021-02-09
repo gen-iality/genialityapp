@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import axios from 'axios';
-import { ApiEviusZoomServer, ApiEviusZoomHosts } from '../../helpers/constants';
+import { ApiEviusZoomHosts } from '../../helpers/constants';
 import { Redirect, withRouter, Link } from 'react-router-dom';
 import Moment from 'moment';
 import EviusReactQuill from '../shared/eviusReactQuill';
@@ -10,8 +9,7 @@ import Creatable from 'react-select';
 import { FaWhmcs } from 'react-icons/fa';
 import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import { Tabs, notification, message } from 'antd';
-import { createOrUpdateActivity, getConfiguration } from './services';
+import { Tabs, message } from 'antd';
 import RoomManager from './roomManager';
 
 // En revision vista previa
@@ -33,7 +31,6 @@ import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage
 import Dropzone from 'react-dropzone';
 import { Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
-import { toast } from 'react-toastify';
 import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
 
@@ -44,7 +41,9 @@ class AgendaEdit extends Component {
     super(props);
     this.state = {
       loading: true,
+      // Estado para la redireccion de navegacion interna al eliminar actividad o volver al listado de actividades.
       redirect: false,
+      // El id de la actividad se inicializa al crear la actividad
       activity_id: false,
       isLoading: { types: true, categories: true },
       name: '',
@@ -53,10 +52,10 @@ class AgendaEdit extends Component {
       has_date: '',
       description: '',
       registration_message: '',
+      date: '',
       hour_start: new Date(),
       hour_end: new Date(),
       key: new Date(),
-      date: '',
       image: '',
       locale: 'en',
       capacity: 0,
@@ -79,8 +78,6 @@ class AgendaEdit extends Component {
       hosts: [],
       selected_document: [],
       nameDocuments: [],
-      hostAvailable: [],
-      availableText: 'ended_meeting_room',
       tickets: [],
       selectedTicket: [],
       platform: '',
@@ -97,13 +94,8 @@ class AgendaEdit extends Component {
       date_start_zoom: null,
       date_end_zoom: null,
     };
-    this.createConference = this.createConference.bind(this);
-    this.removeConference = this.removeConference.bind(this);
-    this.onChange = this.onChange.bind(this);
-    this.handleTabs = this.handleTabs.bind(this);
+
     this.selectTickets = this.selectTickets.bind(this);
-    this.removeVimeoId = this.removeVimeoId.bind(this);
-    this.saveVimeoId = this.saveVimeoId.bind(this);
   }
 
   toggleConference = (isVisible) => {
@@ -159,15 +151,12 @@ class AgendaEdit extends Component {
     }
 
     let documents = await DocumentsApi.byEvent(event._id);
-    let hostAvailable = await EventsApi.hostAvailable();
 
     let nameDocuments = [];
     for (let i = 0; i < documents.length; i += 1) {
       nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
     }
-    this.setState({ nameDocuments, hostAvailable });
-
-    // getHostList(this.loadHostAvailable);
+    this.setState({ nameDocuments });
 
     let spaces = await SpacesApi.byEvent(this.props.event._id);
     let hosts = await SpeakersApi.byEvent(this.props.event._id);
@@ -185,33 +174,15 @@ class AgendaEdit extends Component {
 
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
-      const videoConferenceState = await getConfiguration(event._id, state.edit);
-
+      console.log('info al cargar', info);
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
         platform: info.platform || event.event_platform,
-        availableText: videoConferenceState ? videoConferenceState.habilitar_ingreso : 'ended_meeting_room',
         info: info,
         video: info.video,
         name_host: info.name_host,
-        chat:
-          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.chat
-            ? videoConferenceState.tabs.chat
-            : false,
-        surveys:
-          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.surveys
-            ? videoConferenceState.tabs.surveys
-            : false,
-        games:
-          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.games
-            ? videoConferenceState.tabs.games
-            : false,
-        attendees:
-          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.attendees
-            ? videoConferenceState.tabs.attendees
-            : false,
         date_start_zoom: info.date_start_zoom,
         date_end_zoom: info.date_end_zoom,
       });
@@ -249,27 +220,15 @@ class AgendaEdit extends Component {
     });
   }
 
-  loadHostAvailable = (list) => {
-    this.setState({ hostAvailable: list });
-  };
-
   //FN general para cambio en input
   handleChange = async (e) => {
     const { name, value } = e.target;
-    const { info } = this.state;
-    const { event } = this.props;
 
     // BACKLOG -> porque host_id se setea siempre que se setea un estado
-    this.setState({ [name]: value, host_id: e.target.value });
-
-    if (name === 'platform') {
-      info.platform = e.target.value;
-      await AgendaApi.editOne(info, this.props.location.state.edit, event._id);
-    }
+    this.setState({ [name]: value });
   };
   //FN para cambio en campo de fecha
   handleChangeDate = (value, name) => {
-    console.log(value, name);
     this.setState({ [name]: value });
   };
   //Cada select tiene su propia función para evitar errores y asegurar la información correcta
@@ -376,8 +335,6 @@ class AgendaEdit extends Component {
             date_end_zoom: agenda.date_end_zoom,
           });
         }
-        //if (this.state.hostSelected) await setHostState(this.state.hostSelected, false);
-        //if (this.state.host_id) await setHostState(this.state.host_id, false);
 
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
@@ -424,7 +381,7 @@ class AgendaEdit extends Component {
       capacity,
       access_restriction_type,
       selectedCategories,
-      selectedHosts,
+
       selectedType,
       selectedRol,
       description,
@@ -436,7 +393,6 @@ class AgendaEdit extends Component {
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
     const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
-    const host_ids = selectedHosts >= 0 ? [] : selectedHosts.map(({ value }) => value);
 
     const type_id = selectedType.value;
     return {
@@ -453,7 +409,6 @@ class AgendaEdit extends Component {
       activity_categories_ids,
       access_restriction_type,
       access_restriction_rol_ids,
-      host_ids,
       type_id,
       has_date,
       selected_document,
@@ -490,10 +445,6 @@ class AgendaEdit extends Component {
       join_url,
       name_host,
       key,
-      chat,
-      surveys,
-      games,
-      attendees,
     } = this.state;
 
     //const registration_message_storage = window.sessionStorage.getItem('registration_message');
@@ -507,7 +458,6 @@ class AgendaEdit extends Component {
 
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
     const host_ids = selectedHosts >= 0 ? [] : selectedHosts.map(({ value }) => value);
-
     const type_id = selectedType === undefined ? '' : selectedType.value;
     return {
       name,
@@ -523,7 +473,6 @@ class AgendaEdit extends Component {
       activity_categories_ids,
       access_restriction_type,
       access_restriction_rol_ids,
-      host_ids,
       type_id,
       has_date,
       timeConference: '',
@@ -537,90 +486,10 @@ class AgendaEdit extends Component {
       join_url,
       name_host,
       key,
-      chat,
-      surveys,
-      games,
-      attendees,
+
+      host_ids,
     };
   };
-
-  async removeVimeoId() {
-    if (window.confirm('Esta seguro?')) {
-      this.setState({ vimeo_id: null }, function() {
-        this.submit();
-      });
-    }
-  }
-
-  async removeConference() {
-    if (window.confirm('Esta seguro?')) {
-      this.setState({ meeting_id: null }, function() {
-        this.submit();
-      });
-    }
-  }
-
-  async createConference() {
-    const { hostAvailable } = this.state;
-    const host_name = [];
-
-    for (let i = 0; hostAvailable.length > i; i++) {
-      if (this.state.host_id === hostAvailable[i].id) {
-        host_name.push(hostAvailable[i].first_name);
-      }
-    }
-
-    this.setState({ creatingConference: true });
-    const zoomData = {
-      activity_id: this.props.location.state.edit,
-      activity_name: this.state.name,
-      event_id: this.props.event._id,
-      agenda: this.state.name, //this.props.event.description,
-      host_id: this.state.host_id,
-      host_name: host_name[0],
-    };
-
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      data: zoomData,
-      url: ApiEviusZoomServer,
-    };
-
-    let response = null;
-
-    axios.defaults.timeout = 10000;
-    try {
-      response = await axios(options);
-      toast.success('Conferencia Creada');
-
-      //await setHostState(this.state.host_id, true);
-
-      const activityId = this.props.location.state.edit;
-
-      const { data } = response;
-      const info = await AgendaApi.editOne(
-        {
-          meeting_id: data.id,
-          start_url: data.start_url,
-          join_url: data.join_url,
-          name_host: data.host_email,
-          key: new Date(),
-        },
-        activityId,
-        this.props.event._id
-      );
-    } catch (error) {
-      if (error.response) {
-        response = JSON.stringify(error.response.data);
-      }
-      console.error(error);
-      this.setState({ creatingConference: false });
-    }
-    this.setState({ creatingConference: false });
-  }
 
   //FN para eliminar la actividad
   remove = () => {
@@ -646,7 +515,13 @@ class AgendaEdit extends Component {
     let title = [];
     if (this.state.name.length <= 0) title.push('El nombre es requerido');
 
-    if (this.state.date === '') title.push('Seleccione el día');
+    if (this.state.date === '' || this.state.date === 'Invalid date') title.push('Seleccione el día');
+
+    if (this.state.hour_start === '' || this.state.hour_start === 'Invalid date')
+      title.push('Seleccione una hora de inicio valida');
+
+    if (this.state.hour_end === '' || this.state.hour_end === 'Invalid date')
+      title.push('Seleccione una hora de finalización valida');
 
     if (title.length > 0) {
       //   sweetAlert.twoButton(title, "warning", false, "OK", () => { });
@@ -669,68 +544,8 @@ class AgendaEdit extends Component {
 
   goBack = () => this.setState({ redirect: true });
 
-  async onChange(e) {
-    this.setState({ availableText: e.target.value });
-    const tabs = {
-      chat: this.state.chat,
-      surveys: this.state.surveys,
-      games: this.state.games,
-      attendees: this.state.attendees,
-    };
-
-    let result = await createOrUpdateActivity(
-      this.props.location.state.edit,
-      this.props.event._id,
-      e.target.value,
-      tabs
-    );
-
-    notification.open({
-      message: result.message,
-    });
-  }
-
-  async handleTabs(e, tab) {
-    const valueTab = e.target.value === 'true' ? true : false;
-    const tabs = {
-      chat: this.state.chat,
-      surveys: this.state.surveys,
-      games: this.state.games,
-      attendees: this.state.attendees,
-    };
-    if (tab === 'chat') {
-      tabs.chat = valueTab;
-      this.setState({ chat: valueTab });
-    } else if (tab === 'surveys') {
-      tabs.surveys = valueTab;
-      this.setState({ surveys: valueTab });
-    } else if (tab === 'games') {
-      tabs.games = valueTab;
-      this.setState({ games: valueTab });
-    } else if (tab === 'attendees') {
-      tabs.attendees = valueTab;
-      this.setState({ attendees: valueTab });
-    }
-    await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, this.state.availableText, tabs);
-  }
-
   selectTickets(tickets) {
     this.setState({ selectedTicket: tickets });
-  }
-
-  async saveVimeoId(e) {
-    let info = this.state.info;
-    const { event } = this.props;
-
-    info.vimeo_id = e.target.value;
-    this.setState({ vimeo_id: e.target.value });
-
-    await AgendaApi.editOne(info, this.props.location.state.edit, event._id);
-
-    notification.open({
-      message: 'Id de vimeo Guardado correctamente',
-      description: 'Dato Guardado Correctamente',
-    });
   }
 
   handleChangeReactQuill = (e, label) => {
@@ -770,15 +585,7 @@ class AgendaEdit extends Component {
       types,
       roles,
       isLoading,
-      start_url,
-      join_url,
-      availableText,
-      vimeo_id,
       platform,
-      chat,
-      games,
-      surveys,
-      attendees,
       date_start_zoom,
       date_end_zoom,
     } = this.state;
@@ -1048,7 +855,6 @@ class AgendaEdit extends Component {
                       activity_id={this.state.activity_id}
                       activity_name={this.state.name}
                       firestore={firestore}
-                      ApiEviusZoomHosts={ApiEviusZoomHosts}
                       date_start_zoom={date_start_zoom}
                       date_end_zoom={date_end_zoom}
                       date_activity={this.state.date}

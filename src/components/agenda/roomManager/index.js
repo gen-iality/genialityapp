@@ -5,6 +5,7 @@ import RoomConfig from './config';
 import Service from './service';
 import Moment from 'moment';
 import * as Cookie from 'js-cookie';
+import { replace } from 'formik';
 
 const { TabPane } = Tabs;
 
@@ -28,6 +29,35 @@ class RoomManager extends Component {
       host_id: null,
       host_name: null,
 
+      // si este valor esta en false no se muestra el listado de host
+      // tambien se termina a partir del valor de la variable si se envia un array por host_ids o un string por host_id
+      select_host_manual: false,
+
+      // campo para pasar por el request de crear room
+      host_ids: [],
+      host_list: [
+        {
+          host_id: 'KthHMroFQK24I97YoqxBZw',
+          host_name: 'host1@evius.co',
+        },
+        {
+          host_id: '15DKHS_6TqWIFpwShasM4w',
+          host_name: 'host2@evius.co',
+        },
+        {
+          host_id: 'FIRVnSoZR7WMDajgtzf5Uw',
+          host_name: 'host3@evius.co',
+        },
+        {
+          host_id: 'YaXq_TW2f791cVpP8og',
+          host_name: 'host4@evius.co',
+        },
+        {
+          host_id: 'mSkbi8PmSSqQEWsm6FQiAA',
+          host_name: 'host5@evius.co',
+        },
+      ],
+
       // Estado de los tabs
       chat: true,
       surveys: false,
@@ -38,6 +68,11 @@ class RoomManager extends Component {
 
   componentDidMount = async () => {
     const { event_id, activity_id } = this.props;
+    const { host_list } = this.state;
+
+    const host_ids = host_list.map((host) => host.host_id);
+    this.setState({ host_ids });
+
     if (typeof event_id === 'undefined' || typeof activity_id === 'undefined' || activity_id === false) return;
 
     this.setState({ loading: true });
@@ -120,6 +155,9 @@ class RoomManager extends Component {
     if (e.target.name === 'isPublished') {
       const isPublished = e.target.value === 'true' ? true : false;
       this.setState({ [e.target.name]: isPublished }, async () => await this.handleSaveConfig());
+    } else if (e.target.name === 'select_host_manual') {
+      const select_host_manual = e.target.value === 'true' ? true : false;
+      this.setState({ [e.target.name]: select_host_manual });
     } else {
       this.setState({ [e.target.name]: e.target.value });
     }
@@ -187,6 +225,10 @@ class RoomManager extends Component {
     this.validateForCreateZoomRoom();
     const evius_token = Cookie.get('evius_token');
     const { activity_id, activity_name, event_id, date_start_zoom, date_end_zoom } = this.props;
+    const { select_host_manual, host_id, host_ids } = this.state;
+    const host_field = select_host_manual ? 'host_id' : 'host_ids';
+    const host_value = select_host_manual ? host_id : host_ids;
+
     const body = {
       token: evius_token,
       activity_id,
@@ -195,6 +237,7 @@ class RoomManager extends Component {
       agenda: activity_name,
       date_start_zoom,
       date_end_zoom,
+      [host_field]: host_value,
     };
     const response = await this.state.service.setZoomRoom(evius_token, body);
     console.log('set response:', response);
@@ -248,6 +291,9 @@ class RoomManager extends Component {
       attendees,
       meeting_id,
       isPublished,
+      select_host_manual,
+      host_list,
+      host_id,
     } = this.state;
     const { event_id, activity_id } = this.props;
     return (
@@ -273,7 +319,9 @@ class RoomManager extends Component {
                   handleSaveConfig={this.handleSaveConfig}
                   isPublished={isPublished}
                   createZoomRomm={this.createZoomRomm}
-                  date_activity={this.props.date}
+                  select_host_manual={select_host_manual}
+                  host_list={host_list}
+                  host_id={host_id}
                 />
               )}
             </TabPane>
