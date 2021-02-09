@@ -295,9 +295,9 @@ class RoomManager extends Component {
       host_list,
       host_id,
     } = this.state;
-    const { event_id, activity_id } = this.props;
+    const { event_id, activity_id, activity_name } = this.props;
     return (
-      <Card title='Administrador de salas'>
+      <Card title={activity_name}>
         {typeof event_id === 'undefined' || typeof activity_id === 'undefined' || activity_id === false ? (
           <>
             <Alert

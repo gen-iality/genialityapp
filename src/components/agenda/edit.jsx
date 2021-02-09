@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { ApiEviusZoomHosts } from '../../helpers/constants';
 import { Redirect, withRouter, Link } from 'react-router-dom';
 import Moment from 'moment';
 import EviusReactQuill from '../shared/eviusReactQuill';
@@ -23,7 +22,6 @@ import {
   SpeakersApi,
   TypesAgendaApi,
   DocumentsApi,
-  EventsApi,
   eventTicketsApi,
   getCurrentUser,
 } from '../../helpers/request';
@@ -94,7 +92,7 @@ class AgendaEdit extends Component {
       date_start_zoom: null,
       date_end_zoom: null,
     };
-
+    this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
   }
 
@@ -103,7 +101,6 @@ class AgendaEdit extends Component {
   };
 
   async componentDidMount() {
-    console.log('-- START Edit --');
     const {
       event,
       location: { state },
@@ -218,6 +215,8 @@ class AgendaEdit extends Component {
       loading: false,
       isLoading,
     });
+
+    this.name.current.focus();
   }
 
   //FN general para cambio en input
@@ -604,6 +603,8 @@ class AgendaEdit extends Component {
                     <label className='label required'>Nombre</label>
                     <div className='control'>
                       <input
+                        ref={this.name}
+                        autoFocus
                         className='input'
                         type='text'
                         name={'name'}
@@ -850,16 +851,6 @@ class AgendaEdit extends Component {
                     </button>
                   </div>
                   <div className='section-gray'>
-                    <RoomManager
-                      event_id={this.props.event._id}
-                      activity_id={this.state.activity_id}
-                      activity_name={this.state.name}
-                      firestore={firestore}
-                      date_start_zoom={date_start_zoom}
-                      date_end_zoom={date_end_zoom}
-                      date_activity={this.state.date}
-                    />
-
                     <div className='field'>
                       <label className='label has-text-grey-light'>Imagen</label>
                       <p>Dimensiones: 1000px x 278px</p>
@@ -972,6 +963,17 @@ class AgendaEdit extends Component {
               diferentes idiomas
             </p>
           )}
+        </TabPane>
+        <TabPane tab='Espacio Virtual' key='3'>
+          <RoomManager
+            event_id={this.props.event._id}
+            activity_id={this.state.activity_id}
+            activity_name={this.state.name}
+            firestore={firestore}
+            date_start_zoom={date_start_zoom}
+            date_end_zoom={date_end_zoom}
+            date_activity={this.state.date}
+          />
         </TabPane>
       </Tabs>
     );
