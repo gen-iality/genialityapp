@@ -738,6 +738,7 @@ class Landing extends Component {
                             <MenuUnfoldOutlined  style={{fontSize:'24px'}}/>
                             </Button>
                             <Menu
+                             
                                 style={{
                                   backgroundColor:
                                   event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
