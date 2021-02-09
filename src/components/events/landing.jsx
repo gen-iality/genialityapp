@@ -732,7 +732,7 @@ class Landing extends Component {
                           }}>
                          <div className='Chat-Event' style={{position:'fixed'}}>
                           
-                          ` {this.state.collapsed ? (
+                          {this.state.collapsed ? (
                             <>
                             <Button type="link" onClick={this.toggleCollapsed}>
                             <MenuUnfoldOutlined  style={{fontSize:'24px'}}/>
