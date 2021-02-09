@@ -7,7 +7,7 @@ import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
 import { Layout, Drawer, Button, Col, Row, Tabs, Menu } from 'antd';
-import { MenuOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
+import { MenuOutlined, WechatOutlined, TeamOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 
 //custom
 import { Actions, EventsApi, TicketsApi, fireStoreApi, Activity, getCurrentUser } from '../../helpers/request';
@@ -42,16 +42,6 @@ import InformativeSection from './informativeSections/informativeSection';
 import InformativeSection2 from './informativeSections/informativeSection2';
 import UserLogin from './UserLoginContainer';
 import Partners from './Partners';
-import {
-  AppstoreOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  PieChartOutlined,
-  DesktopOutlined,
-  ContainerOutlined,
-  MailOutlined,
-  EnterOutlined
-} from '@ant-design/icons';
 
 import {
   // BrowserView,
@@ -740,54 +730,53 @@ class Landing extends Component {
                             event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
                             position:'stick'
                           }}>
-                        <div type="primary" onClick={this.toggleCollapsed} style={{ marginBottom: 16, margin: '0px auto' }}>
-                        <Row justify='center'>
-                           <EnterOutlined />
-                        </Row>
-                        </div>
-                        {this.state.collapsed ? (
-                         <>
-                         <Menu
-                            defaultSelectedKeys={['1']}
-                            defaultOpenKeys={['sub1']}
-                            style={{
-                              backgroundColor:
-                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
-                            }}>                       
-                              <Menu.Item key="1" icon={<PieChartOutlined />} onClick={this.toggleCollapsed}>
-                                Option 1
-                              </Menu.Item>
-                              <Menu.Item key="2" icon={<DesktopOutlined />} onClick={this.toggleCollapsed}>
-                                Option 2
-                              </Menu.Item>
-                              <Menu.Item key="3" icon={<ContainerOutlined />} onClick={this.toggleCollapsed}>
-                                Option 3
-                              </Menu.Item>
-                            </Menu>
-                         </>
-                        ) : (
-                          <>
-                          <Tabs defaultActiveKey="1" >
-                            <TabPane tab="Tab 1" key="1">
-                              Content of Tab Pane 1
-                            </TabPane>
-                            <TabPane tab="Tab 2" key="2">
-                              Content of Tab Pane 2
-                            </TabPane>
-                            <TabPane tab="Tab 3" key="3">
-                              Content of Tab Pane 3
-                            </TabPane>
-                          </Tabs>
-                         </>
-                        )
-                        }
-                        </Sider>
-                      </Layout>
-                    
-                    </Layout>
-                  </Content>
-                </>
-              )}
+                         <div className='Chat-Event' style={{position:'fixed'}}>
+                          
+                          ` {this.state.collapsed ? (
+                            <>
+                            <Button type="link" onClick={this.toggleCollapsed}>
+                            <MenuUnfoldOutlined  style={{fontSize:'24px'}}/>
+                            </Button>
+                            <Menu
+                                style={{
+                                  backgroundColor:
+                                  event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                                }}>
+                                  <Menu.Item key="1" icon={<WechatOutlined style={{fontSize:'18px'}}/>} onClick={this.toggleCollapsed}>
+                                    Option 1
+                                  </Menu.Item>                       
+                                  <Menu.Item key="2" icon={<TeamOutlined style={{fontSize:'18px'}}/>} onClick={this.toggleCollapsed}>
+                                    Option 1
+                                  </Menu.Item>
+                                </Menu>
+                            </>
+                            ) : (
+                              <>
+                              <Button type="link" onClick={this.toggleCollapsed}>
+                                <MenuUnfoldOutlined  style={{fontSize:'24px'}}/>
+                              </Button>
+                              <div>
+                                <Tabs centered 
+                                  style={{marginLeft:'9%', width:'85%'}}>
+                                  <TabPane  tab={ <span> <WechatOutlined /> Chat </span>} key="1">
+                                    Content of Tab Pane 1
+                                  </TabPane>
+                                  <TabPane tab={ <span> <TeamOutlined />conectados </span> } key="2">
+                                    Content of Tab Pane 2
+                                  </TabPane>
+                                </Tabs>
+                              </div>
+                              </>
+                            )
+                            }
+                            </div>
+                            </Sider>
+                          </Layout>
+                        
+                        </Layout>
+                      </Content>
+                    </>
+                  )}`
             </div>
           </React.Fragment>
         )}
