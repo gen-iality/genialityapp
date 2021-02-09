@@ -85,7 +85,7 @@ class Landing extends Component {
       toggleConferenceZoom: false,
       meeting_id: null,
       color: '',
-      collapsed: false,
+      collapsed: true,
       visible: false,
       placement: 'left',
       headerVisible: 'true',
@@ -549,9 +549,7 @@ class Landing extends Component {
                   activity={activity}
                 />
               )}
-
               {/* ESTO ES UNA PRUEBA PARA LA ENCUESTA EN VIVO */}
-
               {/* <SurveyNotification /> */}
               {loader_page ? (
                 <Robapagina event={event} eventId={event._id} showLanding={this.showLanding} />
@@ -565,7 +563,7 @@ class Landing extends Component {
                           className='containerMenu_Landing'
                           style={{
                             backgroundColor:
-                            event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
                           }}
                           trigger={null}
                           width={110}>
@@ -623,160 +621,182 @@ class Landing extends Component {
                             />
                           </Drawer>
 
-                         
-                           {event.styles &&
-                            event.styles.show_banner &&
-                            (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
-                              <BannerEvent
-                                bgImage={
-                                  event.styles && event.styles.banner_image
-                                    ? event.styles.banner_image
-                                    : event.picture
-                                    ? event.picture
-                                    : 'https://bulma.io/images/placeholders/1280x960.png'
-                                }
-                                mobileBanner={event.styles && event.styles.mobile_banner && event.styles.mobile_banner}
-                                bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                                title={event.name}
-                                eventId={event._id}
-                                styles={event.styles}
-                                organizado={
-                                  <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                                    {event.organizer.name ? event.organizer.name : event.organizer.email}
-                                  </Link>
-                                }
-                                place={
-                                  <span>
-                                    {event.venue} {event.location.FormattedAddress}
-                                  </span>
-                                }
-                                dateStart={event.date_start}
-                                dateEnd={event.date_end}
-                                dates={event.dates}
-                                type_event={event.type_event}
-                              />
-                            ) : (
-                              <div>
-                                {event.styles && event.styles.show_banner === undefined && this.state.headerVisible && (
-                                  <BannerEvent
-                                    bgImage={
-                                      event.styles && event.styles.banner_image
-                                        ? event.styles.banner_image
-                                        : event.picture
-                                        ? event.picture
-                                        : 'https://bulma.io/images/placeholders/1280x960.png'
-                                    }
-                                    bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                                    title={event.name}
-                                    organizado={
-                                      <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                                        {event.organizer.name ? event.organizer.name : event.organizer.email}
-                                      </Link>
-                                    }
-                                    place={
-                                      <span>
-                                        {event.venue} {event.location.FormattedAddress}
-                                      </span>
-                                    }
-                                    dateStart={event.date_start}
-                                    dateEnd={event.date_end}
-                                    dates={event.dates}
-                                    type_event={event.type_event}
-                                  />
-                                )}
-                              </div>
-                            )}                       
-                          <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>                     
+                          {event.styles &&
+                          event.styles.show_banner &&
+                          (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
+                            <BannerEvent
+                              bgImage={
+                                event.styles && event.styles.banner_image
+                                  ? event.styles.banner_image
+                                  : event.picture
+                                  ? event.picture
+                                  : 'https://bulma.io/images/placeholders/1280x960.png'
+                              }
+                              mobileBanner={event.styles && event.styles.mobile_banner && event.styles.mobile_banner}
+                              bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
+                              title={event.name}
+                              eventId={event._id}
+                              styles={event.styles}
+                              organizado={
+                                <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                                  {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                </Link>
+                              }
+                              place={
+                                <span>
+                                  {event.venue} {event.location.FormattedAddress}
+                                </span>
+                              }
+                              dateStart={event.date_start}
+                              dateEnd={event.date_end}
+                              dates={event.dates}
+                              type_event={event.type_event}
+                            />
+                          ) : (
+                            <div>
+                              {event.styles && event.styles.show_banner === undefined && this.state.headerVisible && (
+                                <BannerEvent
+                                  bgImage={
+                                    event.styles && event.styles.banner_image
+                                      ? event.styles.banner_image
+                                      : event.picture
+                                      ? event.picture
+                                      : 'https://bulma.io/images/placeholders/1280x960.png'
+                                  }
+                                  bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
+                                  title={event.name}
+                                  organizado={
+                                    <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                                      {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                    </Link>
+                                  }
+                                  place={
+                                    <span>
+                                      {event.venue} {event.location.FormattedAddress}
+                                    </span>
+                                  }
+                                  dateStart={event.date_start}
+                                  dateEnd={event.date_end}
+                                  dates={event.dates}
+                                  type_event={event.type_event}
+                                />
+                              )}
+                            </div>
+                          )}
+                          <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>
                             {this.state.sections[this.state.section]}
                           </div>
                           <div className={`modal ${modal ? 'is-active' : ''}`}>
-                              <div className='modal-background'></div>
-                              <div className='modal-content'>
-                                <div id='firebaseui-auth-container' />
-                              </div>
-                              <button
-                                className='modal-close is-large'
-                                aria-label='close'
-                                onClick={() => {
-                                  this.closeLogin();
-                                }}
-                              />
+                            <div className='modal-background'></div>
+                            <div className='modal-content'>
+                              <div id='firebaseui-auth-container' />
                             </div>
-                            <Dialog
-                              modal={modalTicket}
-                              title={'Atención!!'}
-                              content={
-                                <p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>
-                              }
-                              first={{
-                                title: 'Iniciar Sesión o Registrarse',
-                                class: 'is-info',
-                                action: this.openLogin,
+                            <button
+                              className='modal-close is-large'
+                              aria-label='close'
+                              onClick={() => {
+                                this.closeLogin();
                               }}
-                              second={{ title: 'Cancelar', class: '', action: this.closeModal }}
                             />
-                            {event.styles && event.styles.banner_footer && (
-                              <div style={{ textAlign: 'center' }}>
-                                <img alt='image-dialog' src={event.styles.banner_footer} />
-                              </div>
-                            )}
+                          </div>
+                          <Dialog
+                            modal={modalTicket}
+                            title={'Atención!!'}
+                            content={
+                              <p className='has-text-weight-bold'>
+                                Para seleccionar tiquetes debes iniciar sesión o registrarse !!
+                              </p>
+                            }
+                            first={{
+                              title: 'Iniciar Sesión o Registrarse',
+                              class: 'is-info',
+                              action: this.openLogin,
+                            }}
+                            second={{ title: 'Cancelar', class: '', action: this.closeModal }}
+                          />
+                          {event.styles && event.styles.banner_footer && (
+                            <div style={{ textAlign: 'center' }}>
+                              <img alt='image-dialog' src={event.styles.banner_footer} />
+                            </div>
+                          )}
                         </Content>
-                        <Sider trigger={null} 
-                          collapsible 
+                        <Sider
+                          trigger={null}
+                          collapsible
                           collapsed={this.state.collapsed}
-                          width={300} 
+                          width={300}
                           style={{
                             backgroundColor:
-                            event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
-                            position:'stick'
+                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                            position: 'stick',
                           }}>
-                         <div className='Chat-Event' style={{position:'fixed'}}>
-                          
-                          {this.state.collapsed ? (
-                            <>
-                            <Button type="link" onClick={this.toggleCollapsed}>
-                            <MenuUnfoldOutlined  style={{fontSize:'24px'}}/>
-                            </Button>
-                            <Menu
-                                style={{
-                                  backgroundColor:
-                                  event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
-                                }}>
-                                  <Menu.Item key="1" icon={<WechatOutlined style={{fontSize:'18px'}}/>} onClick={this.toggleCollapsed}>
+                          <div className='Chat-Event' style={{ position: 'fixed' }}>
+                            {this.state.collapsed ? (
+                              <>
+                                <Button type='link' onClick={this.toggleCollapsed}>
+                                  <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
+                                </Button>
+                                <Menu
+                                  style={{
+                                    backgroundColor:
+                                      event.styles && event.styles.toolbarDefaultBg
+                                        ? event.styles.toolbarDefaultBg
+                                        : 'white',
+                                  }}>
+                                  <Menu.Item
+                                    key='1'
+                                    icon={<WechatOutlined style={{ fontSize: '18px' }} />}
+                                    onClick={this.toggleCollapsed}>
                                     Option 1
-                                  </Menu.Item>                       
-                                  <Menu.Item key="2" icon={<TeamOutlined style={{fontSize:'18px'}}/>} onClick={this.toggleCollapsed}>
+                                  </Menu.Item>
+                                  <Menu.Item
+                                    key='2'
+                                    icon={<TeamOutlined style={{ fontSize: '18px' }} />}
+                                    onClick={this.toggleCollapsed}>
                                     Option 1
                                   </Menu.Item>
                                 </Menu>
-                            </>
+                              </>
                             ) : (
                               <>
-                              <Button type="link" onClick={this.toggleCollapsed}>
-                                <MenuUnfoldOutlined  style={{fontSize:'24px'}}/>
-                              </Button>
-                              <div>
-                                <Tabs centered 
-                                  style={{marginLeft:'9%', width:'85%'}}>
-                                  <TabPane  tab={ <span> <WechatOutlined /> Chat </span>} key="1">
-                                    Content of Tab Pane 1
-                                  </TabPane>
-                                  <TabPane tab={ <span> <TeamOutlined />conectados </span> } key="2">
-                                    Content of Tab Pane 2
-                                  </TabPane>
-                                </Tabs>
-                              </div>
+                                <Button type='link' onClick={this.toggleCollapsed}>
+                                  <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
+                                </Button>
+                                <div>
+                                  <Tabs centered style={{ marginLeft: '9%', width: '85%' }}>
+                                    <TabPane
+                                      tab={
+                                        <span>
+                                          {' '}
+                                          <WechatOutlined /> Chat{' '}
+                                        </span>
+                                      }
+                                      key='1'>
+                                      Content of Tab Pane 1
+                                    </TabPane>
+                                    <TabPane
+                                      tab={
+                                        <span>
+                                          {' '}
+                                          <TeamOutlined />
+                                          conectados{' '}
+                                        </span>
+                                      }
+                                      key='2'>
+                                      Content of Tab Pane 2
+                                    </TabPane>
+                                  </Tabs>
+                                </div>
                               </>
-                            )
-                            }
-                            </div>
-                            </Sider>
-                          </Layout>
-                        
-                        </Layout>
-                      </Content>
-                    </>
-                  )}`
+                            )}
+                          </div>
+                        </Sider>
+                      </Layout>
+                    </Layout>
+                  </Content>
+                </>
+              )}
+              `
             </div>
           </React.Fragment>
         )}
