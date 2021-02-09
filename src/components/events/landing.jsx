@@ -42,6 +42,7 @@ import InformativeSection from './informativeSections/informativeSection';
 import InformativeSection2 from './informativeSections/informativeSection2';
 import UserLogin from './UserLoginContainer';
 import Partners from './Partners';
+import SocialZone from '../../components/socialZone/socialZone';
 
 import {
   // BrowserView,
@@ -763,29 +764,7 @@ class Landing extends Component {
                                   <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
                                 </Button>
                                 <div>
-                                  <Tabs centered style={{ marginLeft: '9%', width: '85%' }}>
-                                    <TabPane
-                                      tab={
-                                        <span>
-                                          {' '}
-                                          <WechatOutlined /> Chat{' '}
-                                        </span>
-                                      }
-                                      key='1'>
-                                      Content of Tab Pane 1
-                                    </TabPane>
-                                    <TabPane
-                                      tab={
-                                        <span>
-                                          {' '}
-                                          <TeamOutlined />
-                                          conectados{' '}
-                                        </span>
-                                      }
-                                      key='2'>
-                                      Content of Tab Pane 2
-                                    </TabPane>
-                                  </Tabs>
+                                  <SocialZone />
                                 </div>
                               </>
                             )}

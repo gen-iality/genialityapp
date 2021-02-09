@@ -39,9 +39,6 @@ let SocialZone = function(props) {
       <TabPane tab='Chats' key='2'>
         <ChatList setCurrentChat={setCurrentChat} currentChat={currentChat} />
       </TabPane>
-      <TabPane tab='Tab 3' key='3'>
-        aaaa
-      </TabPane>
     </Tabs>
   );
 };
@@ -55,7 +52,7 @@ let ChatList = function(props) {
     'Japanese princess to wed commoner.',
     'Australian walks 100km after outback crash.',
     'Man charged over missing wedding girl.',
-    'Los Angeles battles huge wildfires.'
+    'Los Angeles battles huge wildfires.',
   ];
   return props.currentChat ? (
     <>
@@ -78,7 +75,7 @@ let ChatList = function(props) {
           actions={[
             <a key='list-loadmore-edit' onClick={() => props.setCurrentChat('axax')}>
               Chat
-            </a>
+            </a>,
           ]}>
           <Typography.Text mark>Chat</Typography.Text> {item}
         </List.Item>
@@ -122,7 +119,7 @@ let AttendeList = function(props) {
           actions={[
             <a key='list-loadmore-edit' onClick={() => props.setCurrentChat('axax')}>
               Chat
-            </a>
+            </a>,
           ]}>
           {/* <Skeleton avatar title={false} loading={item.loading} active> */}
           <List.Item.Meta
