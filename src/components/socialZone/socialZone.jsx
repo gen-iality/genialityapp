@@ -2,7 +2,7 @@
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { List, Avatar, Button, Skeleton, Typography } from 'antd';
+import { List, Avatar, Button, Skeleton, Typography, Row } from 'antd';
 import { Tabs } from 'antd';
 
 const { TabPane } = Tabs;
@@ -34,9 +34,9 @@ let SocialZone = function(props) {
   }, [event_id]);
 
   return (
-    <Tabs defaultActiveKey='1' onChange={callback}>
-      <TabPane tab='Asistentes' key='1'>
-        <AttendeList event_id={event_id} setCurrentChat={setCurrentChat} currentChat={currentChat} />
+    <Tabs defaultActiveKey='1' onChange={callback}  style={{marginLeft:'3%', width:'50%'}}>
+      <TabPane tab='Asistentes' key='1' className="asistente-list">
+        <AttendeList event_id={event_id} setCurrentChat={setCurrentChat} currentChat={currentChat}  />
       </TabPane>
       <TabPane tab='Chats' key='2'>
         <ChatList setCurrentChat={setCurrentChat} currentChat={currentChat} />
@@ -56,7 +56,6 @@ let ChatList = function(props) {
         Listado
       </a>
       <iframe
-        style={{ height: 350 }}
         title='chatevius'
         className='ChatEviusx'
         src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + props.currentChat}></iframe>

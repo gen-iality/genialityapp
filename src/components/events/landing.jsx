@@ -725,17 +725,16 @@ class Landing extends Component {
                           trigger={null}
                           collapsible
                           collapsed={this.state.collapsed}
-                          width={300}
+                          width={400}
                           style={{
                             backgroundColor:
                               event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
-                            position: 'stick',
                           }}>
-                          <div className='Chat-Event' style={{ position: 'fixed' }}>
+                          <div className='Chat-Event'>
                             {this.state.collapsed ? (
                               <>
                                 <Button type='link' onClick={this.toggleCollapsed}>
-                                  <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
+                                  <MenuUnfoldOutlined style={{ fontSize: '24px', marginLeft:'3%' }} />
                                 </Button>
                                 <Menu
                                   style={{
@@ -748,13 +747,11 @@ class Landing extends Component {
                                     key='1'
                                     icon={<WechatOutlined style={{ fontSize: '18px' }} />}
                                     onClick={this.toggleCollapsed}>
-                                    Option 1
                                   </Menu.Item>
                                   <Menu.Item
                                     key='2'
                                     icon={<TeamOutlined style={{ fontSize: '18px' }} />}
                                     onClick={this.toggleCollapsed}>
-                                    Option 1
                                   </Menu.Item>
                                 </Menu>
                               </>
@@ -763,9 +760,7 @@ class Landing extends Component {
                                 <Button type='link' onClick={this.toggleCollapsed}>
                                   <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
                                 </Button>
-                                <div  style={{marginLeft:'9%', width:'85%'}}>
                                   <SocialZone />
-                                </div>
                               </>
                             )}
                           </div>

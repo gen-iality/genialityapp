@@ -1,0 +1,24 @@
+.Chat-Event{
+  position: fixed;
+  width: 43%;
+}
+.ChatEviusx{
+  width: 100vw;
+  height: 50vh;
+}
+.asistente-list{
+ overflow-y: scroll;
+ height: 70vh;
+}
+
+.asistente-list::-webkit-scrollbar{
+    width:9px;
+}
+.asistente-list::-webkit-scrollbar-thumb {
+    background-color: rgb(73, 75, 75);
+    border-radius: 20px;
+    border: 2px solid rgb(73, 75, 75);
+}
+.asistente-list::-webkit-scrollbar-track-piece{
+    background-color: #f5f5f500;
+}
