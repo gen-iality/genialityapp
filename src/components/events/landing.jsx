@@ -721,7 +721,7 @@ class Landing extends Component {
                             </div>
                           )}
                         </Content>
-                        <Sider
+                        {/* <Sider
                           trigger={null}
                           collapsible
                           collapsed={this.state.collapsed}
@@ -769,7 +769,7 @@ class Landing extends Component {
                               </>
                             )}
                           </div>
-                        </Sider>
+                        </Sider> */}
                       </Layout>
                     </Layout>
                   </Content>
