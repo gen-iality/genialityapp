@@ -117,7 +117,7 @@ class ListEventUser extends Component {
       }
 
       // Rueda de negocio naranja
-      else if (event._id === '5f0622f01ce76d5550058c32') {
+      else if (event._id === '5f7f21217828e17d80642856') {
         let prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
         prospectos.map((prospecto) => {
           if (
@@ -137,7 +137,9 @@ class ListEventUser extends Component {
 
       // Fenalco Meetups
       else if (event._id === '5f0622f01ce76d5550058c32') {
-        matches = eventUserList.filter((asistente) => asistente.properties.tipodeparticipante === 'Comprador');
+        console.log('Fenalco Meetups: sugeridos');
+        matches = eventUserList.filter((asistente) => asistente.properties.ingresasameetupspara === 'Hacer negocios');
+        console.log('Hacer negocios', matches);
       }
     }
 
@@ -323,9 +325,9 @@ class ListEventUser extends Component {
                             xs={20}
                             sm={20}
                             md={20}
-                            lg={20}
-                            xl={18}
-                            xxl={12}
+                            lg={10}
+                            xl={10}
+                            xxl={10}
                             offset={2}>
                             <Card
                               extra={
