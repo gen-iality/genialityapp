@@ -550,7 +550,7 @@ class ListEventUser extends Component {
                     <Row justify='space-between'>
                       {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                       {pageOfItems.map((users, userIndex) => (
-                        <Col key={`user-item-${userIndex}`} xs={20} sm={20} md={20} lg={20} xl={18} xxl={10} offset={2}>
+                        <Col key={`user-item-${userIndex}`} xs={20} sm={20} md={20} lg={10} xl={10} xxl={10} offset={2}>
                           <Card
                             extra={
                               <a
@@ -569,7 +569,7 @@ class ListEventUser extends Component {
                                 ? { backgroundColor: '#6ddab5' }
                                 : { backgroundColor: event.styles.toolbarDefaultBg }
                             }
-                            style={{ width: 500, marginTop: '2%', marginBottom: '2%', textAlign: 'left' }}
+                            style={{ width: '100%', marginTop: '2%', marginBottom: '2%', textAlign: 'left' }}
                             bordered={true}>
                             <Meta
                               avatar={
