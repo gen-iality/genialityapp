@@ -13,7 +13,7 @@ import EventContent from '../events/shared/content';
 import FilterNetworking from './FilterNetworking';
 
 import * as Cookie from 'js-cookie';
-import { EventsApi, EventFieldsApi, UsersApi } from '../../helpers/request';
+import { EventsApi, EventFieldsApi } from '../../helpers/request';
 import { formatDataToString } from '../../helpers/utils';
 
 import { userRequest } from './services';
@@ -138,8 +138,60 @@ class ListEventUser extends Component {
       // Fenalco Meetups
       else if (event._id === '5f0622f01ce76d5550058c32') {
         console.log('Fenalco Meetups: sugeridos');
-        matches = eventUserList.filter((asistente) => asistente.properties.ingresasameetupspara === 'Hacer negocios');
-        console.log('Hacer negocios', matches);
+        let prospectos = eventUserList.filter(
+          (asistente) =>
+            (asistente.properties.ingresasameetupspara === 'Hacer negocios' ||
+              asistente.properties.ingresasameetupspara === 'Asitir a Charlas + Hacer negocios') &&
+            (meproperties.ingresasameetupspara === 'Hacer negocios' ||
+              meproperties.ingresasameetupspara === 'Asitir a Charlas + Hacer negocios')
+        );
+
+        if (
+          meproperties.asistecomo === 'Persona' &&
+          meproperties.seleccioneunadelassiguientesopciones === 'Voy a Vender'
+        ) {
+          matches = prospectos.filter(
+            (asistente) =>
+              asistente.properties.seleccioneunadelassiguientesopciones === 'Voy a Comprar' ||
+              asistente.properties.seleccioneunadelassiguientesopciones === 'Voy a Vender y Comprar' ||
+              asistente.properties.conquienquieroconectar === 'Proveedores'
+          );
+        } else if (
+          (meproperties.asistecomo === 'Persona' &&
+            meproperties.seleccioneunadelassiguientesopciones === 'Voy a Comprar') ||
+          meproperties.seleccioneunadelassiguientesopciones === 'Voy a Vender y Comprar'
+        ) {
+          matches = prospectos.filter(
+            (asistente) =>
+              asistente.properties.seleccioneunadelassiguientesopciones === 'Voy a Vender' ||
+              asistente.properties.seleccioneunadelassiguientesopciones === 'Voy a Vender y Comprar' ||
+              asistente.properties.conquienquieroconectar === 'Aliados' ||
+              asistente.properties.conquienquieroconectar === 'Inversionistas'
+          );
+        } else if (meproperties.asistecomo === 'Empresa' && meproperties.conquienquieroconectar === 'Proveedores') {
+          matches = prospectos.filter(
+            (asistente) =>
+              asistente.properties.seleccioneunadelassiguientesopciones === 'Voy a Vender' ||
+              asistente.properties.seleccioneunadelassiguientesopciones === 'Voy a Vender y Comprar' ||
+              asistente.properties.conquienquieroconectar === 'Aliados'
+          );
+        } else if (
+          (meproperties.asistecomo === 'Empresa' && meproperties.conquienquieroconectar === 'Aliados') ||
+          meproperties.conquienquieroconectar === 'Inversionistas' ||
+          meproperties.conquienquieroconectar === 'Consultores' ||
+          meproperties.conquienquieroconectar === 'Fenalco'
+        ) {
+          matches = prospectos.filter(
+            (asistente) =>
+              asistente.properties.seleccioneunadelassiguientesopciones === 'Voy a Comprar' ||
+              asistente.properties.conquienquieroconectar === 'Aliados' ||
+              asistente.properties.conquienquieroconectar === 'Inversionistas' ||
+              asistente.properties.conquienquieroconectar === 'Consultores'
+          );
+        } else {
+          matches = prospectos;
+        }
+        console.log('#Sugeridos', matches.length);
       }
     }
 
