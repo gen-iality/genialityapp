@@ -115,8 +115,9 @@ class ListEventUser extends Component {
           matches = eventUserList.filter((asistente) => asistente.properties.tipodeparticipante === 'Oferente');
         }
       }
+
       // Rueda de negocio naranja
-      else if (event._id === '5f7f21217828e17d80642856') {
+      else if (event._id === '5f0622f01ce76d5550058c32') {
         let prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
         prospectos.map((prospecto) => {
           if (
@@ -132,6 +133,11 @@ class ListEventUser extends Component {
             });
           }
         });
+      }
+
+      // Fenalco Meetups
+      else if (event._id === '5f0622f01ce76d5550058c32') {
+        matches = eventUserList.filter((asistente) => asistente.properties.tipodeparticipante === 'Comprador');
       }
     }
 
