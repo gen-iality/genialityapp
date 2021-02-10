@@ -48,7 +48,9 @@ class Home extends Component {
         type === 'next'
           ? await EventsApi.getPublic('?pageSize=30')
           : await EventsApi.getOldEvents(`?pageSize=${pageSize}`);
+
       const events = resp.data.filter((item) => item.organizer);
+
       this.setState({ events, loading: false, current_page: resp.meta.current_page, total: resp.meta.total });
     } catch (error) {
       if (error.response) {
@@ -141,32 +143,9 @@ class Home extends Component {
                       <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                         <EventCard
                           bordered={false}
-                          loading={loading}
                           key={event._id}
                           event={event}
                           action={{ name: 'Ver', url: `landing/${event._id}` }}
-                          right={
-                            <div className='actions'>
-                              <p className='is-size-7'>
-                                <span className='icon is-small has-text-grey'>
-                                  <i className='fas fa-share' />
-                                </span>
-                                <span>Compartir</span>
-                              </p>
-                              <p className='is-size-7'>
-                                <span className='icon is-small has-text-grey'>
-                                  <i className='fas fa-check' />
-                                </span>
-                                <span>Asistiré</span>
-                              </p>
-                              <p className='is-size-7'>
-                                <span className='icon is-small has-text-grey'>
-                                  <i className='fas fa-heart' />
-                                </span>
-                                <span>Me interesa</span>
-                              </p>
-                            </div>
-                          }
                         />
                       </Col>
                     );

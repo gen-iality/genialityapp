@@ -52,12 +52,15 @@ class EventCard extends Component {
                   />
                 )
               }
-              actions={right}>
+              actions={right}
+              bodyStyle={{}}>
               <Meta
+                style={{}}
                 description={
                   <div>
                     <span style={{ fontSize: '12px' }}>
                       <Space>
+                        <i class='fas fa-calendar-alt' />
                         <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
                         {'-'}
                         <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
