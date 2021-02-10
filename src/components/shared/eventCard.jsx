@@ -6,7 +6,7 @@ import { Badge, Card, Space } from 'antd';
 
 class EventCard extends Component {
   render() {
-    const { event, action, bordered, right, loading } = this.props;
+    const { event, action, bordered, right, loading, isHome } = this.props;
     const { Meta } = Card;
     console.log('Marlon aqui', event);
     return (
@@ -53,7 +53,7 @@ class EventCard extends Component {
                 )
               }
               actions={right}
-              bodyStyle={{}}>
+              bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}>
               <Meta
                 style={{}}
                 description={

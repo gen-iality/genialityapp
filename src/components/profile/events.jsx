@@ -69,7 +69,7 @@ class Events extends Component {
                   <br />
                   <span className='has-text-grey-dark is-size-3'>Eventos</span>
                 </h2>
-                <Row gutter={[16, 16]}>
+                <Row gutter={[16, 24]}>
                   {events.map((event, key) => {
                     return (
                       <Col xs={24} sm={12} md={12} lg={8} xl={8}>
@@ -77,7 +77,8 @@ class Events extends Component {
                           event={event}
                           key={event._id}
                           action={''}
-                          bordered={true}
+                          bordered={false}
+                          isHome={false}
                           right={[
                             <div className='edit'>
                               <Link className='button-edit has-text-grey-light' to={`/event/${event._id}`}>
