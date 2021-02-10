@@ -5,10 +5,9 @@ import RoomConfig from './config';
 import Service from './service';
 import Moment from 'moment';
 import * as Cookie from 'js-cookie';
-import { replace } from 'formik';
+import { messaging } from 'firebase';
 
 const { TabPane } = Tabs;
-
 class RoomManager extends Component {
   constructor(props) {
     super(props);
@@ -112,11 +111,16 @@ class RoomManager extends Component {
       });
 
       // Si en firebase ya esta inicializado el campo platfom y meeting_id se habilita el tab controller
-      if (configuration.platform !== null && configuration.meeting_id !== null) {
+      if (
+        configuration.platform !== null &&
+        configuration.platform !== '' &&
+        configuration.meeting_id !== null &&
+        configuration.meeting_id !== ''
+      ) {
         this.setState({ hasVideoconference: true, activeTab: 'controller' });
       }
     } else {
-      await this.handleSaveConfig();
+      await this.saveConfig();
     }
   };
 
@@ -127,7 +131,7 @@ class RoomManager extends Component {
 
   // Encargado de gestionar los eventos del controlador de la sala
   handleRoomState = (e) => {
-    this.setState({ roomStatus: e.target.value }, async () => await this.handleSaveConfig());
+    this.setState({ roomStatus: e.target.value }, async () => await this.saveConfig());
   };
 
   handleTabsController = (e, tab) => {
@@ -137,16 +141,16 @@ class RoomManager extends Component {
 
     if (tab === 'chat') {
       tabs.chat = valueTab;
-      this.setState({ chat: valueTab }, async () => await this.handleSaveConfig());
+      this.setState({ chat: valueTab }, async () => await this.saveConfig());
     } else if (tab === 'surveys') {
       tabs.surveys = valueTab;
-      this.setState({ surveys: valueTab }, async () => await this.handleSaveConfig());
+      this.setState({ surveys: valueTab }, async () => await this.saveConfig());
     } else if (tab === 'games') {
       tabs.games = valueTab;
-      this.setState({ games: valueTab }, async () => await this.handleSaveConfig());
+      this.setState({ games: valueTab }, async () => await this.saveConfig());
     } else if (tab === 'attendees') {
       tabs.attendees = valueTab;
-      this.setState({ attendees: valueTab }, async () => await this.handleSaveConfig());
+      this.setState({ attendees: valueTab }, async () => await this.saveConfig());
     }
   };
 
@@ -154,7 +158,9 @@ class RoomManager extends Component {
   handleChange = (e) => {
     if (e.target.name === 'isPublished') {
       const isPublished = e.target.value === 'true' ? true : false;
-      this.setState({ [e.target.name]: isPublished }, async () => await this.handleSaveConfig());
+      this.setState({ [e.target.name]: isPublished }, async () => await this.saveConfig());
+    } else if (e.target.name === 'platform') {
+      this.setState({ [e.target.name]: e.target.value, meeting_id: '', host_name: '', host_id: '' });
     } else if (e.target.name === 'select_host_manual') {
       const select_host_manual = e.target.value === 'true' ? true : false;
       this.setState({ [e.target.name]: select_host_manual });
@@ -182,46 +188,83 @@ class RoomManager extends Component {
     return { roomInfo, tabs };
   };
 
+  // Se usa al eliminar una sala de zoom, elimnar la informacion asociada a ella, se mantiene la configuración de la misma
+  restartData = () => {
+    const { roomStatus, chat, surveys, games, attendees, isPublished } = this.state;
+    const roomInfo = {
+      roomStatus,
+      isPublished,
+      platform: null,
+      meeting_id: null,
+      host_id: null,
+      host_name: null,
+    };
+    const tabs = { chat, surveys, games, attendees };
+
+    this.setState({
+      platform: '',
+      meeting_id: '',
+      host_id: null,
+      host_name: null,
+      hasVideoconference: false,
+    });
+
+    return { roomInfo, tabs };
+  };
+
   // Método para guarda la información de la configuración
-  handleSaveConfig = async (operation) => {
-    const { roomInfo, tabs } = this.prepareData();
-    const { event_id, activity_id } = this.props;
-    const { service, platform, meeting_id } = this.state;
+  saveConfig = async (operation) => {
+    console.log('-- Start save config --');
 
-    // Se utiliza solo cuando el usuario guarda de manera manual el id del evento en zoom o zoomExterno
-    if (platform === 'zoom' || (platform === 'zoomExterno' && operation)) {
-      const data = {
-        event_id,
-        activity_id,
-        meeting_id,
-      };
-      const response = await service.getZoomRoom(data);
-      console.log('get', response);
-      if (
-        Object.keys(response).length > 0 &&
-        typeof response.meeting_id !== 'undefined' &&
-        typeof response.zoom_host_id !== 'undefined' &&
-        typeof response.zoom_host_name !== 'undefined'
-      ) {
-        roomInfo['host_id'] = response.zoom_host_id;
-        roomInfo['host_name'] = response.zoom_host_name;
-        this.setState({ host_id: response.zoom_host_id, host_name: response.zoom_host_name });
-      } else {
-        message.error('El id de conferencia no existe');
-        return false;
+    const { event_id, activity_id, pendingChangesSave } = this.props;
+
+    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
+    if (!pendingChangesSave) {
+      const { roomInfo, tabs } = this.prepareData();
+      const { service, platform, meeting_id } = this.state;
+      // Se utiliza solo cuando el usuario guarda de manera manual el id del evento en zoom o zoomExterno
+      if (platform === 'zoom' || (platform === 'zoomExterno' && operation)) {
+        const data = {
+          event_id,
+          activity_id,
+          meeting_id,
+        };
+        const response = await service.getZoomRoom(data);
+        console.log('get', response);
+        if (
+          Object.keys(response).length > 0 &&
+          typeof response.meeting_id !== 'undefined' &&
+          typeof response.zoom_host_id !== 'undefined' &&
+          typeof response.zoom_host_name !== 'undefined'
+        ) {
+          roomInfo['host_id'] = response.zoom_host_id;
+          roomInfo['host_name'] = response.zoom_host_name;
+          this.setState({ host_id: response.zoom_host_id, host_name: response.zoom_host_name });
+        } else {
+          message.error('El id de conferencia no existe');
+          return false;
+        }
       }
-    }
-    const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
 
-    if (result) Message.success(result.message);
+      //Validacion del campo plataforma y meeting_id antes de guardar en firebase
+      if (platform !== null && platform !== '' && meeting_id !== null && meeting_id !== '') {
+        const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
 
-    if (result.state && result.state === 'updated' && roomInfo.meeting_id !== null && roomInfo.platform !== null) {
-      this.setState({ hasVideoconference: true });
+        if (result) Message.success(result.message);
+
+        if (result.state && result.state === 'updated' && roomInfo.meeting_id !== null && roomInfo.platform !== null) {
+          this.setState({ hasVideoconference: true });
+        }
+      } else {
+        message.warning('Seleccione una plataforma e ingrese el id de la videoconferencia');
+      }
+    } else {
+      message.warning('Cambios pendientes por guardar en la fecha y hora de la actividad');
     }
   };
 
   // Create Room Zoom
-  createZoomRomm = async () => {
+  createZoomRoom = async () => {
     this.validateForCreateZoomRoom();
     const evius_token = Cookie.get('evius_token');
     const { activity_id, activity_name, event_id, date_start_zoom, date_end_zoom } = this.props;
@@ -255,18 +298,20 @@ class RoomManager extends Component {
           host_id: zoom_host_id,
           host_name: zoom_host_name,
         },
-        async () => await this.handleSaveConfig()
+        async () => await this.saveConfig()
       );
     } else {
       message.warning('Hubo un problema, espere unos segundos y vuelva a intentarlo');
     }
   };
 
+  // Se ejecuta cuando se solicita la creación de una trasmisión de manera automática
   validateForCreateZoomRoom = () => {
-    // if (this.props.date_activity === '' || this.props.date_activity === 'Invalid date') {
-    //   Message.error('La actividad no tiene una fecha seleccionada');
-    //   return false;
-    // }
+    //Esta validacion aplcia para actividades creadas antes de el backend devolviera los campos date_start_zoom y date_end_zoom
+    if (typeof this.props.date_start_zoom === 'undefined' || typeof this.props.date_end_zoom === 'undefined') {
+      Message.error('Guarde primero la actividad antes de continuar');
+      return false;
+    }
     if (!Moment(this.props.date_start_zoom).isValid()) {
       Message.error('La fecha de inicio no es valida');
       return false;
@@ -275,6 +320,19 @@ class RoomManager extends Component {
       Message.error('La fecha de finalización no es valida');
       return false;
     }
+  };
+
+  //Eliminar trasmisión de zoom
+  deleteZoomRoom = () => {
+    const { service, meeting_id, platform } = this.state;
+    const { event_id, activity_id } = this.props;
+    if (platform === 'zoom' || platform === 'zoomExterno') {
+      const updatedData = service.deleteZoomRoom(event_id, meeting_id);
+      console.log('before delete', updatedData);
+    }
+    const response = this.restartData();
+    const { roomInfo, tabs } = response;
+    service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
   };
 
   render() {
@@ -316,12 +374,14 @@ class RoomManager extends Component {
                   platform={platform}
                   meeting_id={meeting_id}
                   host_name={host_name}
-                  handleSaveConfig={this.handleSaveConfig}
+                  handleClick={this.saveConfig}
                   isPublished={isPublished}
-                  createZoomRomm={this.createZoomRomm}
+                  createZoomRoom={this.createZoomRoom}
                   select_host_manual={select_host_manual}
                   host_list={host_list}
                   host_id={host_id}
+                  hasVideoconference={hasVideoconference}
+                  deleteZoomRoom={this.deleteZoomRoom}
                 />
               )}
             </TabPane>

@@ -7,13 +7,15 @@ export default function RoomConfig(props) {
     platform,
     handleChange,
     host_name,
-    handleSaveConfig,
+    handleClick,
     meeting_id,
     isPublished,
-    createZoomRomm,
+    createZoomRoom,
     select_host_manual,
     host_list,
     host_id,
+    hasVideoconference,
+    deleteZoomRoom,
   } = props;
 
   useEffect(() => {
@@ -82,7 +84,7 @@ export default function RoomConfig(props) {
             <label className='label'>Seleccione un host</label>
             <div className='select is-primary'>
               <select defaultValue={false} value={host_id} name='host_id' onChange={handleChange}>
-                <option value={null}>Seleccione</option>
+                <option value=''>Seleccione</option>
                 {host_list.length > 0 &&
                   host_list.map((host) => (
                     <option key={host.host_id} value={host.host_id}>
@@ -115,18 +117,28 @@ export default function RoomConfig(props) {
       )}
 
       <Row>
-        {requiresCreateRoom && (
+        {!hasVideoconference ? (
+          <>
+            {requiresCreateRoom && (
+              <Col span={16}>
+                <button onClick={createZoomRoom} className='button is-primary'>
+                  Crear transmisión
+                </button>
+              </Col>
+            )}
+            <Col span={8}>
+              <button onClick={() => handleClick(true)} className='button is-primary'>
+                Guardar
+              </button>
+            </Col>
+          </>
+        ) : (
           <Col span={16}>
-            <button onClick={createZoomRomm} className='button is-primary'>
-              Crear transmisión
+            <button onClick={deleteZoomRoom} className='button is-danger'>
+              Eliminar transmisión
             </button>
           </Col>
         )}
-        <Col span={8}>
-          <button onClick={() => handleSaveConfig(true)} className='button is-primary'>
-            Guardar
-          </button>
-        </Col>
       </Row>
     </Card>
   );

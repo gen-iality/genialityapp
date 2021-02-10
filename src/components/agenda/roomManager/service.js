@@ -129,6 +129,19 @@ class Service {
       }
     });
   };
+
+  deleteZoomRoom = (event_id, meeting_id) => {
+    const url = `https://apimeetings.evius.co:6490/deleteroom?meeting_id=${meeting_id}&event_id=${event_id}`;
+
+    return new Promise((resolve, reject) => {
+      try {
+        console.log('delete zoom room');
+        fetch(url, { method: 'DELETE' }).then((response) => resolve(response));
+      } catch (err) {
+        console.error('Error: ' + err);
+      }
+    });
+  };
 }
 
 export default Service;

@@ -82,11 +82,8 @@ class AgendaEdit extends Component {
       vimeo_id: '',
       name_host: '',
 
-      //administracion tabs de video conferencia en Vimeo
-      chat: true,
-      surveys: false,
-      games: false,
-      attendees: false,
+      //Estado para detectar cambios en la fecha/hora de la actividad sin guardar
+      pendingChangesSave: false,
 
       // Fechas de la actividad con formato para la creacion de sala en zoom
       date_start_zoom: null,
@@ -228,7 +225,7 @@ class AgendaEdit extends Component {
   };
   //FN para cambio en campo de fecha
   handleChangeDate = (value, name) => {
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, pendingChangesSave: true });
   };
   //Cada select tiene su propia función para evitar errores y asegurar la información correcta
   selectType = (value) => {
@@ -334,6 +331,9 @@ class AgendaEdit extends Component {
             date_end_zoom: agenda.date_end_zoom,
           });
         }
+
+        //Se cambia el estado a pendingChangesSave encargado de detectar cambios pendientes en la fecha/hora sin guardar
+        this.setState({ pendingChangesSave: false });
 
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
@@ -973,6 +973,7 @@ class AgendaEdit extends Component {
             date_start_zoom={date_start_zoom}
             date_end_zoom={date_end_zoom}
             date_activity={this.state.date}
+            pendingChangesSave={this.state.pendingChangesSave}
           />
         </TabPane>
       </Tabs>
