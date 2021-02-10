@@ -514,6 +514,32 @@ class ListEventUser extends Component {
                       </Col>
                     </>
                   )}
+
+                  {/*Fenalco Meetups*/}
+                  {event._id === '5f0622f01ce76d5550058c32' && (
+                    <>
+                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                          <FilterNetworking
+                            id='filterSector'
+                            properties={this.props.event.user_properties || []}
+                            filterProperty={'asistecomo'}
+                            handleSelect={this.handleSelectFilter}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                        <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                          <FilterNetworking
+                            id='filterSector'
+                            properties={this.props.event.user_properties || []}
+                            filterProperty={'sector'}
+                            handleSelect={this.handleSelectFilter}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </>
+                  )}
                 </Row>
               </Form>
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
