@@ -6,9 +6,8 @@ import { Badge, Card, Space } from 'antd';
 
 class EventCard extends Component {
   render() {
-    const { event, action, bordered, right, loading, isHome } = this.props;
+    const { event, action, bordered, right, loading } = this.props;
     const { Meta } = Card;
-    console.log('Marlon aqui', event);
     return (
       <div>
         <Badge.Ribbon

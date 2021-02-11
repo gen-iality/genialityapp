@@ -146,7 +146,6 @@ class Home extends Component {
                           key={event._id}
                           event={event}
                           action={{ name: 'Ver', url: `landing/${event._id}` }}
-                          isHome={true}
                         />
                       </Col>
                     );
