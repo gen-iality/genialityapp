@@ -223,7 +223,6 @@ class RoomManager extends Component {
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
-    console.log('roominfo', roomInfo);
 
     try {
       const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
@@ -256,7 +255,6 @@ class RoomManager extends Component {
           meeting_id,
         };
         const response = await service.getZoomRoom(data);
-        console.log('get', response);
         if (
           Object.keys(response).length > 0 &&
           typeof response.meeting_id !== 'undefined' &&
@@ -305,14 +303,13 @@ class RoomManager extends Component {
       [host_field]: host_value,
     };
     const response = await this.state.service.setZoomRoom(evius_token, body);
-    console.log('set response:', response);
+
     if (
       Object.keys(response).length > 0 &&
       typeof response.meeting_id !== 'undefined' &&
       typeof response.zoom_host_id !== 'undefined' &&
       typeof response.zoom_host_name !== 'undefined'
     ) {
-      console.log('Request Success!!');
       const { meeting_id, zoom_host_id, zoom_host_name } = response;
       this.setState(
         {
