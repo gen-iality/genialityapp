@@ -5,7 +5,6 @@ import RoomConfig from './config';
 import Service from './service';
 import Moment from 'moment';
 import * as Cookie from 'js-cookie';
-import { messaging } from 'firebase';
 
 const { TabPane } = Tabs;
 class RoomManager extends Component {
@@ -76,14 +75,27 @@ class RoomManager extends Component {
 
     this.setState({ loading: true });
 
-    await this.validationRoom();
+    // Si valida si existe informacion en Firebase del espacio virtual
+    const validation = await this.validationRoom();
+
+    // Si no existe información del espacio virtual en firebase se procede inicializa el documento
+    if (!validation) {
+      await this.saveConfig();
+    }
 
     this.setState({ loading: false });
   };
 
   componentDidUpdate = async (prevProps) => {
+    // Se escucha el cambio de activity_id esto sucede cuando se crea una actividad nueva
     if (prevProps.activity_id !== this.props.activity_id) {
-      await this.validationRoom();
+      // Si valida si existe informacion en Firebase del espacio virtual
+      const validation = await this.validationRoom();
+
+      // Si no existe información del espacio virtual en firebase se procede inicializa el documento
+      if (!validation) {
+        await this.saveConfig();
+      }
     }
   };
 
@@ -119,8 +131,9 @@ class RoomManager extends Component {
       ) {
         this.setState({ hasVideoconference: true, activeTab: 'controller' });
       }
+      return true;
     } else {
-      await this.saveConfig();
+      return false;
     }
   };
 
@@ -129,11 +142,13 @@ class RoomManager extends Component {
     this.setState({ activeTab: tab });
   };
 
-  // Encargado de gestionar los eventos del controlador de la sala
+  // Encargado de gestionar los estados de la videoConferencia
+  // Estados: open_meeting_room, closed_meeting_room, ended_meeting_room
   handleRoomState = (e) => {
     this.setState({ roomStatus: e.target.value }, async () => await this.saveConfig());
   };
 
+  // Encargado de gestionar los tabs de la video conferencia
   handleTabsController = (e, tab) => {
     const valueTab = e.target.value === 'true' ? true : false;
     const { chat, surveys, games, attendees } = this.state;
@@ -159,8 +174,6 @@ class RoomManager extends Component {
     if (e.target.name === 'isPublished') {
       const isPublished = e.target.value === 'true' ? true : false;
       this.setState({ [e.target.name]: isPublished }, async () => await this.saveConfig());
-    } else if (e.target.name === 'platform') {
-      this.setState({ [e.target.name]: e.target.value, meeting_id: '', host_name: '', host_id: '' });
     } else if (e.target.name === 'select_host_manual') {
       const select_host_manual = e.target.value === 'true' ? true : false;
       this.setState({ [e.target.name]: select_host_manual });
@@ -213,17 +226,38 @@ class RoomManager extends Component {
   };
 
   // Método para guarda la información de la configuración
-  saveConfig = async (operation) => {
-    console.log('-- Start save config --');
+  saveConfig = async () => {
+    const { event_id, activity_id } = this.props;
 
+    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
+    const { roomInfo, tabs } = this.prepareData();
+    const { service } = this.state;
+
+    const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
+
+    if (result) Message.success(result.message);
+
+    if (result.state && result.state === 'updated' && roomInfo.meeting_id !== null && roomInfo.platform !== null) {
+      this.setState({ hasVideoconference: true });
+    }
+  };
+
+  //
+  handleClickSaveConfig = async () => {
     const { event_id, activity_id, pendingChangesSave } = this.props;
 
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     if (!pendingChangesSave) {
-      const { roomInfo, tabs } = this.prepareData();
       const { service, platform, meeting_id } = this.state;
+
+      // Validación de los campos requeridos
+      if (platform === '' || platform === null || meeting_id === '' || meeting_id === null) {
+        message.warning('Seleccione una plataforma e ingrese el id de la videoconferencia');
+        return false;
+      }
+
       // Se utiliza solo cuando el usuario guarda de manera manual el id del evento en zoom o zoomExterno
-      if (platform === 'zoom' || (platform === 'zoomExterno' && operation)) {
+      if (platform === 'zoom' || platform === 'zoomExterno') {
         const data = {
           event_id,
           activity_id,
@@ -237,27 +271,15 @@ class RoomManager extends Component {
           typeof response.zoom_host_id !== 'undefined' &&
           typeof response.zoom_host_name !== 'undefined'
         ) {
-          roomInfo['host_id'] = response.zoom_host_id;
-          roomInfo['host_name'] = response.zoom_host_name;
           this.setState({ host_id: response.zoom_host_id, host_name: response.zoom_host_name });
         } else {
-          message.error('El id de conferencia no existe');
+          message.error('El id de la videoconferencia NO es valido');
           return false;
         }
       }
 
-      //Validacion del campo plataforma y meeting_id antes de guardar en firebase
-      if (platform !== null && platform !== '' && meeting_id !== null && meeting_id !== '') {
-        const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
-
-        if (result) Message.success(result.message);
-
-        if (result.state && result.state === 'updated' && roomInfo.meeting_id !== null && roomInfo.platform !== null) {
-          this.setState({ hasVideoconference: true });
-        }
-      } else {
-        message.warning('Seleccione una plataforma e ingrese el id de la videoconferencia');
-      }
+      //Si las validaciones  son aprobadas  se procede a salvar en firebase
+      await this.saveConfig();
     } else {
       message.warning('Cambios pendientes por guardar en la fecha y hora de la actividad');
     }
@@ -307,6 +329,13 @@ class RoomManager extends Component {
 
   // Se ejecuta cuando se solicita la creación de una trasmisión de manera automática
   validateForCreateZoomRoom = () => {
+    const { event_id, activity_id, pendingChangesSave } = this.props;
+
+    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
+    if (pendingChangesSave) {
+      message.warning('Cambios pendientes por guardar en la fecha y hora de la actividad');
+      return false;
+    }
     //Esta validacion aplcia para actividades creadas antes de el backend devolviera los campos date_start_zoom y date_end_zoom
     if (typeof this.props.date_start_zoom === 'undefined' || typeof this.props.date_end_zoom === 'undefined') {
       Message.error('Guarde primero la actividad antes de continuar');
@@ -370,17 +399,16 @@ class RoomManager extends Component {
                 <Spin />
               ) : (
                 <RoomConfig
-                  handleChange={this.handleChange}
-                  platform={platform}
-                  meeting_id={meeting_id}
-                  host_name={host_name}
-                  handleClick={this.saveConfig}
-                  isPublished={isPublished}
-                  createZoomRoom={this.createZoomRoom}
-                  select_host_manual={select_host_manual}
-                  host_list={host_list}
                   host_id={host_id}
+                  host_name={host_name}
+                  host_list={host_list}
+                  meeting_id={meeting_id}
+                  platform={platform}
+                  select_host_manual={select_host_manual}
                   hasVideoconference={hasVideoconference}
+                  handleChange={this.handleChange}
+                  handleClick={this.handleClickSaveConfig}
+                  createZoomRoom={this.createZoomRoom}
                   deleteZoomRoom={this.deleteZoomRoom}
                 />
               )}
@@ -392,13 +420,15 @@ class RoomManager extends Component {
                 ) : (
                   <RoomController
                     platform={platform}
-                    handleRoomState={this.handleRoomState}
-                    handleTabsController={this.handleTabsController}
                     roomStatus={roomStatus}
+                    isPublished={isPublished}
+                    attendees={attendees}
                     chat={chat}
                     surveys={surveys}
                     games={games}
-                    attendees={attendees}
+                    handleChange={this.handleChange}
+                    handleRoomState={this.handleRoomState}
+                    handleTabsController={this.handleTabsController}
                   />
                 )}
               </TabPane>

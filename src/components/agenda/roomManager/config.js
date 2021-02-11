@@ -26,18 +26,6 @@ export default function RoomConfig(props) {
     <Card>
       <Row style={{ marginBottom: 24 }}>
         <Col span={24}>
-          <label className='label'>Publicar Actividad</label>
-          <div className='select is-primary'>
-            <select defaultValue={isPublished} value={isPublished} name='isPublished' onChange={handleChange}>
-              <option value={true}>Si</option>
-              <option value={false}>No</option>
-            </select>
-          </div>
-        </Col>
-      </Row>
-
-      <Row style={{ marginBottom: 24 }}>
-        <Col span={24}>
           <label className='label'>Plataforma Streaming del evento</label>
           <div className='select is-primary'>
             <select defaultValue={platform} value={platform} name='platform' onChange={handleChange}>
