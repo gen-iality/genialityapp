@@ -97,7 +97,15 @@ class Service {
           body: JSON.stringify(data),
           method: 'POST',
         })
-          .then(async (response) => await response.json())
+          .then(async (response) => {
+            console.log('response', response);
+            if (response.status === 400) {
+              console.log('status 400', response.status);
+              resolve({ message: 'No está disponible el host para la fecha/hora indicada', state: 'error' });
+            } else {
+              return await response.json();
+            }
+          })
           .then((data) => {
             resolve(data);
           });

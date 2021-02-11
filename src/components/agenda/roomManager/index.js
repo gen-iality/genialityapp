@@ -203,26 +203,17 @@ class RoomManager extends Component {
 
   // Se usa al eliminar una sala de zoom, elimnar la informacion asociada a ella, se mantiene la configuración de la misma
   restartData = () => {
-    const { roomStatus, chat, surveys, games, attendees, isPublished } = this.state;
-    const roomInfo = {
-      roomStatus,
-      isPublished,
-      platform: null,
-      meeting_id: null,
-      host_id: null,
-      host_name: null,
-    };
-    const tabs = { chat, surveys, games, attendees };
-
-    this.setState({
-      platform: '',
-      meeting_id: '',
-      host_id: null,
-      host_name: null,
-      hasVideoconference: false,
-    });
-
-    return { roomInfo, tabs };
+    this.setState(
+      {
+        platform: '',
+        meeting_id: '',
+        host_id: null,
+        host_name: null,
+        hasVideoconference: false,
+        roomStatus: '',
+      },
+      async () => await this.saveConfig()
+    );
   };
 
   // Método para guarda la información de la configuración
@@ -232,13 +223,14 @@ class RoomManager extends Component {
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
+    console.log('roominfo', roomInfo);
 
-    const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
-
-    if (result) Message.success(result.message);
-
-    if (result.state && result.state === 'updated' && roomInfo.meeting_id !== null && roomInfo.platform !== null) {
-      this.setState({ hasVideoconference: true });
+    try {
+      const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
+      if (result) Message.success(result.message);
+      return result;
+    } catch (err) {
+      Message.error('Error', err);
     }
   };
 
@@ -279,7 +271,11 @@ class RoomManager extends Component {
       }
 
       //Si las validaciones  son aprobadas  se procede a salvar en firebase
-      await this.saveConfig();
+      const result = await this.saveConfig();
+
+      if (result.state === 'created' || result.state === 'updated') {
+        this.setState({ hasVideoconference: true });
+      }
     } else {
       message.warning('Cambios pendientes por guardar en la fecha y hora de la actividad');
     }
@@ -291,6 +287,10 @@ class RoomManager extends Component {
     const evius_token = Cookie.get('evius_token');
     const { activity_id, activity_name, event_id, date_start_zoom, date_end_zoom } = this.props;
     const { select_host_manual, host_id, host_ids } = this.state;
+
+    // Se valida si es el host se selecciona de manera manual o automáticamente
+    // Si la seleccion del host es manual se envia el campo host_id con el id del host tipo string
+    // Si la seleccion del host es automática se envia el campo host_ids con un array de strings con los ids de los hosts
     const host_field = select_host_manual ? 'host_id' : 'host_ids';
     const host_value = select_host_manual ? host_id : host_ids;
 
@@ -319,17 +319,18 @@ class RoomManager extends Component {
           meeting_id,
           host_id: zoom_host_id,
           host_name: zoom_host_name,
+          hasVideoconference: true,
         },
         async () => await this.saveConfig()
       );
     } else {
-      message.warning('Hubo un problema, espere unos segundos y vuelva a intentarlo');
+      Message.warning(response.message);
     }
   };
 
   // Se ejecuta cuando se solicita la creación de una trasmisión de manera automática
   validateForCreateZoomRoom = () => {
-    const { event_id, activity_id, pendingChangesSave } = this.props;
+    const { pendingChangesSave } = this.props;
 
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     if (pendingChangesSave) {
@@ -352,16 +353,19 @@ class RoomManager extends Component {
   };
 
   //Eliminar trasmisión de zoom
-  deleteZoomRoom = () => {
+  deleteZoomRoom = async () => {
     const { service, meeting_id, platform } = this.state;
-    const { event_id, activity_id } = this.props;
+    const { event_id } = this.props;
+
+    // Si es una sala de zoom se elimina de la agenda de la api zoom
     if (platform === 'zoom' || platform === 'zoomExterno') {
-      const updatedData = service.deleteZoomRoom(event_id, meeting_id);
-      console.log('before delete', updatedData);
+      const updatedData = await service.deleteZoomRoom(event_id, meeting_id);
+      if (updatedData.status === 200) {
+        message.success('Transmisión de Zoom eliminada!');
+      }
     }
-    const response = this.restartData();
-    const { roomInfo, tabs } = response;
-    service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
+
+    this.restartData();
   };
 
   render() {
@@ -399,6 +403,7 @@ class RoomManager extends Component {
                 <Spin />
               ) : (
                 <RoomConfig
+                  isPublished={isPublished}
                   host_id={host_id}
                   host_name={host_name}
                   host_list={host_list}
@@ -421,12 +426,10 @@ class RoomManager extends Component {
                   <RoomController
                     platform={platform}
                     roomStatus={roomStatus}
-                    isPublished={isPublished}
                     attendees={attendees}
                     chat={chat}
                     surveys={surveys}
                     games={games}
-                    handleChange={this.handleChange}
                     handleRoomState={this.handleRoomState}
                     handleTabsController={this.handleTabsController}
                   />

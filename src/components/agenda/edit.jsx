@@ -168,7 +168,7 @@ class AgendaEdit extends Component {
 
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
-      console.log('info al cargar', info);
+
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
