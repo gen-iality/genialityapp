@@ -9,8 +9,14 @@ class EventCard extends Component {
     const { event, action, bordered, right, loading } = this.props;
     const { Meta } = Card;
     return (
-      <div>
+      <div className='animate__animated animate__fadeIn'>
         <Badge.Ribbon
+          style={{
+            maxWidth: '200px',
+            height: 'auto',
+            overflowWrap: 'break-word',
+            whiteSpace: 'normal',
+          }}
           text={
             <span style={{ fontSize: '12px' }}>
               <div>
@@ -31,6 +37,7 @@ class EventCard extends Component {
               cover={
                 event.picture ? (
                   <img
+                    className='animate__animated animate__fadeIn animate__slower'
                     loading='lazy'
                     style={{ objectFit: 'cover', height: 180 }}
                     src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
@@ -38,6 +45,7 @@ class EventCard extends Component {
                   />
                 ) : (
                   <img
+                    className='animate__animated animate__fadeIn animate__slower'
                     loading='lazy'
                     style={{ objectFit: 'cover', height: 180 }}
                     src={
