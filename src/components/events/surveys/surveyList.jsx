@@ -11,21 +11,21 @@ const headStyle = {
 
 //Componente que renderiza el listado de encuestas publicadas para la actividad
 
-const SurveyList = ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
+const SurveyList = ({ jsonData, showSurvey, currentUser, surveyLabel }) => {
   const [surveyList, setSurveyList] = useState([]);
-  //const [ isASpeaker, setIsASpeaker ] = useState( false );
 
   useEffect(() => {
+    console.log('props surveylist', { jsonData, showSurvey, currentUser, surveyLabel });
     let surveyList = jsonData;
     //Los usuarios anónimos solo ven las encuestas que permiten respuestas anónimas
-    if (!usuarioRegistrado) {
+    if (!currentUser) {
       surveyList = jsonData.filter((item) => {
         return item.allow_anonymous_answers !== 'false';
       });
     }
 
     setSurveyList(surveyList);
-  }, [jsonData, usuarioRegistrado]);
+  }, [jsonData, currentUser]);
 
   // useEffect( () => {
   //   let isASpeaker = false

@@ -40,8 +40,7 @@ class SurveyForm extends Component {
     super(props);
     this.state = {
       selectedSurvey: {},
-      surveysData: undefined,
-      currentUser: null,
+      surveysData: [],
       loading: true,
       surveyVisible: false,
       availableSurveysBar: props.availableSurveysBar || false,
@@ -60,6 +59,13 @@ class SurveyForm extends Component {
       counterQuestions: 0,
       counterOkAnswers: 0,
       scoreMinimumForWin: 10,
+
+      //Estados para el listado de encuestas
+
+      // luego de cargar el componente este estado permanece escuchando todas las encuestas del evento
+      eventSurveys: [], // Todas las encuestas de un evento, este estado va a estar escuchando
+      anonymousSurveys: [], // Solo encuestas que permiten usuarios anónimos
+      publishedSurveys: [], // Encuestas relacionadas con la actividad + globales para renderizar el listado de encuestas en componente de videoconferencia
     };
   }
 
@@ -79,16 +85,26 @@ class SurveyForm extends Component {
   };
 
   async componentDidMount() {
-    let { event, currentUser } = this.props;
+    let { event } = this.props;
+
+    await this.listenSurveysData();
+    // Verifica si el usuario esta inscrito en el evento
+    // REVIEW Se esta pasando por props pero no se identifica si se esta validando su uso
+    // Detiene el hilo de ejecucion
+
     let eventUser = await this.getCurrentEvenUser(event._id);
 
-    this.setState({ currentUser: currentUser, eventUser: eventUser }, this.listenSurveysData);
+    this.setState({ eventUser: eventUser });
     this.userVote();
     this.getItemsMenu();
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    this.listenSurveysData(prevProps);
+    if (prevState.eventSurveys !== this.state.eventSurveys) {
+      console.log('hay un cambio en eventos', this.state.eventSurveys);
+    }
+
+    //this.listenSurveysData(prevProps);
     if (this.props.usuarioRegistrado !== prevProps.usuarioRegistrado) {
       this.setState({ usuarioRegistrado: this.props.usuarioRegistrado });
     }
@@ -106,73 +122,117 @@ class SurveyForm extends Component {
     }
   }
 
+  listenSurveysData = async (prevProps) => {
+    const { event, activity } = this.props;
+    //if (!prevProps || event !== prevProps.event || activity !== prevProps.activity) {
+    //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
+    let $query = firestore.collection('surveys');
+
+    //$query = $query.where('isPublished', '==', 'true');
+
+    //Le agregamos el filtro por evento
+    if (event && event._id) {
+      $query = $query.where('eventId', '==', event._id);
+    }
+
+    // Almacena el Snapshot de todas las encuestas del evento
+    const eventSurveys = [];
+
+    $query.onSnapshot(async (surveySnapShot) => {
+      if (surveySnapShot.size === 0) {
+        this.setState({ selectedSurvey: {}, surveyVisible: false, surveysData: [] });
+        return;
+      }
+
+      surveySnapShot.forEach(function(doc) {
+        eventSurveys.push({ ...doc.data(), _id: doc.id });
+        //console.log('snapshot', doc.data());
+      });
+      this.setState({ eventSurveys: eventSurveys });
+    });
+    //}
+  };
+
+  surveyRouter = () => {
+    const { eventSurveys } = this.state;
+
+    // Consultamos las encuestas que permiten usuarios anónimos
+    const anonymousSurveys = eventSurveys.filter((item) => item.allow_anonymous_answers !== 'false');
+    this.setState({ anonymousSurveys });
+  };
+
   /**
    * Desde firebase monitorea si hubo algún cambio y consulta la nueva
    * información desde la base de datos principal
    */
 
-  listenSurveysData = async (prevProps) => {
-    const { event, activity } = this.props;
-    if (!prevProps || event !== prevProps.event || activity !== prevProps.activity) {
-      //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
-      let $query = firestore.collection('surveys');
-      $query = $query.where('isPublished', '==', 'true');
+  // listenSurveysData = async (prevProps) => {
+  //   const { event, activity } = this.props;
+  //   if (!prevProps || event !== prevProps.event || activity !== prevProps.activity) {
+  //     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
+  //     let $query = firestore.collection('surveys');
 
-      //Le agregamos el filtro por evento
-      if (event && event._id) {
-        $query = $query.where('eventId', '==', event._id);
-      }
+  //     //$query = $query.where('isPublished', '==', 'true');
 
-      let publishedSurveys = [];
-      $query.onSnapshot(async (surveySnapShot) => {
-        //console.log("surveySnapShot", surveySnapShot, surveySnapShot.size);
+  //     //Le agregamos el filtro por evento
+  //     if (event && event._id) {
+  //       $query = $query.where('eventId', '==', event._id);
+  //     }
 
-        if (surveySnapShot.size === 0) {
-          this.setState({ selectedSurvey: {}, surveyVisible: false, surveysData: [] });
-          return;
-        }
-        publishedSurveys = [];
-        surveySnapShot.forEach(function(doc) {
-          publishedSurveys.push({ ...doc.data(), _id: doc.id });
-        });
+  //     // Almacena el Snapshot de todas las encuestas del evento
+  //     const publishedSurveys = [];
+  //     let anonymousSurveys = [];
 
-        //Filtramos las encuestas que  pueden ver los usuarios anónimos
-        if (!this.state.currentUser) {
-          publishedSurveys = publishedSurveys.filter((item) => item.allow_anonymous_answers !== 'false');
-        }
+  //     $query.onSnapshot(async (surveySnapShot) => {
+  //       if (surveySnapShot.size === 0) {
+  //         this.setState({ selectedSurvey: {}, surveyVisible: false, surveysData: [] });
+  //         return;
+  //       }
 
-        let publishedSurveysIds = publishedSurveys.map((item) => item._id);
+  //       surveySnapShot.forEach(function(doc) {
+  //         publishedSurveys.push({ ...doc.data(), _id: doc.id });
+  //       });
 
-        let surveysData = await SurveysApi.getAll(event._id);
-        surveysData = surveysData.data;
+  //       // Almacena las encuestas que permiten usuarios anónimos
+  //       anonymousSurveys = publishedSurveys.filter((item) => item.allow_anonymous_answers !== 'false');
 
-        //Filtramos si la encuesta esta relacionada a una actividad y estamos en esa actividad
-        if (activity && activity._id) {
-          surveysData = surveysData.filter((item) => item.activity_id === activity._id);
-        }
+  //       console.log('publishedSurveys', publishedSurveys);
+  //       const { currentUser } = this.props;
 
-        surveysData = surveysData.filter((item) => publishedSurveysIds.indexOf(item._id) !== -1);
-        this.setState({ surveyRecentlyChanged: true });
+  //       let publishedSurveysIds = publishedSurveys.map((item) => item._id);
 
-        if (surveysData && surveysData.length > 0) {
-          //playFrequency(500)
-        }
+  //       // Se consulta todas las encuestas del evento
+  //       let surveysData = await SurveysApi.getAll(event._id);
+  //       surveysData = surveysData.data;
 
-        setTimeout(() => {
-          this.setState({ surveyRecentlyChanged: false });
-        }, 3000);
+  //       //Filtramos si la encuesta esta relacionada a una actividad y estamos en esa actividad
+  //       if (activity && activity._id) {
+  //         surveysData = surveysData.filter((item) => item.activity_id === activity._id);
+  //       }
 
-        this.setState(
-          { surveysData: surveysData, surveyVisible: surveysData && surveysData.length },
-          this.seeIfUserHasVote
-        );
-      });
-    }
-  };
+  //       surveysData = surveysData.filter((item) => publishedSurveysIds.indexOf(item._id) !== -1);
+  //       this.setState({ surveyRecentlyChanged: true });
+
+  //       if (surveysData && surveysData.length > 0) {
+  //         //playFrequency(500)
+  //       }
+
+  //       setTimeout(() => {
+  //         this.setState({ surveyRecentlyChanged: false });
+  //       }, 3000);
+
+  //       this.setState(
+  //         { surveysData: surveysData, surveyVisible: surveysData && surveysData.length },
+  //         this.seeIfUserHasVote
+  //       );
+  //     });
+  //   }
+  // };
 
   // Funcion que valida si el usuario ha votado en cada una de las encuestas
   seeIfUserHasVote = async () => {
-    let { currentUser, surveysData } = this.state;
+    let { surveysData } = this.state;
+    const { currentUser } = this.props;
     const { event } = this.props;
 
     // eslint-disable-next-line no-unused-vars
@@ -233,6 +293,8 @@ class SurveyForm extends Component {
     const { event } = this.props;
     const response = await Actions.getAll(`/api/events/${event._id}`);
 
+    console.log('get items menu', response);
+
     let surveyLabel = response.itemsMenu.survey || defaultSurveyLabel;
     this.setState({ surveyLabel });
   };
@@ -256,8 +318,9 @@ class SurveyForm extends Component {
   };
 
   render() {
-    let { selectedSurvey, surveysData, currentUser, eventUser, userVote, surveyVisible, surveyLabel } = this.state;
-    const { event } = this.props;
+    let { selectedSurvey, surveysData, eventUser, userVote, surveyVisible, surveyLabel } = this.state;
+
+    const { event, currentUser } = this.props;
 
     if (selectedSurvey.hasOwnProperty('_id'))
       return (
@@ -301,14 +364,16 @@ class SurveyForm extends Component {
           </Button>
         )}
 
+        {console.log('surveyForm', this.state)}
+
         {(this.state.surveyVisible || !this.state.availableSurveysBar) && (
           <Card>
             <SurveyList
               jsonData={surveysData}
-              usuarioRegistrado={currentUser}
               eventUser={eventUser}
               showSurvey={this.toggleSurvey}
               surveyLabel={surveyLabel}
+              currentUser={currentUser}
             />
           </Card>
         )}

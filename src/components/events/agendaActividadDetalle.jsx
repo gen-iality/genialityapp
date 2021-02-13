@@ -306,16 +306,6 @@ let AgendaActividadDetalle = (props) => {
                 </Col>
               </Row>
             )}
-            {/* <Row>
-              <Col span={24}>
-                <AttendeeNotAllowedCheck
-                  event={event}
-                  currentUser={props.currentUser}
-                  usuarioRegistrado={usuarioRegistrado}
-                  currentActivity={currentActivity}
-                />
-              </Col>
-            </Row> */}
 
             <hr />
             <hr />
