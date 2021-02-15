@@ -1,5 +1,5 @@
 //external
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -7,7 +7,7 @@ import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
 import { Layout, Drawer, Button, Col, Row, Tabs, Menu } from 'antd';
-import { MenuOutlined, WechatOutlined, TeamOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { MenuOutlined, WechatOutlined, TeamOutlined, MenuUnfoldOutlined, MessageOutlined } from '@ant-design/icons';
 
 //custom
 import { Actions, EventsApi, TicketsApi, fireStoreApi, Activity, getCurrentUser } from '../../helpers/request';
@@ -52,9 +52,6 @@ import {
 } from 'react-device-detect';
 
 const { Content, Sider } = Layout;
-const { TabPane } = Tabs;
-const { SubMenu } = Menu;
-
 Moment.locale('es');
 momentLocalizer();
 
@@ -88,7 +85,9 @@ class Landing extends Component {
       color: '',
       collapsed: true,
       visible: false,
+      visibleChat: false,
       placement: 'left',
+      placementBottom:'bottom',
       headerVisible: 'true',
       namesUser: '',
       data: null,
@@ -119,6 +118,12 @@ class Landing extends Component {
     });
   };
 
+  showDrawerMobile = () =>{
+    this.setState({
+      visibleChat: true,
+    })
+  }
+
   showDrawer = () => {
     this.setState({
       visible: true,
@@ -129,12 +134,14 @@ class Landing extends Component {
   onClose = () => {
     this.setState({
       visible: false,
+      visibleChat:false
     });
   };
 
   onChange = (e) => {
     this.setState({
       placement: e.target.value,
+      placementBottom: e.target.value,
     });
   };
 
@@ -721,7 +728,31 @@ class Landing extends Component {
                             </div>
                           )}
                         </Content>
+                        {/* aqui esta el boton del chat mobile */}
+                        <div className='chat-evius_mobile'>
+                         <Button   
+                           shape='circle' 
+                           icon={<MessageOutlined />} size='large' 
+                           onClick={this.showDrawerMobile}
+                           style={this.state.visibleChat == true ? {display:'none'} : {}}
+                           >
+                        </Button>
+                        </div>
+                        <Drawer
+                          height={353}
+                          placement={this.state.placementBottom}
+                          closable={true}
+                          onClose={this.onClose}
+                          visible={this.state.visibleChat}
+                          maskClosable={true}
+                          className='drawerMobile'
+                        > 
+                          <SocialZone />
+                        </Drawer>
+                        
+                        {/* aqui empieza el chat del evento desktop */}
                         <Sider
+                          className="collapse-chatEvent"
                           trigger={null}
                           collapsible
                           collapsed={this.state.collapsed}
@@ -734,7 +765,7 @@ class Landing extends Component {
                             {this.state.collapsed ? (
                               <>
                                 <Button type='link' onClick={this.toggleCollapsed}>
-                                  <MenuUnfoldOutlined style={{ fontSize: '24px', marginLeft:'3%' }} />
+                                  <MenuUnfoldOutlined style={{ fontSize: '24px', marginLeft:'5%' }} />
                                 </Button>
                                 <Menu
                                   style={{
