@@ -272,7 +272,7 @@ class Styles extends Component {
           toolbarDefaultBg: info.styles.toolbarDefaultBg || '#FFFFFF',
           brandDark: info.styles.brandDark || '#FFFFFF',
           brandLight: info.styles.brandLight || '#FFFFFF',
-          textMenu: info.styles.textMenu || '#FFFFFF',
+          textMenu: info.styles.textMenu || '#000000',
           activeText: info.styles.activeText || '#FFFFFF',
           bgButtonsEvent: info.styles.bgButtonsEvent || '#FFFFFF',
           // bgCalendarDayEvent: info.style.bgCalendarDayEvent || "#FFFFFF",
