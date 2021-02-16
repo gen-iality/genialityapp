@@ -87,7 +87,7 @@ class Landing extends Component {
       visible: false,
       visibleChat: false,
       placement: 'left',
-      placementBottom:'bottom',
+      placementBottom: 'bottom',
       headerVisible: 'true',
       namesUser: '',
       data: null,
@@ -118,11 +118,11 @@ class Landing extends Component {
     });
   };
 
-  showDrawerMobile = () =>{
+  showDrawerMobile = () => {
     this.setState({
       visibleChat: true,
-    })
-  }
+    });
+  };
 
   showDrawer = () => {
     this.setState({
@@ -134,7 +134,7 @@ class Landing extends Component {
   onClose = () => {
     this.setState({
       visible: false,
-      visibleChat:false
+      visibleChat: false,
     });
   };
 
@@ -582,11 +582,8 @@ class Landing extends Component {
                               user={currentUser}
                               eventId={event._id}
                               showSection={this.showSection}
-<<<<<<< HEAD
-=======
                               collapsed={this.state.collapsed}
                               styleText={event.styles && event.styles.textMenu ? event.styles.textMenu : '#222222'}
->>>>>>> scrollView
                             />
                           </div>
                         </Sider>
@@ -696,11 +693,7 @@ class Landing extends Component {
                               )}
                             </div>
                           )}
-<<<<<<< HEAD
-                          <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>
-=======
                           <div id='visualizar' style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>
->>>>>>> scrollView
                             {this.state.sections[this.state.section]}
                           </div>
                           <div className={`modal ${modal ? 'is-active' : ''}`}>
@@ -739,13 +732,12 @@ class Landing extends Component {
                         </Content>
                         {/* aqui esta el boton del chat mobile */}
                         <div className='chat-evius_mobile'>
-                         <Button   
-                           shape='circle' 
-                           icon={<MessageOutlined />} size='large' 
-                           onClick={this.showDrawerMobile}
-                           style={this.state.visibleChat == true ? {display:'none'} : {}}
-                           >
-                        </Button>
+                          <Button
+                            shape='circle'
+                            icon={<MessageOutlined />}
+                            size='large'
+                            onClick={this.showDrawerMobile}
+                            style={this.state.visibleChat == true ? { display: 'none' } : {}}></Button>
                         </div>
                         <Drawer
                           height={353}
@@ -754,14 +746,13 @@ class Landing extends Component {
                           onClose={this.onClose}
                           visible={this.state.visibleChat}
                           maskClosable={true}
-                          className='drawerMobile'
-                        > 
+                          className='drawerMobile'>
                           <SocialZone />
                         </Drawer>
-                        
+
                         {/* aqui empieza el chat del evento desktop */}
                         <Sider
-                          className="collapse-chatEvent"
+                          className='collapse-chatEvent'
                           trigger={null}
                           collapsible
                           collapsed={this.state.collapsed}
@@ -774,7 +765,7 @@ class Landing extends Component {
                             {this.state.collapsed ? (
                               <>
                                 <Button type='link' onClick={this.toggleCollapsed}>
-                                  <MenuUnfoldOutlined style={{ fontSize: '24px', marginLeft:'5%' }} />
+                                  <MenuUnfoldOutlined style={{ fontSize: '24px', marginLeft: '5%' }} />
                                 </Button>
                                 <Menu
                                   style={{
@@ -786,13 +777,11 @@ class Landing extends Component {
                                   <Menu.Item
                                     key='1'
                                     icon={<WechatOutlined style={{ fontSize: '18px' }} />}
-                                    onClick={this.toggleCollapsed}>
-                                  </Menu.Item>
+                                    onClick={this.toggleCollapsed}></Menu.Item>
                                   <Menu.Item
                                     key='2'
                                     icon={<TeamOutlined style={{ fontSize: '18px' }} />}
-                                    onClick={this.toggleCollapsed}>
-                                  </Menu.Item>
+                                    onClick={this.toggleCollapsed}></Menu.Item>
                                 </Menu>
                               </>
                             ) : (
@@ -800,7 +789,7 @@ class Landing extends Component {
                                 <Button type='link' onClick={this.toggleCollapsed}>
                                   <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
                                 </Button>
-                                  <SocialZone />
+                                <SocialZone />
                               </>
                             )}
                           </div>
