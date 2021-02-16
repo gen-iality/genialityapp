@@ -3,14 +3,6 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-<<<<<<< HEAD
-import LoadingEvent from "../loaders/loadevent";
-import EventCard from "../shared/eventCard";
-import { EventsApi } from "../../helpers/request";
-import API from "../../helpers/request";
-import LogOut from "../shared/logOut";
-import ErrorServe from "../modal/serverError";
-=======
 import LoadingEvent from '../loaders/loadevent';
 import EventCard from '../shared/eventCard';
 import { EventsApi } from '../../helpers/request';
@@ -18,7 +10,6 @@ import API from '../../helpers/request';
 import LogOut from '../shared/logOut';
 import ErrorServe from '../modal/serverError';
 import { Button, Row, Col } from 'antd';
->>>>>>> scrollView
 
 Moment.locale('es');
 momentLocalizer();
@@ -119,63 +110,6 @@ class Home extends Component {
       });
   }
 
-<<<<<<< HEAD
-    render() {
-        const { timeout, typeEvent, serverError, errorData, events, loading } = this.state;
-
-        return (
-            <React.Fragment>
-                <h2 className="is-size-2 bold-text">Eventos</h2>
-                <section className="home">
-                    <div className="tabs">
-                        <ul>
-                            <li onClick={e => this.fetchEvent('next')} className={typeEvent === "next" ? "is-active" : ""}><a href="#proximos">Próximos</a></li>
-                            <li onClick={e => this.fetchEvent('prev')} className={typeEvent === "prev" ? "is-active" : ""}><a href="#pasados">Pasados</a></li>
-                        </ul>
-                    </div>
-                    <div className="dynamic-content">
-                        {
-                            loading ? <LoadingEvent /> :
-                                <div className="columns home is-multiline">
-                                    {
-                                        events.length <= 0 ? <p className="sin-evento">No hay eventos próximos</p> :
-                                            events.map((event, key) => {
-                                                return <EventCard key={event._id} event={event}
-                                                    action={{ name: 'Ver', url: `landing/${event._id}` }}
-                                                    size={'column is-one-third'}
-                                                    right={<div className="actions">
-                                                        <p className="is-size-7">
-                                                            <span className="icon is-small has-text-grey">
-                                                                <i className="fas fa-share" />
-                                                            </span>
-                                                            <span>Compartir</span>
-                                                        </p>
-                                                        <p className="is-size-7">
-                                                            <span className="icon is-small has-text-grey">
-                                                                <i className="fas fa-check" />
-                                                            </span>
-                                                            <span>Asistiré</span>
-                                                        </p>
-                                                        <p className="is-size-7">
-                                                            <span className="icon is-small has-text-grey">
-                                                                <i className="fas fa-heart" />
-                                                            </span>
-                                                            <span>Me interesa</span>
-                                                        </p>
-                                                    </div>}
-                                                />
-                                            })
-                                    }
-                                </div>
-                        }
-                    </div>
-                </section>
-                {timeout && (<LogOut />)}
-                {serverError && (<ErrorServe errorData={errorData} />)}
-            </React.Fragment>
-        );
-    }
-=======
   render() {
     const { timeout, typeEvent, serverError, errorData, events, loading, hasMore } = this.state;
     return (
@@ -243,7 +177,6 @@ class Home extends Component {
       </React.Fragment>
     );
   }
->>>>>>> scrollView
 }
 
 const mapStateToProps = (state) => ({
