@@ -107,8 +107,6 @@
     // stilos de la imagen de agenda
     .img-agenda-event{
       margin-bottom: 5px;
-      border: 1px solid;
-      border-radius: 17px;
       object-fit: cover;
       img{
         width: auto;
@@ -233,9 +231,6 @@
         }
         .img-agenda-event{
           margin-bottom: 5px;
-          width: 100%;
-          border: 1px solid;
-          border-radius: 17px;
           object-fit: cover;
           img{
             width: auto;
