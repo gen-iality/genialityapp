@@ -582,6 +582,11 @@ class Landing extends Component {
                               user={currentUser}
                               eventId={event._id}
                               showSection={this.showSection}
+<<<<<<< HEAD
+=======
+                              collapsed={this.state.collapsed}
+                              styleText={event.styles && event.styles.textMenu ? event.styles.textMenu : '#222222'}
+>>>>>>> scrollView
                             />
                           </div>
                         </Sider>
@@ -691,7 +696,11 @@ class Landing extends Component {
                               )}
                             </div>
                           )}
+<<<<<<< HEAD
                           <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>
+=======
+                          <div id='visualizar' style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>
+>>>>>>> scrollView
                             {this.state.sections[this.state.section]}
                           </div>
                           <div className={`modal ${modal ? 'is-active' : ''}`}>

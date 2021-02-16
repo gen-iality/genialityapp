@@ -3,7 +3,7 @@ import API, { EventsApi, TicketsApi } from '../../helpers/request';
 import { fieldNameEmailFirst } from '../../helpers/utils';
 import * as Cookie from 'js-cookie';
 import FormComponent from './registrationForm/form';
-import { Spin } from 'antd';
+import { Spin, Skeleton } from 'antd';
 
 class UserRegistration extends Component {
   constructor(props) {
@@ -108,7 +108,14 @@ class UserRegistration extends Component {
         //   initialValues={currentUser} eventId={eventId} extraFieldsOriginal={extraFields} conditionals={conditionals}
         // />
       );
-    return <Spin></Spin>;
+    return (
+      <Spin tip='Cargando...' size='large'>
+        <Skeleton.Input style={{ width: 600 }} active={true} size='default' />
+        <Skeleton active></Skeleton>
+        <Skeleton active></Skeleton>
+        <Skeleton.Input style={{ width: 200 }} active={true} size='default' />
+      </Spin>
+    );
   }
 }
 
