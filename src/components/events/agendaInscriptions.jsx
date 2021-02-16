@@ -244,6 +244,7 @@ class AgendaInscriptions extends Component {
                 {agendaData.map((item, llave) => (
                   <div key={llave} className='container_agenda-information'>
                     <div className='card agenda_information'>
+                      hola perros
                       <Row align='middle'>
                         <Row>
                           <span className='date-activity'>

@@ -5,7 +5,7 @@ import Moment from 'moment';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
 import { FormattedMessage, useIntl } from 'react-intl';
-
+import { TagOutlined, CaretRightFilled } from '@ant-design/icons';
 export default function AgendaActivityItem({
   item,
   Surveys,

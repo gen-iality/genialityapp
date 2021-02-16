@@ -104,25 +104,79 @@
         color: #fafafa;
       }
     }
+    // stilos de la imagen de agenda
+    .img-agenda-event{
+      margin-bottom: 5px;
+      width: 100%;
+      border: 1px solid;
+      border-radius: 17px;
+    }
+    // estilos de la descripción de agenda
+    .description-agenda{
+      margin-left: 3%;
+      margin-bottom: 1%;
+      margin-right: 3%;
+      text-align: left;
+      font-size: 18px;
+    }
+
+    //estilo de panelistas
+    .txt-agenda-Panelistas{
+      margin-left: 3%;
+    }
+
+    //estilos del los tags
+    .tag-agenda{
+      margin-top: 4%;
+    }
+
+    //estilos de los speaker
+    .Agenda-speaker{
+      font-size: 18px;
+      font-weight: 500;
+      margin-left: 3%;
+    }
+
+    .icono_play-agenda{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      cursor: pointer;
+      .anticon svg {
+        display: inline-block;
+        font-size: 43px;
+      }
+    }
     .agenda_information {
       padding: 20px;
       border: none;
       border-radius: 10px;
-      .card-header {
-        box-shadow: none;
+      .ant-card-head-title {
+        flex: initial;
+        font-weight: 500;
+        font-size: 24px;
       }
+      h4{
+        color: black;
+        font-size: larger;
+        margin-bottom: 22px;
+      }
+      // .card-header {
+      //   box-shadow: none;
+      // }
 
-      .card-header-date {
-        color: $title-agenda;
-        justify-content: start;
-        font-weight: 600;
-      }
+      // .card-header-date {
+      //   color: $title-agenda;
+      //   justify-content: start;
+      //   font-weight: 600;
+      // }
       .date-activity {
         display: block;
         margin-right: 10%;
         margin-bottom: 5%;
-        margin-left: 1%;
-        font-weight: 700;
+        margin-left: 4%;
+        font-weight: 400;
+        color: #b5b5b5;
       }
       .card-header-title {
         justify-content: start;
@@ -133,6 +187,12 @@
           margin-bottom: 0px;
         }
       }
+      // .card-header-title {
+      //   justify-content: start;
+      //   font-weight: bolder;
+      //   font: normal normal 500 23px/25px $family-sans-serif;
+      //   text-align: initial;
+      // }
 
       .container_calendar-description {
         .calendar-description {
@@ -147,6 +207,47 @@
         .category_calendar-tag {
           margin-right: 2%;
           font-size: 0.9rem;
+        }
+      }
+      @media screen and (max-width:$breakpoint-mobile) {
+        .ant-card-head-title {
+          overflow: visible;
+          font-size: 16px;
+          white-space: break-spaces;
+        }  
+        .date-activity {
+          display: block;
+          margin-right: 0%;
+          margin-left: 20%;
+          font-weight: 300;
+          color: #949494;
+          font-size: 11px;
+        }   
+        .button-Agenda{
+          width: 100%;
+        }
+        .img-agenda-event{
+          margin-bottom: 5px;
+          width: 100%;
+          border: 1px solid;
+          border-radius: 17px;
+        }
+        // estilos de la descripción de agenda
+        .description-agenda{
+          margin-left: 0;
+          margin-bottom: 0;
+          margin-right: 0;
+          font-size: 15px;
+        }
+        //estilo de panelistas
+        .txt-agenda-Panelistas{
+          margin-left: 1%;
+        }
+        //estilos de los speaker
+        .Agenda-speaker{
+          font-size: 14px;
+          font-weight: 500;
+          margin-left: 0;
         }
       }
     }
