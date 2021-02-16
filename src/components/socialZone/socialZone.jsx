@@ -2,7 +2,8 @@
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { List, Avatar, Button, Skeleton, Typography } from 'antd';
+import { List, Avatar, Button, Skeleton, Typography, Row } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 
 const { TabPane } = Tabs;
@@ -34,11 +35,11 @@ let SocialZone = function(props) {
   }, [event_id]);
 
   return (
-    <Tabs defaultActiveKey='1' onChange={callback}>
-      <TabPane tab='Asistentes' key='1'>
-        <AttendeList event_id={event_id} setCurrentChat={setCurrentChat} currentChat={currentChat} />
+    <Tabs defaultActiveKey='1' onChange={callback}  className='ChatTabs'>
+      <TabPane tab='Asistentes' key='1' className="asistente-list">
+        <AttendeList event_id={event_id} setCurrentChat={setCurrentChat} currentChat={currentChat}  />
       </TabPane>
-      <TabPane tab='Chats' key='2'>
+      <TabPane tab='Chats' key='2'  className="asistente-chat-list">
         <ChatList setCurrentChat={setCurrentChat} currentChat={currentChat} />
       </TabPane>
     </Tabs>
@@ -53,12 +54,11 @@ let ChatList = function(props) {
   return props.currentChat ? (
     <>
       <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(null)}>
-        Listado
+      <ArrowLeftOutlined /> Volver a listado
       </a>
       <iframe
-        style={{ height: 350 }}
         title='chatevius'
-        className='ChatEviusx'
+        className='ChatEvius'
         src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + props.currentChat}></iframe>
     </>
   ) : (
