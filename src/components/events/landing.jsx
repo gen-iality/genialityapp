@@ -634,6 +634,7 @@ class Landing extends Component {
                               eventId={event._id}
                               showSection={this.showSection}
                               collapsed={this.state.collapsed}
+                              styleText={event.styles && event.styles.textMenu ? event.styles.textMenu : '#222222'}
                             />
                           </div>
                         </Sider>

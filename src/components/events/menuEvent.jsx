@@ -27,6 +27,7 @@ class MenuEvent extends Component {
       logged: false,
       email: false,
       section: 'evento',
+      styleText: this.props.styleText ? this.props.styleText : 'red',
     };
     this.menuDefault = {
       evento: {
@@ -175,7 +176,8 @@ class MenuEvent extends Component {
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading, styleText } = this.state;
+
     return (
       <ScrollTo selector='#visualizar' /*Desplazamiento automatico a la seccion seleccionada */>
         <Menu
@@ -213,7 +215,7 @@ class MenuEvent extends Component {
                   /*style={{display:'grid', marginBottom:'12%', height:'63px', paddingLeft:'15px !important'}}*/
                 >
                   <IconoComponente
-                    style={{ margin: '0 auto', fontSize: '22px' }}
+                    style={{ margin: '0 auto', fontSize: '22px', Color: 'red' }}
                     // style={
                     //   this.state.eventId === '5faae7381fc1d06d3b28fca2' ||
                     //   this.state.eventId === '5f7e3564cdedb50e4c651602' ||
@@ -232,11 +234,11 @@ class MenuEvent extends Component {
                   this.state.eventId === '5fca68b7e2f869277cfa31b0' ? (
                     <span
                       className='menuEvent_section-text'
-                      style={{ color: '#FFFFFF' }}>{` ${this.state.itemsMenu[key].name}`}</span>
+                      style={{ color: styleText }}>{` ${this.state.itemsMenu[key].name}`}</span>
                   ) : (
                     <span
                       className='menuEvent_section-text'
-                      style={{ color: '#222222' }}>{` ${this.state.itemsMenu[key].name}`}</span>
+                      style={{ color: styleText }}>{` ${this.state.itemsMenu[key].name}`}</span>
                   )}
                 </Menu.Item>
               );

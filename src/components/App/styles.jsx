@@ -33,6 +33,11 @@ class Styles extends Component {
           editIsVisible: false,
         },
         {
+          title: 'Elige un color para el texto del menu:',
+          fieldColorName: 'textMenu',
+          editIsVisible: false,
+        },
+        {
           title: 'Elige un color para los botones:',
           fieldColorName: 'bgButtonsEvent',
           editIsVisible: false,

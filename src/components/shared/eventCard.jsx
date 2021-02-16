@@ -12,7 +12,7 @@ class EventCard extends Component {
       <div className='animate__animated animate__fadeIn'>
         <Badge.Ribbon
           style={{
-            maxWidth: '200px',
+            maxWidth: '250px',
             height: 'auto',
             overflowWrap: 'break-word',
             whiteSpace: 'normal',
