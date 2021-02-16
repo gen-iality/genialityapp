@@ -266,18 +266,23 @@ export default function AgendaActivityItem({
               )}
             </div>      
           </Col>
-          <Col xs={24} sm={24} md={24} lg={12} xl={16} xxl={16}>         
-              { item.description === null ? 
-              (''
-
-              ):(<> 
-                  <Row className="description-agenda">
+          <Col xs={24} sm={24} md={24} lg={12} xl={16} xxl={16}>
+          {item.description !== null && item.description !== "<p><br></p>" && (
+            <div className="description-agenda"
+            style={item.description !== null && item.description !== "<p><br></p>" ? {} : {display:'none'}}
+            >
+              {
+                <>
+                  <Row>
                     <div 
                       dangerouslySetInnerHTML={{ __html: item.description }}
                     />
                   </Row>
-                </>)               
+                </>
               }
+            </div>
+          )}
+            
               {item.hosts.length > 0 && (
                 <>
                   <Row justify="start"  className='txt-agenda-Panelistas'><h4>Panelistas:</h4></Row>

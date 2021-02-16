@@ -107,9 +107,13 @@
     // stilos de la imagen de agenda
     .img-agenda-event{
       margin-bottom: 5px;
-      width: 100%;
       border: 1px solid;
       border-radius: 17px;
+      object-fit: cover;
+      img{
+        width: auto;
+        height: 225px;
+      }
     }
     // estilos de la descripción de agenda
     .description-agenda{
@@ -232,6 +236,11 @@
           width: 100%;
           border: 1px solid;
           border-radius: 17px;
+          object-fit: cover;
+          img{
+            width: auto;
+            height: 225px;
+          }
         }
         // estilos de la descripción de agenda
         .description-agenda{
