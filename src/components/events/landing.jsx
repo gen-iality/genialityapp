@@ -7,7 +7,7 @@ import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
 import { Layout, Drawer, Button, Col, Row, Tabs, Menu } from 'antd';
-import { MenuOutlined, WechatOutlined, TeamOutlined, MenuUnfoldOutlined, MessageOutlined } from '@ant-design/icons';
+import { MenuOutlined, CommentOutlined, TeamOutlined, MenuUnfoldOutlined, MessageOutlined } from '@ant-design/icons';
 
 //custom
 import { Actions, EventsApi, TicketsApi, fireStoreApi, Activity, getCurrentUser } from '../../helpers/request';
@@ -528,7 +528,7 @@ class Landing extends Component {
       currentUser,
       loader_page,
     } = this.state;
-
+ 
     return (
       <section className='section landing' style={{ backgroundColor: this.state.color, height: '100%' }}>
         {this.state.showConfirm && (
@@ -758,29 +758,25 @@ class Landing extends Component {
                           collapsed={this.state.collapsed}
                           width={400}
                           style={{
-                            backgroundColor:
-                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                            backgroundColor: event.styles.toolbarMenuSocial ? event.style.toolbarMenuSocial : '#fff'
                           }}>
                           <div className='Chat-Event'>
                             {this.state.collapsed ? (
                               <>
+                               <div style={{marginLeft: '2%', marginBottom: '3%' }} >
                                 <Button type='link' onClick={this.toggleCollapsed}>
-                                  <MenuUnfoldOutlined style={{ fontSize: '24px', marginLeft: '5%' }} />
-                                </Button>
+                                  <MenuUnfoldOutlined style={{ fontSize: '24px'}} />
+                                </Button> 
+                               </div>
                                 <Menu
-                                  style={{
-                                    backgroundColor:
-                                      event.styles && event.styles.toolbarDefaultBg
-                                        ? event.styles.toolbarDefaultBg
-                                        : 'white',
-                                  }}>
+                                  style={{backgroundColor:event.styles.toolbarMenuSocial}}>
                                   <Menu.Item
                                     key='1'
-                                    icon={<WechatOutlined style={{ fontSize: '18px' }} />}
+                                    icon={<CommentOutlined style={{ fontSize: '24px' }} />}
                                     onClick={this.toggleCollapsed}></Menu.Item>
                                   <Menu.Item
                                     key='2'
-                                    icon={<TeamOutlined style={{ fontSize: '18px' }} />}
+                                    icon={<TeamOutlined style={{ fontSize: '24px' }} />}
                                     onClick={this.toggleCollapsed}></Menu.Item>
                                 </Menu>
                               </>
@@ -799,7 +795,6 @@ class Landing extends Component {
                   </Content>
                 </>
               )}
-              `
             </div>
           </React.Fragment>
         )}

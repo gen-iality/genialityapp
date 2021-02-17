@@ -33,6 +33,11 @@ class Styles extends Component {
           editIsVisible: false,
         },
         {
+          title: 'Elige un color para el menu del chat',
+          fieldColorName: 'toolbarMenuSocial',
+          editIsVisible: false,
+        },
+        {
           title: 'Elige un color para el texto del menu:',
           fieldColorName: 'textMenu',
           editIsVisible: false,
@@ -273,6 +278,7 @@ class Styles extends Component {
           brandDark: info.styles.brandDark || '#FFFFFF',
           brandLight: info.styles.brandLight || '#FFFFFF',
           textMenu: info.styles.textMenu || '#000000',
+          toolbarMenuSocial: info.styles.toolbarMenuSocial || '#FFFFFF',
           activeText: info.styles.activeText || '#FFFFFF',
           bgButtonsEvent: info.styles.bgButtonsEvent || '#FFFFFF',
           // bgCalendarDayEvent: info.style.bgCalendarDayEvent || "#FFFFFF",
