@@ -1,25 +1,32 @@
 //import { useParams } from 'react-router';
 import { withRouter } from 'react-router-dom';
-import { firestore } from '../../helpers/firebase';
+import { firestore, fireRealtime } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
 import { List, Avatar, Button, Skeleton, Typography } from 'antd';
 import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
+import initUserPresence from '../../containers/userPresenceInEvent';
 const { TabPane } = Tabs;
 const callback = () => {};
-
+/** Inspiración para construir el monitoreo de presencia firestore
+ * no tiene presencia pero firebase realtime si, usamos los dos entonces.
+ * https://firebase.google.com/docs/firestore/solutions/presence
+ */
 let SocialZone = function(props) {
   //let { event_id } = useParams();
   /***** STATE ****/
-  const [attendeeList, setAttendeeList] = useState([]);
+  const [attendeeList, setAttendeeList] = useState({});
+  const [attendeeListPresence, setAttendeeListPresence] = useState({});
+
   const [currentChat, setCurrentChatInner] = useState(null);
   const [availableChats, setavailableChats] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [currentTab, setcurrentTab] = useState('1');
   let userName = 'LuisXXX';
   /***********/
-
+  console.log('datafirebase nos inicamos nuevamente');
   let event_id = props.match.params.event_id;
+
   let setCurrentChat = (id) => {
     setcurrentTab('2'); //chats tab
     setCurrentChatInner(id);
@@ -46,6 +53,28 @@ let SocialZone = function(props) {
       .set(data, { merge: true });
     setCurrentChat(newId);
   };
+  const monitorEventPresence = (event_id) => {
+    console.log('datafirebase se inicio el monitoreo de presencia');
+    var eventpresenceRef = fireRealtime.ref('status/' + event_id);
+    eventpresenceRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      let attendeeListClone = { ...attendeeListPresence };
+      console.log('datafirebase clone', attendeeListClone, attendeeListPresence);
+
+      Object.keys(data).map((key) => {
+        let attendee = attendeeListClone[key] || {};
+        attendee['state'] = data[key]['state'];
+        attendee['last_changed'] = data[key]['last_changed'];
+        attendeeListClone[key] = attendee;
+      });
+      setAttendeeListPresence(attendeeListClone);
+      console.log('datafirebase attendeeListPresence', attendeeListClone);
+    });
+    return true;
+  };
+  const inicializada = useMemo(() => initUserPresence(event_id), [event_id]);
+
+  const flagmonitorEventPresence = useMemo(() => monitorEventPresence(event_id), [event_id]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,13 +104,19 @@ let SocialZone = function(props) {
 
   useEffect(() => {
     if (!event_id) return;
-    console.log('Corriendo carga de _event_attendees');
+    console.log('datafirebase Corriendo carga de _event_attendees');
+
     let colletion_name = event_id + '_event_attendees';
+    let attendee;
     firestore.collection(colletion_name).onSnapshot(function(querySnapshot) {
-      let list = [];
+      let list = {};
+
       querySnapshot.forEach((doc) => {
-        list.push(doc.data());
+        attendee = doc.data();
+        let localattendee = attendeeList[attendee.user.uid] || {};
+        list[attendee.user.uid] = { ...localattendee, ...attendee };
       });
+      console.log('datafirebase del firestore', list);
       setAttendeeList(list);
       //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
     });
@@ -96,6 +131,7 @@ let SocialZone = function(props) {
           currentChat={currentChat}
           createNewOneToOneChat={createNewOneToOneChat}
           attendeeList={attendeeList}
+          attendeeListPresence={attendeeListPresence}
         />
       </TabPane>
       <TabPane tab='Chats' key='2'>
@@ -146,35 +182,15 @@ let ChatList = function(props) {
 };
 
 let AttendeList = function(props) {
-  //let { event_id } = useParams();
-  /***** STATE ****/
-  const [attendeeList, setAttendeeList] = useState([]);
-
-  let userName = 'LuisXXX';
-  /***********/
-  let event_id = props.event_id || null;
-  useEffect(() => {
-    if (!event_id) return;
-
-    let colletion_name = event_id + '_event_attendees';
-    firestore.collection(colletion_name).onSnapshot(function(querySnapshot) {
-      let list = [];
-      querySnapshot.forEach((doc) => {
-        list.push(doc.data());
-      });
-      setAttendeeList(list);
-      console.log(list);
-      //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
-    });
-  }, [event_id]);
-
   return (
     <List
       className='demo-loadmore-list'
       //loading={initLoading}
       itemLayout='horizontal'
       //loadMore={loadMore}
-      dataSource={attendeeList}
+      dataSource={Object.keys(props.attendeeList).map((key) => {
+        return { key: key, ...props.attendeeList[key] };
+      })}
       renderItem={(item) => (
         <List.Item
           actions={[
@@ -192,7 +208,7 @@ let AttendeList = function(props) {
           <List.Item.Meta
             avatar={<Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />}
             title={<a href='https://ant.design'>{item.properties.names}</a>}
-            description='Ant'
+            description={props.attendeeListPresence[item.key] ? props.attendeeListPresence[item.key].state : 'offline'}
           />
           <div></div>
           {/* </Skeleton> */}
