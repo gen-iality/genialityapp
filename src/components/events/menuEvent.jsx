@@ -14,10 +14,6 @@ const stylesMenuItems = {
   backgroundColor: 'transparent',
 };
 
-const styleIcon = {
-  color: 'red',
-};
-
 class MenuEvent extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +27,7 @@ class MenuEvent extends Component {
       logged: false,
       email: false,
       section: 'evento',
-      styleText: this.props.styleText ? this.props.styleText : 'red',
+      styleText: this.props.styleText ? this.props.styleText : '#22222',
     };
     this.menuDefault = {
       evento: {
@@ -219,7 +215,6 @@ class MenuEvent extends Component {
                   /*style={{display:'grid', marginBottom:'12%', height:'63px', paddingLeft:'15px !important'}}*/
                 >
                   <IconoComponente
-                    className={styleIcon}
                     style={{ margin: '0 auto', fontSize: '22px', color: styleText }}
                     // style={
                     //   this.state.eventId === '5faae7381fc1d06d3b28fca2' ||
