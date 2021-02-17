@@ -47,7 +47,7 @@ import {
   // BrowserView,
   // MobileView,
   // isBrowser,
-  isMobile,
+  isMobile
 } from 'react-device-detect';
 
 const { Content, Sider } = Layout;
@@ -60,14 +60,14 @@ const html = document.querySelector('html');
 const drawerButton = {
   height: '46px',
   padding: '7px 10px',
-  fontSize: '10px',
+  fontSize: '10px'
 };
 
 const imageCenter = {
   maxWidth: '100%',
   minWidth: '66.6667%',
   margin: '0 auto',
-  display: 'block',
+  display: 'block'
 };
 
 class Landing extends Component {
@@ -94,39 +94,39 @@ class Landing extends Component {
       show_banner_footer: false,
       event: null,
       requireValidation: false,
-      currentSurvey: {},
+      currentSurvey: {}
     };
     this.showLanding = this.showLanding.bind(this);
   }
 
   toggle = () => {
     this.setState({
-      collapsed: !this.state.collapsed,
+      collapsed: !this.state.collapsed
     });
   };
 
   hideHeader = () => {
     this.setState({
-      headerVisible: false,
+      headerVisible: false
     });
   };
 
   showDrawer = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
     this.hideHeader();
   };
 
   onClose = () => {
     this.setState({
-      visible: false,
+      visible: false
     });
   };
 
   onChange = (e) => {
     this.setState({
-      placement: e.target.value,
+      placement: e.target.value
     });
   };
 
@@ -162,6 +162,13 @@ class Landing extends Component {
 
     /* Trae la información del evento con la instancia pública*/
     const event = await EventsApi.landingEvent(id);
+
+    //definiendo un google tag por evento si viene sino utiliza el por defecto
+    let googleanlyticsid = event['googleanlyticsid'];
+    if (googleanlyticsid) {
+      window.gtag('config', googleanlyticsid);
+    }
+
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
     this.loadDynamicEventStyles(id);
 
@@ -189,7 +196,7 @@ class Landing extends Component {
       data: user,
       currentUser: user,
       namesUser: namesUser,
-      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false,
+      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false
     });
     const sections = {
       agenda: (
@@ -297,7 +304,7 @@ class Landing extends Component {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={event.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -339,7 +346,7 @@ class Landing extends Component {
             </Col>
           </Row>
         </>
-      ),
+      )
     };
     //default section is firstone
     this.setState({ loading: false, sections }, () => {
@@ -366,14 +373,14 @@ class Landing extends Component {
           const user = authResult.user;
           this.closeLogin(user);
           return false;
-        },
+        }
       },
       //Disabled accountchooser
       credentialHelper: 'none',
       // Terms of service url.
       tosUrl: `${BaseUrl}/terms`,
       // Privacy policy url.
-      privacyPolicyUrl: `${BaseUrl}/privacy`,
+      privacyPolicyUrl: `${BaseUrl}/privacy`
     };
     ui.start('#firebaseui-auth-container', uiConfig);
   };
@@ -511,7 +518,7 @@ class Landing extends Component {
       toggleConferenceZoom,
       meeting_id,
       currentUser,
-      loader_page,
+      loader_page
     } = this.state;
 
     return (
@@ -620,7 +627,7 @@ class Landing extends Component {
                           className='containerMenu_Landing'
                           style={{
                             backgroundColor:
-                            event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
                           }}
                           trigger={null}
                           collapsible
@@ -671,7 +678,7 @@ class Landing extends Component {
                             bodyStyle={{
                               padding: '0px',
                               backgroundColor:
-                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
                             }}>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                             <MenuEvent
@@ -683,103 +690,104 @@ class Landing extends Component {
                             />
                           </Drawer>
 
-                         
-                           {event.styles &&
-                            event.styles.show_banner &&
-                            (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
-                              <BannerEvent
-                                bgImage={
-                                  event.styles && event.styles.banner_image
-                                    ? event.styles.banner_image
-                                    : event.picture
-                                    ? event.picture
-                                    : 'https://bulma.io/images/placeholders/1280x960.png'
-                                }
-                                mobileBanner={event.styles && event.styles.mobile_banner && event.styles.mobile_banner}
-                                bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                                title={event.name}
-                                eventId={event._id}
-                                styles={event.styles}
-                                organizado={
-                                  <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                                    {event.organizer.name ? event.organizer.name : event.organizer.email}
-                                  </Link>
-                                }
-                                place={
-                                  <span>
-                                    {event.venue} {event.location.FormattedAddress}
-                                  </span>
-                                }
-                                dateStart={event.date_start}
-                                dateEnd={event.date_end}
-                                dates={event.dates}
-                                type_event={event.type_event}
-                              />
-                            ) : (
-                              <div>
-                                {event.styles && event.styles.show_banner === undefined && this.state.headerVisible && (
-                                  <BannerEvent
-                                    bgImage={
-                                      event.styles && event.styles.banner_image
-                                        ? event.styles.banner_image
-                                        : event.picture
-                                        ? event.picture
-                                        : 'https://bulma.io/images/placeholders/1280x960.png'
-                                    }
-                                    bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                                    title={event.name}
-                                    organizado={
-                                      <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                                        {event.organizer.name ? event.organizer.name : event.organizer.email}
-                                      </Link>
-                                    }
-                                    place={
-                                      <span>
-                                        {event.venue} {event.location.FormattedAddress}
-                                      </span>
-                                    }
-                                    dateStart={event.date_start}
-                                    dateEnd={event.date_end}
-                                    dates={event.dates}
-                                    type_event={event.type_event}
-                                  />
-                                )}
-                              </div>
-                            )}                       
-                          <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>                     
+                          {event.styles &&
+                          event.styles.show_banner &&
+                          (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
+                            <BannerEvent
+                              bgImage={
+                                event.styles && event.styles.banner_image
+                                  ? event.styles.banner_image
+                                  : event.picture
+                                  ? event.picture
+                                  : 'https://bulma.io/images/placeholders/1280x960.png'
+                              }
+                              mobileBanner={event.styles && event.styles.mobile_banner && event.styles.mobile_banner}
+                              bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
+                              title={event.name}
+                              eventId={event._id}
+                              styles={event.styles}
+                              organizado={
+                                <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                                  {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                </Link>
+                              }
+                              place={
+                                <span>
+                                  {event.venue} {event.location.FormattedAddress}
+                                </span>
+                              }
+                              dateStart={event.date_start}
+                              dateEnd={event.date_end}
+                              dates={event.dates}
+                              type_event={event.type_event}
+                            />
+                          ) : (
+                            <div>
+                              {event.styles && event.styles.show_banner === undefined && this.state.headerVisible && (
+                                <BannerEvent
+                                  bgImage={
+                                    event.styles && event.styles.banner_image
+                                      ? event.styles.banner_image
+                                      : event.picture
+                                      ? event.picture
+                                      : 'https://bulma.io/images/placeholders/1280x960.png'
+                                  }
+                                  bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
+                                  title={event.name}
+                                  organizado={
+                                    <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                                      {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                    </Link>
+                                  }
+                                  place={
+                                    <span>
+                                      {event.venue} {event.location.FormattedAddress}
+                                    </span>
+                                  }
+                                  dateStart={event.date_start}
+                                  dateEnd={event.date_end}
+                                  dates={event.dates}
+                                  type_event={event.type_event}
+                                />
+                              )}
+                            </div>
+                          )}
+                          <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>
                             {this.state.sections[this.state.section]}
                           </div>
                           <div className={`modal ${modal ? 'is-active' : ''}`}>
-              <div className='modal-background'></div>
-              <div className='modal-content'>
-                <div id='firebaseui-auth-container' />
-              </div>
-              <button
-                className='modal-close is-large'
-                aria-label='close'
-                onClick={() => {
-                  this.closeLogin();
-                }}
-              />
-            </div>
-            <Dialog
-              modal={modalTicket}
-              title={'Atención!!'}
-              content={
-                <p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>
-              }
-              first={{
-                title: 'Iniciar Sesión o Registrarse',
-                class: 'is-info',
-                action: this.openLogin,
-              }}
-              second={{ title: 'Cancelar', class: '', action: this.closeModal }}
-            />
-            {event.styles && event.styles.banner_footer && (
-              <div style={{ textAlign: 'center' }}>
-                <img alt='image-dialog' src={event.styles.banner_footer} />
-              </div>
-            )}
+                            <div className='modal-background'></div>
+                            <div className='modal-content'>
+                              <div id='firebaseui-auth-container' />
+                            </div>
+                            <button
+                              className='modal-close is-large'
+                              aria-label='close'
+                              onClick={() => {
+                                this.closeLogin();
+                              }}
+                            />
+                          </div>
+                          <Dialog
+                            modal={modalTicket}
+                            title={'Atención!!'}
+                            content={
+                              <p className='has-text-weight-bold'>
+                                Para seleccionar tiquetes debes iniciar sesión o registrarse !!
+                              </p>
+                            }
+                            first={{
+                              title: 'Iniciar Sesión o Registrarse',
+                              class: 'is-info',
+                              action: this.openLogin
+                            }}
+                            second={{ title: 'Cancelar', class: '', action: this.closeModal }}
+                          />
+                          {event.styles && event.styles.banner_footer && (
+                            <div style={{ textAlign: 'center' }}>
+                              <img alt='image-dialog' src={event.styles.banner_footer} />
+                            </div>
+                          )}
                         </Content>
                       </Layout>
                     </Layout>
