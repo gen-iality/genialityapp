@@ -6,8 +6,8 @@ import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row } from 'antd';
-import { MenuOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
+import { Layout, Drawer, Button, Col, Row, Tabs, Menu } from 'antd';
+import { MenuOutlined, WechatOutlined, TeamOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 
 //custom
 import { Actions, EventsApi, TicketsApi, fireStoreApi, Activity, getCurrentUser } from '../../helpers/request';
@@ -42,6 +42,7 @@ import InformativeSection from './informativeSections/informativeSection';
 import InformativeSection2 from './informativeSections/informativeSection2';
 import UserLogin from './UserLoginContainer';
 import Partners from './Partners';
+import SocialZone from '../../components/socialZone/socialZone';
 
 import {
   // BrowserView,
@@ -51,6 +52,8 @@ import {
 } from 'react-device-detect';
 
 const { Content, Sider } = Layout;
+const { TabPane } = Tabs;
+const { SubMenu } = Menu;
 
 Moment.locale('es');
 momentLocalizer();
@@ -83,7 +86,7 @@ class Landing extends Component {
       toggleConferenceZoom: false,
       meeting_id: null,
       color: '',
-      collapsed: false,
+      collapsed: true,
       visible: false,
       placement: 'left',
       headerVisible: 'true',
@@ -100,6 +103,11 @@ class Landing extends Component {
   }
 
   toggle = () => {
+    this.setState({
+      collapsed: !this.state.collapsed
+    });
+  };
+  toggleCollapsed = () => {
     this.setState({
       collapsed: !this.state.collapsed
     });
@@ -549,76 +557,12 @@ class Landing extends Component {
                   activity={activity}
                 />
               )}
-
               {/* ESTO ES UNA PRUEBA PARA LA ENCUESTA EN VIVO */}
-
               {/* <SurveyNotification /> */}
               {loader_page ? (
                 <Robapagina event={event} eventId={event._id} showLanding={this.showLanding} />
               ) : (
                 <>
-                  {/* {event.styles &&
-                  event.styles.show_banner &&
-                  (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
-                    <BannerEvent
-                      bgImage={
-                        event.styles && event.styles.banner_image
-                          ? event.styles.banner_image
-                          : event.picture
-                          ? event.picture
-                          : 'https://bulma.io/images/placeholders/1280x960.png'
-                      }
-                      mobileBanner={event.styles && event.styles.mobile_banner && event.styles.mobile_banner}
-                      bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                      title={event.name}
-                      eventId={event._id}
-                      styles={event.styles}
-                      organizado={
-                        <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                          {event.organizer.name ? event.organizer.name : event.organizer.email}
-                        </Link>
-                      }
-                      place={
-                        <span>
-                          {event.venue} {event.location.FormattedAddress}
-                        </span>
-                      }
-                      dateStart={event.date_start}
-                      dateEnd={event.date_end}
-                      dates={event.dates}
-                      type_event={event.type_event}
-                    />
-                  ) : (
-                    <div>
-                      {event.styles && event.styles.show_banner === undefined && this.state.headerVisible && (
-                        <BannerEvent
-                          bgImage={
-                            event.styles && event.styles.banner_image
-                              ? event.styles.banner_image
-                              : event.picture
-                              ? event.picture
-                              : 'https://bulma.io/images/placeholders/1280x960.png'
-                          }
-                          bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                          title={event.name}
-                          organizado={
-                            <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                              {event.organizer.name ? event.organizer.name : event.organizer.email}
-                            </Link>
-                          }
-                          place={
-                            <span>
-                              {event.venue} {event.location.FormattedAddress}
-                            </span>
-                          }
-                          dateStart={event.date_start}
-                          dateEnd={event.date_end}
-                          dates={event.dates}
-                          type_event={event.type_event}
-                        />
-                      )}
-                    </div>
-                  )} */}
                   <Content>
                     <Layout className='site-layout'>
                       {/*Aqui empieza el menu para dispositivos >  */}
@@ -630,8 +574,6 @@ class Landing extends Component {
                               event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
                           }}
                           trigger={null}
-                          collapsible
-                          collapsed={this.state.collapsed}
                           width={110}>
                           <div className='items-menu_Landing '>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
@@ -640,7 +582,6 @@ class Landing extends Component {
                               user={currentUser}
                               eventId={event._id}
                               showSection={this.showSection}
-                              collapsed={this.state.collapsed}
                             />
                           </div>
                         </Sider>
@@ -667,7 +608,6 @@ class Landing extends Component {
                               <div>Menu</div>
                             </Button>
                           </div>
-
                           <Drawer
                             title={event.name}
                             placement={this.state.placement}
@@ -686,7 +626,6 @@ class Landing extends Component {
                               user={currentUser}
                               itemsMenu={this.state.event.itemsMenu}
                               showSection={this.showSection}
-                              collapsed={this.state.collapsed}
                             />
                           </Drawer>
 
@@ -789,11 +728,61 @@ class Landing extends Component {
                             </div>
                           )}
                         </Content>
+                        {/* <Sider
+                          trigger={null}
+                          collapsible
+                          collapsed={this.state.collapsed}
+                          width={300}
+                          style={{
+                            backgroundColor:
+                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                            position: 'stick',
+                          }}>
+                          <div className='Chat-Event' style={{ position: 'fixed' }}>
+                            {this.state.collapsed ? (
+                              <>
+                                <Button type='link' onClick={this.toggleCollapsed}>
+                                  <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
+                                </Button>
+                                <Menu
+                                  style={{
+                                    backgroundColor:
+                                      event.styles && event.styles.toolbarDefaultBg
+                                        ? event.styles.toolbarDefaultBg
+                                        : 'white',
+                                  }}>
+                                  <Menu.Item
+                                    key='1'
+                                    icon={<WechatOutlined style={{ fontSize: '18px' }} />}
+                                    onClick={this.toggleCollapsed}>
+                                    Option 1
+                                  </Menu.Item>
+                                  <Menu.Item
+                                    key='2'
+                                    icon={<TeamOutlined style={{ fontSize: '18px' }} />}
+                                    onClick={this.toggleCollapsed}>
+                                    Option 1
+                                  </Menu.Item>
+                                </Menu>
+                              </>
+                            ) : (
+                              <>
+                                <Button type='link' onClick={this.toggleCollapsed}>
+                                  <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
+                                </Button>
+                                <div>
+                                  <SocialZone />
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </Sider> */}
                       </Layout>
                     </Layout>
                   </Content>
                 </>
               )}
+              `
             </div>
           </React.Fragment>
         )}
