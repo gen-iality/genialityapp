@@ -34,7 +34,14 @@ const SurveyList = ({ jsonData, showSurvey, currentUser, surveyLabel, event, loa
   return (
     <>
       {loading ? (
-        <Spin />
+        <div className='loading-container'>
+          <div className='lds-ring'>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
       ) : (
         <Card title={`Lista de ${surveyLabel.name}`} className='survyCard' headStyle={headStyle}>
           <Fragment>
