@@ -252,14 +252,13 @@ class Landing extends Component {
         />
       ),
       speakers: <SpeakersForm eventId={event._id} event={event} />,
-      wall: <WallForm event={event} eventId={event._id} toggleConference={this.toggleConference} currentUser={user} />,
+      wall: <WallForm event={event} eventId={event._id} currentUser={user} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: (
         <NetworkingForm
           event={event}
           eventId={event._id}
-          toggleConference={this.toggleConference}
           currentUser={this.state.currentUser}
           section={this.state.section}
         />
@@ -528,7 +527,7 @@ class Landing extends Component {
       currentUser,
       loader_page,
     } = this.state;
- 
+
     return (
       <section className='section landing' style={{ backgroundColor: this.state.color, height: '100%' }}>
         {this.state.showConfirm && (
@@ -758,18 +757,17 @@ class Landing extends Component {
                           collapsed={this.state.collapsed}
                           width={400}
                           style={{
-                            backgroundColor: event.styles.toolbarMenuSocial ? event.style.toolbarMenuSocial : '#fff'
+                            backgroundColor: event.styles.toolbarMenuSocial ? event.style.toolbarMenuSocial : '#fff',
                           }}>
                           <div className='Chat-Event'>
                             {this.state.collapsed ? (
                               <>
-                               <div style={{marginLeft: '2%', marginBottom: '3%' }} >
-                                <Button type='link' onClick={this.toggleCollapsed}>
-                                  <MenuUnfoldOutlined style={{ fontSize: '24px'}} />
-                                </Button> 
-                               </div>
-                                <Menu
-                                  style={{backgroundColor:event.styles.toolbarMenuSocial}}>
+                                <div style={{ marginLeft: '2%', marginBottom: '3%' }}>
+                                  <Button type='link' onClick={this.toggleCollapsed}>
+                                    <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
+                                  </Button>
+                                </div>
+                                <Menu style={{ backgroundColor: event.styles.toolbarMenuSocial }}>
                                   <Menu.Item
                                     key='1'
                                     icon={<CommentOutlined style={{ fontSize: '24px' }} />}

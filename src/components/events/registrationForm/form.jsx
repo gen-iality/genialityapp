@@ -522,7 +522,7 @@ export default ({
               {description && description.length > 500 && (
                 <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
                   <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
-                    <pre style={{whiteSpace:'normal'}}>{description}</pre>
+                    <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
                   </Panel>
                 </Collapse>
               )}
