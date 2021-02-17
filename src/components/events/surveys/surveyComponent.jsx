@@ -9,7 +9,6 @@ import { SurveyAnswers, SurveyPage, UserGamification, Trivia } from './services'
 import Graphics from './graphics';
 import * as Survey from 'survey-react';
 import 'survey-react/modern.css';
-import { cosh } from 'core-js/fn/math';
 Survey.StylesManager.applyTheme('modern');
 
 const MIN_ANSWER_FEEDBACK_TIME = 5;
@@ -43,6 +42,7 @@ class SurveyComponent extends Component {
   }
 
   async componentDidMount() {
+    console.log('start survey component', this.props);
     var self = this;
     const { eventId, idSurvey } = this.props;
     let surveyData = await this.loadSurvey(eventId, idSurvey);
@@ -141,6 +141,8 @@ class SurveyComponent extends Component {
     Survey.JsonObject.metaData.addProperty('question', 'points');
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
+
+    console.log('data survey +++++++++++++++', dataSurvey);
 
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];
@@ -478,10 +480,6 @@ class SurveyComponent extends Component {
       totalQuestions = surveyData.pages.length - 1;
     }
 
-    // Umbral de exito, esta variable indica apartir de cuantos aciertos se completa con Ã©xito el cuestionario
-    // Por el momento el valor esta quemado y deberÃ­a venir de un parÃ¡metro del CMS
-    let scoreMinimumForWin = 10;
-
     let textOnCompleted = survey.completedHtml;
 
     survey.currentPage.questions.forEach((question) => {
@@ -492,7 +490,7 @@ class SurveyComponent extends Component {
     if (surveyData.allow_gradable_survey === 'true') {
       let text = `Has obtenido ${totalPoints} de ${totalQuestions} puntos </br>`;
       text +=
-        totalPoints >= scoreMinimumForWin
+        totalPoints >= surveyData.minimunScore && surveyData.hasMinimunScore === 'true'
           ? `${surveyData.win_Message ? surveyData.win_Message : ''}`
           : `${surveyData.lose_Message ? surveyData.lose_Message : ''}`;
 

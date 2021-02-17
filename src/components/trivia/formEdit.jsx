@@ -5,7 +5,7 @@ import {
   fieldsFormQuestionWithPoints,
   selectOptions,
   searchWithMultipleIndex,
-  operationType
+  operationType,
 } from './constants';
 
 import { SurveysApi } from '../../helpers/request';
@@ -18,18 +18,18 @@ const { Option } = Select;
 
 const layout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 16 }
+  wrapperCol: { span: 16 },
 };
 
 const validateMessages = {
   required: '${label} is required!',
   types: {
     email: '${label} is not validate email!',
-    number: '${label} is not a validate number!'
+    number: '${label} is not a validate number!',
   },
   number: {
-    range: '${label} must be between ${min} and ${max}'
-  }
+    range: '${label} must be between ${min} and ${max}',
+  },
 };
 
 const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirmLoading, gradableSurvey }, ref) => {
@@ -64,7 +64,6 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
   };
 
   const handleCheckbox = (value) => {
-    console.log('handle checkbox:', value);
     setCorrectAnswerIndex(value.sort((a, b) => a - b));
   };
 
@@ -149,8 +148,8 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                   rules={[
                     { required: true },
                     {
-                      validator: fieldValidation
-                    }
+                      validator: fieldValidation,
+                    },
                   ]}>
                   <Input />
                 </Form.Item>
@@ -163,8 +162,8 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                     rules={[
                       { required: true },
                       {
-                        validator: fieldValidation
-                      }
+                        validator: fieldValidation,
+                      },
                     ]}>
                     <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
                       {field.selectOptions.map((option, index) =>
@@ -195,8 +194,8 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                   rules={[
                     { required: true },
                     {
-                      validator: fieldValidation
-                    }
+                      validator: fieldValidation,
+                    },
                   ]}>
                   <Input />
                 </Form.Item>
@@ -209,8 +208,8 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                     rules={[
                       { required: true },
                       {
-                        validator: fieldValidation
-                      }
+                        validator: fieldValidation,
+                      },
                     ]}>
                     <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
                       {field.selectOptions.map((option, index) =>
@@ -251,11 +250,11 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                               {
                                 required: true,
                                 whitespace: true,
-                                message: `Por favor ingresa un valor a la respuesta ${index + 1}`
+                                message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
                               },
                               {
-                                validator: fieldValidation
-                              }
+                                validator: fieldValidation,
+                              },
                             ]}
                             noStyle>
                             <Input placeholder='Texto de la Respuesta' style={{ width: '90%' }} />
@@ -290,11 +289,11 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                                 {
                                   required: true,
                                   whitespace: true,
-                                  message: `Por favor ingresa un valor a la respuesta ${index + 1}`
+                                  message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
                                 },
                                 {
-                                  validator: fieldValidation
-                                }
+                                  validator: fieldValidation,
+                                },
                               ]}
                               noStyle>
                               <Input placeholder='Texto de la Respuesta' style={{ width: '85%' }} />

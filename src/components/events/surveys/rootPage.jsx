@@ -28,6 +28,7 @@ export default class RootPage extends Component {
   };
 
   componentDidMount() {
+    console.log('revision eventUser', this.props.eventUser);
     this.loadData();
   }
 
@@ -56,6 +57,7 @@ export default class RootPage extends Component {
 
   getResults = (surveyData) => {
     // eslint-disable-next-line no-console
+    console.log(surveyData);
   };
 
   componentWillUnmount() {
@@ -89,9 +91,7 @@ export default class RootPage extends Component {
           guestVoteInSurvey ? (
             <>
               {/*Preparacion componente para los resultados*/}
-              {/* <Card className='survyCard'>
-            <h1>fin de la encuesta</h1>
-          </Card> */}
+
               <Graphics
                 idSurvey={idSurvey}
                 showListSurvey={toggleSurvey}

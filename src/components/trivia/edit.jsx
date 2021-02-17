@@ -19,7 +19,7 @@ class triviaEdit extends Component {
       redirect: false,
       survey: '',
       publish: '',
-      allow_anonymous_answers: '',
+      allow_anonymous_answers: false,
       openSurvey: false,
       allow_gradable_survey: false,
       show_horizontal_bar: true,
@@ -40,6 +40,13 @@ class triviaEdit extends Component {
       win_Message: null,
       neutral_Message: null,
       lose_Message: null,
+
+      // determina si la encuesta esta disponible desde cualquier actividad
+      isGlobal: 'false',
+      // Si la encuesta calificable requiere un puntaje minimo de aprobación
+      hasMinimumScore: 'false',
+      // Puntaje mínimo de aprobación
+      minimumScore: 0,
     };
     this.submit = this.submit.bind(this);
     this.submitWithQuestions = this.submitWithQuestions.bind(this);
@@ -78,6 +85,10 @@ class triviaEdit extends Component {
         win_Message: Update.win_Message ? Update.win_Message : '',
         neutral_Message: Update.neutral_Message ? Update.neutral_Message : '',
         lose_Message: Update.lose_Message ? Update.lose_Message : '',
+
+        isGlobal: Update.isGlobal ? Update.isGlobal : false,
+        hasMinimumScore: Update.hasMinimumScore ? Update.hasMinimumScore : false,
+        minimumScore: Update.minimumScore ? Update.minimumScore : 0,
       });
 
       this.getQuestions();
@@ -110,7 +121,7 @@ class triviaEdit extends Component {
       survey: this.state.survey,
       publish: 'false',
       open: 'false',
-      allow_anonymous_answers: 'false',
+      allow_anonymous_answers: this.state.allow_anonymous_answers,
       allow_gradable_survey: 'false',
       show_horizontal_bar: this.state.show_horizontal_bar === 'true' ? true : false,
       allow_vote_value_per_user: 'false',
@@ -123,6 +134,11 @@ class triviaEdit extends Component {
       win_Message: this.state.win_Message,
       neutral_Message: this.state.neutral_Message,
       lose_Message: this.state.lose_Message,
+
+      //
+      isGlobal: false,
+      hasMinimumScore: false,
+      minimumScore: 0,
     };
     // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
     const save = await SurveysApi.createOne(this.props.event._id, data);
@@ -131,13 +147,19 @@ class triviaEdit extends Component {
     // Esto permite almacenar los estados en firebase
     let setDataInFire = await createOrUpdateSurvey(
       idSurvey,
-      { isPublished: data.publish, isOpened: 'false', freezeGame: data.freezeGame },
+      {
+        isPublished: data.publish,
+        isOpened: 'false',
+        freezeGame: data.freezeGame,
+        isGlobal: data.isGlobal,
+        hasMinimumScore: data.hasMinimumScore,
+        minimumScore: data.minimumScore,
+        allow_anonymous_answers: data.allow_anonymous_answers,
+      },
       { eventId: this.props.event._id, name: save.survey, category: 'none' }
     );
-    console.log('Fire:', setDataInFire);
 
     await this.setState({ idSurvey });
-    console.log(this.state.idSurvey);
   }
 
   async submitWithQuestions() {
@@ -159,6 +181,11 @@ class triviaEdit extends Component {
       win_Message: this.state.win_Message,
       neutral_Message: this.state.neutral_Message,
       lose_Message: this.state.lose_Message,
+
+      //
+      isGlobal: this.state.isGlobal,
+      hasMinimumScore: this.state.hasMinimumScore,
+      minimumScore: parseInt(this.state.minimumScore),
     };
 
     console.log('survey edit', data);
@@ -173,6 +200,11 @@ class triviaEdit extends Component {
             isOpened: data.open,
             allow_anonymous_answers: data.allow_anonymous_answers,
             freezeGame: data.freezeGame,
+
+            isGlobal: data.isGlobal,
+            hasMinimumScore: data.hasMinimumScore,
+            minimumScore: data.minimumScore,
+            activity_id: data.activity_id,
           },
           { eventId: this.props.event._id, name: data.survey, category: 'none' }
         );
@@ -349,6 +381,9 @@ class triviaEdit extends Component {
       allow_vote_value_per_user,
       freezeGame,
       time_limit,
+      hasMinimumScore,
+      minimumScore,
+      isGlobal,
     } = this.state;
     const columns = [
       {
@@ -405,18 +440,6 @@ class triviaEdit extends Component {
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: '3%' }} className='label'>
-                Permitir usuarios anonimos
-              </label>
-              <Switch
-                checked={allow_anonymous_answers === 'true'}
-                onChange={(checked) => this.setState({ allow_anonymous_answers: checked ? 'true' : 'false' })}
-              />
-            </div>
-          )}
-
-          {this.state.idSurvey && (
-            <div>
-              <label style={{ marginTop: '3%' }} className='label'>
                 Publicar encuesta
               </label>
               <Switch
@@ -440,6 +463,28 @@ class triviaEdit extends Component {
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: '3%' }} className='label'>
+                Encuesta abierta
+              </label>
+              <Switch
+                checked={openSurvey === 'true'}
+                onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
+              />
+            </div>
+          )}
+          {this.state.idSurvey && (
+            <div>
+              <label style={{ marginTop: '3%' }} className='label'>
+                Permitir usuarios anonimos
+              </label>
+              <Switch
+                checked={allow_anonymous_answers === 'true'}
+                onChange={(checked) => this.setState({ allow_anonymous_answers: checked ? 'true' : 'false' })}
+              />
+            </div>
+          )}
+          {this.state.idSurvey && (
+            <div>
+              <label style={{ marginTop: '3%' }} className='label'>
                 Mostrar grafica de barras Vertical
               </label>
               <Switch
@@ -448,15 +493,14 @@ class triviaEdit extends Component {
               />
             </div>
           )}
-
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: '3%' }} className='label'>
-                Encuesta abierta
+                Encuesta global (visible en todas las actividades)
               </label>
               <Switch
-                checked={openSurvey === 'true'}
-                onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
+                checked={isGlobal === 'true'}
+                onChange={(checked) => this.setState({ isGlobal: checked ? 'true' : 'false' })}
               />
             </div>
           )}
@@ -474,14 +518,66 @@ class triviaEdit extends Component {
           )}
 
           {this.state.idSurvey && (
+            <>
+              <div>
+                <label style={{ marginTop: '3%' }} className='label'>
+                  Encuesta calificable
+                </label>
+                <Switch
+                  checked={allow_gradable_survey === 'true'}
+                  onChange={(checked) => this.toggleSwitch('allow_gradable_survey', checked)}
+                />
+              </div>
+              {allow_gradable_survey === 'true' && (
+                <div>
+                  <label style={{ marginTop: '3%' }} className='label'>
+                    Requiere puntaje mínimo para aprobar
+                  </label>
+                  <Switch
+                    checked={hasMinimumScore === 'true'}
+                    onChange={(checked) => this.setState({ hasMinimumScore: checked ? 'true' : 'false' })}
+                  />
+                </div>
+              )}
+              {(hasMinimumScore === true || hasMinimumScore === 'true') && (
+                <div>
+                  <label style={{ marginTop: '3%' }} className='label'>
+                    Puntaje mínimo para aprobar
+                  </label>
+                  <input name='minimumScore' value={minimumScore} onChange={this.changeInput} />
+                </div>
+              )}
+            </>
+          )}
+
+          {this.state.idSurvey && (
             <div>
-              <label style={{ marginTop: '3%' }} className='label'>
-                Encuesta calificable
+              <label style={{ marginTop: '2%' }} className='label'>
+                Relacionar esta encuesta a una actividad
               </label>
-              <Switch
-                checked={allow_gradable_survey === 'true'}
-                onChange={(checked) => this.toggleSwitch('allow_gradable_survey', checked)}
-              />
+              <div className='select'>
+                <select name='activity_id' value={activity_id} onChange={this.changeInput}>
+                  <option value=''>No relacionar</option>
+                  {dataAgenda.map((activity, key) => (
+                    <option key={key} value={activity._id}>
+                      {activity.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+          {this.state.idSurvey ? (
+            <div className='column'>
+              <button onClick={this.submitWithQuestions} className='columns is-pulled-right button is-primary'>
+                Guardar
+              </button>
+            </div>
+          ) : (
+            <div className='column'>
+              <button onClick={this.submit} className='columns is-pulled-right button is-primary'>
+                Guardar
+              </button>
             </div>
           )}
 
@@ -516,37 +612,6 @@ class triviaEdit extends Component {
                 <ReactQuill value={this.state.lose_Message} modules={toolbarEditor} onChange={this.onChangeLose} />
               </div>
             </Fragment>
-          )}
-
-          {this.state.idSurvey && (
-            <div>
-              <label style={{ marginTop: '2%' }} className='label'>
-                Relacionar esta encuesta a una actividad
-              </label>
-              <div className='select'>
-                <select name='activity_id' value={activity_id} onChange={this.changeInput}>
-                  <option value='0'>No relacionar</option>
-                  {dataAgenda.map((activity, key) => (
-                    <option key={key} value={activity._id}>
-                      {activity.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          )}
-          {this.state.idSurvey ? (
-            <div className='column'>
-              <button onClick={this.submitWithQuestions} className='columns is-pulled-right button is-primary'>
-                Guardar
-              </button>
-            </div>
-          ) : (
-            <div className='column'>
-              <button onClick={this.submit} className='columns is-pulled-right button is-primary'>
-                Guardar
-              </button>
-            </div>
           )}
 
           {this.state.idSurvey && (

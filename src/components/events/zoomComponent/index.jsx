@@ -347,8 +347,6 @@ export default class ZoomComponent extends Component {
                   style={{ zIndex: '10', width: '99vw', height: '100%' }}></iframe>
               )}
 
-              {console.log('this.state', this.state)}
-
               {this.state.contentDisplayed && this.state.contentDisplayed == 'surveys' && (
                 <div style={{ width: '100%' }}>
                   <SurveyForm
