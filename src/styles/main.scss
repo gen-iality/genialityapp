@@ -245,10 +245,10 @@ iframe {
   width: 100px;
   height: 100px;
   margin: 8px;
-  border: 8px solid #1cdcb7;
+  border: 8px solid $color-evius;
   border-radius: 50%;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #1cdcb7 transparent transparent transparent;
+  border-color: $color-evius transparent transparent transparent;
 }
 .lds-ring div:nth-child(1) {
   animation-delay: -0.45s;
@@ -272,7 +272,7 @@ iframe {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - 31px);
 }
 
 @import '~bulma/bulma';

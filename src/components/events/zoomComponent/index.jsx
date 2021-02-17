@@ -102,7 +102,6 @@ export default class ZoomComponent extends Component {
       .doc(this.state.activity._id)
       .onSnapshot((response) => {
         const videoConference = response.data();
-        console.log('zoom component', videoConference);
 
         this.setState({
           meeting_id: videoConference.meeting_id ? videoConference.meeting_id : this.props.meetingId,

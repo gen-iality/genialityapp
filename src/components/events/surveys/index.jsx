@@ -5,6 +5,7 @@ import { firestore } from '../../../helpers/firebase';
 import SurveyList from './surveyList';
 import RootPage from './rootPage';
 import { Spin, Button, Card } from 'antd';
+import Loading from './loading';
 
 const surveyButtons = {
   text: {
@@ -63,6 +64,7 @@ class SurveyForm extends Component {
   }
 
   async componentDidMount() {
+    console.log('-- Mount SurveyForm --');
     let { event } = this.props;
 
     // Método para escuchar todas las encuestas relacionadas con el evento
@@ -106,7 +108,7 @@ class SurveyForm extends Component {
       publishedSurveys = eventSurveys.filter(
         (survey) =>
           (survey.isPublished === 'true' || survey.isPublished === true) &&
-          (survey.activity_id === activity._id || survey.isGlobal === 'true')
+          ((activity && survey.activity_id === activity._id) || survey.isGlobal === 'true')
       );
 
       this.setState(
@@ -267,7 +269,7 @@ class SurveyForm extends Component {
         )
       );
 
-    if (!publishedSurveys) return <Spin />;
+    if (!publishedSurveys) return <Loading />;
 
     return (
       <div>

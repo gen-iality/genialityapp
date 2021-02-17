@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { List, Button, Card, Tag, Result, Spin } from 'antd';
 import { MehOutlined } from '@ant-design/icons';
+import Loading from './loading';
 
 const headStyle = {
   fontWeight: 300,
@@ -33,69 +34,64 @@ const SurveyList = ({ jsonData, showSurvey, currentUser, surveyLabel, event, loa
 
   return (
     <>
-      {loading ? (
-        <div className='loading-container'>
-          <div className='lds-ring'>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-        </div>
-      ) : (
-        <Card title={`Lista de ${surveyLabel.name}`} className='survyCard' headStyle={headStyle}>
-          <Fragment>
-            {surveyList && surveyList.length === 0 && (
-              <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
-            )}
+      <Card title={`Lista de ${surveyLabel.name}`} className='survyCard' headStyle={headStyle}>
+        <Fragment>
+          {surveyList && surveyList.length === 0 && (
+            <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
+          )}
 
-            {surveyList && surveyList.length > 0 && (
-              <List
-                dataSource={surveyList}
-                renderItem={(survey) => (
-                  <List.Item key={survey._id}>
-                    <List.Item.Meta title={survey.name} style={{ textAlign: 'left' }} />
-                    {survey.userHasVoted && (
+          {surveyList && surveyList.length > 0 && (
+            <List
+              dataSource={surveyList}
+              renderItem={(survey) => (
+                <List.Item key={survey._id}>
+                  <List.Item.Meta title={survey.name} style={{ textAlign: 'left' }} />
+                  {loading ? (
+                    <Spin />
+                  ) : (
+                    <>
+                      {survey.userHasVoted && (
+                        <div>
+                          <Tag color='success'>Respondida</Tag>
+                        </div>
+                      )}
+                      {survey.isOpened && (
+                        <div>
+                          {' '}
+                          {survey.isOpened == 'true' || survey.isOpened == true ? (
+                            <Tag color='green'>Abierta</Tag>
+                          ) : (
+                            <Tag color='red'>Cerrada</Tag>
+                          )}
+                        </div>
+                      )}
                       <div>
-                        <Tag color='success'>Respondida</Tag>
+                        <Button
+                          type={!survey.userHasVoted && survey.isOpened === 'true' ? 'primary' : 'ghost'}
+                          className={`${
+                            !survey.userHasVoted && survey.isOpened === 'true'
+                              ? 'animate__animated  animate__pulse animate__slower animate__infinite'
+                              : ''
+                          }`}
+                          onClick={() => showSurvey(survey)}
+                          loading={loading}>
+                          {!survey.userHasVoted && survey.isOpened === 'true'
+                            ? `Ir a ${
+                                surveyLabel.name
+                                  ? surveyLabel.name.replace(/([^aeiou]{2})?(e)?s\b/gi, pluralToSingular)
+                                  : 'Encuesta'
+                              }`
+                            : ' Ver Resultados'}
+                        </Button>
                       </div>
-                    )}
-                    {survey.isOpened && (
-                      <div>
-                        {' '}
-                        {survey.isOpened == 'true' || survey.isOpened == true ? (
-                          <Tag color='green'>Abierta</Tag>
-                        ) : (
-                          <Tag color='red'>Cerrada</Tag>
-                        )}
-                      </div>
-                    )}
-                    <div>
-                      <Button
-                        type={!survey.userHasVoted ? 'primary' : 'ghost'}
-                        className={`${
-                          !survey.userHasVoted
-                            ? 'animate__animated  animate__pulse animate__slower animate__infinite'
-                            : ''
-                        }`}
-                        onClick={() => showSurvey(survey)}
-                        loading={survey.userHasVoted === undefined}>
-                        {!survey.userHasVoted && survey.isOpened === 'true'
-                          ? `Ir a ${
-                              surveyLabel.name
-                                ? surveyLabel.name.replace(/([^aeiou]{2})?(e)?s\b/gi, pluralToSingular)
-                                : 'Encuesta'
-                            }`
-                          : ' Ver Resultados'}
-                      </Button>
-                    </div>
-                  </List.Item>
-                )}
-              />
-            )}
-          </Fragment>
-        </Card>
-      )}
+                    </>
+                  )}
+                </List.Item>
+              )}
+            />
+          )}
+        </Fragment>
+      </Card>
     </>
   );
 };

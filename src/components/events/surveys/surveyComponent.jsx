@@ -15,6 +15,7 @@ const MIN_ANSWER_FEEDBACK_TIME = 5;
 const surveyStyle = {
   overFlowX: 'hidden',
   overFlowY: 'scroll',
+  minHeight: 'calc(100vh - 100px)',
 };
 
 class SurveyComponent extends Component {
@@ -42,7 +43,6 @@ class SurveyComponent extends Component {
   }
 
   async componentDidMount() {
-    console.log('start survey component', this.props);
     var self = this;
     const { eventId, idSurvey } = this.props;
     let surveyData = await this.loadSurvey(eventId, idSurvey);
@@ -141,8 +141,6 @@ class SurveyComponent extends Component {
     Survey.JsonObject.metaData.addProperty('question', 'points');
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
-
-    console.log('data survey +++++++++++++++', dataSurvey);
 
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];
@@ -488,11 +486,15 @@ class SurveyComponent extends Component {
     });
 
     if (surveyData.allow_gradable_survey === 'true') {
+      //const { minimumScore } = surveyData;
+
       let text = `Has obtenido ${totalPoints} de ${totalQuestions} puntos </br>`;
-      text +=
-        totalPoints >= surveyData.minimunScore && surveyData.hasMinimunScore === 'true'
-          ? `${surveyData.win_Message ? surveyData.win_Message : ''}`
-          : `${surveyData.lose_Message ? surveyData.lose_Message : ''}`;
+      if (surveyData.hasMinimumScore === 'true') {
+        text +=
+          totalPoints >= surveyData.minimumScore
+            ? `${surveyData.win_Message ? surveyData.win_Message : ''}`
+            : `${surveyData.lose_Message ? surveyData.lose_Message : ''}`;
+      }
 
       survey.completedHtml = `${textOnCompleted}<br>${text}<br>${
         surveyData.neutral_Message ? surveyData.neutral_Message : ''

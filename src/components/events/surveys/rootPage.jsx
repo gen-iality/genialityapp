@@ -5,7 +5,8 @@ import { SurveyAnswers } from './services';
 import Graphics from './graphics';
 import SurveyComponent from './surveyComponent';
 
-import { Card, Spin } from 'antd';
+import { Card } from 'antd';
+import Loading from './loading';
 
 export default class RootPage extends Component {
   constructor(props) {
@@ -28,7 +29,6 @@ export default class RootPage extends Component {
   };
 
   componentDidMount() {
-    console.log('revision eventUser', this.props.eventUser);
     this.loadData();
   }
 
@@ -55,9 +55,10 @@ export default class RootPage extends Component {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   getResults = (surveyData) => {
     // eslint-disable-next-line no-console
-    console.log(surveyData);
+    //console.log(surveyData);
   };
 
   componentWillUnmount() {
@@ -118,6 +119,6 @@ export default class RootPage extends Component {
         </div>
       );
 
-    return <Spin></Spin>;
+    return <Loading />;
   }
 }

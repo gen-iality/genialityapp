@@ -2,6 +2,7 @@ import 'chartjs-plugin-datalabels';
 import React, { Component } from 'react';
 import { Pagination, Spin, Card, Button } from 'antd';
 import { ArrowLeftOutlined, LeftCircleFilled } from '@ant-design/icons';
+import Loading from './loading';
 
 import Chart from 'chart.js';
 
@@ -280,7 +281,7 @@ class Graphics extends Component {
         </>
       );
 
-    return <Spin></Spin>;
+    return <Loading />;
   }
 }
 
