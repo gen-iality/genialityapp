@@ -757,7 +757,7 @@ class Landing extends Component {
                           collapsed={this.state.collapsed}
                           width={400}
                           style={{
-                            backgroundColor: event.styles.toolbarMenuSocial ? event.style.toolbarMenuSocial : '#fff',
+                            backgroundColor: event.styles.toolbarMenuSocial ? event.styles.toolbarMenuSocial : '#fff',
                           }}>
                           <div className='Chat-Event'>
                             {this.state.collapsed ? (
