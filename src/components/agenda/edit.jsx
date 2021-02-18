@@ -10,6 +10,7 @@ import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
 import { Tabs, message } from 'antd';
 import RoomManager from './roomManager';
+import SurveyManager from './surveyManager';
 
 // En revision vista previa
 //import ZoomComponent from '../events/zoomComponent';
@@ -975,6 +976,7 @@ class AgendaEdit extends Component {
             date_activity={this.state.date}
             pendingChangesSave={this.state.pendingChangesSave}
           />
+          <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
         </TabPane>
       </Tabs>
     );

@@ -150,9 +150,12 @@ class RoomManager extends Component {
 
   // Encargado de gestionar los tabs de la video conferencia
   handleTabsController = (e, tab) => {
-    const valueTab = e.target.value === 'true' ? true : false;
+    const valueTab = e;
     const { chat, surveys, games, attendees } = this.state;
     const tabs = { chat, surveys, games, attendees };
+
+    // console.log('e', typeof e, 'tab');
+    // return true;
 
     if (tab === 'chat') {
       tabs.chat = valueTab;

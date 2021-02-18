@@ -64,7 +64,6 @@ class SurveyForm extends Component {
   }
 
   async componentDidMount() {
-    console.log('-- Mount SurveyForm --');
     let { event } = this.props;
 
     // Método para escuchar todas las encuestas relacionadas con el evento
@@ -294,19 +293,17 @@ class SurveyForm extends Component {
           </Button>
         )} */}
 
-        {(this.state.surveyVisible || !this.state.availableSurveysBar) && (
-          <Card>
-            <SurveyList
-              jsonData={publishedSurveys}
-              currentUser={currentUser}
-              eventUser={eventUser}
-              showSurvey={this.toggleSurvey}
-              surveyLabel={surveyLabel}
-              forceCheckVoted={this.state.forceCheckVoted}
-              loading={this.state.loading}
-            />
-          </Card>
-        )}
+        <Card>
+          <SurveyList
+            jsonData={publishedSurveys}
+            currentUser={currentUser}
+            eventUser={eventUser}
+            showSurvey={this.toggleSurvey}
+            surveyLabel={surveyLabel}
+            forceCheckVoted={this.state.forceCheckVoted}
+            loading={this.state.loading}
+          />
+        </Card>
       </div>
     );
   }

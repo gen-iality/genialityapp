@@ -152,7 +152,7 @@ class Agenda extends Component {
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
-          console.log('data', data);
+
           let { habilitar_ingreso, isPublished } = data;
           let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished };
 
