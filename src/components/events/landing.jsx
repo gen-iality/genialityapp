@@ -746,7 +746,7 @@ class Landing extends Component {
                           visible={this.state.visibleChat}
                           maskClosable={true}
                           className='drawerMobile'>
-                          <SocialZone />
+                          <SocialZone event_id={event._id} />
                         </Drawer>
 
                         {/* aqui empieza el chat del evento desktop */}
@@ -783,7 +783,7 @@ class Landing extends Component {
                                 <Button type='link' onClick={this.toggleCollapsed}>
                                   <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
                                 </Button>
-                                <SocialZone />
+                                <SocialZone event_id={event._id} />
                               </>
                             )}
                           </div>
