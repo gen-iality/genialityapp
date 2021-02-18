@@ -104,6 +104,11 @@ class General extends Component {
   }
 
   //*********** FUNCIONES DEL FORMULARIO
+
+  googleanlyticsid = (e) => {
+    const { name, value } = e.target;
+    this.setState({ event: { ...this.state.event, [name]: value } });
+  };
   //Cambio en los input
   handleChange = (e) => {
     const { name, value } = e.target;
@@ -293,7 +298,10 @@ class General extends Component {
       show_banner_footer: event.show_banner_footer || false,
       has_payment: event.has_payment ? event.has_payment : false,
       language: event.language ? event.language : 'es',
+      googleanlyticsid: event.googleanlyticsid || null,
     };
+
+    console.log('Marlon aqui:', data);
 
     try {
       if (event._id) {
@@ -868,6 +876,19 @@ class General extends Component {
                 options={types}
                 required={true}
               />
+              <div className='field'>
+                <label className='label has-text-grey-light'>ID Google Analytics</label>
+                <div className='control'>
+                  <input
+                    className='input'
+                    name={'googleanlyticsid'}
+                    type='text'
+                    placeholder='¿El evento tiene Id tag-Manager?'
+                    value={event.googleanlyticsid}
+                    onChange={this.googleanlyticsid}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
