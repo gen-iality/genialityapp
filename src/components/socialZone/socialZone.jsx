@@ -19,6 +19,7 @@ let SocialZone = function(props) {
   const [attendeeListPresence, setAttendeeListPresence] = useState({});
 
   const [currentChat, setCurrentChatInner] = useState(null);
+  const [currentChatName, setCurrentChatNameInner] = useState('');
   const [availableChats, setavailableChats] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [currentTab, setcurrentTab] = useState('1');
@@ -27,9 +28,10 @@ let SocialZone = function(props) {
   console.log('datafirebase nos inicamos nuevamente');
   let event_id = props.match.params.event_id;
 
-  let setCurrentChat = (id) => {
+  let setCurrentChat = (id, chatname) => {
     setcurrentTab('2'); //chats tab
     setCurrentChatInner(id);
+    setCurrentChatNameInner(chatname);
   };
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
@@ -38,6 +40,7 @@ let SocialZone = function(props) {
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
+    console.log('newId', newId);
     let data = {};
 
     //agregamos una referencia al chat para el usuario actual
@@ -51,7 +54,7 @@ let SocialZone = function(props) {
     firestore
       .doc('eventchats/' + event_id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
-    setCurrentChat(newId);
+    setCurrentChat(newId, otherUserName);
   };
   const monitorEventPresence = (event_id) => {
     console.log('datafirebase se inicio el monitoreo de presencia');
@@ -90,7 +93,7 @@ let SocialZone = function(props) {
     console.log('Corriendo carga de chats');
 
     firestore
-      .collection('eventchats/' + event_id + '/userchats/' + currentUser._id + '/' + 'chats/')
+      .collection('eventchats/' + event_id + '/userchats/' + currentUser.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
         console.log('cargando lista de chats');
         let list = [];
@@ -129,6 +132,7 @@ let SocialZone = function(props) {
           currentUser={currentUser}
           event_id={event_id}
           currentChat={currentChat}
+          currentChatName={currentChatName}
           createNewOneToOneChat={createNewOneToOneChat}
           attendeeList={attendeeList}
           attendeeListPresence={attendeeListPresence}
@@ -139,6 +143,7 @@ let SocialZone = function(props) {
           availableChats={availableChats}
           currentUser={currentUser}
           setCurrentChat={setCurrentChat}
+          currentChatName={currentChatName}
           currentChat={currentChat}
         />
       </TabPane>
@@ -149,13 +154,14 @@ let SocialZone = function(props) {
 export default withRouter(SocialZone);
 
 let ChatList = function(props) {
-  let userName = 'LuisXXX';
+  let userName = props.currentUser.names || '---';
 
   return props.currentChat ? (
     <>
-      <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(null)}>
+      <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(null, null)}>
         Listado
       </a>
+      <p>{props.currentChatName}</p>
       <iframe
         title='chatevius'
         className='ChatEvius'
@@ -170,7 +176,7 @@ let ChatList = function(props) {
       renderItem={(item) => (
         <List.Item
           actions={[
-            <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id)}>
+            <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
               Chat
             </a>
           ]}>
@@ -198,7 +204,12 @@ let AttendeList = function(props) {
               <a
                 key='list-loadmore-edit'
                 onClick={() =>
-                  props.createNewOneToOneChat(props.currentUser._id, props.currentUser.names, item._id, item.user.names)
+                  props.createNewOneToOneChat(
+                    props.currentUser.uid,
+                    props.currentUser.names,
+                    item.user.uid,
+                    item.user.names
+                  )
                 }>
                 Chat
               </a>
@@ -207,7 +218,22 @@ let AttendeList = function(props) {
           {/* <Skeleton avatar title={false} loading={item.loading} active> */}
           <List.Item.Meta
             avatar={<Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />}
-            title={<a href='https://ant.design'>{item.properties.names}</a>}
+            title={
+              props.currentUser ? (
+                <a
+                  key='list-loadmore-edit'
+                  onClick={() =>
+                    props.createNewOneToOneChat(
+                      props.currentUser.uid,
+                      props.currentUser.names,
+                      item.user.uid,
+                      item.user.names
+                    )
+                  }>
+                  {item.properties.names}
+                </a>
+              ) : null
+            }
             description={props.attendeeListPresence[item.key] ? props.attendeeListPresence[item.key].state : 'offline'}
           />
           <div></div>
