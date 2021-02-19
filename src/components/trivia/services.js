@@ -1,6 +1,5 @@
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment';
-import { resolve } from 'core-js/fn/promise';
 
 const refSurvey = firestore.collection('surveys');
 

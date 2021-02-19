@@ -10,12 +10,16 @@ export default function ListadoJuegos(props) {
   const [myScore, setMyScore] = useState('');
 
   useEffect(() => {
+    console.log('props', props);
+  }, []);
+
+  useEffect(() => {
     props.changeContentDisplayed('games');
 
     let gameId = '0biWfCwWbUGhbZmfhkvu';
 
     //Consulta del puntaje del currentUser
-    if (props.currentUser._id !== undefined) {
+    if (props.currentUser !== null) {
       firestore
         .collection('juegos/' + gameId + '/puntajes/')
         .doc(props.currentUser._id)

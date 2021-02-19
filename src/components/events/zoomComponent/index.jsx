@@ -29,6 +29,7 @@ export default class ZoomComponent extends Component {
 
       //parametros de la actividad almacenados en firestore
       habilitar_ingreso: 'close_metting_room',
+      platform: null,
       chat: false,
       surveys: false,
       games: false,
@@ -46,7 +47,7 @@ export default class ZoomComponent extends Component {
   }
 
   async setUpUserForConference() {
-    let { meetingId, userEntered } = this.props;
+    let { userEntered } = this.props;
 
     let displayName = 'Anónimo';
     let email = 'anonimo@evius.co';
@@ -83,7 +84,6 @@ export default class ZoomComponent extends Component {
     }
 
     this.setState({
-      meeting_id: meetingId,
       userEntered,
       displayName,
       email,
@@ -104,9 +104,11 @@ export default class ZoomComponent extends Component {
         const videoConference = response.data();
 
         this.setState({
+          meeting_id: videoConference.meeting_id ? videoConference.meeting_id : this.props.meetingId,
+          platform: videoConference.platform ? videoConference.platform : null,
           habilitar_ingreso: videoConference.habilitar_ingreso
             ? videoConference.habilitar_ingreso
-            : 'close_metting_room',
+            : 'closed_metting_room',
           chat: videoConference.tabs && videoConference.tabs.chat ? videoConference.tabs.chat : false,
           surveys: videoConference.tabs && videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
           games: videoConference.tabs && videoConference.tabs.games ? videoConference.tabs.games : false,
@@ -246,8 +248,8 @@ export default class ZoomComponent extends Component {
       attendees,
       activeTab,
       conferenceStyles,
+      platform,
     } = this.state;
-    const platform = activity.platform || this.state.event.event_platform;
     return (
       <div
         className={`content-zoom ${isMedium === true ? 'mediumScreen' : ''} ${
@@ -294,7 +296,7 @@ export default class ZoomComponent extends Component {
           {this.state.event && platform === 'vimeo' && (
             <Row className='platform-vimeo' style={{ display: 'contents' }}>
               <iframe
-                src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
+                src={`https://player.vimeo.com/video/${meeting_id}`}
                 frameBorder='0'
                 allow='autoplay; fullscreen; camera *;microphone *'
                 allowFullScreen
@@ -360,6 +362,7 @@ export default class ZoomComponent extends Component {
 
               {/* Retiro temporal del chat se ajusta video a pantalla completa */}
               <ConferenceTabs
+                meeting_id={meeting_id}
                 activity={activity}
                 event={event}
                 currentUser={this.props.userEntered}

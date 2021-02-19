@@ -1,6 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import axios from 'axios';
-import { ApiEviusZoomServer } from '../../helpers/constants';
 import { Redirect, withRouter, Link } from 'react-router-dom';
 import Moment from 'moment';
 import EviusReactQuill from '../shared/eviusReactQuill';
@@ -10,10 +8,13 @@ import Creatable from 'react-select';
 import { FaWhmcs } from 'react-icons/fa';
 import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import { Tabs, notification } from 'antd';
-import { createOrUpdateActivity, getConfiguration } from './services';
+import { Tabs, message } from 'antd';
+import RoomManager from './roomManager';
+import SurveyManager from './surveyManager';
 
-import ZoomComponent from '../events/zoomComponent';
+// En revision vista previa
+//import ZoomComponent from '../events/zoomComponent';
+
 import {
   AgendaApi,
   CategoriesAgendaApi,
@@ -22,17 +23,15 @@ import {
   SpeakersApi,
   TypesAgendaApi,
   DocumentsApi,
-  EventsApi,
   eventTicketsApi,
   getCurrentUser,
 } from '../../helpers/request';
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from '../../helpers/utils';
 import Dropzone from 'react-dropzone';
-import { Spin, Card, Row, Col, Select as SelectAntd } from 'antd';
+import { Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
-import { toast } from 'react-toastify';
-import { setHostState } from './fireHost';
 import AgendaLanguaje from './language/index';
+import { firestore } from '../../helpers/firebase';
 
 const { TabPane } = Tabs;
 
@@ -41,8 +40,10 @@ class AgendaEdit extends Component {
     super(props);
     this.state = {
       loading: true,
+      // Estado para la redireccion de navegacion interna al eliminar actividad o volver al listado de actividades.
       redirect: false,
-      deleteID: false,
+      // El id de la actividad se inicializa al crear la actividad
+      activity_id: false,
       isLoading: { types: true, categories: true },
       name: '',
       subtitle: '',
@@ -50,10 +51,10 @@ class AgendaEdit extends Component {
       has_date: '',
       description: '',
       registration_message: '',
+      date: '',
       hour_start: new Date(),
       hour_end: new Date(),
       key: new Date(),
-      date: '',
       image: '',
       locale: 'en',
       capacity: 0,
@@ -76,27 +77,21 @@ class AgendaEdit extends Component {
       hosts: [],
       selected_document: [],
       nameDocuments: [],
-      hostAvailable: [],
-      availableText: 'ended_meeting_room',
       tickets: [],
       selectedTicket: [],
       platform: '',
       vimeo_id: '',
       name_host: '',
 
-      //administracion tabs de video conferencia en Vimeo
-      chat: true,
-      surveys: false,
-      games: false,
-      attendees: false,
+      //Estado para detectar cambios en la fecha/hora de la actividad sin guardar
+      pendingChangesSave: false,
+
+      // Fechas de la actividad con formato para la creacion de sala en zoom
+      date_start_zoom: null,
+      date_end_zoom: null,
     };
-    this.createConference = this.createConference.bind(this);
-    this.removeConference = this.removeConference.bind(this);
-    this.onChange = this.onChange.bind(this);
-    this.handleTabs = this.handleTabs.bind(this);
+    this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
-    this.removeVimeoId = this.removeVimeoId.bind(this);
-    this.saveVimeoId = this.saveVimeoId.bind(this);
   }
 
   toggleConference = (isVisible) => {
@@ -151,15 +146,12 @@ class AgendaEdit extends Component {
     }
 
     let documents = await DocumentsApi.byEvent(event._id);
-    let hostAvailable = await EventsApi.hostAvailable();
 
     let nameDocuments = [];
     for (let i = 0; i < documents.length; i += 1) {
       nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
     }
-    this.setState({ nameDocuments, hostAvailable });
-
-    // getHostList(this.loadHostAvailable);
+    this.setState({ nameDocuments });
 
     let spaces = await SpacesApi.byEvent(this.props.event._id);
     let hosts = await SpeakersApi.byEvent(this.props.event._id);
@@ -177,33 +169,17 @@ class AgendaEdit extends Component {
 
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
-      const videoConferenceState = await getConfiguration(event._id, state.edit);
 
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
         platform: info.platform || event.event_platform,
-        availableText: videoConferenceState ? videoConferenceState.habilitar_ingreso : 'ended_meeting_room',
         info: info,
         video: info.video,
         name_host: info.name_host,
-        chat:
-          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.chat
-            ? videoConferenceState.tabs.chat
-            : false,
-        surveys:
-          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.surveys
-            ? videoConferenceState.tabs.surveys
-            : false,
-        games:
-          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.games
-            ? videoConferenceState.tabs.games
-            : false,
-        attendees:
-          videoConferenceState && videoConferenceState.tabs && videoConferenceState.tabs.attendees
-            ? videoConferenceState.tabs.attendees
-            : false,
+        date_start_zoom: info.date_start_zoom,
+        date_end_zoom: info.date_end_zoom,
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
@@ -211,7 +187,7 @@ class AgendaEdit extends Component {
 
       let currentUser = await getCurrentUser();
       this.setState({
-        deleteID: state.edit,
+        activity_id: state.edit,
         date,
         hour_start,
         hour_end,
@@ -237,29 +213,20 @@ class AgendaEdit extends Component {
       loading: false,
       isLoading,
     });
-  }
 
-  loadHostAvailable = (list) => {
-    this.setState({ hostAvailable: list });
-  };
+    this.name.current.focus();
+  }
 
   //FN general para cambio en input
   handleChange = async (e) => {
     const { name, value } = e.target;
-    const { info } = this.state;
-    const { event } = this.props;
 
     // BACKLOG -> porque host_id se setea siempre que se setea un estado
-    this.setState({ [name]: value, host_id: e.target.value });
-
-    if (name === 'platform') {
-      info.platform = e.target.value;
-      await AgendaApi.editOne(info, this.props.location.state.edit, event._id);
-    }
+    this.setState({ [name]: value });
   };
   //FN para cambio en campo de fecha
-  handleDate = (value, name) => {
-    this.setState({ [name]: value });
+  handleChangeDate = (value, name) => {
+    this.setState({ [name]: value, pendingChangesSave: true });
   };
   //Cada select tiene su propia función para evitar errores y asegurar la información correcta
   selectType = (value) => {
@@ -328,7 +295,8 @@ class AgendaEdit extends Component {
   //Envío de información
 
   submit = async () => {
-    if (this.validForm()) {
+    const validation = this.validForm();
+    if (validation) {
       try {
         const info = this.buildInfo();
 
@@ -344,17 +312,29 @@ class AgendaEdit extends Component {
           const data = {
             activity_id: state.edit,
           };
-          await AgendaApi.editOne(info, state.edit, event._id);
+          const result = await AgendaApi.editOne(info, state.edit, event._id);
+
+          //Se actualizan los estados date_start_zoom y date_end_zoom para que componente de administracion actualice el valor pasado por props
+          this.setState({
+            date_start_zoom: result.date_start_zoom,
+            date_end_zoom: result.date_end_zoom,
+          });
 
           for (let i = 0; i < selected_document.length; i++) {
             await DocumentsApi.editOne(event._id, data, selected_document[i]._id);
           }
         } else {
           const agenda = await AgendaApi.create(event._id, info);
-          this.setState({ deleteID: agenda._id });
+          // Al crear una actividad de la agenda se inicializa el id de la actividad y las fechas de inicio y finalizacion como requisito del componente de administrador de salas
+          this.setState({
+            activity_id: agenda._id,
+            date_start_zoom: agenda.date_start_zoom,
+            date_end_zoom: agenda.date_end_zoom,
+          });
         }
-        //if (this.state.hostSelected) await setHostState(this.state.hostSelected, false);
-        //if (this.state.host_id) await setHostState(this.state.host_id, false);
+
+        //Se cambia el estado a pendingChangesSave encargado de detectar cambios pendientes en la fecha/hora sin guardar
+        this.setState({ pendingChangesSave: false });
 
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
@@ -378,7 +358,7 @@ class AgendaEdit extends Component {
         if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
         else {
           const agenda = await AgendaApi.create(event._id, info);
-          this.setState({ deleteID: agenda._id });
+          this.setState({ activity_id: agenda._id });
         }
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
@@ -401,7 +381,7 @@ class AgendaEdit extends Component {
       capacity,
       access_restriction_type,
       selectedCategories,
-      selectedHosts,
+
       selectedType,
       selectedRol,
       description,
@@ -413,7 +393,6 @@ class AgendaEdit extends Component {
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
     const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
-    const host_ids = selectedHosts >= 0 ? [] : selectedHosts.map(({ value }) => value);
 
     const type_id = selectedType.value;
     return {
@@ -430,7 +409,6 @@ class AgendaEdit extends Component {
       activity_categories_ids,
       access_restriction_type,
       access_restriction_rol_ids,
-      host_ids,
       type_id,
       has_date,
       selected_document,
@@ -467,10 +445,6 @@ class AgendaEdit extends Component {
       join_url,
       name_host,
       key,
-      chat,
-      surveys,
-      games,
-      attendees,
     } = this.state;
 
     //const registration_message_storage = window.sessionStorage.getItem('registration_message');
@@ -484,7 +458,6 @@ class AgendaEdit extends Component {
 
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
     const host_ids = selectedHosts >= 0 ? [] : selectedHosts.map(({ value }) => value);
-
     const type_id = selectedType === undefined ? '' : selectedType.value;
     return {
       name,
@@ -500,7 +473,6 @@ class AgendaEdit extends Component {
       activity_categories_ids,
       access_restriction_type,
       access_restriction_rol_ids,
-      host_ids,
       type_id,
       has_date,
       timeConference: '',
@@ -514,99 +486,19 @@ class AgendaEdit extends Component {
       join_url,
       name_host,
       key,
-      chat,
-      surveys,
-      games,
-      attendees,
+
+      host_ids,
     };
   };
 
-  async removeVimeoId() {
-    if (window.confirm('Esta seguro?')) {
-      this.setState({ vimeo_id: null }, function() {
-        this.submit();
-      });
-    }
-  }
-
-  async removeConference() {
-    if (window.confirm('Esta seguro?')) {
-      this.setState({ meeting_id: null }, function() {
-        this.submit();
-      });
-    }
-  }
-
-  async createConference() {
-    const { hostAvailable } = this.state;
-    const host_name = [];
-
-    for (let i = 0; hostAvailable.length > i; i++) {
-      if (this.state.host_id === hostAvailable[i].id) {
-        host_name.push(hostAvailable[i].first_name);
-      }
-    }
-
-    this.setState({ creatingConference: true });
-    const zoomData = {
-      activity_id: this.props.location.state.edit,
-      activity_name: this.state.name,
-      event_id: this.props.event._id,
-      agenda: this.state.name, //this.props.event.description,
-      host_id: this.state.host_id,
-      host_name: host_name[0],
-    };
-
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      data: zoomData,
-      url: ApiEviusZoomServer,
-    };
-
-    let response = null;
-
-    axios.defaults.timeout = 10000;
-    try {
-      response = await axios(options);
-      toast.success('Conferencia Creada');
-
-      //await setHostState(this.state.host_id, true);
-
-      const activityId = this.props.location.state.edit;
-
-      const { data } = response;
-      const info = await AgendaApi.editOne(
-        {
-          meeting_id: data.id,
-          start_url: data.start_url,
-          join_url: data.join_url,
-          name_host: data.host_email,
-          key: new Date(),
-        },
-        activityId,
-        this.props.event._id
-      );
-    } catch (error) {
-      if (error.response) {
-        response = JSON.stringify(error.response.data);
-      }
-      console.error(error);
-      this.setState({ creatingConference: false });
-    }
-    this.setState({ creatingConference: false });
-  }
-
   //FN para eliminar la actividad
   remove = () => {
-    if (this.state.deleteID) {
+    if (this.state.activity_id) {
       sweetAlert.twoButton(`Está seguro de borrar esta actividad`, 'warning', true, 'Borrar', async (result) => {
         try {
           if (result.value) {
             sweetAlert.showLoading('Espera (:', 'Borrando...');
-            await AgendaApi.deleteOne(this.state.deleteID, this.props.event._id);
+            await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id);
             this.setState({ redirect: true });
             sweetAlert.hideLoading();
           }
@@ -620,12 +512,22 @@ class AgendaEdit extends Component {
   //Validación de campos
 
   validForm = () => {
-    let title = '';
-    if (this.state.name.length <= 0) title = 'El Nombre es requerido';
+    let title = [];
+    if (this.state.name.length <= 0) title.push('El nombre es requerido');
+
+    if (this.state.date === '' || this.state.date === 'Invalid date') title.push('Seleccione el día');
+
+    if (this.state.hour_start === '' || this.state.hour_start === 'Invalid date')
+      title.push('Seleccione una hora de inicio valida');
+
+    if (this.state.hour_end === '' || this.state.hour_end === 'Invalid date')
+      title.push('Seleccione una hora de finalización valida');
 
     if (title.length > 0) {
       //   sweetAlert.twoButton(title, "warning", false, "OK", () => { });
-      //   return false;
+      title.map((item) => {
+        message.warning(item);
+      });
     } else return true;
   };
 
@@ -642,68 +544,8 @@ class AgendaEdit extends Component {
 
   goBack = () => this.setState({ redirect: true });
 
-  async onChange(e) {
-    this.setState({ availableText: e.target.value });
-    const tabs = {
-      chat: this.state.chat,
-      surveys: this.state.surveys,
-      games: this.state.games,
-      attendees: this.state.attendees,
-    };
-
-    let result = await createOrUpdateActivity(
-      this.props.location.state.edit,
-      this.props.event._id,
-      e.target.value,
-      tabs
-    );
-
-    notification.open({
-      message: result.message,
-    });
-  }
-
-  async handleTabs(e, tab) {
-    const valueTab = e.target.value === 'true' ? true : false;
-    const tabs = {
-      chat: this.state.chat,
-      surveys: this.state.surveys,
-      games: this.state.games,
-      attendees: this.state.attendees,
-    };
-    if (tab === 'chat') {
-      tabs.chat = valueTab;
-      this.setState({ chat: valueTab });
-    } else if (tab === 'surveys') {
-      tabs.surveys = valueTab;
-      this.setState({ surveys: valueTab });
-    } else if (tab === 'games') {
-      tabs.games = valueTab;
-      this.setState({ games: valueTab });
-    } else if (tab === 'attendees') {
-      tabs.attendees = valueTab;
-      this.setState({ attendees: valueTab });
-    }
-    await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, this.state.availableText, tabs);
-  }
-
   selectTickets(tickets) {
     this.setState({ selectedTicket: tickets });
-  }
-
-  async saveVimeoId(e) {
-    let info = this.state.info;
-    const { event } = this.props;
-
-    info.vimeo_id = e.target.value;
-    this.setState({ vimeo_id: e.target.value });
-
-    await AgendaApi.editOne(info, this.props.location.state.edit, event._id);
-
-    notification.open({
-      message: 'Id de vimeo Guardado correctamente',
-      description: 'Dato Guardado Correctamente',
-    });
   }
 
   handleChangeReactQuill = (e, label) => {
@@ -712,10 +554,6 @@ class AgendaEdit extends Component {
     } else if (label === 'registration_message') {
       this.setState({ registration_message: e });
     }
-  };
-
-  handleChangeDate = (e) => {
-    this.setState({ date: e });
   };
 
   handleVideoConference = () => {
@@ -747,15 +585,9 @@ class AgendaEdit extends Component {
       types,
       roles,
       isLoading,
-      start_url,
-      join_url,
-      availableText,
-      vimeo_id,
       platform,
-      chat,
-      games,
-      surveys,
-      attendees,
+      date_start_zoom,
+      date_end_zoom,
     } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
@@ -767,11 +599,13 @@ class AgendaEdit extends Component {
               <Loading />
             ) : (
               <div className='columns'>
-                <div className='column is-8'>
+                <div className='column is-7'>
                   <div className='field'>
                     <label className='label required'>Nombre</label>
                     <div className='control'>
                       <input
+                        ref={this.name}
+                        autoFocus
                         className='input'
                         type='text'
                         name={'name'}
@@ -803,7 +637,7 @@ class AgendaEdit extends Component {
                       options={this.state.days}
                       style={{ width: '100%' }}
                       defaultValue={date}
-                      onChange={this.handleChangeDate}
+                      onChange={(value) => this.handleChangeDate(value, 'date')}
                     />
                   </div>
                   <div className='columns'>
@@ -815,7 +649,7 @@ class AgendaEdit extends Component {
                           dropUp
                           step={15}
                           date={false}
-                          onChange={(value) => this.handleDate(value, 'hour_start')}
+                          onChange={(value) => this.handleChangeDate(value, 'hour_start')}
                         />
                       </div>
                     </div>
@@ -828,7 +662,7 @@ class AgendaEdit extends Component {
                           dropUp
                           step={15}
                           date={false}
-                          onChange={(value) => this.handleDate(value, 'hour_end')}
+                          onChange={(value) => this.handleChangeDate(value, 'hour_end')}
                         />
                       </div>
                     </div>
@@ -964,16 +798,16 @@ class AgendaEdit extends Component {
                     />
                   </div>
                   {/* <label className="label">Ticket</label>
-                <div>
-                  <Select
-                    isClearable
-                    isMulti
-                    styles={creatableStyles}
-                    onChange={this.selectTickets}
-                    options={tickets}
-                    value={selectedTickets}
-                  />
-                </div> */}
+                  <div>
+                    <Select
+                      isClearable
+                      isMulti
+                      styles={creatableStyles}
+                      onChange={this.selectTickets}
+                      options={tickets}
+                      value={selectedTickets}
+                    />
+                  </div> */}
 
                   <div className='field'>
                     <label className='label'>Link del video</label>
@@ -1002,7 +836,8 @@ class AgendaEdit extends Component {
                     </div>
                   </div>
                 </div>
-                <div className='column is-4 general'>
+
+                <div className='column is-5 general'>
                   <div className='field is-grouped'>
                     <button className='button is-text' onClick={this.remove}>
                       x Eliminar actividad
@@ -1016,7 +851,6 @@ class AgendaEdit extends Component {
                       Duplicar para traducir
                     </button>
                   </div>
-
                   <div className='section-gray'>
                     <div className='field'>
                       <label className='label has-text-grey-light'>Imagen</label>
@@ -1088,216 +922,30 @@ class AgendaEdit extends Component {
                     </div>
                   </div>
 
-                  <Card style={{ marginTop: '4%' }} title='Conferencia virtual'>
-                    {!this.props.location.state.edit ? (
-                      <div>Primero cree la actividad y luego podrá crear una conferencia virtual asociada</div>
-                    ) : (
-                      <>
-                        <p>
-                          <strong>Recuerda Salvar la información en el botón Guardar de la parte superior</strong>
-                        </p>
-                        <div>
-                          <label className='label'>Plataforma Streaming del evento</label>
-                          <div className='select is-primary'>
-                            <select defaultValue={platform} name='platform' onChange={this.handleChange}>
-                              <option value=''>Seleccionar...</option>
-                              <option value='zoom'>Zoom</option>
-                              <option value='zoomExterno'>ZoomExterno</option>
-                              <option value='vimeo'>Vimeo</option>
-                              <option value='bigmarker'>BigMaker</option>
-                            </select>
-                          </div>
-                        </div>
-                      </>
-                    )}
+                  {/* componente de vista previa en revision, por firebase se tiene problemas si se deja como un modal y al mismo tiempo si se abre otra ventana para su administracion, se soluciona si se abre en una pestaña nueva */}
 
-                    {(platform === 'zoom' || platform === 'zoomExterno') && (
-                      <>
-                        <>
-                          {!this.state.meeting_id && (
-                            <Fragment>
-                              <div className='control'>
-                                <div className='select'>
-                                  <select name={'host_id'} value={this.state.host_id} onChange={this.handleChange}>
-                                    <option>Seleccione host</option>
-                                    {this.state.hostAvailable.length > 0 &&
-                                      this.state.hostAvailable.map((host) => {
-                                        return (
-                                          host.state &&
-                                          host.state === 'available' && (
-                                            <option value={host.id} key={host.id}>
-                                              {host.email}
-                                            </option>
-                                          )
-                                        );
-                                      })}
-                                  </select>
-                                </div>
-                              </div>
-                              <div>
-                                {!this.state.creatingConference && (
-                                  <button
-                                    style={{ marginTop: '2%' }}
-                                    className='button is-primary'
-                                    disabled={!this.state.host_id}
-                                    onClick={this.createConference}>
-                                    Crear espacio virtual
-                                  </button>
-                                )}
-                                {this.state.creatingConference && <Spin tip='Creando...' />}
-                              </div>
-                            </Fragment>
-                          )}
+                  {/* {(this.state.meeting_id || this.state.vimeo_id) && (
+                    <>
+                      <button
+                        style={{ marginTop: '2%' }}
+                        className='button is-primary'
+                        onClick={() => {
+                          this.toggleConference(true);
+                        }}>
+                        Ver Conferencia (Vista previa)
+                      </button>
+                    </>
+                  )}
 
-                          {this.state.meeting_id && (
-                            <div>
-                              <div style={{ marginTop: '2%' }}>
-                                <div>
-                                  <p>El id de la conferencia virtual es:</p>
-                                  <p>{this.state.meeting_id}</p>
-                                </div>
-
-                                <div>
-                                  <p>El host encargado es:</p>
-                                  <p>{this.state.name_host}</p>
-                                </div>
-                                <div key={this.state.key}>
-                                  <p>
-                                    <b>Accessos</b>
-                                  </p>
-                                  <hr />
-                                  <p>
-                                    <a href={start_url} rel='noopener noreferrer' target='_blank'>
-                                      Acceso para hosts
-                                    </a>
-                                  </p>
-                                  <p>
-                                    <a href={join_url} rel='noopener noreferrer' target='_blank'>
-                                      Acceso para asistentes
-                                    </a>
-                                  </p>
-                                </div>
-                              </div>
-                              <div>
-                                <label className='label'>Estado de videoconferencia</label>
-                                <div className='select'>
-                                  <select
-                                    defaultValue={availableText}
-                                    styles={creatableStyles}
-                                    onChange={this.onChange}>
-                                    <option value='open_meeting_room'>Conferencia Abierta</option>
-                                    <option value='closed_meeting_room'>Conferencia no Iniciada</option>
-                                    <option value='ended_meeting_room'>Conferencia Terminada</option>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <button
-                                style={{ marginTop: '2%' }}
-                                className='button is-primary'
-                                onClick={this.removeConference}>
-                                Eliminar espacio virtual
-                              </button>
-                            </div>
-                          )}
-                        </>
-                      </>
-                    )}
-                    {platform === 'vimeo' && this.props.location.state.edit && (
-                      <>
-                        {!vimeo_id ? (
-                          <div className='control'>
-                            <label>Ingrese id de videoconferencia Vimeo</label>
-                            <input type='number' name='vimeo_id' onChange={(e) => this.saveVimeoId(e)} />
-                          </div>
-                        ) : (
-                          <>
-                            <div className='control'>
-                              <label>id de videoconferencia Vimeo</label>
-                              <p>{vimeo_id}</p>
-                            </div>
-                            <div>
-                              <label className='label'>Estado de videoconferencia</label>
-                              <div className='select'>
-                                <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
-                                  <option value='open_meeting_room'>Conferencia Abierta</option>
-                                  <option value='closed_meeting_room'>Conferencia no Iniciada</option>
-                                  <option value='ended_meeting_room'>Conferencia Terminada</option>
-                                </select>
-                              </div>
-                              <button
-                                style={{ marginTop: '2%' }}
-                                className='button is-primary'
-                                onClick={this.removeVimeoId}>
-                                Eliminar espacio virtual
-                              </button>
-                              <Card>
-                                <Row style={{ marginBottom: 16 }}>
-                                  <Col>
-                                    <label className='label'>Habilitar Chat</label>
-                                    <select defaultValue={chat} onChange={(e) => this.handleTabs(e, 'chat')}>
-                                      <option value='true'>Si</option>
-                                      <option value='false'>No</option>
-                                    </select>
-                                  </Col>
-                                </Row>
-                                <Row style={{ marginBottom: 16 }}>
-                                  <Col>
-                                    <label className='label'>Habilitar Encuestas</label>
-                                    <select defaultValue={surveys} onChange={(e) => this.handleTabs(e, 'surveys')}>
-                                      <option value='true'>Si</option>
-                                      <option value='false'>No</option>
-                                    </select>
-                                  </Col>
-                                </Row>
-                                <Row style={{ marginBottom: 16 }}>
-                                  <Col>
-                                    <label className='label'>Habilitar Juegos</label>
-                                    <select defaultValue={games} onChange={(e) => this.handleTabs(e, 'games')}>
-                                      <option value='true'>Si</option>
-                                      <option value='false'>No</option>
-                                    </select>
-                                  </Col>
-                                </Row>
-                                <Row style={{ marginBottom: 16 }}>
-                                  <Col>
-                                    <label className='label'>Habilitar Listado de asistentes</label>
-                                    <select defaultValue={attendees} onChange={(e) => this.handleTabs(e, 'attendees')}>
-                                      <option value='true'>Si</option>
-                                      <option value='false'>No</option>
-                                    </select>
-                                  </Col>
-                                </Row>
-                              </Card>
-                            </div>
-                          </>
-                        )}
-                      </>
-                    )}
-
-                    {(this.state.meeting_id || this.state.vimeo_id) && (
-                      <>
-                        <button
-                          style={{ marginTop: '2%' }}
-                          className='button is-primary'
-                          onClick={() => {
-                            this.toggleConference(true);
-                          }}>
-                          Ver Conferencia (Vista previa)
-                        </button>
-                      </>
-                    )}
-
-                    {this.state.conferenceVisible && (
-                      <ZoomComponent
-                        toggleConference={this.toggleConference}
-                        meetingId={this.state.meeting_id || this.state.vimeo_id}
-                        userEntered={this.state.currentUser}
-                        event={this.props.event}
-                        activity={this.state.info}
-                      />
-                    )}
-                  </Card>
+                  {this.state.conferenceVisible && (
+                    <ZoomComponent
+                      toggleConference={this.toggleConference}
+                      meetingId={this.state.meeting_id || this.state.vimeo_id}
+                      userEntered={this.state.currentUser}
+                      event={this.props.event}
+                      activity={this.state.info}
+                    />
+                  )} */}
                 </div>
               </div>
             )}
@@ -1316,6 +964,19 @@ class AgendaEdit extends Component {
               diferentes idiomas
             </p>
           )}
+        </TabPane>
+        <TabPane tab='Espacio Virtual' key='3'>
+          <RoomManager
+            event_id={this.props.event._id}
+            activity_id={this.state.activity_id}
+            activity_name={this.state.name}
+            firestore={firestore}
+            date_start_zoom={date_start_zoom}
+            date_end_zoom={date_end_zoom}
+            date_activity={this.state.date}
+            pendingChangesSave={this.state.pendingChangesSave}
+          />
+          <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
         </TabPane>
       </Tabs>
     );

@@ -100,8 +100,8 @@ class VirtualConference extends Component {
         .doc(activity._id)
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
-          let { habilitar_ingreso } = infoActivity.data();
-          let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
+          let { habilitar_ingreso, isPublished } = infoActivity.data();
+          let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished };
 
           arr[index] = updatedActivityInfo;
 
@@ -154,7 +154,8 @@ class VirtualConference extends Component {
               .filter((item) => {
                 return (
                   item.habilitar_ingreso &&
-                  (item.habilitar_ingreso == 'open_meeting_room' || item.habilitar_ingreso == 'closed_meeting_room')
+                  (item.habilitar_ingreso == 'open_meeting_room' || item.habilitar_ingreso == 'closed_meeting_room') &&
+                  (item.isPublished === true || item.isPublished === 'true')
                 );
               })
               .map((item, key) => (

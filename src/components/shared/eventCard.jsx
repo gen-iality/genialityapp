@@ -1,83 +1,95 @@
 import React, { Component } from 'react';
-import Moment from "moment";
-import { Link, withRouter } from "react-router-dom";
-import EventImage from "../../eventimage.png";
+import Moment from 'moment';
+import { Link, withRouter } from 'react-router-dom';
+import EventImage from '../../eventimage.png';
+import { Badge, Card, Space } from 'antd';
 
 class EventCard extends Component {
-    render () {
-        const { event, action, size, right } = this.props;
-        return (
-            <div className={ size }>
-                <Link to={ { pathname: `/landing/${ event._id }`, state: { event: event } } }>
-                    <div className="card">
-                        <div className="card-image">
-                            <figure className="image is-3by2">
-                                {
-                                    event.picture ?
-                                        <img src={ typeof event.picture === 'object' ? event.picture[ 0 ] : event.picture } alt="Evius.co" /> :
-                                        <img src={ EventImage } alt="Evius.co" />
-                                }
-                            </figure>
-                            <div className="header-event">
-                                <div className="is-pulled-left dates">
-                                    <p className="is-size-7 has-text-white">
-                                        <time dateTime={ event.datetime_from }>{ Moment( event.datetime_from ).format( 'DD' ) }</time><br />
-                                        <time dateTime={ event.datetime_from }>{ Moment( event.datetime_from ).format( 'MMM YYYY' ) }</time>
-                                    </p>
-                                    <div className="vertical-line"></div>
-                                    <p className="is-size-7 has-text-white">
-                                        <time dateTime={ event.datetime_to }>{ Moment( event.datetime_to ).format( 'DD' ) }</time><br />
-                                        <time dateTime={ event.datetime_to }>{ Moment( event.datetime_to ).format( 'MMM YYYY' ) }</time>
-                                    </p>
-                                </div>
-                                <div className="is-pulled-right cats">
-                                    {
-                                        event.categories.length >= 1 && <p># { event.categories[ 0 ].name }</p>
-                                    }
-                                    {
-                                        event.event_type && <p># { event.event_type.name }</p>
-                                    }
-                                </div>
-                            </div>
-                            {
-                                action && (
-
-                                    <button className="img-see button is-white is-small has-text-weight-bold">
-                                        {action.name }
-                                        <span className="icon is-small">
-                                            <i className="fas fa-angle-right"></i>
-                                        </span>
-                                    </button>
-                                )
-                            }
-                        </div>
-                        <div className="card-content">
-                            <div className="media">
-                                <div className="media-content">
-                                    <div className="">
-                                        <h2 className="title is-size-6 is-medium has-text-grey-dark">{ event.name }</h2>
-                                    </div>
-                                    { event.location &&
-                                        <div className="subtitle">
-                                            <span className="icon is-small has-text-grey">
-                                                <i className="fas fa-map-marker-alt" />
-                                            </span>
-
-                                            <span className="is-size-7 is-small has-text-grey-dark subt-location">{ ( event.location ) ? event.location.FormattedAddress : "" }</span>
-                                        </div>
-                                    }
-                                </div>
-                                <div className="vertical-line"></div>
-                                <div className="media-right">
-                                    { right }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </Link>
-            </div>
-        );
-    }
+  render() {
+    const { event, action, bordered, right, loading } = this.props;
+    const { Meta } = Card;
+    return (
+      <div className='animate__animated animate__fadeIn'>
+        <Badge.Ribbon
+          style={{
+            maxWidth: '250px',
+            height: 'auto',
+            overflowWrap: 'break-word',
+            whiteSpace: 'normal',
+          }}
+          text={
+            <span style={{ fontSize: '12px' }}>
+              <div>
+                <Space>
+                  <span>
+                    <i className='fas fa-map-marker-alt' />
+                  </span>
+                  <span>{event.venue ? event.venue : 'Virtual'}</span>
+                </Space>
+              </div>
+            </span>
+          }>
+          <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+            <Card
+              bordered={bordered}
+              loading={loading}
+              style={{ width: '100%' }}
+              cover={
+                event.picture ? (
+                  <img
+                    className='animate__animated animate__fadeIn animate__slower'
+                    loading='lazy'
+                    style={{ objectFit: 'cover', height: 180 }}
+                    src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
+                    alt='Evius.co'
+                  />
+                ) : (
+                  <img
+                    className='animate__animated animate__fadeIn animate__slower'
+                    loading='lazy'
+                    style={{ objectFit: 'cover', height: 180 }}
+                    src={
+                      event.styles
+                        ? event.styles.banner_image && event.styles.banner_image !== undefined
+                          ? event.styles.banner_image
+                          : EventImage
+                        : EventImage
+                    }
+                    alt='Evius.co'
+                  />
+                )
+              }
+              actions={right}
+              bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}>
+              <Meta
+                style={{}}
+                description={
+                  <div>
+                    <span style={{ fontSize: '12px' }}>
+                      <Space>
+                        <i class='fas fa-calendar-alt' />
+                        <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
+                        {'-'}
+                        <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
+                      </Space>
+                    </span>
+                    <h3 style={{ fontWeight: 'bold' }}>{event.name}</h3>
+                    <span>
+                      {event.organizer.name
+                        ? event.organizer.name
+                        : event.author.displayName
+                        ? event.author.displayName
+                        : event.author.names}
+                    </span>
+                  </div>
+                }
+              />
+            </Card>
+          </Link>
+        </Badge.Ribbon>
+      </div>
+    );
+  }
 }
 
-export default withRouter( EventCard );
+export default withRouter(EventCard);

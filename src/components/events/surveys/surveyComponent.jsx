@@ -9,13 +9,13 @@ import { SurveyAnswers, SurveyPage, UserGamification, Trivia } from './services'
 import Graphics from './graphics';
 import * as Survey from 'survey-react';
 import 'survey-react/modern.css';
-import { cosh } from 'core-js/fn/math';
 Survey.StylesManager.applyTheme('modern');
 
 const MIN_ANSWER_FEEDBACK_TIME = 5;
 const surveyStyle = {
   overFlowX: 'hidden',
   overFlowY: 'scroll',
+  minHeight: 'calc(100vh - 100px)',
 };
 
 class SurveyComponent extends Component {
@@ -478,10 +478,6 @@ class SurveyComponent extends Component {
       totalQuestions = surveyData.pages.length - 1;
     }
 
-    // Umbral de exito, esta variable indica apartir de cuantos aciertos se completa con Ã©xito el cuestionario
-    // Por el momento el valor esta quemado y deberÃ­a venir de un parÃ¡metro del CMS
-    let scoreMinimumForWin = 10;
-
     let textOnCompleted = survey.completedHtml;
 
     survey.currentPage.questions.forEach((question) => {
@@ -490,11 +486,15 @@ class SurveyComponent extends Component {
     });
 
     if (surveyData.allow_gradable_survey === 'true') {
+      //const { minimumScore } = surveyData;
+
       let text = `Has obtenido ${totalPoints} de ${totalQuestions} puntos </br>`;
-      text +=
-        totalPoints >= scoreMinimumForWin
-          ? `${surveyData.win_Message ? surveyData.win_Message : ''}`
-          : `${surveyData.lose_Message ? surveyData.lose_Message : ''}`;
+      if (surveyData.hasMinimumScore === 'true') {
+        text +=
+          totalPoints >= surveyData.minimumScore
+            ? `${surveyData.win_Message ? surveyData.win_Message : ''}`
+            : `${surveyData.lose_Message ? surveyData.lose_Message : ''}`;
+      }
 
       survey.completedHtml = `${textOnCompleted}<br>${text}<br>${
         surveyData.neutral_Message ? surveyData.neutral_Message : ''
