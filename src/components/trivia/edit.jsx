@@ -19,7 +19,7 @@ class triviaEdit extends Component {
       redirect: false,
       survey: '',
       publish: '',
-      allow_anonymous_answers: false,
+      allow_anonymous_answers: '',
       openSurvey: false,
       allow_gradable_survey: false,
       show_horizontal_bar: true,

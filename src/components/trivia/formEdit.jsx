@@ -73,7 +73,7 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
   };
 
   const fieldValidation = (rule, value) => {
-    if (!value) {
+    if (value) {
       toggleConfirmLoading();
       return Promise.resolve();
     } else {
@@ -82,8 +82,6 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
   };
 
   const onFinish = (values) => {
-    console.log('values:', values);
-
     values['id'] = questionId;
     if (allowGradableSurvey) {
       switch (questionType) {
@@ -145,12 +143,13 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                   key={`field${key}${field.name}`}
                   name={field.name}
                   label={field.label}
-                  rules={[
-                    { required: true },
-                    {
-                      validator: fieldValidation,
-                    },
-                  ]}>
+                  // rules={[
+                  //   { required: true },
+                  //   {
+                  //     validator: fieldValidation,
+                  //   },
+                  // ]}
+                >
                   <Input />
                 </Form.Item>
               ) : (
