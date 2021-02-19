@@ -20,8 +20,19 @@ let AgendaActividadDetalle = (props) => {
   let [orderedHost, setOrderedHost] = useState([]);
   const [meetingState, setMeetingState] = useState(null);
   const [meeting_id, setMeeting_id] = useState(null);
-
+  const [platform, setPlatform] = useState(null);
+  const [contentDisplayed, setContentDisplayed] = useState('');
   const intl = useIntl();
+  const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
+
+  useEffect(() => {
+    const checkContentToDisplay = () => {
+      if (platform !== '' && platform === null && meeting_id !== '' && meeting_id !== null) {
+        setContentDisplayed('videoconference');
+      }
+    };
+    checkContentToDisplay();
+  }, [platform, meeting_id]);
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     firestore
@@ -31,9 +42,10 @@ let AgendaActividadDetalle = (props) => {
       .doc(activity_id)
       .onSnapshot((infoActivity) => {
         if (!infoActivity.exists) return;
-        const { habilitar_ingreso, meeting_id } = infoActivity.data();
+        const { habilitar_ingreso, meeting_id, platform } = infoActivity.data();
         setMeetingState(habilitar_ingreso);
         setMeeting_id(meeting_id);
+        setPlatform(platform);
       });
   }
 
@@ -82,6 +94,15 @@ let AgendaActividadDetalle = (props) => {
     setIdSpeaker(idSpeaker);
   }
 
+  const getMeetingPath = (platform) => {
+    const { displayName, email } = props.currentUser;
+    if (platform === 'zoom') {
+      return url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`;
+    } else if (platform === 'vimeo') {
+      return `https://player.vimeo.com/video/${meeting_id}`;
+    }
+  };
+
   const { currentActivity, gotoActivityList, toggleConference, image_event } = props;
   return (
     <div className='columns container-calendar-section is-centered'>
@@ -115,8 +136,8 @@ let AgendaActividadDetalle = (props) => {
               ? 'magicland-agenda_information'
               : 'agenda_information'
           }>
-          <header className='card-header columns has-padding-left-7'>
-            <div className='is-block is-11 column is-paddingless'>
+          <header className='card-header columns '>
+            <div className='is-block is-12 column is-paddingless'>
               {/* Hora del evento */}
               {/* <p className='card-header-title has-padding-left-0 '>
                 {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
@@ -127,6 +148,18 @@ let AgendaActividadDetalle = (props) => {
                 <p className='has-text-left is-size-6-desktop'>
                   <b>Lugar:</b> {currentActivity.space.name}
                 </p>
+              )}
+
+              {meetingState === 'open_meeting_room' && platform !== '' && platform !== null && (
+                <iframe
+                  src={getMeetingPath(platform)}
+                  frameBorder='0'
+                  allow='autoplay; fullscreen; camera *;microphone *'
+                  allowFullScreen
+                  allowusermedia
+                  style={{ width: '100%', height: '450px' }}
+                  //style={conferenceStyles}
+                ></iframe>
               )}
 
               {currentActivity.video ? (

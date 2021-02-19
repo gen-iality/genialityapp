@@ -5,6 +5,7 @@ import Moment from 'moment';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
 import { TagOutlined, CaretRightFilled } from '@ant-design/icons';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 export default function AgendaActivityItem({
   item,
@@ -19,11 +20,11 @@ export default function AgendaActivityItem({
   eventId,
   userId,
   show_inscription,
-  userRegistered,
-  handleOpenModal,
+  hideHours,
 }) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
+  const intl = useIntl();
 
   useEffect(() => {
     if (registerStatus) {
@@ -63,12 +64,20 @@ export default function AgendaActivityItem({
                   {Moment(item.datetime_start).format('DD MMMM YYYY') ===
                   Moment(item.datetime_end).format('DD MMMM YYYY') ? (
                     <>
-                      {Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} -{' '}
-                      {Moment(item.datetime_end).format('h:mm a')}
+                      {`${Moment(item.datetime_start).format('DD MMMM YYYY')} ${
+                        !hideHours || hideHours === 'false'
+                          ? Moment(item.datetime_start).format('h:mm a') +
+                            ' - ' +
+                            Moment(item.datetime_end).format('h:mm a')
+                          : ''
+                      }`}
                     </>
                   ) : (
-                    Moment(item.datetime_start).format('DD MMMM YYYY   hh:mm') -
-                    Moment(item.datetime_end).format('DD MMMM YYYY     hh:mm')
+                    <>{`${Moment(item.datetime_start).format('DD MMMM YYYY')} ${
+                      !hideHours || hideHours === 'false' ? Moment(item.datetime_start).format('hh:mm') + ' - ' : ' '
+                    } - ${Moment(item.datetime_end).format('DD MMMM YYYY')} ${
+                      !hideHours || hideHours === 'false' ? Moment(item.datetime_end).format('hh:mm') + ' - ' : ' '
+                    }`}</>
                   )}
                 </span>
               )
@@ -83,9 +92,12 @@ export default function AgendaActivityItem({
                         <>
                           <img src={item.image ? item.image : event_image} />
                           <Alert
-                            message={`La sesión inicia: ${Moment(item.datetime_start).format(
-                              'DD MMMM YYYY h:mm a'
-                            )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                            message={
+                              intl.formatMessage({ id: 'live.starts_in' }) +
+                              ` ${Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} ${' - '} ${Moment(
+                                item.datetime_end
+                              ).format('h:mm a')}`
+                            }
                             type='warning'
                           />
                         </>
@@ -95,7 +107,7 @@ export default function AgendaActivityItem({
                           {item.video ? (
                             item.video && (
                               <>
-                                <Alert message='Conferencia Terminada. Observa el video Aquí' type='success' />
+                                <Alert message={intl.formatMessage({ id: 'live.ended.video' })} type='success' />
                                 <ReactPlayer
                                   width={'100%'}
                                   style={{
@@ -115,9 +127,11 @@ export default function AgendaActivityItem({
                             <>
                               <img src={item.image ? item.image : event_image} />
                               <Alert
-                                message={`La Conferencia ha Terminado: ${Moment(item.datetime_start).format(
-                                  'DD MMMM YYYY h:mm a'
-                                )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                                message={`${intl.formatMessage({ id: 'live.ended' })}: ${Moment(
+                                  item.datetime_start
+                                ).format('DD MMMM YYYY h:mm a')} ${' - '} ${Moment(item.datetime_end).format(
+                                  'h:mm a'
+                                )}`}
                                 type='info'
                               />
                             </>
@@ -135,16 +149,17 @@ export default function AgendaActivityItem({
                               block
                               type='primary'
                               disabled={item.meeting_id || item.vimeo_id ? false : true}
-                              onClick={() =>
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 toggleConference(
                                   true,
                                   item.meeting_id || item.vimeo_id ? item.meeting_id : item.vimeo_id,
                                   item
-                                )
-                              }>
+                                );
+                              }}>
                               {item.meeting_id || item.vimeo_id
-                                ? 'Conéctate a la conferencia en vivo'
-                                : 'Aún no empieza Conferencia Virtual'}
+                                ? intl.formatMessage({ id: 'live.join' })
+                                : intl.formatMessage({ id: 'live.join.disabled' })}
                             </Button>
                           </div>
                           <Row>
@@ -164,11 +179,11 @@ export default function AgendaActivityItem({
                                     </Button>
                                   )}
                                   {item.state === 'closed_meeting_room' && (
-                                    <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
+                                    <Alert message={intl.formatMessage({ id: 'live.closed' })} type='info' />
                                   )}
 
                                   {item.state === 'ended_meeting_room' && (
-                                    <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
+                                    <Alert message={intl.formatMessage({ id: 'live.ended' })} type='info' />
                                   )}
                                 </>
                               ))}

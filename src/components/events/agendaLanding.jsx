@@ -153,8 +153,8 @@ class Agenda extends Component {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
 
-          let { habilitar_ingreso, isPublished } = data;
-          let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished };
+          let { habilitar_ingreso, isPublished, meeting_id } = data;
+          let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id };
 
           arr[index] = updatedActivityInfo;
           const filtered = this.filterByDay(this.state.days[0], arr);
