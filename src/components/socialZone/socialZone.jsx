@@ -140,7 +140,7 @@ let SocialZone = function(props) {
 
   return (
     <Tabs defaultActiveKey='1' onChange={callback} activeKey={currentTab} onTabClick={(key) => setcurrentTab(key)}>
-      <TabPane tab='Asistentes' key='1'>
+      <TabPane tab='Asistentes' key='1' className='asistente-list'>
         <AttendeList
           currentUser={currentUser}
           event_id={event_id}
@@ -153,6 +153,7 @@ let SocialZone = function(props) {
       </TabPane>
 
       <TabPane
+        className='asistente-chat-list'
         tab={
           <>
             Chat<Badge count={totalNewMessages}></Badge>
