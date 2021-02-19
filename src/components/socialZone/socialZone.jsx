@@ -2,7 +2,7 @@
 import { withRouter } from 'react-router-dom';
 import { firestore, fireRealtime } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { List, Avatar, Button, Skeleton, Typography, Row } from 'antd';
+import { List, Avatar, Button, Skeleton, Typography, Row, Badge } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
@@ -24,6 +24,8 @@ let SocialZone = function(props) {
   const [availableChats, setavailableChats] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [currentTab, setcurrentTab] = useState('1');
+  const [totalNewMessages, setTotalNewMessages] = useState(0);
+
   let userName = 'LuisXXX';
   /***********/
   console.log('datafirebase nos inicamos nuevamente');
@@ -90,6 +92,7 @@ let SocialZone = function(props) {
     fetchData();
   });
 
+  //Cargar la lista de chats de una persona
   useEffect(() => {
     if (!event_id || !currentUser) return;
     console.log('Corriendo carga de chats');
@@ -99,9 +102,16 @@ let SocialZone = function(props) {
       .onSnapshot(function(querySnapshot) {
         console.log('cargando lista de chats');
         let list = [];
+        let data;
+        let totalNewMessages = 0;
         querySnapshot.forEach((doc) => {
-          list.push(doc.data());
+          data = doc.data();
+          if (data.newMessages) {
+            totalNewMessages += parseInt(data.newMessages);
+          }
+          list.push(data);
         });
+        setTotalNewMessages(totalNewMessages);
         setavailableChats(list);
         console.log('Termianndo carga de chats', list);
       });
@@ -141,7 +151,14 @@ let SocialZone = function(props) {
           attendeeListPresence={attendeeListPresence}
         />
       </TabPane>
-      <TabPane tab='Chats' key='2'>
+
+      <TabPane
+        tab={
+          <>
+            Chat<Badge count={totalNewMessages}></Badge>
+          </>
+        }
+        key='2'>
         <ChatList
           availableChats={availableChats}
           currentUser={currentUser}
@@ -180,8 +197,8 @@ let ChatList = function(props) {
         <List.Item
           actions={[
             <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
-              Chat
-            </a>,
+              Chat <Badge count={item.newMessages ? item.newMessages : ''}></Badge>
+            </a>
           ]}>
           <Typography.Text mark>Chat</Typography.Text> {item.name || '----'}
         </List.Item>
@@ -216,7 +233,7 @@ let AttendeList = function(props) {
                 }>
                 Chat
               </a>
-            ) : null,
+            ) : null
           ]}>
           {/* <Skeleton avatar title={false} loading={item.loading} active> */}
           <List.Item.Meta
