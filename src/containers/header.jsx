@@ -7,12 +7,18 @@ import { OrganizationApi, getCurrentUser } from '../helpers/request';
 import LogOut from '../components/shared/logOut';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
+
 import { connect } from 'react-redux';
-import { addLoginInformation, showMenu } from '../redux/user/actions';
+import * as userActions from '../redux/user/actions';
+import * as eventActions from '../redux/event/actions';
+
 import MenuOld from '../components/events/shared/menu';
 import { Menu, Drawer, Button, Col, Row, Layout } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { parseUrl } from '../helpers/constants';
+
+const { setEventData } = eventActions;
+const { addLoginInformation, showMenu } = userActions;
 
 const { Header } = Layout;
 const zIndex = {
@@ -99,7 +105,7 @@ class Headers extends Component {
       this.setState(
         { name, photo, uid: data.uid, id: data._id, user: true, cookie: evius_token, loader: false, organizations },
         () => {
-          this.props.dispatch(addLoginInformation(data));
+          this.props.addLoginInformation(data);
         }
       );
       this.handleMenu(this.props.location);
@@ -252,4 +258,10 @@ const mapStateToProps = (state) => ({
   error: state.categories.error,
 });
 
-export default connect(mapStateToProps)(withRouter(Headers));
+const mapDispatchToProps = {
+  setEventData,
+  addLoginInformation,
+  showMenu,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Headers));
