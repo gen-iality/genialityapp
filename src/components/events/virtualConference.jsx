@@ -61,7 +61,6 @@ class VirtualConference extends Component {
     this.state = {
       data: [],
       infoAgendaArr: [],
-      currentUser: this.props.currentUser || undefined,
       usuarioRegistrado: this.props.usuarioRegistrado || undefined,
       event: this.props.event || undefined,
       survey: [],
