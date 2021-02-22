@@ -6,7 +6,7 @@ import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row, Tabs, Menu } from 'antd';
+import { Layout, Drawer, Button, Col, Row, Tabs, Menu, Badge } from 'antd';
 import {
   MenuOutlined,
   CommentOutlined,
@@ -116,11 +116,37 @@ class Landing extends Component {
       games: false,
       attendees: false,
       tabSelected: -1,
-      option: 'N/A'
+      option: 'N/A',
+      totalNewMessages: 0
       //fin Integración con encuestas
     };
     this.showLanding = this.showLanding.bind(this);
   }
+
+  monitorNewChatMessages = (event, user) => {
+    var self = this;
+    firestore
+      .collection('eventchats/' + event._id + '/userchats/' + user.uid + '/' + 'chats/')
+      .onSnapshot(function(querySnapshot) {
+        console.log('cargando lista de chats');
+        let data;
+        let totalNewMessages = 0;
+        querySnapshot.forEach((doc) => {
+          data = doc.data();
+          if (data.newMessages) {
+            totalNewMessages += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
+          }
+        });
+        self.setTotalNewMessages(totalNewMessages);
+      });
+  };
+
+  setTotalNewMessages = (newMessages) => {
+    console.log('ACTUALIZANDO ESTADO DEL PADRE');
+    this.setState({
+      totalNewMessages: newMessages || 0
+    });
+  };
 
   updateOption = async (optionselected) => {
     this.setState({
@@ -260,6 +286,7 @@ class Landing extends Component {
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       eventUsers = []; //await EventsApi.getcurrentUserEventUsers( event._id );
+      this.monitorNewChatMessages(event, user);
     }
 
     const dateFrom = event.datetime_from.split(' ');
@@ -869,7 +896,11 @@ class Landing extends Component {
                                   {
                                     /* {this.state.currentActivity && this.state.chat &&*/ <Menu.Item
                                       key='1'
-                                      icon={<CommentOutlined style={{ fontSize: '24px' }} />}
+                                      icon={
+                                        <Badge count={this.state.totalNewMessages}>
+                                          <CommentOutlined style={{ fontSize: '24px' }} />
+                                        </Badge>
+                                      }
                                       onClick={() => this.toggleCollapsed(2)}></Menu.Item>
                                   }
                                   {

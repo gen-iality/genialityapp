@@ -121,7 +121,9 @@ let SocialZone = function(props) {
           }
           list.push(data);
         });
+        console.timeLog('setTotalNewMessages ZONA');
         setTotalNewMessages(totalNewMessages);
+
         setavailableChats(list);
 
         console.log('Termianndo carga de chats', list);

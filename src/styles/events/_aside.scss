@@ -1,3 +1,8 @@
+/* para mostrar la cantidad de mensajes nuevos de una chat con el componente badge se alcanza  salir */
+.ant-menu-vertical > .ant-menu-item {
+  overflow: visible !important;
+}
+
 .aside {
   background: #f9f9f9;
   padding: 2rem !important;
