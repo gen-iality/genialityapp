@@ -107,7 +107,7 @@ let SocialZone = function(props) {
         querySnapshot.forEach((doc) => {
           data = doc.data();
           if (data.newMessages) {
-            totalNewMessages += parseInt(data.newMessages);
+            totalNewMessages += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
           }
           list.push(data);
         });
@@ -166,6 +166,7 @@ let SocialZone = function(props) {
           setCurrentChat={setCurrentChat}
           currentChatName={currentChatName}
           currentChat={currentChat}
+          event_id={event_id}
         />
       </TabPane>
     </Tabs>
@@ -186,7 +187,16 @@ let ChatList = function(props) {
       <iframe
         title='chatevius'
         className='ChatEvius'
-        src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + props.currentChat}></iframe>
+        src={
+          'https://chatevius.web.app?nombre=' +
+          userName +
+          '&chatid=' +
+          props.currentChat +
+          '&eventid=' +
+          props.event_id +
+          '&userid=' +
+          props.currentUser.uid
+        }></iframe>
     </>
   ) : (
     <List
@@ -198,7 +208,7 @@ let ChatList = function(props) {
         <List.Item
           actions={[
             <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
-              Chat <Badge count={item.newMessages ? item.newMessages : ''}></Badge>
+              Chat <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}></Badge>
             </a>
           ]}>
           <Typography.Text mark>Chat</Typography.Text> {item.name || '----'}
