@@ -304,9 +304,8 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
     let namesUser = user ? user.names || user.displayName || 'Anónimo' : 'Anónimo';
 
-    const { setEventData } = eventActions;
     // Seteando el estado global con la informacion del evento
-    setEventData(event);
+    this.props.setEventData(event);
 
     this.setState({
       event,
@@ -976,7 +975,7 @@ class Landing extends Component {
 
 const mapStateToProps = (state) => ({
   loginInfo: state.user.data,
-  // eventInfo: state.event.data,
+  eventInfo: state.event.data,
 });
 
 const mapDispatchToProps = {
