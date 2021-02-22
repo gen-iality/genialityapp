@@ -143,9 +143,6 @@ class Landing extends Component {
       placement: e.target.value,
       placementBottom: e.target.value,
     });
-  };
-
-  showEvent = () => {
     this.setState({ section: 'evento' });
   };
 
@@ -177,6 +174,13 @@ class Landing extends Component {
 
     /* Trae la información del evento con la instancia pública*/
     const event = await EventsApi.landingEvent(id);
+
+    //definiendo un google tag por evento si viene sino utiliza el por defecto
+    let googleanlyticsid = event['googleanlyticsid'];
+    if (googleanlyticsid) {
+      window.gtag('config', googleanlyticsid);
+    }
+
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
     this.loadDynamicEventStyles(id);
 
