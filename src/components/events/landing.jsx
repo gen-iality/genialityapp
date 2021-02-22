@@ -1,6 +1,10 @@
 //external
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+
+import { connect } from 'react-redux';
+import * as eventActions from '../../redux/event/actions';
+
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
@@ -59,6 +63,7 @@ import {
   isMobile,
 } from 'react-device-detect';
 
+const { setEventData } = eventActions;
 const { Content, Sider } = Layout;
 Moment.locale('es');
 momentLocalizer();
@@ -299,6 +304,10 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
     let namesUser = user ? user.names || user.displayName || 'Anónimo' : 'Anónimo';
 
+    const { setEventData } = eventActions;
+    // Seteando el estado global con la informacion del evento
+    setEventData(event);
+
     this.setState({
       event,
       eventUser,
@@ -471,6 +480,7 @@ class Landing extends Component {
   };
 
   async componentDidMount() {
+    console.log('props', this.props);
     await this.mountSections();
   }
 
@@ -964,4 +974,13 @@ class Landing extends Component {
   }
 }
 
-export default withRouter(Landing);
+const mapStateToProps = (state) => ({
+  loginInfo: state.user.data,
+  // eventInfo: state.event.data,
+});
+
+const mapDispatchToProps = {
+  setEventData,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Landing));
