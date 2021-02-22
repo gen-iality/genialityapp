@@ -7,7 +7,15 @@ import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
 import { Layout, Drawer, Button, Col, Row, Tabs, Menu } from 'antd';
-import { MenuOutlined, CommentOutlined, TeamOutlined, MenuUnfoldOutlined, MessageOutlined } from '@ant-design/icons';
+import {
+  MenuOutlined,
+  CommentOutlined,
+  TeamOutlined,
+  MenuUnfoldOutlined,
+  MessageOutlined,
+  ArrowLeftOutlined,
+  PieChartOutlined
+} from '@ant-design/icons';
 
 //custom
 import { Actions, EventsApi, TicketsApi, fireStoreApi, Activity, getCurrentUser } from '../../helpers/request';
@@ -43,12 +51,13 @@ import InformativeSection2 from './informativeSections/informativeSection2';
 import UserLogin from './UserLoginContainer';
 import Partners from './Partners';
 import SocialZone from '../../components/socialZone/socialZone';
+import { firestore } from '../../helpers/firebase';
 
 import {
   // BrowserView,
   // MobileView,
   // isBrowser,
-  isMobile,
+  isMobile
 } from 'react-device-detect';
 
 const { Content, Sider } = Layout;
@@ -60,14 +69,14 @@ const html = document.querySelector('html');
 const drawerButton = {
   height: '46px',
   padding: '7px 10px',
-  fontSize: '10px',
+  fontSize: '10px'
 };
 
 const imageCenter = {
   maxWidth: '100%',
   minWidth: '66.6667%',
   margin: '0 auto',
-  display: 'block',
+  display: 'block'
 };
 
 class Landing extends Component {
@@ -97,36 +106,99 @@ class Landing extends Component {
       event: null,
       requireValidation: false,
       currentSurvey: {},
+      //Integración con encuestas
+      currentActivity: null,
+      meeting_id: null,
+      platform: null,
+      habilitar_ingreso: null,
+      chat: false,
+      surveys: false,
+      games: false,
+      attendees: false,
+      tabSelected: -1,
+      option: 'N/A'
+      //fin Integración con encuestas
     };
     this.showLanding = this.showLanding.bind(this);
   }
 
+  updateOption = async (optionselected) => {
+    this.setState({
+      option: optionselected
+    });
+    console.log('UPDATE OPTIONS=>' + this.state.option);
+    let currentActivity = { ...this.state.currentActivity, option: optionselected };
+    this.setState({
+      currentActivity: currentActivity
+    });
+
+    await this.mountSections();
+  };
+
+  actualizarCurrentActivity = (activity) => {
+    this.setState({
+      currentActivity: { ...activity, option: 'N/A' }
+    });
+
+    firestore
+      .collection('events')
+      .doc(activity.event_id)
+      .collection('activities')
+      .doc(activity._id)
+      .onSnapshot((response) => {
+        let videoConference = response.data();
+        console.log(videoConference);
+
+        this.setState({
+          meeting_id: videoConference.meeting_id ? videoConference.meeting_id : this.props.meetingId,
+          platform: videoConference.platform ? videoConference.platform : null,
+          habilitar_ingreso: videoConference.habilitar_ingreso
+            ? videoConference.habilitar_ingreso
+            : 'closed_metting_room',
+          chat: videoConference.tabs.chat ? videoConference.tabs.chat : false,
+          surveys: videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
+          games: videoConference.tabs.games ? videoConference.tabs.games : false,
+          attendees: videoConference.tabs.attendees ? videoConference.tabs.attendees : false
+        });
+      });
+  };
+
   toggle = () => {
     this.setState({
-      collapsed: !this.state.collapsed,
+      collapsed: !this.state.collapsed
     });
   };
-  toggleCollapsed = () => {
+  toggleCollapsed = async (tab) => {
     this.setState({
       collapsed: !this.state.collapsed,
+      tabSelected: tab
     });
+    await this.mountSections();
+  };
+
+  toggleCollapsedN = async () => {
+    this.setState({
+      collapsed: !this.state.collapsed,
+      tabSelected: 1
+    });
+    await this.mountSections();
   };
 
   hideHeader = () => {
     this.setState({
-      headerVisible: false,
+      headerVisible: false
     });
   };
 
   showDrawerMobile = () => {
     this.setState({
-      visibleChat: true,
+      visibleChat: true
     });
   };
 
   showDrawer = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
     this.hideHeader();
   };
@@ -134,14 +206,14 @@ class Landing extends Component {
   onClose = () => {
     this.setState({
       visible: false,
-      visibleChat: false,
+      visibleChat: false
     });
   };
 
   onChange = (e) => {
     this.setState({
       placement: e.target.value,
-      placementBottom: e.target.value,
+      placementBottom: e.target.value
     });
     this.setState({ section: 'evento' });
   };
@@ -163,7 +235,8 @@ class Landing extends Component {
     /* Fin Carga */
   }
 
-  async componentDidMount() {
+  mountSections = async () => {
+    console.log('current activity=>', this.state.currentActivity != undefined ? this.state.currentActivity : 'NO HAY');
     let eventUser = null;
     let eventUsers = null;
 
@@ -208,9 +281,9 @@ class Landing extends Component {
       data: user,
       currentUser: user,
       namesUser: namesUser,
-      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false,
+      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false
     });
-    const sections = {
+    let sections = {
       agenda: (
         <AgendaForm
           event={event}
@@ -220,6 +293,11 @@ class Landing extends Component {
           handleOpenLogin={this.handleOpenLogin}
           userRegistered={this.state.eventUser}
           currentUser={user}
+          activity={this.state.currentActivity}
+          userEntered={user}
+          activeActivity={this.actualizarCurrentActivity}
+          option={this.state.currentActivity ? this.state.currentActivity.option : 'N/A'}
+          collapsed={this.state.collapsed}
         />
       ),
       tickets: (
@@ -315,7 +393,7 @@ class Landing extends Component {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={event.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -357,13 +435,17 @@ class Landing extends Component {
             </Col>
           </Row>
         </>
-      ),
+      )
     };
     //default section is firstone
     this.setState({ loading: false, sections }, () => {
       this.firebaseUI();
       this.handleScroll();
     });
+  };
+
+  async componentDidMount() {
+    await this.mountSections();
   }
 
   firebaseUI = () => {
@@ -384,14 +466,14 @@ class Landing extends Component {
           const user = authResult.user;
           this.closeLogin(user);
           return false;
-        },
+        }
       },
       //Disabled accountchooser
       credentialHelper: 'none',
       // Terms of service url.
       tosUrl: `${BaseUrl}/terms`,
       // Privacy policy url.
-      privacyPolicyUrl: `${BaseUrl}/privacy`,
+      privacyPolicyUrl: `${BaseUrl}/privacy`
     };
     ui.start('#firebaseui-auth-container', uiConfig);
   };
@@ -529,7 +611,7 @@ class Landing extends Component {
       toggleConferenceZoom,
       meeting_id,
       currentUser,
-      loader_page,
+      loader_page
     } = this.state;
 
     return (
@@ -574,7 +656,7 @@ class Landing extends Component {
                           className='containerMenu_Landing'
                           style={{
                             backgroundColor:
-                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
                           }}
                           trigger={null}
                           width={110}>
@@ -623,7 +705,7 @@ class Landing extends Component {
                             bodyStyle={{
                               padding: '0px',
                               backgroundColor:
-                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
                             }}>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                             <MenuEvent
@@ -723,7 +805,7 @@ class Landing extends Component {
                             first={{
                               title: 'Iniciar Sesión o Registrarse',
                               class: 'is-info',
-                              action: this.openLogin,
+                              action: this.openLogin
                             }}
                             second={{ title: 'Cancelar', class: '', action: this.closeModal }}
                           />
@@ -750,7 +832,16 @@ class Landing extends Component {
                           visible={this.state.visibleChat}
                           maskClosable={true}
                           className='drawerMobile'>
-                          <SocialZone event_id={event._id} />
+                          <SocialZone
+                            tcollapse={this.toggleCollapsed}
+                            optionselected={this.updateOption}
+                            tab={this.state.tabSelected}
+                            event_id={event._id}
+                            chat={this.state.chat}
+                            attendees={this.state.attendees}
+                            survey={this.state.surveys}
+                            games={this.state.games}
+                          />
                         </Drawer>
 
                         {/* aqui empieza el chat del evento desktop */}
@@ -761,25 +852,52 @@ class Landing extends Component {
                           collapsed={this.state.collapsed}
                           width={400}
                           style={{
-                            backgroundColor: event.styles.toolbarMenuSocial ? event.styles.toolbarMenuSocial : '#fff',
+                            backgroundColor: event.styles.toolbarMenuSocial ? event.styles.toolbarMenuSocial : '#fff'
                           }}>
                           <div className='Chat-Event'>
                             {this.state.collapsed ? (
                               <>
+                                {/* MENU DERECHO */}
+
                                 <div style={{ marginLeft: '2%', marginBottom: '3%' }}>
-                                  <Button type='link' onClick={this.toggleCollapsed}>
+                                  <Button type='link' onClick={this.toggleCollapsedN}>
                                     <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
                                   </Button>
                                 </div>
+
                                 <Menu style={{ backgroundColor: event.styles.toolbarMenuSocial }}>
-                                  <Menu.Item
-                                    key='1'
-                                    icon={<CommentOutlined style={{ fontSize: '24px' }} />}
-                                    onClick={this.toggleCollapsed}></Menu.Item>
-                                  <Menu.Item
-                                    key='2'
-                                    icon={<TeamOutlined style={{ fontSize: '24px' }} />}
-                                    onClick={this.toggleCollapsed}></Menu.Item>
+                                  {
+                                    /* {this.state.currentActivity && this.state.chat &&*/ <Menu.Item
+                                      key='1'
+                                      icon={<CommentOutlined style={{ fontSize: '24px' }} />}
+                                      onClick={() => this.toggleCollapsed(2)}></Menu.Item>
+                                  }
+                                  {
+                                    /* {this.state.currentActivity && this.state.attendees && */ <Menu.Item
+                                      key='2'
+                                      icon={<TeamOutlined style={{ fontSize: '24px' }} />}
+                                      onClick={() => this.toggleCollapsed(1)}></Menu.Item>
+                                  }
+                                  {
+                                    /* {this.state.currentActivity && this.state.surveys &&  */
+                                    <Menu.Item
+                                      key='3'
+                                      icon={<PieChartOutlined style={{ fontSize: '24px' }} />}
+                                      onClick={() => this.toggleCollapsed(3)}></Menu.Item>
+                                  }
+                                  {
+                                    /* {this.state.currentActivity && this.state.games && */
+                                    <Menu.Item
+                                      key='4'
+                                      icon={
+                                        <img
+                                          src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
+                                          style={{ width: '50px', height: '32px' }}
+                                          alt='Games'
+                                        />
+                                      }
+                                      onClick={() => this.toggleCollapsed(4)}></Menu.Item>
+                                  }
                                 </Menu>
                               </>
                             ) : (
@@ -787,7 +905,18 @@ class Landing extends Component {
                                 <Button type='link' onClick={this.toggleCollapsed}>
                                   <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
                                 </Button>
-                                <SocialZone event_id={event._id} />
+
+                                <SocialZone
+                                  tcollapse={this.toggleCollapsed}
+                                  optionselected={this.updateOption}
+                                  tab={this.state.tabSelected}
+                                  event={event}
+                                  event_id={event._id}
+                                  chat={this.state.chat}
+                                  attendees={this.state.attendees}
+                                  survey={this.state.surveys}
+                                  games={this.state.games}
+                                />
                               </>
                             )}
                           </div>
