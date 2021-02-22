@@ -175,7 +175,7 @@ class Headers extends Component {
 
   handleMenuEvent = () => {
     this.setState({ showEventMenu: true }, () => {
-      this.props.dispatch(showMenu());
+      this.props.showMenu();
     });
   };
 
