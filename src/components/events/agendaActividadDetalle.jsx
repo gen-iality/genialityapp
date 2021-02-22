@@ -10,6 +10,7 @@ import DocumentsList from '../documents/documentsList';
 import ModalSpeaker from './modalSpeakers';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { firestore } from '../../helpers/firebase';
+import SurveyForm from './surveys';
 
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
@@ -24,6 +25,9 @@ let AgendaActividadDetalle = (props) => {
   const [contentDisplayed, setContentDisplayed] = useState('');
   const intl = useIntl();
   const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
+  const [currentSurvey, setcurrentSurvey] = useState(null);
+
+  let option=props.option
 
   useEffect(() => {
     const checkContentToDisplay = () => {
@@ -49,12 +53,25 @@ let AgendaActividadDetalle = (props) => {
       });
   }
 
+  console.log("COLLAPSE MENU AGENDA DETALLE=>",props.collapsed)
+
+ const mountCurrentSurvey = (survey) => {
+    setcurrentSurvey(survey);
+  };
+
+  const unMountCurrentSurvey = () => {
+    setcurrentSurvey(null);
+  };
+
   useEffect(() => {
     (async () => {
       //Id del evento
+
       var id = props.match.params.event;
       const event = await EventsApi.landingEvent(id);
       setEvent(event);
+
+    
 
       await listeningStateMeetingRoom(event._id, props.currentActivity._id);
 
@@ -150,7 +167,7 @@ let AgendaActividadDetalle = (props) => {
                 </p>
               )}
 
-              {meetingState === 'open_meeting_room' && platform !== '' && platform !== null && (
+              {meetingState === 'open_meeting_room' && option=="N/A"  && platform !== '' && platform !== null && (
                 <iframe
                   src={getMeetingPath(platform)}
                   frameBorder='0'
@@ -160,6 +177,20 @@ let AgendaActividadDetalle = (props) => {
                   style={{ width: '100%', height: '450px' }}
                   //style={conferenceStyles}
                 ></iframe>
+              )}
+
+            {meetingState === 'open_meeting_room' && option=="survey" && (
+                <div style={{ width: props.collapsed? '98%':'98%-389px' }}>
+                <SurveyForm
+                  event={event}
+                  currentUser={props.userEntered}
+                  activity={props.activity}
+                  availableSurveysBar={true}
+                  style={{ zIndex: 9999, width: props.collapsed?'95vw': '50vw-389px', height: '100%' }}
+                  mountCurrentSurvey={mountCurrentSurvey}
+                  unMountCurrentSurvey={unMountCurrentSurvey}
+                />
+              </div>
               )}
 
               {currentActivity.video ? (

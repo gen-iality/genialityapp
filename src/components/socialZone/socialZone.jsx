@@ -2,11 +2,12 @@
 import { withRouter } from 'react-router-dom';
 import { firestore, fireRealtime } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { List, Avatar, Button, Skeleton, Typography, Row, Badge } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { List, Avatar, Button, Skeleton, Typography, Row, Badge, Col } from 'antd';
+import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
+import SurveyComponent from '../events/surveys/surveyComponent';
 const { TabPane } = Tabs;
 const callback = () => {};
 /** Inspiración para construir el monitoreo de presencia firestore
@@ -29,7 +30,13 @@ let SocialZone = function(props) {
   let userName = 'LuisXXX';
   /***********/
   console.log('datafirebase nos inicamos nuevamente');
+  let chat =props.chat;
+  let attendees=props.attendees;
+  let survey=props.survey;
+  let games=props.games;
   let event_id = props.event_id;
+  let tab=props.tab;
+  
 
   let setCurrentChat = (id, chatname) => {
     setcurrentTab('2'); //chats tab
@@ -83,14 +90,23 @@ let SocialZone = function(props) {
 
   const flagmonitorEventPresence = useMemo(() => monitorEventPresence(event_id), [event_id]);
 
-  useEffect(() => {
+  useEffect(()=> {
+   
     const fetchData = async () => {
       const user = await getCurrentUser();
       setCurrentUser(user);
       console.log('currentUser', currentUser);
+      setcurrentTab(""+tab);
+      if(tab!=2){
+       props.optionselected(tab==1?"attendees":tab==3?"survey":"games")
+      }
     };
     fetchData();
-  });
+   
+    
+   
+  },[]);
+
 
   //Cargar la lista de chats de una persona
   useEffect(() => {
@@ -113,8 +129,10 @@ let SocialZone = function(props) {
         });
         setTotalNewMessages(totalNewMessages);
         setavailableChats(list);
+        
         console.log('Termianndo carga de chats', list);
       });
+     
   }, [event_id, currentUser]);
 
   useEffect(() => {
@@ -138,9 +156,12 @@ let SocialZone = function(props) {
     });
   }, [event_id]);
 
+ 
+
   return (
-    <Tabs defaultActiveKey='1' onChange={callback} activeKey={currentTab} onTabClick={(key) => setcurrentTab(key)}>
-      <TabPane tab='Asistentes' key='1' className='asistente-list'>
+    <Tabs defaultActiveKey='1' onChange={callback} activeKey={currentTab} onTabClick={(key) => {setcurrentTab(key);if(key!="2"){props.optionselected(key=='1'?"attendees":key=='3'?"survey":"games")} }}>
+     { attendees && <TabPane tab='Asistentes' key='1' className='asistente-list'>
+        
         <AttendeList
           currentUser={currentUser}
           event_id={event_id}
@@ -150,9 +171,11 @@ let SocialZone = function(props) {
           attendeeList={attendeeList}
           attendeeListPresence={attendeeListPresence}
         />
-      </TabPane>
+      </TabPane>}
 
-      <TabPane
+     
+
+     {chat && <TabPane
         className='asistente-chat-list'
         tab={
           <>
@@ -167,7 +190,30 @@ let SocialZone = function(props) {
           currentChatName={currentChatName}
           currentChat={currentChat}
         />
-      </TabPane>
+      </TabPane>}
+      {survey && <TabPane
+        className='asistente-survey-list'
+        tab="Encuestas"
+        key='3'>
+           <Row justify='space-between'>
+                  <Col span={4}>
+                    <ArrowLeftOutlined onClick={() =>{props.optionselected("N/A");setcurrentTab("");props.tcollapse() }} />
+                  </Col>
+                  <Col span={14}>
+                    <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
+                  </Col>
+                  <Col span={4}>
+                    <VideoCameraOutlined />
+                  </Col>
+                </Row>
+      
+      </TabPane>}
+      {games && <TabPane
+        className='asistente-survey-list'
+        tab="Juegos"
+        key='4'>
+       <div>Juegos</div>
+      </TabPane>}
     </Tabs>
   );
 };
@@ -176,6 +222,7 @@ export default withRouter(SocialZone);
 
 let ChatList = function(props) {
   let userName = props.currentUser.names || '---';
+ 
 
   return props.currentChat ? (
     <>
