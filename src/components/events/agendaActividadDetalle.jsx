@@ -11,9 +11,10 @@ import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
 import SurveyForm from './surveys';
+import SurveyComponent from './surveys';
 import * as StageActions from '../../redux/stage/actions';
 
-const { gotoActivity } = StageActions;
+const { setStageData } = StageActions;
 
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
@@ -119,7 +120,7 @@ let AgendaActividadDetalle = (props) => {
     }
   };
 
-  const { currentActivity, gotoActivity, toggleConference, image_event } = props;
+  const { currentActivity, gotoActivityList, toggleConference, image_event } = props;
   return (
     <div className='columns container-calendar-section is-centered'>
       <div className=' container_agenda-information container-calendar is-three-fifths'>
@@ -128,7 +129,7 @@ let AgendaActividadDetalle = (props) => {
             <PageHeader
               className='site-page-header'
               onBack={() => {
-                gotoActivity(null);
+                gotoActivityList();
               }}
               title={currentActivity.name}
             />
@@ -159,6 +160,8 @@ let AgendaActividadDetalle = (props) => {
                 {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
                 {Moment(currentActivity.datetime_end).format('h:mm a')}
               </p> */}
+
+              {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
               {currentActivity.space && (
                 /* Lugar del evento */
                 <p className='has-text-left is-size-6-desktop'>
@@ -167,7 +170,7 @@ let AgendaActividadDetalle = (props) => {
               )}
 
               {meetingState === 'open_meeting_room' &&
-                option !== 'survey' &&
+                option !== 'surveyDetalle' &&
                 option !== 'games' &&
                 platform !== '' &&
                 platform !== null && (
@@ -182,7 +185,7 @@ let AgendaActividadDetalle = (props) => {
                   ></iframe>
                 )}
 
-              {option == 'survey' && (
+              {option == 'surveyDetalle' && (
                 <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
                   <SurveyForm
                     event={event}
@@ -196,7 +199,7 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               )}
 
-              {(meetingState === '' || meetingState == null) && option !== 'survey' && option !== 'games' && (
+              {(meetingState === '' || meetingState == null) && option !== 'surveyDetalle' && option !== 'games' && (
                 <div className='column is-centered mediaplayer'>
                   <img
                     className='activity_image'
@@ -207,7 +210,7 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               )}
 
-              {meetingState === 'closed_meeting_room' && option !== 'survey' && option !== 'games' && (
+              {meetingState === 'closed_meeting_room' && option !== 'surveyDetalle' && option !== 'games' && (
                 <div className='column is-centered mediaplayer'>
                   <img
                     className='activity_image'
@@ -220,7 +223,7 @@ let AgendaActividadDetalle = (props) => {
 
               {meetingState === 'ended_meeting_room' &&
               currentActivity.video &&
-              option !== 'survey' &&
+              option !== 'surveyDetalle' &&
               option !== 'games' ? (
                 <div className='column is-centered mediaplayer'>
                   <ReactPlayer
@@ -238,7 +241,7 @@ let AgendaActividadDetalle = (props) => {
                 <>
                   {meetingState === 'ended_meeting_room' &&
                     (currentActivity.image || image_event) &&
-                    option !== 'survey' &&
+                    option !== 'surveyDetalle' &&
                     option !== 'games' && (
                       <div>
                         <img
@@ -544,7 +547,7 @@ let AgendaActividadDetalle = (props) => {
             <a
               className=''
               onClick={() => {
-                gotoActivity(null);
+                gotoActivityList();
               }}>
               <Button>{intl.formatMessage({ id: 'button.return' })}</Button>
             </a>
@@ -561,7 +564,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  gotoActivity,
+  setStageData,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
