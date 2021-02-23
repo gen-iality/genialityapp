@@ -599,7 +599,7 @@ class Agenda extends Component {
           <div className='container-calendar-section'>
             <div className='columns is-centered'>
               <div className='container-calendar is-three-fifths'>
-                {spaces && spaces.length > 1 && (
+                {/* {spaces && spaces.length > 1 && (
                   <>
                     <p className='is-size-5'>Seleccióne el espacio</p>
                     <div
@@ -621,7 +621,7 @@ class Agenda extends Component {
                       </select>
                     </div>
                   </>
-                )}
+                )} */}
 
                 {/* Contenedor donde se iteran los tabs de las fechas */}
                 {event.styles &&

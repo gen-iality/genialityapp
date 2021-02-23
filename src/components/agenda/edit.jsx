@@ -515,7 +515,7 @@ class AgendaEdit extends Component {
     let title = [];
     if (this.state.name.length <= 0) title.push('El nombre es requerido');
 
-    if (this.state.date === '' || this.state.date === 'Invalid date') title.push('Seleccione el día');
+    if (this.state.date === '' || this.state.date === 'Invalid date') title.push('l día');
 
     if (this.state.hour_start === '' || this.state.hour_start === 'Invalid date')
       title.push('Seleccione una hora de inicio valida');
