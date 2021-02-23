@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Row, Col, Tag, Avatar, Alert, Card } from 'antd';
+import { Button, Row, Col, Tag, Avatar, Alert, Card, Space } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
-import { TagOutlined, CaretRightFilled } from '@ant-design/icons';
+import { TagOutlined, CaretRightFilled,UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 export default function AgendaActivityItem({
@@ -50,7 +50,7 @@ export default function AgendaActivityItem({
 
   return (
     <>
-      {item.isPublished && (
+      {/* {item.isPublished && (
         <div className='container_agenda-information'>
           <Card
             className='agenda_information'
@@ -404,8 +404,47 @@ export default function AgendaActivityItem({
               </Col>
             </Row>
           </Card>
+          
         </div>
-      )}
+      )} */}
+      <Row justify='start'>
+        <Col xs={24} sm={24} lg={0} xxl={0}>
+         diseño mobile
+         <Card
+          bodyStyle={{ padding: '10px'}}>
+           <Row gutter={[8,8]}>
+             <Col span={4}>
+               <div style={{fontSize:'8px', marginTop:'6%'}}>08:25 AM</div>
+               <div> o <span style={{fontSize:'8px'}}>En vivo</span></div>
+             </Col>
+             <Col span={16}>
+               <Space direction="vertical">
+                <Row justify='start'>
+                  <div style={{fontWeight:'700', textAlign:'initial', fontSize:'12px'}}>Lorem ipsum dolor sit amet consectetur. <span style={{fontSize:'10px', color:'grey'}}>sala de evento</span></div>
+                </Row>
+                <Row justify='start' style={{textAlign:'initial'}}>
+                  <Col span={8}>
+                   <div><Avatar size={30} icon={<UserOutlined />}/>mildred silva</div>
+                  </Col>
+                  <Col span={8}>
+                    <Avatar size={30} icon={<UserOutlined />}/><span style={{fontSize:'8px'}}> mildred silva</span>
+                  </Col>
+                  <Col span={8}>
+                    <Avatar size={30} icon={<UserOutlined />}/><span style={{fontSize:'8px'}}> mildred silva</span>
+                  </Col>
+                </Row>
+               </Space>
+             </Col>
+             <Col span={4}>
+               foto
+             </Col>
+           </Row>
+         </Card>
+        </Col>
+        <Col xs={0} sm={0} lg={24} xxl={24}>
+         diseño escritorio
+        </Col>
+      </Row>
     </>
   );
 }
