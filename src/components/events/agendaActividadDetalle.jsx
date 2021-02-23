@@ -1,16 +1,20 @@
+import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Moment from 'moment';
 import ReactPlayer from 'react-player';
-import React, { useState, useEffect } from 'react';
-import API, { EventsApi, SurveysApi } from '../../helpers/request';
-import { withRouter } from 'react-router-dom';
-import SurveyComponent from './surveys';
-import { PageHeader, Row, Col, Button, List, Avatar, Card } from 'antd';
-import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
-import DocumentsList from '../documents/documentsList';
-import ModalSpeaker from './modalSpeakers';
 import { FormattedMessage, useIntl } from 'react-intl';
+import API, { EventsApi, SurveysApi } from '../../helpers/request';
+import { PageHeader, Row, Col, Button, List, Avatar, Card } from 'antd';
 import { firestore } from '../../helpers/firebase';
+import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
+import ModalSpeaker from './modalSpeakers';
+import DocumentsList from '../documents/documentsList';
 import SurveyForm from './surveys';
+import SurveyComponent from './surveys';
+import * as StageActions from '../../redux/stage/actions';
+
+const { setStageData } = StageActions;
 
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
@@ -27,7 +31,7 @@ let AgendaActividadDetalle = (props) => {
   const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
   const [currentSurvey, setcurrentSurvey] = useState(null);
 
-  let option=props.option
+  let option = props.option;
 
   useEffect(() => {
     const checkContentToDisplay = () => {
@@ -53,16 +57,14 @@ let AgendaActividadDetalle = (props) => {
       });
   }
 
-  console.log("COLLAPSE MENU AGENDA DETALLE=>",props.collapsed)
-
- const mountCurrentSurvey = (survey) => {
+  const mountCurrentSurvey = (survey) => {
     setcurrentSurvey(survey);
   };
 
   const unMountCurrentSurvey = () => {
     setcurrentSurvey(null);
   };
-
+  console.log('ACTIVITY=>' + props.currentActivity);
   useEffect(() => {
     (async () => {
       //Id del evento
@@ -70,8 +72,6 @@ let AgendaActividadDetalle = (props) => {
       var id = props.match.params.event;
       const event = await EventsApi.landingEvent(id);
       setEvent(event);
-
-    
 
       await listeningStateMeetingRoom(event._id, props.currentActivity._id);
 
@@ -112,7 +112,7 @@ let AgendaActividadDetalle = (props) => {
   }
 
   const getMeetingPath = (platform) => {
-    const { displayName, email } = props.currentUser;
+    const { displayName, email } = props.userInfo;
     if (platform === 'zoom') {
       return url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`;
     } else if (platform === 'vimeo') {
@@ -167,33 +167,62 @@ let AgendaActividadDetalle = (props) => {
                 </p>
               )}
 
-              {meetingState === 'open_meeting_room' && option=="N/A"  && platform !== '' && platform !== null && (
-                <iframe
-                  src={getMeetingPath(platform)}
-                  frameBorder='0'
-                  allow='autoplay; fullscreen; camera *;microphone *'
-                  allowFullScreen
-                  allowusermedia
-                  style={{ width: '100%', height: '450px' }}
-                  //style={conferenceStyles}
-                ></iframe>
+              {meetingState === 'open_meeting_room' &&
+                option !== 'survey' &&
+                option !== 'games' &&
+                platform !== '' &&
+                platform !== null && (
+                  <iframe
+                    src={getMeetingPath(platform)}
+                    frameBorder='0'
+                    allow='autoplay; fullscreen; camera *;microphone *'
+                    allowFullScreen
+                    allowusermedia
+                    style={{ width: '100%', height: '450px' }}
+                    //style={conferenceStyles}
+                  ></iframe>
+                )}
+
+              {option == 'survey' && (
+                <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
+                  <SurveyForm
+                    event={event}
+                    currentUser={props.userEntered}
+                    activity={props.activity}
+                    availableSurveysBar={true}
+                    style={{ zIndex: 9999, width: props.collapsed ? '95vw' : '50vw-389px', height: '100%' }}
+                    mountCurrentSurvey={mountCurrentSurvey}
+                    unMountCurrentSurvey={unMountCurrentSurvey}
+                  />
+                </div>
               )}
 
-            {meetingState === 'open_meeting_room' && option=="survey" && (
-                <div style={{ width: props.collapsed? '98%':'98%-389px' }}>
-                <SurveyForm
-                  event={event}
-                  currentUser={props.userEntered}
-                  activity={props.activity}
-                  availableSurveysBar={true}
-                  style={{ zIndex: 9999, width: props.collapsed?'95vw': '50vw-389px', height: '100%' }}
-                  mountCurrentSurvey={mountCurrentSurvey}
-                  unMountCurrentSurvey={unMountCurrentSurvey}
-                />
-              </div>
+              {(meetingState === '' || meetingState == null) && option !== 'survey' && option !== 'games' && (
+                <div className='column is-centered mediaplayer'>
+                  <img
+                    className='activity_image'
+                    src={currentActivity.image ? currentActivity.image : image_event}
+                    alt='Activity'
+                  />
+                  <h5>La sesión iniciará pronto</h5>
+                </div>
               )}
 
-              {currentActivity.video ? (
+              {meetingState === 'closed_meeting_room' && option !== 'survey' && option !== 'games' && (
+                <div className='column is-centered mediaplayer'>
+                  <img
+                    className='activity_image'
+                    src={currentActivity.image ? currentActivity.image : image_event}
+                    alt='Activity'
+                  />
+                  <h5>La sesión inicia el {Moment(currentActivity.datetime_start).format('DD MMMM YYYY h:mm a')}</h5>
+                </div>
+              )}
+
+              {meetingState === 'ended_meeting_room' &&
+              currentActivity.video &&
+              option !== 'survey' &&
+              option !== 'games' ? (
                 <div className='column is-centered mediaplayer'>
                   <ReactPlayer
                     width={'100%'}
@@ -208,13 +237,19 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               ) : (
                 <>
-                  {(currentActivity.image || image_event) && (
-                    <img
-                      className='activity_image'
-                      src={currentActivity.image ? currentActivity.image : image_event}
-                      alt='Activity'
-                    />
-                  )}
+                  {meetingState === 'ended_meeting_room' &&
+                    (currentActivity.image || image_event) &&
+                    option !== 'survey' &&
+                    option !== 'games' && (
+                      <div>
+                        <img
+                          className='activity_image'
+                          src={currentActivity.image ? currentActivity.image : image_event}
+                          alt='Activity'
+                        />
+                        <h5>Aún no se ha subido video</h5>
+                      </div>
+                    )}
                 </>
               )}
               {/*logo quemado de aval para el evento de magicland */}
@@ -243,7 +278,7 @@ let AgendaActividadDetalle = (props) => {
                   />
                 </div>
               )}
-              {event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6' ? (
+              {/*event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6' ? (
                 <></>
               ) : (
                 <p className='has-text-left is-size-6-desktop'>
@@ -260,7 +295,7 @@ let AgendaActividadDetalle = (props) => {
                     </Button>
                   )}
                 </p>
-              )}
+              )*/}
               {/* <p className='has-text-left is-size-6-desktop'>
 
                 {usuarioRegistrado && (
@@ -363,7 +398,7 @@ let AgendaActividadDetalle = (props) => {
                 <Col span={24}>
                   <AttendeeNotAllowedCheck
                     event={event}
-                    currentUser={props.currentUser}
+                    currentUser={props.userInfo}
                     usuarioRegistrado={usuarioRegistrado}
                     currentActivity={currentActivity}
                   />
@@ -373,7 +408,7 @@ let AgendaActividadDetalle = (props) => {
 
             <hr />
             <hr />
-            <div>
+            {/* <div>
               {showSurvey && (
                 <div style={{}} className='has-text-left is-size-6-desktop'>
                   <p>
@@ -382,7 +417,7 @@ let AgendaActividadDetalle = (props) => {
                   <SurveyComponent event={event} activity={currentActivity} usuarioRegistrado={usuarioRegistrado} />
                 </div>
               )}
-            </div>
+            </div>*/}
 
             {currentActivity.hosts.length === 0 ? (
               <div></div>
@@ -451,7 +486,7 @@ let AgendaActividadDetalle = (props) => {
               </div>
             )}
 
-            {props.currentUser && props.currentUser.names ? (
+            {props.userInfo && props.userInfo.names ? (
               <div />
             ) : (
               <div>
@@ -521,4 +556,13 @@ let AgendaActividadDetalle = (props) => {
   );
 };
 
-export default withRouter(AgendaActividadDetalle);
+const mapStateToProps = (state) => ({
+  stageInfo: state.stage.data,
+  userInfo: state.user.data,
+});
+
+const mapDispatchToProps = {
+  setStageData,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
