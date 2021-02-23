@@ -182,7 +182,7 @@ let SocialZone = function(props) {
           className='asistente-chat-list'
           tab={
             <>
-              Chat<Badge count={totalNewMessages}></Badge>
+              Chats<Badge count={totalNewMessages}></Badge>
             </>
           }
           key='2'>
@@ -236,9 +236,8 @@ let ChatList = function(props) {
   return props.currentChat ? (
     <>
       <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(null, null)}>
-        Listado
+        Todos los chats
       </a>
-      <p>{props.currentChatName}</p>
       <iframe
         title='chatevius'
         className='ChatEvius'
@@ -254,22 +253,44 @@ let ChatList = function(props) {
         }></iframe>
     </>
   ) : (
-    <List
-      header={<div></div>}
-      footer={<div></div>}
-      bordered
-      dataSource={props.availableChats}
-      renderItem={(item) => (
-        <List.Item
-          actions={[
-            <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
-              Chat <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}></Badge>
-            </a>,
-          ]}>
-          <Typography.Text mark>Chat</Typography.Text> {item.name || '----'}
-        </List.Item>
-      )}
-    />
+    <Tabs defaultActiveKey='chat1' size='small' onChange={callback}>
+      <TabPane tab='Público' key='chat1'>
+        <iframe
+          title='chatevius'
+          className='ChatEvius'
+          src={
+            'https://chatevius.web.app?nombre=' +
+            userName +
+            '&chatid=' +
+            'event_' +
+            props.event_id +
+            '&eventid=' +
+            props.event_id +
+            '&userid=' +
+            props.currentUser.uid
+          }></iframe>
+      </TabPane>
+
+      <TabPane tab='Privados' key='chat2'>
+        <List
+          header={<div></div>}
+          footer={<div></div>}
+          bordered
+          dataSource={props.availableChats}
+          renderItem={(item) => (
+            <List.Item
+              actions={[
+                <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
+                  Chat{' '}
+                  <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}></Badge>
+                </a>,
+              ]}>
+              <Typography.Text mark>Chat</Typography.Text> {item.name || '----'}
+            </List.Item>
+          )}
+        />
+      </TabPane>
+    </Tabs>
   );
 };
 
@@ -320,9 +341,22 @@ let AttendeList = function(props) {
                 </a>
               ) : null
             }
-            description={props.attendeeListPresence[item.key] ? props.attendeeListPresence[item.key].state : 'offline'}
+            description={
+              props.attendeeListPresence[item.key] ? (
+                <h1 style={{ color: '#0CD5A1' }}>
+                  <Avatar size={8} style={{ backgroundColor: '#0CD5A1' }}></Avatar>{' '}
+                  {props.attendeeListPresence[item.key].state}
+                </h1>
+              ) : (
+                <h1 style={{ color: '#b5b5b5' }}>
+                  {' '}
+                  <Avatar size={8} style={{ backgroundColor: '#b5b5b5' }}></Avatar> offline
+                </h1>
+              )
+            }
           />
           <div></div>
+
           {/* </Skeleton> */}
         </List.Item>
       )}

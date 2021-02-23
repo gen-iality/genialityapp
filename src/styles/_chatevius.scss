@@ -1,31 +1,29 @@
 // estilos del collapse del chat de los eventos de evius
 // boton mobile para visualizar el chat del evento
 
-
 // estilos del iframe del chat de los evento
 
-
-.ChatEvius{
+.ChatEvius {
   position: absolute;
-    top: 23%;
-    left: 0;
-    width: 21%;
-    height: 62%;
-    min-width: 347px;
-    z-index: 999999999;
-    margin-left: 12px;
-    .mdl-card__supporting-text {
-      width: 223px;
-      height: 100%;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
+  top: 23%;
+  left: 0;
+  width: 100%;
+  height: 62%;
+  min-width: 347px;
+  z-index: 999999999;
+  margin-left: 12px;
+  .mdl-card__supporting-text {
+    width: 223px;
+    height: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 }
-.button_regresar{
+.button_regresar {
   margin-bottom: 12px;
 }
 
-@media screen and (max-width:$breakpoint-mobile){
+@media screen and (max-width: $breakpoint-mobile) {
   .ChatEvius {
     position: absolute;
     top: 3%;
@@ -40,7 +38,7 @@
     min-width: 308px;
     z-index: 999999999;
   }
-  .collapse-chatEvent{
+  .collapse-chatEvent {
     display: none;
   }
 }
