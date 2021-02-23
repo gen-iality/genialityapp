@@ -4,7 +4,9 @@
   .ant-tabs{
   margin-left: 3% !important;
   }
-  
+  .ant-menu-item-icon{
+    top: 12px;
+  }
 }
 .drawerMobile{
   .ant-drawer-body {
@@ -87,4 +89,7 @@
     height: 30vh;
   }
   
+}
+.ant-menu-inline-collapsed > .ant-menu-item, .ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item, .ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title{
+  padding: 0px calc(50% - 27px / 2) !important;
 }

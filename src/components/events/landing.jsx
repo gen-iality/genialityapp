@@ -898,9 +898,10 @@ class Landing extends Component {
                                       key='1'
                                       icon={
                                         <Badge count={this.state.totalNewMessages}>
-                                          <CommentOutlined style={{ fontSize: '24px' }} />
+                                          <CommentOutlined style={{ fontSize: '24px'}} />
                                         </Badge>
                                       }
+                                      style={{marginTop:'12px', marginBottom:'22px' }} 
                                       onClick={() => this.toggleCollapsed(2)}></Menu.Item>
                                   }
                                   {

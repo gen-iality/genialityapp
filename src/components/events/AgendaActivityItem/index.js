@@ -404,6 +404,7 @@ export default function AgendaActivityItem({
               </Col>
             </Row>
           </Card>
+          estoy aqui 
         </div>
       )}
     </>
