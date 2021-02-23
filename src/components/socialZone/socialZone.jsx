@@ -338,9 +338,14 @@ let AttendeList = function(props) {
                 </a>
               ) : null
             }
-            description={props.attendeeListPresence[item.key] ? props.attendeeListPresence[item.key].state : 'offline'}
-          />
+            description={props.attendeeListPresence[item.key] ?(
+             <h1 style={{color:'#0CD5A1'}}> 
+              <Avatar size={8} style={{backgroundColor:'#0CD5A1'}}></Avatar> {props.attendeeListPresence[item.key].state}</h1>)  
+              : (<h1 style={{color:'#b5b5b5'}}> <Avatar size={8} style={{backgroundColor:'#b5b5b5'}}></Avatar> offline</h1>) }           
+              
+            />
           <div></div>
+              
           {/* </Skeleton> */}
         </List.Item>
       )}
