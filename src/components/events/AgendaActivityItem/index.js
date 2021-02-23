@@ -424,7 +424,7 @@ export default function AgendaActivityItem({
                 </Row>
                 <Row justify='start' style={{textAlign:'initial'}}>
                   <Col span={8}>
-                   <div><Avatar size={30} icon={<UserOutlined />}/>mildred silva</div>
+                   <div><Avatar size={30} icon={<UserOutlined />}/></div><div>diana mildred</div>
                   </Col>
                   <Col span={8}>
                     <Avatar size={30} icon={<UserOutlined />}/><span style={{fontSize:'8px'}}> mildred silva</span>
