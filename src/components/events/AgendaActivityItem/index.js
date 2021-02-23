@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Row, Col, Tag, Avatar, Alert, Card } from 'antd';
+import { Button, Row, Col, Tag, Avatar, Alert, Card, Space } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
-import { TagOutlined } from '@ant-design/icons';
-import { useIntl } from 'react-intl';
+import { TagOutlined, CaretRightFilled,UserOutlined } from '@ant-design/icons';
+import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
 
 const { gotoActivity } = StageActions;
@@ -55,7 +55,7 @@ function AgendaActivityItem(props) {
 
   return (
     <>
-      {item.isPublished && (
+      {/* {item.isPublished && (
         <div className='container_agenda-information'>
           <Card
             className='agenda_information'
@@ -409,8 +409,49 @@ function AgendaActivityItem(props) {
               </Col>
             </Row>
           </Card>
+          
         </div>
-      )}
+      )} */}
+      <Row justify='start'>
+        <Col xs={24} sm={24} md={0} lg={24} xxl={24}>
+
+         <Card
+          bodyStyle={{ padding: '10px'}}>
+           <Row gutter={[8,8]}>
+             <Col span={3}>
+               <div style={{fontSize:'8px', marginTop:'6%'}}>08:25 AM</div>
+               <div> o <span style={{fontSize:'8px'}}>En vivo</span></div>
+             </Col>
+             <Col span={17}>
+               <Space direction="vertical">
+                <Row justify='start'>
+                  <div style={{fontWeight:'700', textAlign:'initial', fontSize:'12px'}}>Lorem ipsum dolor sit amet consectetur. <span style={{fontSize:'10px', color:'grey'}}>sala de evento</span></div>
+                </Row>
+                <Row justify='start' style={{textAlign:'initial'}}>
+                  <Col span={8}>
+                   <Avatar size={30} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" style={{float:'left', marginRight:'6px'}} /><div style={{fontSize:'10px'}}>Juan Lopez</div>
+                  </Col>
+                  <Col span={8}>
+                   <Avatar size={30} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" style={{float:'left', marginRight:'6px'}} /><div style={{fontSize:'10px'}}>Diego Lopez</div>
+                  </Col>
+                  <Col span={8}>
+                   <Avatar size={30} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" style={{float:'left', marginRight:'6px'}} /><div style={{fontSize:'10px'}}>pepito lopez</div>
+                  </Col>
+                </Row>
+               </Space>
+             </Col>
+             <Col span={4}>
+               <div style={{height:'100%'}}>
+               <img  style={{objectFit:'cover'}}src="https://www.esan.edu.pe/apuntes-empresariales/2016/10/25/proyectoempresarial_principal.jpg"/>
+               </div>
+             </Col>      
+           </Row>
+         </Card>
+        </Col>
+        <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
+        
+        </Col>
+      </Row>
     </>
   );
 }

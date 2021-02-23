@@ -11,7 +11,6 @@ import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
 import SurveyForm from './surveys';
-import SurveyComponent from './surveys';
 import * as StageActions from '../../redux/stage/actions';
 
 const { setStageData } = StageActions;
