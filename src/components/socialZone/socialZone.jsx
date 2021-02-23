@@ -95,9 +95,8 @@ let SocialZone = function(props) {
       setCurrentUser(user);
       console.log('currentUser', currentUser);
       setcurrentTab('' + tab);
-      if (tab != 2) {
-        props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : 'games');
-      }
+
+      props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'games');
     };
     fetchData();
   }, []);
@@ -158,9 +157,8 @@ let SocialZone = function(props) {
       activeKey={currentTab}
       onTabClick={(key) => {
         setcurrentTab(key);
-        if (key != '2') {
-          props.optionselected(key == '1' ? 'attendees' : key == '3' ? 'survey' : 'games');
-        }
+
+        props.optionselected(key == '1' ? 'attendees' : key == '3' ? 'survey' : key == '2' ? 'chat' : 'games');
       }}>
       {
         /*attendees &&*/ <TabPane tab='Asistentes' key='1' className='asistente-list'>
@@ -195,7 +193,7 @@ let SocialZone = function(props) {
           />
         </TabPane>
       }
-      {survey && (
+      {
         <TabPane className='asistente-survey-list' tab='Encuestas' key='3'>
           <Row justify='space-between'>
             <Col span={4}>
@@ -212,15 +210,16 @@ let SocialZone = function(props) {
             </Col>
             <Col span={4}>
               <VideoCameraOutlined />
+              aqui van las encuestas
             </Col>
           </Row>
         </TabPane>
-      )}
-      {games && (
+      }
+      {
         <TabPane className='asistente-survey-list' tab='Juegos' key='4'>
           <div>Juegos</div>
         </TabPane>
-      )}
+      }
     </Tabs>
   );
 };
@@ -261,7 +260,7 @@ let ChatList = function(props) {
           actions={[
             <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
               Chat <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}></Badge>
-            </a>
+            </a>,
           ]}>
           <Typography.Text mark>Chat</Typography.Text> {item.name || '----'}
         </List.Item>
@@ -296,7 +295,7 @@ let AttendeList = function(props) {
                 }>
                 Chat
               </a>
-            ) : null
+            ) : null,
           ]}>
           {/* <Skeleton avatar title={false} loading={item.loading} active> */}
           <List.Item.Meta
