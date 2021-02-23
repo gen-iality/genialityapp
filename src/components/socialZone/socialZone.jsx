@@ -318,9 +318,9 @@ let AttendeList = function(props) {
               ) : null
             }
             description={props.attendeeListPresence[item.key] ?(
-             <h1 style={{color:'green'}}> 
-              <Avatar size={8} style={{backgroundColor:'green'}}></Avatar> {props.attendeeListPresence[item.key].state}</h1>)  
-              : (<h1>  <Avatar size={8}></Avatar> offline</h1>) }           
+             <h1 style={{color:'#0CD5A1'}}> 
+              <Avatar size={8} style={{backgroundColor:'#0CD5A1'}}></Avatar> {props.attendeeListPresence[item.key].state}</h1>)  
+              : (<h1 style={{color:'#b5b5b5'}}> <Avatar size={8} style={{backgroundColor:'#b5b5b5'}}></Avatar> offline</h1>) }           
               
             />
           <div></div>

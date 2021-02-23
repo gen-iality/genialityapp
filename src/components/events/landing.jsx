@@ -897,9 +897,11 @@ class Landing extends Component {
                                     /* {this.state.currentActivity && this.state.chat &&*/ <Menu.Item
                                       key='1'
                                       icon={
+                                        <>
                                         <Badge count={this.state.totalNewMessages}>
                                           <CommentOutlined style={{ fontSize: '24px'}} />
                                         </Badge>
+                                        </>
                                       }
                                       style={{marginTop:'12px', marginBottom:'22px' }} 
                                       onClick={() => this.toggleCollapsed(2)}></Menu.Item>
