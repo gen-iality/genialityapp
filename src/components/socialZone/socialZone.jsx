@@ -7,7 +7,8 @@ import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
-import SurveyComponent from '../events/surveys/surveyComponent';
+import SurveyList from '../events/surveys/surveyList';
+
 const { TabPane } = Tabs;
 const callback = () => {};
 /** Inspiración para construir el monitoreo de presencia firestore
@@ -95,9 +96,8 @@ let SocialZone = function(props) {
       setCurrentUser(user);
       console.log('currentUser', currentUser);
       setcurrentTab('' + tab);
-      if (tab != 2) {
-        props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : 'games');
-      }
+
+      props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'games');
     };
     fetchData();
   }, []);
@@ -158,9 +158,8 @@ let SocialZone = function(props) {
       activeKey={currentTab}
       onTabClick={(key) => {
         setcurrentTab(key);
-        if (key != '2') {
-          props.optionselected(key == '1' ? 'attendees' : key == '3' ? 'survey' : 'games');
-        }
+
+        props.optionselected(key == '1' ? 'attendees' : key == '3' ? 'survey' : key == '2' ? 'chat' : 'games');
       }}>
       {
         /*attendees &&*/ <TabPane tab='Asistentes' key='1' className='asistente-list'>
@@ -181,7 +180,7 @@ let SocialZone = function(props) {
           className='asistente-chat-list'
           tab={
             <>
-              Chat<Badge count={totalNewMessages}></Badge>
+              Chats<Badge count={totalNewMessages}></Badge>
             </>
           }
           key='2'>
@@ -195,7 +194,7 @@ let SocialZone = function(props) {
           />
         </TabPane>
       }
-      {survey && (
+      {
         <TabPane className='asistente-survey-list' tab='Encuestas' key='3'>
           <Row justify='space-between'>
             <Col span={4}>
@@ -212,15 +211,17 @@ let SocialZone = function(props) {
             </Col>
             <Col span={4}>
               <VideoCameraOutlined />
+              aqui van las encuestas
             </Col>
           </Row>
+          <SurveyList />
         </TabPane>
-      )}
-      {games && (
+      }
+      {
         <TabPane className='asistente-survey-list' tab='Juegos' key='4'>
           <div>Juegos</div>
         </TabPane>
-      )}
+      }
     </Tabs>
   );
 };
@@ -233,9 +234,8 @@ let ChatList = function(props) {
   return props.currentChat ? (
     <>
       <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(null, null)}>
-        Listado
+        Todos los chats
       </a>
-      <p>{props.currentChatName}</p>
       <iframe
         title='chatevius'
         className='ChatEvius'
@@ -251,22 +251,44 @@ let ChatList = function(props) {
         }></iframe>
     </>
   ) : (
-    <List
-      header={<div></div>}
-      footer={<div></div>}
-      bordered
-      dataSource={props.availableChats}
-      renderItem={(item) => (
-        <List.Item
-          actions={[
-            <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
-              Chat <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}></Badge>
-            </a>
-          ]}>
-          <Typography.Text mark>Chat</Typography.Text> {item.name || '----'}
-        </List.Item>
-      )}
-    />
+    <Tabs defaultActiveKey='chat1' size='small' onChange={callback}>
+      <TabPane tab='Público' key='chat1'>
+        <iframe
+          title='chatevius'
+          className='ChatEvius'
+          src={
+            'https://chatevius.web.app?nombre=' +
+            userName +
+            '&chatid=' +
+            'event_' +
+            props.event_id +
+            '&eventid=' +
+            props.event_id +
+            '&userid=' +
+            props.currentUser.uid
+          }></iframe>
+      </TabPane>
+
+      <TabPane tab='Privados' key='chat2'>
+        <List
+          header={<div></div>}
+          footer={<div></div>}
+          bordered
+          dataSource={props.availableChats}
+          renderItem={(item) => (
+            <List.Item
+              actions={[
+                <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
+                  Chat{' '}
+                  <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}></Badge>
+                </a>,
+              ]}>
+              <Typography.Text mark>Chat</Typography.Text> {item.name || '----'}
+            </List.Item>
+          )}
+        />
+      </TabPane>
+    </Tabs>
   );
 };
 
@@ -296,7 +318,7 @@ let AttendeList = function(props) {
                 }>
                 Chat
               </a>
-            ) : null
+            ) : null,
           ]}>
           {/* <Skeleton avatar title={false} loading={item.loading} active> */}
           <List.Item.Meta
@@ -317,9 +339,22 @@ let AttendeList = function(props) {
                 </a>
               ) : null
             }
-            description={props.attendeeListPresence[item.key] ? props.attendeeListPresence[item.key].state : 'offline'}
+            description={
+              props.attendeeListPresence[item.key] ? (
+                <h1 style={{ color: '#0CD5A1' }}>
+                  <Avatar size={8} style={{ backgroundColor: '#0CD5A1' }}></Avatar>{' '}
+                  {props.attendeeListPresence[item.key].state}
+                </h1>
+              ) : (
+                <h1 style={{ color: '#b5b5b5' }}>
+                  {' '}
+                  <Avatar size={8} style={{ backgroundColor: '#b5b5b5' }}></Avatar> offline
+                </h1>
+              )
+            }
           />
           <div></div>
+
           {/* </Skeleton> */}
         </List.Item>
       )}

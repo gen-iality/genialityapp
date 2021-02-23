@@ -1,20 +1,23 @@
 //external
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+
+import { connect } from 'react-redux';
+import * as eventActions from '../../redux/event/actions';
+
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row, Tabs, Menu, Badge } from 'antd';
+import { Layout, Drawer, Button, Col, Row, Menu, Badge } from 'antd';
 import {
   MenuOutlined,
   CommentOutlined,
   TeamOutlined,
   MenuUnfoldOutlined,
   MessageOutlined,
-  ArrowLeftOutlined,
-  PieChartOutlined
+  PieChartOutlined,
 } from '@ant-design/icons';
 
 //custom
@@ -57,9 +60,10 @@ import {
   // BrowserView,
   // MobileView,
   // isBrowser,
-  isMobile
+  isMobile,
 } from 'react-device-detect';
 
+const { setEventData } = eventActions;
 const { Content, Sider } = Layout;
 Moment.locale('es');
 momentLocalizer();
@@ -69,14 +73,14 @@ const html = document.querySelector('html');
 const drawerButton = {
   height: '46px',
   padding: '7px 10px',
-  fontSize: '10px'
+  fontSize: '10px',
 };
 
 const imageCenter = {
   maxWidth: '100%',
   minWidth: '66.6667%',
   margin: '0 auto',
-  display: 'block'
+  display: 'block',
 };
 
 class Landing extends Component {
@@ -117,7 +121,7 @@ class Landing extends Component {
       attendees: false,
       tabSelected: -1,
       option: 'N/A',
-      totalNewMessages: 0
+      totalNewMessages: 0,
       //fin Integración con encuestas
     };
     this.showLanding = this.showLanding.bind(this);
@@ -144,18 +148,18 @@ class Landing extends Component {
   setTotalNewMessages = (newMessages) => {
     console.log('ACTUALIZANDO ESTADO DEL PADRE');
     this.setState({
-      totalNewMessages: newMessages || 0
+      totalNewMessages: newMessages || 0,
     });
   };
 
   updateOption = async (optionselected) => {
     this.setState({
-      option: optionselected
+      option: optionselected,
     });
     console.log('UPDATE OPTIONS=>' + this.state.option);
     let currentActivity = { ...this.state.currentActivity, option: optionselected };
     this.setState({
-      currentActivity: currentActivity
+      currentActivity: currentActivity,
     });
 
     await this.mountSections();
@@ -163,7 +167,7 @@ class Landing extends Component {
 
   actualizarCurrentActivity = (activity) => {
     this.setState({
-      currentActivity: { ...activity, option: 'N/A' }
+      currentActivity: { ...activity, option: 'N/A' },
     });
 
     firestore
@@ -184,20 +188,20 @@ class Landing extends Component {
           chat: videoConference.tabs.chat ? videoConference.tabs.chat : false,
           surveys: videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
           games: videoConference.tabs.games ? videoConference.tabs.games : false,
-          attendees: videoConference.tabs.attendees ? videoConference.tabs.attendees : false
+          attendees: videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
         });
       });
   };
 
   toggle = () => {
     this.setState({
-      collapsed: !this.state.collapsed
+      collapsed: !this.state.collapsed,
     });
   };
   toggleCollapsed = async (tab) => {
     this.setState({
       collapsed: !this.state.collapsed,
-      tabSelected: tab
+      tabSelected: tab,
     });
     await this.mountSections();
   };
@@ -205,26 +209,26 @@ class Landing extends Component {
   toggleCollapsedN = async () => {
     this.setState({
       collapsed: !this.state.collapsed,
-      tabSelected: 1
+      tabSelected: 1,
     });
     await this.mountSections();
   };
 
   hideHeader = () => {
     this.setState({
-      headerVisible: false
+      headerVisible: false,
     });
   };
 
   showDrawerMobile = () => {
     this.setState({
-      visibleChat: true
+      visibleChat: true,
     });
   };
 
   showDrawer = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
     this.hideHeader();
   };
@@ -232,14 +236,14 @@ class Landing extends Component {
   onClose = () => {
     this.setState({
       visible: false,
-      visibleChat: false
+      visibleChat: false,
     });
   };
 
   onChange = (e) => {
     this.setState({
       placement: e.target.value,
-      placementBottom: e.target.value
+      placementBottom: e.target.value,
     });
     this.setState({ section: 'evento' });
   };
@@ -300,6 +304,9 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
     let namesUser = user ? user.names || user.displayName || 'Anónimo' : 'Anónimo';
 
+    // Seteando el estado global con la informacion del evento
+    this.props.setEventData(event);
+
     this.setState({
       event,
       eventUser,
@@ -308,7 +315,7 @@ class Landing extends Component {
       data: user,
       currentUser: user,
       namesUser: namesUser,
-      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false
+      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false,
     });
     let sections = {
       agenda: (
@@ -420,7 +427,7 @@ class Landing extends Component {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={event.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -462,7 +469,7 @@ class Landing extends Component {
             </Col>
           </Row>
         </>
-      )
+      ),
     };
     //default section is firstone
     this.setState({ loading: false, sections }, () => {
@@ -472,6 +479,7 @@ class Landing extends Component {
   };
 
   async componentDidMount() {
+    console.log('props', this.props);
     await this.mountSections();
   }
 
@@ -493,14 +501,14 @@ class Landing extends Component {
           const user = authResult.user;
           this.closeLogin(user);
           return false;
-        }
+        },
       },
       //Disabled accountchooser
       credentialHelper: 'none',
       // Terms of service url.
       tosUrl: `${BaseUrl}/terms`,
       // Privacy policy url.
-      privacyPolicyUrl: `${BaseUrl}/privacy`
+      privacyPolicyUrl: `${BaseUrl}/privacy`,
     };
     ui.start('#firebaseui-auth-container', uiConfig);
   };
@@ -638,7 +646,7 @@ class Landing extends Component {
       toggleConferenceZoom,
       meeting_id,
       currentUser,
-      loader_page
+      loader_page,
     } = this.state;
 
     return (
@@ -683,7 +691,7 @@ class Landing extends Component {
                           className='containerMenu_Landing'
                           style={{
                             backgroundColor:
-                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
+                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
                           }}
                           trigger={null}
                           width={110}>
@@ -732,7 +740,7 @@ class Landing extends Component {
                             bodyStyle={{
                               padding: '0px',
                               backgroundColor:
-                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
+                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
                             }}>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                             <MenuEvent
@@ -832,7 +840,7 @@ class Landing extends Component {
                             first={{
                               title: 'Iniciar Sesión o Registrarse',
                               class: 'is-info',
-                              action: this.openLogin
+                              action: this.openLogin,
                             }}
                             second={{ title: 'Cancelar', class: '', action: this.closeModal }}
                           />
@@ -879,7 +887,7 @@ class Landing extends Component {
                           collapsed={this.state.collapsed}
                           width={400}
                           style={{
-                            backgroundColor: event.styles.toolbarMenuSocial ? event.styles.toolbarMenuSocial : '#fff'
+                            backgroundColor: event.styles.toolbarMenuSocial ? event.styles.toolbarMenuSocial : '#fff',
                           }}>
                           <div className='Chat-Event'>
                             {this.state.collapsed ? (
@@ -897,10 +905,13 @@ class Landing extends Component {
                                     /* {this.state.currentActivity && this.state.chat &&*/ <Menu.Item
                                       key='1'
                                       icon={
+                                        <>
                                         <Badge count={this.state.totalNewMessages}>
-                                          <CommentOutlined style={{ fontSize: '24px' }} />
+                                          <CommentOutlined style={{ fontSize: '24px'}} />
                                         </Badge>
+                                        </>
                                       }
+                                      style={{marginTop:'12px', marginBottom:'22px' }} 
                                       onClick={() => this.toggleCollapsed(2)}></Menu.Item>
                                   }
                                   {
@@ -965,4 +976,13 @@ class Landing extends Component {
   }
 }
 
-export default withRouter(Landing);
+const mapStateToProps = (state) => ({
+  loginInfo: state.user.data,
+  eventInfo: state.event.data,
+});
+
+const mapDispatchToProps = {
+  setEventData,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Landing));

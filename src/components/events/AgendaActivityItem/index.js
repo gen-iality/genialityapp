@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { Button, Row, Col, Tag, Avatar, Alert, Card, Space } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment';
@@ -6,25 +7,29 @@ import './style.scss';
 import { firestore } from '../../../helpers/firebase';
 import { TagOutlined, CaretRightFilled,UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
+import * as StageActions from '../../../redux/stage/actions';
 
-export default function AgendaActivityItem({
-  item,
-  Surveys,
-  Documents,
-  btnDetailAgenda,
-  toggleConference,
-  event_image,
-  gotoActivity,
-  registerStatus,
-  registerInActivity,
-  eventId,
-  userId,
-  show_inscription,
-  hideHours,
-}) {
+const { gotoActivity } = StageActions;
+
+function AgendaActivityItem(props) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
   const intl = useIntl();
+  const {
+    item,
+    Surveys,
+    Documents,
+    btnDetailAgenda,
+    toggleConference,
+    event_image,
+    gotoActivity,
+    registerStatus,
+    registerInActivity,
+    eventId,
+    userId,
+    show_inscription,
+    hideHours,
+  } = props;
 
   useEffect(() => {
     if (registerStatus) {
@@ -370,7 +375,7 @@ export default function AgendaActivityItem({
                     <Button
                       type='primary'
                       onClick={() => {
-                        gotoActivity(item);
+                        props.gotoActivity(item);
                       }}
                       className='space-align-block button-Agenda'>
                       Detalle de actividad
@@ -450,3 +455,9 @@ export default function AgendaActivityItem({
     </>
   );
 }
+
+const mapDispatchToProps = {
+  gotoActivity,
+};
+
+export default connect(null, mapDispatchToProps)(AgendaActivityItem);
