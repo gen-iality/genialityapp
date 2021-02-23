@@ -408,41 +408,43 @@ export default function AgendaActivityItem({
         </div>
       )} */}
       <Row justify='start'>
-        <Col xs={24} sm={24} lg={0} xxl={0}>
-         diseño mobile
+        <Col xs={24} sm={24} md={0} lg={24} xxl={24}>
+
          <Card
           bodyStyle={{ padding: '10px'}}>
            <Row gutter={[8,8]}>
-             <Col span={4}>
+             <Col span={3}>
                <div style={{fontSize:'8px', marginTop:'6%'}}>08:25 AM</div>
                <div> o <span style={{fontSize:'8px'}}>En vivo</span></div>
              </Col>
-             <Col span={16}>
+             <Col span={17}>
                <Space direction="vertical">
                 <Row justify='start'>
                   <div style={{fontWeight:'700', textAlign:'initial', fontSize:'12px'}}>Lorem ipsum dolor sit amet consectetur. <span style={{fontSize:'10px', color:'grey'}}>sala de evento</span></div>
                 </Row>
                 <Row justify='start' style={{textAlign:'initial'}}>
                   <Col span={8}>
-                   <div><Avatar size={30} icon={<UserOutlined />}/></div><div>diana mildred</div>
+                   <Avatar size={30} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" style={{float:'left', marginRight:'6px'}} /><div style={{fontSize:'10px'}}>Juan Lopez</div>
                   </Col>
                   <Col span={8}>
-                    <Avatar size={30} icon={<UserOutlined />}/><span style={{fontSize:'8px'}}> mildred silva</span>
+                   <Avatar size={30} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" style={{float:'left', marginRight:'6px'}} /><div style={{fontSize:'10px'}}>Diego Lopez</div>
                   </Col>
                   <Col span={8}>
-                    <Avatar size={30} icon={<UserOutlined />}/><span style={{fontSize:'8px'}}> mildred silva</span>
+                   <Avatar size={30} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" style={{float:'left', marginRight:'6px'}} /><div style={{fontSize:'10px'}}>pepito lopez</div>
                   </Col>
                 </Row>
                </Space>
              </Col>
              <Col span={4}>
-               foto
-             </Col>
+               <div style={{height:'100%'}}>
+               <img  style={{objectFit:'cover'}}src="https://www.esan.edu.pe/apuntes-empresariales/2016/10/25/proyectoempresarial_principal.jpg"/>
+               </div>
+             </Col>      
            </Row>
          </Card>
         </Col>
-        <Col xs={0} sm={0} lg={24} xxl={24}>
-         diseño escritorio
+        <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
+        
         </Col>
       </Row>
     </>
