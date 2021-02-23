@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
+import { connect } from 'react-redux';
 import {
   AgendaApi,
   SpacesApi,
@@ -24,11 +25,11 @@ let attendee_states = {
 
 class Agenda extends Component {
   constructor(props) {
-    console.log("CONSTRUCTOR AGENDA LANDING")
+    console.log('CONSTRUCTOR AGENDA LANDING');
     super(props);
     this.state = {
       list: [],
-     
+
       listDay: [],
       days: [],
       day: '',
@@ -43,7 +44,6 @@ class Agenda extends Component {
       currentActivity: null,
       survey: [],
       visible: false,
-      
 
       //Modal en caso que el usuario no este registrado
       visibleModal: false,
@@ -64,23 +64,19 @@ class Agenda extends Component {
       hideBtnDetailAgenda: true,
       userId: null,
     };
-   
+
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
     this.survey = this.survey.bind(this);
     this.gotoActivity = this.gotoActivity.bind(this);
     this.gotoActivityList = this.gotoActivityList.bind(this);
-    
   }
 
-  
-  
   async componentDidMount() {
     //Se carga esta funcion para cargar los datos
- 
+
     this.setState({ loading: true });
     await this.fetchAgenda();
-    
 
     //Si hay currentUser pasado por props entonces inicializamos el estado userId
     if (this.props.currentUser) {
@@ -149,7 +145,6 @@ class Agenda extends Component {
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     const filtered = this.filterByDay(this.state.days[0], this.state.list);
     this.setState({ data, filtered, toShow: filtered });
-    
   }
 
   async listeningStateMeetingRoom(list) {
@@ -332,7 +327,7 @@ class Agenda extends Component {
 
   gotoActivity(activity) {
     this.setState({ currentActivity: activity });
-    this.props.activeActivity(activity)
+    this.props.activeActivity(activity);
 
     //Se trae la funcion survey para pasarle el objeto activity y asi retornar los datos que consulta la funcion survey
     this.survey(activity);
@@ -466,7 +461,7 @@ class Agenda extends Component {
   //End modal methods
 
   render() {
-    const { toggleConference, event,option} = this.props;
+    const { toggleConference, event, option } = this.props;
     const {
       days,
       day,
@@ -475,14 +470,14 @@ class Agenda extends Component {
       spaces,
       toShow,
       data,
-      currentActivity,
+
       loading,
       survey,
       documents,
     } = this.state;
     //console.log("OPTION AGENDA LANDING=>",option);
 
-   
+    const { currentActivity } = this.props;
     return (
       <div>
         <Modal
@@ -588,7 +583,6 @@ class Agenda extends Component {
             collapsed={this.props.collapsed}
           />
         )}
-       
 
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && loading && (
@@ -689,4 +683,8 @@ class Agenda extends Component {
   }
 }
 
-export default Agenda;
+const mapStateToProps = (state) => ({
+  currentActivity: state.stage.data.currentActivity,
+});
+
+export default connect(mapStateToProps)(Agenda);
