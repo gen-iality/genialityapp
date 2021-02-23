@@ -11,7 +11,6 @@ import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
 import SurveyForm from './surveys';
-import SurveyComponent from './surveys';
 import * as StageActions from '../../redux/stage/actions';
 
 const { setStageData } = StageActions;
@@ -57,8 +56,6 @@ let AgendaActividadDetalle = (props) => {
       });
   }
 
-  console.log('COLLAPSE MENU AGENDA DETALLE=>', props.collapsed);
-
   const mountCurrentSurvey = (survey) => {
     setcurrentSurvey(survey);
   };
@@ -66,7 +63,7 @@ let AgendaActividadDetalle = (props) => {
   const unMountCurrentSurvey = () => {
     setcurrentSurvey(null);
   };
-
+  console.log('ACTIVITY=>' + props.currentActivity);
   useEffect(() => {
     (async () => {
       //Id del evento
@@ -169,19 +166,23 @@ let AgendaActividadDetalle = (props) => {
                 </p>
               )}
 
-              {meetingState === 'open_meeting_room' && option == 'N/A' && platform !== '' && platform !== null && (
-                <iframe
-                  src={getMeetingPath(platform)}
-                  frameBorder='0'
-                  allow='autoplay; fullscreen; camera *;microphone *'
-                  allowFullScreen
-                  allowusermedia
-                  style={{ width: '100%', height: '450px' }}
-                  //style={conferenceStyles}
-                ></iframe>
-              )}
+              {meetingState === 'open_meeting_room' &&
+                option !== 'survey' &&
+                option !== 'games' &&
+                platform !== '' &&
+                platform !== null && (
+                  <iframe
+                    src={getMeetingPath(platform)}
+                    frameBorder='0'
+                    allow='autoplay; fullscreen; camera *;microphone *'
+                    allowFullScreen
+                    allowusermedia
+                    style={{ width: '100%', height: '450px' }}
+                    //style={conferenceStyles}
+                  ></iframe>
+                )}
 
-              {meetingState === 'open_meeting_room' && option == 'survey' && (
+              {option == 'survey' && (
                 <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
                   <SurveyForm
                     event={event}
@@ -195,7 +196,32 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               )}
 
-              {currentActivity.video ? (
+              {(meetingState === '' || meetingState == null) && option !== 'survey' && option !== 'games' && (
+                <div className='column is-centered mediaplayer'>
+                  <img
+                    className='activity_image'
+                    src={currentActivity.image ? currentActivity.image : image_event}
+                    alt='Activity'
+                  />
+                  <h5>La sesión iniciará pronto</h5>
+                </div>
+              )}
+
+              {meetingState === 'closed_meeting_room' && option !== 'survey' && option !== 'games' && (
+                <div className='column is-centered mediaplayer'>
+                  <img
+                    className='activity_image'
+                    src={currentActivity.image ? currentActivity.image : image_event}
+                    alt='Activity'
+                  />
+                  <h5>La sesión inicia el {Moment(currentActivity.datetime_start).format('DD MMMM YYYY h:mm a')}</h5>
+                </div>
+              )}
+
+              {meetingState === 'ended_meeting_room' &&
+              currentActivity.video &&
+              option !== 'survey' &&
+              option !== 'games' ? (
                 <div className='column is-centered mediaplayer'>
                   <ReactPlayer
                     width={'100%'}
@@ -210,13 +236,19 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               ) : (
                 <>
-                  {(currentActivity.image || image_event) && (
-                    <img
-                      className='activity_image'
-                      src={currentActivity.image ? currentActivity.image : image_event}
-                      alt='Activity'
-                    />
-                  )}
+                  {meetingState === 'ended_meeting_room' &&
+                    (currentActivity.image || image_event) &&
+                    option !== 'survey' &&
+                    option !== 'games' && (
+                      <div>
+                        <img
+                          className='activity_image'
+                          src={currentActivity.image ? currentActivity.image : image_event}
+                          alt='Activity'
+                        />
+                        <h5>Aún no se ha subido video</h5>
+                      </div>
+                    )}
                 </>
               )}
               {/*logo quemado de aval para el evento de magicland */}
@@ -245,7 +277,7 @@ let AgendaActividadDetalle = (props) => {
                   />
                 </div>
               )}
-              {event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6' ? (
+              {/*event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6' ? (
                 <></>
               ) : (
                 <p className='has-text-left is-size-6-desktop'>
@@ -262,7 +294,7 @@ let AgendaActividadDetalle = (props) => {
                     </Button>
                   )}
                 </p>
-              )}
+              )*/}
               {/* <p className='has-text-left is-size-6-desktop'>
 
                 {usuarioRegistrado && (
@@ -375,7 +407,7 @@ let AgendaActividadDetalle = (props) => {
 
             <hr />
             <hr />
-            <div>
+            {/* <div>
               {showSurvey && (
                 <div style={{}} className='has-text-left is-size-6-desktop'>
                   <p>
@@ -384,7 +416,7 @@ let AgendaActividadDetalle = (props) => {
                   <SurveyComponent event={event} activity={currentActivity} usuarioRegistrado={usuarioRegistrado} />
                 </div>
               )}
-            </div>
+            </div>*/}
 
             {currentActivity.hosts.length === 0 ? (
               <div></div>
