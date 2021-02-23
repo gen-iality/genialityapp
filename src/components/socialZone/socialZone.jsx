@@ -7,7 +7,8 @@ import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
-import SurveyComponent from '../events/surveys/surveyComponent';
+import SurveyList from '../events/surveys/surveyList';
+
 const { TabPane } = Tabs;
 const callback = () => {};
 /** Inspiración para construir el monitoreo de presencia firestore
@@ -213,9 +214,9 @@ let SocialZone = function(props) {
             </Col>
             <Col span={4}>
               <VideoCameraOutlined />
-              aqui van las encuestas
             </Col>
           </Row>
+          <SurveyList />
         </TabPane>
       )}
       {games && (

@@ -203,23 +203,24 @@ class SurveyList extends Component {
                         </div>
                       )}
                       <div>
-                        {/* <Button
+                        <Button
                           type={!survey.userHasVoted && survey.isOpened === 'true' ? 'primary' : 'ghost'}
                           className={`${
                             !survey.userHasVoted && survey.isOpened === 'true'
                               ? 'animate__animated  animate__pulse animate__slower animate__infinite'
                               : ''
                           }`}
-                          onClick={() => showSurvey(survey)}
+                          onClick={() => console.log('ok')}
                           loading={loading}>
-                          {!survey.userHasVoted && survey.isOpened === 'true'
+                          Ingresar
+                          {/* {!survey.userHasVoted && survey.isOpened === 'true'
                             ? `Ir a ${
                                 surveyLabel.name
                                   ? surveyLabel.name.replace(/([^aeiou]{2})?(e)?s\b/gi, this.pluralToSingular)
                                   : 'Encuesta'
                               }`
-                            : ' Ver Resultados'}
-                        </Button> */}
+                            : ' Ver Resultados'} */}
+                        </Button>
                       </div>
                     </>
                   )}
@@ -236,6 +237,7 @@ class SurveyList extends Component {
 const mapStateToProps = (state) => ({
   event: state.event.data,
   activity: state.stage.data.currentActivity,
+  currentUser: state.user.data,
 });
 
 export default connect(mapStateToProps)(SurveyList);
