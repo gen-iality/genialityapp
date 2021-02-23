@@ -233,9 +233,8 @@ let ChatList = function(props) {
   return props.currentChat ? (
     <>
       <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(null, null)}>
-        Listado
+        Todos los chats
       </a>
-      <p>{props.currentChatName}</p>
       <iframe
         title='chatevius'
         className='ChatEvius'
