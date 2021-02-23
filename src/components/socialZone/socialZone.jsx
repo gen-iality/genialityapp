@@ -195,7 +195,8 @@ let SocialZone = function(props) {
           />
         </TabPane>
       }
-      {survey && (
+      {/*survey*/}
+      {true && (
         <TabPane className='asistente-survey-list' tab='Encuestas' key='3'>
           <Row justify='space-between'>
             <Col span={4}>
@@ -212,6 +213,7 @@ let SocialZone = function(props) {
             </Col>
             <Col span={4}>
               <VideoCameraOutlined />
+              aqui van las encuestas
             </Col>
           </Row>
         </TabPane>
@@ -261,7 +263,7 @@ let ChatList = function(props) {
           actions={[
             <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
               Chat <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}></Badge>
-            </a>
+            </a>,
           ]}>
           <Typography.Text mark>Chat</Typography.Text> {item.name || '----'}
         </List.Item>
@@ -296,7 +298,7 @@ let AttendeList = function(props) {
                 }>
                 Chat
               </a>
-            ) : null
+            ) : null,
           ]}>
           {/* <Skeleton avatar title={false} loading={item.loading} active> */}
           <List.Item.Meta

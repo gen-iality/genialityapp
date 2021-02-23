@@ -1,6 +1,6 @@
-export const SET_SURVEY_DATA = 'SET_SURVEY_DATA';
+export const SET_SURVEY_LIST = 'SET_SURVEY_LIST';
 
-export const setStageData = (survey) => ({
-  type: SET_SURVEY_DATA,
-  payload: survey,
+export const setSurveyList = (list) => ({
+  type: SET_SURVEY_LIST,
+  payload: list,
 });

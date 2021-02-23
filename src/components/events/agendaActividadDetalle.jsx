@@ -114,7 +114,7 @@ let AgendaActividadDetalle = (props) => {
   }
 
   const getMeetingPath = (platform) => {
-    const { displayName, email } = props.currentUser;
+    const { displayName, email } = props.userInfo;
     if (platform === 'zoom') {
       return url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`;
     } else if (platform === 'vimeo') {
@@ -365,7 +365,7 @@ let AgendaActividadDetalle = (props) => {
                 <Col span={24}>
                   <AttendeeNotAllowedCheck
                     event={event}
-                    currentUser={props.currentUser}
+                    currentUser={props.userInfo}
                     usuarioRegistrado={usuarioRegistrado}
                     currentActivity={currentActivity}
                   />
@@ -453,7 +453,7 @@ let AgendaActividadDetalle = (props) => {
               </div>
             )}
 
-            {props.currentUser && props.currentUser.names ? (
+            {props.userInfo && props.userInfo.names ? (
               <div />
             ) : (
               <div>
@@ -525,6 +525,7 @@ let AgendaActividadDetalle = (props) => {
 
 const mapStateToProps = (state) => ({
   stageInfo: state.stage.data,
+  userInfo: state.user.data,
 });
 
 const mapDispatchToProps = {

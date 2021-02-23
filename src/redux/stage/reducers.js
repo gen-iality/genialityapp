@@ -2,7 +2,7 @@ import { SET_STAGE_DATA, GO_TO_ACTIVITY } from './actions';
 
 const initialState = {
   data: {
-    mainStage: null,
+    mainStage: null, //videconference, media, survey, game
     currentActivity: null,
     collapsed: null,
     tabSelected: -1,
