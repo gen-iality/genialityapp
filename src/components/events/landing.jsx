@@ -753,7 +753,8 @@ class Landing extends Component {
 
                           {event.styles &&
                           event.styles.show_banner &&
-                          (event.styles.show_banner === 'true' || event.styles.show_banner === true) ? (
+                          (event.styles.show_banner === 'true' || event.styles.show_banner === true) &&
+                          this.props.currentActivity === null ? (
                             <BannerEvent
                               bgImage={
                                 event.styles && event.styles.banner_image
@@ -784,33 +785,38 @@ class Landing extends Component {
                             />
                           ) : (
                             <div>
-                              {event.styles && event.styles.show_banner === undefined && this.state.headerVisible && (
-                                <BannerEvent
-                                  bgImage={
-                                    event.styles && event.styles.banner_image
-                                      ? event.styles.banner_image
-                                      : event.picture
-                                      ? event.picture
-                                      : 'https://bulma.io/images/placeholders/1280x960.png'
-                                  }
-                                  bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                                  title={event.name}
-                                  organizado={
-                                    <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                                      {event.organizer.name ? event.organizer.name : event.organizer.email}
-                                    </Link>
-                                  }
-                                  place={
-                                    <span>
-                                      {event.venue} {event.location.FormattedAddress}
-                                    </span>
-                                  }
-                                  dateStart={event.date_start}
-                                  dateEnd={event.date_end}
-                                  dates={event.dates}
-                                  type_event={event.type_event}
-                                />
-                              )}
+                              {event.styles &&
+                                event.styles.show_banner === undefined &&
+                                this.state.headerVisible &&
+                                this.props.currentActivity === null && (
+                                  <BannerEvent
+                                    bgImage={
+                                      event.styles && event.styles.banner_image
+                                        ? event.styles.banner_image
+                                        : event.picture
+                                        ? event.picture
+                                        : 'https://bulma.io/images/placeholders/1280x960.png'
+                                    }
+                                    bgImageText={
+                                      event.styles && event.styles.event_image ? event.styles.event_image : ''
+                                    }
+                                    title={event.name}
+                                    organizado={
+                                      <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                                        {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                      </Link>
+                                    }
+                                    place={
+                                      <span>
+                                        {event.venue} {event.location.FormattedAddress}
+                                      </span>
+                                    }
+                                    dateStart={event.date_start}
+                                    dateEnd={event.date_end}
+                                    dates={event.dates}
+                                    type_event={event.type_event}
+                                  />
+                                )}
                             </div>
                           )}
                           <div id='visualizar' style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>
@@ -906,12 +912,12 @@ class Landing extends Component {
                                       key='1'
                                       icon={
                                         <>
-                                        <Badge count={this.state.totalNewMessages}>
-                                          <CommentOutlined style={{ fontSize: '24px'}} />
-                                        </Badge>
+                                          <Badge count={this.state.totalNewMessages}>
+                                            <CommentOutlined style={{ fontSize: '24px' }} />
+                                          </Badge>
                                         </>
                                       }
-                                      style={{marginTop:'12px', marginBottom:'22px' }} 
+                                      style={{ marginTop: '12px', marginBottom: '22px' }}
                                       onClick={() => this.toggleCollapsed(2)}></Menu.Item>
                                   }
                                   {
@@ -979,6 +985,7 @@ class Landing extends Component {
 const mapStateToProps = (state) => ({
   loginInfo: state.user.data,
   eventInfo: state.event.data,
+  currentActivity: state.stage.data.currentActivity,
 });
 
 const mapDispatchToProps = {

@@ -658,7 +658,7 @@ class Agenda extends Component {
                         Surveys={survey}
                         toggleConference={toggleConference}
                         event_image={this.props.event.styles.event_image}
-                        gotoActivity={this.gotoActivity}
+                        /// gotoActivity={this.gotoActivity}
                         registerInActivity={this.registerInActivity}
                         registerStatus={isRegistered}
                         eventId={this.props.eventId}

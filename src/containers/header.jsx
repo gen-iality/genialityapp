@@ -190,7 +190,7 @@ class Headers extends Component {
               {/*evius LOGO */}
 
               <Row className='logo-header' justify='space-between' align='middle'>
-                <Link to={'/'}>{/* <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} /> */}</Link>
+                {this.props.event !== null && this.props.event.name}
 
                 {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
                 {showAdmin && (
@@ -256,6 +256,7 @@ const mapStateToProps = (state) => ({
   eventMenu: state.user.menu,
   permissions: state.permissions,
   error: state.categories.error,
+  event: state.event.data,
 });
 
 const mapDispatchToProps = {

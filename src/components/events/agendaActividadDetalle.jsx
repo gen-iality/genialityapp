@@ -29,7 +29,7 @@ let AgendaActividadDetalle = (props) => {
   const intl = useIntl();
   const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
   const [currentSurvey, setcurrentSurvey] = useState(null);
-  const [videoStyles, setVideoStyles] = useState({ width: '100%', height: '450px' });
+  const [videoStyles, setVideoStyles] = useState(null);
   let option = props.option;
 
   useEffect(() => {
@@ -49,7 +49,10 @@ let AgendaActividadDetalle = (props) => {
         right: '0',
         bottom: '0',
         width: '170px',
+        transition: '300ms',
       });
+    } else {
+      setVideoStyles({ width: '100%', height: '450px', transition: '300ms' });
     }
   }, [option]);
 

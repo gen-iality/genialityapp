@@ -9,6 +9,8 @@ import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
 import SurveyList from '../events/surveys/surveyList';
 import { connect } from 'react-redux';
+import * as StageActions from '../../redux/stage/actions';
+const { setMainStage } = StageActions;
 
 const { TabPane } = Tabs;
 const callback = () => {};
@@ -201,7 +203,9 @@ let SocialZone = function(props) {
             <Col span={4}>
               <ArrowLeftOutlined
                 onClick={() => {
-                  props.optionselected('N/A');
+                  // props.optionselected('N/A');
+                  props.setMainStage(null);
+
                   setcurrentTab('');
                   props.tcollapse();
                 }}
@@ -230,7 +234,11 @@ const mapStateToProps = (state) => ({
   mainStage: state.stage.data.mainStage,
 });
 
-export default connect(mapStateToProps)(withRouter(SocialZone));
+const mapDispatchToProps = {
+  setMainStage,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));
 
 let ChatList = function(props) {
   let userName = props.currentUser.names || '---';
