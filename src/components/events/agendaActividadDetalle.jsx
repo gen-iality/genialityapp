@@ -11,10 +11,9 @@ import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
 import SurveyForm from './surveys';
-import SurveyComponent from './surveys';
 import * as StageActions from '../../redux/stage/actions';
 
-const { setStageData } = StageActions;
+const { gotoActivity } = StageActions;
 
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
@@ -120,7 +119,7 @@ let AgendaActividadDetalle = (props) => {
     }
   };
 
-  const { currentActivity, gotoActivityList, toggleConference, image_event } = props;
+  const { currentActivity, gotoActivity, toggleConference, image_event } = props;
   return (
     <div className='columns container-calendar-section is-centered'>
       <div className=' container_agenda-information container-calendar is-three-fifths'>
@@ -129,7 +128,7 @@ let AgendaActividadDetalle = (props) => {
             <PageHeader
               className='site-page-header'
               onBack={() => {
-                gotoActivityList();
+                gotoActivity(null);
               }}
               title={currentActivity.name}
             />
@@ -547,7 +546,7 @@ let AgendaActividadDetalle = (props) => {
             <a
               className=''
               onClick={() => {
-                gotoActivityList();
+                gotoActivity(null);
               }}>
               <Button>{intl.formatMessage({ id: 'button.return' })}</Button>
             </a>
@@ -564,7 +563,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setStageData,
+  gotoActivity,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
