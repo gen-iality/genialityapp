@@ -5,6 +5,9 @@ import { firestore } from '../../../helpers/firebase';
 import { connect } from 'react-redux';
 import { Actions, TicketsApi } from '../../../helpers/request';
 import * as Cookie from 'js-cookie';
+import * as StageAction from '../../../redux/stage/actions';
+
+const { setMainStage } = StageAction;
 
 const headStyle = {
   fontWeight: 300,
@@ -167,12 +170,19 @@ class SurveyList extends Component {
     return '';
   };
 
+  handleClick = () => {
+    const { activity, setMainStage } = this.props;
+    if (activity !== null) {
+      setMainStage('surveyDetalle');
+    }
+  };
+
   render() {
     const { surveyLabel, loading, publishedSurveys } = this.state;
 
     return (
       <>
-        <Card title={`Lista de ${surveyLabel.name}`} className='' headStyle={headStyle}>
+        <Card className='' headStyle={headStyle}>
           {publishedSurveys && publishedSurveys.length === 0 && (
             <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
           )}
@@ -210,7 +220,7 @@ class SurveyList extends Component {
                               ? 'animate__animated  animate__pulse animate__slower animate__infinite'
                               : ''
                           }`}
-                          onClick={() => console.log('ok')}
+                          onClick={this.handleClick}
                           loading={loading}>
                           Ingresar
                           {/* {!survey.userHasVoted && survey.isOpened === 'true'
@@ -240,4 +250,8 @@ const mapStateToProps = (state) => ({
   currentUser: state.user.data,
 });
 
-export default connect(mapStateToProps)(SurveyList);
+const mapDispatchToProps = {
+  setMainStage,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SurveyList);

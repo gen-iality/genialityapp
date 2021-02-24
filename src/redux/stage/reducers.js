@@ -1,4 +1,4 @@
-import { SET_STAGE_DATA, GO_TO_ACTIVITY } from './actions';
+import { SET_STAGE_DATA, GO_TO_ACTIVITY, SET_MAIN_STAGE } from './actions';
 
 const initialState = {
   data: {
@@ -24,6 +24,14 @@ export default function stagesReducer(state = initialState, action) {
       return {
         ...state,
         data: { ...state.data, currentActivity: action.payload },
+        loading: true,
+        error: null,
+      };
+
+    case SET_MAIN_STAGE:
+      return {
+        ...state,
+        data: { ...state.data, mainStage: action.payload },
         loading: true,
         error: null,
       };

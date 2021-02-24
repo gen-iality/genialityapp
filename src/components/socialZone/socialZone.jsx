@@ -8,6 +8,7 @@ import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
 import SurveyList from '../events/surveys/surveyList';
+import { connect } from 'react-redux';
 
 const { TabPane } = Tabs;
 const callback = () => {};
@@ -211,7 +212,6 @@ let SocialZone = function(props) {
             </Col>
             <Col span={4}>
               <VideoCameraOutlined />
-              aqui van las encuestas
             </Col>
           </Row>
           <SurveyList />
@@ -226,7 +226,11 @@ let SocialZone = function(props) {
   );
 };
 
-export default withRouter(SocialZone);
+const mapStateToProps = (state) => ({
+  mainStage: state.stage.data.mainStage,
+});
+
+export default connect(mapStateToProps)(withRouter(SocialZone));
 
 let ChatList = function(props) {
   let userName = props.currentUser.names || '---';

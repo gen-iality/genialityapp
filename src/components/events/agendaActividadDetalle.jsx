@@ -29,7 +29,7 @@ let AgendaActividadDetalle = (props) => {
   const intl = useIntl();
   const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
   const [currentSurvey, setcurrentSurvey] = useState(null);
-
+  const [videoStyles, setVideoStyles] = useState({ width: '100%', height: '450px' });
   let option = props.option;
 
   useEffect(() => {
@@ -40,6 +40,18 @@ let AgendaActividadDetalle = (props) => {
     };
     checkContentToDisplay();
   }, [platform, meeting_id]);
+
+  useEffect(() => {
+    if (option === 'surveyDetalle') {
+      setVideoStyles({
+        zIndex: '90000',
+        position: 'fixed',
+        right: '0',
+        bottom: '0',
+        width: '170px',
+      });
+    }
+  }, [option]);
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     firestore
@@ -169,8 +181,8 @@ let AgendaActividadDetalle = (props) => {
               )}
 
               {meetingState === 'open_meeting_room' &&
-                option !== 'surveyDetalle' &&
-                option !== 'games' &&
+                // option !== 'surveyDetalle' &&
+                // option !== 'games' &&
                 platform !== '' &&
                 platform !== null && (
                   <iframe
@@ -179,7 +191,7 @@ let AgendaActividadDetalle = (props) => {
                     allow='autoplay; fullscreen; camera *;microphone *'
                     allowFullScreen
                     allowusermedia
-                    style={{ width: '100%', height: '450px' }}
+                    style={videoStyles}
                     //style={conferenceStyles}
                   ></iframe>
                 )}
@@ -558,7 +570,7 @@ let AgendaActividadDetalle = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  stageInfo: state.stage.data,
+  option: state.stage.data.mainStage,
   userInfo: state.user.data,
 });
 
