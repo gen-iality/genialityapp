@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Row, Col, Tag, Avatar, Alert, Card, Space,Timeline  } from 'antd';
+import { Button, Row, Col, Tag, Avatar, Alert, Card, Space, Timeline } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
-import { TagOutlined, CaretRightFilled, UserOutlined} from '@ant-design/icons';
+import { TagOutlined, CaretRightFilled, UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
 
@@ -411,88 +411,120 @@ function AgendaActivityItem(props) {
           </Card>
         </div>
       )} */}
-      <Row justify='start'>
+      <Row
+        justify='start'
+        onClick={() => {
+          props.gotoActivity(item);
+        }}>
         <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
-         <Card
-          bodyStyle={{ padding: '10px'}}>
-           <Row gutter={[8,8]}>
-             <Col span={4}>
-               <div style={{fontSize:'8px', marginTop:'6%'}}>{ item.datetime_start ? Moment(item.datetime_start).format('h:mm a'):''}</div>
-               <div> o <span style={{fontSize:'8px'}}>En vivo</span></div>
-             </Col>
-             <Col span={20} style={{textAlign:'left'}}>
-               <Space direction="vertical">
-                <Row gutter={[10,10]} style={{textAlign:'left'}}>
-                  <Col span={24}>
-                  <div style={{fontWeight:'700', textAlign:'left', fontSize:'12px'}}>{item.name}. <span style={{fontSize:'10px', color:'grey'}}>sala de evento</span></div>
-                  </Col>
-                  {item.hosts.length > 0 && (
-                    <>
-                    {item.hosts.map((speaker, key) => (
-                    <Col key={key} span={8} style={{fontSize:'75%'}}>
-                    <Avatar size={30} src={speaker.image} style={{float:'left', marginRight:'6px'}} /><div>{speaker.name}</div>
-                    </Col>))}
-                    </>
-                  )}
-                </Row>
-               </Space>
-             </Col>      
-           </Row>
-         </Card>
+          <Card bodyStyle={{ padding: '10px' }}>
+            <Row gutter={[8, 8]}>
+              <Col span={4}>
+                <div style={{ fontSize: '8px', marginTop: '6%' }}>
+                  {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
+                </div>
+                <div>
+                  {' '}
+                  o <span style={{ fontSize: '8px' }}>En vivo</span>
+                </div>
+              </Col>
+              <Col span={20} style={{ textAlign: 'left' }}>
+                <Space direction='vertical'>
+                  <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
+                    <Col span={24}>
+                      <div style={{ fontWeight: '700', textAlign: 'left', fontSize: '12px' }}>
+                        {item.name}. <span style={{ fontSize: '10px', color: 'grey' }}>sala de evento</span>
+                      </div>
+                    </Col>
+                    {item.hosts.length > 0 && (
+                      <>
+                        {item.hosts.map((speaker, key) => (
+                          <Col key={key} span={8} style={{ fontSize: '75%' }}>
+                            <Avatar size={30} src={speaker.image} style={{ float: 'left', marginRight: '6px' }} />
+                            <div>{speaker.name}</div>
+                          </Col>
+                        ))}
+                      </>
+                    )}
+                  </Row>
+                </Space>
+              </Col>
+            </Row>
+          </Card>
         </Col>
         <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
-        <Card
-          bodyStyle={{ padding: '10px'}}>
-           <Row gutter={[8,8]}>
-             <Col span={4}>
-              <div style={{marginTop:'10%' }}>
-                <Timeline>
-                 <Timeline.Item color="#1cdcb7">{ item.datetime_start ? Moment(item.datetime_start).format('h:mm a'):''}
-                  <div style={{height:'60px', fontSize:'8px', marginLeft:'-8px', marginTop:'3%'}}>
-                    <img src='https://static.thenounproject.com/png/55528-200.png' style={{height:'80%', width:'auto'}} />
-                      <p>En vivo</p>
-                  </div>
-                 </Timeline.Item>                
-                 <Timeline.Item color="#1cdcb7" style={{ paddingBottom: '0px'}}>{ item.datetime_end ?  Moment(item.datetime_end).format('h:mm a') : ''} </Timeline.Item>
-               </Timeline>
-              </div>
-             </Col>
-             <Col span={16} style={{textAlign:'left'}}>
-               <Space direction="vertical">
-                <Row gutter={[10,10]} style={{textAlign:'left'}}>
-                  <Col span={24}>
-                  <div style={{fontWeight:'700', textAlign:'left', fontSize:'20px'}}>{item.name}.</div>
-                  <span style={{fontSize:'15px', color:'grey'}}>sala de evento</span>
-                  </Col>
-                  <Row>
-                  {item.description !== null && item.description !== '<p><br></p>' && (
-                      <div
-                        style={
-                          item.description !== null && item.description !== '<p><br></p>' ? {} : { display: 'none' }
-                        }>
-                        {
-                          <>
-                              <div style={{overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', width:'22%'}} dangerouslySetInnerHTML={{ __html: item.description }} />
-                          </>
-                        }
-                      </div> ) }
+          <Card bodyStyle={{ padding: '10px' }}>
+            <Row gutter={[8, 8]}>
+              <Col span={4}>
+                <div style={{ marginTop: '10%' }}>
+                  <Timeline>
+                    <Timeline.Item color='#1cdcb7'>
+                      {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
+                      <div style={{ height: '60px', fontSize: '8px', marginLeft: '-8px', marginTop: '3%' }}>
+                        <img
+                          src='https://static.thenounproject.com/png/55528-200.png'
+                          style={{ height: '80%', width: 'auto' }}
+                        />
+                        <p>En vivo</p>
+                      </div>
+                    </Timeline.Item>
+                    <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>
+                      {item.datetime_end ? Moment(item.datetime_end).format('h:mm a') : ''}{' '}
+                    </Timeline.Item>
+                  </Timeline>
+                </div>
+              </Col>
+              <Col span={16} style={{ textAlign: 'left' }}>
+                <Space direction='vertical'>
+                  <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
+                    <Col span={24}>
+                      <div style={{ fontWeight: '700', textAlign: 'left', fontSize: '20px' }}>{item.name}.</div>
+                      <span style={{ fontSize: '15px', color: 'grey' }}>sala de evento</span>
+                    </Col>
+                    <Row>
+                      {item.description !== null && item.description !== '<p><br></p>' && (
+                        <div
+                          style={
+                            item.description !== null && item.description !== '<p><br></p>' ? {} : { display: 'none' }
+                          }>
+                          {
+                            <>
+                              <div
+                                style={{
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                  width: '22%',
+                                }}
+                                dangerouslySetInnerHTML={{ __html: item.description }}
+                              />
+                            </>
+                          }
+                        </div>
+                      )}
+                    </Row>
+                    {item.hosts.length > 0 && (
+                      <>
+                        {item.hosts.map((speaker, key) => (
+                          <Col key={key} span={8} style={{ fontSize: '75%' }}>
+                            <Avatar
+                              size={30}
+                              src={speaker.image}
+                              style={{ float: 'left', marginRight: '6px', verticalAlign: 'middle' }}
+                            />
+                            <div>{speaker.name}</div>
+                          </Col>
+                        ))}
+                      </>
+                    )}
                   </Row>
-                  {item.hosts.length > 0 && (
-                    <>
-                    {item.hosts.map((speaker, key) => (
-                    <Col key={key} span={8} style={{fontSize:'75%'}}>
-                    <Avatar size={30} src={speaker.image} style={{float:'left', marginRight:'6px', verticalAlign:'middle'}} /><div>{speaker.name}</div>
-                    </Col>))}
-                    </>
-                  )}
-                </Row>
-               </Space>
-             </Col>   
-             <Col span={4}> 
-              <img src={item.image ? item.image : event_image}/>
-             </Col>  
-           </Row>
-         </Card>
+                </Space>
+              </Col>
+              <Col span={4}>
+                <img src={item.image ? item.image : event_image} />
+              </Col>
+            </Row>
+          </Card>
         </Col>
       </Row>
     </>
