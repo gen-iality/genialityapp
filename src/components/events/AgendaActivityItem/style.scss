@@ -11,3 +11,21 @@
 .button-Agenda:hover {
   color: white !important;
 }
+.ant-timeline-item-last > .ant-timeline-item-content {
+  min-height: 22px;
+}
+
+.ant-timeline-item-content {
+  position: relative;
+  top: -7.001px;
+  margin: 0px 0 0 -2px;
+  word-break: break-word;
+}
+
+.ant-timeline-item {
+  position: relative;
+  margin: 0;
+  padding-bottom: 11px;
+  font-size: 14px;
+  list-style: none;
+}
