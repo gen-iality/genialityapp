@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Row, Col, Tag, Avatar, Alert, Card, Space, Timeline } from 'antd';
+import { Button, Row, Col, Tag, Avatar, Alert, Card, Space, Timeline, List } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment';
 import './style.scss';
@@ -433,19 +433,31 @@ function AgendaActivityItem(props) {
                   <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
                     <Col span={24}>
                       <div style={{ fontWeight: '700', textAlign: 'left', fontSize: '12px' }}>
-                        {item.name}. <span style={{ fontSize: '10px', color: 'grey' }}>sala de evento</span>
+                        {item.name}. 
                       </div>
+                      <span style={{ fontSize: '10px', color: 'grey' }}>sala de evento</span>
                     </Col>
-                    {item.hosts.length > 0 && (
-                      <>
-                        {item.hosts.map((speaker, key) => (
-                          <Col key={key} span={8} style={{ fontSize: '75%' }}>
-                            <Avatar size={30} src={speaker.image} style={{ float: 'left', marginRight: '6px' }} />
-                            <div>{speaker.name}</div>
-                          </Col>
-                        ))}
-                      </>
-                    )}
+                    <Row gutter={[4,4]}>
+                      {item.hosts.length > 0 && (
+                        <>
+                          {item.hosts.map((speaker, key) => (
+                            <Col key={key} span={6} style={{ fontSize: '75%' }}>
+                              <table>
+                                <tr>
+                                  <th>
+                                    <Avatar   
+                                     size={25}                                   
+                                     src={speaker.image}
+                                    />
+                                  </th>
+                                  <th style={{marginRight:'12px'}}><div style={{marginLeft:'12px', fontSize:'9px', marginRight:'12px'}}>{speaker.name}</div></th>
+                                </tr>
+                              </table>
+                            </Col>
+                          ))}
+                        </>
+                      )}
+                    </Row>
                   </Row>
                 </Space>
               </Col>
@@ -460,7 +472,7 @@ function AgendaActivityItem(props) {
                   <Timeline>
                     <Timeline.Item color='#1cdcb7'>
                       {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
-                      <div style={{ height: '60px', fontSize: '8px', marginLeft: '-8px', marginTop: '3%' }}>
+                      <div style={{ height: '79px', fontSize: '8px', marginLeft: '-8px', marginTop: '3%' }}>
                         <img
                           src='https://static.thenounproject.com/png/55528-200.png'
                           style={{ height: '80%', width: 'auto' }}
@@ -485,7 +497,7 @@ function AgendaActivityItem(props) {
                       {item.description !== null && item.description !== '<p><br></p>' && (
                         <div
                           style={
-                            item.description !== null && item.description !== '<p><br></p>' ? {} : { display: 'none' }
+                            item.description !== null && item.description !== '<p><br></p>' ? {} : { display: '' }
                           }>
                           {
                             <>
@@ -503,25 +515,31 @@ function AgendaActivityItem(props) {
                         </div>
                       )}
                     </Row>
-                    {item.hosts.length > 0 && (
-                      <>
-                        {item.hosts.map((speaker, key) => (
-                          <Col key={key} span={8} style={{ fontSize: '75%' }}>
-                            <Avatar
-                              size={30}
-                              src={speaker.image}
-                              style={{ float: 'left', marginRight: '6px', verticalAlign: 'middle' }}
-                            />
-                            <div>{speaker.name}</div>
-                          </Col>
-                        ))}
-                      </>
-                    )}
+                    <Row>
+                      {item.hosts.length > 0 && (
+                        <>
+                          {item.hosts.map((speaker, key) => (
+                            <Col key={key} span={6} style={{ fontSize: '75%' }}>
+                              <table>
+                                <tr>
+                                  <th>
+                                    <Avatar                                      
+                                     src={speaker.image}
+                                    />
+                                  </th>
+                                  <th><div style={{marginLeft:'12px'}}>{speaker.name}</div></th>
+                                </tr>
+                              </table>
+                            </Col>
+                          ))}
+                        </>
+                      )}
+                    </Row>
                   </Row>
                 </Space>
               </Col>
               <Col span={4}>
-                <img src={item.image ? item.image : event_image} />
+                <img src={item.image ? item.image : event_image} style={{ objectFit:'cover', height:'160px', borderRadius:'3px' }} />
               </Col>
             </Row>
           </Card>
