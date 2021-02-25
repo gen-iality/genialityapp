@@ -9,13 +9,16 @@ import { TagOutlined, CaretRightFilled, UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
 
+
+
 const { gotoActivity } = StageActions;
 
 function AgendaActivityItem(props) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
+  const [meetingState, setMeetingState] = useState(null);
   const intl = useIntl();
-  const {
+  let {
     item,
     Surveys,
     Documents,
@@ -32,6 +35,11 @@ function AgendaActivityItem(props) {
   } = props;
 
   useEffect(() => {
+
+
+
+
+    
     if (registerStatus) {
       setIsRegistered(registerStatus);
     }
@@ -51,7 +59,30 @@ function AgendaActivityItem(props) {
 
   useEffect(() => {
     console.log('item', item);
+    (async () => {
+      await listeningStateMeetingRoom(item.event_id, item._id);    
+     
+    })();
+   
+
   }, []);
+
+  async function listeningStateMeetingRoom(event_id, activity_id) {
+    firestore
+      .collection('events')
+      .doc(event_id)
+      .collection('activities')
+      .doc(activity_id)
+      .onSnapshot((infoActivity) => {
+        if (!infoActivity.exists) return;
+        const { habilitar_ingreso, meeting_id, platform } = infoActivity.data();
+        setMeetingState(habilitar_ingreso);
+
+      });
+  }
+
+
+
 
   return (
     <>
@@ -425,7 +456,7 @@ function AgendaActivityItem(props) {
                 </div>
                 <div>
                   {' '}
-                  o <span style={{ fontSize: '8px' }}>En vivo</span>
+                  o <span style={{ fontSize: '8px' }}>{meetingState=="open_meeting_room"?"En vivo":meetingState=="ended_meeting_room"? "Grab/Term":meetingState=="closed_meeting_room"?"Por iniciar": "sin estado"}</span>
                 </div>
               </Col>
               <Col span={20} style={{ textAlign: 'left' }}>
@@ -473,11 +504,23 @@ function AgendaActivityItem(props) {
                     <Timeline.Item color='#1cdcb7'>
                       {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
                       <div style={{ height: '79px', fontSize: '8px', marginLeft: '-8px', marginTop: '3%' }}>
-                        <img
+                      {meetingState=="open_meeting_room"&& <img
                           src='https://static.thenounproject.com/png/55528-200.png'
                           style={{ height: '80%', width: 'auto' }}
-                        />
-                        <p>En vivo</p>
+                        />}
+                        {meetingState=="closed_meeting_room"&& <img
+                          src='https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif'
+                          style={{ height: '80%', width: 'auto' }}
+                        />}
+                        {meetingState=="ended_meeting_room"&& <img
+                          src='https://img.flaticon.com/icons/png/512/0/375.png?size=1200x630f&pad=10,10,10,10&ext=png&bg=FFFFFFFF'
+                          style={{ height: '80%', width: 'auto' }}
+                        />}
+                        {(meetingState=="" || meetingState==null)&& <img
+                          src='data:image/png;base64,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'
+                          style={{ height: '80%', width: 'auto' }}
+                        />}
+                         <p>{meetingState=="open_meeting_room"?"En vivo":meetingState=="ended_meeting_room"? "Grab/Term":meetingState=="closed_meeting_room"?"Por iniciar": "sin estado"}</p>
                       </div>
                     </Timeline.Item>
                     <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>

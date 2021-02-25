@@ -241,7 +241,7 @@ let AgendaActividadDetalle = (props) => {
                         textAlign: 'right',
                         display: 'block',
                       }}>
-                      <p>{Moment(currentActivity.datetime_start).format('DD MMM YYYY')}</p>{' '}
+                      {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
                     </Row>
                     <Row
                       style={{
@@ -251,10 +251,10 @@ let AgendaActividadDetalle = (props) => {
                         display: 'block',
                         height: '2.5vh',
                       }}>
-                      <p>
+                      
                         {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
                         {Moment(currentActivity.datetime_end).format('h:mm a')}
-                      </p>
+                      
                     </Row>
                   </Col>
                 </div>
@@ -696,7 +696,7 @@ let AgendaActividadDetalle = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  //option: state.stage.data.mainStage,
+  option: state.stage.data.mainStage,
   userInfo: state.user.data,
   eventInfo: state.event.data,
 });

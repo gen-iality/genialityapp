@@ -73,6 +73,8 @@ class Agenda extends Component {
     this.gotoActivityList = this.gotoActivityList.bind(this);
   }
 
+  
+
   async componentDidMount() {
     //Se carga esta funcion para cargar los datos
 
@@ -475,8 +477,9 @@ class Agenda extends Component {
       survey,
       documents,
     } = this.state;
-   console.log("OPTION AGENDA LANDING...")
-   console.log(option)
+   
+   
+  
 
     return (
       <div>
@@ -648,6 +651,8 @@ class Agenda extends Component {
                   : toShow
                 ).map((item, llave) => {
                   const isRegistered = this.checkInscriptionStatus(item._id) && true;
+                 
+                    
 
                   return (
                     <div key={llave} className='container_agenda-information'>
