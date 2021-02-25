@@ -191,7 +191,7 @@ class Headers extends Component {
 
               <Row className='logo-header' justify='space-between' align='middle'>
                 {this.props.event !== null && this.props.event.name}
-
+                <Link to={'/'}>{/* <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} /> */}</Link>
                 {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
                 {showAdmin && (
                   <Col span={2} offset={3} data-target='navbarBasicExample'>
