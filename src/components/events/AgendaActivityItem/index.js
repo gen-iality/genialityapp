@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Row, Col, Tag, Avatar, Alert, Card, Space, Timeline, List } from 'antd';
+import { Button, Row, Col, Tag, Avatar, Alert, Card, Space, Timeline, List,Comment } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment';
 import './style.scss';
@@ -437,7 +437,8 @@ function AgendaActivityItem(props) {
                       </div>
                       <span style={{ fontSize: '10px', color: 'grey' }}>sala de evento</span>
                     </Col>
-                    <Row gutter={[4,4]}>
+                    
+                  </Row><Row gutter={[4,4]}>
                       {item.hosts.length > 0 && (
                         <>
                           {item.hosts.map((speaker, key) => (
@@ -458,7 +459,6 @@ function AgendaActivityItem(props) {
                         </>
                       )}
                     </Row>
-                  </Row>
                 </Space>
               </Col>
             </Row>
@@ -467,7 +467,7 @@ function AgendaActivityItem(props) {
         <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
           <Card bodyStyle={{ padding: '10px' }}>
             <Row gutter={[8, 8]}>
-              <Col span={4}>
+              <Col md={4} lg={4} xl={4}>
                 <div style={{ marginTop: '10%' }}>
                   <Timeline>
                     <Timeline.Item color='#1cdcb7'>
@@ -486,7 +486,7 @@ function AgendaActivityItem(props) {
                   </Timeline>
                 </div>
               </Col>
-              <Col span={16} style={{ textAlign: 'left' }}>
+              <Col md={12} lg={16} xl={16} style={{ textAlign: 'left' }}>
                 <Space direction='vertical'>
                   <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
                     <Col span={24}>
@@ -501,14 +501,20 @@ function AgendaActivityItem(props) {
                           }>
                           {
                             <>
-                              <div
+                              {/*  */}
+                              <Comment
+                                style={{padding:'0px'}}
+                                content={ <div
                                 style={{
                                   overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                  width: '22%',
+                                  display:'-webkit-box',
+                                  WebkitLineClamp: '2',
+                                  WebkitBoxOrient: 'vertical',
+                                  overflow:'hidden',
+                                  width:'90%'
                                 }}
                                 dangerouslySetInnerHTML={{ __html: item.description }}
+                              />}
                               />
                             </>
                           }
@@ -538,7 +544,7 @@ function AgendaActivityItem(props) {
                   </Row>
                 </Space>
               </Col>
-              <Col span={4}>
+              <Col  md={8} lg={4} xl={4}>
                 <img src={item.image ? item.image : event_image} style={{ objectFit:'cover', height:'160px', borderRadius:'3px' }} />
               </Col>
             </Row>
