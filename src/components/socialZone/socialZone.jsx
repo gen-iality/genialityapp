@@ -8,6 +8,7 @@ import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
 import SurveyList from '../events/surveys/surveyList';
+import SurveyDetail from '../events/surveys/surveyDetail';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
 const { setMainStage } = StageActions;
@@ -221,7 +222,7 @@ let SocialZone = function(props) {
               <VideoCameraOutlined />
             </Col>
           </Row>
-          <SurveyList />
+          {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
         </TabPane>
       }
       {
@@ -253,6 +254,7 @@ let SocialZone = function(props) {
 
 const mapStateToProps = (state) => ({
   mainStage: state.stage.data.mainStage,
+  currentSurvey: state.survey.data.currentSurvey,
 });
 
 const mapDispatchToProps = {

@@ -262,11 +262,11 @@ class Graphics extends Component {
       return (
         <>
           <Card className='survyCard'>
-            <div style={{ marginTop: 5 }}>
+            {/* <div style={{ marginTop: 5 }}>
               <Button type='ghost primary' shape='round' onClick={() => showListSurvey()}>
                 <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
               </Button>
-            </div>
+            </div> */}
             <Card>
               <strong>{titleQuestion}</strong>
               <canvas style={{ width: '100%' }} id='chart'></canvas>
