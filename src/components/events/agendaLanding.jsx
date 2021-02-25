@@ -26,7 +26,7 @@ let attendee_states = {
 
 class Agenda extends Component {
   constructor(props) {
-    console.log('CONSTRUCTOR AGENDA LANDING');
+  
     super(props);
     this.state = {
       list: [],
@@ -462,7 +462,7 @@ class Agenda extends Component {
   //End modal methods
 
   render() {
-    const { toggleConference, event, option } = this.props;
+    const { toggleConference, event,option,currentActivity} = this.props;
     const {
       days,
       day,
@@ -471,14 +471,13 @@ class Agenda extends Component {
       spaces,
       toShow,
       data,
-
       loading,
       survey,
       documents,
     } = this.state;
-    //console.log("OPTION AGENDA LANDING=>",option);
+   console.log("OPTION AGENDA LANDING...")
+   console.log(option)
 
-    const { currentActivity } = this.props;
     return (
       <div>
         <Modal

@@ -157,6 +157,7 @@ class Landing extends Component {
       option: optionselected,
     });
     console.log('UPDATE OPTIONS=>' + this.state.option);
+    console.log(optionselected)
     let currentActivity = { ...this.state.currentActivity, option: optionselected };
     this.setState({
       currentActivity: currentActivity,

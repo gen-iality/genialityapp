@@ -100,7 +100,7 @@ let SocialZone = function(props) {
       console.log('currentUser', currentUser);
       setcurrentTab('' + tab);
 
-      props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'games');
+      props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
     };
     fetchData();
   }, []);
@@ -165,7 +165,7 @@ let SocialZone = function(props) {
           props.setMainStage(key);
         }
 
-        props.optionselected(key == '1' ? 'attendees' : key == '3' ? 'survey' : key == '2' ? 'chat' : 'games');
+        props.optionselected(key == '1' ? 'attendees' : key == '3' ? 'survey' : key == '2' ? 'chat' : 'game');
       }}>
       {
         /*attendees &&*/ <TabPane tab='Asistentes' key='1' className='asistente-list'>
@@ -225,7 +225,7 @@ let SocialZone = function(props) {
         </TabPane>
       }
       {
-        <TabPane className='asistente-survey-list' tab='Juegos' key='game'>
+        <TabPane className='asistente-survey-list' tab='Juegos' key='4'>
           <Row justify='space-between'>
             <Col span={4}>
               <ArrowLeftOutlined
