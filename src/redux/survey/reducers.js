@@ -1,19 +1,19 @@
-import { SET_SURVEY_LIST } from './actions';
+import { SET_CURRENT_SURVEY } from './actions';
 
 const initialState = {
   data: {
-    publishedSurveys: [],
+    currentSurvey: null,
   },
   loading: false,
   error: null,
 };
 
-export default function stagesReducer(state = initialState, action) {
+export default function eventReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_SURVEY_LIST:
+    case SET_CURRENT_SURVEY:
       return {
         ...state,
-        data: { ...state.data, publishedSurveys: action.payload },
+        data: { ...state.data, currentSurvey: action.payload },
         loading: true,
         error: null,
       };

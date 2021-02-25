@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { List, Button, Card, Tag, Result, Spin } from 'antd';
+import { List, Button, Card, Tag, Result, Spin, Row, Col } from 'antd';
 import { MehOutlined } from '@ant-design/icons';
 import { firestore } from '../../../helpers/firebase';
 import { connect } from 'react-redux';
 import { Actions, TicketsApi } from '../../../helpers/request';
 import * as Cookie from 'js-cookie';
-import * as StageAction from '../../../redux/stage/actions';
+import * as StageActions from '../../../redux/stage/actions';
+import * as SurveyActions from '../../../redux/survey/actions';
 
-const { setMainStage } = StageAction;
+const { setMainStage } = StageActions;
+const { setCurrentSurvey } = SurveyActions;
 
 const headStyle = {
   fontWeight: 300,
@@ -56,6 +58,13 @@ class SurveyList extends Component {
     this.setState({ eventUser: eventUser });
     // this.userVote();
     this.getItemsMenu();
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (prevProps.activity !== this.props.activity) {
+      // Método para escuchar todas las encuestas relacionadas con el evento
+      await this.listenSurveysData();
+    }
   }
 
   listenSurveysData = async () => {
@@ -170,11 +179,12 @@ class SurveyList extends Component {
     return '';
   };
 
-  handleClick = () => {
-    const { activity, setMainStage } = this.props;
+  handleClick = (currentSurvey) => {
+    const { activity, setMainStage, setCurrentSurvey } = this.props;
     if (activity !== null) {
       setMainStage('surveyDetalle');
     }
+    setCurrentSurvey(currentSurvey);
   };
 
   render() {
@@ -192,26 +202,35 @@ class SurveyList extends Component {
               dataSource={publishedSurveys}
               renderItem={(survey) => (
                 <List.Item key={survey._id}>
-                  <List.Item.Meta title={survey.name} style={{ textAlign: 'left' }} />
+                  <List.Item.Meta
+                    title={survey.name}
+                    style={{ textAlign: 'left' }}
+                    description={
+                      !loading && (
+                        <Row>
+                          {survey.userHasVoted && (
+                            <Col>
+                              <Tag color='success'>Respondida</Tag>
+                            </Col>
+                          )}
+                          {survey.isOpened && (
+                            <Col>
+                              {' '}
+                              {survey.isOpened == 'true' || survey.isOpened == true ? (
+                                <Tag color='green'>Abierta</Tag>
+                              ) : (
+                                <Tag color='red'>Cerrada</Tag>
+                              )}
+                            </Col>
+                          )}
+                        </Row>
+                      )
+                    }
+                  />
                   {loading ? (
                     <Spin />
                   ) : (
                     <>
-                      {survey.userHasVoted && (
-                        <div>
-                          <Tag color='success'>Respondida</Tag>
-                        </div>
-                      )}
-                      {survey.isOpened && (
-                        <div>
-                          {' '}
-                          {survey.isOpened == 'true' || survey.isOpened == true ? (
-                            <Tag color='green'>Abierta</Tag>
-                          ) : (
-                            <Tag color='red'>Cerrada</Tag>
-                          )}
-                        </div>
-                      )}
                       <div>
                         <Button
                           type={!survey.userHasVoted && survey.isOpened === 'true' ? 'primary' : 'ghost'}
@@ -220,16 +239,15 @@ class SurveyList extends Component {
                               ? 'animate__animated  animate__pulse animate__slower animate__infinite'
                               : ''
                           }`}
-                          onClick={this.handleClick}
+                          onClick={() => this.handleClick(survey)}
                           loading={loading}>
-                          Ingresar
-                          {/* {!survey.userHasVoted && survey.isOpened === 'true'
+                          {!survey.userHasVoted && survey.isOpened === 'true'
                             ? `Ir a ${
                                 surveyLabel.name
                                   ? surveyLabel.name.replace(/([^aeiou]{2})?(e)?s\b/gi, this.pluralToSingular)
                                   : 'Encuesta'
                               }`
-                            : ' Ver Resultados'} */}
+                            : ' Ver Resultados'}
                         </Button>
                       </div>
                     </>
@@ -252,6 +270,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   setMainStage,
+  setCurrentSurvey,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList);

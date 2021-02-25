@@ -10,7 +10,7 @@ import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
-import SurveyForm from './surveys';
+import RootPage from './surveys/rootPage';
 import * as StageActions from '../../redux/stage/actions';
 
 const { gotoActivity } = StageActions;
@@ -201,14 +201,14 @@ let AgendaActividadDetalle = (props) => {
 
               {option == 'surveyDetalle' && (
                 <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
-                  <SurveyForm
-                    event={event}
-                    currentUser={props.userEntered}
-                    activity={props.activity}
-                    availableSurveysBar={true}
-                    style={{ zIndex: 9999, width: props.collapsed ? '95vw' : '50vw-389px', height: '100%' }}
-                    mountCurrentSurvey={mountCurrentSurvey}
-                    unMountCurrentSurvey={unMountCurrentSurvey}
+                  <RootPage
+                  // event={event}
+                  // currentUser={props.userEntered}
+                  // activity={props.activity}
+                  // availableSurveysBar={true}
+                  // style={{ zIndex: 9999, width: props.collapsed ? '95vw' : '50vw-389px', height: '100%' }}
+                  // mountCurrentSurvey={mountCurrentSurvey}
+                  // unMountCurrentSurvey={unMountCurrentSurvey}
                   />
                 </div>
               )}
