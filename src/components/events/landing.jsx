@@ -160,6 +160,7 @@ class Landing extends Component {
       option: optionselected,
     });
     console.log('UPDATE OPTIONS=>' + this.state.option);
+    console.log(optionselected)
     let currentActivity = { ...this.state.currentActivity, option: optionselected };
     this.setState({
       currentActivity: currentActivity,
@@ -926,13 +927,13 @@ class Landing extends Component {
                                         </>
                                       }
                                       style={{ marginTop: '12px', marginBottom: '22px' }}
-                                      onClick={() => this.toggleCollapsed(2)}></Menu.Item>
+                                      onClick={() => this.toggleCollapsed(1)}></Menu.Item>
                                   }
                                   {
                                     /* {this.state.currentActivity && this.state.attendees && */ <Menu.Item
                                       key='2'
                                       icon={<TeamOutlined style={{ fontSize: '24px' }} />}
-                                      onClick={() => this.toggleCollapsed(1)}></Menu.Item>
+                                      onClick={() => this.toggleCollapsed(2)}></Menu.Item>
                                   }
                                   {
                                     /* {this.state.currentActivity && this.state.surveys &&  */

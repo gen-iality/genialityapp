@@ -45,6 +45,12 @@ let AgendaActividadDetalle = (props) => {
 
   const [activeTab, setActiveTab] = useState('description');
   let option = props.option;
+  console.log("OPTION AGENDA");
+  console.log(option)
+  let eventInfo=props.eventInfo;
+  
+  console.log("EVENT INFO");
+  console.log(eventInfo);
 
   const [tabSel, settabSel] = useState('description');
 
@@ -74,6 +80,7 @@ let AgendaActividadDetalle = (props) => {
         bottom: '0',
         width: '170px',
         transition: '300ms',
+        width:'100% !important'
       });
     } else {
       setVideoStyles({ width: '100%', height: '450px', transition: '300ms' });
@@ -113,6 +120,8 @@ let AgendaActividadDetalle = (props) => {
       var id = props.match.params.event;
       const event = await EventsApi.landingEvent(id);
       setEvent(event);
+      console.log("EVENTO")
+      console.log(event);
 
       await listeningStateMeetingRoom(event._id, props.currentActivity._id);
 
@@ -232,7 +241,7 @@ let AgendaActividadDetalle = (props) => {
                         textAlign: 'right',
                         display: 'block',
                       }}>
-                      <p>{Moment(currentActivity.datetime_start).format('DD MMM YYYY')}</p>{' '}
+                      {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
                     </Row>
                     <Row
                       style={{
@@ -242,10 +251,10 @@ let AgendaActividadDetalle = (props) => {
                         display: 'block',
                         height: '2.5vh',
                       }}>
-                      <p>
+                      
                         {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
                         {Moment(currentActivity.datetime_end).format('h:mm a')}
-                      </p>
+                      
                     </Row>
                   </Col>
                 </div>
@@ -299,23 +308,23 @@ let AgendaActividadDetalle = (props) => {
 
               {option == 'game' && <Game />}
 
-              {(meetingState === '' || meetingState == null) && option !== 'surveyDetalle' && option !== 'games' && (
+              {(meetingState === '' || meetingState == null) && option !== 'surveyDetalle' && option !== 'game' && (
                 <div className='column is-centered mediaplayer'>
                   <img
                     className='activity_image'
                     style={{ width: '100%', height: '60vh' }}
-                    src={currentActivity.image ? currentActivity.image : image_event}
+                    src={ eventInfo.styles.banner_image? eventInfo.styles.banner_image: currentActivity.image?currentActivity.image:image_event }
                     alt='Activity'
                   />
                 </div>
               )}
 
-              {meetingState === 'closed_meeting_room' && option !== 'surveyDetalle' && option !== 'games' && (
+              {meetingState === 'closed_meeting_room' && option !== 'surveyDetalle' && option !== 'game' && (
                 <div className='column is-centered mediaplayer'>
                   <img
                     className='activity_image'
                     style={{ width: '100%', height: '60vh' }}
-                    src={currentActivity.image ? currentActivity.image : image_event}
+                    src={ eventInfo.styles.banner_image? eventInfo.styles.banner_image: currentActivity.image?currentActivity.image:image_event }
                     alt='Activity'
                   />
                 </div>
@@ -324,7 +333,7 @@ let AgendaActividadDetalle = (props) => {
               {meetingState === 'ended_meeting_room' &&
               currentActivity.video &&
               option !== 'surveyDetalle' &&
-              option !== 'games' ? (
+              option !== 'game' ? (
                 <div className='column is-centered mediaplayer'>
                   <ReactPlayer
                     width={'100%'}
@@ -342,12 +351,12 @@ let AgendaActividadDetalle = (props) => {
                   {meetingState === 'ended_meeting_room' &&
                     (currentActivity.image || image_event) &&
                     option !== 'surveyDetalle' &&
-                    option !== 'games' && (
+                    option !== 'game' && (
                       <div>
                         <img
                           className='activity_image'
                           style={{ width: '100%', height: '60vh' }}
-                          src={currentActivity.image ? currentActivity.image : image_event}
+                          src={ eventInfo.styles.banner_image? eventInfo.styles.banner_image: currentActivity.image?currentActivity.image:image_event }
                           alt='Activity'
                         />
                       </div>
@@ -517,7 +526,7 @@ let AgendaActividadDetalle = (props) => {
                     </>
                   }
                   key='description'>
-                  option 1
+                  <div dangerouslySetInnerHTML={{__html: event.description}}></div>
                 </TabPane>
               }
               {
@@ -593,7 +602,16 @@ let AgendaActividadDetalle = (props) => {
                     </>
                   }
                   key='docs'>
-                  Documentos
+                     {currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
+                      <div>
+                        <div style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
+                          <b>Documentos:</b> &nbsp;
+                          <div>
+                            <DocumentsList data={currentActivity.selected_document} />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                 </TabPane>
               }
             </Tabs>
@@ -609,16 +627,7 @@ let AgendaActividadDetalle = (props) => {
               )}
             </div>*/}
 
-            {currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
-              <div>
-                <div style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
-                  <b>Documentos:</b> &nbsp;
-                  <div>
-                    <DocumentsList data={currentActivity.selected_document} />
-                  </div>
-                </div>
-              </div>
-            )}
+         
 
             {props.userInfo && props.userInfo.names ? (
               <div />
@@ -689,6 +698,7 @@ let AgendaActividadDetalle = (props) => {
 const mapStateToProps = (state) => ({
   option: state.stage.data.mainStage,
   userInfo: state.user.data,
+  eventInfo: state.event.data,
 });
 
 const mapDispatchToProps = {

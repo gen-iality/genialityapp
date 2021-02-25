@@ -100,8 +100,9 @@ let SocialZone = function(props) {
       setCurrentUser(user);
       console.log('currentUser', currentUser);
       setcurrentTab('' + tab);
+      console.log("TAB=>"+tab);
 
-      props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'games');
+      props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
     };
     fetchData();
   }, []);
@@ -162,11 +163,11 @@ let SocialZone = function(props) {
       activeKey={currentTab}
       onTabClick={(key) => {
         setcurrentTab(key);
-        if (key == 'game') {
-          props.setMainStage(key);
+        if (key == '4') {
+          props.setMainStage("game");
         }
 
-        props.optionselected(key == '1' ? 'attendees' : key == '3' ? 'survey' : key == '2' ? 'chat' : 'games');
+        props.optionselected(key == '2' ? 'attendees' : key == '3' ? 'survey' : key == '1' ? 'chat' : 'game');
       }}>
       {
         /*chat  &&*/ <TabPane
@@ -229,7 +230,7 @@ let SocialZone = function(props) {
         </TabPane>
       }
       {
-        <TabPane className='asistente-survey-list' tab='Juegos' key='game'>
+        <TabPane className='asistente-survey-list' tab='Juegos' key='4'>
           <Row justify='space-between'>
             <Col span={4}>
               <ArrowLeftOutlined
