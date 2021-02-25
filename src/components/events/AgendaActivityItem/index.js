@@ -416,14 +416,17 @@ function AgendaActivityItem(props) {
         onClick={() => {
           props.gotoActivity(item);
         }}>
+        {/* aquie empieza la agenda en estilo mobile */}
         <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
-          <Card bodyStyle={{ padding: '10px' }}>
+          {/* card de agenda en mobile */}
+          <Card className='card-agenda-mobile' bodyStyle={{ padding: '10px' }}>
             <Row gutter={[8, 8]}>
               <Col span={4}>
-                <div style={{ fontSize: '8px', marginTop: '6%' }}>
+                <div className='agenda-hora'>
                   {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
                 </div>
-                <div>
+                {/* aqui se encuenta el estado de agenda en la mobile */}
+                <div className='contenedor-estado-agendaM'>                 
                   {' '}
                   o <span style={{ fontSize: '8px' }}>En vivo</span>
                 </div>
@@ -432,17 +435,17 @@ function AgendaActivityItem(props) {
                 <Space direction='vertical'>
                   <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
                     <Col span={24}>
-                      <div style={{ fontWeight: '700', textAlign: 'left', fontSize: '12px' }}>
+                      <div className='tituloM'>
                         {item.name}. 
                       </div>
-                      <span style={{ fontSize: '10px', color: 'grey' }}>sala de evento</span>
+                      <span className='lugarM'>sala de evento</span>
                     </Col>
                     
                   </Row><Row gutter={[4,4]}>
                       {item.hosts.length > 0 && (
                         <>
                           {item.hosts.map((speaker, key) => (
-                            <Col key={key} span={6} style={{ fontSize: '75%' }}>
+                            <Col key={key} span={8} style={{ fontSize: '75%' }}>
                               <table>
                                 <tr>
                                   <th>
@@ -464,15 +467,18 @@ function AgendaActivityItem(props) {
             </Row>
           </Card>
         </Col>
+        {/* aqui empieza la parte de agenda en desktop */}
         <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
-          <Card bodyStyle={{ padding: '10px' }}>
+          {/* card de la genda en desktop */}
+          <Card className='card-agenda-desktop' bodyStyle={{ padding: '10px' }}>
             <Row gutter={[8, 8]}>
               <Col md={4} lg={4} xl={4}>
-                <div style={{ marginTop: '10%' }}>
+                <div className='agenda-hora'>
                   <Timeline>
                     <Timeline.Item color='#1cdcb7'>
                       {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
-                      <div style={{ height: '79px', fontSize: '8px', marginLeft: '-8px', marginTop: '3%' }}>
+                       {/* aqui se encuenta el estado de agenda en la desktop*/}
+                       <div className='contenedor-estado-agenda'>
                         <img
                           src='https://static.thenounproject.com/png/55528-200.png'
                           style={{ height: '80%', width: 'auto' }}
@@ -486,12 +492,12 @@ function AgendaActivityItem(props) {
                   </Timeline>
                 </div>
               </Col>
-              <Col md={12} lg={16} xl={16} style={{ textAlign: 'left' }}>
+              <Col md={12} lg={16} xl={16} className='agenda-contenido'>
                 <Space direction='vertical'>
-                  <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
-                    <Col span={24}>
-                      <div style={{ fontWeight: '700', textAlign: 'left', fontSize: '20px' }}>{item.name}.</div>
-                      <span style={{ fontSize: '15px', color: 'grey' }}>sala de evento</span>
+                  <Row gutter={[10, 10]}>
+                    <Col span={24} style={{paddingLeft:'0px'}}>
+                      <div className='titulo'>{item.name}.</div>
+                      <span className='lugar' >sala de evento</span>
                     </Col>
                     <Row>
                       {item.description !== null && item.description !== '<p><br></p>' && (
@@ -503,7 +509,7 @@ function AgendaActivityItem(props) {
                             <>
                               {/*  */}
                               <Comment
-                                style={{padding:'0px'}}
+                                className='descripcion'
                                 content={ <div
                                 style={{
                                   overflow: 'hidden',
@@ -525,7 +531,7 @@ function AgendaActivityItem(props) {
                       {item.hosts.length > 0 && (
                         <>
                           {item.hosts.map((speaker, key) => (
-                            <Col key={key} span={6} style={{ fontSize: '75%' }}>
+                            <Col key={key} span={6} className='speaker'>
                               <table>
                                 <tr>
                                   <th>
@@ -533,7 +539,7 @@ function AgendaActivityItem(props) {
                                      src={speaker.image}
                                     />
                                   </th>
-                                  <th><div style={{marginLeft:'12px'}}>{speaker.name}</div></th>
+                                  <th><div className='speaker-name'>{speaker.name}</div></th>
                                 </tr>
                               </table>
                             </Col>
@@ -545,7 +551,7 @@ function AgendaActivityItem(props) {
                 </Space>
               </Col>
               <Col  md={8} lg={4} xl={4}>
-                <img src={item.image ? item.image : event_image} style={{ objectFit:'cover', height:'160px', borderRadius:'3px' }} />
+                <img className='agenda-imagen' src={item.image ? item.image : event_image} />
               </Col>
             </Row>
           </Card>
