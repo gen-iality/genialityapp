@@ -1,6 +1,6 @@
-export const SET_SURVEY_LIST = 'SET_SURVEY_LIST';
+export const SET_CURRENT_SURVEY = 'SET_CURRENT_SURVEY';
 
-export const setSurveyList = (list) => ({
-  type: SET_SURVEY_LIST,
-  payload: list,
+export const setCurrentSurvey = (survey) => ({
+  type: SET_CURRENT_SURVEY,
+  payload: survey,
 });

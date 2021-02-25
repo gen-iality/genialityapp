@@ -7,6 +7,9 @@ import ScrollTo from 'react-scroll-into-view';
 import * as iconComponents from '@ant-design/icons';
 import { Component } from 'react';
 import * as Cookie from 'js-cookie';
+import { connect } from 'react-redux';
+
+import { setMainStage } from '../../redux/stage/actions';
 
 const stylesMenuItems = {
   height: '100%',
@@ -249,4 +252,8 @@ class MenuEvent extends Component {
   }
 }
 
-export default WithLoading(MenuEvent);
+const mapDispatchToProps = {
+  setMainStage,
+};
+
+export default connect(null, mapDispatchToProps)(WithLoading(MenuEvent));

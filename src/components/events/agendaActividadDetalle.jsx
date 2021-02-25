@@ -5,13 +5,25 @@ import Moment from 'moment';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
 import API, { EventsApi, SurveysApi } from '../../helpers/request';
-import { PageHeader, Row, Col, Button, List, Avatar, Card } from 'antd';
+import { PageHeader, Row, Col, Button, List, Avatar, Card, Tabs } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
-import SurveyForm from './surveys';
+import RootPage from './surveys/rootPage';
 import * as StageActions from '../../redux/stage/actions';
+import Game from './game';
+import styles from './agendaActividadDetalle.module.css';
+import EnVivo from '../../EnVivo.svg';
+import {
+  CaretRightOutlined,
+  CommentOutlined,
+  LoadingOutlined,
+  PieChartOutlined,
+  TeamOutlined,
+} from '@ant-design/icons';
+import RankingTrivia from './zoomComponent/rankingTrivia';
+const { TabPane } = Tabs;
 
 const { gotoActivity } = StageActions;
 
@@ -30,7 +42,11 @@ let AgendaActividadDetalle = (props) => {
   const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
   const [currentSurvey, setcurrentSurvey] = useState(null);
   const [videoStyles, setVideoStyles] = useState(null);
+
+  const [activeTab, setActiveTab] = useState('description');
   let option = props.option;
+
+  const [tabSel, settabSel] = useState('description');
 
   useEffect(() => {
     const checkContentToDisplay = () => {
@@ -42,7 +58,7 @@ let AgendaActividadDetalle = (props) => {
   }, [platform, meeting_id]);
 
   useEffect(() => {
-    if (option === 'surveyDetalle') {
+    if (option === 'surveyDetalle' || option === 'game') {
       setVideoStyles({
         zIndex: '90000',
         position: 'fixed',
@@ -55,6 +71,9 @@ let AgendaActividadDetalle = (props) => {
       setVideoStyles({ width: '100%', height: '450px', transition: '300ms' });
     }
   }, [option]);
+  function callback(key) {
+    setActiveTab(key);
+  }
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     firestore
@@ -135,18 +154,58 @@ let AgendaActividadDetalle = (props) => {
   };
 
   const { currentActivity, gotoActivity, toggleConference, image_event } = props;
+
   return (
-    <div className='columns container-calendar-section is-centered'>
-      <div className=' container_agenda-information container-calendar is-three-fifths'>
+    <div className='is-centered'>
+      <div className=' container_agenda-information container-calendar2 is-three-fifths'>
         <Card
+          style={{ padding: '0 !important' }}
           title={
-            <PageHeader
-              className='site-page-header'
-              onBack={() => {
-                gotoActivity(null);
-              }}
-              title={currentActivity.name}
-            />
+            <Row>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '7vh',
+                  width: '5vw',
+                }}>
+                <Col style={{ marginLeft: '2vw' }}>
+                  <Row type='flex' style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
+                      <CommentOutlined style={{ fontSize: '30px' }} />
+                    ) : meetingState === '' || meetingState == null ? (
+                      <CommentOutlined style={{ fontSize: '30px' }} />
+                    ) : meetingState === 'closed_meeting_room' ? (
+                      <LoadingOutlined style={{ fontSize: '30px' }} />
+                    ) : meetingState === 'ended_meeting_room' && currentActivity.video ? (
+                      <CaretRightOutlined style={{ fontSize: '30px' }} />
+                    ) : (
+                      <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
+                    )}
+                  </Row>
+                  <Row style={{ height: '2vh', fontSize: 11, fontWeight: 'normal' }}>
+                    {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
+                      ? 'Terminada'
+                      : meetingState === '' || meetingState == null
+                      ? ' '
+                      : meetingState === 'closed_meeting_room'
+                      ? 'Por iniciar'
+                      : meetingState === 'ended_meeting_room' && currentActivity.video
+                      ? 'Grabada'
+                      : 'En vivo'}
+                  </Row>
+                </Col>
+              </div>
+              <Col style={{ marginLeft: '2.5vw', marginTop: '1vh' }}>
+                <div style={{ height: '5vh' }}>
+                  <Row style={{ height: '3.0vh' }}>{currentActivity.name} </Row>
+                  <Row style={{ height: '2.5vh', fontSize: 14, fontWeight: 'normal' }}>
+                    {currentActivity?.space.name}{' '}
+                  </Row>
+                </div>
+              </Col>
+            </Row>
           }
           extra={
             event._id === '5f99a20378f48e50a571e3b6' ||
@@ -155,10 +214,33 @@ let AgendaActividadDetalle = (props) => {
               <></>
             ) : (
               <>
-                <p className='card-header-title has-padding-left-0 '>
-                  {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
-                  {Moment(currentActivity.datetime_end).format('h:mm a')}
-                </p>
+                <div style={{ paddingRight: '2vw', height: '5vh', textAlign: 'right !important', display: 'block' }}>
+                  <Col>
+                    <Row
+                      style={{
+                        fontSize: 14,
+                        height: '3.0vh',
+                        fontWeight: 'normal',
+                        textAlign: 'right',
+                        display: 'block',
+                      }}>
+                      <p>{Moment(currentActivity.datetime_start).format('DD MMM YYYY')}</p>{' '}
+                    </Row>
+                    <Row
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 'normal',
+                        textAlign: 'right',
+                        display: 'block',
+                        height: '2.5vh',
+                      }}>
+                      <p>
+                        {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
+                        {Moment(currentActivity.datetime_end).format('h:mm a')}
+                      </p>
+                    </Row>
+                  </Col>
+                </div>
               </>
             )
           }
@@ -176,12 +258,6 @@ let AgendaActividadDetalle = (props) => {
               </p> */}
 
               {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
-              {currentActivity.space && (
-                /* Lugar del evento */
-                <p className='has-text-left is-size-6-desktop'>
-                  <b>Lugar:</b> {currentActivity.space.name}
-                </p>
-              )}
 
               {meetingState === 'open_meeting_room' &&
                 // option !== 'surveyDetalle' &&
@@ -201,26 +277,28 @@ let AgendaActividadDetalle = (props) => {
 
               {option == 'surveyDetalle' && (
                 <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
-                  <SurveyForm
-                    event={event}
-                    currentUser={props.userEntered}
-                    activity={props.activity}
-                    availableSurveysBar={true}
-                    style={{ zIndex: 9999, width: props.collapsed ? '95vw' : '50vw-389px', height: '100%' }}
-                    mountCurrentSurvey={mountCurrentSurvey}
-                    unMountCurrentSurvey={unMountCurrentSurvey}
+                  <RootPage
+                  // event={event}
+                  // currentUser={props.userEntered}
+                  // activity={props.activity}
+                  // availableSurveysBar={true}
+                  // style={{ zIndex: 9999, width: props.collapsed ? '95vw' : '50vw-389px', height: '100%' }}
+                  // mountCurrentSurvey={mountCurrentSurvey}
+                  // unMountCurrentSurvey={unMountCurrentSurvey}
                   />
                 </div>
               )}
+
+              {option == 'game' && <Game />}
 
               {(meetingState === '' || meetingState == null) && option !== 'surveyDetalle' && option !== 'games' && (
                 <div className='column is-centered mediaplayer'>
                   <img
                     className='activity_image'
+                    style={{ width: '100%', height: '60vh' }}
                     src={currentActivity.image ? currentActivity.image : image_event}
                     alt='Activity'
                   />
-                  <h5>La sesión iniciará pronto</h5>
                 </div>
               )}
 
@@ -228,10 +306,10 @@ let AgendaActividadDetalle = (props) => {
                 <div className='column is-centered mediaplayer'>
                   <img
                     className='activity_image'
+                    style={{ width: '100%', height: '60vh' }}
                     src={currentActivity.image ? currentActivity.image : image_event}
                     alt='Activity'
                   />
-                  <h5>La sesión inicia el {Moment(currentActivity.datetime_start).format('DD MMMM YYYY h:mm a')}</h5>
                 </div>
               )}
 
@@ -260,10 +338,10 @@ let AgendaActividadDetalle = (props) => {
                       <div>
                         <img
                           className='activity_image'
+                          style={{ width: '100%', height: '60vh' }}
                           src={currentActivity.image ? currentActivity.image : image_event}
                           alt='Activity'
                         />
-                        <h5>Aún no se ha subido video</h5>
                       </div>
                     )}
                 </>
@@ -348,7 +426,7 @@ let AgendaActividadDetalle = (props) => {
           ) : (
             <div className='calendar-category has-margin-top-7'>
               {/* Tags de categorias */}
-              {currentActivity.activity_categories.map((cat, key) => (
+              {/*currentActivity.activity_categories.map((cat, key) => (
                 <span
                   key={key}
                   style={{
@@ -358,7 +436,7 @@ let AgendaActividadDetalle = (props) => {
                   className='tag category_calendar-tag'>
                   {cat.name}
                 </span>
-              ))}
+              ))*/}
 
               {/* <span className='tag category_calendar-tag'>
                 {currentActivity.meeting_id || currentActivity.vimeo_id
@@ -368,9 +446,9 @@ let AgendaActividadDetalle = (props) => {
             </div>
           )}
           <div className='card-content has-text-left container_calendar-description'>
-            <div className='calendar-category has-margin-top-7'>
+            {/*<div className='calendar-category has-margin-top-7'>
               {/* Tags de categorias */}
-              {/* {currentActivity.activity_categories.map((cat, key) => (
+            {/* {currentActivity.activity_categories.map((cat, key) => (
                 <span
                   key={key}
                   style={{
@@ -384,8 +462,8 @@ let AgendaActividadDetalle = (props) => {
 
               <span className='tag category_calendar-tag'>               
                 {currentActivity.meeting_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
-              </span> */}
-            </div>
+              </span> }
+            </div>*/}
 
             {/* Boton de para acceder a la conferencia */}
 
@@ -403,10 +481,10 @@ let AgendaActividadDetalle = (props) => {
               
              */}
 
-            <div
+            {/* <div
               className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
               dangerouslySetInnerHTML={{ __html: currentActivity.description }}
-            />
+           />*/}
             {event._id === '5f99a20378f48e50a571e3b6' || event._id === '5fca68b7e2f869277cfa31b0' ? (
               <></>
             ) : (
@@ -422,8 +500,96 @@ let AgendaActividadDetalle = (props) => {
               </Row>
             )}
 
-            <hr />
-            <hr />
+            <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={callback}>
+              {
+                <TabPane
+                  tab={
+                    <>
+                      <p style={{ marginBottom: '0px' }}>Descripción</p>
+                    </>
+                  }
+                  key='description'>
+                  option 1
+                </TabPane>
+              }
+              {
+                <TabPane
+                  tab={
+                    <>
+                      <p style={{ marginBottom: '0px' }}>Panelistas</p>
+                    </>
+                  }
+                  key='panel'>
+                  <Row justify='space-between'></Row>
+                  <>
+                    {' '}
+                    {currentActivity.hosts.length === 0 ? (
+                      <div></div>
+                    ) : (
+                      <div className='List-conferencistas'>
+                        <p style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
+                          {orderedHost.length > 0 ? (
+                            <>
+                              <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: '0 auto' }}>
+                                <Card style={{ textAlign: 'left' }}>
+                                  <List
+                                    itemLayout='horizontal'
+                                    dataSource={orderedHost}
+                                    renderItem={(item) => (
+                                      <List.Item>
+                                        <List.Item.Meta
+                                          avatar={
+                                            <Avatar
+                                              size={80}
+                                              src={
+                                                item.image
+                                                  ? item.image
+                                                  : 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                                              }
+                                            />
+                                          }
+                                          title={<strong>{item.name}</strong>}
+                                          description={item.profession}
+                                        />
+                                        <div className='btn-list-confencista'>
+                                          <Button className='button_lista' onClick={() => getSpeakers(item._id)}>
+                                            Ver detalle
+                                          </Button>
+                                        </div>
+                                      </List.Item>
+                                    )}
+                                  />
+                                  {idSpeaker ? (
+                                    <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} />
+                                  ) : (
+                                    <></>
+                                  )}
+                                </Card>
+                              </Col>
+                            </>
+                          ) : (
+                            <></>
+                          )}
+                        </p>
+                      </div>
+                    )}
+                  </>
+                </TabPane>
+              }
+
+              {
+                <TabPane
+                  tab={
+                    <>
+                      <p style={{ marginBottom: '0px' }}>Documentos</p>
+                    </>
+                  }
+                  key='docs'>
+                  Documentos
+                </TabPane>
+              }
+            </Tabs>
+
             {/* <div>
               {showSurvey && (
                 <div style={{}} className='has-text-left is-size-6-desktop'>
@@ -434,62 +600,6 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               )}
             </div>*/}
-
-            {currentActivity.hosts.length === 0 ? (
-              <div></div>
-            ) : (
-              <div className='List-conferencistas'>
-                <p style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
-                  {orderedHost.length > 0 ? (
-                    <>
-                      <p>
-                        <b>
-                          <FormattedMessage id='live.hosts' defaultMessage='Anfitriones' />
-                        </b>
-                      </p>
-                      <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: '0 auto' }}>
-                        <Card style={{ textAlign: 'left', paddingBottom: 17 }}>
-                          <List
-                            itemLayout='horizontal'
-                            dataSource={orderedHost}
-                            renderItem={(item) => (
-                              <List.Item>
-                                <List.Item.Meta
-                                  avatar={
-                                    <Avatar
-                                      size={80}
-                                      src={
-                                        item.image
-                                          ? item.image
-                                          : 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-                                      }
-                                    />
-                                  }
-                                  title={<strong>{item.name}</strong>}
-                                  description={item.profession}
-                                />
-                                <div className='btn-list-confencista'>
-                                  <Button className='button_lista' onClick={() => getSpeakers(item._id)}>
-                                    Ver detalle
-                                  </Button>
-                                </div>
-                              </List.Item>
-                            )}
-                          />
-                          {idSpeaker ? (
-                            <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} />
-                          ) : (
-                            <></>
-                          )}
-                        </Card>
-                      </Col>
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                </p>
-              </div>
-            )}
 
             {currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
               <div>
@@ -520,10 +630,6 @@ let AgendaActividadDetalle = (props) => {
                 )}
               </div>
             )}
-
-            <hr></hr>
-            <br />
-            <br />
 
             {/* Descripción del evento */}
 
@@ -557,7 +663,7 @@ let AgendaActividadDetalle = (props) => {
           </button> */}
             </div>
           </div>
-          <div style={{ clear: 'both' }}>
+          {/*<div style={{ clear: 'both' }}>
             <a
               className=''
               onClick={() => {
@@ -565,7 +671,7 @@ let AgendaActividadDetalle = (props) => {
               }}>
               <Button>{intl.formatMessage({ id: 'button.return' })}</Button>
             </a>
-          </div>
+          </div>*/}
         </Card>
       </div>
     </div>

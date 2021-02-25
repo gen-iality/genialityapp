@@ -253,17 +253,16 @@ class SurveyForm extends Component {
       return (
         surveyVisible != false && (
           <RootPage
-            selectedSurvey={selectedSurvey}
-            userHasVoted={selectedSurvey.userHasVoted}
-            idSurvey={selectedSurvey._id}
+            //selectedSurvey={selectedSurvey} // -> modificado en rootpage por currentsurvey
+            //userHasVoted={selectedSurvey.userHasVoted} // -> modificado en rootpage por currentsurvey
+            //idSurvey={selectedSurvey._id}
             toggleSurvey={this.toggleSurvey}
-            eventId={event._id}
-            currentUser={currentUser}
-            eventUser={eventUser}
+            //eventId={event._id}
+            //currentUser={currentUser}
+            //eventUser={eventUser}
             openSurvey={selectedSurvey.isOpened}
             surveyLabel={surveyLabel}
             //Metodo que permite reasignar el estado (currentSurvey) del componente superior al desmontar el componente SurveyComponent
-            unMountCurrentSurvey={this.props.unMountCurrentSurvey}
           />
         )
       );

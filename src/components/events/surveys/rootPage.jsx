@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux';
+import * as Cookie from 'js-cookie';
+import { TicketsApi } from '../../../helpers/request';
 import { SurveyAnswers } from './services';
 
 import Graphics from './graphics';
@@ -8,23 +10,22 @@ import SurveyComponent from './surveyComponent';
 import { Card } from 'antd';
 import Loading from './loading';
 
-export default class RootPage extends Component {
+class RootPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      idSurvey: '',
       hasVote: false,
       guestVoteInSurvey: false,
-      eventId: '',
       isLoading: true,
-      currentUser: '',
     };
   }
 
-  loadData = (prevProps) => {
-    const { idSurvey, eventId, currentUser, eventUser } = this.props;
+  loadData = async (prevProps) => {
+    const { idSurvey, eventId } = this.props;
     if (!prevProps || idSurvey !== prevProps.idSurvey) {
-      this.setState({ idSurvey, eventId, currentUser, eventUser }, this.seeIfUserHasVote);
+      let eventUser = await this.getCurrentEvenUser(eventId);
+
+      this.setState({ eventUser }, this.seeIfUserHasVote);
     }
   };
 
@@ -36,12 +37,20 @@ export default class RootPage extends Component {
     this.loadData(prevProps);
   }
 
+  getCurrentEvenUser = async (eventId) => {
+    let evius_token = Cookie.get('evius_token');
+    if (!evius_token) return null;
+    let response = await TicketsApi.getByEvent(eventId, evius_token);
+    return response && response.data.length ? response.data[0] : null;
+  };
+
   seeIfUserHasVote = async () => {
-    let { idSurvey, eventId, currentUser } = this.state;
-    const { userHasVoted, selectedSurvey } = this.props;
+    const { currentSurvey } = this.props;
+    const { userHasVoted } = currentSurvey;
+    const { currentUser, idSurvey, eventId } = this.props;
 
     if (currentUser) {
-      let responseCounter = await SurveyAnswers.getUserById(eventId, selectedSurvey, currentUser._id, true);
+      let responseCounter = await SurveyAnswers.getUserById(eventId, currentSurvey, currentUser._id, true);
       this.setState({ hasVote: userHasVoted, isLoading: false, responseCounter });
     } else {
       // Esto solo se ejecuta si no hay algun usuario logeado
@@ -61,22 +70,9 @@ export default class RootPage extends Component {
     //console.log(surveyData);
   };
 
-  componentWillUnmount() {
-    this.props.unMountCurrentSurvey();
-  }
-
   render() {
-    let {
-      idSurvey,
-      hasVote,
-      eventId,
-      isLoading,
-      currentUser,
-      guestVoteInSurvey,
-      responseCounter,
-      eventUser,
-    } = this.state;
-    const { toggleSurvey, openSurvey, surveyLabel } = this.props;
+    let { hasVote, isLoading, guestVoteInSurvey, responseCounter, eventUser } = this.state;
+    const { toggleSurvey, openSurvey, surveyLabel, currentUser, eventId, idSurvey } = this.props;
     if (!isLoading)
       return (
         <div
@@ -122,3 +118,13 @@ export default class RootPage extends Component {
     return <Loading />;
   }
 }
+
+const mapStateToProps = (state) => ({
+  event: state.event.data,
+  eventId: state.event.data._id,
+  currentSurvey: state.survey.data.currentSurvey,
+  idSurvey: state.survey.data.currentSurvey._id,
+  currentUser: state.user.data,
+});
+
+export default connect(mapStateToProps)(RootPage);
