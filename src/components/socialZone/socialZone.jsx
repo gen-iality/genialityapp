@@ -161,6 +161,9 @@ let SocialZone = function(props) {
       activeKey={currentTab}
       onTabClick={(key) => {
         setcurrentTab(key);
+        if (key == 'game') {
+          props.setMainStage(key);
+        }
 
         props.optionselected(key == '1' ? 'attendees' : key == '3' ? 'survey' : key == '2' ? 'chat' : 'games');
       }}>
@@ -222,8 +225,26 @@ let SocialZone = function(props) {
         </TabPane>
       }
       {
-        <TabPane className='asistente-survey-list' tab='Juegos' key='4'>
-          <div>Juegos</div>
+        <TabPane className='asistente-survey-list' tab='Juegos' key='game'>
+          <Row justify='space-between'>
+            <Col span={4}>
+              <ArrowLeftOutlined
+                onClick={() => {
+                  // props.optionselected('N/A');
+                  props.setMainStage(null);
+
+                  setcurrentTab('');
+                  props.tcollapse();
+                }}
+              />
+            </Col>
+            <Col span={14}>
+              <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
+            </Col>
+            <Col span={4}>
+              <VideoCameraOutlined />
+            </Col>
+          </Row>
         </TabPane>
       }
     </Tabs>

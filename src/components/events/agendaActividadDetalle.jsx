@@ -12,6 +12,7 @@ import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
 import RootPage from './surveys/rootPage';
 import * as StageActions from '../../redux/stage/actions';
+import Game from './game';
 
 const { gotoActivity } = StageActions;
 
@@ -42,7 +43,7 @@ let AgendaActividadDetalle = (props) => {
   }, [platform, meeting_id]);
 
   useEffect(() => {
-    if (option === 'surveyDetalle') {
+    if (option === 'surveyDetalle' || option === 'game') {
       setVideoStyles({
         zIndex: '90000',
         position: 'fixed',
@@ -212,6 +213,8 @@ let AgendaActividadDetalle = (props) => {
                   />
                 </div>
               )}
+
+              {option == 'game' && <Game />}
 
               {(meetingState === '' || meetingState == null) && option !== 'surveyDetalle' && option !== 'games' && (
                 <div className='column is-centered mediaplayer'>
