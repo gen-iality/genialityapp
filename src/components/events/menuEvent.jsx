@@ -9,7 +9,7 @@ import { Component } from 'react';
 import * as Cookie from 'js-cookie';
 import { connect } from 'react-redux';
 
-import { setMainStage } from '../../redux/stage/actions';
+import { gotoActivity } from '../../redux/stage/actions';
 
 const stylesMenuItems = {
   height: '100%',
@@ -178,6 +178,12 @@ class MenuEvent extends Component {
     }
   }
 
+  callback = (section) => {
+    if (section === 'agenda') {
+      this.props.gotoActivity(null);
+    }
+  };
+
   render() {
     const { loading, styleText } = this.state;
 
@@ -253,7 +259,7 @@ class MenuEvent extends Component {
 }
 
 const mapDispatchToProps = {
-  setMainStage,
+  gotoActivity,
 };
 
 export default connect(null, mapDispatchToProps)(WithLoading(MenuEvent));

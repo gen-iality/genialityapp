@@ -2,12 +2,13 @@
 import { withRouter } from 'react-router-dom';
 import { firestore, fireRealtime } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { List, Avatar, Button, Skeleton, Typography, Row, Badge, Col } from 'antd';
+import { List, Avatar, Button, Skeleton, Typography, Row, Badge, Col, Modal } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
 import SurveyList from '../events/surveys/surveyList';
+import SurveyDetail from '../events/surveys/surveyDetail';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
 const { setMainStage } = StageActions;
@@ -42,7 +43,7 @@ let SocialZone = function(props) {
   let tab = props.tab;
 
   let setCurrentChat = (id, chatname) => {
-    setcurrentTab('2'); //chats tab
+    setcurrentTab('1'); //chats tab
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
   };
@@ -168,7 +169,29 @@ let SocialZone = function(props) {
         props.optionselected(key == '1' ? 'attendees' : key == '3' ? 'survey' : key == '2' ? 'chat' : 'game');
       }}>
       {
-        /*attendees &&*/ <TabPane tab='Asistentes' key='1' className='asistente-list'>
+        /*chat  &&*/ <TabPane
+          className='asistente-chat-list'
+          tab={
+            <>
+              Chats<Badge count={totalNewMessages}></Badge>
+            </>
+          }
+          key='1'>
+          <ChatList
+            availableChats={availableChats}
+            currentUser={currentUser}
+            setCurrentChat={setCurrentChat}
+            currentChatName={currentChatName}
+            currentChat={currentChat}
+            totalNewMessages={totalNewMessages}
+            event_id={event_id}
+          />
+        </TabPane>
+      }
+      {
+        /*attendees &&*/
+
+        <TabPane tab='Asistentes' key='2' className='asistente-list'>
           <AttendeList
             currentUser={currentUser}
             event_id={event_id}
@@ -181,25 +204,6 @@ let SocialZone = function(props) {
         </TabPane>
       }
 
-      {
-        /*chat  &&*/ <TabPane
-          className='asistente-chat-list'
-          tab={
-            <>
-              Chats<Badge count={totalNewMessages}></Badge>
-            </>
-          }
-          key='2'>
-          <ChatList
-            availableChats={availableChats}
-            currentUser={currentUser}
-            setCurrentChat={setCurrentChat}
-            currentChatName={currentChatName}
-            currentChat={currentChat}
-            event_id={event_id}
-          />
-        </TabPane>
-      }
       {
         <TabPane className='asistente-survey-list' tab='Encuestas' key='3'>
           <Row justify='space-between'>
@@ -221,7 +225,7 @@ let SocialZone = function(props) {
               <VideoCameraOutlined />
             </Col>
           </Row>
-          <SurveyList />
+          {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
         </TabPane>
       }
       {
@@ -253,6 +257,7 @@ let SocialZone = function(props) {
 
 const mapStateToProps = (state) => ({
   mainStage: state.stage.data.mainStage,
+  currentSurvey: state.survey.data.currentSurvey,
 });
 
 const mapDispatchToProps = {
@@ -261,8 +266,39 @@ const mapDispatchToProps = {
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));
 
+let AttendeeActionsModal = function(props) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  return (
+    <>
+      <Button type='primary' onClick={showModal}>
+        Open Modal
+      </Button>
+      <Modal title='Basic Modal' visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
+    </>
+  );
+};
+
 let ChatList = function(props) {
-  let userName = props.currentUser.names || '---';
+  if (!props.currentUser) return <p>Debes haber ingresado con tu usuario</p>;
+
+  let userName = props.currentUser ? props.currentUser.name : '---';
 
   return props.currentChat ? (
     <>
@@ -302,7 +338,13 @@ let ChatList = function(props) {
           }></iframe>
       </TabPane>
 
-      <TabPane tab='Privados' key='chat2'>
+      <TabPane
+        tab={
+          <>
+            Privados<Badge count={props.totalNewMessages}></Badge>
+          </>
+        }
+        key='chat2'>
         <List
           header={<div></div>}
           footer={<div></div>}
