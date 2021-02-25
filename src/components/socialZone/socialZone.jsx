@@ -10,6 +10,7 @@ import initUserPresence from '../../containers/userPresenceInEvent';
 import SurveyList from '../events/surveys/surveyList';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
+import AttendeList from './attendees/index';
 const { setMainStage } = StageActions;
 
 const { TabPane } = Tabs;
@@ -168,7 +169,7 @@ let SocialZone = function(props) {
         props.optionselected(key == '1' ? 'attendees' : key == '3' ? 'survey' : key == '2' ? 'chat' : 'games');
       }}>
       {
-        /*chat  &&*/ <TabPane
+        <TabPane
           className='asistente-chat-list'
           tab={
             <>
@@ -255,11 +256,11 @@ let SocialZone = function(props) {
 };
 
 const mapStateToProps = (state) => ({
-  mainStage: state.stage.data.mainStage
+  mainStage: state.stage.data.mainStage,
 });
 
 const mapDispatchToProps = {
-  setMainStage
+  setMainStage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));
@@ -354,7 +355,7 @@ let ChatList = function(props) {
                 <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
                   Chat{' '}
                   <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}></Badge>
-                </a>
+                </a>,
               ]}>
               <Typography.Text mark>Chat</Typography.Text> {item.name || '----'}
             </List.Item>
@@ -362,75 +363,5 @@ let ChatList = function(props) {
         />
       </TabPane>
     </Tabs>
-  );
-};
-
-let AttendeList = function(props) {
-  return (
-    <List
-      className='demo-loadmore-list'
-      //loading={initLoading}
-      itemLayout='horizontal'
-      //loadMore={loadMore}
-      dataSource={Object.keys(props.attendeeList).map((key) => {
-        return { key: key, ...props.attendeeList[key] };
-      })}
-      renderItem={(item) => (
-        <List.Item
-          actions={[
-            props.currentUser ? (
-              <a
-                key='list-loadmore-edit'
-                onClick={() =>
-                  props.createNewOneToOneChat(
-                    props.currentUser.uid,
-                    props.currentUser.names,
-                    item.user.uid,
-                    item.user.names
-                  )
-                }>
-                Chat
-              </a>
-            ) : null
-          ]}>
-          {/* <Skeleton avatar title={false} loading={item.loading} active> */}
-          <List.Item.Meta
-            avatar={<Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />}
-            title={
-              props.currentUser ? (
-                <a
-                  key='list-loadmore-edit'
-                  onClick={() =>
-                    props.createNewOneToOneChat(
-                      props.currentUser.uid,
-                      props.currentUser.names,
-                      item.user.uid,
-                      item.user.names
-                    )
-                  }>
-                  {item.properties.names}
-                </a>
-              ) : null
-            }
-            description={
-              props.attendeeListPresence[item.key] ? (
-                <h1 style={{ color: '#0CD5A1' }}>
-                  <Avatar size={8} style={{ backgroundColor: '#0CD5A1' }}></Avatar>{' '}
-                  {props.attendeeListPresence[item.key].state}
-                </h1>
-              ) : (
-                <h1 style={{ color: '#b5b5b5' }}>
-                  {' '}
-                  <Avatar size={8} style={{ backgroundColor: '#b5b5b5' }}></Avatar> offline
-                </h1>
-              )
-            }
-          />
-          <div></div>
-
-          {/* </Skeleton> */}
-        </List.Item>
-      )}
-    />
   );
 };
