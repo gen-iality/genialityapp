@@ -15,6 +15,7 @@ import { Modal, Button, Card, Spin, notification, Input, Alert } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';
 
+
 let attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
   STATE_INVITED: '5ba8d213aac5b12a5a8ce749', //"INVITED";
