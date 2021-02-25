@@ -275,7 +275,7 @@ let AttendeeActionsModal = function(props) {
 let ChatList = function(props) {
   if (!props.currentUser) return <p>Debes haber ingresado con tu usuario</p>;
 
-  let userName = props.currentUser ? props.currentUser : '---';
+  let userName = props.currentUser ? props.currentUser.name : '---';
 
   return props.currentChat ? (
     <>
