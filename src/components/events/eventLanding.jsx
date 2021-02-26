@@ -81,12 +81,17 @@ class eventLanding extends Component {
           bordered={true}
           style={
             event.styles && event.styles.show_card_banner && event.styles.show_card_banner === true
-              ? { marginTop: '23%' }
+              ? { marginTop: '2%' }
               : { marginTop: '0px' }
           }>
           {event._id === '5f0622f01ce76d5550058c32' ? (
-            <><h3 style={{fontWeight:700}}> El espacio digital para comprar, vender y relacionarse con empresarios de FENALCO </h3>
-            <h3 style={{fontWeight:700, color: '#2cd237'}}> #JuntosSaldremosAdelante</h3></>           
+            <>
+              <h3 style={{ fontWeight: 700 }}>
+                {' '}
+                El espacio digital para comprar, vender y relacionarse con empresarios de FENALCO{' '}
+              </h3>
+              <h3 style={{ fontWeight: 700, color: '#2cd237' }}> #JuntosSaldremosAdelante</h3>
+            </>
           ) : (
             <>
               <h1 className='is-size-4-desktop has-text-weight-semibold'>{event.name}</h1>
