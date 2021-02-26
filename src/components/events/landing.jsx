@@ -898,12 +898,10 @@ class Landing extends Component {
                         <Sider
                           className='collapse-chatEvent'
                           trigger={null}
+                          theme='light'
                           collapsible
                           collapsed={this.state.collapsed}
-                          width={400}
-                          style={{
-                            backgroundColor: event.styles.toolbarMenuSocial ? event.styles.toolbarMenuSocial : '#fff',
-                          }}>
+                          width={400}>
                           <div className='Chat-Event'>
                             {this.state.collapsed ? (
                               <>
@@ -915,7 +913,7 @@ class Landing extends Component {
                                   </Button>
                                 </div>
 
-                                <Menu style={{ backgroundColor: event.styles.toolbarMenuSocial }}>
+                                <Menu theme='light'>
                                   {
                                     /* {this.state.currentActivity && this.state.chat &&*/ <Menu.Item
                                       key='1'
