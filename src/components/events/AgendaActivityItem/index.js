@@ -485,7 +485,7 @@ function AgendaActivityItem(props) {
                   </Row>
                   <Row gutter={[4, 4]}>
                     {item.hosts.length > 0 && (
-                      <>
+                      item.hosts.length < 4 ? (<>
                         {item.hosts.map((speaker, key) => (
                           <Col key={key} span={8} style={{ fontSize: '75%' }}>
                             <table>
@@ -502,7 +502,26 @@ function AgendaActivityItem(props) {
                             </table>
                           </Col>
                         ))}
-                      </>
+                      </>):(
+                        <>
+                          <Col  span={8} style={{ fontSize: '75%' }}>
+                            <Avatar.Group 
+                            maxCount={3}
+                            maxStyle={{
+                              color: '#ffffff',
+                              backgroundColor: '#1CDCB7',}
+                              }
+                            >
+                              {item.hosts.map((speaker, key) => (
+                               
+                                   <Avatar key={key} src={speaker.image} />
+                                
+                             
+                              ))}
+                            </Avatar.Group>
+                          </Col> 
+                        </>
+                      )
                     )}
                   </Row>
                 </Space>
@@ -588,24 +607,44 @@ function AgendaActivityItem(props) {
                       )}
                     </Row>
                     <Row>
-                      {item.hosts.length > 0 && (
+                    {item.hosts.length > 0 && (
+                      item.hosts.length < 4 ? (<>
+                        {item.hosts.map((speaker, key) => (
+                          <Col key={key} span={6} className='speaker'>
+                            <table>
+                              <tr>
+                                <th>
+                                  <Avatar size={25} src={speaker.image} />
+                                </th>
+                                <th style={{ marginRight: '12px' }}>
+                                  <div className='speaker-name'>
+                                    {speaker.name}
+                                  </div>
+                                </th>
+                              </tr>
+                            </table>
+                          </Col>
+                        ))}
+                      </>):(
                         <>
-                          {item.hosts.map((speaker, key) => (
-                            <Col key={key} span={6} className='speaker'>
-                              <table>
-                                <tr>
-                                  <th>
-                                    <Avatar src={speaker.image} />
-                                  </th>
-                                  <th>
-                                    <div className='speaker-name'>{speaker.name}</div>
-                                  </th>
-                                </tr>
-                              </table>
-                            </Col>
-                          ))}
+                          <Col  span={8} style={{ fontSize: '75%' }}>
+                            <Avatar.Group 
+                            maxCount={3} 
+                            maxStyle={{
+                          color: '#ffffff',
+                          backgroundColor: '#1CDCB7',}
+                          }>
+                              {item.hosts.map((speaker, key) => (
+                               
+                                   <Avatar src={speaker.image} />
+                                
+                             
+                              ))}
+                            </Avatar.Group>
+                          </Col> 
                         </>
-                      )}
+                      )
+                    )}
                     </Row>
                   </Row>
                 </Space>
