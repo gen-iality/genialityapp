@@ -594,7 +594,6 @@ function AgendaActivityItem(props) {
                                       display: '-webkit-box',
                                       WebkitLineClamp: '2',
                                       WebkitBoxOrient: 'vertical',
-                                      overflow: 'hidden',
                                       width: '90%',
                                     }}
                                     dangerouslySetInnerHTML={{ __html: item.description }}
@@ -636,7 +635,7 @@ function AgendaActivityItem(props) {
                           }>
                               {item.hosts.map((speaker, key) => (
                                
-                                   <Avatar src={speaker.image} />
+                                   <Avatar key={key} src={speaker.image} />
                                 
                              
                               ))}
