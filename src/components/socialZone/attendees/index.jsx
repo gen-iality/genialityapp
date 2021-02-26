@@ -1,38 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { List, Tooltip, Popover, Button, Skeleton, Switch, Card, Avatar } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined, MessageTwoTone } from '@ant-design/icons';
-
-const { Meta } = Card;
+import React from 'react';
+import { List, Tooltip, Popover, Avatar } from 'antd';
+import { MessageTwoTone } from '@ant-design/icons';
+import { InitialsNameUser } from '../hooks';
+import PopoverInfoUser from '../hooks/Popover';
 
 const AttendeList = function(props) {
-  let [popoverVisible, setpopoverVisible] = useState(false);
-
-  const InitialsNameUser = (name) => {
-    let rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
-    let initials = [...name.matchAll(rgx)] || [];
-    initials = ((initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')).toUpperCase();
-    return initials;
-  };
-
-  const PopoverInfoUser = ({ item }) => {
-    console.log({ ...item });
-    return (
-      <Skeleton loading={false} avatar active>
-        <Meta
-          avatar={<Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />}
-          title={item.user.names}
-          description={item.user.email}
-        />
-      </Skeleton>
-    );
-  };
-
   return (
     <List
       className='demo-loadmore-list'
-      //loading={initLoading}
       itemLayout='horizontal'
-      //loadMore={loadMore}
       dataSource={Object.keys(props.attendeeList).map((key) => {
         return { key: key, ...props.attendeeList[key] };
       })}
@@ -56,7 +32,6 @@ const AttendeList = function(props) {
               </a>
             ) : null,
           ]}>
-          {/* <Skeleton avatar title={false} loading={item.loading} active> */}
           <List.Item.Meta
             avatar={
               item.currentUser?.image ? (
@@ -69,7 +44,10 @@ const AttendeList = function(props) {
             }
             title={
               props.currentUser ? (
-                <Popover content={<PopoverInfoUser item={item} />}>
+                <Popover
+                  style={{ padding: '0px !important' }}
+                  placement='leftTop'
+                  content={<PopoverInfoUser item={item} props={props} />}>
                   <a
                     key='list-loadmore-edit'
                     onClick={() =>
@@ -98,7 +76,6 @@ const AttendeList = function(props) {
               )
             }
           />
-          <div></div>
         </List.Item>
       )}
     />
