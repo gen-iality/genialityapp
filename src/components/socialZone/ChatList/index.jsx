@@ -1,6 +1,6 @@
 import React from 'react';
-import { List, Typography, Badge } from 'antd';
-import { Tabs } from 'antd';
+import { List, Typography, Badge, Tooltip, Tabs } from 'antd';
+import { MessageTwoTone } from '@ant-design/icons';
 const { TabPane } = Tabs;
 const callback = () => {};
 
@@ -50,7 +50,9 @@ const ChatList = (props) => {
       <TabPane
         tab={
           <>
-            Privados<Badge count={props.totalNewMessages}></Badge>
+            <Badge size='small' count={props.totalNewMessages}>
+              Privados
+            </Badge>
           </>
         }
         key='chat2'>
@@ -63,11 +65,14 @@ const ChatList = (props) => {
             <List.Item
               actions={[
                 <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
-                  Chat{' '}
-                  <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}></Badge>
+                  <Tooltip title='Chatear'>
+                    <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}>
+                      <MessageTwoTone style={{ fontSize: '20px' }} />
+                    </Badge>
+                  </Tooltip>
                 </a>,
               ]}>
-              <Typography.Text mark>Chat</Typography.Text> {item.name || '----'}
+              <Typography.Text mark></Typography.Text> {item.name || '----'}
             </List.Item>
           )}
         />

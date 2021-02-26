@@ -1,8 +1,7 @@
-//import { useParams } from 'react-router';
 import { withRouter } from 'react-router-dom';
-import { firestore, fireRealtime } from '../../helpers/firebase';
+import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { List, Button, Typography, Row, Badge, Col, Modal } from 'antd';
+import { Row, Badge, Col } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
@@ -155,11 +154,14 @@ let SocialZone = function(props) {
           className='asistente-chat-list'
           tab={
             <>
-              Chats<Badge count={totalNewMessages}></Badge>
+              <Badge size='small' count={totalNewMessages}>
+                Chats
+              </Badge>
             </>
           }
           key='1'>
           <ChatList
+            props={props}
             availableChats={availableChats}
             currentUser={currentUser}
             setCurrentChat={setCurrentChat}
@@ -192,9 +194,7 @@ let SocialZone = function(props) {
             <Col span={4}>
               <ArrowLeftOutlined
                 onClick={() => {
-                  // props.optionselected('N/A');
                   props.setMainStage(null);
-
                   setcurrentTab('');
                   props.tcollapse();
                 }}

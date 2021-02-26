@@ -1,67 +1,10 @@
 import React from 'react';
-import { List, Tooltip, Popover, Skeleton, Card, Avatar } from 'antd';
-import { UserOutlined, MessageTwoTone, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
-
-const { Meta } = Card;
+import { List, Tooltip, Popover, Avatar } from 'antd';
+import { MessageTwoTone } from '@ant-design/icons';
+import { InitialsNameUser } from '../hooks';
+import PopoverInfoUser from '../hooks/Popover';
 
 const AttendeList = function(props) {
-  const InitialsNameUser = (name) => {
-    let rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
-    let initials = [...name.matchAll(rgx)] || [];
-    initials = ((initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')).toUpperCase();
-    return initials;
-  };
-
-  const PopoverInfoUser = ({ item }) => {
-    return (
-      <Skeleton loading={false} avatar active>
-        <Card
-          style={{ width: 300, padding: '0', color: 'black' }}
-          actions={[
-            <Tooltip title='Ver perfil'>
-              <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
-            </Tooltip>,
-            <Tooltip title='Chat(Hablar)'>
-              <MessageTwoTone
-                onClick={() =>
-                  props.createNewOneToOneChat(
-                    props.currentUser.uid,
-                    props.currentUser.names,
-                    item.user.uid,
-                    item.user.names
-                  )
-                }
-                style={{ fontSize: '20px', color: '#1890FF' }}
-              />
-              ,
-            </Tooltip>,
-
-            <Tooltip title='Enviar solicitud Contacto'>
-              <UsergroupAddOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
-            </Tooltip>,
-
-            <Tooltip title='Invitar Video llamada'>
-              <VideoCameraOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
-            </Tooltip>,
-          ]}>
-          <Meta
-            avatar={
-              item.user?.image ? (
-                <Avatar src={item.user?.image} />
-              ) : (
-                <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={30}>
-                  {InitialsNameUser(item.user.names)}
-                </Avatar>
-              )
-            }
-            title={item.user.names}
-            description={item.user.email}
-          />
-        </Card>
-      </Skeleton>
-    );
-  };
-
   return (
     <List
       className='demo-loadmore-list'
@@ -104,7 +47,7 @@ const AttendeList = function(props) {
                 <Popover
                   style={{ padding: '0px !important' }}
                   placement='leftTop'
-                  content={<PopoverInfoUser item={item} />}>
+                  content={<PopoverInfoUser item={item} props={props} />}>
                   <a
                     key='list-loadmore-edit'
                     onClick={() =>
@@ -133,7 +76,6 @@ const AttendeList = function(props) {
               )
             }
           />
-          <div></div>
         </List.Item>
       )}
     />
