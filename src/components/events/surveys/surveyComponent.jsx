@@ -538,11 +538,13 @@ class SurveyComponent extends Component {
     return (
       <div style={surveyStyle}>
         {this.state.survey && (
-          <div style={{ marginTop: 5 }}>
-            <Button type='ghost primary' shape='round' onClick={() => showListSurvey(sentSurveyAnswers)}>
-              <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
-            </Button>
-          </div>
+          <>
+            {/* // <div style={{ marginTop: 5 }}>
+          //   <Button type='ghost primary' shape='round' onClick={() => showListSurvey(sentSurveyAnswers)}>
+          //     <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
+          //   </Button>
+          // </div> */}
+          </>
         )}
         {surveyData &&
           surveyData.allow_gradable_survey === 'true' &&

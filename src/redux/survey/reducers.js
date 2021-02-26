@@ -1,4 +1,4 @@
-import { SET_CURRENT_SURVEY } from './actions';
+import { SET_CURRENT_SURVEY, UNSET_CURRENT_SURVEY } from './actions';
 
 const initialState = {
   data: {
@@ -14,6 +14,13 @@ export default function eventReducer(state = initialState, action) {
       return {
         ...state,
         data: { ...state.data, currentSurvey: action.payload },
+        loading: true,
+        error: null,
+      };
+    case UNSET_CURRENT_SURVEY:
+      return {
+        ...state,
+        data: { ...state.data, currentSurvey: null },
         loading: true,
         error: null,
       };

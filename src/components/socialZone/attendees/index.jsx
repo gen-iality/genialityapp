@@ -1,14 +1,31 @@
-import React, { useEffect } from 'react';
-import { List, Avatar } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { List, Tooltip, Popover, Button, Skeleton, Switch, Card, Avatar } from 'antd';
+import { EditOutlined, EllipsisOutlined, SettingOutlined, MessageTwoTone } from '@ant-design/icons';
+
+const { Meta } = Card;
 
 const AttendeList = function(props) {
-  //   console.log(props.attendeeListPresence);
-  useEffect(() => {
-    let arrayuserss = [];
+  let [popoverVisible, setpopoverVisible] = useState(false);
 
-    arrayuserss.push(props.attendeeListPresence);
-    console.log('array ordenado', arrayuserss.sort());
-  });
+  const InitialsNameUser = (name) => {
+    let rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
+    let initials = [...name.matchAll(rgx)] || [];
+    initials = ((initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')).toUpperCase();
+    return initials;
+  };
+
+  const PopoverInfoUser = ({ item }) => {
+    console.log({ ...item });
+    return (
+      <Skeleton loading={false} avatar active>
+        <Meta
+          avatar={<Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />}
+          title={item.user.names}
+          description={item.user.email}
+        />
+      </Skeleton>
+    );
+  };
 
   return (
     <List
@@ -33,38 +50,50 @@ const AttendeList = function(props) {
                     item.user.names
                   )
                 }>
-                Chat
+                <Tooltip title='Chatear'>
+                  <MessageTwoTone style={{ fontSize: '20px' }} />
+                </Tooltip>
               </a>
             ) : null,
           ]}>
           {/* <Skeleton avatar title={false} loading={item.loading} active> */}
           <List.Item.Meta
-            avatar={<Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />}
+            avatar={
+              item.currentUser?.image ? (
+                <Avatar src={item.currentUser?.image} />
+              ) : (
+                <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={30}>
+                  {InitialsNameUser(item.properties.names)}
+                </Avatar>
+              )
+            }
             title={
               props.currentUser ? (
-                <a
-                  key='list-loadmore-edit'
-                  onClick={() =>
-                    props.createNewOneToOneChat(
-                      props.currentUser.uid,
-                      props.currentUser.names,
-                      item.user.uid,
-                      item.user.names
-                    )
-                  }>
-                  {item.properties.names}
-                </a>
+                <Popover content={<PopoverInfoUser item={item} />}>
+                  <a
+                    key='list-loadmore-edit'
+                    onClick={() =>
+                      props.createNewOneToOneChat(
+                        props.currentUser.uid,
+                        props.currentUser.names,
+                        item.user.uid,
+                        item.user.names
+                      )
+                    }>
+                    {item.properties.names}
+                  </a>
+                </Popover>
               ) : null
             }
             description={
               props.attendeeListPresence[item.key]?.state === 'online' ? (
                 <h1 style={{ color: '#0CD5A1' }}>
-                  <Avatar size={8} style={{ backgroundColor: '#0CD5A1' }}></Avatar> Online
+                  <Avatar size={9} style={{ backgroundColor: '#0CD5A1' }}></Avatar> Online
                 </h1>
               ) : (
                 <h1 style={{ color: '#b5b5b5' }}>
                   {' '}
-                  <Avatar size={8} style={{ backgroundColor: '#b5b5b5' }}></Avatar> Offline
+                  <Avatar size={9} style={{ backgroundColor: '#b5b5b5' }}></Avatar> Offline
                 </h1>
               )
             }

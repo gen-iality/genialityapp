@@ -2,12 +2,13 @@
 import { withRouter } from 'react-router-dom';
 import { firestore, fireRealtime } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { List, Avatar, Button, Skeleton, Typography, Row, Badge, Col, Modal } from 'antd';
+import { List, Button, Typography, Row, Badge, Col, Modal } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
 import SurveyList from '../events/surveys/surveyList';
+import SurveyDetail from '../events/surveys/surveyDetail';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
 import AttendeList from './attendees/index';
@@ -225,7 +226,7 @@ let SocialZone = function(props) {
               <VideoCameraOutlined />
             </Col>
           </Row>
-          <SurveyList />
+          {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
         </TabPane>
       }
       {
@@ -257,6 +258,7 @@ let SocialZone = function(props) {
 
 const mapStateToProps = (state) => ({
   mainStage: state.stage.data.mainStage,
+  currentSurvey: state.survey.data.currentSurvey,
 });
 
 const mapDispatchToProps = {

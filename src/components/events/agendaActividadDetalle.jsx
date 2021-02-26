@@ -49,6 +49,14 @@ let AgendaActividadDetalle = (props) => {
   const [tabSel, settabSel] = useState('description');
 
   useEffect(() => {
+    console.log('start detail activity');
+
+    return () => {
+      props.gotoActivity(null);
+    };
+  }, []);
+
+  useEffect(() => {
     const checkContentToDisplay = () => {
       if (platform !== '' && platform === null && meeting_id !== '' && meeting_id !== null) {
         setContentDisplayed('videoconference');
@@ -201,7 +209,7 @@ let AgendaActividadDetalle = (props) => {
                 <div style={{ height: '5vh' }}>
                   <Row style={{ height: '3.0vh' }}>{currentActivity.name} </Row>
                   <Row style={{ height: '2.5vh', fontSize: 14, fontWeight: 'normal' }}>
-                    {currentActivity?.space.name}{' '}
+                    {currentActivity.space.name}{' '}
                   </Row>
                 </div>
               </Col>

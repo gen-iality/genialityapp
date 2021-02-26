@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import * as eventActions from '../../redux/event/actions';
+import * as stageActions from '../../redux/stage/actions';
 
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -64,6 +65,8 @@ import {
 } from 'react-device-detect';
 
 const { setEventData } = eventActions;
+const { gotoActivity } = stageActions;
+
 const { Content, Sider } = Layout;
 Moment.locale('es');
 momentLocalizer();
@@ -549,8 +552,13 @@ class Landing extends Component {
   };
 
   showSection = (section) => {
-    this.setState({ section });
-    this.setState({ visible: false });
+    this.setState({ section, visible: false }, () => this.callbackShowSection(section));
+  };
+
+  callbackShowSection = (section) => {
+    if (section === 'agenda') {
+      this.props.gotoActivity(null);
+    }
   };
 
   addUser = (activity) => {
@@ -889,12 +897,10 @@ class Landing extends Component {
                         <Sider
                           className='collapse-chatEvent'
                           trigger={null}
+                          theme='light'
                           collapsible
                           collapsed={this.state.collapsed}
-                          width={400}
-                          style={{
-                            backgroundColor: event.styles.toolbarMenuSocial ? event.styles.toolbarMenuSocial : '#fff',
-                          }}>
+                          width={400}>
                           <div className='Chat-Event'>
                             {this.state.collapsed ? (
                               <>
@@ -906,7 +912,7 @@ class Landing extends Component {
                                   </Button>
                                 </div>
 
-                                <Menu style={{ backgroundColor: event.styles.toolbarMenuSocial }}>
+                                <Menu theme='light'>
                                   {
                                     /* {this.state.currentActivity && this.state.chat &&*/ <Menu.Item
                                       key='1'
@@ -990,6 +996,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   setEventData,
+  gotoActivity,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Landing));
