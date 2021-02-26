@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { List, Tooltip, Popover, Button, Skeleton, Switch, Card, Avatar } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined, MessageTwoTone } from '@ant-design/icons';
+import React from 'react';
+import { List, Tooltip, Popover, Skeleton, Card, Avatar } from 'antd';
+import { UserOutlined, MessageTwoTone, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 
 const { Meta } = Card;
 
 const AttendeList = function(props) {
-  let [popoverVisible, setpopoverVisible] = useState(false);
-
   const InitialsNameUser = (name) => {
     let rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
     let initials = [...name.matchAll(rgx)] || [];
@@ -15,14 +13,51 @@ const AttendeList = function(props) {
   };
 
   const PopoverInfoUser = ({ item }) => {
-    console.log({ ...item });
     return (
       <Skeleton loading={false} avatar active>
-        <Meta
-          avatar={<Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />}
-          title={item.user.names}
-          description={item.user.email}
-        />
+        <Card
+          style={{ width: 300, padding: '0', color: 'black' }}
+          actions={[
+            <Tooltip title='Ver perfil'>
+              <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
+            </Tooltip>,
+            <Tooltip title='Chat(Hablar)'>
+              <MessageTwoTone
+                onClick={() =>
+                  props.createNewOneToOneChat(
+                    props.currentUser.uid,
+                    props.currentUser.names,
+                    item.user.uid,
+                    item.user.names
+                  )
+                }
+                style={{ fontSize: '20px', color: '#1890FF' }}
+              />
+              ,
+            </Tooltip>,
+
+            <Tooltip title='Enviar solicitud Contacto'>
+              <UsergroupAddOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
+            </Tooltip>,
+
+            <Tooltip title='Invitar Video llamada'>
+              <VideoCameraOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
+            </Tooltip>,
+          ]}>
+          <Meta
+            avatar={
+              item.user?.image ? (
+                <Avatar src={item.user?.image} />
+              ) : (
+                <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={30}>
+                  {InitialsNameUser(item.user.names)}
+                </Avatar>
+              )
+            }
+            title={item.user.names}
+            description={item.user.email}
+          />
+        </Card>
       </Skeleton>
     );
   };
@@ -30,9 +65,7 @@ const AttendeList = function(props) {
   return (
     <List
       className='demo-loadmore-list'
-      //loading={initLoading}
       itemLayout='horizontal'
-      //loadMore={loadMore}
       dataSource={Object.keys(props.attendeeList).map((key) => {
         return { key: key, ...props.attendeeList[key] };
       })}
@@ -56,7 +89,6 @@ const AttendeList = function(props) {
               </a>
             ) : null,
           ]}>
-          {/* <Skeleton avatar title={false} loading={item.loading} active> */}
           <List.Item.Meta
             avatar={
               item.currentUser?.image ? (
@@ -69,7 +101,10 @@ const AttendeList = function(props) {
             }
             title={
               props.currentUser ? (
-                <Popover content={<PopoverInfoUser item={item} />}>
+                <Popover
+                  style={{ padding: '0px !important' }}
+                  placement='leftTop'
+                  content={<PopoverInfoUser item={item} />}>
                   <a
                     key='list-loadmore-edit'
                     onClick={() =>

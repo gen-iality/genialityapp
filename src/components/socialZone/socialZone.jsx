@@ -12,20 +12,16 @@ import SurveyDetail from '../events/surveys/surveyDetail';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
 import AttendeList from './attendees/index';
+import ChatList from './ChatList';
+import { monitorEventPresence } from './hooks';
 const { setMainStage } = StageActions;
 
 const { TabPane } = Tabs;
 const callback = () => {};
-/** Inspiración para construir el monitoreo de presencia firestore
- * no tiene presencia pero firebase realtime si, usamos los dos entonces.
- * https://firebase.google.com/docs/firestore/solutions/presence
- */
+
 let SocialZone = function(props) {
-  //let { event_id } = useParams();
-  /***** STATE ****/
   const [attendeeList, setAttendeeList] = useState({});
   const [attendeeListPresence, setAttendeeListPresence] = useState({});
-
   const [currentChat, setCurrentChatInner] = useState(null);
   const [currentChatName, setCurrentChatNameInner] = useState('');
   const [availableChats, setavailableChats] = useState([]);
@@ -71,29 +67,13 @@ let SocialZone = function(props) {
       .set(data, { merge: true });
     setCurrentChat(newId, otherUserName);
   };
-  const monitorEventPresence = (event_id) => {
-    console.log('datafirebase se inicio el monitoreo de presencia');
-    var eventpresenceRef = fireRealtime.ref('status/' + event_id);
-    eventpresenceRef.on('value', (snapshot) => {
-      const data = snapshot.val();
-      let attendeeListClone = { ...attendeeListPresence };
-      console.log('datafirebase clone', attendeeListClone, attendeeListPresence);
 
-      if (data === null) return;
-      Object.keys(data).map((key) => {
-        let attendee = attendeeListClone[key] || {};
-        attendee['state'] = data[key]['state'];
-        attendee['last_changed'] = data[key]['last_changed'];
-        attendeeListClone[key] = attendee;
-      });
-      setAttendeeListPresence(attendeeListClone);
-      console.log('datafirebase attendeeListPresence', attendeeListClone);
-    });
-    return true;
-  };
   const inicializada = useMemo(() => initUserPresence(event_id), [event_id]);
 
-  const flagmonitorEventPresence = useMemo(() => monitorEventPresence(event_id), [event_id]);
+  const flagmonitorEventPresence = useMemo(
+    () => monitorEventPresence(event_id, attendeeListPresence, setAttendeeListPresence),
+    [event_id]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,7 +81,7 @@ let SocialZone = function(props) {
       setCurrentUser(user);
       console.log('currentUser', currentUser);
       setcurrentTab('' + tab);
-      console.log("TAB=>"+tab);
+      console.log('TAB=>' + tab);
 
       props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
     };
@@ -165,7 +145,7 @@ let SocialZone = function(props) {
       onTabClick={(key) => {
         setcurrentTab(key);
         if (key == '4') {
-          props.setMainStage("game");
+          props.setMainStage('game');
         }
 
         props.optionselected(key == '2' ? 'attendees' : key == '3' ? 'survey' : key == '1' ? 'chat' : 'game');
@@ -238,7 +218,6 @@ let SocialZone = function(props) {
                 onClick={() => {
                   // props.optionselected('N/A');
                   props.setMainStage(null);
-
                   setcurrentTab('');
                   props.tcollapse();
                 }}
@@ -267,104 +246,3 @@ const mapDispatchToProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));
-
-let AttendeeActionsModal = function(props) {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
-  return (
-    <>
-      <Button type='primary' onClick={showModal}>
-        Open Modal
-      </Button>
-      <Modal title='Basic Modal' visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Modal>
-    </>
-  );
-};
-
-let ChatList = function(props) {
-  if (!props.currentUser) return <p>Debes haber ingresado con tu usuario</p>;
-
-  let userName = props.currentUser ? props.currentUser.name : '---';
-
-  return props.currentChat ? (
-    <>
-      <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(null, null)}>
-        Todos los chats
-      </a>
-      <iframe
-        title='chatevius'
-        className='ChatEvius'
-        src={
-          'https://chatevius.web.app?nombre=' +
-          userName +
-          '&chatid=' +
-          props.currentChat +
-          '&eventid=' +
-          props.event_id +
-          '&userid=' +
-          props.currentUser.uid
-        }></iframe>
-    </>
-  ) : (
-    <Tabs defaultActiveKey='chat1' size='small' onChange={callback}>
-      <TabPane tab='Público' key='chat1'>
-        <iframe
-          title='chatevius'
-          className='ChatEvius'
-          src={
-            'https://chatevius.web.app?nombre=' +
-            userName +
-            '&chatid=' +
-            'event_' +
-            props.event_id +
-            '&eventid=' +
-            props.event_id +
-            '&userid=' +
-            props.currentUser.uid
-          }></iframe>
-      </TabPane>
-
-      <TabPane
-        tab={
-          <>
-            Privados<Badge count={props.totalNewMessages}></Badge>
-          </>
-        }
-        key='chat2'>
-        <List
-          header={<div></div>}
-          footer={<div></div>}
-          bordered
-          dataSource={props.availableChats}
-          renderItem={(item) => (
-            <List.Item
-              actions={[
-                <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
-                  Chat{' '}
-                  <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}></Badge>
-                </a>,
-              ]}>
-              <Typography.Text mark>Chat</Typography.Text> {item.name || '----'}
-            </List.Item>
-          )}
-        />
-      </TabPane>
-    </Tabs>
-  );
-};
