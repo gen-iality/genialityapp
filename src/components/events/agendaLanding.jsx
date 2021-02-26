@@ -26,7 +26,7 @@ let attendee_states = {
 
 class Agenda extends Component {
   constructor(props) {
-    console.log('CONSTRUCTOR AGENDA LANDING');
+  
     super(props);
     this.state = {
       list: [],
@@ -72,6 +72,8 @@ class Agenda extends Component {
     this.gotoActivity = this.gotoActivity.bind(this);
     this.gotoActivityList = this.gotoActivityList.bind(this);
   }
+
+  
 
   async componentDidMount() {
     //Se carga esta funcion para cargar los datos
@@ -462,7 +464,7 @@ class Agenda extends Component {
   //End modal methods
 
   render() {
-    const { toggleConference, event, option } = this.props;
+    const { toggleConference, event,option,currentActivity} = this.props;
     const {
       days,
       day,
@@ -471,14 +473,14 @@ class Agenda extends Component {
       spaces,
       toShow,
       data,
-
       loading,
       survey,
       documents,
     } = this.state;
-    //console.log("OPTION AGENDA LANDING=>",option);
+   
+   
+  
 
-    const { currentActivity } = this.props;
     return (
       <div>
         <Modal
@@ -649,6 +651,8 @@ class Agenda extends Component {
                   : toShow
                 ).map((item, llave) => {
                   const isRegistered = this.checkInscriptionStatus(item._id) && true;
+                 
+                    
 
                   return (
                     <div key={llave} className='container_agenda-information'>

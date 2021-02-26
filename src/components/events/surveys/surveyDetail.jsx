@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Card, Button } from 'antd';
 import { unsetCurrentSurvey } from '../../../redux/survey/actions';
 import { setMainStage } from '../../../redux/stage/actions';
+import RankingTrivia from './rankingTrivia';
+
 function SurveyDetail(props) {
   const handleClick = () => {
     const { unsetCurrentSurvey, setMainStage } = props;
@@ -10,9 +12,13 @@ function SurveyDetail(props) {
     setMainStage(null);
   };
 
+  //hasRanking -> Parametro para cuando se cree en CMS la opcion de seleccionar el ranking
+  const hasRanking = true;
+
   return (
     <Card title={props.currentSurvey.name}>
       <Button onClick={handleClick}>Volver al listado de encuestas</Button>
+      {hasRanking && <RankingTrivia />}
     </Card>
   );
 }
