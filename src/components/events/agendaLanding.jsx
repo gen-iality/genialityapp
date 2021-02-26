@@ -15,7 +15,6 @@ import { Modal, Button, Card, Spin, notification, Input, Alert } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';
 
-
 let attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
   STATE_INVITED: '5ba8d213aac5b12a5a8ce749', //"INVITED";
@@ -26,7 +25,6 @@ let attendee_states = {
 
 class Agenda extends Component {
   constructor(props) {
-  
     super(props);
     this.state = {
       list: [],
@@ -72,8 +70,6 @@ class Agenda extends Component {
     this.gotoActivity = this.gotoActivity.bind(this);
     this.gotoActivityList = this.gotoActivityList.bind(this);
   }
-
-  
 
   async componentDidMount() {
     //Se carga esta funcion para cargar los datos
@@ -464,7 +460,7 @@ class Agenda extends Component {
   //End modal methods
 
   render() {
-    const { toggleConference, event,option,currentActivity} = this.props;
+    const { toggleConference, event, option, currentActivity } = this.props;
     const {
       days,
       day,
@@ -477,9 +473,6 @@ class Agenda extends Component {
       survey,
       documents,
     } = this.state;
-   
-   
-  
 
     return (
       <div>
@@ -582,7 +575,7 @@ class Agenda extends Component {
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
             currentUser={this.props.currentUser}
-            option={option}
+            //option={option}
             collapsed={this.props.collapsed}
           />
         )}
@@ -651,8 +644,6 @@ class Agenda extends Component {
                   : toShow
                 ).map((item, llave) => {
                   const isRegistered = this.checkInscriptionStatus(item._id) && true;
-                 
-                    
 
                   return (
                     <div key={llave} className='container_agenda-information'>

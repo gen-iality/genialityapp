@@ -266,7 +266,6 @@ class Landing extends Component {
   }
 
   mountSections = async () => {
-    console.log('current activity=>', this.state.currentActivity != undefined ? this.state.currentActivity : 'NO HAY');
     let eventUser = null;
     let eventUsers = null;
 
