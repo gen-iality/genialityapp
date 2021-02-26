@@ -55,7 +55,6 @@ let SocialZone = function(props) {
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
-    console.log('newId', newId);
     let data = {};
 
     //agregamos una referencia al chat para el usuario actual
@@ -101,7 +100,7 @@ let SocialZone = function(props) {
       setCurrentUser(user);
       console.log('currentUser', currentUser);
       setcurrentTab('' + tab);
-      console.log("TAB=>"+tab);
+      console.log('TAB=>' + tab);
 
       props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
     };
@@ -164,8 +163,11 @@ let SocialZone = function(props) {
       activeKey={currentTab}
       onTabClick={(key) => {
         setcurrentTab(key);
-        if (key == '4') {
-          props.setMainStage("game");
+        if (key === '4') {
+          props.setMainStage('game');
+        } else if (key === '3') {
+          console.log('--------------------------', props);
+          // props.showSection('survey');
         }
 
         props.optionselected(key == '2' ? 'attendees' : key == '3' ? 'survey' : key == '1' ? 'chat' : 'game');

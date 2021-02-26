@@ -149,7 +149,6 @@ class Landing extends Component {
   };
 
   setTotalNewMessages = (newMessages) => {
-    console.log('ACTUALIZANDO ESTADO DEL PADRE');
     this.setState({
       totalNewMessages: newMessages || 0,
     });
@@ -159,8 +158,6 @@ class Landing extends Component {
     this.setState({
       option: optionselected,
     });
-    console.log('UPDATE OPTIONS=>' + this.state.option);
-    console.log(optionselected)
     let currentActivity = { ...this.state.currentActivity, option: optionselected };
     this.setState({
       currentActivity: currentActivity,
@@ -181,7 +178,6 @@ class Landing extends Component {
       .doc(activity._id)
       .onSnapshot((response) => {
         let videoConference = response.data();
-        console.log(videoConference);
 
         this.setState({
           meeting_id: videoConference.meeting_id ? videoConference.meeting_id : this.props.meetingId,
@@ -483,7 +479,6 @@ class Landing extends Component {
   };
 
   async componentDidMount() {
-    console.log('props', this.props);
     await this.mountSections();
   }
 
@@ -891,6 +886,7 @@ class Landing extends Component {
                             attendees={this.state.attendees}
                             survey={this.state.surveys}
                             games={this.state.games}
+                            showSection={this.showSection}
                           />
                         </Drawer>
 
