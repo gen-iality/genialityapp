@@ -17,6 +17,7 @@ import styles from './agendaActividadDetalle.module.css';
 import EnVivo from '../../EnVivo.svg';
 import {
   CaretRightOutlined,
+  CheckCircleOutlined,
   CommentOutlined,
   LoadingOutlined,
   PieChartOutlined,
@@ -181,27 +182,29 @@ let AgendaActividadDetalle = (props) => {
                 <Col style={{ marginLeft: '2vw' }}>
                   <Row type='flex' style={{ alignItems: 'center', justifyContent: 'center' }}>
                     {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
-                      <CommentOutlined style={{ fontSize: '30px' }} />
+                      <CheckCircleOutlined style={{ fontSize: '30px' }} />
                     ) : meetingState === '' || meetingState == null ? (
-                      <CommentOutlined style={{ fontSize: '30px' }} />
+                      <></>
                     ) : meetingState === 'closed_meeting_room' ? (
                       <LoadingOutlined style={{ fontSize: '30px' }} />
-                    ) : meetingState === 'ended_meeting_room' && currentActivity.video ? (
+                    ) : meetingState === 'recorded_meeting_room' && currentActivity.video ? (
                       <CaretRightOutlined style={{ fontSize: '30px' }} />
-                    ) : (
+                    ) : meetingState === 'open_meeting_room' ? (
                       <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
+                    ) : (
+                      ''
                     )}
                   </Row>
                   <Row style={{ height: '2vh', fontSize: 11, fontWeight: 'normal' }}>
                     {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
                       ? 'Terminada'
-                      : meetingState === '' || meetingState == null
-                      ? ' '
                       : meetingState === 'closed_meeting_room'
                       ? 'Por iniciar'
-                      : meetingState === 'ended_meeting_room' && currentActivity.video
-                      ? 'Grabada'
-                      : 'En vivo'}
+                      : meetingState === 'recorded_meeting_room' && currentActivity.video
+                      ? 'Grabado'
+                      : meetingState === 'open_meeting_room'
+                      ? 'En vivo'
+                      : ''}
                   </Row>
                 </Col>
               </div>
@@ -331,7 +334,7 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               )}
 
-              {meetingState === 'ended_meeting_room' &&
+              {meetingState === 'recorded_meeting_room' &&
               currentActivity.video &&
               option !== 'surveyDetalle' &&
               option !== 'game' ? (
