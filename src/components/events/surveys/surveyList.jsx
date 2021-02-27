@@ -100,6 +100,12 @@ class SurveyList extends Component {
           ((activity && survey.activity_id === activity._id) || survey.isGlobal === 'true')
       );
 
+      if (Object.keys(this.props.currentUser).length === 0) {
+        publishedSurveys = publishedSurveys.filter((item) => {
+          return item.allow_anonymous_answers !== 'false';
+        });
+      }
+
       this.setState(
         { publishedSurveys, surveyVisible: publishedSurveys && publishedSurveys.length, loading: true },
         this.callback
@@ -141,7 +147,7 @@ class SurveyList extends Component {
       let filteredSurveys = [];
 
       publishedSurveys.forEach(async (survey, index, arr) => {
-        if (currentUser) {
+        if (Object.keys(currentUser).length > 0) {
           const result = await this.queryMyResponses(survey);
           filteredSurveys.push({
             ...arr[index],
