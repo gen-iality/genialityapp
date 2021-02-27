@@ -15,6 +15,7 @@ export default function RoomController(props) {
                 <option value='open_meeting_room'>Conferencia Abierta</option>
                 <option value='closed_meeting_room'>Conferencia no Iniciada</option>
                 <option value='ended_meeting_room'>Conferencia Terminada</option>
+                <option value='recorded_meeting_room'>Conferencia Terminada y Grabada</option>
               </select>
             </div>
           </Col>
