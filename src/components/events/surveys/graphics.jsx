@@ -1,5 +1,6 @@
-import 'chartjs-plugin-datalabels';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import 'chartjs-plugin-datalabels';
 import { Pagination, Spin, Card, Button } from 'antd';
 import { ArrowLeftOutlined, LeftCircleFilled } from '@ant-design/icons';
 import Loading from './loading';
@@ -9,6 +10,10 @@ import Chart from 'chart.js';
 import { SurveyAnswers } from './services';
 import { SurveysApi, UsersApi } from '../../../helpers/request';
 import { graphicsFrame } from './frame';
+
+import * as SurveyActions from '../../../redux/survey/actions';
+
+const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
 class Graphics extends Component {
   constructor(props) {
@@ -256,17 +261,25 @@ class Graphics extends Component {
 
   render() {
     let { dataSurvey, currentPage, titleQuestion } = this.state;
-    const { showListSurvey, surveyLabel } = this.props;
+    const { surveyLabel } = this.props;
 
     if (dataSurvey.questions)
       return (
         <>
-          <Card className='survyCard'>
-            {/* <div style={{ marginTop: 5 }}>
-              <Button type='ghost primary' shape='round' onClick={() => showListSurvey()}>
-                <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
-              </Button>
-            </div> */}
+          <Card className='survyCard' title={this.props.currentSurvey.name}>
+            <div style={{ marginTop: 5 }}>
+              {this.props.currentActivity === null && (
+                <Button
+                  type='ghost primary'
+                  shape='round'
+                  onClick={() => {
+                    this.props.setCurrentSurvey(null);
+                    this.props.setSurveyVisible(false);
+                  }}>
+                  <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
+                </Button>
+              )}
+            </div>
             <Card>
               <strong>{titleQuestion}</strong>
               <canvas style={{ width: '100%' }} id='chart'></canvas>
@@ -285,4 +298,11 @@ class Graphics extends Component {
   }
 }
 
-export default Graphics;
+const mapDispatchToProps = { setCurrentSurvey, setSurveyVisible };
+
+const mapStateToProps = (state) => ({
+  currentSurvey: state.survey.data.currentSurvey,
+  currentActivity: state.stage.data.currentActivity,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Graphics);

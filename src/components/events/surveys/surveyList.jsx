@@ -9,7 +9,7 @@ import * as StageActions from '../../../redux/stage/actions';
 import * as SurveyActions from '../../../redux/survey/actions';
 
 const { setMainStage } = StageActions;
-const { setCurrentSurvey } = SurveyActions;
+const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
 const headStyle = {
   fontWeight: 300,
@@ -180,9 +180,11 @@ class SurveyList extends Component {
   };
 
   handleClick = (currentSurvey) => {
-    const { activity, setMainStage, setCurrentSurvey } = this.props;
+    const { activity, setMainStage, setCurrentSurvey, setSurveyVisible } = this.props;
     if (activity !== null) {
       setMainStage('surveyDetalle');
+    } else {
+      setSurveyVisible(true);
     }
     setCurrentSurvey(currentSurvey);
   };
@@ -192,7 +194,7 @@ class SurveyList extends Component {
 
     return (
       <>
-        <Card className='' headStyle={headStyle}>
+        <Card title={this.props.activity === null && 'Listado de Encuestas'} headStyle={headStyle}>
           {publishedSurveys && publishedSurveys.length === 0 && (
             <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
           )}
@@ -271,6 +273,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
+  setSurveyVisible,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList);

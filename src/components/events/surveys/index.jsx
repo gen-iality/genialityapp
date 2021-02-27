@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import * as Cookie from 'js-cookie';
 import { Actions, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
@@ -6,6 +7,9 @@ import SurveyList from './surveyList';
 import RootPage from './rootPage';
 import { Spin, Button, Card } from 'antd';
 import Loading from './loading';
+import * as SurveyActions from '../../../redux/survey/actions';
+
+const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
 const surveyButtons = {
   text: {
@@ -245,29 +249,36 @@ class SurveyForm extends Component {
     char = char.trim();
     return `(${char}) `;
   };
+
+  componentWillUnmount = () => {
+    const { setCurrentSurvey, setSurveyVisible } = this.props;
+    setCurrentSurvey(null);
+    setSurveyVisible(false);
+  };
+
   render() {
     const { selectedSurvey, publishedSurveys, eventUser, userVote, surveyVisible, surveyLabel } = this.state;
     const { event, currentUser } = this.props;
 
-    if (Object.prototype.hasOwnProperty.call(selectedSurvey, '_id'))
+    if (this.props.currentSurvey !== null)
       return (
-        surveyVisible != false && (
+        this.props.surveyVisible !== false && (
           <RootPage
-            //selectedSurvey={selectedSurvey} // -> modificado en rootpage por currentsurvey
-            //userHasVoted={selectedSurvey.userHasVoted} // -> modificado en rootpage por currentsurvey
-            //idSurvey={selectedSurvey._id}
-            toggleSurvey={this.toggleSurvey}
-            //eventId={event._id}
-            //currentUser={currentUser}
-            //eventUser={eventUser}
-            openSurvey={selectedSurvey.isOpened}
-            surveyLabel={surveyLabel}
-            //Metodo que permite reasignar el estado (currentSurvey) del componente superior al desmontar el componente SurveyComponent
+          //selectedSurvey={selectedSurvey} // -> modificado en rootpage por currentsurvey
+          //userHasVoted={selectedSurvey.userHasVoted} // -> modificado en rootpage por currentsurvey
+          //idSurvey={selectedSurvey._id}
+          //toggleSurvey={this.toggleSurvey}
+          //eventId={event._id}
+          //currentUser={currentUser}
+          //eventUser={eventUser}
+          //openSurvey={selectedSurvey.isOpened}
+          //surveyLabel={surveyLabel}
+          //Metodo que permite reasignar el estado (currentSurvey) del componente superior al desmontar el componente SurveyComponent
           />
         )
       );
 
-    if (!publishedSurveys) return <Loading />;
+    //if (!publishedSurveys) return <Loading />;
 
     return (
       <div>
@@ -294,7 +305,7 @@ class SurveyForm extends Component {
 
         <Card>
           <SurveyList
-            jsonData={publishedSurveys}
+            //jsonData={publishedSurveys}
             currentUser={currentUser}
             eventUser={eventUser}
             showSurvey={this.toggleSurvey}
@@ -308,4 +319,14 @@ class SurveyForm extends Component {
   }
 }
 
-export default SurveyForm;
+const mapStateToProps = (state) => ({
+  currentSurvey: state.survey.data.currentSurvey,
+  surveyVisible: state.survey.data.surveyVisible,
+});
+
+const mapDispatchToProps = {
+  setCurrentSurvey,
+  setSurveyVisible,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SurveyForm);

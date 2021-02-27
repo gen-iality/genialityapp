@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Moment from 'moment';
 import { Result, Button } from 'antd';
 import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined, BulbOutlined } from '@ant-design/icons';
@@ -9,6 +10,10 @@ import { SurveyAnswers, SurveyPage, UserGamification, Trivia } from './services'
 import Graphics from './graphics';
 import * as Survey from 'survey-react';
 import 'survey-react/modern.css';
+import * as SurveyActions from '../../../redux/survey/actions';
+
+const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
+
 Survey.StylesManager.applyTheme('modern');
 
 const MIN_ANSWER_FEEDBACK_TIME = 5;
@@ -537,14 +542,16 @@ class SurveyComponent extends Component {
     if (!surveyData) return 'Cargando...';
     return (
       <div style={surveyStyle}>
-        {this.state.survey && (
-          <>
-            {/* // <div style={{ marginTop: 5 }}>
-          //   <Button type='ghost primary' shape='round' onClick={() => showListSurvey(sentSurveyAnswers)}>
-          //     <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
-          //   </Button>
-          // </div> */}
-          </>
+        {this.state.survey && this.props.currentActivity === null && (
+          <Button
+            type='ghost primary'
+            shape='round'
+            onClick={() => {
+              this.props.setCurrentSurvey(null);
+              this.props.setSurveyVisible(false);
+            }}>
+            <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
+          </Button>
         )}
         {surveyData &&
           surveyData.allow_gradable_survey === 'true' &&
@@ -640,4 +647,11 @@ class SurveyComponent extends Component {
   }
 }
 
-export default SurveyComponent;
+const mapDispatchToProps = { setCurrentSurvey, setSurveyVisible };
+
+const mapStateToProps = (state) => ({
+  currentSurvey: state.survey.data.currentSurvey,
+  currentActivity: state.stage.data.currentActivity,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SurveyComponent);

@@ -16,7 +16,7 @@ function SurveyDetail(props) {
   const hasRanking = true;
 
   return (
-    <Card title={props.currentSurvey.name}>
+    <Card>
       <Button onClick={handleClick}>Volver al listado de encuestas</Button>
       {hasRanking && <RankingTrivia />}
     </Card>

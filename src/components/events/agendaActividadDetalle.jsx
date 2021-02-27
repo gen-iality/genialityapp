@@ -12,6 +12,7 @@ import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
 import RootPage from './surveys/rootPage';
 import * as StageActions from '../../redux/stage/actions';
+import * as SurveyActions from '../../redux/survey/actions';
 import Game from './game';
 import styles from './agendaActividadDetalle.module.css';
 import EnVivo from '../../EnVivo.svg';
@@ -22,10 +23,11 @@ import {
   PieChartOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
-import RankingTrivia from './zoomComponent/rankingTrivia';
+
 const { TabPane } = Tabs;
 
 const { gotoActivity, setMainStage } = StageActions;
+const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
@@ -54,6 +56,8 @@ let AgendaActividadDetalle = (props) => {
     return () => {
       props.gotoActivity(null);
       props.setMainStage(null);
+      props.setCurrentSurvey(null);
+      props.setSurveyVisible(false);
     };
   }, []);
 
@@ -714,6 +718,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   gotoActivity,
   setMainStage,
+  setCurrentSurvey,
+  setSurveyVisible,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
