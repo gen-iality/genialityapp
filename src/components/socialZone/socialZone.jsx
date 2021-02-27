@@ -74,6 +74,10 @@ let SocialZone = function(props) {
   );
 
   useEffect(() => {
+    console.log('social zone props ************', props);
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       const user = await getCurrentUser();
       setCurrentUser(user);
@@ -187,50 +191,50 @@ let SocialZone = function(props) {
         </TabPane>
       }
 
-      {
-        <TabPane className='asistente-survey-list' tab='Encuestas' key='3'>
-          <Row justify='space-between'>
-            <Col span={4}>
-              <ArrowLeftOutlined
-                onClick={() => {
-                  props.setMainStage(null);
-                  setcurrentTab('');
-                  props.tcollapse();
-                }}
-              />
-            </Col>
-            <Col span={14}>
-              <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
-            </Col>
-            <Col span={4}>
-              <VideoCameraOutlined />
-            </Col>
-          </Row>
-          {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
-        </TabPane>
-      }
-      {
-        <TabPane className='asistente-survey-list' tab='Juegos' key='4'>
-          <Row justify='space-between'>
-            <Col span={4}>
-              <ArrowLeftOutlined
-                onClick={() => {
-                  // props.optionselected('N/A');
-                  props.setMainStage(null);
-                  setcurrentTab('');
-                  props.tcollapse();
-                }}
-              />
-            </Col>
-            <Col span={14}>
-              <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
-            </Col>
-            <Col span={4}>
-              <VideoCameraOutlined />
-            </Col>
-          </Row>
-        </TabPane>
-      }
+      {props.currentActivity !== null && (
+        <>
+          <TabPane className='asistente-survey-list' tab='Encuestas' key='3'>
+            <Row justify='space-between'>
+              <Col span={4}>
+                <ArrowLeftOutlined
+                  onClick={() => {
+                    props.setMainStage(null);
+                    setcurrentTab('');
+                    props.tcollapse();
+                  }}
+                />
+              </Col>
+              <Col span={14}>
+                <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
+              </Col>
+              <Col span={4}>
+                <VideoCameraOutlined />
+              </Col>
+            </Row>
+            {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
+          </TabPane>
+          <TabPane className='asistente-survey-list' tab='Juegos' key='4'>
+            <Row justify='space-between'>
+              <Col span={4}>
+                <ArrowLeftOutlined
+                  onClick={() => {
+                    // props.optionselected('N/A');
+                    props.setMainStage(null);
+                    setcurrentTab('');
+                    props.tcollapse();
+                  }}
+                />
+              </Col>
+              <Col span={14}>
+                <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
+              </Col>
+              <Col span={4}>
+                <VideoCameraOutlined />
+              </Col>
+            </Row>
+          </TabPane>
+        </>
+      )}
     </Tabs>
   );
 };
@@ -238,6 +242,7 @@ let SocialZone = function(props) {
 const mapStateToProps = (state) => ({
   mainStage: state.stage.data.mainStage,
   currentSurvey: state.survey.data.currentSurvey,
+  currentActivity: state.stage.data.currentActivity,
 });
 
 const mapDispatchToProps = {

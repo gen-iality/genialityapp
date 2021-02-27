@@ -25,7 +25,7 @@ import {
 import RankingTrivia from './zoomComponent/rankingTrivia';
 const { TabPane } = Tabs;
 
-const { gotoActivity } = StageActions;
+const { gotoActivity, setMainStage } = StageActions;
 
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
@@ -53,6 +53,7 @@ let AgendaActividadDetalle = (props) => {
   useEffect(() => {
     return () => {
       props.gotoActivity(null);
+      props.setMainStage(null);
     };
   }, []);
 
@@ -209,7 +210,7 @@ let AgendaActividadDetalle = (props) => {
                 <div style={{ height: '5vh' }}>
                   <Row style={{ height: '3.0vh' }}>{currentActivity.name} </Row>
                   <Row style={{ height: '2.5vh', fontSize: 14, fontWeight: 'normal' }}>
-                    {currentActivity.space.name}{' '}
+                    {currentActivity && currentActivity.space && currentActivity.space.name}{' '}
                   </Row>
                 </div>
               </Col>
@@ -712,6 +713,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   gotoActivity,
+  setMainStage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));

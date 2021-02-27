@@ -65,7 +65,7 @@ import {
 } from 'react-device-detect';
 
 const { setEventData } = eventActions;
-const { gotoActivity } = stageActions;
+const { gotoActivity, setMainStage } = stageActions;
 
 const { Content, Sider } = Layout;
 Moment.locale('es');
@@ -553,6 +553,7 @@ class Landing extends Component {
   callbackShowSection = (section) => {
     if (section === 'agenda') {
       this.props.gotoActivity(null);
+      this.props.setMainStage(null);
     }
   };
 
@@ -885,7 +886,6 @@ class Landing extends Component {
                             attendees={this.state.attendees}
                             survey={this.state.surveys}
                             games={this.state.games}
-                            showSection={this.showSection}
                           />
                         </Drawer>
 
@@ -928,26 +928,24 @@ class Landing extends Component {
                                       icon={<TeamOutlined style={{ fontSize: '24px' }} />}
                                       onClick={() => this.toggleCollapsed(2)}></Menu.Item>
                                   }
-                                  {
-                                    /* {this.state.currentActivity && this.state.surveys &&  */
-                                    <Menu.Item
-                                      key='3'
-                                      icon={<PieChartOutlined style={{ fontSize: '24px' }} />}
-                                      onClick={() => this.toggleCollapsed(3)}></Menu.Item>
-                                  }
-                                  {
-                                    /* {this.state.currentActivity && this.state.games && */
-                                    <Menu.Item
-                                      key='4'
-                                      icon={
-                                        <img
-                                          src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
-                                          style={{ width: '50px', height: '32px' }}
-                                          alt='Games'
-                                        />
-                                      }
-                                      onClick={() => this.toggleCollapsed(4)}></Menu.Item>
-                                  }
+                                  {this.props.currentActivity !== null && (
+                                    <>
+                                      <Menu.Item
+                                        key='3'
+                                        icon={<PieChartOutlined style={{ fontSize: '24px' }} />}
+                                        onClick={() => this.toggleCollapsed(3)}></Menu.Item>
+                                      <Menu.Item
+                                        key='4'
+                                        icon={
+                                          <img
+                                            src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
+                                            style={{ width: '50px', height: '32px' }}
+                                            alt='Games'
+                                          />
+                                        }
+                                        onClick={() => this.toggleCollapsed(4)}></Menu.Item>
+                                    </>
+                                  )}
                                 </Menu>
                               </>
                             ) : (
@@ -993,6 +991,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   setEventData,
   gotoActivity,
+  setMainStage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Landing));
