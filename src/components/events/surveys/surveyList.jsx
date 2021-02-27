@@ -147,14 +147,25 @@ class SurveyList extends Component {
       let filteredSurveys = [];
 
       publishedSurveys.forEach(async (survey, index, arr) => {
-        if (Object.keys(currentUser).length > 0) {
+        if (!Object.keys(currentUser).length === 0) {
           const result = await this.queryMyResponses(survey);
           filteredSurveys.push({
             ...arr[index],
             userHasVoted: result.userHasVoted,
             totalResponses: result.totalResponses,
           });
+        } else {
+          // Esto solo se ejecuta si no hay algun usuario logeado
+          // eslint-disable-next-line no-unused-vars
+          const guestUser = new Promise((resolve, reject) => {
+            let surveyId = localStorage.getItem(`userHasVoted_${survey._id}`);
+            console.log('el surveyid cono anonimo', surveyId);
+            surveyId ? resolve(true) : resolve(false);
+          });
+          let guestHasVote = await guestUser;
+          filteredSurveys.push({ ...arr[index], userHasVoted: guestHasVote });
         }
+
         if (filteredSurveys.length === arr.length) resolve(filteredSurveys);
       });
     });
