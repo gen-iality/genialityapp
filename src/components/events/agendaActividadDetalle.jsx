@@ -212,7 +212,8 @@ let AgendaActividadDetalle = (props) => {
                 <div style={{ height: '5vh' }}>
                   <Row style={{ height: '3.0vh' }}>{currentActivity.name} </Row>
                   <Row style={{ height: '2.5vh', fontSize: 14, fontWeight: 'normal' }}>
-                    {currentActivity.space.name}{' '}
+                    {currentActivity.space.name}
+                    {''}
                   </Row>
                 </div>
               </Col>
@@ -304,7 +305,7 @@ let AgendaActividadDetalle = (props) => {
                 <div className='column is-centered mediaplayer'>
                   <img
                     className='activity_image'
-                    style={{ width: '100%', height: '60vh' }}
+                    style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                     src={
                       eventInfo.styles.banner_image
                         ? eventInfo.styles.banner_image
@@ -321,7 +322,7 @@ let AgendaActividadDetalle = (props) => {
                 <div className='column is-centered mediaplayer'>
                   <img
                     className='activity_image'
-                    style={{ width: '100%', height: '60vh' }}
+                    style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                     src={
                       eventInfo.styles.banner_image
                         ? eventInfo.styles.banner_image
@@ -359,7 +360,7 @@ let AgendaActividadDetalle = (props) => {
                       <div>
                         <img
                           className='activity_image'
-                          style={{ width: '100%', height: '60vh' }}
+                          style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                           src={
                             eventInfo.styles.banner_image
                               ? eventInfo.styles.banner_image
