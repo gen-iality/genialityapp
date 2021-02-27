@@ -18,10 +18,11 @@ import styles from './agendaActividadDetalle.module.css';
 import EnVivo from '../../EnVivo.svg';
 import {
   CaretRightOutlined,
+  CheckCircleOutlined,
   CommentOutlined,
   LoadingOutlined,
   PieChartOutlined,
-  TeamOutlined,
+  TeamOutlined
 } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
@@ -78,7 +79,7 @@ let AgendaActividadDetalle = (props) => {
         right: '0',
         bottom: '0',
         width: '170px',
-        transition: '300ms',
+        transition: '300ms'
       });
     } else {
       setVideoStyles({ width: '100%', height: '450px', transition: '300ms' });
@@ -181,32 +182,34 @@ let AgendaActividadDetalle = (props) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   height: '7vh',
-                  width: '5vw',
+                  width: '5vw'
                 }}>
                 <Col style={{ marginLeft: '2vw' }}>
                   <Row type='flex' style={{ alignItems: 'center', justifyContent: 'center' }}>
                     {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
-                      <CommentOutlined style={{ fontSize: '30px' }} />
+                      <CheckCircleOutlined style={{ fontSize: '30px' }} />
                     ) : meetingState === '' || meetingState == null ? (
-                      <CommentOutlined style={{ fontSize: '30px' }} />
+                      <></>
                     ) : meetingState === 'closed_meeting_room' ? (
                       <LoadingOutlined style={{ fontSize: '30px' }} />
-                    ) : meetingState === 'ended_meeting_room' && currentActivity.video ? (
+                    ) : meetingState === 'recorded_meeting_room' && currentActivity.video ? (
                       <CaretRightOutlined style={{ fontSize: '30px' }} />
-                    ) : (
+                    ) : meetingState === 'open_meeting_room' ? (
                       <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
+                    ) : (
+                      ''
                     )}
                   </Row>
                   <Row style={{ height: '2vh', fontSize: 11, fontWeight: 'normal' }}>
                     {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
                       ? 'Terminada'
-                      : meetingState === '' || meetingState == null
-                      ? ' '
                       : meetingState === 'closed_meeting_room'
                       ? 'Por iniciar'
-                      : meetingState === 'ended_meeting_room' && currentActivity.video
-                      ? 'Grabada'
-                      : 'En vivo'}
+                      : meetingState === 'recorded_meeting_room' && currentActivity.video
+                      ? 'Grabado'
+                      : meetingState === 'open_meeting_room'
+                      ? 'En vivo'
+                      : ''}
                   </Row>
                 </Col>
               </div>
@@ -214,7 +217,7 @@ let AgendaActividadDetalle = (props) => {
                 <div style={{ height: '5vh' }}>
                   <Row style={{ height: '3.0vh' }}>{currentActivity.name} </Row>
                   <Row style={{ height: '2.5vh', fontSize: 14, fontWeight: 'normal' }}>
-                    {currentActivity && currentActivity.space && currentActivity.space.name}{' '}
+                    {currentActivity && currentActivity.space && currentActivity.space.name}
                   </Row>
                 </div>
               </Col>
@@ -235,7 +238,7 @@ let AgendaActividadDetalle = (props) => {
                         height: '3.0vh',
                         fontWeight: 'normal',
                         textAlign: 'right',
-                        display: 'block',
+                        display: 'block'
                       }}>
                       {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
                     </Row>
@@ -245,7 +248,7 @@ let AgendaActividadDetalle = (props) => {
                         fontWeight: 'normal',
                         textAlign: 'right',
                         display: 'block',
-                        height: '2.5vh',
+                        height: '2.5vh'
                       }}>
                       {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
                       {Moment(currentActivity.datetime_end).format('h:mm a')}
@@ -306,7 +309,7 @@ let AgendaActividadDetalle = (props) => {
                 <div className='column is-centered mediaplayer'>
                   <img
                     className='activity_image'
-                    style={{ width: '100%', height: '60vh' }}
+                    style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                     src={
                       eventInfo.styles.banner_image
                         ? eventInfo.styles.banner_image
@@ -323,7 +326,7 @@ let AgendaActividadDetalle = (props) => {
                 <div className='column is-centered mediaplayer'>
                   <img
                     className='activity_image'
-                    style={{ width: '100%', height: '60vh' }}
+                    style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                     src={
                       eventInfo.styles.banner_image
                         ? eventInfo.styles.banner_image
@@ -336,7 +339,7 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               )}
 
-              {meetingState === 'ended_meeting_room' &&
+              {meetingState === 'recorded_meeting_room' &&
               currentActivity.video &&
               option !== 'surveyDetalle' &&
               option !== 'game' ? (
@@ -345,7 +348,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -361,7 +364,7 @@ let AgendaActividadDetalle = (props) => {
                       <div>
                         <img
                           className='activity_image'
-                          style={{ width: '100%', height: '60vh' }}
+                          style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                           src={
                             eventInfo.styles.banner_image
                               ? eventInfo.styles.banner_image
@@ -393,7 +396,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -669,7 +672,7 @@ let AgendaActividadDetalle = (props) => {
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end',
+                alignItems: 'flex-end'
               }}>
               {/* <button
                   <div
@@ -712,14 +715,14 @@ let AgendaActividadDetalle = (props) => {
 const mapStateToProps = (state) => ({
   option: state.stage.data.mainStage,
   userInfo: state.user.data,
-  eventInfo: state.event.data,
+  eventInfo: state.event.data
 });
 
 const mapDispatchToProps = {
   gotoActivity,
   setMainStage,
   setCurrentSurvey,
-  setSurveyVisible,
+  setSurveyVisible
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));

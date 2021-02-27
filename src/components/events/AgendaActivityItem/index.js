@@ -12,6 +12,7 @@ import Icon, {
   LoadingOutlined,
   PlayCircleOutlined,
   CaretRightOutlined,
+  CheckCircleOutlined,
 } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
@@ -469,6 +470,9 @@ function AgendaActivityItem(props) {
                     <LoadingOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
                   )}
                   {meetingState == 'ended_meeting_room' && (
+                    <CheckCircleOutlined style={{ fontSize: '35px', marginTop: '10px' }}/>
+                  )}
+                  {meetingState == 'recorded_meeting_room' && (
                     <CaretRightOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
                   )}
                   {(meetingState == '' || meetingState == null) && <></>}
@@ -476,9 +480,11 @@ function AgendaActivityItem(props) {
                     {meetingState == 'open_meeting_room'
                       ? 'En vivo'
                       : meetingState == 'ended_meeting_room'
-                      ? 'Grabado'
+                      ? 'Finalizado'
                       : meetingState == 'closed_meeting_room'
                       ? 'Por iniciar'
+                      : meetingState == 'recorded_meeting_room'
+                      ? 'Grabado'
                       : '     '}
                   </span>
                 </div>
@@ -555,6 +561,9 @@ function AgendaActivityItem(props) {
                           <LoadingOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
                         )}
                         {meetingState == 'ended_meeting_room' && (
+                          <CheckCircleOutlined style={{ fontSize: '45px', marginTop: '10px' }}/>
+                        )}
+                        {meetingState == 'recorded_meeting_room' && (
                           <CaretRightOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
                         )}
                         {(meetingState == '' || meetingState == null) && <></>}
@@ -562,9 +571,11 @@ function AgendaActivityItem(props) {
                           {meetingState == 'open_meeting_room'
                             ? 'En vivo'
                             : meetingState == 'ended_meeting_room'
-                            ? 'Grabado'
+                            ? 'Finalizado'
                             : meetingState == 'closed_meeting_room'
                             ? 'Por iniciar'
+                            : meetingState == 'recorded_meeting_room'
+                            ? 'Grabado'
                             : '     '}
                         </p>
                       </div>
