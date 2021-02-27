@@ -5,7 +5,7 @@ import Moment from 'moment';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
 import API, { EventsApi, SurveysApi } from '../../helpers/request';
-import { PageHeader, Row, Col, Button, List, Avatar, Card, Tabs } from 'antd';
+import { PageHeader, Row, Col, Button, List, Avatar, Card, Tabs, Comment } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
@@ -171,46 +171,55 @@ let AgendaActividadDetalle = (props) => {
           style={{ padding: '0 !important' }}
           title={
             <Row>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '7vh',
-                  width: '5vw',
-                }}>
-                <Col style={{ marginLeft: '2vw' }}>
-                  <Row type='flex' style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
-                      <CheckCircleOutlined style={{ fontSize: '30px' }} />
-                    ) : meetingState === '' || meetingState == null ? (
-                      <></>
-                    ) : meetingState === 'closed_meeting_room' ? (
-                      <LoadingOutlined style={{ fontSize: '30px' }} />
-                    ) : meetingState === 'recorded_meeting_room' && currentActivity.video ? (
-                      <CaretRightOutlined style={{ fontSize: '30px' }} />
-                    ) : meetingState === 'open_meeting_room' ? (
-                      <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
-                    ) : (
-                      ''
-                    )}
-                  </Row>
-                  <Row style={{ height: '2vh', fontSize: 11, fontWeight: 'normal' }}>
-                    {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
-                      ? 'Terminada'
-                      : meetingState === 'closed_meeting_room'
-                      ? 'Por iniciar'
-                      : meetingState === 'recorded_meeting_room' && currentActivity.video
-                      ? 'Grabado'
-                      : meetingState === 'open_meeting_room'
-                      ? 'En vivo'
-                      : ''}
-                  </Row>
-                </Col>
-              </div>
-              <Col style={{ marginLeft: '2.5vw', marginTop: '1vh' }}>
+              <Col
+                xs={{ order: 2, span: 24 }}
+                sm={{ order: 2, span: 24 }}
+                md={{ order: 1, span: 2 }}
+                lg={{ order: 1, span: 2 }}
+                xl={{ order: 1, span: 2 }}>
+                <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
+                  {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
+                    <CheckCircleOutlined style={{ fontSize: '30px' }} />
+                  ) : meetingState === '' || meetingState == null ? (
+                    <></>
+                  ) : meetingState === 'closed_meeting_room' ? (
+                    <LoadingOutlined style={{ fontSize: '30px' }} />
+                  ) : meetingState === 'recorded_meeting_room' && currentActivity.video ? (
+                    <CaretRightOutlined style={{ fontSize: '30px' }} />
+                  ) : meetingState === 'open_meeting_room' ? (
+                    <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
+                  ) : (
+                    ''
+                  )}
+                </Row>
+                <Row
+                  style={{
+                    height: '2vh',
+                    fontSize: 11,
+                    fontWeight: 'normal',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
+                    ? 'Terminada'
+                    : meetingState === 'closed_meeting_room'
+                    ? 'Por iniciar'
+                    : meetingState === 'recorded_meeting_room' && currentActivity.video
+                    ? 'Grabado'
+                    : meetingState === 'open_meeting_room'
+                    ? 'En vivo'
+                    : ''}
+                </Row>
+              </Col>
+              <Col
+                xs={{ order: 1, span: 24 }}
+                sm={{ order: 1, span: 24 }}
+                md={{ order: 2, span: 22 }}
+                lg={{ order: 2, span: 22 }}
+                xl={{ order: 2, span: 22 }}
+                style={{ display: 'flex' }}>
                 <div style={{ height: '5vh' }}>
-                  <Row style={{ height: '3.0vh' }}>{currentActivity.name} </Row>
+                  <Row style={{ height: '3.0vh', wordBreak: 'break-all' }}>{currentActivity.name} </Row>
                   <Row style={{ height: '2.5vh', fontSize: 14, fontWeight: 'normal' }}>
                     {currentActivity.space.name}
                     {''}
@@ -226,7 +235,13 @@ let AgendaActividadDetalle = (props) => {
               <></>
             ) : (
               <>
-                <div style={{ paddingRight: '2vw', height: '5vh', textAlign: 'right !important', display: 'block' }}>
+                <div
+                  style={{
+                    paddingRight: '2vw',
+                    height: '5vh',
+                    textAlign: 'right !important',
+                    display: 'block',
+                  }}>
                   <Col>
                     <Row
                       style={{
@@ -240,7 +255,7 @@ let AgendaActividadDetalle = (props) => {
                     </Row>
                     <Row
                       style={{
-                        fontSize: 14,
+                        fontSize: 10,
                         fontWeight: 'normal',
                         textAlign: 'right',
                         display: 'block',
