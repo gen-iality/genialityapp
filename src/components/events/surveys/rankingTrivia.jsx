@@ -10,56 +10,64 @@ function RankingTrivia(props) {
 
   const { currentSurvey, currentUser } = props;
   useEffect(() => {
-    const initialValues = {
-      name: currentUser.names ? currentUser.names : currentUser.name,
-      score: 0,
-    };
+    if (!Object.keys(currentUser).length === 0) {
+      const initialValues = {
+        name: currentUser.names ? currentUser.names : currentUser.name,
+        score: 0,
+      };
 
-    firestore
-      .collection('surveys')
-      .doc(currentSurvey._id)
-      .collection('ranking')
-      .doc(currentUser._id)
-      .onSnapshot(function(result) {
-        if (result.exists) {
-          const data = result.data();
-          setMyScore({ ...initialValues, score: data.correctAnswers });
-        } else {
-          setMyScore(initialValues);
-        }
-      });
+      firestore
+        .collection('surveys')
+        .doc(currentSurvey._id)
+        .collection('ranking')
+        .doc(currentUser._id)
+        .onSnapshot(function(result) {
+          if (result.exists) {
+            const data = result.data();
+            setMyScore({ ...initialValues, score: data.correctAnswers });
+          } else {
+            setMyScore(initialValues);
+          }
+        });
+    }
   }, [currentUser, currentSurvey]);
 
   useEffect(() => {
-    firestore
-      .collection('surveys')
-      .doc(currentSurvey._id)
-      .collection('ranking')
-      .onSnapshot(function(result) {
-        if (result) {
-          const players = [];
-          const data = result.docs;
-          data.forEach((player) => {
-            const result = player.data();
-            players.push({
-              name: result.userName,
-              score: result.correctAnswers,
+    if (!Object.keys(currentUser).length === 0) {
+      firestore
+        .collection('surveys')
+        .doc(currentSurvey._id)
+        .collection('ranking')
+        .onSnapshot(function(result) {
+          if (result) {
+            const players = [];
+            const data = result.docs;
+            data.forEach((player) => {
+              const result = player.data();
+              players.push({
+                name: result.userName,
+                score: result.correctAnswers,
+              });
             });
-          });
 
-          players.sort(function(a, b) {
-            return b.score - a.score;
-          });
+            players.sort(function(a, b) {
+              return b.score - a.score;
+            });
 
-          setRanking(players);
-        }
-      });
-  }, [currentSurvey]);
+            setRanking(players);
+          }
+        });
+    }
+  }, [currentSurvey, currentUser]);
 
   return (
     <>
-      <RankingMyScore myScore={myScore} />
-      <RankingList data={ranking} />
+      {!Object.keys(currentUser).length === 0 && (
+        <>
+          <RankingMyScore myScore={myScore} />
+          <RankingList data={ranking} />
+        </>
+      )}
     </>
   );
 }
