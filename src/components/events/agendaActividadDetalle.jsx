@@ -5,7 +5,7 @@ import Moment from 'moment';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
 import API, { EventsApi, SurveysApi } from '../../helpers/request';
-import { PageHeader, Row, Col, Button, List, Avatar, Card, Tabs } from 'antd';
+import { PageHeader, Row, Col, Button, List, Avatar, Card, Tabs, Comment } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
@@ -22,7 +22,7 @@ import {
   CommentOutlined,
   LoadingOutlined,
   PieChartOutlined,
-  TeamOutlined
+  TeamOutlined,
 } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
@@ -79,7 +79,7 @@ let AgendaActividadDetalle = (props) => {
         right: '0',
         bottom: '0',
         width: '170px',
-        transition: '300ms'
+        transition: '300ms',
       });
     } else {
       setVideoStyles({ width: '100%', height: '450px', transition: '300ms' });
@@ -176,46 +176,55 @@ let AgendaActividadDetalle = (props) => {
           style={{ padding: '0 !important' }}
           title={
             <Row>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '7vh',
-                  width: '5vw'
-                }}>
-                <Col style={{ marginLeft: '2vw' }}>
-                  <Row type='flex' style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
-                      <CheckCircleOutlined style={{ fontSize: '30px' }} />
-                    ) : meetingState === '' || meetingState == null ? (
-                      <></>
-                    ) : meetingState === 'closed_meeting_room' ? (
-                      <LoadingOutlined style={{ fontSize: '30px' }} />
-                    ) : meetingState === 'recorded_meeting_room' && currentActivity.video ? (
-                      <CaretRightOutlined style={{ fontSize: '30px' }} />
-                    ) : meetingState === 'open_meeting_room' ? (
-                      <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
-                    ) : (
-                      ''
-                    )}
-                  </Row>
-                  <Row style={{ height: '2vh', fontSize: 11, fontWeight: 'normal' }}>
-                    {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
-                      ? 'Terminada'
-                      : meetingState === 'closed_meeting_room'
-                      ? 'Por iniciar'
-                      : meetingState === 'recorded_meeting_room' && currentActivity.video
-                      ? 'Grabado'
-                      : meetingState === 'open_meeting_room'
-                      ? 'En vivo'
-                      : ''}
-                  </Row>
-                </Col>
-              </div>
-              <Col style={{ marginLeft: '2.5vw', marginTop: '1vh' }}>
+              <Col
+                xs={{ order: 2, span: 24 }}
+                sm={{ order: 2, span: 24 }}
+                md={{ order: 1, span: 2 }}
+                lg={{ order: 1, span: 2 }}
+                xl={{ order: 1, span: 2 }}>
+                <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
+                  {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
+                    <CheckCircleOutlined style={{ fontSize: '30px' }} />
+                  ) : meetingState === '' || meetingState == null ? (
+                    <></>
+                  ) : meetingState === 'closed_meeting_room' ? (
+                    <LoadingOutlined style={{ fontSize: '30px' }} />
+                  ) : meetingState === 'recorded_meeting_room' && currentActivity.video ? (
+                    <CaretRightOutlined style={{ fontSize: '30px' }} />
+                  ) : meetingState === 'open_meeting_room' ? (
+                    <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
+                  ) : (
+                    ''
+                  )}
+                </Row>
+                <Row
+                  style={{
+                    height: '2vh',
+                    fontSize: 11,
+                    fontWeight: 'normal',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
+                    ? 'Terminada'
+                    : meetingState === 'closed_meeting_room'
+                    ? 'Por iniciar'
+                    : meetingState === 'recorded_meeting_room' && currentActivity.video
+                    ? 'Grabado'
+                    : meetingState === 'open_meeting_room'
+                    ? 'En vivo'
+                    : ''}
+                </Row>
+              </Col>
+              <Col
+                xs={{ order: 1, span: 24 }}
+                sm={{ order: 1, span: 24 }}
+                md={{ order: 2, span: 22 }}
+                lg={{ order: 2, span: 22 }}
+                xl={{ order: 2, span: 22 }}
+                style={{ display: 'flex' }}>
                 <div style={{ height: '5vh' }}>
-                  <Row style={{ height: '3.0vh' }}>{currentActivity.name} </Row>
+                  <Row style={{ height: '3.0vh', wordBreak: 'break-all' }}>{currentActivity.name} </Row>
                   <Row style={{ height: '2.5vh', fontSize: 14, fontWeight: 'normal' }}>
                     {currentActivity && currentActivity.space && currentActivity.space.name}
                   </Row>
@@ -230,7 +239,13 @@ let AgendaActividadDetalle = (props) => {
               <></>
             ) : (
               <>
-                <div style={{ paddingRight: '2vw', height: '5vh', textAlign: 'right !important', display: 'block' }}>
+                <div
+                  style={{
+                    paddingRight: '2vw',
+                    height: '5vh',
+                    textAlign: 'right !important',
+                    display: 'block',
+                  }}>
                   <Col>
                     <Row
                       style={{
@@ -238,17 +253,17 @@ let AgendaActividadDetalle = (props) => {
                         height: '3.0vh',
                         fontWeight: 'normal',
                         textAlign: 'right',
-                        display: 'block'
+                        display: 'block',
                       }}>
                       {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
                     </Row>
                     <Row
                       style={{
-                        fontSize: 14,
+                        fontSize: 10,
                         fontWeight: 'normal',
                         textAlign: 'right',
                         display: 'block',
-                        height: '2.5vh'
+                        height: '2.5vh',
                       }}>
                       {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
                       {Moment(currentActivity.datetime_end).format('h:mm a')}
@@ -348,7 +363,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -396,7 +411,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -672,7 +687,7 @@ let AgendaActividadDetalle = (props) => {
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end'
+                alignItems: 'flex-end',
               }}>
               {/* <button
                   <div
@@ -715,14 +730,14 @@ let AgendaActividadDetalle = (props) => {
 const mapStateToProps = (state) => ({
   option: state.stage.data.mainStage,
   userInfo: state.user.data,
-  eventInfo: state.event.data
+  eventInfo: state.event.data,
 });
 
 const mapDispatchToProps = {
   gotoActivity,
   setMainStage,
   setCurrentSurvey,
-  setSurveyVisible
+  setSurveyVisible,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
