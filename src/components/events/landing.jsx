@@ -943,7 +943,10 @@ class Landing extends Component {
                                             alt='Games'
                                           />
                                         }
-                                        onClick={() => this.toggleCollapsed(4)}></Menu.Item>
+                                        onClick={() => {
+                                          this.props.setMainStage('game');
+                                          this.toggleCollapsed(4);
+                                        }}></Menu.Item>
                                     </>
                                   )}
                                 </Menu>

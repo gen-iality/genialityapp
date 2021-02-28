@@ -245,7 +245,7 @@ class SurveyComponent extends Component {
 
       // Se envia al servicio el id de la encuesta, de la pregunta y los datos
       // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
-      if (!Object.keys(infoUser).length === 0) {
+      if (!(Object.keys(infoUser).length === 0)) {
         SurveyAnswers.registerWithUID(
           surveyData._id,
           question.id,
@@ -368,7 +368,7 @@ class SurveyComponent extends Component {
     );
     this.setState({ rankingPoints: rankingPointsThisPage });
 
-    if (!Object.keys(currentUser).length === 0) {
+    if (!(Object.keys(currentUser).length === 0)) {
       //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
       SurveyPage.setCurrentPage(surveyData._id, currentUser._id, surveyModel.currentPageNo);
     }

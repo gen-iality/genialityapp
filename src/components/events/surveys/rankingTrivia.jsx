@@ -10,7 +10,7 @@ function RankingTrivia(props) {
 
   const { currentSurvey, currentUser } = props;
   useEffect(() => {
-    if (!Object.keys(currentUser).length === 0) {
+    if (!(Object.keys(currentUser).length === 0)) {
       const initialValues = {
         name: currentUser.names ? currentUser.names : currentUser.name,
         score: 0,
@@ -33,7 +33,7 @@ function RankingTrivia(props) {
   }, [currentUser, currentSurvey]);
 
   useEffect(() => {
-    if (!Object.keys(currentUser).length === 0) {
+    if (!(Object.keys(currentUser).length === 0)) {
       firestore
         .collection('surveys')
         .doc(currentSurvey._id)
@@ -62,7 +62,7 @@ function RankingTrivia(props) {
 
   return (
     <>
-      {!Object.keys(currentUser).length === 0 && (
+      {!(Object.keys(currentUser).length === 0) && (
         <>
           <RankingMyScore myScore={myScore} />
           <RankingList data={ranking} />

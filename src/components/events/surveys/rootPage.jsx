@@ -49,7 +49,7 @@ class RootPage extends Component {
     const { userHasVoted } = currentSurvey;
     const { currentUser, idSurvey, eventId } = this.props;
 
-    if (!Object.keys(currentUser).length === 0) {
+    if (!(Object.keys(currentUser).length === 0)) {
       let responseCounter = await SurveyAnswers.getUserById(eventId, currentSurvey, currentUser._id, true);
       this.setState({ hasVote: userHasVoted, isLoading: false, responseCounter });
     } else {

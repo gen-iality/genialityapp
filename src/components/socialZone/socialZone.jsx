@@ -13,6 +13,8 @@ import * as StageActions from '../../redux/stage/actions';
 import AttendeList from './attendees/index';
 import ChatList from './ChatList';
 import { monitorEventPresence } from './hooks';
+import GameRanking from '../events/game/gameRanking';
+
 const { setMainStage } = StageActions;
 
 const { TabPane } = Tabs;
@@ -232,6 +234,8 @@ let SocialZone = function(props) {
                 <VideoCameraOutlined />
               </Col>
             </Row>
+
+            <GameRanking />
           </TabPane>
         </>
       )}

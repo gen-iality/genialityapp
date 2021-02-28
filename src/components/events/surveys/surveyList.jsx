@@ -146,8 +146,11 @@ class SurveyList extends Component {
     const checkMyResponses = new Promise((resolve, reject) => {
       let filteredSurveys = [];
 
+      console.log('survey list current user', !(Object.keys(currentUser).length === 0));
+
       publishedSurveys.forEach(async (survey, index, arr) => {
-        if (!Object.keys(currentUser).length === 0) {
+        if (!(Object.keys(currentUser).length === 0)) {
+          console.log('666666666666666666666666666666666666666666666666666666');
           const result = await this.queryMyResponses(survey);
           filteredSurveys.push({
             ...arr[index],
