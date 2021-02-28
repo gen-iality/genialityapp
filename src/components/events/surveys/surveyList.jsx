@@ -159,7 +159,6 @@ class SurveyList extends Component {
           // eslint-disable-next-line no-unused-vars
           const guestUser = new Promise((resolve, reject) => {
             let surveyId = localStorage.getItem(`userHasVoted_${survey._id}`);
-            console.log('el surveyid cono anonimo', surveyId);
             surveyId ? resolve(true) : resolve(false);
           });
           let guestHasVote = await guestUser;
