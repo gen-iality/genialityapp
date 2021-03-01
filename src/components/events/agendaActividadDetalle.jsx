@@ -369,7 +369,7 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               ) : (
                 <>
-                  {meetingState === 'ended_meeting_room' &&
+                  {(meetingState === 'ended_meeting_room' || meetingState === 'recorded_meeting_room') &&
                     (currentActivity.image || image_event) &&
                     option !== 'surveyDetalle' &&
                     option !== 'game' && (

@@ -405,6 +405,7 @@ class Landing extends Component {
                 currentUser={this.state.currentUser}
                 usuarioRegistrado={this.state.eventUser}
                 toggleConference={this.toggleConference}
+                showSection={this.showSection}
               />
               <MapComponent event={event} />
             </Col>

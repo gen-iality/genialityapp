@@ -5,10 +5,21 @@ import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment';
 import { Avatar } from 'antd';
+import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 //const { Meta } = Card;
+import * as StageActions from '../../redux/stage/actions';
 
-const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado, event }) => {
+const { gotoActivity } = StageActions;
+
+const MeetingConferenceButton = ({
+  activity,
+  toggleConference,
+  usuarioRegistrado,
+  event,
+  showSection,
+  setActivity,
+}) => {
   const [infoActivity, setInfoActivity] = useState({});
   const [infoEvent, setInfoEvent] = useState({});
   const intl = useIntl();
@@ -29,7 +40,12 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
                 type='primary'
                 className='buttonVirtualConference'
                 onClick={() => {
-                  toggleConference(true, infoActivity.meeting_id, infoActivity);
+                  //toggleConference(true, infoActivity.meeting_id, infoActivity);
+                  setActivity(activity);
+                  showSection('agenda');
+                  console.log(activity);
+
+                  console.log('ACA');
                 }}>
                 <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
               </Button>
@@ -139,7 +155,7 @@ class VirtualConference extends Component {
 
   render() {
     const { infoAgendaArr, event, usuarioRegistrado } = this.state;
-    const { toggleConference } = this.props;
+    const { toggleConference, showSection } = this.props;
     if (!infoAgendaArr || infoAgendaArr.length <= 0) return null;
     return (
       <Fragment>
@@ -201,6 +217,8 @@ class VirtualConference extends Component {
                       toggleConference={toggleConference}
                       event={event}
                       usuarioRegistrado={usuarioRegistrado}
+                      showSection={showSection}
+                      setActivity={this.props.gotoActivity}
                     />
                     {item.related_meetings &&
                       item.related_meetings.map((item, key) => (
@@ -209,7 +227,8 @@ class VirtualConference extends Component {
                             <Button
                               disabled={item.meeting_id || item.vimeo_id ? false : true}
                               onClick={() =>
-                                toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
+                                //toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
+                                showSection('agenda')
                               }
                               type='primary'
                               className='button-Agenda'
@@ -236,4 +255,8 @@ class VirtualConference extends Component {
   }
 }
 
-export default WithUserEventRegistered(VirtualConference);
+const mapDispatchToProps = {
+  gotoActivity,
+};
+
+export default connect(null, mapDispatchToProps)(WithUserEventRegistered(VirtualConference));
