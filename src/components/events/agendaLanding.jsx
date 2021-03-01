@@ -125,10 +125,27 @@ class Agenda extends Component {
         days.push(Moment(date[i]).format('YYYY-MM-DD'));
       }
 
-      this.setState({ days, day: days[0] }, this.fetchAgenda);
+      //this.setState({ days, day: days[0] }, this.fetchAgenda);
     }
     this.getAgendaUser();
   }
+
+  setDaysWithAllActivities = () => {
+    const { data } = this.state;
+    const getDays = [];
+
+    data.map((activity) => {
+      const date = Moment(activity.datetime_start).format('YYYY-MM-DD');
+
+      const result = getDays.filter((item) => item === date);
+
+      if (result.length === 0) {
+        getDays.push(Moment(activity.datetime_start).format('YYYY-MM-DD'));
+      }
+    });
+
+    this.setState({ days: getDays });
+  };
 
   async componentDidUpdate(prevProps) {
     const { data } = this.state;
@@ -214,10 +231,11 @@ class Agenda extends Component {
     let space = await SpacesApi.byEvent(this.props.event._id);
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
-    const filtered = this.filterByDay(this.state.days[0], data);
+    //const filtered = this.filterByDay(this.state.days[0], data);
     this.listeningStateMeetingRoom(data);
 
-    this.setState({ data, filtered, toShow: filtered, spaces: space });
+    //this.setState({ data, filtered, toShow: filtered, spaces: space });
+    this.setState({ data, spaces: space }, () => this.setDaysWithAllActivities(this.state.data));
   };
 
   returnList() {

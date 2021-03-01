@@ -41,8 +41,8 @@ const MeetingConferenceButton = ({
                 className='buttonVirtualConference'
                 onClick={() => {
                   //toggleConference(true, infoActivity.meeting_id, infoActivity);
-                  setActivity(activity);
                   showSection('agenda');
+                  setActivity(activity);
                   console.log(activity);
 
                   console.log('ACA');
@@ -211,6 +211,8 @@ class VirtualConference extends Component {
                         })}
                       </div>
                     )}
+
+                    <button onClick={() => this.props.gotoActivity(item)}>prueba</button>
 
                     <MeetingConferenceButton
                       activity={item}
