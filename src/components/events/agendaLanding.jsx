@@ -11,7 +11,7 @@ import {
   discountCodesApi,
 } from '../../helpers/request';
 import AgendaActividadDetalle from './agendaActividadDetalle';
-import { Modal, Button, Card, Spin, notification, Input, Alert } from 'antd';
+import { Modal, Button, Card, Spin, notification, Input, Alert, Divider } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';
 
@@ -457,6 +457,50 @@ class Agenda extends Component {
     }
   };
 
+  getActivitiesByDay = (date) => {
+    const { toggleConference, event } = this.props;
+    const { hideBtnDetailAgenda, show_inscription, data, loading, survey, documents } = this.state;
+
+    //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
+    const list = data
+      .filter((a) => date && date.format && a.datetime_start && a.datetime_start.includes(date.format('YYYY-MM-DD')))
+      .sort(
+        (a, b) =>
+          Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
+          Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY')
+      );
+
+    const renderList = list.map((item, index) => {
+      const isRegistered = this.checkInscriptionStatus(item._id) && true;
+
+      return (
+        <div key={index} className='container_agenda-information'>
+          <AgendaActivityItem
+            item={item}
+            key={index}
+            Documents={documents}
+            Surveys={survey}
+            toggleConference={toggleConference}
+            event_image={this.props.event.styles.event_image}
+            gotoActivity={this.gotoActivity}
+            registerInActivity={this.registerInActivity}
+            registerStatus={isRegistered}
+            eventId={this.props.eventId}
+            event={this.props.event}
+            userId={this.state.userId}
+            btnDetailAgenda={hideBtnDetailAgenda}
+            show_inscription={show_inscription}
+            userRegistered={this.props.userRegistered}
+            handleOpenModal={this.handleOpenModal}
+            hideHours={event.styles.hideHoursAgenda}
+            handleValidatePayment={this.validationRegisterAndExchangeCode}
+          />
+        </div>
+      );
+    });
+    return renderList;
+  };
+
   //End modal methods
 
   render() {
@@ -619,57 +663,14 @@ class Agenda extends Component {
                   </>
                 )} */}
 
-                {/* Contenedor donde se iteran los tabs de las fechas */}
-                {event.styles &&
-                  event.styles.hideDatesAgenda &&
-                  (event.styles.hideDatesAgenda === 'false' || event.styles.hideDatesAgenda === false) && (
-                    <div className='container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60'>
-                      {days.map((date, key) => (
-                        <Button
-                          key={key}
-                          onClick={() => this.selectDay(date)}
-                          size={'large'}
-                          type={`${date === day ? 'primary' : ''}`}>
-                          {this.capitalizeDate(Moment(date).format('MMMM DD'))}
-                        </Button>
-                      ))}
-                    </div>
-                  )}
-
-                {/* Contenedor donde se pinta la información de la agenda */}
-                {(event.styles &&
-                event.styles.hideDatesAgenda &&
-                (event.styles.hideDatesAgenda === 'true' || event.styles.hideDatesAgenda === true)
-                  ? data
-                  : toShow
-                ).map((item, llave) => {
-                  const isRegistered = this.checkInscriptionStatus(item._id) && true;
-
-                  return (
-                    <div key={llave} className='container_agenda-information'>
-                      <AgendaActivityItem
-                        item={item}
-                        key={llave}
-                        Documents={documents}
-                        Surveys={survey}
-                        toggleConference={toggleConference}
-                        event_image={this.props.event.styles.event_image}
-                        /// gotoActivity={this.gotoActivity}
-                        registerInActivity={this.registerInActivity}
-                        registerStatus={isRegistered}
-                        eventId={this.props.eventId}
-                        event={this.props.event}
-                        userId={this.state.userId}
-                        btnDetailAgenda={hideBtnDetailAgenda}
-                        show_inscription={show_inscription}
-                        userRegistered={this.props.userRegistered}
-                        handleOpenModal={this.handleOpenModal}
-                        hideHours={event.styles.hideHoursAgenda}
-                        handleValidatePayment={this.validationRegisterAndExchangeCode}
-                      />
-                    </div>
-                  );
-                })}
+                {days.map((day) => (
+                  <>
+                    <Divider orientation='center'>
+                      <p>{day}</p>
+                    </Divider>
+                    {this.getActivitiesByDay(day)}
+                  </>
+                ))}
               </div>
             </div>
           </div>
