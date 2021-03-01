@@ -83,7 +83,8 @@ class RootPage extends Component {
               'url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/convencion_corona%2Fbg-QQSM2.jpg?alt=media&token=a13a7c60-6e42-4eb0-8ddb-01e4582ed8af")',
           }}>
           {(eventUser && eventUser.rol && eventUser.rol.name === 'Speaker') ||
-          openSurvey === 'false' ||
+          this.props.currentSurvey.isOpened === 'false' ||
+          this.props.currentSurvey.isOpened === false ||
           hasVote ||
           guestVoteInSurvey ? (
             <>

@@ -48,6 +48,7 @@ class SurveyComponent extends Component {
   }
 
   async componentDidMount() {
+    console.log('componente survey', this.props);
     var self = this;
     const { eventId, idSurvey } = this.props;
     let surveyData = await this.loadSurvey(eventId, idSurvey);
