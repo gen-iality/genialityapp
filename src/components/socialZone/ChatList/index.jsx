@@ -16,7 +16,7 @@ const ChatList = (props) => {
       </a>
       <iframe
         title='chatevius'
-        className='ChatEvius'
+        className='ChatEviusLan'
         src={
           'https://chatevius.web.app?nombre=' +
           userName +
@@ -33,7 +33,7 @@ const ChatList = (props) => {
       <TabPane tab='Público' key='chat1'>
         <iframe
           title='chatevius'
-          className='ChatEvius'
+          className='ChatEviusLan'
           src={
             'https://chatevius.web.app?nombre=' +
             userName +
