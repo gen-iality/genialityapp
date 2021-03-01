@@ -5,7 +5,7 @@ import Moment from 'moment';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
 import API, { EventsApi, SurveysApi } from '../../helpers/request';
-import { PageHeader, Row, Col, Button, List, Avatar, Card, Tabs, Comment } from 'antd';
+import { PageHeader, Row, Col, Button, List, Avatar, Card, Tabs, Comment, Empty } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
@@ -633,19 +633,19 @@ let AgendaActividadDetalle = (props) => {
                   }
                   key='docs'>
                   {currentActivity &&
-                    currentActivity.selected_document &&
-                    currentActivity.selected_document.length > 0 && (
-                      <div>
-                        <div
-                          style={{ marginTop: '5%', marginBottom: '5%' }}
-                          className='has-text-left is-size-6-desktop'>
-                          <b>Documentos:</b> &nbsp;
-                          <div>
-                            <DocumentsList data={currentActivity.selected_document} />
-                          </div>
+                  currentActivity.selected_document &&
+                  currentActivity.selected_document.length > 0 ? (
+                    <div>
+                      <div style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
+                        <b>Documentos:</b> &nbsp;
+                        <div>
+                          <DocumentsList data={currentActivity.selected_document} />
                         </div>
                       </div>
-                    )}
+                    </div>
+                  ) : (
+                    <Empty />
+                  )}
                 </TabPane>
               }
             </Tabs>
