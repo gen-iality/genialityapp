@@ -41,11 +41,8 @@ const MeetingConferenceButton = ({
                 className='buttonVirtualConference'
                 onClick={() => {
                   //toggleConference(true, infoActivity.meeting_id, infoActivity);
-                  showSection('agenda');
                   setActivity(activity);
-                  console.log(activity);
-
-                  console.log('ACA');
+                  showSection('agenda', true);
                 }}>
                 <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
               </Button>
@@ -155,7 +152,7 @@ class VirtualConference extends Component {
 
   render() {
     const { infoAgendaArr, event, usuarioRegistrado } = this.state;
-    const { toggleConference, showSection } = this.props;
+    const { toggleConference, showSection, gotoActivity } = this.props;
     if (!infoAgendaArr || infoAgendaArr.length <= 0) return null;
     return (
       <Fragment>
@@ -212,15 +209,13 @@ class VirtualConference extends Component {
                       </div>
                     )}
 
-                    <button onClick={() => this.props.gotoActivity(item)}>prueba</button>
-
                     <MeetingConferenceButton
                       activity={item}
                       toggleConference={toggleConference}
                       event={event}
                       usuarioRegistrado={usuarioRegistrado}
                       showSection={showSection}
-                      setActivity={this.props.gotoActivity}
+                      setActivity={gotoActivity}
                     />
                     {item.related_meetings &&
                       item.related_meetings.map((item, key) => (

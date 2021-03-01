@@ -547,13 +547,13 @@ class Landing extends Component {
     this.setState({ modal: false, modalTicket: false });
   };
 
-  showSection = (section) => {
-    this.setState({ section, visible: false }, () => this.callbackShowSection(section));
+  showSection = (section, clean = false) => {
+    this.setState({ section, visible: false }, () => this.callbackShowSection(section, clean));
   };
 
-  callbackShowSection = (section) => {
+  callbackShowSection = (section, clean) => {
     if (section === 'agenda') {
-      this.props.gotoActivity(null);
+      !clean && this.props.gotoActivity(null);
       this.props.setMainStage(null);
     }
   };
