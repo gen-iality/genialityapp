@@ -88,7 +88,7 @@ function AgendaActivityItem(props) {
         setMeetingState(habilitar_ingreso);
       });
   }
-
+  
   return (
     <>
       {/* {item.isPublished && (
@@ -494,7 +494,7 @@ function AgendaActivityItem(props) {
                   <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
                     <Col span={24}>
                       <div className='tituloM'>{item.name}.</div>
-                      <span className='lugarM'>sala de evento</span>
+                      <span className='lugarM'>{item && item.space && item.space.name}</span>
                     </Col>
                   </Row>
                   <Row gutter={[4, 4]}>
@@ -591,7 +591,7 @@ function AgendaActivityItem(props) {
                   <Row gutter={[10, 10]}>
                     <Col span={24} style={{ paddingLeft: '0px' }}>
                       <div className='titulo'>{item.name}.</div>
-                      <span className='lugar'>sala de evento</span>
+                      <span className='lugar'>{item && item.space && item.space.name}</span>
                     </Col>
                     <Row>
                       {item.description !== null && item.description !== '<p><br></p>' && (
