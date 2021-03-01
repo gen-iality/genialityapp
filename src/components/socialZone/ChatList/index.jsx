@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { List, Typography, Badge, Tooltip, Tabs } from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 const { TabPane } = Tabs;
@@ -7,7 +8,7 @@ const callback = () => {};
 const ChatList = (props) => {
   if (!props.currentUser) return <p>Debes haber ingresado con tu usuario</p>;
 
-  let userName = props.currentUser ? props.currentUser.name : '---';
+  let userName = props.currentUser ? props.currentUser.names : props.currentUser.name ? props.currentUser.name : '---';
 
   return props.currentChat ? (
     <>
