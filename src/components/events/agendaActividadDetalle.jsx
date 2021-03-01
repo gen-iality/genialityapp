@@ -23,6 +23,8 @@ import {
   LoadingOutlined,
   PieChartOutlined,
   TeamOutlined,
+  CalendarOutlined, 
+  ClockCircleOutlined
 } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
@@ -173,15 +175,21 @@ let AgendaActividadDetalle = (props) => {
     <div className='is-centered'>
       <div className=' container_agenda-information container-calendar2 is-three-fifths'>
         <Card
-          style={{ padding: '0 !important' }}
-          title={
-            <Row>
+          style={{ padding: '1 !important' }}
+          className={
+            event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6'
+              ? 'magicland-agenda_information'
+              : 'agenda_information'
+          }>
+
+            <Row align='middle'>
               <Col
-                xs={{ order: 2, span: 24 }}
-                sm={{ order: 2, span: 24 }}
+                xs={{ order: 2, span: 4 }}
+                sm={{ order: 2, span: 4 }}
                 md={{ order: 1, span: 2 }}
                 lg={{ order: 1, span: 2 }}
-                xl={{ order: 1, span: 2 }}>
+                xl={{ order: 1, span: 2 }}
+                style={{ padding:'4px' }}>
                 <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
                   {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
                     <CheckCircleOutlined style={{ fontSize: '30px' }} />
@@ -217,27 +225,30 @@ let AgendaActividadDetalle = (props) => {
                 </Row>
               </Col>
               <Col
-                xs={{ order: 1, span: 24 }}
-                sm={{ order: 1, span: 24 }}
-                md={{ order: 2, span: 22 }}
-                lg={{ order: 2, span: 22 }}
-                xl={{ order: 2, span: 22 }}
+                xs={{ order: 3, span: 20 }}
+                sm={{ order: 3, span: 20 }}
+                md={{ order: 2, span: 18 }}
+                lg={{ order: 2, span: 18 }}
+                xl={{ order: 2, span: 18 }}
                 style={{ display: 'flex' }}>
-                <div style={{ height: '5vh' }}>
-                  <Row style={{ height: '3.0vh', wordBreak: 'break-all' }}>{currentActivity.name} </Row>
+                <div style={{ padding:'8px' }}>
+                  <Row style={{textAlign: 'left', fontWeight:'bolder' }}>{currentActivity.name} </Row>
                   <Row style={{ height: '2.5vh', fontSize: 14, fontWeight: 'normal' }}>
                     {currentActivity && currentActivity.space && currentActivity.space.name}
                   </Row>
                 </div>
               </Col>
-            </Row>
-          }
-          extra={
-            event._id === '5f99a20378f48e50a571e3b6' ||
-            event._id === '5fca68b7e2f869277cfa31b0' ||
-            event.id === '60061bfac8c0284c432069c8' ? (
-              <></>
-            ) : (
+              <Col xs={{ order: 1, span: 24 }}
+                sm={{ order: 1, span: 24 }}
+                md={{ order: 1, span: 24 }}
+                lg={{ order: 3, span: 4 }}
+                xl={{ order: 3, span: 4 }} >
+                  {
+                event._id === '5f99a20378f48e50a571e3b6' ||
+                event._id === '5fca68b7e2f869277cfa31b0' ||
+                event.id === '60061bfac8c0284c432069c8' ? (
+                  <></>
+                ) : (
               <>
                 <div
                   style={{
@@ -247,37 +258,23 @@ let AgendaActividadDetalle = (props) => {
                     display: 'block',
                   }}>
                   <Col>
-                    <Row
-                      style={{
-                        fontSize: 14,
-                        height: '3.0vh',
-                        fontWeight: 'normal',
-                        textAlign: 'right',
-                        display: 'block',
-                      }}>
-                      {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
-                    </Row>
-                    <Row
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 'normal',
-                        textAlign: 'right',
-                        display: 'block',
-                        height: '2.5vh',
-                      }}>
+                    <Row style={{paddingTop:'4px'}}>
+                      <Col xs={12} xs={12} md={24} xl={24}>
+                      <CalendarOutlined />   {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
+                      </Col>
+                      <Col xs={12} xs={12}  md={24} xl={24} >
                       {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
                       {Moment(currentActivity.datetime_end).format('h:mm a')}
+                      </Col>              
                     </Row>
                   </Col>
                 </div>
               </>
             )
           }
-          className={
-            event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6'
-              ? 'magicland-agenda_information'
-              : 'agenda_information'
-          }>
+              </Col>
+            </Row>
+            
           <header className='card-header columns '>
             <div className='is-block is-12 column is-paddingless'>
               {/* Hora del evento */}
