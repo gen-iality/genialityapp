@@ -11,9 +11,10 @@ import {
   discountCodesApi,
 } from '../../helpers/request';
 import AgendaActividadDetalle from './agendaActividadDetalle';
-import { Modal, Button, Card, Spin, notification, Input, Alert, Divider } from 'antd';
+import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';
+import { CalendarOutlined } from '@ant-design/icons';
 
 let attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
@@ -683,9 +684,18 @@ class Agenda extends Component {
 
                 {days.map((day) => (
                   <>
-                    <Divider orientation='center'>
-                      <p>{day}</p>
-                    </Divider>
+                    <Card style={{ marginBottom: '20px', height: 'auto' }}>
+                      <Divider orientation='left' style={{ fontSize: '18px', color: '#1cdcb7' }}>
+                        <p>
+                          <Space>
+                            <CalendarOutlined />
+                            {Moment(day)
+                              .format('MMMM DD YYYY')
+                              .toUpperCase()}
+                          </Space>
+                        </p>
+                      </Divider>
+                    </Card>
                     {this.getActivitiesByDay(day)}
                   </>
                 ))}
