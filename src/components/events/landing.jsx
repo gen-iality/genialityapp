@@ -871,7 +871,7 @@ class Landing extends Component {
                             style={this.state.visibleChat == true ? { display: 'none' } : {}}></Button>
                         </div>
                         <Drawer
-                          height={353}
+                          height={450}
                           placement={this.state.placementBottom}
                           closable={true}
                           onClose={this.onClose}
