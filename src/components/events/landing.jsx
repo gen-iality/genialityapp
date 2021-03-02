@@ -99,7 +99,7 @@ class Landing extends Component {
       toggleConferenceZoom: false,
       meeting_id: null,
       color: '',
-      collapsed: true,
+      collapsed: false,
       visible: false,
       visibleChat: false,
       placement: 'left',
