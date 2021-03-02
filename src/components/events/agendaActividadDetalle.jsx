@@ -46,7 +46,10 @@ let AgendaActividadDetalle = (props) => {
   const intl = useIntl();
   const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
   const [currentSurvey, setcurrentSurvey] = useState(null);
+
+  // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
   const [videoStyles, setVideoStyles] = useState(null);
+  const [videoButtonStyles, setVideoButtonStyles] = useState(null);
 
   const [activeTab, setActiveTab] = useState('description');
   let option = props.option;
@@ -75,16 +78,26 @@ let AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     if (option === 'surveyDetalle' || option === 'game') {
+      const sharedProperties = { position: 'fixed', right: '0', bottom: '0', width: '170px' };
+
       setVideoStyles({
-        zIndex: '90000',
-        position: 'fixed',
-        right: '0',
-        bottom: '0',
-        width: '170px',
+        ...sharedProperties,
+        zIndex: '100',
+
         transition: '300ms',
+      });
+
+      setVideoButtonStyles({
+        ...sharedProperties,
+        zIndex: '101',
+
+        display: 'block',
+        height: '96px',
+        bottom: '27px',
       });
     } else {
       setVideoStyles({ width: '100%', height: '450px', transition: '300ms' });
+      setVideoButtonStyles({ display: 'none' });
     }
   }, [option]);
   function callback(key) {
@@ -258,10 +271,10 @@ let AgendaActividadDetalle = (props) => {
                     }}>
                     <Col>
                       <Row style={{ paddingTop: '4px' }}>
-                        <Col xs={12} xs={12} md={24} xl={24}>
+                        <Col xs={12} md={24} xl={24}>
                           <CalendarOutlined /> {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
                         </Col>
-                        <Col xs={12} xs={12} md={24} xl={24}>
+                        <Col xs={12} md={24} xl={24}>
                           {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
                           {Moment(currentActivity.datetime_end).format('h:mm a')}
                         </Col>
@@ -288,15 +301,16 @@ let AgendaActividadDetalle = (props) => {
                 // option !== 'games' &&
                 platform !== '' &&
                 platform !== null && (
-                  <iframe
-                    src={getMeetingPath(platform)}
-                    frameBorder='0'
-                    allow='autoplay; fullscreen; camera *;microphone *'
-                    allowFullScreen
-                    allowusermedia
-                    style={videoStyles}
-                    //style={conferenceStyles}
-                  ></iframe>
+                  <>
+                    <iframe
+                      src={getMeetingPath(platform)}
+                      frameBorder='0'
+                      allow='autoplay; fullscreen; camera *;microphone *'
+                      allowFullScreen
+                      allowusermedia
+                      style={videoStyles}></iframe>
+                    <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
+                  </>
                 )}
 
               {option == 'surveyDetalle' && (
