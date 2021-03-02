@@ -45,18 +45,18 @@ let AgendaActividadDetalle = (props) => {
   const [contentDisplayed, setContentDisplayed] = useState('');
   const intl = useIntl();
   const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
-  const [currentSurvey, setcurrentSurvey] = useState(null);
 
   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
   const [videoStyles, setVideoStyles] = useState(null);
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
 
+  // Estado del espacio virtual
+  const [stateSpace, setStateSpace] = useState(true);
+
   const [activeTab, setActiveTab] = useState('description');
   let option = props.option;
 
   let eventInfo = props.eventInfo;
-
-  const [tabSel, settabSel] = useState('description');
 
   useEffect(() => {
     return () => {
@@ -74,6 +74,45 @@ let AgendaActividadDetalle = (props) => {
       }
     };
     checkContentToDisplay();
+  }, [platform, meeting_id]);
+
+  useEffect(() => {
+    if (meeting_id === null && platform === null) return;
+
+    const listeningSpaceRoom = async () => {
+      const { eventInfo } = props;
+
+      return new Promise((resolve, reject) => {
+        firestore
+          .collection('events')
+          .doc(eventInfo._id)
+          .collection('activities')
+          .where('meeting_id', '==', meeting_id)
+          .where('platform', '==', platform)
+          .onSnapshot((result) => {
+            const activitiesSpace = [];
+            result.forEach(function(doc) {
+              if (doc.exists) {
+                const response = doc.data();
+                activitiesSpace.push(response);
+              }
+            });
+
+            const openActivities = activitiesSpace.filter(
+              (activity) => activity.habilitar_ingreso === 'open_meeting_room'
+            );
+            if (openActivities.length > 0) {
+              console.log('Estado del espacio: ', true);
+              setStateSpace(true);
+            } else {
+              console.log('Estado del espacio: ', false);
+              setStateSpace(false);
+            }
+          });
+      });
+    };
+
+    listeningSpaceRoom();
   }, [platform, meeting_id]);
 
   useEffect(() => {
@@ -118,14 +157,6 @@ let AgendaActividadDetalle = (props) => {
         setPlatform(platform);
       });
   }
-
-  const mountCurrentSurvey = (survey) => {
-    setcurrentSurvey(survey);
-  };
-
-  const unMountCurrentSurvey = () => {
-    setcurrentSurvey(null);
-  };
 
   useEffect(() => {
     (async () => {
@@ -296,7 +327,7 @@ let AgendaActividadDetalle = (props) => {
 
               {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
 
-              {meetingState === 'open_meeting_room' &&
+              {(meetingState === 'open_meeting_room' || stateSpace) &&
                 // option !== 'surveyDetalle' &&
                 // option !== 'games' &&
                 platform !== '' &&
@@ -329,22 +360,25 @@ let AgendaActividadDetalle = (props) => {
 
               {option == 'game' && <Game />}
 
-              {(meetingState === '' || meetingState == null) && option !== 'surveyDetalle' && option !== 'game' && (
-                <div className='column is-centered mediaplayer'>
-                  <img
-                    className='activity_image'
-                    style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
-                    src={
-                      eventInfo.styles.banner_image
-                        ? eventInfo.styles.banner_image
-                        : currentActivity.image
-                        ? currentActivity.image
-                        : image_event
-                    }
-                    alt='Activity'
-                  />
-                </div>
-              )}
+              {(meetingState === '' || meetingState == null) &&
+                stateSpace === false &&
+                option !== 'surveyDetalle' &&
+                option !== 'game' && (
+                  <div className='column is-centered mediaplayer'>
+                    <img
+                      className='activity_image'
+                      style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
+                      src={
+                        eventInfo.styles.banner_image
+                          ? eventInfo.styles.banner_image
+                          : currentActivity.image
+                          ? currentActivity.image
+                          : image_event
+                      }
+                      alt='Activity'
+                    />
+                  </div>
+                )}
 
               {meetingState === 'closed_meeting_room' && option !== 'surveyDetalle' && option !== 'game' && (
                 <div className='column is-centered mediaplayer'>
@@ -740,6 +774,7 @@ const mapStateToProps = (state) => ({
   option: state.stage.data.mainStage,
   userInfo: state.user.data,
   eventInfo: state.event.data,
+  currentActivity: state.stage.data.currentActivity,
 });
 
 const mapDispatchToProps = {
