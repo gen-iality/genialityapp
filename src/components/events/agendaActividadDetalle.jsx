@@ -240,7 +240,7 @@ let AgendaActividadDetalle = (props) => {
               xs={{ order: 3, span: 20 }}
               sm={{ order: 3, span: 20 }}
               md={{ order: 2, span: 18 }}
-              lg={{ order: 2, span: 18 }}
+              lg={{ order: 2, span: 16 }}
               xl={{ order: 2, span: 18 }}
               style={{ display: 'flex' }}>
               <div style={{ padding: '8px' }}>
@@ -254,7 +254,7 @@ let AgendaActividadDetalle = (props) => {
               xs={{ order: 1, span: 24 }}
               sm={{ order: 1, span: 24 }}
               md={{ order: 1, span: 24 }}
-              lg={{ order: 3, span: 4 }}
+              lg={{ order: 3, span: 6 }}
               xl={{ order: 3, span: 4 }}>
               {event._id === '5f99a20378f48e50a571e3b6' ||
               event._id === '5fca68b7e2f869277cfa31b0' ||
@@ -270,9 +270,9 @@ let AgendaActividadDetalle = (props) => {
                       display: 'block',
                     }}>
                     <Col>
-                      <Row style={{ paddingTop: '4px' }}>
+                      <Row style={{ paddingTop: '4px', fontSize:'12px' }}>
                         <Col xs={12} md={24} xl={24}>
-                          <CalendarOutlined /> {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
+                          {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
                         </Col>
                         <Col xs={12} md={24} xl={24}>
                           {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
