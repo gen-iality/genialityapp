@@ -76,16 +76,10 @@ let SocialZone = function(props) {
   );
 
   useEffect(() => {
-    console.log('social zone props ************', props);
-  }, []);
-
-  useEffect(() => {
     const fetchData = async () => {
       const user = await getCurrentUser();
       setCurrentUser(user);
-      console.log('currentUser', currentUser);
       setcurrentTab('' + tab);
-      console.log('TAB=>' + tab);
 
       props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
     };
@@ -95,12 +89,10 @@ let SocialZone = function(props) {
   //Cargar la lista de chats de una persona
   useEffect(() => {
     if (!event_id || !currentUser) return;
-    console.log('Corriendo carga de chats');
 
     firestore
       .collection('eventchats/' + event_id + '/userchats/' + currentUser.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
-        console.log('cargando lista de chats');
         let list = [];
         let data;
         let totalNewMessages = 0;
@@ -115,15 +107,11 @@ let SocialZone = function(props) {
         setTotalNewMessages(totalNewMessages);
 
         setavailableChats(list);
-
-        console.log('Termianndo carga de chats', list);
       });
   }, [event_id, currentUser]);
 
   useEffect(() => {
-    console.log('event_id', event_id);
     if (!event_id) return;
-    console.log('datafirebase Corriendo carga de _event_attendees');
 
     let colletion_name = event_id + '_event_attendees';
     let attendee;
@@ -135,7 +123,6 @@ let SocialZone = function(props) {
         let localattendee = attendeeList[attendee.user.uid] || {};
         list[attendee.user.uid] = { ...localattendee, ...attendee };
       });
-      console.log('datafirebase del firestore', list);
       setAttendeeList(list);
       //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
     });

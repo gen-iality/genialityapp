@@ -5,7 +5,7 @@ import Moment from 'moment';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
 import API, { EventsApi, SurveysApi } from '../../helpers/request';
-import { PageHeader, Row, Col, Button, List, Avatar, Card, Tabs, Comment, Empty } from 'antd';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Empty } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
@@ -14,18 +14,10 @@ import RootPage from './surveys/rootPage';
 import * as StageActions from '../../redux/stage/actions';
 import * as SurveyActions from '../../redux/survey/actions';
 import Game from './game';
-import styles from './agendaActividadDetalle.module.css';
 import EnVivo from '../../EnVivo.svg';
-import {
-  CaretRightOutlined,
-  CheckCircleOutlined,
-  CommentOutlined,
-  LoadingOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  CalendarOutlined,
-  ClockCircleOutlined,
-} from '@ant-design/icons';
+import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined, CalendarOutlined } from '@ant-design/icons';
+import SurveyList from '../events/surveys/surveyList';
+import SurveyDetail from '../events/surveys/surveyDetail';
 
 const { TabPane } = Tabs;
 
@@ -49,6 +41,9 @@ let AgendaActividadDetalle = (props) => {
   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
   const [videoStyles, setVideoStyles] = useState(null);
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
+
+  // Array que contiene las actividades del espacio (que comparten el mismo meeting_id y platform)
+  const [activitiesSpace, setActivitiesSpace] = useState([]);
 
   // Estado del espacio virtual
   const [stateSpace, setStateSpace] = useState(true);
@@ -77,43 +72,43 @@ let AgendaActividadDetalle = (props) => {
   }, [platform, meeting_id]);
 
   useEffect(() => {
-    if (meeting_id === null && platform === null) return;
-
-    const listeningSpaceRoom = async () => {
+    async function listeningSpaceRoom() {
       const { eventInfo } = props;
 
-      return new Promise((resolve, reject) => {
-        firestore
-          .collection('events')
-          .doc(eventInfo._id)
-          .collection('activities')
-          .where('meeting_id', '==', meeting_id)
-          .where('platform', '==', platform)
-          .onSnapshot((result) => {
-            const activitiesSpace = [];
-            result.forEach(function(doc) {
-              if (doc.exists) {
-                const response = doc.data();
-                activitiesSpace.push(response);
-              }
-            });
-
-            const openActivities = activitiesSpace.filter(
-              (activity) => activity.habilitar_ingreso === 'open_meeting_room'
-            );
-            if (openActivities.length > 0) {
-              console.log('Estado del espacio: ', true);
-              setStateSpace(true);
-            } else {
-              console.log('Estado del espacio: ', false);
-              setStateSpace(false);
+      if (meeting_id === null || platform === null) return false;
+      firestore
+        .collection('events')
+        .doc(eventInfo._id)
+        .collection('activities')
+        .where('meeting_id', '==', meeting_id)
+        .where('platform', '==', platform)
+        .onSnapshot((snapshot) => {
+          const list = [];
+          snapshot.forEach(function(doc) {
+            if (doc.exists) {
+              const response = doc.data();
+              list.push(response);
             }
           });
-      });
-    };
 
-    listeningSpaceRoom();
-  }, [platform, meeting_id]);
+          setActivitiesSpace(list);
+        });
+    }
+
+    (async () => {
+      await listeningSpaceRoom();
+    })();
+  }, [meeting_id, platform]);
+
+  useEffect(() => {
+    const openActivities = activitiesSpace.filter((activity) => activity.habilitar_ingreso === 'open_meeting_room');
+
+    if (openActivities.length > 0) {
+      setStateSpace(true);
+    } else {
+      setStateSpace(false);
+    }
+  }, [activitiesSpace]);
 
   useEffect(() => {
     if (option === 'surveyDetalle' || option === 'game') {
@@ -143,26 +138,25 @@ let AgendaActividadDetalle = (props) => {
     setActiveTab(key);
   }
 
-  async function listeningStateMeetingRoom(event_id, activity_id) {
-    firestore
-      .collection('events')
-      .doc(event_id)
-      .collection('activities')
-      .doc(activity_id)
-      .onSnapshot((infoActivity) => {
-        if (!infoActivity.exists) return;
-        const { habilitar_ingreso, meeting_id, platform } = infoActivity.data();
-        setMeetingState(habilitar_ingreso);
-        setMeeting_id(meeting_id);
-        setPlatform(platform);
-      });
-  }
-
   useEffect(() => {
+    async function listeningStateMeetingRoom(event_id, activity_id) {
+      firestore
+        .collection('events')
+        .doc(event_id)
+        .collection('activities')
+        .doc(activity_id)
+        .onSnapshot((infoActivity) => {
+          if (!infoActivity.exists) return;
+          const { habilitar_ingreso, meeting_id, platform } = infoActivity.data();
+          setMeeting_id(meeting_id);
+          setPlatform(platform);
+          setMeetingState(habilitar_ingreso);
+        });
+    }
     (async () => {
       //Id del evento
 
-      var id = props.match.params.event;
+      var id = props.eventInfo._id;
       const event = await EventsApi.landingEvent(id);
       setEvent(event);
 
@@ -198,7 +192,7 @@ let AgendaActividadDetalle = (props) => {
       }
       orderHost();
     })();
-  }, [props.match.params.event, props.currentActivity]);
+  }, [props.eventInfo._id, props.currentActivity]);
 
   async function getSpeakers(idSpeaker) {
     setIdSpeaker(idSpeaker);
@@ -213,7 +207,7 @@ let AgendaActividadDetalle = (props) => {
     }
   };
 
-  const { currentActivity, gotoActivity, toggleConference, image_event } = props;
+  const { currentActivity, image_event } = props;
 
   return (
     <div className='is-centered'>
@@ -234,14 +228,14 @@ let AgendaActividadDetalle = (props) => {
               xl={{ order: 1, span: 2 }}
               style={{ padding: '4px' }}>
               <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
-                {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
+                {meetingState === 'ended_meeting_room' && currentActivity.video ? (
+                  <CaretRightOutlined style={{ fontSize: '30px' }} />
+                ) : meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
                   <CheckCircleOutlined style={{ fontSize: '30px' }} />
                 ) : meetingState === '' || meetingState == null ? (
                   <></>
                 ) : meetingState === 'closed_meeting_room' ? (
                   <LoadingOutlined style={{ fontSize: '30px' }} />
-                ) : meetingState === 'recorded_meeting_room' && currentActivity.video ? (
-                  <CaretRightOutlined style={{ fontSize: '30px' }} />
                 ) : meetingState === 'open_meeting_room' ? (
                   <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
                 ) : (
@@ -256,12 +250,12 @@ let AgendaActividadDetalle = (props) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                {meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
+                {meetingState === 'ended_meeting_room' && currentActivity.video
+                  ? 'Grabado'
+                  : meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
                   ? 'Terminada'
                   : meetingState === 'closed_meeting_room'
                   ? 'Por iniciar'
-                  : meetingState === 'recorded_meeting_room' && currentActivity.video
-                  ? 'Grabado'
                   : meetingState === 'open_meeting_room'
                   ? 'En vivo'
                   : ''}
@@ -380,25 +374,29 @@ let AgendaActividadDetalle = (props) => {
                   </div>
                 )}
 
-              {meetingState === 'closed_meeting_room' && option !== 'surveyDetalle' && option !== 'game' && (
-                <div className='column is-centered mediaplayer'>
-                  <img
-                    className='activity_image'
-                    style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
-                    src={
-                      eventInfo.styles.banner_image
-                        ? eventInfo.styles.banner_image
-                        : currentActivity.image
-                        ? currentActivity.image
-                        : image_event
-                    }
-                    alt='Activity'
-                  />
-                </div>
-              )}
+              {meetingState === 'closed_meeting_room' &&
+                option !== 'surveyDetalle' &&
+                option !== 'game' &&
+                stateSpace === false && (
+                  <div className='column is-centered mediaplayer'>
+                    <img
+                      className='activity_image'
+                      style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
+                      src={
+                        eventInfo.styles.banner_image
+                          ? eventInfo.styles.banner_image
+                          : currentActivity.image
+                          ? currentActivity.image
+                          : image_event
+                      }
+                      alt='Activity'
+                    />
+                  </div>
+                )}
 
-              {meetingState === 'recorded_meeting_room' &&
+              {meetingState === 'ended_meeting_room' &&
               currentActivity.video &&
+              stateSpace === false &&
               option !== 'surveyDetalle' &&
               option !== 'game' ? (
                 <div className='column is-centered mediaplayer'>
@@ -415,8 +413,9 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               ) : (
                 <>
-                  {(meetingState === 'ended_meeting_room' || meetingState === 'recorded_meeting_room') &&
+                  {meetingState === 'ended_meeting_room' &&
                     (currentActivity.image || image_event) &&
+                    stateSpace === false &&
                     option !== 'surveyDetalle' &&
                     option !== 'game' && (
                       <div>
@@ -691,6 +690,14 @@ let AgendaActividadDetalle = (props) => {
                   )}
                 </TabPane>
               }
+              <TabPane
+                tab={
+                  <>
+                    <p style={{ marginBottom: '0px' }}>Encuestas</p>
+                  </>
+                }>
+                {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
+              </TabPane>
             </Tabs>
 
             {/* <div>
@@ -775,6 +782,7 @@ const mapStateToProps = (state) => ({
   userInfo: state.user.data,
   eventInfo: state.event.data,
   currentActivity: state.stage.data.currentActivity,
+  currentSurvey: state.survey.data.currentSurvey,
 });
 
 const mapDispatchToProps = {
