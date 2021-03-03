@@ -117,13 +117,13 @@ let AgendaActividadDetalle = (props) => {
       setVideoStyles({
         ...sharedProperties,
         zIndex: '100',
-
         transition: '300ms',
       });
 
       setVideoButtonStyles({
         ...sharedProperties,
         zIndex: '101',
+        cursor: 'pointer',
 
         display: 'block',
         height: '96px',
@@ -134,8 +134,13 @@ let AgendaActividadDetalle = (props) => {
       setVideoButtonStyles({ display: 'none' });
     }
   }, [option]);
-  function callback(key) {
-    setActiveTab(key);
+
+  function handleChangeLowerTabs(tab) {
+    setActiveTab(tab);
+
+    if (tab === 'games') {
+      props.setMainStage('game');
+    }
   }
 
   useEffect(() => {
@@ -589,7 +594,7 @@ let AgendaActividadDetalle = (props) => {
               </Row>
             )}
 
-            <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={callback}>
+            <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={handleChangeLowerTabs}>
               {
                 <TabPane
                   tab={
@@ -698,6 +703,7 @@ let AgendaActividadDetalle = (props) => {
                 }>
                 {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
               </TabPane>
+              <TabPane className='asistente-survey-list' tab='Juegos' key='games'></TabPane>
             </Tabs>
 
             {/* <div>
