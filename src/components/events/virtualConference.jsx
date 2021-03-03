@@ -82,8 +82,11 @@ class VirtualConference extends Component {
 
   async componentDidMount() {
     if (!this.props.event) return;
+
     let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
+
     this.setState({ infoAgendaArr: filteredAgenda });
+    //this.listeningStateMeetingRoom;
   }
 
   async componentDidUpdate(prevProps) {
@@ -97,14 +100,15 @@ class VirtualConference extends Component {
 
     let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
     this.setState(
-      { event: this.props.event, usuarioRegistrado: this.props.usuarioRegistrado, infoAgendaArr: filteredAgenda },
-      this.listeningStateMeetingRoom
+      { event: this.props.event, usuarioRegistrado: this.props.usuarioRegistrado, infoAgendaArr: filteredAgenda }
+      // this.listeningStateMeetingRoom
     );
   }
 
-  listeningStateMeetingRoom = () => {
-    let { infoAgendaArr } = this.state;
-    infoAgendaArr.forEach((activity, index, arr) => {
+  listeningStateMeetingRoom = (infoAgenda) => {
+    console.log('AGENDA INFO');
+    console.log(infoAgenda);
+    infoAgenda.forEach((activity, index, arr) => {
       firestore
         .collection('events')
         .doc(this.props.event._id)
@@ -112,8 +116,8 @@ class VirtualConference extends Component {
         .doc(activity._id)
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
-          let { habilitar_ingreso, isPublished } = infoActivity.data();
-          let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished };
+          let { habilitar_ingreso, isPublished, meeting_id, platform } = infoActivity.data();
+          let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id, platform };
 
           arr[index] = updatedActivityInfo;
 
@@ -129,20 +133,26 @@ class VirtualConference extends Component {
                 arr[index] = updatedActivityInfo;
                 this.setState({ infoAgendaArr: arr });
               });
+            this.setState({ infoAgendaArr: arr });
           });
-          this.setState({ infoAgendaArr: arr });
         });
     });
   };
 
   async filterVirtualActivities(event_id) {
     let infoAgendaArr = [];
+
     if (!event_id) return infoAgendaArr;
     const infoAgenda = await AgendaApi.byEvent(event_id);
+    console.log('ACTIVIDADES 1');
+    console.log(infoAgenda.data);
+    await this.listeningStateMeetingRoom(infoAgenda.data);
+    console.log('ACTIVIDADES RESULTANTE');
+    console.log(this.state.infoAgendaArr);
 
     //Mostramos solamente las conferencias que tengan una sala virtual asignada
-    for (const prop in infoAgenda.data) {
-      if (infoAgenda.data[prop].meeting_id || infoAgenda.data[prop].vimeo_id) {
+    for (const prop in this.stateinfoAgendaArr) {
+      if (infoAgenda.data[prop].meeting_id) {
         infoAgendaArr.push(infoAgenda.data[prop]);
       }
     }

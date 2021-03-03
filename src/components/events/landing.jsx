@@ -5,6 +5,8 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as eventActions from '../../redux/event/actions';
 import * as stageActions from '../../redux/stage/actions';
+import * as notificationsActions from '../../redux/notifications/actions';
+import { message } from 'antd';
 
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -56,6 +58,7 @@ import UserLogin from './UserLoginContainer';
 import Partners from './Partners';
 import SocialZone from '../../components/socialZone/socialZone';
 import { firestore } from '../../helpers/firebase';
+import { AgendaApi } from '../../helpers/request';
 
 import {
   // BrowserView,
@@ -63,9 +66,11 @@ import {
   // isBrowser,
   isMobile,
 } from 'react-device-detect';
+import { cosh } from 'core-js/fn/math';
 
 const { setEventData } = eventActions;
 const { gotoActivity, setMainStage } = stageActions;
+const { setNotification } = notificationsActions;
 
 const { Content, Sider } = Layout;
 Moment.locale('es');
@@ -85,6 +90,8 @@ const imageCenter = {
   margin: '0 auto',
   display: 'block',
 };
+
+let notify = false;
 
 class Landing extends Component {
   constructor(props) {
@@ -125,6 +132,7 @@ class Landing extends Component {
       tabSelected: -1,
       option: 'N/A',
       totalNewMessages: 0,
+      activitiesAgenda: [],
       //fin Integración con encuestas
     };
     this.showLanding = this.showLanding.bind(this);
@@ -192,6 +200,13 @@ class Landing extends Component {
         });
       });
   };
+
+  obtenerNombreActivity(activityID) {
+    const act = this.state.activitiesAgenda.filter((ac) => ac._id == activityID);
+    console.log('ACTIVIDAD SELECTED');
+    console.log(act);
+    return act[0].name;
+  }
 
   toggle = () => {
     this.setState({
@@ -480,6 +495,40 @@ class Landing extends Component {
 
   async componentDidMount() {
     await this.mountSections();
+    const infoAgenda = await AgendaApi.byEvent(this.state.event._id);
+
+    this.setState({
+      activitiesAgenda: infoAgenda.data,
+    });
+
+    firestore
+      .collection('events')
+      .doc(this.state.event._id)
+      .collection('activities')
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.docChanges().forEach((change) => {
+          if (notify && change.doc.data().habilitar_ingreso == 'open_meeting_room') {
+            this.props.setNotification({
+              message: this.obtenerNombreActivity(change.doc.id) + ' está en vivo..',
+              type: 'warning',
+            });
+          }
+          if (notify && change.doc.data().habilitar_ingreso == 'ended_meeting_room') {
+            this.props.setNotification({
+              message: this.obtenerNombreActivity(change.doc.id) + ' ha terminado..',
+              type: 'warning',
+            });
+          }
+          if (notify && change.doc.data().habilitar_ingreso == 'closed_meeting_room') {
+            this.props.setNotification({
+              message: this.obtenerNombreActivity(change.doc.id) + ' está por iniciar',
+              type: 'warning',
+            });
+          }
+        });
+        this.mountSections();
+        notify = true;
+      });
   }
 
   firebaseUI = () => {
@@ -640,6 +689,21 @@ class Landing extends Component {
     this.setState({ currentSurvey: null });
   };
 
+  openMessage = () => {
+    let key = 'updatable';
+    if (this.props.viewNotification.type == 'success') {
+      message
+        .success({ content: this.props.viewNotification.message, key, duration: 5 })
+        .then(() => this.props.setNotification({ message: null, type: null }));
+    } else if (this.props.viewNotification.type == 'warning') {
+      message
+        .warning({ content: this.props.viewNotification.message, key, duration: 5 })
+        .then(() => this.props.setNotification({ message: null, type: null }));
+    }
+
+    // message.success({ content: 'Loaded!', key, duration: 2 });
+  };
+
   // End methods for modal private activities
 
   render() {
@@ -656,6 +720,7 @@ class Landing extends Component {
 
     return (
       <section className='section landing' style={{ backgroundColor: this.state.color, height: '100%' }}>
+        {this.props.viewNotification.message != null && this.openMessage()}
         {this.state.showConfirm && (
           <div className='notification is-success'>
             <button
@@ -990,11 +1055,13 @@ const mapStateToProps = (state) => ({
   loginInfo: state.user.data,
   eventInfo: state.event.data,
   currentActivity: state.stage.data.currentActivity,
+  viewNotification: state.notifications.data,
 });
 
 const mapDispatchToProps = {
   setEventData,
   gotoActivity,
+  setNotification,
   setMainStage,
 };
 
