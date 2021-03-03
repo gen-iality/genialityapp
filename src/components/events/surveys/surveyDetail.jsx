@@ -4,6 +4,7 @@ import { Card, Button } from 'antd';
 import { unsetCurrentSurvey } from '../../../redux/survey/actions';
 import { setMainStage } from '../../../redux/stage/actions';
 import RankingTrivia from './rankingTrivia';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 function SurveyDetail(props) {
   const handleClick = () => {
@@ -17,7 +18,14 @@ function SurveyDetail(props) {
 
   return (
     <Card>
-      <Button onClick={handleClick}>Volver al listado de encuestas</Button>
+      <Button
+        style={{ backgroundColor: '#1cdcb7', color: '#ffffff' }}
+        size='large'
+        icon={<ArrowLeftOutlined />}
+        block
+        onClick={handleClick}>
+        Volver al listado de encuestas
+      </Button>
       {hasRanking && <RankingTrivia />}
     </Card>
   );
