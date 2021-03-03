@@ -753,6 +753,7 @@ class Landing extends Component {
                               user={currentUser}
                               itemsMenu={this.state.event.itemsMenu}
                               showSection={this.showSection}
+                              styleText={event.styles && event.styles.textMenu ? event.styles.textMenu : '#222222'}
                             />
                           </Drawer>
 

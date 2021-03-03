@@ -604,7 +604,11 @@ export default ({
             <Result
               status='success'
               title={intl.formatMessage({ id: 'registration.message.success' })}
-              subTitle={intl.formatMessage({ id: 'registration.message.success.subtitle' })}>
+              subTitle={
+                <h2 style={{ fontSize: '20px' }}>
+                  {intl.formatMessage({ id: 'registration.message.success.subtitle' })}
+                </h2>
+              }>
               {loggedurl && (
                 <a className='ant-btn  ant-btn-primary ant-btn-lg' href={loggedurl}>
                   {eventId == '5fca68b7e2f869277cfa31b0' || eventId == '5f99a20378f48e50a571e3b6'

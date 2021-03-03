@@ -133,7 +133,7 @@
     "registration.button.create": "Registrar",
     "registration.button.update": "Actualizar",
     "registration.message.success": "Ha sido registrado exitosamente!",
-    "registration.message.success.subtitle": "Fuiste registrado al evento, revisa tu correo para encontrar el enlace de ingreso.",
+    "registration.message.success.subtitle": "Enviamos un correo electrónico con un enlace para garantizar tu ingreso al evento.",
     "registration.message.policy": "Política de privacidad, términos y condiciones",
     "registration.message.loading": "Registrando usuario",
     "registration.message.created": "Usuario Registrado",
