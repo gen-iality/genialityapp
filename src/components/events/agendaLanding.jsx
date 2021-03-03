@@ -15,6 +15,7 @@ import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space }
 import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';
 import { CalendarOutlined } from '@ant-design/icons';
+import * as notificationsActions from '../../redux/notifications/actions';
 
 let attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
@@ -23,6 +24,9 @@ let attendee_states = {
   ROL_ATTENDEE: '5d7ac3f56b364a4042de9b08', //"rol id";
   STATE_BOOKED: '5b859ed02039276ce2b996f0', //"BOOKED";
 };
+
+let changeStatus = false;
+const { setNotification } = notificationsActions;
 
 class Agenda extends Component {
   constructor(props) {
@@ -711,5 +715,8 @@ class Agenda extends Component {
 const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
 });
+const mapDispatchToProps = {
+  setNotification,
+};
 
-export default connect(mapStateToProps)(Agenda);
+export default connect(mapStateToProps, mapDispatchToProps)(Agenda);
