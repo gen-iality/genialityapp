@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import * as eventActions from '../../redux/event/actions';
 import * as stageActions from '../../redux/stage/actions';
 import * as notificationsActions from '../../redux/notifications/actions';
-import { message } from 'antd';
+import { message, notification } from 'antd';
 
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -75,6 +75,10 @@ const { setNotification } = notificationsActions;
 const { Content, Sider } = Layout;
 Moment.locale('es');
 momentLocalizer();
+
+const close = () => {
+  console.log('Notification was closed. Either the close button was clicked or duration time elapsed.');
+};
 
 const html = document.querySelector('html');
 
@@ -204,8 +208,7 @@ class Landing extends Component {
   obtenerNombreActivity(activityID) {
     const act = this.state.activitiesAgenda.filter((ac) => ac._id == activityID);
     console.log('ACTIVIDAD SELECTED');
-    console.log(act);
-    return act[0].name;
+    return act.length > 0 ? act[0].name : null;
   }
 
   toggle = () => {
@@ -506,27 +509,30 @@ class Landing extends Component {
       .doc(this.state.event._id)
       .collection('activities')
       .onSnapshot((querySnapshot) => {
-        querySnapshot.docChanges().forEach((change) => {
-          if (notify && change.doc.data().habilitar_ingreso == 'open_meeting_room') {
-            this.props.setNotification({
-              message: this.obtenerNombreActivity(change.doc.id) + ' está en vivo..',
-              type: 'warning',
-            });
-          }
-          if (notify && change.doc.data().habilitar_ingreso == 'ended_meeting_room') {
-            this.props.setNotification({
-              message: this.obtenerNombreActivity(change.doc.id) + ' ha terminado..',
-              type: 'warning',
-            });
-          }
-          if (notify && change.doc.data().habilitar_ingreso == 'closed_meeting_room') {
-            this.props.setNotification({
-              message: this.obtenerNombreActivity(change.doc.id) + ' está por iniciar',
-              type: 'warning',
-            });
-          }
-        });
-        this.mountSections();
+        let change = querySnapshot.docChanges()[0];
+        console.log('CHANGE');
+        console.log(change);
+        if (notify && change.doc.data().habilitar_ingreso == 'open_meeting_room') {
+          this.props.setNotification({
+            message: this.obtenerNombreActivity(change.doc.id) + ' está en vivo..',
+            type: 'warning',
+          });
+          //console.log('NOTIFICAION OPEN');
+        } else if (notify && change.doc.data().habilitar_ingreso == 'ended_meeting_room') {
+          this.props.setNotification({
+            message: this.obtenerNombreActivity(change.doc.id) + ' ha terminado..',
+            type: 'warning',
+          });
+          // console.log('NOTIFICAION ENDED');
+        } else if (notify && change.doc.data().habilitar_ingreso == 'closed_meeting_room') {
+          this.props.setNotification({
+            message: this.obtenerNombreActivity(change.doc.id) + ' está por iniciar',
+            type: 'warning',
+          });
+        }
+        // console.log('NOTIFICAION CLOSED');
+
+        //this.mountSections();
         notify = true;
       });
   }
@@ -690,7 +696,20 @@ class Landing extends Component {
   };
 
   openMessage = () => {
-    let key = 'updatable';
+    const key = `open${Date.now()}`;
+    const btn = (
+      <Button type='primary' size='small' onClick={() => notification.close(key)}>
+        Ir a evento
+      </Button>
+    );
+    notification.open({
+      message: 'ACTIVIDADES',
+      description: this.props.viewNotification.message,
+      btn,
+      key,
+      onClose: close,
+    });
+    /*  let key = 'updatable';
     if (this.props.viewNotification.type == 'success') {
       message
         .success({ content: this.props.viewNotification.message, key, duration: 5 })
@@ -699,7 +718,7 @@ class Landing extends Component {
       message
         .warning({ content: this.props.viewNotification.message, key, duration: 5 })
         .then(() => this.props.setNotification({ message: null, type: null }));
-    }
+    }*/
 
     // message.success({ content: 'Loaded!', key, duration: 2 });
   };
