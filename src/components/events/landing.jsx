@@ -6,14 +6,12 @@ import { connect } from 'react-redux';
 import * as eventActions from '../../redux/event/actions';
 import * as stageActions from '../../redux/stage/actions';
 import * as notificationsActions from '../../redux/notifications/actions';
-import { message, notification } from 'antd';
-
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row, Menu, Badge } from 'antd';
+import { Layout, Drawer, Button, Col, Row, Menu, Badge, message, notification } from 'antd';
 import {
   MenuOutlined,
   CommentOutlined,
@@ -21,6 +19,7 @@ import {
   MenuUnfoldOutlined,
   MessageOutlined,
   PieChartOutlined,
+  MessageTwoTone,
 } from '@ant-design/icons';
 
 //custom
@@ -141,6 +140,13 @@ class Landing extends Component {
     };
     this.showLanding = this.showLanding.bind(this);
   }
+
+  openNotificationWithIcon = (type) => {
+    notification[type]({
+      message: 'holap',
+      // description: 'Tienes un nuevo mensaje',
+    });
+  };
 
   monitorNewChatMessages = (event, user) => {
     var self = this;
@@ -307,7 +313,7 @@ class Landing extends Component {
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       eventUsers = []; //await EventsApi.getcurrentUserEventUsers( event._id );
-      this.monitorNewChatMessages(event, user);
+      // this.monitorNewChatMessages(event, user);
     }
 
     const dateFrom = event.datetime_from.split(' ');
@@ -547,6 +553,33 @@ class Landing extends Component {
         //this.mountSections();
         notify = true;
       });
+
+    //codigo para mensajes nuevos
+    let nombreactivouser = this.state.user.names;
+    var self = this;
+    firestore
+      .collection('eventchats/' + this.state.event._id + '/userchats/' + this.state.user.uid + '/' + 'chats/')
+      .onSnapshot(function(querySnapshot) {
+        let data;
+        let totalNewMessages = 0;
+        querySnapshot.forEach((doc) => {
+          data = doc.data();
+          if (data.newMessages) {
+            totalNewMessages += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
+          }
+        });
+
+        let change = querySnapshot.docChanges()[0];
+        console.log('CHANGE');
+        console.log(change.doc.data());
+        nombreactivouser !== change.doc.data().remitente &&
+          change.doc.data().remitente !== null &&
+          totalNewMessages > 0 &&
+          notification.open({
+            description: `Nuevo mensaje de ${change.doc.data().remitente}`,
+            icon: <MessageTwoTone />,
+          });
+      });
   }
 
   firebaseUI = () => {
@@ -734,8 +767,6 @@ class Landing extends Component {
 
     // message.success({ content: 'Loaded!', key, duration: 2 });
   };
-
-  // End methods for modal private activities
 
   render() {
     const {
