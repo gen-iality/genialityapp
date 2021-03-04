@@ -1,9 +1,8 @@
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Row, Badge, Col } from 'antd';
+import { Tabs, Row, Badge, Col } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
 import SurveyList from '../events/surveys/surveyList';
@@ -185,11 +184,11 @@ let SocialZone = function(props) {
           <TabPane
             className='asistente-survey-list'
             tab={
-              <>
+              <Badge dot={props.hasOpenSurveys} size='default'>
                 <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
                   Encuestas
                 </p>
-              </>
+              </Badge>
             }
             key='3'>
             <Row justify='space-between'>
@@ -251,6 +250,7 @@ let SocialZone = function(props) {
 const mapStateToProps = (state) => ({
   mainStage: state.stage.data.mainStage,
   currentSurvey: state.survey.data.currentSurvey,
+  hasOpenSurveys: state.survey.data.hasOpenSurveys,
   currentActivity: state.stage.data.currentActivity,
 });
 

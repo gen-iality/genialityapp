@@ -9,7 +9,7 @@ import * as StageActions from '../../../redux/stage/actions';
 import * as SurveyActions from '../../../redux/survey/actions';
 
 const { setMainStage } = StageActions;
-const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
+const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys } = SurveyActions;
 
 const headStyle = {
   fontWeight: 300,
@@ -43,6 +43,9 @@ class SurveyList extends Component {
       eventSurveys: [], // Todas las encuestas de un evento, este estado va a estar escuchando
       anonymousSurveys: [], // Solo encuestas que permiten usuarios anónimos
       publishedSurveys: [], // Encuestas relacionadas con la actividad + globales para renderizar el listado de encuestas en componente de videoconferencia
+
+      // boolean: Estado de escucha reacciona cuando el listado de encuestas tiene una o mas encuestas abiertas
+      hasOpenSurveys: false,
     };
   }
 
@@ -106,11 +109,22 @@ class SurveyList extends Component {
         });
       }
 
+      const openSurveys = publishedSurveys.filter(
+        (survey) => survey.isOpened && (survey.isOpened == 'true' || survey.isOpened == true)
+      );
+
+      const hasOpenSurveys = openSurveys.length > 0 ? true : false;
+
+      this.props.setHasOpenSurveys(hasOpenSurveys);
+
       this.setState(
-        { publishedSurveys, surveyVisible: publishedSurveys && publishedSurveys.length, loading: true },
+        { publishedSurveys, surveyVisible: publishedSurveys && publishedSurveys.length, loading: true, hasOpenSurveys },
         this.callback
       );
     });
+  };
+  componentWillUnmount = () => {
+    this.props.setHasOpenSurveys(false);
   };
 
   queryMyResponses = async (survey) => {
@@ -290,6 +304,7 @@ const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
+  setHasOpenSurveys,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList);
