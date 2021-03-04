@@ -20,6 +20,9 @@ import {
   MessageOutlined,
   PieChartOutlined,
   MessageTwoTone,
+  WifiOutlined,
+  PlayCircleOutlined,
+  LoadingOutlined,
 } from '@ant-design/icons';
 
 //custom
@@ -74,10 +77,6 @@ const { setNotification } = notificationsActions;
 const { Content, Sider } = Layout;
 Moment.locale('es');
 momentLocalizer();
-
-const close = () => {
-  console.log('Notification was closed. Either the close button was clicked or duration time elapsed.');
-};
 
 const html = document.querySelector('html');
 
@@ -213,8 +212,13 @@ class Landing extends Component {
 
   obtenerNombreActivity(activityID) {
     const act = this.state.activitiesAgenda.filter((ac) => ac._id == activityID);
-    console.log('ACTIVIDAD SELECTED');
-    return act.length > 0 ? act[0].name : null;
+    if (act.length > 0 && act[0] != null) {
+      /* this.setState({
+        currentActivity: act[0],
+      });*/
+    }
+
+    return act.length > 0 ? act[0] : null;
   }
 
   toggle = () => {
@@ -292,6 +296,10 @@ class Landing extends Component {
   mountSections = async () => {
     let eventUser = null;
     let eventUsers = null;
+    this.props.setNotification({
+      message: null,
+      type: null,
+    });
 
     const id = this.props.match.params.event;
 
@@ -516,36 +524,37 @@ class Landing extends Component {
       .collection('activities')
       .onSnapshot((querySnapshot) => {
         let change = querySnapshot.docChanges()[0];
-        console.log('CHANGE');
-        console.log(change);
+        //console.log('CHANGE');
+        //console.log(change);
         if (
           notify &&
           change.doc.data().habilitar_ingreso == 'open_meeting_room' &&
-          this.obtenerNombreActivity(change.doc.id) != null
+          this.obtenerNombreActivity(change.doc.id).name != null
         ) {
           this.props.setNotification({
-            message: this.obtenerNombreActivity(change.doc.id) + ' está en vivo..',
-            type: 'warning',
+            message: this.obtenerNombreActivity(change.doc.id).name + ' está en vivo..',
+            type: 'open',
+            activity: this.obtenerNombreActivity(change.doc.id),
           });
           //console.log('NOTIFICAION OPEN');
         } else if (
           notify &&
           change.doc.data().habilitar_ingreso == 'ended_meeting_room' &&
-          this.obtenerNombreActivity(change.doc.id) != null
+          this.obtenerNombreActivity(change.doc.id).name != null
         ) {
           this.props.setNotification({
-            message: this.obtenerNombreActivity(change.doc.id) + ' ha terminado..',
-            type: 'warning',
+            message: this.obtenerNombreActivity(change.doc.id).name + ' ha terminado..',
+            type: 'ended',
           });
           // console.log('NOTIFICAION ENDED');
         } else if (
           notify &&
           change.doc.data().habilitar_ingreso == 'closed_meeting_room' &&
-          this.obtenerNombreActivity(change.doc.id) != null
+          this.obtenerNombreActivity(change.doc.id).name != null
         ) {
           this.props.setNotification({
-            message: this.obtenerNombreActivity(change.doc.id) + ' está por iniciar',
-            type: 'warning',
+            message: this.obtenerNombreActivity(change.doc.id).name + ' está por iniciar',
+            type: 'close',
           });
         }
         // console.log('NOTIFICAION CLOSED');
@@ -570,7 +579,7 @@ class Landing extends Component {
         });
 
         let change = querySnapshot.docChanges()[0];
-        console.log('CHANGE');
+        //console.log('CHANGE');
         console.log(change.doc.data());
         nombreactivouser !== change.doc.data().remitente &&
           change.doc.data().remitente !== null &&
@@ -648,6 +657,10 @@ class Landing extends Component {
   };
 
   showSection = (section, clean = false) => {
+    this.props.setNotification({
+      message: null,
+      type: null,
+    });
     this.setState({ section, visible: false }, () => this.callbackShowSection(section, clean));
   };
 
@@ -742,18 +755,41 @@ class Landing extends Component {
 
   openMessage = () => {
     const key = `open${Date.now()}`;
-    const btn = (
-      <Button type='primary' size='small' onClick={() => notification.close(key)}>
-        Ir a evento
-      </Button>
-    );
+
     notification.open({
-      message: 'ACTIVIDADES',
-      description: this.props.viewNotification.message,
-      btn,
-      key,
-      onClose: close,
+      description: `${this.props.viewNotification.message}`,
+      icon:
+        this.props.viewNotification.type == 'open' ? (
+          <WifiOutlined />
+        ) : this.props.viewNotification.type == 'closed' ? (
+          <LoadingOutlined />
+        ) : (
+          <PlayCircleOutlined />
+        ),
+      duration: this.props.viewNotification.type == 'open' ? 6 : 3,
+      onClick:
+        this.props.viewNotification.type == 'open'
+          ? () => {
+              if (this.props.viewNotification.type == 'open') {
+                this.props.gotoActivity(this.props.viewNotification.activity);
+                this.props.setNotification({
+                  message: null,
+                  type: null,
+                });
+              }
+
+              //this.showSection('adenda', true);
+              //alert('CLICK A EN VIVO');
+            }
+          : null,
+      onClose: () => {
+        this.props.setNotification({
+          message: null,
+          type: null,
+        });
+      },
     });
+
     /*  let key = 'updatable';
     if (this.props.viewNotification.type == 'success') {
       message
