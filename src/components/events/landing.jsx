@@ -19,6 +19,7 @@ import {
   MenuUnfoldOutlined,
   MessageOutlined,
   PieChartOutlined,
+  MessageTwoTone,
 } from '@ant-design/icons';
 
 //custom
@@ -73,6 +74,10 @@ const { setNotification } = notificationsActions;
 const { Content, Sider } = Layout;
 Moment.locale('es');
 momentLocalizer();
+
+const close = () => {
+  console.log('Notification was closed. Either the close button was clicked or duration time elapsed.');
+};
 
 const html = document.querySelector('html');
 
@@ -209,8 +214,7 @@ class Landing extends Component {
   obtenerNombreActivity(activityID) {
     const act = this.state.activitiesAgenda.filter((ac) => ac._id == activityID);
     console.log('ACTIVIDAD SELECTED');
-    console.log(act);
-    return act[0]?.name;
+    return act.length > 0 ? act[0].name : null;
   }
 
   toggle = () => {
@@ -511,28 +515,58 @@ class Landing extends Component {
       .doc(this.state.event._id)
       .collection('activities')
       .onSnapshot((querySnapshot) => {
-        querySnapshot.docChanges().forEach((change) => {
-          if (notify && change.doc.data().habilitar_ingreso == 'open_meeting_room') {
-            this.props.setNotification({
-              message: this.obtenerNombreActivity(change.doc.id) + ' está en vivo..',
-              type: 'warning',
-            });
-          }
-          if (notify && change.doc.data().habilitar_ingreso == 'ended_meeting_room') {
-            this.props.setNotification({
-              message: this.obtenerNombreActivity(change.doc.id) + ' ha terminado..',
-              type: 'warning',
-            });
-          }
-          if (notify && change.doc.data().habilitar_ingreso == 'closed_meeting_room') {
-            this.props.setNotification({
-              message: this.obtenerNombreActivity(change.doc.id) + ' está por iniciar',
-              type: 'warning',
-            });
+        let change = querySnapshot.docChanges()[0];
+        console.log('CHANGE');
+        console.log(change);
+        if (notify && change.doc.data().habilitar_ingreso == 'open_meeting_room') {
+          this.props.setNotification({
+            message: this.obtenerNombreActivity(change.doc.id) + ' está en vivo..',
+            type: 'warning',
+          });
+          //console.log('NOTIFICAION OPEN');
+        } else if (notify && change.doc.data().habilitar_ingreso == 'ended_meeting_room') {
+          this.props.setNotification({
+            message: this.obtenerNombreActivity(change.doc.id) + ' ha terminado..',
+            type: 'warning',
+          });
+          // console.log('NOTIFICAION ENDED');
+        } else if (notify && change.doc.data().habilitar_ingreso == 'closed_meeting_room') {
+          this.props.setNotification({
+            message: this.obtenerNombreActivity(change.doc.id) + ' está por iniciar',
+            type: 'warning',
+          });
+        }
+        // console.log('NOTIFICAION CLOSED');
+
+        //this.mountSections();
+        notify = true;
+      });
+
+    //codigo para mensajes nuevos
+    let nombreactivouser = this.state.user.names;
+    var self = this;
+    firestore
+      .collection('eventchats/' + this.state.event._id + '/userchats/' + this.state.user.uid + '/' + 'chats/')
+      .onSnapshot(function(querySnapshot) {
+        let data;
+        let totalNewMessages = 0;
+        querySnapshot.forEach((doc) => {
+          data = doc.data();
+          if (data.newMessages) {
+            totalNewMessages += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
           }
         });
-        this.mountSections();
-        notify = true;
+
+        let change = querySnapshot.docChanges()[0];
+        console.log('CHANGE');
+        console.log(change.doc.data());
+        nombreactivouser !== change.doc.data().remitente &&
+          change.doc.data().remitente !== null &&
+          totalNewMessages > 0 &&
+          notification.open({
+            description: `Nuevo mensaje de ${change.doc.data().remitente}`,
+            icon: <MessageTwoTone />,
+          });
       });
   }
 
@@ -695,17 +729,31 @@ class Landing extends Component {
   };
 
   openMessage = () => {
+    const key = `open${Date.now()}`;
     const btn = (
-      <Button type='primary' size='small'>
-        {this.props.viewNotification.type === 'newmessage' && 'Ir al mensaje'}
+      <Button type='primary' size='small' onClick={() => notification.close(key)}>
+        Ir a evento
       </Button>
     );
     notification.open({
-      message: 'Notification Title',
-      description:
-        'A function will be be called after the notification is closed (automatically after the "duration" time of manually).',
+      message: 'ACTIVIDADES',
+      description: this.props.viewNotification.message,
       btn,
+      key,
+      onClose: close,
     });
+    /*  let key = 'updatable';
+    if (this.props.viewNotification.type == 'success') {
+      message
+        .success({ content: this.props.viewNotification.message, key, duration: 5 })
+        .then(() => this.props.setNotification({ message: null, type: null }));
+    } else if (this.props.viewNotification.type == 'warning') {
+      message
+        .warning({ content: this.props.viewNotification.message, key, duration: 5 })
+        .then(() => this.props.setNotification({ message: null, type: null }));
+    }*/
+
+    // message.success({ content: 'Loaded!', key, duration: 2 });
   };
 
   render() {
