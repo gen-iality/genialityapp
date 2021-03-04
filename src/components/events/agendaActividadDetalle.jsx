@@ -15,7 +15,7 @@ import * as StageActions from '../../redux/stage/actions';
 import * as SurveyActions from '../../redux/survey/actions';
 import Game from './game';
 import EnVivo from '../../EnVivo.svg';
-import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined, CalendarOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 
@@ -230,7 +230,9 @@ let AgendaActividadDetalle = (props) => {
               xl={{ order: 1, span: 2 }}
               style={{ padding: '4px' }}>
               <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
-                {meetingState === 'ended_meeting_room' && currentActivity.video ? (
+                {meetingState === 'open_meeting_room' || stateSpace ? (
+                  <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
+                ) : meetingState === 'ended_meeting_room' && currentActivity.video ? (
                   <CaretRightOutlined style={{ fontSize: '30px' }} />
                 ) : meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
                   <CheckCircleOutlined style={{ fontSize: '30px' }} />
@@ -238,8 +240,6 @@ let AgendaActividadDetalle = (props) => {
                   <></>
                 ) : meetingState === 'closed_meeting_room' ? (
                   <LoadingOutlined style={{ fontSize: '30px' }} />
-                ) : meetingState === 'open_meeting_room' ? (
-                  <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
                 ) : (
                   ''
                 )}
@@ -252,14 +252,14 @@ let AgendaActividadDetalle = (props) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                {meetingState === 'ended_meeting_room' && currentActivity.video
+                {meetingState === 'open_meeting_room' || stateSpace
+                  ? 'En vivo'
+                  : meetingState === 'ended_meeting_room' && currentActivity.video
                   ? 'Grabado'
                   : meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
                   ? 'Terminada'
                   : meetingState === 'closed_meeting_room'
                   ? 'Por iniciar'
-                  : meetingState === 'open_meeting_room'
-                  ? 'En vivo'
                   : ''}
               </Row>
             </Col>
