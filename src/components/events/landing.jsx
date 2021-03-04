@@ -6,14 +6,12 @@ import { connect } from 'react-redux';
 import * as eventActions from '../../redux/event/actions';
 import * as stageActions from '../../redux/stage/actions';
 import * as notificationsActions from '../../redux/notifications/actions';
-import { message } from 'antd';
-
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row, Menu, Badge } from 'antd';
+import { Layout, Drawer, Button, Col, Row, Menu, Badge, message, notification } from 'antd';
 import {
   MenuOutlined,
   CommentOutlined,
@@ -138,6 +136,13 @@ class Landing extends Component {
     this.showLanding = this.showLanding.bind(this);
   }
 
+  openNotificationWithIcon = (type) => {
+    notification[type]({
+      message: 'holap',
+      // description: 'Tienes un nuevo mensaje',
+    });
+  };
+
   monitorNewChatMessages = (event, user) => {
     var self = this;
     firestore
@@ -205,7 +210,7 @@ class Landing extends Component {
     const act = this.state.activitiesAgenda.filter((ac) => ac._id == activityID);
     console.log('ACTIVIDAD SELECTED');
     console.log(act);
-    return act[0].name;
+    return act[0]?.name;
   }
 
   toggle = () => {
@@ -304,7 +309,7 @@ class Landing extends Component {
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       eventUsers = []; //await EventsApi.getcurrentUserEventUsers( event._id );
-      this.monitorNewChatMessages(event, user);
+      // this.monitorNewChatMessages(event, user);
     }
 
     const dateFrom = event.datetime_from.split(' ');
@@ -690,21 +695,18 @@ class Landing extends Component {
   };
 
   openMessage = () => {
-    let key = 'updatable';
-    if (this.props.viewNotification.type == 'success') {
-      message
-        .success({ content: this.props.viewNotification.message, key, duration: 5 })
-        .then(() => this.props.setNotification({ message: null, type: null }));
-    } else if (this.props.viewNotification.type == 'warning') {
-      message
-        .warning({ content: this.props.viewNotification.message, key, duration: 5 })
-        .then(() => this.props.setNotification({ message: null, type: null }));
-    }
-
-    // message.success({ content: 'Loaded!', key, duration: 2 });
+    const btn = (
+      <Button type='primary' size='small'>
+        {this.props.viewNotification.type === 'newmessage' && 'Ir al mensaje'}
+      </Button>
+    );
+    notification.open({
+      message: 'Notification Title',
+      description:
+        'A function will be be called after the notification is closed (automatically after the "duration" time of manually).',
+      btn,
+    });
   };
-
-  // End methods for modal private activities
 
   render() {
     const {
