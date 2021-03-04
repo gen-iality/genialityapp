@@ -512,19 +512,31 @@ class Landing extends Component {
         let change = querySnapshot.docChanges()[0];
         console.log('CHANGE');
         console.log(change);
-        if (notify && change.doc.data().habilitar_ingreso == 'open_meeting_room') {
+        if (
+          notify &&
+          change.doc.data().habilitar_ingreso == 'open_meeting_room' &&
+          this.obtenerNombreActivity(change.doc.id) != null
+        ) {
           this.props.setNotification({
             message: this.obtenerNombreActivity(change.doc.id) + ' está en vivo..',
             type: 'warning',
           });
           //console.log('NOTIFICAION OPEN');
-        } else if (notify && change.doc.data().habilitar_ingreso == 'ended_meeting_room') {
+        } else if (
+          notify &&
+          change.doc.data().habilitar_ingreso == 'ended_meeting_room' &&
+          this.obtenerNombreActivity(change.doc.id) != null
+        ) {
           this.props.setNotification({
             message: this.obtenerNombreActivity(change.doc.id) + ' ha terminado..',
             type: 'warning',
           });
           // console.log('NOTIFICAION ENDED');
-        } else if (notify && change.doc.data().habilitar_ingreso == 'closed_meeting_room') {
+        } else if (
+          notify &&
+          change.doc.data().habilitar_ingreso == 'closed_meeting_room' &&
+          this.obtenerNombreActivity(change.doc.id) != null
+        ) {
           this.props.setNotification({
             message: this.obtenerNombreActivity(change.doc.id) + ' está por iniciar',
             type: 'warning',
