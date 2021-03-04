@@ -18,7 +18,7 @@ const ChatList = (props) => {
   let [usuariofriend, setusuariofriend] = useState(userName);
   const openNotificationWithIcon = (type) => {
     notification[type]({
-      message: `${usuariofriend}   ${userName}`,
+      message: 'holap',
       // description: 'Tienes un nuevo mensaje',
     });
   };
