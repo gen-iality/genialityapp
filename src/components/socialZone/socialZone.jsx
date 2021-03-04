@@ -182,7 +182,16 @@ let SocialZone = function(props) {
 
       {props.currentActivity !== null && (
         <>
-          <TabPane className='asistente-survey-list' tab='Encuestas' key='3'>
+          <TabPane
+            className='asistente-survey-list'
+            tab={
+              <>
+                <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
+                  Encuestas
+                </p>
+              </>
+            }
+            key='3'>
             <Row justify='space-between'>
               <Col span={4}>
                 <ArrowLeftOutlined
@@ -202,7 +211,16 @@ let SocialZone = function(props) {
             </Row>
             {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
           </TabPane>
-          <TabPane className='asistente-survey-list' tab='Juegos' key='4'>
+          <TabPane
+            className='asistente-survey-list'
+            tab={
+              <>
+                <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
+                  Juegos
+                </p>
+              </>
+            }
+            key='4'>
             <Row justify='space-between'>
               <Col span={4}>
                 <ArrowLeftOutlined

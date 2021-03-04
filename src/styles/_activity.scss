@@ -1,12 +1,16 @@
-.lowerTabsDynamic {
+.lowerTabs__mobile-visible {
+  display: none;
+}
+
+.lowerTabs__mobile-hidden {
   display: block;
 }
 
-.upperTabsDynamic {
-}
-
-@media screen and (min-width: $breakpoint-mobile) {
-  .lowerTabsDynamic {
+@media screen and (max-width: $breakpoint-mobile) {
+  .lowerTabs__mobile-visible {
+    display: block;
+  }
+  .lowerTabs__mobile-hidden {
     display: none;
   }
 }

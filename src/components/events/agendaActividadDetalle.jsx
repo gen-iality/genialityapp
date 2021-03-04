@@ -29,12 +29,12 @@ let AgendaActividadDetalle = (props) => {
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
   let [event, setEvent] = useState(false);
   let [idSpeaker, setIdSpeaker] = useState(false);
-  let [showSurvey, setShowSurvey] = useState(false);
   let [orderedHost, setOrderedHost] = useState([]);
   const [meetingState, setMeetingState] = useState(null);
   const [meeting_id, setMeeting_id] = useState(null);
   const [platform, setPlatform] = useState(null);
-  const [contentDisplayed, setContentDisplayed] = useState('');
+  const { eventInfo } = props;
+
   const intl = useIntl();
   const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
 
@@ -51,30 +51,25 @@ let AgendaActividadDetalle = (props) => {
   const [activeTab, setActiveTab] = useState('description');
   let option = props.option;
 
-  let eventInfo = props.eventInfo;
+  //Estado para detección si la vista es para mobile
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
+    mediaQueryMatches();
+    window.addEventListener('resize', mediaQueryMatches);
+
     return () => {
       props.gotoActivity(null);
       props.setMainStage(null);
       props.setCurrentSurvey(null);
       props.setSurveyVisible(false);
+      window.removeEventListener('resize', mediaQueryMatches);
     };
   }, []);
 
   useEffect(() => {
-    const checkContentToDisplay = () => {
-      if (platform !== '' && platform === null && meeting_id !== '' && meeting_id !== null) {
-        setContentDisplayed('videoconference');
-      }
-    };
-    checkContentToDisplay();
-  }, [platform, meeting_id]);
-
-  useEffect(() => {
     async function listeningSpaceRoom() {
-      const { eventInfo } = props;
-
       if (meeting_id === null || platform === null) return false;
       firestore
         .collection('events')
@@ -98,7 +93,7 @@ let AgendaActividadDetalle = (props) => {
     (async () => {
       await listeningSpaceRoom();
     })();
-  }, [meeting_id, platform]);
+  }, [meeting_id, platform, eventInfo]);
 
   useEffect(() => {
     const openActivities = activitiesSpace.filter((activity) => activity.habilitar_ingreso === 'open_meeting_room');
@@ -112,28 +107,36 @@ let AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     if (option === 'surveyDetalle' || option === 'game') {
-      const sharedProperties = { position: 'fixed', right: '0', bottom: '0', width: '170px' };
+      const sharedProperties = {
+        position: 'fixed',
+        right: '0',
+        width: '170px',
+      };
+
+      const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
 
       setVideoStyles({
         ...sharedProperties,
+        ...verticalVideo,
         zIndex: '100',
         transition: '300ms',
       });
 
+      const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
+
       setVideoButtonStyles({
         ...sharedProperties,
+        ...verticalVideoButton,
         zIndex: '101',
         cursor: 'pointer',
-
         display: 'block',
         height: '96px',
-        bottom: '27px',
       });
     } else {
       setVideoStyles({ width: '100%', height: '450px', transition: '300ms' });
       setVideoButtonStyles({ display: 'none' });
     }
-  }, [option]);
+  }, [option, isMobile]);
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
@@ -169,17 +172,6 @@ let AgendaActividadDetalle = (props) => {
 
       try {
         const respuesta = await API.get('api/me/eventusers/event/' + id);
-        let surveysData = await SurveysApi.getAll(event._id);
-        const currentActivityId = props.currentActivity._id;
-
-        if (surveysData.data.length > 0) {
-          //Si hay una actividad que haga match con el listado de encuestas entonces habilitamos el componente survey
-          surveysData.data.map((item) => {
-            if (item.activity_id === currentActivityId) {
-              setShowSurvey(true);
-            }
-          });
-        }
 
         if (respuesta.data && respuesta.data.data && respuesta.data.data.length) {
           setUsuarioRegistrado(true);
@@ -210,6 +202,11 @@ let AgendaActividadDetalle = (props) => {
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
     }
+  };
+
+  const mediaQueryMatches = () => {
+    let screenWidth = window.innerWidth;
+    screenWidth <= 768 ? setIsMobile(true) : setIsMobile(false);
   };
 
   const { currentActivity, image_event } = props;
@@ -699,7 +696,7 @@ let AgendaActividadDetalle = (props) => {
               <TabPane
                 tab={
                   <>
-                    <p style={{ marginBottom: '0px' }} className='lowerTabsDynamic'>
+                    <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-visible'>
                       Encuestas
                     </p>
                   </>
@@ -710,7 +707,7 @@ let AgendaActividadDetalle = (props) => {
               <TabPane
                 tab={
                   <>
-                    <p className='lowerTabsDynamic' style={{ marginBottom: '0px' }}>
+                    <p className='lowerTabs__mobile-visible' style={{ marginBottom: '0px' }}>
                       Juegos
                     </p>{' '}
                   </>
