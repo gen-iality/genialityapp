@@ -1,0 +1,12 @@
+.lowerTabsDynamic {
+  display: block;
+}
+
+.upperTabsDynamic {
+}
+
+@media screen and (min-width: $breakpoint-mobile) {
+  .lowerTabsDynamic {
+    display: none;
+  }
+}

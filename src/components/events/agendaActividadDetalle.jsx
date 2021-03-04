@@ -300,7 +300,7 @@ let AgendaActividadDetalle = (props) => {
                       display: 'block',
                     }}>
                     <Col>
-                      <Row style={{ paddingTop: '4px', fontSize:'12px' }}>
+                      <Row style={{ paddingTop: '4px', fontSize: '12px' }}>
                         <Col xs={12} md={24} xl={24}>
                           {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
                         </Col>
@@ -695,15 +695,27 @@ let AgendaActividadDetalle = (props) => {
                   )}
                 </TabPane>
               }
+
               <TabPane
                 tab={
                   <>
-                    <p style={{ marginBottom: '0px' }}>Encuestas</p>
+                    <p style={{ marginBottom: '0px' }} className='lowerTabsDynamic'>
+                      Encuestas
+                    </p>
                   </>
                 }>
                 {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
               </TabPane>
-              <TabPane className='asistente-survey-list' tab='Juegos' key='games'></TabPane>
+
+              <TabPane
+                tab={
+                  <>
+                    <p className='lowerTabsDynamic' style={{ marginBottom: '0px' }}>
+                      Juegos
+                    </p>{' '}
+                  </>
+                }
+                key='games'></TabPane>
             </Tabs>
 
             {/* <div>
