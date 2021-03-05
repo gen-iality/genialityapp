@@ -388,6 +388,7 @@ export const listenSurveysData = (event, activity, currentUser, callback) => {
   let $query = firestore.collection('surveys');
 
   //Le agregamos el filtro por evento
+  
   if (event && event._id) {
     $query = $query.where('eventId', '==', event._id);
   }
