@@ -23,6 +23,7 @@ import {
   WifiOutlined,
   PlayCircleOutlined,
   LoadingOutlined,
+  DiffOutlined
 } from '@ant-design/icons';
 
 //custom
@@ -61,6 +62,8 @@ import Partners from './Partners';
 import SocialZone from '../../components/socialZone/socialZone';
 import { firestore } from '../../helpers/firebase';
 import { AgendaApi } from '../../helpers/request';
+import * as SurveyActions from '../../redux/survey/actions';
+
 
 import {
   // BrowserView,
@@ -73,6 +76,7 @@ import { cosh } from 'core-js/fn/math';
 const { setEventData } = eventActions;
 const { gotoActivity, setMainStage } = stageActions;
 const { setNotification } = notificationsActions;
+const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
 const { Content, Sider } = Layout;
 Moment.locale('es');
@@ -94,6 +98,7 @@ const imageCenter = {
 };
 
 let notify = false;
+let notifySurvey=false;
 
 class Landing extends Component {
   constructor(props) {
@@ -135,10 +140,59 @@ class Landing extends Component {
       option: 'N/A',
       totalNewMessages: 0,
       activitiesAgenda: [],
+      publishedSurveys:[]
       //fin Integración con encuestas
     };
     this.showLanding = this.showLanding.bind(this);
   }
+
+  //METODO PARA OBTENER ENCUESTAS
+  listenSurveysData = async () => {
+    const { event, activity } = this.props;
+
+    //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
+    let $query = firestore.collection('surveys');
+
+    //Le agregamos el filtro por evento
+    if (event && event._id) {
+      $query = $query.where('eventId', '==', event._id);
+    }
+
+    $query.onSnapshot(async (surveySnapShot) => {
+      // Almacena el Snapshot de todas las encuestas del evento
+
+      const eventSurveys = [];
+      let publishedSurveys = [];
+
+      if (surveySnapShot.size === 0) {
+        this.setState({ selectedSurvey: {}, surveyVisible: false, publishedSurveys: [] });
+        return;
+      }
+
+      surveySnapShot.forEach(function(doc) {
+        eventSurveys.push({ ...doc.data(), _id: doc.id });
+      });
+
+      // Listado de encuestas publicadas del evento
+      publishedSurveys = eventSurveys.filter(
+        (survey) =>
+          (survey.isPublished === 'true' || survey.isPublished === true) &&
+          ((activity && survey.activity_id === activity._id) || survey.isGlobal === 'true')
+      );
+
+      if (this.state.user &&Object.keys(this.state.user).length === 0) {
+        publishedSurveys = publishedSurveys.filter((item) => {
+          return item.allow_anonymous_answers !== 'false';
+        });
+      }
+
+      this.setState(
+        { publishedSurveys },        
+      );
+      console.log("SURVEYS ACTUALIZADOS")
+      console.log(publishedSurveys)
+    });
+  };
 
   openNotificationWithIcon = (type) => {
     notification[type]({
@@ -210,14 +264,11 @@ class Landing extends Component {
       });
   };
 
+  // OBTIENE EL NOMBRE DE LA ACTIVIDAD// SE CAMBIO PARA OBTENER LA ACTIVIDAD Y PODER REDIRIGIR CUANDO LA ACTIVIDAD ESTA EN VIVO(NOTIFICATIONS)
   obtenerNombreActivity(activityID) {
+    //console.log("ACTIVITY NOMBRE ID=>"+activityID)
     const act = this.state.activitiesAgenda.filter((ac) => ac._id == activityID);
-    if (act.length > 0 && act[0] != null) {
-      /* this.setState({
-        currentActivity: act[0],
-      });*/
-    }
-
+    //console.log(act)
     return act.length > 0 ? act[0] : null;
   }
 
@@ -513,10 +564,15 @@ class Landing extends Component {
   async componentDidMount() {
     await this.mountSections();
     const infoAgenda = await AgendaApi.byEvent(this.state.event._id);
+   // await this.listenSurveysData()
 
     this.setState({
       activitiesAgenda: infoAgenda.data,
     });
+
+    //LISTENER DE ACTIVITIES  STATUS  NOTIFICATIONS POR EVENT
+
+
 
     firestore
       .collection('events')
@@ -564,10 +620,10 @@ class Landing extends Component {
       });
 
     //codigo para mensajes nuevos
-    let nombreactivouser = this.state.user.names;
+    let nombreactivouser = this.state.user?.names;
     var self = this;
     firestore
-      .collection('eventchats/' + this.state.event._id + '/userchats/' + this.state.user.uid + '/' + 'chats/')
+      .collection('eventchats/' + this.state.event._id + '/userchats/' + this.state.user?.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
         let data;
         let totalNewMessages = 0;
@@ -580,15 +636,47 @@ class Landing extends Component {
 
         let change = querySnapshot.docChanges()[0];
         //console.log('CHANGE');
-        console.log(change.doc.data());
-        nombreactivouser !== change.doc.data().remitente &&
+        //console.log(change.doc.data());
+        if(change){
+          nombreactivouser !== change.doc.data().remitente &&
           change.doc.data().remitente !== null &&
           totalNewMessages > 0 &&
           notification.open({
             description: `Nuevo mensaje de ${change.doc.data().remitente}`,
             icon: <MessageTwoTone />,
           });
+
+        }
+       
       });
+
+      //LISTENER ENCUESTAS POR EVENTO NOTIFICATIONS 
+      let $query = firestore.collection('surveys');
+
+      //Le agregamos el filtro por evento
+      //console.log("EVENT=>"+this.state.event._id)
+      if (this.state.event && this.state.event._id) {
+        $query = $query.where('eventId', '==', this.state.event._id);
+      }
+    
+      $query.onSnapshot((surveySnapShot) => {
+        let change = surveySnapShot.docChanges()[0];
+
+        if((change.doc.data().isPublished==true || change.doc.data().isPublished=="true") && (change.doc.data().isOpened=="true" || change.doc.data().isOpened==true  ) && notifySurvey){
+          this.props.setNotification({
+            message: change.doc.data().name+" está abierta"  ,
+            type: 'survey',
+            //survey: change.doc.data(),
+            //activity: this.obtenerNombreActivity(change.doc.data().activity_id)
+          });
+
+        }
+
+        notifySurvey=true;
+
+        
+      });
+
   }
 
   firebaseUI = () => {
@@ -763,10 +851,12 @@ class Landing extends Component {
           <WifiOutlined />
         ) : this.props.viewNotification.type == 'closed' ? (
           <LoadingOutlined />
-        ) : (
+        ) : this.props.viewNotification.type=='ended'?(
           <PlayCircleOutlined />
+        ):(
+          <DiffOutlined />
         ),
-      duration: this.props.viewNotification.type == 'open' ? 6 : 3,
+      duration: this.props.viewNotification.type == 'open'   ? 6 : 3,
       onClick:
         this.props.viewNotification.type == 'open'
           ? () => {
@@ -781,7 +871,14 @@ class Landing extends Component {
               //this.showSection('adenda', true);
               //alert('CLICK A EN VIVO');
             }
-          : null,
+          : this.props.viewNotification.type == 'survey'? ()=>{
+            //console.log("ACTIVITY SURVEY=>"+this.props.viewNotification.activity)
+            //this.props.gotoActivity(this.props.viewNotification.activity);
+            //this.props.setCurrentSurvey(this.props.viewNotification.survey)
+            
+           // alert("CLICK SURVEY")
+
+          }:null,
       onClose: () => {
         this.props.setNotification({
           message: null,
@@ -1162,6 +1259,8 @@ const mapDispatchToProps = {
   gotoActivity,
   setNotification,
   setMainStage,
+  setCurrentSurvey,
+  setSurveyVisible,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Landing));

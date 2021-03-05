@@ -1,15 +1,15 @@
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Row, Badge, Col } from 'antd';
+import { Tabs, Row, Badge, Col } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { Tabs } from 'antd';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
+
 import AttendeList from './attendees/index';
 import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
@@ -192,7 +192,16 @@ let SocialZone = function(props) {
 
       {props.currentActivity !== null && (
         <>
-          <TabPane className='asistente-survey-list' tab='Encuestas' key='3'>
+          <TabPane
+            className='asistente-survey-list'
+            tab={
+              <div style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
+                <Badge dot={props.hasOpenSurveys} size='default'>
+                  Encuestas
+                </Badge>
+              </div>
+            }
+            key='3'>
             <Row justify='space-between'>
               <Col span={4}>
                 <ArrowLeftOutlined
@@ -212,7 +221,16 @@ let SocialZone = function(props) {
             </Row>
             {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
           </TabPane>
-          <TabPane className='asistente-survey-list' tab='Juegos' key='4'>
+          <TabPane
+            className='asistente-survey-list'
+            tab={
+              <>
+                <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
+                  Juegos
+                </p>
+              </>
+            }
+            key='4'>
             <Row justify='space-between'>
               <Col span={4}>
                 <ArrowLeftOutlined
@@ -243,8 +261,9 @@ let SocialZone = function(props) {
 const mapStateToProps = (state) => ({
   mainStage: state.stage.data.mainStage,
   currentSurvey: state.survey.data.currentSurvey,
+  hasOpenSurveys: state.survey.data.hasOpenSurveys,
   currentActivity: state.stage.data.currentActivity,
-  viewNotification: state.notifications.data,
+  event: state.event.data,
 });
 
 const mapDispatchToProps = {

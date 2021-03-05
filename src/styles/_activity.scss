@@ -1,0 +1,16 @@
+.lowerTabs__mobile-visible {
+  display: none;
+}
+
+.lowerTabs__mobile-hidden {
+  display: block;
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+  .lowerTabs__mobile-visible {
+    display: block;
+  }
+  .lowerTabs__mobile-hidden {
+    display: none;
+  }
+}

@@ -455,7 +455,7 @@ function AgendaActivityItem(props) {
         {/* aquie empieza la agenda en estilo mobile */}
         <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
           {/* card de agenda en mobile */}
-          <Card hoverable className='card-agenda-mobile' bodyStyle={{ padding: '10px' }}>
+          <Card hoverable className='card-agenda-mobile agendaHover efect-scale' bodyStyle={{ padding: '10px' }}>
             <Row gutter={[8, 8]}>
               <Col span={4}>
                 <div className='agenda-hora'>
@@ -546,7 +546,7 @@ function AgendaActivityItem(props) {
         {/* aqui empieza la parte de agenda en desktop */}
         <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
           {/* card de la genda en desktop */}
-          <Card hoverable className='card-agenda-desktop' bodyStyle={{ padding: '10px' }}>
+          <Card hoverable className='card-agenda-desktop agendaHover efect-scale' bodyStyle={{ padding: '10px' }}>
             <Row gutter={[8, 8]}>
               <Col md={4} lg={4} xl={4}>
                 <div className='agenda-hora'>

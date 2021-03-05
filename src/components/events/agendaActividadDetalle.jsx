@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import Moment from 'moment';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
-import API, { EventsApi, SurveysApi } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Empty } from 'antd';
+import API, { EventsApi } from '../../helpers/request';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Empty, Badge } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
@@ -15,26 +15,28 @@ import * as StageActions from '../../redux/stage/actions';
 import * as SurveyActions from '../../redux/survey/actions';
 import Game from './game';
 import EnVivo from '../../EnVivo.svg';
-import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined, CalendarOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
+import { listenSurveysData } from '../events/surveys/services';
+
 
 const { TabPane } = Tabs;
 
 const { gotoActivity, setMainStage } = StageActions;
-const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
+const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys } = SurveyActions;
 
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
   let [event, setEvent] = useState(false);
   let [idSpeaker, setIdSpeaker] = useState(false);
-  let [showSurvey, setShowSurvey] = useState(false);
   let [orderedHost, setOrderedHost] = useState([]);
   const [meetingState, setMeetingState] = useState(null);
   const [meeting_id, setMeeting_id] = useState(null);
   const [platform, setPlatform] = useState(null);
-  const [contentDisplayed, setContentDisplayed] = useState('');
+  const { eventInfo } = props;
+
   const intl = useIntl();
   const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
 
@@ -51,30 +53,26 @@ let AgendaActividadDetalle = (props) => {
   const [activeTab, setActiveTab] = useState('description');
   let option = props.option;
 
-  let eventInfo = props.eventInfo;
+  //Estado para detección si la vista es para mobile
+  const [isMobile, setIsMobile] = useState(false);
+ 
 
   useEffect(() => {
+    // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
+    mediaQueryMatches();
+    window.addEventListener('resize', mediaQueryMatches);
+
     return () => {
       props.gotoActivity(null);
       props.setMainStage(null);
       props.setCurrentSurvey(null);
       props.setSurveyVisible(false);
+      window.removeEventListener('resize', mediaQueryMatches);
     };
   }, []);
 
   useEffect(() => {
-    const checkContentToDisplay = () => {
-      if (platform !== '' && platform === null && meeting_id !== '' && meeting_id !== null) {
-        setContentDisplayed('videoconference');
-      }
-    };
-    checkContentToDisplay();
-  }, [platform, meeting_id]);
-
-  useEffect(() => {
     async function listeningSpaceRoom() {
-      const { eventInfo } = props;
-
       if (meeting_id === null || platform === null) return false;
       firestore
         .collection('events')
@@ -98,7 +96,7 @@ let AgendaActividadDetalle = (props) => {
     (async () => {
       await listeningSpaceRoom();
     })();
-  }, [meeting_id, platform]);
+  }, [meeting_id, platform, eventInfo]);
 
   useEffect(() => {
     const openActivities = activitiesSpace.filter((activity) => activity.habilitar_ingreso === 'open_meeting_room');
@@ -112,28 +110,36 @@ let AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     if (option === 'surveyDetalle' || option === 'game') {
-      const sharedProperties = { position: 'fixed', right: '0', bottom: '0', width: '170px' };
+      const sharedProperties = {
+        position: 'fixed',
+        right: '0',
+        width: '170px',
+      };
+
+      const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
 
       setVideoStyles({
         ...sharedProperties,
+        ...verticalVideo,
         zIndex: '100',
         transition: '300ms',
       });
 
+      const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
+
       setVideoButtonStyles({
         ...sharedProperties,
+        ...verticalVideoButton,
         zIndex: '101',
         cursor: 'pointer',
-
         display: 'block',
         height: '96px',
-        bottom: '27px',
       });
     } else {
       setVideoStyles({ width: '100%', height: '450px', transition: '300ms' });
       setVideoButtonStyles({ display: 'none' });
     }
-  }, [option]);
+  }, [option, isMobile]);
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
@@ -144,7 +150,9 @@ let AgendaActividadDetalle = (props) => {
   }
 
   useEffect(() => {
+    
     async function listeningStateMeetingRoom(event_id, activity_id) {
+     // console.log("ACTIVIDAD SELECTED=>"+activity_id)
       firestore
         .collection('events')
         .doc(event_id)
@@ -169,17 +177,6 @@ let AgendaActividadDetalle = (props) => {
 
       try {
         const respuesta = await API.get('api/me/eventusers/event/' + id);
-        let surveysData = await SurveysApi.getAll(event._id);
-        const currentActivityId = props.currentActivity._id;
-
-        if (surveysData.data.length > 0) {
-          //Si hay una actividad que haga match con el listado de encuestas entonces habilitamos el componente survey
-          surveysData.data.map((item) => {
-            if (item.activity_id === currentActivityId) {
-              setShowSurvey(true);
-            }
-          });
-        }
 
         if (respuesta.data && respuesta.data.data && respuesta.data.data.length) {
           setUsuarioRegistrado(true);
@@ -212,7 +209,20 @@ let AgendaActividadDetalle = (props) => {
     }
   };
 
+  const mediaQueryMatches = () => {
+    let screenWidth = window.innerWidth;
+    screenWidth <= 768 ? setIsMobile(true) : setIsMobile(false);
+  };
+
   const { currentActivity, image_event } = props;
+
+  useEffect(() => {
+    if (props.currentActivity !== null) {
+      listenSurveysData(props.eventInfo, props.currentActivity, props.userInfo, (data) => {
+        props.setHasOpenSurveys(data.hasOpenSurveys);
+      });
+    }
+  }, [props.event, props.currentActivity]);
 
   return (
     <div className='is-centered'>
@@ -233,7 +243,9 @@ let AgendaActividadDetalle = (props) => {
               xl={{ order: 1, span: 2 }}
               style={{ padding: '4px' }}>
               <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
-                {meetingState === 'ended_meeting_room' && currentActivity.video ? (
+                {meetingState === 'open_meeting_room' || stateSpace ? (
+                  <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
+                ) : meetingState === 'ended_meeting_room' && currentActivity.video ? (
                   <CaretRightOutlined style={{ fontSize: '30px' }} />
                 ) : meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
                   <CheckCircleOutlined style={{ fontSize: '30px' }} />
@@ -241,8 +253,6 @@ let AgendaActividadDetalle = (props) => {
                   <></>
                 ) : meetingState === 'closed_meeting_room' ? (
                   <LoadingOutlined style={{ fontSize: '30px' }} />
-                ) : meetingState === 'open_meeting_room' ? (
-                  <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
                 ) : (
                   ''
                 )}
@@ -255,14 +265,14 @@ let AgendaActividadDetalle = (props) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                {meetingState === 'ended_meeting_room' && currentActivity.video
+                {meetingState === 'open_meeting_room' || stateSpace
+                  ? 'En vivo'
+                  : meetingState === 'ended_meeting_room' && currentActivity.video
                   ? 'Grabado'
                   : meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
                   ? 'Terminada'
                   : meetingState === 'closed_meeting_room'
                   ? 'Por iniciar'
-                  : meetingState === 'open_meeting_room'
-                  ? 'En vivo'
                   : ''}
               </Row>
             </Col>
@@ -300,7 +310,7 @@ let AgendaActividadDetalle = (props) => {
                       display: 'block',
                     }}>
                     <Col>
-                      <Row style={{ paddingTop: '4px', fontSize:'12px' }}>
+                      <Row style={{ paddingTop: '4px', fontSize: '12px' }}>
                         <Col xs={12} md={24} xl={24}>
                           {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
                         </Col>
@@ -695,15 +705,29 @@ let AgendaActividadDetalle = (props) => {
                   )}
                 </TabPane>
               }
+
               <TabPane
                 tab={
                   <>
-                    <p style={{ marginBottom: '0px' }}>Encuestas</p>
+                    <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-visible'>
+                      <Badge dot={props.hasOpenSurveys} size='default'>
+                        Encuestas
+                      </Badge>
+                    </p>
                   </>
                 }>
                 {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
               </TabPane>
-              <TabPane className='asistente-survey-list' tab='Juegos' key='games'></TabPane>
+
+              <TabPane
+                tab={
+                  <>
+                    <p className='lowerTabs__mobile-visible' style={{ marginBottom: '0px' }}>
+                      Juegos
+                    </p>{' '}
+                  </>
+                }
+                key='games'></TabPane>
             </Tabs>
 
             {/* <div>
@@ -789,6 +813,7 @@ const mapStateToProps = (state) => ({
   eventInfo: state.event.data,
   currentActivity: state.stage.data.currentActivity,
   currentSurvey: state.survey.data.currentSurvey,
+  hasOpenSurveys: state.survey.data.hasOpenSurveys,
 });
 
 const mapDispatchToProps = {
@@ -796,6 +821,7 @@ const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
+  setHasOpenSurveys,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));

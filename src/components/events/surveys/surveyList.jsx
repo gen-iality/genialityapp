@@ -139,6 +139,7 @@ class SurveyList extends Component {
     });
   };
 
+  //Verifica si el usuario ya votó en una encuesta cuando se carga el listado de encuestas
   callback = async () => {
     const { publishedSurveys } = this.state;
     const { currentUser } = this.props;
