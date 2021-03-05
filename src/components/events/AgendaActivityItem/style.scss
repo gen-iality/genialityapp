@@ -11,6 +11,16 @@
 .button-Agenda:hover {
   color: white !important;
 }
+/********** Efectos de hover para la agenda **********/
+.agendaHover {
+  transition: all;
+  transition-duration: 300ms;
+}
 
+.efect-scale:hover {
+  transform: scale(1.05);
+}
 
-
+.efect-traslate:hover {
+  transform: translateX(10px);
+}
