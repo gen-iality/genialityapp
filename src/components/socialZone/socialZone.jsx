@@ -46,7 +46,7 @@ let SocialZone = function(props) {
   let attendees = props.attendees;
   let survey = props.survey;
   let games = props.games;
-ß let event_id = props.event_id;
+  let event_id = props.event_id;
   let tab = props.tab;
 
   let setCurrentChat = (id, chatname) => {
@@ -264,12 +264,12 @@ const mapStateToProps = (state) => ({
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
-  viewNotification: state.notifications.data,
+  viewNotification: state.notifications.data
 });
 
 const mapDispatchToProps = {
   setMainStage,
-  setNotification,
+  setNotification
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));

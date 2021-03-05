@@ -12,7 +12,7 @@ import Icon, {
   LoadingOutlined,
   PlayCircleOutlined,
   CaretRightOutlined,
-  CheckCircleOutlined,
+  CheckCircleOutlined
 } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
@@ -49,7 +49,7 @@ function AgendaActivityItem(props) {
     eventId,
     userId,
     show_inscription,
-    hideHours,
+    hideHours
   } = props;
 
   useEffect(() => {
@@ -88,7 +88,7 @@ function AgendaActivityItem(props) {
         setMeetingState(habilitar_ingreso);
       });
   }
-  
+
   return (
     <>
       {/* {item.isPublished && (
@@ -463,28 +463,26 @@ function AgendaActivityItem(props) {
                 </div>
                 {/* aqui se encuenta el estado de agenda en la mobile */}
                 <div className='contenedor-estado-agenda'>
-                  {meetingState == 'open_meeting_room' && (
+                  {meetingState == 'open_meeting_room' ? (
                     <EnvivoIcon style={{ fontSize: '35px', marginTop: '10px' }} />
-                  )}
-                  {meetingState == 'closed_meeting_room' && (
+                  ) : meetingState == 'closed_meeting_room' ? (
                     <LoadingOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
-                  )}
-                  {meetingState == 'ended_meeting_room' && (
-                    <CheckCircleOutlined style={{ fontSize: '35px', marginTop: '10px' }}/>
-                  )}
-                  {meetingState == 'recorded_meeting_room' && (
+                  ) : meetingState == 'ended_meeting_room' && item.video ? (
                     <CaretRightOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
+                  ) : meetingState == 'ended_meeting_room' ? (
+                    <CheckCircleOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
+                  ) : (
+                    <></>
                   )}
-                  {(meetingState == '' || meetingState == null) && <></>}
                   <span style={{ fontSize: '8px' }}>
                     {meetingState == 'open_meeting_room'
                       ? 'En vivo'
+                      : meetingState == 'ended_meeting_room' && item.video
+                      ? 'Grabado'
                       : meetingState == 'ended_meeting_room'
                       ? 'Finalizado'
                       : meetingState == 'closed_meeting_room'
                       ? 'Por iniciar'
-                      : meetingState == 'recorded_meeting_room'
-                      ? 'Grabado'
                       : '     '}
                   </span>
                 </div>
@@ -498,45 +496,42 @@ function AgendaActivityItem(props) {
                     </Col>
                   </Row>
                   <Row gutter={[4, 4]}>
-                    {item.hosts.length > 0 && (
-                      item.hosts.length < 4 ? (<>
-                        {item.hosts.map((speaker, key) => (
-                          <Col key={key} span={8} style={{ fontSize: '75%' }}>
-                            <table>
-                              <tr>
-                                <th>
-                                  <Avatar size={25} src={speaker.image} />
-                                </th>
-                                <th style={{ marginRight: '12px' }}>
-                                  <div style={{ marginLeft: '12px', fontSize: '9px', marginRight: '12px' }}>
-                                    {speaker.name}
-                                  </div>
-                                </th>
-                              </tr>
-                            </table>
-                          </Col>
-                        ))}
-                      </>):(
+                    {item.hosts.length > 0 &&
+                      (item.hosts.length < 4 ? (
                         <>
-                          <Col  span={8} style={{ fontSize: '75%' }}>
-                            <Avatar.Group 
-                            maxCount={3}
-                            maxStyle={{
-                              color: '#ffffff',
-                              backgroundColor: '#1CDCB7',}
-                              }
-                            >
+                          {item.hosts.map((speaker, key) => (
+                            <Col key={key} span={8} style={{ fontSize: '75%' }}>
+                              <table>
+                                <tr>
+                                  <th>
+                                    <Avatar size={25} src={speaker.image} />
+                                  </th>
+                                  <th style={{ marginRight: '12px' }}>
+                                    <div style={{ marginLeft: '12px', fontSize: '9px', marginRight: '12px' }}>
+                                      {speaker.name}
+                                    </div>
+                                  </th>
+                                </tr>
+                              </table>
+                            </Col>
+                          ))}
+                        </>
+                      ) : (
+                        <>
+                          <Col span={8} style={{ fontSize: '75%' }}>
+                            <Avatar.Group
+                              maxCount={3}
+                              maxStyle={{
+                                color: '#ffffff',
+                                backgroundColor: '#1CDCB7'
+                              }}>
                               {item.hosts.map((speaker, key) => (
-                               
-                                   <Avatar key={key} src={speaker.image} />
-                                
-                             
+                                <Avatar key={key} src={speaker.image} />
                               ))}
                             </Avatar.Group>
-                          </Col> 
+                          </Col>
                         </>
-                      )
-                    )}
+                      ))}
                   </Row>
                 </Space>
               </Col>
@@ -554,28 +549,28 @@ function AgendaActivityItem(props) {
                     <Timeline.Item color='#1cdcb7'>
                       {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
                       <div className='contenedor-estado-agenda'>
-                        {meetingState == 'open_meeting_room' && (
+                        {meetingState == 'open_meeting_room' ? (
                           <EnvivoIcon style={{ fontSize: '45px', marginTop: '10px' }} />
-                        )}
-                        {meetingState == 'closed_meeting_room' && (
+                        ) : meetingState == 'closed_meeting_room' ? (
                           <LoadingOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
-                        )}
-                        {meetingState == 'ended_meeting_room' && (
-                          <CheckCircleOutlined style={{ fontSize: '45px', marginTop: '10px' }}/>
-                        )}
-                        {meetingState == 'recorded_meeting_room' && (
+                        ) : meetingState == 'ended_meeting_room' && item.video ? (
                           <CaretRightOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
+                        ) : meetingState == 'ended_meeting_room' ? (
+                          <CheckCircleOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
+                        ) : (
+                          <></>
                         )}
+
                         {(meetingState == '' || meetingState == null) && <></>}
                         <p style={{ fontSize: '14px' }}>
                           {meetingState == 'open_meeting_room'
                             ? 'En vivo'
+                            : meetingState == 'ended_meeting_room' && item.video
+                            ? 'Grabado'
                             : meetingState == 'ended_meeting_room'
                             ? 'Finalizado'
                             : meetingState == 'closed_meeting_room'
                             ? 'Por iniciar'
-                            : meetingState == 'recorded_meeting_room'
-                            ? 'Grabado'
                             : '     '}
                         </p>
                       </div>
@@ -611,7 +606,7 @@ function AgendaActivityItem(props) {
                                       display: '-webkit-box',
                                       WebkitLineClamp: '2',
                                       WebkitBoxOrient: 'vertical',
-                                      width: '90%',
+                                      width: '90%'
                                     }}
                                     dangerouslySetInnerHTML={{ __html: item.description }}
                                   />
@@ -623,44 +618,40 @@ function AgendaActivityItem(props) {
                       )}
                     </Row>
                     <Row>
-                    {item.hosts.length > 0 && (
-                      item.hosts.length < 4 ? (<>
-                        {item.hosts.map((speaker, key) => (
-                          <Col key={key} span={6} className='speaker'>
-                            <table>
-                              <tr>
-                                <th>
-                                  <Avatar size={25} src={speaker.image} />
-                                </th>
-                                <th style={{ marginRight: '12px' }}>
-                                  <div className='speaker-name'>
-                                    {speaker.name}
-                                  </div>
-                                </th>
-                              </tr>
-                            </table>
-                          </Col>
+                      {item.hosts.length > 0 &&
+                        (item.hosts.length < 4 ? (
+                          <>
+                            {item.hosts.map((speaker, key) => (
+                              <Col key={key} span={6} className='speaker'>
+                                <table>
+                                  <tr>
+                                    <th>
+                                      <Avatar size={25} src={speaker.image} />
+                                    </th>
+                                    <th style={{ marginRight: '12px' }}>
+                                      <div className='speaker-name'>{speaker.name}</div>
+                                    </th>
+                                  </tr>
+                                </table>
+                              </Col>
+                            ))}
+                          </>
+                        ) : (
+                          <>
+                            <Col span={8} style={{ fontSize: '75%' }}>
+                              <Avatar.Group
+                                maxCount={3}
+                                maxStyle={{
+                                  color: '#ffffff',
+                                  backgroundColor: '#1CDCB7'
+                                }}>
+                                {item.hosts.map((speaker, key) => (
+                                  <Avatar key={key} src={speaker.image} />
+                                ))}
+                              </Avatar.Group>
+                            </Col>
+                          </>
                         ))}
-                      </>):(
-                        <>
-                          <Col  span={8} style={{ fontSize: '75%' }}>
-                            <Avatar.Group 
-                            maxCount={3} 
-                            maxStyle={{
-                          color: '#ffffff',
-                          backgroundColor: '#1CDCB7',}
-                          }>
-                              {item.hosts.map((speaker, key) => (
-                               
-                                   <Avatar key={key} src={speaker.image} />
-                                
-                             
-                              ))}
-                            </Avatar.Group>
-                          </Col> 
-                        </>
-                      )
-                    )}
                     </Row>
                   </Row>
                 </Space>
@@ -677,7 +668,7 @@ function AgendaActivityItem(props) {
 }
 
 const mapDispatchToProps = {
-  gotoActivity,
+  gotoActivity
 };
 
 export default connect(null, mapDispatchToProps)(AgendaActivityItem);
