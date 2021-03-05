@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import Moment from 'moment';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
-import API, { EventsApi, SurveysApi } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Empty } from 'antd';
+import API, { EventsApi } from '../../helpers/request';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Empty, Badge } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
@@ -18,11 +18,12 @@ import EnVivo from '../../EnVivo.svg';
 import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
+import { listenSurveysData } from '../events/surveys/services';
 
 const { TabPane } = Tabs;
 
 const { gotoActivity, setMainStage } = StageActions;
-const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
+const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys } = SurveyActions;
 
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
@@ -210,6 +211,14 @@ let AgendaActividadDetalle = (props) => {
   };
 
   const { currentActivity, image_event } = props;
+
+  useEffect(() => {
+    if (props.currentActivity !== null) {
+      listenSurveysData(props.eventInfo, props.currentActivity, props.userInfo, (data) => {
+        props.setHasOpenSurveys(data.hasOpenSurveys);
+      });
+    }
+  }, [props.event, props.currentActivity]);
 
   return (
     <div className='is-centered'>
@@ -697,7 +706,9 @@ let AgendaActividadDetalle = (props) => {
                 tab={
                   <>
                     <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-visible'>
-                      Encuestas
+                      <Badge dot={props.hasOpenSurveys} size='default'>
+                        Encuestas
+                      </Badge>
                     </p>
                   </>
                 }>
@@ -798,6 +809,7 @@ const mapStateToProps = (state) => ({
   eventInfo: state.event.data,
   currentActivity: state.stage.data.currentActivity,
   currentSurvey: state.survey.data.currentSurvey,
+  hasOpenSurveys: state.survey.data.hasOpenSurveys,
 });
 
 const mapDispatchToProps = {
@@ -805,6 +817,7 @@ const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
+  setHasOpenSurveys,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));

@@ -9,6 +9,7 @@ import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
+
 import AttendeList from './attendees/index';
 import ChatList from './ChatList';
 import { monitorEventPresence } from './hooks';
@@ -184,11 +185,11 @@ let SocialZone = function(props) {
           <TabPane
             className='asistente-survey-list'
             tab={
-              <Badge dot={props.hasOpenSurveys} size='default'>
-                <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
+              <div style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
+                <Badge dot={props.hasOpenSurveys} size='default'>
                   Encuestas
-                </p>
-              </Badge>
+                </Badge>
+              </div>
             }
             key='3'>
             <Row justify='space-between'>
@@ -252,6 +253,7 @@ const mapStateToProps = (state) => ({
   currentSurvey: state.survey.data.currentSurvey,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   currentActivity: state.stage.data.currentActivity,
+  event: state.event.data,
 });
 
 const mapDispatchToProps = {
