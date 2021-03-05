@@ -6,14 +6,12 @@ import { connect } from 'react-redux';
 import * as eventActions from '../../redux/event/actions';
 import * as stageActions from '../../redux/stage/actions';
 import * as notificationsActions from '../../redux/notifications/actions';
-import { message } from 'antd';
-
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row, Menu, Badge } from 'antd';
+import { Layout, Drawer, Button, Col, Row, Menu, Badge, message, notification } from 'antd';
 import {
   MenuOutlined,
   CommentOutlined,
@@ -21,6 +19,10 @@ import {
   MenuUnfoldOutlined,
   MessageOutlined,
   PieChartOutlined,
+  MessageTwoTone,
+  WifiOutlined,
+  PlayCircleOutlined,
+  LoadingOutlined,
 } from '@ant-design/icons';
 
 //custom
@@ -138,6 +140,13 @@ class Landing extends Component {
     this.showLanding = this.showLanding.bind(this);
   }
 
+  openNotificationWithIcon = (type) => {
+    notification[type]({
+      message: 'holap',
+      // description: 'Tienes un nuevo mensaje',
+    });
+  };
+
   monitorNewChatMessages = (event, user) => {
     var self = this;
     firestore
@@ -203,9 +212,13 @@ class Landing extends Component {
 
   obtenerNombreActivity(activityID) {
     const act = this.state.activitiesAgenda.filter((ac) => ac._id == activityID);
-    console.log('ACTIVIDAD SELECTED');
-    console.log(act);
-    return act[0].name;
+    if (act.length > 0 && act[0] != null) {
+      /* this.setState({
+        currentActivity: act[0],
+      });*/
+    }
+
+    return act.length > 0 ? act[0] : null;
   }
 
   toggle = () => {
@@ -283,6 +296,10 @@ class Landing extends Component {
   mountSections = async () => {
     let eventUser = null;
     let eventUsers = null;
+    this.props.setNotification({
+      message: null,
+      type: null,
+    });
 
     const id = this.props.match.params.event;
 
@@ -304,7 +321,7 @@ class Landing extends Component {
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       eventUsers = []; //await EventsApi.getcurrentUserEventUsers( event._id );
-      this.monitorNewChatMessages(event, user);
+      // this.monitorNewChatMessages(event, user);
     }
 
     const dateFrom = event.datetime_from.split(' ');
@@ -506,28 +523,71 @@ class Landing extends Component {
       .doc(this.state.event._id)
       .collection('activities')
       .onSnapshot((querySnapshot) => {
-        querySnapshot.docChanges().forEach((change) => {
-          if (notify && change.doc.data().habilitar_ingreso == 'open_meeting_room') {
-            this.props.setNotification({
-              message: this.obtenerNombreActivity(change.doc.id) + ' está en vivo..',
-              type: 'warning',
-            });
-          }
-          if (notify && change.doc.data().habilitar_ingreso == 'ended_meeting_room') {
-            this.props.setNotification({
-              message: this.obtenerNombreActivity(change.doc.id) + ' ha terminado..',
-              type: 'warning',
-            });
-          }
-          if (notify && change.doc.data().habilitar_ingreso == 'closed_meeting_room') {
-            this.props.setNotification({
-              message: this.obtenerNombreActivity(change.doc.id) + ' está por iniciar',
-              type: 'warning',
-            });
+        let change = querySnapshot.docChanges()[0];
+        //console.log('CHANGE');
+        //console.log(change);
+        if (
+          notify &&
+          change.doc.data().habilitar_ingreso == 'open_meeting_room' &&
+          this.obtenerNombreActivity(change.doc.id).name != null
+        ) {
+          this.props.setNotification({
+            message: this.obtenerNombreActivity(change.doc.id).name + ' está en vivo..',
+            type: 'open',
+            activity: this.obtenerNombreActivity(change.doc.id),
+          });
+          //console.log('NOTIFICAION OPEN');
+        } else if (
+          notify &&
+          change.doc.data().habilitar_ingreso == 'ended_meeting_room' &&
+          this.obtenerNombreActivity(change.doc.id).name != null
+        ) {
+          this.props.setNotification({
+            message: this.obtenerNombreActivity(change.doc.id).name + ' ha terminado..',
+            type: 'ended',
+          });
+          // console.log('NOTIFICAION ENDED');
+        } else if (
+          notify &&
+          change.doc.data().habilitar_ingreso == 'closed_meeting_room' &&
+          this.obtenerNombreActivity(change.doc.id).name != null
+        ) {
+          this.props.setNotification({
+            message: this.obtenerNombreActivity(change.doc.id).name + ' está por iniciar',
+            type: 'close',
+          });
+        }
+        // console.log('NOTIFICAION CLOSED');
+
+        //this.mountSections();
+        notify = true;
+      });
+
+    //codigo para mensajes nuevos
+    let nombreactivouser = this.state.user.names;
+    var self = this;
+    firestore
+      .collection('eventchats/' + this.state.event._id + '/userchats/' + this.state.user.uid + '/' + 'chats/')
+      .onSnapshot(function(querySnapshot) {
+        let data;
+        let totalNewMessages = 0;
+        querySnapshot.forEach((doc) => {
+          data = doc.data();
+          if (data.newMessages) {
+            totalNewMessages += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
           }
         });
-        this.mountSections();
-        notify = true;
+
+        let change = querySnapshot.docChanges()[0];
+        //console.log('CHANGE');
+        console.log(change.doc.data());
+        nombreactivouser !== change.doc.data().remitente &&
+          change.doc.data().remitente !== null &&
+          totalNewMessages > 0 &&
+          notification.open({
+            description: `Nuevo mensaje de ${change.doc.data().remitente}`,
+            icon: <MessageTwoTone />,
+          });
       });
   }
 
@@ -597,6 +657,10 @@ class Landing extends Component {
   };
 
   showSection = (section, clean = false) => {
+    this.props.setNotification({
+      message: null,
+      type: null,
+    });
     this.setState({ section, visible: false }, () => this.callbackShowSection(section, clean));
   };
 
@@ -690,7 +754,43 @@ class Landing extends Component {
   };
 
   openMessage = () => {
-    let key = 'updatable';
+    const key = `open${Date.now()}`;
+
+    notification.open({
+      description: `${this.props.viewNotification.message}`,
+      icon:
+        this.props.viewNotification.type == 'open' ? (
+          <WifiOutlined />
+        ) : this.props.viewNotification.type == 'closed' ? (
+          <LoadingOutlined />
+        ) : (
+          <PlayCircleOutlined />
+        ),
+      duration: this.props.viewNotification.type == 'open' ? 6 : 3,
+      onClick:
+        this.props.viewNotification.type == 'open'
+          ? () => {
+              if (this.props.viewNotification.type == 'open') {
+                this.props.gotoActivity(this.props.viewNotification.activity);
+                this.props.setNotification({
+                  message: null,
+                  type: null,
+                });
+              }
+
+              //this.showSection('adenda', true);
+              //alert('CLICK A EN VIVO');
+            }
+          : null,
+      onClose: () => {
+        this.props.setNotification({
+          message: null,
+          type: null,
+        });
+      },
+    });
+
+    /*  let key = 'updatable';
     if (this.props.viewNotification.type == 'success') {
       message
         .success({ content: this.props.viewNotification.message, key, duration: 5 })
@@ -699,12 +799,10 @@ class Landing extends Component {
       message
         .warning({ content: this.props.viewNotification.message, key, duration: 5 })
         .then(() => this.props.setNotification({ message: null, type: null }));
-    }
+    }*/
 
     // message.success({ content: 'Loaded!', key, duration: 2 });
   };
-
-  // End methods for modal private activities
 
   render() {
     const {

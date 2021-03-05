@@ -1,35 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { List, Typography, Badge, Tooltip, Tabs } from 'antd';
+import { List, Typography, Badge, Tooltip, Tabs, notification } from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
+import * as notificationsActions from '../../../redux/notifications/actions';
+import { connect } from 'react-redux';
 const { TabPane } = Tabs;
-const callback = () => {};
+const { setNotification } = notificationsActions;
 
 const ChatList = (props) => {
+  let userName = props.currentUser
+    ? props.currentUser?.names
+    : props.currentUser?.name
+    ? props.currentUser?.name
+    : undefined;
+
+  let usuarioactivo = props.currentUser?.name;
+  let [usuariofriend, setusuariofriend] = useState(userName);
+  const openNotificationWithIcon = (type) => {
+    notification[type]({
+      message: 'holap',
+      // description: 'Tienes un nuevo mensaje',
+    });
+  };
+
+  useEffect(() => {
+    // console.log(userName);
+    // console.log(usuariofriend);
+    // if (props.totalNewMessages > 0 && usuariofriend !== usuarioactivo) {
+    //   openNotificationWithIcon('success');
+    // }
+  }, [props.totalNewMessages, usuariofriend, usuarioactivo]);
+
+  function callback(key) {
+    if (key === 'chat1') {
+      setusuariofriend(null);
+      props.setCurrentChat(null, null);
+    }
+  }
+
   if (!props.currentUser) return <p>Debes haber ingresado con tu usuario</p>;
 
-  let userName = props.currentUser ? props.currentUser.names : props.currentUser.name ? props.currentUser.name : '---';
-
-  return props.currentChat ? (
-    <>
-      <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(null, null)}>
-        Todos los chats
-      </a>
-      <iframe
-        title='chatevius'
-        className='ChatEviusLan'
-        src={
-          'https://chatevius.web.app?nombre=' +
-          userName +
-          '&chatid=' +
-          props.currentChat +
-          '&eventid=' +
-          props.event_id +
-          '&userid=' +
-          props.currentUser.uid
-        }></iframe>
-    </>
-  ) : (
+  return (
     <Tabs defaultActiveKey='chat1' size='small' onChange={callback}>
       <TabPane tab='Público' key='chat1'>
         <iframe
@@ -51,7 +62,7 @@ const ChatList = (props) => {
       <TabPane
         tab={
           <>
-            <Badge size='small' count={props.totalNewMessages}>
+            <Badge size='small' count={userName !== usuariofriend ? props.totalNewMessages : null}>
               Privados
             </Badge>
           </>
@@ -65,9 +76,14 @@ const ChatList = (props) => {
           renderItem={(item) => (
             <List.Item
               actions={[
-                <a key='list-loadmore-edit' onClick={() => props.setCurrentChat(item.id, item.name)}>
+                <a
+                  key='list-loadmore-edit'
+                  onClick={() => {
+                    props.setCurrentChat(item.id, item.name);
+                    setusuariofriend(item?.names ? item.names : item.name);
+                  }}>
                   <Tooltip title='Chatear'>
-                    <Badge count={item.newMessages && item.newMessages.length ? item.newMessages.length : ''}>
+                    <Badge count={usuarioactivo !== item.name ? item.newMessages.length : null}>
                       <MessageTwoTone style={{ fontSize: '20px' }} />
                     </Badge>
                   </Tooltip>
@@ -78,8 +94,35 @@ const ChatList = (props) => {
           )}
         />
       </TabPane>
+
+      {props.currentChat && (
+        <iframe
+          title='chatevius'
+          className='ChatEviusLan'
+          src={
+            'https://chatevius.web.app?nombre=' +
+            userName +
+            '&chatid=' +
+            props.currentChat +
+            '&eventid=' +
+            props.event_id +
+            '&userid=' +
+            props.currentUser.uid
+          }></iframe>
+      )}
     </Tabs>
   );
 };
 
-export default ChatList;
+const mapStateToProps = (state) => ({
+  mainStage: state.stage.data.mainStage,
+  currentSurvey: state.survey.data.currentSurvey,
+  currentActivity: state.stage.data.currentActivity,
+  viewNotification: state.notifications.data,
+});
+
+const mapDispatchToProps = {
+  setNotification,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatList);

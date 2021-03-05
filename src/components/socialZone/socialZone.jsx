@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
 
 import AttendeList from './attendees/index';
+import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
 import { monitorEventPresence } from './hooks';
 import GameRanking from '../events/game/gameRanking';
@@ -19,6 +20,7 @@ const { setMainStage } = StageActions;
 
 const { TabPane } = Tabs;
 const callback = () => {};
+const { setNotification } = notificationsActions;
 
 let SocialZone = function(props) {
   const [attendeeList, setAttendeeList] = useState({});
@@ -30,14 +32,21 @@ let SocialZone = function(props) {
   const [currentTab, setcurrentTab] = useState('1');
   const [totalNewMessages, setTotalNewMessages] = useState(0);
 
-  let userName = 'LuisXXX';
+  let userName = props.currentUser
+    ? props.currentUser?.names
+    : props.currentUser?.name
+    ? props.currentUser?.name
+    : '---';
+
+  let usuarioactivo = props.currentUser?.name;
+
   /***********/
   console.log('datafirebase nos inicamos nuevamente');
   let chat = props.chat;
   let attendees = props.attendees;
   let survey = props.survey;
   let games = props.games;
-  let event_id = props.event_id;
+ß let event_id = props.event_id;
   let tab = props.tab;
 
   let setCurrentChat = (id, chatname) => {
@@ -87,6 +96,7 @@ let SocialZone = function(props) {
   }, []);
 
   //Cargar la lista de chats de una persona
+
   useEffect(() => {
     if (!event_id || !currentUser) return;
 
@@ -103,9 +113,9 @@ let SocialZone = function(props) {
           }
           list.push(data);
         });
+
         console.timeLog('setTotalNewMessages ZONA');
         setTotalNewMessages(totalNewMessages);
-
         setavailableChats(list);
       });
   }, [event_id, currentUser]);
@@ -146,7 +156,7 @@ let SocialZone = function(props) {
           className='asistente-chat-list'
           tab={
             <>
-              <Badge size='small' count={totalNewMessages}>
+              <Badge size='small' count={usuarioactivo !== props.currentUser?.name ? totalNewMessages : null}>
                 Chats
               </Badge>
             </>
@@ -254,10 +264,12 @@ const mapStateToProps = (state) => ({
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
+  viewNotification: state.notifications.data,
 });
 
 const mapDispatchToProps = {
   setMainStage,
+  setNotification,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));
