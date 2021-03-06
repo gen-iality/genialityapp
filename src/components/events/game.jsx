@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 function Game(props) {
+  useEffect(() => {
+    const evius_body = document.getElementById('evius-body');
+    evius_body.style.cssText = 'overflow-y: hidden;';
+
+    return () => {
+      evius_body.style.cssText = 'overflow-y: visible;';
+    };
+  }, []);
+
   const { currentUser } = props;
   return (
     <iframe
