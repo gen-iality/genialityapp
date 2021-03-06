@@ -1,8 +1,8 @@
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Tabs, Row, Badge, Col } from 'antd';
-import { ArrowLeftOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { Tabs, Row, Badge, Col, notification } from 'antd';
+import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone } from '@ant-design/icons';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
 import SurveyList from '../events/surveys/surveyList';
@@ -59,6 +59,8 @@ let SocialZone = function(props) {
     return ida < idb ? ida + '_' + idb : idb + '_' + ida;
   };
 
+  let [chattab, setchattab] = useState('chat1');
+
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
@@ -96,7 +98,7 @@ let SocialZone = function(props) {
   }, []);
 
   //Cargar la lista de chats de una persona
-
+  let nombreactivouser = props.currentUser?.name;
   useEffect(() => {
     if (!event_id || !currentUser) return;
 
@@ -105,17 +107,38 @@ let SocialZone = function(props) {
       .onSnapshot(function(querySnapshot) {
         let list = [];
         let data;
-        let totalNewMessages = 0;
+        let newmsj = 0;
         querySnapshot.forEach((doc) => {
           data = doc.data();
           if (data.newMessages) {
-            totalNewMessages += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
+            newmsj += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
           }
           list.push(data);
         });
 
+        let change = querySnapshot.docChanges()[0];
+        //console.log('CHANGE');
+        //console.log(change.doc.data());
+        if (change) {
+          userName !== change.doc.data().remitente &&
+            change.doc.data().remitente !== null &&
+            change.doc.data().remitente !== undefined &&
+            newmsj > 0 &&
+            notification.open({
+              description: `Nuevo mensaje de ${change.doc.data().remitente}`,
+              icon: <MessageTwoTone />,
+              onClick: () => {
+                setchattab('chat2');
+                console.log(change.doc.data());
+                setCurrentChat(change.doc.data().id, change.doc.data()._name);
+                notification.destroy();
+              },
+            });
+          setTotalNewMessages(totalNewMessages + 1);
+        }
+
         console.timeLog('setTotalNewMessages ZONA');
-        setTotalNewMessages(totalNewMessages);
+        // setTotalNewMessages(totalNewMessages);
         setavailableChats(list);
       });
   }, [event_id, currentUser]);
@@ -156,7 +179,7 @@ let SocialZone = function(props) {
           className='asistente-chat-list'
           tab={
             <>
-              <Badge size='small' count={usuarioactivo !== props.currentUser?.name ? totalNewMessages : null}>
+              <Badge onClick={() => setchattab('chat1')} size='small' count={totalNewMessages}>
                 Chats
               </Badge>
             </>
@@ -171,6 +194,9 @@ let SocialZone = function(props) {
             currentChat={currentChat}
             totalNewMessages={totalNewMessages}
             event_id={event_id}
+            setTotalNewMessages={setTotalNewMessages}
+            setchattab={setchattab}
+            chattab={chattab}
           />
         </TabPane>
       }
@@ -264,12 +290,12 @@ const mapStateToProps = (state) => ({
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
-  viewNotification: state.notifications.data
+  viewNotification: state.notifications.data,
 });
 
 const mapDispatchToProps = {
   setMainStage,
-  setNotification
+  setNotification,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));
