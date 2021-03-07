@@ -644,6 +644,7 @@ class Agenda extends Component {
             currentUser={this.props.currentUser}
             //option={option}
             collapsed={this.props.collapsed}
+            toggleCollapsed={this.props.toggleCollapsed}
           />
         )}
 

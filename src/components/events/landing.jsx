@@ -19,7 +19,6 @@ import {
   MenuUnfoldOutlined,
   MessageOutlined,
   PieChartOutlined,
-  MessageTwoTone,
   WifiOutlined,
   PlayCircleOutlined,
   LoadingOutlined,
@@ -70,7 +69,6 @@ import {
   // isBrowser,
   isMobile,
 } from 'react-device-detect';
-import { cosh } from 'core-js/fn/math';
 
 const { setEventData } = eventActions;
 const { gotoActivity, setMainStage } = stageActions;
@@ -112,7 +110,7 @@ class Landing extends Component {
       toggleConferenceZoom: false,
       meeting_id: null,
       color: '',
-      collapsed: false,
+      collapsed: true,
       visible: false,
       visibleChat: false,
       placement: 'left',
@@ -128,7 +126,7 @@ class Landing extends Component {
       currentSurvey: {},
       //Integración con encuestas
       currentActivity: null,
-      meeting_id: null,
+
       platform: null,
       habilitar_ingreso: null,
       chat: false,
@@ -186,8 +184,6 @@ class Landing extends Component {
       }
 
       this.setState({ publishedSurveys });
-      console.log('SURVEYS ACTUALIZADOS');
-      console.log(publishedSurveys);
     });
   };
 
@@ -203,7 +199,6 @@ class Landing extends Component {
     firestore
       .collection('eventchats/' + event._id + '/userchats/' + user.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
-        console.log('cargando lista de chats');
         let data;
         let totalNewMessages = 0;
         querySnapshot.forEach((doc) => {
@@ -269,11 +264,6 @@ class Landing extends Component {
     return act.length > 0 ? act[0] : null;
   }
 
-  toggle = () => {
-    this.setState({
-      collapsed: !this.state.collapsed,
-    });
-  };
   toggleCollapsed = async (tab) => {
     this.setState({
       collapsed: !this.state.collapsed,
@@ -411,6 +401,7 @@ class Landing extends Component {
           activeActivity={this.actualizarCurrentActivity}
           option={this.state.currentActivity ? this.state.currentActivity.option : 'N/A'}
           collapsed={this.state.collapsed}
+          toggleCollapsed={this.toggleCollapsed}
         />
       ),
       tickets: (
@@ -973,14 +964,7 @@ class Landing extends Component {
                       <Layout className='site-layout'>
                         <Content className='site-layout-background'>
                           {/* Boton que abre el menu para dispositivos > tablet  */}
-                          <div className='hiddenMenu_Landing'>
-                            {/* <Button onClick={this.toggle}>
-                              {React.createElement(this.state.collapsed ? RightOutlined : LeftOutlined, {
-                                className: 'trigger',
-                                onClick: this.toggle,
-                              })}
-                            </Button> */}
-                          </div>
+                          <div className='hiddenMenu_Landing'></div>
 
                           {/*Aqui empieza el menu para dispositivos < tablet*/}
 

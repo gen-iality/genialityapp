@@ -20,7 +20,6 @@ import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 import { listenSurveysData } from '../events/surveys/services';
 
-
 const { TabPane } = Tabs;
 
 const { gotoActivity, setMainStage } = StageActions;
@@ -55,12 +54,15 @@ let AgendaActividadDetalle = (props) => {
 
   //Estado para detección si la vista es para mobile
   const [isMobile, setIsMobile] = useState(false);
- 
 
   useEffect(() => {
     // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
     mediaQueryMatches();
     window.addEventListener('resize', mediaQueryMatches);
+
+    if (props.collapsed) {
+      props.toggleCollapsed(1);
+    }
 
     return () => {
       props.gotoActivity(null);
@@ -150,9 +152,8 @@ let AgendaActividadDetalle = (props) => {
   }
 
   useEffect(() => {
-    
     async function listeningStateMeetingRoom(event_id, activity_id) {
-     // console.log("ACTIVIDAD SELECTED=>"+activity_id)
+      // console.log("ACTIVIDAD SELECTED=>"+activity_id)
       firestore
         .collection('events')
         .doc(event_id)
