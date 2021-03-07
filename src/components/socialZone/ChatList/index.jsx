@@ -23,15 +23,16 @@ const ChatList = (props) => {
     });
   };
 
+  let [currentab, setcurrentab] = useState(props.chattab);
+
   useEffect(() => {
-    // console.log(userName);
-    // console.log(usuariofriend);
-    // if (props.totalNewMessages > 0 && usuariofriend !== usuarioactivo) {
-    //   openNotificationWithIcon('success');
-    // }
-  }, [props.totalNewMessages, usuariofriend, usuarioactivo]);
+    setcurrentab(props.chattab);
+  }, [props.chattab]);
+
+  useEffect(() => {}, [props.totalNewMessages, usuariofriend, usuarioactivo]);
 
   function callback(key) {
+    setcurrentab(key);
     if (key === 'chat1') {
       setusuariofriend(null);
       props.setCurrentChat(null, null);
@@ -40,8 +41,9 @@ const ChatList = (props) => {
 
   if (!props.currentUser) return <p>Debes haber ingresado con tu usuario</p>;
 
+  console.log(currentab);
   return (
-    <Tabs defaultActiveKey='chat1' size='small' onChange={callback}>
+    <Tabs activeKey={currentab} size='small' onChange={callback} centered>
       <TabPane tab='Público' key='chat1'>
         <iframe
           title='chatevius'
@@ -81,6 +83,7 @@ const ChatList = (props) => {
                   onClick={() => {
                     props.setCurrentChat(item.id, item.name);
                     setusuariofriend(item?.names ? item.names : item.name);
+                    props.setTotalNewMessages(0);
                   }}>
                   <Tooltip title='Chatear'>
                     <Badge count={usuarioactivo !== item.name ? item.newMessages.length : null}>
