@@ -34,6 +34,9 @@ let AgendaActividadDetalle = (props) => {
   const [meetingState, setMeetingState] = useState(null);
   const [meeting_id, setMeeting_id] = useState(null);
   const [platform, setPlatform] = useState(null);
+  const [totalAttendees, setTotalAttendees] = useState(0);
+  const [totalAttendeesCheckedin, setTotalAttendeesCheckedin] = useState(0);
+
   const { eventInfo } = props;
 
   const intl = useIntl();
@@ -86,6 +89,36 @@ let AgendaActividadDetalle = (props) => {
   }, []);
 
   useEffect(() => {
+    async function listeningAsistentes() {
+      if (event === null || event == undefined || event == false) return false;
+
+      const asistentesRef = firestore.collection(`${event._id}_event_attendees`);
+      asistentesRef.onSnapshot((snapshot) => {
+        console.log('total ', snapshot.size, event._id, event);
+
+        const list = [];
+        let cuantos = 0;
+        let checkedin = 0;
+        snapshot.forEach(function(doc) {
+          if (doc.exists) {
+            cuantos++;
+            if (doc.data().checkedin_at) {
+              checkedin++;
+            }
+            //list.push(response);
+          }
+        });
+        setTotalAttendees(cuantos);
+        setTotalAttendeesCheckedin(checkedin);
+      });
+    }
+
+    (async () => {
+      await listeningAsistentes();
+    })();
+  }, [event]);
+
+  useEffect(() => {
     async function listeningSpaceRoom() {
       if (meeting_id === null || platform === null) return false;
       firestore
@@ -127,7 +160,7 @@ let AgendaActividadDetalle = (props) => {
       const sharedProperties = {
         position: 'fixed',
         right: '0',
-        width: '170px',
+        width: '170px'
       };
 
       const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
@@ -136,7 +169,7 @@ let AgendaActividadDetalle = (props) => {
         ...sharedProperties,
         ...verticalVideo,
         zIndex: '100',
-        transition: '300ms',
+        transition: '300ms'
       });
 
       const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
@@ -147,7 +180,7 @@ let AgendaActividadDetalle = (props) => {
         zIndex: '101',
         cursor: 'pointer',
         display: 'block',
-        height: '96px',
+        height: '96px'
       });
     } else {
       setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
@@ -276,7 +309,7 @@ let AgendaActividadDetalle = (props) => {
                   fontSize: 11,
                   fontWeight: 'normal',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  justifyContent: 'center'
                 }}>
                 {meetingState === 'open_meeting_room' || stateSpace
                   ? 'En vivo'
@@ -297,7 +330,12 @@ let AgendaActividadDetalle = (props) => {
               xl={{ order: 2, span: 18 }}
               style={{ display: 'flex' }}>
               <div style={{ padding: '8px' }}>
-                <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>{currentActivity.name} </Row>
+                <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
+                  {'Actuales'}
+                  {currentActivity.name} {totalAttendees}
+                  {'/'} {totalAttendeesCheckedin}{' '}
+                  {'(' + Math.round((totalAttendeesCheckedin / totalAttendees) * 100 * 100) / 100 + '%)'}
+                </Row>
                 <Row style={{ height: '2.5vh', fontSize: 14, fontWeight: 'normal' }}>
                   {currentActivity && currentActivity.space && currentActivity.space.name}
                 </Row>
@@ -320,7 +358,7 @@ let AgendaActividadDetalle = (props) => {
                       paddingRight: '2vw',
                       height: '5vh',
                       textAlign: 'right !important',
-                      display: 'block',
+                      display: 'block'
                     }}>
                     <Col>
                       <Row style={{ paddingTop: '4px', fontSize: '12px' }}>
@@ -432,7 +470,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -481,7 +519,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -780,7 +818,7 @@ let AgendaActividadDetalle = (props) => {
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end',
+                alignItems: 'flex-end'
               }}>
               {/* <button
                   <div
@@ -826,7 +864,7 @@ const mapStateToProps = (state) => ({
   eventInfo: state.event.data,
   currentActivity: state.stage.data.currentActivity,
   currentSurvey: state.survey.data.currentSurvey,
-  hasOpenSurveys: state.survey.data.hasOpenSurveys,
+  hasOpenSurveys: state.survey.data.hasOpenSurveys
 });
 
 const mapDispatchToProps = {
@@ -834,7 +872,7 @@ const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
-  setHasOpenSurveys,
+  setHasOpenSurveys
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
