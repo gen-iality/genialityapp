@@ -43,12 +43,12 @@ const PopoverInfoUser = ({ item, props }) => {
               <Avatar src={item.user?.image} />
             ) : (
               <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={30}>
-                {InitialsNameUser(item.user.names)}
+                {InitialsNameUser(item.names)}
               </Avatar>
             )
           }
-          title={item.user.names}
-          description={item.user.email}
+          title={item.names}
+          description={item.email}
         />
       </Card>
     </Skeleton>
