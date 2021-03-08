@@ -153,8 +153,8 @@ let SocialZone = function(props) {
 
       querySnapshot.forEach((doc) => {
         attendee = doc.data();
-        let localattendee = attendeeList[attendee.user.uid] || {};
-        list[attendee.user.uid] = { ...localattendee, ...attendee };
+        let localattendee = attendeeList[attendee.user?.uid] || {};
+        list[attendee.user?.uid] = { ...localattendee, ...attendee };
       });
       setAttendeeList(list);
       //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
