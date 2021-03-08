@@ -183,7 +183,7 @@ let AgendaActividadDetalle = (props) => {
         height: '96px'
       });
     } else {
-      setVideoStyles({ width: '100%', height: '450px', transition: '300ms' });
+      setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
       setVideoButtonStyles({ display: 'none' });
     }
   }, [option, isMobile]);

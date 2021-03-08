@@ -100,6 +100,7 @@ const ChatList = (props) => {
             </List.Item>
           )}
         />
+        
       </TabPane>
 
       {props.currentChat && (
