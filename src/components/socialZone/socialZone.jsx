@@ -132,7 +132,7 @@ let SocialZone = function(props) {
                 console.log(change.doc.data());
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
-              },
+              }
             });
           setTotalNewMessages(totalNewMessages + 1);
         }
@@ -206,18 +206,17 @@ let SocialZone = function(props) {
       }
       {
         /*attendees &&*/
-
-        <TabPane tab='Asistentes' key='2' className='asistente-list'>
-          <AttendeList
-            currentUser={currentUser}
-            event_id={event_id}
-            currentChat={currentChat}
-            currentChatName={currentChatName}
-            createNewOneToOneChat={createNewOneToOneChat}
-            attendeeList={attendeeList}
-            attendeeListPresence={attendeeListPresence}
-          />
-        </TabPane>
+        // <TabPane tab='Asistentes' key='2' className='asistente-list'>
+        //   <AttendeList
+        //     currentUser={currentUser}
+        //     event_id={event_id}
+        //     currentChat={currentChat}
+        //     currentChatName={currentChatName}
+        //     createNewOneToOneChat={createNewOneToOneChat}
+        //     attendeeList={attendeeList}
+        //     attendeeListPresence={attendeeListPresence}
+        //   />
+        // </TabPane>
       }
 
       {props.currentActivity !== null && (
@@ -294,12 +293,12 @@ const mapStateToProps = (state) => ({
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
-  viewNotification: state.notifications.data,
+  viewNotification: state.notifications.data
 });
 
 const mapDispatchToProps = {
   setMainStage,
-  setNotification,
+  setNotification
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));
