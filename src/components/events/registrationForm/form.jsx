@@ -465,6 +465,7 @@ export default ({
             placeholder='Ingrese su password'
             onChange={(e) => setPassword(e.target.value)}
             key={key}
+            defaultValue={value}
             value={password}
             pattern='(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$'
             title={intl.formatMessage({ id: 'form.validate.message.password' })}
