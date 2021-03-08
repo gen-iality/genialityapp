@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Moment from 'moment';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
-import API, { EventsApi } from '../../helpers/request';
+import API, { EventsApi, TicketsApi, Activity } from '../../helpers/request';
 import { Row, Col, Button, List, Avatar, Card, Tabs, Empty, Badge } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
@@ -54,6 +54,18 @@ let AgendaActividadDetalle = (props) => {
 
   //Estado para detección si la vista es para mobile
   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Al cargar el componente se realiza el checkin del usuario en la actividad
+    try {
+      if (props.eventUser) {
+        TicketsApi.checkInAttendee(eventInfo._id, props.eventUser._id);
+        Activity.checkInAttendeeActivity(eventInfo._id, props.currentActivity._id, props.eventUser.account_id);
+      }
+    } catch (e) {
+      console.error('fallo el checkin:', e);
+    }
+  }, []);
 
   useEffect(() => {
     // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño

@@ -358,6 +358,7 @@ class Landing extends Component {
 
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
+
       eventUsers = []; //await EventsApi.getcurrentUserEventUsers( event._id );
       // this.monitorNewChatMessages(event, user);
     }
@@ -394,6 +395,7 @@ class Landing extends Component {
           toggleConference={this.toggleConference}
           handleOpenRegisterForm={this.handleOpenRegisterForm}
           handleOpenLogin={this.handleOpenLogin}
+          //Para verificar que el usuario esta registrado en el evento
           userRegistered={this.state.eventUser}
           currentUser={user}
           activity={this.state.currentActivity}
@@ -571,10 +573,10 @@ class Landing extends Component {
         if (
           notify &&
           change.doc.data().habilitar_ingreso == 'open_meeting_room' &&
-          this.obtenerNombreActivity(change.doc.id).name != null
+          this.obtenerNombreActivity(change.doc.id)?.name != null
         ) {
           this.props.setNotification({
-            message: this.obtenerNombreActivity(change.doc.id).name + ' está en vivo..',
+            message: this.obtenerNombreActivity(change.doc.id)?.name + ' está en vivo..',
             type: 'open',
             activity: this.obtenerNombreActivity(change.doc.id),
           });

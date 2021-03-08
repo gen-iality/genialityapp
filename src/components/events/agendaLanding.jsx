@@ -645,6 +645,8 @@ class Agenda extends Component {
             //option={option}
             collapsed={this.props.collapsed}
             toggleCollapsed={this.props.toggleCollapsed}
+            // eventUser: Determina si el usuario esta registrado en el evento
+            eventUser={this.props.userRegistered}
           />
         )}
 
