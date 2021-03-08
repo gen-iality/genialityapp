@@ -648,7 +648,7 @@ class Landing extends Component {
 
     $query.onSnapshot((surveySnapShot) => {
       let change = surveySnapShot.docChanges()[0];
-
+      if (!change) return;
       if (
         (change.doc.data().isPublished == true || change.doc.data().isPublished == 'true') &&
         (change.doc.data().isOpened == 'true' || change.doc.data().isOpened == true) &&
