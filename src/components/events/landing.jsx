@@ -649,12 +649,12 @@ class Landing extends Component {
       let change = surveySnapShot.docChanges()[0];
 
       if (
-        (change.doc.data().isPublished == true || change.doc.data().isPublished == 'true') &&
-        (change.doc.data().isOpened == 'true' || change.doc.data().isOpened == true) &&
+        (change?.doc.data().isPublished == true || change?.doc.data().isPublished == 'true') &&
+        (change?.doc.data().isOpened == 'true' || change?.doc.data().isOpened == true) &&
         notifySurvey
       ) {
         this.props.setNotification({
-          message: change.doc.data().name + ' está abierta',
+          message: change?.doc.data().name + ' está abierta',
           type: 'survey',
           //survey: change.doc.data(),
           //activity: this.obtenerNombreActivity(change.doc.data().activity_id)
