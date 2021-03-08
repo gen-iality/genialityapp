@@ -8,17 +8,21 @@ const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 
 const ChatList = (props) => {
+  console.log('props', props);
   let userName = props.currentUser
-    ? props.currentUser?.names
-    : props.currentUser?.name
-    ? props.currentUser?.name
+    ? props.currentUser.names
+      ? props.currentUser.names
+      : props.currentUser.name
     : undefined;
+
+  //para los eventos tipo asamblea que tienen una propiedad llamada casa que sirve para identificaar las personas
+  userName = props.currentUser && props.currentUser.casa ? '(' + props.currentUser.casa + ') ' + userName : userName;
 
   let usuarioactivo = props.currentUser?.name;
   let [usuariofriend, setusuariofriend] = useState(userName);
   const openNotificationWithIcon = (type) => {
     notification[type]({
-      message: 'holap',
+      message: 'holap'
       // description: 'Tienes un nuevo mensaje',
     });
   };
@@ -90,7 +94,7 @@ const ChatList = (props) => {
                       <MessageTwoTone style={{ fontSize: '20px' }} />
                     </Badge>
                   </Tooltip>
-                </a>,
+                </a>
               ]}>
               <Typography.Text mark></Typography.Text> {item.name || '----'}
             </List.Item>
@@ -121,11 +125,11 @@ const mapStateToProps = (state) => ({
   mainStage: state.stage.data.mainStage,
   currentSurvey: state.survey.data.currentSurvey,
   currentActivity: state.stage.data.currentActivity,
-  viewNotification: state.notifications.data,
+  viewNotification: state.notifications.data
 });
 
 const mapDispatchToProps = {
-  setNotification,
+  setNotification
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);
