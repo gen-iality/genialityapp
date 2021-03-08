@@ -82,7 +82,7 @@ let SocialZone = function(props) {
   const inicializada = useMemo(() => initUserPresence(event_id), [event_id]);
 
   const flagmonitorEventPresence = useMemo(
-    () => monitorEventPresence(event_id, attendeeListPresence, setAttendeeListPresence),
+    () => monitorEventPresence(event_id, attendeeList, setAttendeeListPresence),
     [event_id]
   );
 
@@ -148,17 +148,20 @@ let SocialZone = function(props) {
 
     let colletion_name = event_id + '_event_attendees';
     let attendee;
-    firestore.collection(colletion_name).onSnapshot(function(querySnapshot) {
-      let list = {};
+    firestore
+      .collection(colletion_name)
+      .orderBy('state_id', 'asc')
+      .onSnapshot(function(querySnapshot) {
+        let list = {};
 
-      querySnapshot.forEach((doc) => {
-        attendee = doc.data();
-        let localattendee = attendeeList[attendee.user?.uid] || {};
-        list[attendee.user?.uid] = { ...localattendee, ...attendee };
+        querySnapshot.forEach((doc) => {
+          attendee = doc.data();
+          let localattendee = attendeeList[attendee.user?.uid] || {};
+          list[attendee.user?.uid] = { ...localattendee, ...attendee };
+        });
+        setAttendeeList(list);
+        //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
       });
-      setAttendeeList(list);
-      //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
-    });
   }, [event_id]);
 
   return (
@@ -168,6 +171,7 @@ let SocialZone = function(props) {
       activeKey={currentTab}
       onTabClick={(key) => {
         setcurrentTab(key);
+        console.log(key);
         if (key == '4') {
           props.setMainStage('game');
         }

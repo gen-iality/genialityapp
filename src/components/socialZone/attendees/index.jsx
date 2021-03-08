@@ -1,17 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { List, Tooltip, Popover, Avatar } from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
 
 const AttendeList = function(props) {
+  let [myattendelist, setmyattendelist] = useState();
+
+  useEffect(() => {
+    let usersorderbystatus = [];
+    let ordenadousers = [];
+    console.log(props.attendeeList);
+    console.log(props.attendeeListPresence);
+
+    Object.keys(props.attendeeList).map((key) => {
+      Object.keys(props.attendeeListPresence).map((key2) => {
+        if (key2 === key) {
+          let mihijo = {
+            idattendpresence: key2,
+            iduser: key,
+            name: props.attendeeList[key].properties.name,
+            names: props.attendeeList[key].properties.names,
+            status: props.attendeeListPresence[key2].state,
+            email: props.attendeeList[key].properties.email,
+          };
+          console.log('si es igual', mihijo);
+          usersorderbystatus.push(mihijo);
+        }
+      });
+    });
+
+    usersorderbystatus.map((user) => {
+      if (user.status === 'online') {
+        ordenadousers.unshift(user);
+      } else if (user.status === 'offline') {
+        ordenadousers.push(user);
+      }
+    });
+
+    console.log('ordenadousers', ordenadousers);
+    setmyattendelist(ordenadousers);
+  }, [props.attendeeList]);
+
   return (
     <List
       className='demo-loadmore-list'
       itemLayout='horizontal'
-      dataSource={Object.keys(props.attendeeList).map((key) => {
-        return { key: key, ...props.attendeeList[key] };
-      })}
+      dataSource={myattendelist && myattendelist}
       renderItem={(item) => (
         <List.Item
           actions={[
@@ -38,7 +73,7 @@ const AttendeList = function(props) {
                 <Avatar src={item.currentUser?.image} />
               ) : (
                 <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={30}>
-                  {InitialsNameUser(item.properties.names)}
+                  {InitialsNameUser(item.names)}
                 </Avatar>
               )
             }
@@ -58,13 +93,13 @@ const AttendeList = function(props) {
                         item.user.names
                       )
                     }>
-                    {item.properties.names}
+                    {item.names}
                   </a>
                 </Popover>
               ) : null
             }
             description={
-              props.attendeeListPresence[item.key]?.state === 'online' ? (
+              item.status === 'online' ? (
                 <h1 style={{ color: '#0CD5A1' }}>
                   <Avatar size={9} style={{ backgroundColor: '#0CD5A1' }}></Avatar> Online
                 </h1>
