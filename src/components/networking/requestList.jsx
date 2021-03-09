@@ -127,8 +127,8 @@ export default function RequestList({ eventId }) {
 
         // Solo se obtendran las invitaciones que no tengan respuesta
         if (data.length > 0) {
-          setRequestListReceived(data.filter((item) => !item.response));
-          insertNameRequested(data);
+          const response = data.filter((item) => !item.response);
+          insertNameRequested(response);
         }
       });
 
