@@ -167,7 +167,7 @@ let AgendaActividadDetalle = (props) => {
       const sharedProperties = {
         position: 'fixed',
         right: '0',
-        width: '170px'
+        width: '170px',
       };
 
       const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
@@ -176,7 +176,7 @@ let AgendaActividadDetalle = (props) => {
         ...sharedProperties,
         ...verticalVideo,
         zIndex: '100',
-        transition: '300ms'
+        transition: '300ms',
       });
 
       const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
@@ -187,7 +187,7 @@ let AgendaActividadDetalle = (props) => {
         zIndex: '101',
         cursor: 'pointer',
         display: 'block',
-        height: '96px'
+        height: '96px',
       });
     } else {
       setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
@@ -316,7 +316,7 @@ let AgendaActividadDetalle = (props) => {
                   fontSize: 11,
                   fontWeight: 'normal',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
                 }}>
                 {meetingState === 'open_meeting_room' || stateSpace
                   ? 'En vivo'
@@ -338,7 +338,6 @@ let AgendaActividadDetalle = (props) => {
               style={{ display: 'flex' }}>
               <div style={{ padding: '8px' }}>
                 <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
-                  {'Actuales'}
                   {currentActivity.name}
                   {/* {totalAttendees}
                   {'/'} {totalAttendeesCheckedin}{' '}
@@ -366,7 +365,7 @@ let AgendaActividadDetalle = (props) => {
                       paddingRight: '2vw',
                       height: '5vh',
                       textAlign: 'right !important',
-                      display: 'block'
+                      display: 'block',
                     }}>
                     <Col>
                       <Row style={{ paddingTop: '4px', fontSize: '12px' }}>
@@ -478,7 +477,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -527,7 +526,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -764,29 +763,31 @@ let AgendaActividadDetalle = (props) => {
                   )}
                 </TabPane>
               }
-
-              <TabPane
-                tab={
-                  <>
-                    <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-visible'>
-                      <Badge dot={props.hasOpenSurveys} size='default'>
-                        Encuestas
-                      </Badge>
-                    </p>
-                  </>
-                }>
-                {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
-              </TabPane>
-
-              <TabPane
-                tab={
-                  <>
-                    <p className='lowerTabs__mobile-visible' style={{ marginBottom: '0px' }}>
-                      Juegos
-                    </p>{' '}
-                  </>
-                }
-                key='games'></TabPane>
+              {props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
+                <TabPane
+                  tab={
+                    <>
+                      <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-visible'>
+                        <Badge dot={props.hasOpenSurveys} size='default'>
+                          Encuestas
+                        </Badge>
+                      </p>
+                    </>
+                  }>
+                  {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
+                </TabPane>
+              )}
+              {props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
+                <TabPane
+                  tab={
+                    <>
+                      <p className='lowerTabs__mobile-visible' style={{ marginBottom: '0px' }}>
+                        Juegos
+                      </p>{' '}
+                    </>
+                  }
+                  key='games'></TabPane>
+              )}
             </Tabs>
 
             {/* <div>
@@ -826,7 +827,7 @@ let AgendaActividadDetalle = (props) => {
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end'
+                alignItems: 'flex-end',
               }}>
               {/* <button
                   <div
@@ -872,7 +873,8 @@ const mapStateToProps = (state) => ({
   eventInfo: state.event.data,
   currentActivity: state.stage.data.currentActivity,
   currentSurvey: state.survey.data.currentSurvey,
-  hasOpenSurveys: state.survey.data.hasOpenSurveys
+  hasOpenSurveys: state.survey.data.hasOpenSurveys,
+  tabs: state.stage.data.tabs,
 });
 
 const mapDispatchToProps = {
@@ -880,7 +882,7 @@ const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
-  setHasOpenSurveys
+  setHasOpenSurveys,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));

@@ -41,11 +41,7 @@ let SocialZone = function(props) {
   let usuarioactivo = props.currentUser?.name;
 
   /***********/
-  console.log('datafirebase nos inicamos nuevamente');
-  let chat = props.chat;
-  let attendees = props.attendees;
-  let survey = props.survey;
-  let games = props.games;
+
   let event_id = props.event_id;
   let tab = props.tab;
 
@@ -129,7 +125,7 @@ let SocialZone = function(props) {
               icon: <MessageTwoTone />,
               onClick: () => {
                 setchattab('chat2');
-                console.log(change.doc.data());
+
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
               },
@@ -171,7 +167,7 @@ let SocialZone = function(props) {
       activeKey={currentTab}
       onTabClick={(key) => {
         setcurrentTab(key);
-        console.log(key);
+
         if (key == '4') {
           props.setMainStage('game');
         }
@@ -220,81 +216,75 @@ let SocialZone = function(props) {
         // </TabPane>
       }
 
-      {props.currentActivity !== null && (
-        <>
-          <TabPane
-            className='asistente-survey-list'
-            tab={
-              <div style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
-                <Badge dot={props.hasOpenSurveys} size='default'>
-                  Encuestas
-                </Badge>
-              </div>
-            }
-            key='3'>
-            <Row
-              justify='space-between'
-              style={{ display: 'pointer' }}
-              onClick={() => {
-                props.setMainStage(null);
-                setcurrentTab('');
-                // props.tcollapse();
-              }}>
-              <Col span={24}>
-                <Button
-                  style={{ backgroundColor: '#1cdcb7', color: '#ffffff' }}
-                  size='large'
-                  icon={<VideoCameraOutlined />}
-                  block
-                  onClick={() => {
-                    props.setMainStage(null);
-                    setcurrentTab('');
-                    props.tcollapse();
-                  }}>
-                  Volver a la Conferencia
-                </Button>
-              </Col>
-              {/* <Col span={14}>
-                <h2 style={{ fontWeight: '700' }}></h2>
-              </Col>
-              <Col span={4}>
-               
-              </Col> */}
-            </Row>
-            {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
-          </TabPane>
-          {/* <TabPane
-            className='asistente-survey-list'
-            tab={
-              <>
-                <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
-                  Juegos
-                </p>
-              </>
-            }
-            key='4'>
-            <Row justify='space-between'>
-              <Col span={4}>
-                <ArrowLeftOutlined
-                  onClick={() => {
-                    // props.optionselected('N/A');
-                    props.setMainStage(null);
-                    setcurrentTab('');
-                    props.tcollapse();
-                  }}
-                />
-              </Col>
-              <Col span={14}>
-                <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
-              </Col>
-              <Col span={4}>
-                <VideoCameraOutlined />
-              </Col>
-            </Row>
+      {props.currentActivity !== null && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
+        <TabPane
+          className='asistente-survey-list'
+          tab={
+            <div style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
+              <Badge dot={props.hasOpenSurveys} size='default'>
+                Encuestas
+              </Badge>
+            </div>
+          }
+          key='3'>
+          <Row
+            justify='space-between'
+            style={{ display: 'pointer' }}
+            onClick={() => {
+              props.setMainStage(null);
+              setcurrentTab('');
+              // props.tcollapse();
+            }}>
+            <Col span={24}>
+              <Button
+                style={{ backgroundColor: '#1cdcb7', color: '#ffffff' }}
+                size='large'
+                icon={<VideoCameraOutlined />}
+                block
+                onClick={() => {
+                  props.setMainStage(null);
+                  setcurrentTab('');
+                  props.tcollapse();
+                }}>
+                Volver a la Conferencia
+              </Button>
+            </Col>
+          </Row>
+          {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
+        </TabPane>
+      )}
+      {props.currentActivity !== null && (props.tabs.games === true || props.tabs.games === 'true') && (
+        <TabPane
+          className='asistente-survey-list'
+          tab={
+            <>
+              <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
+                Juegos
+              </p>
+            </>
+          }
+          key='4'>
+          <Row justify='space-between'>
+            <Col span={4}>
+              <ArrowLeftOutlined
+                onClick={() => {
+                  // props.optionselected('N/A');
+                  props.setMainStage(null);
+                  setcurrentTab('');
+                  props.tcollapse();
+                }}
+              />
+            </Col>
+            <Col span={14}>
+              <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
+            </Col>
+            <Col span={4}>
+              <VideoCameraOutlined />
+            </Col>
+          </Row>
 
-            <GameRanking />
-          </TabPane> */}
-        </>
+          <GameRanking />
+        </TabPane>
       )}
     </Tabs>
   );
@@ -307,6 +297,7 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
   viewNotification: state.notifications.data,
+  tabs: state.stage.data.tabs,
 });
 
 const mapDispatchToProps = {

@@ -211,7 +211,10 @@ class SurveyList extends Component {
 
     return (
       <>
-        <Card title={this.props.activity === null && 'Listado de Encuestas'} headStyle={headStyle}>
+        <Card
+          className='lowerTabs__mobile-visible'
+          title={this.props.activity === null && 'Listado de Encuestas'}
+          headStyle={headStyle}>
           {publishedSurveys && publishedSurveys.length === 0 && (
             <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
           )}

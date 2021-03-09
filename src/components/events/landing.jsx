@@ -1177,8 +1177,9 @@ class Landing extends Component {
                                       icon={<TeamOutlined style={{ fontSize: '24px' }} />}
                                       onClick={() => this.toggleCollapsed(2)}></Menu.Item>
                                   }
-                                  {this.props.currentActivity !== null && (
-                                    <>
+                                  {this.props.currentActivity !== null &&
+                                    this.props?.tabs &&
+                                    (this.props.tabs.surveys === 'true' || this.props.tabs.surveys === true) && (
                                       <Menu.Item
                                         key='3'
                                         icon={
@@ -1187,7 +1188,11 @@ class Landing extends Component {
                                           </Badge>
                                         }
                                         onClick={() => this.toggleCollapsed(3)}></Menu.Item>
-                                      {/* <Menu.Item
+                                    )}
+                                  {this.props.currentActivity !== null &&
+                                    this.props?.tabs &&
+                                    (this.props.tabs.games === 'true' || this.props.tabs.games === true) && (
+                                      <Menu.Item
                                         key='4'
                                         icon={
                                           <img
@@ -1199,9 +1204,8 @@ class Landing extends Component {
                                         onClick={() => {
                                           this.props.setMainStage('game');
                                           this.toggleCollapsed(4);
-                                        }}></Menu.Item> */}
-                                    </>
-                                  )}
+                                        }}></Menu.Item>
+                                    )}
                                 </Menu>
                               </>
                             ) : (
@@ -1245,6 +1249,7 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   viewNotification: state.notifications.data,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
+  tabs: state.stage.data.tabs,
 });
 
 const mapDispatchToProps = {
