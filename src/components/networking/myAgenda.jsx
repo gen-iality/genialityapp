@@ -60,7 +60,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Obteniendo las citas del usuario'
+            description: 'Obteniendo las citas del usuario',
           });
         })
         .finally(() => setLoading(false));
@@ -93,7 +93,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             Regresar al listado de citas
           </Button>
 
-          <div className='aspect-ratio-box'>
+          <div className='aspect-ratio-box' style={{ width: '100%' }}>
             <div className='aspect-ratio-box-inside'>
               <iframe
                 style={{ border: '2px solid blue' }}
@@ -102,7 +102,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                   userName +
                   '&URLRoomName=' +
                   currentRoom +
-                  '&passcode=7241521496'
+                  '&passcode=8331071496'
                 }
                 allow='autoplay; fullscreen; camera *;microphone *'
                 allowusermedia
@@ -118,6 +118,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             <iframe
               title='chatevius'
               className='ChatEvius'
+              style={{ width: 400, height: 373 }}
               src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
           )}
         </Col>
@@ -216,7 +217,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Error eliminando la cita'
+            description: 'Error eliminando la cita',
           });
         })
         .finally(() => setLoading(false));
@@ -230,7 +231,6 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
         <Meta
           avatar={<Avatar>{userName ? userName.charAt(0).toUpperCase() : userName}</Avatar>}
           title={userName || 'No registra nombre'}
-          style={{ width: '300px' }}
           description={
             <div>
               <Row className='mi_agenda' justify='space-around'>
@@ -277,7 +277,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                           content: '¿Desea cancelar/eliminar esta cita?',
                           okText: 'Si',
                           cancelText: 'No',
-                          onOk: deleteThisAgenda
+                          onOk: deleteThisAgenda,
                         });
                       }}>
                       {'Cancelar'}

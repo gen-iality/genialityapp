@@ -12,7 +12,7 @@ import Icon, {
   LoadingOutlined,
   PlayCircleOutlined,
   CaretRightOutlined,
-  CheckCircleOutlined
+  CheckCircleOutlined,
 } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
@@ -49,7 +49,7 @@ function AgendaActivityItem(props) {
     eventId,
     userId,
     show_inscription,
-    hideHours
+    hideHours,
   } = props;
 
   useEffect(() => {
@@ -447,189 +447,71 @@ function AgendaActivityItem(props) {
           </Card>
         </div>
       )} */}
-      <Row
-        justify='start'
-        onClick={() => {
-          props.gotoActivity(item);
-        }}>
-        {/* aquie empieza la agenda en estilo mobile */}
-        <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
-          {/* card de agenda en mobile */}
-          <Card hoverable className='card-agenda-mobile agendaHover efect-scale' bodyStyle={{ padding: '10px' }}>
-            <Row gutter={[8, 8]}>
-              <Col span={4}>
-                <div className='agenda-hora'>
-                  {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
-                </div>
-                {/* aqui se encuenta el estado de agenda en la mobile */}
-                <div className='contenedor-estado-agenda'>
-                  {meetingState == 'open_meeting_room' ? (
-                    <EnvivoIcon style={{ fontSize: '35px', marginTop: '10px' }} />
-                  ) : meetingState == 'closed_meeting_room' ? (
-                    <LoadingOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
-                  ) : meetingState == 'ended_meeting_room' && item.video ? (
-                    <CaretRightOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
-                  ) : meetingState == 'ended_meeting_room' ? (
-                    <CheckCircleOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
-                  ) : (
-                    <></>
-                  )}
-                  <span style={{ fontSize: '8px' }}>
-                    {meetingState == 'open_meeting_room'
-                      ? 'En vivo'
-                      : meetingState == 'ended_meeting_room' && item.video
-                      ? 'Grabado'
-                      : meetingState == 'ended_meeting_room'
-                      ? 'Finalizado'
-                      : meetingState == 'closed_meeting_room'
-                      ? 'Por iniciar'
-                      : '     '}
-                  </span>
-                </div>
-              </Col>
-              <Col span={20} style={{ textAlign: 'left' }}>
-                <Space direction='vertical'>
-                  <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
-                    <Col span={24}>
-                      <div className='tituloM'>{item.name}.</div>
-                      <span className='lugarM'>{item && item.space && item.space.name}</span>
-                    </Col>
-                  </Row>
-                  <Row gutter={[4, 4]}>
-                    {item.hosts.length > 0 &&
-                      (item.hosts.length < 4 ? (
-                        <>
-                          {item.hosts.map((speaker, key) => (
-                            <Col key={key} span={8} style={{ fontSize: '75%' }}>
-                              <table>
-                                <tr>
-                                  <th>
-                                    <Avatar size={25} src={speaker.image} />
-                                  </th>
-                                  <th style={{ marginRight: '12px' }}>
-                                    <div style={{ marginLeft: '12px', fontSize: '9px', marginRight: '12px' }}>
-                                      {speaker.name}
-                                    </div>
-                                  </th>
-                                </tr>
-                              </table>
-                            </Col>
-                          ))}
-                        </>
-                      ) : (
-                        <>
-                          <Col span={8} style={{ fontSize: '75%' }}>
-                            <Avatar.Group
-                              maxCount={3}
-                              maxStyle={{
-                                color: '#ffffff',
-                                backgroundColor: '#1CDCB7'
-                              }}>
-                              {item.hosts.map((speaker, key) => (
-                                <Avatar key={key} src={speaker.image} />
-                              ))}
-                            </Avatar.Group>
-                          </Col>
-                        </>
-                      ))}
-                  </Row>
-                </Space>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-        {/* aqui empieza la parte de agenda en desktop */}
-        <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
-          {/* card de la genda en desktop */}
-          <Card hoverable className='card-agenda-desktop agendaHover efect-scale' bodyStyle={{ padding: '10px' }}>
-            <Row gutter={[8, 8]}>
-              <Col md={4} lg={4} xl={4}>
-                <div className='agenda-hora'>
-                  <Timeline>
-                    <Timeline.Item color='#1cdcb7'>
-                      {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
-                      <div className='contenedor-estado-agenda'>
-                        {meetingState == 'open_meeting_room' ? (
-                          <EnvivoIcon style={{ fontSize: '45px', marginTop: '10px' }} />
-                        ) : meetingState == 'closed_meeting_room' ? (
-                          <LoadingOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
-                        ) : meetingState == 'ended_meeting_room' && item.video ? (
-                          <CaretRightOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
-                        ) : meetingState == 'ended_meeting_room' ? (
-                          <CheckCircleOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
-                        ) : (
-                          <></>
-                        )}
 
-                        {(meetingState == '' || meetingState == null) && <></>}
-                        <p style={{ fontSize: '14px' }}>
-                          {meetingState == 'open_meeting_room'
-                            ? 'En vivo'
-                            : meetingState == 'ended_meeting_room' && item.video
-                            ? 'Grabado'
-                            : meetingState == 'ended_meeting_room'
-                            ? 'Finalizado'
-                            : meetingState == 'closed_meeting_room'
-                            ? 'Por iniciar'
-                            : '     '}
-                        </p>
-                      </div>
-                    </Timeline.Item>
-                    <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>
-                      {item.datetime_end ? Moment(item.datetime_end).format('h:mm a') : ''}{' '}
-                    </Timeline.Item>
-                  </Timeline>
-                </div>
-              </Col>
-              <Col md={12} lg={16} xl={16} className='agenda-contenido'>
-                <Space direction='vertical'>
-                  <Row gutter={[10, 10]}>
-                    <Col span={24} style={{ paddingLeft: '0px' }}>
-                      <div className='titulo'>{item.name}.</div>
-                      <span className='lugar'>{item && item.space && item.space.name}</span>
-                    </Col>
-                    <Row>
-                      {item.description !== null && item.description !== '<p><br></p>' && (
-                        <div
-                          style={
-                            item.description !== null && item.description !== '<p><br></p>' ? {} : { display: '' }
-                          }>
-                          {
-                            <>
-                              {/*  */}
-                              <Comment
-                                className='descripcion'
-                                content={
-                                  <div
-                                    style={{
-                                      overflow: 'hidden',
-                                      display: '-webkit-box',
-                                      WebkitLineClamp: '2',
-                                      WebkitBoxOrient: 'vertical',
-                                      width: '90%'
-                                    }}
-                                    dangerouslySetInnerHTML={{ __html: item.description }}
-                                  />
-                                }
-                              />
-                            </>
-                          }
-                        </div>
-                      )}
+      {item.isPublished && (
+        <Row
+          justify='start'
+          onClick={() => {
+            props.gotoActivity(item);
+          }}>
+          {/* aquie empieza la agenda en estilo mobile */}
+          <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
+            {/* card de agenda en mobile */}
+            <Card hoverable className='card-agenda-mobile agendaHover efect-scale' bodyStyle={{ padding: '10px' }}>
+              <Row gutter={[8, 8]}>
+                <Col span={4}>
+                  <div className='agenda-hora'>
+                    {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
+                  </div>
+                  {/* aqui se encuenta el estado de agenda en la mobile */}
+                  <div className='contenedor-estado-agenda'>
+                    {meetingState == 'open_meeting_room' ? (
+                      <EnvivoIcon style={{ fontSize: '35px', marginTop: '10px' }} />
+                    ) : meetingState == 'closed_meeting_room' ? (
+                      <LoadingOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
+                    ) : meetingState == 'ended_meeting_room' && item.video ? (
+                      <CaretRightOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
+                    ) : meetingState == 'ended_meeting_room' ? (
+                      <CheckCircleOutlined style={{ fontSize: '35px', marginTop: '10px' }} />
+                    ) : (
+                      <></>
+                    )}
+                    <span style={{ fontSize: '8px' }}>
+                      {meetingState == 'open_meeting_room'
+                        ? 'En vivo'
+                        : meetingState == 'ended_meeting_room' && item.video
+                        ? 'Grabado'
+                        : meetingState == 'ended_meeting_room'
+                        ? 'Finalizado'
+                        : meetingState == 'closed_meeting_room'
+                        ? 'Por iniciar'
+                        : '     '}
+                    </span>
+                  </div>
+                </Col>
+                <Col span={20} style={{ textAlign: 'left' }}>
+                  <Space direction='vertical'>
+                    <Row gutter={[10, 10]} style={{ textAlign: 'left' }}>
+                      <Col span={24}>
+                        <div className='tituloM'>{item.name}.</div>
+                        <span className='lugarM'>{item && item.space && item.space.name}</span>
+                      </Col>
                     </Row>
-                    <Row>
+                    <Row gutter={[4, 4]}>
                       {item.hosts.length > 0 &&
                         (item.hosts.length < 4 ? (
                           <>
                             {item.hosts.map((speaker, key) => (
-                              <Col key={key} span={6} className='speaker'>
+                              <Col key={key} span={8} style={{ fontSize: '75%' }}>
                                 <table>
                                   <tr>
                                     <th>
                                       <Avatar size={25} src={speaker.image} />
                                     </th>
                                     <th style={{ marginRight: '12px' }}>
-                                      <div className='speaker-name'>{speaker.name}</div>
+                                      <div style={{ marginLeft: '12px', fontSize: '9px', marginRight: '12px' }}>
+                                        {speaker.name}
+                                      </div>
                                     </th>
                                   </tr>
                                 </table>
@@ -643,7 +525,7 @@ function AgendaActivityItem(props) {
                                 maxCount={3}
                                 maxStyle={{
                                   color: '#ffffff',
-                                  backgroundColor: '#1CDCB7'
+                                  backgroundColor: '#1CDCB7',
                                 }}>
                                 {item.hosts.map((speaker, key) => (
                                   <Avatar key={key} src={speaker.image} />
@@ -653,22 +535,143 @@ function AgendaActivityItem(props) {
                           </>
                         ))}
                     </Row>
-                  </Row>
-                </Space>
-              </Col>
-              <Col md={8} lg={4} xl={4}>
-                <img className='agenda-imagen' src={item.image ? item.image : event_image} />
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-      </Row>
+                  </Space>
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+          {/* aqui empieza la parte de agenda en desktop */}
+          <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
+            {/* card de la genda en desktop */}
+            <Card hoverable className='card-agenda-desktop agendaHover efect-scale' bodyStyle={{ padding: '10px' }}>
+              <Row gutter={[8, 8]}>
+                <Col md={4} lg={4} xl={4}>
+                  <div className='agenda-hora'>
+                    <Timeline>
+                      <Timeline.Item color='#1cdcb7'>
+                        {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
+                        <div className='contenedor-estado-agenda'>
+                          {meetingState == 'open_meeting_room' ? (
+                            <EnvivoIcon style={{ fontSize: '45px', marginTop: '10px' }} />
+                          ) : meetingState == 'closed_meeting_room' ? (
+                            <LoadingOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
+                          ) : meetingState == 'ended_meeting_room' && item.video ? (
+                            <CaretRightOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
+                          ) : meetingState == 'ended_meeting_room' ? (
+                            <CheckCircleOutlined style={{ fontSize: '45px', marginTop: '10px' }} />
+                          ) : (
+                            <></>
+                          )}
+
+                          {(meetingState == '' || meetingState == null) && <></>}
+                          <p style={{ fontSize: '14px' }}>
+                            {meetingState == 'open_meeting_room'
+                              ? 'En vivo'
+                              : meetingState == 'ended_meeting_room' && item.video
+                              ? 'Grabado'
+                              : meetingState == 'ended_meeting_room'
+                              ? 'Finalizado'
+                              : meetingState == 'closed_meeting_room'
+                              ? 'Por iniciar'
+                              : '     '}
+                          </p>
+                        </div>
+                      </Timeline.Item>
+                      <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>
+                        {item.datetime_end ? Moment(item.datetime_end).format('h:mm a') : ''}{' '}
+                      </Timeline.Item>
+                    </Timeline>
+                  </div>
+                </Col>
+                <Col md={12} lg={16} xl={16} className='agenda-contenido'>
+                  <Space direction='vertical'>
+                    <Row gutter={[10, 10]}>
+                      <Col span={24} style={{ paddingLeft: '0px' }}>
+                        <div className='titulo'>{item.name}.</div>
+                        <span className='lugar'>{item && item.space && item.space.name}</span>
+                      </Col>
+                      <Row>
+                        {item.description !== null && item.description !== '<p><br></p>' && (
+                          <div
+                            style={
+                              item.description !== null && item.description !== '<p><br></p>' ? {} : { display: '' }
+                            }>
+                            {
+                              <>
+                                {/*  */}
+                                <Comment
+                                  className='descripcion'
+                                  content={
+                                    <div
+                                      style={{
+                                        overflow: 'hidden',
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: '2',
+                                        WebkitBoxOrient: 'vertical',
+                                        width: '90%',
+                                      }}
+                                      dangerouslySetInnerHTML={{ __html: item.description }}
+                                    />
+                                  }
+                                />
+                              </>
+                            }
+                          </div>
+                        )}
+                      </Row>
+                      <Row>
+                        {item.hosts.length > 0 &&
+                          (item.hosts.length < 4 ? (
+                            <>
+                              {item.hosts.map((speaker, key) => (
+                                <Col key={key} span={6} className='speaker'>
+                                  <table>
+                                    <tr>
+                                      <th>
+                                        <Avatar size={25} src={speaker.image} />
+                                      </th>
+                                      <th style={{ marginRight: '12px' }}>
+                                        <div className='speaker-name'>{speaker.name}</div>
+                                      </th>
+                                    </tr>
+                                  </table>
+                                </Col>
+                              ))}
+                            </>
+                          ) : (
+                            <>
+                              <Col span={8} style={{ fontSize: '75%' }}>
+                                <Avatar.Group
+                                  maxCount={3}
+                                  maxStyle={{
+                                    color: '#ffffff',
+                                    backgroundColor: '#1CDCB7',
+                                  }}>
+                                  {item.hosts.map((speaker, key) => (
+                                    <Avatar key={key} src={speaker.image} />
+                                  ))}
+                                </Avatar.Group>
+                              </Col>
+                            </>
+                          ))}
+                      </Row>
+                    </Row>
+                  </Space>
+                </Col>
+                <Col md={8} lg={4} xl={4}>
+                  <img className='agenda-imagen' src={item.image ? item.image : event_image} />
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+        </Row>
+      )}
     </>
   );
 }
 
 const mapDispatchToProps = {
-  gotoActivity
+  gotoActivity,
 };
 
 export default connect(null, mapDispatchToProps)(AgendaActivityItem);

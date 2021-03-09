@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Tabs, Row, Badge, Col, notification } from 'antd';
+import { Tabs, Row, Badge, Col, notification, Button } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone } from '@ant-design/icons';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
@@ -203,24 +203,23 @@ let SocialZone = function(props) {
             setTotalNewMessages={setTotalNewMessages}
             setchattab={setchattab}
             chattab={chattab}
-            datamsjlast={datamsjlast}
+            setCurrentUser={setCurrentUser}
           />
         </TabPane>
       }
       {
         /*attendees &&*/
-
-        <TabPane tab='Asistentes' key='2' className='asistente-list'>
-          <AttendeList
-            currentUser={currentUser}
-            event_id={event_id}
-            currentChat={currentChat}
-            currentChatName={currentChatName}
-            createNewOneToOneChat={createNewOneToOneChat}
-            attendeeList={attendeeList}
-            attendeeListPresence={attendeeListPresence}
-          />
-        </TabPane>
+        // <TabPane tab='Asistentes' key='2' className='asistente-list'>
+        //   <AttendeList
+        //     currentUser={currentUser}
+        //     event_id={event_id}
+        //     currentChat={currentChat}
+        //     currentChatName={currentChatName}
+        //     createNewOneToOneChat={createNewOneToOneChat}
+        //     attendeeList={attendeeList}
+        //     attendeeListPresence={attendeeListPresence}
+        //   />
+        // </TabPane>
       }
 
       {props.currentActivity !== null && (
@@ -235,22 +234,34 @@ let SocialZone = function(props) {
               </div>
             }
             key='3'>
-            <Row justify='space-between'>
-              <Col span={4}>
-                <ArrowLeftOutlined
+            <Row
+              justify='space-between'
+              style={{ display: 'pointer' }}
+              onClick={() => {
+                props.setMainStage(null);
+                setcurrentTab('');
+                // props.tcollapse();
+              }}>
+              <Col span={24}>
+                <Button
+                  style={{ backgroundColor: '#1cdcb7', color: '#ffffff' }}
+                  size='large'
+                  icon={<VideoCameraOutlined />}
+                  block
                   onClick={() => {
                     props.setMainStage(null);
                     setcurrentTab('');
                     props.tcollapse();
-                  }}
-                />
+                  }}>
+                  Volver a la Conferencia
+                </Button>
               </Col>
-              <Col span={14}>
-                <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
+              {/* <Col span={14}>
+                <h2 style={{ fontWeight: '700' }}></h2>
               </Col>
               <Col span={4}>
-                <VideoCameraOutlined />
-              </Col>
+               
+              </Col> */}
             </Row>
             {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
           </TabPane>

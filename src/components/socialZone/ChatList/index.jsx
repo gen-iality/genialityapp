@@ -1,18 +1,50 @@
 import React, { useEffect, useState } from 'react';
 
-import { List, Typography, Badge, Tooltip, Tabs, notification } from 'antd';
+import {
+  List,
+  Typography,
+  Badge,
+  Tooltip,
+  Tabs,
+  notification,
+  Form,
+  FormGroup,
+  Input,
+  Checkbox,
+  Button,
+  Row,
+} from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { connect } from 'react-redux';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
+
 const ChatList = (props) => {
+  const onFinish = (values) => {
+    props.setCurrentUser(values);
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+
   let userName = props.currentUser
-    ? props.currentUser?.names
-    : props.currentUser?.name
-    ? props.currentUser?.name
+    ? props.currentUser.names
+      ? props.currentUser.names
+      : props.currentUser.name
     : undefined;
+
+  //para los eventos tipo asamblea que tienen una propiedad llamada casa que sirve para identificaar las personas
+  userName = props.currentUser && props.currentUser.casa ? '(' + props.currentUser.casa + ') ' + userName : userName;
 
   let usuarioactivo = props.currentUser?.name;
   let [usuariofriend, setusuariofriend] = useState(userName);
@@ -37,9 +69,36 @@ const ChatList = (props) => {
     }
   }
 
-  if (!props.currentUser) return <p>Debes haber ingresado con tu usuario</p>;
+  if (!props.currentUser)
+    return (
+      <Form
+        {...layout}
+        name='basic'
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}>
+        <Row justify='center'>
+          {' '}
+          <h1>
+            <strong>Ingresa tus datos para entrar al chat </strong>
+          </h1>
+        </Row>
+        <Form.Item label='Nombre' name='name' rules={[{ required: true, message: 'Digita tu nombre' }]}>
+          <Input />
+        </Form.Item>
 
-  console.log(currentab);
+        <Form.Item name='email' label='Email' rules={[{ required: true, type: 'email', message: 'Digita tu email' }]}>
+          <Input />
+        </Form.Item>
+
+        <Form.Item {...tailLayout}>
+          <Button type='primary' htmlType='submit'>
+            Entrar
+          </Button>
+        </Form.Item>
+      </Form>
+    );
+
   return (
     <Tabs activeKey={currentab} size='small' onChange={callback} centered>
       <TabPane tab='Público' key='chat1'>
