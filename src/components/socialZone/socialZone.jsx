@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Tabs, Row, Badge, Col, notification } from 'antd';
+import { Tabs, Row, Badge, Col, notification, Button } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone } from '@ant-design/icons';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
@@ -132,7 +132,7 @@ let SocialZone = function(props) {
                 console.log(change.doc.data());
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
-              }
+              },
             });
           setTotalNewMessages(totalNewMessages + 1);
         }
@@ -231,22 +231,34 @@ let SocialZone = function(props) {
               </div>
             }
             key='3'>
-            <Row justify='space-between'>
-              <Col span={4}>
-                <ArrowLeftOutlined
+            <Row
+              justify='space-between'
+              style={{ display: 'pointer' }}
+              onClick={() => {
+                props.setMainStage(null);
+                setcurrentTab('');
+                props.tcollapse();
+              }}>
+              <Col span={24}>
+                <Button
+                  style={{ backgroundColor: '#1cdcb7', color: '#ffffff' }}
+                  size='large'
+                  icon={<VideoCameraOutlined />}
+                  block
                   onClick={() => {
                     props.setMainStage(null);
                     setcurrentTab('');
                     props.tcollapse();
-                  }}
-                />
+                  }}>
+                  Volver a la Conferencia
+                </Button>
               </Col>
-              <Col span={14}>
-                <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
+              {/* <Col span={14}>
+                <h2 style={{ fontWeight: '700' }}></h2>
               </Col>
               <Col span={4}>
-                <VideoCameraOutlined />
-              </Col>
+               
+              </Col> */}
             </Row>
             {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
           </TabPane>
@@ -293,12 +305,12 @@ const mapStateToProps = (state) => ({
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
-  viewNotification: state.notifications.data
+  viewNotification: state.notifications.data,
 });
 
 const mapDispatchToProps = {
   setMainStage,
-  setNotification
+  setNotification,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));
