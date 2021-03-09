@@ -1187,7 +1187,7 @@ class Landing extends Component {
                                           </Badge>
                                         }
                                         onClick={() => this.toggleCollapsed(3)}></Menu.Item>
-                                      <Menu.Item
+                                      {/* <Menu.Item
                                         key='4'
                                         icon={
                                           <img
@@ -1199,7 +1199,7 @@ class Landing extends Component {
                                         onClick={() => {
                                           this.props.setMainStage('game');
                                           this.toggleCollapsed(4);
-                                        }}></Menu.Item>
+                                        }}></Menu.Item> */}
                                     </>
                                   )}
                                 </Menu>

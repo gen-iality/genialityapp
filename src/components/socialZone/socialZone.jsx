@@ -263,7 +263,7 @@ let SocialZone = function(props) {
             </Row>
             {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
           </TabPane>
-          <TabPane
+          {/* <TabPane
             className='asistente-survey-list'
             tab={
               <>
@@ -293,7 +293,7 @@ let SocialZone = function(props) {
             </Row>
 
             <GameRanking />
-          </TabPane>
+          </TabPane> */}
         </>
       )}
     </Tabs>
