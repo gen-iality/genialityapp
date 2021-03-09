@@ -237,7 +237,7 @@ let SocialZone = function(props) {
               onClick={() => {
                 props.setMainStage(null);
                 setcurrentTab('');
-                props.tcollapse();
+                // props.tcollapse();
               }}>
               <Col span={24}>
                 <Button
