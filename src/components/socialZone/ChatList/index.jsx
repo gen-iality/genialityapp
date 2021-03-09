@@ -1,14 +1,43 @@
 import React, { useEffect, useState } from 'react';
 
-import { List, Typography, Badge, Tooltip, Tabs, notification } from 'antd';
+import {
+  List,
+  Typography,
+  Badge,
+  Tooltip,
+  Tabs,
+  notification,
+  Form,
+  FormGroup,
+  Input,
+  Checkbox,
+  Button,
+  Row,
+} from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { connect } from 'react-redux';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
+
 const ChatList = (props) => {
-  console.log('props', props);
+  const onFinish = (values) => {
+    console.log('Success:', values);
+    props.setCurrentUser(values);
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+
   let userName = props.currentUser
     ? props.currentUser.names
       ? props.currentUser.names
@@ -22,7 +51,7 @@ const ChatList = (props) => {
   let [usuariofriend, setusuariofriend] = useState(userName);
   const openNotificationWithIcon = (type) => {
     notification[type]({
-      message: 'holap'
+      message: 'holap',
       // description: 'Tienes un nuevo mensaje',
     });
   };
@@ -43,7 +72,35 @@ const ChatList = (props) => {
     }
   }
 
-  if (!props.currentUser) return <p>Debes haber ingresado con tu usuario</p>;
+  if (!props.currentUser)
+    return (
+      <Form
+        {...layout}
+        name='basic'
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}>
+        <Row justify='center'>
+          {' '}
+          <h1>
+            <strong>Ingresa tus datos para entrar al chat </strong>
+          </h1>
+        </Row>
+        <Form.Item label='Nombre' name='name' rules={[{ required: true, message: 'Digita tu nombre' }]}>
+          <Input />
+        </Form.Item>
+
+        <Form.Item name='email' label='Email' rules={[{ required: true, type: 'email', message: 'Digita tu email' }]}>
+          <Input />
+        </Form.Item>
+
+        <Form.Item {...tailLayout}>
+          <Button type='primary' htmlType='submit'>
+            Entrar
+          </Button>
+        </Form.Item>
+      </Form>
+    );
 
   console.log(currentab);
   return (
@@ -94,13 +151,12 @@ const ChatList = (props) => {
                       <MessageTwoTone style={{ fontSize: '20px' }} />
                     </Badge>
                   </Tooltip>
-                </a>
+                </a>,
               ]}>
               <Typography.Text mark></Typography.Text> {item.name || '----'}
             </List.Item>
           )}
         />
-        
       </TabPane>
 
       {props.currentChat && (
@@ -126,11 +182,11 @@ const mapStateToProps = (state) => ({
   mainStage: state.stage.data.mainStage,
   currentSurvey: state.survey.data.currentSurvey,
   currentActivity: state.stage.data.currentActivity,
-  viewNotification: state.notifications.data
+  viewNotification: state.notifications.data,
 });
 
 const mapDispatchToProps = {
-  setNotification
+  setNotification,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);
