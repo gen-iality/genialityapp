@@ -102,7 +102,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                   userName +
                   '&URLRoomName=' +
                   currentRoom +
-                  '&passcode=7241521496'
+                  '&passcode=8331071496'
                 }
                 allow='autoplay; fullscreen; camera *;microphone *'
                 allowusermedia

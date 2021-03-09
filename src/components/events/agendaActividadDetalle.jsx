@@ -88,6 +88,12 @@ let AgendaActividadDetalle = (props) => {
     };
   }, []);
 
+  /**
+   * Calculating total real attendees this could be done less costly
+   * in the backend using cloud funtions.
+   */
+  /** 
+   * 
   useEffect(() => {
     async function listeningAsistentes() {
       if (event === null || event == undefined || event == false) return false;
@@ -117,6 +123,7 @@ let AgendaActividadDetalle = (props) => {
       await listeningAsistentes();
     })();
   }, [event]);
+**/
 
   useEffect(() => {
     async function listeningSpaceRoom() {
@@ -332,9 +339,10 @@ let AgendaActividadDetalle = (props) => {
               <div style={{ padding: '8px' }}>
                 <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
                   {'Actuales'}
-                  {currentActivity.name} {totalAttendees}
+                  {currentActivity.name}
+                  {/* {totalAttendees}
                   {'/'} {totalAttendeesCheckedin}{' '}
-                  {'(' + Math.round((totalAttendeesCheckedin / totalAttendees) * 100 * 100) / 100 + '%)'}
+                  {'(' + Math.round((totalAttendeesCheckedin / totalAttendees) * 100 * 100) / 100 + '%)'} */}
                 </Row>
                 <Row style={{ height: '2.5vh', fontSize: 14, fontWeight: 'normal' }}>
                   {currentActivity && currentActivity.space && currentActivity.space.name}
