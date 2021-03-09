@@ -15,10 +15,6 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
   const [visibleItem, setVisibleItem] = useState(true);
 
   useEffect(() => {
-    console.log('requestlist invitation list received', list);
-  }, [list]);
-
-  useEffect(() => {
     setInvitationsReceived(list);
   }, [list]);
 
@@ -132,7 +128,7 @@ export default function RequestList({ eventId }) {
         // Solo se obtendran las invitaciones que no tengan respuesta
         if (data.length > 0) {
           setRequestListReceived(data.filter((item) => !item.response));
-          insertNameRequested();
+          insertNameRequested(data);
         }
       });
 
@@ -150,21 +146,15 @@ export default function RequestList({ eventId }) {
     //Se itera el array que llega para obtener los datos
     for (let i = 0; i < requestListReceived.length; i++) {
       //dentro del for se consulta la api para obtener el usuario
-
       let dataUser = await UsersApi.getOne(eventId, requestListReceived[i].id_user_requested);
-      console.log('requestlist datauser list received', requestListReceived);
-      console.log('requestlist datauser response', dataUser);
       // se realiza un if para validar que no se encuentre el campo response para insertar los datos resultantes
-      console.log('requestlist datauser validacion', !requestListReceived[i].response);
-
       if (!requestListReceived[i].response) {
-        console.log('requestlist sin response', !requestListReceived[i].response);
         //se insertan los datos obtenidos del array que se esta iterando y se inserta el nombre del usuario
         requestListReceivedNew.push({
           created_at: requestListReceived[i].created_at,
           eventId: requestListReceived[i].event_id,
           id_user_requested: requestListReceived[i].id_user_requested,
-          user_name_requested: dataUser.properties.names ? dataUser.properties.names : dataUser.properties.name,
+          user_name_requested: dataUser.properties.names,
           id_user_requesting: requestListReceived[i].id_user_requesting,
           state: requestListReceived[i].state,
           updated_at: requestListReceived[i].updated_at,
@@ -173,7 +163,7 @@ export default function RequestList({ eventId }) {
         });
       }
     }
-    console.log('requestlist nuevo listado', requestListReceivedNew);
+    console.log(requestListReceivedNew);
     //se envia a setRequestListReceived para no romper la demas logica
     setRequestListReceived(requestListReceivedNew);
   };
