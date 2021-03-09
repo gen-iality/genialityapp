@@ -1,4 +1,4 @@
-import { SET_STAGE_DATA, GO_TO_ACTIVITY, SET_MAIN_STAGE } from './actions';
+import { SET_STAGE_DATA, GO_TO_ACTIVITY, SET_MAIN_STAGE, SET_TABS } from './actions';
 
 const initialState = {
   data: {
@@ -6,6 +6,12 @@ const initialState = {
     currentActivity: null,
     collapsed: null,
     tabSelected: -1,
+    tabs: {
+      chat: true,
+      atteendes: true,
+      surveys: true,
+      games: true,
+    },
   },
   loading: false,
   error: null,
@@ -32,6 +38,13 @@ export default function stagesReducer(state = initialState, action) {
       return {
         ...state,
         data: { ...state.data, mainStage: action.payload },
+        loading: true,
+        error: null,
+      };
+    case SET_TABS:
+      return {
+        ...state,
+        data: { ...state.data, tabs: action.payload },
         loading: true,
         error: null,
       };

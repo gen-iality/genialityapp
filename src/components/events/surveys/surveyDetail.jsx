@@ -17,7 +17,7 @@ function SurveyDetail(props) {
   const hasRanking = true;
 
   return (
-    <Card>
+    <Card className='lowerTabs__mobile-visible'>
       <Button
         style={{ backgroundColor: '#1cdcb7', color: '#ffffff' }}
         size='large'

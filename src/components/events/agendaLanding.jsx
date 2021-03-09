@@ -16,6 +16,7 @@ import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';
 import { CalendarOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';
+import { setTabs } from '../../redux/stage/actions';
 
 let attendee_states = {
   STATE_DRAFT: '5b0efc411d18160bce9bc706', //"DRAFT";
@@ -179,9 +180,9 @@ class Agenda extends Component {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
 
-          let { habilitar_ingreso, isPublished, meeting_id } = data;
+          let { habilitar_ingreso, isPublished, meeting_id, tabs } = data;
           let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id };
-
+          this.props.setTabs(tabs);
           arr[index] = updatedActivityInfo;
           const filtered = this.filterByDay(this.state.days[0], arr);
           this.setState({ list: arr, filtered, toShow: filtered });
@@ -720,6 +721,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = {
   setNotification,
+  setTabs,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Agenda);
