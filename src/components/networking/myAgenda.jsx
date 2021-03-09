@@ -60,7 +60,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Obteniendo las citas del usuario'
+            description: 'Obteniendo las citas del usuario',
           });
         })
         .finally(() => setLoading(false));
@@ -118,6 +118,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             <iframe
               title='chatevius'
               className='ChatEvius'
+              style={{ width: 400, height: 373 }}
               src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
           )}
         </Col>
@@ -216,7 +217,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Error eliminando la cita'
+            description: 'Error eliminando la cita',
           });
         })
         .finally(() => setLoading(false));
@@ -277,7 +278,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                           content: '¿Desea cancelar/eliminar esta cita?',
                           okText: 'Si',
                           cancelText: 'No',
-                          onOk: deleteThisAgenda
+                          onOk: deleteThisAgenda,
                         });
                       }}>
                       {'Cancelar'}
