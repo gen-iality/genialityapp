@@ -201,6 +201,7 @@ let SocialZone = function(props) {
             setTotalNewMessages={setTotalNewMessages}
             setchattab={setchattab}
             chattab={chattab}
+            setCurrentUser={setCurrentUser}
           />
         </TabPane>
       }
