@@ -31,6 +31,7 @@ let SocialZone = function(props) {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentTab, setcurrentTab] = useState('1');
   const [totalNewMessages, setTotalNewMessages] = useState(0);
+  let [datamsjlast, setdatamsjlast] = useState();
 
   let userName = props.currentUser
     ? props.currentUser?.names
@@ -117,6 +118,7 @@ let SocialZone = function(props) {
         });
 
         let change = querySnapshot.docChanges()[0];
+        setdatamsjlast(change.doc.data());
         //console.log('CHANGE');
         //console.log(change.doc.data());
         if (change) {
@@ -201,6 +203,7 @@ let SocialZone = function(props) {
             setTotalNewMessages={setTotalNewMessages}
             setchattab={setchattab}
             chattab={chattab}
+            datamsjlast={datamsjlast}
           />
         </TabPane>
       }

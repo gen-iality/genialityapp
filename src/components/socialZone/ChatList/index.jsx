@@ -29,8 +29,6 @@ const ChatList = (props) => {
     setcurrentab(props.chattab);
   }, [props.chattab]);
 
-  useEffect(() => {}, [props.totalNewMessages, usuariofriend, usuarioactivo]);
-
   function callback(key) {
     setcurrentab(key);
     if (key === 'chat1') {
@@ -64,7 +62,7 @@ const ChatList = (props) => {
       <TabPane
         tab={
           <>
-            <Badge size='small' count={userName !== usuariofriend ? props.totalNewMessages : null}>
+            <Badge size='small' count={userName === usuariofriend ? props.totalNewMessages : null}>
               Privados
             </Badge>
           </>
@@ -96,7 +94,6 @@ const ChatList = (props) => {
             </List.Item>
           )}
         />
-        
       </TabPane>
 
       {props.currentChat && (
