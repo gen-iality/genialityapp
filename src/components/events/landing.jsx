@@ -404,6 +404,7 @@ class Landing extends Component {
           option={this.state.currentActivity ? this.state.currentActivity.option : 'N/A'}
           collapsed={this.state.collapsed}
           toggleCollapsed={this.toggleCollapsed}
+          showSection={this.showSection}
         />
       ),
       tickets: (
