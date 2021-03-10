@@ -30,7 +30,6 @@ const tailLayout = {
 
 const ChatList = (props) => {
   const onFinish = (values) => {
-    console.log('Success:', values);
     props.setCurrentUser(values);
   };
 
@@ -102,7 +101,6 @@ const ChatList = (props) => {
       </Form>
     );
 
-  console.log(currentab);
   return (
     <Tabs activeKey={currentab} size='small' onChange={callback} centered>
       <TabPane tab='Público' key='chat1'>

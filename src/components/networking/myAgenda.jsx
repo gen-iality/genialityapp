@@ -93,7 +93,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             Regresar al listado de citas
           </Button>
 
-          <div className='aspect-ratio-box'>
+          <div className='aspect-ratio-box' style={{ width: '100%' }}>
             <div className='aspect-ratio-box-inside'>
               <iframe
                 style={{ border: '2px solid blue' }}
@@ -231,7 +231,6 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
         <Meta
           avatar={<Avatar>{userName ? userName.charAt(0).toUpperCase() : userName}</Avatar>}
           title={userName || 'No registra nombre'}
-          style={{ width: '300px' }}
           description={
             <div>
               <Row className='mi_agenda' justify='space-around'>

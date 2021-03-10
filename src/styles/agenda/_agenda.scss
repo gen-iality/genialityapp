@@ -14,6 +14,14 @@
   }
 }
 
+//FIX. la imagen principal de la actividad algun componente le forza un alto fijo
+.container_agenda-information {
+  .activity_image {
+    height: auto !important;
+    max-height: 60vh;
+  }
+}
+
 //**************** Agenda landing*******************//
 
 .container-calendar-section {
@@ -318,89 +326,87 @@
   margin: 0 !important;
 }
 // Card de agenda para mobile
-.card-agenda-mobile{
-  .agenda-hora{
-    font-size: 8px; 
+.card-agenda-mobile {
+  .agenda-hora {
+    font-size: 8px;
     margin-top: 6%;
   }
-  .tituloM{
-    font-Weight: 700; 
-    text-align: left; 
+  .tituloM {
+    font-weight: 700;
+    text-align: left;
     font-size: 12px;
   }
-  .lugarM{
+  .lugarM {
     font-size: 10px;
-    color: grey ;
+    color: grey;
   }
   // .speaker{
   //   .speaker-name{
-  //     margin-left:12px; 
-  //     font-size:9px; 
+  //     margin-left:12px;
+  //     font-size:9px;
   //   }
   // }
 }
 // Card de agenda para desktop
-.card-agenda-desktop{
+.card-agenda-desktop {
   // hora de la agenda
-  .agenda-hora{
+  .agenda-hora {
     margin-top: 10%;
-    .contenedor-estado-agenda{
+    .contenedor-estado-agenda {
       height: 79px;
-      font-size: 8px; 
-      margin-left:-8px;
+      font-size: 8px;
+      margin-left: -8px;
       margin-top: '3%';
     }
     .ant-timeline-item-last > .ant-timeline-item-content {
       min-height: 22px;
     }
-    
+
     .ant-timeline-item-content {
       position: relative;
       top: -7.001px;
       margin: 0px 0 0 -2px;
       word-break: break-word;
     }
-    
+
     .ant-timeline-item {
       position: relative;
       margin: 0;
       padding-bottom: 11px;
       font-size: 14px;
       list-style: none;
-    }    
+    }
   }
   // contenido de la agenda
-  .agenda-contenido{
+  .agenda-contenido {
     text-align: left;
-    .titulo{
-      font-weight: 700; 
+    .titulo {
+      font-weight: 700;
       text-align: left;
       font-size: 20px;
     }
-    .lugar{
+    .lugar {
       font-weight: 700;
       font-size: 15px;
       color: grey;
     }
-    
-    .descripcion{
+
+    .descripcion {
       .ant-comment-inner {
         display: flex;
         padding: 0px 0;
       }
     }
-    .speaker{
+    .speaker {
       font-size: 75%;
-      .speaker-name{
+      .speaker-name {
         margin-left: 15px;
       }
     }
-    
-  } 
-  .agenda-imagen{
-    object-fit:cover; 
-    height: 160px;
-    border-radius:3px;
-  } 
-  
+  }
+  .agenda-imagen {
+    object-fit: cover;
+    max-height: 160px;
+    border-radius: 3px;
+  }
 }

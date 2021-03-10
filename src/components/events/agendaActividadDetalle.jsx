@@ -338,7 +338,6 @@ let AgendaActividadDetalle = (props) => {
               style={{ display: 'flex' }}>
               <div style={{ padding: '8px' }}>
                 <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
-                  {'Actuales'}
                   {currentActivity.name}
                   {/* {totalAttendees}
                   {'/'} {totalAttendeesCheckedin}{' '}
@@ -672,7 +671,7 @@ let AgendaActividadDetalle = (props) => {
                     </>
                   }
                   key='description'>
-                  <div dangerouslySetInnerHTML={{ __html: event.description }}></div>
+                  <div dangerouslySetInnerHTML={{ __html: currentActivity.description }}></div>
                 </TabPane>
               }
               {
@@ -764,29 +763,31 @@ let AgendaActividadDetalle = (props) => {
                   )}
                 </TabPane>
               }
-
-              <TabPane
-                tab={
-                  <>
-                    <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-visible'>
-                      <Badge dot={props.hasOpenSurveys} size='default'>
-                        Encuestas
-                      </Badge>
-                    </p>
-                  </>
-                }>
-                {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
-              </TabPane>
-
-              <TabPane
-                tab={
-                  <>
-                    <p className='lowerTabs__mobile-visible' style={{ marginBottom: '0px' }}>
-                      Juegos
-                    </p>{' '}
-                  </>
-                }
-                key='games'></TabPane>
+              {props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
+                <TabPane
+                  tab={
+                    <>
+                      <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-visible'>
+                        <Badge dot={props.hasOpenSurveys} size='default'>
+                          Encuestas
+                        </Badge>
+                      </p>
+                    </>
+                  }>
+                  {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
+                </TabPane>
+              )}
+              {props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
+                <TabPane
+                  tab={
+                    <>
+                      <p className='lowerTabs__mobile-visible' style={{ marginBottom: '0px' }}>
+                        Juegos
+                      </p>{' '}
+                    </>
+                  }
+                  key='games'></TabPane>
+              )}
             </Tabs>
 
             {/* <div>
@@ -872,7 +873,8 @@ const mapStateToProps = (state) => ({
   eventInfo: state.event.data,
   currentActivity: state.stage.data.currentActivity,
   currentSurvey: state.survey.data.currentSurvey,
-  hasOpenSurveys: state.survey.data.hasOpenSurveys
+  hasOpenSurveys: state.survey.data.hasOpenSurveys,
+  tabs: state.stage.data.tabs
 });
 
 const mapDispatchToProps = {

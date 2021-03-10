@@ -106,8 +106,6 @@ class VirtualConference extends Component {
   }
 
   listeningStateMeetingRoom = (infoAgenda) => {
-    console.log('AGENDA INFO');
-    console.log(infoAgenda);
     infoAgenda.forEach((activity, index, arr) => {
       firestore
         .collection('events')
@@ -144,11 +142,8 @@ class VirtualConference extends Component {
 
     if (!event_id) return infoAgendaArr;
     const infoAgenda = await AgendaApi.byEvent(event_id);
-    console.log('ACTIVIDADES 1');
-    console.log(infoAgenda.data);
+
     await this.listeningStateMeetingRoom(infoAgenda.data);
-    console.log('ACTIVIDADES RESULTANTE');
-    console.log(this.state.infoAgendaArr);
 
     //Mostramos solamente las conferencias que tengan una sala virtual asignada
     for (const prop in this.stateinfoAgendaArr) {

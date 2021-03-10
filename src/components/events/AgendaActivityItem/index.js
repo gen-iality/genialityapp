@@ -12,7 +12,7 @@ import Icon, {
   LoadingOutlined,
   PlayCircleOutlined,
   CaretRightOutlined,
-  CheckCircleOutlined,
+  CheckCircleOutlined
 } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
@@ -49,7 +49,7 @@ function AgendaActivityItem(props) {
     eventId,
     userId,
     show_inscription,
-    hideHours,
+    hideHours
   } = props;
 
   useEffect(() => {
@@ -448,7 +448,7 @@ function AgendaActivityItem(props) {
         </div>
       )} */}
 
-      {item.isPublished && (
+      {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           justify='start'
           onClick={() => {
@@ -525,7 +525,7 @@ function AgendaActivityItem(props) {
                                 maxCount={3}
                                 maxStyle={{
                                   color: '#ffffff',
-                                  backgroundColor: '#1CDCB7',
+                                  backgroundColor: '#1CDCB7'
                                 }}>
                                 {item.hosts.map((speaker, key) => (
                                   <Avatar key={key} src={speaker.image} />
@@ -608,7 +608,7 @@ function AgendaActivityItem(props) {
                                         display: '-webkit-box',
                                         WebkitLineClamp: '2',
                                         WebkitBoxOrient: 'vertical',
-                                        width: '90%',
+                                        width: '90%'
                                       }}
                                       dangerouslySetInnerHTML={{ __html: item.description }}
                                     />
@@ -645,7 +645,7 @@ function AgendaActivityItem(props) {
                                   maxCount={3}
                                   maxStyle={{
                                     color: '#ffffff',
-                                    backgroundColor: '#1CDCB7',
+                                    backgroundColor: '#1CDCB7'
                                   }}>
                                   {item.hosts.map((speaker, key) => (
                                     <Avatar key={key} src={speaker.image} />
@@ -671,7 +671,7 @@ function AgendaActivityItem(props) {
 }
 
 const mapDispatchToProps = {
-  gotoActivity,
+  gotoActivity
 };
 
 export default connect(null, mapDispatchToProps)(AgendaActivityItem);
