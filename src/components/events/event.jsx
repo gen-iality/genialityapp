@@ -11,6 +11,7 @@ import { fetchRol } from '../../redux/rols/actions';
 import { fetchPermissions } from '../../redux/permissions/actions';
 import connect from 'react-redux/es/connect/connect';
 import asyncComponent from '../../containers/AsyncComponent';
+import ChatExport from './ChatExport/';
 import Espacios from '../espacios';
 import Menu from './shared/menu';
 import Datos from './datos';
@@ -184,6 +185,15 @@ class Event extends Component {
                 event={this.state.event}
                 url={match.url}
               />
+
+              <Protected
+                path={`${match.url}/chatexport`}
+                component={ChatExport}
+                eventId={this.state.event._id}
+                event={this.state.event}
+                url={match.url}
+              />
+
               <Protected
                 path={`${match.url}/checkin/:id`}
                 component={CheckAgenda}
