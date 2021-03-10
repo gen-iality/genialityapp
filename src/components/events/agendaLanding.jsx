@@ -542,6 +542,10 @@ class Agenda extends Component {
       documents,
     } = this.state;
 
+    {
+      Moment.locale(window.navigator.language);
+    }
+
     return (
       <div>
         <Modal
@@ -697,6 +701,7 @@ class Agenda extends Component {
                         <p>
                           <Space>
                             <CalendarOutlined />
+
                             {Moment(day)
                               .format('LL')
                               .toUpperCase()}

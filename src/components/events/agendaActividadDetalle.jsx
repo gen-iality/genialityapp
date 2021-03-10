@@ -277,6 +277,10 @@ let AgendaActividadDetalle = (props) => {
     }
   }, [props.event, props.currentActivity]);
 
+  {
+    Moment.locale(window.navigator.language);
+  }
+
   return (
     <div className='is-centered'>
       <div className=' container_agenda-information container-calendar2 is-three-fifths'>
