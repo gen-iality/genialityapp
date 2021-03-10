@@ -29,7 +29,6 @@ class Headers extends Component {
   constructor(props) {
     super(props);
     this.props.history.listen((location) => {
-      console.log('location', location);
       this.handleMenu(location);
     });
 
@@ -118,7 +117,6 @@ class Headers extends Component {
 
   handleMenu = (location) => {
     const splited = location.pathname.split('/');
-    console.log('splited', splited);
     if (splited[1] === '') {
       this.setState({ showAdmin: false, menuOpen: false });
     } else if (splited[1] === 'event') {

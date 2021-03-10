@@ -163,7 +163,7 @@ export default function RequestList({ eventId }) {
         });
       }
     }
-    console.log(requestListReceivedNew);
+
     //se envia a setRequestListReceived para no romper la demas logica
     setRequestListReceived(requestListReceivedNew);
   };
@@ -176,11 +176,10 @@ export default function RequestList({ eventId }) {
       .then((response) => {
         getInvitationsList();
 
-        console.log('respuesta de la invitacion ', response);
         message.success('Respuesta enviada');
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         message.error('Hubo un problema', err);
       });
   };
