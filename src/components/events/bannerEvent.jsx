@@ -1,5 +1,5 @@
 import React from 'react';
-import Moment from 'moment';
+import Moment from 'moment-timezone';
 import TweenOne from 'rc-tween-one';
 import 'rc-banner-anim/assets/index.css';
 import { EnvironmentOutlined, LaptopOutlined } from '@ant-design/icons';
@@ -12,7 +12,7 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
         <img src={bgImage} alt={title} />
       </Col>
       <Col xs={24} sm={0}>
-        <img src={mobileBanner == null ? bgImage : mobileBanner } alt={title} />
+        <img src={mobileBanner == null ? bgImage : mobileBanner} alt={title} />
       </Col>
       {styles && styles.show_card_banner && styles.show_card_banner === 'true' && (
         <HeaderEventInfo title={title} {...props} />
@@ -31,7 +31,7 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
       className='banner-user-text-container'
       style={{
         backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundPosition: 'center'
       }}>
       <TweenOne className='banner-user-text'>
         {/* Fecha del evento */}

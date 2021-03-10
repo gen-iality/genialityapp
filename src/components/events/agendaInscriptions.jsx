@@ -3,7 +3,7 @@ import API, { Activity, AgendaApi, SpacesApi, SurveysApi, DocumentsApi } from '.
 import * as Cookie from 'js-cookie';
 import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert, notification } from 'antd';
 import AgendaActividadDetalle from './agendaActividadDetalle';
-import Moment from 'moment';
+import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { firestore } from '../../helpers/firebase';
 import { FormattedMessage } from 'react-intl';
@@ -248,15 +248,28 @@ class AgendaInscriptions extends Component {
                       <Row align='middle'>
                         <Row>
                           <span className='date-activity'>
-                            {Moment(item.datetime_start).format('DD MMMM YYYY') ===
-                            Moment(item.datetime_end).format('DD MMMM YYYY') ? (
+                            {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                              .tz(Moment.tz.guess())
+                              .format('DD MMMM YYYY') ===
+                            Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                              .tz(Moment.tz.guess())
+                              .format('DD MMMM YYYY') ? (
                               <>
-                                {Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} -{' '}
-                                {Moment(item.datetime_end).format('h:mm a')}
+                                {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                                  .tz(Moment.tz.guess())
+                                  .format('DD MMMM YYYY h:mm a z')}{' '}
+                                -{' '}
+                                {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                                  .tz(Moment.tz.guess())
+                                  .format('h:mm a z')}
                               </>
                             ) : (
-                              Moment(item.datetime_start).format('DD MMMM YYYY hh:mm') -
-                              Moment(item.datetime_end).format('DD MMMM YYYY hh:mm')
+                              Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                                .tz(Moment.tz.guess())
+                                .format('DD MMMM YYYY hh:mm z') -
+                              Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                                .tz(Moment.tz.guess())
+                                .format('DD MMMM YYYY hh:mm z')
                             )}
                           </span>
                           <p>

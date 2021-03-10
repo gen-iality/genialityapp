@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Button, Row, Col, Tag, Avatar, Alert, Card, Space, Timeline, List, Comment } from 'antd';
 import ReactPlayer from 'react-player';
-import Moment from 'moment';
+import Moment from 'moment-timezone';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
 import Icon, {
@@ -12,7 +12,7 @@ import Icon, {
   LoadingOutlined,
   PlayCircleOutlined,
   CaretRightOutlined,
-  CheckCircleOutlined,
+  CheckCircleOutlined
 } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
@@ -49,7 +49,7 @@ function AgendaActivityItem(props) {
     eventId,
     userId,
     show_inscription,
-    hideHours,
+    hideHours
   } = props;
 
   useEffect(() => {
@@ -448,7 +448,7 @@ function AgendaActivityItem(props) {
         </div>
       )} */}
 
-      {item.isPublished && (
+      {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           justify='start'
           onClick={() => {
@@ -461,7 +461,11 @@ function AgendaActivityItem(props) {
               <Row gutter={[8, 8]}>
                 <Col span={4}>
                   <div className='agenda-hora'>
-                    {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
+                    {item.datetime_start
+                      ? Moment(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                          .tz(Moment.tz.guess())
+                          .format('mm a z')
+                      : ''}
                   </div>
                   {/* aqui se encuenta el estado de agenda en la mobile */}
                   <div className='contenedor-estado-agenda'>
@@ -525,7 +529,7 @@ function AgendaActivityItem(props) {
                                 maxCount={3}
                                 maxStyle={{
                                   color: '#ffffff',
-                                  backgroundColor: '#1CDCB7',
+                                  backgroundColor: '#1CDCB7'
                                 }}>
                                 {item.hosts.map((speaker, key) => (
                                   <Avatar key={key} src={speaker.image} />
@@ -549,7 +553,11 @@ function AgendaActivityItem(props) {
                   <div className='agenda-hora'>
                     <Timeline>
                       <Timeline.Item color='#1cdcb7'>
-                        {item.datetime_start ? Moment(item.datetime_start).format('h:mm a') : ''}
+                        {item.datetime_start
+                          ? Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                              .tz(Moment.tz.guess())
+                              .format('h:mm a z')
+                          : ''}
                         <div className='contenedor-estado-agenda'>
                           {meetingState == 'open_meeting_room' ? (
                             <EnvivoIcon style={{ fontSize: '45px', marginTop: '10px' }} />
@@ -578,7 +586,11 @@ function AgendaActivityItem(props) {
                         </div>
                       </Timeline.Item>
                       <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>
-                        {item.datetime_end ? Moment(item.datetime_end).format('h:mm a') : ''}{' '}
+                        {item.datetime_end
+                          ? Moment(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                              .tz(Moment.tz.guess())
+                              .format('h:mm a z')
+                          : ''}{' '}
                       </Timeline.Item>
                     </Timeline>
                   </div>
@@ -608,7 +620,7 @@ function AgendaActivityItem(props) {
                                         display: '-webkit-box',
                                         WebkitLineClamp: '2',
                                         WebkitBoxOrient: 'vertical',
-                                        width: '90%',
+                                        width: '90%'
                                       }}
                                       dangerouslySetInnerHTML={{ __html: item.description }}
                                     />
@@ -645,7 +657,7 @@ function AgendaActivityItem(props) {
                                   maxCount={3}
                                   maxStyle={{
                                     color: '#ffffff',
-                                    backgroundColor: '#1CDCB7',
+                                    backgroundColor: '#1CDCB7'
                                   }}>
                                   {item.hosts.map((speaker, key) => (
                                     <Avatar key={key} src={speaker.image} />
@@ -671,7 +683,7 @@ function AgendaActivityItem(props) {
 }
 
 const mapDispatchToProps = {
-  gotoActivity,
+  gotoActivity
 };
 
 export default connect(null, mapDispatchToProps)(AgendaActivityItem);

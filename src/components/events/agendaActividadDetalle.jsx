@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Moment from 'moment';
+import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
 import API, { EventsApi, TicketsApi, Activity } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Empty, Badge } from 'antd';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Empty, Badge, PageHeader } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
@@ -277,10 +277,19 @@ let AgendaActividadDetalle = (props) => {
     }
   }, [props.event, props.currentActivity]);
 
+  {
+    Moment.locale(window.navigator.language);
+  }
+
   return (
     <div className='is-centered'>
       <div className=' container_agenda-information container-calendar2 is-three-fifths'>
         <Card
+          title={
+            <Row style={{ paddingLeft: '10px' }}>
+              <PageHeader onBack={() => console.log('Presionaste la flecha')} subTitle='Volver al listado de agendas' />
+            </Row>
+          }
           style={{ padding: '1 !important' }}
           className={
             event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6'
@@ -370,11 +379,18 @@ let AgendaActividadDetalle = (props) => {
                     <Col>
                       <Row style={{ paddingTop: '4px', fontSize: '12px' }}>
                         <Col xs={12} md={24} xl={24}>
-                          {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
+                          {Moment.tz(currentActivity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                            .tz(Moment.tz.guess())
+                            .format('DD MMM YYYY')}{' '}
                         </Col>
                         <Col xs={12} md={24} xl={24}>
-                          {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
-                          {Moment(currentActivity.datetime_end).format('h:mm a')}
+                          {Moment.tz(currentActivity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                            .tz(Moment.tz.guess())
+                            .format('h:mm a z')}{' '}
+                          -{' '}
+                          {Moment.tz(currentActivity.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                            .tz(Moment.tz.guess())
+                            .format('h:mm a z')}
                         </Col>
                       </Row>
                     </Col>
@@ -671,10 +687,10 @@ let AgendaActividadDetalle = (props) => {
                     </>
                   }
                   key='description'>
-                  <div dangerouslySetInnerHTML={{ __html: event.description }}></div>
+                  <div dangerouslySetInnerHTML={{ __html: currentActivity.description }}></div>
                 </TabPane>
               }
-              {
+              {props.eventInfo._id !== '601470367711a513cc7061c2' && (
                 <TabPane
                   tab={
                     <>
@@ -737,9 +753,9 @@ let AgendaActividadDetalle = (props) => {
                     )}
                   </>
                 </TabPane>
-              }
+              )}
 
-              {
+              {props.eventInfo._id !== '601470367711a513cc7061c2' && (
                 <TabPane
                   tab={
                     <>
@@ -762,7 +778,7 @@ let AgendaActividadDetalle = (props) => {
                     <Empty />
                   )}
                 </TabPane>
-              }
+              )}
               {props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
                 <TabPane
                   tab={

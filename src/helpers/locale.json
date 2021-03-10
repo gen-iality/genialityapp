@@ -77,7 +77,10 @@
     "login.title": "Login",
     "restore.login.title": "Restore password",
     "restore.login.success": "A new password has been sent to your email",
-    "restore.email.not.registered": "The email entered is not registered"
+    "restore.email.not.registered": "The email entered is not registered",
+
+    "auth.restricted.event.title": "Restricted event: requires prior registration",
+    "auth.restricted.event.message": "You must be registered prior to the event to access the live space, if you are registered and do not have access, contact the organizer"
   },
   "es": {
     "header.help": "Ayuda",
@@ -157,7 +160,10 @@
     "login.title": "Iniciar sesión",
     "restore.login.title": "Restablecer contraseña",
     "restore.login.success": "Se ha enviado una nueva contraseña a su correo",
-    "restore.email.not.registered": "El correo ingresado no se encuentra registrado"
+    "restore.email.not.registered": "El correo ingresado no se encuentra registrado",
+
+    "auth.restricted.event.title": "Evento restringido: requiere registro previo",
+    "auth.restricted.event.message": "Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado y no tienes acceso comunicate con el organizador"
   },
 
   "pt": {
@@ -196,6 +202,9 @@
     "login.title": "Iniciar sessão",
     "restore.login.title": "Restaurar senha",
     "restore.login.success": "Uma nova senha foi enviada para o seu e-mail",
-    "restore.email.not.registered": "O email inserido não está registrado"
+    "restore.email.not.registered": "O email inserido não está registrado",
+
+    "auth.restricted.event.title": "Evento restringido: requiere registro previo",
+    "auth.restricted.event.message": "Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado y no tienes acceso comunicate con el organizador"
   }
 }

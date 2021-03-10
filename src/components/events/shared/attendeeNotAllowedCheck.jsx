@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Alert, Tag, Button } from 'antd';
 import { AuthUrl } from '../../../helpers/constants';
+import { useIntl } from 'react-intl';
 
 const AttendeeNotAllowedCheck = (props) => {
   let event = props.event;
   let currentUser = props.currentUser;
   let usuarioRegistrado = props.usuarioRegistrado;
 
-  useEffect(() => {
-    console.log('allowed', props);
-  }, []);
+  const intl = useIntl();
+
   return (
     <>
       {/* <Tag color='geekblue'>{event && event.allow_register ? 'El Evento permite registro' : 'Es Evento Privado'}</Tag>
@@ -37,13 +37,8 @@ const AttendeeNotAllowedCheck = (props) => {
 
       {currentUser && !usuarioRegistrado && !event.allow_register && (
         <Alert
-          message='Evento restringido. requiere registro previo'
-          description={
-            <p>
-              <b>Evento Restringido:</b> debes estar previamente registrado al evento para acceder al espacio en vivo,
-              si estas registrado y no tienes acceso comunicate con el organizador &nbsp;&nbsp;
-            </p>
-          }
+          message={<b>{intl.formatMessage({ id: 'auth.restricted.event.title' })}</b>}
+          description={<p>{intl.formatMessage({ id: 'auth.restricted.event.message' })}</p>}
           type='warning'
           showIcon
         />
