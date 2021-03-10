@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Tag, Space } from 'antd';
+import XLSX from 'xlsx';
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
@@ -34,7 +35,7 @@ function formatAMPM(hours, minutes) {
   return strTime;
 }
 
-const ChatExport = ({ eventId }) => {
+const ChatExport = ({ eventId, event }) => {
   function timeConverter(UNIX_timestamp) {
     var a = new Date(UNIX_timestamp * 1000);
     var months = [
@@ -84,6 +85,19 @@ const ChatExport = ({ eventId }) => {
     },
   ];
 
+  const exportFile = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
+
+    // const data = await parseData2Excel(datamsjevent);
+    const ws = XLSX.utils.json_to_sheet(datamsjevent);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Chat');
+    XLSX.writeFile(wb, `chatEVENTO ${event.name}.xls`);
+  };
+
   useEffect(() => {
     let datamessagesthisevent = [];
 
@@ -110,7 +124,19 @@ const ChatExport = ({ eventId }) => {
     console.log(datamsjevent);
   }, []);
 
-  return <Table columns={columns} dataSource={datamsjevent} />;
+  return (
+    <>
+      <div className='column is-narrow has-text-centered export button-c is-centered'>
+        <button onClick={(e) => exportFile(e)} className='button is-primary'>
+          <span className='icon'>
+            <i className='fas fa-download' />
+          </span>
+          <span className='text-button'>Exportar</span>
+        </button>
+      </div>
+      <Table columns={columns} dataSource={datamsjevent} />;
+    </>
+  );
 };
 
 export default ChatExport;

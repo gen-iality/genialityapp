@@ -243,7 +243,7 @@ class MenuConfig extends Component {
 
             <Menu.Item>
               <NavLink onClick={this.handleClick} to={`${url}/chatexport`}>
-                Exportar chat del evento
+                Gestion de Chats
               </NavLink>
             </Menu.Item>
 
