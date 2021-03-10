@@ -704,7 +704,7 @@ class Agenda extends Component {
                           <Space>
                             <CalendarOutlined />
                             {Moment(day)
-                              .format('MMMM DD YYYY')
+                              .format('LL')
                               .toUpperCase()}
                           </Space>
                         </p>

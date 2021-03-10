@@ -681,7 +681,7 @@ let AgendaActividadDetalle = (props) => {
                   <div dangerouslySetInnerHTML={{ __html: currentActivity.description }}></div>
                 </TabPane>
               }
-              {
+              {props.eventInfo._id !== '601470367711a513cc7061c2' && (
                 <TabPane
                   tab={
                     <>
@@ -744,9 +744,9 @@ let AgendaActividadDetalle = (props) => {
                     )}
                   </>
                 </TabPane>
-              }
+              )}
 
-              {
+              {props.eventInfo._id !== '601470367711a513cc7061c2' && (
                 <TabPane
                   tab={
                     <>
@@ -769,7 +769,7 @@ let AgendaActividadDetalle = (props) => {
                     <Empty />
                   )}
                 </TabPane>
-              }
+              )}
               {props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
                 <TabPane
                   tab={
