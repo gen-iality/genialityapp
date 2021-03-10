@@ -287,11 +287,6 @@ let AgendaActividadDetalle = (props) => {
     <div className='is-centered'>
       <div className=' container_agenda-information container-calendar2 is-three-fifths'>
         <Card
-          title={
-            <Row style={{ paddingLeft: '10px' }}>
-              <PageHeader onBack={() => console.log('Presionaste la flecha')} subTitle='Volver al listado de agendas' />
-            </Row>
-          }
           style={{ padding: '1 !important' }}
           className={
             event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6'
