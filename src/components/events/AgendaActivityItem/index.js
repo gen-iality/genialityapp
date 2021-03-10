@@ -448,7 +448,7 @@ function AgendaActivityItem(props) {
         </div>
       )} */}
 
-      {(item.isPublished == 'undefined' || item.isPublished) && (
+      {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           justify='start'
           onClick={() => {
