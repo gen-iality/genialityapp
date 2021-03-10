@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Moment from 'moment';
+import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
 import API, { EventsApi, TicketsApi, Activity } from '../../helpers/request';
@@ -370,11 +370,18 @@ let AgendaActividadDetalle = (props) => {
                     <Col>
                       <Row style={{ paddingTop: '4px', fontSize: '12px' }}>
                         <Col xs={12} md={24} xl={24}>
-                          {Moment(currentActivity.datetime_start).format('DD MMM YYYY')}{' '}
+                          {Moment.tz(currentActivity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                            .tz(Moment.tz.guess())
+                            .format('DD MMM YYYY')}{' '}
                         </Col>
                         <Col xs={12} md={24} xl={24}>
-                          {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
-                          {Moment(currentActivity.datetime_end).format('h:mm a')}
+                          {Moment.tz(currentActivity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                            .tz(Moment.tz.guess())
+                            .format('h:mm a z')}{' '}
+                          -{' '}
+                          {Moment.tz(currentActivity.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                            .tz(Moment.tz.guess())
+                            .format('h:mm a z')}
                         </Col>
                       </Row>
                     </Col>
