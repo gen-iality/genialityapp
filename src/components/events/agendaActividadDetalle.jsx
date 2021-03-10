@@ -5,7 +5,7 @@ import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
 import API, { EventsApi, TicketsApi, Activity } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Empty, Badge } from 'antd';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Empty, Badge, Typography } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
@@ -38,6 +38,8 @@ let AgendaActividadDetalle = (props) => {
   const [totalAttendeesCheckedin, setTotalAttendeesCheckedin] = useState(0);
 
   const { eventInfo } = props;
+
+  const { Title } = Typography;
 
   const intl = useIntl();
   const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
@@ -167,7 +169,7 @@ let AgendaActividadDetalle = (props) => {
       const sharedProperties = {
         position: 'fixed',
         right: '0',
-        width: '170px'
+        width: '170px',
       };
 
       const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
@@ -176,7 +178,7 @@ let AgendaActividadDetalle = (props) => {
         ...sharedProperties,
         ...verticalVideo,
         zIndex: '100',
-        transition: '300ms'
+        transition: '300ms',
       });
 
       const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
@@ -187,7 +189,7 @@ let AgendaActividadDetalle = (props) => {
         zIndex: '101',
         cursor: 'pointer',
         display: 'block',
-        height: '96px'
+        height: '96px',
       });
     } else {
       setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
@@ -320,7 +322,7 @@ let AgendaActividadDetalle = (props) => {
                   fontSize: 11,
                   fontWeight: 'normal',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
                 }}>
                 {meetingState === 'open_meeting_room' || stateSpace
                   ? 'En vivo'
@@ -369,7 +371,7 @@ let AgendaActividadDetalle = (props) => {
                       paddingRight: '2vw',
                       height: '5vh',
                       textAlign: 'right !important',
-                      display: 'block'
+                      display: 'block',
                     }}>
                     <Col>
                       <Row style={{ paddingTop: '4px', fontSize: '12px' }}>
@@ -488,7 +490,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -537,7 +539,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -683,74 +685,62 @@ let AgendaActividadDetalle = (props) => {
                   }
                   key='description'>
                   <div dangerouslySetInnerHTML={{ __html: currentActivity.description }}></div>
+                  <br />
+                  {currentActivity.hosts.length === 0 ? (
+                    <div></div>
+                  ) : (
+                    <div className='List-conferencistas'>
+                      <Title level={5}>Panelistas </Title>
+                      <p style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
+                        {orderedHost.length > 0 ? (
+                          <>
+                            <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: '0 auto' }}>
+                              <Card style={{ textAlign: 'left' }}>
+                                <List
+                                  itemLayout='horizontal'
+                                  dataSource={orderedHost}
+                                  renderItem={(item) => (
+                                    <List.Item>
+                                      <List.Item.Meta
+                                        avatar={
+                                          <Avatar
+                                            size={80}
+                                            src={
+                                              item.image
+                                                ? item.image
+                                                : 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                                            }
+                                          />
+                                        }
+                                        title={<strong>{item.name}</strong>}
+                                        description={item.profession}
+                                      />
+                                      <div className='btn-list-confencista'>
+                                        <Button className='button_lista' onClick={() => getSpeakers(item._id)}>
+                                          Ver detalle
+                                        </Button>
+                                      </div>
+                                    </List.Item>
+                                  )}
+                                />
+                                {idSpeaker ? (
+                                  <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} />
+                                ) : (
+                                  <></>
+                                )}
+                              </Card>
+                            </Col>
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </p>
+                    </div>
+                  )}
                 </TabPane>
               }
-              {props.eventInfo._id !== '601470367711a513cc7061c2' && (
-                <TabPane
-                  tab={
-                    <>
-                      <p style={{ marginBottom: '0px' }}>Panelistas</p>
-                    </>
-                  }
-                  key='panel'>
-                  <Row justify='space-between'></Row>
-                  <>
-                    {' '}
-                    {currentActivity.hosts.length === 0 ? (
-                      <div></div>
-                    ) : (
-                      <div className='List-conferencistas'>
-                        <p style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
-                          {orderedHost.length > 0 ? (
-                            <>
-                              <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: '0 auto' }}>
-                                <Card style={{ textAlign: 'left' }}>
-                                  <List
-                                    itemLayout='horizontal'
-                                    dataSource={orderedHost}
-                                    renderItem={(item) => (
-                                      <List.Item>
-                                        <List.Item.Meta
-                                          avatar={
-                                            <Avatar
-                                              size={80}
-                                              src={
-                                                item.image
-                                                  ? item.image
-                                                  : 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-                                              }
-                                            />
-                                          }
-                                          title={<strong>{item.name}</strong>}
-                                          description={item.profession}
-                                        />
-                                        <div className='btn-list-confencista'>
-                                          <Button className='button_lista' onClick={() => getSpeakers(item._id)}>
-                                            Ver detalle
-                                          </Button>
-                                        </div>
-                                      </List.Item>
-                                    )}
-                                  />
-                                  {idSpeaker ? (
-                                    <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} />
-                                  ) : (
-                                    <></>
-                                  )}
-                                </Card>
-                              </Col>
-                            </>
-                          ) : (
-                            <></>
-                          )}
-                        </p>
-                      </div>
-                    )}
-                  </>
-                </TabPane>
-              )}
 
-              {props.eventInfo._id !== '601470367711a513cc7061c2' && (
+              {currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
                 <TabPane
                   tab={
                     <>
@@ -758,22 +748,17 @@ let AgendaActividadDetalle = (props) => {
                     </>
                   }
                   key='docs'>
-                  {currentActivity &&
-                  currentActivity.selected_document &&
-                  currentActivity.selected_document.length > 0 ? (
-                    <div>
-                      <div style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
-                        <b>Documentos:</b> &nbsp;
-                        <div>
-                          <DocumentsList data={currentActivity.selected_document} />
-                        </div>
+                  <div>
+                    <div style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
+                      <b>Documentos:</b> &nbsp;
+                      <div>
+                        <DocumentsList data={currentActivity.selected_document} />
                       </div>
                     </div>
-                  ) : (
-                    <Empty />
-                  )}
+                  </div>
                 </TabPane>
               )}
+
               {props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
                 <TabPane
                   tab={
@@ -838,7 +823,7 @@ let AgendaActividadDetalle = (props) => {
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end'
+                alignItems: 'flex-end',
               }}>
               {/* <button
                   <div
@@ -885,7 +870,7 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   currentSurvey: state.survey.data.currentSurvey,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
-  tabs: state.stage.data.tabs
+  tabs: state.stage.data.tabs,
 });
 
 const mapDispatchToProps = {
@@ -893,7 +878,7 @@ const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
-  setHasOpenSurveys
+  setHasOpenSurveys,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
