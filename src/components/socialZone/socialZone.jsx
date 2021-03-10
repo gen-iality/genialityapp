@@ -31,6 +31,7 @@ let SocialZone = function(props) {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentTab, setcurrentTab] = useState('1');
   const [totalNewMessages, setTotalNewMessages] = useState(0);
+  let [datamsjlast, setdatamsjlast] = useState();
 
   let userName = props.currentUser
     ? props.currentUser?.names
@@ -94,7 +95,7 @@ let SocialZone = function(props) {
   }, []);
 
   //Cargar la lista de chats de una persona
-  let nombreactivouser = props.currentUser?.name;
+  let nombreactivouser = props.currentUser?.names;
   useEffect(() => {
     if (!event_id || !currentUser) return;
 
@@ -113,9 +114,14 @@ let SocialZone = function(props) {
         });
 
         let change = querySnapshot.docChanges()[0];
+        setdatamsjlast(change.doc.data());
         //console.log('CHANGE');
         //console.log(change.doc.data());
         if (change) {
+          console.log('username', props.currentUser._id);
+          console.log('remitente,', change.doc.data().remitente);
+          console.log('id evius', '5MxmwDRVy1dULG3oSkigE1shi7z1s');
+
           userName !== change.doc.data().remitente &&
             change.doc.data().remitente !== null &&
             change.doc.data().remitente !== undefined &&
@@ -128,9 +134,9 @@ let SocialZone = function(props) {
 
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
+                setTotalNewMessages(newmsj);
               },
             });
-          setTotalNewMessages(totalNewMessages + 1);
         }
 
         console.timeLog('setTotalNewMessages ZONA');
@@ -198,6 +204,7 @@ let SocialZone = function(props) {
             setchattab={setchattab}
             chattab={chattab}
             setCurrentUser={setCurrentUser}
+            datamsjlast={datamsjlast}
           />
         </TabPane>
       }
