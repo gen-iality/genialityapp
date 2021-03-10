@@ -14,6 +14,14 @@
   }
 }
 
+//FIX. la imagen algun componente le forza un alto fijo
+.container_agenda-information {
+  .activity_image {
+    height: auto !important;
+    max-height: 60vh;
+  }
+}
+
 //**************** Agenda landing*******************//
 
 .container-calendar-section {
