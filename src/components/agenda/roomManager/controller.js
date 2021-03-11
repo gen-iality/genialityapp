@@ -11,7 +11,7 @@ export default function RoomController(props) {
             <label className='label'>Estado de videoconferencia</label>
             <div className='select is-primary'>
               <select defaultValue={roomStatus} onChange={handleRoomState}>
-                <option value=''>Seleccionar...</option>
+                <option value=''>Sin Estado</option>
                 <option value='open_meeting_room'>Conferencia Abierta</option>
                 <option value='closed_meeting_room'>Conferencia no Iniciada</option>
                 <option value='ended_meeting_room'>Conferencia Terminada</option>
