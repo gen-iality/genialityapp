@@ -206,22 +206,20 @@ class SurveyList extends Component {
     setCurrentSurvey(currentSurvey);
   };
 
-  // surveyQuickAccess = () => {
-
-  // }
-
   render() {
     const { surveyLabel, loading, publishedSurveys } = this.state;
 
     return (
       <>
         <Card
-          className='lowerTabs__mobile-visible'
+          // className='lowerTabs__mobile-visible'
           title={this.props.activity === null && 'Listado de Encuestas'}
           headStyle={headStyle}>
           {publishedSurveys && publishedSurveys.length === 0 && (
             <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
           )}
+
+          {publishedSurveys && publishedSurveys.length === 1 && this.handleClick(publishedSurveys[0])}
 
           {publishedSurveys && publishedSurveys.length > 0 && (
             <List
