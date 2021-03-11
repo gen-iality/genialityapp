@@ -18,7 +18,7 @@ const MeetingConferenceButton = ({
   usuarioRegistrado,
   event,
   showSection,
-  setActivity,
+  setActivity
 }) => {
   const [infoActivity, setInfoActivity] = useState({});
   const [infoEvent, setInfoEvent] = useState({});
@@ -76,7 +76,7 @@ class VirtualConference extends Component {
       infoAgendaArr: [],
       usuarioRegistrado: this.props.usuarioRegistrado || undefined,
       event: this.props.event || undefined,
-      survey: [],
+      survey: []
     };
   }
 
@@ -185,20 +185,20 @@ class VirtualConference extends Component {
                                     /> */}
                     <h1 style={{ fontSize: '120%', fontWeight: 'Bold' }}>{item.name}</h1>
                     <p>
-                      {Moment(item.datetime_start).format('D ')}
-                      <span>&nbsp;de&nbsp;</span>
-                      {item.datetime_start &&
-                        Moment(item.datetime_start)
-                          .format('MMMM')
-                          .charAt(0)
-                          .toUpperCase()}
-                      {item.datetime_start &&
-                        Moment(item.datetime_start)
-                          .format('MMMM')
-                          .slice(1)}
+                      {Moment(item.datetime_start).format('LL')}
                       <span>&nbsp;&nbsp;&nbsp;</span>
-                      {Moment(item.datetime_start).format('h:mm A')} {' - '}
-                      {Moment(item.datetime_end).format('h:mm A')}
+                      {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                        .tz(Moment.tz.guess())
+                        .format('h:mm A')}
+                      {' - '}
+                      {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                        .tz(Moment.tz.guess())
+                        .format('h:mm A')}
+                      <span className='ultrasmall-mobile'>
+                        {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                          .tz(Moment.tz.guess())
+                          .format(' (Z)')}
+                      </span>
                     </p>
 
                     {item.hosts && (
@@ -258,7 +258,7 @@ class VirtualConference extends Component {
 }
 
 const mapDispatchToProps = {
-  gotoActivity,
+  gotoActivity
 };
 
 export default connect(null, mapDispatchToProps)(WithUserEventRegistered(VirtualConference));

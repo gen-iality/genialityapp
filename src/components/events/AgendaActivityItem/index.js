@@ -12,7 +12,7 @@ import Icon, {
   LoadingOutlined,
   PlayCircleOutlined,
   CaretRightOutlined,
-  CheckCircleOutlined,
+  CheckCircleOutlined
 } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
@@ -50,7 +50,7 @@ function AgendaActivityItem(props) {
     eventId,
     userId,
     show_inscription,
-    hideHours,
+    hideHours
   } = props;
 
   useEffect(() => {
@@ -92,363 +92,6 @@ function AgendaActivityItem(props) {
 
   return (
     <>
-      {/* {item.isPublished && (
-        <div className='container_agenda-information'>
-          <Card
-            className='agenda_information'
-            title={item.name}
-            extra={
-              eventId != '5f80b6c93b4b966dfe7cd012' &&
-              eventId != '5f80a72272ccfd4e0d44b722' &&
-              eventId != '5f80a9b272ccfd4e0d44b728' &&
-              eventId != '5f8099c29564bf4ee44da4f3' && (
-                <span className='date-activity'>
-                  {Moment(item.datetime_start).format('DD MMMM YYYY') ===
-                  Moment(item.datetime_end).format('DD MMMM YYYY') ? (
-                    <>
-                      {`${Moment(item.datetime_start).format('DD MMMM YYYY')} ${
-                        !hideHours || hideHours === 'false'
-                          ? Moment(item.datetime_start).format('h:mm a') +
-                            ' - ' +
-                            Moment(item.datetime_end).format('h:mm a')
-                          : ''
-                      }`}
-                    </>
-                  ) : (
-                    <>{`${Moment(item.datetime_start).format('DD MMMM YYYY')} ${
-                      !hideHours || hideHours === 'false' ? Moment(item.datetime_start).format('hh:mm') + ' - ' : ' '
-                    } - ${Moment(item.datetime_end).format('DD MMMM YYYY')} ${
-                      !hideHours || hideHours === 'false' ? Moment(item.datetime_end).format('hh:mm') + ' - ' : ' '
-                    }`}</>
-                  )}
-                </span>
-              )
-            }>
-            <Row justify='space-between'>
-              {item.description === null || item.hosts.length === 0 ? (
-                <>
-                  <Col xs={24} sm={24} md={24} xl={24} xxl={24}>
-                    <div className='img-agenda-event'>
-                      {!item.habilitar_ingreso && <img src={item.image ? item.image : event_image} />}
-                      {item.habilitar_ingreso === 'closed_meeting_room' && (
-                        <>
-                          <img src={item.image ? item.image : event_image} />
-                          <Alert
-                            message={
-                              intl.formatMessage({ id: 'live.starts_in' }) +
-                              ` ${Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} ${' - '} ${Moment(
-                                item.datetime_end
-                              ).format('h:mm a')}`
-                            }
-                            type='warning'
-                          />
-                        </>
-                      )}
-                      {item.habilitar_ingreso === 'ended_meeting_room' && (
-                        <>
-                          {item.video ? (
-                            item.video && (
-                              <>
-                                <Alert message={intl.formatMessage({ id: 'live.ended.video' })} type='success' />
-                                <ReactPlayer
-                                  width={'100%'}
-                                  style={{
-                                    display: 'block',
-                                    margin: '0 auto',
-                                  }}
-                                  url={item.video}
-                                  //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-                                  controls
-                                  config={{
-                                    file: { attributes: { controlsList: 'nodownload' } },
-                                  }}
-                                />
-                              </>
-                            )
-                          ) : (
-                            <>
-                              <img src={item.image ? item.image : event_image} />
-                              <Alert
-                                message={`${intl.formatMessage({ id: 'live.ended' })}: ${Moment(
-                                  item.datetime_start
-                                ).format('DD MMMM YYYY h:mm a')} ${' - '} ${Moment(item.datetime_end).format(
-                                  'h:mm a'
-                                )}`}
-                                type='info'
-                              />
-                            </>
-                          )}
-                        </>
-                      )}
-                      {item.habilitar_ingreso === 'open_meeting_room' && (
-                        <>
-                          <img
-                            onClick={() => item.meeting_id && toggleConference(true, item.meeting_id, item)}
-                            src={item.image ? item.image : event_image}
-                          />
-                          <div>
-                            <Button
-                              block
-                              type='primary'
-                              disabled={item.meeting_id || item.vimeo_id ? false : true}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleConference(
-                                  true,
-                                  item.meeting_id || item.vimeo_id ? item.meeting_id : item.vimeo_id,
-                                  item
-                                );
-                              }}>
-                              {item.meeting_id || item.vimeo_id
-                                ? intl.formatMessage({ id: 'live.join' })
-                                : intl.formatMessage({ id: 'live.join.disabled' })}
-                            </Button>
-                          </div>
-                          <Row>
-                            {related_meetings &&
-                              related_meetings.map((item, key) => (
-                                <>
-                                  {item.state === 'open_meeting_room' && (
-                                    <Button
-                                      disabled={item.meeting_id || item.vimeo_id ? false : true}
-                                      onClick={() =>
-                                        toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
-                                      }
-                                      type='primary'
-                                      className='button-Agenda'
-                                      key={key}>
-                                      {item.informative_text}
-                                    </Button>
-                                  )}
-                                  {item.state === 'closed_meeting_room' && (
-                                    <Alert message={intl.formatMessage({ id: 'live.closed' })} type='info' />
-                                  )}
-
-                                  {item.state === 'ended_meeting_room' && (
-                                    <Alert message={intl.formatMessage({ id: 'live.ended' })} type='info' />
-                                  )}
-                                </>
-                              ))}
-                          </Row>
-                        </>
-                      )}
-                    </div>
-                  </Col>
-                </>
-              ) : (
-                <>
-                  <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-                    <div className='img-agenda-event'>
-                      {!item.habilitar_ingreso && <img src={item.image ? item.image : event_image} />}
-                      {item.habilitar_ingreso === 'closed_meeting_room' && (
-                        <>
-                          <img src={item.image ? item.image : event_image} />
-                          <Alert
-                            message={`La sesión inicia: ${Moment(item.datetime_start).format(
-                              'DD MMMM YYYY h:mm a'
-                            )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
-                            type='warning'
-                          />
-                        </>
-                      )}
-                      {item.habilitar_ingreso === 'ended_meeting_room' && (
-                        <>
-                          {item.video ? (
-                            item.video && (
-                              <>
-                                <Alert message='Conferencia Terminada. Observa el video Aquí' type='success' />
-                                <ReactPlayer
-                                  width={'100%'}
-                                  style={{
-                                    display: 'block',
-                                    margin: '0 auto',
-                                  }}
-                                  url={item.video}
-                                  //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-                                  controls
-                                  config={{
-                                    file: { attributes: { controlsList: 'nodownload' } },
-                                  }}
-                                />
-                              </>
-                            )
-                          ) : (
-                            <>
-                              <img src={item.image ? item.image : event_image} />
-                              <Alert
-                                message={`La Conferencia ha Terminado: ${Moment(item.datetime_start).format(
-                                  'DD MMMM YYYY h:mm a'
-                                )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
-                                type='info'
-                              />
-                            </>
-                          )}
-                        </>
-                      )}
-                      {item.habilitar_ingreso === 'open_meeting_room' && (
-                        <>
-                          <img
-                            onClick={() => item.meeting_id && toggleConference(true, item.meeting_id, item)}
-                            src={item.image ? item.image : event_image}
-                          />
-                          <div>
-                            <Button
-                              block
-                              type='primary'
-                              disabled={item.meeting_id || item.vimeo_id ? false : true}
-                              onClick={() =>
-                                toggleConference(
-                                  true,
-                                  item.meeting_id || item.vimeo_id ? item.meeting_id : item.vimeo_id,
-                                  item
-                                )
-                              }>
-                              {item.meeting_id || item.vimeo_id
-                                ? 'Conéctate a la conferencia en vivo'
-                                : 'Aún no empieza Conferencia Virtual'}
-                            </Button>
-                          </div>
-                          <Row>
-                            {related_meetings &&
-                              related_meetings.map((item, key) => (
-                                <>
-                                  {item.state === 'open_meeting_room' && (
-                                    <Button
-                                      disabled={item.meeting_id || item.vimeo_id ? false : true}
-                                      onClick={() =>
-                                        toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
-                                      }
-                                      type='primary'
-                                      className='button-Agenda'
-                                      key={key}>
-                                      {item.informative_text}
-                                    </Button>
-                                  )}
-                                  {item.state === 'closed_meeting_room' && (
-                                    <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
-                                  )}
-
-                                  {item.state === 'ended_meeting_room' && (
-                                    <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
-                                  )}
-                                </>
-                              ))}
-                          </Row>
-                        </>
-                      )}
-                    </div>
-                  </Col>
-                  <Col xs={24} sm={24} md={24} lg={12} xl={16} xxl={16}>
-                    {item.description !== null && item.description !== '<p><br></p>' && (
-                      <div
-                        className='description-agenda'
-                        style={
-                          item.description !== null && item.description !== '<p><br></p>' ? {} : { display: 'none' }
-                        }>
-                        {
-                          <>
-                            <Row>
-                              <div dangerouslySetInnerHTML={{ __html: item.description }} />
-                            </Row>
-                          </>
-                        }
-                      </div>
-                    )}
-
-                    {item.hosts.length > 0 && (
-                      <>
-                        <Row justify='start' className='txt-agenda-Panelistas'>
-                          <h4>Panelistas:</h4>
-                        </Row>
-                        <Row justify='start' className='Agenda-Panelistas'>
-                          {item.hosts.map((speaker, key) => (
-                            <span key={key} className='Agenda-speaker'>
-                              <Col lg={24} xl={24} xxl={24}>
-                                <Avatar size={30} src={speaker.image} /> {speaker.name} &nbsp;
-                              </Col>
-                            </span>
-                          ))}
-                        </Row>
-                      </>
-                    )}
-                  </Col>
-                </>
-              )}
-            </Row>
-            <Row>
-              <Col xs={24} sm={24} md={24} lg={8} xxl={8} xl={8}>
-                <Row justify='start' align='middle'>
-                  <div
-                    onClick={() => {
-                      gotoActivity(item);
-                    }}
-                    className='tag-agenda'
-                    style={{ marginBottom: '5%' }}>
-                    <TagOutlined style={{ marginRight: '12px', fontSize: '15px' }} />
-                    {item.activity_categories.length > 0 && (
-                      <>
-                        {item.activity_categories.map((item) => (
-                          <>
-                            <Tag>{item.name}</Tag>
-                          </>
-                        ))}
-                      </>
-                    )}
-                  </div>
-                </Row>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
-                <Row justify='end' align='bottom'>
-                  {show_inscription === 'true' && (
-                    <Button
-                      type='primary'
-                      onClick={() => registerInActivity(item._id, eventId, userId, setIsRegistered)}
-                      className='space-align-block button-Agenda'
-                      disabled={isRegistered}>
-                      {isRegistered ? 'Inscrito' : 'Inscribirme'}
-                    </Button>
-                  )}
-                  {btnDetailAgenda === 'true' && (
-                    <Button
-                      type='primary'
-                      onClick={() => {
-                        props.gotoActivity(item);
-                      }}
-                      className='space-align-block button-Agenda'>
-                      Detalle de actividad
-                    </Button>
-                  )}
-                  {Documents &&
-                    Documents.length > 0 &&
-                    Documents.filter((element) => element.activity_id === item._id).length > 0 && (
-                      <Button
-                        type='primary'
-                        onClick={() => {
-                          gotoActivity(item);
-                        }}
-                        className='space-align-block button-Agenda'>
-                        Documentos
-                      </Button>
-                    )}
-                  {Surveys &&
-                    Surveys.length > 0 &&
-                    Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
-                      <Button
-                        type='primary'
-                        onClick={() => {
-                          gotoActivity(item);
-                        }}
-                        className='space-align-block button-Agenda'>
-                        Encuestas
-                      </Button>
-                    )}
-                </Row>
-              </Col>
-            </Row>
-          </Card>
-        </div>
-      )} */}
-
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           justify='start'
@@ -463,10 +106,17 @@ function AgendaActivityItem(props) {
                 <Col span={4}>
                   <div className='agenda-hora'>
                     {item.datetime_start
-                      ? Moment(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                      ? Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
                           .tz(timeZone)
-                          .format('mm a (z)')
+                          .format('hh:mm a')
                       : ''}
+                    {item.datetime_start && (
+                      <p className='ultrasmall-mobile'>
+                        {Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                          .tz(timeZone)
+                          .format(' (Z)')}
+                      </p>
+                    )}
                   </div>
                   {/* aqui se encuenta el estado de agenda en la mobile */}
                   <div className='contenedor-estado-agenda'>
@@ -530,7 +180,7 @@ function AgendaActivityItem(props) {
                                 maxCount={3}
                                 maxStyle={{
                                   color: '#ffffff',
-                                  backgroundColor: '#1CDCB7',
+                                  backgroundColor: '#1CDCB7'
                                 }}>
                                 {item.hosts.map((speaker, key) => (
                                   <Avatar key={key} src={speaker.image} />
@@ -557,8 +207,18 @@ function AgendaActivityItem(props) {
                         {item.datetime_start
                           ? Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
                               .tz(timeZone)
-                              .format('h:mm a (z)')
+                              .format('h:mm a')
                           : ''}
+                        {item.datetime_start && (
+                          <p className='ultrasmall'>
+                            {Moment.tz(item.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                              .tz(timeZone)
+                              .format(' (Z') +
+                              ' ' +
+                              timeZone +
+                              ') '}
+                          </p>
+                        )}
                         <div className='contenedor-estado-agenda'>
                           {meetingState == 'open_meeting_room' ? (
                             <EnvivoIcon style={{ fontSize: '45px', marginTop: '10px' }} />
@@ -587,11 +247,20 @@ function AgendaActivityItem(props) {
                         </div>
                       </Timeline.Item>
                       <Timeline.Item color='#1cdcb7' style={{ paddingBottom: '0px' }}>
-                        {item.datetime_end
-                          ? Moment(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                        {item.datetime_end &&
+                          Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                            .tz(timeZone)
+                            .format('h:mm a')}
+                        {item.datetime_end && (
+                          <p className='ultrasmall'>
+                            {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
                               .tz(timeZone)
-                              .format('h:mm a (z)')
-                          : ''}{' '}
+                              .format(' (Z') +
+                              ' ' +
+                              timeZone +
+                              ') '}
+                          </p>
+                        )}
                       </Timeline.Item>
                     </Timeline>
                   </div>
@@ -621,7 +290,7 @@ function AgendaActivityItem(props) {
                                         display: '-webkit-box',
                                         WebkitLineClamp: '2',
                                         WebkitBoxOrient: 'vertical',
-                                        width: '90%',
+                                        width: '90%'
                                       }}
                                       dangerouslySetInnerHTML={{ __html: item.description }}
                                     />
@@ -658,7 +327,7 @@ function AgendaActivityItem(props) {
                                   maxCount={3}
                                   maxStyle={{
                                     color: '#ffffff',
-                                    backgroundColor: '#1CDCB7',
+                                    backgroundColor: '#1CDCB7'
                                   }}>
                                   {item.hosts.map((speaker, key) => (
                                     <Avatar key={key} src={speaker.image} />
@@ -684,7 +353,7 @@ function AgendaActivityItem(props) {
 }
 
 const mapDispatchToProps = {
-  gotoActivity,
+  gotoActivity
 };
 
 export default connect(null, mapDispatchToProps)(AgendaActivityItem);

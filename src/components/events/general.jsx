@@ -47,7 +47,7 @@ class General extends Component {
       dates: [],
       data_loader_page: '',
       checked: false,
-      has_payment: false,
+      has_payment: false
     };
     this.specificDates = this.specificDates.bind(this);
     this.submit = this.submit.bind(this);
@@ -56,11 +56,10 @@ class General extends Component {
   }
 
   async componentDidMount() {
-    //console.log(this.props.intl.formatMessage({ id: 'live.join.disabled' }));
     const info = this.props.event;
     this.setState({ info });
     this.setState({
-      checked: info.initial_page ? true : false,
+      checked: info.initial_page ? true : false
     });
     try {
       const { event } = this.props;
@@ -84,7 +83,7 @@ class General extends Component {
         selectedCategories,
         selectedOrganizer,
         selectedType,
-        loading: false,
+        loading: false
       });
       if (info.dates && info.dates.length > 0) {
         this.setState({ specificDates: true });
@@ -152,7 +151,7 @@ class General extends Component {
   //Cambio en los input de fechas
   changeDate = (value, name) => {
     let {
-      event: { date_end },
+      event: { date_end }
     } = this.state;
     if (name === 'date_start') {
       const diff = Moment(value).diff(Moment(date_end), 'days');
@@ -172,7 +171,7 @@ class General extends Component {
     if (file) {
       this.setState({
         imageFile: file,
-        event: { ...this.state.event, picture: null },
+        event: { ...this.state.event, picture: null }
       });
 
       //envia el archivo de imagen como POST al API
@@ -191,11 +190,11 @@ class General extends Component {
         self.setState({
           event: {
             ...self.state.event,
-            picture: path[0],
+            picture: path[0]
           },
           fileMsg: 'Imagen subida con exito',
           imageFile: null,
-          path,
+          path
         });
 
         toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
@@ -213,7 +212,7 @@ class General extends Component {
     if (file) {
       this.setState({
         imageFileBannerImage: file,
-        event: { ...this.state.event, bannerImage: null },
+        event: { ...this.state.event, bannerImage: null }
       });
 
       //envia el archivo de imagen como POST al API
@@ -232,11 +231,11 @@ class General extends Component {
         self.setState({
           event: {
             ...self.state.event,
-            bannerImage: banner_image,
+            bannerImage: banner_image
           },
           fileMsgBanner: 'Imagen subida con exito',
           imageFileBannerImage: null,
-          banner_image,
+          banner_image
         });
 
         toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
@@ -298,7 +297,7 @@ class General extends Component {
       show_banner_footer: event.show_banner_footer || false,
       has_payment: event.has_payment ? event.has_payment : false,
       language: event.language ? event.language : 'es',
-      googleanlyticsid: event.googleanlyticsid || null,
+      googleanlyticsid: event.googleanlyticsid || null
     };
 
     console.log('Marlon aqui:', data);
@@ -348,7 +347,7 @@ class General extends Component {
       await EventsApi.deleteOne(this.state.event._id);
       this.setState({
         message: { ...this.state.message, class: 'msg_success', content: 'Evento borrado' },
-        isLoading: false,
+        isLoading: false
       });
       setTimeout(() => {
         this.setState({ message: {}, modal: false });
@@ -359,7 +358,7 @@ class General extends Component {
         console.error(error.response);
         this.setState({
           message: { ...this.state.message, class: 'msg_error', content: JSON.stringify(error.response) },
-          isLoading: false,
+          isLoading: false
         });
       } else if (error.request) {
         console.error(error.request);
@@ -384,7 +383,7 @@ class General extends Component {
 
     if (checked === false) {
       const properties = {
-        dates: {},
+        dates: {}
       };
 
       await EventsApi.editOne(properties, this.props.eventId);
@@ -397,7 +396,7 @@ class General extends Component {
 
   onChangeCheck = (e) => {
     this.setState({
-      checked: e.target.checked,
+      checked: e.target.checked
     });
   };
 
@@ -419,7 +418,7 @@ class General extends Component {
       timeout,
       errorData,
       serverError,
-      specificDates,
+      specificDates
     } = this.state;
     return (
       <React.Fragment>
@@ -839,7 +838,7 @@ class General extends Component {
                       borderWidth: 2,
                       borderColor: '#b5b5b5',
                       borderStyle: 'dashed',
-                      borderRadius: 10,
+                      borderRadius: 10
                     }}
                   />
                 </div>
