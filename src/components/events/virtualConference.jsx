@@ -3,7 +3,7 @@ import { Card, Button, Alert } from 'antd';
 import WithUserEventRegistered from '../shared/withUserEventRegistered';
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
-import Moment from 'moment';
+import Moment from 'moment-timezone';
 import { Avatar } from 'antd';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
