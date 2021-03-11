@@ -114,14 +114,10 @@ let SocialZone = function(props) {
         });
 
         let change = querySnapshot.docChanges()[0];
-        setdatamsjlast(change.doc.data());
+        setdatamsjlast(change?.doc.data());
         //console.log('CHANGE');
         //console.log(change.doc.data());
         if (change) {
-          console.log('username', props.currentUser._id);
-          console.log('remitente,', change.doc.data().remitente);
-          console.log('id evius', '5MxmwDRVy1dULG3oSkigE1shi7z1s');
-
           userName !== change.doc.data().remitente &&
             change.doc.data().remitente !== null &&
             change.doc.data().remitente !== undefined &&
@@ -223,7 +219,7 @@ let SocialZone = function(props) {
         // </TabPane>
       }
 
-      {props.currentActivity !== null && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
+      {props.currentActivity !== null && props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
         <TabPane
           className='asistente-survey-list'
           tab={
@@ -260,7 +256,7 @@ let SocialZone = function(props) {
           {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
         </TabPane>
       )}
-      {props.currentActivity !== null && (props.tabs.games === true || props.tabs.games === 'true') && (
+      {props.currentActivity !== null && props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
         <TabPane
           className='asistente-survey-list'
           tab={

@@ -206,6 +206,10 @@ class SurveyList extends Component {
     setCurrentSurvey(currentSurvey);
   };
 
+  // surveyQuickAccess = () => {
+
+  // }
+
   render() {
     const { surveyLabel, loading, publishedSurveys } = this.state;
 
