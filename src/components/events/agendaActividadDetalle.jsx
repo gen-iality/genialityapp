@@ -5,7 +5,7 @@ import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { FormattedMessage, useIntl } from 'react-intl';
 import API, { EventsApi, TicketsApi, Activity } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Empty, Badge, PageHeader, Typography } from 'antd';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, PageHeader, Typography, Form, Input } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
@@ -25,6 +25,15 @@ const { TabPane } = Tabs;
 const { gotoActivity, setMainStage } = StageActions;
 const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys } = SurveyActions;
 
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 10 },
+};
+
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 10 },
+};
+
 let AgendaActividadDetalle = (props) => {
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
@@ -36,6 +45,8 @@ let AgendaActividadDetalle = (props) => {
   const [platform, setPlatform] = useState(null);
   const [totalAttendees, setTotalAttendees] = useState(0);
   const [totalAttendeesCheckedin, setTotalAttendeesCheckedin] = useState(0);
+  const [names, setNames] = useState(null);
+  const [email, setEmail] = useState(null);
 
   const { eventInfo } = props;
 
@@ -69,6 +80,11 @@ let AgendaActividadDetalle = (props) => {
       }
     } catch (e) {
       console.error('fallo el checkin:', e);
+    }
+
+    if (props?.userInfo && props.userInfo?.displayName && props.userInfo?.email) {
+      setNames(props.userInfo.displayName);
+      setEmail(props.userInfo.email);
     }
   }, []);
 
@@ -256,12 +272,18 @@ let AgendaActividadDetalle = (props) => {
   }
 
   const getMeetingPath = (platform) => {
-    const { displayName, email } = props.userInfo;
     if (platform === 'zoom') {
-      return url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`;
+      return url_conference + meeting_id + `&userName=${props.userInfo.displayName}` + `&email=${props.userInfo.email}`;
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
+    } else if (platform === 'dolby') {
+      return `https://eviusmeets.netlify.app/?meeting_id=${meeting_id}&userName=${names}&email=${email}`;
     }
+  };
+
+  const handleSignInForm = (values) => {
+    setNames(values.names);
+    setEmail(values.email);
   };
 
   const mediaQueryMatches = () => {
@@ -410,17 +432,54 @@ let AgendaActividadDetalle = (props) => {
               {(meetingState === 'open_meeting_room' || stateSpace) &&
                 // option !== 'surveyDetalle' &&
                 // option !== 'games' &&
+
                 platform !== '' &&
                 platform !== null && (
                   <>
-                    <iframe
-                      src={getMeetingPath(platform)}
-                      frameBorder='0'
-                      allow='autoplay; fullscreen; camera *;microphone *'
-                      allowFullScreen
-                      allowusermedia
-                      style={videoStyles}></iframe>
-                    <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
+                    {platform === 'dolby' && names === null && email === null ? (
+                      <Card title='Ingresa tus datos para entrar a la transmisión'>
+                        <Form style={{ padding: '16px 8px' }} onFinish={handleSignInForm} {...layout}>
+                          <Form.Item
+                            name='names'
+                            label='Nombre'
+                            rules={[
+                              {
+                                required: true,
+                              },
+                            ]}>
+                            <Input />
+                          </Form.Item>
+                          <Form.Item
+                            name='email'
+                            label='Email'
+                            rules={[
+                              {
+                                required: true,
+                                type: 'email',
+                                message: 'Ingrese un email valido',
+                              },
+                            ]}>
+                            <Input />
+                          </Form.Item>
+                          <Form.Item {...tailLayout}>
+                            <Button type='primary' htmlType='submit'>
+                              Entrar
+                            </Button>
+                          </Form.Item>
+                        </Form>
+                      </Card>
+                    ) : (
+                      <>
+                        <iframe
+                          src={getMeetingPath(platform)}
+                          frameBorder='0'
+                          allow='autoplay; fullscreen; camera *;microphone *'
+                          allowFullScreen
+                          allowusermedia
+                          style={videoStyles}></iframe>
+                        <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
+                      </>
+                    )}
                   </>
                 )}
 
