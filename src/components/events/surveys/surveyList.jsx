@@ -219,7 +219,10 @@ class SurveyList extends Component {
             <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
           )}
 
-          {publishedSurveys && publishedSurveys.length === 1 && this.handleClick(publishedSurveys[0])}
+          {publishedSurveys &&
+            publishedSurveys.length === 1 &&
+            (publishedSurveys[0].isOpened === true || publishedSurveys[0].isOpened === 'true') &&
+            this.handleClick(publishedSurveys[0])}
 
           {publishedSurveys && publishedSurveys.length > 0 && (
             <List
