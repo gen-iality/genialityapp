@@ -47,7 +47,7 @@ let AgendaActividadDetalle = (props) => {
   const [totalAttendeesCheckedin, setTotalAttendeesCheckedin] = useState(0);
   const [names, setNames] = useState(null);
   const [email, setEmail] = useState(null);
-
+  const [dolbyTest, setDolbyTest] = useState(false);
   const { eventInfo } = props;
 
   const { Title } = Typography;
