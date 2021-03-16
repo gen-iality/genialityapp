@@ -60,7 +60,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Obteniendo las citas del usuario',
+            description: 'Obteniendo las citas del usuario'
           });
         })
         .finally(() => setLoading(false));
@@ -102,7 +102,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                   userName +
                   '&URLRoomName=' +
                   currentRoom +
-                  '&passcode=8331071496'
+                  '&passcode=3701051496'
                 }
                 allow='autoplay; fullscreen; camera *;microphone *'
                 allowusermedia
@@ -217,7 +217,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Error eliminando la cita',
+            description: 'Error eliminando la cita'
           });
         })
         .finally(() => setLoading(false));
@@ -277,7 +277,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                           content: '¿Desea cancelar/eliminar esta cita?',
                           okText: 'Si',
                           cancelText: 'No',
-                          onOk: deleteThisAgenda,
+                          onOk: deleteThisAgenda
                         });
                       }}>
                       {'Cancelar'}
