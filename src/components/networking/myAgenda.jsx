@@ -104,7 +104,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                   currentRoom +
                   '&passcode=3701051496'
                 }
-                allow='autoplay; fullscreen; camera *;microphone *'
+                allow='autoplay;fullscreen; camera *;microphone *'
                 allowusermedia
                 allowFullScreen
                 title='video'
