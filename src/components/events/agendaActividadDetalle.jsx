@@ -277,7 +277,7 @@ let AgendaActividadDetalle = (props) => {
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
     } else if (platform === 'dolby') {
-      return `https://eviusmeets.netlify.app/?meeting_id=${meeting_id}&userName=${names}&email=${email}`;
+      return `https://eviusmeets.netlify.app/?username=${names}&email=${email}`;
     }
   };
 
