@@ -45,6 +45,7 @@ export default function RoomConfig(props) {
                 <option value='zoom'>Zoom</option>
                 <option value='zoomExterno'>ZoomExterno</option>
                 <option value='vimeo'>Vimeo</option>
+                <option value='dolby'>Dolby</option>
                 <option value='bigmarker'>BigMaker</option>
               </select>
             </div>
