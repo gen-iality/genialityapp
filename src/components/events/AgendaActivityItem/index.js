@@ -95,6 +95,7 @@ function AgendaActivityItem(props) {
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           justify='start'
+          align="middle"
           onClick={() => {
             props.gotoActivity(item);
           }}>
