@@ -204,20 +204,17 @@ let SocialZone = function(props) {
           />
         </TabPane>
       }
-      {
-        /*attendees &&*/
-        // <TabPane tab='Asistentes' key='2' className='asistente-list'>
-        //   <AttendeList
-        //     currentUser={currentUser}
-        //     event_id={event_id}
-        //     currentChat={currentChat}
-        //     currentChatName={currentChatName}
-        //     createNewOneToOneChat={createNewOneToOneChat}
-        //     attendeeList={attendeeList}
-        //     attendeeListPresence={attendeeListPresence}
-        //   />
-        // </TabPane>
-      }
+      <TabPane tab='Asistentes' key='2' className='asistente-list'>
+        <AttendeList
+          currentUser={currentUser}
+          event_id={event_id}
+          currentChat={currentChat}
+          currentChatName={currentChatName}
+          createNewOneToOneChat={createNewOneToOneChat}
+          attendeeList={attendeeList}
+          attendeeListPresence={attendeeListPresence}
+        />
+      </TabPane>
 
       {props.currentActivity !== null && props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
         <TabPane
