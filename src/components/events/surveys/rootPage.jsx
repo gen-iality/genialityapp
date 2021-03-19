@@ -17,10 +17,14 @@ class RootPage extends Component {
       hasVote: false,
       guestVoteInSurvey: false,
       isLoading: true,
+      forceLoadDataState: false,
     };
   }
 
+  forceLoadData = () => {};
+
   loadData = async (prevProps) => {
+    console.log('rootpage loaddata');
     const { idSurvey, eventId } = this.props;
     if (!prevProps || idSurvey !== prevProps.idSurvey) {
       let eventUser = await this.getCurrentEvenUser(eventId);
@@ -30,11 +34,15 @@ class RootPage extends Component {
   };
 
   componentDidMount() {
+    console.log('rootpage mount');
     this.loadData();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     this.loadData(prevProps);
+    if (prevState.forceLoadDataState !== this.state.forceLoadDataState) {
+      this.loadData();
+    }
   }
 
   getCurrentEvenUser = async (eventId) => {
@@ -51,7 +59,14 @@ class RootPage extends Component {
 
     if (!(Object.keys(currentUser).length === 0)) {
       let responseCounter = await SurveyAnswers.getUserById(eventId, currentSurvey, currentUser._id, true);
-      this.setState({ hasVote: userHasVoted, isLoading: false, responseCounter });
+
+      //Solucion temporarl mientra se configura la retoma
+      // userHasvoted llega undefined despues de contestar la encuesta cuanto esta es unica en la actividad
+      this.setState({
+        hasVote: userHasVoted !== undefined ? userHasVoted : responseCounter > 0,
+        isLoading: false,
+        responseCounter,
+      });
     } else {
       // Esto solo se ejecuta si no hay algun usuario logeado
       // eslint-disable-next-line no-unused-vars
