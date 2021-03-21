@@ -48,6 +48,7 @@ let AgendaActividadDetalle = (props) => {
   const [names, setNames] = useState(null);
   const [email, setEmail] = useState(null);
   const [dolbyTest, setDolbyTest] = useState(false);
+  const [configfast, setConfigfast] = useState({});
   const { eventInfo } = props;
 
   const { Title } = Typography;
@@ -110,11 +111,17 @@ let AgendaActividadDetalle = (props) => {
    * Calculating total real attendees this could be done less costly
    * in the backend using cloud funtions.
    */
-  /** 
-   * 
+
   useEffect(() => {
     async function listeningAsistentes() {
       if (event === null || event == undefined || event == false) return false;
+
+      firestore
+        .collection(`event_config`)
+        .doc(event._id)
+        .onSnapshot((doc) => {
+          setConfigfast(doc.data());
+        });
 
       const asistentesRef = firestore.collection(`${event._id}_event_attendees`);
       asistentesRef.onSnapshot((snapshot) => {
@@ -141,7 +148,6 @@ let AgendaActividadDetalle = (props) => {
       await listeningAsistentes();
     })();
   }, [event]);
-**/
 
   useEffect(() => {
     async function listeningSpaceRoom() {
@@ -367,9 +373,23 @@ let AgendaActividadDetalle = (props) => {
               <div style={{ padding: '8px' }}>
                 <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
                   {currentActivity.name}
-                  {/* {totalAttendees}
-                  {'/'} {totalAttendeesCheckedin}{' '}
-                  {'(' + Math.round((totalAttendeesCheckedin / totalAttendees) * 100 * 100) / 100 + '%)'} */}
+                  {configfast && configfast.enableCount && (
+                    <>
+                      ( &nbsp;
+                      {configfast && configfast.totalAttendees ? configfast.totalAttendees : totalAttendees}
+                      {'/'} {totalAttendeesCheckedin}{' '}
+                      {'(' +
+                        Math.round(
+                          (totalAttendeesCheckedin /
+                            (configfast.totalAttendees ? configfast.totalAttendees : totalAttendees)) *
+                            100 *
+                            100
+                        ) /
+                          100 +
+                        '%)'}
+                      )
+                    </>
+                  )}
                 </Row>
                 <Row style={{ height: '2.5vh', fontSize: 10, fontWeight: 'normal' }}>
                   <div
