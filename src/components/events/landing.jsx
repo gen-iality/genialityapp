@@ -22,7 +22,7 @@ import {
   WifiOutlined,
   PlayCircleOutlined,
   LoadingOutlined,
-  DiffOutlined,
+  DiffOutlined
 } from '@ant-design/icons';
 
 //custom
@@ -67,7 +67,7 @@ import {
   // BrowserView,
   // MobileView,
   // isBrowser,
-  isMobile,
+  isMobile
 } from 'react-device-detect';
 
 const { setEventData } = eventActions;
@@ -84,14 +84,14 @@ const html = document.querySelector('html');
 const drawerButton = {
   height: '46px',
   padding: '7px 10px',
-  fontSize: '10px',
+  fontSize: '10px'
 };
 
 const imageCenter = {
   maxWidth: '100%',
   minWidth: '66.6667%',
   margin: '0 auto',
-  display: 'block',
+  display: 'block'
 };
 
 let notify = false;
@@ -137,7 +137,7 @@ class Landing extends Component {
       option: 'N/A',
       totalNewMessages: 0,
       activitiesAgenda: [],
-      publishedSurveys: [],
+      publishedSurveys: []
       //fin Integración con encuestas
     };
     this.showLanding = this.showLanding.bind(this);
@@ -189,7 +189,7 @@ class Landing extends Component {
 
   openNotificationWithIcon = (type) => {
     notification[type]({
-      message: 'holap',
+      message: 'holap'
       // description: 'Tienes un nuevo mensaje',
     });
   };
@@ -213,17 +213,17 @@ class Landing extends Component {
 
   setTotalNewMessages = (newMessages) => {
     this.setState({
-      totalNewMessages: newMessages || 0,
+      totalNewMessages: newMessages || 0
     });
   };
 
   updateOption = async (optionselected) => {
     this.setState({
-      option: optionselected,
+      option: optionselected
     });
     let currentActivity = { ...this.state.currentActivity, option: optionselected };
     this.setState({
-      currentActivity: currentActivity,
+      currentActivity: currentActivity
     });
 
     await this.mountSections();
@@ -231,7 +231,7 @@ class Landing extends Component {
 
   actualizarCurrentActivity = (activity) => {
     this.setState({
-      currentActivity: { ...activity, option: 'N/A' },
+      currentActivity: { ...activity, option: 'N/A' }
     });
 
     firestore
@@ -251,7 +251,7 @@ class Landing extends Component {
           chat: videoConference.tabs.chat ? videoConference.tabs.chat : false,
           surveys: videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
           games: videoConference.tabs.games ? videoConference.tabs.games : false,
-          attendees: videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
+          attendees: videoConference.tabs.attendees ? videoConference.tabs.attendees : false
         });
       });
   };
@@ -267,7 +267,7 @@ class Landing extends Component {
   toggleCollapsed = async (tab) => {
     this.setState({
       collapsed: !this.state.collapsed,
-      tabSelected: tab,
+      tabSelected: tab
     });
     await this.mountSections();
   };
@@ -275,26 +275,26 @@ class Landing extends Component {
   toggleCollapsedN = async () => {
     this.setState({
       collapsed: !this.state.collapsed,
-      tabSelected: 1,
+      tabSelected: 1
     });
     await this.mountSections();
   };
 
   hideHeader = () => {
     this.setState({
-      headerVisible: false,
+      headerVisible: false
     });
   };
 
   showDrawerMobile = () => {
     this.setState({
-      visibleChat: true,
+      visibleChat: true
     });
   };
 
   showDrawer = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
     this.hideHeader();
   };
@@ -302,14 +302,14 @@ class Landing extends Component {
   onClose = () => {
     this.setState({
       visible: false,
-      visibleChat: false,
+      visibleChat: false
     });
   };
 
   onChange = (e) => {
     this.setState({
       placement: e.target.value,
-      placementBottom: e.target.value,
+      placementBottom: e.target.value
     });
     this.setState({ section: 'evento' });
   };
@@ -336,7 +336,7 @@ class Landing extends Component {
     let eventUsers = null;
     this.props.setNotification({
       message: null,
-      type: null,
+      type: null
     });
 
     const id = this.props.match.params.event;
@@ -385,7 +385,7 @@ class Landing extends Component {
       data: user,
       currentUser: user,
       namesUser: namesUser,
-      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false,
+      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false
     });
     let sections = {
       agenda: (
@@ -501,7 +501,7 @@ class Landing extends Component {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={event.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -543,7 +543,7 @@ class Landing extends Component {
             </Col>
           </Row>
         </>
-      ),
+      )
     };
     //default section is firstone
     this.setState({ loading: false, sections }, () => {
@@ -558,7 +558,7 @@ class Landing extends Component {
     // await this.listenSurveysData()
 
     this.setState({
-      activitiesAgenda: infoAgenda.data,
+      activitiesAgenda: infoAgenda.data
     });
 
     //LISTENER DE ACTIVITIES  STATUS  NOTIFICATIONS POR EVENT
@@ -579,7 +579,7 @@ class Landing extends Component {
           this.props.setNotification({
             message: this.obtenerNombreActivity(change.doc.id)?.name + ' está en vivo..',
             type: 'open',
-            activity: this.obtenerNombreActivity(change.doc.id),
+            activity: this.obtenerNombreActivity(change.doc.id)
           });
           //console.log('NOTIFICAION OPEN');
         } else if (
@@ -589,7 +589,7 @@ class Landing extends Component {
         ) {
           this.props.setNotification({
             message: this.obtenerNombreActivity(change.doc.id).name + ' ha terminado..',
-            type: 'ended',
+            type: 'ended'
           });
           // console.log('NOTIFICAION ENDED');
         } else if (
@@ -600,7 +600,7 @@ class Landing extends Component {
         ) {
           this.props.setNotification({
             message: this.obtenerNombreActivity(change.doc.id).name + ' está por iniciar',
-            type: 'close',
+            type: 'close'
           });
         }
         // console.log('NOTIFICAION CLOSED');
@@ -659,7 +659,7 @@ class Landing extends Component {
       ) {
         this.props.setNotification({
           message: change?.doc.data().name + ' está abierta',
-          type: 'survey',
+          type: 'survey'
           //survey: change.doc.data(),
           //activity: this.obtenerNombreActivity(change.doc.data().activity_id)
         });
@@ -687,14 +687,14 @@ class Landing extends Component {
           const user = authResult.user;
           this.closeLogin(user);
           return false;
-        },
+        }
       },
       //Disabled accountchooser
       credentialHelper: 'none',
       // Terms of service url.
       tosUrl: `${BaseUrl}/terms`,
       // Privacy policy url.
-      privacyPolicyUrl: `${BaseUrl}/privacy`,
+      privacyPolicyUrl: `${BaseUrl}/privacy`
     };
     ui.start('#firebaseui-auth-container', uiConfig);
   };
@@ -737,7 +737,7 @@ class Landing extends Component {
   showSection = (section, clean = false) => {
     this.props.setNotification({
       message: null,
-      type: null,
+      type: null
     });
     this.setState({ section, visible: false }, () => this.callbackShowSection(section, clean));
   };
@@ -854,7 +854,7 @@ class Landing extends Component {
                 this.props.gotoActivity(this.props.viewNotification.activity);
                 this.props.setNotification({
                   message: null,
-                  type: null,
+                  type: null
                 });
               }
 
@@ -872,9 +872,9 @@ class Landing extends Component {
       onClose: () => {
         this.props.setNotification({
           message: null,
-          type: null,
+          type: null
         });
-      },
+      }
     });
 
     /*  let key = 'updatable';
@@ -900,7 +900,7 @@ class Landing extends Component {
       toggleConferenceZoom,
       meeting_id,
       currentUser,
-      loader_page,
+      loader_page
     } = this.state;
 
     return (
@@ -946,7 +946,7 @@ class Landing extends Component {
                           className='containerMenu_Landing'
                           style={{
                             backgroundColor:
-                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
                           }}
                           trigger={null}
                           width={110}>
@@ -988,7 +988,7 @@ class Landing extends Component {
                             bodyStyle={{
                               padding: '0px',
                               backgroundColor:
-                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
                             }}>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                             <MenuEvent
@@ -1068,7 +1068,7 @@ class Landing extends Component {
                                 )}
                             </div>
                           )}
-                          <div id='visualizar' style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center' }}>
+                          <div id='visualizar' style={{ margin: '0px 2px', overflow: 'initial', textAlign: 'center' }}>
                             {this.state.sections[this.state.section]}
                           </div>
                           <div className={`modal ${modal ? 'is-active' : ''}`}>
@@ -1095,7 +1095,7 @@ class Landing extends Component {
                             first={{
                               title: 'Iniciar Sesión o Registrarse',
                               class: 'is-info',
-                              action: this.openLogin,
+                              action: this.openLogin
                             }}
                             second={{ title: 'Cancelar', class: '', action: this.closeModal }}
                           />
@@ -1111,7 +1111,7 @@ class Landing extends Component {
                             shape='circle'
                             icon={
                               <Badge count={this.state.totalNewMessages}>
-                                <MessageOutlined style={{ fontSize: '25px' }} />
+                                <MessageOutlined style={{ fontSize: '20px' }} />
                               </Badge>
                             }
                             size='large'
@@ -1250,7 +1250,7 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   viewNotification: state.notifications.data,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
-  tabs: state.stage.data.tabs,
+  tabs: state.stage.data.tabs
 });
 
 const mapDispatchToProps = {
@@ -1259,7 +1259,7 @@ const mapDispatchToProps = {
   setNotification,
   setMainStage,
   setCurrentSurvey,
-  setSurveyVisible,
+  setSurveyVisible
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Landing));

@@ -354,7 +354,7 @@ export default ({
       if (type === 'tituloseccion') {
         input = (
           <React.Fragment>
-            <div style={{ fontSize: '1.3em' }} className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
+            <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
               <div
                 dangerouslySetInnerHTML={{
                   __html: label
@@ -540,8 +540,6 @@ export default ({
 
   return (
     <>
-      <br />
-
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
           <Card

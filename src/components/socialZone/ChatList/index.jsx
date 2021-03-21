@@ -12,7 +12,7 @@ import {
   Input,
   Checkbox,
   Button,
-  Row,
+  Row
 } from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
@@ -22,10 +22,10 @@ const { setNotification } = notificationsActions;
 
 const layout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  wrapperCol: { span: 16 }
 };
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: { offset: 8, span: 16 }
 };
 
 const ChatList = (props) => {
@@ -50,7 +50,7 @@ const ChatList = (props) => {
   let [usuariofriend, setusuariofriend] = useState(userName);
   const openNotificationWithIcon = (type) => {
     notification[type]({
-      message: 'holap',
+      message: 'holap'
       // description: 'Tienes un nuevo mensaje',
     });
   };
@@ -128,7 +128,8 @@ const ChatList = (props) => {
             '&eventid=' +
             props.event_id +
             '&userid=' +
-            props.currentUser.uid
+            props.currentUser.uid +
+            '&version=0.0.2'
           }></iframe>
       </TabPane>
 
@@ -162,7 +163,7 @@ const ChatList = (props) => {
                       <MessageTwoTone style={{ fontSize: '20px' }} />
                     </Badge>
                   </Tooltip>
-                </a>,
+                </a>
               ]}>
               <Typography.Text mark></Typography.Text> {item.name || '----'}
             </List.Item>
@@ -193,11 +194,11 @@ const mapStateToProps = (state) => ({
   mainStage: state.stage.data.mainStage,
   currentSurvey: state.survey.data.currentSurvey,
   currentActivity: state.stage.data.currentActivity,
-  viewNotification: state.notifications.data,
+  viewNotification: state.notifications.data
 });
 
 const mapDispatchToProps = {
-  setNotification,
+  setNotification
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);

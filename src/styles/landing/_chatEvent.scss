@@ -68,14 +68,16 @@
     display: block;
     position: fixed;
     z-index: 999999939;
-    bottom: 5%;
-    right: 5%;
+    bottom: 2%;
+    right: 2%;
+
     .ant-btn-icon-only.ant-btn-lg {
-      width: 70px;
-      height: 70px;
+      width: 40px;
+      height: 40px;
       padding: 4.9px 0;
-      font-size: 18px;
-      border-radius: 68px;
+      font-size: 14px;
+      border-radius: 48px;
+      background-color: #ddd;
     }
   }
 }
