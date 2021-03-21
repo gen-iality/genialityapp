@@ -84,7 +84,12 @@ let AgendaActividadDetalle = (props) => {
     }
 
     if (props?.userInfo && props.userInfo?.displayName && props.userInfo?.email) {
-      setNames(props.userInfo.displayName);
+      console.log('eventUserm', props.eventUser);
+      let innerName =
+        props.eventUser && props.eventUser.properties.casa && props.eventUser.properties.casa
+          ? '(' + props.eventUser.properties.casa + ')' + props.userInfo.displayName
+          : props.userInfo.displayName;
+      setNames(innerName);
       setEmail(props.userInfo.email);
     }
   }, []);
