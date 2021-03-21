@@ -53,6 +53,7 @@ class SurveyComponent extends Component {
     const { eventId, idSurvey } = this.props;
     let surveyData = await this.loadSurvey(eventId, idSurvey);
     let survey = new Survey.Model(surveyData);
+    console.log('api survey', survey);
     await this.listenAndUpdateStateSurveyRealTime(idSurvey);
 
     /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
@@ -147,6 +148,10 @@ class SurveyComponent extends Component {
     Survey.JsonObject.metaData.addProperty('question', 'points');
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
+
+    // Automáticamente se envia la respuesta y el formulario al contestar la ultima
+    dataSurvey.goNextPageAutomatic = true;
+    dataSurvey.allowCompleteSurveyAutomatic = true;
 
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];
@@ -638,6 +643,8 @@ class SurveyComponent extends Component {
                       onTimerPanelInfoText={this.setCounterMessage}
                       onStarted={this.checkCurrentPage}
                       onCurrentPageChanged={this.onCurrentPageChanged}
+                      // goNextPageAutomatic={true}
+                      // allowCompleteSurveyAutomatic={true}
                     />
                   )}
                 </div>
