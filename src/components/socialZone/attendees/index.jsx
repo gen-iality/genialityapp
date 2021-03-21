@@ -22,7 +22,7 @@ const AttendeList = function(props) {
             name: props.attendeeList[key].properties.name,
             names: props.attendeeList[key].properties.names,
             status: props.attendeeListPresence[key2].state,
-            email: props.attendeeList[key].properties.email,
+            email: props.attendeeList[key].properties.email
           };
           console.log('si es igual', mihijo);
           usersorderbystatus.push(mihijo);
@@ -37,8 +37,6 @@ const AttendeList = function(props) {
         ordenadousers.push(user);
       }
     });
-
-    console.log('ordenadousers', ordenadousers);
     setmyattendelist(ordenadousers);
   }, [props.attendeeList]);
 
@@ -54,18 +52,13 @@ const AttendeList = function(props) {
               <a
                 key='list-loadmore-edit'
                 onClick={() =>
-                  props.createNewOneToOneChat(
-                    props.currentUser.uid,
-                    props.currentUser.names,
-                    item.user.uid,
-                    item.user.names
-                  )
+                  props.createNewOneToOneChat(props.currentUser.uid, props.currentUser.names, item.iduser, item.names)
                 }>
-                <Tooltip title='Chatear'>
+                <Tooltip title={'Chatear'}>
                   <MessageTwoTone style={{ fontSize: '20px' }} />
                 </Tooltip>
               </a>
-            ) : null,
+            ) : null
           ]}>
           <List.Item.Meta
             avatar={

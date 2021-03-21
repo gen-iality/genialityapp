@@ -8,7 +8,7 @@ import {
   LeftOutlined,
   BuildOutlined,
   ArrowLeftOutlined,
-  VideoCameraOutlined,
+  VideoCameraOutlined
 } from '@ant-design/icons';
 import ListadoJuegos from './listadoJuegos';
 import LiveChat from './liveChat';
@@ -33,7 +33,7 @@ export default function ConferenceTabsComponent(props) {
       <Button onClick={() => setCollapsed(collapsed === false ? true : false)} className='zoom-collapsed_button'>
         {React.createElement(collapsed ? RightOutlined : LeftOutlined, {
           className: 'trigger',
-          onClick: () => setCollapsed(collapsed === false ? true : false),
+          onClick: () => setCollapsed(collapsed === false ? true : false)
         })}
       </Button>
       {collapsed === false ? (
@@ -56,7 +56,7 @@ export default function ConferenceTabsComponent(props) {
                 tab={
                   <>
                     <PieChartOutlined style={{ fontSize: '26px', textAlign: 'center' }} />
-                    <p style={{ marginBottom: '0px' }}>Encuestas</p>
+                    <p style={{ marginBottom: '0px' }}>Votaciones</p>
                   </>
                 }
                 key='surveys'>

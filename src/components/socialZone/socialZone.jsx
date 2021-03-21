@@ -131,7 +131,7 @@ let SocialZone = function(props) {
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
                 setTotalNewMessages(newmsj);
-              },
+              }
             });
         }
 
@@ -220,9 +220,9 @@ let SocialZone = function(props) {
         <TabPane
           className='asistente-survey-list'
           tab={
-            <div style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
+            <div style={{ marginBottom: '0px' }}>
               <Badge dot={props.hasOpenSurveys} size='default'>
-                Encuestas
+                Votación
               </Badge>
             </div>
           }
@@ -253,6 +253,7 @@ let SocialZone = function(props) {
           {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
         </TabPane>
       )}
+
       {props.currentActivity !== null && props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
         <TabPane
           className='asistente-survey-list'
@@ -297,12 +298,12 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
   viewNotification: state.notifications.data,
-  tabs: state.stage.data.tabs,
+  tabs: state.stage.data.tabs
 });
 
 const mapDispatchToProps = {
   setMainStage,
-  setNotification,
+  setNotification
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));

@@ -287,6 +287,7 @@ class Landing extends Component {
   };
 
   showDrawerMobile = () => {
+    console.log('chat', this.state.visibleChat);
     this.setState({
       visibleChat: true
     });

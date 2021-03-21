@@ -27,11 +27,11 @@ const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys } = SurveyActions;
 
 const layout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 10 },
+  wrapperCol: { span: 10 }
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 10 },
+  wrapperCol: { offset: 8, span: 10 }
 };
 
 let AgendaActividadDetalle = (props) => {
@@ -185,7 +185,7 @@ let AgendaActividadDetalle = (props) => {
       const sharedProperties = {
         position: 'fixed',
         right: '0',
-        width: '170px',
+        width: '170px'
       };
 
       const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
@@ -194,7 +194,7 @@ let AgendaActividadDetalle = (props) => {
         ...sharedProperties,
         ...verticalVideo,
         zIndex: '100',
-        transition: '300ms',
+        transition: '300ms'
       });
 
       const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
@@ -205,7 +205,7 @@ let AgendaActividadDetalle = (props) => {
         zIndex: '101',
         cursor: 'pointer',
         display: 'block',
-        height: '96px',
+        height: '96px'
       });
     } else {
       setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
@@ -344,7 +344,7 @@ let AgendaActividadDetalle = (props) => {
                   fontSize: 11,
                   fontWeight: 'normal',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  justifyContent: 'center'
                 }}>
                 {meetingState === 'open_meeting_room' || stateSpace
                   ? 'En vivo'
@@ -371,51 +371,36 @@ let AgendaActividadDetalle = (props) => {
                   {'/'} {totalAttendeesCheckedin}{' '}
                   {'(' + Math.round((totalAttendeesCheckedin / totalAttendees) * 100 * 100) / 100 + '%)'} */}
                 </Row>
-                <Row style={{ height: '2.5vh', fontSize: 14, fontWeight: 'normal' }}>
+                <Row style={{ height: '2.5vh', fontSize: 10, fontWeight: 'normal' }}>
+                  <div
+                    xs={{ order: 1, span: 24 }}
+                    sm={{ order: 1, span: 24 }}
+                    md={{ order: 1, span: 24 }}
+                    lg={{ order: 3, span: 6 }}
+                    xl={{ order: 3, span: 4 }}>
+                    {event._id === '5f99a20378f48e50a571e3b6' ||
+                    event._id === '5fca68b7e2f869277cfa31b0' ||
+                    event.id === '60061bfac8c0284c432069c8' ? (
+                      <></>
+                    ) : (
+                      <div>
+                        {Moment.tz(currentActivity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                          .tz(Moment.tz.guess())
+                          .format('DD MMM YYYY')}{' '}
+                        {Moment.tz(currentActivity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                          .tz(Moment.tz.guess())
+                          .format('h:mm a z')}{' '}
+                        -{' '}
+                        {Moment.tz(currentActivity.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                          .tz(Moment.tz.guess())
+                          .format('h:mm a z')}
+                      </div>
+                    )}
+                  </div>
+
                   {currentActivity && currentActivity.space && currentActivity.space.name}
                 </Row>
               </div>
-            </Col>
-            <Col
-              xs={{ order: 1, span: 24 }}
-              sm={{ order: 1, span: 24 }}
-              md={{ order: 1, span: 24 }}
-              lg={{ order: 3, span: 6 }}
-              xl={{ order: 3, span: 4 }}>
-              {event._id === '5f99a20378f48e50a571e3b6' ||
-              event._id === '5fca68b7e2f869277cfa31b0' ||
-              event.id === '60061bfac8c0284c432069c8' ? (
-                <></>
-              ) : (
-                <>
-                  <div
-                    style={{
-                      paddingRight: '2vw',
-                      height: '5vh',
-                      textAlign: 'right !important',
-                      display: 'block',
-                    }}>
-                    <Col>
-                      <Row style={{ paddingTop: '4px', fontSize: '12px' }}>
-                        <Col xs={12} md={24} xl={24}>
-                          {Moment.tz(currentActivity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
-                            .tz(Moment.tz.guess())
-                            .format('DD MMM YYYY')}{' '}
-                        </Col>
-                        <Col xs={12} md={24} xl={24}>
-                          {Moment.tz(currentActivity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
-                            .tz(Moment.tz.guess())
-                            .format('h:mm a z')}{' '}
-                          -{' '}
-                          {Moment.tz(currentActivity.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
-                            .tz(Moment.tz.guess())
-                            .format('h:mm a z')}
-                        </Col>
-                      </Row>
-                    </Col>
-                  </div>
-                </>
-              )}
             </Col>
           </Row>
 
@@ -444,8 +429,8 @@ let AgendaActividadDetalle = (props) => {
                             label='Nombre'
                             rules={[
                               {
-                                required: true,
-                              },
+                                required: true
+                              }
                             ]}>
                             <Input />
                           </Form.Item>
@@ -456,8 +441,8 @@ let AgendaActividadDetalle = (props) => {
                               {
                                 required: true,
                                 type: 'email',
-                                message: 'Ingrese un email valido',
-                              },
+                                message: 'Ingrese un email valido'
+                              }
                             ]}>
                             <Input />
                           </Form.Item>
@@ -549,7 +534,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -598,7 +583,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -764,7 +749,7 @@ let AgendaActividadDetalle = (props) => {
                                         style={{
                                           display: 'flex',
                                           flexDirection: 'row',
-                                          alignItems: 'center',
+                                          alignItems: 'center'
                                         }}
                                         avatar={
                                           item.image ? (
@@ -888,7 +873,7 @@ let AgendaActividadDetalle = (props) => {
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end',
+                alignItems: 'flex-end'
               }}>
               {/* <button
                   <div
@@ -943,7 +928,7 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   currentSurvey: state.survey.data.currentSurvey,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
-  tabs: state.stage.data.tabs,
+  tabs: state.stage.data.tabs
 });
 
 const mapDispatchToProps = {
@@ -951,7 +936,7 @@ const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
-  setHasOpenSurveys,
+  setHasOpenSurveys
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
