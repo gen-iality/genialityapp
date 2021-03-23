@@ -1172,11 +1172,11 @@ class Landing extends Component {
                               <>
                                 {/* MENU DERECHO */}
 
-                                <div style={{ marginLeft: '2%', marginBottom: '3%' }}>
+                                {/* <div style={{ marginLeft: '2%', marginBottom: '3%' }}>
                                   <Button type='link' onClick={this.toggleCollapsedN}>
                                     <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
                                   </Button>
-                                </div>
+                                </div> */}
 
                                 <Menu theme='light'>
                                   {
