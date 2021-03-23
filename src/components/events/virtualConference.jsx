@@ -160,14 +160,11 @@ class VirtualConference extends Component {
   }
 
   zoomExternoHandleOpen = (activity) => {
-    console.log('zoom externo handle open start!!!');
     let name =
       this.props.eventUser && this.props.eventUser.properties && this.props.eventUser.properties.names
         ? this.props.eventUser.properties.names
         : 'Anónimo';
     let urlMeeting = null;
-    //let urlMeeting = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
-    //let urlMeeting = 'https://zoom.us/j/' + meeting_id + '&uname=' + name;
     if (isMobile) {
       urlMeeting = 'zoomus://zoom.us/join?confno=' + activity.meeting_id + '&uname=' + name;
     } else {
@@ -178,11 +175,6 @@ class VirtualConference extends Component {
       urlMeeting += '&password=' + activity.zoomPassword;
     }
     window.location.href = urlMeeting;
-
-    // else {
-    //   //Esta instrucción activa la conferencia interna en EVIUS
-    //   this.setState({ toggleConferenceZoom: state });
-    // }
   };
 
   render() {
