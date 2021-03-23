@@ -661,6 +661,7 @@ class Agenda extends Component {
             // eventUser: Determina si el usuario esta registrado en el evento
             eventUser={this.props.userRegistered}
             showSection={this.props.showSection}
+            zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
           />
         )}
 

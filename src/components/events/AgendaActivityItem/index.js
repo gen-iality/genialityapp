@@ -98,7 +98,7 @@ function AgendaActivityItem(props) {
           align='middle'
           onClick={() => {
             console.log('ingreso item', item, props);
-            if (item.platform === 'zoomExterno') {
+            if (item.platform === 'zoomExterno' && item.habilitar_ingreso === 'open_meeting_room'){
               const { eventUser, zoomExternoHandleOpen } = props;
               zoomExternoHandleOpen(item, eventUser);
             } else {
@@ -138,6 +138,7 @@ function AgendaActivityItem(props) {
                     ) : (
                       <></>
                     )}
+                    
                     <span style={{ fontSize: '8px' }}>
                       {meetingState == 'open_meeting_room'
                         ? 'En vivo'
@@ -360,7 +361,7 @@ function AgendaActivityItem(props) {
 }
 
 const mapDispatchToProps = {
-  gotoActivity,
-};
+  gotoActivity
+}
 
 export default connect(null, mapDispatchToProps)(AgendaActivityItem);
