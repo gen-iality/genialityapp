@@ -9,16 +9,17 @@ import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 //const { Meta } = Card;
 import * as StageActions from '../../redux/stage/actions';
+import { isMobile } from 'react-device-detect';
 
 const { gotoActivity } = StageActions;
 
 const MeetingConferenceButton = ({
   activity,
-  toggleConference,
+  zoomExternoHandleOpen,
   usuarioRegistrado,
   event,
   showSection,
-  setActivity
+  setActivity,
 }) => {
   const [infoActivity, setInfoActivity] = useState({});
   const [infoEvent, setInfoEvent] = useState({});
@@ -40,9 +41,12 @@ const MeetingConferenceButton = ({
                 type='primary'
                 className='buttonVirtualConference'
                 onClick={() => {
-                  //toggleConference(true, infoActivity.meeting_id, infoActivity);
-                  setActivity(activity);
-                  showSection('agenda', true);
+                  if (activity.platform === 'zoomExterno') {
+                    zoomExternoHandleOpen(activity);
+                  } else {
+                    setActivity(activity);
+                    showSection('agenda', true);
+                  }
                 }}>
                 <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
               </Button>
@@ -76,7 +80,7 @@ class VirtualConference extends Component {
       infoAgendaArr: [],
       usuarioRegistrado: this.props.usuarioRegistrado || undefined,
       event: this.props.event || undefined,
-      survey: []
+      survey: [],
     };
   }
 
@@ -155,6 +159,32 @@ class VirtualConference extends Component {
     return infoAgendaArr;
   }
 
+  zoomExternoHandleOpen = (activity) => {
+    console.log('zoom externo handle open start!!!');
+    let name =
+      this.props.eventUser && this.props.eventUser.properties && this.props.eventUser.properties.names
+        ? this.props.eventUser.properties.names
+        : 'Anónimo';
+    let urlMeeting = null;
+    //let urlMeeting = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
+    //let urlMeeting = 'https://zoom.us/j/' + meeting_id + '&uname=' + name;
+    if (isMobile) {
+      urlMeeting = 'zoomus://zoom.us/join?confno=' + activity.meeting_id + '&uname=' + name;
+    } else {
+      urlMeeting = 'zoommtg://zoom.us/join?confno=' + activity.meeting_id + '&uname=' + name;
+    }
+
+    if (activity.zoomPassword) {
+      urlMeeting += '&password=' + activity.zoomPassword;
+    }
+    window.location.href = urlMeeting;
+
+    // else {
+    //   //Esta instrucción activa la conferencia interna en EVIUS
+    //   this.setState({ toggleConferenceZoom: state });
+    // }
+  };
+
   render() {
     const { infoAgendaArr, event, usuarioRegistrado } = this.state;
     const { toggleConference, showSection, gotoActivity } = this.props;
@@ -221,17 +251,23 @@ class VirtualConference extends Component {
                       usuarioRegistrado={usuarioRegistrado}
                       showSection={showSection}
                       setActivity={gotoActivity}
+                      zoomExternoHandleOpen={this.zoomExternoHandleOpen}
                     />
-                    {item.related_meetings &&
+                    {/* {item.related_meetings &&
                       item.related_meetings.map((item, key) => (
                         <>
                           {item.state === 'open_meeting_room' && (
                             <Button
                               disabled={item.meeting_id || item.vimeo_id ? false : true}
-                              onClick={() =>
-                                //toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
-                                showSection('agenda')
-                              }
+                              onClick={() => {
+                                console.log('zoom externo button', item.platform);
+                                if (item.platform === 'zoomExterno') {
+                                  this.zoomExternoHandleOpen(item);
+                                } else {
+                                  //toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
+                                  showSection('agenda');
+                                }
+                              }}
                               type='primary'
                               className='button-Agenda'
                               key={key}>
@@ -246,7 +282,7 @@ class VirtualConference extends Component {
                             <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
                           )}
                         </>
-                      ))}
+                      ))} */}
                   </Card>
                 </div>
               ))}
@@ -258,7 +294,7 @@ class VirtualConference extends Component {
 }
 
 const mapDispatchToProps = {
-  gotoActivity
+  gotoActivity,
 };
 
 export default connect(null, mapDispatchToProps)(WithUserEventRegistered(VirtualConference));
