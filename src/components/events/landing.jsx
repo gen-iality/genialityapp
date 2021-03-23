@@ -406,6 +406,8 @@ class Landing extends Component {
           collapsed={this.state.collapsed}
           toggleCollapsed={this.toggleCollapsed}
           showSection={this.showSection}
+          zoomExternoHandleOpen={this.zoomExternoHandleOpen}
+          eventUser={this.state.eventUser}
         />
       ),
       tickets: (
@@ -482,6 +484,7 @@ class Landing extends Component {
                 usuarioRegistrado={this.state.eventUser}
                 toggleConference={this.toggleConference}
                 showSection={this.showSection}
+                zoomExternoHandleOpen={this.zoomExternoHandleOpen}
               />
               <MapComponent event={event} />
             </Col>
@@ -891,6 +894,21 @@ class Landing extends Component {
     }*/
 
     // message.success({ content: 'Loaded!', key, duration: 2 });
+  };
+
+  zoomExternoHandleOpen = (activity, eventUser) => {
+    let name = eventUser && eventUser.properties && eventUser.properties.names ? eventUser.properties.names : 'Anónimo';
+    let urlMeeting = null;
+    if (isMobile) {
+      urlMeeting = 'zoomus://zoom.us/join?confno=' + activity.meeting_id + '&uname=' + name;
+    } else {
+      urlMeeting = 'zoommtg://zoom.us/join?confno=' + activity.meeting_id + '&uname=' + name;
+    }
+
+    if (activity.zoomPassword) {
+      urlMeeting += '&password=' + activity.zoomPassword;
+    }
+    window.location.href = urlMeeting;
   };
 
   render() {

@@ -186,8 +186,8 @@ class Agenda extends Component {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
 
-          let { habilitar_ingreso, isPublished, meeting_id, tabs } = data;
-          let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id };
+          let { habilitar_ingreso, isPublished, meeting_id, platform, tabs } = data;
+          let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id, platform };
           this.props.setTabs(tabs);
           arr[index] = updatedActivityInfo;
           const filtered = this.filterByDay(this.state.days[0], arr);
@@ -524,6 +524,8 @@ class Agenda extends Component {
             handleOpenModal={this.handleOpenModal}
             hideHours={event.styles.hideHoursAgenda}
             handleValidatePayment={this.validationRegisterAndExchangeCode}
+            eventUser={this.props.eventUser}
+            zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
           />
         </div>
       );

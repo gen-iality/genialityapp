@@ -12,7 +12,7 @@ import Icon, {
   LoadingOutlined,
   PlayCircleOutlined,
   CaretRightOutlined,
-  CheckCircleOutlined
+  CheckCircleOutlined,
 } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
@@ -50,7 +50,7 @@ function AgendaActivityItem(props) {
     eventId,
     userId,
     show_inscription,
-    hideHours
+    hideHours,
   } = props;
 
   useEffect(() => {
@@ -95,9 +95,15 @@ function AgendaActivityItem(props) {
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           justify='start'
-          align="middle"
+          align='middle'
           onClick={() => {
-            props.gotoActivity(item);
+            console.log('ingreso item', item, props);
+            if (item.platform === 'zoomExterno') {
+              const { eventUser, zoomExternoHandleOpen } = props;
+              zoomExternoHandleOpen(item, eventUser);
+            } else {
+              props.gotoActivity(item);
+            }
           }}>
           {/* aquie empieza la agenda en estilo mobile */}
           <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
@@ -181,7 +187,7 @@ function AgendaActivityItem(props) {
                                 maxCount={3}
                                 maxStyle={{
                                   color: '#ffffff',
-                                  backgroundColor: '#1CDCB7'
+                                  backgroundColor: '#1CDCB7',
                                 }}>
                                 {item.hosts.map((speaker, key) => (
                                   <Avatar key={key} src={speaker.image} />
@@ -291,7 +297,7 @@ function AgendaActivityItem(props) {
                                         display: '-webkit-box',
                                         WebkitLineClamp: '2',
                                         WebkitBoxOrient: 'vertical',
-                                        width: '90%'
+                                        width: '90%',
                                       }}
                                       dangerouslySetInnerHTML={{ __html: item.description }}
                                     />
@@ -328,7 +334,7 @@ function AgendaActivityItem(props) {
                                   maxCount={3}
                                   maxStyle={{
                                     color: '#ffffff',
-                                    backgroundColor: '#1CDCB7'
+                                    backgroundColor: '#1CDCB7',
                                   }}>
                                   {item.hosts.map((speaker, key) => (
                                     <Avatar key={key} src={speaker.image} />
@@ -354,7 +360,7 @@ function AgendaActivityItem(props) {
 }
 
 const mapDispatchToProps = {
-  gotoActivity
+  gotoActivity,
 };
 
 export default connect(null, mapDispatchToProps)(AgendaActivityItem);

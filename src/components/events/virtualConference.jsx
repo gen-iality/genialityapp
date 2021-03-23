@@ -20,6 +20,7 @@ const MeetingConferenceButton = ({
   event,
   showSection,
   setActivity,
+  eventUser,
 }) => {
   const [infoActivity, setInfoActivity] = useState({});
   const [infoEvent, setInfoEvent] = useState({});
@@ -42,7 +43,7 @@ const MeetingConferenceButton = ({
                 className='buttonVirtualConference'
                 onClick={() => {
                   if (activity.platform === 'zoomExterno') {
-                    zoomExternoHandleOpen(activity);
+                    zoomExternoHandleOpen(activity, eventUser);
                   } else {
                     setActivity(activity);
                     showSection('agenda', true);
@@ -159,24 +160,6 @@ class VirtualConference extends Component {
     return infoAgendaArr;
   }
 
-  zoomExternoHandleOpen = (activity) => {
-    let name =
-      this.props.eventUser && this.props.eventUser.properties && this.props.eventUser.properties.names
-        ? this.props.eventUser.properties.names
-        : 'Anónimo';
-    let urlMeeting = null;
-    if (isMobile) {
-      urlMeeting = 'zoomus://zoom.us/join?confno=' + activity.meeting_id + '&uname=' + name;
-    } else {
-      urlMeeting = 'zoommtg://zoom.us/join?confno=' + activity.meeting_id + '&uname=' + name;
-    }
-
-    if (activity.zoomPassword) {
-      urlMeeting += '&password=' + activity.zoomPassword;
-    }
-    window.location.href = urlMeeting;
-  };
-
   render() {
     const { infoAgendaArr, event, usuarioRegistrado } = this.state;
     const { toggleConference, showSection, gotoActivity } = this.props;
@@ -243,38 +226,9 @@ class VirtualConference extends Component {
                       usuarioRegistrado={usuarioRegistrado}
                       showSection={showSection}
                       setActivity={gotoActivity}
-                      zoomExternoHandleOpen={this.zoomExternoHandleOpen}
+                      zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+                      eventUser={this.props.eventUser}
                     />
-                    {/* {item.related_meetings &&
-                      item.related_meetings.map((item, key) => (
-                        <>
-                          {item.state === 'open_meeting_room' && (
-                            <Button
-                              disabled={item.meeting_id || item.vimeo_id ? false : true}
-                              onClick={() => {
-                                console.log('zoom externo button', item.platform);
-                                if (item.platform === 'zoomExterno') {
-                                  this.zoomExternoHandleOpen(item);
-                                } else {
-                                  //toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
-                                  showSection('agenda');
-                                }
-                              }}
-                              type='primary'
-                              className='button-Agenda'
-                              key={key}>
-                              {item.informative_text}
-                            </Button>
-                          )}
-                          {item.state === 'closed_meeting_room' && (
-                            <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
-                          )}
-
-                          {item.state === 'ended_meeting_room' && (
-                            <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
-                          )}
-                        </>
-                      ))} */}
                   </Card>
                 </div>
               ))}
