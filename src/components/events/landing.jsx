@@ -899,6 +899,12 @@ class Landing extends Component {
   zoomExternoHandleOpen = (activity, eventUser) => {
     let name = eventUser && eventUser.properties && eventUser.properties.names ? eventUser.properties.names : 'Anónimo';
     let urlMeeting = null;
+
+    name =
+      eventUser && eventUser.properties.casa && eventUser.properties.casa
+        ? '(' + eventUser.properties.casa + ')' + name
+        : name;
+
     if (isMobile) {
       urlMeeting = 'zoomus://zoom.us/join?confno=' + activity.meeting_id + '&uname=' + name;
     } else {
