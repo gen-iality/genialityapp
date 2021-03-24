@@ -258,7 +258,7 @@ function AgendaActivityItem(props) {
                     </Timeline>
                   </div>
                 </Col>
-                <Col md={12} lg={16} xl={16} className='agenda-contenido'>
+                <Col md={12} lg={15} xl={15} className='agenda-contenido'>
                   <Space direction='vertical'>
                     <Row gutter={[10, 10]}>
                       <Col span={24} style={{ paddingLeft: '0px' }}>
@@ -333,7 +333,7 @@ function AgendaActivityItem(props) {
                     </Row>
                   </Space>
                 </Col>
-                <Col md={8} lg={4} xl={4}>
+                <Col md={8} lg={5} xl={5}>
                   <img className='agenda-imagen' src={item.image ? item.image : event_image} />
                 </Col>
               </Row>

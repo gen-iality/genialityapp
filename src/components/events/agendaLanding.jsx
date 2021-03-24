@@ -8,7 +8,7 @@ import {
   SurveysApi,
   DocumentsApi,
   AttendeeApi,
-  discountCodesApi
+  discountCodesApi,
 } from '../../helpers/request';
 import AgendaActividadDetalle from './agendaActividadDetalle';
 import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs } from 'antd';
@@ -23,7 +23,7 @@ let attendee_states = {
   STATE_INVITED: '5ba8d213aac5b12a5a8ce749', //"INVITED";
   STATE_RESERVED: '5ba8d200aac5b12a5a8ce748', //"RESERVED";
   ROL_ATTENDEE: '5d7ac3f56b364a4042de9b08', //"rol id";
-  STATE_BOOKED: '5b859ed02039276ce2b996f0' //"BOOKED";
+  STATE_BOOKED: '5b859ed02039276ce2b996f0', //"BOOKED";
 };
 
 let changeStatus = false;
@@ -67,7 +67,7 @@ class Agenda extends Component {
       show_inscription: false,
       status: 'in_progress',
       hideBtnDetailAgenda: true,
-      userId: null
+      userId: null,
     };
 
     this.returnList = this.returnList.bind(this);
@@ -95,7 +95,7 @@ class Agenda extends Component {
 
     this.setState({
       show_inscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
-      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true,
     });
 
     let surveysData = await SurveysApi.getAll(event._id);
@@ -211,8 +211,8 @@ class Agenda extends Component {
       this.setState({
         exchangeCodeMessage: {
           type: 'success',
-          message: 'Código canjeado, habilitando el acceso...'
-        }
+          message: 'Código canjeado, habilitando el acceso...',
+        },
       });
       setTimeout(() => window.location.reload(), 500);
     } catch (e) {
@@ -226,8 +226,8 @@ class Agenda extends Component {
       this.setState({
         exchangeCodeMessage: {
           type: 'error',
-          message: msg
-        }
+          message: msg,
+        },
       });
     }
   };
@@ -336,13 +336,13 @@ class Agenda extends Component {
     Activity.Register(eventId, userId, activityId)
       .then(() => {
         notification.open({
-          message: 'Inscripción realizada'
+          message: 'Inscripción realizada',
         });
         callback(true);
       })
       .catch((err) => {
         notification.open({
-          message: err
+          message: err,
         });
       });
   };
@@ -375,7 +375,7 @@ class Agenda extends Component {
 
   showDrawer = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
   };
 
@@ -385,7 +385,7 @@ class Agenda extends Component {
 
   onClose = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
@@ -547,7 +547,7 @@ class Agenda extends Component {
       data,
       loading,
       survey,
-      documents
+      documents,
     } = this.state;
 
     {
@@ -571,7 +571,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
               Registrarme
-            </Button>
+            </Button>,
           ]}>
           <p>Para poder disfrutar de este contenido debes estar registrado e iniciar sesión</p>
         </Modal>
@@ -588,7 +588,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='login' onClick={this.handleOpenModalExchangeCode}>
               Canjear código
-            </Button>
+            </Button>,
           ]}>
           <p>
             Para poder disfrutar de este contenido debes haber pagado y tener un código porfavor ingresalo a
@@ -608,7 +608,7 @@ class Agenda extends Component {
           footer={[
             <Button key='cancel' onClick={this.handleCloseModalRestrictedDevices}>
               Cancelar
-            </Button>
+            </Button>,
           ]}>
           <p>Has excedido el número de dispositivos permitido</p>
         </Modal>
@@ -625,7 +625,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='login' onClick={this.exchangeCode}>
               Canjear código
-            </Button>
+            </Button>,
           ]}>
           <div>
             {this.state.exchangeCodeMessage && (
@@ -724,9 +724,10 @@ class Agenda extends Component {
                     </>
                   ))}
                 {event && event.styles && event.styles.hideDatesAgenda && (
-                  <Tabs defaultActiveKey='0'>
+                  <Tabs defaultActiveKey='0' size='large'>
                     {days.map((day, index) => (
                       <TabPane
+                        style={{ paddingLeft: '25px', paddingRight: '25px' }}
                         tab={Moment(day)
                           .format('LL')
                           .toUpperCase()}
@@ -746,11 +747,11 @@ class Agenda extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  currentActivity: state.stage.data.currentActivity
+  currentActivity: state.stage.data.currentActivity,
 });
 const mapDispatchToProps = {
   setNotification,
-  setTabs
+  setTabs,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Agenda);
