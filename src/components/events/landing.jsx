@@ -287,7 +287,6 @@ class Landing extends Component {
   };
 
   showDrawerMobile = () => {
-    console.log('chat', this.state.visibleChat);
     this.setState({
       visibleChat: true,
     });
@@ -406,6 +405,8 @@ class Landing extends Component {
           collapsed={this.state.collapsed}
           toggleCollapsed={this.toggleCollapsed}
           showSection={this.showSection}
+          zoomExternoHandleOpen={this.zoomExternoHandleOpen}
+          eventUser={this.state.eventUser}
         />
       ),
       tickets: (
@@ -477,10 +478,12 @@ class Landing extends Component {
             <Col sm={24} md={16} lg={18} xl={18}>
               <VirtualConference
                 event={event}
+                eventUser={this.state.eventUser}
                 currentUser={this.state.currentUser}
                 usuarioRegistrado={this.state.eventUser}
                 toggleConference={this.toggleConference}
                 showSection={this.showSection}
+                zoomExternoHandleOpen={this.zoomExternoHandleOpen}
               />
               <MapComponent event={event} />
             </Col>
@@ -892,6 +895,39 @@ class Landing extends Component {
     // message.success({ content: 'Loaded!', key, duration: 2 });
   };
 
+  zoomExternoHandleOpen = (activity, eventUser) => {
+    let name = eventUser && eventUser.properties && eventUser.properties.names ? eventUser.properties.names : 'Anónimo';
+    let urlMeeting = null;
+
+    name =
+      eventUser && eventUser.properties.casa && eventUser.properties.casa
+        ? '(' + eventUser.properties.casa + ')' + name
+        : name;
+
+    if (isMobile) {
+      urlMeeting = 'zoomus://zoom.us/join?confno=' + activity.meeting_id + '&uname=' + name;
+    } else {
+      urlMeeting = 'zoommtg://zoom.us/join?confno=' + activity.meeting_id + '&uname=' + name;
+    }
+
+    if (activity.zoomPassword) {
+      urlMeeting += '&password=' + activity.zoomPassword;
+    }
+    window.location.href = urlMeeting;
+
+    //Registro del checkin ingresando en una sesion de zoom externo
+    const { eventInfo } = this.props;
+
+    try {
+      if (eventUser) {
+        TicketsApi.checkInAttendee(eventInfo._id, eventUser._id);
+        //Activity.checkInAttendeeActivity(eventInfo._id, props.currentActivity._id, eventUser.account_id);
+      }
+    } catch (e) {
+      console.error('fallo el checkin:', e);
+    }
+  };
+
   render() {
     const {
       event,
@@ -1153,11 +1189,11 @@ class Landing extends Component {
                               <>
                                 {/* MENU DERECHO */}
 
-                                <div style={{ marginLeft: '2%', marginBottom: '3%' }}>
+                                {/* <div style={{ marginLeft: '2%', marginBottom: '3%' }}>
                                   <Button type='link' onClick={this.toggleCollapsedN}>
                                     <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
                                   </Button>
-                                </div>
+                                </div> */}
 
                                 <Menu theme='light'>
                                   {

@@ -9,16 +9,18 @@ import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 //const { Meta } = Card;
 import * as StageActions from '../../redux/stage/actions';
+import { isMobile } from 'react-device-detect';
 
 const { gotoActivity } = StageActions;
 
 const MeetingConferenceButton = ({
   activity,
-  toggleConference,
+  zoomExternoHandleOpen,
   usuarioRegistrado,
   event,
   showSection,
-  setActivity
+  setActivity,
+  eventUser,
 }) => {
   const [infoActivity, setInfoActivity] = useState({});
   const [infoEvent, setInfoEvent] = useState({});
@@ -40,9 +42,12 @@ const MeetingConferenceButton = ({
                 type='primary'
                 className='buttonVirtualConference'
                 onClick={() => {
-                  //toggleConference(true, infoActivity.meeting_id, infoActivity);
-                  setActivity(activity);
-                  showSection('agenda', true);
+                  if (activity.platform === 'zoomExterno') {
+                    zoomExternoHandleOpen(activity, eventUser);
+                  } else {
+                    setActivity(activity);
+                    showSection('agenda', true);
+                  }
                 }}>
                 <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
               </Button>
@@ -76,7 +81,7 @@ class VirtualConference extends Component {
       infoAgendaArr: [],
       usuarioRegistrado: this.props.usuarioRegistrado || undefined,
       event: this.props.event || undefined,
-      survey: []
+      survey: [],
     };
   }
 
@@ -221,32 +226,9 @@ class VirtualConference extends Component {
                       usuarioRegistrado={usuarioRegistrado}
                       showSection={showSection}
                       setActivity={gotoActivity}
+                      zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+                      eventUser={this.props.eventUser}
                     />
-                    {item.related_meetings &&
-                      item.related_meetings.map((item, key) => (
-                        <>
-                          {item.state === 'open_meeting_room' && (
-                            <Button
-                              disabled={item.meeting_id || item.vimeo_id ? false : true}
-                              onClick={() =>
-                                //toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
-                                showSection('agenda')
-                              }
-                              type='primary'
-                              className='button-Agenda'
-                              key={key}>
-                              {item.informative_text}
-                            </Button>
-                          )}
-                          {item.state === 'closed_meeting_room' && (
-                            <Alert message={`La  ${item.informative_text} no ha iniciado`} type='info' />
-                          )}
-
-                          {item.state === 'ended_meeting_room' && (
-                            <Alert message={`La ${item.informative_text} ha terminado`} type='info' />
-                          )}
-                        </>
-                      ))}
                   </Card>
                 </div>
               ))}
@@ -258,7 +240,7 @@ class VirtualConference extends Component {
 }
 
 const mapDispatchToProps = {
-  gotoActivity
+  gotoActivity,
 };
 
 export default connect(null, mapDispatchToProps)(WithUserEventRegistered(VirtualConference));

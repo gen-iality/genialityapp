@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Row, Col, Tag, Avatar, Alert, Card, Space, Timeline, List, Comment } from 'antd';
+import { Row, Col, Tag, Avatar, Alert, Card, Space, Timeline, List, Comment } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment-timezone';
 import './style.scss';
@@ -12,7 +12,7 @@ import Icon, {
   LoadingOutlined,
   PlayCircleOutlined,
   CaretRightOutlined,
-  CheckCircleOutlined
+  CheckCircleOutlined,
 } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
@@ -37,21 +37,7 @@ function AgendaActivityItem(props) {
   const intl = useIntl();
   const EnvivoIcon = (props) => <Icon component={EnVivoSvg} {...props} />;
   const timeZone = Moment.tz.guess();
-  let {
-    item,
-    Surveys,
-    Documents,
-    btnDetailAgenda,
-    toggleConference,
-    event_image,
-    gotoActivity,
-    registerStatus,
-    registerInActivity,
-    eventId,
-    userId,
-    show_inscription,
-    hideHours
-  } = props;
+  let { item, event_image, registerStatus } = props;
 
   useEffect(() => {
     if (registerStatus) {
@@ -95,9 +81,14 @@ function AgendaActivityItem(props) {
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
           justify='start'
-          align="middle"
+          align='middle'
           onClick={() => {
-            props.gotoActivity(item);
+            if (item.platform === 'zoomExterno' && item.habilitar_ingreso === 'open_meeting_room') {
+              const { eventUser, zoomExternoHandleOpen } = props;
+              zoomExternoHandleOpen(item, eventUser);
+            } else {
+              props.gotoActivity(item);
+            }
           }}>
           {/* aquie empieza la agenda en estilo mobile */}
           <Col xs={24} sm={24} md={0} lg={0} xxl={0}>
@@ -132,6 +123,7 @@ function AgendaActivityItem(props) {
                     ) : (
                       <></>
                     )}
+
                     <span style={{ fontSize: '8px' }}>
                       {meetingState == 'open_meeting_room'
                         ? 'En vivo'
@@ -181,7 +173,7 @@ function AgendaActivityItem(props) {
                                 maxCount={3}
                                 maxStyle={{
                                   color: '#ffffff',
-                                  backgroundColor: '#1CDCB7'
+                                  backgroundColor: '#1CDCB7',
                                 }}>
                                 {item.hosts.map((speaker, key) => (
                                   <Avatar key={key} src={speaker.image} />
@@ -291,7 +283,7 @@ function AgendaActivityItem(props) {
                                         display: '-webkit-box',
                                         WebkitLineClamp: '2',
                                         WebkitBoxOrient: 'vertical',
-                                        width: '90%'
+                                        width: '90%',
                                       }}
                                       dangerouslySetInnerHTML={{ __html: item.description }}
                                     />
@@ -328,7 +320,7 @@ function AgendaActivityItem(props) {
                                   maxCount={3}
                                   maxStyle={{
                                     color: '#ffffff',
-                                    backgroundColor: '#1CDCB7'
+                                    backgroundColor: '#1CDCB7',
                                   }}>
                                   {item.hosts.map((speaker, key) => (
                                     <Avatar key={key} src={speaker.image} />
@@ -354,7 +346,7 @@ function AgendaActivityItem(props) {
 }
 
 const mapDispatchToProps = {
-  gotoActivity
+  gotoActivity,
 };
 
 export default connect(null, mapDispatchToProps)(AgendaActivityItem);

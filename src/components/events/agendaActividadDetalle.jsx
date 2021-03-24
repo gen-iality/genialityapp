@@ -27,11 +27,11 @@ const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys } = SurveyActions;
 
 const layout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 10 }
+  wrapperCol: { span: 10 },
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 10 }
+  wrapperCol: { offset: 8, span: 10 },
 };
 
 let AgendaActividadDetalle = (props) => {
@@ -47,7 +47,7 @@ let AgendaActividadDetalle = (props) => {
   const [totalAttendeesCheckedin, setTotalAttendeesCheckedin] = useState(0);
   const [names, setNames] = useState(null);
   const [email, setEmail] = useState(null);
-  const [dolbyTest, setDolbyTest] = useState(false);
+
   const [configfast, setConfigfast] = useState({});
   const { eventInfo } = props;
 
@@ -84,7 +84,6 @@ let AgendaActividadDetalle = (props) => {
     }
 
     if (props?.userInfo && props.userInfo?.displayName && props.userInfo?.email) {
-      console.log('eventUserm', props.eventUser);
       let innerName =
         props.eventUser && props.eventUser.properties.casa && props.eventUser.properties.casa
           ? '(' + props.eventUser.properties.casa + ')' + props.userInfo.displayName
@@ -130,8 +129,6 @@ let AgendaActividadDetalle = (props) => {
 
       const asistentesRef = firestore.collection(`${event._id}_event_attendees`);
       asistentesRef.onSnapshot((snapshot) => {
-        console.log('total ', snapshot.size, event._id, event);
-
         const list = [];
         let cuantos = 0;
         let checkedin = 0;
@@ -196,7 +193,7 @@ let AgendaActividadDetalle = (props) => {
       const sharedProperties = {
         position: 'fixed',
         right: '0',
-        width: '170px'
+        width: '170px',
       };
 
       const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
@@ -205,7 +202,7 @@ let AgendaActividadDetalle = (props) => {
         ...sharedProperties,
         ...verticalVideo,
         zIndex: '100',
-        transition: '300ms'
+        transition: '300ms',
       });
 
       const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
@@ -216,7 +213,7 @@ let AgendaActividadDetalle = (props) => {
         zIndex: '101',
         cursor: 'pointer',
         display: 'block',
-        height: '96px'
+        height: '96px',
       });
     } else {
       setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
@@ -316,6 +313,11 @@ let AgendaActividadDetalle = (props) => {
     Moment.locale(window.navigator.language);
   }
 
+  const openZoomExterno = () => {
+    const { zoomExternoHandleOpen, eventUser, currentActivity } = props;
+    zoomExternoHandleOpen(currentActivity, eventUser);
+  };
+
   return (
     <div className='is-centered'>
       <div className=' container_agenda-information container-calendar2 is-three-fifths'>
@@ -355,7 +357,7 @@ let AgendaActividadDetalle = (props) => {
                   fontSize: 11,
                   fontWeight: 'normal',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
                 }}>
                 {meetingState === 'open_meeting_room' || stateSpace
                   ? 'En vivo'
@@ -454,8 +456,8 @@ let AgendaActividadDetalle = (props) => {
                             label='Nombre'
                             rules={[
                               {
-                                required: true
-                              }
+                                required: true,
+                              },
                             ]}>
                             <Input />
                           </Form.Item>
@@ -466,8 +468,8 @@ let AgendaActividadDetalle = (props) => {
                               {
                                 required: true,
                                 type: 'email',
-                                message: 'Ingrese un email valido'
-                              }
+                                message: 'Ingrese un email valido',
+                              },
                             ]}>
                             <Input />
                           </Form.Item>
@@ -480,14 +482,20 @@ let AgendaActividadDetalle = (props) => {
                       </Card>
                     ) : (
                       <>
-                        <iframe
-                          src={getMeetingPath(platform)}
-                          frameBorder='0'
-                          allow='autoplay; fullscreen; camera *;microphone *'
-                          allowFullScreen
-                          allowusermedia
-                          style={videoStyles}></iframe>
-                        <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
+                        {platform === 'zoomExterno' ? (
+                          openZoomExterno()
+                        ) : (
+                          <>
+                            <iframe
+                              src={getMeetingPath(platform)}
+                              frameBorder='0'
+                              allow='autoplay; fullscreen; camera *;microphone *'
+                              allowFullScreen
+                              allowusermedia
+                              style={videoStyles}></iframe>
+                            <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
+                          </>
+                        )}
                       </>
                     )}
                   </>
@@ -559,7 +567,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -608,7 +616,7 @@ let AgendaActividadDetalle = (props) => {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto'
+                      margin: '0 auto',
                     }}
                     url={currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -774,7 +782,7 @@ let AgendaActividadDetalle = (props) => {
                                         style={{
                                           display: 'flex',
                                           flexDirection: 'row',
-                                          alignItems: 'center'
+                                          alignItems: 'center',
                                         }}
                                         avatar={
                                           item.image ? (
@@ -898,7 +906,7 @@ let AgendaActividadDetalle = (props) => {
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end'
+                alignItems: 'flex-end',
               }}>
               {/* <button
                   <div
@@ -953,7 +961,7 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   currentSurvey: state.survey.data.currentSurvey,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
-  tabs: state.stage.data.tabs
+  tabs: state.stage.data.tabs,
 });
 
 const mapDispatchToProps = {
@@ -961,7 +969,7 @@ const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
-  setHasOpenSurveys
+  setHasOpenSurveys,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
