@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Row, Col, Tag, Avatar, Alert, Card, Space, Timeline, List, Comment } from 'antd';
+import { Row, Col, Tag, Avatar, Alert, Card, Space, Timeline, List, Comment } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment-timezone';
 import './style.scss';
@@ -37,21 +37,7 @@ function AgendaActivityItem(props) {
   const intl = useIntl();
   const EnvivoIcon = (props) => <Icon component={EnVivoSvg} {...props} />;
   const timeZone = Moment.tz.guess();
-  let {
-    item,
-    Surveys,
-    Documents,
-    btnDetailAgenda,
-    toggleConference,
-    event_image,
-    gotoActivity,
-    registerStatus,
-    registerInActivity,
-    eventId,
-    userId,
-    show_inscription,
-    hideHours,
-  } = props;
+  let { item, event_image, registerStatus } = props;
 
   useEffect(() => {
     if (registerStatus) {
@@ -97,8 +83,7 @@ function AgendaActivityItem(props) {
           justify='start'
           align='middle'
           onClick={() => {
-            console.log('ingreso item', item, props);
-            if (item.platform === 'zoomExterno' && item.habilitar_ingreso === 'open_meeting_room'){
+            if (item.platform === 'zoomExterno' && item.habilitar_ingreso === 'open_meeting_room') {
               const { eventUser, zoomExternoHandleOpen } = props;
               zoomExternoHandleOpen(item, eventUser);
             } else {
@@ -138,7 +123,7 @@ function AgendaActivityItem(props) {
                     ) : (
                       <></>
                     )}
-                    
+
                     <span style={{ fontSize: '8px' }}>
                       {meetingState == 'open_meeting_room'
                         ? 'En vivo'
@@ -361,7 +346,7 @@ function AgendaActivityItem(props) {
 }
 
 const mapDispatchToProps = {
-  gotoActivity
-}
+  gotoActivity,
+};
 
 export default connect(null, mapDispatchToProps)(AgendaActivityItem);
