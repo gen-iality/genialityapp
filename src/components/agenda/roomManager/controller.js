@@ -44,14 +44,14 @@ export default function RoomController(props) {
             <Switch checked={games} onChange={(checked) => handleTabsController(checked, 'games')} />
           </Col>
         </Row>
-        {/* <Row style={{ padding: '8px 0px' }}>
+        <Row style={{ padding: '8px 0px' }}>
           <Col xs={12} lg={8}>
             Habilitar Asistentes
           </Col>
           <Col xs={4} lg={2}>
             <Switch checked={attendees} onChange={(checked) => handleTabsController(checked, 'attendees')} />
           </Col>
-        </Row> */}
+        </Row>
       </Card>
     </>
   );

@@ -1209,12 +1209,15 @@ class Landing extends Component {
                                       style={{ marginTop: '12px', marginBottom: '22px' }}
                                       onClick={() => this.toggleCollapsed(1)}></Menu.Item>
                                   }
-                                  {
-                                    /* {this.state.currentActivity && this.state.attendees && */ <Menu.Item
-                                      key='2'
-                                      icon={<TeamOutlined style={{ fontSize: '24px' }} />}
-                                      onClick={() => this.toggleCollapsed(2)}></Menu.Item>
-                                  }
+                                  {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una actividad*/}
+                                  {false &&
+                                    this.props?.tabs &&
+                                    (this.props.tabs.attendees === 'true' || this.props.tabs.attendees === true) && (
+                                      <Menu.Item
+                                        key='2'
+                                        icon={<TeamOutlined style={{ fontSize: '24px' }} />}
+                                        onClick={() => this.toggleCollapsed(2)}></Menu.Item>
+                                    )}
                                   {this.props.currentActivity !== null &&
                                     this.props?.tabs &&
                                     (this.props.tabs.surveys === 'true' || this.props.tabs.surveys === true) && (
