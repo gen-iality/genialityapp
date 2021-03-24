@@ -287,7 +287,6 @@ class Landing extends Component {
   };
 
   showDrawerMobile = () => {
-    console.log('chat', this.state.visibleChat);
     this.setState({
       visibleChat: true,
     });
@@ -915,6 +914,18 @@ class Landing extends Component {
       urlMeeting += '&password=' + activity.zoomPassword;
     }
     window.location.href = urlMeeting;
+
+    //Registro del checkin ingresando en una sesion de zoom externo
+    const { eventInfo } = this.props;
+
+    try {
+      if (eventUser) {
+        TicketsApi.checkInAttendee(eventInfo._id, eventUser._id);
+        //Activity.checkInAttendeeActivity(eventInfo._id, props.currentActivity._id, eventUser.account_id);
+      }
+    } catch (e) {
+      console.error('fallo el checkin:', e);
+    }
   };
 
   render() {

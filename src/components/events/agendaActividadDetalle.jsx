@@ -47,7 +47,7 @@ let AgendaActividadDetalle = (props) => {
   const [totalAttendeesCheckedin, setTotalAttendeesCheckedin] = useState(0);
   const [names, setNames] = useState(null);
   const [email, setEmail] = useState(null);
-  const [dolbyTest, setDolbyTest] = useState(false);
+
   const [configfast, setConfigfast] = useState({});
   const { eventInfo } = props;
 
@@ -84,7 +84,6 @@ let AgendaActividadDetalle = (props) => {
     }
 
     if (props?.userInfo && props.userInfo?.displayName && props.userInfo?.email) {
-      console.log('eventUserm', props.eventUser);
       let innerName =
         props.eventUser && props.eventUser.properties.casa && props.eventUser.properties.casa
           ? '(' + props.eventUser.properties.casa + ')' + props.userInfo.displayName
@@ -130,8 +129,6 @@ let AgendaActividadDetalle = (props) => {
 
       const asistentesRef = firestore.collection(`${event._id}_event_attendees`);
       asistentesRef.onSnapshot((snapshot) => {
-        console.log('total ', snapshot.size, event._id, event);
-
         const list = [];
         let cuantos = 0;
         let checkedin = 0;
