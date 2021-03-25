@@ -17,8 +17,10 @@ import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';
-import { Switch } from 'antd';
-import { cssNumber } from 'jquery';
+import { Switch, Card, Row, Col, message } from 'antd';
+import { firestore } from '../../helpers/firebase';
+import { resolve } from 'core-js/fn/promise';
+
 Moment.locale('es');
 
 class General extends Component {
@@ -47,7 +49,12 @@ class General extends Component {
       dates: [],
       data_loader_page: '',
       checked: false,
-      has_payment: false
+      has_payment: false,
+      tabs: {
+        publicChat: true,
+        privateChat: true,
+        attendees: true,
+      },
     };
     this.specificDates = this.specificDates.bind(this);
     this.submit = this.submit.bind(this);
@@ -56,10 +63,18 @@ class General extends Component {
   }
 
   async componentDidMount() {
+    const validate = await this.validateTabs();
+    if (validate) {
+      this.setState({ ...validate });
+      // creacion o actualizacion de estado en firebase de los tabs de la zona social
+    } else {
+      await this.upsertTabs();
+    }
+
     const info = this.props.event;
     this.setState({ info });
     this.setState({
-      checked: info.initial_page ? true : false
+      checked: info.initial_page ? true : false,
     });
     try {
       const { event } = this.props;
@@ -83,7 +98,7 @@ class General extends Component {
         selectedCategories,
         selectedOrganizer,
         selectedType,
-        loading: false
+        loading: false,
       });
       if (info.dates && info.dates.length > 0) {
         this.setState({ specificDates: true });
@@ -151,7 +166,7 @@ class General extends Component {
   //Cambio en los input de fechas
   changeDate = (value, name) => {
     let {
-      event: { date_end }
+      event: { date_end },
     } = this.state;
     if (name === 'date_start') {
       const diff = Moment(value).diff(Moment(date_end), 'days');
@@ -171,7 +186,7 @@ class General extends Component {
     if (file) {
       this.setState({
         imageFile: file,
-        event: { ...this.state.event, picture: null }
+        event: { ...this.state.event, picture: null },
       });
 
       //envia el archivo de imagen como POST al API
@@ -190,11 +205,11 @@ class General extends Component {
         self.setState({
           event: {
             ...self.state.event,
-            picture: path[0]
+            picture: path[0],
           },
           fileMsg: 'Imagen subida con exito',
           imageFile: null,
-          path
+          path,
         });
 
         toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
@@ -212,7 +227,7 @@ class General extends Component {
     if (file) {
       this.setState({
         imageFileBannerImage: file,
-        event: { ...this.state.event, bannerImage: null }
+        event: { ...this.state.event, bannerImage: null },
       });
 
       //envia el archivo de imagen como POST al API
@@ -231,11 +246,11 @@ class General extends Component {
         self.setState({
           event: {
             ...self.state.event,
-            bannerImage: banner_image
+            bannerImage: banner_image,
           },
           fileMsgBanner: 'Imagen subida con exito',
           imageFileBannerImage: null,
-          banner_image
+          banner_image,
         });
 
         toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
@@ -244,12 +259,84 @@ class General extends Component {
       this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
     }
   };
+
+  /* ZONA SOCIAL */
+
+  validateTabs = () => {
+    const { event } = this.props;
+    return new Promise(function(resolve, reject) {
+      firestore
+        .collection('events')
+        .doc(event._id)
+        .get()
+        .then((result) => {
+          if (result.exists) {
+            const data = result.data();
+            data.tabs ? resolve(data) : resolve(false);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          reject(err);
+        });
+    });
+  };
+
+  upsertTabs = async () => {
+    const { event } = this.props;
+    const { tabs } = this.state;
+
+    let response = await this.validateTabs();
+
+    return new Promise(function(resolve, reject) {
+      if (response) {
+        firestore
+          .collection('events')
+          .doc(event._id)
+          .update({ tabs: { ...tabs } })
+          .then(() => {
+            const msg = 'Tabs de la zona social actualizados';
+            message.success(msg);
+            resolve({
+              error: '',
+              message: msg,
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      } else {
+        firestore
+          .collection('events')
+          .doc(event._id)
+          .set({ tabs: { ...tabs } })
+          .then(() => {
+            const msg = 'Tabs de la zona social inicializados';
+            message.success(msg);
+            resolve({
+              error: '',
+              message: msg,
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      }
+    });
+  };
+
   //*********** FIN FUNCIONES DEL FORMULARIO
 
   //Envío de datos
   async submit(e) {
     e.preventDefault();
     e.stopPropagation();
+
+    // creacion o actualizacion de estado en firebase de los tabs de la zona social
+    await this.upsertTabs();
+
     const { event, path } = this.state;
     const self = this;
     //this.setState({loading:true});
@@ -297,10 +384,8 @@ class General extends Component {
       show_banner_footer: event.show_banner_footer || false,
       has_payment: event.has_payment ? event.has_payment : false,
       language: event.language ? event.language : 'es',
-      googleanlyticsid: event.googleanlyticsid || null
+      googleanlyticsid: event.googleanlyticsid || null,
     };
-
-    console.log('Marlon aqui:', data);
 
     try {
       if (event._id) {
@@ -347,7 +432,7 @@ class General extends Component {
       await EventsApi.deleteOne(this.state.event._id);
       this.setState({
         message: { ...this.state.message, class: 'msg_success', content: 'Evento borrado' },
-        isLoading: false
+        isLoading: false,
       });
       setTimeout(() => {
         this.setState({ message: {}, modal: false });
@@ -358,7 +443,7 @@ class General extends Component {
         console.error(error.response);
         this.setState({
           message: { ...this.state.message, class: 'msg_error', content: JSON.stringify(error.response) },
-          isLoading: false
+          isLoading: false,
         });
       } else if (error.request) {
         console.error(error.request);
@@ -383,7 +468,7 @@ class General extends Component {
 
     if (checked === false) {
       const properties = {
-        dates: {}
+        dates: {},
       };
 
       await EventsApi.editOne(properties, this.props.eventId);
@@ -396,7 +481,7 @@ class General extends Component {
 
   onChangeCheck = (e) => {
     this.setState({
-      checked: e.target.checked
+      checked: e.target.checked,
     });
   };
 
@@ -418,7 +503,7 @@ class General extends Component {
       timeout,
       errorData,
       serverError,
-      specificDates
+      specificDates,
     } = this.state;
     return (
       <React.Fragment>
@@ -838,7 +923,7 @@ class General extends Component {
                       borderWidth: 2,
                       borderColor: '#b5b5b5',
                       borderStyle: 'dashed',
-                      borderRadius: 10
+                      borderRadius: 10,
                     }}
                   />
                 </div>
@@ -888,6 +973,51 @@ class General extends Component {
                   />
                 </div>
               </div>
+
+              <Card title='Zona Social'>
+                <Row style={{ padding: '8px 0px' }}>
+                  <Col xs={18}>Chat General</Col>
+                  <Col xs={6}>
+                    <Switch
+                      checked={this.state?.tabs?.publicChat}
+                      onChange={(checked) =>
+                        this.setState(
+                          { tabs: { ...this.state.tabs, publicChat: checked } },
+                          async () => await this.upsertTabs()
+                        )
+                      }
+                    />
+                  </Col>
+                </Row>
+                <Row style={{ padding: '8px 0px' }}>
+                  <Col xs={18}>Chat Privado</Col>
+                  <Col xs={6}>
+                    <Switch
+                      checked={this.state?.tabs?.privateChat}
+                      onChange={(checked) =>
+                        this.setState(
+                          { tabs: { ...this.state.tabs, privateChat: checked } },
+                          async () => await this.upsertTabs()
+                        )
+                      }
+                    />
+                  </Col>
+                </Row>
+                <Row style={{ padding: '8px 0px' }}>
+                  <Col xs={18}>Asistentes</Col>
+                  <Col xs={6}>
+                    <Switch
+                      checked={this.state?.tabs?.attendees}
+                      onChange={(checked) =>
+                        this.setState(
+                          { tabs: { ...this.state.tabs, attendees: checked } },
+                          async () => await this.upsertTabs()
+                        )
+                      }
+                    />
+                  </Col>
+                </Row>
+              </Card>
             </div>
           </div>
         </div>
