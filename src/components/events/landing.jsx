@@ -111,7 +111,7 @@ class Landing extends Component {
       meeting_id: null,
       color: '',
       collapsed: true,
-      visible: false,
+      visible: true,
       visibleChat: false,
       placement: 'left',
       placementBottom: 'bottom',
