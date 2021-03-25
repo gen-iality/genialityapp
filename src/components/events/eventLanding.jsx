@@ -103,7 +103,7 @@ class eventLanding extends Component {
             <div className='column is-centered mediaplayer'>
               <ReactPlayer
                 width={'100%'}
-                height={'500px'}
+                height={'50vw'}
                 style={{
                   display: 'block',
                   margin: '0 auto',
