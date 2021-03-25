@@ -17,7 +17,7 @@ class AgendaInscriptions extends Component {
       hideBtnDetailAgenda: false,
       Surveys: [],
       Documents: [],
-      related_meetings: []
+      related_meetings: [],
     };
     this.survey = this.survey.bind(this);
     this.gotoActivity = this.gotoActivity.bind(this);
@@ -85,7 +85,7 @@ class AgendaInscriptions extends Component {
     }
 
     this.setState({
-      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true,
     });
   }
 
@@ -171,7 +171,7 @@ class AgendaInscriptions extends Component {
     Activity.DeleteRegister(eventId, activityKey)
       .then(() => {
         notification.open({
-          message: 'Inscripción Eliminada'
+          message: 'Inscripción Eliminada',
         });
       })
       .catch((err) => {
@@ -182,7 +182,7 @@ class AgendaInscriptions extends Component {
   };
   onClose = (e) => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
@@ -192,7 +192,7 @@ class AgendaInscriptions extends Component {
 
   showDrawer = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
   };
 
@@ -206,7 +206,7 @@ class AgendaInscriptions extends Component {
       Surveys,
       Documents,
       agendaData,
-      related_meetings
+      related_meetings,
     } = this.state;
     return (
       <div>
@@ -244,7 +244,6 @@ class AgendaInscriptions extends Component {
                 {agendaData.map((item, llave) => (
                   <div key={llave} className='container_agenda-information'>
                     <div className='card agenda_information'>
-                      hola perros
                       <Row align='middle'>
                         <Row>
                           <span className='date-activity'>
@@ -399,7 +398,7 @@ class AgendaInscriptions extends Component {
                                         width={'100%'}
                                         style={{
                                           display: 'block',
-                                          margin: '0 auto'
+                                          margin: '0 auto',
                                         }}
                                         url={item.video}
                                         //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"

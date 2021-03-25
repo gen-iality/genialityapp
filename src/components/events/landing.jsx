@@ -1198,104 +1198,109 @@ class Landing extends Component {
                             survey={this.state.surveys}
                             games={this.state.games}
                             generalTabs={this.state.generalTabs}
-                            />
+                          />
                         </Drawer>
 
                         {/* aqui empieza el chat del evento desktop */}
-                        <Sider
-                          className='collapse-chatEvent'
-                          trigger={null}
-                          theme='light'
-                          collapsible
-                          collapsed={this.state.collapsed}
-                          width={400}>
-                          <div className='Chat-Event'>
-                            {this.state.collapsed ? (
-                              <>
-                                {/* MENU DERECHO */}
 
-                                {/* <div style={{ marginLeft: '2%', marginBottom: '3%' }}>
-                                  <Button type='link' onClick={this.toggleCollapsedN}>
+                        {(this.state.generalTabs.attendees ||
+                          this.state.generalTabs.publicChat ||
+                          this.state.generalTabs.privateChat) && (
+                          <Sider
+                            className='collapse-chatEvent'
+                            trigger={null}
+                            theme='light'
+                            collapsible
+                            collapsed={this.state.collapsed}
+                            width={400}>
+                            <div className='Chat-Event'>
+                              {this.state.collapsed ? (
+                                <>
+                                  {/* MENU DERECHO */}
+
+                                  {/* <div style={{ marginLeft: '2%', marginBottom: '3%' }}>
+                                    <Button type='link' onClick={this.toggleCollapsedN}>
+                                      <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
+                                    </Button>
+                                  </div> */}
+
+                                  <Menu theme='light'>
+                                    {(this.state.generalTabs.publicChat || this.state.generalTabs.privateChat) && (
+                                      <Menu.Item
+                                        key='1'
+                                        icon={
+                                          <>
+                                            <Badge count={this.state.totalNewMessages}>
+                                              <CommentOutlined style={{ fontSize: '24px' }} />
+                                            </Badge>
+                                          </>
+                                        }
+                                        style={{ marginTop: '12px', marginBottom: '22px' }}
+                                        onClick={() => this.toggleCollapsed(1)}></Menu.Item>
+                                    )}
+
+                                    {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una actividad*/}
+                                    {this.state.generalTabs.attendees && (
+                                      <Menu.Item
+                                        key='2'
+                                        icon={<TeamOutlined style={{ fontSize: '24px' }} />}
+                                        onClick={() => this.toggleCollapsed(2)}></Menu.Item>
+                                    )}
+                                    {this.props.currentActivity !== null &&
+                                      this.props?.tabs &&
+                                      (this.props.tabs.surveys === 'true' || this.props.tabs.surveys === true) && (
+                                        <Menu.Item
+                                          key='3'
+                                          icon={
+                                            <Badge dot={this.props.hasOpenSurveys}>
+                                              <PieChartOutlined style={{ fontSize: '24px' }} />
+                                            </Badge>
+                                          }
+                                          onClick={() => this.toggleCollapsed(3)}></Menu.Item>
+                                      )}
+                                    {this.props.currentActivity !== null &&
+                                      this.props?.tabs &&
+                                      (this.props.tabs.games === 'true' || this.props.tabs.games === true) && (
+                                        <Menu.Item
+                                          key='4'
+                                          icon={
+                                            <img
+                                              src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
+                                              style={{ width: '50px', height: '32px' }}
+                                              alt='Games'
+                                            />
+                                          }
+                                          onClick={() => {
+                                            this.props.setMainStage('game');
+                                            this.toggleCollapsed(4);
+                                          }}></Menu.Item>
+                                      )}
+                                  </Menu>
+                                </>
+                              ) : (
+                                <>
+                                  <Button type='link' onClick={this.toggleCollapsed}>
                                     <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
                                   </Button>
-                                </div> */}
 
-                                <Menu theme='light'>
-                                  {(this.state.generalTabs.publicChat || this.state.generalTabs.privateChat) && (
-                                    <Menu.Item
-                                      key='1'
-                                      icon={
-                                        <>
-                                          <Badge count={this.state.totalNewMessages}>
-                                            <CommentOutlined style={{ fontSize: '24px' }} />
-                                          </Badge>
-                                        </>
-                                      }
-                                      style={{ marginTop: '12px', marginBottom: '22px' }}
-                                      onClick={() => this.toggleCollapsed(1)}></Menu.Item>
-                                  )}
-
-                                  {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una actividad*/}
-                                  {this.state.generalTabs.attendees && (
-                                    <Menu.Item
-                                      key='2'
-                                      icon={<TeamOutlined style={{ fontSize: '24px' }} />}
-                                      onClick={() => this.toggleCollapsed(2)}></Menu.Item>
-                                  )}
-                                  {this.props.currentActivity !== null &&
-                                    this.props?.tabs &&
-                                    (this.props.tabs.surveys === 'true' || this.props.tabs.surveys === true) && (
-                                      <Menu.Item
-                                        key='3'
-                                        icon={
-                                          <Badge dot={this.props.hasOpenSurveys}>
-                                            <PieChartOutlined style={{ fontSize: '24px' }} />
-                                          </Badge>
-                                        }
-                                        onClick={() => this.toggleCollapsed(3)}></Menu.Item>
-                                    )}
-                                  {this.props.currentActivity !== null &&
-                                    this.props?.tabs &&
-                                    (this.props.tabs.games === 'true' || this.props.tabs.games === true) && (
-                                      <Menu.Item
-                                        key='4'
-                                        icon={
-                                          <img
-                                            src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
-                                            style={{ width: '50px', height: '32px' }}
-                                            alt='Games'
-                                          />
-                                        }
-                                        onClick={() => {
-                                          this.props.setMainStage('game');
-                                          this.toggleCollapsed(4);
-                                        }}></Menu.Item>
-                                    )}
-                                </Menu>
-                              </>
-                            ) : (
-                              <>
-                                <Button type='link' onClick={this.toggleCollapsed}>
-                                  <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
-                                </Button>
-
-                                <SocialZone
-                                  tcollapse={this.toggleCollapsed}
-                                  optionselected={this.updateOption}
-                                  tab={this.state.tabSelected}
-                                  event={event}
-                                  event_id={event._id}
-                                  chat={this.state.chat}
-                                  attendees={this.state.attendees}
-                                  survey={this.state.surveys}
-                                  games={this.state.games}
-                                  currentUser={this.state.currentUser}
-                                  generalTabs={this.state.generalTabs}
-                                />
-                              </>
-                            )}
-                          </div>
-                        </Sider>
+                                  <SocialZone
+                                    tcollapse={this.toggleCollapsed}
+                                    optionselected={this.updateOption}
+                                    tab={this.state.tabSelected}
+                                    event={event}
+                                    event_id={event._id}
+                                    chat={this.state.chat}
+                                    attendees={this.state.attendees}
+                                    survey={this.state.surveys}
+                                    games={this.state.games}
+                                    currentUser={this.state.currentUser}
+                                    generalTabs={this.state.generalTabs}
+                                  />
+                                </>
+                              )}
+                            </div>
+                          </Sider>
+                        )}
                       </Layout>
                     </Layout>
                   </Content>
