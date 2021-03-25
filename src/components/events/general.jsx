@@ -19,7 +19,6 @@ import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';
 import { Switch, Card, Row, Col, message } from 'antd';
 import { firestore } from '../../helpers/firebase';
-import { resolve } from 'core-js/fn/promise';
 
 Moment.locale('es');
 

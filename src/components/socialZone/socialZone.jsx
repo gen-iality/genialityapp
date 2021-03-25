@@ -131,7 +131,7 @@ let SocialZone = function(props) {
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
                 setTotalNewMessages(newmsj);
-              }
+              },
             });
         }
 
@@ -176,7 +176,7 @@ let SocialZone = function(props) {
 
         props.optionselected(key == '2' ? 'attendees' : key == '3' ? 'survey' : key == '1' ? 'chat' : 'game');
       }}>
-      {
+      {(props.generalTabs.publicChat || props.generalTabs.privateChat) && (
         <TabPane
           className='asistente-chat-list'
           tab={
@@ -201,20 +201,23 @@ let SocialZone = function(props) {
             chattab={chattab}
             setCurrentUser={setCurrentUser}
             datamsjlast={datamsjlast}
+            generalTabs={props.generalTabs}
           />
         </TabPane>
-      }
-      <TabPane tab='Asistentes' key='2' className='asistente-list'>
-        <AttendeList
-          currentUser={currentUser}
-          event_id={event_id}
-          currentChat={currentChat}
-          currentChatName={currentChatName}
-          createNewOneToOneChat={createNewOneToOneChat}
-          attendeeList={attendeeList}
-          attendeeListPresence={attendeeListPresence}
-        />
-      </TabPane>
+      )}
+      {props.generalTabs.attendees && (
+        <TabPane tab='Asistentes' key='2' className='asistente-list'>
+          <AttendeList
+            currentUser={currentUser}
+            event_id={event_id}
+            currentChat={currentChat}
+            currentChatName={currentChatName}
+            createNewOneToOneChat={createNewOneToOneChat}
+            attendeeList={attendeeList}
+            attendeeListPresence={attendeeListPresence}
+          />
+        </TabPane>
+      )}
 
       {props.currentActivity !== null && props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
         <TabPane
@@ -298,12 +301,12 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
   viewNotification: state.notifications.data,
-  tabs: state.stage.data.tabs
+  tabs: state.stage.data.tabs,
 });
 
 const mapDispatchToProps = {
   setMainStage,
-  setNotification
+  setNotification,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));

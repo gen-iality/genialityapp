@@ -139,6 +139,13 @@ class Landing extends Component {
       activitiesAgenda: [],
       publishedSurveys: [],
       //fin Integración con encuestas
+
+      // Tabs generales
+      generalTabs: {
+        publicChat: true,
+        privateChat: true,
+        attendees: true,
+      },
     };
     this.showLanding = this.showLanding.bind(this);
   }
@@ -192,6 +199,20 @@ class Landing extends Component {
       message: 'holap',
       // description: 'Tienes un nuevo mensaje',
     });
+  };
+
+  listenConfigurationEvent = () => {
+    const { eventInfo } = this.props;
+    const self = this;
+    firestore
+      .collection('events')
+      .doc(eventInfo._id)
+      .onSnapshot(function(eventSnapshot) {
+        if (eventSnapshot.exists) {
+          const tabs = eventSnapshot.data().tabs;
+          self.setState({ generalTabs: tabs });
+        }
+      });
   };
 
   monitorNewChatMessages = (event, user) => {
@@ -564,6 +585,9 @@ class Landing extends Component {
     this.setState({
       activitiesAgenda: infoAgenda.data,
     });
+
+    // Se escucha la configuracion  de los tabs del evento
+    this.listenConfigurationEvent();
 
     //LISTENER DE ACTIVITIES  STATUS  NOTIFICATIONS POR EVENT
 
@@ -1173,7 +1197,8 @@ class Landing extends Component {
                             attendees={this.state.attendees}
                             survey={this.state.surveys}
                             games={this.state.games}
-                          />
+                            generalTabs={this.state.generalTabs}
+                            />
                         </Drawer>
 
                         {/* aqui empieza el chat del evento desktop */}
@@ -1196,8 +1221,8 @@ class Landing extends Component {
                                 </div> */}
 
                                 <Menu theme='light'>
-                                  {
-                                    /* {this.state.currentActivity && this.state.chat &&*/ <Menu.Item
+                                  {(this.state.generalTabs.publicChat || this.state.generalTabs.privateChat) && (
+                                    <Menu.Item
                                       key='1'
                                       icon={
                                         <>
@@ -1208,16 +1233,15 @@ class Landing extends Component {
                                       }
                                       style={{ marginTop: '12px', marginBottom: '22px' }}
                                       onClick={() => this.toggleCollapsed(1)}></Menu.Item>
-                                  }
+                                  )}
+
                                   {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una actividad*/}
-                                  {false &&
-                                    this.props?.tabs &&
-                                    (this.props.tabs.attendees === 'true' || this.props.tabs.attendees === true) && (
-                                      <Menu.Item
-                                        key='2'
-                                        icon={<TeamOutlined style={{ fontSize: '24px' }} />}
-                                        onClick={() => this.toggleCollapsed(2)}></Menu.Item>
-                                    )}
+                                  {this.state.generalTabs.attendees && (
+                                    <Menu.Item
+                                      key='2'
+                                      icon={<TeamOutlined style={{ fontSize: '24px' }} />}
+                                      onClick={() => this.toggleCollapsed(2)}></Menu.Item>
+                                  )}
                                   {this.props.currentActivity !== null &&
                                     this.props?.tabs &&
                                     (this.props.tabs.surveys === 'true' || this.props.tabs.surveys === true) && (
@@ -1266,6 +1290,7 @@ class Landing extends Component {
                                   survey={this.state.surveys}
                                   games={this.state.games}
                                   currentUser={this.state.currentUser}
+                                  generalTabs={this.state.generalTabs}
                                 />
                               </>
                             )}
