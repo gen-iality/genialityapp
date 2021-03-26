@@ -728,9 +728,13 @@ class Agenda extends Component {
                     {days.map((day, index) => (
                       <TabPane
                         style={{ paddingLeft: '25px', paddingRight: '25px' }}
-                        tab={Moment(day)
-                          .format('LL')
-                          .toUpperCase()}
+                        tab={
+                          <span style={{ fontWeight: 'bolder' }}>
+                            {Moment(day)
+                              .format('LL')
+                              .toUpperCase()}
+                          </span>
+                        }
                         key={index}>
                         {this.getActivitiesByDay(day)}
                       </TabPane>
