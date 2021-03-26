@@ -204,15 +204,19 @@ class Landing extends Component {
   listenConfigurationEvent = () => {
     const { eventInfo } = this.props;
     const self = this;
-    firestore
-      .collection('events')
-      .doc(eventInfo._id)
-      .onSnapshot(function(eventSnapshot) {
-        if (eventSnapshot.exists) {
-          const tabs = eventSnapshot.data().tabs;
-          self.setState({ generalTabs: tabs });
-        }
-      });
+    if (this.props.eventInfo) {
+      firestore
+        .collection('events')
+        .doc(eventInfo._id)
+        .onSnapshot(function(eventSnapshot) {
+          if (eventSnapshot.exists) {
+            if (eventSnapshot.data().tabs !== undefined) {
+              const tabs = eventSnapshot.data().tabs;
+              self.setState({ generalTabs: tabs });
+            }
+          }
+        });
+    }
   };
 
   monitorNewChatMessages = (event, user) => {
@@ -1167,6 +1171,7 @@ class Landing extends Component {
                           )}
                         </Content>
                         {/* aqui esta el boton del chat mobile */}
+                        {console.log('attendees', this.state.generalTabs)}
                         <div className='chat-evius_mobile'>
                           <Button
                             shape='circle'
