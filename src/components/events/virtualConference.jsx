@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useState, useEffect } from 'react';
-import { Card, Button, Alert } from 'antd';
+import { Card, Button, Alert, Carousel } from 'antd';
 import WithUserEventRegistered from '../shared/withUserEventRegistered';
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
@@ -167,7 +167,7 @@ class VirtualConference extends Component {
     return (
       <Fragment>
         {
-          <div>
+          <Carousel autoplay  >
             {/* <Card bordered={ true }>
                             <span>Sesiones</span>
                         </Card> */}
@@ -232,7 +232,7 @@ class VirtualConference extends Component {
                   </Card>
                 </div>
               ))}
-          </div>
+          </Carousel>
         }
       </Fragment>
     );

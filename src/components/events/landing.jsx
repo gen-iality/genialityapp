@@ -497,20 +497,6 @@ class Landing extends Component {
         <>
           <Row justify='center'>
             <Col sm={24} md={16} lg={18} xl={18}>
-              <VirtualConference
-                event={event}
-                eventUser={this.state.eventUser}
-                currentUser={this.state.currentUser}
-                usuarioRegistrado={this.state.eventUser}
-                toggleConference={this.toggleConference}
-                showSection={this.showSection}
-                zoomExternoHandleOpen={this.zoomExternoHandleOpen}
-              />
-              <MapComponent event={event} />
-            </Col>
-          </Row>
-          <Row justify='center'>
-            <Col sm={24} md={16} lg={18} xl={18}>
               {this.state.event && this.state.event._id !== '5f0b95ca34c8116f9b21ebd6' && (
                 <EventLanding
                   event={event}
@@ -1129,6 +1115,20 @@ class Landing extends Component {
                                 )}
                             </div>
                           )}
+                          <Row justify='center'>
+                            <Col sm={24} md={16} lg={18} xl={18}>
+                              <VirtualConference
+                                event={event}
+                                eventUser={this.state.eventUser}
+                                currentUser={this.state.currentUser}
+                                usuarioRegistrado={this.state.eventUser}
+                                toggleConference={this.toggleConference}
+                                showSection={this.showSection}
+                                zoomExternoHandleOpen={this.zoomExternoHandleOpen}
+                              />
+                              <MapComponent event={event} />
+                            </Col>
+                          </Row>
                           <div id='visualizar' style={{ margin: '0px 2px', overflow: 'initial', textAlign: 'center' }}>
                             {this.state.sections[this.state.section]}
                           </div>
