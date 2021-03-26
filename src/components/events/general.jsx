@@ -63,9 +63,13 @@ class General extends Component {
 
   async componentDidMount() {
     const validate = await this.validateTabs();
+    console.log('validate', validate);
     if (validate) {
-      this.setState({ ...validate });
-      // creacion o actualizacion de estado en firebase de los tabs de la zona social
+      if (validate.tabs !== undefined) {
+        this.setState({ tabs: { ...validate.tabs } });
+      } else {
+        await this.upsertTabs();
+      }
     } else {
       await this.upsertTabs();
     }
@@ -271,7 +275,7 @@ class General extends Component {
         .then((result) => {
           if (result.exists) {
             const data = result.data();
-            data.tabs ? resolve(data) : resolve(false);
+            data ? resolve(data) : resolve(false);
           } else {
             resolve(false);
           }
@@ -286,15 +290,16 @@ class General extends Component {
   upsertTabs = async () => {
     const { event } = this.props;
     const { tabs } = this.state;
-
     let response = await this.validateTabs();
 
     return new Promise(function(resolve, reject) {
       if (response) {
+        let updateData = { ...response, tabs: { ...tabs } };
+
         firestore
           .collection('events')
           .doc(event._id)
-          .update({ tabs: { ...tabs } })
+          .update(updateData)
           .then(() => {
             const msg = 'Tabs de la zona social actualizados';
             message.success(msg);
@@ -422,7 +427,6 @@ class General extends Component {
       }
       console.error(error.config);
     }
-    console.log('data que se guarda del evento ', data);
   }
   //Delete event
   async deleteEvent() {
