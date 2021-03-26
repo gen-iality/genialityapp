@@ -166,74 +166,72 @@ class VirtualConference extends Component {
     if (!infoAgendaArr || infoAgendaArr.length <= 0) return null;
     return (
       <Fragment>
-        {
-          <Carousel autoplay  >
-            {/* <Card bordered={ true }>
+        <Carousel autoplay style={{ height: '50vh', width: '100%', padding: '20px' }} dotPosition='bottom'>
+          {/* <Card bordered={ true }>
                             <span>Sesiones</span>
                         </Card> */}
 
-            {infoAgendaArr
-              .filter((item) => {
-                return (
-                  item.habilitar_ingreso &&
-                  (item.habilitar_ingreso == 'open_meeting_room' || item.habilitar_ingreso == 'closed_meeting_room') &&
-                  (item.isPublished === true || item.isPublished === 'true')
-                );
-              })
-              .map((item, key) => (
-                <div key={key}>
-                  <Card avatar={<Avatar src='' />} bordered={true} style={{ marginBottom: '3%' }}>
-                    {/* Experimento de estilo <Meta
+          {infoAgendaArr
+            .filter((item) => {
+              return (
+                item.habilitar_ingreso &&
+                (item.habilitar_ingreso == 'open_meeting_room' || item.habilitar_ingreso == 'closed_meeting_room') &&
+                (item.isPublished === true || item.isPublished === 'true')
+              );
+            })
+            .map((item, key) => (
+              <div key={key}>
+                <Card hoverable avatar={<Avatar src='' />} bordered={true} style={{ marginBottom: '3%' }}>
+                  {/* Experimento de estilo <Meta
                                         avatar={ <><Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /> <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /></> }
                                         title="Card titlesfas fdas dfa sdf asdf as as as df"
                                         description="This is the description"
                                     /> */}
-                    <h1 style={{ fontSize: '120%', fontWeight: 'Bold' }}>{item.name}</h1>
-                    <p>
-                      {Moment(item.datetime_start).format('LL')}
-                      <span>&nbsp;&nbsp;&nbsp;</span>
-                      {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                  <h1 style={{ fontSize: '120%', fontWeight: 'Bold' }}>{item.name}</h1>
+                  <p>
+                    {Moment(item.datetime_start).format('LL')}
+                    <span>&nbsp;&nbsp;&nbsp;</span>
+                    {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                      .tz(Moment.tz.guess())
+                      .format('h:mm A')}
+                    {' - '}
+                    {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                      .tz(Moment.tz.guess())
+                      .format('h:mm A')}
+                    <span className='ultrasmall-mobile'>
+                      {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
                         .tz(Moment.tz.guess())
-                        .format('h:mm A')}
-                      {' - '}
-                      {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
-                        .tz(Moment.tz.guess())
-                        .format('h:mm A')}
-                      <span className='ultrasmall-mobile'>
-                        {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
-                          .tz(Moment.tz.guess())
-                          .format(' (Z)')}
-                      </span>
-                    </p>
+                        .format(' (Z)')}
+                    </span>
+                  </p>
 
-                    {item.hosts && (
-                      <div className='Virtual-Conferences'>
-                        {item.hosts.map((host, key) => {
-                          return (
-                            <div style={{ margin: '0px 14px' }} key={key}>
-                              <Avatar src={host.image} />
-                              <div>{host.name}</div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
+                  {item.hosts && (
+                    <div className='Virtual-Conferences'>
+                      {item.hosts.map((host, key) => {
+                        return (
+                          <div style={{ margin: '0px 14px' }} key={key}>
+                            <Avatar src={host.image} />
+                            <div>{host.name}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
 
-                    <MeetingConferenceButton
-                      activity={item}
-                      toggleConference={toggleConference}
-                      event={event}
-                      usuarioRegistrado={usuarioRegistrado}
-                      showSection={showSection}
-                      setActivity={gotoActivity}
-                      zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
-                      eventUser={this.props.eventUser}
-                    />
-                  </Card>
-                </div>
-              ))}
-          </Carousel>
-        }
+                  <MeetingConferenceButton
+                    activity={item}
+                    toggleConference={toggleConference}
+                    event={event}
+                    usuarioRegistrado={usuarioRegistrado}
+                    showSection={showSection}
+                    setActivity={gotoActivity}
+                    zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+                    eventUser={this.props.eventUser}
+                  />
+                </Card>
+              </div>
+            ))}
+        </Carousel>
       </Fragment>
     );
   }

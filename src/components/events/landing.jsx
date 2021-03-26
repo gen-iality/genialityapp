@@ -1116,7 +1116,7 @@ class Landing extends Component {
                             </div>
                           )}
                           <Row justify='center'>
-                            <Col sm={24} md={16} lg={18} xl={18}>
+                            <Col xs={24} sm={24} md={16} lg={18} xl={18}>
                               <VirtualConference
                                 event={event}
                                 eventUser={this.state.eventUser}
