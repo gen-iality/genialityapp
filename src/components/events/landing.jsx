@@ -1171,7 +1171,6 @@ class Landing extends Component {
                           )}
                         </Content>
                         {/* aqui esta el boton del chat mobile */}
-                        {console.log('attendees', this.state.generalTabs)}
                         <div className='chat-evius_mobile'>
                           <Button
                             shape='circle'
