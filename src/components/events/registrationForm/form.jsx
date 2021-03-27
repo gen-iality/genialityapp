@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { UsersApi, TicketsApi, EventsApi } from '../../../helpers/request';
+import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 import {
   Collapse,
@@ -15,9 +15,9 @@ import {
   Result,
   Divider,
   Upload,
-  Select,
+  Select
 } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { ControlOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
@@ -28,19 +28,19 @@ const { Panel } = Collapse;
 const { TextArea, Password } = Input;
 
 const textLeft = {
-  textAlign: 'left',
+  textAlign: 'left'
 };
 
 const center = {
-  margin: '0 auto',
+  margin: '0 auto'
 };
 
 const validateMessages = {
   required: 'Este campo ${label} es obligatorio para completar el registro.',
   types: {
     email: '${label} no válido!',
-    regexp: 'malo',
-  },
+    regexp: 'malo'
+  }
 };
 
 const options = [
@@ -61,7 +61,7 @@ const options = [
   { value: 'Buenos dias 15', label: 'Buenos dias 15' },
   { value: 'Buenos dias 16', label: 'Buenos dias 16' },
   { value: 'Buenos dias 17', label: 'Buenos dias 17' },
-  { value: 'Buenos dias 18', label: 'Buenos dias 18' },
+  { value: 'Buenos dias 18', label: 'Buenos dias 18' }
 ];
 
 /**
@@ -98,6 +98,24 @@ function OutsideAlerter(props) {
   return <div ref={wrapperRef}>{props.children}</div>;
 }
 
+/** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
+ * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
+ */
+let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) => {
+  camposConOpcionTomada.map((field) => {
+    let taken = field.options.filter((option) => option.value == values[field.name]);
+    let updatedField = { ...field };
+    updatedField.optionstaken = updatedField.optionstaken ? [...updatedField.optionstaken, ...taken] : taken;
+
+    //Esto es un parche porque el field viene con campos tipo objeto que revientan el API
+    let fieldId = updatedField._id && updatedField._id['$oid'] ? updatedField._id['$oid'] : updatedField._id;
+    delete updatedField['_id'];
+    delete updatedField['updated_at'];
+    delete updatedField['created_at'];
+    EventFieldsApi.editOne(updatedField, fieldId, eventId);
+  });
+};
+
 export default ({
   initialValues,
   eventId,
@@ -106,7 +124,7 @@ export default ({
   eventUserId,
   closeModal,
   conditionals,
-  showSection,
+  showSection
 }) => {
   const intl = useIntl();
   const [user, setUser] = useState({});
@@ -197,6 +215,14 @@ export default ({
         let resp = await UsersApi.createOne(snap, eventId);
 
         console.log('respuesta al registrar un usuario', resp);
+
+        /** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
+         * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
+         */
+        let camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
+        updateTakenOptionInTakeableList(camposConOpcionTomada, values, eventId);
+
+        /** FIN CAMPO LISTA  tipo justonebyattendee */
 
         if (resp.status !== 'UPDATED') {
           setSuccessMessageInRegisterForm(resp.status);
@@ -359,7 +385,7 @@ export default ({
             <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
               <div
                 dangerouslySetInnerHTML={{
-                  __html: label,
+                  __html: label
                 }}></div>
             </div>
             <Divider />
@@ -424,6 +450,12 @@ export default ({
       }
 
       if (type === 'list') {
+        //Filtramos las opciones ya tomadas si la opción justonebyattendee esta activada
+        if (m.justonebyattendee && m.options && m.optionstaken) {
+          m.options = m.options.filter((x) => {
+            return m.optionstaken.filter((c) => x.value == c.value).length <= 0;
+          });
+        }
         input = m.options.map((o, key) => {
           return (
             <Option key={key} value={o.value}>
@@ -491,7 +523,7 @@ export default ({
               required: true,
               type: 'regexp',
               pattern: new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{10,}$/),
-              message: 'El formato del password no es valido',
+              message: 'El formato del password no es valido'
             }
           : rule;
 
@@ -560,8 +592,8 @@ export default ({
                 required: intl.formatMessage({ id: 'form.field.required' }),
                 types: {
                   email: intl.formatMessage({ id: 'form.validate.message.email' }),
-                  regexp: 'malo',
-                },
+                  regexp: 'malo'
+                }
               }}
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
@@ -623,7 +655,7 @@ export default ({
               <OutsideAlerter showSection={showSection}>
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: successMessage ? successMessage.replace(/\[.*\]/gi, '') : '',
+                    __html: successMessage ? successMessage.replace(/\[.*\]/gi, '') : ''
                   }}></div>
               </OutsideAlerter>
             </Result>
