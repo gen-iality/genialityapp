@@ -204,15 +204,19 @@ class Landing extends Component {
   listenConfigurationEvent = () => {
     const { eventInfo } = this.props;
     const self = this;
-    firestore
-      .collection('events')
-      .doc(eventInfo._id)
-      .onSnapshot(function(eventSnapshot) {
-        if (eventSnapshot.exists) {
-          const tabs = eventSnapshot.data().tabs;
-          self.setState({ generalTabs: tabs });
-        }
-      });
+    if (this.props.eventInfo) {
+      firestore
+        .collection('events')
+        .doc(eventInfo._id)
+        .onSnapshot(function(eventSnapshot) {
+          if (eventSnapshot.exists) {
+            if (eventSnapshot.data().tabs !== undefined) {
+              const tabs = eventSnapshot.data().tabs;
+              self.setState({ generalTabs: tabs });
+            }
+          }
+        });
+    }
   };
 
   monitorNewChatMessages = (event, user) => {
@@ -495,20 +499,6 @@ class Landing extends Component {
       partners: <Partners eventId={event._id} />,
       evento: (
         <>
-          <Row justify='center'>
-            <Col sm={24} md={16} lg={18} xl={18}>
-              <VirtualConference
-                event={event}
-                eventUser={this.state.eventUser}
-                currentUser={this.state.currentUser}
-                usuarioRegistrado={this.state.eventUser}
-                toggleConference={this.toggleConference}
-                showSection={this.showSection}
-                zoomExternoHandleOpen={this.zoomExternoHandleOpen}
-              />
-              <MapComponent event={event} />
-            </Col>
-          </Row>
           <Row justify='center'>
             <Col sm={24} md={16} lg={18} xl={18}>
               {this.state.event && this.state.event._id !== '5f0b95ca34c8116f9b21ebd6' && (
@@ -1129,6 +1119,20 @@ class Landing extends Component {
                                 )}
                             </div>
                           )}
+                          <Row justify='center'>
+                            <Col xs={24} sm={24} md={16} lg={18} xl={18}>
+                              <VirtualConference
+                                event={event}
+                                eventUser={this.state.eventUser}
+                                currentUser={this.state.currentUser}
+                                usuarioRegistrado={this.state.eventUser}
+                                toggleConference={this.toggleConference}
+                                showSection={this.showSection}
+                                zoomExternoHandleOpen={this.zoomExternoHandleOpen}
+                              />
+                              <MapComponent event={event} />
+                            </Col>
+                          </Row>
                           <div id='visualizar' style={{ margin: '0px 2px', overflow: 'initial', textAlign: 'center' }}>
                             {this.state.sections[this.state.section]}
                           </div>
