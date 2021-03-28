@@ -105,14 +105,15 @@ let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) =
   camposConOpcionTomada.map((field) => {
     let taken = field.options.filter((option) => option.value == values[field.name]);
     let updatedField = { ...field };
-    updatedField.optionstaken = updatedField.optionstaken ? [...updatedField.optionstaken, ...taken] : taken;
-
-    //Esto es un parche porque el field viene con campos tipo objeto que revientan el API
     let fieldId = updatedField._id && updatedField._id['$oid'] ? updatedField._id['$oid'] : updatedField._id;
-    delete updatedField['_id'];
-    delete updatedField['updated_at'];
-    delete updatedField['created_at'];
-    EventFieldsApi.editOne(updatedField, fieldId, eventId);
+    // updatedField.optionstaken = updatedField.optionstaken ? [...updatedField.optionstaken, ...taken] : taken;
+
+    // //Esto es un parche porque el field viene con campos tipo objeto que revientan el API
+
+    // delete updatedField['_id'];
+    // delete updatedField['updated_at'];
+    // delete updatedField['created_at'];
+    EventFieldsApi.registerListFieldOptionTaken(taken, fieldId, eventId);
   });
 };
 
@@ -451,10 +452,16 @@ export default ({
 
       if (type === 'list') {
         //Filtramos las opciones ya tomadas si la opción justonebyattendee esta activada
-        if (m.justonebyattendee && m.options && m.optionstaken) {
-          m.options = m.options.filter((x) => {
-            return m.optionstaken.filter((c) => x.value == c.value).length <= 0;
-          });
+
+        let fieldId = m._id && m._id['$oid'] ? m._id['$oid'] : m._id;
+
+        if (event && m.justonebyattendee && m.options) {
+          let takenoptions = event['takenoptions_' + fieldId];
+          if (takenoptions) {
+            m.options = m.options.filter((x) => {
+              return takenoptions.filter((c) => x.value == c.value).length <= 0;
+            });
+          }
         }
         input = m.options.map((o, key) => {
           return (
