@@ -25,6 +25,24 @@ class DashboardEvent extends Component {
   }
 
   render() {
+    const columnsEmail = [
+      {
+        title: 'Campaña',
+        dataIndex: 'campaña',
+        key: 'campaña',
+      },
+      {
+        title: 'Nombre completo',
+        dataIndex: 'nombreCom',
+        key: 'nombreCom',
+      },
+      {
+        title: 'Correo Electronico',
+        dataIndex: 'email',
+        key: 'email',
+      },
+    ];
+
     const columns = [
       {
         title: 'Actividad',
@@ -195,6 +213,16 @@ class DashboardEvent extends Component {
                       title={<h3 style={{ textAlign: 'center' }}>CLICS</h3>}
                       value={858}
                     />
+                  </Card>
+                </Col>
+              </Row>
+              <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
+                <Col span={24}>
+                  <Card
+                    headStyle={{ border: 'none' }}
+                    title={'Titulo'} // el titulo debe cambiar dependiendo el cuadro de arriba
+                    extra={<MoreOutlined />}>
+                    <Table dataSource={null} columns={columnsEmail} size='small' />
                   </Card>
                 </Col>
               </Row>
