@@ -1212,6 +1212,7 @@ class Landing extends Component {
                           this.state.generalTabs.privateChat) && (
                           <Sider
                             className='collapse-chatEvent'
+                            style={{backgroundColor:event.styles.toolbarMenuSocial}}
                             trigger={null}
                             theme='light'
                             collapsible
@@ -1228,7 +1229,7 @@ class Landing extends Component {
                                     </Button>
                                   </div> */}
 
-                                  <Menu theme='light'>
+                                  <Menu theme='light' style={{backgroundColor:event.styles.toolbarMenuSocial}}>
                                     {(this.state.generalTabs.publicChat || this.state.generalTabs.privateChat) && (
                                       <Menu.Item
                                         key='1'
