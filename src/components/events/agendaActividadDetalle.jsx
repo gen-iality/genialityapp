@@ -937,15 +937,7 @@ let AgendaActividadDetalle = (props) => {
           </button> */}
             </div>
           </div>
-          {/*<div style={{ clear: 'both' }}>
-            <a
-              className=''
-              onClick={() => {
-                gotoActivity(null);
-              }}>
-              <Button>{intl.formatMessage({ id: 'button.return' })}</Button>
-            </a>
-          </div>*/}
+
           <Row style={{ paddingLeft: '10px' }}>
             <PageHeader
               onBack={() => {
