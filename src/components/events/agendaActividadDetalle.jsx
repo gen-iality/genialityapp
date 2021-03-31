@@ -54,8 +54,7 @@ let AgendaActividadDetalle = (props) => {
   const { Title } = Typography;
 
   const intl = useIntl();
- // const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
-const url_conference = `https://blissful-pike-cd113e.netlify.app/?meetingNumber=`;
+  const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
 
   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
   const [videoStyles, setVideoStyles] = useState(null);
@@ -282,7 +281,13 @@ const url_conference = `https://blissful-pike-cd113e.netlify.app/?meetingNumber=
 
   const getMeetingPath = (platform) => {
     if (platform === 'zoom') {
-      return url_conference + meeting_id + `&userName=${props.userInfo.displayName}` + `&email=${props.userInfo.email}` + `&hasChat=${false}`;
+      return (
+        url_conference +
+        meeting_id +
+        `&userName=${props.userInfo.displayName}` +
+        `&email=${props.userInfo.email}` +
+        `&hasChat=${false}`
+      );
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
     } else if (platform === 'dolby') {
