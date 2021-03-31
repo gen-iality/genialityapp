@@ -286,7 +286,7 @@ let AgendaActividadDetalle = (props) => {
         meeting_id +
         `&userName=${props.userInfo.displayName}` +
         `&email=${props.userInfo.email}` +
-        `&hasChat=${false}`
+        `&disabledChat=${true}`
       );
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
