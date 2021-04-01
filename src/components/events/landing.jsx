@@ -62,6 +62,7 @@ import SocialZone from '../../components/socialZone/socialZone';
 import { firestore } from '../../helpers/firebase';
 import { AgendaApi } from '../../helpers/request';
 import * as SurveyActions from '../../redux/survey/actions';
+import { setGeneralTabs, getGeneralTabs } from '../../redux/tabs/actions';
 
 import {
   // BrowserView,
@@ -432,6 +433,7 @@ class Landing extends Component {
           showSection={this.showSection}
           zoomExternoHandleOpen={this.zoomExternoHandleOpen}
           eventUser={this.state.eventUser}
+          generalTabs={this.state.generalTabs}
         />
       ),
       tickets: (
@@ -566,6 +568,12 @@ class Landing extends Component {
       this.handleScroll();
     });
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.generalTabs !== this.state.generalTabs) {
+      this.props.setGeneralTabs(this.state.generalTabs);
+    }
+  }
 
   async componentDidMount() {
     await this.mountSections();
@@ -1212,7 +1220,7 @@ class Landing extends Component {
                           this.state.generalTabs.privateChat) && (
                           <Sider
                             className='collapse-chatEvent'
-                            style={{backgroundColor:event.styles.toolbarMenuSocial}}
+                            style={{ backgroundColor: event.styles.toolbarMenuSocial }}
                             trigger={null}
                             theme='light'
                             collapsible
@@ -1229,7 +1237,7 @@ class Landing extends Component {
                                     </Button>
                                   </div> */}
 
-                                  <Menu theme='light' style={{backgroundColor:event.styles.toolbarMenuSocial}}>
+                                  <Menu theme='light' style={{ backgroundColor: event.styles.toolbarMenuSocial }}>
                                     {(this.state.generalTabs.publicChat || this.state.generalTabs.privateChat) && (
                                       <Menu.Item
                                         key='1'
@@ -1335,6 +1343,8 @@ const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
+  setGeneralTabs,
+  getGeneralTabs,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Landing));

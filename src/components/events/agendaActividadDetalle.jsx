@@ -54,7 +54,6 @@ let AgendaActividadDetalle = (props) => {
   const { Title } = Typography;
 
   const intl = useIntl();
-  const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
 
   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
   const [videoStyles, setVideoStyles] = useState(null);
@@ -98,7 +97,7 @@ let AgendaActividadDetalle = (props) => {
     mediaQueryMatches();
     window.addEventListener('resize', mediaQueryMatches);
 
-    if (props.collapsed) {
+    if (!props.collapsed) {
       props.toggleCollapsed(1);
     }
 
@@ -281,12 +280,14 @@ let AgendaActividadDetalle = (props) => {
 
   const getMeetingPath = (platform) => {
     if (platform === 'zoom') {
+      const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
+
       return (
         url_conference +
         meeting_id +
         `&userName=${props.userInfo.displayName}` +
         `&email=${props.userInfo.email}` +
-        `&disabledChat=${true}`
+        `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}`
       );
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
@@ -960,6 +961,7 @@ const mapStateToProps = (state) => ({
   currentSurvey: state.survey.data.currentSurvey,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   tabs: state.stage.data.tabs,
+  generalTabs: state.tabs.generalTabs
 });
 
 const mapDispatchToProps = {

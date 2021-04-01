@@ -7,5 +7,5 @@ export const setEventData = (event) => ({
 });
 
 export const getEventData = () => ({
-  type: SET_EVENT_DATA,
+  type: GET_EVENT_DATA,
 });

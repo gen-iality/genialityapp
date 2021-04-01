@@ -7,5 +7,6 @@ import permissions from './permissions/reducers';
 import stage from './stage/reducers';
 import survey from './survey/reducers';
 import notifications from './notifications/reducers';
+import tabs from './tabs/reducers';
 
-export default { categories, types, user, rols, permissions, event, stage, survey, notifications };
+export default { categories, types, user, rols, permissions, event, stage, survey, notifications, tabs };

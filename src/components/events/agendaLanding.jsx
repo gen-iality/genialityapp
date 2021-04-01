@@ -61,7 +61,6 @@ class Agenda extends Component {
 
       redirect: false,
       disabled: false,
-      generalTab: true,
       loading: false,
       documents: [],
       show_inscription: false,
@@ -159,7 +158,7 @@ class Agenda extends Component {
     this.setState({ days: getDays });
   };
 
-  async componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps) {
     const { data } = this.state;
     //Cargamos solamente los espacios virtuales de la agenda
 
@@ -662,6 +661,7 @@ class Agenda extends Component {
             eventUser={this.props.userRegistered}
             showSection={this.props.showSection}
             zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+            
           />
         )}
 
