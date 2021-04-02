@@ -291,10 +291,11 @@ export default ({
     newExtraFields = newExtraFields.filter((field) => {
       let fieldShouldBeDisplayed = false;
       let fieldHasCondition = false;
+      let conditionalsArray = Array.from([conditionals])
 
       //para cada campo revisamos si se cumplen todas las condiciones para mostrarlo
-      conditionals.map((conditional) => {
-        let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
+      conditionalsArray.map((conditional) => {
+        let fieldExistInThisCondition = conditionals.fields && conditional.fields.indexOf(field.name) !== -1;
         if (!fieldExistInThisCondition) return;
 
         fieldHasCondition = true;
