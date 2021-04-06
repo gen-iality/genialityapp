@@ -168,7 +168,9 @@ class Agenda extends Component {
     //Revisamos si el evento sigue siendo el mismo, no toca cargar nada
     if (prevProps.event && this.props.event._id === prevProps.event._id) return;
 
-    this.listeningStateMeetingRoom(data);
+    console.log('component did update agenda landing');
+
+    //this.listeningStateMeetingRoom(data);
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     const filtered = this.filterByDay(this.state.days[0], this.state.list);
     this.setState({ data, filtered, toShow: filtered });
@@ -184,6 +186,7 @@ class Agenda extends Component {
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
+          console.log('listeningStateMeetingRoom', data);
 
           let { habilitar_ingreso, isPublished, meeting_id, platform, tabs } = data;
           let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id, platform };
@@ -661,7 +664,6 @@ class Agenda extends Component {
             eventUser={this.props.userRegistered}
             showSection={this.props.showSection}
             zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
-            
           />
         )}
 

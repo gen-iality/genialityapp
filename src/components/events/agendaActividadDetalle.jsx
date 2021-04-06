@@ -22,7 +22,7 @@ import { listenSurveysData } from '../events/surveys/services';
 
 const { TabPane } = Tabs;
 
-const { gotoActivity, setMainStage } = StageActions;
+const { gotoActivity, setMainStage, setTabs } = StageActions;
 const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys } = SurveyActions;
 
 const layout = {
@@ -238,10 +238,11 @@ let AgendaActividadDetalle = (props) => {
         .doc(activity_id)
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
-          const { habilitar_ingreso, meeting_id, platform } = infoActivity.data();
+          const { habilitar_ingreso, meeting_id, platform, tabs } = infoActivity.data();
           setMeeting_id(meeting_id);
           setPlatform(platform);
           setMeetingState(habilitar_ingreso);
+          setTabs(tabs);
         });
     }
     (async () => {
@@ -961,7 +962,7 @@ const mapStateToProps = (state) => ({
   currentSurvey: state.survey.data.currentSurvey,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   tabs: state.stage.data.tabs,
-  generalTabs: state.tabs.generalTabs
+  generalTabs: state.tabs.generalTabs,
 });
 
 const mapDispatchToProps = {
@@ -970,6 +971,7 @@ const mapDispatchToProps = {
   setCurrentSurvey,
   setSurveyVisible,
   setHasOpenSurveys,
+  setTabs,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
