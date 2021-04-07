@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiUrl, ApiDEVUrl } from './constants';
+import { ApiUrl, ApiDEVUrl,ApiEviusZoomSurvey } from './constants';
 import * as Cookie from 'js-cookie';
 import { handleSelect } from './utils';
 import { firestore } from './firebase';
@@ -672,6 +672,10 @@ export const SpeakersApi = {
     return await Actions.create(`api/events/${event}/host`, data);
   }
 };
+
+export const ExternalSurvey=async(meeting_id)=>{
+  return await Actions.get(`${ApiEviusZoomSurvey}/?meeting_id=${meeting_id}`);
+}
 
 export const Activity = {
   Register: async (event, user_id, activity_id) => {

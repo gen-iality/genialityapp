@@ -1120,8 +1120,8 @@ class Landing extends Component {
                             </div>
                           )}
                           <Row justify='center'>
-                            <Col xs={24} sm={24} md={16} lg={18} xl={18}>
-                              <VirtualConference
+                          <Col xs={24} sm={24} md={16} lg={18} xl={18}>
+                             {this.props.currentActivity==null && <VirtualConference
                                 event={event}
                                 eventUser={this.state.eventUser}
                                 currentUser={this.state.currentUser}
@@ -1129,8 +1129,8 @@ class Landing extends Component {
                                 toggleConference={this.toggleConference}
                                 showSection={this.showSection}
                                 zoomExternoHandleOpen={this.zoomExternoHandleOpen}
-                              />
-                              <MapComponent event={event} />
+                              />}
+                            {this.props.currentActivity==null &&   <MapComponent event={event} />}
                             </Col>
                           </Row>
                           <div id='visualizar' style={{ margin: '0px 2px', overflow: 'initial', textAlign: 'center' }}>
