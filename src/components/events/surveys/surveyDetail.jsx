@@ -14,7 +14,7 @@ function SurveyDetail(props) {
   };
 
   //hasRanking -> Parametro para cuando se cree en CMS la opcion de seleccionar el ranking
-  const hasRanking = false;
+  const hasRanking = true;
 
   return (
     <Card>
@@ -31,12 +31,12 @@ function SurveyDetail(props) {
   );
 }
 const mapStateToProps = (state) => ({
-  currentSurvey: state.survey.data.currentSurvey
+  currentSurvey: state.survey.data.currentSurvey,
 });
 
 const mapDispatchToProps = {
   unsetCurrentSurvey,
-  setMainStage
+  setMainStage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyDetail);
