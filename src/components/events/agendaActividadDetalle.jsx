@@ -297,8 +297,8 @@ let AgendaActividadDetalle = (props) => {
       return (
         url_conference +
         meeting_id +
-        `&userName=${props.userInfo.displayName}` +
-        `&email=${props.userInfo.email}` +
+        `&userName=${props.userInfo.displayName ? props.userInfo.displayName : 'Guest'}` +
+        `&email=${props.userInfo.email ? props.userInfo.email : 'emaxxxxxxil@gmail.com'}` +
         `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}`
       );
     } else if (platform === 'vimeo') {
