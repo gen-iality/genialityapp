@@ -72,6 +72,14 @@ let AgendaActividadDetalle = (props) => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
+    mediaQueryMatches();
+    window.addEventListener('resize', mediaQueryMatches);
+
+    if (!props.collapsed) {
+      props.toggleCollapsed(1);
+    }
+
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
       if (props.eventUser) {
@@ -90,17 +98,14 @@ let AgendaActividadDetalle = (props) => {
       setNames(innerName);
       setEmail(props.userInfo.email);
     }
-  }, []);
 
-  useEffect(() => {
-    // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
-    mediaQueryMatches();
-    window.addEventListener('resize', mediaQueryMatches);
+    //Escuchando el estado de la actividad
 
-    if (!props.collapsed) {
-      props.toggleCollapsed(1);
-    }
+    (async function() {
+      await listeningStateMeetingRoom(props.eventInfo._id, props.currentActivity._id);
+    })();
 
+    // Desmontado del componente
     return () => {
       props.gotoActivity(null);
       props.setMainStage(null);
@@ -109,6 +114,12 @@ let AgendaActividadDetalle = (props) => {
       window.removeEventListener('resize', mediaQueryMatches);
     };
   }, []);
+
+  useEffect(() => {
+    (async function() {
+      await listeningStateMeetingRoom(props.eventInfo._id, props.currentActivity._id);
+    })();
+  }, [props.currentActivity._id]);
 
   /**
    * Calculating total real attendees this could be done less costly
@@ -228,31 +239,31 @@ let AgendaActividadDetalle = (props) => {
     }
   }
 
+  async function listeningStateMeetingRoom(event_id, activity_id) {
+    // console.log("ACTIVIDAD SELECTED=>"+activity_id)
+    firestore
+      .collection('events')
+      .doc(event_id)
+      .collection('activities')
+      .doc(activity_id)
+      .onSnapshot((infoActivity) => {
+        if (!infoActivity.exists) return;
+        const data = infoActivity.data();
+        const { habilitar_ingreso, meeting_id, platform, tabs } = data;
+        setMeeting_id(meeting_id);
+        setPlatform(platform);
+        setMeetingState(habilitar_ingreso);
+        props.setTabs(tabs);
+      });
+  }
+
   useEffect(() => {
-    async function listeningStateMeetingRoom(event_id, activity_id) {
-      // console.log("ACTIVIDAD SELECTED=>"+activity_id)
-      firestore
-        .collection('events')
-        .doc(event_id)
-        .collection('activities')
-        .doc(activity_id)
-        .onSnapshot((infoActivity) => {
-          if (!infoActivity.exists) return;
-          const { habilitar_ingreso, meeting_id, platform, tabs } = infoActivity.data();
-          setMeeting_id(meeting_id);
-          setPlatform(platform);
-          setMeetingState(habilitar_ingreso);
-          setTabs(tabs);
-        });
-    }
     (async () => {
       //Id del evento
 
       var id = props.eventInfo._id;
       const event = await EventsApi.landingEvent(id);
       setEvent(event);
-
-      await listeningStateMeetingRoom(event._id, props.currentActivity._id);
 
       try {
         const respuesta = await API.get('api/me/eventusers/event/' + id);

@@ -130,10 +130,10 @@ class Landing extends Component {
 
       platform: null,
       habilitar_ingreso: null,
-      chat: false,
-      surveys: false,
-      games: false,
-      attendees: false,
+      // chat: false,
+      // surveys: false,
+      // games: false,
+      // attendees: false,
       tabSelected: -1,
       option: 'N/A',
       totalNewMessages: 0,
@@ -212,8 +212,8 @@ class Landing extends Component {
         .onSnapshot(function(eventSnapshot) {
           if (eventSnapshot.exists) {
             if (eventSnapshot.data().tabs !== undefined) {
-              const tabs = eventSnapshot.data().tabs;
-              self.setState({ generalTabs: tabs });
+              const generalTabs = eventSnapshot.data().tabs;
+              self.setState({ generalTabs });
             }
           }
         });
@@ -274,19 +274,13 @@ class Landing extends Component {
           habilitar_ingreso: videoConference.habilitar_ingreso
             ? videoConference.habilitar_ingreso
             : 'closed_metting_room',
-          chat: videoConference.tabs.chat ? videoConference.tabs.chat : false,
-          surveys: videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
-          games: videoConference.tabs.games ? videoConference.tabs.games : false,
-          attendees: videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
         });
       });
   };
 
   // OBTIENE EL NOMBRE DE LA ACTIVIDAD// SE CAMBIO PARA OBTENER LA ACTIVIDAD Y PODER REDIRIGIR CUANDO LA ACTIVIDAD ESTA EN VIVO(NOTIFICATIONS)
   obtenerNombreActivity(activityID) {
-    //console.log("ACTIVITY NOMBRE ID=>"+activityID)
     const act = this.state.activitiesAgenda.filter((ac) => ac._id == activityID);
-    //console.log(act)
     return act.length > 0 ? act[0] : null;
   }
 
@@ -595,8 +589,6 @@ class Landing extends Component {
       .collection('activities')
       .onSnapshot((querySnapshot) => {
         let change = querySnapshot.docChanges()[0];
-        //console.log('CHANGE');
-        //console.log(change);
         if (
           notify &&
           change.doc.data().habilitar_ingreso == 'open_meeting_room' &&
@@ -1205,10 +1197,10 @@ class Landing extends Component {
                             optionselected={this.updateOption}
                             tab={this.state.tabSelected}
                             event_id={event._id}
-                            chat={this.state.chat}
-                            attendees={this.state.attendees}
-                            survey={this.state.surveys}
-                            games={this.state.games}
+                            // chat={this.state.chat}
+                            // attendees={this.state.attendees}
+                            // survey={this.state.surveys}
+                            // games={this.state.games}
                             generalTabs={this.state.generalTabs}
                           />
                         </Drawer>
@@ -1302,10 +1294,10 @@ class Landing extends Component {
                                     tab={this.state.tabSelected}
                                     event={event}
                                     event_id={event._id}
-                                    chat={this.state.chat}
-                                    attendees={this.state.attendees}
-                                    survey={this.state.surveys}
-                                    games={this.state.games}
+                                    // chat={this.state.chat}
+                                    // attendees={this.state.attendees}
+                                    // survey={this.state.surveys}
+                                    // games={this.state.games}
                                     currentUser={this.state.currentUser}
                                     generalTabs={this.state.generalTabs}
                                   />

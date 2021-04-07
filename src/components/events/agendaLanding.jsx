@@ -119,7 +119,8 @@ class Agenda extends Component {
         days.push(Moment(init).add(i, 'd'));
       }
 
-      this.setState({ days, day: days[0] }, this.fetchAgenda);
+      this.setState({ days, day: days[0] });
+      //this.setState({ days, day: days[0] }, this.fetchAgenda);
       //Si existe dates, entonces envia al array push las fechas del array dates del evento
     } else {
       const days = [];
@@ -168,9 +169,6 @@ class Agenda extends Component {
     //Revisamos si el evento sigue siendo el mismo, no toca cargar nada
     if (prevProps.event && this.props.event._id === prevProps.event._id) return;
 
-    console.log('component did update agenda landing');
-
-    //this.listeningStateMeetingRoom(data);
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     const filtered = this.filterByDay(this.state.days[0], this.state.list);
     this.setState({ data, filtered, toShow: filtered });
@@ -186,11 +184,9 @@ class Agenda extends Component {
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
-          console.log('listeningStateMeetingRoom', data);
-
           let { habilitar_ingreso, isPublished, meeting_id, platform, tabs } = data;
           let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id, platform };
-          this.props.setTabs(tabs);
+          //this.props.setTabs(tabs);
           arr[index] = updatedActivityInfo;
           const filtered = this.filterByDay(this.state.days[0], arr);
           this.setState({ list: arr, filtered, toShow: filtered });
@@ -246,7 +242,7 @@ class Agenda extends Component {
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     //const filtered = this.filterByDay(this.state.days[0], data);
-    this.listeningStateMeetingRoom(data);
+    await this.listeningStateMeetingRoom(data);
 
     //this.setState({ data, filtered, toShow: filtered, spaces: space });
     this.setState({ data, spaces: space }, () => this.setDaysWithAllActivities(this.state.data));
