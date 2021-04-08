@@ -1,5 +1,5 @@
 import { withRouter } from 'react-router-dom';
-import { firestore } from '../../helpers/firebase';
+import { firestore, fireRealtime } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Tabs, Row, Badge, Col, notification, Button } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone } from '@ant-design/icons';
@@ -131,7 +131,7 @@ let SocialZone = function(props) {
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
                 setTotalNewMessages(newmsj);
-              },
+              }
             });
         }
 
@@ -225,7 +225,7 @@ let SocialZone = function(props) {
           tab={
             <div style={{ marginBottom: '0px' }}>
               <Badge dot={props.hasOpenSurveys} size='default'>
-                Votación
+                Encuestas
               </Badge>
             </div>
           }
@@ -301,12 +301,12 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
   viewNotification: state.notifications.data,
-  tabs: state.stage.data.tabs,
+  tabs: state.stage.data.tabs
 });
 
 const mapDispatchToProps = {
   setMainStage,
-  setNotification,
+  setNotification
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));

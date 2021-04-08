@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { List, Button, Card, Tag, Result, Spin, Row, Col } from 'antd';
 import { MehOutlined } from '@ant-design/icons';
-import { firestore } from '../../../helpers/firebase';
+import { firestore, fireRealtime } from '../../../helpers/firebase';
 import { connect } from 'react-redux';
 import { Actions, TicketsApi } from '../../../helpers/request';
 import * as Cookie from 'js-cookie';
@@ -15,7 +15,7 @@ const headStyle = {
   fontWeight: 300,
   textTransform: 'uppercase',
   textAlign: 'center',
-  color: '#000',
+  color: '#000'
 };
 
 class SurveyList extends Component {
@@ -36,13 +36,13 @@ class SurveyList extends Component {
         section: 'survey',
         icon: 'FileUnknownOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
 
       // luego de cargar el componente este estado permanece escuchando todas las encuestas del evento
       eventSurveys: [], // Todas las encuestas de un evento, este estado va a estar escuchando
       anonymousSurveys: [], // Solo encuestas que permiten usuarios anónimos
-      publishedSurveys: [], // Encuestas relacionadas con la actividad + globales para renderizar el listado de encuestas en componente de videoconferencia
+      publishedSurveys: [] // Encuestas relacionadas con la actividad + globales para renderizar el listado de encuestas en componente de videoconferencia
     };
   }
 
@@ -75,11 +75,21 @@ class SurveyList extends Component {
 
     //Le agregamos el filtro por evento
     if (event && event._id) {
+      let eventid = 'general';
+      var surveysRef = fireRealtime.ref('events/' + eventid + '/surveys');
+      surveysRef.on('value', (snapshot) => {
+        console.log('LLEGO DATO DE REALTIME');
+        const data = snapshot.val();
+        console.log('surveys', data);
+        //updateStarCount(postElement, data);
+      });
+
       $query = $query.where('eventId', '==', event._id);
     }
-
+    console.log('NUEVO LISTENER');
     $query.onSnapshot(async (surveySnapShot) => {
       // Almacena el Snapshot de todas las encuestas del evento
+      console.log('LLEGO DATO DE FIRESTORE');
 
       const eventSurveys = [];
       let publishedSurveys = [];
@@ -153,7 +163,7 @@ class SurveyList extends Component {
           filteredSurveys.push({
             ...arr[index],
             userHasVoted: result.userHasVoted,
-            totalResponses: result.totalResponses,
+            totalResponses: result.totalResponses
           });
         } else {
           // Esto solo se ejecuta si no hay algun usuario logeado
@@ -292,13 +302,13 @@ class SurveyList extends Component {
 const mapStateToProps = (state) => ({
   event: state.event.data,
   activity: state.stage.data.currentActivity,
-  currentUser: state.user.data,
+  currentUser: state.user.data
 });
 
 const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
-  setSurveyVisible,
+  setSurveyVisible
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList);

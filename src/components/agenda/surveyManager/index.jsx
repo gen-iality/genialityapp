@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Card, Row, Col, message } from 'antd';
-import { firestore } from '../../../helpers/firebase';
+import { firestore, fireRealtime } from '../../../helpers/firebase';
 import SurveyItem from './surveyItem';
 
 export default class SurveyManager extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      publishedSurveys: [],
+      publishedSurveys: []
     };
   }
   componentDidMount = () => {
@@ -50,6 +50,10 @@ export default class SurveyManager extends Component {
 
   updateSurvey = (survey_id, data) => {
     return new Promise((resolve, reject) => {
+      //Abril 2021 @todo migracion de estados de firestore a firebaserealtime
+      //let eventId = surveyInfo.eventId || 'general';
+      let eventId = data.eventId || 'general';
+      fireRealtime.ref('events/' + eventId + '/surveys/' + survey_id).update(data);
       firestore
         .collection('surveys')
         .doc(survey_id)
