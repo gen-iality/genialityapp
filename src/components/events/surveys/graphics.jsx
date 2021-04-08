@@ -26,6 +26,7 @@ class Graphics extends Component {
       chartCreated: false,
       usersRegistered: 0,
       titleQuestion: '',
+      isMobile: window.screen.width < 800 ? true : false, // determina el tamaño del dispositivo para saber si es mobile o no
     };
   }
 
@@ -190,6 +191,9 @@ class Graphics extends Component {
             textAlign: 'left',
             anchor: 'start',
             align: 5,
+            font: {
+              size: this.state.isMobile ? 12 : 18, // otorga el tamaño de la fuente en los resultados de la encuesta segun el dispositivo
+            },
           },
         },
         legend: {
