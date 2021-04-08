@@ -195,7 +195,7 @@ class Landing extends Component {
           ((currentActivity && survey.activity_id === currentActivity._id) || survey.isGlobal === 'true')
       );
 
-      if (Object.keys(this.state.currentUser).length === 0) {
+      if (!this.state.currentUser || Object.keys(this.state.currentUser).length === 0) {
         publishedSurveys = publishedSurveys.filter((item) => {
           return item.allow_anonymous_answers !== 'false';
         });
