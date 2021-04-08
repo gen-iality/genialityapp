@@ -135,36 +135,37 @@ class SurveyList extends Component {
   callback = async () => {
     const { publishedSurveys } = this.state;
     const { currentUser } = this.props;
+    if (publishedSurveys) {
+      const checkMyResponses = new Promise((resolve, reject) => {
+        let filteredSurveys = [];
 
-    const checkMyResponses = new Promise((resolve, reject) => {
-      let filteredSurveys = [];
+        publishedSurveys.forEach(async (survey, index, arr) => {
+          if (!(Object.keys(currentUser).length === 0)) {
+            const result = await this.queryMyResponses(survey);
+            filteredSurveys.push({
+              ...arr[index],
+              userHasVoted: result.userHasVoted,
+              totalResponses: result.totalResponses
+            });
+          } else {
+            // Esto solo se ejecuta si no hay algun usuario logeado
+            // eslint-disable-next-line no-unused-vars
+            const guestUser = new Promise((resolve, reject) => {
+              let surveyId = localStorage.getItem(`userHasVoted_${survey._id}`);
+              surveyId ? resolve(true) : resolve(false);
+            });
+            let guestHasVote = await guestUser;
+            filteredSurveys.push({ ...arr[index], userHasVoted: guestHasVote });
+          }
 
-      publishedSurveys.forEach(async (survey, index, arr) => {
-        if (!(Object.keys(currentUser).length === 0)) {
-          const result = await this.queryMyResponses(survey);
-          filteredSurveys.push({
-            ...arr[index],
-            userHasVoted: result.userHasVoted,
-            totalResponses: result.totalResponses
-          });
-        } else {
-          // Esto solo se ejecuta si no hay algun usuario logeado
-          // eslint-disable-next-line no-unused-vars
-          const guestUser = new Promise((resolve, reject) => {
-            let surveyId = localStorage.getItem(`userHasVoted_${survey._id}`);
-            surveyId ? resolve(true) : resolve(false);
-          });
-          let guestHasVote = await guestUser;
-          filteredSurveys.push({ ...arr[index], userHasVoted: guestHasVote });
-        }
-
-        if (filteredSurveys.length === arr.length) resolve(filteredSurveys);
+          if (filteredSurveys.length === arr.length) resolve(filteredSurveys);
+        });
       });
-    });
 
-    let stateSurveys = await checkMyResponses;
+      let stateSurveys = await checkMyResponses;
 
-    this.setState({ publishedSurveys: stateSurveys, forceCheckVoted: false, loading: false });
+      this.setState({ publishedSurveys: stateSurveys, forceCheckVoted: false, loading: false });
+    }
   };
 
   getItemsMenu = async () => {
