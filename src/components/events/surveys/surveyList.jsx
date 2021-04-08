@@ -15,7 +15,7 @@ const headStyle = {
   fontWeight: 300,
   textTransform: 'uppercase',
   textAlign: 'center',
-  color: '#000',
+  color: '#000'
 };
 
 class SurveyList extends Component {
@@ -36,13 +36,13 @@ class SurveyList extends Component {
         section: 'survey',
         icon: 'FileUnknownOutlined',
         checked: false,
-        permissions: 'public',
+        permissions: 'public'
       },
 
       // luego de cargar el componente este estado permanece escuchando todas las encuestas del evento
       eventSurveys: [], // Todas las encuestas de un evento, este estado va a estar escuchando
       anonymousSurveys: [], // Solo encuestas que permiten usuarios anónimos
-      publishedSurveys: [], // Encuestas relacionadas con la actividad + globales para renderizar el listado de encuestas en componente de videoconferencia
+      publishedSurveys: [] // Encuestas relacionadas con la actividad + globales para renderizar el listado de encuestas en componente de videoconferencia
     };
   }
 
@@ -50,7 +50,7 @@ class SurveyList extends Component {
     let { event } = this.props;
 
     // Método para escuchar todas las encuestas relacionadas con el evento
-    this.filterEventSurveys();
+    //this.filterEventSurveys();
 
     // Verifica si el usuario esta inscrito en el evento para obtener su rol en compoente RootPage para saber si es un speaker
     let eventUser = await this.getCurrentEvenUser(event._id);
@@ -59,78 +59,28 @@ class SurveyList extends Component {
     // this.userVote();
     this.getItemsMenu();
 
-    this.setState({
-      publishedSurveys: this.props.publishedSurveys,
-      surveyVisible: this.props.publishedSurveys && this.props.publishedSurveys.length,
-      loading: true,
-    });
+    this.setState(
+      {
+        publishedSurveys: this.props.publishedSurveys,
+        surveyVisible: this.props.publishedSurveys && this.props.publishedSurveys.length,
+        loading: true
+      },
+      this.callback
+    );
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.activity !== this.props.activity || prevProps.publishedSurveys !== this.props.publishedSurveys) {
-      this.setState({
-        publishedSurveys: this.props.publishedSurveys,
-        surveyVisible: this.props.publishedSurveys && this.props.publishedSurveys.length,
-        loading: true,
-      });
+      this.setState(
+        {
+          publishedSurveys: this.props.publishedSurveys,
+          surveyVisible: this.props.publishedSurveys && this.props.publishedSurveys.length,
+          loading: true
+        },
+        this.callback
+      );
     }
   }
-
-  // listenSurveysData = async () => {
-  //   const { event, activity } = this.props;
-
-  //   //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
-  //   let $query = firestore.collection('surveys');
-
-  //   //Le agregamos el filtro por evento
-  //   if (event && event._id) {
-  //     let eventid = 'general';
-  //     var surveysRef = fireRealtime.ref('events/' + eventid + '/surveys');
-  //     surveysRef.on('value', (snapshot) => {
-  //       console.log('LLEGO DATO DE REALTIME');
-  //       const data = snapshot.val();
-  //       console.log('surveys', data);
-  //       //updateStarCount(postElement, data);
-  //     });
-
-  //     $query = $query.where('eventId', '==', event._id);
-  //   }
-  //   console.log('NUEVO LISTENER');
-  //   $query.onSnapshot(async (surveySnapShot) => {
-  //     // Almacena el Snapshot de todas las encuestas del evento
-  //     console.log('LLEGO DATO DE FIRESTORE');
-
-  //     const eventSurveys = [];
-  //     let publishedSurveys = [];
-
-  //     if (surveySnapShot.size === 0) {
-  //       this.setState({ selectedSurvey: {}, surveyVisible: false, publishedSurveys: [] });
-  //       return;
-  //     }
-
-  //     surveySnapShot.forEach(function(doc) {
-  //       eventSurveys.push({ ...doc.data(), _id: doc.id });
-  //     });
-
-  //     // Listado de encuestas publicadas del evento
-  //     publishedSurveys = eventSurveys.filter(
-  //       (survey) =>
-  //         (survey.isPublished === 'true' || survey.isPublished === true) &&
-  //         ((activity && survey.activity_id === activity._id) || survey.isGlobal === 'true')
-  //     );
-
-  //     if (Object.keys(this.props.currentUser).length === 0) {
-  //       publishedSurveys = publishedSurveys.filter((item) => {
-  //         return item.allow_anonymous_answers !== 'false';
-  //       });
-  //     }
-
-  //     this.setState(
-  //       { publishedSurveys, surveyVisible: publishedSurveys && publishedSurveys.length, loading: true },
-  //       this.callback
-  //     );
-  //   });
-  // };
 
   filterEventSurveys = () => {
     const { activity } = this.props;
@@ -195,7 +145,7 @@ class SurveyList extends Component {
           filteredSurveys.push({
             ...arr[index],
             userHasVoted: result.userHasVoted,
-            totalResponses: result.totalResponses,
+            totalResponses: result.totalResponses
           });
         } else {
           // Esto solo se ejecuta si no hay algun usuario logeado
@@ -260,8 +210,6 @@ class SurveyList extends Component {
           {publishedSurveys && publishedSurveys.length === 0 && (
             <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
           )}
-
-         
 
           {publishedSurveys && publishedSurveys.length > 0 && (
             <List
@@ -331,14 +279,14 @@ class SurveyList extends Component {
 const mapStateToProps = (state) => ({
   event: state.event.data,
   activity: state.stage.data.currentActivity,
-  currentUser: state.user.data,
+  currentUser: state.user.data
 });
 
 const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
-  unsetCurrentSurvey,
+  unsetCurrentSurvey
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList);
