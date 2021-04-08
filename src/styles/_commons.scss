@@ -160,7 +160,7 @@ a {
       }
     }
     &:after {
-      content: "\A";
+      content: '\A';
       filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99000000', endColorstr='#00000000',GradientType=0 );
       background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0) 100%);
       background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0) 100%);
@@ -360,7 +360,7 @@ a {
     margin: 0;
   }
   .required:after {
-    content: " *";
+    content: ' *';
     color: $danger;
   }
   .control {
@@ -374,7 +374,7 @@ a {
 }
 
 .required:after {
-  content: " *";
+  content: ' *';
   color: $danger;
 }
 .container-control {
@@ -679,7 +679,7 @@ a {
   }
 }
 
-.is-checkradio[type="checkbox"]:checked[disabled] + label {
+.is-checkradio[type='checkbox']:checked[disabled] + label {
   opacity: 1;
   &:after,
   &:before {
@@ -687,7 +687,7 @@ a {
   }
 }
 
-.is-checkradio[type="checkbox"] + label {
+.is-checkradio[type='checkbox'] + label {
   &:after,
   &:before {
     border-width: 0.11rem;
@@ -922,7 +922,7 @@ a {
 }
 [data-tooltip]::after {
   margin: -5px auto auto -5px;
-  content: "";
+  content: '';
   border-style: solid;
   border-width: 6px;
   border-color: rgba(74, 74, 74, 0.9) transparent transparent transparent;
@@ -1079,5 +1079,5 @@ a {
 }
 
 .mediaplayer iframe {
-  height: 100% !important;
+  height: 60% !important;
 }
