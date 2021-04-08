@@ -71,6 +71,13 @@ let AgendaActividadDetalle = (props) => {
   //Estado para detección si la vista es para mobile
   const [isMobile, setIsMobile] = useState(false);
 
+  // useEffect(() => {
+  //   if (props.currentSurvey !== null) {
+  //     const snapshotSurvey = props.eventSurveys.filter((survey) => survey._id === props.currentSurvey._id);
+  //     console.log('[survey snapshotSurvey]', snapshotSurvey);
+  //   }
+  // }, [props.currentSurvey, props.eventSurveys]);
+
   useEffect(() => {
     // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
     mediaQueryMatches();
@@ -256,6 +263,16 @@ let AgendaActividadDetalle = (props) => {
         props.setTabs(tabs);
       });
   }
+
+  // No tener 2 encuestas publicadas al tiempo
+  // Si se cierra una automaticamente se carga un nuevo current survey
+  // afectando el objetivo del snapshot que es detectar cuando se despublica
+
+  // useEffect(() => {
+  //   if (props.currentSurvey !== null &&  props.currentSurvey.isPublished === 'false') {
+
+  //   }
+  // }, [props.currentSurvey]);
 
   useEffect(() => {
     (async () => {
@@ -872,7 +889,7 @@ let AgendaActividadDetalle = (props) => {
                       </p>
                     </>
                   }>
-                  {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
+                  {props.currentSurvey === null ? <SurveyList eventSurveys={props.eventSurveys} /> : <SurveyDetail />}
                 </TabPane>
               )}
               {props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (

@@ -9,6 +9,7 @@ import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
+import { setCurrentSurvey } from '../../redux/survey/actions';
 
 import AttendeList from './attendees/index';
 import * as notificationsActions from '../../redux/notifications/actions';
@@ -84,6 +85,7 @@ let SocialZone = function(props) {
   );
 
   useEffect(() => {
+    console.log('social zone mount**********');
     const fetchData = async () => {
       const user = await getCurrentUser();
       setCurrentUser(user);
@@ -131,7 +133,7 @@ let SocialZone = function(props) {
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
                 setTotalNewMessages(newmsj);
-              }
+              },
             });
         }
 
@@ -253,7 +255,11 @@ let SocialZone = function(props) {
               </Button>
             </Col>
           </Row>
-          {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
+          {props.currentSurvey === null ? (
+            <SurveyList eventSurveys={props.eventSurveys} publishedSurveys={props.publishedSurveys} />
+          ) : (
+            <SurveyDetail />
+          )}
         </TabPane>
       )}
 
@@ -301,12 +307,13 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
   viewNotification: state.notifications.data,
-  tabs: state.stage.data.tabs
+  tabs: state.stage.data.tabs,
 });
 
 const mapDispatchToProps = {
   setMainStage,
-  setNotification
+  setNotification,
+  setCurrentSurvey,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));
