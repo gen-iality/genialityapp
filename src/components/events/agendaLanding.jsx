@@ -661,6 +661,7 @@ class Agenda extends Component {
             event={event}
             showSection={this.props.showSection}
             zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+            eventSurveys={this.props.eventSurveys}
           />
         )}
 

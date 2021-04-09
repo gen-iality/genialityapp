@@ -633,7 +633,7 @@ class AgendaEdit extends Component {
                         name={'name'}
                         value={name}
                         onChange={this.handleChange}
-                        placeholder='Nombre de la actividad'
+                        placeholder='Nombre de handleChangela actividad'
                       />
                     </div>
                   </div>

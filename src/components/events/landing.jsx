@@ -139,6 +139,7 @@ class Landing extends Component {
       totalNewMessages: 0,
       activitiesAgenda: [],
       publishedSurveys: [],
+      eventSurveys: [],
       //fin Integración con encuestas
 
       // Tabs generales
@@ -152,22 +153,18 @@ class Landing extends Component {
   }
 
   //METODO PARA OBTENER ENCUESTAS
-  listenSurveysData = async () => {
-    const { event, activity } = this.props;
+  listenSurveysData = async (event_id) => {
+    if (!event_id) {
+      return [];
+    }
 
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
-    let $query = firestore.collection('surveys');
-
-    //Le agregamos el filtro por evento
-    if (event && event._id) {
-      $query = $query.where('eventId', '==', event._id);
-    }
+    let $query = firestore.collection('surveys').where('eventId', '==', event_id);
 
     $query.onSnapshot(async (surveySnapShot) => {
       // Almacena el Snapshot de todas las encuestas del evento
 
       const eventSurveys = [];
-      let publishedSurveys = [];
 
       if (surveySnapShot.size === 0) {
         this.setState({ selectedSurvey: {}, surveyVisible: false, publishedSurveys: [] });
@@ -178,21 +175,33 @@ class Landing extends Component {
         eventSurveys.push({ ...doc.data(), _id: doc.id });
       });
 
+      this.setState({ eventSurveys });
+    });
+  };
+
+  publishedSurveysByActivity = () => {
+    console.log('publishedSurveysByActivity');
+    const { currentActivity } = this.props;
+
+    if (currentActivity !== null) {
+      console.log('publishedSurveysByActivity activity', currentActivity);
+      let publishedSurveys = [];
+      let surveys = this.state.eventSurveys || [];
+
       // Listado de encuestas publicadas del evento
-      publishedSurveys = eventSurveys.filter(
+      publishedSurveys = surveys.filter(
         (survey) =>
           (survey.isPublished === 'true' || survey.isPublished === true) &&
-          ((activity && survey.activity_id === activity._id) || survey.isGlobal === 'true')
+          ((currentActivity && survey.activity_id === currentActivity._id) || survey.isGlobal === 'true')
       );
 
-      if (this.state.user && Object.keys(this.state.user).length === 0) {
+      if (!this.state.currentUser || Object.keys(this.state.currentUser).length === 0) {
         publishedSurveys = publishedSurveys.filter((item) => {
           return item.allow_anonymous_answers !== 'false';
         });
       }
-
       this.setState({ publishedSurveys });
-    });
+    }
   };
 
   openNotificationWithIcon = (type) => {
@@ -428,6 +437,8 @@ class Landing extends Component {
           zoomExternoHandleOpen={this.zoomExternoHandleOpen}
           eventUser={this.state.eventUser}
           generalTabs={this.state.generalTabs}
+          eventSurveys={this.state.eventSurveys}
+          publishedSurveys={this.state.publishedSurveys}
         />
       ),
       tickets: (
@@ -567,12 +578,53 @@ class Landing extends Component {
     if (prevState.generalTabs !== this.state.generalTabs) {
       this.props.setGeneralTabs(this.state.generalTabs);
     }
+
+    if (prevState.event && prevState.event._id !== this.state.event._id) {
+      this.listenSurveysData(this.state.event._id);
+    }
+
+    if (
+      prevState.eventSurveys !== this.state.eventSurveys ||
+      prevProps.currentActivity !== this.props.currentActivity
+    ) {
+      this.publishedSurveysByActivity();
+    }
+
+    if (prevState.publishedSurveys !== this.state.publishedSurveys) {
+      if (
+        this.state.publishedSurveys &&
+        this.state.publishedSurveys.length === 1 &&
+        (this.state.publishedSurveys[0].isOpened === true || this.state.publishedSurveys[0].isOpened === 'true')
+      ) {
+        this.props.setCurrentSurvey(this.state.publishedSurveys[0]);
+        this.props.setMainStage('surveyDetalle');
+      }
+    }
+
+    //Por si despublicaron la encuesta actualmente visible
+    if (
+      prevProps.currentSurvey !== this.props.currentSurvey ||
+      prevState.publishedSurveys !== this.state.publishedSurveys
+    ) {
+      console.log('SURVEYS2', this.props.currentSurvey, this.state.publishedSurveys);
+      if (this.props.currentSurvey) {
+        //si la encuesta que estoy viendo no esta en el listado de publicadas es que ya se despublico y toca quitarla
+        let stillActive = this.state.publishedSurveys.filter((survey) => survey._id === this.props.currentSurvey._id);
+
+        if (!(stillActive && stillActive.length)) {
+          this.props.setMainStage(null);
+          this.props.setCurrentSurvey(null);
+        }
+      }
+    }
+
+    //AQUI
   }
 
   async componentDidMount() {
     await this.mountSections();
     const infoAgenda = await AgendaApi.byEvent(this.state.event._id);
-    // await this.listenSurveysData()
+    await this.listenSurveysData(this.state.event._id);
 
     this.setState({
       activitiesAgenda: infoAgenda.data,
@@ -1120,17 +1172,21 @@ class Landing extends Component {
                             </div>
                           )}
                           <Row justify='center'>
-                          <Col xs={24} sm={24} md={16} lg={18} xl={18}>
-                             {this.props.currentActivity==null && <VirtualConference
-                                event={event}
-                                eventUser={this.state.eventUser}
-                                currentUser={this.state.currentUser}
-                                usuarioRegistrado={this.state.eventUser}
-                                toggleConference={this.toggleConference}
-                                showSection={this.showSection}
-                                zoomExternoHandleOpen={this.zoomExternoHandleOpen}
-                              />}
-                            {this.props.currentActivity==null &&   <MapComponent event={event} />}
+                            <Col xs={24} sm={24} md={16} lg={18} xl={18}>
+                              {/** this.props.location.pathname.match(/landing\/[a-zA-Z0-9]*\/?$/gi This component is a shortcut to landing/* route, hencefor should not be visible in that route */}
+                              {/** this component is a shortcut to agenda thus should not be visible in agenda */}
+                              {!(this.state.section && this.state.section === 'agenda') && (
+                                <VirtualConference
+                                  event={event}
+                                  eventUser={this.state.eventUser}
+                                  currentUser={this.state.currentUser}
+                                  usuarioRegistrado={this.state.eventUser}
+                                  toggleConference={this.toggleConference}
+                                  showSection={this.showSection}
+                                  zoomExternoHandleOpen={this.zoomExternoHandleOpen}
+                                />
+                              )}
+                              <MapComponent event={event} />
                             </Col>
                           </Row>
                           <div id='visualizar' style={{ margin: '0px 2px', overflow: 'initial', textAlign: 'center' }}>
@@ -1197,11 +1253,9 @@ class Landing extends Component {
                             optionselected={this.updateOption}
                             tab={this.state.tabSelected}
                             event_id={event._id}
-                            // chat={this.state.chat}
-                            // attendees={this.state.attendees}
-                            // survey={this.state.surveys}
-                            // games={this.state.games}
+                            eventSurveys={this.state.eventSurveys}
                             generalTabs={this.state.generalTabs}
+                            publishedSurveys={this.state.publishedSurveys}
                           />
                         </Drawer>
 
@@ -1294,12 +1348,10 @@ class Landing extends Component {
                                     tab={this.state.tabSelected}
                                     event={event}
                                     event_id={event._id}
-                                    // chat={this.state.chat}
-                                    // attendees={this.state.attendees}
-                                    // survey={this.state.surveys}
-                                    // games={this.state.games}
+                                    eventSurveys={this.state.eventSurveys}
                                     currentUser={this.state.currentUser}
                                     generalTabs={this.state.generalTabs}
+                                    publishedSurveys={this.state.publishedSurveys}
                                   />
                                 </>
                               )}
@@ -1326,6 +1378,7 @@ const mapStateToProps = (state) => ({
   viewNotification: state.notifications.data,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   tabs: state.stage.data.tabs,
+  currentSurvey: state.survey.data.currentSurvey,
 });
 
 const mapDispatchToProps = {
