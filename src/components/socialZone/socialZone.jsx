@@ -249,7 +249,7 @@ let SocialZone = function(props) {
                 </div>
               </Col>
               <Col sm={2}>
-                <Button onClick={searhAttende}>
+                <Button shape='circle' onClick={searhAttende}>
                   {!isFiltered && <SearchOutlined />}
                   {isFiltered && 'X'}
                 </Button>
