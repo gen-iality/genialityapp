@@ -1175,7 +1175,8 @@ class Landing extends Component {
                             <Col xs={24} sm={24} md={16} lg={18} xl={18}>
                               {/** this.props.location.pathname.match(/landing\/[a-zA-Z0-9]*\/?$/gi This component is a shortcut to landing/* route, hencefor should not be visible in that route */}
                               {/** this component is a shortcut to agenda thus should not be visible in agenda */}
-                              {!(this.state.section && this.state.section === 'agenda') && (
+
+                              {currentUser && !(this.state.section && this.state.section === 'agenda') && (
                                 <VirtualConference
                                   event={event}
                                   eventUser={this.state.eventUser}
