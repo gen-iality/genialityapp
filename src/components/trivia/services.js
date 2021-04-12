@@ -112,8 +112,12 @@ export const getTriviaRanking = (surveyId) => {
   });
 };
 
-export const getSurveyComponent = (surveyId) => {
+export const getSurveyConfiguration = (surveyId) => {
   return new Promise((resolve, reject) => {
+    if (!surveyId) {
+      reject('Survey ID required');
+    }
+
     firestore
       .collection('surveys')
       .doc(surveyId)

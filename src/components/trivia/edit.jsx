@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import EventContent from '../events/shared/content';
 import { selectOptions } from './constants';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
-import { createOrUpdateSurvey, getSurveyComponent } from './services';
+import { createOrUpdateSurvey, getSurveyConfiguration } from './services';
 import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
@@ -71,9 +71,7 @@ class triviaEdit extends Component {
       const surveyId = this.props.location.state.edit;
 
       //Se obtiene el estado y la confiugracion de la encuesta de Firebase
-      const firebaseSurvey = await getSurveyComponent(surveyId);
-
-      console.log('component did mount ', firebaseSurvey);
+      const firebaseSurvey = await getSurveyConfiguration(surveyId);
 
       //Consulta  a Mongo del información del evento
       const Update = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit);

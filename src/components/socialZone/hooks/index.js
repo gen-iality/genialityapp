@@ -7,7 +7,6 @@ export const monitorEventPresence = (event_id, attendeeListPresence, setAttendee
     const data = snapshot.val();
     let datalist = [];
     let attendeeListClone = { ...attendeeListPresence };
-    console.log('datafirebase clone', attendeeListClone, attendeeListPresence);
 
     if (data === null) return;
     Object.keys(data).map((key) => {
@@ -18,7 +17,6 @@ export const monitorEventPresence = (event_id, attendeeListPresence, setAttendee
       datalist.push(attendee);
     });
     setAttendeeListPresence(attendeeListClone);
-    console.log('datafirebase attendeeListPresence', attendeeListClone);
   });
   return true;
 };
