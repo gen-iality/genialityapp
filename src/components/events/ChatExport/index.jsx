@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Space } from 'antd';
+import { Table, Tag, Spin } from 'antd';
 import XLSX from 'xlsx';
 import app from 'firebase/app';
 import 'firebase/auth';
@@ -63,7 +63,9 @@ const ChatExport = ({ eventId, event }) => {
     return time;
   }
 
-  let [datamsjevent, setdatamsjevent] = useState();
+  let [datamsjevent, setdatamsjevent] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const columns = [
     {
       title: 'usuario',
@@ -99,6 +101,10 @@ const ChatExport = ({ eventId, event }) => {
   };
 
   useEffect(() => {
+    getChat();
+  }, []);
+
+  function getChat() {
     let datamessagesthisevent = [];
 
     firestore
@@ -106,9 +112,9 @@ const ChatExport = ({ eventId, event }) => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          console.log(timeConverter(doc.data().timestamp));
           let newtime = timeConverter(doc.data().timestamp);
           let msjnew = {
+            chatId: doc.id,
             name: doc.data().name,
             text: doc.data().text,
             hora: newtime,
@@ -120,13 +126,46 @@ const ChatExport = ({ eventId, event }) => {
       .catch((err) => {
         console.log('error firebase', err);
       });
+  }
 
-    console.log(datamsjevent);
-  }, []);
+  function deleteAllChat() {
+    datamsjevent.forEach(async (item) => {
+      await deleteSingleChat(eventId, item.chatId);
+    });
+    setdatamsjevent([]);
+    setLoading(false);
+  }
+
+  function deleteSingleChat(eventId, chatId) {
+    return new Promise((resolve, reject) => {
+      firestore
+        .collection('messagesevent_' + eventId)
+        .doc(chatId)
+        .delete()
+        .then(() => {
+          resolve('Delete chat', chatId);
+        })
+        .catch((error) => {
+          reject('Error deleting chat: ', error);
+        });
+    });
+  }
 
   return (
     <>
       <div className='column is-narrow has-text-centered export button-c is-centered'>
+        <button
+          onClick={() => {
+            setLoading(true);
+            deleteAllChat();
+          }}
+          className='button is-primary'
+          style={{ marginRight: 80 }}>
+          <span className='icon'>
+            <i className='fas fa-trash' />
+          </span>
+          <span className='text-button'>Eliminar Chat</span>
+        </button>
         <button onClick={(e) => exportFile(e)} className='button is-primary'>
           <span className='icon'>
             <i className='fas fa-download' />
@@ -134,7 +173,7 @@ const ChatExport = ({ eventId, event }) => {
           <span className='text-button'>Exportar</span>
         </button>
       </div>
-      <Table columns={columns} dataSource={datamsjevent} />;
+      {loading ? <Spin /> : <Table columns={columns} dataSource={datamsjevent} />}
     </>
   );
 };
