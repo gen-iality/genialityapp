@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Spin } from 'antd';
+import { Table, Tag, Spin, Popconfirm, Button } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import XLSX from 'xlsx';
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/database';
-import { data } from 'jquery';
 
-var otherApp = app.initializeApp(
+var chatFirebase = app.initializeApp(
   {
     apiKey: 'AIzaSyD4_AiJFGf1nIvn9BY_rZeoITinzxfkl70',
     authDomain: 'chatevius.firebaseapp.com',
@@ -22,7 +22,7 @@ var otherApp = app.initializeApp(
   'nameOfOtherApp'
 );
 
-const firestore = otherApp.firestore();
+const firestore = chatFirebase.firestore();
 
 function formatAMPM(hours, minutes) {
   // var hours = date.getHours();
@@ -65,6 +65,7 @@ const ChatExport = ({ eventId, event }) => {
 
   let [datamsjevent, setdatamsjevent] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = React.useState(false);
 
   const columns = [
     {
@@ -129,6 +130,7 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function deleteAllChat() {
+    setLoading(true);
     datamsjevent.forEach(async (item) => {
       await deleteSingleChat(eventId, item.chatId);
     });
@@ -154,24 +156,31 @@ const ChatExport = ({ eventId, event }) => {
   return (
     <>
       <div className='column is-narrow has-text-centered export button-c is-centered'>
-        <button
-          onClick={() => {
-            setLoading(true);
-            deleteAllChat();
-          }}
-          className='button is-primary'
-          style={{ marginRight: 80 }}>
-          <span className='icon'>
-            <i className='fas fa-trash' />
-          </span>
-          <span className='text-button'>Eliminar Chat</span>
-        </button>
-        <button onClick={(e) => exportFile(e)} className='button is-primary'>
+        <button onClick={(e) => exportFile(e)} className='button is-primary' style={{ marginRight: 80 }}>
           <span className='icon'>
             <i className='fas fa-download' />
           </span>
           <span className='text-button'>Exportar</span>
         </button>
+        <Popconfirm
+          title='Está seguro？'
+          onConfirm={deleteAllChat}
+          onCancel={() => setVisible(false)}
+          style={{ width: '170px' }}
+          icon={<QuestionCircleOutlined style={{ color: 'red' }} />}>
+          <Button
+            danger
+            onClick={() => {
+              setVisible(true);
+            }}
+            //className='button is-primary'
+          >
+            <span className='icon'>
+              <i className='fas fa-trash' />
+            </span>
+            <span className='text-button'>Eliminar Chat</span>
+          </Button>
+        </Popconfirm>
       </div>
       {loading ? <Spin /> : <Table columns={columns} dataSource={datamsjevent} />}
     </>
