@@ -111,3 +111,22 @@ export const getTriviaRanking = (surveyId) => {
       });
   });
 };
+
+export const getSurveyConfiguration = (surveyId) => {
+  return new Promise((resolve, reject) => {
+    if (!surveyId) {
+      reject('Survey ID required');
+    }
+
+    firestore
+      .collection('surveys')
+      .doc(surveyId)
+      .get()
+      .then((result) => {
+        if (result.exists) {
+          const data = result.data();
+          resolve(data);
+        }
+      });
+  });
+};
