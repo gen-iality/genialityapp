@@ -307,3 +307,16 @@ export const deleteAgenda = (eventId, agendaId) => {
       .catch(reject);
   });
 };
+
+export const getUserByEmail = async (email) => {
+  try {
+    const resp = await UsersApi.findByEmail(email);
+    console.log(resp[0]._id);
+    const ru = await UsersApi.getProfile(resp[0]._id);
+    console.log(ru);
+    return ru;
+  } catch (error) {
+    const { status } = error.response;
+    return null;
+  }
+};

@@ -257,6 +257,9 @@ let SocialZone = function(props) {
             </Row>
             <div className='asistente-list'>
               <AttendeList
+                perfil={props.perfil}
+                section={props.section}
+                containNetWorking={props.containNetWorking}
                 busqueda={strAttende}
                 currentUser={currentUser}
                 event_id={event_id}

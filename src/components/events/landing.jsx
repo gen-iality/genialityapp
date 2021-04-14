@@ -11,7 +11,8 @@ import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row, Menu, Badge, message, notification } from 'antd';
+import { Layout, Drawer, Button, Col, Row, Menu, Badge, notification, Space, Tooltip, List } from 'antd';
+
 import {
   MenuOutlined,
   CommentOutlined,
@@ -23,10 +24,21 @@ import {
   PlayCircleOutlined,
   LoadingOutlined,
   DiffOutlined,
+  SearchOutlined,
+  UsergroupAddOutlined,
+  VideoCameraAddOutlined,
 } from '@ant-design/icons';
 
 //custom
-import { Actions, EventsApi, TicketsApi, fireStoreApi, Activity, getCurrentUser } from '../../helpers/request';
+import {
+  Actions,
+  EventsApi,
+  TicketsApi,
+  fireStoreApi,
+  Activity,
+  getCurrentUser,
+  EventFieldsApi,
+} from '../../helpers/request';
 import Loading from '../loaders/loading';
 import { BaseUrl } from '../../helpers/constants';
 import Dialog from '../modal/twoAction';
@@ -51,7 +63,7 @@ import VirtualConference from './virtualConference';
 import MapComponent from './mapComponet';
 import EventLanding from './eventLanding';
 import { toast } from 'react-toastify';
-import { handleRequestError } from '../../helpers/utils';
+import { formatDataToString, handleRequestError } from '../../helpers/utils';
 import Robapagina from '../shared/Animate_Img/index';
 import Trophies from './trophies';
 import InformativeSection from './informativeSections/informativeSection';
@@ -70,6 +82,9 @@ import {
   // isBrowser,
   isMobile,
 } from 'react-device-detect';
+import Avatar from 'antd/lib/avatar/avatar';
+import Text from 'antd/lib/typography/Text';
+import { getCurrentEventUser, getUserByEmail } from '../networking/services';
 
 const { setEventData } = eventActions;
 const { gotoActivity, setMainStage } = stageActions;
@@ -125,6 +140,12 @@ class Landing extends Component {
       event: null,
       requireValidation: false,
       currentSurvey: {},
+      //Visibilidad drawer perfil
+      visiblePerfil: false,
+      //usuario seleccionado para obtener su perfil
+      userPerfil: null,
+      //properties user perfil
+      propertiesUserPerfil: null,
       //Integración con encuestas
       currentActivity: null,
 
@@ -140,6 +161,7 @@ class Landing extends Component {
       activitiesAgenda: [],
       publishedSurveys: [],
       eventSurveys: [],
+      containNetWorking: false,
       //fin Integración con encuestas
 
       // Tabs generales
@@ -180,7 +202,6 @@ class Landing extends Component {
   };
 
   publishedSurveysByActivity = () => {
-    console.log('publishedSurveysByActivity');
     const { currentActivity } = this.props;
 
     if (currentActivity !== null) {
@@ -246,6 +267,32 @@ class Landing extends Component {
       });
   };
 
+  getProperties = async (idUser) => {
+    console.log(idUser);
+    let properties = await EventFieldsApi.getAll(this.props.eventInfo._id);
+    console.log(properties);
+    if (properties.length > 0) {
+      this.setState({
+        propertiesUserPerfil: properties,
+      });
+      return properties;
+    }
+
+    return null;
+  };
+
+  containsNetWorking = () => {
+    if (this.state.sections != undefined) {
+      console.log(this.state.event.itemsMenu);
+      console.log(this.state.event.itemsMenu['networking']);
+      if (this.state.event.itemsMenu['networking'] !== undefined) {
+        this.setState({ containNetWorking: true });
+      } else {
+        this.setState({ containNetWorking: false });
+      }
+    }
+  };
+
   setTotalNewMessages = (newMessages) => {
     this.setState({
       totalNewMessages: newMessages || 0,
@@ -299,6 +346,30 @@ class Landing extends Component {
       tabSelected: tab,
     });
     await this.mountSections();
+  };
+
+  loadDataUser = async (email) => {
+    const resp = await getUserByEmail(email);
+    return resp;
+  };
+
+  collapsePerfil = async (userPerfil) => {
+    this.setState({
+      visiblePerfil: !this.state.visiblePerfil,
+    });
+    if (userPerfil != null) {
+      console.log(userPerfil);
+      this.setState({ userPerfil });
+      var data = await this.loadDataUser(userPerfil.email);
+      console.log(data);
+      var userEid = await getCurrentEventUser(this.props.eventInfo._id, data._id);
+      if (data) {
+        var properties = await this.getProperties(userEid._id);
+        console.log(properties);
+      }
+    } else {
+      console.log('Perfil usuario nulo');
+    }
   };
 
   toggleCollapsedN = async () => {
@@ -571,6 +642,7 @@ class Landing extends Component {
     this.setState({ loading: false, sections }, () => {
       this.firebaseUI();
       this.handleScroll();
+      this.containsNetWorking();
     });
   };
 
@@ -1102,6 +1174,69 @@ class Landing extends Component {
                               styleText={event.styles && event.styles.textMenu ? event.styles.textMenu : '#222222'}
                             />
                           </Drawer>
+                          {/*Aqui empieza el drawer del perfil*/}
+                          <Drawer
+                            visible={this.state.visiblePerfil}
+                            closable={true}
+                            onClose={() => this.collapsePerfil(null)}
+                            width={'52vh'}
+                            bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
+                            <Row justify='center' style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+                              <Avatar
+                                size={110}
+                                src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                              />
+                              <Space size={0} direction='vertical' style={{ textAlign: 'center' }}>
+                                <Text style={{ fontSize: '20px' }}>
+                                  {this.state.userPerfil && this.state.userPerfil.names
+                                    ? this.state.userPerfil.names
+                                    : this.state.userPerfil && this.state.userPerfil.name
+                                    ? this.state.userPerfil.name
+                                    : ''}
+                                </Text>
+                                <Text type='secondary' style={{ fontSize: '16px' }}>
+                                  {this.state.userPerfil && this.state.userPerfil.email}
+                                </Text>
+                              </Space>
+                              <Col span={24}>
+                                <Row justify='center' style={{ marginTop: '20px' }}>
+                                  <Space size='middle'>
+                                    <Tooltip title='Solicitar contacto'>
+                                      <Button size='large' shape='circle' icon={<UsergroupAddOutlined />} />
+                                    </Tooltip>
+                                    <Tooltip title='Ir al chat privado'>
+                                      <Button size='large' shape='circle' icon={<CommentOutlined />} />
+                                    </Tooltip>
+                                    <Tooltip title='Solicitar cita'>
+                                      <Button size='large' shape='circle' icon={<VideoCameraAddOutlined />} />
+                                    </Tooltip>
+                                  </Space>
+                                </Row>
+                              </Col>
+                            </Row>
+                            <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '5px' }}>
+                              <Col
+                                className='asistente-list'
+                                span={24}
+                                style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'scroll' }}>
+                                {this.state.propertiesUserPerfil &&
+                                  this.state.propertiesUserPerfil.map(
+                                    (property, key) =>
+                                      this.state.userPerfil[property.name] !== undefined &&
+                                      !property.visibleByAdmin && (
+                                        <div key={'contact-property' + key}>
+                                          {
+                                            <p>
+                                              <strong>{property.label}</strong>:{' '}
+                                              {formatDataToString(this.state.userPerfil[property.name], property)}
+                                            </p>
+                                          }
+                                        </div>
+                                      )
+                                  )}
+                              </Col>
+                            </Row>
+                          </Drawer>
 
                           {event.styles &&
                           event.styles.show_banner &&
@@ -1249,11 +1384,14 @@ class Landing extends Component {
                           maskClosable={true}
                           className='drawerMobile'>
                           <SocialZone
+                            perfil={this.collapsePerfil}
                             currentUser={this.state.currentUser}
                             tcollapse={this.toggleCollapsed}
                             optionselected={this.updateOption}
                             tab={this.state.tabSelected}
                             event_id={event._id}
+                            section={this.state.section}
+                            containNetWorking={this.state.containNetWorking}
                             eventSurveys={this.state.eventSurveys}
                             generalTabs={this.state.generalTabs}
                             publishedSurveys={this.state.publishedSurveys}
@@ -1344,11 +1482,14 @@ class Landing extends Component {
                                   </Button>
 
                                   <SocialZone
+                                    perfil={this.collapsePerfil}
                                     tcollapse={this.toggleCollapsed}
                                     optionselected={this.updateOption}
                                     tab={this.state.tabSelected}
                                     event={event}
+                                    section={this.state.section}
                                     event_id={event._id}
+                                    containNetWorking={this.state.containNetWorking}
                                     eventSurveys={this.state.eventSurveys}
                                     currentUser={this.state.currentUser}
                                     generalTabs={this.state.generalTabs}

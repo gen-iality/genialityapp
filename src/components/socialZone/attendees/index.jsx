@@ -14,14 +14,12 @@ const AttendeList = function(props) {
   let [filteredlist, setfilteredlist] = useState([]);
   let [hasMore, setHasMore] = useState(true);
 
-  const pag = 100;
+  const pag = 15;
 
   useEffect(() => {
     if (props.busqueda == undefined || props.busqueda == '') {
-      console.log('ENTRO SIN BUSQUEDA');
       myattendelist && setfilteredlist(myattendelist.slice(0, pag));
     } else {
-      console.log('ENTRO CON BUSQUEDA');
       setfilteredlist(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
     }
   }, [props.busqueda]);
@@ -29,8 +27,9 @@ const AttendeList = function(props) {
   useEffect(() => {
     let usersorderbystatus = [];
     let ordenadousers = [];
-    console.log('EJECUTADO EFFECT');
-    //console.log(props.attendeeListPresence);
+
+    // console.log('SECTION=>', props.section);
+    // console.log(props.containNetWorking);
 
     Object.keys(props.attendeeList).map((key) => {
       Object.keys(props.attendeeListPresence).map((key2) => {
@@ -58,6 +57,8 @@ const AttendeList = function(props) {
     });
 
     setmyattendelist(ordenadousers);
+    console.log('ordenadousers');
+    console.log(ordenadousers);
     setfilteredlist(ordenadousers.slice(0, pag));
     setPage(1);
   }, [props.attendeeListPresence, props.attendeeList]);
@@ -65,9 +66,10 @@ const AttendeList = function(props) {
   const handleInfiniteOnLoad = () => {
     console.log('SCROLL HANDLE');
     setLoading(true);
+    setHasMore(true);
 
     if (filteredlist.length == myattendelist.length) {
-      message.warning('NO HAY MAS ASISTENTES');
+      // message.warning('NO HAY MAS ASISTENTES');
       setHasMore(false);
       setLoading(false);
       return;
@@ -86,7 +88,7 @@ const AttendeList = function(props) {
 
     setfilteredlist(datosg);
     setPage(pagP++);
-    console.log('PAGE=>' + pagP);
+    //console.log('PAGE=>' + pagP);
     setLoading(false);
     setHasMore(true);
   };
@@ -168,14 +170,13 @@ const AttendeList = function(props) {
               }
             />
           </List.Item>
+        )}>
+        {loading && hasMore && (
+          <div>
+            <Spin size='large' />
+          </div>
         )}
-      />
-
-      {loading && hasMore && (
-        <div className='demo-loading-container'>
-          <Spin />
-        </div>
-      )}
+      </List>
     </InfiniteScroll>
   );
 };

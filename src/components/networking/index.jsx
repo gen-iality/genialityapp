@@ -228,6 +228,10 @@ class ListEventUser extends Component {
     this.setState({ pageOfItems: pageOfItems });
   };
 
+  AgendarCita = (id) => {
+    this.setState({ eventUserIdToMakeAppointment: id });
+  };
+
   //Se ejecuta cuando se selecciona el filtro
   handleSelectFilter = (value) => {
     let inputSearch = document.getElementById('inputSearch');
@@ -436,7 +440,7 @@ class ListEventUser extends Component {
                                           <Button
                                             type='primary'
                                             onClick={() => {
-                                              this.setState({ eventUserIdToMakeAppointment: users._id });
+                                              this.AgendarCita(users._id);
                                             }}>
                                             {'Agendar cita'}
                                           </Button>
@@ -693,7 +697,7 @@ class ListEventUser extends Component {
                                         <Button
                                           style={{ backgroundColor: '#363636', color: 'white' }}
                                           onClick={() => {
-                                            this.setState({ eventUserIdToMakeAppointment: users._id });
+                                            this.AgendarCita(users._id);
                                           }}>
                                           {'Agendar cita'}
                                         </Button>
@@ -727,7 +731,7 @@ class ListEventUser extends Component {
             </TabPane>
 
             <TabPane tab='Mis Contactos' key='mis-contactos'>
-              <ContactList eventId={this.props.event._id} section={this.props.section} />
+              <ContactList agendarCita={this.AgendarCita} eventId={this.props.event._id} section={this.props.section} />
             </TabPane>
 
             <TabPane tab='Solicitudes de Contacto' key='solicitudes'>
