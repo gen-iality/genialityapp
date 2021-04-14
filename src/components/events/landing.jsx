@@ -11,7 +11,7 @@ import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row, Menu, Badge, notification, Space, Tooltip, List } from 'antd';
+import { Layout, Drawer, Button, Col, Row, Menu, Badge, notification, Space, Tooltip, List, Spin } from 'antd';
 
 import {
   MenuOutlined,
@@ -1176,17 +1176,18 @@ class Landing extends Component {
                           </Drawer>
                           {/*Aqui empieza el drawer del perfil*/}
                           <Drawer
+                            zIndex={5000}
                             visible={this.state.visiblePerfil}
                             closable={true}
                             onClose={() => this.collapsePerfil(null)}
                             width={'52vh'}
                             bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
                             <Row justify='center' style={{ paddingLeft: '10px', paddingRight: '10px' }}>
-                              <Avatar
-                                size={110}
-                                src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-                              />
                               <Space size={0} direction='vertical' style={{ textAlign: 'center' }}>
+                                <Avatar
+                                  size={110}
+                                  src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                                />
                                 <Text style={{ fontSize: '20px' }}>
                                   {this.state.userPerfil && this.state.userPerfil.names
                                     ? this.state.userPerfil.names
@@ -1216,9 +1217,12 @@ class Landing extends Component {
                             </Row>
                             <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '5px' }}>
                               <Col
-                                className='asistente-list'
+                                className='asistente-list' //agrega el estilo a la barra de scroll
                                 span={24}
                                 style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'scroll' }}>
+                                {!this.state.propertiesUserPerfil && (
+                                  <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>
+                                )}
                                 {this.state.propertiesUserPerfil &&
                                   this.state.propertiesUserPerfil.map(
                                     (property, key) =>
