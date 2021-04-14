@@ -116,9 +116,15 @@ const AttendeList = function(props) {
               props.currentUser ? (
                 <a
                   key='list-loadmore-edit'
-                  onClick={() =>
-                    props.createNewOneToOneChat(props.currentUser.uid, props.currentUser.names, item.iduser, item.names)
-                  }>
+                  onClick={() => {
+                    console.log(props.currentUser);
+                    props.createNewOneToOneChat(
+                      props.currentUser.uid,
+                      props.currentUser.names,
+                      item.iduser,
+                      item.names
+                    );
+                  }}>
                   <Tooltip title={'Chatear'}>
                     <MessageTwoTone style={{ fontSize: '20px' }} />
                   </Tooltip>
@@ -143,14 +149,12 @@ const AttendeList = function(props) {
                     content={<PopoverInfoUser item={item} props={props} />}>
                     <a
                       key='list-loadmore-edit'
-                      onClick={() =>
-                        props.createNewOneToOneChat(
-                          props.currentUser.uid,
-                          props.currentUser.names,
-                          item.user.uid,
-                          item.user.names
-                        )
-                      }>
+                      onClick={() => {
+                        var user = props.currentUser;
+                        console.log(props.currentUser);
+                        console.log(item);
+                        props.createNewOneToOneChat(user.uid, user.names, item.iduser, item.names);
+                      }}>
                       {item.names}
                     </a>
                   </Popover>

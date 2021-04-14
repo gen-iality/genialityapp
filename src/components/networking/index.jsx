@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Form } from 'antd';
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Form, Badge } from 'antd';
 
 import { SmileOutlined } from '@ant-design/icons';
 import AppointmentModal from './appointmentModal';
@@ -46,6 +46,9 @@ class ListEventUser extends Component {
   }
 
   async componentDidMount() {
+    console.log('TOTAL NOTIFICATIONS');
+    console.log(this.props.notifications);
+    console.log(this.props.notifyAmis);
     await this.getInfoCurrentUser();
     this.loadData();
   }
@@ -734,7 +737,18 @@ class ListEventUser extends Component {
               <ContactList agendarCita={this.AgendarCita} eventId={this.props.event._id} section={this.props.section} />
             </TabPane>
 
-            <TabPane tab='Solicitudes de Contacto' key='solicitudes'>
+            <TabPane
+              tab={
+                <div style={{ position: 'relative' }}>
+                  Solicitudes de contacto{' '}
+                  {this.props.notifyAmis && this.props.notifyAmis.length > 0 && (
+                    <Badge
+                      style={{ position: 'absolute', top: '-21px', right: '-13px' }}
+                      count={this.props.notifyAmis.length}></Badge>
+                  )}
+                </div>
+              }
+              key='solicitudes'>
               <RequestList eventId={this.props.event._id} />
             </TabPane>
 

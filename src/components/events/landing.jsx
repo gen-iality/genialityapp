@@ -163,7 +163,10 @@ class Landing extends Component {
       eventSurveys: [],
       containNetWorking: false,
       //fin Integración con encuestas
-
+      // notificacionesNetworking
+      notifyNetworkingAg: [],
+      notifyNetworkingAm: [],
+      totalNotficationsN: 0,
       // Tabs generales
       generalTabs: {
         publicChat: true,
@@ -552,6 +555,9 @@ class Landing extends Component {
       networking: (
         <NetworkingForm
           event={event}
+          notifications={this.state.totalNotficationsN}
+          notifyAgenda={this.state.notifyNetworkingAg}
+          notifyAmis={this.state.notifyNetworkingAm}
           eventId={event._id}
           currentUser={this.state.currentUser}
           section={this.state.section}
@@ -689,10 +695,40 @@ class Landing extends Component {
         }
       }
     }
-
-    //AQUI
   }
 
+  addNotification(notification, iduserEmmited) {
+    if (notification.emailEmited != null) {
+      firestore
+        .collection('notificationUser')
+        .doc(this.state.user?._id)
+        .collection('events')
+        .doc(this.state.event._id)
+        .collection('notifications')
+        .doc(iduserEmmited)
+        .set({
+          emailEmited: notification.emailEmited,
+          message: notification.message,
+          name: notification.name,
+          state: notification.state,
+          type: notification.type,
+        });
+    } else {
+      firestore
+        .collection('notificationUser')
+        .doc(this.state.user?._id)
+        .collection('events')
+        .doc(this.state.event._id)
+        .collection('notifications')
+        .doc(iduserEmmited)
+        .set(
+          {
+            state: notification.state,
+          },
+          { merge: true }
+        );
+    }
+  }
   async componentDidMount() {
     await this.mountSections();
     const infoAgenda = await AgendaApi.byEvent(this.state.event._id);
@@ -705,8 +741,55 @@ class Landing extends Component {
     // Se escucha la configuracion  de los tabs del evento
     this.listenConfigurationEvent();
 
-    //LISTENER DE ACTIVITIES  STATUS  NOTIFICATIONS POR EVENT
+    //ADD NOTIFICATION PRUEBA
+    /* let notification = {
+      state: '0',
+    };
+    let iduserEmmited = 'hfxofxtzuyfUiIGI8spwk1lHnEA2';
 
+    this.addNotification(notification, iduserEmmited);*/
+    //LISTENER NOTIFICATIONS NETWORKING
+    firestore
+      .collection('notificationUser')
+      .doc(this.state.user?._id)
+      .collection('events')
+      .doc(this.state.event._id)
+      .collection('notifications')
+      .onSnapshot((querySnapshot) => {
+        console.log('NETWORKING NOTIFICATIONS');
+        let contNotifications = 0;
+        let notAg = [];
+        let notAm = [];
+        //console.log(querySnapshot.docs[0].data());
+        querySnapshot.docs.forEach((doc) => {
+          let notification = doc.data();
+
+          if (notification.state === '0') {
+            contNotifications++;
+            console.log('LLEGO ACA');
+          }
+
+          //Notificacion tipo agenda
+          if (notification.type == 'agenda' && notification.state === '0') {
+            notAg.push(doc.data());
+            console.log(doc.data());
+          }
+          //Notificacion otra
+          if (notification.type == 'amistad' && notification.state === '0') {
+            notAm.push(doc.data());
+            console.log(doc.data());
+          }
+        });
+        this.setState({
+          notifyNetworkingAg: notAg,
+          notifyNetworkingAm: notAm,
+          totalNotficationsN: contNotifications,
+        });
+        this.mountSections();
+        console.log('Usted tiene ' + contNotifications + ' notificaciones');
+      });
+
+    //LISTENER DE ACTIVITIES  STATUS  NOTIFICATIONS POR EVENT
     firestore
       .collection('events')
       .doc(this.state.event._id)

@@ -112,6 +112,7 @@ let SocialZone = function(props) {
     const fetchData = async () => {
       const user = await getCurrentUser();
       setCurrentUser(user);
+      console.log(user);
       setcurrentTab('' + tab);
 
       props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');

@@ -61,6 +61,7 @@ const ChatList = (props) => {
   let [totalmsjpriv, settotalmsjpriv] = useState(props.totalNewMessages);
 
   useEffect(() => {
+    console.log(userName);
     props.datamsjlast &&
       props.datamsjlast.remitente !== undefined &&
       props.datamsjlast.remitente !== null &&
@@ -156,7 +157,7 @@ const ChatList = (props) => {
                   <a
                     key='list-loadmore-edit'
                     onClick={() => {
-                      props.setCurrentChat(item.id, item.name);
+                      props.setCurrentChat(item.id, item.name ? item.name : item.names);
                       setusuariofriend(item?.names ? item.names : item.name);
                       settotalmsjpriv(0);
                       props.setTotalNewMessages(0);
@@ -168,7 +169,7 @@ const ChatList = (props) => {
                     </Tooltip>
                   </a>,
                 ]}>
-                <Typography.Text mark></Typography.Text> {item.name || '----'}
+                <Typography.Text mark></Typography.Text> {item.name ? item.name : item.names || '----'}
               </List.Item>
             )}
           />
