@@ -21,7 +21,7 @@ const PopoverInfoUser = ({ item, props }) => {
               <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
             </Tooltip>
           ),
-          props.containNetWorking && (
+          /* props.containNetWorking && (
             <Tooltip title='Chat(Hablar)'>
               <MessageTwoTone
                 onClick={() =>
@@ -37,7 +37,7 @@ const PopoverInfoUser = ({ item, props }) => {
               ,
             </Tooltip>
           ),
-
+ */
           props.containNetWorking && (
             <Tooltip title='Enviar solicitud Contacto'>
               <UsergroupAddOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
