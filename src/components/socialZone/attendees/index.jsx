@@ -144,19 +144,11 @@ const AttendeList = function(props) {
               title={
                 props.currentUser ? (
                   <Popover
+                    trigger='click'
                     style={{ padding: '0px !important' }}
                     placement='leftTop'
                     content={<PopoverInfoUser item={item} props={props} />}>
-                    <a
-                      key='list-loadmore-edit'
-                      onClick={() => {
-                        var user = props.currentUser;
-                        console.log(props.currentUser);
-                        console.log(item);
-                        props.createNewOneToOneChat(user.uid, user.names, item.iduser, item.names);
-                      }}>
-                      {item.names}
-                    </a>
+                    <a key='list-loadmore-edit'>{item.names}</a>
                   </Popover>
                 ) : null
               }

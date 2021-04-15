@@ -111,6 +111,8 @@ const ContactList = ({ eventId, agendarCita }) => {
                 />
                 <Col xs={24}>
                   <Button
+                    block
+                    size='large'
                     style={{ backgroundColor: '#363636', color: 'white' }}
                     onClick={() => agendarCita(contact._id)}>
                     {'Agendar cita'}
