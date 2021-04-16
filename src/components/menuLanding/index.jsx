@@ -16,7 +16,7 @@ class menuLanding extends Component {
           section: 'evento',
           icon: 'CalendarOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         agenda: {
           name: 'Agenda',
@@ -24,7 +24,7 @@ class menuLanding extends Component {
           section: 'agenda',
           icon: 'ReadOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         speakers: {
           name: 'Conferencistas',
@@ -32,7 +32,7 @@ class menuLanding extends Component {
           section: 'speakers',
           icon: 'AudioOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         tickets: {
           name: 'Boletería',
@@ -40,7 +40,7 @@ class menuLanding extends Component {
           section: 'tickets',
           icon: 'CreditCardOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         certs: {
           name: 'Certificados',
@@ -48,7 +48,7 @@ class menuLanding extends Component {
           section: 'certs',
           icon: 'FileDoneOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         documents: {
           name: 'Documentos',
@@ -56,7 +56,7 @@ class menuLanding extends Component {
           section: 'documents',
           icon: 'FolderOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         wall: {
           name: 'Muro',
@@ -64,7 +64,7 @@ class menuLanding extends Component {
           section: 'wall',
           icon: 'TeamOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         survey: {
           name: 'Encuestas',
@@ -72,7 +72,7 @@ class menuLanding extends Component {
           section: 'survey',
           icon: 'FileUnknownOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         faqs: {
           name: 'Preguntas Frecuentes',
@@ -80,7 +80,7 @@ class menuLanding extends Component {
           section: 'faqs',
           icon: 'QuestionOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         networking: {
           name: 'Networking',
@@ -88,7 +88,7 @@ class menuLanding extends Component {
           section: 'networking',
           icon: 'LaptopOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         my_section: {
           name: 'Seccion Personalizada',
@@ -96,7 +96,7 @@ class menuLanding extends Component {
           section: 'my_section',
           icon: 'EnterOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         companies: {
           name: 'Empresas',
@@ -104,7 +104,7 @@ class menuLanding extends Component {
           section: 'companies',
           icon: 'ApartmentOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         interviews: {
           name: 'Citas',
@@ -112,7 +112,7 @@ class menuLanding extends Component {
           section: 'interviews',
           icon: 'UserOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         trophies: {
           name: 'Trofeos',
@@ -120,7 +120,7 @@ class menuLanding extends Component {
           section: 'trophies',
           icon: 'TrophyOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         my_sesions: {
           name: 'Mis Actividades',
@@ -128,8 +128,9 @@ class menuLanding extends Component {
           section: 'my_sesions',
           icon: 'TeamOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
+
         informativeSection: {
           name: 'Seccion Informativa',
           position: '',
@@ -137,7 +138,7 @@ class menuLanding extends Component {
           icon: 'FileDoneOutlined',
           markup: '',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         informativeSection1: {
           name: 'Seccion Informativa Segunda',
@@ -146,7 +147,7 @@ class menuLanding extends Component {
           icon: 'FileDoneOutlined',
           markup: '',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         login: {
           name: 'Inicio de sesion',
@@ -154,25 +155,24 @@ class menuLanding extends Component {
           section: 'login',
           icon: 'LoginOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         partners: {
           name: 'Patrocinadores',
           section: 'partners',
           icon: 'DollarCircleOutlined',
           checked: false,
-          permissions: 'public'
-        }
+          permissions: 'public',
+        },
       },
       values: {},
       itemsMenu: {},
-      keySelect: Date.now()
+      keySelect: Date.now(),
     };
     this.submit = this.submit.bind(this);
   }
 
   async componentDidMount() {
-    console.log('Menu landing', this.props);
     const menuBase = this.state.menu;
     const menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}`);
 

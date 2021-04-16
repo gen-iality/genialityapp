@@ -23,6 +23,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
     return getDatesRange(event.date_start, event.date_end);
   }, [event.date_start, event.date_end]);
 
+  useEffect(() => {}, []);
   useEffect(() => {
     if (!event || !event._id) return;
 
@@ -60,7 +61,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Obteniendo las citas del usuario'
+            description: 'Obteniendo las citas del usuario',
           });
         })
         .finally(() => setLoading(false));
@@ -217,7 +218,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Error eliminando la cita'
+            description: 'Error eliminando la cita',
           });
         })
         .finally(() => setLoading(false));
@@ -277,7 +278,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                           content: '¿Desea cancelar/eliminar esta cita?',
                           okText: 'Si',
                           cancelText: 'No',
-                          onOk: deleteThisAgenda
+                          onOk: deleteThisAgenda,
                         });
                       }}>
                       {'Cancelar'}
