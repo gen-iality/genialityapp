@@ -25,7 +25,7 @@ const SinginTest = asyncComponent(() => import('../components/signintest'));
 const Tickets = asyncComponent(() => import('../components/tickets'));
 const socialZone = asyncComponent(() => import('../components/socialZone/socialZone'));
 const AppointmentAccept = asyncComponent(() => import('../components/networking/appointmentAccept'));
-
+const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
 class ContentContainer extends Component {
   componentDidMount() {
     this.props.history.index = 0;
@@ -42,9 +42,9 @@ class ContentContainer extends Component {
           <Route exact path='/meetupsfenalco' render={() => <Redirect to='/landing/5f0622f01ce76d5550058c32' />} />
 
           <Route exact path='/evento/tpgamers' render={() => <Redirect to='/landing/5f4e41d5eae9886d464c6bf4' />} />
+          <Route exact path='/' component={Home} />
 
           <WithFooter>
-            <Route exact path='/' component={Home} />
             <Route exact path='/page/:id' component={HomeProfile} />
             <PrivateRoute path='/my_events' component={Events} />
             <PrivateRoute path='/event/:event' component={Event} />
@@ -68,6 +68,8 @@ class ContentContainer extends Component {
               path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
               component={AppointmentAccept}
             />
+            <Route exact path='/notfound' component={NotFoundPage} />
+            <Redirect to='/notfound' />
           </WithFooter>
         </Switch>
       </main>
@@ -90,7 +92,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
         <Redirect
           to={{
             pathname: '/',
-            state: { from: props.location }
+            state: { from: props.location },
           }}
         />
       )
