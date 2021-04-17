@@ -108,7 +108,7 @@ let SocialZone = function(props) {
   );
 
   useEffect(() => {
-    console.log('social zone mount**********');
+    //console.log('social zone mount**********');
     const fetchData = async () => {
       const user = await getCurrentUser();
       setCurrentUser(user);
@@ -183,6 +183,7 @@ let SocialZone = function(props) {
           let localattendee = attendeeList[attendee.user?.uid] || {};
           list[attendee.user?.uid] = { ...localattendee, ...attendee };
         });
+
         setAttendeeList(list);
         //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
       });
@@ -258,11 +259,14 @@ let SocialZone = function(props) {
             </Row>
             <div className='asistente-list'>
               <AttendeList
+                loadDataUser={props.loadDataUser}
+                notificacion={props.notificacion}
+                sendFriendship={props.sendFriendship}
                 perfil={props.perfil}
                 section={props.section}
                 containNetWorking={props.containNetWorking}
                 busqueda={strAttende}
-                currentUser={currentUser}
+                currentUser={props.currentUser}
                 event_id={event_id}
                 currentChat={currentChat}
                 currentChatName={currentChatName}

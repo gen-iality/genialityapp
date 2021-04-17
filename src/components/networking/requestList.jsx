@@ -7,7 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import * as Cookie from 'js-cookie';
 import { Networking, UsersApi } from '../../helpers/request';
-import { getCurrentUser, getCurrentEventUser } from './services';
+import { getCurrentUser, getCurrentEventUser, getUserByEventUser } from './services';
+import { props } from 'ramda';
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
@@ -28,10 +29,10 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
               <List.Item
                 key={item._id}
                 actions={[
-                  <Button key='btn-aceptar' onClick={() => sendResponseToInvitation(item._id, true)}>
+                  <Button key='btn-aceptar' onClick={() => sendResponseToInvitation(item, true)}>
                     Aceptar
                   </Button>,
-                  <Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item._id, false)}>
+                  <Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item, false)}>
                     No Aceptar
                   </Button>,
                 ]}>
@@ -108,15 +109,19 @@ const InvitacionListSent = ({ list }) => {
   );
 };
 
-export default function RequestList({ eventId }) {
+export default function RequestList({ eventId, notification, currentUser, notify }) {
   const [requestListReceived, setRequestListReceived] = useState([]);
   const [requestListSent, setRequestListSent] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
 
+  useEffect(() => {
+    getInvitationsList();
+  }, [notify]);
+
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
     // Se consulta el id del usuario por el token
-
+    console.log('OBTENER INVITACIONES');
     getCurrentUser(Cookie.get('evius_token')).then(async (user) => {
       // Servicio que obtiene el eventUserId del usuario actual
       let eventUser = await getCurrentEventUser(eventId, user._id);
@@ -129,6 +134,8 @@ export default function RequestList({ eventId }) {
         if (data.length > 0) {
           const response = data.filter((item) => !item.response);
           insertNameRequested(response);
+        } else {
+          setRequestListReceived([]);
         }
       });
 
@@ -169,14 +176,24 @@ export default function RequestList({ eventId }) {
   };
 
   // Funcion para aceptar o rechazar una invitacion o solicitud
-  const sendResponseToInvitation = (requestId, state) => {
+  const sendResponseToInvitation = async (requestId, state) => {
+    console.log(requestId);
+    const resp = await getUserByEventUser(requestId.id_user_requesting, eventId);
+
     let data = { response: state ? 'accepted' : 'rejected' };
 
-    Networking.acceptOrDeclineInvitation(eventId, requestId, data)
-      .then((response) => {
-        getInvitationsList();
-
+    Networking.acceptOrDeclineInvitation(eventId, requestId._id, data)
+      .then(async (response) => {
         message.success('Respuesta enviada');
+        console.log(currentUser);
+        let notificationr = {
+          idReceive: currentUser._id,
+          idEmited: resp && resp.user._id,
+          state: '1',
+        };
+
+        notification(notificationr, currentUser._id);
+        await getInvitationsList();
       })
       .catch((err) => {
         console.error(err);

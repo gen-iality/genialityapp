@@ -28,9 +28,6 @@ const AttendeList = function(props) {
     let usersorderbystatus = [];
     let ordenadousers = [];
 
-    // console.log('SECTION=>', props.section);
-    // console.log(props.containNetWorking);
-
     Object.keys(props.attendeeList).map((key) => {
       Object.keys(props.attendeeListPresence).map((key2) => {
         if (key2 === key) {
@@ -42,7 +39,7 @@ const AttendeList = function(props) {
             status: props.attendeeListPresence[key2].state,
             email: props.attendeeList[key].properties.email,
           };
-          // console.log('si es igual', mihijo);
+
           usersorderbystatus.push(mihijo);
         }
       });

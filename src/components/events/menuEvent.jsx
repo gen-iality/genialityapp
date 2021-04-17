@@ -1,6 +1,6 @@
 import React from 'react';
 import WithLoading from './../shared/withLoading';
-import { Menu, Spin } from 'antd';
+import { Badge, Menu, Spin } from 'antd';
 import ScrollTo from 'react-scroll-into-view';
 
 //Se importan todos los iconos a  un Objeto para llamarlos dinámicamente
@@ -10,6 +10,7 @@ import * as Cookie from 'js-cookie';
 import { connect } from 'react-redux';
 
 import { gotoActivity } from '../../redux/stage/actions';
+import {} from '../../redux/notifyNetworking/actions';
 
 const stylesMenuItems = {
   height: '100%',
@@ -30,6 +31,7 @@ class MenuEvent extends Component {
       logged: false,
       email: false,
       section: 'evento',
+      totalnotifications: null,
       styleText: this.props.styleText ? this.props.styleText : '#22222',
     };
     this.menuDefault = {
@@ -136,6 +138,15 @@ class MenuEvent extends Component {
 
   async componentDidMount() {
     const isExistCookie = Cookie.get('evius_token');
+    console.log('properties');
+    console.log(this.props);
+    console.log(this.props.notifications);
+    if (this.props.notifications !== undefined && this.props.notifications !== null) {
+      this.setState({
+        totalnotifications: this.props.notifications,
+      });
+    }
+    console.log('DID MOUNT');
 
     if (isExistCookie) {
       this.setState({ isEnabledLogin: false });
@@ -170,9 +181,11 @@ class MenuEvent extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
+    console.log('DID UPDATE');
     if (this.props.user && !this.state.user) {
-      this.setState({ user: this.props.user });
+      this.setState({ user: this.props.user, notifications: this.props.notifications });
     }
+    this.state.notifications = this.props.notifications;
     if (prevState.section !== this.state.section) {
       this.handleInitialSection();
     }
@@ -218,11 +231,19 @@ class MenuEvent extends Component {
 
               return (
                 <Menu.Item
+                  style={{ position: 'relative' }}
                   key={this.state.itemsMenu[key].section}
                   className='MenuItem_event'
                   onClick={() => this.state.showSection(this.state.itemsMenu[key].section)}
                   /*style={{display:'grid', marginBottom:'12%', height:'63px', paddingLeft:'15px !important'}}*/
                 >
+                  {this.state.itemsMenu[key].name === 'Networking' && (
+                    <Badge
+                      style={{ position: 'absolute', top: 2, right: 5 }}
+                      count={this.props.totalNotifyNetworking.total}>
+                      <a className='head-example' />
+                    </Badge>
+                  )}
                   <IconoComponente
                     style={{ margin: '0 auto', fontSize: '22px', color: styleText }}
                     // style={
@@ -245,9 +266,9 @@ class MenuEvent extends Component {
                       className='menuEvent_section-text'
                       style={{ color: styleText }}>{` ${this.state.itemsMenu[key].name}`}</span>
                   ) : (
-                    <span
-                      className='menuEvent_section-text'
-                      style={{ color: styleText }}>{` ${this.state.itemsMenu[key].name}`}</span>
+                    <span className='menuEvent_section-text' style={{ color: styleText, position: 'relative' }}>
+                      {` ${this.state.itemsMenu[key].name}`}
+                    </span>
                   )}
                 </Menu.Item>
               );
@@ -258,8 +279,12 @@ class MenuEvent extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  totalNotifyNetworking: state.notificationsNetReducer.data,
+});
+
 const mapDispatchToProps = {
   gotoActivity,
 };
 
-export default connect(null, mapDispatchToProps)(WithLoading(MenuEvent));
+export default connect(mapStateToProps, mapDispatchToProps)(WithLoading(MenuEvent));

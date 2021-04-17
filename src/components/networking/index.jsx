@@ -46,10 +46,10 @@ class ListEventUser extends Component {
   }
 
   async componentDidMount() {
-    console.log('TOTAL NOTIFICATIONS');
-    console.log(this.props.notifications);
-    console.log(this.props.notifyAmis);
     await this.getInfoCurrentUser();
+    console.log('EVENTO ID---------');
+    console.log(this.props.event);
+    console.log(this.props.currentUser);
     this.loadData();
   }
 
@@ -252,9 +252,10 @@ class ListEventUser extends Component {
   async SendFriendship({ eventUserIdReceiver, userName }) {
     let { eventUserId, currentUserName } = this.state;
     let currentUser = Cookie.get('evius_token');
-
+    console.log(eventUserId);
+    console.log(eventUserIdReceiver);
     message.loading('Enviando solicitud');
-    if (currentUser) {
+    /*if (currentUser) {
       // Se valida si el usuario esta suscrito al evento
       if (eventUserId) {
         // Se usan los EventUserId
@@ -286,7 +287,7 @@ class ListEventUser extends Component {
       }
     } else {
       message.warning('Para enviar la solicitud es necesario iniciar sesión');
-    }
+    }*/
   }
 
   //Método que se ejecuta cuando se selecciona el tipo de usuario
@@ -749,10 +750,26 @@ class ListEventUser extends Component {
                 </div>
               }
               key='solicitudes'>
-              <RequestList eventId={this.props.event._id} />
+              <RequestList
+                notify={this.props.notifyAmis}
+                currentUser={this.props.currentUser}
+                notification={this.props.notification}
+                eventId={this.props.event._id}
+              />
             </TabPane>
 
-            <TabPane tab='Solicitudes de citas' key='solicitudes-de-citas'>
+            <TabPane
+              tab={
+                <div style={{ position: 'relative' }}>
+                  Solicitudes de citas{' '}
+                  {this.props.notifyAgenda && this.props.notifyAgenda.length > 0 && (
+                    <Badge
+                      style={{ position: 'absolute', top: '-21px', right: '-13px' }}
+                      count={this.props.notifyAgenda.length}></Badge>
+                  )}
+                </div>
+              }
+              key='solicitudes-de-citas'>
               {activeTab === 'solicitudes-de-citas' && (
                 <AppointmentRequests eventId={event._id} currentEventUserId={eventUserId} eventUsers={users} />
               )}

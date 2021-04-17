@@ -308,15 +308,32 @@ export const deleteAgenda = (eventId, agendaId) => {
   });
 };
 
-export const getUserByEmail = async (email) => {
+export const getUserByEmail = async (email, eventid) => {
+  console.log(eventid);
   try {
     const resp = await UsersApi.findByEmail(email);
-    console.log(resp[0]._id);
+    console.log('RESPUESTA FIND BY EMAIL');
+    console.log(resp[0]);
     const ru = await UsersApi.getProfile(resp[0]._id);
+    const user = await getUserEvent(email, eventid);
+    ru = { ...ru, userEvent: user._id };
     console.log(ru);
     return ru;
   } catch (error) {
-    const { status } = error.response;
     return null;
   }
+};
+
+export const getUserEvent = async (email, eventid) => {
+  const levu = await UsersApi.getAll(eventid);
+  const user = levu.data.filter((u) => u.user != null && u.user.email === email && u.event_id === eventid)[0];
+  return user;
+};
+
+export const getUserByEventUser = async (eventuser, eventid) => {
+  console.log(eventuser);
+  console.log(eventid);
+  const levu = await UsersApi.getAll(eventid);
+  const user = levu.data.filter((u) => u.user != null && u._id === eventuser && u.event_id === eventid)[0];
+  return user;
 };

@@ -7,6 +7,10 @@ import { prop } from 'ramda';
 const { Meta } = Card;
 
 const PopoverInfoUser = ({ item, props }) => {
+  useEffect(() => {
+    console.log('POPOVER INFO USER=>', props.currentUser);
+  }, []);
+
   return (
     <Skeleton loading={false} avatar active>
       <Card
@@ -39,7 +43,31 @@ const PopoverInfoUser = ({ item, props }) => {
           ),
  */
           props.containNetWorking && (
-            <Tooltip title='Enviar solicitud Contacto'>
+            <Tooltip
+              onClick={async () => {
+                console.log('ACA ITEM');
+                console.log(item);
+
+                var us = await props.loadDataUser(item.email);
+                console.log('USER PERFIL=>', us);
+                let notification = {
+                  idReceive: us._id,
+                  idEmited: props.currentUser._id,
+                  emailEmited: props.currentUser.email,
+                  message: 'Te ha enviado solicitud de amistad',
+                  name: 'notification.name',
+                  type: 'amistad',
+                  state: '0',
+                };
+                var sendResp = await props.sendFriendship({
+                  eventUserIdReceiver: us.userEvent,
+                  userName: props.currentUser.names || props.currentUser.email,
+                });
+
+                console.log('RESPUESTA SEND AMISTAD' + sendResp);
+                await props.notificacion(notification, props.currentUser._id);
+              }}
+              title='Enviar solicitud Contacto'>
               <UsergroupAddOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
             </Tooltip>
           ),

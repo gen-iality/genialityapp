@@ -6,12 +6,14 @@ import { connect } from 'react-redux';
 import * as eventActions from '../../redux/event/actions';
 import * as stageActions from '../../redux/stage/actions';
 import * as notificationsActions from '../../redux/notifications/actions';
+import * as notifyNetworking from '../../redux/notifyNetworking/actions';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row, Menu, Badge, notification, Space, Tooltip, List, Spin } from 'antd';
+import { Layout, Drawer, Button, Col, Row, Menu, Badge, notification, Space, Tooltip, List, Spin, message } from 'antd';
+import * as Cookie from 'js-cookie';
 
 import {
   MenuOutlined,
@@ -27,6 +29,7 @@ import {
   SearchOutlined,
   UsergroupAddOutlined,
   VideoCameraAddOutlined,
+  SmileOutlined,
 } from '@ant-design/icons';
 
 //custom
@@ -90,6 +93,7 @@ const { setEventData } = eventActions;
 const { gotoActivity, setMainStage } = stageActions;
 const { setNotification } = notificationsActions;
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
+const { setNotificationN } = notifyNetworking;
 
 const { Content, Sider } = Layout;
 Moment.locale('es');
@@ -175,6 +179,10 @@ class Landing extends Component {
       },
     };
     this.showLanding = this.showLanding.bind(this);
+    this.SendFriendship = this.SendFriendship.bind(this);
+    this.addNotification = this.addNotification.bind(this);
+    this.obtenerUserPerfil = this.obtenerUserPerfil.bind(this);
+    this.loadDataUser = this.loadDataUser.bind(this);
   }
 
   //METODO PARA OBTENER ENCUESTAS
@@ -296,6 +304,51 @@ class Landing extends Component {
     }
   };
 
+  async SendFriendship({ eventUserIdReceiver, userName }) {
+    console.log('Solicitud de amistad');
+    console.log(this.state.user.email);
+    let resp = await this.loadDataUser(this.state.user.email);
+    console.log(resp);
+    let eventUserId = resp.userEvent;
+    let currentUserName = this.state.user.names || this.state.user.email;
+    let currentUser = Cookie.get('evius_token');
+
+    message.loading('Enviando solicitud');
+    if (currentUser) {
+      // Se valida si el usuario esta suscrito al evento
+      if (eventUserId) {
+        // Se usan los EventUserId
+        const data = {
+          id_user_requested: eventUserId,
+          id_user_requesting: eventUserIdReceiver,
+          user_name_requested: currentUserName,
+          user_name_requesting: userName,
+          event_id: this.props.eventInfo._id,
+          state: 'send',
+        };
+
+        // Se ejecuta el servicio del api de evius
+        try {
+          await EventsApi.sendInvitation(this.props.eventInfo._id, data);
+          notification.open({
+            message: 'Solicitud enviada',
+            description:
+              'Le llegará un correo a la persona notificandole la solicitud, quién la aceptara o recharaza. Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.',
+            icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+            duration: 30,
+          });
+        } catch (err) {
+          let { data } = err.response;
+          message.warning(data.message);
+        }
+      } else {
+        message.warning('No es posible enviar solicitudes. No se encuentra suscrito al evento');
+      }
+    } else {
+      message.warning('Para enviar la solicitud es necesario iniciar sesión');
+    }
+  }
+
   setTotalNewMessages = (newMessages) => {
     this.setState({
       totalNewMessages: newMessages || 0,
@@ -352,9 +405,15 @@ class Landing extends Component {
   };
 
   loadDataUser = async (email) => {
-    const resp = await getUserByEmail(email);
+    const resp = await getUserByEmail(email, this.props.eventInfo._id);
+    console.log(resp);
     return resp;
   };
+
+  async obtenerUserPerfil(id) {
+    let userp = await getCurrentEventUser(this.props.eventInfo._id, id);
+    return userp;
+  }
 
   collapsePerfil = async (userPerfil) => {
     this.setState({
@@ -362,12 +421,14 @@ class Landing extends Component {
     });
     if (userPerfil != null) {
       console.log(userPerfil);
-      this.setState({ userPerfil });
+
       var data = await this.loadDataUser(userPerfil.email);
       console.log(data);
-      var userEid = await getCurrentEventUser(this.props.eventInfo._id, data._id);
+      this.setState({ userPerfil: data });
+      var userEid = this.obtenerUserPerfil(data._id);
       if (data) {
         var properties = await this.getProperties(userEid._id);
+        console.log('properties');
         console.log(properties);
       }
     } else {
@@ -435,6 +496,8 @@ class Landing extends Component {
   }
 
   mountSections = async () => {
+    //console.log('MOUNT SECTIONS NOTIFY');
+    //console.log(this.state.totalNotficationsN);
     let eventUser = null;
     let eventUsers = null;
     this.props.setNotification({
@@ -486,6 +549,7 @@ class Landing extends Component {
       show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false,
       eventUsers,
       data: user,
+      user: user,
       currentUser: user,
       namesUser: namesUser,
       loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false,
@@ -554,6 +618,7 @@ class Landing extends Component {
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: (
         <NetworkingForm
+          notification={this.addNotification}
           event={event}
           notifications={this.state.totalNotficationsN}
           notifyAgenda={this.state.notifyNetworkingAg}
@@ -697,15 +762,17 @@ class Landing extends Component {
     }
   }
 
-  addNotification(notification, iduserEmmited) {
+  async addNotification(notification, iduserEmmited) {
+    console.log('Notificación');
     if (notification.emailEmited != null) {
+      console.log('ENTRO ACA');
       firestore
         .collection('notificationUser')
-        .doc(this.state.user?._id)
+        .doc(notification.idReceive)
         .collection('events')
         .doc(this.state.event._id)
         .collection('notifications')
-        .doc(iduserEmmited)
+        .doc(notification.idEmited)
         .set({
           emailEmited: notification.emailEmited,
           message: notification.message,
@@ -749,6 +816,7 @@ class Landing extends Component {
 
     this.addNotification(notification, iduserEmmited);*/
     //LISTENER NOTIFICATIONS NETWORKING
+    //console.log('Networking');
     firestore
       .collection('notificationUser')
       .doc(this.state.user?._id)
@@ -773,11 +841,13 @@ class Landing extends Component {
           if (notification.type == 'agenda' && notification.state === '0') {
             notAg.push(doc.data());
             console.log(doc.data());
+            console.log('Not Agenda');
           }
           //Notificacion otra
           if (notification.type == 'amistad' && notification.state === '0') {
             notAm.push(doc.data());
             console.log(doc.data());
+            console.log('Not amistas');
           }
         });
         this.setState({
@@ -785,6 +855,7 @@ class Landing extends Component {
           notifyNetworkingAm: notAm,
           totalNotficationsN: contNotifications,
         });
+        this.props.setNotificationN({ total: contNotifications });
         this.mountSections();
         console.log('Usted tiene ' + contNotifications + ' notificaciones');
       });
@@ -1250,6 +1321,7 @@ class Landing extends Component {
                             }}>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                             <MenuEvent
+                              notifications={this.state.totalNotficationsN}
                               eventId={event._id}
                               user={currentUser}
                               itemsMenu={this.state.event.itemsMenu}
@@ -1306,7 +1378,7 @@ class Landing extends Component {
                                 {!this.state.propertiesUserPerfil && (
                                   <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>
                                 )}
-                                {this.state.propertiesUserPerfil &&
+                                {/*this.state.propertiesUserPerfil &&
                                   this.state.propertiesUserPerfil.map(
                                     (property, key) =>
                                       this.state.userPerfil[property.name] !== undefined &&
@@ -1320,7 +1392,23 @@ class Landing extends Component {
                                           }
                                         </div>
                                       )
-                                  )}
+                                        )*/}
+                                {this.state.propertiesUserPerfil && (
+                                  <List
+                                    bordered
+                                    dataSource={this.state.propertiesUserPerfil && this.state.propertiesUserPerfil}
+                                    renderItem={(item) =>
+                                      this.state.userPerfil[item.name] !== undefined && (
+                                        <List.Item>
+                                          <List.Item.Meta
+                                            title={item.label}
+                                            description={formatDataToString(this.state.userPerfil[item.name], item)}
+                                          />
+                                        </List.Item>
+                                      )
+                                    }
+                                  />
+                                )}
                               </Col>
                             </Row>
                           </Drawer>
@@ -1471,6 +1559,10 @@ class Landing extends Component {
                           maskClosable={true}
                           className='drawerMobile'>
                           <SocialZone
+                            loadDataUser={this.loadDataUser}
+                            obtenerPerfil={this.obtenerUserPerfil}
+                            notificacion={this.addNotification}
+                            sendFriendship={this.SendFriendship}
                             perfil={this.collapsePerfil}
                             currentUser={this.state.currentUser}
                             tcollapse={this.toggleCollapsed}
@@ -1480,6 +1572,7 @@ class Landing extends Component {
                             section={this.state.section}
                             containNetWorking={this.state.containNetWorking}
                             eventSurveys={this.state.eventSurveys}
+                            currentUser={this.state.currentUser}
                             generalTabs={this.state.generalTabs}
                             publishedSurveys={this.state.publishedSurveys}
                           />
@@ -1569,6 +1662,10 @@ class Landing extends Component {
                                   </Button>
 
                                   <SocialZone
+                                    loadDataUser={this.loadDataUser}
+                                    obtenerPerfil={this.obtenerUserPerfil}
+                                    notificacion={this.addNotification}
+                                    sendFriendship={this.SendFriendship}
                                     perfil={this.collapsePerfil}
                                     tcollapse={this.toggleCollapsed}
                                     optionselected={this.updateOption}
@@ -1619,6 +1716,7 @@ const mapDispatchToProps = {
   setSurveyVisible,
   setGeneralTabs,
   getGeneralTabs,
+  setNotificationN,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Landing));
