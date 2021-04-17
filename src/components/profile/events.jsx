@@ -25,16 +25,14 @@ class Events extends Component {
   }
 
   async componentDidMount() {
+    console.log('Events Mount', this.props);
     let userId = this.props.match.params.id;
     try {
       const categories = await CategoriesApi.getAll();
       const events = await EventsApi.mine();
       const user = await UsersApi.getProfile(userId, true);
       this.setState({ loading: false, user, events: events || [], categories, valid: false }, this.handleScroll);
-
-      console.log(events);
     } catch (e) {
-      console.log(e);
       this.setState({
         timeout: true,
         loading: false,
@@ -70,16 +68,15 @@ class Events extends Component {
                   <span className='has-text-grey-dark is-size-3'>Eventos</span>
                 </h2>
                 <Row gutter={[16, 24]}>
-                  {events.map((event, key) => {
+                  {events.map((event) => {
                     return (
-                      <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+                      <Col key={event._id} xs={24} sm={12} md={12} lg={8} xl={8}>
                         <EventCard
                           event={event}
-                          key={event._id}
                           action={''}
                           bordered={false}
                           right={[
-                            <div className='edit'>
+                            <div className='edit' key={'event-' + event._id}>
                               <Link className='button-edit has-text-grey-light' to={`/event/${event._id}`}>
                                 <Space>
                                   <span>

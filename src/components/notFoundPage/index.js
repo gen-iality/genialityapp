@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Result, Button } from 'antd';
 
-export default function NotFoundPage() {
+function NotFoundPage() {
   return (
     <Result
       status='404'
@@ -16,3 +16,5 @@ export default function NotFoundPage() {
     />
   );
 }
+
+export default withRouter(NotFoundPage);

@@ -1,38 +1,42 @@
-import React from "react";
-import { FormattedMessage } from "react-intl";
-import WithLoading from "./withLoading";
-import { Menu, Dropdown, Avatar, Button, Col, Row } from "antd";
-import { LogoutOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
+import WithLoading from './withLoading';
+import { Menu, Dropdown, Avatar, Button, Col, Row } from 'antd';
+import { LogoutOutlined } from '@ant-design/icons';
+import { NavLink, Link, withRouter } from 'react-router-dom';
+import { BaseUrl } from '../../helpers/constants';
 const MenuStyle = {
   flex: 1,
-  textAlign: "right"
-}
+  textAlign: 'right',
+};
 
-let userStatusAndMenu = props => {
+let userStatusAndMenu = (props) => {
   let user = props.user;
   let photo = props.photo;
   let name = props.name;
   let logout = props.logout;
   let eventId = props.eventId;
 
+  function goTo(path) {
+    props.history.push(path);
+  }
+  console.log('user status', props);
   let menu = (
     <Menu>
       <Menu.Item>
-        <Link to={`/profile/${eventId}`}>
-          <FormattedMessage id="header.profile" defaultMessage="Perfil" />
-        </Link>
+        <NavLink exact to={`/profile/${eventId}`}>
+          <FormattedMessage id='header.profile' defaultMessage='Perfil' />
+        </NavLink>
       </Menu.Item>
       <Menu.Item>
         <Link to={`/tickets/${eventId}`}>
-          <FormattedMessage id="header.my_tickets" defaultMessage="Mis Entradas / Ticket" />
+          <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to={`/eventEdit/${eventId}#events`}>
-          <FormattedMessage id="header.my_events" defaultMessage="Administrar Mis Eventos" />
-        </Link>
+        <NavLink exact to={`/eventEdit/${eventId}#events`}>
+          <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
+        </NavLink>
       </Menu.Item>
       {/* <Menu.Item>
         <Link to={`/purchase/${eventId}`}>
@@ -40,9 +44,9 @@ let userStatusAndMenu = props => {
         </Link>
       </Menu.Item> */}
       <Menu.Item>
-        <Link to={"/create-event"}>
-          <Button type="primary">
-            <FormattedMessage id="header.create_event" defaultMessage="Crear Evento" />
+        <Link to={'/create-event'}>
+          <Button type='primary'>
+            <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
           </Button>
         </Link>
       </Menu.Item>
@@ -50,7 +54,7 @@ let userStatusAndMenu = props => {
       <Menu.Item>
         <a onClick={logout}>
           <LogoutOutlined /> &nbsp;&nbsp;
-          <FormattedMessage id="header.logout" defaultMessage="Log Out" />
+          <FormattedMessage id='header.logout' defaultMessage='Log Out' />
         </a>
       </Menu.Item>
     </Menu>
@@ -68,9 +72,16 @@ let userStatusAndMenu = props => {
     <Row style={MenuStyle}>
       <Col style={MenuStyle}>
         <Dropdown overlay={menu}>
-          <a onClick={e => e.preventDefault()}>
-            {photo ? <Avatar src={photo} /> : <Avatar className="avatar_menu-user">{name && name.charAt(0).toUpperCase()}{name && name.substring(name.indexOf(" ") + 1, name.indexOf(" ") + 2)}</Avatar>}
-            <span className="name_menu-user">&nbsp;&nbsp;{name}&nbsp;&nbsp;</span>
+          <a onClick={(e) => e.preventDefault()}>
+            {photo ? (
+              <Avatar src={photo} />
+            ) : (
+              <Avatar className='avatar_menu-user'>
+                {name && name.charAt(0).toUpperCase()}
+                {name && name.substring(name.indexOf(' ') + 1, name.indexOf(' ') + 2)}
+              </Avatar>
+            )}
+            <span className='name_menu-user'>&nbsp;&nbsp;{name}&nbsp;&nbsp;</span>
           </a>
         </Dropdown>
       </Col>
@@ -81,4 +92,4 @@ let userStatusAndMenu = props => {
   return <React.Fragment>{user ? loggedInuser : loggedOutUser}</React.Fragment>;
 };
 
-export default WithLoading(userStatusAndMenu);
+export default WithLoading(withRouter(userStatusAndMenu));
