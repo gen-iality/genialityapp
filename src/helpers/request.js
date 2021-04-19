@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ApiUrl, ApiDEVUrl, ApiEviusZoomSurvey } from './constants';
+
 import * as Cookie from 'js-cookie';
 import { handleSelect } from './utils';
 import { firestore } from './firebase';
@@ -115,7 +116,8 @@ export const getCurrentUser = () => {
   let token = Cookie.get('evius_token');
 
   // eslint-disable-next-line no-unused-vars
-  return new Promise(async (resolve, reject) => {
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async (resolve) => {
     if (currentUser) {
       resolve(currentUser);
       return;

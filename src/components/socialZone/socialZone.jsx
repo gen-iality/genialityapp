@@ -1,5 +1,5 @@
 import { withRouter } from 'react-router-dom';
-import { firestore, fireRealtime } from '../../helpers/firebase';
+import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Tabs, Row, Badge, Col, notification, Button } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone, SearchOutlined } from '@ant-design/icons';
@@ -161,8 +161,6 @@ let SocialZone = function(props) {
             });
         }
 
-        console.timeLog('setTotalNewMessages ZONA');
-        // setTotalNewMessages(totalNewMessages);
         setavailableChats(list);
       });
   }, [event_id, currentUser]);

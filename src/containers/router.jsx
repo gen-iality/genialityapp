@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import { connect } from "react-redux";
-import { fetchCategories } from "../redux/categories/actions";
-import { fetchTypes } from "../redux/types/actions";
-import Header from "./header";
-import ContentContainer from "./content";
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { fetchCategories } from '../redux/categories/actions';
+import { fetchTypes } from '../redux/types/actions';
+import Header from './header';
+import ContentContainer from './content';
+import NotFoundPage from '../components/notFoundPage';
 
-import { Layout } from "antd";
+import { Layout } from 'antd';
 import { userContext } from './userContext';
 //const { Header, Footer, Sider, Content } = Layout;
 
@@ -23,23 +24,21 @@ class MainRouter extends Component {
 
   render() {
     return (
-
-      <Router>
+      <Router basename='/'>
         <Layout>
-          <userContext.Consumer>{(user) => {
-            return (
-              <>
-                <Header user={user} />
-                <ContentContainer />
-                
-              </>
-            )
-          }
-          }
+          <userContext.Consumer>
+            {(user) => {
+              return (
+                <>
+                  <Header user={user} />
+                  <ContentContainer />
+                </>
+              );
+            }}
           </userContext.Consumer>
         </Layout>
-      </Router>);
-
+      </Router>
+    );
   }
 }
 

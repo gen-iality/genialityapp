@@ -140,7 +140,6 @@ class ListEventUser extends Component {
 
       // Fenalco Meetups
       else if (event._id === '5f0622f01ce76d5550058c32') {
-        console.log('Fenalco Meetups: sugeridos');
         let prospectos = eventUserList.filter(
           (asistente) =>
             (asistente.properties.ingresasameetupspara === 'Hacer negocios' ||
@@ -194,7 +193,6 @@ class ListEventUser extends Component {
         } else {
           matches = prospectos;
         }
-        console.log('#Sugeridos', matches.length);
       }
     }
 

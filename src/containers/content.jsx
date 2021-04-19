@@ -5,6 +5,7 @@ import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../helpers/constants';
 import asyncComponent from './AsyncComponent';
 import WithFooter from '../components/withFooter';
+// import NotFoundPage from '../components/notFoundPage';
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
 const HomeProfile = asyncComponent(() => import('../components/home/profile'));
@@ -25,7 +26,7 @@ const SinginTest = asyncComponent(() => import('../components/signintest'));
 const Tickets = asyncComponent(() => import('../components/tickets'));
 const socialZone = asyncComponent(() => import('../components/socialZone/socialZone'));
 const AppointmentAccept = asyncComponent(() => import('../components/networking/appointmentAccept'));
-
+const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
 class ContentContainer extends Component {
   componentDidMount() {
     this.props.history.index = 0;
@@ -34,18 +35,18 @@ class ContentContainer extends Component {
     return (
       <main className='main'>
         <Switch>
-          <Route exact path='/landing/:event' component={Landing} />
-          <Route exact path='/social/:event_id' component={socialZone} />
+          <Route path='/landing/:event' component={Landing} />
+          <Route path='/social/:event_id' component={socialZone} />
           {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
-          <Route exact path='/mentoriamastercard' render={() => <Redirect to='/landing/5ef49fd9c6c89039a14c6412' />} />
+          <Route path='/mentoriamastercard' render={() => <Redirect to='/landing/5ef49fd9c6c89039a14c6412' />} />
 
-          <Route exact path='/meetupsfenalco' render={() => <Redirect to='/landing/5f0622f01ce76d5550058c32' />} />
+          <Route path='/meetupsfenalco' render={() => <Redirect to='/landing/5f0622f01ce76d5550058c32' />} />
 
-          <Route exact path='/evento/tpgamers' render={() => <Redirect to='/landing/5f4e41d5eae9886d464c6bf4' />} />
+          <Route path='/evento/tpgamers' render={() => <Redirect to='/landing/5f4e41d5eae9886d464c6bf4' />} />
 
           <WithFooter>
-            <Route exact path='/' component={Home} />
-            <Route exact path='/page/:id' component={HomeProfile} />
+            <Route path='/notfound' component={NotFoundPage} />
+            <Route path='/page/:id' component={HomeProfile} />
             <PrivateRoute path='/my_events' component={Events} />
             <PrivateRoute path='/event/:event' component={Event} />
             <PrivateRoute path='/create-event' component={NewEvent} />
@@ -54,20 +55,20 @@ class ContentContainer extends Component {
             <PrivateRoute path='/purchase/:id' component={Purchase} />
             <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
             <PrivateRoute path='/tickets/:id' component={Tickets} />
-            <Route exact path='/terms' component={Terms} />
-            <Route exact path='/privacy' component={Privacy} />
-            <Route exact path='/policies' component={Policies} />
-            <Route exact path='/about' component={About} />
-            <Route exact path='/faqs' component={Faqs} />
-            <Route exact path='/singintest' component={SinginTest} />
-            <Route exact path='/api/generatorQr/:id' component={QRedirect} />
-            <Route exact path='/transition/:event' component={Transition} />
+            <Route path='/terms' component={Terms} />
+            <Route path='/privacy' component={Privacy} />
+            <Route path='/policies' component={Policies} />
+            <Route path='/about' component={About} />
+            <Route path='/faqs' component={Faqs} />
+            <Route path='/singintest' component={SinginTest} />
+            <Route path='/api/generatorQr/:id' component={QRedirect} />
+            <Route path='/transition/:event' component={Transition} />
 
             <Route
-              exact
               path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
               component={AppointmentAccept}
             />
+            <Route exact path='/' component={Home} />
           </WithFooter>
         </Switch>
       </main>
@@ -90,7 +91,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
         <Redirect
           to={{
             pathname: '/',
-            state: { from: props.location }
+            state: { from: props.location },
           }}
         />
       )

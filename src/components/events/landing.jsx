@@ -1,4 +1,3 @@
-//external
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
@@ -216,7 +215,6 @@ class Landing extends Component {
     const { currentActivity } = this.props;
 
     if (currentActivity !== null) {
-      console.log('publishedSurveysByActivity activity', currentActivity);
       let publishedSurveys = [];
       let surveys = this.state.eventSurveys || [];
 
@@ -511,7 +509,16 @@ class Landing extends Component {
     this.setState({ user, currentUser: user });
 
     /* Trae la información del evento con la instancia pública*/
-    const event = await EventsApi.landingEvent(id);
+    let event = {};
+
+    try {
+      event = await EventsApi.landingEvent(id);
+    } catch (err) {
+      console.error('Landing error:', err);
+    }
+
+    //Detenemos el hilo de ejecución si el id no retorna un evento de la base de datos
+    if (!Object.keys(event).length) return;
 
     //definiendo un google tag por evento si viene sino utiliza el por defecto
     let googleanlyticsid = event['googleanlyticsid'];
@@ -749,7 +756,6 @@ class Landing extends Component {
       prevProps.currentSurvey !== this.props.currentSurvey ||
       prevState.publishedSurveys !== this.state.publishedSurveys
     ) {
-      console.log('SURVEYS2', this.props.currentSurvey, this.state.publishedSurveys);
       if (this.props.currentSurvey) {
         //si la encuesta que estoy viendo no esta en el listado de publicadas es que ya se despublico y toca quitarla
         let stillActive = this.state.publishedSurveys.filter((survey) => survey._id === this.props.currentSurvey._id);
@@ -798,6 +804,11 @@ class Landing extends Component {
   }
   async componentDidMount() {
     await this.mountSections();
+
+    if (this.state.event === null) {
+      this.props.history.push('/notfound');
+      return;
+    }
     const infoAgenda = await AgendaApi.byEvent(this.state.event._id);
     await this.listenSurveysData(this.state.event._id);
 
@@ -866,6 +877,7 @@ class Landing extends Component {
       .doc(this.state.event._id)
       .collection('activities')
       .onSnapshot((querySnapshot) => {
+        if (querySnapshot.empty) return;
         let change = querySnapshot.docChanges()[0];
         if (
           notify &&
@@ -921,8 +933,6 @@ class Landing extends Component {
         });
 
         let change = querySnapshot.docChanges()[0];
-        //console.log('CHANGE');
-        //console.log(change.doc.data());
         if (change) {
           nombreactivouser !== change.doc.data().remitente &&
             change.doc.data().remitente !== null &&
@@ -940,7 +950,6 @@ class Landing extends Component {
     let $query = firestore.collection('surveys');
 
     //Le agregamos el filtro por evento
-    //console.log("EVENT=>"+this.state.event._id)
     if (this.state.event && this.state.event._id) {
       $query = $query.where('eventId', '==', this.state.event._id);
     }
@@ -1128,8 +1137,6 @@ class Landing extends Component {
   };
 
   openMessage = () => {
-    const key = `open${Date.now()}`;
-
     notification.open({
       description: `${this.props.viewNotification.message}`,
       icon:
@@ -1585,7 +1592,7 @@ class Landing extends Component {
                           this.state.generalTabs.privateChat) && (
                           <Sider
                             className='collapse-chatEvent'
-                            style={{ backgroundColor: event.styles.toolbarMenuSocial }}
+                            style={{ backgroundColor: event.styles?.toolbarMenuSocial }}
                             trigger={null}
                             theme='light'
                             collapsible
@@ -1602,7 +1609,7 @@ class Landing extends Component {
                                     </Button>
                                   </div> */}
 
-                                  <Menu theme='light' style={{ backgroundColor: event.styles.toolbarMenuSocial }}>
+                                  <Menu theme='light' style={{ backgroundColor: event.styles?.toolbarMenuSocial }}>
                                     {(this.state.generalTabs.publicChat || this.state.generalTabs.privateChat) && (
                                       <Menu.Item
                                         key='1'

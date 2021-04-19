@@ -26,7 +26,6 @@ let attendee_states = {
   STATE_BOOKED: '5b859ed02039276ce2b996f0', //"BOOKED";
 };
 
-let changeStatus = false;
 const { setNotification } = notificationsActions;
 
 class Agenda extends Component {
