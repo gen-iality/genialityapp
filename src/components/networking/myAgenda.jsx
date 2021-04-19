@@ -18,12 +18,25 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [acceptedAgendas, setAcceptedAgendas] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
+  const [baseUrlMeetingRoom, setBaseUrlMeetingRoom] = useState('');
 
   const eventDatesRange = useMemo(() => {
     return getDatesRange(event.date_start, event.date_end);
   }, [event.date_start, event.date_end]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const platform = 'dolby';
+
+    switch (platform) {
+      case 'twilio':
+        setBaseUrlMeetingRoom('https://video-app-1496-dev.twil.io');
+        break;
+      case 'dolby':
+        setBaseUrlMeetingRoom('https://eviusmeets.netlify.app/');
+        break;
+    }
+  }, []);
+
   useEffect(() => {
     if (!event || !event._id) return;
 
@@ -79,6 +92,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 
   if (currentRoom) {
     let userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
+    let email = eventUser && eventUser.properties ? eventUser.properties.email : '';
     //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=8816111496
     //console.log("params",eventUser,currentRoom );
 
@@ -99,13 +113,9 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
               <iframe
                 style={{ border: '2px solid blue' }}
                 src={
-                  'https://video-app-1496-dev.twil.io?UserName=' +
-                  userName +
-                  '&URLRoomName=' +
-                  currentRoom +
-                  '&passcode=3701051496'
+                  `${baseUrlMeetingRoom}` + '?username=' + userName + '&email=' + email + '&meeting_id=' + currentRoom
                 }
-                allow='autoplay;fullscreen; camera *;microphone *'
+                allow='autoplay;fullscreen; camera *;microphone *' //eviusmeets.netlify.app/?username=${names}&email=${email}
                 allowusermedia
                 allowFullScreen
                 title='video'
