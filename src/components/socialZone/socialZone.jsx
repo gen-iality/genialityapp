@@ -53,7 +53,7 @@ let SocialZone = function(props) {
   let tab = props.tab;
 
   let setCurrentChat = (id, chatname) => {
-    console.log('CURRENT CHAT');
+    // console.log('CURRENT CHAT');
     setcurrentTab('1'); //chats tab
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);

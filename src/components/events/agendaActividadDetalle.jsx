@@ -365,6 +365,7 @@ let AgendaActividadDetalle = (props) => {
               lg={{ order: 1, span: 2 }}
               xl={{ order: 1, span: 2 }}
               style={{ padding: '4px' }}>
+              {console.log('meetingState', meetingState, platform)}
               <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
                 {meetingState === 'open_meeting_room' || stateSpace ? (
                   <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
@@ -511,20 +512,20 @@ let AgendaActividadDetalle = (props) => {
                       </Card>
                     ) : (
                       <>
-                        {platform === 'zoomExterno' ? (
-                          openZoomExterno()
-                        ) : (props.currentUser && !props.event.allow_register) || (props.event.allow_register)&&  (
-                          <>
-                            <iframe
-                              src={getMeetingPath(platform)}
-                              frameBorder='0'
-                              allow='autoplay; fullscreen; camera *;microphone *'
-                              allowFullScreen
-                              allowusermedia
-                              style={videoStyles}></iframe>
-                            <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
-                          </>
-                        )}
+                        {platform === 'zoomExterno'
+                          ? openZoomExterno()
+                          : ((props.currentUser && !props.event.allow_register) || props.event.allow_register) && (
+                              <>
+                                <iframe
+                                  src={getMeetingPath(platform)}
+                                  frameBorder='0'
+                                  allow='autoplay; fullscreen; camera *;microphone *'
+                                  allowFullScreen
+                                  allowusermedia
+                                  style={videoStyles}></iframe>
+                                <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
+                              </>
+                            )}
                       </>
                     )}
                   </>
