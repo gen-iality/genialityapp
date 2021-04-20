@@ -62,12 +62,17 @@ const ChatList = (props) => {
 
   useEffect(() => {
     console.log(userName);
+    console.log(props.totalNewMessages);
+    console.log(props.datamsjlast);
     props.datamsjlast &&
       props.datamsjlast.remitente !== undefined &&
       props.datamsjlast.remitente !== null &&
       props.datamsjlast.remitente !== userName &&
       props.totalNewMessages > 0 &&
       settotalmsjpriv(props.totalNewMessages);
+
+    //settotalmsjpriv(props.totalNewMessages);
+    console.log(totalmsjpriv);
   }, [props.datamsjlast, props.totalNewMessages]);
 
   let [currentab, setcurrentab] = useState(props.chattab);
@@ -119,6 +124,9 @@ const ChatList = (props) => {
       </Form>
     );
 
+  console.log('CHAT AVAILABLE');
+  console.log(props.availableChats);
+
   return (
     <Tabs activeKey={currentab} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
@@ -145,7 +153,7 @@ const ChatList = (props) => {
         <TabPane
           tab={
             <>
-              <Badge size='small' count={totalmsjpriv}>
+              <Badge size='small' count={props.totalNewMessages}>
                 Privados{props.currentChat ? ' (ver todos)' : ''}
               </Badge>
             </>
@@ -169,9 +177,11 @@ const ChatList = (props) => {
                         props.setTotalNewMessages(0);
                       }}>
                       <Tooltip title='Chatear'>
-                        <Badge count={totalmsjpriv}>
-                          <MessageTwoTone style={{ fontSize: '20px' }} />
-                        </Badge>
+                        {item.newMessages && item.newMessages.length > 0 && (
+                          <Badge count={item.newMessages.length}>
+                            <MessageTwoTone style={{ fontSize: '20px' }} />
+                          </Badge>
+                        )}
                       </Tooltip>
                     </a>,
                   ]}>

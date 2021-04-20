@@ -119,17 +119,23 @@ let SocialZone = function(props) {
 
       props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
     };
+    setTotalNewMessages(props.totalMessages);
     fetchData();
   }, []);
 
   //Cargar la lista de chats de una persona
   let nombreactivouser = props.currentUser?.names;
   useEffect(() => {
+    console.log('USE_EFFECT');
+    console.log(currentUser);
     if (!event_id || !currentUser) return;
-
+    console.log('USE_EFFECT');
+    console.log(currentUser.uid);
     firestore
       .collection('eventchats/' + event_id + '/userchats/' + currentUser.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
+        console.log('SNAPSHOT-------------');
+        console.log(currentUser.uid);
         let list = [];
         let data;
         let newmsj = 0;
@@ -143,13 +149,34 @@ let SocialZone = function(props) {
 
         let change = querySnapshot.docChanges()[0];
         setdatamsjlast(change?.doc.data());
-        //console.log('CHANGE');
-        //console.log(change.doc.data());
+        console.log('CHANGE');
+        console.log(change.doc.data().remitente);
+        console.log(userName);
+        let userNameFirebase = null;
+        if (
+          (change.doc.data().remitente &&
+            change.doc
+              .data()
+              .remitente.toLowerCase()
+              .indexOf('(admin)') > -1) ||
+          change.doc
+            .data()
+            .remitente.toLowerCase()
+            .indexOf('(casa)')
+        ) {
+          userNameFirebase = change.doc.data().remitente.replace('(admin)', '');
+          userNameFirebase = change.doc.data().remitente.replace('(casa)', '');
+        }
+        console.log('USERNAME CHANGE');
+        console.log(userName);
+
         if (change) {
-          userName !== change.doc.data().remitente &&
+          if (
+            userName !== userNameFirebase &&
             change.doc.data().remitente !== null &&
             change.doc.data().remitente !== undefined &&
-            newmsj > 0 &&
+            newmsj > 0
+          ) {
             notification.open({
               description: `Nuevo mensaje de ${change.doc.data().remitente}`,
               icon: <MessageTwoTone />,
@@ -158,14 +185,18 @@ let SocialZone = function(props) {
 
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
-                setTotalNewMessages(newmsj);
               },
             });
+
+            console.log('NUEVOS MSJ');
+            console.log(newmsj);
+            newmsj > 0 && setTotalNewMessages(newmsj);
+          }
         }
 
         setavailableChats(list);
       });
-  }, [event_id, currentUser]);
+  }, [event_id, currentUser, props.collapse]);
 
   useEffect(() => {
     if (!event_id) return;
@@ -188,6 +219,12 @@ let SocialZone = function(props) {
         //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
       });
   }, [event_id]);
+
+  useEffect(() => {
+    if (!props.totalMessages) return;
+    console.log('NEW MESSAGES');
+    setTotalNewMessages(props.totalMessages);
+  }, [props.totalMessages]);
 
   return (
     <Tabs
