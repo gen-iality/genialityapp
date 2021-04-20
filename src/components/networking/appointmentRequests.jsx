@@ -59,6 +59,7 @@ function AppointmentRequests({ eventId, currentEventUserId, eventUsers, notifica
 
       getPendingAgendasSent(eventId, currentEventUserId)
         .then((agendas) => {
+          console.log('AGENDAS--', eventId, currentEventUserId, agendas, eventUsers);
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             const pendingAgendas = map((agenda) => {
               const ownerEventUser = find(propEq('_id', agenda.attendees[1]), eventUsers);

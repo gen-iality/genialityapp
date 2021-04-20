@@ -1267,7 +1267,7 @@ class Landing extends Component {
         <AppointmentModal
           notificacion={this.addNotification}
           event={this.props.eventInfo}
-          currentEventUserId={this.state.currentUser && this.state.currentUser._id}
+          currentEventUserId={this.state.eventUser && this.state.eventUser._id}
           targetEventUserId={this.state.eventUserIdToMakeAppointment}
           targetEventUser={this.state.eventUserToMakeAppointment}
           closeModal={this.closeAppointmentModal}
