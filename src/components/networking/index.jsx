@@ -42,7 +42,7 @@ class ListEventUser extends Component {
       asistantData: [],
       matches: [],
       filterSector: null,
-      typeAssistant: null
+      typeAssistant: null,
     };
   }
 
@@ -205,7 +205,7 @@ class ListEventUser extends Component {
         loading: false,
         clearSearch: !prevState.clearSearch,
         asistantData,
-        matches
+        matches,
       };
     });
   };
@@ -279,7 +279,7 @@ class ListEventUser extends Component {
       eventUserIdToMakeAppointment,
       eventUserToMakeAppointment,
       activeTab,
-      matches
+      matches,
     } = this.state;
 
     return (
@@ -342,7 +342,7 @@ class ListEventUser extends Component {
                                     onClick={() => {
                                       this.SendFriendship({
                                         eventUserIdReceiver: user._id,
-                                        userName: user.properties.names || user.properties.email
+                                        userName: user.properties.names || user.properties.email,
                                       });
                                     }}></a>
                                 }
@@ -393,7 +393,7 @@ class ListEventUser extends Component {
                                               onClick={() => {
                                                 this.setState({
                                                   eventUserIdToMakeAppointment: user._id,
-                                                  eventUserToMakeAppointment: user
+                                                  eventUserToMakeAppointment: user,
                                                 });
                                               }}>
                                               {'Agendar cita'}
@@ -402,7 +402,7 @@ class ListEventUser extends Component {
                                         )}
                                       </Row>
                                       <br />
-                                    </div>
+                                    </div>,
                                   ]}
                                 />
                               </Card>
@@ -661,20 +661,20 @@ class ListEventUser extends Component {
                                           onClick={async () => {
                                             var sendResp = await this.props.sendFriendship({
                                               eventUserIdReceiver: users._id,
-                                              userName: users.properties.names || users.properties.email
+                                              userName: users.properties.names || users.properties.email,
                                             });
 
                                             var us = await this.props.loadDataUser(users.properties.email);
 
                                             if (sendResp._id) {
                                               let notificationU = {
-                                                idReceive: us._id,
+                                                idReceive: us ? us._id : users.account_id,
                                                 idEmited: sendResp._id,
                                                 emailEmited: this.props.currentUser.email,
                                                 message: 'Te ha enviado solicitud de amistad',
                                                 name: 'notification.name',
                                                 type: 'amistad',
-                                                state: '0'
+                                                state: '0',
                                               };
                                               await this.props.notification(notificationU, this.props.currentUser._id);
                                             }
@@ -685,7 +685,7 @@ class ListEventUser extends Component {
                                     )}
                                   </Row>
                                   <br />
-                                </div>
+                                </div>,
                               ]}
                             />
                           </Card>
