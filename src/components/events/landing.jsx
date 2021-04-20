@@ -173,6 +173,7 @@ class Landing extends Component {
       totalNotficationsN: 0,
       //modal Agenda
       eventUserIdToMakeAppointment: null,
+      eventUserToMakeAppointment: null,
       // Tabs generales
       generalTabs: {
         publicChat: true,
@@ -237,8 +238,9 @@ class Landing extends Component {
     }
   };
 
-  AgendarCita = (id) => {
-    this.setState({ eventUserIdToMakeAppointment: id });
+  AgendarCita = (id, targetEventUser) => {
+    console.log('targetEventUser', targetEventUser);
+    this.setState({ eventUserIdToMakeAppointment: id, eventUserToMakeAppointment: targetEventUser });
   };
 
   openNotificationWithIcon = (type) => {
@@ -1212,7 +1214,7 @@ class Landing extends Component {
   };
   //Cerrar modal agenda
   closeAppointmentModal = () => {
-    this.setState({ eventUserIdToMakeAppointment: '' });
+    this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
   };
 
   zoomExternoHandleOpen = (activity, eventUser) => {
@@ -1267,6 +1269,7 @@ class Landing extends Component {
           event={this.props.eventInfo}
           currentEventUserId={this.state.currentUser && this.state.currentUser._id}
           targetEventUserId={this.state.eventUserIdToMakeAppointment}
+          targetEventUser={this.state.eventUserToMakeAppointment}
           closeModal={this.closeAppointmentModal}
         />
         {this.props.viewNotification.message != null && this.openMessage()}

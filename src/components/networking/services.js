@@ -51,7 +51,7 @@ export const userRequest = {
       console.error(error);
     }
     return docs;
-  },
+  }
 };
 
 export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
@@ -68,7 +68,7 @@ export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
         result.docs.forEach((doc) => {
           data.push({
             id: doc.id,
-            ...doc.data(),
+            ...doc.data()
           });
         });
 
@@ -78,7 +78,16 @@ export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
   });
 };
 
-export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEventUserId, timetableItem, message }) => {
+export const createAgendaToEventUser = ({
+  eventId,
+  currentEventUserId,
+  targetEventUserId,
+  targetEventUser,
+  timetableItem,
+  message,
+  name,
+  email
+}) => {
   return new Promise(async (resolve, reject) => {
     try {
       const existingAgendas = [];
@@ -95,7 +104,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
       existingAgendaResult.docs.forEach((doc) => {
         existingAgendas.push({
           id: doc.id,
-          ...doc.data(),
+          ...doc.data()
         });
       });
 
@@ -107,14 +116,16 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
           .doc(eventId)
           .collection('agendas')
           .add({
-            name: '',
+            name: targetEventUser ? targetEventUser.properties.names : '',
+            email: targetEventUser ? targetEventUser.properties.email : '',
+            nuevapropiedad: 'asdfa',
             attendees: [currentEventUserId, targetEventUserId],
             owner_id: currentEventUserId,
             request_status: 'pending',
             type: 'meeting',
             timestamp_start: timetableItem.timestamp_start,
             timestamp_end: timetableItem.timestamp_end,
-            message,
+            message
           });
         // enviamos notificaciones por correo
         let data = {
@@ -125,7 +136,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
           event_id: eventId,
           state: 'send',
           request_type: 'meeting',
-          start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString(),
+          start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString()
         };
 
         EventsApi.sendMeetingRequest(eventId, data);
@@ -139,6 +150,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
 };
 
 export const getPendingAgendasFromEventUser = (eventId, currentEventUserId) => {
+  console.log('currentEventUserId', currentEventUserId);
   return new Promise((resolve, reject) => {
     firestore
       .collection('event_agendas')
@@ -238,7 +250,7 @@ export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newSta
       acceptedAgendasAtSameTimeResult.docs.forEach((doc) => {
         const newDataItem = {
           id: doc.id,
-          ...doc.data(),
+          ...doc.data()
         };
 
         if (newDataItem.owner_id !== currentEventUserId) {
@@ -280,7 +292,7 @@ export const getAcceptedAgendasFromEventUser = (eventId, currentEventUserId) => 
         result.docs.forEach((doc) => {
           const newDataItem = {
             id: doc.id,
-            ...doc.data(),
+            ...doc.data()
           };
 
           if (newDataItem.type !== 'reserved') {

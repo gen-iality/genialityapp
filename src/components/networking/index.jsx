@@ -37,11 +37,12 @@ class ListEventUser extends Component {
       activeTab: 'asistentes',
       eventUserId: null,
       currentUserName: null,
-      eventUserIdToMakeAppointment: '',
+      eventUserIdToMakeAppointment: null,
+      eventUserToMakeAppointment: null,
       asistantData: [],
       matches: [],
       filterSector: null,
-      typeAssistant: null,
+      typeAssistant: null
     };
   }
 
@@ -204,7 +205,7 @@ class ListEventUser extends Component {
         loading: false,
         clearSearch: !prevState.clearSearch,
         asistantData,
-        matches,
+        matches
       };
     });
   };
@@ -276,8 +277,9 @@ class ListEventUser extends Component {
       eventUser,
       asistantData,
       eventUserIdToMakeAppointment,
+      eventUserToMakeAppointment,
       activeTab,
-      matches,
+      matches
     } = this.state;
 
     return (
@@ -340,7 +342,7 @@ class ListEventUser extends Component {
                                     onClick={() => {
                                       this.SendFriendship({
                                         eventUserIdReceiver: user._id,
-                                        userName: user.properties.names || user.properties.email,
+                                        userName: user.properties.names || user.properties.email
                                       });
                                     }}></a>
                                 }
@@ -389,7 +391,10 @@ class ListEventUser extends Component {
                                             <Button
                                               type='primary'
                                               onClick={() => {
-                                                this.setState({ eventUserIdToMakeAppointment: user._id });
+                                                this.setState({
+                                                  eventUserIdToMakeAppointment: user._id,
+                                                  eventUserToMakeAppointment: user
+                                                });
                                               }}>
                                               {'Agendar cita'}
                                             </Button>
@@ -397,7 +402,7 @@ class ListEventUser extends Component {
                                         )}
                                       </Row>
                                       <br />
-                                    </div>,
+                                    </div>
                                   ]}
                                 />
                               </Card>
@@ -415,6 +420,7 @@ class ListEventUser extends Component {
                 event={event}
                 currentEventUserId={eventUserId}
                 targetEventUserId={eventUserIdToMakeAppointment}
+                targetEventUser={eventUserToMakeAppointment}
                 closeModal={this.closeAppointmentModal}
               />
               <Form>
@@ -646,7 +652,7 @@ class ListEventUser extends Component {
                                         <Button
                                           style={{ backgroundColor: '#363636', color: 'white' }}
                                           onClick={() => {
-                                            this.props.agendarCita(users._id);
+                                            this.props.agendarCita(users._id, users);
                                           }}>
                                           {'Agendar cita'}
                                         </Button>
@@ -655,7 +661,7 @@ class ListEventUser extends Component {
                                           onClick={async () => {
                                             var sendResp = await this.props.sendFriendship({
                                               eventUserIdReceiver: users._id,
-                                              userName: users.properties.names || users.properties.email,
+                                              userName: users.properties.names || users.properties.email
                                             });
 
                                             var us = await this.props.loadDataUser(users.properties.email);
@@ -668,7 +674,7 @@ class ListEventUser extends Component {
                                                 message: 'Te ha enviado solicitud de amistad',
                                                 name: 'notification.name',
                                                 type: 'amistad',
-                                                state: '0',
+                                                state: '0'
                                               };
                                               await this.props.notification(notificationU, this.props.currentUser._id);
                                             }
@@ -679,7 +685,7 @@ class ListEventUser extends Component {
                                     )}
                                   </Row>
                                   <br />
-                                </div>,
+                                </div>
                               ]}
                             />
                           </Card>
