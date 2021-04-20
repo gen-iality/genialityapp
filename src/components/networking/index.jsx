@@ -63,7 +63,7 @@ class ListEventUser extends Component {
     const { event } = this.props;
 
     // NO BORRAR ES UN AVANCE  PARA OPTIMIZAR LAS PETICIONES A LA API DE LA SECCION NETWORKING
-    // let eventUserList = []
+    let eventUserList = [];
     // const response = await UsersApi.getAll(event._id);
 
     // if(response.data){
@@ -71,11 +71,7 @@ class ListEventUser extends Component {
     // }
 
     //Servicio que trae la lista de asistentes excluyendo el usuario logeado
-    let eventUserList = await userRequest.getEventUserList(
-      event._id,
-      Cookie.get('evius_token'),
-      this.props.currentUser
-    );
+    eventUserList = await userRequest.getEventUserList(event._id, Cookie.get('evius_token'), this.props.currentUser);
 
     /** Inicia destacados
      * Búscamos usuarios destacados para colocarlos de primeros en la lista(destacados), tiene varios usos cómo publicitarios
@@ -98,8 +94,16 @@ class ListEventUser extends Component {
     if (this.state.eventUser) {
       let meproperties = this.state.eventUser.properties;
 
+      //
+      if (event._id === '60413a3cf215e97bb908bec9') {
+        let prospectos = eventUserList.filter((asistente) => asistente.properties.interes === 'Vender');
+        prospectos.forEach((prospecto) => {
+          matches.push(prospecto);
+        });
+      }
+
       //Finanzas del clima
-      if (event._id === '5f9708a2e4c9eb75713f8cc6') {
+      else if (event._id === '5f9708a2e4c9eb75713f8cc6') {
         let prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
         prospectos.map((prospecto) => {
           if (prospecto.properties.participacomo == 'Financiador') {
@@ -369,85 +373,90 @@ class ListEventUser extends Component {
                     <div className='container' justify='center'>
                       <Row justify='space-between'>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                        {matches.map((users, userIndex) => (
-                          <Col
-                            key={`user-item-${userIndex}`}
-                            xs={20}
-                            sm={20}
-                            md={20}
-                            lg={10}
-                            xl={10}
-                            xxl={10}
-                            offset={2}>
-                            <Card
-                              extra={
-                                <a
-                                  onClick={() => {
-                                    this.SendFriendship({
-                                      eventUserIdReceiver: users._id,
-                                      userName: users.properties.names || users.properties.email,
-                                    });
-                                  }}></a>
-                              }
-                              hoverable={8}
-                              headStyle={
-                                users.destacado && users.destacado == true
-                                  ? { backgroundColor: '#33FFEC' }
-                                  : { backgroundColor: event.styles.toolbarDefaultBg }
-                              }
-                              style={{ width: 500, marginTop: '2%', marginBottom: '2%', textAlign: 'left' }}
-                              bordered={true}>
-                              <Meta
-                                avatar={
-                                  <Avatar>
-                                    {users.properties.names
-                                      ? users.properties.names.charAt(0).toUpperCase()
-                                      : users.properties.names}
-                                  </Avatar>
+                        {console.log('matches', matches.length > 0)}
+                        {console.log('matches', matches.length > 0)}
+                        {matches.length > 0 &&
+                          matches.map((user, userIndex) => (
+                            <Col
+                              key={`user-item-${userIndex}`}
+                              xs={20}
+                              sm={20}
+                              md={20}
+                              lg={10}
+                              xl={10}
+                              xxl={10}
+                              offset={2}>
+                              {console.log('property matches', matches)}
+                              {console.log('property', user)}
+                              <Card
+                                extra={
+                                  <a
+                                    onClick={() => {
+                                      this.SendFriendship({
+                                        eventUserIdReceiver: user._id,
+                                        userName: user.properties.names || user.properties.email,
+                                      });
+                                    }}></a>
                                 }
-                                title={users.properties.names ? users.properties.names : 'No registra Nombre'}
-                                description={[
-                                  <div key={`ui-${userIndex}`}>
-                                    <br />
-                                    <Row>
-                                      <Col xs={24}>
-                                        <div>
-                                          {asistantData.map(
-                                            (data, dataIndex) =>
-                                              /*Condicion !data.visible para poder tener en cuenta el campo visible en los datos que llegan, 
+                                hoverable={8}
+                                headStyle={
+                                  user.destacado && user.destacado == true
+                                    ? { backgroundColor: '#33FFEC' }
+                                    : { backgroundColor: event.styles.toolbarDefaultBg }
+                                }
+                                style={{ width: 500, marginTop: '2%', marginBottom: '2%', textAlign: 'left' }}
+                                bordered={true}>
+                                <Meta
+                                  avatar={
+                                    <Avatar>
+                                      {user.properties && user.properties.names
+                                        ? user.properties.names.charAt(0).toUpperCase()
+                                        : user.properties.names}
+                                    </Avatar>
+                                  }
+                                  title={user.properties.names ? user.properties.names : 'No registra Nombre'}
+                                  description={[
+                                    <div key={`ui-${userIndex}`}>
+                                      <br />
+                                      <Row>
+                                        <Col xs={24}>
+                                          <div>
+                                            {asistantData.map(
+                                              (data, dataIndex) =>
+                                                /*Condicion !data.visible para poder tener en cuenta el campo visible en los datos que llegan, 
                                                   esto ya que visibleByContacst es variable nueva, ambas realizan la misma funcionalidad
                                                 */
-                                              !data.visibleByAdmin &&
-                                              users.properties[data.name] && (
-                                                <div key={`public-field-${userIndex}-${dataIndex}`}>
-                                                  <p>
-                                                    <b>{data.label}:</b>{' '}
-                                                    {formatDataToString(users.properties[data.name], data)}
-                                                  </p>
-                                                </div>
-                                              )
-                                          )}
-                                        </div>
-                                      </Col>
-                                      {eventUserId !== null && (
-                                        <Col xs={24}>
-                                          <Button
-                                            type='primary'
-                                            onClick={() => {
-                                              this.setState({ eventUserIdToMakeAppointment: users._id });
-                                            }}>
-                                            {'Agendar cita'}
-                                          </Button>
+                                                !data.visibleByAdmin &&
+                                                user.properties[data.name] && (
+                                                  <div key={`public-field-${userIndex}-${dataIndex}`}>
+                                                    <p>
+                                                      <b>{data.label}:</b>{' '}
+                                                      {formatDataToString(user.properties[data.name], data)}
+                                                    </p>
+                                                  </div>
+                                                )
+                                            )}
+                                          </div>
                                         </Col>
-                                      )}
-                                    </Row>
-                                    <br />
-                                  </div>,
-                                ]}
-                              />
-                            </Card>
-                          </Col>
-                        ))}
+                                        {eventUserId !== null && (
+                                          <Col xs={24}>
+                                            <Button
+                                              type='primary'
+                                              onClick={() => {
+                                                this.setState({ eventUserIdToMakeAppointment: user._id });
+                                              }}>
+                                              {'Agendar cita'}
+                                            </Button>
+                                          </Col>
+                                        )}
+                                      </Row>
+                                      <br />
+                                    </div>,
+                                  ]}
+                                />
+                              </Card>
+                            </Col>
+                          ))}
                       </Row>
                     </div>
                   </div>

@@ -28,7 +28,7 @@ export const getCurrentUser = (token) => {
 export const getCurrentEventUser = (eventId, userId) => {
   // eslint-disable-next-line no-unused-vars
   return new Promise(async (resolve, reject) => {
-    const users = await UsersApi.getAll(eventId, '?pageSize=3000');
+    const users = await UsersApi.getAll(eventId, '?pageSize=10000');
 
     let currentEventUser = filterList(users.data, userId);
 
@@ -43,7 +43,7 @@ export const userRequest = {
   getEventUserList: async (eventId, token, currentUser) => {
     let docs = [];
     try {
-      const users = await UsersApi.getAll(eventId, '?pageSize=3000');
+      const users = await UsersApi.getAll(eventId, '?pageSize=10000');
       if (users) {
         docs = users.data.filter((user) => user.account_id !== currentUser._id);
       }
