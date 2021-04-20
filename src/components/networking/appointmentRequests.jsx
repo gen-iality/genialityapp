@@ -1,6 +1,6 @@
 import { Avatar, Button, Card, Col, Divider, notification, Row, Spin } from 'antd';
 import moment from 'moment';
-import { find, map, pathOr, propEq } from 'ramda';
+import { find, map, pathOr, propEq, props } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import React, { useEffect, useState } from 'react';
 
@@ -13,7 +13,7 @@ const requestStatusText = {
   accepted: 'aceptada',
 };
 
-function AppointmentRequests({ eventId, currentEventUserId, eventUsers }) {
+function AppointmentRequests({ eventId, currentEventUserId, eventUsers, notificacion, currentUser }) {
   const [loading, setLoading] = useState(true);
   const [loading1, setLoading1] = useState(true);
   const [fetching, setFetching] = useState(false);
@@ -87,6 +87,8 @@ function AppointmentRequests({ eventId, currentEventUserId, eventUsers }) {
           (pendingAgendas.length > 0 ? (
             pendingAgendas.map((pendingAgenda) => (
               <RequestCard
+                notificacion={notificacion}
+                currentUser={currentUser}
                 key={`pending-${pendingAgenda.id}`}
                 eventId={eventId}
                 currentEventUserId={currentEventUserId}
@@ -113,6 +115,7 @@ function AppointmentRequests({ eventId, currentEventUserId, eventUsers }) {
           (pendingAgendasSent.length > 0 ? (
             pendingAgendasSent.map((pendingAgenda) => (
               <RequestCard
+                notificacion={notificacion}
                 key={`pending-${pendingAgenda.id}`}
                 eventId={eventId}
                 currentEventUserId={currentEventUserId}
@@ -136,7 +139,16 @@ function AppointmentRequests({ eventId, currentEventUserId, eventUsers }) {
   );
 }
 
-function RequestCard({ data, eventId, currentEventUserId, fetching, setFetching, meSended }) {
+function RequestCard({
+  data,
+  eventId,
+  currentEventUserId,
+  fetching,
+  setFetching,
+  meSended,
+  notificacion,
+  currentUser,
+}) {
   const [requestResponse, setRequestResponse] = useState('');
   const { ownerEventUser } = data;
   const userName = pathOr('', ['properties', 'names'], ownerEventUser);
@@ -146,7 +158,16 @@ function RequestCard({ data, eventId, currentEventUserId, fetching, setFetching,
     if (!fetching) {
       setFetching(true);
       acceptOrRejectAgenda(eventId, currentEventUserId, data, newStatus)
-        .then(() => setRequestResponse(newStatus))
+        .then(() => {
+          setRequestResponse(newStatus);
+          let notificationr = {
+            idReceive: currentUser._id,
+            idEmited: data && data.id,
+            state: '1',
+          };
+          console.log(notificationr);
+          notification(notificationr, props.currentUser._id);
+        })
         .catch((error) => {
           if (!error) {
             notification.error({
@@ -163,6 +184,14 @@ function RequestCard({ data, eventId, currentEventUserId, fetching, setFetching,
               message: 'Error',
               description: 'Error al actualizar la solicitud',
             });
+
+            let notificationr = {
+              idReceive: currentUser._id,
+              idEmited: data && data.id,
+              state: '1',
+            };
+            console.log(notificationr);
+            notificacion(notificationr, currentUser._id);
           }
         })
         .finally(() => setFetching(false));

@@ -308,32 +308,47 @@ export const deleteAgenda = (eventId, agendaId) => {
   });
 };
 
-export const getUserByEmail = async (email, eventid) => {
+export const getUserByEmail = async (user, eventid) => {
   console.log(eventid);
+  console.log(user);
   try {
-    const resp = await UsersApi.findByEmail(email);
-    console.log('RESPUESTA FIND BY EMAIL');
+    const resp = await UsersApi.findByEmail(user.email);
     console.log(resp[0]);
-    const ru = await UsersApi.getProfile(resp[0]._id);
-    const user = await getUserEvent(email, eventid);
-    ru = { ...ru, userEvent: user._id };
-    console.log(ru);
-    return ru;
+    //const ru = await UsersApi.getProfile(resp[0]._id);
+    let userR;
+    if (resp[0]) {
+      userR = await getUserEvent(resp[0]._id, eventid);
+    } else {
+      userR = await getUserEvent(user._id, eventid);
+    }
+
+    console.log(userR);
+    userR = { ...userR, userEvent: userR._id };
+    return userR;
   } catch (error) {
     return null;
   }
 };
 
-export const getUserEvent = async (email, eventid) => {
-  const levu = await UsersApi.getAll(eventid);
-  const user = levu.data.filter((u) => u.user != null && u.user.email === email && u.event_id === eventid)[0];
+export const getUserEvent = async (id, eventid) => {
+  console.log(id);
+  const levu = await UsersApi.getAll(eventid, `?filtered=[{"field":"account_id","value":"${id}"}]`);
+  console.log(levu.data);
+  let user = levu.data.filter((u) => u.account_id && u.account_id.trim() == id.trim())[0];
   return user;
+};
+
+export const getUsersId = async (id, eventid) => {
+  console.log(id);
+  const levu = await UsersApi.getAll(eventid, `?filtered=[{"field":"_id","value":"${id}"}]`);
+  console.log(levu.data);
+  return levu.data[0];
 };
 
 export const getUserByEventUser = async (eventuser, eventid) => {
   console.log(eventuser);
   console.log(eventid);
   const levu = await UsersApi.getAll(eventid);
-  const user = levu.data.filter((u) => u.user != null && u._id === eventuser && u.event_id === eventid)[0];
+  const user = await levu.data.filter((u) => u.user != null && u._id === eventuser)[0];
   return user;
 };

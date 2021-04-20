@@ -87,6 +87,7 @@ import {
 import Avatar from 'antd/lib/avatar/avatar';
 import Text from 'antd/lib/typography/Text';
 import { getCurrentEventUser, getUserByEmail } from '../networking/services';
+import AppointmentModal from '../networking/appointmentModal';
 
 const { setEventData } = eventActions;
 const { gotoActivity, setMainStage } = stageActions;
@@ -170,6 +171,8 @@ class Landing extends Component {
       notifyNetworkingAg: [],
       notifyNetworkingAm: [],
       totalNotficationsN: 0,
+      //modal Agenda
+      eventUserIdToMakeAppointment: null,
       // Tabs generales
       generalTabs: {
         publicChat: true,
@@ -232,6 +235,10 @@ class Landing extends Component {
       }
       this.setState({ publishedSurveys });
     }
+  };
+
+  AgendarCita = (id) => {
+    this.setState({ eventUserIdToMakeAppointment: id });
   };
 
   openNotificationWithIcon = (type) => {
@@ -305,9 +312,9 @@ class Landing extends Component {
   async SendFriendship({ eventUserIdReceiver, userName }) {
     console.log('Solicitud de amistad');
     console.log(this.state.user.email);
-    let resp = await this.loadDataUser(this.state.user.email);
+    let resp = await this.loadDataUser(this.state.user);
     console.log(resp);
-    let eventUserId = resp.userEvent;
+    let eventUserId = resp._id;
     let currentUserName = this.state.user.names || this.state.user.email;
     let currentUser = Cookie.get('evius_token');
 
@@ -327,7 +334,7 @@ class Landing extends Component {
 
         // Se ejecuta el servicio del api de evius
         try {
-          await EventsApi.sendInvitation(this.props.eventInfo._id, data);
+          var respInvitation = await EventsApi.sendInvitation(this.props.eventInfo._id, data);
           notification.open({
             message: 'Solicitud enviada',
             description:
@@ -335,6 +342,7 @@ class Landing extends Component {
             icon: <SmileOutlined style={{ color: '#108ee9' }} />,
             duration: 30,
           });
+          return respInvitation;
         } catch (err) {
           let { data } = err.response;
           message.warning(data.message);
@@ -404,6 +412,7 @@ class Landing extends Component {
 
   loadDataUser = async (email) => {
     const resp = await getUserByEmail(email, this.props.eventInfo._id);
+    console.log('BY EMAIL');
     console.log(resp);
     return resp;
   };
@@ -420,12 +429,12 @@ class Landing extends Component {
     if (userPerfil != null) {
       console.log(userPerfil);
 
-      var data = await this.loadDataUser(userPerfil.email);
+      var data = await this.loadDataUser(userPerfil);
       console.log(data);
-      this.setState({ userPerfil: data });
-      var userEid = this.obtenerUserPerfil(data._id);
+      this.setState({ userPerfil: data.properties });
+      //var userEid = this.obtenerUserPerfil(data._id);
       if (data) {
-        var properties = await this.getProperties(userEid._id);
+        var properties = await this.getProperties(data._id);
         console.log('properties');
         console.log(properties);
       }
@@ -627,6 +636,9 @@ class Landing extends Component {
         <NetworkingForm
           notification={this.addNotification}
           event={event}
+          agendarCita={this.AgendarCita}
+          loadDataUser={this.loadDataUser}
+          sendFriendship={this.SendFriendship}
           notifications={this.state.totalNotficationsN}
           notifyAgenda={this.state.notifyNetworkingAg}
           notifyAmis={this.state.notifyNetworkingAm}
@@ -770,6 +782,9 @@ class Landing extends Component {
 
   async addNotification(notification, iduserEmmited) {
     console.log('Notificación');
+
+    console.log(notification);
+
     if (notification.emailEmited != null) {
       console.log('ENTRO ACA');
       firestore
@@ -793,7 +808,7 @@ class Landing extends Component {
         .collection('events')
         .doc(this.state.event._id)
         .collection('notifications')
-        .doc(iduserEmmited)
+        .doc(notification.idEmited)
         .set(
           {
             state: notification.state,
@@ -1193,6 +1208,10 @@ class Landing extends Component {
 
     // message.success({ content: 'Loaded!', key, duration: 2 });
   };
+  //Cerrar modal agenda
+  closeAppointmentModal = () => {
+    this.setState({ eventUserIdToMakeAppointment: '' });
+  };
 
   zoomExternoHandleOpen = (activity, eventUser) => {
     let name = eventUser && eventUser.properties && eventUser.properties.names ? eventUser.properties.names : 'Anónimo';
@@ -1241,6 +1260,13 @@ class Landing extends Component {
 
     return (
       <section className='section landing' style={{ backgroundColor: this.state.color, height: '100%' }}>
+        <AppointmentModal
+          notificacion={this.addNotification}
+          event={this.props.eventInfo}
+          currentEventUserId={this.state.currentUser && this.state.currentUser._id}
+          targetEventUserId={this.state.eventUserIdToMakeAppointment}
+          closeModal={this.closeAppointmentModal}
+        />
         {this.props.viewNotification.message != null && this.openMessage()}
         {this.state.showConfirm && (
           <div className='notification is-success'>
@@ -1566,6 +1592,7 @@ class Landing extends Component {
                           maskClosable={true}
                           className='drawerMobile'>
                           <SocialZone
+                            agendarCita={this.AgendarCita}
                             loadDataUser={this.loadDataUser}
                             obtenerPerfil={this.obtenerUserPerfil}
                             notificacion={this.addNotification}
@@ -1670,6 +1697,7 @@ class Landing extends Component {
 
                                   <SocialZone
                                     loadDataUser={this.loadDataUser}
+                                    agendarCita={this.AgendarCita}
                                     obtenerPerfil={this.obtenerUserPerfil}
                                     notificacion={this.addNotification}
                                     sendFriendship={this.SendFriendship}

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 
 import { getDatesRange } from '../../helpers/utils';
-import { createAgendaToEventUser, getAgendasFromEventUser } from './services';
+import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId } from './services';
 
 const { Option } = Select;
 
@@ -56,7 +56,8 @@ const buttonStatusText = {
 };
 const MESSAGE_MAX_LENGTH = 200;
 
-function AppointmentModal({ event, currentEventUserId, targetEventUserId, closeModal }) {
+function AppointmentModal({ event, currentEventUserId, targetEventUserId, closeModal, notificacion, idsend }) {
+  console.log(targetEventUserId);
   const eventDatesRange = getDatesRange(event.date_start, event.date_end);
   const [openAgenda, setOpenAgenda] = useState('');
   const [agendaMessage, setAgendaMessage] = useState('');
@@ -65,8 +66,9 @@ function AppointmentModal({ event, currentEventUserId, targetEventUserId, closeM
   const [loading, setLoading] = useState(true);
   const [reloadFlag, setReloadFlag] = useState(false);
 
-  const reloadData = () => {
+  const reloadData = async (resp, target) => {
     setReloadFlag(!reloadFlag);
+    console.log(target);
     notification.open({
       message: 'Solicitud enviada',
       description:
@@ -74,6 +76,19 @@ function AppointmentModal({ event, currentEventUserId, targetEventUserId, closeM
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
       duration: 30,
     });
+    var usId = await getUsersId(targetEventUserId, event._id);
+    console.log(usId);
+    let notificationA = {
+      idReceive: usId.account_id,
+      idEmited: resp,
+      emailEmited: 'email@gmail.com',
+      message: 'Te ha enviado solicitud de agenda',
+      name: 'notification.name',
+      type: 'agenda',
+      state: '0',
+    };
+    console.log('RESPUESTA SEND AGENDA' + resp);
+    await notificacion(notificationA, currentEventUserId);
   };
 
   const resetModal = () => {
@@ -255,7 +270,13 @@ function AppointmentModal({ event, currentEventUserId, targetEventUserId, closeM
                                   timetableItem,
                                   message: agendaMessage,
                                 })
-                                  .then(reloadData)
+                                  .then((resp) => {
+                                    console.log('RESP AGENDA');
+                                    console.log(resp);
+                                    console.log(targetEventUserId);
+                                    console.log(timetableItem);
+                                    reloadData(resp, targetEventUserId);
+                                  })
                                   .catch((error) => {
                                     console.error(error);
                                     if (!error) {

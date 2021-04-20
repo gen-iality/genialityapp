@@ -97,7 +97,7 @@ let SocialZone = function(props) {
       setIsFiltered(false);
       setstrAttende('');
       setBusqueda('');
-      console.log('BUSQUEDA CURRENT=>', (busquedaRef.current.value = ''));
+      // console.log('BUSQUEDA CURRENT=>', (busquedaRef.current.value = ''));
       busquedaRef.current = '';
     }
   };
@@ -257,6 +257,7 @@ let SocialZone = function(props) {
             </Row>
             <div className='asistente-list'>
               <AttendeList
+                agendarCita={props.agendarCita}
                 loadDataUser={props.loadDataUser}
                 notificacion={props.notificacion}
                 sendFriendship={props.sendFriendship}

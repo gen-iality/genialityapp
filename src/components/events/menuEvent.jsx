@@ -237,7 +237,7 @@ class MenuEvent extends Component {
                   onClick={() => this.state.showSection(this.state.itemsMenu[key].section)}
                   /*style={{display:'grid', marginBottom:'12%', height:'63px', paddingLeft:'15px !important'}}*/
                 >
-                  {this.state.itemsMenu[key].name === 'Networking' && (
+                  {this.state.itemsMenu[key].section === 'networking' && (
                     <Badge
                       style={{ position: 'absolute', top: 2, right: 5 }}
                       count={this.props.totalNotifyNetworking.total}>

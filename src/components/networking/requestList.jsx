@@ -114,27 +114,28 @@ export default function RequestList({ eventId, notification, currentUser, notify
   const [requestListSent, setRequestListSent] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
 
-  useEffect(() => {
-    getInvitationsList();
-  }, [notify]);
-
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
     // Se consulta el id del usuario por el token
-    console.log('OBTENER INVITACIONES');
+
     getCurrentUser(Cookie.get('evius_token')).then(async (user) => {
+      console.log('GET CURRENT');
       // Servicio que obtiene el eventUserId del usuario actual
       let eventUser = await getCurrentEventUser(eventId, user._id);
 
       // Servicio que trae las invitaciones / solicitudes recibidas
-      Networking.getInvitationsReceived(eventId, eventUser._id).then(({ data }) => {
+      Networking.getInvitationsReceived(eventId, eventUser._id).then(async ({ data }) => {
         setCurrentUserId(user._id);
-
+        console.log(data);
         // Solo se obtendran las invitaciones que no tengan respuesta
         if (data.length > 0) {
-          const response = data.filter((item) => !item.response);
-          insertNameRequested(response);
+          let response = data.filter((item) => item.response == undefined);
+
+          console.log(response);
+          setRequestListReceived(response);
+          await insertNameRequested(response);
         } else {
+          console.log('ACA');
           setRequestListReceived([]);
         }
       });
@@ -178,22 +179,20 @@ export default function RequestList({ eventId, notification, currentUser, notify
   // Funcion para aceptar o rechazar una invitacion o solicitud
   const sendResponseToInvitation = async (requestId, state) => {
     console.log(requestId);
-    const resp = await getUserByEventUser(requestId.id_user_requesting, eventId);
-
     let data = { response: state ? 'accepted' : 'rejected' };
-
+    console.log(data);
     Networking.acceptOrDeclineInvitation(eventId, requestId._id, data)
       .then(async (response) => {
         message.success('Respuesta enviada');
         console.log(currentUser);
+
         let notificationr = {
           idReceive: currentUser._id,
-          idEmited: resp && resp.user._id,
+          idEmited: requestId && requestId._id,
           state: '1',
         };
-
         notification(notificationr, currentUser._id);
-        await getInvitationsList();
+        setRequestListReceived(requestListReceived.filter((item) => item._id != requestId._id));
       })
       .catch((err) => {
         console.error(err);

@@ -48,24 +48,26 @@ const PopoverInfoUser = ({ item, props }) => {
                 console.log('ACA ITEM');
                 console.log(item);
 
-                var us = await props.loadDataUser(item.email);
+                var us = await props.loadDataUser(item);
                 console.log('USER PERFIL=>', us);
-                let notification = {
-                  idReceive: us._id,
-                  idEmited: props.currentUser._id,
-                  emailEmited: props.currentUser.email,
-                  message: 'Te ha enviado solicitud de amistad',
-                  name: 'notification.name',
-                  type: 'amistad',
-                  state: '0',
-                };
+
                 var sendResp = await props.sendFriendship({
-                  eventUserIdReceiver: us.userEvent,
+                  eventUserIdReceiver: us._id,
                   userName: props.currentUser.names || props.currentUser.email,
                 });
-
-                console.log('RESPUESTA SEND AMISTAD' + sendResp);
-                await props.notificacion(notification, props.currentUser._id);
+                if (sendResp._id) {
+                  let notification = {
+                    idReceive: us.account_id,
+                    idEmited: sendResp._id,
+                    emailEmited: props.currentUser.email,
+                    message: 'Te ha enviado solicitud de amistad',
+                    name: 'notification.name',
+                    type: 'amistad',
+                    state: '0',
+                  };
+                  console.log('RESPUESTA SEND AMISTAD' + sendResp._id);
+                  await props.notificacion(notification, props.currentUser._id);
+                }
               }}
               title='Enviar solicitud Contacto'>
               <UsergroupAddOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
@@ -74,7 +76,20 @@ const PopoverInfoUser = ({ item, props }) => {
 
           props.containNetWorking && (
             <Tooltip title='Invitar Video llamada'>
-              <VideoCameraOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
+              <VideoCameraOutlined
+                onClick={async () => {
+                  console.log('ACA ITEM');
+                  console.log(item);
+
+                  var us = await props.loadDataUser(item);
+                  console.log('USER PERFIL=>', us);
+                  if (us) {
+                    props.agendarCita(us._id);
+                  }
+                }}
+                style={{ fontSize: '20px', color: '#1890FF' }}
+              />
+              ,
             </Tooltip>
           ),
         ]}>
