@@ -163,9 +163,11 @@ const ChatExport = ({ eventId, event }) => {
           <span className='text-button'>Exportar</span>
         </button>
         <Popconfirm
-          title='Está seguro？'
+          title='¿Está seguro que desea eliminar el chat de forma permanente?'
           onConfirm={deleteAllChat}
           onCancel={() => setVisible(false)}
+          okText='Si'
+          cancelText='No'
           style={{ width: '170px' }}
           icon={<QuestionCircleOutlined style={{ color: 'red' }} />}>
           <Button
