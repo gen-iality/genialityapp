@@ -7,6 +7,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import AttendeScroll from './ScrollAttendes';
 
 const AttendeList = function(props) {
+  console.log('AttendeList', 'rerender');
   let [myattendelist, setmyattendelist] = useState();
 
   let [loading, setLoading] = useState(false);
