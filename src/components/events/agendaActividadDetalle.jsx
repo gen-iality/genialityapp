@@ -514,7 +514,7 @@ let AgendaActividadDetalle = (props) => {
                       <>
                         {platform === 'zoomExterno'
                           ? openZoomExterno()
-                          : props.currentUser && (
+                          : ((props.currentUser && !props.event.allow_register) || props.event.allow_register) && (
                               <>
                                 <iframe
                                   src={getMeetingPath(platform)}
