@@ -47,9 +47,6 @@ class ListEventUser extends Component {
 
   async componentDidMount() {
     await this.getInfoCurrentUser();
-    console.log('EVENTO ID---------');
-    console.log(this.props.event);
-    console.log(this.props.currentUser);
     this.loadData();
   }
 
@@ -326,8 +323,6 @@ class ListEventUser extends Component {
                     <div className='container' justify='center'>
                       <Row justify='space-between'>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                        {console.log('matches', matches.length > 0)}
-                        {console.log('matches', matches.length > 0)}
                         {matches.length > 0 &&
                           matches.map((user, userIndex) => (
                             <Col
@@ -339,8 +334,6 @@ class ListEventUser extends Component {
                               xl={10}
                               xxl={10}
                               offset={2}>
-                              {console.log('property matches', matches)}
-                              {console.log('property', user)}
                               <Card
                                 extra={
                                   <a
@@ -666,7 +659,6 @@ class ListEventUser extends Component {
                                             });
 
                                             var us = await this.props.loadDataUser(users.properties.email);
-                                            console.log('USER PERFIL=>', us);
 
                                             if (sendResp._id) {
                                               let notificationU = {
@@ -678,7 +670,6 @@ class ListEventUser extends Component {
                                                 type: 'amistad',
                                                 state: '0',
                                               };
-                                              console.log('RESPUESTA SEND AMISTAD' + sendResp._id);
                                               await this.props.notification(notificationU, this.props.currentUser._id);
                                             }
                                           }}>
