@@ -53,7 +53,7 @@ const PopoverInfoUser = ({ item, props }) => {
 
                 var sendResp = await props.sendFriendship({
                   eventUserIdReceiver: us._id,
-                  userName: props.currentUser.names || props.currentUser.email,
+                  userName: props.currentUser.names || props.currentUser.email
                 });
                 if (sendResp._id) {
                   let notification = {
@@ -63,7 +63,7 @@ const PopoverInfoUser = ({ item, props }) => {
                     message: 'Te ha enviado solicitud de amistad',
                     name: 'notification.name',
                     type: 'amistad',
-                    state: '0',
+                    state: '0'
                   };
                   console.log('RESPUESTA SEND AMISTAD' + sendResp._id);
                   await props.notificacion(notification, props.currentUser._id);
@@ -84,14 +84,14 @@ const PopoverInfoUser = ({ item, props }) => {
                   var us = await props.loadDataUser(item);
                   console.log('USER PERFIL=>', us);
                   if (us) {
-                    props.agendarCita(us._id);
+                    props.agendarCita(us._id, us);
                   }
                 }}
                 style={{ fontSize: '20px', color: '#1890FF' }}
               />
               ,
             </Tooltip>
-          ),
+          )
         ]}>
         <Meta
           avatar={

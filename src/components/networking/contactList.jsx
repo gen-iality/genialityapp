@@ -106,7 +106,7 @@ const ContactList = ({ eventId, agendarCita }) => {
                             </div>
                           )
                       )}
-                    </div>,
+                    </div>
                   ]}
                 />
                 <Col xs={24}>
@@ -114,7 +114,7 @@ const ContactList = ({ eventId, agendarCita }) => {
                     block
                     size='large'
                     style={{ backgroundColor: '#363636', color: 'white' }}
-                    onClick={() => agendarCita(contact._id)}>
+                    onClick={() => agendarCita(contact._id, contact)}>
                     {'Agendar cita'}
                   </Button>
                 </Col>
