@@ -2,7 +2,7 @@ import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Tabs, Row, Badge, Col, notification, Button } from 'antd';
-import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone } from '@ant-design/icons';
+import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone, SearchOutlined } from '@ant-design/icons';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
 import SurveyList from '../events/surveys/surveyList';
@@ -16,6 +16,7 @@ import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
 import { monitorEventPresence } from './hooks';
 import GameRanking from '../events/game/gameRanking';
+import { useRef } from 'react';
 
 const { setMainStage } = StageActions;
 
@@ -33,6 +34,10 @@ let SocialZone = function(props) {
   const [currentTab, setcurrentTab] = useState('1');
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [datamsjlast, setdatamsjlast] = useState();
+  let [busqueda, setBusqueda] = useState();
+  let [strAttende, setstrAttende] = useState();
+  let [isFiltered, setIsFiltered] = useState(false);
+  let busquedaRef = useRef();
 
   let userName = props.currentUser
     ? props.currentUser?.names
@@ -79,15 +84,35 @@ let SocialZone = function(props) {
 
   const inicializada = useMemo(() => initUserPresence(event_id), [event_id]);
 
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    setBusqueda(value);
+  };
+
+  const searhAttende = () => {
+    if (!isFiltered && (busqueda != undefined || busqueda != '')) {
+      setstrAttende(busqueda);
+      setIsFiltered(true);
+    } else {
+      setIsFiltered(false);
+      setstrAttende('');
+      setBusqueda('');
+      // console.log('BUSQUEDA CURRENT=>', (busquedaRef.current.value = ''));
+      busquedaRef.current = '';
+    }
+  };
+
   const flagmonitorEventPresence = useMemo(
     () => monitorEventPresence(event_id, attendeeList, setAttendeeListPresence),
     [event_id]
   );
 
   useEffect(() => {
+    //console.log('social zone mount**********');
     const fetchData = async () => {
       const user = await getCurrentUser();
       setCurrentUser(user);
+      console.log(user);
       setcurrentTab('' + tab);
 
       props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
@@ -156,6 +181,7 @@ let SocialZone = function(props) {
           let localattendee = attendeeList[attendee.user?.uid] || {};
           list[attendee.user?.uid] = { ...localattendee, ...attendee };
         });
+
         setAttendeeList(list);
         //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
       });
@@ -205,17 +231,51 @@ let SocialZone = function(props) {
         </TabPane>
       )}
       {props.generalTabs.attendees && (
-        <TabPane tab='Asistentes' key='2' className='asistente-list'>
-          <AttendeList
-            currentUser={currentUser}
-            event_id={event_id}
-            currentChat={currentChat}
-            currentChatName={currentChatName}
-            createNewOneToOneChat={createNewOneToOneChat}
-            attendeeList={attendeeList}
-            attendeeListPresence={attendeeListPresence}
-          />
-        </TabPane>
+        <>
+          {' '}
+          <TabPane tab='Asistentes' key='2'>
+            <Row>
+              <Col sm={21}>
+                <div className='control' style={{ marginBottom: '10px', marginRight: '5px' }}>
+                  <input
+                    ref={busquedaRef}
+                    autoFocus
+                    className='input'
+                    type='text'
+                    name={'name'}
+                    onChange={handleChange}
+                    placeholder='Buscar...'
+                  />
+                </div>
+              </Col>
+              <Col sm={2}>
+                <Button shape='circle' onClick={searhAttende}>
+                  {!isFiltered && <SearchOutlined />}
+                  {isFiltered && 'X'}
+                </Button>
+              </Col>
+            </Row>
+            <div className='asistente-list'>
+              <AttendeList
+                agendarCita={props.agendarCita}
+                loadDataUser={props.loadDataUser}
+                notificacion={props.notificacion}
+                sendFriendship={props.sendFriendship}
+                perfil={props.perfil}
+                section={props.section}
+                containNetWorking={props.containNetWorking}
+                busqueda={strAttende}
+                currentUser={props.currentUser}
+                event_id={event_id}
+                currentChat={currentChat}
+                currentChatName={currentChatName}
+                createNewOneToOneChat={createNewOneToOneChat}
+                attendeeList={attendeeList}
+                attendeeListPresence={attendeeListPresence}
+              />
+            </div>
+          </TabPane>
+        </>
       )}
 
       {props.currentActivity !== null && props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (

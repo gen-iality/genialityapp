@@ -32,6 +32,8 @@ import { Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
 import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
+import SurveyExternal from './surveyExternal';
+import Service from './roomManager/service';
 
 const { TabPane } = Tabs;
 
@@ -82,6 +84,9 @@ class AgendaEdit extends Component {
       platform: '',
       vimeo_id: '',
       name_host: '',
+      isExternal:false,
+      service: new Service(firestore),
+      externalSurveyID:'',
 
       //Estado para detectar cambios en la fecha/hora de la actividad sin guardar
       pendingChangesSave: false,
@@ -94,11 +99,25 @@ class AgendaEdit extends Component {
     this.selectTickets = this.selectTickets.bind(this);
   }
 
+  // VALIDAR SI TIENE ENCUESTAS EXTERNAS
+  validateRoom=async()=>{
+    const { service } = this.state;
+    const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, this.state.activity_id);
+    if (hasVideoconference) {
+      const configuration = await service.getConfiguration(this.props.event._id, this.state.activity_id);
+      this.setState({
+          isExternal:configuration.platform && configuration.platform=="zoomExterno"?true: false,
+          externalSurveyID:configuration.meeting_id ? configuration.meeting_id : null,
+      });
+    }  
+  }
+
   toggleConference = (isVisible) => {
     this.setState({ conferenceVisible: isVisible });
   };
 
   async componentDidMount() {
+  
     const {
       event,
       location: { state },
@@ -215,6 +234,7 @@ class AgendaEdit extends Component {
     });
 
     this.name.current.focus();
+    this.validateRoom();
   }
 
   //FN general para cambio en input
@@ -531,6 +551,8 @@ class AgendaEdit extends Component {
     } else return true;
   };
 
+  
+
   //FN para ir a una ruta específica (ruedas en los select)
   goSection = (path, state) => {
     this.props.history.push(path, state);
@@ -611,7 +633,7 @@ class AgendaEdit extends Component {
                         name={'name'}
                         value={name}
                         onChange={this.handleChange}
-                        placeholder='Nombre de la actividad'
+                        placeholder='Nombre de handleChangela actividad'
                       />
                     </div>
                   </div>
@@ -977,6 +999,7 @@ class AgendaEdit extends Component {
             pendingChangesSave={this.state.pendingChangesSave}
           />
           <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
+          {this.state.isExternal && <SurveyExternal isExternal={this.state.isExternal}  meeting_id={this.state.externalSurveyID} event_id={this.props.event._id} activity_id={this.state.activity_id} />}
         </TabPane>
       </Tabs>
     );

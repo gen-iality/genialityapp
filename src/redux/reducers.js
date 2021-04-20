@@ -8,5 +8,18 @@ import stage from './stage/reducers';
 import survey from './survey/reducers';
 import notifications from './notifications/reducers';
 import tabs from './tabs/reducers';
+import notificationsNetReducer from './notifyNetworking/reducers';
 
-export default { categories, types, user, rols, permissions, event, stage, survey, notifications, tabs };
+export default {
+  categories,
+  types,
+  user,
+  rols,
+  permissions,
+  event,
+  stage,
+  survey,
+  notifications,
+  tabs,
+  notificationsNetReducer,
+};
