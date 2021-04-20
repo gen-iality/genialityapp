@@ -10,7 +10,7 @@ const { Meta } = Card;
 
 const requestStatusText = {
   rejected: 'rechazada',
-  accepted: 'aceptada'
+  accepted: 'aceptada',
 };
 
 function AppointmentRequests({ eventId, currentEventUserId, eventUsers, notificacion, currentUser }) {
@@ -45,7 +45,7 @@ function AppointmentRequests({ eventId, currentEventUserId, eventUsers, notifica
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Obteniendo las citas pendientes'
+            description: 'Obteniendo las citas pendientes',
           });
         })
         .finally(() => setLoading(false));
@@ -72,7 +72,7 @@ function AppointmentRequests({ eventId, currentEventUserId, eventUsers, notifica
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Obteniendo las citas pendientes'
+            description: 'Obteniendo las citas pendientes',
           });
         })
         .finally(() => setLoading1(false));
@@ -148,7 +148,7 @@ function RequestCard({
   setFetching,
   meSended,
   notificacion,
-  currentUser
+  currentUser,
 }) {
   const [requestResponse, setRequestResponse] = useState('');
   const { ownerEventUser } = data;
@@ -164,7 +164,7 @@ function RequestCard({
           let notificationr = {
             idReceive: currentUser._id,
             idEmited: data && data.id,
-            state: '1'
+            state: '1',
           };
           console.log(notificationr);
           notification(notificationr, props.currentUser._id);
@@ -173,23 +173,23 @@ function RequestCard({
           if (!error) {
             notification.error({
               message: 'Solicitud no encontrada',
-              description: 'La solicitud no existe o no esta en estado pendiente'
+              description: 'La solicitud no existe o no esta en estado pendiente',
             });
           } else if (error === 'HOURS_NOT_AVAILABLE') {
             notification.error({
               message: 'Horario agendado',
-              description: 'Ya tienes agendada esta hora'
+              description: 'Ya tienes agendada esta hora',
             });
           } else {
-            notification.error({
-              message: 'Error',
-              description: 'Error al actualizar la solicitud'
-            });
+            // notification.error({
+            //   message: 'Error',
+            //   description: 'Error al actualizar la solicitud'
+            // });
 
             let notificationr = {
               idReceive: currentUser._id,
               idEmited: data && data.id,
-              state: '1'
+              state: '1',
             };
             console.log(notificationr);
             notificacion(notificationr, currentUser._id);
