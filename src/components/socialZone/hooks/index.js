@@ -3,7 +3,6 @@ import { fireRealtime } from '../../../helpers/firebase';
 export const monitorEventPresence = (event_id, attendeeListPresence, setAttendeeListPresence) => {
   console.log('datafirebase se inicio el monitoreo de presencia');
   var eventpresenceRef = fireRealtime.ref('status/' + event_id);
-
   eventpresenceRef.on('value', (snapshot) => {
     const data = snapshot.val();
     let datalist = [];

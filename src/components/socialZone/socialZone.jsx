@@ -56,6 +56,7 @@ let SocialZone = function(props) {
     setcurrentTab('1'); //chats tab
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
+    setchattab('chat2'); //selecciona el tab de un chat privado
   };
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
