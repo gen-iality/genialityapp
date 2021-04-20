@@ -59,6 +59,7 @@ const MESSAGE_MAX_LENGTH = 200;
 function AppointmentModal({
   event,
   currentEventUserId,
+  eventUser,
   targetEventUserId,
   targetEventUser,
   closeModal,
@@ -275,6 +276,7 @@ function AppointmentModal({
                                 createAgendaToEventUser({
                                   eventId: event._id,
                                   currentEventUserId,
+                                  eventUser,
                                   targetEventUserId,
                                   targetEventUser,
                                   timetableItem,

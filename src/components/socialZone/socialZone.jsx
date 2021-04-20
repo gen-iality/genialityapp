@@ -53,8 +53,10 @@ let SocialZone = function(props) {
   let tab = props.tab;
 
   let setCurrentChat = (id, chatname) => {
+    console.log('CURRENT CHAT');
     setcurrentTab('1'); //chats tab
     setCurrentChatInner(id);
+    setchattab('chat2');
     setCurrentChatNameInner(chatname);
   };
 
@@ -157,7 +159,7 @@ let SocialZone = function(props) {
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
                 setTotalNewMessages(newmsj);
-              }
+              },
             });
         }
 
@@ -368,13 +370,13 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
   viewNotification: state.notifications.data,
-  tabs: state.stage.data.tabs
+  tabs: state.stage.data.tabs,
 });
 
 const mapDispatchToProps = {
   setMainStage,
   setNotification,
-  setCurrentSurvey
+  setCurrentSurvey,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));
