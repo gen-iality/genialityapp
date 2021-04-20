@@ -126,16 +126,16 @@ let SocialZone = function(props) {
   //Cargar la lista de chats de una persona
   let nombreactivouser = props.currentUser?.names;
   useEffect(() => {
-    console.log('USE_EFFECT');
-    console.log(currentUser);
+    // console.log('USE_EFFECT');
+    // console.log(currentUser);
     if (!event_id || !currentUser) return;
-    console.log('USE_EFFECT');
-    console.log(currentUser.uid);
+    // console.log('USE_EFFECT');
+    // console.log(currentUser.uid);
     firestore
       .collection('eventchats/' + event_id + '/userchats/' + currentUser.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
-        console.log('SNAPSHOT-------------');
-        console.log(currentUser.uid);
+        //console.log('SNAPSHOT-------------');
+        //console.log(currentUser.uid);
         let list = [];
         let data;
         let newmsj = 0;
@@ -149,9 +149,9 @@ let SocialZone = function(props) {
 
         let change = querySnapshot.docChanges()[0];
         setdatamsjlast(change?.doc.data());
-        console.log('CHANGE');
-        console.log(change.doc.data().remitente);
-        console.log(userName);
+        //console.log('CHANGE');
+        //console.log(change.doc.data().remitente);
+        //console.log(userName);
         let userNameFirebase = null;
         if (
           (change.doc.data().remitente &&
@@ -167,8 +167,8 @@ let SocialZone = function(props) {
           userNameFirebase = change.doc.data().remitente.replace('(admin)', '');
           userNameFirebase = change.doc.data().remitente.replace('(casa)', '');
         }
-        console.log('USERNAME CHANGE');
-        console.log(userName);
+        //console.log('USERNAME CHANGE');
+        //console.log(userName);
 
         if (change) {
           if (
@@ -187,9 +187,8 @@ let SocialZone = function(props) {
                 notification.destroy();
               },
             });
-
-            console.log('NUEVOS MSJ');
-            console.log(newmsj);
+            // console.log('NUEVOS MSJ');
+            // console.log(newmsj);
             newmsj > 0 && setTotalNewMessages(newmsj);
           }
         }
@@ -222,7 +221,7 @@ let SocialZone = function(props) {
 
   useEffect(() => {
     if (!props.totalMessages) return;
-    console.log('NEW MESSAGES');
+    //console.log('NEW MESSAGES');
     setTotalNewMessages(props.totalMessages);
   }, [props.totalMessages]);
 
