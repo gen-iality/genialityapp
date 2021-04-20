@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 
 import { getDatesRange } from '../../helpers/utils';
-import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId } from './services';
+import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId, getUserEvent } from './services';
 
 const { Option } = Select;
 
@@ -76,10 +76,13 @@ function AppointmentModal({ event, currentEventUserId, targetEventUserId, closeM
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
       duration: 30,
     });
+    var r = null;
     var usId = await getUsersId(targetEventUserId, event._id);
-    console.log(usId);
+    if (!usId) {
+      r = await getUserEvent(targetEventUserId, event._id);
+    }
     let notificationA = {
-      idReceive: usId.account_id,
+      idReceive: usId.account_id || r._id,
       idEmited: resp,
       emailEmited: 'email@gmail.com',
       message: 'Te ha enviado solicitud de agenda',

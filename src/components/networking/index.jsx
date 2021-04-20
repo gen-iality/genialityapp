@@ -656,12 +656,12 @@ class ListEventUser extends Component {
                                               userName: users.properties.names || users.properties.email,
                                             });
 
-                                            var us = await this.props.loadDataUser(users.properties.email);
+                                            var us = await this.props.loadDataUser(users);
                                             console.log('USER PERFIL=>', us);
 
                                             if (sendResp._id) {
                                               let notificationU = {
-                                                idReceive: us._id,
+                                                idReceive: us ? us._id : users.account_id,
                                                 idEmited: sendResp._id,
                                                 emailEmited: this.props.currentUser.email,
                                                 message: 'Te ha enviado solicitud de amistad',
