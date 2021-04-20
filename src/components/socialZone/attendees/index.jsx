@@ -38,7 +38,7 @@ const AttendeList = function(props) {
         name: props.attendeeList[key].properties.name,
         names: props.attendeeList[key].properties.names,
         status: props.attendeeListPresence[key] ? props.attendeeListPresence[key].state : 'offline',
-        email: props.attendeeList[key].properties.email
+        email: props.attendeeList[key].properties.email,
       };
 
       if (mihijo.status === 'online') {
@@ -123,7 +123,7 @@ const AttendeList = function(props) {
                     <MessageTwoTone style={{ fontSize: '20px' }} />
                   </Tooltip>
                 </a>
-              ) : null
+              ) : null,
             ]}>
             <List.Item.Meta
               avatar={
@@ -139,7 +139,7 @@ const AttendeList = function(props) {
                 //props.currentUser ? (
                 <Popover
                   trigger='click'
-                  style={{ padding: '0px !important' }}
+                  style={{ padding: '0px !important', zIndex: 900 }}
                   placement='leftTop'
                   content={<PopoverInfoUser item={item} props={props} />}>
                   <a
