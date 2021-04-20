@@ -81,6 +81,7 @@ export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
 
 export const createAgendaToEventUser = ({
   eventId,
+  eventUser,
   currentEventUserId,
   targetEventUserId,
   targetEventUser,
@@ -120,6 +121,8 @@ export const createAgendaToEventUser = ({
           .add({
             name: targetEventUser ? targetEventUser.properties.names : '',
             email: targetEventUser ? targetEventUser.properties.email : '',
+            name_requesting: eventUser ? eventUser.properties.names : '',
+            email_requesting: eventUser ? eventUser.properties.email : '',
             nuevapropiedad: 'asdfa',
             attendees: [currentEventUserId, targetEventUserId],
             owner_id: currentEventUserId,
