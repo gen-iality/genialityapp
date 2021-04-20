@@ -78,11 +78,9 @@ function AppointmentModal({ event, currentEventUserId, targetEventUserId, closeM
     });
     var r = null;
     var usId = await getUsersId(targetEventUserId, event._id);
-    if (!usId) {
-      r = await getUserEvent(targetEventUserId, event._id);
-    }
+
     let notificationA = {
-      idReceive: usId.account_id || r._id,
+      idReceive: usId.account_id,
       idEmited: resp,
       emailEmited: 'email@gmail.com',
       message: 'Te ha enviado solicitud de agenda',
