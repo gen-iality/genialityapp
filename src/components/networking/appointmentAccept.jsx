@@ -4,7 +4,7 @@
 // import { isNonEmptyArray } from "ramda-adjunct"
 // import React, { useEffect, useState } from 'react'
 // import { acceptOrRejectAgenda} from "./services";
-import React from 'react'
+import React from 'react';
 // const { Meta } = Card;
 
 // const requestStatusText = {
@@ -12,21 +12,19 @@ import React from 'react'
 //   accepted: 'aceptada'
 // }
 
+//props
+const AppointmentAccept = async () => {
+  // const {event_id, meeting_id, id_receiver} = props.match.params
+  // let data = {};
+  // let newStatus =  "accepted";
+  // let meeting = await getMeeting (eventId, meeting_id)
+  //changeAgendaStatus(event_id, id_receiver, meeting,newStatus)
+  // llamar al api con la agenda, id_receiver, id_sender, hora_agenda,
+  //
+  return <h1> Trabajo en progreso. para la aceptación de reuniones de forma rápida</h1>;
+};
 
- //props
-  const AppointmentAccept = async (  ) => {
-    // const {event_id, meeting_id, id_receiver} = props.match.params
-    // let data = {};
-    // let newStatus =  "accepted";
-        // let meeting = await getMeeting (eventId, meeting_id)
-    //changeAgendaStatus(event_id, id_receiver, meeting,newStatus)
-    // llamar al api con la agenda, id_receiver, id_sender, hora_agenda,
-    //
-    return (<h1> Trabajo en progreso. para la aceptación de reuniones de forma rápida</h1>);
-  }
-
-
-// let changeAgendaStatus = function( newStatus ){ 
+// let changeAgendaStatus = function( newStatus ){
 
 //       acceptOrRejectAgenda( eventId, currentEventUserId, data, newStatus )
 //         .then( () => setRequestResponse( newStatus ) )
@@ -49,8 +47,7 @@ import React from 'react'
 //           }
 //         } )
 //         .finally( () => setFetching( false ) )
-    
-  
+
 // }
 
-export default AppointmentAccept
+export default AppointmentAccept;
