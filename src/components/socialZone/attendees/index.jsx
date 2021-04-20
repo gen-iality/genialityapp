@@ -29,33 +29,29 @@ const AttendeList = function(props) {
     let ordenadousers = [];
 
     Object.keys(props.attendeeList).map((key) => {
-      Object.keys(props.attendeeListPresence).map((key2) => {
-        if (key2 === key) {
-          let mihijo = {
-            idattendpresence: key2,
-            iduser: key,
-            name: props.attendeeList[key].properties.name,
-            names: props.attendeeList[key].properties.names,
-            status: props.attendeeListPresence[key2].state,
-            email: props.attendeeList[key].properties.email,
-          };
+      //Object.keys(props.attendeeListPresence).map((key2) => {
+      //if (key2 === key) {
+      let mihijo = {
+        idattendpresence: key,
+        iduser: key,
+        name: props.attendeeList[key].properties.name,
+        names: props.attendeeList[key].properties.names,
+        status: props.attendeeListPresence[key] ? props.attendeeListPresence[key].state : 'offline',
+        email: props.attendeeList[key].properties.email
+      };
 
-          usersorderbystatus.push(mihijo);
-        }
-      });
-    });
-
-    usersorderbystatus.map((user) => {
-      if (user.status === 'online') {
-        ordenadousers.unshift(user);
-      } else if (user.status === 'offline') {
-        ordenadousers.push(user);
+      if (mihijo.status === 'online') {
+        ordenadousers.unshift(mihijo);
+      } else if (mihijo.status === 'offline') {
+        ordenadousers.push(mihijo);
       }
+      //}
+      //});
     });
 
     setmyattendelist(ordenadousers);
-    console.log('ordenadousers');
-    console.log(ordenadousers);
+    console.log('ordenadousers', ordenadousers);
+
     setfilteredlist(ordenadousers.slice(0, pag));
     setPage(1);
   }, [props.attendeeListPresence, props.attendeeList]);
@@ -126,7 +122,7 @@ const AttendeList = function(props) {
                     <MessageTwoTone style={{ fontSize: '20px' }} />
                   </Tooltip>
                 </a>
-              ) : null,
+              ) : null
             ]}>
             <List.Item.Meta
               avatar={
@@ -139,25 +135,25 @@ const AttendeList = function(props) {
                 )
               }
               title={
-                props.currentUser ? (
-                  <Popover
-                    trigger='click'
-                    style={{ padding: '0px !important' }}
-                    placement='leftTop'
-                    content={<PopoverInfoUser item={item} props={props} />}>
-                    <a
-                      key='list-loadmore-edit'
-                      /* onClick={() => {
+                //props.currentUser ? (
+                <Popover
+                  trigger='click'
+                  style={{ padding: '0px !important' }}
+                  placement='leftTop'
+                  content={<PopoverInfoUser item={item} props={props} />}>
+                  <a
+                    key='list-loadmore-edit'
+                    /* onClick={() => {
                         var user = props.currentUser;
                         console.log(props.currentUser);
                         console.log(item);
                         props.createNewOneToOneChat(user.uid, user.names, item.iduser, item.names);
                       }} */
-                    >
-                      {item.names}
-                    </a>
-                  </Popover>
-                ) : null
+                  >
+                    {item.names}
+                  </a>
+                </Popover>
+                //) : null
               }
               description={
                 item.status === 'online' ? (

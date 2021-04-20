@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Tabs, Row, Badge, Col, notification, Button } from 'antd';
+import { Tabs, Row, Badge, Col, notification, Button, Spin } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone, SearchOutlined } from '@ant-design/icons';
 import { getCurrentUser } from '../../helpers/request';
 import initUserPresence from '../../containers/userPresenceInEvent';
@@ -157,7 +157,7 @@ let SocialZone = function(props) {
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
                 setTotalNewMessages(newmsj);
-              },
+              }
             });
         }
 
@@ -256,23 +256,27 @@ let SocialZone = function(props) {
               </Col>
             </Row>
             <div className='asistente-list'>
-              <AttendeList
-                agendarCita={props.agendarCita}
-                loadDataUser={props.loadDataUser}
-                notificacion={props.notificacion}
-                sendFriendship={props.sendFriendship}
-                perfil={props.perfil}
-                section={props.section}
-                containNetWorking={props.containNetWorking}
-                busqueda={strAttende}
-                currentUser={props.currentUser}
-                event_id={event_id}
-                currentChat={currentChat}
-                currentChatName={currentChatName}
-                createNewOneToOneChat={createNewOneToOneChat}
-                attendeeList={attendeeList}
-                attendeeListPresence={attendeeListPresence}
-              />
+              {!Object.keys(attendeeList).length ? (
+                <Spin tip='Loading...' />
+              ) : (
+                <AttendeList
+                  agendarCita={props.agendarCita}
+                  loadDataUser={props.loadDataUser}
+                  notificacion={props.notificacion}
+                  sendFriendship={props.sendFriendship}
+                  perfil={props.perfil}
+                  section={props.section}
+                  containNetWorking={props.containNetWorking}
+                  busqueda={strAttende}
+                  currentUser={props.currentUser}
+                  event_id={event_id}
+                  currentChat={currentChat}
+                  currentChatName={currentChatName}
+                  createNewOneToOneChat={createNewOneToOneChat}
+                  attendeeList={attendeeList}
+                  attendeeListPresence={attendeeListPresence}
+                />
+              )}
             </div>
           </TabPane>
         </>
@@ -364,13 +368,13 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
   viewNotification: state.notifications.data,
-  tabs: state.stage.data.tabs,
+  tabs: state.stage.data.tabs
 });
 
 const mapDispatchToProps = {
   setMainStage,
   setNotification,
-  setCurrentSurvey,
+  setCurrentSurvey
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));

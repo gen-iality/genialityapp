@@ -28,7 +28,7 @@ import {
   SearchOutlined,
   UsergroupAddOutlined,
   VideoCameraAddOutlined,
-  SmileOutlined,
+  SmileOutlined
 } from '@ant-design/icons';
 
 //custom
@@ -39,7 +39,7 @@ import {
   fireStoreApi,
   Activity,
   getCurrentUser,
-  EventFieldsApi,
+  EventFieldsApi
 } from '../../helpers/request';
 import Loading from '../loaders/loading';
 import { BaseUrl } from '../../helpers/constants';
@@ -82,7 +82,7 @@ import {
   // BrowserView,
   // MobileView,
   // isBrowser,
-  isMobile,
+  isMobile
 } from 'react-device-detect';
 import Avatar from 'antd/lib/avatar/avatar';
 import Text from 'antd/lib/typography/Text';
@@ -104,14 +104,14 @@ const html = document.querySelector('html');
 const drawerButton = {
   height: '46px',
   padding: '7px 10px',
-  fontSize: '10px',
+  fontSize: '10px'
 };
 
 const imageCenter = {
   maxWidth: '100%',
   minWidth: '66.6667%',
   margin: '0 auto',
-  display: 'block',
+  display: 'block'
 };
 
 let notify = false;
@@ -177,8 +177,8 @@ class Landing extends Component {
       generalTabs: {
         publicChat: true,
         privateChat: true,
-        attendees: true,
-      },
+        attendees: true
+      }
     };
     this.showLanding = this.showLanding.bind(this);
     this.SendFriendship = this.SendFriendship.bind(this);
@@ -243,7 +243,7 @@ class Landing extends Component {
 
   openNotificationWithIcon = (type) => {
     notification[type]({
-      message: 'holap',
+      message: 'holap'
       // description: 'Tienes un nuevo mensaje',
     });
   };
@@ -289,7 +289,7 @@ class Landing extends Component {
     console.log(properties);
     if (properties.length > 0) {
       this.setState({
-        propertiesUserPerfil: properties,
+        propertiesUserPerfil: properties
       });
       return properties;
     }
@@ -329,7 +329,7 @@ class Landing extends Component {
           user_name_requested: currentUserName,
           user_name_requesting: userName,
           event_id: this.props.eventInfo._id,
-          state: 'send',
+          state: 'send'
         };
 
         // Se ejecuta el servicio del api de evius
@@ -340,7 +340,7 @@ class Landing extends Component {
             description:
               'Le llegará un correo a la persona notificandole la solicitud, quién la aceptara o recharaza. Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.',
             icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-            duration: 30,
+            duration: 30
           });
           return respInvitation;
         } catch (err) {
@@ -357,17 +357,17 @@ class Landing extends Component {
 
   setTotalNewMessages = (newMessages) => {
     this.setState({
-      totalNewMessages: newMessages || 0,
+      totalNewMessages: newMessages || 0
     });
   };
 
   updateOption = async (optionselected) => {
     this.setState({
-      option: optionselected,
+      option: optionselected
     });
     let currentActivity = { ...this.state.currentActivity, option: optionselected };
     this.setState({
-      currentActivity: currentActivity,
+      currentActivity: currentActivity
     });
 
     await this.mountSections();
@@ -375,7 +375,7 @@ class Landing extends Component {
 
   actualizarCurrentActivity = (activity) => {
     this.setState({
-      currentActivity: { ...activity, option: 'N/A' },
+      currentActivity: { ...activity, option: 'N/A' }
     });
 
     firestore
@@ -391,7 +391,7 @@ class Landing extends Component {
           platform: videoConference.platform ? videoConference.platform : null,
           habilitar_ingreso: videoConference.habilitar_ingreso
             ? videoConference.habilitar_ingreso
-            : 'closed_metting_room',
+            : 'closed_metting_room'
         });
       });
   };
@@ -405,7 +405,7 @@ class Landing extends Component {
   toggleCollapsed = async (tab) => {
     this.setState({
       collapsed: !this.state.collapsed,
-      tabSelected: tab,
+      tabSelected: tab
     });
     await this.mountSections();
   };
@@ -424,7 +424,7 @@ class Landing extends Component {
 
   collapsePerfil = async (userPerfil) => {
     this.setState({
-      visiblePerfil: !this.state.visiblePerfil,
+      visiblePerfil: !this.state.visiblePerfil
     });
     if (userPerfil != null) {
       console.log(userPerfil);
@@ -446,26 +446,26 @@ class Landing extends Component {
   toggleCollapsedN = async () => {
     this.setState({
       collapsed: !this.state.collapsed,
-      tabSelected: 1,
+      tabSelected: 1
     });
     await this.mountSections();
   };
 
   hideHeader = () => {
     this.setState({
-      headerVisible: false,
+      headerVisible: false
     });
   };
 
   showDrawerMobile = () => {
     this.setState({
-      visibleChat: true,
+      visibleChat: true
     });
   };
 
   showDrawer = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
     this.hideHeader();
   };
@@ -473,14 +473,14 @@ class Landing extends Component {
   onClose = () => {
     this.setState({
       visible: false,
-      visibleChat: false,
+      visibleChat: false
     });
   };
 
   onChange = (e) => {
     this.setState({
       placement: e.target.value,
-      placementBottom: e.target.value,
+      placementBottom: e.target.value
     });
     this.setState({ section: 'evento' });
   };
@@ -509,7 +509,7 @@ class Landing extends Component {
     let eventUsers = null;
     this.props.setNotification({
       message: null,
-      type: null,
+      type: null
     });
 
     const id = this.props.match.params.event;
@@ -568,7 +568,7 @@ class Landing extends Component {
       user: user,
       currentUser: user,
       namesUser: namesUser,
-      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false,
+      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false
     });
     let sections = {
       agenda: (
@@ -684,7 +684,7 @@ class Landing extends Component {
                     width={'100%'}
                     style={{
                       display: 'block',
-                      margin: '0 auto',
+                      margin: '0 auto'
                     }}
                     url={event.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -726,7 +726,7 @@ class Landing extends Component {
             </Col>
           </Row>
         </>
-      ),
+      )
     };
     //default section is firstone
     this.setState({ loading: false, sections }, () => {
@@ -799,7 +799,7 @@ class Landing extends Component {
           message: notification.message,
           name: notification.name,
           state: notification.state,
-          type: notification.type,
+          type: notification.type
         });
     } else {
       firestore
@@ -811,7 +811,7 @@ class Landing extends Component {
         .doc(notification.idEmited)
         .set(
           {
-            state: notification.state,
+            state: notification.state
           },
           { merge: true }
         );
@@ -828,7 +828,7 @@ class Landing extends Component {
     await this.listenSurveysData(this.state.event._id);
 
     this.setState({
-      activitiesAgenda: infoAgenda.data,
+      activitiesAgenda: infoAgenda.data
     });
 
     // Se escucha la configuracion  de los tabs del evento
@@ -843,48 +843,50 @@ class Landing extends Component {
     this.addNotification(notification, iduserEmmited);*/
     //LISTENER NOTIFICATIONS NETWORKING
     //console.log('Networking');
-    firestore
-      .collection('notificationUser')
-      .doc(this.state.user?._id)
-      .collection('events')
-      .doc(this.state.event._id)
-      .collection('notifications')
-      .onSnapshot((querySnapshot) => {
-        console.log('NETWORKING NOTIFICATIONS');
-        let contNotifications = 0;
-        let notAg = [];
-        let notAm = [];
-        //console.log(querySnapshot.docs[0].data());
-        querySnapshot.docs.forEach((doc) => {
-          let notification = doc.data();
+    if (this.state.user) {
+      firestore
+        .collection('notificationUser')
+        .doc(this.state.user?._id)
+        .collection('events')
+        .doc(this.state.event._id)
+        .collection('notifications')
+        .onSnapshot((querySnapshot) => {
+          console.log('NETWORKING NOTIFICATIONS');
+          let contNotifications = 0;
+          let notAg = [];
+          let notAm = [];
+          //console.log(querySnapshot.docs[0].data());
+          querySnapshot.docs.forEach((doc) => {
+            let notification = doc.data();
 
-          if (notification.state === '0') {
-            contNotifications++;
-            console.log('LLEGO ACA');
-          }
+            if (notification.state === '0') {
+              contNotifications++;
+              console.log('LLEGO ACA');
+            }
 
-          //Notificacion tipo agenda
-          if (notification.type == 'agenda' && notification.state === '0') {
-            notAg.push(doc.data());
-            console.log(doc.data());
-            console.log('Not Agenda');
-          }
-          //Notificacion otra
-          if (notification.type == 'amistad' && notification.state === '0') {
-            notAm.push(doc.data());
-            console.log(doc.data());
-            console.log('Not amistas');
-          }
+            //Notificacion tipo agenda
+            if (notification.type == 'agenda' && notification.state === '0') {
+              notAg.push(doc.data());
+              console.log(doc.data());
+              console.log('Not Agenda');
+            }
+            //Notificacion otra
+            if (notification.type == 'amistad' && notification.state === '0') {
+              notAm.push(doc.data());
+              console.log(doc.data());
+              console.log('Not amistas');
+            }
+          });
+          this.setState({
+            notifyNetworkingAg: notAg,
+            notifyNetworkingAm: notAm,
+            totalNotficationsN: contNotifications
+          });
+          this.props.setNotificationN({ total: contNotifications });
+          this.mountSections();
+          console.log('Usted tiene ' + contNotifications + ' notificaciones');
         });
-        this.setState({
-          notifyNetworkingAg: notAg,
-          notifyNetworkingAm: notAm,
-          totalNotficationsN: contNotifications,
-        });
-        this.props.setNotificationN({ total: contNotifications });
-        this.mountSections();
-        console.log('Usted tiene ' + contNotifications + ' notificaciones');
-      });
+    }
 
     //LISTENER DE ACTIVITIES  STATUS  NOTIFICATIONS POR EVENT
     firestore
@@ -902,7 +904,7 @@ class Landing extends Component {
           this.props.setNotification({
             message: this.obtenerNombreActivity(change.doc.id)?.name + ' está en vivo..',
             type: 'open',
-            activity: this.obtenerNombreActivity(change.doc.id),
+            activity: this.obtenerNombreActivity(change.doc.id)
           });
           //console.log('NOTIFICAION OPEN');
         } else if (
@@ -912,7 +914,7 @@ class Landing extends Component {
         ) {
           this.props.setNotification({
             message: this.obtenerNombreActivity(change.doc.id).name + ' ha terminado..',
-            type: 'ended',
+            type: 'ended'
           });
           // console.log('NOTIFICAION ENDED');
         } else if (
@@ -923,7 +925,7 @@ class Landing extends Component {
         ) {
           this.props.setNotification({
             message: this.obtenerNombreActivity(change.doc.id).name + ' está por iniciar',
-            type: 'close',
+            type: 'close'
           });
         }
         // console.log('NOTIFICAION CLOSED');
@@ -979,7 +981,7 @@ class Landing extends Component {
       ) {
         this.props.setNotification({
           message: change?.doc.data().name + ' está abierta',
-          type: 'survey',
+          type: 'survey'
           //survey: change.doc.data(),
           //activity: this.obtenerNombreActivity(change.doc.data().activity_id)
         });
@@ -1007,14 +1009,14 @@ class Landing extends Component {
           const user = authResult.user;
           this.closeLogin(user);
           return false;
-        },
+        }
       },
       //Disabled accountchooser
       credentialHelper: 'none',
       // Terms of service url.
       tosUrl: `${BaseUrl}/terms`,
       // Privacy policy url.
-      privacyPolicyUrl: `${BaseUrl}/privacy`,
+      privacyPolicyUrl: `${BaseUrl}/privacy`
     };
     ui.start('#firebaseui-auth-container', uiConfig);
   };
@@ -1057,7 +1059,7 @@ class Landing extends Component {
   showSection = (section, clean = false) => {
     this.props.setNotification({
       message: null,
-      type: null,
+      type: null
     });
     this.setState({ section, visible: false }, () => this.callbackShowSection(section, clean));
   };
@@ -1172,7 +1174,7 @@ class Landing extends Component {
                 this.props.gotoActivity(this.props.viewNotification.activity);
                 this.props.setNotification({
                   message: null,
-                  type: null,
+                  type: null
                 });
               }
 
@@ -1190,9 +1192,9 @@ class Landing extends Component {
       onClose: () => {
         this.props.setNotification({
           message: null,
-          type: null,
+          type: null
         });
-      },
+      }
     });
 
     /*  let key = 'updatable';
@@ -1255,7 +1257,7 @@ class Landing extends Component {
       toggleConferenceZoom,
       meeting_id,
       currentUser,
-      loader_page,
+      loader_page
     } = this.state;
 
     return (
@@ -1308,7 +1310,7 @@ class Landing extends Component {
                           className='containerMenu_Landing'
                           style={{
                             backgroundColor:
-                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
                           }}
                           trigger={null}
                           width={110}>
@@ -1350,7 +1352,7 @@ class Landing extends Component {
                             bodyStyle={{
                               padding: '0px',
                               backgroundColor:
-                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
+                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white'
                             }}>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                             <MenuEvent
@@ -1560,7 +1562,7 @@ class Landing extends Component {
                             first={{
                               title: 'Iniciar Sesión o Registrarse',
                               class: 'is-info',
-                              action: this.openLogin,
+                              action: this.openLogin
                             }}
                             second={{ title: 'Cancelar', class: '', action: this.closeModal }}
                           />
@@ -1739,7 +1741,7 @@ const mapStateToProps = (state) => ({
   viewNotification: state.notifications.data,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   tabs: state.stage.data.tabs,
-  currentSurvey: state.survey.data.currentSurvey,
+  currentSurvey: state.survey.data.currentSurvey
 });
 
 const mapDispatchToProps = {
@@ -1751,7 +1753,7 @@ const mapDispatchToProps = {
   setSurveyVisible,
   setGeneralTabs,
   getGeneralTabs,
-  setNotificationN,
+  setNotificationN
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Landing));
