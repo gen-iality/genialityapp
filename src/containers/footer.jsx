@@ -9,10 +9,6 @@ class Footer extends Component {
     this.state = {};
   }
 
-  componentDidMount() {
-    console.log(this.props);
-  }
-
   logout = () => {
     Cookie.remove('token');
     Cookie.remove('evius_token');
