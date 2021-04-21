@@ -30,6 +30,11 @@ export const fieldsFormQuestion = [
     name: 'title',
   },
   {
+    label: 'Imagen',
+    type: 'image',
+    name: 'image',
+  },
+  {
     label: 'Tipo de Pregunta',
     selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text']),
     name: 'type',

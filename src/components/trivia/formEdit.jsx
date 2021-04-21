@@ -4,7 +4,7 @@ import { SurveysApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import { Form, Input, Button, Select, Spin, Radio, Checkbox } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-
+import ImageInput from '../shared/imageInput';
 const { Option } = Select;
 
 const layout = {
@@ -48,6 +48,7 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
     setAllowGradableSurvey(state);
 
     setCorrectAnswerIndex(valuesQuestion.correctAnswerIndex);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [valuesQuestion]);
 
   const handleRadio = (e) => {
@@ -97,10 +98,11 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
       });
     }
 
+    // eslint-disable-next-line no-unused-vars
     const exclude = ({ questionOptions, ...rest }) => rest;
 
     if (questionIndex === undefined) {
-      return SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then((response) => {
+      return SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then(() => {
         form.resetFields();
         closeModal({ questionIndex, data: exclude(values) }, 'created');
         toast.success('Pregunta creada');
@@ -116,6 +118,34 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
       .catch((err) => toast.error('No se pudo actualizar la pregunta: ', err));
   };
 
+  const inputTextRules = [
+    { required: true },
+    {
+      validator: fieldValidation,
+    },
+  ];
+
+  function inputByType(field, key, rules) {
+    switch (field.type) {
+      case 'text':
+        return (
+          <Form.Item
+            key={`field${key}${field.name}`}
+            name={field.name}
+            label={field.label}
+            rules={rules ? inputTextRules : []}>
+            <Input />
+          </Form.Item>
+        );
+      case 'image':
+        return (
+          <Form.Item key={`field${key}${field.name}`} name={field.name} label={field.label}>
+            <ImageInput />
+          </Form.Item>
+        );
+    }
+  }
+
   if (Object.entries(defaultValues).length !== 0)
     return (
       <Form
@@ -129,94 +159,67 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
         {allowGradableSurvey === true ? (
           <div>
             {fieldsFormQuestionWithPoints.map((field, key) =>
-              field.type ? (
-                <Form.Item
-                  key={`field${key}${field.name}`}
-                  name={field.name}
-                  label={field.label}
-                  // rules={[
-                  //   { required: true },
-                  //   {
-                  //     validator: fieldValidation,
-                  //   },
-                  // ]}
-                >
-                  <Input />
-                </Form.Item>
-              ) : (
-                field.selectOptions && (
-                  <Form.Item
-                    key={`field${key}`}
-                    name={field.name}
-                    label={field.label}
-                    rules={[
-                      { required: true },
-                      {
-                        validator: fieldValidation,
-                      },
-                    ]}>
-                    <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
-                      {field.selectOptions.map((option, index) =>
-                        option.text ? (
-                          <Option key={`type${index}`} value={option.value}>
-                            {option.text}
-                          </Option>
-                        ) : (
-                          <Option key={`quantity${index}`} value={option}>
-                            {option}
-                          </Option>
-                        )
-                      )}
-                    </Select>
-                  </Form.Item>
-                )
-              )
+              field.type
+                ? inputByType(field, key)
+                : field.selectOptions && (
+                    <Form.Item
+                      key={`field${key}`}
+                      name={field.name}
+                      label={field.label}
+                      rules={[
+                        { required: true },
+                        {
+                          validator: fieldValidation,
+                        },
+                      ]}>
+                      <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
+                        {field.selectOptions.map((option, index) =>
+                          option.text ? (
+                            <Option key={`type${index}`} value={option.value}>
+                              {option.text}
+                            </Option>
+                          ) : (
+                            <Option key={`quantity${index}`} value={option}>
+                              {option}
+                            </Option>
+                          )
+                        )}
+                      </Select>
+                    </Form.Item>
+                  )
             )}
           </div>
         ) : (
           <div>
             {fieldsFormQuestion.map((field, key) =>
-              field.type ? (
-                <Form.Item
-                  key={`field${key}${field.name}`}
-                  name={field.name}
-                  label={field.label}
-                  rules={[
-                    { required: true },
-                    {
-                      validator: fieldValidation,
-                    },
-                  ]}>
-                  <Input />
-                </Form.Item>
-              ) : (
-                field.selectOptions && (
-                  <Form.Item
-                    key={`field${key}`}
-                    name={field.name}
-                    label={field.label}
-                    rules={[
-                      { required: true },
-                      {
-                        validator: fieldValidation,
-                      },
-                    ]}>
-                    <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
-                      {field.selectOptions.map((option, index) =>
-                        option.text ? (
-                          <Option key={`type${index}`} value={option.value}>
-                            {option.text}
-                          </Option>
-                        ) : (
-                          <Option key={`quantity${index}`} value={option}>
-                            {option}
-                          </Option>
-                        )
-                      )}
-                    </Select>
-                  </Form.Item>
-                )
-              )
+              field.type
+                ? inputByType(field, key, true)
+                : field.selectOptions && (
+                    <Form.Item
+                      key={`field${key}`}
+                      name={field.name}
+                      label={field.label}
+                      rules={[
+                        { required: true },
+                        {
+                          validator: fieldValidation,
+                        },
+                      ]}>
+                      <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
+                        {field.selectOptions.map((option, index) =>
+                          option.text ? (
+                            <Option key={`type${index}`} value={option.value}>
+                              {option.text}
+                            </Option>
+                          ) : (
+                            <Option key={`quantity${index}`} value={option}>
+                              {option}
+                            </Option>
+                          )
+                        )}
+                      </Select>
+                    </Form.Item>
+                  )
             )}
           </div>
         )}
