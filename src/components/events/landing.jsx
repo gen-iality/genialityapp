@@ -25,7 +25,6 @@ import {
   PlayCircleOutlined,
   LoadingOutlined,
   DiffOutlined,
-  SearchOutlined,
   UsergroupAddOutlined,
   VideoCameraAddOutlined,
   SmileOutlined,
@@ -284,7 +283,7 @@ class Landing extends Component {
       });
   };
 
-  getProperties = async (idUser) => {
+  getProperties = async () => {
     let properties = await EventFieldsApi.getAll(this.props.eventInfo._id);
 
     if (properties.length > 0) {
@@ -427,10 +426,10 @@ class Landing extends Component {
       this.setState({ userPerfil: data.properties });
       //var userEid = this.obtenerUserPerfil(data._id);
       if (data) {
-        var properties = await this.getProperties(data._id);
+        await this.getProperties(data._id);
       }
     } else {
-      console.log('Perfil usuario nulo');
+      //console.log('Perfil usuario nulo');
     }
   };
 
@@ -771,7 +770,7 @@ class Landing extends Component {
     }
   }
 
-  async addNotification(notification, iduserEmmited) {
+  async addNotification(notification) {
     if (notification.emailEmited != null) {
       firestore
         .collection('notificationUser')
@@ -1589,7 +1588,6 @@ class Landing extends Component {
                             section={this.state.section}
                             containNetWorking={this.state.containNetWorking}
                             eventSurveys={this.state.eventSurveys}
-                            currentUser={this.state.currentUser}
                             generalTabs={this.state.generalTabs}
                             publishedSurveys={this.state.publishedSurveys}
                           />

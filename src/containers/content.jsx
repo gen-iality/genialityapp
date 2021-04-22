@@ -45,33 +45,39 @@ class ContentContainer extends Component {
           <Route path='/evento/tpgamers' render={() => <Redirect to='/landing/5f4e41d5eae9886d464c6bf4' />} />
 
           <Route path='/notfound' component={NotFoundPage} />
-          <WithFooter>
-            <Route path='/page/:id' component={HomeProfile} />
-            <PrivateRoute path='/my_events' component={Events} />
-            <PrivateRoute path='/event/:event' component={Event} />
-            <PrivateRoute path='/create-event' component={NewEvent} />
-            <PrivateRoute path='/profile/:id' component={MyProfile} />
-            <PrivateRoute path='/organization/:id' component={Organization} />
-            <PrivateRoute path='/purchase/:id' component={Purchase} />
-            <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
-            <PrivateRoute path='/tickets/:id' component={Tickets} />
-            <Route path='/terms' component={Terms} />
-            <Route path='/privacy' component={Privacy} />
-            <Route path='/policies' component={Policies} />
-            <Route path='/about' component={About} />
-            <Route path='/faqs' component={Faqs} />
-            <Route path='/singintest' component={SinginTest} />
-            <Route path='/api/generatorQr/:id' component={QRedirect} />
-            <Route exact path='/transition/:event' component={Transition} />
+          {/* <WithFooter> */}
+          <Route path='/page/:id' component={HomeProfile} />
+          <PrivateRoute path='/my_events' component={Events} />
+          <PrivateRoute path='/event/:event' component={Event} />
+          <PrivateRoute path='/create-event' component={NewEvent} />
+          <PrivateRoute path='/profile/:id' component={MyProfile} />
+          <PrivateRoute path='/organization/:id' component={Organization} />
+          <PrivateRoute path='/purchase/:id' component={Purchase} />
+          <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
+          <PrivateRoute path='/tickets/:id' component={Tickets} />
+          <Route path='/terms' component={Terms} />
+          <Route path='/privacy' component={Privacy} />
+          <Route path='/policies' component={Policies} />
+          <Route path='/about' component={About} />
+          <Route path='/faqs' component={Faqs} />
+          <Route path='/singintest' component={SinginTest} />
+          <Route path='/api/generatorQr/:id' component={QRedirect} />
+          <Route exact path='/transition/:event' component={Transition} />
 
-            <Route
-              path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
-              component={AppointmentAccept}
-            />
-            <Route exact path='/' component={Home} />
-            {/* <Route component={NotFoundPage} /> */}
-          </WithFooter>
-          {/* <Route component={NotFoundPage} /> */}
+          <Route
+            path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
+            component={AppointmentAccept}
+          />
+          <Route
+            exact
+            path='/'
+            render={() => (
+              <WithFooter>
+                <Home />
+              </WithFooter>
+            )}
+          />
+          <Route component={NotFoundPage} />
         </Switch>
       </main>
     );
