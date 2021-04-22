@@ -152,33 +152,35 @@ const ChatList = (props) => {
           }
           key='chat2'>
           {!props.currentChat && (
-            <List
-              header={<div></div>}
-              footer={<div></div>}
-              bordered
-              dataSource={props.availableChats}
-              renderItem={(item) => (
-                <List.Item
-                  actions={[
-                    <a
-                      key='list-loadmore-edit'
-                      onClick={() => {
-                        props.setCurrentChat(item.id, item.name ? item.name : item.names);
-                        setusuariofriend(item?.names ? item.names : item.name);
-                        settotalmsjpriv(0);
-                        props.setTotalNewMessages(0);
-                      }}>
-                      <Tooltip title='Chatear'>
-                        <Badge count={totalmsjpriv}>
-                          <MessageTwoTone style={{ fontSize: '20px' }} />
-                        </Badge>
-                      </Tooltip>
-                    </a>,
-                  ]}>
-                  <Typography.Text mark></Typography.Text> {item.name ? item.name : item.names || '----'}
-                </List.Item>
-              )}
-            />
+            <div className='asistente-list'>
+              <List
+                header={<div></div>}
+                footer={<div></div>}
+                bordered
+                dataSource={props.availableChats}
+                renderItem={(item) => (
+                  <List.Item
+                    actions={[
+                      <a
+                        key='list-loadmore-edit'
+                        onClick={() => {
+                          props.setCurrentChat(item.id, item.name ? item.name : item.names);
+                          setusuariofriend(item?.names ? item.names : item.name);
+                          settotalmsjpriv(0);
+                          props.setTotalNewMessages(0);
+                        }}>
+                        <Tooltip title='Chatear'>
+                          <Badge count={totalmsjpriv}>
+                            <MessageTwoTone style={{ fontSize: '20px' }} />
+                          </Badge>
+                        </Tooltip>
+                      </a>,
+                    ]}>
+                    <Typography.Text mark></Typography.Text> {item.name ? item.name : item.names || '----'}
+                  </List.Item>
+                )}
+              />
+            </div>
           )}
           {props.currentChat && (
             <iframe
