@@ -717,7 +717,7 @@ class Agenda extends Component {
                       <TabPane
                         style={{ paddingLeft: '25px', paddingRight: '25px' }}
                         tab={
-                          <span style={{ fontWeight: 'bolder' }}>
+                          <span style={{ fontWeight: 'bolder', color:event.styles.color_tab_agenda }}>
                             {Moment(day)
                               .format('LL')
                               .toUpperCase()}

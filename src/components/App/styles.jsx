@@ -49,11 +49,16 @@ class Styles extends Component {
         },
         {
           title: 'Elige un color para seleccion de fecha de la agenda:',
-          fieldColorName: 'color_tab_agenda ',
+          fieldColorName: 'bgCalendarDayEvent',
           editIsVisible: false
         },
         {
-          title: 'Elige un color para los iconos del menu de la zona zocial',
+          title: 'Elige un color para el texto de los tabs de la agenda:',
+          fieldColorName: 'color_tab_agenda',
+          editIsVisible: false
+        },
+        {
+          title: 'Elige un color para los iconos del menu de la zona zocial:',
           fieldColorName: 'color_icon_socialzone',
           editIsVisible: false
         }
