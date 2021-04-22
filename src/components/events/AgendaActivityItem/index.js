@@ -265,7 +265,7 @@ function AgendaActivityItem(props) {
                         <div className='titulo'>{item.name}.</div>
                         <span className='lugar'>{item && item.space && item.space.name}</span>
                       </Col>
-                      <Row>
+                      <Row style={{width:'100%'}}>
                         {item.description !== null && item.description !== '<p><br></p>' && (
                           <div
                             style={
@@ -294,13 +294,15 @@ function AgendaActivityItem(props) {
                           </div>
                         )}
                       </Row>
-                      <Row>
+                      <Row style={{marginRight:'8px'}}>
                         {item.hosts.length > 0 &&
                           (item.hosts.length < 4 ? (
                             <>
                               {item.hosts.map((speaker, key) => (
-                                <Col key={key} span={6} className='speaker'>
-                                  <table>
+                                  <Space key={key} style={{marginRight:'8px'} } direction='horizontal'>
+                                  <Avatar size={25} src={speaker.image} />
+                                  {speaker.name}
+                                  {/* <table>
                                     <tr>
                                       <th>
                                         <Avatar size={25} src={speaker.image} />
@@ -309,8 +311,8 @@ function AgendaActivityItem(props) {
                                         <div className='speaker-name'>{speaker.name}</div>
                                       </th>
                                     </tr>
-                                  </table>
-                                </Col>
+                                  </table> */}
+ </Space>
                               ))}
                             </>
                           ) : (
