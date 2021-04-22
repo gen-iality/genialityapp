@@ -5,7 +5,7 @@ import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../helpers/constants';
 import asyncComponent from './AsyncComponent';
 import WithFooter from '../components/withFooter';
-// import NotFoundPage from '../components/notFoundPage';
+
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
 const HomeProfile = asyncComponent(() => import('../components/home/profile'));
@@ -44,8 +44,8 @@ class ContentContainer extends Component {
 
           <Route path='/evento/tpgamers' render={() => <Redirect to='/landing/5f4e41d5eae9886d464c6bf4' />} />
 
+          <Route path='/notfound' component={NotFoundPage} />
           <WithFooter>
-            <Route path='/notfound' component={NotFoundPage} />
             <Route path='/page/:id' component={HomeProfile} />
             <PrivateRoute path='/my_events' component={Events} />
             <PrivateRoute path='/event/:event' component={Event} />
@@ -62,16 +62,16 @@ class ContentContainer extends Component {
             <Route path='/faqs' component={Faqs} />
             <Route path='/singintest' component={SinginTest} />
             <Route path='/api/generatorQr/:id' component={QRedirect} />
-            <Route path='/transition/:event' component={Transition} />
+            <Route exact path='/transition/:event' component={Transition} />
 
             <Route
               path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
               component={AppointmentAccept}
             />
             <Route exact path='/' component={Home} />
-            {/* <Route component={NotFoundPage} /> */}
-            {/* <Redirect to={NotFoundPage} /> */}
+            <Route component={NotFoundPage} />
           </WithFooter>
+          <Route component={NotFoundPage} />
         </Switch>
       </main>
     );

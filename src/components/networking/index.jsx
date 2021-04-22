@@ -283,7 +283,7 @@ class ListEventUser extends Component {
     } = this.state;
 
     return (
-      <div style={{ width: '86.66667%' }}>
+      <div style={{ padding:'12px'}}>
         <EventContent>
           {/* Componente de busqueda */}
           <Tabs activeKey={activeTab} onChange={this.changeActiveTab}>
