@@ -5,10 +5,12 @@ import { ToastContainer } from 'react-toastify';
 
 export default function WithFooter({ children }) {
   return (
-    <Switch>
+    <>
+      {/* <Switch> */}
       {children}
       <Footer />
       <ToastContainer autoClose={2000} newestOnTop pauseOnVisibilityChange />
-    </Switch>
+      {/* </Switch> */}
+    </>
   );
 }

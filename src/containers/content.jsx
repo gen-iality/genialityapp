@@ -69,9 +69,9 @@ class ContentContainer extends Component {
               component={AppointmentAccept}
             />
             <Route exact path='/' component={Home} />
-            <Route component={NotFoundPage} />
+            {/* <Route component={NotFoundPage} /> */}
           </WithFooter>
-          <Route component={NotFoundPage} />
+          {/* <Route component={NotFoundPage} /> */}
         </Switch>
       </main>
     );

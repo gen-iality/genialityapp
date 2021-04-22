@@ -63,7 +63,6 @@ class General extends Component {
 
   async componentDidMount() {
     const validate = await this.validateTabs();
-    console.log('validate', validate);
     if (validate) {
       if (validate.tabs !== undefined) {
         this.setState({ tabs: { ...validate.tabs } });
@@ -292,7 +291,7 @@ class General extends Component {
     const { tabs } = this.state;
     let response = await this.validateTabs();
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       if (response) {
         let updateData = { ...response, tabs: { ...tabs } };
 
