@@ -126,16 +126,11 @@ let SocialZone = function(props) {
   //Cargar la lista de chats de una persona
   let nombreactivouser = props.currentUser?.names;
   useEffect(() => {
-    // console.log('USE_EFFECT');
-    // console.log(currentUser);
     if (!event_id || !currentUser) return;
-    // console.log('USE_EFFECT');
-    // console.log(currentUser.uid);
+
     firestore
       .collection('eventchats/' + event_id + '/userchats/' + currentUser.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
-        //console.log('SNAPSHOT-------------');
-        //console.log(currentUser.uid);
         let list = [];
         let data;
         let newmsj = 0;
@@ -149,26 +144,22 @@ let SocialZone = function(props) {
 
         let change = querySnapshot.docChanges()[0];
         setdatamsjlast(change?.doc.data());
-        //console.log('CHANGE');
-        //console.log(change.doc.data().remitente);
-        //console.log(userName);
         let userNameFirebase = null;
-        if (
-          (change.doc.data().remitente &&
+        if (change.doc.data().remitente) {
+          if (
             change.doc
               .data()
               .remitente.toLowerCase()
-              .indexOf('(admin)') > -1) ||
-          change.doc
-            .data()
-            .remitente.toLowerCase()
-            .indexOf('(casa)')
-        ) {
-          userNameFirebase = change.doc.data().remitente.replace('(admin)', '');
-          userNameFirebase = change.doc.data().remitente.replace('(casa)', '');
+              .indexOf('(admin)') > -1 ||
+            change.doc
+              .data()
+              .remitente.toLowerCase()
+              .indexOf('(casa)')
+          ) {
+            userNameFirebase = change.doc.data().remitente.replace('(admin)', '');
+            userNameFirebase = change.doc.data().remitente.replace('(casa)', '');
+          }
         }
-        //console.log('USERNAME CHANGE');
-        //console.log(userName);
 
         if (change) {
           if (
@@ -187,8 +178,7 @@ let SocialZone = function(props) {
                 notification.destroy();
               },
             });
-            // console.log('NUEVOS MSJ');
-            // console.log(newmsj);
+
             newmsj > 0 && setTotalNewMessages(newmsj);
           }
         }
