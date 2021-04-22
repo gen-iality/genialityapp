@@ -6,7 +6,7 @@ import { Badge, Card, Space } from 'antd';
 
 class EventCard extends Component {
   render() {
-    const { event, action, bordered, right, loading } = this.props;
+    const { event, bordered, right, loading } = this.props;
     const { Meta } = Card;
     return (
       <div className='animate__animated animate__fadeIn'>
@@ -67,7 +67,7 @@ class EventCard extends Component {
                   <div>
                     <span style={{ fontSize: '12px' }}>
                       <Space>
-                        <i class='fas fa-calendar-alt' />
+                        <i className='fas fa-calendar-alt' />
                         <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
                         {'-'}
                         <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>

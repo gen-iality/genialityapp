@@ -17,7 +17,7 @@ import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';
-import { Switch, Card, Row, Col, message, Tabs } from 'antd';
+import { Switch, Card, Row, Col, message, Tabs, Checkbox } from 'antd';
 import { firestore } from '../../helpers/firebase';
 
 Moment.locale('es');
@@ -127,8 +127,14 @@ class General extends Component {
   };
   //Cambio en los input
   handleChange = (e) => {
-    const { name, value } = e.target;
-    //console.log('name', name, 'value', value);
+    let { name, value } = e.target;
+
+    if (name === 'visibility') {
+      value = e.target.checked ? 'PUBLIC' : 'ORGANIZATION';
+    } else if (name === 'allow_register' || name === 'has_payment') {
+      value = e.target.checked;
+    }
+
     this.setState({ event: { ...this.state.event, [name]: value } }, this.valid);
   };
   //Validación
@@ -368,7 +374,7 @@ class General extends Component {
         event.allow_detail_calendar === 'true' || event.allow_detail_calendar === true ? true : false,
       enable_language: event.enable_language === 'true' || event.enable_language === true ? true : false,
       homeSelectedScreen: event.homeSelectedScreen,
-      visibility: event.visibility ? event.visibility : 'PUBLIC',
+      visibility: event.visibility ? event.visibility : 'ORGANIZATION',
       description: event.description,
       category_ids: categories,
       organizer_id:
@@ -819,61 +825,39 @@ class General extends Component {
                 </div>
               </Tabs.TabPane>
               <Tabs.TabPane tab='Avanzado' key='2'>
-                <div className='field'>
-                  <label className='label required'>El evento acepta registros o es privado</label>
-                  <p>
-                    En un evento privado no se aceptan registros externos, la personas que asisten al evento han sido
-                    añadidas por un administrador u organizador del evento
-                  </p>
-                  <div className='select is-primary'>
-                    <select name={'allow_register'} defaultValue={event.allow_register} onChange={this.handleChange}>
-                      <option value={true}>Público</option>
-                      <option value={false}>Privado</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className='field'>
-                  <label className='label required'>El acceso a las actividades del evento requieren pago?</label>
-
-                  <div className='select is-primary'>
-                    <select
-                      name={'has_payment'}
-                      defaultValue={event.has_payment ? event.has_payment : false}
-                      value={event.has_payment}
-                      onChange={this.handleChange}>
-                      <option value={true}>Si</option>
-                      <option value={false}>No</option>
-                    </select>
-                  </div>
-                </div>
-                <div className='field'>
-                  <label className='label'>Visibilidad del evento</label>
-                  <p>Determina si es visible desde el listado general de eventos</p>
-                  <div className='control toggle-switch has-text-centered'>
-                    <input
-                      type='radio'
-                      id='choice1'
-                      name='visibility'
-                      checked={event.visibility === 'PUBLIC'}
+                <Row>
+                  <Col xs={24}>
+                    <Checkbox
+                      defaultChecked={event.allow_register || event.allow_register === 'true'}
+                      onChange={this.handleChange}
+                      value={true}
+                      name='allow_register'>
+                      Habilitar formulario de registro
+                    </Checkbox>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={24}>
+                    <Checkbox
+                      defaultChecked={event.visibility === 'PUBLIC'}
+                      onChange={this.handleChange}
                       value='PUBLIC'
+                      name='visibility'>
+                      Mostrar el evento en la página principal de Evius
+                    </Checkbox>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={24}>
+                    <Checkbox
+                      defaultChecked={event.has_payment || event.has_payment === 'true'}
                       onChange={this.handleChange}
-                    />
-                    <label htmlFor='choice1'>Público</label>
-                    <input
-                      type='radio'
-                      id='choice2'
-                      name='visibility'
-                      checked={event.visibility === 'ORGANIZATION'}
-                      value='ORGANIZATION'
-                      onChange={this.handleChange}
-                    />
-                    <label htmlFor='choice2'>Privado</label>
-                    <div id='flap'>
-                      <span className='content'>{event.visibility === 'PUBLIC' ? 'Público' : 'Privado'}</span>
-                    </div>
-                  </div>
-                </div>
+                      name={'has_payment'}
+                      value={true}>
+                      El evento requiere pago
+                    </Checkbox>
+                  </Col>
+                </Row>
               </Tabs.TabPane>
             </Tabs>
           </div>
