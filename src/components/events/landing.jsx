@@ -1624,7 +1624,7 @@ class Landing extends Component {
                                         icon={
                                           <>
                                             <Badge count={this.state.totalNewMessages}>
-                                              <CommentOutlined style={{ fontSize: '24px' }} />
+                                              <CommentOutlined style={{ fontSize: '24px', color:event.styles.color_icon_socialzone }} />
                                             </Badge>
                                           </>
                                         }
@@ -1636,7 +1636,7 @@ class Landing extends Component {
                                     {this.state.generalTabs.attendees && (
                                       <Menu.Item
                                         key='2'
-                                        icon={<TeamOutlined style={{ fontSize: '24px' }} />}
+                                        icon={<TeamOutlined style={{ fontSize: '24px',  color:event.styles.color_icon_socialzone}} />}
                                         onClick={() => this.toggleCollapsed(2)}></Menu.Item>
                                     )}
                                     {this.props.currentActivity !== null &&
@@ -1646,7 +1646,7 @@ class Landing extends Component {
                                           key='3'
                                           icon={
                                             <Badge dot={this.props.hasOpenSurveys}>
-                                              <PieChartOutlined style={{ fontSize: '24px' }} />
+                                              <PieChartOutlined style={{ fontSize: '24px',  color:event.styles.color_icon_socialzone }} />
                                             </Badge>
                                           }
                                           onClick={() => this.toggleCollapsed(3)}></Menu.Item>

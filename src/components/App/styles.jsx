@@ -49,7 +49,12 @@ class Styles extends Component {
         },
         {
           title: 'Elige un color para seleccion de fecha de la agenda:',
-          fieldColorName: 'bgCalendarDayEvent',
+          fieldColorName: 'color_tab_agenda ',
+          editIsVisible: false
+        },
+        {
+          title: 'Elige un color para los iconos del menu de la zona zocial',
+          fieldColorName: 'color_icon_socialzone',
           editIsVisible: false
         }
         /*                 
@@ -281,6 +286,9 @@ class Styles extends Component {
           toolbarMenuSocial: info.styles.toolbarMenuSocial || '#FFFFFF',
           activeText: info.styles.activeText || '#FFFFFF',
           bgButtonsEvent: info.styles.bgButtonsEvent || '#FFFFFF',
+          // color de los iconos del menu derecho
+          color_icon_socialzone: info.styles.color_icon_socialzone || '#000000',
+          color_tab_agenda: info.styles.color_tab_agenda || '#000000',
           // bgCalendarDayEvent: info.style.bgCalendarDayEvent || "#FFFFFF",
           event_image: info.styles.event_image || null,
           banner_image: info.styles.banner_image || null,
@@ -298,7 +306,6 @@ class Styles extends Component {
           hideBtnDetailAgenda: info.styles.hideBtnDetailAgenda || true,
           loader_page: info.styles.loader_page || 'no',
           data_loader_page: info.styles.data_loader_page || '',
-
           // Estilos de las actividades de la agenda
           hideDatesAgendaItem: info.styles.hideDatesAgendaItem || false,
           hideHoursAgenda: info.styles.hideHoursAgenda || false
