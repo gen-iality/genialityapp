@@ -34,7 +34,7 @@ const MeetingConferenceButton = ({
     case 'open_meeting_room':
       return (
         <>
-          {(usuarioRegistrado && event.visibility === 'ORGANIZATION') || event.visibility !== 'ORGANIZATION' ? (
+          {true|| event.visibility !== 'ORGANIZATION' ? (
             <>
               <Button
                 size='large'

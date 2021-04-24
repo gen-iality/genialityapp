@@ -17,10 +17,11 @@ import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';
-import { Switch, Card, Row, Col, message, Tabs, Checkbox } from 'antd';
+import { Switch, Card, Row, Col, message, Tabs, Checkbox, Typography, Input } from 'antd';
 import { firestore } from '../../helpers/firebase';
 
 Moment.locale('es');
+const { Title } = Typography;
 
 class General extends Component {
   constructor(props) {
@@ -54,6 +55,16 @@ class General extends Component {
         privateChat: true,
         attendees: true,
       },
+      itemsMenu: [],
+      // Estado inicial de la seccion de formulario de registro
+      registerForm: {
+        name: 'Boletería',
+        position: '',
+        section: 'tickets',
+        icon: 'CreditCardOutlined',
+        checked: true,
+        permissions: 'public',
+      },
     };
     this.specificDates = this.specificDates.bind(this);
     this.submit = this.submit.bind(this);
@@ -62,6 +73,25 @@ class General extends Component {
   }
 
   async componentDidMount() {
+    //inicializacion del estado de menu
+    if (this.state.event.itemsMenu) {
+      const { itemsMenu } = this.state.event;
+      const { registerForm } = this.state;
+
+      let registerSection = registerForm;
+
+      if (Object.keys(itemsMenu).length > 0) {
+        Object.keys(itemsMenu).forEach((index) => {
+          if (index === 'tickets') {
+            registerSection.name = itemsMenu[index].name;
+            registerSection.position = itemsMenu[index].position;
+          }
+        });
+      }
+      delete itemsMenu.tickets;
+      this.setState({ itemsMenu, registerForm: registerSection });
+    }
+
     const validate = await this.validateTabs();
     if (validate) {
       if (validate.tabs !== undefined) {
@@ -394,6 +424,10 @@ class General extends Component {
       has_payment: event.has_payment ? event.has_payment : false,
       language: event.language ? event.language : 'es',
       googleanlyticsid: event.googleanlyticsid || null,
+      itemsMenu:
+        event.allow_register === 'true' || event.allow_register === true
+          ? { ...this.state.itemsMenu, tickets: this.state.registerForm }
+          : { ...this.state.itemsMenu },
     };
 
     try {
@@ -512,6 +546,7 @@ class General extends Component {
       errorData,
       serverError,
       specificDates,
+      registerForm,
     } = this.state;
     return (
       <React.Fragment>
@@ -836,6 +871,40 @@ class General extends Component {
                     </Checkbox>
                   </Col>
                 </Row>
+                {(event.allow_register || event.allow_register === 'true') && (
+                  <Row>
+                    <Col xs={24}>
+                      <Card
+                        title={<Title level={4}>{registerForm.name}</Title>}
+                        bordered={true}
+                        style={{ width: 300, marginTop: '2%' }}>
+                        <div style={{ marginBottom: '3%' }}></div>
+
+                        <div style={{ marginTop: '4%' }}>
+                          <label>Cambiar nombre de la sección</label>
+                          <Input
+                            defaultValue={registerForm.name}
+                            onChange={(e) => {
+                              this.setState({ registerForm: { ...registerForm, name: e.target.value } });
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <label>Posición en el menú</label>
+                          <Input
+                            type='number'
+                            defaultValue={registerForm.position}
+                            onChange={(e) => {
+                              this.setState({ registerForm: { ...registerForm, position: e.target.value } });
+                            }}
+                          />
+                        </div>
+                      </Card>
+                    </Col>
+                  </Row>
+                )}
+
                 <Row>
                   <Col xs={24}>
                     <Checkbox

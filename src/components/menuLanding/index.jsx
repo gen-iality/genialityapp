@@ -267,7 +267,6 @@ class menuLanding extends Component {
   }
 
   orderPosition(key, order) {
-    console.log('order', order, 'menu state', this.state.menu[key].position);
     let itemsMenuToOrder = { ...this.state.itemsMenu };
     itemsMenuToOrder[key].position = order;
 
@@ -286,11 +285,11 @@ class menuLanding extends Component {
                   <Card
                     title={<Title level={4}>{this.state.menu[key].name}</Title>}
                     bordered={true}
-                    //extra={<Checkbox disabled checked={this.state.menu[key].checked} />}
                     style={{ width: 300, marginTop: '2%' }}>
                     <div style={{ marginBottom: '3%' }}>
                       <Button
-                        onClick={(e) => {
+                        disabled={this.state.menu[key].section === 'tickets'}
+                        onClick={() => {
                           this.mapActiveItemsToAvailable(key);
                         }}>
                         {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
@@ -311,7 +310,11 @@ class menuLanding extends Component {
                       <label>Permisos para la sección</label>
                       <Select
                         key={this.state.keySelect}
-                        disabled={this.state.menu[key].checked === true ? false : true}
+                        disabled={
+                          this.state.menu[key].checked === true && this.state.menu[key].section !== 'tickets'
+                            ? false
+                            : true
+                        }
                         defaultValue={this.state.menu[key].permissions}
                         style={{ width: 200 }}
                         onChange={(e) => {
