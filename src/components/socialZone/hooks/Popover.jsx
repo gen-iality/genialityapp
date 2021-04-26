@@ -46,9 +46,6 @@ const PopoverInfoUser = ({ item, props }) => {
           props.containNetWorking && (
             <Tooltip
               onClick={async () => {
-                console.log('ACA ITEM');
-                console.log(item);
-
                 var us = await props.loadDataUser(item);
                 console.log('USER PERFIL=>', us);
 
@@ -76,7 +73,7 @@ const PopoverInfoUser = ({ item, props }) => {
           ),
 
           props.containNetWorking && (
-            <Tooltip title='Invitar Video llamada'>
+            <Tooltip title='Agendar cita'>
               <VideoCameraOutlined
                 onClick={async () => {
                   console.log('ACA ITEM');

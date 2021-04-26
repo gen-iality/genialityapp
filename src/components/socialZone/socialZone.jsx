@@ -39,6 +39,17 @@ let SocialZone = function(props) {
   let [isFiltered, setIsFiltered] = useState(false);
   let busquedaRef = useRef();
 
+  useEffect(() => {
+    if (props.updateChat.idCurentUser) {
+      createNewOneToOneChat(
+        props.updateChat.idCurentUser,
+        props.updateChat.currentName,
+        props.updateChat.idOtherUser,
+        props.updateChat.otherUserName
+      );
+    }
+  }, [props.updateChat]);
+
   let userName = props.currentUser
     ? props.currentUser?.names
     : props.currentUser?.name
@@ -53,7 +64,6 @@ let SocialZone = function(props) {
   let tab = props.tab;
 
   let setCurrentChat = (id, chatname) => {
-    // console.log('CURRENT CHAT');
     setcurrentTab('1'); //chats tab
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
@@ -156,6 +166,7 @@ let SocialZone = function(props) {
               .remitente.toLowerCase()
               .indexOf('(casa)')
           ) {
+            // QUITAR ALGUNOS PREFIJOS PARA HACER EL MATCH DE NOMBRE ******HAY QUE MEJORAR*******
             userNameFirebase = change.doc.data().remitente.replace('(admin)', '');
             userNameFirebase = change.doc.data().remitente.replace('(casa)', '');
           }
@@ -208,12 +219,6 @@ let SocialZone = function(props) {
         //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
       });
   }, [event_id]);
-
-  useEffect(() => {
-    if (!props.totalMessages) return;
-    //console.log('NEW MESSAGES');
-    setTotalNewMessages(props.totalMessages);
-  }, [props.totalMessages]);
 
   return (
     <Tabs

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
 import { connect } from 'react-redux';
@@ -152,7 +152,8 @@ class Landing extends Component {
       propertiesUserPerfil: null,
       //Integración con encuestas
       currentActivity: null,
-
+      //Variable para cambiar de estado y actualizar chat
+      updateChat: {},
       platform: null,
       habilitar_ingreso: null,
       // chat: false,
@@ -181,6 +182,7 @@ class Landing extends Component {
         attendees: true,
       },
     };
+    this.socialZoneRef = createRef();
     this.showLanding = this.showLanding.bind(this);
     this.SendFriendship = this.SendFriendship.bind(this);
     this.addNotification = this.addNotification.bind(this);
@@ -238,8 +240,16 @@ class Landing extends Component {
     }
   };
 
+  //función que abre el modal para agendar citas
   AgendarCita = (id, targetEventUser) => {
     this.setState({ eventUserIdToMakeAppointment: id, eventUserToMakeAppointment: targetEventUser });
+  };
+
+  //Función para actualizar chat desde el drawer del perfil
+  UpdateChat = (idCurentUser, currentName, idOtherUser, otherUserName) => {
+    this.setState({
+      updateChat: { idCurentUser, currentName, idOtherUser, otherUserName },
+    });
   };
 
   openNotificationWithIcon = (type) => {
@@ -284,19 +294,18 @@ class Landing extends Component {
       });
   };
 
+  // METODO QUE PERMITE OBTENER LAS PROPERTIES CONFIGURADAS EN UN EVENTO
   getProperties = async (idUser) => {
     let properties = await EventFieldsApi.getAll(this.props.eventInfo._id);
-
     if (properties.length > 0) {
       this.setState({
         propertiesUserPerfil: properties,
       });
       return properties;
     }
-
     return null;
   };
-
+  //METODO QUE PERMITE  VALIDAR SI UN EVENTO TIENE HABILITADA LA SECTION DE NETWORKING
   containsNetWorking = () => {
     if (this.state.sections != undefined) {
       if (this.state.event.itemsMenu['networking'] !== undefined) {
@@ -306,7 +315,7 @@ class Landing extends Component {
       }
     }
   };
-
+  //Enviar invitación de contacto
   async SendFriendship({ eventUserIdReceiver, userName }) {
     let resp = await this.loadDataUser(this.state.user);
 
@@ -400,33 +409,39 @@ class Landing extends Component {
 
   toggleCollapsed = async (tab) => {
     this.setState({
+      updateChat: {},
       collapsed: !this.state.collapsed,
       tabSelected: tab,
     });
     await this.mountSections();
   };
 
-  loadDataUser = async (email) => {
-    const resp = await getUserByEmail(email, this.props.eventInfo._id);
-
+  //PETICION PARA TRAER LOS DATOS COMPLETOS DE UN USUARIO ESPECIFICO
+  loadDataUser = async (user) => {
+    const resp = await getUserByEmail(user, this.props.eventInfo._id);
     return resp;
   };
 
+  //OBTENER DATOS DEL USUARIO LOGUEADO
   async obtenerUserPerfil(id) {
     let userp = await getCurrentEventUser(this.props.eventInfo._id, id);
     return userp;
   }
 
+  //METODO QUE PERMITE CARGAR LOS DATOS DINAMICOS DEL USUARIO EN LA SECCION DE PERFIL
   collapsePerfil = async (userPerfil) => {
+    console.log('USER PERFIL COLLAPASE');
+    console.log(userPerfil);
     this.setState({
       visiblePerfil: !this.state.visiblePerfil,
     });
     if (userPerfil != null) {
       var data = await this.loadDataUser(userPerfil);
 
-      this.setState({ userPerfil: data.properties });
-      //var userEid = this.obtenerUserPerfil(data._id);
+      this.setState({ userPerfil: { ...data.properties, iduser: userPerfil.iduser } });
+
       if (data) {
+        //OBTENER LAS PROPERTIES POR USUARIO
         var properties = await this.getProperties(data._id);
       }
     } else {
@@ -436,6 +451,7 @@ class Landing extends Component {
 
   toggleCollapsedN = async () => {
     this.setState({
+      updateChat: {},
       collapsed: !this.state.collapsed,
       tabSelected: 1,
     });
@@ -1374,13 +1390,67 @@ class Landing extends Component {
                                 <Row justify='center' style={{ marginTop: '20px' }}>
                                   <Space size='middle'>
                                     <Tooltip title='Solicitar contacto'>
-                                      <Button size='large' shape='circle' icon={<UsergroupAddOutlined />} />
+                                      <Button
+                                        size='large'
+                                        shape='circle'
+                                        onClick={async () => {
+                                          var us = await this.loadDataUser(this.state.userPerfil);
+                                          console.log('USER PERFIL=>', us);
+                                          this.collapsePerfil();
+
+                                          var sendResp = await this.SendFriendship({
+                                            eventUserIdReceiver: us._id,
+                                            userName: currentUser.names || currentUser.email,
+                                          });
+                                          if (sendResp._id) {
+                                            let notification = {
+                                              idReceive: us.account_id,
+                                              idEmited: sendResp._id,
+                                              emailEmited: currentUser.email,
+                                              message: 'Te ha enviado solicitud de amistad',
+                                              name: 'notification.name',
+                                              type: 'amistad',
+                                              state: '0',
+                                            };
+                                            console.log('RESPUESTA SEND AMISTAD' + sendResp._id);
+                                            await this.addNotification(notification, currentUser._id);
+                                          }
+                                        }}
+                                        icon={<UsergroupAddOutlined />}
+                                      />
                                     </Tooltip>
                                     <Tooltip title='Ir al chat privado'>
-                                      <Button size='large' shape='circle' icon={<CommentOutlined />} />
+                                      <Button
+                                        size='large'
+                                        shape='circle'
+                                        onClick={async () => {
+                                          var us = await this.loadDataUser(this.state.userPerfil);
+                                          this.collapsePerfil();
+                                          this.UpdateChat(
+                                            currentUser.uid,
+                                            currentUser.names || currentUser.name,
+                                            this.state.userPerfil.iduser,
+                                            this.state.userPerfil.names || this.state.userPerfil.name
+                                          );
+                                        }}
+                                        icon={<CommentOutlined />}
+                                      />
                                     </Tooltip>
                                     <Tooltip title='Solicitar cita'>
-                                      <Button size='large' shape='circle' icon={<VideoCameraAddOutlined />} />
+                                      <Button
+                                        size='large'
+                                        shape='circle'
+                                        onClick={async () => {
+                                          var us = await this.loadDataUser(this.state.userPerfil);
+                                          console.log('USER PERFIL=>', us);
+                                          console.log(this.state.userPerfil);
+                                          if (us) {
+                                            this.collapsePerfil();
+                                            this.AgendarCita(us._id, us);
+                                          }
+                                        }}
+                                        icon={<VideoCameraAddOutlined />}
+                                      />
                                     </Tooltip>
                                   </Space>
                                 </Row>
@@ -1575,6 +1645,7 @@ class Landing extends Component {
                           maskClosable={true}
                           className='drawerMobile'>
                           <SocialZone
+                            updateChat={this.state.updateChat}
                             collapse={this.state.collapsed}
                             totalMessages={this.state.totalNewMessages}
                             agendarCita={this.AgendarCita}
@@ -1681,6 +1752,7 @@ class Landing extends Component {
                                   </Button>
 
                                   <SocialZone
+                                    updateChat={this.state.updateChat}
                                     collapse={this.state.collapsed}
                                     totalMessages={this.state.totalNewMessages}
                                     loadDataUser={this.loadDataUser}
