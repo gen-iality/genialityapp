@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import API, { EventsApi, TicketsApi, Activity } from '../../helpers/request';
 import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, PageHeader, Typography, Form, Input } from 'antd';
 import { firestore } from '../../helpers/firebase';
@@ -113,12 +113,14 @@ let AgendaActividadDetalle = (props) => {
       props.setSurveyVisible(false);
       window.removeEventListener('resize', mediaQueryMatches);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     (async function() {
       await listeningStateMeetingRoom(props.eventInfo._id, props.currentActivity._id);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentActivity._id]);
 
   /**
@@ -257,16 +259,6 @@ let AgendaActividadDetalle = (props) => {
       });
   }
 
-  // No tener 2 encuestas publicadas al tiempo
-  // Si se cierra una automaticamente se carga un nuevo current survey
-  // afectando el objetivo del snapshot que es detectar cuando se despublica
-
-  // useEffect(() => {
-  //   if (props.currentSurvey !== null &&  props.currentSurvey.isPublished === 'false') {
-
-  //   }
-  // }, [props.currentSurvey]);
-
   useEffect(() => {
     (async () => {
       //Id del evento
@@ -336,6 +328,7 @@ let AgendaActividadDetalle = (props) => {
         props.setHasOpenSurveys(data.hasOpenSurveys);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.event, props.currentActivity]);
 
   {
@@ -365,7 +358,6 @@ let AgendaActividadDetalle = (props) => {
               lg={{ order: 1, span: 2 }}
               xl={{ order: 1, span: 2 }}
               style={{ padding: '4px' }}>
-              {console.log('meetingState', meetingState, platform)}
               <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
                 {meetingState === 'open_meeting_room' || stateSpace ? (
                   <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />

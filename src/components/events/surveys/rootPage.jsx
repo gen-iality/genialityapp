@@ -24,7 +24,6 @@ class RootPage extends Component {
   forceLoadData = () => {};
 
   loadData = async (prevProps) => {
-    console.log('rootpage loaddata');
     const { idSurvey, eventId } = this.props;
     if (!prevProps || idSurvey !== prevProps.idSurvey) {
       let eventUser = await this.getCurrentEvenUser(eventId);
@@ -34,7 +33,6 @@ class RootPage extends Component {
   };
 
   componentDidMount() {
-    console.log('rootpage mount');
     this.loadData();
   }
 
@@ -87,7 +85,7 @@ class RootPage extends Component {
 
   render() {
     let { hasVote, isLoading, guestVoteInSurvey, responseCounter, eventUser } = this.state;
-    const { toggleSurvey, openSurvey, surveyLabel, currentUser, eventId, idSurvey } = this.props;
+    const { toggleSurvey, surveyLabel, currentUser, eventId, idSurvey } = this.props;
     if (!isLoading)
       return (
         <div

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Typography, Select, Card, Input, Button, Col, Row } from 'antd';
+import { Typography, Select, Card, Input, Button, Col, Row, Alert } from 'antd';
 import { Actions } from '../../helpers/request';
 import { toast } from 'react-toastify';
 const { Title } = Typography;
@@ -35,7 +35,7 @@ class menuLanding extends Component {
           permissions: 'public',
         },
         tickets: {
-          name: 'Boletería',
+          name: 'Registro',
           position: '',
           section: 'tickets',
           icon: 'CreditCardOutlined',
@@ -213,6 +213,12 @@ class menuLanding extends Component {
     let menu = this.orderItemsMenu(itemsMenu);
     const newMenu = { itemsMenu: { ...menu } };
 
+    if (newMenu.itemsMenu.tickets) {
+      newMenu.allow_register = true;
+    } else {
+      newMenu.allow_register = false;
+    }
+
     await Actions.put(`api/events/${this.props.event._id}`, newMenu);
     toast.success('Información guardada');
   }
@@ -267,7 +273,6 @@ class menuLanding extends Component {
   }
 
   orderPosition(key, order) {
-    console.log('order', order, 'menu state', this.state.menu[key].position);
     let itemsMenuToOrder = { ...this.state.itemsMenu };
     itemsMenuToOrder[key].position = order;
 
@@ -286,11 +291,10 @@ class menuLanding extends Component {
                   <Card
                     title={<Title level={4}>{this.state.menu[key].name}</Title>}
                     bordered={true}
-                    //extra={<Checkbox disabled checked={this.state.menu[key].checked} />}
                     style={{ width: 300, marginTop: '2%' }}>
                     <div style={{ marginBottom: '3%' }}>
                       <Button
-                        onClick={(e) => {
+                        onClick={() => {
                           this.mapActiveItemsToAvailable(key);
                         }}>
                         {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
@@ -311,7 +315,11 @@ class menuLanding extends Component {
                       <label>Permisos para la sección</label>
                       <Select
                         key={this.state.keySelect}
-                        disabled={this.state.menu[key].checked === true ? false : true}
+                        disabled={
+                          this.state.menu[key].checked === true && this.state.menu[key].section !== 'tickets'
+                            ? false
+                            : true
+                        }
                         defaultValue={this.state.menu[key].permissions}
                         style={{ width: 200 }}
                         onChange={(e) => {
