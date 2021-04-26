@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Typography, Select, Card, Input, Button, Col, Row } from 'antd';
+import { Typography, Select, Card, Input, Button, Col, Row, Alert } from 'antd';
 import { Actions } from '../../helpers/request';
 import { toast } from 'react-toastify';
 const { Title } = Typography;
@@ -35,7 +35,7 @@ class menuLanding extends Component {
           permissions: 'public',
         },
         tickets: {
-          name: 'Boletería',
+          name: 'Registro',
           position: '',
           section: 'tickets',
           icon: 'CreditCardOutlined',
@@ -213,6 +213,12 @@ class menuLanding extends Component {
     let menu = this.orderItemsMenu(itemsMenu);
     const newMenu = { itemsMenu: { ...menu } };
 
+    if (newMenu.itemsMenu.tickets) {
+      newMenu.allow_register = true;
+    } else {
+      newMenu.allow_register = false;
+    }
+
     await Actions.put(`api/events/${this.props.event._id}`, newMenu);
     toast.success('Información guardada');
   }
@@ -288,7 +294,6 @@ class menuLanding extends Component {
                     style={{ width: 300, marginTop: '2%' }}>
                     <div style={{ marginBottom: '3%' }}>
                       <Button
-                        disabled={this.state.menu[key].section === 'tickets'}
                         onClick={() => {
                           this.mapActiveItemsToAvailable(key);
                         }}>

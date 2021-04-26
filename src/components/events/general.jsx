@@ -58,7 +58,7 @@ class General extends Component {
       itemsMenu: [],
       // Estado inicial de la seccion de formulario de registro
       registerForm: {
-        name: 'Boletería',
+        name: 'Registro',
         position: '',
         section: 'tickets',
         icon: 'CreditCardOutlined',
