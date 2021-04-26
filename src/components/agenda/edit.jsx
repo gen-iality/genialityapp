@@ -326,7 +326,6 @@ class AgendaEdit extends Component {
     if (validation) {
       try {
         const info = this.buildInfo();
-        console.log('info', info);
 
         sweetAlert.showLoading('Espera (:', 'Guardando...');
         const {

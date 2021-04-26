@@ -502,7 +502,7 @@ class Agenda extends Component {
 
       return (
         <div key={index} className='container_agenda-information'>
-          {item.requires_registration || item.requires_registration === 'true' ? (
+          {(item.requires_registration || item.requires_registration === 'true') && !this.props.userRegistered ? (
             <Badge.Ribbon color='red' placement='end' text='Requiere registro'>
               <AgendaActivityItem
                 item={item}
@@ -668,7 +668,6 @@ class Agenda extends Component {
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
             currentUser={this.props.currentUser}
-            //option={option}
             collapsed={this.props.collapsed}
             toggleCollapsed={this.props.toggleCollapsed}
             // eventUser: Determina si el usuario esta registrado en el evento
