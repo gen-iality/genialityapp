@@ -1,6 +1,6 @@
 import React, { Component, Fragment, useState, useEffect } from 'react';
 import { Card, Button, Alert } from 'antd';
-import WithUserEventRegistered from '../shared/withUserEventRegistered';
+
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment-timezone';
@@ -15,7 +15,7 @@ const { gotoActivity } = StageActions;
 const MeetingConferenceButton = ({
   activity,
   zoomExternoHandleOpen,
-  usuarioRegistrado,
+
   event,
   showSection,
   setActivity,
@@ -33,32 +33,20 @@ const MeetingConferenceButton = ({
   switch (infoActivity.habilitar_ingreso) {
     case 'open_meeting_room':
       return (
-        <>
-          {true|| event.visibility !== 'ORGANIZATION' ? (
-            <>
-              <Button
-                size='large'
-                type='primary'
-                className='buttonVirtualConference'
-                onClick={() => {
-                  if (activity.platform === 'zoomExterno') {
-                    zoomExternoHandleOpen(activity, eventUser);
-                  } else {
-                    setActivity(activity);
-                    showSection('agenda', true);
-                  }
-                }}>
-                <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button size='large' type='primary' className='buttonVirtualConference' disabled='true'>
-                <FormattedMessage id='live.private_access' defaultMessage='Ingreso privado' />
-              </Button>
-            </>
-          )}
-        </>
+        <Button
+          size='large'
+          type='primary'
+          className='buttonVirtualConference'
+          onClick={() => {
+            if (activity.platform === 'zoomExterno') {
+              zoomExternoHandleOpen(activity, eventUser);
+            } else {
+              setActivity(activity);
+              showSection('agenda', true);
+            }
+          }}>
+          <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
+        </Button>
       );
 
     case 'closed_meeting_room':
@@ -238,4 +226,4 @@ const mapDispatchToProps = {
   gotoActivity,
 };
 
-export default connect(null, mapDispatchToProps)(WithUserEventRegistered(VirtualConference));
+export default connect(null, mapDispatchToProps)(VirtualConference);

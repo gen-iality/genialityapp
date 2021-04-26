@@ -5,7 +5,7 @@ import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { useIntl } from 'react-intl';
 import API, { EventsApi, TicketsApi, Activity } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, PageHeader, Typography, Form, Input } from 'antd';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, PageHeader, Typography, Form, Input, Alert } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
@@ -141,7 +141,7 @@ let AgendaActividadDetalle = (props) => {
 
       const asistentesRef = firestore.collection(`${event._id}_event_attendees`);
       asistentesRef.onSnapshot((snapshot) => {
-        const list = [];
+        //const list = [];
         let cuantos = 0;
         let checkedin = 0;
         snapshot.forEach(function(doc) {
@@ -504,20 +504,28 @@ let AgendaActividadDetalle = (props) => {
                       </Card>
                     ) : (
                       <>
-                        {platform === 'zoomExterno'
-                          ? openZoomExterno()
-                          : ((props.currentUser && !props.event.allow_register) || props.event.allow_register) && (
-                              <>
-                                <iframe
-                                  src={getMeetingPath(platform)}
-                                  frameBorder='0'
-                                  allow='autoplay; fullscreen; camera *;microphone *'
-                                  allowFullScreen
-                                  allowusermedia
-                                  style={videoStyles}></iframe>
-                                <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
-                              </>
-                            )}
+                        {platform === 'zoomExterno' ? (
+                          openZoomExterno()
+                        ) : (props.currentUser && currentActivity.requires_registration) ||
+                          !currentActivity.requires_registration ? (
+                          <>
+                            <iframe
+                              src={getMeetingPath(platform)}
+                              frameBorder='0'
+                              allow='autoplay; fullscreen; camera *;microphone *'
+                              allowFullScreen
+                              allowusermedia
+                              style={videoStyles}></iframe>
+                            <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
+                          </>
+                        ) : (
+                          <Alert
+                            message='Advertencia'
+                            description='Esta actividad requiere que el usuario este registrado en el evento'
+                            type='warning'
+                            showIcon
+                          />
+                        )}
                       </>
                     )}
                   </>
@@ -754,25 +762,6 @@ let AgendaActividadDetalle = (props) => {
                 comunicate con el organizador del evento
               
              */}
-
-            {/* <div
-              className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
-              dangerouslySetInnerHTML={{ __html: currentActivity.description }}
-           />*/}
-            {event._id === '5f99a20378f48e50a571e3b6' || event._id === '5fca68b7e2f869277cfa31b0' ? (
-              <></>
-            ) : (
-              <Row>
-                <Col span={24}>
-                  <AttendeeNotAllowedCheck
-                    event={event}
-                    currentUser={props.userInfo}
-                    usuarioRegistrado={usuarioRegistrado}
-                    currentActivity={currentActivity}
-                  />
-                </Col>
-              </Row>
-            )}
 
             <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={handleChangeLowerTabs}>
               {
