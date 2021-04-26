@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useState, useEffect } from 'react';
-import { Card, Button, Alert, Carousel } from 'antd';
+import { Card, Button, Alert } from 'antd';
 import WithUserEventRegistered from '../shared/withUserEventRegistered';
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 //const { Meta } = Card;
 import * as StageActions from '../../redux/stage/actions';
-import { isMobile } from 'react-device-detect';
 
 const { gotoActivity } = StageActions;
 
@@ -20,22 +19,22 @@ const MeetingConferenceButton = ({
   event,
   showSection,
   setActivity,
-  eventUser
+  eventUser,
 }) => {
   const [infoActivity, setInfoActivity] = useState({});
-  const [infoEvent, setInfoEvent] = useState({});
+  //const [infoEvent, setInfoEvent] = useState({});
   const intl = useIntl();
 
   useEffect(() => {
     setInfoActivity(activity);
-    setInfoEvent(event);
+    //setInfoEvent(event);
   }, [activity, event]);
 
   switch (infoActivity.habilitar_ingreso) {
     case 'open_meeting_room':
       return (
         <>
-          {(usuarioRegistrado && event.visibility === 'ORGANIZATION') || event.visibility !== 'ORGANIZATION' ? (
+          {true|| event.visibility !== 'ORGANIZATION' ? (
             <>
               <Button
                 size='large'
@@ -81,7 +80,7 @@ class VirtualConference extends Component {
       infoAgendaArr: [],
       usuarioRegistrado: this.props.usuarioRegistrado || undefined,
       event: this.props.event || undefined,
-      survey: []
+      survey: [],
     };
   }
 
@@ -236,7 +235,7 @@ class VirtualConference extends Component {
 }
 
 const mapDispatchToProps = {
-  gotoActivity
+  gotoActivity,
 };
 
 export default connect(null, mapDispatchToProps)(WithUserEventRegistered(VirtualConference));

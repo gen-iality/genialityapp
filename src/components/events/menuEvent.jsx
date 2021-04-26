@@ -138,15 +138,12 @@ class MenuEvent extends Component {
 
   async componentDidMount() {
     const isExistCookie = Cookie.get('evius_token');
-    console.log('properties');
-    console.log(this.props);
-    console.log(this.props.notifications);
+
     if (this.props.notifications !== undefined && this.props.notifications !== null) {
       this.setState({
         totalnotifications: this.props.notifications,
       });
     }
-    console.log('DID MOUNT');
 
     if (isExistCookie) {
       this.setState({ isEnabledLogin: false });
@@ -181,7 +178,6 @@ class MenuEvent extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    console.log('DID UPDATE');
     if (this.props.user && !this.state.user) {
       this.setState({ user: this.props.user, notifications: this.props.notifications });
     }
@@ -244,18 +240,7 @@ class MenuEvent extends Component {
                       <a className='head-example' />
                     </Badge>
                   )}
-                  <IconoComponente
-                    style={{ margin: '0 auto', fontSize: '22px', color: styleText }}
-                    // style={
-                    //   this.state.eventId === '5faae7381fc1d06d3b28fca2' ||
-                    //   this.state.eventId === '5f7e3564cdedb50e4c651602' ||
-                    //   this.state.eventId === '5f7b31866df71d13c2782153' ||
-                    //   this.state.eventId === '5f99a20378f48e50a571e3b6'
-                    //     ? { color: '#FFFFFF !important' }
-                    //     : { color: '#000000 !important' }
-                    // }
-                    //style={color:'#FFFFFF'}
-                  />
+                  <IconoComponente style={{ margin: '0 auto', fontSize: '22px', color: styleText }} />
 
                   {this.state.eventId === '5faae7381fc1d06d3b28fca2' ||
                   this.state.eventId === '5f7e3564cdedb50e4c651602' ||

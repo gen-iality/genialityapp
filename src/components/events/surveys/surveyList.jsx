@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { List, Button, Card, Tag, Result, Spin, Row, Col } from 'antd';
 import { MehOutlined } from '@ant-design/icons';
-import { firestore, fireRealtime } from '../../../helpers/firebase';
+import { firestore } from '../../../helpers/firebase';
 import { connect } from 'react-redux';
 import { Actions, TicketsApi } from '../../../helpers/request';
 import * as Cookie from 'js-cookie';
@@ -15,7 +15,7 @@ const headStyle = {
   fontWeight: 300,
   textTransform: 'uppercase',
   textAlign: 'center',
-  color: '#000'
+  color: '#000',
 };
 
 class SurveyList extends Component {
@@ -36,13 +36,13 @@ class SurveyList extends Component {
         section: 'survey',
         icon: 'FileUnknownOutlined',
         checked: false,
-        permissions: 'public'
+        permissions: 'public',
       },
 
       // luego de cargar el componente este estado permanece escuchando todas las encuestas del evento
       eventSurveys: [], // Todas las encuestas de un evento, este estado va a estar escuchando
       anonymousSurveys: [], // Solo encuestas que permiten usuarios anónimos
-      publishedSurveys: [] // Encuestas relacionadas con la actividad + globales para renderizar el listado de encuestas en componente de videoconferencia
+      publishedSurveys: [], // Encuestas relacionadas con la actividad + globales para renderizar el listado de encuestas en componente de videoconferencia
     };
   }
 
@@ -63,7 +63,7 @@ class SurveyList extends Component {
       {
         publishedSurveys: this.props.publishedSurveys,
         surveyVisible: this.props.publishedSurveys && this.props.publishedSurveys.length,
-        loading: true
+        loading: true,
       },
       this.callback
     );
@@ -75,7 +75,7 @@ class SurveyList extends Component {
         {
           publishedSurveys: this.props.publishedSurveys,
           surveyVisible: this.props.publishedSurveys && this.props.publishedSurveys.length,
-          loading: true
+          loading: true,
         },
         this.callback
       );
@@ -109,7 +109,7 @@ class SurveyList extends Component {
     const { currentUser } = this.props;
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
     let counterDocuments = 0;
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       firestore
         .collectionGroup('responses')
         .where('id_survey', '==', survey._id)
@@ -136,7 +136,7 @@ class SurveyList extends Component {
     const { publishedSurveys } = this.state;
     const { currentUser } = this.props;
     if (publishedSurveys) {
-      const checkMyResponses = new Promise((resolve, reject) => {
+      const checkMyResponses = new Promise((resolve) => {
         let filteredSurveys = [];
 
         publishedSurveys.forEach(async (survey, index, arr) => {
@@ -145,12 +145,11 @@ class SurveyList extends Component {
             filteredSurveys.push({
               ...arr[index],
               userHasVoted: result.userHasVoted,
-              totalResponses: result.totalResponses
+              totalResponses: result.totalResponses,
             });
           } else {
             // Esto solo se ejecuta si no hay algun usuario logeado
-            // eslint-disable-next-line no-unused-vars
-            const guestUser = new Promise((resolve, reject) => {
+            const guestUser = new Promise((resolve) => {
               let surveyId = localStorage.getItem(`userHasVoted_${survey._id}`);
               surveyId ? resolve(true) : resolve(false);
             });
@@ -280,14 +279,14 @@ class SurveyList extends Component {
 const mapStateToProps = (state) => ({
   event: state.event.data,
   activity: state.stage.data.currentActivity,
-  currentUser: state.user.data
+  currentUser: state.user.data,
 });
 
 const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
-  unsetCurrentSurvey
+  unsetCurrentSurvey,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList);

@@ -25,7 +25,6 @@ import {
   PlayCircleOutlined,
   LoadingOutlined,
   DiffOutlined,
-  SearchOutlined,
   UsergroupAddOutlined,
   VideoCameraAddOutlined,
   SmileOutlined,
@@ -294,8 +293,7 @@ class Landing extends Component {
       });
   };
 
-  // METODO QUE PERMITE OBTENER LAS PROPERTIES CONFIGURADAS EN UN EVENTO
-  getProperties = async (idUser) => {
+  getProperties = async () => {
     let properties = await EventFieldsApi.getAll(this.props.eventInfo._id);
     if (properties.length > 0) {
       this.setState({
@@ -441,11 +439,10 @@ class Landing extends Component {
       this.setState({ userPerfil: { ...data.properties, iduser: userPerfil.iduser } });
 
       if (data) {
-        //OBTENER LAS PROPERTIES POR USUARIO
-        var properties = await this.getProperties(data._id);
+        await this.getProperties(data._id);
       }
     } else {
-      console.log('Perfil usuario nulo');
+      //console.log('Perfil usuario nulo');
     }
   };
 
@@ -787,7 +784,7 @@ class Landing extends Component {
     }
   }
 
-  async addNotification(notification, iduserEmmited) {
+  async addNotification(notification) {
     if (notification.emailEmited != null) {
       firestore
         .collection('notificationUser')
@@ -1572,7 +1569,7 @@ class Landing extends Component {
                               {/** this.props.location.pathname.match(/landing\/[a-zA-Z0-9]*\/?$/gi This component is a shortcut to landing/* route, hencefor should not be visible in that route */}
                               {/** this component is a shortcut to agenda thus should not be visible in agenda */}
 
-                              {currentUser && !(this.state.section && this.state.section === 'agenda') && (
+                              {!(this.state.section && this.state.section === 'agenda') && (
                                 <VirtualConference
                                   event={event}
                                   eventUser={this.state.eventUser}
@@ -1662,7 +1659,6 @@ class Landing extends Component {
                             section={this.state.section}
                             containNetWorking={this.state.containNetWorking}
                             eventSurveys={this.state.eventSurveys}
-                            currentUser={this.state.currentUser}
                             generalTabs={this.state.generalTabs}
                             publishedSurveys={this.state.publishedSurveys}
                           />
@@ -1699,7 +1695,9 @@ class Landing extends Component {
                                         icon={
                                           <>
                                             <Badge count={this.state.totalNewMessages}>
-                                              <CommentOutlined style={{ fontSize: '24px' }} />
+                                              <CommentOutlined
+                                                style={{ fontSize: '24px', color: event.styles.color_icon_socialzone }}
+                                              />
                                             </Badge>
                                           </>
                                         }
@@ -1711,7 +1709,11 @@ class Landing extends Component {
                                     {this.state.generalTabs.attendees && (
                                       <Menu.Item
                                         key='2'
-                                        icon={<TeamOutlined style={{ fontSize: '24px' }} />}
+                                        icon={
+                                          <TeamOutlined
+                                            style={{ fontSize: '24px', color: event.styles.color_icon_socialzone }}
+                                          />
+                                        }
                                         onClick={() => this.toggleCollapsed(2)}></Menu.Item>
                                     )}
                                     {this.props.currentActivity !== null &&
@@ -1721,7 +1723,9 @@ class Landing extends Component {
                                           key='3'
                                           icon={
                                             <Badge dot={this.props.hasOpenSurveys}>
-                                              <PieChartOutlined style={{ fontSize: '24px' }} />
+                                              <PieChartOutlined
+                                                style={{ fontSize: '24px', color: event.styles.color_icon_socialzone }}
+                                              />
                                             </Badge>
                                           }
                                           onClick={() => this.toggleCollapsed(3)}></Menu.Item>

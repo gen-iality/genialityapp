@@ -119,12 +119,12 @@ class Home extends Component {
           <div className='tabs'>
             <ul>
               <li
-                onClick={!loading ? (e) => this.fetchEvent('next') : ''}
+                onClick={!loading ? () => this.fetchEvent('next') : ''}
                 className={typeEvent === 'next' ? 'is-active' : ''}>
                 <a>Próximos</a>
               </li>
               <li
-                onClick={!loading ? (e) => this.fetchEvent('prev') : ''}
+                onClick={!loading ? () => this.fetchEvent('prev') : ''}
                 className={typeEvent === 'prev' ? 'is-active' : ''}>
                 <a>Pasados</a>
               </li>
@@ -140,7 +140,7 @@ class Home extends Component {
                 ) : (
                   events.map((event, key) => {
                     return (
-                      <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                      <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <EventCard
                           bordered={false}
                           key={event._id}

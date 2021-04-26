@@ -183,7 +183,7 @@ class Agenda extends Component {
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
-          let { habilitar_ingreso, isPublished, meeting_id, platform, tabs } = data;
+          let { habilitar_ingreso, isPublished, meeting_id, platform } = data;
           let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id, platform };
           //this.props.setTabs(tabs);
           arr[index] = updatedActivityInfo;
@@ -486,7 +486,7 @@ class Agenda extends Component {
 
   getActivitiesByDay = (date) => {
     const { toggleConference, event } = this.props;
-    const { hideBtnDetailAgenda, show_inscription, data, loading, survey, documents } = this.state;
+    const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
 
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = data
@@ -533,19 +533,8 @@ class Agenda extends Component {
   //End modal methods
 
   render() {
-    const { toggleConference, event, option, currentActivity } = this.props;
-    const {
-      days,
-      day,
-      hideBtnDetailAgenda,
-      show_inscription,
-      spaces,
-      toShow,
-      data,
-      loading,
-      survey,
-      documents,
-    } = this.state;
+    const { toggleConference, event, currentActivity } = this.props;
+    const { days, loading, survey } = this.state;
 
     {
       Moment.locale(window.navigator.language);
@@ -728,7 +717,7 @@ class Agenda extends Component {
                       <TabPane
                         style={{ paddingLeft: '25px', paddingRight: '25px' }}
                         tab={
-                          <span style={{ fontWeight: 'bolder' }}>
+                          <span style={{ fontWeight: 'bolder', color:event.styles.color_tab_agenda }}>
                             {Moment(day)
                               .format('LL')
                               .toUpperCase()}
