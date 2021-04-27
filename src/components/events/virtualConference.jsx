@@ -1,10 +1,10 @@
 import React, { Component, Fragment, useState, useEffect } from 'react';
-import { Card, Button, Alert } from 'antd';
+import { Card, Button, Alert,Avatar, Row, Col, Tooltip } from 'antd';
 import WithUserEventRegistered from '../shared/withUserEventRegistered';
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment-timezone';
-import { Avatar } from 'antd';
+import { HistoryOutlined, UserOutlined, AntDesignOutlined  } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 //const { Meta } = Card;
@@ -178,6 +178,55 @@ class VirtualConference extends Component {
             );
           })
           .map((item, key) => (
+            <>
+            <Card>
+              <Row justify='center' gutter={[16,16]} align='middle'>
+                <Col md={6} lg={6} xl={6} xxl={6}>
+                  <div style={{justifyContent:'center', display:'flex'}}>
+                    <HistoryOutlined  style={{fontSize:'85px'}} />
+                  </div> 
+                </Col>
+                <Col md={12} lg={12} xl={12} xxl={12}>
+                  <div>
+                    <h1 style={{fontWeight:'bold', fontSize:'17px'}}>Asamblea general</h1>
+                    <h2 style={{color:'#7c909a'}}>26 de abril de 2021 7:00 pm a 9:00 pm</h2>
+                  </div>
+                  <div>
+                    <h2 style={{color:'#7c909a'}}>el evento empieza en </h2>
+                    <h1 style={{fontWeight:'400', fontSize:'45px'}}>1 D 22 H 53 m 09 s</h1>
+                  </div>
+                </Col>
+                <Col md={6} lg={6} xl={6} xxl={6}>
+                  <div>
+                  <Avatar.Group>
+                    <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                    <Avatar
+                      style={{
+                        backgroundColor: '#f56a00',
+                      }}
+                    >
+                      K
+                    </Avatar>
+                    <Tooltip title="Ant User" placement="top">
+                      <Avatar
+                        style={{
+                          backgroundColor: '#87d068',
+                        }}
+                        icon={<UserOutlined />}
+                      />
+                    </Tooltip>
+                    <Avatar
+                      style={{
+                        backgroundColor: '#1890ff',
+                      }}
+                      icon={<AntDesignOutlined />}
+                    />
+                  </Avatar.Group>
+                  </div>
+                </Col>
+              </Row> 
+            </Card>
+            <br/>
             <div key={key}>
               <Card hoverable avatar={<Avatar src='' />} bordered={true} style={{ marginBottom: '3%' }}>
                 {/* Experimento de estilo <Meta
@@ -185,7 +234,7 @@ class VirtualConference extends Component {
                                         title="Card titlesfas fdas dfa sdf asdf as as as df"
                                         description="This is the description"
                                     /> */}
-                <h1 style={{ fontSize: '120%', fontWeight: 'Bold' }}>{item.name}</h1>
+                 <h1 style={{ fontSize: '120%', fontWeight: 'Bold' }}>{item.name}</h1>
                 <p>
                   {Moment(item.datetime_start).format('LL')}
                   <span>&nbsp;&nbsp;&nbsp;</span>
@@ -225,9 +274,10 @@ class VirtualConference extends Component {
                   setActivity={gotoActivity}
                   zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
                   eventUser={this.props.eventUser}
-                />
+                /> 
               </Card>
             </div>
+            </>
           ))}
       </Fragment>
     );
