@@ -11,7 +11,7 @@ import {
   discountCodesApi,
 } from '../../helpers/request';
 import AgendaActividadDetalle from './agendaActividadDetalle';
-import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs } from 'antd';
+import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';
 import { CalendarOutlined } from '@ant-design/icons';
@@ -502,28 +502,55 @@ class Agenda extends Component {
 
       return (
         <div key={index} className='container_agenda-information'>
-          <AgendaActivityItem
-            item={item}
-            key={index}
-            Documents={documents}
-            Surveys={survey}
-            toggleConference={toggleConference}
-            event_image={this.props.event.styles.event_image}
-            gotoActivity={this.gotoActivity}
-            registerInActivity={this.registerInActivity}
-            registerStatus={isRegistered}
-            eventId={this.props.eventId}
-            event={this.props.event}
-            userId={this.state.userId}
-            btnDetailAgenda={hideBtnDetailAgenda}
-            show_inscription={show_inscription}
-            userRegistered={this.props.userRegistered}
-            handleOpenModal={this.handleOpenModal}
-            hideHours={event.styles.hideHoursAgenda}
-            handleValidatePayment={this.validationRegisterAndExchangeCode}
-            eventUser={this.props.eventUser}
-            zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
-          />
+          {(item.requires_registration || item.requires_registration === 'true') && !this.props.userRegistered ? (
+            <Badge.Ribbon color='red' placement='end' text='Requiere registro'>
+              <AgendaActivityItem
+                item={item}
+                key={index}
+                Documents={documents}
+                Surveys={survey}
+                toggleConference={toggleConference}
+                event_image={this.props.event.styles.event_image}
+                gotoActivity={this.gotoActivity}
+                registerInActivity={this.registerInActivity}
+                registerStatus={isRegistered}
+                eventId={this.props.eventId}
+                event={this.props.event}
+                userId={this.state.userId}
+                btnDetailAgenda={hideBtnDetailAgenda}
+                show_inscription={show_inscription}
+                userRegistered={this.props.userRegistered}
+                handleOpenModal={this.handleOpenModal}
+                hideHours={event.styles.hideHoursAgenda}
+                handleValidatePayment={this.validationRegisterAndExchangeCode}
+                eventUser={this.props.eventUser}
+                zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+              />
+            </Badge.Ribbon>
+          ) : (
+            <AgendaActivityItem
+              item={item}
+              key={index}
+              Documents={documents}
+              Surveys={survey}
+              toggleConference={toggleConference}
+              event_image={this.props.event.styles.event_image}
+              gotoActivity={this.gotoActivity}
+              registerInActivity={this.registerInActivity}
+              registerStatus={isRegistered}
+              eventId={this.props.eventId}
+              event={this.props.event}
+              userId={this.state.userId}
+              btnDetailAgenda={hideBtnDetailAgenda}
+              show_inscription={show_inscription}
+              userRegistered={this.props.userRegistered}
+              handleOpenModal={this.handleOpenModal}
+              hideHours={event.styles.hideHoursAgenda}
+              handleValidatePayment={this.validationRegisterAndExchangeCode}
+              eventUser={this.props.eventUser}
+              zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+            />
+          )}
         </div>
       );
     });
@@ -641,7 +668,6 @@ class Agenda extends Component {
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
             currentUser={this.props.currentUser}
-            //option={option}
             collapsed={this.props.collapsed}
             toggleCollapsed={this.props.toggleCollapsed}
             // eventUser: Determina si el usuario esta registrado en el evento
@@ -717,7 +743,7 @@ class Agenda extends Component {
                       <TabPane
                         style={{ paddingLeft: '25px', paddingRight: '25px' }}
                         tab={
-                          <span style={{ fontWeight: 'bolder', color:event.styles.color_tab_agenda }}>
+                          <span style={{ fontWeight: 'bolder', color: event.styles.color_tab_agenda }}>
                             {Moment(day)
                               .format('LL')
                               .toUpperCase()}

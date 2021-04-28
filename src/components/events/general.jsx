@@ -865,7 +865,6 @@ class General extends Component {
                     <Checkbox
                       defaultChecked={event.allow_register || event.allow_register === 'true'}
                       onChange={this.handleChange}
-                      value={true}
                       name='allow_register'>
                       Habilitar formulario de registro
                     </Checkbox>
@@ -910,7 +909,6 @@ class General extends Component {
                     <Checkbox
                       defaultChecked={event.visibility === 'PUBLIC'}
                       onChange={this.handleChange}
-                      value='PUBLIC'
                       name='visibility'>
                       Mostrar el evento en la página principal de Evius
                     </Checkbox>
@@ -921,8 +919,7 @@ class General extends Component {
                     <Checkbox
                       defaultChecked={event.has_payment || event.has_payment === 'true'}
                       onChange={this.handleChange}
-                      name={'has_payment'}
-                      value={true}>
+                      name={'has_payment'}>
                       El evento requiere pago
                     </Checkbox>
                   </Col>

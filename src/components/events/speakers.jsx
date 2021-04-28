@@ -276,12 +276,12 @@ class Speakers extends Component {
                     actions={[this.btnViewMore(speaker)]}>
                     <Meta
                       title={[
-                        <div key={'speaker-name' + key}>
-                          <span>{speaker.name}</span>
+                        <div key={'speaker-name  ' + key}>
+                          <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{speaker.name}</span>
                         </div>,
                       ]}
                       description={[
-                        <div key={'speaker-description' + key} style={{ minHeight: '100px' }}>
+                        <div key={'speaker-description  ' + key} style={{ minHeight: '100px' }}>
                           <p>{speaker.profession}</p>
                         </div>,
                       ]}

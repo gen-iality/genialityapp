@@ -8,7 +8,7 @@ import Creatable from 'react-select';
 import { FaWhmcs } from 'react-icons/fa';
 import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import { Tabs, message } from 'antd';
+import { Tabs, message, Row, Col, Checkbox } from 'antd';
 import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
 
@@ -94,6 +94,9 @@ class AgendaEdit extends Component {
       // Fechas de la actividad con formato para la creacion de sala en zoom
       date_start_zoom: null,
       date_end_zoom: null,
+
+      //Estado para determinar si una actividad requiere registro para ser accedida
+      requires_registration: false,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -198,6 +201,7 @@ class AgendaEdit extends Component {
         name_host: info.name_host,
         date_start_zoom: info.date_start_zoom,
         date_end_zoom: info.date_end_zoom,
+        requires_registration: info.requires_registration || false,
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
@@ -238,7 +242,11 @@ class AgendaEdit extends Component {
 
   //FN general para cambio en input
   handleChange = async (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+
+    if (name === 'requires_registration') {
+      value = e.target.checked;
+    }
 
     // BACKLOG -> porque host_id se setea siempre que se setea un estado
     this.setState({ [name]: value });
@@ -400,7 +408,7 @@ class AgendaEdit extends Component {
       capacity,
       access_restriction_type,
       selectedCategories,
-
+      requires_registration,
       selectedType,
       selectedRol,
       description,
@@ -431,6 +439,7 @@ class AgendaEdit extends Component {
       type_id,
       has_date,
       selected_document,
+      requires_registration,
     };
   };
 
@@ -464,6 +473,7 @@ class AgendaEdit extends Component {
       join_url,
       name_host,
       key,
+      requires_registration,
     } = this.state;
 
     //const registration_message_storage = window.sessionStorage.getItem('registration_message');
@@ -505,7 +515,7 @@ class AgendaEdit extends Component {
       join_url,
       name_host,
       key,
-
+      requires_registration,
       host_ids,
     };
   };
@@ -581,6 +591,7 @@ class AgendaEdit extends Component {
 
   render() {
     const {
+      info,
       loading,
       name,
       subtitle,
@@ -1004,6 +1015,25 @@ class AgendaEdit extends Component {
               activity_id={this.state.activity_id}
             />
           )}
+        </TabPane>
+        <TabPane tab='Avanzado' key='4'>
+          <Row>
+            <Col xs={24}>
+              <Checkbox
+                defaultChecked={info && (info.requires_registration || info.requires_registration === 'true')}
+                onChange={this.handleChange}
+                name='requires_registration'>
+                La actividad requiere registro
+              </Checkbox>
+            </Col>
+          </Row>
+          <Row style={{ marginTop: 8 }}>
+            <Col xs={24}>
+              <button onClick={this.submit} className='button is-primary'>
+                Guardar
+              </button>
+            </Col>
+          </Row>
         </TabPane>
       </Tabs>
     );
