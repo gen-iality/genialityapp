@@ -83,16 +83,18 @@ const ChatList = (props) => {
   }, [props.chattab]);
 
   function callback(key) {
-    setcurrentab(key);
     if (key === 'chat1') {
+      if (props.currentChat) {
+        props.setCurrentChat(null, null);
+      }
       setusuariofriend(null);
-      props.setCurrentChat(null, null);
     }
     if (key === 'chat2') {
       if (props.currentChat) {
         props.setCurrentChat(null, null);
       }
     }
+    setcurrentab(key);
   }
 
   if (!props.currentUser)
@@ -176,12 +178,16 @@ const ChatList = (props) => {
                         setusuariofriend(item?.names ? item.names : item.name);
                         settotalmsjpriv(0);
                         props.setTotalNewMessages(0);
+                        props.notNewMessages();
                       }}>
                       <Tooltip title='Chatear'>
                         {item.newMessages && item.newMessages.length > 0 && (
                           <Badge count={item.newMessages.length}>
                             <MessageTwoTone style={{ fontSize: '20px' }} />
                           </Badge>
+                        )}
+                        {item.newMessages && item.newMessages.length == 0 && (
+                          <MessageTwoTone style={{ fontSize: '20px' }} />
                         )}
                       </Tooltip>
                     </a>,

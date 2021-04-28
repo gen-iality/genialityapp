@@ -181,13 +181,20 @@ class Landing extends Component {
         attendees: true,
       },
     };
-    this.socialZoneRef = createRef();
+
     this.showLanding = this.showLanding.bind(this);
     this.SendFriendship = this.SendFriendship.bind(this);
     this.addNotification = this.addNotification.bind(this);
     this.obtenerUserPerfil = this.obtenerUserPerfil.bind(this);
     this.loadDataUser = this.loadDataUser.bind(this);
   }
+
+  //METODO PARA SETEAR NEW MESSAGE
+  notNewMessage = () => {
+    this.setState({
+      totalNewMessages: 0,
+    });
+  };
 
   //METODO PARA OBTENER ENCUESTAS
   listenSurveysData = async (event_id) => {
@@ -1661,6 +1668,7 @@ class Landing extends Component {
                             eventSurveys={this.state.eventSurveys}
                             generalTabs={this.state.generalTabs}
                             publishedSurveys={this.state.publishedSurveys}
+                            notNewMessages={this.notNewMessage}
                           />
                         </Drawer>
 
@@ -1776,6 +1784,7 @@ class Landing extends Component {
                                     currentUser={this.state.currentUser}
                                     generalTabs={this.state.generalTabs}
                                     publishedSurveys={this.state.publishedSurveys}
+                                    notNewMessages={this.notNewMessage}
                                   />
                                 </>
                               )}

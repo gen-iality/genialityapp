@@ -174,7 +174,7 @@ let SocialZone = function(props) {
 
         if (change) {
           if (
-            userName !== userNameFirebase &&
+            userName !== userNameFirebase.trim() &&
             change.doc.data().remitente !== null &&
             change.doc.data().remitente !== undefined &&
             newmsj > 0
@@ -260,6 +260,7 @@ let SocialZone = function(props) {
             setCurrentUser={setCurrentUser}
             datamsjlast={datamsjlast}
             generalTabs={props.generalTabs}
+            notNewMessages={props.notNewMessages}
           />
         </TabPane>
       )}
