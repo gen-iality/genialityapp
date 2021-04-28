@@ -192,7 +192,8 @@ class VirtualConference extends Component {
                 <Col md={6} lg={6} xl={6} xxl={6}>
                   <div style={{justifyContent:'center', alignContent:'center', display:'grid', height:'140px'}}>
                     {
-                      item.habilitar_ingreso == 'open_meeting_room' ? (<img src={ENVIVO} style={{height:'91px'}}/>)
+                      item.habilitar_ingreso == 'open_meeting_room' ? (
+                      <><img src={ENVIVO} style={{height:'91px'}}/><span style={{textAlign:'center', fontSize:'18px'}}>En Vivo</span></>)
                       : item.habilitar_ingreso == 'closed_meeting_room' ? (<FieldTimeOutlined  style={{fontSize:'85px', color:'#FAAD14'}} />)
                       : ''
                     }       
