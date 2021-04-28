@@ -125,7 +125,8 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
     },
   ];
 
-  function inputByType(field, key, rules) {
+  function inputByType(field, key, rules, options = {}) {
+    console.log('field', field);
     switch (field.type) {
       case 'text':
         return (
@@ -140,7 +141,7 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
       case 'image':
         return (
           <Form.Item key={`field${key}${field.name}`} name={field.name} label={field.label}>
-            <ImageInput />
+            <ImageInput picture={options.picture} />
           </Form.Item>
         );
     }
