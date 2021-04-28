@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Tag, Avatar, Alert, Card, Space, Timeline, List, Comment } from 'antd';
-import ReactPlayer from 'react-player';
+import { Row, Col, Avatar, Card, Space, Timeline, Comment } from 'antd';
+
 import Moment from 'moment-timezone';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
-import Icon, {
-  TagOutlined,
-  CaretRightFilled,
-  UserOutlined,
-  LoadingOutlined,
-  PlayCircleOutlined,
-  CaretRightOutlined,
-  CheckCircleOutlined,
-} from '@ant-design/icons';
-import { FormattedMessage, useIntl } from 'react-intl';
+import Icon, { LoadingOutlined, CaretRightOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
 
 const EnVivoSvg = () => (
@@ -71,7 +63,7 @@ function AgendaActivityItem(props) {
       .doc(activity_id)
       .onSnapshot((infoActivity) => {
         if (!infoActivity.exists) return;
-        const { habilitar_ingreso, meeting_id, platform } = infoActivity.data();
+        const { habilitar_ingreso } = infoActivity.data();
         setMeetingState(habilitar_ingreso);
       });
   }
@@ -265,7 +257,7 @@ function AgendaActivityItem(props) {
                         <div className='titulo'>{item.name}.</div>
                         <span className='lugar'>{item && item.space && item.space.name}</span>
                       </Col>
-                      <Row style={{width:'100%'}}>
+                      <Row style={{ width: '100%' }}>
                         {item.description !== null && item.description !== '<p><br></p>' && (
                           <div
                             style={
@@ -294,12 +286,12 @@ function AgendaActivityItem(props) {
                           </div>
                         )}
                       </Row>
-                      <Row style={{marginRight:'8px'}}>
+                      <Row style={{ marginRight: '8px' }}>
                         {item.hosts.length > 0 &&
                           (item.hosts.length < 4 ? (
                             <>
                               {item.hosts.map((speaker, key) => (
-                                  <Space key={key} style={{marginRight:'8px'} } direction='horizontal'>
+                                <Space key={key} style={{ marginRight: '8px' }} direction='horizontal'>
                                   <Avatar size={25} src={speaker.image} />
                                   {speaker.name}
                                   {/* <table>
@@ -312,7 +304,7 @@ function AgendaActivityItem(props) {
                                       </th>
                                     </tr>
                                   </table> */}
- </Space>
+                                </Space>
                               ))}
                             </>
                           ) : (
