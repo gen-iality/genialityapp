@@ -34,6 +34,8 @@ const MeetingConferenceButton = ({
   switch (infoActivity.habilitar_ingreso) {
     case 'open_meeting_room':
       return (
+        <>
+        <br/>
         <Button
           size='large'
           type='primary'
@@ -48,6 +50,7 @@ const MeetingConferenceButton = ({
           }}>
           <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
         </Button>
+        </>
       );
 
     case 'closed_meeting_room':
