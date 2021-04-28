@@ -121,6 +121,7 @@ class triviaEdit extends Component {
 
   async getQuestions() {
     const Update = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit);
+    console.log('getQuestions', Update)
 
     const question = [];
     for (const prop in Update.questions) {

@@ -29,11 +29,7 @@ export const fieldsFormQuestion = [
     type: 'text',
     name: 'title',
   },
-  {
-    label: 'Imagen',
-    type: 'image',
-    name: 'image',
-  },
+
   {
     label: 'Tipo de Pregunta',
     selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text']),
@@ -47,6 +43,7 @@ export const fieldsFormQuestionWithPoints = [
     type: 'text',
     name: 'title',
   },
+
   {
     label: 'Tipo de Pregunta',
     selectOptions: filterBy(selectOptions, ['checkbox', 'radiogroup', 'text']),

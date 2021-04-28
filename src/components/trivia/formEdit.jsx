@@ -2,9 +2,11 @@ import React, { useState, useEffect, forwardRef } from 'react';
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from './constants';
 import { SurveysApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
-import { Form, Input, Button, Select, Spin, Radio, Checkbox } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload } from 'antd';
+import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+
 import ImageInput from '../shared/imageInput';
+
 const { Option } = Select;
 
 const layout = {
@@ -140,9 +142,21 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
         );
       case 'image':
         return (
-          <Form.Item key={`field${key}${field.name}`} name={field.name} label={field.label}>
-            <ImageInput picture={options.picture} />
+          <Form.Item
+            key={`field${key}${field.name}`}
+            name={field.name}
+            label={field.label}
+            valuePropName='image'
+            //getValueFromEvent={normFile}
+            //extra='longgggggggggggggggggggggggggggggggggg'
+          >
+            <Upload name='logo' action='/upload.do' listType='picture'>
+              <Button icon={<UploadOutlined />}>Cargar imagen</Button>
+            </Upload>
           </Form.Item>
+          // <Form.Item key={`field${key}${field.name}`} name={field.name} label={field.label}>
+          //   <ImageInput picture={options.picture} />
+          // </Form.Item>
         );
     }
   }
@@ -160,70 +174,97 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
         {allowGradableSurvey === true ? (
           <div>
             {fieldsFormQuestionWithPoints.map((field, key) =>
-              field.type
-                ? inputByType(field, key)
-                : field.selectOptions && (
-                    <Form.Item
-                      key={`field${key}`}
-                      name={field.name}
-                      label={field.label}
-                      rules={[
-                        { required: true },
-                        {
-                          validator: fieldValidation,
-                        },
-                      ]}>
-                      <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
-                        {field.selectOptions.map((option, index) =>
-                          option.text ? (
-                            <Option key={`type${index}`} value={option.value}>
-                              {option.text}
-                            </Option>
-                          ) : (
-                            <Option key={`quantity${index}`} value={option}>
-                              {option}
-                            </Option>
-                          )
-                        )}
-                      </Select>
-                    </Form.Item>
-                  )
+              field.type ? (
+                <Form.Item
+                  key={`field${key}${field.name}`}
+                  name={field.name}
+                  label={field.label}
+                  rules={[
+                    { required: true },
+                    {
+                      validator: fieldValidation,
+                    },
+                  ]}>
+                  <Input />
+                </Form.Item>
+              ) : (
+                field.selectOptions && (
+                  <Form.Item
+                    key={`field${key}`}
+                    name={field.name}
+                    label={field.label}
+                    rules={[
+                      { required: true },
+                      {
+                        validator: fieldValidation,
+                      },
+                    ]}>
+                    <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
+                      {field.selectOptions.map((option, index) =>
+                        option.text ? (
+                          <Option key={`type${index}`} value={option.value}>
+                            {option.text}
+                          </Option>
+                        ) : (
+                          <Option key={`quantity${index}`} value={option}>
+                            {option}
+                          </Option>
+                        )
+                      )}
+                    </Select>
+                  </Form.Item>
+                )
+              )
             )}
           </div>
         ) : (
           <div>
             {fieldsFormQuestion.map((field, key) =>
-              field.type
-                ? inputByType(field, key, true)
-                : field.selectOptions && (
-                    <Form.Item
-                      key={`field${key}`}
-                      name={field.name}
-                      label={field.label}
-                      rules={[
-                        { required: true },
-                        {
-                          validator: fieldValidation,
-                        },
-                      ]}>
-                      <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
-                        {field.selectOptions.map((option, index) =>
-                          option.text ? (
-                            <Option key={`type${index}`} value={option.value}>
-                              {option.text}
-                            </Option>
-                          ) : (
-                            <Option key={`quantity${index}`} value={option}>
-                              {option}
-                            </Option>
-                          )
-                        )}
-                      </Select>
-                    </Form.Item>
-                  )
+              field.type ? (
+                <Form.Item
+                  key={`field${key}${field.name}`}
+                  name={field.name}
+                  label={field.label}
+                  rules={[
+                    { required: true },
+                    {
+                      validator: fieldValidation,
+                    },
+                  ]}>
+                  <Input />
+                </Form.Item>
+              ) : (
+                field.selectOptions && (
+                  <Form.Item
+                    key={`field${key}`}
+                    name={field.name}
+                    label={field.label}
+                    rules={[
+                      { required: true },
+                      {
+                        validator: fieldValidation,
+                      },
+                    ]}>
+                    <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
+                      {field.selectOptions.map((option, index) =>
+                        option.text ? (
+                          <Option key={`type${index}`} value={option.value}>
+                            {option.text}
+                          </Option>
+                        ) : (
+                          <Option key={`quantity${index}`} value={option}>
+                            {option}
+                          </Option>
+                        )
+                      )}
+                    </Select>
+                  </Form.Item>
+                )
+              )
             )}
           </div>
         )}
+
         <Form.List name={`choices`}>
           {(fields, { add, remove }) => {
             return (
@@ -307,6 +348,56 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                     </Checkbox.Group>
                   )
                 )}
+                <div>
+                  {/* <Form.Item
+                    key={`img`}
+                    name={'image'}
+                    label={'Imagen'}
+                    //getValueFromEvent={normFile}
+                    //extra='longgggggggggggggggggggggggggggggggggg'
+                  >
+                    <Upload
+                      itemRender={(item) => {
+                        return <img src={item} />;
+                      }}
+                      accept='image/png, image/jpeg'
+                      name='logo'
+                      action='/upload.do'
+                      listType='picture'
+                      fileList={[
+                        {
+                          uid: '-1',
+                          name: 'xxx.png',
+                          status: 'done',
+                          url: 'https://es.wikipedia.org/wiki/Bogot%C3%A1#/media/Archivo:Bogot%C3%A1Skyline.jpg',
+                        },
+                      ]}>
+                      <Button icon={<UploadOutlined />}>Cargar imagen</Button>
+                    </Upload>
+                  </Form.Item> */}
+                  <Upload
+                    multiple={false}
+                    accept='image/png, image/jpeg'
+                    name='logo'
+                    action='/upload.do'
+                    listType='picture'
+                    //previewFile={'https://es.wikipedia.org/wiki/Bogot%C3%A1#/media/Archivo:Bogot%C3%A1Skyline.jpg'}
+                    defaultFileList={[
+                      {
+                        uid: '-1',
+                        name: 'xxx',
+                        status: 'done',
+                        type: 'image/jpg',
+                        thumbUrl:
+                          'https://storage.googleapis.com/eviusauth.appspot.com/evius/events/A4c8xSIWiENsX6AgUdY968u528MUqkmOsWkNALC6.jpeg',
+                        url:
+                          'https://storage.googleapis.com/eviusauth.appspot.com/evius/events/A4c8xSIWiENsX6AgUdY968u528MUqkmOsWkNALC6.jpeg',
+                      },
+                    ]}>
+                    <Button icon={<UploadOutlined />}>Cargar imagen</Button>
+                  </Upload>
+                </div>
+
                 {fields.length < 5 && (
                   <Form.Item>
                     <Button
