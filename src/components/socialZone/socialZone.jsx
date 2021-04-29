@@ -174,7 +174,7 @@ let SocialZone = function(props) {
 
         if (change) {
           if (
-            userName !== userNameFirebase.trim() &&
+            userName !== userNameFirebase &&
             change.doc.data().remitente !== null &&
             change.doc.data().remitente !== undefined &&
             newmsj > 0
