@@ -4,8 +4,7 @@ import { SurveysApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
-
-import ImageInput from '../shared/imageInput';
+import { Actions } from '../../helpers/request';
 
 const { Option } = Select;
 
@@ -25,17 +24,62 @@ const validateMessages = {
   },
 };
 
-const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirmLoading, gradableSurvey }, ref) => {
+const FormEdit = (
+  { valuesQuestion, eventId, surveyId, closeModal, toggleConfirmLoading, gradableSurvey, unmountForm },
+  ref
+) => {
   const [defaultValues, setDefaultValues] = useState({});
   const [questionId, setQuestionId] = useState('');
   const [questionIndex, setQuestionIndex] = useState(0);
   const [allowGradableSurvey, setAllowGradableSurvey] = useState(false);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
   const [questionType, setQuestionType] = useState(null);
+  const [defaultImgValue, setDefaultImgValue] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [form] = Form.useForm();
 
   useEffect(() => {
+    if (valuesQuestion.image && valuesQuestion.image !== null) {
+      setDefaultImgValue(valuesQuestion.image);
+    } else {
+      setDefaultImgValue(null);
+    }
+
+    return () => {
+      setDefaultImgValue(null);
+      unmountForm();
+    };
+  }, []);
+
+  async function saveEventImage(file) {
+    const url = '/api/files/upload';
+    const data = new FormData();
+    data.append('file', file);
+    let response = null;
+    response = await Actions.post(url, data)
+      .then((result) => {
+        return result;
+      })
+      .catch((err) => {
+        response = null;
+        console.error(err);
+      });
+
+    setDefaultImgValue([
+      {
+        uid: 'img-' + questionId,
+        //name: 'xxx',
+        status: 'done',
+        //type: 'image/png',
+        thumbUrl: response,
+        url: response,
+      },
+    ]);
+  }
+
+  useEffect(() => {
+    setLoading(true);
     let state = gradableSurvey === 'true' ? true : false;
 
     setDefaultValues(valuesQuestion);
@@ -50,8 +94,11 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
     setAllowGradableSurvey(state);
 
     setCorrectAnswerIndex(valuesQuestion.correctAnswerIndex);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [valuesQuestion]);
+  }, [form, valuesQuestion]);
 
   const handleRadio = (e) => {
     setCorrectAnswerIndex(e.target.value);
@@ -77,6 +124,11 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
 
   const onFinish = (values) => {
     values['id'] = questionId;
+
+    delete values.image;
+    if (defaultImgValue != null) {
+      values.image = defaultImgValue;
+    }
     if (allowGradableSurvey) {
       switch (questionType) {
         case 'radiogroup':
@@ -102,7 +154,6 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
 
     // eslint-disable-next-line no-unused-vars
     const exclude = ({ questionOptions, ...rest }) => rest;
-
     if (questionIndex === undefined) {
       return SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then(() => {
         form.resetFields();
@@ -120,314 +171,236 @@ const FormEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
       .catch((err) => toast.error('No se pudo actualizar la pregunta: ', err));
   };
 
-  const inputTextRules = [
-    { required: true },
-    {
-      validator: fieldValidation,
-    },
-  ];
-
-  function inputByType(field, key, rules, options = {}) {
-    console.log('field', field);
-    switch (field.type) {
-      case 'text':
-        return (
-          <Form.Item
-            key={`field${key}${field.name}`}
-            name={field.name}
-            label={field.label}
-            rules={rules ? inputTextRules : []}>
-            <Input />
-          </Form.Item>
-        );
-      case 'image':
-        return (
-          <Form.Item
-            key={`field${key}${field.name}`}
-            name={field.name}
-            label={field.label}
-            valuePropName='image'
-            //getValueFromEvent={normFile}
-            //extra='longgggggggggggggggggggggggggggggggggg'
-          >
-            <Upload name='logo' action='/upload.do' listType='picture'>
-              <Button icon={<UploadOutlined />}>Cargar imagen</Button>
-            </Upload>
-          </Form.Item>
-          // <Form.Item key={`field${key}${field.name}`} name={field.name} label={field.label}>
-          //   <ImageInput picture={options.picture} />
-          // </Form.Item>
-        );
-    }
+  function handleRemoveImg() {
+    setDefaultImgValue(null);
   }
 
   if (Object.entries(defaultValues).length !== 0)
     return (
-      <Form
-        {...layout}
-        form={form}
-        ref={ref}
-        name='form-edit'
-        onFinish={onFinish}
-        validateMessages={validateMessages}
-        initialValues={defaultValues}>
-        {allowGradableSurvey === true ? (
-          <div>
-            {fieldsFormQuestionWithPoints.map((field, key) =>
-              field.type ? (
-                <Form.Item
-                  key={`field${key}${field.name}`}
-                  name={field.name}
-                  label={field.label}
-                  rules={[
-                    { required: true },
-                    {
-                      validator: fieldValidation,
-                    },
-                  ]}>
-                  <Input />
-                </Form.Item>
-              ) : (
-                field.selectOptions && (
-                  <Form.Item
-                    key={`field${key}`}
-                    name={field.name}
-                    label={field.label}
-                    rules={[
-                      { required: true },
-                      {
-                        validator: fieldValidation,
-                      },
-                    ]}>
-                    <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
-                      {field.selectOptions.map((option, index) =>
-                        option.text ? (
-                          <Option key={`type${index}`} value={option.value}>
-                            {option.text}
-                          </Option>
-                        ) : (
-                          <Option key={`quantity${index}`} value={option}>
-                            {option}
-                          </Option>
-                        )
-                      )}
-                    </Select>
-                  </Form.Item>
-                )
-              )
-            )}
-          </div>
+      <>
+        {loading ? (
+          <Spin />
         ) : (
-          <div>
-            {fieldsFormQuestion.map((field, key) =>
-              field.type ? (
-                <Form.Item
-                  key={`field${key}${field.name}`}
-                  name={field.name}
-                  label={field.label}
-                  rules={[
-                    { required: true },
-                    {
-                      validator: fieldValidation,
-                    },
-                  ]}>
-                  <Input />
-                </Form.Item>
-              ) : (
-                field.selectOptions && (
-                  <Form.Item
-                    key={`field${key}`}
-                    name={field.name}
-                    label={field.label}
-                    rules={[
-                      { required: true },
-                      {
-                        validator: fieldValidation,
-                      },
-                    ]}>
-                    <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
-                      {field.selectOptions.map((option, index) =>
-                        option.text ? (
-                          <Option key={`type${index}`} value={option.value}>
-                            {option.text}
-                          </Option>
-                        ) : (
-                          <Option key={`quantity${index}`} value={option}>
-                            {option}
-                          </Option>
-                        )
-                      )}
-                    </Select>
-                  </Form.Item>
-                )
-              )
-            )}
-          </div>
-        )}
-
-        <Form.List name={`choices`}>
-          {(fields, { add, remove }) => {
-            return (
+          <Form
+            {...layout}
+            form={form}
+            ref={ref}
+            name='form-edit'
+            onFinish={onFinish}
+            validateMessages={validateMessages}
+            initialValues={defaultValues}>
+            {allowGradableSurvey === true ? (
               <div>
-                {questionType === 'radiogroup' ? (
-                  <Radio.Group
-                    onChange={handleRadio}
-                    disabled={!allowGradableSurvey}
-                    value={correctAnswerIndex}
-                    style={{ display: 'block', marginRight: 0 }}>
-                    {fields.map((field, index) => (
-                      <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
-                        <Radio value={index} style={{ width: '100%' }}>
-                          <Form.Item
-                            {...field}
-                            validateTrigger={['onChange', 'onBlur']}
-                            rules={[
-                              {
-                                required: true,
-                                whitespace: true,
-                                message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
-                              },
-                              {
-                                validator: fieldValidation,
-                              },
-                            ]}
-                            noStyle>
-                            <Input placeholder='Texto de la Respuesta' style={{ width: '90%' }} />
-                          </Form.Item>
-                          {fields.length > 2 ? (
-                            <MinusCircleOutlined
-                              className='dynamic-delete-button'
-                              style={{ margin: '0 8px' }}
-                              onClick={() => {
-                                remove(field.name);
-                              }}
-                            />
-                          ) : null}
-                        </Radio>
-                      </Form.Item>
-                    ))}
-                  </Radio.Group>
-                ) : (
-                  questionType === 'checkbox' && (
-                    <Checkbox.Group
-                      onChange={handleCheckbox}
-                      disabled={!allowGradableSurvey}
-                      value={correctAnswerIndex}
-                      style={{ display: 'block', marginRight: 0 }}>
-                      {fields.map((field, index) => (
-                        <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
-                          <Checkbox value={index} style={{ display: 'block', width: '100%' }}>
-                            <Form.Item
-                              {...field}
-                              validateTrigger={['onChange', 'onBlur']}
-                              rules={[
-                                {
-                                  required: true,
-                                  whitespace: true,
-                                  message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
-                                },
-                                {
-                                  validator: fieldValidation,
-                                },
-                              ]}
-                              noStyle>
-                              <Input placeholder='Texto de la Respuesta' style={{ width: '85%' }} />
-                            </Form.Item>
-                            {fields.length > 2 ? (
-                              <MinusCircleOutlined
-                                className='dynamic-delete-button'
-                                style={{ margin: '0 8px' }}
-                                onClick={() => {
-                                  remove(field.name);
-                                }}
-                              />
-                            ) : null}
-                          </Checkbox>
-                        </Form.Item>
-                      ))}
-                    </Checkbox.Group>
-                  )
-                )}
-                <div>
-                  {/* <Form.Item
-                    key={`img`}
-                    name={'image'}
-                    label={'Imagen'}
-                    //getValueFromEvent={normFile}
-                    //extra='longgggggggggggggggggggggggggggggggggg'
-                  >
-                    <Upload
-                      itemRender={(item) => {
-                        return <img src={item} />;
-                      }}
-                      accept='image/png, image/jpeg'
-                      name='logo'
-                      action='/upload.do'
-                      listType='picture'
-                      fileList={[
+                {fieldsFormQuestionWithPoints.map((field, key) =>
+                  field.type ? (
+                    <Form.Item
+                      key={`field${key}${field.name}`}
+                      name={field.name}
+                      label={field.label}
+                      rules={[
+                        { required: true },
                         {
-                          uid: '-1',
-                          name: 'xxx.png',
-                          status: 'done',
-                          url: 'https://es.wikipedia.org/wiki/Bogot%C3%A1#/media/Archivo:Bogot%C3%A1Skyline.jpg',
+                          validator: fieldValidation,
                         },
                       ]}>
-                      <Button icon={<UploadOutlined />}>Cargar imagen</Button>
-                    </Upload>
-                  </Form.Item> */}
-                  <Upload
-                    multiple={false}
-                    accept='image/png, image/jpeg'
-                    name='logo'
-                    action='/upload.do'
-                    listType='picture'
-                    //previewFile={'https://es.wikipedia.org/wiki/Bogot%C3%A1#/media/Archivo:Bogot%C3%A1Skyline.jpg'}
-                    defaultFileList={[
-                      {
-                        uid: '-1',
-                        name: 'xxx',
-                        status: 'done',
-                        type: 'image/jpg',
-                        thumbUrl:
-                          'https://storage.googleapis.com/eviusauth.appspot.com/evius/events/A4c8xSIWiENsX6AgUdY968u528MUqkmOsWkNALC6.jpeg',
-                        url:
-                          'https://storage.googleapis.com/eviusauth.appspot.com/evius/events/A4c8xSIWiENsX6AgUdY968u528MUqkmOsWkNALC6.jpeg',
-                      },
-                    ]}>
-                    <Button icon={<UploadOutlined />}>Cargar imagen</Button>
-                  </Upload>
-                </div>
-
-                {fields.length < 5 && (
-                  <Form.Item>
-                    <Button
-                      type='dashed'
-                      onClick={() => {
-                        add();
-                      }}>
-                      <PlusOutlined /> Agregar Otra Respuesta
-                    </Button>
-                  </Form.Item>
+                      <Input />
+                    </Form.Item>
+                  ) : (
+                    field.selectOptions && (
+                      <Form.Item
+                        key={`field${key}`}
+                        name={field.name}
+                        label={field.label}
+                        rules={[
+                          { required: true },
+                          {
+                            validator: fieldValidation,
+                          },
+                        ]}>
+                        <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
+                          {field.selectOptions.map((option, index) =>
+                            option.text ? (
+                              <Option key={`type${index}`} value={option.value}>
+                                {option.text}
+                              </Option>
+                            ) : (
+                              <Option key={`quantity${index}`} value={option}>
+                                {option}
+                              </Option>
+                            )
+                          )}
+                        </Select>
+                      </Form.Item>
+                    )
+                  )
                 )}
               </div>
-            );
-          }}
-        </Form.List>
-        {/* <Form.List>
-          <Select>
-            {
-              operationType.map((item, index) => {
-                return <Option key={`operation${index}`} value={item.value}>{item.text}</Option>
-              }
-              )
-            }
+            ) : (
+              <div>
+                {fieldsFormQuestion.map((field, key) =>
+                  field.type ? (
+                    <Form.Item
+                      key={`field${key}${field.name}`}
+                      name={field.name}
+                      label={field.label}
+                      rules={[
+                        { required: true },
+                        {
+                          validator: fieldValidation,
+                        },
+                      ]}>
+                      <Input />
+                    </Form.Item>
+                  ) : (
+                    field.selectOptions && (
+                      <Form.Item
+                        key={`field${key}`}
+                        name={field.name}
+                        label={field.label}
+                        rules={[
+                          { required: true },
+                          {
+                            validator: fieldValidation,
+                          },
+                        ]}>
+                        <Select placeholder='Seleccione una Opcion' onChange={handleFunction}>
+                          {field.selectOptions.map((option, index) =>
+                            option.text ? (
+                              <Option key={`type${index}`} value={option.value}>
+                                {option.text}
+                              </Option>
+                            ) : (
+                              <Option key={`quantity${index}`} value={option}>
+                                {option}
+                              </Option>
+                            )
+                          )}
+                        </Select>
+                      </Form.Item>
+                    )
+                  )
+                )}
+              </div>
+            )}
+            <div>
+              <Form.Item key={`img`} name={'image'} label={'Imagen'}>
+                <Upload
+                  multiple={false}
+                  accept='image/png, image/jpeg'
+                  name='logo'
+                  listType='picture'
+                  maxCount={1}
+                  defaultFileList={defaultImgValue}
+                  action={(file) => saveEventImage(file)}
+                  onRemove={handleRemoveImg}>
+                  <Button icon={<UploadOutlined />}>Cargar imagen</Button>
+                </Upload>
+              </Form.Item>
+            </div>
 
-          </Select>
-        </Form.List> */}
-      </Form>
+            <Form.List name={`choices`}>
+              {(fields, { add, remove }) => {
+                return (
+                  <div>
+                    {questionType === 'radiogroup' ? (
+                      <Radio.Group
+                        onChange={handleRadio}
+                        disabled={!allowGradableSurvey}
+                        value={correctAnswerIndex}
+                        style={{ display: 'block', marginRight: 0 }}>
+                        {fields.map((field, index) => (
+                          <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
+                            <Radio value={index} style={{ width: '100%' }}>
+                              <Form.Item
+                                {...field}
+                                validateTrigger={['onChange', 'onBlur']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    whitespace: true,
+                                    message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
+                                  },
+                                  {
+                                    validator: fieldValidation,
+                                  },
+                                ]}
+                                noStyle>
+                                <Input placeholder='Texto de la Respuesta' style={{ width: '90%' }} />
+                              </Form.Item>
+                              {fields.length > 2 ? (
+                                <MinusCircleOutlined
+                                  className='dynamic-delete-button'
+                                  style={{ margin: '0 8px' }}
+                                  onClick={() => {
+                                    remove(field.name);
+                                  }}
+                                />
+                              ) : null}
+                            </Radio>
+                          </Form.Item>
+                        ))}
+                      </Radio.Group>
+                    ) : (
+                      questionType === 'checkbox' && (
+                        <Checkbox.Group
+                          onChange={handleCheckbox}
+                          disabled={!allowGradableSurvey}
+                          value={correctAnswerIndex}
+                          style={{ display: 'block', marginRight: 0 }}>
+                          {fields.map((field, index) => (
+                            <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
+                              <Checkbox value={index} style={{ display: 'block', width: '100%' }}>
+                                <Form.Item
+                                  {...field}
+                                  validateTrigger={['onChange', 'onBlur']}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      whitespace: true,
+                                      message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
+                                    },
+                                    {
+                                      validator: fieldValidation,
+                                    },
+                                  ]}
+                                  noStyle>
+                                  <Input placeholder='Texto de la Respuesta' style={{ width: '85%' }} />
+                                </Form.Item>
+                                {fields.length > 2 ? (
+                                  <MinusCircleOutlined
+                                    className='dynamic-delete-button'
+                                    style={{ margin: '0 8px' }}
+                                    onClick={() => {
+                                      remove(field.name);
+                                    }}
+                                  />
+                                ) : null}
+                              </Checkbox>
+                            </Form.Item>
+                          ))}
+                        </Checkbox.Group>
+                      )
+                    )}
+
+                    {fields.length < 5 && (
+                      <Form.Item>
+                        <Button
+                          type='dashed'
+                          onClick={() => {
+                            add();
+                          }}>
+                          <PlusOutlined /> Agregar Otra Respuesta
+                        </Button>
+                      </Form.Item>
+                    )}
+                  </div>
+                );
+              }}
+            </Form.List>
+          </Form>
+        )}
+      </>
     );
-
-  return <Spin></Spin>;
 };
 
 export default forwardRef(FormEdit);
