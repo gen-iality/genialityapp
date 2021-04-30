@@ -27,7 +27,7 @@ class triviaEdit extends Component {
       visibleModal: false,
       confirmLoading: false,
       key: Date.now(),
-      currentQuestion: [], // Variable que se usa para obtener datos de una pregunta y editarla en el modal
+      currentQuestion: {}, // Variable que se usa para obtener datos de una pregunta y editarla en el modal
 
       // configuracion de la encuestas
       allow_anonymous_answers: false,
@@ -218,7 +218,6 @@ class triviaEdit extends Component {
       minimumScore: parseInt(this.state.minimumScore),
     };
 
-    console.log('survey edit', data);
     // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
     SurveysApi.editOne(data, this.state.idSurvey, this.props.event._id)
       .then(async () => {
@@ -246,7 +245,7 @@ class triviaEdit extends Component {
         message.success({ content: setDataInFire.message, key: 'updating' });
       })
       .catch((err) => {
-        console.log('Hubo un error', err);
+        console.error('Hubo un error', err);
       });
   }
 
@@ -658,21 +657,21 @@ class triviaEdit extends Component {
               </Row>
 
               <Table style={{ marginTop: '5%' }} dataSource={question} columns={columns} />
-              <Modal
-                width={700}
-                title='Editando Pregunta'
-                visible={visibleModal}
-                onOk={this.sendForm}
-                onCancel={this.closeModal}
-                footer={[
-                  <Button key='back' onClick={this.closeModal}>
-                    Cancelar
-                  </Button>,
-                  <Button key='submit' type='primary' loading={confirmLoading} onClick={this.sendForm}>
-                    Guardar
-                  </Button>,
-                ]}>
-                {this.state.idSurvey && Object.entries(currentQuestion).length !== 0 && (
+              {this.state.idSurvey && Object.entries(currentQuestion).length !== 0 && (
+                <Modal
+                  width={700}
+                  title='Editando Pregunta'
+                  visible={visibleModal}
+                  onOk={this.sendForm}
+                  onCancel={this.closeModal}
+                  footer={[
+                    <Button key='back' onClick={this.closeModal}>
+                      Cancelar
+                    </Button>,
+                    <Button key='submit' type='primary' loading={confirmLoading} onClick={this.sendForm}>
+                      Guardar
+                    </Button>,
+                  ]}>
                   <FormQuestionEdit
                     ref={this.formEditRef}
                     valuesQuestion={currentQuestion}
@@ -681,9 +680,10 @@ class triviaEdit extends Component {
                     closeModal={this.closeModal}
                     toggleConfirmLoading={this.toggleConfirmLoading}
                     gradableSurvey={allow_gradable_survey}
+                    unmountForm={() => this.setState({ currentQuestion: {} })}
                   />
-                )}
-              </Modal>
+                </Modal>
+              )}
             </div>
           )}
         </EventContent>
