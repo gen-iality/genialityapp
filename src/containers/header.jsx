@@ -74,6 +74,7 @@ class Headers extends Component {
   };
 
   async componentDidMount() {
+    console.log('header', this.props);
     const eventId = this.setEventId();
     this.setState({ eventId });
 
@@ -137,6 +138,10 @@ class Headers extends Component {
 
     if (prevProps && prevProps.location !== this.props.location) {
       this.handleMenu(this.props.location);
+    }
+
+    if (prevProps.match !== this.props.match) {
+      console.log('match', this.props.match);
     }
   }
 

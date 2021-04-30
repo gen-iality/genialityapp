@@ -27,8 +27,9 @@ export const getCurrentUser = (token) => {
 // Funcion que obtiene el eventUserId del usuario actual
 export const getCurrentEventUser = (eventId, userId) => {
   // eslint-disable-next-line no-unused-vars
+  console.log('NI POR EL PUTAS');
   return new Promise(async (resolve, reject) => {
-    const users = await UsersApi.getAll(eventId, '?pageSize=1500');
+    const users = await UsersApi.getAll(eventId, '?pageSize=10000');
 
     let currentEventUser = filterList(users.data, userId);
 
@@ -43,7 +44,7 @@ export const userRequest = {
   getEventUserList: async (eventId, token, currentUser) => {
     let docs = [];
     try {
-      const users = await UsersApi.getAll(eventId, '?pageSize=1700');
+      const users = await UsersApi.getAll(eventId, '?pageSize=10000');
       if (users) {
         docs = users.data.filter((user) => user.account_id !== currentUser._id);
       }
@@ -51,7 +52,7 @@ export const userRequest = {
       console.error(error);
     }
     return docs;
-  },
+  }
 };
 
 export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
@@ -68,7 +69,7 @@ export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
         result.docs.forEach((doc) => {
           data.push({
             id: doc.id,
-            ...doc.data(),
+            ...doc.data()
           });
         });
 
@@ -78,7 +79,17 @@ export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
   });
 };
 
-export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEventUserId, timetableItem, message }) => {
+export const createAgendaToEventUser = ({
+  eventId,
+  eventUser,
+  currentEventUserId,
+  targetEventUserId,
+  targetEventUser,
+  timetableItem,
+  message,
+  name,
+  email
+}) => {
   return new Promise(async (resolve, reject) => {
     try {
       const existingAgendas = [];
@@ -95,26 +106,31 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
       existingAgendaResult.docs.forEach((doc) => {
         existingAgendas.push({
           id: doc.id,
-          ...doc.data(),
+          ...doc.data()
         });
       });
 
       if (existingAgendas.length > 0) {
         reject();
       } else {
+        console.log('aaaaaa', currentEventUserId, targetEventUserId);
         const newAgendaResult = await firestore
           .collection('event_agendas')
           .doc(eventId)
           .collection('agendas')
           .add({
-            name: '',
+            name: targetEventUser ? targetEventUser.properties.names : '',
+            email: targetEventUser ? targetEventUser.properties.email : '',
+            name_requesting: eventUser ? eventUser.properties.names : '',
+            email_requesting: eventUser ? eventUser.properties.email : '',
+            nuevapropiedad: 'asdfa',
             attendees: [currentEventUserId, targetEventUserId],
             owner_id: currentEventUserId,
             request_status: 'pending',
             type: 'meeting',
             timestamp_start: timetableItem.timestamp_start,
             timestamp_end: timetableItem.timestamp_end,
-            message,
+            message
           });
         // enviamos notificaciones por correo
         let data = {
@@ -125,7 +141,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
           event_id: eventId,
           state: 'send',
           request_type: 'meeting',
-          start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString(),
+          start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString()
         };
 
         EventsApi.sendMeetingRequest(eventId, data);
@@ -139,6 +155,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
 };
 
 export const getPendingAgendasFromEventUser = (eventId, currentEventUserId) => {
+  console.log('currentEventUserId', currentEventUserId);
   return new Promise((resolve, reject) => {
     firestore
       .collection('event_agendas')
@@ -238,7 +255,7 @@ export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newSta
       acceptedAgendasAtSameTimeResult.docs.forEach((doc) => {
         const newDataItem = {
           id: doc.id,
-          ...doc.data(),
+          ...doc.data()
         };
 
         if (newDataItem.owner_id !== currentEventUserId) {
@@ -280,7 +297,7 @@ export const getAcceptedAgendasFromEventUser = (eventId, currentEventUserId) => 
         result.docs.forEach((doc) => {
           const newDataItem = {
             id: doc.id,
-            ...doc.data(),
+            ...doc.data()
           };
 
           if (newDataItem.type !== 'reserved') {
@@ -306,4 +323,49 @@ export const deleteAgenda = (eventId, agendaId) => {
       .then(resolve)
       .catch(reject);
   });
+};
+
+export const getUserByEmail = async (user, eventid) => {
+  console.log(eventid);
+  console.log(user);
+  try {
+    const resp = await UsersApi.findByEmail(user.email);
+    console.log(resp[0]);
+    //const ru = await UsersApi.getProfile(resp[0]._id);
+    let userR;
+    if (resp[0]) {
+      userR = await getUserEvent(resp[0]._id, eventid);
+    } else {
+      userR = await getUserEvent(user._id, eventid);
+    }
+
+    console.log(userR);
+    userR = { ...userR, userEvent: userR._id };
+    return userR;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getUserEvent = async (id, eventid) => {
+  console.log(id);
+  const levu = await UsersApi.getAll(eventid, `?filtered=[{"field":"account_id","value":"${id}"}]`);
+  console.log(levu.data);
+  let user = levu.data.filter((u) => u.account_id && u.account_id.trim() == id.trim())[0];
+  return user;
+};
+
+export const getUsersId = async (id, eventid) => {
+  console.log(id);
+  const levu = await UsersApi.getAll(eventid, `?filtered=[{"field":"_id","value":"${id}"}]`);
+  console.log(levu.data);
+  return levu.data[0];
+};
+
+export const getUserByEventUser = async (eventuser, eventid) => {
+  console.log(eventuser);
+  console.log(eventid);
+  const levu = await UsersApi.getAll(eventid);
+  const user = await levu.data.filter((u) => u.user != null && u._id === eventuser)[0];
+  return user;
 };

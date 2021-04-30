@@ -89,13 +89,13 @@ export function parseData2Excel(data, fields) {
       let str;
       switch (type) {
         case 'number':
-          str = item.properties[name] ? item.properties[name].toString() : 'udenfined';
+          str = item.properties[name] ? item.properties[name].toString() : '';
           break;
         case 'boolean':
           str = item.properties[name] ? 'TRUE' : 'FALSE';
           break;
         case 'complex':
-          str = item.properties[name] ? item.properties[name].response : 'undefined';
+          str = item.properties[name] ? item.properties[name].response : '';
           break;
         case 'multiplelist':
           str = Array.isArray(item.properties[name]) ? item.properties[name].join() : item.properties[name];
@@ -107,7 +107,7 @@ export function parseData2Excel(data, fields) {
               : item.properties[name];
           break;
         default:
-          str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : 'undefined';
+          str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : '';
       }
 
       if (type === 'complex' && str) {
@@ -134,7 +134,7 @@ export const sweetAlert = {
       text,
       onBeforeOpen: () => {
         Swal.showLoading();
-      }
+      },
     }),
   hideLoading: () => Swal.close(),
   twoButton: (title, type, showCancelButton, confirmButtonText, cb) =>
@@ -146,7 +146,7 @@ export const sweetAlert = {
   simple: (title, html, confirmLabel, confirmColor, cb) =>
     Swal.fire({ title, html, confirmButtonColor: confirmColor, confirmButtonAriaLabel: confirmLabel }).then((result) =>
       cb(result)
-    )
+    ),
 };
 
 export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-MM-DD') {

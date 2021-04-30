@@ -6,9 +6,11 @@ import { Actions } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 import LogOut from '../shared/logOut';
 import { SketchPicker } from 'react-color';
-import { Button } from 'antd';
+import { Button, Card, Typography } from 'antd';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
+
+const { Text, Title } = Typography;
 
 class Styles extends Component {
   constructor(props) {
@@ -22,36 +24,46 @@ class Styles extends Component {
       //Se realizan estas constantes para optimizar mas el codigo,de esta manera se mapea en el markup para utilizarlo posteriormente
       colorDrawer: [
         {
-          title: 'Elige un color de fondo:',
+          title: 'Color de fondo para el evento:',
           description: 'Si escoges luego una imagen de fondo, esa imagen reemplazara este color.',
           fieldColorName: 'containerBgColor',
-          editIsVisible: false
+          editIsVisible: false,
         },
         {
-          title: 'Elige un color para el menu:',
+          title: 'Color de fondo para el menu',
           fieldColorName: 'toolbarDefaultBg',
-          editIsVisible: false
+          editIsVisible: false,
         },
         {
-          title: 'Elige un color para el menu del chat',
+          title: 'Color de fondo para la zona social ',
           fieldColorName: 'toolbarMenuSocial',
-          editIsVisible: false
+          editIsVisible: false,
         },
         {
-          title: 'Elige un color para el texto del menu:',
+          title: 'Color del texto para el menu',
           fieldColorName: 'textMenu',
-          editIsVisible: false
+          editIsVisible: false,
         },
         {
           title: 'Elige un color para los botones:',
           fieldColorName: 'bgButtonsEvent',
-          editIsVisible: false
+          editIsVisible: false,
         },
         {
           title: 'Elige un color para seleccion de fecha de la agenda:',
           fieldColorName: 'bgCalendarDayEvent',
-          editIsVisible: false
-        }
+          editIsVisible: false,
+        },
+        {
+          title: 'Color del texto de los tabs de fechas de la agenda',
+          fieldColorName: 'color_tab_agenda',
+          editIsVisible: false,
+        },
+        {
+          title: 'Color de los iconos para la zona social',
+          fieldColorName: 'color_icon_socialzone',
+          editIsVisible: false,
+        },
         /*                 
                 {
                   title: "Elige un color para los botones",
@@ -69,7 +81,7 @@ class Styles extends Component {
                   fieldColorName: "activeText",
                   editIsVisible: false,
                 }, */
-      ]
+      ],
     };
     //Se establecen las funciones para su posterior uso
     this.saveEventImage = this.saveEventImage.bind(this);
@@ -84,7 +96,7 @@ class Styles extends Component {
         imageFieldName: 'banner_image',
         button: 'Eliminar banner superior',
         width: 1920,
-        height: 540
+        height: 540,
       },
       {
         title: 'Elige una imagen para el banner del email: (Tamaño recomendado 600x280)',
@@ -92,7 +104,7 @@ class Styles extends Component {
         imageFieldName: 'banner_image_email',
         button: 'Eliminar banner de email',
         width: 320,
-        height: 180
+        height: 180,
       },
       {
         title:
@@ -100,28 +112,28 @@ class Styles extends Component {
         imageFieldName: 'mobile_banner',
         button: 'eliminar banner en mobile',
         width: 1080,
-        height: 556
+        height: 556,
       },
       {
         title: 'Elige una imagen(textura) para el fondo: (Tamaño recomendado 1920x2160)',
         imageFieldName: 'BackgroundImage',
         button: 'Eliminar textura de fondo',
         width: 1920,
-        height: 2160
+        height: 2160,
       },
       {
         title: 'Elige una imagen para tu logo: (Tamaño recomendado 320x180)',
         imageFieldName: 'event_image',
         button: 'Eliminar Logo',
         width: 320,
-        height: 180
+        height: 180,
       },
       {
         title: 'Elige una imagen para el footer del evento: (Tamaño recomendado 1920x280)',
         imageFieldName: 'banner_footer',
         button: 'Eliminar pie de pagina',
         width: 1920,
-        height: 280
+        height: 280,
       },
       {
         title: 'Elige una imagen para el footer del email: (Tamaño recomendado 600x220)',
@@ -129,8 +141,8 @@ class Styles extends Component {
         imageFieldName: 'banner_footer_email',
         button: 'Eliminar pie de pagina de email',
         width: 600,
-        height: 220
-      }
+        height: 220,
+      },
       //{ title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
     ];
     this.selectsDrawer = [
@@ -141,17 +153,17 @@ class Styles extends Component {
         options: [
           {
             label: 'No',
-            value: 'no'
+            value: 'no',
           },
           {
             label: 'Video',
-            value: 'text'
+            value: 'text',
           },
           {
             label: 'Texto / Imagen',
-            value: 'code'
-          }
-        ]
+            value: 'code',
+          },
+        ],
       },
       {
         label: 'Habilitar banner Superior',
@@ -160,13 +172,13 @@ class Styles extends Component {
         options: [
           {
             label: 'Si',
-            value: true
+            value: true,
           },
           {
             label: 'No',
-            value: false
-          }
-        ]
+            value: false,
+          },
+        ],
       },
       {
         label: 'Habilitar Informacíon sobre el banner superior',
@@ -175,13 +187,13 @@ class Styles extends Component {
         options: [
           {
             label: 'Si',
-            value: true
+            value: true,
           },
           {
             label: 'No',
-            value: false
-          }
-        ]
+            value: false,
+          },
+        ],
       },
       {
         label: 'Habilitar inscripción de agenda',
@@ -190,13 +202,13 @@ class Styles extends Component {
         options: [
           {
             label: 'Si',
-            value: true
+            value: true,
           },
           {
             label: 'No',
-            value: false
-          }
-        ]
+            value: false,
+          },
+        ],
       },
       {
         label: 'Agrupar la actividades de la agenda en TABS ',
@@ -205,13 +217,13 @@ class Styles extends Component {
         options: [
           {
             label: 'Si',
-            value: true
+            value: true,
           },
           {
             label: 'No',
-            value: false
-          }
-        ]
+            value: false,
+          },
+        ],
       },
       {
         label: 'Ocultar fechas de las actividades de la agenda',
@@ -220,13 +232,13 @@ class Styles extends Component {
         options: [
           {
             label: 'Si',
-            value: true
+            value: true,
           },
           {
             label: 'No',
-            value: false
-          }
-        ]
+            value: false,
+          },
+        ],
       },
       {
         label: 'Ocultar horas de las actividades de la agenda',
@@ -235,13 +247,13 @@ class Styles extends Component {
         options: [
           {
             label: 'Si',
-            value: true
+            value: true,
           },
           {
             label: 'No',
-            value: false
-          }
-        ]
+            value: false,
+          },
+        ],
       },
       {
         label: 'Mostrar boton de detalle de la agenda',
@@ -250,14 +262,14 @@ class Styles extends Component {
         options: [
           {
             label: 'Si',
-            value: true
+            value: true,
           },
           {
             label: 'No',
-            value: false
-          }
-        ]
-      }
+            value: false,
+          },
+        ],
+      },
     ];
   }
   //Se consulta la api para traer los datos ya guardados y enviarlos al state
@@ -281,6 +293,9 @@ class Styles extends Component {
           toolbarMenuSocial: info.styles.toolbarMenuSocial || '#FFFFFF',
           activeText: info.styles.activeText || '#FFFFFF',
           bgButtonsEvent: info.styles.bgButtonsEvent || '#FFFFFF',
+          // color de los iconos del menu derecho
+          color_icon_socialzone: info.styles.color_icon_socialzone || '#000000',
+          color_tab_agenda: info.styles.color_tab_agenda || '#000000',
           // bgCalendarDayEvent: info.style.bgCalendarDayEvent || "#FFFFFF",
           event_image: info.styles.event_image || null,
           banner_image: info.styles.banner_image || null,
@@ -298,11 +313,10 @@ class Styles extends Component {
           hideBtnDetailAgenda: info.styles.hideBtnDetailAgenda || true,
           loader_page: info.styles.loader_page || 'no',
           data_loader_page: info.styles.data_loader_page || '',
-
           // Estilos de las actividades de la agenda
           hideDatesAgendaItem: info.styles.hideDatesAgendaItem || false,
-          hideHoursAgenda: info.styles.hideHoursAgenda || false
-        }
+          hideHoursAgenda: info.styles.hideHoursAgenda || false,
+        },
       });
     }
   }
@@ -316,7 +330,7 @@ class Styles extends Component {
     if (file) {
       this.setState({
         imageFile: file,
-        event: { ...this.state.event, picture: null }
+        event: { ...this.state.event, picture: null },
       });
 
       //envia el archivo de imagen como POST al API
@@ -338,7 +352,7 @@ class Styles extends Component {
         if (imageFieldName === 'banner_image') {
           let imageObject = {
             banner_image_email: imageUrl,
-            type: 'email'
+            type: 'email',
           };
           let image_event_name = 'banner_image_email';
           let imageUrl_email = await Actions.post(`/api/files/uploadbase/${image_event_name}`, imageObject);
@@ -348,7 +362,7 @@ class Styles extends Component {
         if (imageFieldName === 'banner_footer') {
           let imageObject = {
             banner_footer_email: imageUrl,
-            type: 'email'
+            type: 'email',
           };
           let image_event_name = 'banner_footer_email';
           let imageFooter_email = await Actions.post(`/api/files/uploadbase/${image_event_name}`, imageObject);
@@ -358,7 +372,7 @@ class Styles extends Component {
         this.setState({ styles: temp, isLoading: false });
 
         self.setState({
-          fileMsg: 'Imagen subida con exito'
+          fileMsg: 'Imagen subida con exito',
         });
 
         toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
@@ -477,13 +491,19 @@ class Styles extends Component {
             {this.state.colorDrawer.map((item, key) => (
               <div className='column inner-column' key={key}>
                 {item.editIsVisible && (
-                  <SketchPicker
-                    color={this.state.styles[item.fieldColorName]}
-                    onChangeComplete={(color) => {
-                      this.onColorChange(color, item.fieldColorName);
-                    }}
-                  />
+                  <div style={{ position: 'fixed', top: '200px', right: '0px', bottom: '0px', left: '600px' }}>
+                    <Card size='small' style={{ width: '250px' }}>
+                      <Title level={5}>{item.title}</Title>
+                      <SketchPicker
+                        color={this.state.styles[item.fieldColorName]}
+                        onChangeComplete={(color) => {
+                          this.onColorChange(color, item.fieldColorName);
+                        }}
+                      />
+                    </Card>
+                  </div>
                 )}
+
                 <div onClick={() => this.handleClickSelectColor(key)}>
                   <p className='label'>{item.title}</p>
                   {item.description && <label className='label has-text-grey-light'>{item.description}</label>}

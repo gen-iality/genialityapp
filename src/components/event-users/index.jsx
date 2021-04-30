@@ -84,7 +84,7 @@ class ListEventUser extends Component {
       percent_checked: 0,
       percent_unchecked: 0,
       totalPesoVoto: 0,
-      configfast: {}
+      configfast: {},
     };
   }
 
@@ -182,12 +182,12 @@ class ListEventUser extends Component {
         title: 'Ingreso',
         dataIndex: 'checkedin_at',
         key: 'checkedin_at',
-        render: self.checkedincomponent
+        render: self.checkedincomponent,
       };
       let editColumn = {
         title: 'Editar',
         key: 'edit',
-        render: self.editcomponent
+        render: self.editcomponent,
       };
       columns.push(editColumn);
       columns.push(checkInColumn);
@@ -205,13 +205,13 @@ class ListEventUser extends Component {
         title: 'Creado',
         dataIndex: 'created_at',
         key: 'created_at',
-        render: self.created_at_component
+        render: self.created_at_component,
       };
       let updated_at = {
         title: 'Actualizado',
         dataIndex: 'updated_at',
         key: 'updated_at',
-        render: self.updated_at_component
+        render: self.updated_at_component,
       };
 
       columns.push(created_at);
@@ -286,7 +286,7 @@ class ListEventUser extends Component {
             users: updatedAttendees,
             usersReq: updatedAttendees,
             auxArr: updatedAttendees,
-            loading: false
+            loading: false,
           });
         },
         () => {
@@ -360,7 +360,7 @@ class ListEventUser extends Component {
       .update({
         updated_at: new Date(),
         checkedin_at: new Date(),
-        checked_at: new Date()
+        checked_at: new Date(),
       })
       .then(() => {
         toast.success('Usuario Chequeado');
@@ -406,7 +406,7 @@ class ListEventUser extends Component {
   changeStage = (e) => {
     const { value } = e.target;
     const {
-      event: { tickets }
+      event: { tickets },
     } = this.props;
     if (value === '') {
       let check = 0,
@@ -424,7 +424,7 @@ class ListEventUser extends Component {
             ticket: '',
             stage: value,
             total: list.length + acompanates,
-            checkIn: check
+            checkIn: check,
           };
         });
       });
@@ -482,10 +482,10 @@ class ListEventUser extends Component {
       localChanges,
       quantityUsersSync,
       lastUpdate,
-      disabledPersistence
+      disabledPersistence,
     } = this.state;
     const {
-      event: { event_stages }
+      event: { event_stages },
     } = this.props;
 
     return (

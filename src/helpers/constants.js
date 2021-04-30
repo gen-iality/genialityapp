@@ -9,6 +9,7 @@ export const EVIUS_GOOGLE_MAPS_KEY = process.env.EVIUS_GOOGLE_MAPS_KEY || 'AIzaS
 export const ApiEviusZoomServer = process.env.REACT_APP_API_EVIUS_ZOOM_SERVER;
 export const ApiGoogleDocuments = process.env.REACT_APP_API_GOOGLE_API_DOCUMENTS;
 export const ApiEviusZoomHosts = process.env.REACT_APP_API_EVIUS_ZOOM_HOSTS;
+export const ApiEviusZoomSurvey=process.env.REACT_APP_API_EVIUS_ZOOM_SURVEY;
 
 export const parseUrl = (url) => {
   try {

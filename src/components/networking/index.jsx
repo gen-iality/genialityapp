@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Form } from 'antd';
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Form, Badge } from 'antd';
 
 import { SmileOutlined } from '@ant-design/icons';
 import AppointmentModal from './appointmentModal';
@@ -37,11 +37,12 @@ class ListEventUser extends Component {
       activeTab: 'asistentes',
       eventUserId: null,
       currentUserName: null,
-      eventUserIdToMakeAppointment: '',
+      eventUserIdToMakeAppointment: null,
+      eventUserToMakeAppointment: null,
       asistantData: [],
       matches: [],
       filterSector: null,
-      typeAssistant: null,
+      typeAssistant: null
     };
   }
 
@@ -54,16 +55,12 @@ class ListEventUser extends Component {
     this.setState({ activeTab });
   };
 
-  closeAppointmentModal = () => {
-    this.setState({ eventUserIdToMakeAppointment: '' });
-  };
-
   loadData = async () => {
     let { changeItem } = this.state;
     const { event } = this.props;
 
     // NO BORRAR ES UN AVANCE  PARA OPTIMIZAR LAS PETICIONES A LA API DE LA SECCION NETWORKING
-    // let eventUserList = []
+    let eventUserList = [];
     // const response = await UsersApi.getAll(event._id);
 
     // if(response.data){
@@ -71,11 +68,7 @@ class ListEventUser extends Component {
     // }
 
     //Servicio que trae la lista de asistentes excluyendo el usuario logeado
-    let eventUserList = await userRequest.getEventUserList(
-      event._id,
-      Cookie.get('evius_token'),
-      this.props.currentUser
-    );
+    eventUserList = await userRequest.getEventUserList(event._id, Cookie.get('evius_token'), this.props.currentUser);
 
     /** Inicia destacados
      * Búscamos usuarios destacados para colocarlos de primeros en la lista(destacados), tiene varios usos cómo publicitarios
@@ -98,8 +91,16 @@ class ListEventUser extends Component {
     if (this.state.eventUser) {
       let meproperties = this.state.eventUser.properties;
 
+      //
+      if (event._id === '60413a3cf215e97bb908bec9') {
+        let prospectos = eventUserList.filter((asistente) => asistente.properties.interes === 'Vender');
+        prospectos.forEach((prospecto) => {
+          matches.push(prospecto);
+        });
+      }
+
       //Finanzas del clima
-      if (event._id === '5f9708a2e4c9eb75713f8cc6') {
+      else if (event._id === '5f9708a2e4c9eb75713f8cc6') {
         let prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
         prospectos.map((prospecto) => {
           if (prospecto.properties.participacomo == 'Financiador') {
@@ -137,7 +138,6 @@ class ListEventUser extends Component {
 
       // Fenalco Meetups
       else if (event._id === '5f0622f01ce76d5550058c32') {
-        console.log('Fenalco Meetups: sugeridos');
         let prospectos = eventUserList.filter(
           (asistente) =>
             (asistente.properties.ingresasameetupspara === 'Hacer negocios' ||
@@ -191,7 +191,6 @@ class ListEventUser extends Component {
         } else {
           matches = prospectos;
         }
-        console.log('#Sugeridos', matches.length);
       }
     }
 
@@ -206,7 +205,7 @@ class ListEventUser extends Component {
         loading: false,
         clearSearch: !prevState.clearSearch,
         asistantData,
-        matches,
+        matches
       };
     });
   };
@@ -241,46 +240,6 @@ class ListEventUser extends Component {
   searchResult = (data) => {
     !data ? this.setState({ users: [] }) : this.setState({ users: data });
   };
-
-  async SendFriendship({ eventUserIdReceiver, userName }) {
-    let { eventUserId, currentUserName } = this.state;
-    let currentUser = Cookie.get('evius_token');
-
-    message.loading('Enviando solicitud');
-    if (currentUser) {
-      // Se valida si el usuario esta suscrito al evento
-      if (eventUserId) {
-        // Se usan los EventUserId
-        const data = {
-          id_user_requested: eventUserId,
-          id_user_requesting: eventUserIdReceiver,
-          user_name_requested: currentUserName,
-          user_name_requesting: userName,
-          event_id: this.props.event._id,
-          state: 'send',
-        };
-
-        // Se ejecuta el servicio del api de evius
-        try {
-          await EventsApi.sendInvitation(this.props.event._id, data);
-          notification.open({
-            message: 'Solicitud enviada',
-            description:
-              'Le llegará un correo a la persona notificandole la solicitud, quién la aceptara o recharaza. Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.',
-            icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-            duration: 30,
-          });
-        } catch (err) {
-          let { data } = err.response;
-          message.warning(data.message);
-        }
-      } else {
-        message.warning('No es posible enviar solicitudes. No se encuentra suscrito al evento');
-      }
-    } else {
-      message.warning('Para enviar la solicitud es necesario iniciar sesión');
-    }
-  }
 
   //Método que se ejecuta cuando se selecciona el tipo de usuario
   handleSelectTypeUser = async (typeUser) => {
@@ -318,22 +277,17 @@ class ListEventUser extends Component {
       eventUser,
       asistantData,
       eventUserIdToMakeAppointment,
+      eventUserToMakeAppointment,
       activeTab,
-      matches,
+      matches
     } = this.state;
 
     return (
-      <div style={{ width: '86.66667%' }}>
+      <div style={{ padding:'12px'}}>
         <EventContent>
           {/* Componente de busqueda */}
           <Tabs activeKey={activeTab} onChange={this.changeActiveTab}>
             <TabPane tab='Sugeridos' key='sugeridos'>
-              <AppointmentModal
-                event={event}
-                currentEventUserId={eventUserId}
-                targetEventUserId={eventUserIdToMakeAppointment}
-                closeModal={this.closeAppointmentModal}
-              />
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
                 <h1> Encuentra aquí tus contactos sugeridos, basados en la información de registro al evento.</h1>
               </Col>
@@ -371,85 +325,89 @@ class ListEventUser extends Component {
                     <div className='container' justify='center'>
                       <Row justify='space-between'>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                        {matches.map((users, userIndex) => (
-                          <Col
-                            key={`user-item-${userIndex}`}
-                            xs={20}
-                            sm={20}
-                            md={20}
-                            lg={10}
-                            xl={10}
-                            xxl={10}
-                            offset={2}>
-                            <Card
-                              extra={
-                                <a
-                                  onClick={() => {
-                                    this.SendFriendship({
-                                      eventUserIdReceiver: users._id,
-                                      userName: users.properties.names || users.properties.email,
-                                    });
-                                  }}></a>
-                              }
-                              hoverable={8}
-                              headStyle={
-                                users.destacado && users.destacado == true
-                                  ? { backgroundColor: '#33FFEC' }
-                                  : { backgroundColor: event.styles.toolbarDefaultBg }
-                              }
-                              style={{ width: 500, marginTop: '2%', marginBottom: '2%', textAlign: 'left' }}
-                              bordered={true}>
-                              <Meta
-                                avatar={
-                                  <Avatar>
-                                    {users.properties.names
-                                      ? users.properties.names.charAt(0).toUpperCase()
-                                      : users.properties.names}
-                                  </Avatar>
+                        {matches.length > 0 &&
+                          matches.map((user, userIndex) => (
+                            <Col
+                              key={`user-item-${userIndex}`}
+                              xs={20}
+                              sm={20}
+                              md={20}
+                              lg={10}
+                              xl={10}
+                              xxl={10}
+                              offset={2}>
+                              <Card
+                                extra={
+                                  <a
+                                    onClick={() => {
+                                      this.SendFriendship({
+                                        eventUserIdReceiver: user._id,
+                                        userName: user.properties.names || user.properties.email
+                                      });
+                                    }}></a>
                                 }
-                                title={users.properties.names ? users.properties.names : 'No registra Nombre'}
-                                description={[
-                                  <div key={`ui-${userIndex}`}>
-                                    <br />
-                                    <Row>
-                                      <Col xs={24}>
-                                        <div>
-                                          {asistantData.map(
-                                            (data, dataIndex) =>
-                                              /*Condicion !data.visible para poder tener en cuenta el campo visible en los datos que llegan, 
+                                hoverable={8}
+                                headStyle={
+                                  user.destacado && user.destacado == true
+                                    ? { backgroundColor: '#33FFEC' }
+                                    : { backgroundColor: event.styles.toolbarDefaultBg }
+                                }
+                                style={{ width: 500, marginTop: '2%', marginBottom: '2%', textAlign: 'left' }}
+                                bordered={true}>
+                                <Meta
+                                  avatar={
+                                    <Avatar>
+                                      {user.properties && user.properties.names
+                                        ? user.properties.names.charAt(0).toUpperCase()
+                                        : user.properties.names}
+                                    </Avatar>
+                                  }
+                                  title={user.properties.names ? user.properties.names : 'No registra Nombre'}
+                                  description={[
+                                    <div key={`ui-${userIndex}`}>
+                                      <br />
+                                      <Row>
+                                        <Col xs={24}>
+                                          <div>
+                                            {asistantData.map(
+                                              (data, dataIndex) =>
+                                                /*Condicion !data.visible para poder tener en cuenta el campo visible en los datos que llegan, 
                                                   esto ya que visibleByContacst es variable nueva, ambas realizan la misma funcionalidad
                                                 */
-                                              !data.visibleByAdmin &&
-                                              users.properties[data.name] && (
-                                                <div key={`public-field-${userIndex}-${dataIndex}`}>
-                                                  <p>
-                                                    <b>{data.label}:</b>{' '}
-                                                    {formatDataToString(users.properties[data.name], data)}
-                                                  </p>
-                                                </div>
-                                              )
-                                          )}
-                                        </div>
-                                      </Col>
-                                      {eventUserId !== null && (
-                                        <Col xs={24}>
-                                          <Button
-                                            type='primary'
-                                            onClick={() => {
-                                              this.setState({ eventUserIdToMakeAppointment: users._id });
-                                            }}>
-                                            {'Agendar cita'}
-                                          </Button>
+                                                !data.visibleByAdmin &&
+                                                user.properties[data.name] && (
+                                                  <div key={`public-field-${userIndex}-${dataIndex}`}>
+                                                    <p>
+                                                      <b>{data.label}:</b>{' '}
+                                                      {formatDataToString(user.properties[data.name], data)}
+                                                    </p>
+                                                  </div>
+                                                )
+                                            )}
+                                          </div>
                                         </Col>
-                                      )}
-                                    </Row>
-                                    <br />
-                                  </div>,
-                                ]}
-                              />
-                            </Card>
-                          </Col>
-                        ))}
+                                        {eventUserId !== null && (
+                                          <Col xs={24}>
+                                            <Button
+                                              type='primary'
+                                              onClick={() => {
+                                                this.setState({
+                                                  eventUserIdToMakeAppointment: user._id,
+                                                  eventUserToMakeAppointment: user
+                                                });
+                                              }}>
+                                              {'Agendar cita'}
+                                            </Button>
+                                          </Col>
+                                        )}
+                                      </Row>
+                                      <br />
+                                    </div>
+                                  ]}
+                                />
+                              </Card>
+                            </Col>
+                          ))}
                       </Row>
                     </div>
                   </div>
@@ -461,7 +419,9 @@ class ListEventUser extends Component {
               <AppointmentModal
                 event={event}
                 currentEventUserId={eventUserId}
+                eventUser={eventUser}
                 targetEventUserId={eventUserIdToMakeAppointment}
+                targetEventUser={eventUserToMakeAppointment}
                 closeModal={this.closeAppointmentModal}
               />
               <Form>
@@ -693,17 +653,32 @@ class ListEventUser extends Component {
                                         <Button
                                           style={{ backgroundColor: '#363636', color: 'white' }}
                                           onClick={() => {
-                                            this.setState({ eventUserIdToMakeAppointment: users._id });
+                                            this.props.agendarCita(users._id, users);
                                           }}>
                                           {'Agendar cita'}
                                         </Button>
                                         <Button
                                           style={{ backgroundColor: '#363636', color: 'white' }}
-                                          onClick={() => {
-                                            this.SendFriendship({
+                                          onClick={async () => {
+                                            var sendResp = await this.props.sendFriendship({
                                               eventUserIdReceiver: users._id,
-                                              userName: users.properties.names || users.properties.email,
+                                              userName: users.properties.names || users.properties.email
                                             });
+
+                                            var us = await this.props.loadDataUser(users);
+
+                                            if (sendResp._id) {
+                                              let notificationU = {
+                                                idReceive: us ? us._id : users.account_id,
+                                                idEmited: sendResp._id,
+                                                emailEmited: this.props.currentUser.email,
+                                                message: 'Te ha enviado solicitud de amistad',
+                                                name: 'notification.name',
+                                                type: 'amistad',
+                                                state: '0'
+                                              };
+                                              await this.props.notification(notificationU, this.props.currentUser._id);
+                                            }
                                           }}>
                                           {'Enviar solicitud de Contacto'}
                                         </Button>
@@ -711,7 +686,7 @@ class ListEventUser extends Component {
                                     )}
                                   </Row>
                                   <br />
-                                </div>,
+                                </div>
                               ]}
                             />
                           </Card>
@@ -727,16 +702,53 @@ class ListEventUser extends Component {
             </TabPane>
 
             <TabPane tab='Mis Contactos' key='mis-contactos'>
-              <ContactList eventId={this.props.event._id} section={this.props.section} />
+              <ContactList
+                agendarCita={this.props.agendarCita}
+                eventId={this.props.event._id}
+                section={this.props.section}
+              />
             </TabPane>
 
-            <TabPane tab='Solicitudes de Contacto' key='solicitudes'>
-              <RequestList eventId={this.props.event._id} />
+            <TabPane
+              tab={
+                <div style={{ position: 'relative' }}>
+                  Solicitudes de contacto{' '}
+                  {this.props.notifyAmis && this.props.notifyAmis.length > 0 && (
+                    <Badge
+                      style={{ position: 'absolute', top: '-21px', right: '-13px' }}
+                      count={this.props.notifyAmis.length}></Badge>
+                  )}
+                </div>
+              }
+              key='solicitudes'>
+              <RequestList
+                notify={this.props.notifyAmis}
+                currentUser={this.props.currentUser}
+                notification={this.props.notification}
+                eventId={this.props.event._id}
+              />
             </TabPane>
 
-            <TabPane tab='Solicitudes de citas' key='solicitudes-de-citas'>
+            <TabPane
+              tab={
+                <div style={{ position: 'relative' }}>
+                  Solicitudes de citas{' '}
+                  {this.props.notifyAgenda && this.props.notifyAgenda.length > 0 && (
+                    <Badge
+                      style={{ position: 'absolute', top: '-21px', right: '-13px' }}
+                      count={this.props.notifyAgenda.length}></Badge>
+                  )}
+                </div>
+              }
+              key='solicitudes-de-citas'>
               {activeTab === 'solicitudes-de-citas' && (
-                <AppointmentRequests eventId={event._id} currentEventUserId={eventUserId} eventUsers={users} />
+                <AppointmentRequests
+                  eventId={event._id}
+                  currentEventUserId={eventUserId}
+                  currentUser={this.props.currentUser}
+                  notificacion={this.props.notification}
+                  eventUsers={users}
+                />
               )}
             </TabPane>
 

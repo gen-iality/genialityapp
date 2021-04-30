@@ -3,9 +3,9 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import API, { EventsApi, TicketsApi, Activity } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, PageHeader, Typography, Form, Input } from 'antd';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, PageHeader, Typography, Form, Input, Alert } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
@@ -22,7 +22,7 @@ import { listenSurveysData } from '../events/surveys/services';
 
 const { TabPane } = Tabs;
 
-const { gotoActivity, setMainStage } = StageActions;
+const { gotoActivity, setMainStage, setTabs } = StageActions;
 const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys } = SurveyActions;
 
 const layout = {
@@ -54,7 +54,6 @@ let AgendaActividadDetalle = (props) => {
   const { Title } = Typography;
 
   const intl = useIntl();
-  const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
 
   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
   const [videoStyles, setVideoStyles] = useState(null);
@@ -73,6 +72,14 @@ let AgendaActividadDetalle = (props) => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
+    mediaQueryMatches();
+    window.addEventListener('resize', mediaQueryMatches);
+
+    if (props.collapsed) {
+      props.toggleCollapsed(1);
+    }
+
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
       if (props.eventUser) {
@@ -91,17 +98,14 @@ let AgendaActividadDetalle = (props) => {
       setNames(innerName);
       setEmail(props.userInfo.email);
     }
-  }, []);
 
-  useEffect(() => {
-    // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
-    mediaQueryMatches();
-    window.addEventListener('resize', mediaQueryMatches);
+    //Escuchando el estado de la actividad
 
-    if (props.collapsed) {
-      props.toggleCollapsed(1);
-    }
+    (async function() {
+      await listeningStateMeetingRoom(props.eventInfo._id, props.currentActivity._id);
+    })();
 
+    // Desmontado del componente
     return () => {
       props.gotoActivity(null);
       props.setMainStage(null);
@@ -109,7 +113,15 @@ let AgendaActividadDetalle = (props) => {
       props.setSurveyVisible(false);
       window.removeEventListener('resize', mediaQueryMatches);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    (async function() {
+      await listeningStateMeetingRoom(props.eventInfo._id, props.currentActivity._id);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.currentActivity._id]);
 
   /**
    * Calculating total real attendees this could be done less costly
@@ -129,7 +141,7 @@ let AgendaActividadDetalle = (props) => {
 
       const asistentesRef = firestore.collection(`${event._id}_event_attendees`);
       asistentesRef.onSnapshot((snapshot) => {
-        const list = [];
+        //const list = [];
         let cuantos = 0;
         let checkedin = 0;
         snapshot.forEach(function(doc) {
@@ -147,7 +159,7 @@ let AgendaActividadDetalle = (props) => {
     }
 
     (async () => {
-      await listeningAsistentes();
+      //await listeningAsistentes();
     })();
   }, [event]);
 
@@ -229,30 +241,31 @@ let AgendaActividadDetalle = (props) => {
     }
   }
 
+  async function listeningStateMeetingRoom(event_id, activity_id) {
+    // console.log("ACTIVIDAD SELECTED=>"+activity_id)
+    firestore
+      .collection('events')
+      .doc(event_id)
+      .collection('activities')
+      .doc(activity_id)
+      .onSnapshot((infoActivity) => {
+        if (!infoActivity.exists) return;
+        const data = infoActivity.data();
+        const { habilitar_ingreso, meeting_id, platform, tabs } = data;
+        setMeeting_id(meeting_id);
+        setPlatform(platform);
+        setMeetingState(habilitar_ingreso);
+        props.setTabs(tabs);
+      });
+  }
+
   useEffect(() => {
-    async function listeningStateMeetingRoom(event_id, activity_id) {
-      // console.log("ACTIVIDAD SELECTED=>"+activity_id)
-      firestore
-        .collection('events')
-        .doc(event_id)
-        .collection('activities')
-        .doc(activity_id)
-        .onSnapshot((infoActivity) => {
-          if (!infoActivity.exists) return;
-          const { habilitar_ingreso, meeting_id, platform } = infoActivity.data();
-          setMeeting_id(meeting_id);
-          setPlatform(platform);
-          setMeetingState(habilitar_ingreso);
-        });
-    }
     (async () => {
       //Id del evento
 
       var id = props.eventInfo._id;
       const event = await EventsApi.landingEvent(id);
       setEvent(event);
-
-      await listeningStateMeetingRoom(event._id, props.currentActivity._id);
 
       try {
         const respuesta = await API.get('api/me/eventusers/event/' + id);
@@ -281,7 +294,15 @@ let AgendaActividadDetalle = (props) => {
 
   const getMeetingPath = (platform) => {
     if (platform === 'zoom') {
-      return url_conference + meeting_id + `&userName=${props.userInfo.displayName}` + `&email=${props.userInfo.email}`;
+      const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
+
+      return (
+        url_conference +
+        meeting_id +
+        `&userName=${props.userInfo.displayName ? props.userInfo.displayName : 'Guest'}` +
+        `&email=${props.userInfo.email ? props.userInfo.email : 'emaxxxxxxil@gmail.com'}` +
+        `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}`
+      );
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
     } else if (platform === 'dolby') {
@@ -307,6 +328,7 @@ let AgendaActividadDetalle = (props) => {
         props.setHasOpenSurveys(data.hasOpenSurveys);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.event, props.currentActivity]);
 
   {
@@ -484,7 +506,8 @@ let AgendaActividadDetalle = (props) => {
                       <>
                         {platform === 'zoomExterno' ? (
                           openZoomExterno()
-                        ) : (
+                        ) : (props.currentUser && currentActivity.requires_registration) ||
+                          !currentActivity.requires_registration ? (
                           <>
                             <iframe
                               src={getMeetingPath(platform)}
@@ -495,6 +518,13 @@ let AgendaActividadDetalle = (props) => {
                               style={videoStyles}></iframe>
                             <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
                           </>
+                        ) : (
+                          <Alert
+                            message='Advertencia'
+                            description='Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento'
+                            type='warning'
+                            showIcon
+                          />
                         )}
                       </>
                     )}
@@ -733,25 +763,6 @@ let AgendaActividadDetalle = (props) => {
               
              */}
 
-            {/* <div
-              className='is-size-5-desktop has-margin-top-10 has-margin-bottom-10'
-              dangerouslySetInnerHTML={{ __html: currentActivity.description }}
-           />*/}
-            {event._id === '5f99a20378f48e50a571e3b6' || event._id === '5fca68b7e2f869277cfa31b0' ? (
-              <></>
-            ) : (
-              <Row>
-                <Col span={24}>
-                  <AttendeeNotAllowedCheck
-                    event={event}
-                    currentUser={props.userInfo}
-                    usuarioRegistrado={usuarioRegistrado}
-                    currentActivity={currentActivity}
-                  />
-                </Col>
-              </Row>
-            )}
-
             <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={handleChangeLowerTabs}>
               {
                 <TabPane
@@ -853,7 +864,7 @@ let AgendaActividadDetalle = (props) => {
                       </p>
                     </>
                   }>
-                  {props.currentSurvey === null ? <SurveyList /> : <SurveyDetail />}
+                  {props.currentSurvey === null ? <SurveyList eventSurveys={props.eventSurveys} /> : <SurveyDetail />}
                 </TabPane>
               )}
               {props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
@@ -931,15 +942,7 @@ let AgendaActividadDetalle = (props) => {
           </button> */}
             </div>
           </div>
-          {/*<div style={{ clear: 'both' }}>
-            <a
-              className=''
-              onClick={() => {
-                gotoActivity(null);
-              }}>
-              <Button>{intl.formatMessage({ id: 'button.return' })}</Button>
-            </a>
-          </div>*/}
+
           <Row style={{ paddingLeft: '10px' }}>
             <PageHeader
               onBack={() => {
@@ -962,6 +965,7 @@ const mapStateToProps = (state) => ({
   currentSurvey: state.survey.data.currentSurvey,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   tabs: state.stage.data.tabs,
+  generalTabs: state.tabs.generalTabs,
 });
 
 const mapDispatchToProps = {
@@ -970,6 +974,7 @@ const mapDispatchToProps = {
   setCurrentSurvey,
   setSurveyVisible,
   setHasOpenSurveys,
+  setTabs,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));

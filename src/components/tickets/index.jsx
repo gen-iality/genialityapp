@@ -1,13 +1,13 @@
-import React, { Component, Fragment } from "react";
-import * as Cookie from "js-cookie";
-import { fieldNameEmailFirst } from "../../helpers/utils";
-import TimeStamp from "react-timestamp";
-import { TicketsApi, EventsApi } from "../../helpers/request";
-import { Typography, Card, Col, Row, Button, message } from "antd";
-import EventImage from "../../eventimage.png";
-import { Link } from "react-router-dom";
-import DetailTickets from "./detalleTickets";
-import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
+import React, { Component, Fragment } from 'react';
+import * as Cookie from 'js-cookie';
+import { fieldNameEmailFirst } from '../../helpers/utils';
+import TimeStamp from 'react-timestamp';
+import { TicketsApi, EventsApi } from '../../helpers/request';
+import { Typography, Card, Col, Row, Button, message } from 'antd';
+import EventImage from '../../eventimage.png';
+import { Link } from 'react-router-dom';
+import DetailTickets from './detalleTickets';
+import { CheckCircleOutlined, WarningOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
@@ -16,7 +16,7 @@ class TicketInfo extends Component {
     super(props);
     this.state = {
       loading: true,
-      iframeUrl: "",
+      iframeUrl: '',
       usersInscription: [],
       visible: false,
       items: {},
@@ -26,7 +26,7 @@ class TicketInfo extends Component {
     this.changeVisible = this.changeVisible.bind(this);
   }
   async componentWillMount() {
-    const token = Cookie.get("evius_token");
+    const token = Cookie.get('evius_token');
     const tickets = await TicketsApi.getAll(token);
     const usersInscription = [];
     tickets.forEach(async (element) => {
@@ -41,10 +41,10 @@ class TicketInfo extends Component {
           event_start: eventByTicket.datetime_from,
           event_end: eventByTicket.datetime_to,
           rol: element.properties.rol,
-          state: element.state ? element.state.name : "Sin Confirmar",
+          state: element.state ? element.state.name : 'Sin Confirmar',
           properties: element.properties,
           status: element.checked_in,
-          author: eventByTicket.author.displayName,
+          author: eventByTicket.author?.displayName,
         });
       }
       console.log(element);
@@ -58,9 +58,9 @@ class TicketInfo extends Component {
 
   // Funciones del modal para transferir los ticketes -----------------------------------------
   openModal = async (eventId) => {
-    message.loading({ content: "Cargando...", key: "loading" }, 10);
+    message.loading({ content: 'Cargando...', key: 'loading' }, 10);
     let extraFields = await this.getEventFields(eventId);
-    message.success({ content: "Formulario cargado", key: "loading" });
+    message.success({ content: 'Formulario cargado', key: 'loading' });
     this.setState({ visibleModal: true, currentEventId: eventId, extraFields });
   };
 
@@ -77,7 +77,7 @@ class TicketInfo extends Component {
   // Funcion que extrae los campos -------------------------------------------------------------
   addDefaultLabels = (extraFields) => {
     extraFields = extraFields.map((field) => {
-      field["label"] = field["label"] ? field["label"] : field["name"];
+      field['label'] = field['label'] ? field['label'] : field['name'];
       return field;
     });
     return extraFields;
@@ -103,7 +103,7 @@ class TicketInfo extends Component {
       extraFields = this.addDefaultLabels(extraFields);
       extraFields = this.orderFieldsByWeight(extraFields);
 
-      console.log("extraFields", properties);
+      console.log('extraFields', properties);
       resolve(extraFields);
     });
   };
@@ -119,7 +119,7 @@ class TicketInfo extends Component {
           {usersInscription.map((items, key) => (
             <Col span={9} key={key}>
               <Card
-                style={{ marginLeft: "15%", marginTop: "3%" }}
+                style={{ marginLeft: '15%', marginTop: '3%' }}
                 bordered={true}
                 actions={[
                   <Link to={{ pathname: `/landing/${items.id}` }}>
@@ -135,21 +135,21 @@ class TicketInfo extends Component {
                 ]}
                 cover={
                   <div>
-                    <figure className="image is-3by2">
-                      {" "}
-                      <img alt="example" src={items.picture} />{" "}
+                    <figure className='image is-3by2'>
+                      {' '}
+                      <img alt='example' src={items.picture} />{' '}
                     </figure>
                   </div>
                 }>
-                <div className="media-content">
-                  <div className="">
-                    <h2 className="title is-size-6 is-medium has-text-grey-dark">{items.event}</h2>
+                <div className='media-content'>
+                  <div className=''>
+                    <h2 className='title is-size-6 is-medium has-text-grey-dark'>{items.event}</h2>
                   </div>
                 </div>
 
                 <div>
-                  <div className="is-size-7">
-                    <div style={{ float: "left", marginRight: "3%" }}>
+                  <div className='is-size-7'>
+                    <div style={{ float: 'left', marginRight: '3%' }}>
                       <TimeStamp data={items.event_start} />
                     </div>
                     <div>

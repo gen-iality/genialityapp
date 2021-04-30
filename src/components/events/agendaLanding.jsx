@@ -11,7 +11,7 @@ import {
   discountCodesApi,
 } from '../../helpers/request';
 import AgendaActividadDetalle from './agendaActividadDetalle';
-import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs } from 'antd';
+import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';
 import { CalendarOutlined } from '@ant-design/icons';
@@ -26,7 +26,6 @@ let attendee_states = {
   STATE_BOOKED: '5b859ed02039276ce2b996f0', //"BOOKED";
 };
 
-let changeStatus = false;
 const { setNotification } = notificationsActions;
 
 class Agenda extends Component {
@@ -61,7 +60,6 @@ class Agenda extends Component {
 
       redirect: false,
       disabled: false,
-      generalTab: true,
       loading: false,
       documents: [],
       show_inscription: false,
@@ -120,7 +118,8 @@ class Agenda extends Component {
         days.push(Moment(init).add(i, 'd'));
       }
 
-      this.setState({ days, day: days[0] }, this.fetchAgenda);
+      this.setState({ days, day: days[0] });
+      //this.setState({ days, day: days[0] }, this.fetchAgenda);
       //Si existe dates, entonces envia al array push las fechas del array dates del evento
     } else {
       const days = [];
@@ -159,7 +158,7 @@ class Agenda extends Component {
     this.setState({ days: getDays });
   };
 
-  async componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps) {
     const { data } = this.state;
     //Cargamos solamente los espacios virtuales de la agenda
 
@@ -169,7 +168,6 @@ class Agenda extends Component {
     //Revisamos si el evento sigue siendo el mismo, no toca cargar nada
     if (prevProps.event && this.props.event._id === prevProps.event._id) return;
 
-    this.listeningStateMeetingRoom(data);
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     const filtered = this.filterByDay(this.state.days[0], this.state.list);
     this.setState({ data, filtered, toShow: filtered });
@@ -185,10 +183,9 @@ class Agenda extends Component {
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
           const data = infoActivity.data();
-
-          let { habilitar_ingreso, isPublished, meeting_id, platform, tabs } = data;
+          let { habilitar_ingreso, isPublished, meeting_id, platform } = data;
           let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id, platform };
-          this.props.setTabs(tabs);
+          //this.props.setTabs(tabs);
           arr[index] = updatedActivityInfo;
           const filtered = this.filterByDay(this.state.days[0], arr);
           this.setState({ list: arr, filtered, toShow: filtered });
@@ -244,7 +241,7 @@ class Agenda extends Component {
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     //const filtered = this.filterByDay(this.state.days[0], data);
-    this.listeningStateMeetingRoom(data);
+    await this.listeningStateMeetingRoom(data);
 
     //this.setState({ data, filtered, toShow: filtered, spaces: space });
     this.setState({ data, spaces: space }, () => this.setDaysWithAllActivities(this.state.data));
@@ -489,7 +486,7 @@ class Agenda extends Component {
 
   getActivitiesByDay = (date) => {
     const { toggleConference, event } = this.props;
-    const { hideBtnDetailAgenda, show_inscription, data, loading, survey, documents } = this.state;
+    const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
 
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = data
@@ -505,28 +502,55 @@ class Agenda extends Component {
 
       return (
         <div key={index} className='container_agenda-information'>
-          <AgendaActivityItem
-            item={item}
-            key={index}
-            Documents={documents}
-            Surveys={survey}
-            toggleConference={toggleConference}
-            event_image={this.props.event.styles.event_image}
-            gotoActivity={this.gotoActivity}
-            registerInActivity={this.registerInActivity}
-            registerStatus={isRegistered}
-            eventId={this.props.eventId}
-            event={this.props.event}
-            userId={this.state.userId}
-            btnDetailAgenda={hideBtnDetailAgenda}
-            show_inscription={show_inscription}
-            userRegistered={this.props.userRegistered}
-            handleOpenModal={this.handleOpenModal}
-            hideHours={event.styles.hideHoursAgenda}
-            handleValidatePayment={this.validationRegisterAndExchangeCode}
-            eventUser={this.props.eventUser}
-            zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
-          />
+          {(item.requires_registration || item.requires_registration === 'true') && !this.props.userRegistered ? (
+            <Badge.Ribbon color='red' placement='end' text='Requiere registro'>
+              <AgendaActivityItem
+                item={item}
+                key={index}
+                Documents={documents}
+                Surveys={survey}
+                toggleConference={toggleConference}
+                event_image={this.props.event.styles.event_image}
+                gotoActivity={this.gotoActivity}
+                registerInActivity={this.registerInActivity}
+                registerStatus={isRegistered}
+                eventId={this.props.eventId}
+                event={this.props.event}
+                userId={this.state.userId}
+                btnDetailAgenda={hideBtnDetailAgenda}
+                show_inscription={show_inscription}
+                userRegistered={this.props.userRegistered}
+                handleOpenModal={this.handleOpenModal}
+                hideHours={event.styles.hideHoursAgenda}
+                handleValidatePayment={this.validationRegisterAndExchangeCode}
+                eventUser={this.props.eventUser}
+                zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+              />
+            </Badge.Ribbon>
+          ) : (
+            <AgendaActivityItem
+              item={item}
+              key={index}
+              Documents={documents}
+              Surveys={survey}
+              toggleConference={toggleConference}
+              event_image={this.props.event.styles.event_image}
+              gotoActivity={this.gotoActivity}
+              registerInActivity={this.registerInActivity}
+              registerStatus={isRegistered}
+              eventId={this.props.eventId}
+              event={this.props.event}
+              userId={this.state.userId}
+              btnDetailAgenda={hideBtnDetailAgenda}
+              show_inscription={show_inscription}
+              userRegistered={this.props.userRegistered}
+              handleOpenModal={this.handleOpenModal}
+              hideHours={event.styles.hideHoursAgenda}
+              handleValidatePayment={this.validationRegisterAndExchangeCode}
+              eventUser={this.props.eventUser}
+              zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+            />
+          )}
         </div>
       );
     });
@@ -536,19 +560,8 @@ class Agenda extends Component {
   //End modal methods
 
   render() {
-    const { toggleConference, event, option, currentActivity } = this.props;
-    const {
-      days,
-      day,
-      hideBtnDetailAgenda,
-      show_inscription,
-      spaces,
-      toShow,
-      data,
-      loading,
-      survey,
-      documents,
-    } = this.state;
+    const { toggleConference, event, currentActivity } = this.props;
+    const { days, loading, survey } = this.state;
 
     {
       Moment.locale(window.navigator.language);
@@ -655,13 +668,14 @@ class Agenda extends Component {
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
             currentUser={this.props.currentUser}
-            //option={option}
             collapsed={this.props.collapsed}
             toggleCollapsed={this.props.toggleCollapsed}
             // eventUser: Determina si el usuario esta registrado en el evento
             eventUser={this.props.userRegistered}
+            event={event}
             showSection={this.props.showSection}
             zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+            eventSurveys={this.props.eventSurveys}
           />
         )}
 
@@ -729,7 +743,7 @@ class Agenda extends Component {
                       <TabPane
                         style={{ paddingLeft: '25px', paddingRight: '25px' }}
                         tab={
-                          <span style={{ fontWeight: 'bolder' }}>
+                          <span style={{ fontWeight: 'bolder', color: event.styles.color_tab_agenda }}>
                             {Moment(day)
                               .format('LL')
                               .toUpperCase()}

@@ -1,4 +1,4 @@
-import { firestore } from '../../helpers/firebase';
+import { firestore, fireRealtime } from '../../helpers/firebase';
 import Moment from 'moment';
 import { resolve } from 'core-js/fn/promise';
 
@@ -17,6 +17,11 @@ export const validateSurveyCreated = (surveyId) => {
 
 export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
   return new Promise((resolve, reject) => {
+    //Abril 2021 @todo migracion de estados de firestore a firebaserealtime
+    //let eventId = surveyInfo.eventId || 'general';
+    let eventId = 'general';
+    fireRealtime.ref('events/' + eventId + '/surveys/' + surveyId).update(surveyInfo);
+
     validateSurveyCreated(surveyId).then((existSurvey) => {
       if (existSurvey) {
         refSurvey
@@ -103,6 +108,25 @@ export const getTriviaRanking = (surveyId) => {
       })
       .catch((err) => {
         reject(err);
+      });
+  });
+};
+
+export const getSurveyConfiguration = (surveyId) => {
+  return new Promise((resolve, reject) => {
+    if (!surveyId) {
+      reject('Survey ID required');
+    }
+
+    firestore
+      .collection('surveys')
+      .doc(surveyId)
+      .get()
+      .then((result) => {
+        if (result.exists) {
+          const data = result.data();
+          resolve(data);
+        }
       });
   });
 };

@@ -23,6 +23,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
     return getDatesRange(event.date_start, event.date_end);
   }, [event.date_start, event.date_end]);
 
+  useEffect(() => {}, []);
   useEffect(() => {
     if (!event || !event._id) return;
 
@@ -60,7 +61,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Obteniendo las citas del usuario'
+            description: 'Obteniendo las citas del usuario',
           });
         })
         .finally(() => setLoading(false));
@@ -82,8 +83,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
     //console.log("params",eventUser,currentRoom );
 
     return (
-      <Row align='middle' justify='center'>
-        <Col span={18}>
+      <Row align='middle'>
+        <Col span={24}>
           <Button
             className='button_regresar'
             type='primary'
@@ -92,41 +93,45 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
             }}>
             Regresar al listado de citas
           </Button>
-
-          <div className='aspect-ratio-box' style={{ width: '100%' }}>
-            <div className='aspect-ratio-box-inside'>
-              <iframe
-                style={{ border: '2px solid blue' }}
-                src={
-                  'https://video-app-1496-dev.twil.io?UserName=' +
-                  userName +
-                  '&URLRoomName=' +
-                  currentRoom +
-                  '&passcode=3701051496'
-                }
-                allow='autoplay;fullscreen; camera *;microphone *'
-                allowusermedia
-                allowFullScreen
-                title='video'
-                className='iframe-zoom nuevo'>
-                <p>Your browser does not support iframes.</p>
-              </iframe>
-            </div>
-          </div>
-
-          {userName && (
-            <iframe
-              title='chatevius'
-              className='ChatEvius'
-              style={{ width: 400, height: 373 }}
-              src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
-          )}
+            <Row gutter={[12,12]} >
+              <Col xs={24} sm={24} md={16} xl={16} xxl={16}>
+                <div className='aspect-ratio-box' style={{ width: '100%' }}>
+                  <div className='aspect-ratio-box-inside'>
+                    <iframe
+                      style={{ border: '2px solid blue' }}
+                      src={
+                        'https://video-app-1496-dev.twil.io?UserName=' +
+                        userName +
+                        '&URLRoomName=' +
+                        currentRoom +
+                        '&passcode=5896741496'
+                      }
+                      allow='autoplay;fullscreen; camera *;microphone *'
+                      allowusermedia
+                      allowFullScreen
+                      title='video'
+                      className='iframe-zoom nuevo'>
+                      <p>Your browser does not support iframes.</p>
+                    </iframe>
+                  </div>
+                </div>
+              </Col>
+              <Col xs={24} sm={24}  md={8} xl={8} xxl={8}>
+              {userName && (
+                  <iframe
+                    title='chatevius'
+                    className='ChatEvius'
+                    style={{ width: 400, height: 373 }}
+                    src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
+                )}
+              </Col>
+            </Row>
         </Col>
       </Row>
     );
   }
 
-  return (
+  return ( 
     <div>
       {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
@@ -217,7 +222,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Error eliminando la cita'
+            description: 'Error eliminando la cita',
           });
         })
         .finally(() => setLoading(false));
@@ -277,7 +282,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                           content: '¿Desea cancelar/eliminar esta cita?',
                           okText: 'Si',
                           cancelText: 'No',
-                          onOk: deleteThisAgenda
+                          onOk: deleteThisAgenda,
                         });
                       }}>
                       {'Cancelar'}

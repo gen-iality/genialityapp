@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Space } from 'antd';
+import { Table, Tag, Spin, Popconfirm, Button } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import XLSX from 'xlsx';
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/database';
-import { data } from 'jquery';
 
-var otherApp = app.initializeApp(
+var chatFirebase = app.initializeApp(
   {
     apiKey: 'AIzaSyD4_AiJFGf1nIvn9BY_rZeoITinzxfkl70',
     authDomain: 'chatevius.firebaseapp.com',
@@ -22,7 +22,7 @@ var otherApp = app.initializeApp(
   'nameOfOtherApp'
 );
 
-const firestore = otherApp.firestore();
+const firestore = chatFirebase.firestore();
 
 function formatAMPM(hours, minutes) {
   // var hours = date.getHours();
@@ -63,7 +63,10 @@ const ChatExport = ({ eventId, event }) => {
     return time;
   }
 
-  let [datamsjevent, setdatamsjevent] = useState();
+  let [datamsjevent, setdatamsjevent] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = React.useState(false);
+
   const columns = [
     {
       title: 'usuario',
@@ -99,6 +102,10 @@ const ChatExport = ({ eventId, event }) => {
   };
 
   useEffect(() => {
+    getChat();
+  }, []);
+
+  function getChat() {
     let datamessagesthisevent = [];
 
     firestore
@@ -106,9 +113,9 @@ const ChatExport = ({ eventId, event }) => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          console.log(timeConverter(doc.data().timestamp));
           let newtime = timeConverter(doc.data().timestamp);
           let msjnew = {
+            chatId: doc.id,
             name: doc.data().name,
             text: doc.data().text,
             hora: newtime,
@@ -120,21 +127,64 @@ const ChatExport = ({ eventId, event }) => {
       .catch((err) => {
         console.log('error firebase', err);
       });
+  }
 
-    console.log(datamsjevent);
-  }, []);
+  function deleteAllChat() {
+    setLoading(true);
+    datamsjevent.forEach(async (item) => {
+      await deleteSingleChat(eventId, item.chatId);
+    });
+    setdatamsjevent([]);
+    setLoading(false);
+  }
+
+  function deleteSingleChat(eventId, chatId) {
+    return new Promise((resolve, reject) => {
+      firestore
+        .collection('messagesevent_' + eventId)
+        .doc(chatId)
+        .delete()
+        .then(() => {
+          resolve('Delete chat', chatId);
+        })
+        .catch((error) => {
+          reject('Error deleting chat: ', error);
+        });
+    });
+  }
 
   return (
     <>
       <div className='column is-narrow has-text-centered export button-c is-centered'>
-        <button onClick={(e) => exportFile(e)} className='button is-primary'>
+        <button onClick={(e) => exportFile(e)} className='button is-primary' style={{ marginRight: 80 }}>
           <span className='icon'>
             <i className='fas fa-download' />
           </span>
           <span className='text-button'>Exportar</span>
         </button>
+        <Popconfirm
+          title='¿Está seguro que desea eliminar el chat de forma permanente?'
+          onConfirm={deleteAllChat}
+          onCancel={() => setVisible(false)}
+          okText='Si'
+          cancelText='No'
+          style={{ width: '170px' }}
+          icon={<QuestionCircleOutlined style={{ color: 'red' }} />}>
+          <Button
+            danger
+            onClick={() => {
+              setVisible(true);
+            }}
+            //className='button is-primary'
+          >
+            <span className='icon'>
+              <i className='fas fa-trash' />
+            </span>
+            <span className='text-button'>Eliminar Chat</span>
+          </Button>
+        </Popconfirm>
       </div>
-      <Table columns={columns} dataSource={datamsjevent} />;
+      {loading ? <Spin /> : <Table columns={columns} dataSource={datamsjevent} />}
     </>
   );
 };

@@ -17,10 +17,11 @@ import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';
-import { Switch, Card, Row, Col, message } from 'antd';
+import { Switch, Card, Row, Col, message, Tabs, Checkbox, Typography, Input } from 'antd';
 import { firestore } from '../../helpers/firebase';
 
 Moment.locale('es');
+const { Title } = Typography;
 
 class General extends Component {
   constructor(props) {
@@ -54,6 +55,16 @@ class General extends Component {
         privateChat: true,
         attendees: true,
       },
+      itemsMenu: [],
+      // Estado inicial de la seccion de formulario de registro
+      registerForm: {
+        name: 'Registro',
+        position: '',
+        section: 'tickets',
+        icon: 'CreditCardOutlined',
+        checked: true,
+        permissions: 'public',
+      },
     };
     this.specificDates = this.specificDates.bind(this);
     this.submit = this.submit.bind(this);
@@ -62,8 +73,26 @@ class General extends Component {
   }
 
   async componentDidMount() {
+    //inicializacion del estado de menu
+    if (this.state.event.itemsMenu) {
+      const { itemsMenu } = this.state.event;
+      const { registerForm } = this.state;
+
+      let registerSection = registerForm;
+
+      if (Object.keys(itemsMenu).length > 0) {
+        Object.keys(itemsMenu).forEach((index) => {
+          if (index === 'tickets') {
+            registerSection.name = itemsMenu[index].name;
+            registerSection.position = itemsMenu[index].position;
+          }
+        });
+      }
+      delete itemsMenu.tickets;
+      this.setState({ itemsMenu, registerForm: registerSection });
+    }
+
     const validate = await this.validateTabs();
-    console.log('validate', validate);
     if (validate) {
       if (validate.tabs !== undefined) {
         this.setState({ tabs: { ...validate.tabs } });
@@ -128,8 +157,14 @@ class General extends Component {
   };
   //Cambio en los input
   handleChange = (e) => {
-    const { name, value } = e.target;
-    //console.log('name', name, 'value', value);
+    let { name, value } = e.target;
+
+    if (name === 'visibility') {
+      value = e.target.checked ? 'PUBLIC' : 'ORGANIZATION';
+    } else if (name === 'allow_register' || name === 'has_payment') {
+      value = e.target.checked;
+    }
+
     this.setState({ event: { ...this.state.event, [name]: value } }, this.valid);
   };
   //Validación
@@ -292,7 +327,7 @@ class General extends Component {
     const { tabs } = this.state;
     let response = await this.validateTabs();
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       if (response) {
         let updateData = { ...response, tabs: { ...tabs } };
 
@@ -369,7 +404,7 @@ class General extends Component {
         event.allow_detail_calendar === 'true' || event.allow_detail_calendar === true ? true : false,
       enable_language: event.enable_language === 'true' || event.enable_language === true ? true : false,
       homeSelectedScreen: event.homeSelectedScreen,
-      visibility: event.visibility ? event.visibility : 'PUBLIC',
+      visibility: event.visibility ? event.visibility : 'ORGANIZATION',
       description: event.description,
       category_ids: categories,
       organizer_id:
@@ -389,6 +424,10 @@ class General extends Component {
       has_payment: event.has_payment ? event.has_payment : false,
       language: event.language ? event.language : 'es',
       googleanlyticsid: event.googleanlyticsid || null,
+      itemsMenu:
+        event.allow_register === 'true' || event.allow_register === true
+          ? { ...this.state.itemsMenu, tickets: this.state.registerForm }
+          : { ...this.state.itemsMenu },
     };
 
     try {
@@ -507,27 +546,30 @@ class General extends Component {
       errorData,
       serverError,
       specificDates,
+      registerForm,
     } = this.state;
     return (
       <React.Fragment>
         <div className='columns general'>
           <div className='column is-8'>
-            <h2 className='title-section'>Datos del evento</h2>
-            <div className='field'>
-              <label className='label required has-text-grey-light'>Nombre</label>
-              <div className='control'>
-                <input
-                  className='input'
-                  name={'name'}
-                  type='text'
-                  placeholder='Nombre del evento'
-                  value={event.name}
-                  onChange={this.handleChange}
-                />
-              </div>
-            </div>
+            <Tabs defaultActiveKey='1'>
+              <Tabs.TabPane tab='General' key='1'>
+                <h2 className='title-section'>Datos del evento</h2>
+                <div className='field'>
+                  <label className='label required has-text-grey-light'>Nombre</label>
+                  <div className='control'>
+                    <input
+                      className='input'
+                      name={'name'}
+                      type='text'
+                      placeholder='Nombre del evento'
+                      value={event.name}
+                      onChange={this.handleChange}
+                    />
+                  </div>
+                </div>
 
-            {/* <div className="field">
+                {/* <div className="field">
                             <label className="label required has-text-grey-light">Contenido de administrador</label>
                             <div className="control">
                                 <input className="input" name={"adminContenido"} type="text"
@@ -537,7 +579,7 @@ class General extends Component {
                             </div>
                         </div> */}
 
-            {/* <div className="field">
+                {/* <div className="field">
                             <label className="label required">Desea mantener activa las fechas ?</label>
                             <div className="select is-primary">
                                 <select name={"has_date"} value={event.has_date} defaultValue={event.has_date} onChange={this.handleChange}>
@@ -548,36 +590,7 @@ class General extends Component {
                             </div>
                         </div> */}
 
-            <div className='field'>
-              <label className='label required'>El evento acepta registros o es privado</label>
-              <p>
-                En un evento privado no se aceptan registros externos, la personas que asisten al evento han sido
-                añadidas por un administrador u organizador del evento
-              </p>
-              <div className='select is-primary'>
-                <select name={'allow_register'} defaultValue={event.allow_register} onChange={this.handleChange}>
-                  <option value={true}>Público</option>
-                  <option value={false}>Privado</option>
-                </select>
-              </div>
-            </div>
-
-            <div className='field'>
-              <label className='label required'>El acceso a las actividades del evento requieren pago?</label>
-
-              <div className='select is-primary'>
-                <select
-                  name={'has_payment'}
-                  defaultValue={event.has_payment ? event.has_payment : false}
-                  value={event.has_payment}
-                  onChange={this.handleChange}>
-                  <option value={true}>Si</option>
-                  <option value={false}>No</option>
-                </select>
-              </div>
-            </div>
-
-            {/* <div className="field">
+                {/* <div className="field">
                             <label className="label required">Desea observar el detalle de la agenda ?</label>
                             <div className="select is-primary">
                                 <select name={"allow_detail_calendar"} defaultValue={event.allow_detail_calendar} value={event.allow_detail_calendar} onChange={this.handleChange}>
@@ -588,7 +601,7 @@ class General extends Component {
                             </div>
                         </div> */}
 
-            {/* <div className="field">
+                {/* <div className="field">
                             <label className="label required">Desea Habilitar la traducción del lenguaje en el aplicativo</label>
                             <div className="select is-primary">
                                 <select name={"enable_language"} defaultValue={event.enable_language} value={event.enable_language} onChange={this.handleChange}>
@@ -598,136 +611,147 @@ class General extends Component {
                                 </select>
                             </div>
                         </div> */}
-            {event.app_configuration ? (
-              <div className='field'>
-                <label className='label'>Que modulo desea observar en el inicio</label>
-                <div className='select is-primary'>
-                  <select name='homeSelectedScreen' value={event.homeSelectedScreen} onChange={this.handleChange}>
-                    <option value={null}>Banner de inicio</option>
-                    <option
-                      value={event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : ''}>
-                      {event.app_configuration.ProfileScreen
-                        ? event.app_configuration.ProfileScreen.title
-                        : 'Favor Seleccionar items del menu para la '}
-                    </option>
-                    <option
-                      value={event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.name : ''}>
-                      {event.app_configuration.CalendarScreen
-                        ? event.app_configuration.CalendarScreen.title
-                        : 'Favor Seleccionar items del menu para la '}
-                    </option>
-                    <option value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}>
-                      {event.app_configuration.NewsScreen
-                        ? event.app_configuration.NewsScreen.title
-                        : 'Favor Seleccionar items del menu para la '}
-                    </option>
-                    <option
-                      value={
-                        event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.name : ''
-                      }>
-                      {event.app_configuration.EventPlaceScreen
-                        ? event.app_configuration.EventPlaceScreen.title
-                        : 'Favor Seleccionar items del menu para la '}
-                    </option>
-                    <option
-                      value={event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.name : ''}>
-                      {event.app_configuration.SpeakerScreen
-                        ? event.app_configuration.SpeakerScreen.title
-                        : 'Favor Seleccionar items del menu para la '}
-                    </option>
-                    <option
-                      value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}>
-                      {event.app_configuration.SurveyScreen
-                        ? event.app_configuration.SurveyScreen.title
-                        : 'Favor Seleccionar items del menu para la '}
-                    </option>
-                    <option
-                      value={
-                        event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.name : ''
-                      }>
-                      {event.app_configuration.DocumentsScreen
-                        ? event.app_configuration.DocumentsScreen.title
-                        : 'Favor Seleccionar items del menu para la '}
-                    </option>
-                    <option value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}>
-                      {event.app_configuration.WallScreen
-                        ? event.app_configuration.WallScreen.title
-                        : 'Favor Seleccionar items del menu para la '}
-                    </option>
-                    <option value={event.app_configuration.WebScreen ? event.app_configuration.WebScreen.name : ''}>
-                      {event.app_configuration.WebScreen
-                        ? event.app_configuration.WebScreen.title
-                        : 'Favor Seleccionar items del menu para la '}
-                    </option>
-                    <option value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}>
-                      {event.app_configuration.FaqsScreen
-                        ? event.app_configuration.FaqsScreen.title
-                        : 'Favor Seleccionar items del menu para la '}
-                    </option>
-                  </select>
-                </div>
-              </div>
-            ) : (
-              '   '
-            )}
-            <div>
-              <label className='label'>Tipo de evento</label>
-              <div className='select is-primary'>
-                <select value={event.type_event} name='type_event' onChange={this.handleChange}>
-                  <option value=''>Seleccionar...</option>
-                  <option value='physicalEvent'>Evento Fisico</option>
-                  <option value='onlineEvent'>Evento Virtual</option>
-                </select>
-              </div>
-            </div>
-
-            {event.type_event === 'onlineEvent' && (
-              <div>
-                <label className='label'>Plataforma Streaming del evento</label>
-                <div className='select is-primary'>
-                  <select defaultValue={event.event_platform} name='event_platform' onChange={this.handleChange}>
-                    {/* <option value="">Seleccionar...</option> */}
-                    <option value='zoom'>Zoom</option>
-                    <option value='zoomExterno'>ZoomExterno</option>
-                    <option value='vimeo'>Vimeo</option>
-                    <option value='bigmarker'>BigMaker</option>
-                  </select>
-                </div>
-              </div>
-            )}
-            {event.type_event === 'physicalEvent' && (
-              <>
-                <div className='field'>
-                  <label className='label has-text-grey-light'>Dirección</label>
-                  <div className='control'>
-                    <input
-                      className='input'
-                      name={'address'}
-                      type='text'
-                      placeholder='¿Cuál es la dirección del evento?'
-                      value={event.address}
-                      onChange={this.handleChange}
-                    />
+                {event.app_configuration ? (
+                  <div className='field'>
+                    <label className='label'>Que modulo desea observar en el inicio</label>
+                    <div className='select is-primary'>
+                      <select name='homeSelectedScreen' value={event.homeSelectedScreen} onChange={this.handleChange}>
+                        <option value={null}>Banner de inicio</option>
+                        <option
+                          value={
+                            event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : ''
+                          }>
+                          {event.app_configuration.ProfileScreen
+                            ? event.app_configuration.ProfileScreen.title
+                            : 'Favor Seleccionar items del menu para la '}
+                        </option>
+                        <option
+                          value={
+                            event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.name : ''
+                          }>
+                          {event.app_configuration.CalendarScreen
+                            ? event.app_configuration.CalendarScreen.title
+                            : 'Favor Seleccionar items del menu para la '}
+                        </option>
+                        <option
+                          value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}>
+                          {event.app_configuration.NewsScreen
+                            ? event.app_configuration.NewsScreen.title
+                            : 'Favor Seleccionar items del menu para la '}
+                        </option>
+                        <option
+                          value={
+                            event.app_configuration.EventPlaceScreen
+                              ? event.app_configuration.EventPlaceScreen.name
+                              : ''
+                          }>
+                          {event.app_configuration.EventPlaceScreen
+                            ? event.app_configuration.EventPlaceScreen.title
+                            : 'Favor Seleccionar items del menu para la '}
+                        </option>
+                        <option
+                          value={
+                            event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.name : ''
+                          }>
+                          {event.app_configuration.SpeakerScreen
+                            ? event.app_configuration.SpeakerScreen.title
+                            : 'Favor Seleccionar items del menu para la '}
+                        </option>
+                        <option
+                          value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}>
+                          {event.app_configuration.SurveyScreen
+                            ? event.app_configuration.SurveyScreen.title
+                            : 'Favor Seleccionar items del menu para la '}
+                        </option>
+                        <option
+                          value={
+                            event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.name : ''
+                          }>
+                          {event.app_configuration.DocumentsScreen
+                            ? event.app_configuration.DocumentsScreen.title
+                            : 'Favor Seleccionar items del menu para la '}
+                        </option>
+                        <option
+                          value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}>
+                          {event.app_configuration.WallScreen
+                            ? event.app_configuration.WallScreen.title
+                            : 'Favor Seleccionar items del menu para la '}
+                        </option>
+                        <option value={event.app_configuration.WebScreen ? event.app_configuration.WebScreen.name : ''}>
+                          {event.app_configuration.WebScreen
+                            ? event.app_configuration.WebScreen.title
+                            : 'Favor Seleccionar items del menu para la '}
+                        </option>
+                        <option
+                          value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}>
+                          {event.app_configuration.FaqsScreen
+                            ? event.app_configuration.FaqsScreen.title
+                            : 'Favor Seleccionar items del menu para la '}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                ) : (
+                  '   '
+                )}
+                <div>
+                  <label className='label'>Tipo de evento</label>
+                  <div className='select is-primary'>
+                    <select value={event.type_event} name='type_event' onChange={this.handleChange}>
+                      <option value=''>Seleccionar...</option>
+                      <option value='physicalEvent'>Evento Fisico</option>
+                      <option value='onlineEvent'>Evento Virtual</option>
+                    </select>
                   </div>
                 </div>
 
-                <div className='field'>
-                  <label className='label has-text-grey-light'>Lugar</label>
-                  <div className='control'>
-                    <input
-                      className='input'
-                      name={'venue'}
-                      type='text'
-                      placeholder='Nombre del lugar del evento'
-                      value={event.venue}
-                      onChange={this.handleChange}
-                    />
+                {event.type_event === 'onlineEvent' && (
+                  <div>
+                    <label className='label'>Plataforma Streaming del evento</label>
+                    <div className='select is-primary'>
+                      <select defaultValue={event.event_platform} name='event_platform' onChange={this.handleChange}>
+                        {/* <option value="">Seleccionar...</option> */}
+                        <option value='zoom'>Zoom</option>
+                        <option value='zoomExterno'>ZoomExterno</option>
+                        <option value='vimeo'>Vimeo</option>
+                        <option value='bigmarker'>BigMaker</option>
+                      </select>
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
+                )}
+                {event.type_event === 'physicalEvent' && (
+                  <>
+                    <div className='field'>
+                      <label className='label has-text-grey-light'>Dirección</label>
+                      <div className='control'>
+                        <input
+                          className='input'
+                          name={'address'}
+                          type='text'
+                          placeholder='¿Cuál es la dirección del evento?'
+                          value={event.address}
+                          onChange={this.handleChange}
+                        />
+                      </div>
+                    </div>
 
-            {/* <div className="field">
+                    <div className='field'>
+                      <label className='label has-text-grey-light'>Lugar</label>
+                      <div className='control'>
+                        <input
+                          className='input'
+                          name={'venue'}
+                          type='text'
+                          placeholder='Nombre del lugar del evento'
+                          value={event.venue}
+                          onChange={this.handleChange}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* <div className="field">
                             <label className="label required has-text-grey-light">Id Analiticas</label>
                             <div className="control">
                                 <input className="input" name={"analytics"} type="text"
@@ -736,7 +760,7 @@ class General extends Component {
                             </div>
                         </div> */}
 
-            {/* <div className="field">
+                {/* <div className="field">
                             <label className="label required has-text-grey-light">link de banner externo</label>
                             <div className="control">
                                 <input className="input" name={"banner_image_link"} type="text"
@@ -744,96 +768,164 @@ class General extends Component {
                                     onChange={this.handleChange} />
                             </div>
                         </div> */}
-            <div>
-              <label className='label has-text-grey-light' style={{ marginRight: '3%' }}>
-                Especificar fechas
-              </label>
-              <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
-            </div>
+                <div>
+                  <label className='label has-text-grey-light' style={{ marginRight: '3%' }}>
+                    Especificar fechas
+                  </label>
+                  <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
+                </div>
 
-            {specificDates === false ? (
-              <div>
-                <div className='field'>
-                  <div className='columns is-mobile'>
-                    <div className='column inner-column'>
-                      <div className='field'>
-                        <label className='label has-text-grey-light'>Fecha Inicio</label>
-                        <div className='control'>
-                          <DateTimePicker
-                            value={event.date_start}
-                            format={'DD/MM/YYYY'}
-                            time={false}
-                            onChange={(value) => this.changeDate(value, 'date_start')}
-                          />
+                {specificDates === false ? (
+                  <div>
+                    <div className='field'>
+                      <div className='columns is-mobile'>
+                        <div className='column inner-column'>
+                          <div className='field'>
+                            <label className='label has-text-grey-light'>Fecha Inicio</label>
+                            <div className='control'>
+                              <DateTimePicker
+                                value={event.date_start}
+                                format={'DD/MM/YYYY'}
+                                time={false}
+                                onChange={(value) => this.changeDate(value, 'date_start')}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className='column inner-column'>
+                          <div className='field'>
+                            <label className='label has-text-grey-light'>Hora Inicio</label>
+                            <div className='control'>
+                              <DateTimePicker
+                                value={event.hour_start}
+                                step={60}
+                                date={false}
+                                onChange={(value) => this.changeDate(value, 'hour_start')}
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div className='column inner-column'>
-                      <div className='field'>
-                        <label className='label has-text-grey-light'>Hora Inicio</label>
-                        <div className='control'>
-                          <DateTimePicker
-                            value={event.hour_start}
-                            step={60}
-                            date={false}
-                            onChange={(value) => this.changeDate(value, 'hour_start')}
-                          />
+                    <div className='field'>
+                      <div className='columns is-mobile'>
+                        <div className='column inner-column'>
+                          <div className='field'>
+                            <label className='label has-text-grey-light'>Fecha Fin</label>
+                            <div className='control'>
+                              <DateTimePicker
+                                value={event.date_end}
+                                min={this.minDate}
+                                format={'DD/MM/YYYY'}
+                                time={false}
+                                onChange={(value) => this.changeDate(value, 'date_end')}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className='column inner-column'>
+                          <div className='field'>
+                            <label className='label has-text-grey-light'>Hora Fin</label>
+                            <div className='control'>
+                              <DateTimePicker
+                                value={event.hour_end}
+                                step={60}
+                                date={false}
+                                onChange={(value) => this.changeDate(value, 'hour_end')}
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
+                )}
+
                 <div className='field'>
-                  <div className='columns is-mobile'>
-                    <div className='column inner-column'>
-                      <div className='field'>
-                        <label className='label has-text-grey-light'>Fecha Fin</label>
-                        <div className='control'>
-                          <DateTimePicker
-                            value={event.date_end}
-                            min={this.minDate}
-                            format={'DD/MM/YYYY'}
-                            time={false}
-                            onChange={(value) => this.changeDate(value, 'date_end')}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className='column inner-column'>
-                      <div className='field'>
-                        <label className='label has-text-grey-light'>Hora Fin</label>
-                        <div className='control'>
-                          <DateTimePicker
-                            value={event.hour_end}
-                            step={60}
-                            date={false}
-                            onChange={(value) => this.changeDate(value, 'hour_end')}
-                          />
-                        </div>
-                      </div>
-                    </div>
+                  <label className='label'>Idioma del evento</label>
+                  <div className='select is-primary'>
+                    <select value={event.language} name='language' onChange={this.handleChange}>
+                      <option value='es'>Español</option>
+                      <option value='en'>English</option>
+                      <option value='pt'>Portuguese</option>
+                    </select>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
-            )}
 
-            <div className='field'>
-              <label className='label'>Idioma del evento</label>
-              <div className='select is-primary'>
-                <select value={event.language} name='language' onChange={this.handleChange}>
-                  <option value='es'>Español</option>
-                  <option value='en'>English</option>
-                  <option value='pt'>Portuguese</option>
-                </select>
-              </div>
-            </div>
+                <div className='field'>
+                  <label className='label has-text-grey-light'>Descripción</label>
+                  <EviusReactQuill name='description' data={event.description} handleChange={this.chgTxt} />
+                </div>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab='Avanzado' key='2'>
+                <Row>
+                  <Col xs={24}>
+                    <Checkbox
+                      defaultChecked={event.allow_register || event.allow_register === 'true'}
+                      onChange={this.handleChange}
+                      name='allow_register'>
+                      Habilitar formulario de registro
+                    </Checkbox>
+                  </Col>
+                </Row>
+                {(event.allow_register || event.allow_register === 'true') && (
+                  <Row>
+                    <Col xs={24}>
+                      <Card
+                        title={<Title level={4}>{registerForm.name}</Title>}
+                        bordered={true}
+                        style={{ width: 300, marginTop: '2%' }}>
+                        <div style={{ marginBottom: '3%' }}></div>
 
-            <div className='field'>
-              <label className='label has-text-grey-light'>Descripción</label>
-              <EviusReactQuill name='description' data={event.description} handleChange={this.chgTxt} />
-            </div>
+                        <div style={{ marginTop: '4%' }}>
+                          <label>Cambiar nombre de la sección</label>
+                          <Input
+                            defaultValue={registerForm.name}
+                            onChange={(e) => {
+                              this.setState({ registerForm: { ...registerForm, name: e.target.value } });
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <label>Posición en el menú</label>
+                          <Input
+                            type='number'
+                            defaultValue={registerForm.position}
+                            onChange={(e) => {
+                              this.setState({ registerForm: { ...registerForm, position: e.target.value } });
+                            }}
+                          />
+                        </div>
+                      </Card>
+                    </Col>
+                  </Row>
+                )}
+
+                <Row>
+                  <Col xs={24}>
+                    <Checkbox
+                      defaultChecked={event.visibility === 'PUBLIC'}
+                      onChange={this.handleChange}
+                      name='visibility'>
+                      Mostrar el evento en la página principal de Evius
+                    </Checkbox>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={24}>
+                    <Checkbox
+                      defaultChecked={event.has_payment || event.has_payment === 'true'}
+                      onChange={this.handleChange}
+                      name={'has_payment'}>
+                      El evento requiere pago
+                    </Checkbox>
+                  </Col>
+                </Row>
+              </Tabs.TabPane>
+            </Tabs>
           </div>
           <div className='column is-4'>
             <div className='field is-grouped'>
@@ -850,34 +942,6 @@ class General extends Component {
               </button>
             </div>
             <div className='section-gray'>
-              <div className='field'>
-                <label className='label'>Visibilidad del evento</label>
-                <p>Determina si es visible desde el listado general de eventos</p>
-                <div className='control toggle-switch has-text-centered'>
-                  <input
-                    type='radio'
-                    id='choice1'
-                    name='visibility'
-                    checked={event.visibility === 'PUBLIC'}
-                    value='PUBLIC'
-                    onChange={this.handleChange}
-                  />
-                  <label htmlFor='choice1'>Público</label>
-                  <input
-                    type='radio'
-                    id='choice2'
-                    name='visibility'
-                    checked={event.visibility === 'ORGANIZATION'}
-                    value='ORGANIZATION'
-                    onChange={this.handleChange}
-                  />
-                  <label htmlFor='choice2'>Privado</label>
-                  <div id='flap'>
-                    <span className='content'>{event.visibility === 'PUBLIC' ? 'Público' : 'Privado'}</span>
-                  </div>
-                </div>
-              </div>
-
               <SelectInput
                 name={'Organizado por:'}
                 isMulti={false}

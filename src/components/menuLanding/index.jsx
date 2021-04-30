@@ -16,7 +16,7 @@ class menuLanding extends Component {
           section: 'evento',
           icon: 'CalendarOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         agenda: {
           name: 'Agenda',
@@ -24,7 +24,7 @@ class menuLanding extends Component {
           section: 'agenda',
           icon: 'ReadOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         speakers: {
           name: 'Conferencistas',
@@ -32,15 +32,15 @@ class menuLanding extends Component {
           section: 'speakers',
           icon: 'AudioOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         tickets: {
-          name: 'Boletería',
+          name: 'Registro',
           position: '',
           section: 'tickets',
           icon: 'CreditCardOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         certs: {
           name: 'Certificados',
@@ -48,7 +48,7 @@ class menuLanding extends Component {
           section: 'certs',
           icon: 'FileDoneOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         documents: {
           name: 'Documentos',
@@ -56,7 +56,7 @@ class menuLanding extends Component {
           section: 'documents',
           icon: 'FolderOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         wall: {
           name: 'Muro',
@@ -64,7 +64,7 @@ class menuLanding extends Component {
           section: 'wall',
           icon: 'TeamOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         survey: {
           name: 'Encuestas',
@@ -72,7 +72,7 @@ class menuLanding extends Component {
           section: 'survey',
           icon: 'FileUnknownOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         faqs: {
           name: 'Preguntas Frecuentes',
@@ -80,7 +80,7 @@ class menuLanding extends Component {
           section: 'faqs',
           icon: 'QuestionOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         networking: {
           name: 'Networking',
@@ -88,7 +88,7 @@ class menuLanding extends Component {
           section: 'networking',
           icon: 'LaptopOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         my_section: {
           name: 'Seccion Personalizada',
@@ -96,7 +96,7 @@ class menuLanding extends Component {
           section: 'my_section',
           icon: 'EnterOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         companies: {
           name: 'Empresas',
@@ -104,7 +104,7 @@ class menuLanding extends Component {
           section: 'companies',
           icon: 'ApartmentOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         interviews: {
           name: 'Citas',
@@ -112,7 +112,7 @@ class menuLanding extends Component {
           section: 'interviews',
           icon: 'UserOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         trophies: {
           name: 'Trofeos',
@@ -120,7 +120,7 @@ class menuLanding extends Component {
           section: 'trophies',
           icon: 'TrophyOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         my_sesions: {
           name: 'Mis Actividades',
@@ -128,8 +128,9 @@ class menuLanding extends Component {
           section: 'my_sesions',
           icon: 'TeamOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
+
         informativeSection: {
           name: 'Seccion Informativa',
           position: '',
@@ -137,7 +138,7 @@ class menuLanding extends Component {
           icon: 'FileDoneOutlined',
           markup: '',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         informativeSection1: {
           name: 'Seccion Informativa Segunda',
@@ -146,7 +147,7 @@ class menuLanding extends Component {
           icon: 'FileDoneOutlined',
           markup: '',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         login: {
           name: 'Inicio de sesion',
@@ -154,25 +155,24 @@ class menuLanding extends Component {
           section: 'login',
           icon: 'LoginOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         partners: {
           name: 'Patrocinadores',
           section: 'partners',
           icon: 'DollarCircleOutlined',
           checked: false,
-          permissions: 'public'
-        }
+          permissions: 'public',
+        },
       },
       values: {},
       itemsMenu: {},
-      keySelect: Date.now()
+      keySelect: Date.now(),
     };
     this.submit = this.submit.bind(this);
   }
 
   async componentDidMount() {
-    console.log('Menu landing', this.props);
     const menuBase = this.state.menu;
     const menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}`);
 
@@ -212,6 +212,12 @@ class menuLanding extends Component {
     const { itemsMenu } = this.state;
     let menu = this.orderItemsMenu(itemsMenu);
     const newMenu = { itemsMenu: { ...menu } };
+
+    if (newMenu.itemsMenu.tickets) {
+      newMenu.allow_register = true;
+    } else {
+      newMenu.allow_register = false;
+    }
 
     await Actions.put(`api/events/${this.props.event._id}`, newMenu);
     toast.success('Información guardada');
@@ -267,7 +273,6 @@ class menuLanding extends Component {
   }
 
   orderPosition(key, order) {
-    console.log('order', order, 'menu state', this.state.menu[key].position);
     let itemsMenuToOrder = { ...this.state.itemsMenu };
     itemsMenuToOrder[key].position = order;
 
@@ -286,11 +291,10 @@ class menuLanding extends Component {
                   <Card
                     title={<Title level={4}>{this.state.menu[key].name}</Title>}
                     bordered={true}
-                    //extra={<Checkbox disabled checked={this.state.menu[key].checked} />}
                     style={{ width: 300, marginTop: '2%' }}>
                     <div style={{ marginBottom: '3%' }}>
                       <Button
-                        onClick={(e) => {
+                        onClick={() => {
                           this.mapActiveItemsToAvailable(key);
                         }}>
                         {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
@@ -311,7 +315,11 @@ class menuLanding extends Component {
                       <label>Permisos para la sección</label>
                       <Select
                         key={this.state.keySelect}
-                        disabled={this.state.menu[key].checked === true ? false : true}
+                        disabled={
+                          this.state.menu[key].checked === true && this.state.menu[key].section !== 'tickets'
+                            ? false
+                            : true
+                        }
                         defaultValue={this.state.menu[key].permissions}
                         style={{ width: 200 }}
                         onChange={(e) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Row, Col, Switch } from 'antd';
 
 export default function RoomController(props) {
-  const { handleRoomState, handleTabsController, roomStatus, chat, surveys, games, attendees } = props;
+  const { handleRoomState, handleTabsController, roomStatus, surveys, games } = props;
   return (
     <>
       <Card>

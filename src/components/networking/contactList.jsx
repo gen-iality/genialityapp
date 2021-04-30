@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Spin, Alert, Col, Card, Avatar, Row } from 'antd';
+import { Spin, Alert, Col, Card, Avatar, Row, Button } from 'antd';
 import * as Cookie from 'js-cookie';
 import { getCurrentUser, getCurrentEventUser } from './services';
 import { Networking } from '../../helpers/request';
@@ -8,7 +8,7 @@ import { formatDataToString } from '../../helpers/utils';
 
 const { Meta } = Card;
 
-const ContactList = ({ eventId }) => {
+const ContactList = ({ eventId, agendarCita }) => {
   const [contactsList, setContactsList] = useState([]);
   const [messageService, setMessageService] = useState('');
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -106,9 +106,18 @@ const ContactList = ({ eventId }) => {
                             </div>
                           )
                       )}
-                    </div>,
+                    </div>
                   ]}
                 />
+                <Col xs={24}>
+                  <Button
+                    block
+                    size='large'
+                    style={{ backgroundColor: '#363636', color: 'white' }}
+                    onClick={() => agendarCita(contact._id, contact)}>
+                    {'Agendar cita'}
+                  </Button>
+                </Col>
               </Card>
             </Row>
           );

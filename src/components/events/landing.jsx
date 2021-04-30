@@ -1,4 +1,3 @@
-//external
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
@@ -6,12 +5,15 @@ import { connect } from 'react-redux';
 import * as eventActions from '../../redux/event/actions';
 import * as stageActions from '../../redux/stage/actions';
 import * as notificationsActions from '../../redux/notifications/actions';
+import * as notifyNetworking from '../../redux/notifyNetworking/actions';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row, Menu, Badge, message, notification } from 'antd';
+import { Layout, Drawer, Button, Col, Row, Menu, Badge, notification, Space, Tooltip, List, Spin, message } from 'antd';
+import * as Cookie from 'js-cookie';
+
 import {
   MenuOutlined,
   CommentOutlined,
@@ -23,10 +25,21 @@ import {
   PlayCircleOutlined,
   LoadingOutlined,
   DiffOutlined,
+  UsergroupAddOutlined,
+  VideoCameraAddOutlined,
+  SmileOutlined,
 } from '@ant-design/icons';
 
 //custom
-import { Actions, EventsApi, TicketsApi, fireStoreApi, Activity, getCurrentUser } from '../../helpers/request';
+import {
+  Actions,
+  EventsApi,
+  TicketsApi,
+  fireStoreApi,
+  Activity,
+  getCurrentUser,
+  EventFieldsApi,
+} from '../../helpers/request';
 import Loading from '../loaders/loading';
 import { BaseUrl } from '../../helpers/constants';
 import Dialog from '../modal/twoAction';
@@ -51,7 +64,7 @@ import VirtualConference from './virtualConference';
 import MapComponent from './mapComponet';
 import EventLanding from './eventLanding';
 import { toast } from 'react-toastify';
-import { handleRequestError } from '../../helpers/utils';
+import { formatDataToString, handleRequestError } from '../../helpers/utils';
 import Robapagina from '../shared/Animate_Img/index';
 import Trophies from './trophies';
 import InformativeSection from './informativeSections/informativeSection';
@@ -62,6 +75,7 @@ import SocialZone from '../../components/socialZone/socialZone';
 import { firestore } from '../../helpers/firebase';
 import { AgendaApi } from '../../helpers/request';
 import * as SurveyActions from '../../redux/survey/actions';
+import { setGeneralTabs, getGeneralTabs } from '../../redux/tabs/actions';
 
 import {
   // BrowserView,
@@ -69,11 +83,16 @@ import {
   // isBrowser,
   isMobile,
 } from 'react-device-detect';
+import Avatar from 'antd/lib/avatar/avatar';
+import Text from 'antd/lib/typography/Text';
+import { getCurrentEventUser, getUserByEmail } from '../networking/services';
+import AppointmentModal from '../networking/appointmentModal';
 
 const { setEventData } = eventActions;
 const { gotoActivity, setMainStage } = stageActions;
 const { setNotification } = notificationsActions;
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
+const { setNotificationN } = notifyNetworking;
 
 const { Content, Sider } = Layout;
 Moment.locale('es');
@@ -124,22 +143,36 @@ class Landing extends Component {
       event: null,
       requireValidation: false,
       currentSurvey: {},
+      //Visibilidad drawer perfil
+      visiblePerfil: false,
+      //usuario seleccionado para obtener su perfil
+      userPerfil: null,
+      //properties user perfil
+      propertiesUserPerfil: null,
       //Integración con encuestas
       currentActivity: null,
 
       platform: null,
       habilitar_ingreso: null,
-      chat: false,
-      surveys: false,
-      games: false,
-      attendees: false,
+      // chat: false,
+      // surveys: false,
+      // games: false,
+      // attendees: false,
       tabSelected: -1,
       option: 'N/A',
       totalNewMessages: 0,
       activitiesAgenda: [],
       publishedSurveys: [],
+      eventSurveys: [],
+      containNetWorking: false,
       //fin Integración con encuestas
-
+      // notificacionesNetworking
+      notifyNetworkingAg: [],
+      notifyNetworkingAm: [],
+      totalNotficationsN: 0,
+      //modal Agenda
+      eventUserIdToMakeAppointment: null,
+      eventUserToMakeAppointment: null,
       // Tabs generales
       generalTabs: {
         publicChat: true,
@@ -148,25 +181,25 @@ class Landing extends Component {
       },
     };
     this.showLanding = this.showLanding.bind(this);
+    this.SendFriendship = this.SendFriendship.bind(this);
+    this.addNotification = this.addNotification.bind(this);
+    this.obtenerUserPerfil = this.obtenerUserPerfil.bind(this);
+    this.loadDataUser = this.loadDataUser.bind(this);
   }
 
   //METODO PARA OBTENER ENCUESTAS
-  listenSurveysData = async () => {
-    const { event, activity } = this.props;
+  listenSurveysData = async (event_id) => {
+    if (!event_id) {
+      return [];
+    }
 
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
-    let $query = firestore.collection('surveys');
-
-    //Le agregamos el filtro por evento
-    if (event && event._id) {
-      $query = $query.where('eventId', '==', event._id);
-    }
+    let $query = firestore.collection('surveys').where('eventId', '==', event_id);
 
     $query.onSnapshot(async (surveySnapShot) => {
       // Almacena el Snapshot de todas las encuestas del evento
 
       const eventSurveys = [];
-      let publishedSurveys = [];
 
       if (surveySnapShot.size === 0) {
         this.setState({ selectedSurvey: {}, surveyVisible: false, publishedSurveys: [] });
@@ -177,21 +210,35 @@ class Landing extends Component {
         eventSurveys.push({ ...doc.data(), _id: doc.id });
       });
 
+      this.setState({ eventSurveys });
+    });
+  };
+
+  publishedSurveysByActivity = () => {
+    const { currentActivity } = this.props;
+
+    if (currentActivity !== null) {
+      let publishedSurveys = [];
+      let surveys = this.state.eventSurveys || [];
+
       // Listado de encuestas publicadas del evento
-      publishedSurveys = eventSurveys.filter(
+      publishedSurveys = surveys.filter(
         (survey) =>
           (survey.isPublished === 'true' || survey.isPublished === true) &&
-          ((activity && survey.activity_id === activity._id) || survey.isGlobal === 'true')
+          ((currentActivity && survey.activity_id === currentActivity._id) || survey.isGlobal === 'true')
       );
 
-      if (this.state.user && Object.keys(this.state.user).length === 0) {
+      if (!this.state.currentUser || Object.keys(this.state.currentUser).length === 0) {
         publishedSurveys = publishedSurveys.filter((item) => {
           return item.allow_anonymous_answers !== 'false';
         });
       }
-
       this.setState({ publishedSurveys });
-    });
+    }
+  };
+
+  AgendarCita = (id, targetEventUser) => {
+    this.setState({ eventUserIdToMakeAppointment: id, eventUserToMakeAppointment: targetEventUser });
   };
 
   openNotificationWithIcon = (type) => {
@@ -211,8 +258,8 @@ class Landing extends Component {
         .onSnapshot(function(eventSnapshot) {
           if (eventSnapshot.exists) {
             if (eventSnapshot.data().tabs !== undefined) {
-              const tabs = eventSnapshot.data().tabs;
-              self.setState({ generalTabs: tabs });
+              const generalTabs = eventSnapshot.data().tabs;
+              self.setState({ generalTabs });
             }
           }
         });
@@ -235,6 +282,73 @@ class Landing extends Component {
         self.setTotalNewMessages(totalNewMessages);
       });
   };
+
+  getProperties = async () => {
+    let properties = await EventFieldsApi.getAll(this.props.eventInfo._id);
+
+    if (properties.length > 0) {
+      this.setState({
+        propertiesUserPerfil: properties,
+      });
+      return properties;
+    }
+
+    return null;
+  };
+
+  containsNetWorking = () => {
+    if (this.state.sections != undefined) {
+      if (this.state.event.itemsMenu['networking'] !== undefined) {
+        this.setState({ containNetWorking: true });
+      } else {
+        this.setState({ containNetWorking: false });
+      }
+    }
+  };
+
+  async SendFriendship({ eventUserIdReceiver, userName }) {
+    let resp = await this.loadDataUser(this.state.user);
+
+    let eventUserId = resp._id;
+    let currentUserName = this.state.user.names || this.state.user.email;
+    let currentUser = Cookie.get('evius_token');
+
+    message.loading('Enviando solicitud');
+    if (currentUser) {
+      // Se valida si el usuario esta suscrito al evento
+      if (eventUserId) {
+        // Se usan los EventUserId
+        const data = {
+          id_user_requested: eventUserId,
+          id_user_requesting: eventUserIdReceiver,
+          user_name_requested: currentUserName,
+          user_name_requesting: userName,
+          event_id: this.props.eventInfo._id,
+          state: 'send',
+        };
+
+        // Se ejecuta el servicio del api de evius
+        try {
+          var respInvitation = await EventsApi.sendInvitation(this.props.eventInfo._id, data);
+          notification.open({
+            message: 'Solicitud enviada',
+            description:
+              'Le llegará un correo a la persona notificandole la solicitud, quién la aceptara o recharaza. Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.',
+            icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+            duration: 30,
+          });
+          return respInvitation;
+        } catch (err) {
+          let { data } = err.response;
+          message.warning(data.message);
+        }
+      } else {
+        message.warning('No es posible enviar solicitudes. No se encuentra suscrito al evento');
+      }
+    } else {
+      message.warning('Para enviar la solicitud es necesario iniciar sesión');
+    }
+  }
 
   setTotalNewMessages = (newMessages) => {
     this.setState({
@@ -273,19 +387,13 @@ class Landing extends Component {
           habilitar_ingreso: videoConference.habilitar_ingreso
             ? videoConference.habilitar_ingreso
             : 'closed_metting_room',
-          chat: videoConference.tabs.chat ? videoConference.tabs.chat : false,
-          surveys: videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
-          games: videoConference.tabs.games ? videoConference.tabs.games : false,
-          attendees: videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
         });
       });
   };
 
   // OBTIENE EL NOMBRE DE LA ACTIVIDAD// SE CAMBIO PARA OBTENER LA ACTIVIDAD Y PODER REDIRIGIR CUANDO LA ACTIVIDAD ESTA EN VIVO(NOTIFICATIONS)
   obtenerNombreActivity(activityID) {
-    //console.log("ACTIVITY NOMBRE ID=>"+activityID)
     const act = this.state.activitiesAgenda.filter((ac) => ac._id == activityID);
-    //console.log(act)
     return act.length > 0 ? act[0] : null;
   }
 
@@ -295,6 +403,34 @@ class Landing extends Component {
       tabSelected: tab,
     });
     await this.mountSections();
+  };
+
+  loadDataUser = async (email) => {
+    const resp = await getUserByEmail(email, this.props.eventInfo._id);
+
+    return resp;
+  };
+
+  async obtenerUserPerfil(id) {
+    let userp = await getCurrentEventUser(this.props.eventInfo._id, id);
+    return userp;
+  }
+
+  collapsePerfil = async (userPerfil) => {
+    this.setState({
+      visiblePerfil: !this.state.visiblePerfil,
+    });
+    if (userPerfil != null) {
+      var data = await this.loadDataUser(userPerfil);
+
+      this.setState({ userPerfil: data.properties });
+      //var userEid = this.obtenerUserPerfil(data._id);
+      if (data) {
+        await this.getProperties(data._id);
+      }
+    } else {
+      //console.log('Perfil usuario nulo');
+    }
   };
 
   toggleCollapsedN = async () => {
@@ -357,6 +493,8 @@ class Landing extends Component {
   }
 
   mountSections = async () => {
+    //console.log('MOUNT SECTIONS NOTIFY');
+    //console.log(this.state.totalNotficationsN);
     let eventUser = null;
     let eventUsers = null;
     this.props.setNotification({
@@ -370,7 +508,16 @@ class Landing extends Component {
     this.setState({ user, currentUser: user });
 
     /* Trae la información del evento con la instancia pública*/
-    const event = await EventsApi.landingEvent(id);
+    let event = {};
+
+    try {
+      event = await EventsApi.landingEvent(id);
+    } catch (err) {
+      console.error('Landing error:', err);
+    }
+
+    //Detenemos el hilo de ejecución si el id no retorna un evento de la base de datos
+    if (!Object.keys(event).length) return;
 
     //definiendo un google tag por evento si viene sino utiliza el por defecto
     let googleanlyticsid = event['googleanlyticsid'];
@@ -408,6 +555,7 @@ class Landing extends Component {
       show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false,
       eventUsers,
       data: user,
+      user: user,
       currentUser: user,
       namesUser: namesUser,
       loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false,
@@ -432,6 +580,9 @@ class Landing extends Component {
           showSection={this.showSection}
           zoomExternoHandleOpen={this.zoomExternoHandleOpen}
           eventUser={this.state.eventUser}
+          generalTabs={this.state.generalTabs}
+          eventSurveys={this.state.eventSurveys}
+          publishedSurveys={this.state.publishedSurveys}
         />
       ),
       tickets: (
@@ -473,7 +624,14 @@ class Landing extends Component {
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: (
         <NetworkingForm
+          notification={this.addNotification}
           event={event}
+          agendarCita={this.AgendarCita}
+          loadDataUser={this.loadDataUser}
+          sendFriendship={this.SendFriendship}
+          notifications={this.state.totalNotficationsN}
+          notifyAgenda={this.state.notifyNetworkingAg}
+          notifyAmis={this.state.notifyNetworkingAm}
           eventId={event._id}
           currentUser={this.state.currentUser}
           section={this.state.section}
@@ -564,13 +722,95 @@ class Landing extends Component {
     this.setState({ loading: false, sections }, () => {
       this.firebaseUI();
       this.handleScroll();
+      this.containsNetWorking();
     });
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.generalTabs !== this.state.generalTabs) {
+      this.props.setGeneralTabs(this.state.generalTabs);
+    }
+
+    if (prevState.event && prevState.event._id !== this.state.event._id) {
+      this.listenSurveysData(this.state.event._id);
+    }
+
+    if (
+      prevState.eventSurveys !== this.state.eventSurveys ||
+      prevProps.currentActivity !== this.props.currentActivity
+    ) {
+      this.publishedSurveysByActivity();
+    }
+
+    if (prevState.publishedSurveys !== this.state.publishedSurveys) {
+      if (
+        this.state.publishedSurveys &&
+        this.state.publishedSurveys.length === 1 &&
+        (this.state.publishedSurveys[0].isOpened === true || this.state.publishedSurveys[0].isOpened === 'true')
+      ) {
+        this.props.setCurrentSurvey(this.state.publishedSurveys[0]);
+        this.props.setMainStage('surveyDetalle');
+      }
+    }
+
+    //Por si despublicaron la encuesta actualmente visible
+    if (
+      prevProps.currentSurvey !== this.props.currentSurvey ||
+      prevState.publishedSurveys !== this.state.publishedSurveys
+    ) {
+      if (this.props.currentSurvey) {
+        //si la encuesta que estoy viendo no esta en el listado de publicadas es que ya se despublico y toca quitarla
+        let stillActive = this.state.publishedSurveys.filter((survey) => survey._id === this.props.currentSurvey._id);
+
+        if (!(stillActive && stillActive.length)) {
+          this.props.setMainStage(null);
+          this.props.setCurrentSurvey(null);
+        }
+      }
+    }
+  }
+
+  async addNotification(notification) {
+    if (notification.emailEmited != null) {
+      firestore
+        .collection('notificationUser')
+        .doc(notification.idReceive)
+        .collection('events')
+        .doc(this.state.event._id)
+        .collection('notifications')
+        .doc(notification.idEmited)
+        .set({
+          emailEmited: notification.emailEmited,
+          message: notification.message,
+          name: notification.name,
+          state: notification.state,
+          type: notification.type,
+        });
+    } else {
+      firestore
+        .collection('notificationUser')
+        .doc(this.state.user?._id)
+        .collection('events')
+        .doc(this.state.event._id)
+        .collection('notifications')
+        .doc(notification.idEmited)
+        .set(
+          {
+            state: notification.state,
+          },
+          { merge: true }
+        );
+    }
+  }
   async componentDidMount() {
     await this.mountSections();
+
+    if (this.state.event === null) {
+      this.props.history.push('/notfound');
+      return;
+    }
     const infoAgenda = await AgendaApi.byEvent(this.state.event._id);
-    // await this.listenSurveysData()
+    await this.listenSurveysData(this.state.event._id);
 
     this.setState({
       activitiesAgenda: infoAgenda.data,
@@ -579,16 +819,61 @@ class Landing extends Component {
     // Se escucha la configuracion  de los tabs del evento
     this.listenConfigurationEvent();
 
-    //LISTENER DE ACTIVITIES  STATUS  NOTIFICATIONS POR EVENT
+    //ADD NOTIFICATION PRUEBA
+    /* let notification = {
+      state: '0',
+    };
+    let iduserEmmited = 'hfxofxtzuyfUiIGI8spwk1lHnEA2';
 
+    this.addNotification(notification, iduserEmmited);*/
+    //LISTENER NOTIFICATIONS NETWORKING
+    //console.log('Networking');
+    if (this.state.user) {
+      firestore
+        .collection('notificationUser')
+        .doc(this.state.user?._id)
+        .collection('events')
+        .doc(this.state.event._id)
+        .collection('notifications')
+        .onSnapshot((querySnapshot) => {
+          let contNotifications = 0;
+          let notAg = [];
+          let notAm = [];
+          //console.log(querySnapshot.docs[0].data());
+          querySnapshot.docs.forEach((doc) => {
+            let notification = doc.data();
+
+            if (notification.state === '0') {
+              contNotifications++;
+            }
+
+            //Notificacion tipo agenda
+            if (notification.type == 'agenda' && notification.state === '0') {
+              notAg.push(doc.data());
+            }
+            //Notificacion otra
+            if (notification.type == 'amistad' && notification.state === '0') {
+              notAm.push(doc.data());
+            }
+          });
+          this.setState({
+            notifyNetworkingAg: notAg,
+            notifyNetworkingAm: notAm,
+            totalNotficationsN: contNotifications,
+          });
+          this.props.setNotificationN({ total: contNotifications });
+          this.mountSections();
+        });
+    }
+
+    //LISTENER DE ACTIVITIES  STATUS  NOTIFICATIONS POR EVENT
     firestore
       .collection('events')
       .doc(this.state.event._id)
       .collection('activities')
       .onSnapshot((querySnapshot) => {
+        if (querySnapshot.empty) return;
         let change = querySnapshot.docChanges()[0];
-        //console.log('CHANGE');
-        //console.log(change);
         if (
           notify &&
           change.doc.data().habilitar_ingreso == 'open_meeting_room' &&
@@ -643,8 +928,6 @@ class Landing extends Component {
         });
 
         let change = querySnapshot.docChanges()[0];
-        //console.log('CHANGE');
-        //console.log(change.doc.data());
         if (change) {
           nombreactivouser !== change.doc.data().remitente &&
             change.doc.data().remitente !== null &&
@@ -662,7 +945,6 @@ class Landing extends Component {
     let $query = firestore.collection('surveys');
 
     //Le agregamos el filtro por evento
-    //console.log("EVENT=>"+this.state.event._id)
     if (this.state.event && this.state.event._id) {
       $query = $query.where('eventId', '==', this.state.event._id);
     }
@@ -850,8 +1132,6 @@ class Landing extends Component {
   };
 
   openMessage = () => {
-    const key = `open${Date.now()}`;
-
     notification.open({
       description: `${this.props.viewNotification.message}`,
       icon:
@@ -908,6 +1188,10 @@ class Landing extends Component {
 
     // message.success({ content: 'Loaded!', key, duration: 2 });
   };
+  //Cerrar modal agenda
+  closeAppointmentModal = () => {
+    this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
+  };
 
   zoomExternoHandleOpen = (activity, eventUser) => {
     let name = eventUser && eventUser.properties && eventUser.properties.names ? eventUser.properties.names : 'Anónimo';
@@ -956,6 +1240,15 @@ class Landing extends Component {
 
     return (
       <section className='section landing' style={{ backgroundColor: this.state.color, height: '100%' }}>
+        <AppointmentModal
+          notificacion={this.addNotification}
+          event={this.props.eventInfo}
+          currentEventUserId={this.state.eventUser && this.state.eventUser._id}
+          eventUser={this.state.eventUser}
+          targetEventUserId={this.state.eventUserIdToMakeAppointment}
+          targetEventUser={this.state.eventUserToMakeAppointment}
+          closeModal={this.closeAppointmentModal}
+        />
         {this.props.viewNotification.message != null && this.openMessage()}
         {this.state.showConfirm && (
           <div className='notification is-success'>
@@ -1043,12 +1336,96 @@ class Landing extends Component {
                             }}>
                             {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                             <MenuEvent
+                              notifications={this.state.totalNotficationsN}
                               eventId={event._id}
                               user={currentUser}
                               itemsMenu={this.state.event.itemsMenu}
                               showSection={this.showSection}
                               styleText={event.styles && event.styles.textMenu ? event.styles.textMenu : '#222222'}
                             />
+                          </Drawer>
+                          {/*Aqui empieza el drawer del perfil*/}
+                          <Drawer
+                            zIndex={5000}
+                            visible={this.state.visiblePerfil}
+                            closable={true}
+                            onClose={() => this.collapsePerfil(null)}
+                            width={'52vh'}
+                            bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
+                            <Row justify='center' style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+                              <Space size={0} direction='vertical' style={{ textAlign: 'center' }}>
+                                <Avatar
+                                  size={110}
+                                  src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                                />
+                                <Text style={{ fontSize: '20px' }}>
+                                  {this.state.userPerfil && this.state.userPerfil.names
+                                    ? this.state.userPerfil.names
+                                    : this.state.userPerfil && this.state.userPerfil.name
+                                    ? this.state.userPerfil.name
+                                    : ''}
+                                </Text>
+                                <Text type='secondary' style={{ fontSize: '16px' }}>
+                                  {this.state.userPerfil && this.state.userPerfil.email}
+                                </Text>
+                              </Space>
+                              <Col span={24}>
+                                <Row justify='center' style={{ marginTop: '20px' }}>
+                                  <Space size='middle'>
+                                    <Tooltip title='Solicitar contacto'>
+                                      <Button size='large' shape='circle' icon={<UsergroupAddOutlined />} />
+                                    </Tooltip>
+                                    <Tooltip title='Ir al chat privado'>
+                                      <Button size='large' shape='circle' icon={<CommentOutlined />} />
+                                    </Tooltip>
+                                    <Tooltip title='Solicitar cita'>
+                                      <Button size='large' shape='circle' icon={<VideoCameraAddOutlined />} />
+                                    </Tooltip>
+                                  </Space>
+                                </Row>
+                              </Col>
+                            </Row>
+                            <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '5px' }}>
+                              <Col
+                                className='asistente-list' //agrega el estilo a la barra de scroll
+                                span={24}
+                                style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'scroll' }}>
+                                {!this.state.propertiesUserPerfil && (
+                                  <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>
+                                )}
+                                {/*this.state.propertiesUserPerfil &&
+                                  this.state.propertiesUserPerfil.map(
+                                    (property, key) =>
+                                      this.state.userPerfil[property.name] !== undefined &&
+                                      !property.visibleByAdmin && (
+                                        <div key={'contact-property' + key}>
+                                          {
+                                            <p>
+                                              <strong>{property.label}</strong>:{' '}
+                                              {formatDataToString(this.state.userPerfil[property.name], property)}
+                                            </p>
+                                          }
+                                        </div>
+                                      )
+                                        )*/}
+                                {this.state.propertiesUserPerfil && (
+                                  <List
+                                    bordered
+                                    dataSource={this.state.propertiesUserPerfil && this.state.propertiesUserPerfil}
+                                    renderItem={(item) =>
+                                      this.state.userPerfil[item.name] !== undefined && (
+                                        <List.Item>
+                                          <List.Item.Meta
+                                            title={item.label}
+                                            description={formatDataToString(this.state.userPerfil[item.name], item)}
+                                          />
+                                        </List.Item>
+                                      )
+                                    }
+                                  />
+                                )}
+                              </Col>
+                            </Row>
                           </Drawer>
 
                           {event.styles &&
@@ -1121,15 +1498,20 @@ class Landing extends Component {
                           )}
                           <Row justify='center'>
                             <Col xs={24} sm={24} md={16} lg={18} xl={18}>
-                              <VirtualConference
-                                event={event}
-                                eventUser={this.state.eventUser}
-                                currentUser={this.state.currentUser}
-                                usuarioRegistrado={this.state.eventUser}
-                                toggleConference={this.toggleConference}
-                                showSection={this.showSection}
-                                zoomExternoHandleOpen={this.zoomExternoHandleOpen}
-                              />
+                              {/** this.props.location.pathname.match(/landing\/[a-zA-Z0-9]*\/?$/gi This component is a shortcut to landing/* route, hencefor should not be visible in that route */}
+                              {/** this component is a shortcut to agenda thus should not be visible in agenda */}
+
+                              {!(this.state.section && this.state.section === 'agenda') && (
+                                <VirtualConference
+                                  event={event}
+                                  eventUser={this.state.eventUser}
+                                  currentUser={this.state.currentUser}
+                                  usuarioRegistrado={this.state.eventUser}
+                                  toggleConference={this.toggleConference}
+                                  showSection={this.showSection}
+                                  zoomExternoHandleOpen={this.zoomExternoHandleOpen}
+                                />
+                              )}
                               <MapComponent event={event} />
                             </Col>
                           </Row>
@@ -1192,16 +1574,22 @@ class Landing extends Component {
                           maskClosable={true}
                           className='drawerMobile'>
                           <SocialZone
+                            agendarCita={this.AgendarCita}
+                            loadDataUser={this.loadDataUser}
+                            obtenerPerfil={this.obtenerUserPerfil}
+                            notificacion={this.addNotification}
+                            sendFriendship={this.SendFriendship}
+                            perfil={this.collapsePerfil}
                             currentUser={this.state.currentUser}
                             tcollapse={this.toggleCollapsed}
                             optionselected={this.updateOption}
                             tab={this.state.tabSelected}
                             event_id={event._id}
-                            chat={this.state.chat}
-                            attendees={this.state.attendees}
-                            survey={this.state.surveys}
-                            games={this.state.games}
+                            section={this.state.section}
+                            containNetWorking={this.state.containNetWorking}
+                            eventSurveys={this.state.eventSurveys}
                             generalTabs={this.state.generalTabs}
+                            publishedSurveys={this.state.publishedSurveys}
                           />
                         </Drawer>
 
@@ -1212,6 +1600,7 @@ class Landing extends Component {
                           this.state.generalTabs.privateChat) && (
                           <Sider
                             className='collapse-chatEvent'
+                            style={{ backgroundColor: event.styles?.toolbarMenuSocial }}
                             trigger={null}
                             theme='light'
                             collapsible
@@ -1228,14 +1617,14 @@ class Landing extends Component {
                                     </Button>
                                   </div> */}
 
-                                  <Menu theme='light'>
+                                  <Menu theme='light' style={{ backgroundColor: event.styles?.toolbarMenuSocial }}>
                                     {(this.state.generalTabs.publicChat || this.state.generalTabs.privateChat) && (
                                       <Menu.Item
                                         key='1'
                                         icon={
                                           <>
                                             <Badge count={this.state.totalNewMessages}>
-                                              <CommentOutlined style={{ fontSize: '24px' }} />
+                                              <CommentOutlined style={{ fontSize: '24px', color:event.styles.color_icon_socialzone }} />
                                             </Badge>
                                           </>
                                         }
@@ -1247,7 +1636,7 @@ class Landing extends Component {
                                     {this.state.generalTabs.attendees && (
                                       <Menu.Item
                                         key='2'
-                                        icon={<TeamOutlined style={{ fontSize: '24px' }} />}
+                                        icon={<TeamOutlined style={{ fontSize: '24px',  color:event.styles.color_icon_socialzone}} />}
                                         onClick={() => this.toggleCollapsed(2)}></Menu.Item>
                                     )}
                                     {this.props.currentActivity !== null &&
@@ -1257,7 +1646,7 @@ class Landing extends Component {
                                           key='3'
                                           icon={
                                             <Badge dot={this.props.hasOpenSurveys}>
-                                              <PieChartOutlined style={{ fontSize: '24px' }} />
+                                              <PieChartOutlined style={{ fontSize: '24px',  color:event.styles.color_icon_socialzone }} />
                                             </Badge>
                                           }
                                           onClick={() => this.toggleCollapsed(3)}></Menu.Item>
@@ -1288,17 +1677,23 @@ class Landing extends Component {
                                   </Button>
 
                                   <SocialZone
+                                    loadDataUser={this.loadDataUser}
+                                    agendarCita={this.AgendarCita}
+                                    obtenerPerfil={this.obtenerUserPerfil}
+                                    notificacion={this.addNotification}
+                                    sendFriendship={this.SendFriendship}
+                                    perfil={this.collapsePerfil}
                                     tcollapse={this.toggleCollapsed}
                                     optionselected={this.updateOption}
                                     tab={this.state.tabSelected}
                                     event={event}
+                                    section={this.state.section}
                                     event_id={event._id}
-                                    chat={this.state.chat}
-                                    attendees={this.state.attendees}
-                                    survey={this.state.surveys}
-                                    games={this.state.games}
+                                    containNetWorking={this.state.containNetWorking}
+                                    eventSurveys={this.state.eventSurveys}
                                     currentUser={this.state.currentUser}
                                     generalTabs={this.state.generalTabs}
+                                    publishedSurveys={this.state.publishedSurveys}
                                   />
                                 </>
                               )}
@@ -1325,6 +1720,7 @@ const mapStateToProps = (state) => ({
   viewNotification: state.notifications.data,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   tabs: state.stage.data.tabs,
+  currentSurvey: state.survey.data.currentSurvey,
 });
 
 const mapDispatchToProps = {
@@ -1334,6 +1730,9 @@ const mapDispatchToProps = {
   setMainStage,
   setCurrentSurvey,
   setSurveyVisible,
+  setGeneralTabs,
+  getGeneralTabs,
+  setNotificationN,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Landing));

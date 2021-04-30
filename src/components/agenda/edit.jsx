@@ -8,7 +8,7 @@ import Creatable from 'react-select';
 import { FaWhmcs } from 'react-icons/fa';
 import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import { Tabs, message } from 'antd';
+import { Tabs, message, Row, Col, Checkbox } from 'antd';
 import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
 
@@ -32,6 +32,8 @@ import { Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
 import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
+import SurveyExternal from './surveyExternal';
+import Service from './roomManager/service';
 
 const { TabPane } = Tabs;
 
@@ -82,6 +84,9 @@ class AgendaEdit extends Component {
       platform: '',
       vimeo_id: '',
       name_host: '',
+      isExternal: false,
+      service: new Service(firestore),
+      externalSurveyID: '',
 
       //Estado para detectar cambios en la fecha/hora de la actividad sin guardar
       pendingChangesSave: false,
@@ -89,10 +94,26 @@ class AgendaEdit extends Component {
       // Fechas de la actividad con formato para la creacion de sala en zoom
       date_start_zoom: null,
       date_end_zoom: null,
+
+      //Estado para determinar si una actividad requiere registro para ser accedida
+      requires_registration: false,
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
   }
+
+  // VALIDAR SI TIENE ENCUESTAS EXTERNAS
+  validateRoom = async () => {
+    const { service } = this.state;
+    const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, this.state.activity_id);
+    if (hasVideoconference) {
+      const configuration = await service.getConfiguration(this.props.event._id, this.state.activity_id);
+      this.setState({
+        isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
+        externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
+      });
+    }
+  };
 
   toggleConference = (isVisible) => {
     this.setState({ conferenceVisible: isVisible });
@@ -180,6 +201,7 @@ class AgendaEdit extends Component {
         name_host: info.name_host,
         date_start_zoom: info.date_start_zoom,
         date_end_zoom: info.date_end_zoom,
+        requires_registration: info.requires_registration || false,
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
@@ -215,11 +237,16 @@ class AgendaEdit extends Component {
     });
 
     this.name.current.focus();
+    this.validateRoom();
   }
 
   //FN general para cambio en input
   handleChange = async (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+
+    if (name === 'requires_registration') {
+      value = e.target.checked;
+    }
 
     // BACKLOG -> porque host_id se setea siempre que se setea un estado
     this.setState({ [name]: value });
@@ -381,7 +408,7 @@ class AgendaEdit extends Component {
       capacity,
       access_restriction_type,
       selectedCategories,
-
+      requires_registration,
       selectedType,
       selectedRol,
       description,
@@ -412,6 +439,7 @@ class AgendaEdit extends Component {
       type_id,
       has_date,
       selected_document,
+      requires_registration,
     };
   };
 
@@ -445,6 +473,7 @@ class AgendaEdit extends Component {
       join_url,
       name_host,
       key,
+      requires_registration,
     } = this.state;
 
     //const registration_message_storage = window.sessionStorage.getItem('registration_message');
@@ -486,7 +515,7 @@ class AgendaEdit extends Component {
       join_url,
       name_host,
       key,
-
+      requires_registration,
       host_ids,
     };
   };
@@ -562,6 +591,7 @@ class AgendaEdit extends Component {
 
   render() {
     const {
+      info,
       loading,
       name,
       subtitle,
@@ -611,7 +641,7 @@ class AgendaEdit extends Component {
                         name={'name'}
                         value={name}
                         onChange={this.handleChange}
-                        placeholder='Nombre de la actividad'
+                        placeholder='Nombre de handleChangela actividad'
                       />
                     </div>
                   </div>
@@ -977,6 +1007,33 @@ class AgendaEdit extends Component {
             pendingChangesSave={this.state.pendingChangesSave}
           />
           <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
+          {this.state.isExternal && (
+            <SurveyExternal
+              isExternal={this.state.isExternal}
+              meeting_id={this.state.externalSurveyID}
+              event_id={this.props.event._id}
+              activity_id={this.state.activity_id}
+            />
+          )}
+        </TabPane>
+        <TabPane tab='Avanzado' key='4'>
+          <Row>
+            <Col xs={24}>
+              <Checkbox
+                defaultChecked={info && (info.requires_registration || info.requires_registration === 'true')}
+                onChange={this.handleChange}
+                name='requires_registration'>
+                La actividad requiere registro
+              </Checkbox>
+            </Col>
+          </Row>
+          <Row style={{ marginTop: 8 }}>
+            <Col xs={24}>
+              <button onClick={this.submit} className='button is-primary'>
+                Guardar
+              </button>
+            </Col>
+          </Row>
         </TabPane>
       </Tabs>
     );

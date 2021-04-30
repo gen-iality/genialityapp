@@ -7,6 +7,7 @@ import * as Cookie from 'js-cookie';
 import { SurveysApi, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
 import { SurveyAnswers, SurveyPage, UserGamification, Trivia } from './services';
+import { getSurveyConfiguration } from '../../trivia/services';
 import Graphics from './graphics';
 import * as Survey from 'survey-react';
 import 'survey-react/modern.css';
@@ -48,12 +49,18 @@ class SurveyComponent extends Component {
   }
 
   async componentDidMount() {
-    console.log('componente survey', this.props);
     var self = this;
     const { eventId, idSurvey } = this.props;
     let surveyData = await this.loadSurvey(eventId, idSurvey);
+
+    const firebaseSurvey = await getSurveyConfiguration(idSurvey);
+
+    surveyData.open = firebaseSurvey.isOpened;
+    surveyData.publish = firebaseSurvey.isPublished;
+    surveyData.freezeGame = firebaseSurvey.freezeGame;
+
     let survey = new Survey.Model(surveyData);
-    console.log('api survey', survey);
+
     await this.listenAndUpdateStateSurveyRealTime(idSurvey);
 
     /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
@@ -598,7 +605,11 @@ class SurveyComponent extends Component {
         )}
 
         {//Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
-        surveyData && (surveyData.allow_anonymous_answers === 'true' || surveyData.publish === 'true') ? (
+        surveyData &&
+        (surveyData.allow_anonymous_answers === 'true' ||
+          surveyData.allow_anonymous_answers === true ||
+          surveyData.publish === 'true' ||
+          surveyData.publish === true) ? (
           <div style={{ display: feedbackMessage.hasOwnProperty('title') || showMessageOnComplete ? 'none' : 'block' }}>
             {this.state.survey && (
               <div className='animate__animated animate__bounceInDown'>
