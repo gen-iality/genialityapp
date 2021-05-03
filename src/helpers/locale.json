@@ -125,7 +125,7 @@
     "live.private_access": "Acceso privado",
     "live.hosts": "Anfitriones",
 
-    "live.join": "Conéctate al evento en vivo",
+    "live.join": "Conéctate al evento",
     "live.join.disabled": "El evento iniciará pronto",
     "live.starts_in": "La sesión inicia en",
     "live.ended": "Evento Terminado.",
