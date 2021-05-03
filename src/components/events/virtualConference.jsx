@@ -184,7 +184,7 @@ class VirtualConference extends Component {
                     {
                       item.habilitar_ingreso == 'open_meeting_room' ? (
                       <><img src={ENVIVO} style={{height:'91px'}}/><span style={{textAlign:'center', fontSize:'18px'}}>En Vivo</span></>)
-                      : item.habilitar_ingreso == 'closed_meeting_room' ? (<FieldTimeOutlined  style={{fontSize:'85px', color:'#FAAD14'}} />)
+                      : item.habilitar_ingreso == 'closed_meeting_room' ? (<><FieldTimeOutlined  style={{fontSize:'85px', color:'#FAAD14'}} /><span style={{textAlign:'center', fontSize:'18px'}}>Iniciara Pronto</span></>)
                       : ''
                     }       
                   </div> 
@@ -294,6 +294,20 @@ class VirtualConference extends Component {
             {/* </div> */}
             </>
           ))}
+          <div style={{backgroundColor:'white', boxSizing:'border-box', height:'204px', width:'304px', borderRadius:'8px', padding:'12px'}}>
+           <Row>
+             <Col span={18}>
+              <h6 style={{fontWeight:'bold'}}>Asamblea General</h6>
+              <div style={{display:'grid', color: 'rgb(124, 144, 154)'}}>
+                <span>7:00 am - 8:00 pm</span>
+                <span>26 abril del 2021</span>
+              </div>
+             </Col>
+             <Col span={6}>
+              <FieldTimeOutlined  style={{fontSize:'55px', color:'#FAAD14'}} />
+             </Col>                       
+           </Row>
+          </div>
       </Fragment>
     );
   }
