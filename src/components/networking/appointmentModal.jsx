@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
 
 import { getDatesRange } from '../../helpers/utils';
-import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId, getUserEvent } from './services';
+import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId } from './services';
 
 const { Option } = Select;
 
@@ -85,7 +85,6 @@ function AppointmentModal({
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
       duration: 30,
     });
-    var r = null;
     var usId = await getUsersId(targetEventUserId, event._id);
 
     let notificationA = {

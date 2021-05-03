@@ -3,6 +3,7 @@ import { Tooltip, Skeleton, Card, Avatar } from 'antd';
 import { UserOutlined, MessageTwoTone, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { InitialsNameUser } from './index';
 import { prop } from 'ramda';
+import Text from 'antd/lib/typography/Text';
 
 const { Meta } = Card;
 
@@ -45,15 +46,12 @@ const PopoverInfoUser = ({ item, props }) => {
           props.containNetWorking && (
             <Tooltip
               onClick={async () => {
-                console.log('ACA ITEM');
-                console.log(item);
-
                 var us = await props.loadDataUser(item);
                 console.log('USER PERFIL=>', us);
 
                 var sendResp = await props.sendFriendship({
                   eventUserIdReceiver: us._id,
-                  userName: props.currentUser.names || props.currentUser.email
+                  userName: props.currentUser.names || props.currentUser.email,
                 });
                 if (sendResp._id) {
                   let notification = {
@@ -63,7 +61,7 @@ const PopoverInfoUser = ({ item, props }) => {
                     message: 'Te ha enviado solicitud de amistad',
                     name: 'notification.name',
                     type: 'amistad',
-                    state: '0'
+                    state: '0',
                   };
                   console.log('RESPUESTA SEND AMISTAD' + sendResp._id);
                   await props.notificacion(notification, props.currentUser._id);
@@ -75,7 +73,7 @@ const PopoverInfoUser = ({ item, props }) => {
           ),
 
           props.containNetWorking && (
-            <Tooltip title='Invitar Video llamada'>
+            <Tooltip title='Agendar cita'>
               <VideoCameraOutlined
                 onClick={async () => {
                   console.log('ACA ITEM');
@@ -91,7 +89,7 @@ const PopoverInfoUser = ({ item, props }) => {
               />
               ,
             </Tooltip>
-          )
+          ),
         ]}>
         <Meta
           avatar={
@@ -103,7 +101,18 @@ const PopoverInfoUser = ({ item, props }) => {
               </Avatar>
             )
           }
-          title={item.names}
+          title={
+            <a
+              onClick={
+                props.containNetWorking
+                  ? () => {
+                      props.perfil(item);
+                    }
+                  : null
+              }>
+              {item.names}
+            </a>
+          }
           description={item.email}
         />
       </Card>

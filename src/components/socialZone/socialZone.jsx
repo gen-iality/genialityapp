@@ -39,6 +39,17 @@ let SocialZone = function(props) {
   let [isFiltered, setIsFiltered] = useState(false);
   let busquedaRef = useRef();
 
+  useEffect(() => {
+    if (props.updateChat.idCurentUser) {
+      createNewOneToOneChat(
+        props.updateChat.idCurentUser,
+        props.updateChat.currentName,
+        props.updateChat.idOtherUser,
+        props.updateChat.otherUserName
+      );
+    }
+  }, [props.updateChat]);
+
   let userName = props.currentUser
     ? props.currentUser?.names
     : props.currentUser?.name
@@ -53,7 +64,6 @@ let SocialZone = function(props) {
   let tab = props.tab;
 
   let setCurrentChat = (id, chatname) => {
-    console.log('CURRENT CHAT');
     setcurrentTab('1'); //chats tab
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
@@ -119,6 +129,7 @@ let SocialZone = function(props) {
 
       props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
     };
+    setTotalNewMessages(props.totalMessages);
     fetchData();
   }, []);
 
@@ -143,13 +154,31 @@ let SocialZone = function(props) {
 
         let change = querySnapshot.docChanges()[0];
         setdatamsjlast(change?.doc.data());
-        //console.log('CHANGE');
-        //console.log(change.doc.data());
+        let userNameFirebase = null;
+        if (change.doc.data().remitente) {
+          if (
+            change.doc
+              .data()
+              .remitente.toLowerCase()
+              .indexOf('(admin)') > -1 ||
+            change.doc
+              .data()
+              .remitente.toLowerCase()
+              .indexOf('(casa)')
+          ) {
+            // QUITAR ALGUNOS PREFIJOS PARA HACER EL MATCH DE NOMBRE ******HAY QUE MEJORAR*******
+            userNameFirebase = change.doc.data().remitente.replace('(admin)', '');
+            userNameFirebase = change.doc.data().remitente.replace('(casa)', '');
+          }
+        }
+
         if (change) {
-          userName !== change.doc.data().remitente &&
+          if (
+            userName !== userNameFirebase &&
             change.doc.data().remitente !== null &&
             change.doc.data().remitente !== undefined &&
-            newmsj > 0 &&
+            newmsj > 0
+          ) {
             notification.open({
               description: `Nuevo mensaje de ${change.doc.data().remitente}`,
               icon: <MessageTwoTone />,
@@ -158,14 +187,16 @@ let SocialZone = function(props) {
 
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
-                setTotalNewMessages(newmsj);
               },
             });
+
+            newmsj > 0 && setTotalNewMessages(newmsj);
+          }
         }
 
         setavailableChats(list);
       });
-  }, [event_id, currentUser]);
+  }, [event_id, currentUser, props.collapse]);
 
   useEffect(() => {
     if (!event_id) return;
@@ -229,6 +260,7 @@ let SocialZone = function(props) {
             setCurrentUser={setCurrentUser}
             datamsjlast={datamsjlast}
             generalTabs={props.generalTabs}
+            notNewMessages={props.notNewMessages}
           />
         </TabPane>
       )}
