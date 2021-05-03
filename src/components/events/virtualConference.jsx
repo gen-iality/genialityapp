@@ -35,7 +35,6 @@ const MeetingConferenceButton = ({
     case 'open_meeting_room':
       return (
         <>
-        <br/>
         <Button
           size='large'
           type='primary'
@@ -54,18 +53,18 @@ const MeetingConferenceButton = ({
       );
 
     case 'closed_meeting_room':
-      return <div style={{display:'grid'}}>
-               <span style={{color:'#7c909a'}}>El evento</span>
-               <span style={{fontWeight:'400', fontSize:'45px'}}>Iniciara pronto</span>
-             </div>
+      // return <div style={{display:'grid'}}>
+      //          <span style={{color:'#7c909a'}}>El evento</span>
+      //          <span style={{fontWeight:'400', fontSize:'45px'}}>Iniciara pronto</span>
+      //        </div>
       //  <Alert message={intl.formatMessage({ id: 'live.join.disabled' })} type='warning' showIcon />;
 
     case 'ended_meeting_room':
-      return <h1 style={{fontWeight:'400', fontSize:'45px'}}>El evento ha terminado</h1>
+      // return <h1 style={{fontWeight:'400', fontSize:'45px'}}>El evento ha terminado</h1>
                   //  <Alert message='El evento ha terminado' type='info' showIcon />;
 
     default:
-      return <h1 style={{fontWeight:'400', fontSize:'45px'}}>cargando</h1>;
+      return <h1 style={{fontWeight:'400', fontSize:'45px'}}></h1>;
                   // <Alert message='Cargando...' type='warning' showIcon />;
   }
 };
@@ -178,8 +177,8 @@ class VirtualConference extends Component {
           .map((item, key) => (
             <>
             <Card key={key} style={{height:'204px', maxHeight:'204px', minHeight:'204px'}}>
-              <Row justify='center'align='top'>
-                <Col md={6} lg={6} xl={6} xxl={6}>
+              <Row justify='center'align='middle' gutter={[8,8]}>
+                <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
                   <div style={{justifyContent:'center', alignContent:'center', display:'grid', height:'140px'}}>
                     {
                       item.habilitar_ingreso == 'open_meeting_room' ? (
@@ -189,10 +188,10 @@ class VirtualConference extends Component {
                     }       
                   </div> 
                 </Col>
-                <Col md={14} lg={14} xl={14} xxl={14}>
+                <Col xs={18} sm={18} md={12} lg={12} xl={12} xxl={12}>
                   <div>
-                    <h1 style={{fontWeight:'bold', fontSize:'17px'}}>{item.name}</h1>
-                    <h2 style={{color:'#7c909a'}}>
+                    <h1 style={{fontWeight:'bold', fontSize:'20px'}}>{item.name}</h1>
+                    <h2 style={{color:'#7c909a', fontSize:'17px'}}>
                      {Moment(item.datetime_start).format('LL')}
                       <span>&nbsp;&nbsp;&nbsp;</span>
                       {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
@@ -209,7 +208,7 @@ class VirtualConference extends Component {
                       </span>
                     </h2>
                   </div>
-                  <div>
+                 <div>
                     <MeetingConferenceButton
                       activity={item}
                       toggleConference={toggleConference}
@@ -222,22 +221,30 @@ class VirtualConference extends Component {
                     />  
                   </div>
                 </Col>
-                <Col md={4} lg={4} xl={4} xxl={4}>
-                  <Row align='top'>
+                <Col xs={0} sm={0} md={6} lg={6} xl={6} xxl={6}>
+                  <div  style={{justifyContent:'center', alignContent:'center', display:'grid', height:'153px'}}>
                   {item.hosts && (
-                  <div className='Virtual-Conferences'>
-                    {item.hosts.map((host, key) => {
-                      return (
-                        <div style={{ margin: '0px 14px' }} key={key}>
-                          <Avatar.Group size={40}>
-                            <Avatar src={host.image} />
-                          </Avatar.Group>
-                        </div>
-                      );
-                        })}
-                      </div>
+                  <div className='Virtual-Conferences' >
+                    <Avatar.Group maxCount={2} size={{ xs:20, sm:20, md:40, lg:50, xl:80, xxl:80 }} maxStyle={{backgroundColor:'#50D3C9'}}>
+                    {
+                      item.hosts.length < 3 ? (
+                       item.hosts.map((host, key) => {
+                          return (
+                            <Avatar key={key} src={host.image} size={100} />      
+                          );
+                        } )
+                      ):(
+                        item.hosts.map((host, key) => {
+                          return (
+                             <Avatar key={key} src={host.image} size={{ xs:20, sm:20, md:40, lg:50, xl:80, xxl:80 }}/>      
+                          );
+                        })
+                      )
+                    }
+                    </Avatar.Group>
+                    </div>
                     )}
-                  </Row>
+                  </div>
                 </Col>
               </Row> 
             </Card>
