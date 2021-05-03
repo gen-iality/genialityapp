@@ -313,7 +313,7 @@ class Landing extends Component {
   //METODO QUE PERMITE  VALIDAR SI UN EVENTO TIENE HABILITADA LA SECTION DE NETWORKING
   containsNetWorking = () => {
     if (this.state.sections != undefined) {
-      if (this.state.event.itemsMenu['networking'] !== undefined) {
+      if (this.state.event.itemsMenu && this.state.event.itemsMenu['networking'] !== undefined) {
         this.setState({ containNetWorking: true });
       } else {
         this.setState({ containNetWorking: false });
