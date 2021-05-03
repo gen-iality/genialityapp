@@ -51,7 +51,7 @@ const PopoverInfoUser = ({ item, props }) => {
 
                 var sendResp = await props.sendFriendship({
                   eventUserIdReceiver: us._id,
-                  userName: props.currentUser.names || props.currentUser.email,
+                  userName: item.names || item.email,
                 });
                 if (sendResp._id) {
                   let notification = {

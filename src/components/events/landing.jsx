@@ -1404,7 +1404,7 @@ class Landing extends Component {
 
                                           var sendResp = await this.SendFriendship({
                                             eventUserIdReceiver: us._id,
-                                            userName: currentUser.names || currentUser.email,
+                                            userName: this.state.userPerfil.names || this.state.userPerfil.email,
                                           });
                                           if (sendResp._id) {
                                             let notification = {
