@@ -42,7 +42,7 @@ class ListEventUser extends Component {
       asistantData: [],
       matches: [],
       filterSector: null,
-      typeAssistant: null
+      typeAssistant: null,
     };
   }
 
@@ -205,7 +205,7 @@ class ListEventUser extends Component {
         loading: false,
         clearSearch: !prevState.clearSearch,
         asistantData,
-        matches
+        matches,
       };
     });
   };
@@ -279,11 +279,11 @@ class ListEventUser extends Component {
       eventUserIdToMakeAppointment,
       eventUserToMakeAppointment,
       activeTab,
-      matches
+      matches,
     } = this.state;
 
     return (
-      <div style={{ padding:'12px'}}>
+      <div style={{ padding: '12px' }}>
         <EventContent>
           {/* Componente de busqueda */}
           <Tabs activeKey={activeTab} onChange={this.changeActiveTab}>
@@ -342,7 +342,7 @@ class ListEventUser extends Component {
                                     onClick={() => {
                                       this.SendFriendship({
                                         eventUserIdReceiver: user._id,
-                                        userName: user.properties.names || user.properties.email
+                                        userName: user.properties.names || user.properties.email,
                                       });
                                     }}></a>
                                 }
@@ -393,7 +393,7 @@ class ListEventUser extends Component {
                                               onClick={() => {
                                                 this.setState({
                                                   eventUserIdToMakeAppointment: user._id,
-                                                  eventUserToMakeAppointment: user
+                                                  eventUserToMakeAppointment: user,
                                                 });
                                               }}>
                                               {'Agendar cita'}
@@ -402,7 +402,7 @@ class ListEventUser extends Component {
                                         )}
                                       </Row>
                                       <br />
-                                    </div>
+                                    </div>,
                                   ]}
                                 />
                               </Card>
@@ -662,7 +662,7 @@ class ListEventUser extends Component {
                                           onClick={async () => {
                                             var sendResp = await this.props.sendFriendship({
                                               eventUserIdReceiver: users._id,
-                                              userName: users.properties.names || users.properties.email
+                                              userName: users.properties.names || users.properties.email,
                                             });
 
                                             var us = await this.props.loadDataUser(users);
@@ -675,7 +675,7 @@ class ListEventUser extends Component {
                                                 message: 'Te ha enviado solicitud de amistad',
                                                 name: 'notification.name',
                                                 type: 'amistad',
-                                                state: '0'
+                                                state: '0',
                                               };
                                               await this.props.notification(notificationU, this.props.currentUser._id);
                                             }
@@ -686,7 +686,7 @@ class ListEventUser extends Component {
                                     )}
                                   </Row>
                                   <br />
-                                </div>
+                                </div>,
                               ]}
                             />
                           </Card>
@@ -706,6 +706,7 @@ class ListEventUser extends Component {
                 agendarCita={this.props.agendarCita}
                 eventId={this.props.event._id}
                 section={this.props.section}
+                tabActive={this.state.activeTab}
               />
             </TabPane>
 
@@ -726,6 +727,7 @@ class ListEventUser extends Component {
                 currentUser={this.props.currentUser}
                 notification={this.props.notification}
                 eventId={this.props.event._id}
+                tabActive={this.state.activeTab}
               />
             </TabPane>
 

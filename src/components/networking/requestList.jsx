@@ -67,6 +67,7 @@ const InvitacionListSent = ({ list }) => {
 
   useEffect(() => {
     setInvitationsSent(list);
+    console.log(list);
   }, [list]);
 
   if (invitationsSent.length)
@@ -109,17 +110,17 @@ const InvitacionListSent = ({ list }) => {
   );
 };
 
-export default function RequestList({ eventId, notification, currentUser, notify }) {
+export default function RequestList({ eventId, notification, currentUser, notify, tabActive }) {
   const [requestListReceived, setRequestListReceived] = useState([]);
   const [requestListSent, setRequestListSent] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
     // Se consulta el id del usuario por el token
-
+    setLoading(true);
     getCurrentUser(Cookie.get('evius_token')).then(async (user) => {
-      console.log('GET CURRENT');
       // Servicio que obtiene el eventUserId del usuario actual
       let eventUser = await getCurrentEventUser(eventId, user._id);
 
@@ -135,9 +136,9 @@ export default function RequestList({ eventId, notification, currentUser, notify
           setRequestListReceived(response);
           await insertNameRequested(response);
         } else {
-          console.log('ACA');
           setRequestListReceived([]);
         }
+        setLoading(false);
       });
 
       // Servicio que trae las invitaciones / solicitudes enviadas
@@ -201,10 +202,15 @@ export default function RequestList({ eventId, notification, currentUser, notify
   };
 
   useEffect(() => {
-    getInvitationsList();
-  }, [eventId]);
+    if (tabActive === 'solicitudes') {
+      console.log('EJECUTADO SOLICITUDES');
+      getInvitationsList();
+    }
+    console.log('ACTIVE TAB');
+    console.log(tabActive);
+  }, [eventId, tabActive]);
 
-  if (currentUserId)
+  if (currentUserId && !loading)
     return currentUserId === 'guestUser' ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
         <Alert
@@ -222,5 +228,5 @@ export default function RequestList({ eventId, notification, currentUser, notify
         <InvitacionListSent list={requestListSent} />
       </div>
     );
-  return <Spin></Spin>;
+  if (loading || !currentUserId) return <Spin></Spin>;
 }

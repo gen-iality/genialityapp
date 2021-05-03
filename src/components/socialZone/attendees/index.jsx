@@ -112,6 +112,7 @@ const AttendeList = function(props) {
                   key='list-loadmore-edit'
                   onClick={() => {
                     console.log(props.currentUser);
+                    console.log(item);
                     props.createNewOneToOneChat(
                       props.currentUser.uid,
                       props.currentUser.names,
