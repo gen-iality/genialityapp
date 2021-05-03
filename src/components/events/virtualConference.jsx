@@ -197,7 +197,7 @@ class VirtualConference extends Component {
                       {item.habilitar_ingreso == 'open_meeting_room' ? (
                         ''
                       ) : (
-                        <h2 style={{ color: '#7c909a', fontSize: '17px' }}>
+                        <h2 style={{ color: '#7c909a', fontSize: '16px' }}>
                           {Moment(item.datetime_start).format('LL')}
                           <span>&nbsp;&nbsp;&nbsp;</span>
                           {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
