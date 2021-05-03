@@ -8,16 +8,19 @@ import { formatDataToString } from '../../helpers/utils';
 
 const { Meta } = Card;
 
-const ContactList = ({ eventId, agendarCita }) => {
+const ContactList = ({ eventId, agendarCita, tabActive }) => {
   const [contactsList, setContactsList] = useState([]);
   const [messageService, setMessageService] = useState('');
   const [currentUserId, setCurrentUserId] = useState(null);
   const [userProperties, setUserProperties] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     const getuserContactList = async () => {
       let response = await getCurrentUser(Cookie.get('evius_token'));
       setCurrentUserId(response);
+      console.log('FINISHED GET USER CONTACT LIST');
     };
     const getContactList = async () => {
       // Se consulta el id del usuario por el token
@@ -28,21 +31,29 @@ const ContactList = ({ eventId, agendarCita }) => {
 
         // Servicio que trae los contactos
         Networking.getContactList(eventId, eventUser._id).then((result) => {
-          if (typeof result == 'object') setContactsList(result);
+          if (typeof result == 'object') {
+            setContactsList(result);
+          }
           if (typeof result == 'string') setMessageService(result);
+          console.log('FINISHED GET CONTACT LIST');
+          setLoading(false);
         });
       });
     };
     const getProperties = async () => {
       let properties = await EventFieldsApi.getAll(eventId);
       setUserProperties(properties);
+      console.log('FINISHED GET PROPERTIES');
     };
-    getuserContactList();
-    getContactList();
-    getProperties();
-  }, [eventId]);
 
-  if (currentUserId)
+    if (tabActive === 'mis-contactos') {
+      getProperties();
+      getuserContactList();
+      getContactList();
+    }
+  }, [eventId, tabActive]);
+
+  if (currentUserId && !loading)
     return currentUserId === 'guestUser' ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
         <Alert
@@ -52,7 +63,7 @@ const ContactList = ({ eventId, agendarCita }) => {
           showIcon
         />
       </Col>
-    ) : contactsList.length > 0 ? (
+    ) : contactsList.length > 0 && !loading ? (
       <div>
         {contactsList.map((contact, key) => {
           const user = contact.properties ? contact.properties : contact.user;
@@ -106,7 +117,7 @@ const ContactList = ({ eventId, agendarCita }) => {
                             </div>
                           )
                       )}
-                    </div>
+                    </div>,
                   ]}
                 />
                 <Col xs={24}>
@@ -124,11 +135,13 @@ const ContactList = ({ eventId, agendarCita }) => {
         })}
       </div>
     ) : (
-      <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-        <Card>{messageService}</Card>
-      </Col>
+      contactsList.length == 0 &&
+      !loading && (
+        <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
+          <Card>{messageService}</Card>
+        </Col>
+      )
     );
-
-  return <Spin></Spin>;
+  if (!currentUserId || loading) return <Spin></Spin>;
 };
 export default ContactList;
