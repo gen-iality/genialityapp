@@ -1632,9 +1632,10 @@ class Landing extends Component {
                           <Button
                             shape='circle'
                             icon={
-                              <Badge count={this.state.totalNewMessages}>
-                                <MessageOutlined style={{ fontSize: '20px' }} />
-                              </Badge>
+                              this.state.totalNewMessages !== undefined &&
+                              this.state.totalNewMessages > 0 && (
+                                <Badge count={' '} style={{ minWidth: '10px', height: '10px', padding: '0px' }}></Badge>
+                              )
                             }
                             size='large'
                             onClick={this.showDrawerMobile}
@@ -1702,11 +1703,28 @@ class Landing extends Component {
                                         key='1'
                                         icon={
                                           <>
-                                            <Badge count={this.state.totalNewMessages}>
-                                              <CommentOutlined
-                                                style={{ fontSize: '24px', color: event.styles.color_icon_socialzone }}
-                                              />
-                                            </Badge>
+                                            {this.state.totalNewMessages !== undefined &&
+                                              this.state.totalNewMessages > 0 && (
+                                                <Badge
+                                                  count={' '}
+                                                  style={{ minWidth: '10px', height: '10px', padding: '0px' }}>
+                                                  <CommentOutlined
+                                                    style={{
+                                                      fontSize: '24px',
+                                                      color: event.styles.color_icon_socialzone,
+                                                    }}
+                                                  />
+                                                </Badge>
+                                              )}
+                                            {this.state.totalNewMessages !== undefined &&
+                                              this.state.totalNewMessages == 0 && (
+                                                <CommentOutlined
+                                                  style={{
+                                                    fontSize: '24px',
+                                                    color: event.styles.color_icon_socialzone,
+                                                  }}
+                                                />
+                                              )}
                                           </>
                                         }
                                         style={{ marginTop: '12px', marginBottom: '22px' }}

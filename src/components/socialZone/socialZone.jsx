@@ -48,6 +48,8 @@ let SocialZone = function(props) {
         props.updateChat.otherUserName
       );
     }
+    console.log('PROPS');
+    console.log(props.totalMessages);
   }, [props.updateChat]);
 
   let userName = props.currentUser
@@ -239,9 +241,18 @@ let SocialZone = function(props) {
           className='asistente-chat-list'
           tab={
             <>
-              <Badge onClick={() => setchattab('chat1')} size='small' count={totalNewMessages}>
-                Chats
-              </Badge>
+              {props.totalMessages !== undefined && props.totalMessages > 0 && (
+                <Badge
+                  onClick={() => setchattab('chat1')}
+                  size='small'
+                  style={{ minWidth: '10px', height: '10px', padding: '0px' }}
+                  count={' '}>
+                  Chats
+                </Badge>
+              )}
+              {props.totalMessages !== undefined && props.totalMessages == 0 && (
+                <div onClick={() => setchattab('chat1')}>Chats</div>
+              )}
             </>
           }
           key='1'>

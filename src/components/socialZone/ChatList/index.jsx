@@ -156,9 +156,14 @@ const ChatList = (props) => {
         <TabPane
           tab={
             <>
-              <Badge size='small' count={props.totalNewMessages}>
-                Privados{props.currentChat ? ' (ver todos)' : ''}
-              </Badge>
+              {props.totalNewMessages !== undefined && props.totalNewMessages > 0 && (
+                <Badge size='small' style={{ minWidth: '10px', height: '10px', padding: '0px' }} count={' '}>
+                  Privados{props.currentChat ? ' (ver todos)' : ''}
+                </Badge>
+              )}
+              {props.totalNewMessages !== undefined && props.totalNewMessages == 0 && (
+                <div>Privados{props.currentChat ? ' (ver todos)' : ''}</div>
+              )}
             </>
           }
           key='chat2'>
@@ -182,7 +187,7 @@ const ChatList = (props) => {
                       }}>
                       <Tooltip title='Chatear'>
                         {item.newMessages && item.newMessages.length > 0 && (
-                          <Badge count={item.newMessages.length}>
+                          <Badge count={' '} style={{ minWidth: '10px', height: '10px', padding: '0px' }}>
                             <MessageTwoTone style={{ fontSize: '20px' }} />
                           </Badge>
                         )}
