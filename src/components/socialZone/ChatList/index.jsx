@@ -33,6 +33,7 @@ const ChatList = (props) => {
     console.log('cargando chatlist', props);
   }, []);
   const onFinish = (values) => {
+    alert(values);
     props.setCurrentUser(values);
   };
 
@@ -62,12 +63,17 @@ const ChatList = (props) => {
 
   useEffect(() => {
     console.log(userName);
+    console.log(props.totalNewMessages);
+    console.log(props.datamsjlast);
     props.datamsjlast &&
       props.datamsjlast.remitente !== undefined &&
       props.datamsjlast.remitente !== null &&
       props.datamsjlast.remitente !== userName &&
       props.totalNewMessages > 0 &&
       settotalmsjpriv(props.totalNewMessages);
+
+    //settotalmsjpriv(props.totalNewMessages);
+    console.log(totalmsjpriv);
   }, [props.datamsjlast, props.totalNewMessages]);
 
   let [currentab, setcurrentab] = useState(props.chattab);
@@ -77,16 +83,18 @@ const ChatList = (props) => {
   }, [props.chattab]);
 
   function callback(key) {
-    setcurrentab(key);
     if (key === 'chat1') {
+      if (props.currentChat) {
+        props.setCurrentChat(null, null);
+      }
       setusuariofriend(null);
-      props.setCurrentChat(null, null);
     }
     if (key === 'chat2') {
       if (props.currentChat) {
         props.setCurrentChat(null, null);
       }
     }
+    setcurrentab(key);
   }
 
   if (!props.currentUser)
@@ -119,6 +127,9 @@ const ChatList = (props) => {
       </Form>
     );
 
+  console.log('CHAT AVAILABLE');
+  console.log(props.availableChats);
+
   return (
     <Tabs activeKey={currentab} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
@@ -145,42 +156,46 @@ const ChatList = (props) => {
         <TabPane
           tab={
             <>
-              <Badge size='small' count={totalmsjpriv}>
+              <Badge size='small' count={props.totalNewMessages}>
                 Privados{props.currentChat ? ' (ver todos)' : ''}
               </Badge>
             </>
           }
           key='chat2'>
           {!props.currentChat && (
-            <div className='asistente-list'>
-              <List
-                header={<div></div>}
-                footer={<div></div>}
-                bordered
-                dataSource={props.availableChats}
-                renderItem={(item) => (
-                  <List.Item
-                    actions={[
-                      <a
-                        key='list-loadmore-edit'
-                        onClick={() => {
-                          props.setCurrentChat(item.id, item.name ? item.name : item.names);
-                          setusuariofriend(item?.names ? item.names : item.name);
-                          settotalmsjpriv(0);
-                          props.setTotalNewMessages(0);
-                        }}>
-                        <Tooltip title='Chatear'>
-                          <Badge count={totalmsjpriv}>
+            <List
+              header={<div></div>}
+              footer={<div></div>}
+              bordered
+              dataSource={props.availableChats}
+              renderItem={(item) => (
+                <List.Item
+                  actions={[
+                    <a
+                      key='list-loadmore-edit'
+                      onClick={() => {
+                        props.setCurrentChat(item.id, item.name ? item.name : item.names);
+                        setusuariofriend(item?.names ? item.names : item.name);
+                        settotalmsjpriv(0);
+                        props.setTotalNewMessages(0);
+                        props.notNewMessages();
+                      }}>
+                      <Tooltip title='Chatear'>
+                        {item.newMessages && item.newMessages.length > 0 && (
+                          <Badge count={item.newMessages.length}>
                             <MessageTwoTone style={{ fontSize: '20px' }} />
                           </Badge>
-                        </Tooltip>
-                      </a>,
-                    ]}>
-                    <Typography.Text mark></Typography.Text> {item.name ? item.name : item.names || '----'}
-                  </List.Item>
-                )}
-              />
-            </div>
+                        )}
+                        {item.newMessages && item.newMessages.length == 0 && (
+                          <MessageTwoTone style={{ fontSize: '20px' }} />
+                        )}
+                      </Tooltip>
+                    </a>,
+                  ]}>
+                  <Typography.Text mark></Typography.Text> {item.name ? item.name : item.names || '----'}
+                </List.Item>
+              )}
+            />
           )}
           {props.currentChat && (
             <iframe

@@ -52,7 +52,7 @@ export const userRequest = {
       console.error(error);
     }
     return docs;
-  }
+  },
 };
 
 export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
@@ -69,7 +69,7 @@ export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
         result.docs.forEach((doc) => {
           data.push({
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
           });
         });
 
@@ -88,7 +88,7 @@ export const createAgendaToEventUser = ({
   timetableItem,
   message,
   name,
-  email
+  email,
 }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -106,7 +106,7 @@ export const createAgendaToEventUser = ({
       existingAgendaResult.docs.forEach((doc) => {
         existingAgendas.push({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         });
       });
 
@@ -130,7 +130,7 @@ export const createAgendaToEventUser = ({
             type: 'meeting',
             timestamp_start: timetableItem.timestamp_start,
             timestamp_end: timetableItem.timestamp_end,
-            message
+            message,
           });
         // enviamos notificaciones por correo
         let data = {
@@ -141,7 +141,7 @@ export const createAgendaToEventUser = ({
           event_id: eventId,
           state: 'send',
           request_type: 'meeting',
-          start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString()
+          start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString(),
         };
 
         EventsApi.sendMeetingRequest(eventId, data);
@@ -255,7 +255,7 @@ export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newSta
       acceptedAgendasAtSameTimeResult.docs.forEach((doc) => {
         const newDataItem = {
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         };
 
         if (newDataItem.owner_id !== currentEventUserId) {
@@ -297,7 +297,7 @@ export const getAcceptedAgendasFromEventUser = (eventId, currentEventUserId) => 
         result.docs.forEach((doc) => {
           const newDataItem = {
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
           };
 
           if (newDataItem.type !== 'reserved') {
@@ -325,47 +325,40 @@ export const deleteAgenda = (eventId, agendaId) => {
   });
 };
 
+//METODO QUE OBTIENE EL USUARIO A PARTIR DEL EMAIL Y LO DEVUELVE CON EL EVENTUSER_ID
 export const getUserByEmail = async (user, eventid) => {
-  console.log(eventid);
-  console.log(user);
   try {
-    const resp = await UsersApi.findByEmail(user.email);
-    console.log(resp[0]);
-    //const ru = await UsersApi.getProfile(resp[0]._id);
-    let userR;
-    if (resp[0]) {
-      userR = await getUserEvent(resp[0]._id, eventid);
+    const userByEmail = await UsersApi.findByEmail(user.email);
+    let datauser;
+    if (userByEmail[0]) {
+      datauser = await getUserEvent(userByEmail[0]._id, eventid);
     } else {
-      userR = await getUserEvent(user._id, eventid);
+      datauser = await getUserEvent(user._id, eventid);
     }
-
-    console.log(userR);
-    userR = { ...userR, userEvent: userR._id };
-    return userR;
+    datauser = { ...datauser, userEvent: datauser._id };
+    return datauser;
   } catch (error) {
     return null;
   }
 };
 
+// OBTENER USUARIO A PARTIR DEL ACCOUNT ID
 export const getUserEvent = async (id, eventid) => {
-  console.log(id);
-  const levu = await UsersApi.getAll(eventid, `?filtered=[{"field":"account_id","value":"${id}"}]`);
-  console.log(levu.data);
-  let user = levu.data.filter((u) => u.account_id && u.account_id.trim() == id.trim())[0];
+  const dataUser = await UsersApi.getAll(eventid, `?filtered=[{"field":"account_id","value":"${id}"}]`);
+  let user = dataUser.data.filter((u) => u.account_id && u.account_id.trim() == id.trim())[0];
   return user;
 };
 
+// OBTENER USUARIO A PARTIR DEL EVENTUSER_ID
 export const getUsersId = async (id, eventid) => {
-  console.log(id);
-  const levu = await UsersApi.getAll(eventid, `?filtered=[{"field":"_id","value":"${id}"}]`);
-  console.log(levu.data);
-  return levu.data[0];
+  const dataUser = await UsersApi.getAll(eventid, `?filtered=[{"field":"_id","value":"${id}"}]`);
+  return dataUser.data[0];
 };
 
-export const getUserByEventUser = async (eventuser, eventid) => {
+/*export const getUserByEventUser = async (eventuser, eventid) => {
   console.log(eventuser);
   console.log(eventid);
   const levu = await UsersApi.getAll(eventid);
   const user = await levu.data.filter((u) => u.user != null && u._id === eventuser)[0];
   return user;
-};
+};*/
