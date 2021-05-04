@@ -242,7 +242,7 @@ class VirtualConference extends Component {
                                     <Tooltip title={host.name} key={key}>
                                       <Avatar
                                         src={host.image}
-                                        size={{ xs: 50, sm: 50, md: 50, lg: 100, xl: 100, xxl: 100 }}
+                                        size={{ xs: 50, sm: 50, md: 50, lg: 85, xl: 85, xxl: 85 }}
                                       />
                                     </Tooltip>
                                   );
