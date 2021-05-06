@@ -4,6 +4,8 @@ class Service {
   }
 
   validateHasVideoconference = (event_id, activity_id) => {
+    if (!event_id || !activity_id) return false;
+
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
       this.firestore
