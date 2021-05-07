@@ -185,7 +185,8 @@ class VirtualConference extends Component {
                   minHeight: '204px',
                   marginTop: '10px',
                   marginBottom: '10px',
-                }}>
+                }}
+                className='animate__animated animate__slideInRight'>
                 <Row justify='center' align='middle' gutter={[8, 8]}>
                   <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
                     <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid', height: '140px' }}>
