@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useState, useEffect } from 'react';
-import { Card, Button, Alert, Avatar, Row, Col, Tooltip, Space } from 'antd';
+import { Card, Button, Alert, Avatar, Row, Col, Tooltip, Space, Typography } from 'antd';
 import WithUserEventRegistered from '../shared/withUserEventRegistered';
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
@@ -12,6 +12,7 @@ import ENVIVO from '../../EnVivo.svg';
 import * as StageActions from '../../redux/stage/actions';
 
 const { gotoActivity } = StageActions;
+const { Title } = Typography;
 
 const MeetingConferenceButton = ({
   activity,
@@ -179,8 +180,8 @@ class VirtualConference extends Component {
                 key={key}
                 hoverable
                 style={{
-                  height: '204px',
-                  maxHeight: '204px',
+                  height: 'auto',
+                  maxHeight: '300px',
                   minHeight: '204px',
                   marginTop: '10px',
                   marginBottom: '10px',
@@ -208,8 +209,22 @@ class VirtualConference extends Component {
                     </div>
                   </Col>
                   <Col xs={16} sm={16} md={12} lg={12} xl={12} xxl={12}>
-                    <div style={{ alignContent: 'center', display: 'grid', height: '100%' }}>
-                      <h1 style={{ fontWeight: 'bold', fontSize: '18px' }}>{item.name}</h1>
+                    <div style={{ alignContent: 'center', display: 'grid', height: '100%', alignItems: 'center' }}>
+                      <Title
+                        level={4}
+                        ellipsis={{
+                          rows: 3, // Determina la cantidad de filas que se muestran antes de cortar el texto.
+                          expandable: true,
+                          symbol: (
+                            <span style={{ color: '#2D7FD6', fontSize: '14px' }}>
+                              {Moment.locale() == 'en' ? 'More' : 'Ver más'}{' '}
+                              {/* Se valido de esta forma porque el componente FormattedMessage no hacia
+                               efecto en la prop del componente de Ant design */}
+                            </span>
+                          ),
+                        }}>
+                        {item.name}
+                      </Title>
                       {item.habilitar_ingreso == 'open_meeting_room' ? (
                         ''
                       ) : (
