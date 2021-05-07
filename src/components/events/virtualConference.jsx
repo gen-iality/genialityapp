@@ -1,12 +1,13 @@
 import React, { Component, Fragment, useState, useEffect } from 'react';
-import { Card, Button, Alert } from 'antd';
-
+import { Card, Button, Alert, Avatar, Row, Col, Tooltip, Space } from 'antd';
+import WithUserEventRegistered from '../shared/withUserEventRegistered';
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment-timezone';
-import { Avatar } from 'antd';
+import { HistoryOutlined, UserOutlined, AntDesignOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
+import ENVIVO from '../../EnVivo.svg';
 //const { Meta } = Card;
 import * as StageActions from '../../redux/stage/actions';
 
@@ -33,30 +34,38 @@ const MeetingConferenceButton = ({
   switch (infoActivity.habilitar_ingreso) {
     case 'open_meeting_room':
       return (
-        <Button
-          size='large'
-          type='primary'
-          className='buttonVirtualConference'
-          onClick={() => {
-            if (activity.platform === 'zoomExterno') {
-              zoomExternoHandleOpen(activity, eventUser);
-            } else {
-              setActivity(activity);
-              showSection('agenda', true);
-            }
-          }}>
-          <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
-        </Button>
+        <>
+          <Button
+            size='large'
+            type='primary'
+            className='buttonVirtualConference'
+            onClick={() => {
+              if (activity.platform === 'zoomExterno') {
+                zoomExternoHandleOpen(activity, eventUser);
+              } else {
+                setActivity(activity);
+                showSection('agenda', true);
+              }
+            }}>
+            <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
+          </Button>
+        </>
       );
 
     case 'closed_meeting_room':
-      return <Alert message={intl.formatMessage({ id: 'live.join.disabled' })} type='warning' showIcon />;
+    // return <div style={{display:'grid'}}>
+    //          <span style={{color:'#7c909a'}}>El evento</span>
+    //          <span style={{fontWeight:'400', fontSize:'45px'}}>Iniciara pronto</span>
+    //        </div>
+    //  <Alert message={intl.formatMessage({ id: 'live.join.disabled' })} type='warning' showIcon />;
 
     case 'ended_meeting_room':
-      return <Alert message='El evento ha terminado' type='info' showIcon />;
+    // return <h1 style={{fontWeight:'400', fontSize:'45px'}}>El evento ha terminado</h1>
+    //  <Alert message='El evento ha terminado' type='info' showIcon />;
 
     default:
-      return <Alert message='Cargando...' type='warning' showIcon />;
+      return <h1 style={{ fontWeight: '400', fontSize: '45px' }}></h1>;
+    // <Alert message='Cargando...' type='warning' showIcon />;
   }
 };
 
@@ -153,10 +162,6 @@ class VirtualConference extends Component {
     if (!infoAgendaArr || infoAgendaArr.length <= 0) return null;
     return (
       <Fragment>
-        {/* <Card bordered={ true }>
-                            <span>Sesiones</span>
-                        </Card> */}
-
         {infoAgendaArr
           .filter((item) => {
             return (
@@ -166,56 +171,101 @@ class VirtualConference extends Component {
             );
           })
           .map((item, key) => (
-            <div key={key}>
-              <Card hoverable avatar={<Avatar src='' />} bordered={true} style={{ marginBottom: '3%' }}>
-                {/* Experimento de estilo <Meta
-                                        avatar={ <><Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /> <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /></> }
-                                        title="Card titlesfas fdas dfa sdf asdf as as as df"
-                                        description="This is the description"
-                                    /> */}
-                <h1 style={{ fontSize: '120%', fontWeight: 'Bold' }}>{item.name}</h1>
-                <p>
-                  {Moment(item.datetime_start).format('LL')}
-                  <span>&nbsp;&nbsp;&nbsp;</span>
-                  {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
-                    .tz(Moment.tz.guess())
-                    .format('h:mm A')}
-                  {' - '}
-                  {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
-                    .tz(Moment.tz.guess())
-                    .format('h:mm A')}
-                  <span className='ultrasmall-mobile'>
-                    {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
-                      .tz(Moment.tz.guess())
-                      .format(' (Z)')}
-                  </span>
-                </p>
-
-                {item.hosts && (
-                  <div className='Virtual-Conferences'>
-                    {item.hosts.map((host, key) => {
-                      return (
-                        <div style={{ margin: '0px 14px' }} key={key}>
-                          <Avatar src={host.image} />
-                          <div>{host.name}</div>
+            <>
+              <Card key={key} style={{ height: '204px', maxHeight: '204px', minHeight: '204px', marginTop: '10px' }}>
+                <Row justify='center' align='middle' gutter={[8, 8]}>
+                  <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
+                    <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid', height: '140px' }}>
+                      {item.habilitar_ingreso == 'open_meeting_room' ? (
+                        <>
+                          <img src={ENVIVO} style={{ height: '70px' }} />
+                          <span style={{ textAlign: 'center', fontSize: '18px' }}>En Vivo</span>
+                        </>
+                      ) : item.habilitar_ingreso == 'closed_meeting_room' ? (
+                        <>
+                          <FieldTimeOutlined style={{ fontSize: '70px', color: '#FAAD14' }} />
+                          <span style={{ textAlign: 'center', fontSize: '18px' }}>Iniciara Pronto</span>
+                        </>
+                      ) : (
+                        ''
+                      )}
+                    </div>
+                  </Col>
+                  <Col xs={16} sm={16} md={12} lg={12} xl={12} xxl={12}>
+                    <div style={{ alignContent: 'center', display: 'grid', height: '100%' }}>
+                      <h1 style={{ fontWeight: 'bold', fontSize: '20px' }}>{item.name}</h1>
+                      {item.habilitar_ingreso == 'open_meeting_room' ? (
+                        ''
+                      ) : (
+                        <h2 style={{ color: '#7c909a', fontSize: '16px' }}>
+                          {Moment(item.datetime_start).format('LL')}
+                          <span>&nbsp;&nbsp;&nbsp;</span>
+                          {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                            .tz(Moment.tz.guess())
+                            .format('h:mm A')}
+                          {' - '}
+                          {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                            .tz(Moment.tz.guess())
+                            .format('h:mm A')}
+                          <span className='ultrasmall-mobile'>
+                            {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                              .tz(Moment.tz.guess())
+                              .format(' (Z)')}
+                          </span>
+                        </h2>
+                      )}
+                    </div>
+                    <div>
+                      <MeetingConferenceButton
+                        activity={item}
+                        toggleConference={toggleConference}
+                        event={event}
+                        usuarioRegistrado={usuarioRegistrado}
+                        showSection={showSection}
+                        setActivity={gotoActivity}
+                        zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+                        eventUser={this.props.eventUser}
+                      />
+                    </div>
+                  </Col>
+                  <Col xs={0} sm={0} md={6} lg={6} xl={6} xxl={6}>
+                    <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid', height: '153px' }}>
+                      {item.hosts && (
+                        <div className='Virtual-Conferences'>
+                          <Avatar.Group
+                            maxCount={2}
+                            size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 80, xxl: 80 }}
+                            maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}>
+                            {item.hosts.length < 3
+                              ? item.hosts.map((host, key) => {
+                                  return (
+                                    <Tooltip title={host.name} key={key}>
+                                      <Avatar
+                                        src={host.image}
+                                        size={{ xs: 50, sm: 50, md: 50, lg: 85, xl: 85, xxl: 85 }}
+                                      />
+                                    </Tooltip>
+                                  );
+                                })
+                              : item.hosts.map((host, key) => {
+                                  return (
+                                    <Tooltip title={host.name} key={key}>
+                                      <Avatar
+                                        key={key}
+                                        src={host.image}
+                                        size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 80, xxl: 80 }}
+                                      />
+                                    </Tooltip>
+                                  );
+                                })}
+                          </Avatar.Group>
                         </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                <MeetingConferenceButton
-                  activity={item}
-                  toggleConference={toggleConference}
-                  event={event}
-                  usuarioRegistrado={usuarioRegistrado}
-                  showSection={showSection}
-                  setActivity={gotoActivity}
-                  zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
-                  eventUser={this.props.eventUser}
-                />
+                      )}
+                    </div>
+                  </Col>
+                </Row>
               </Card>
-            </div>
+            </>
           ))}
       </Fragment>
     );

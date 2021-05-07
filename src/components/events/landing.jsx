@@ -1572,7 +1572,7 @@ class Landing extends Component {
                             </div>
                           )}
                           <Row justify='center'>
-                            <Col xs={24} sm={24} md={16} lg={18} xl={18}>
+                            <Col xs={24} sm={24} md={18} lg={18} xl={18}>
                               {/** this.props.location.pathname.match(/landing\/[a-zA-Z0-9]*\/?$/gi This component is a shortcut to landing/* route, hencefor should not be visible in that route */}
                               {/** this component is a shortcut to agenda thus should not be visible in agenda */}
 
