@@ -159,6 +159,9 @@ class VirtualConference extends Component {
   render() {
     const { infoAgendaArr, event, usuarioRegistrado } = this.state;
     const { toggleConference, showSection, gotoActivity } = this.props;
+    {
+      Moment.locale(window.navigator.language);
+    }
     if (!infoAgendaArr || infoAgendaArr.length <= 0) return null;
     return (
       <Fragment>
@@ -172,19 +175,32 @@ class VirtualConference extends Component {
           })
           .map((item, key) => (
             <>
-              <Card key={key} style={{ height: '204px', maxHeight: '204px', minHeight: '204px', marginTop: '10px' }}>
+              <Card
+                key={key}
+                hoverable
+                style={{
+                  height: '204px',
+                  maxHeight: '204px',
+                  minHeight: '204px',
+                  marginTop: '10px',
+                  marginBottom: '10px',
+                }}>
                 <Row justify='center' align='middle' gutter={[8, 8]}>
                   <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
                     <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid', height: '140px' }}>
                       {item.habilitar_ingreso == 'open_meeting_room' ? (
                         <>
                           <img src={ENVIVO} style={{ height: '70px' }} />
-                          <span style={{ textAlign: 'center', fontSize: '18px' }}>En Vivo</span>
+                          <span style={{ textAlign: 'center', fontSize: '18px' }}>
+                            {<FormattedMessage id='live' defaultMessage='En vivo' />}
+                          </span>
                         </>
                       ) : item.habilitar_ingreso == 'closed_meeting_room' ? (
                         <>
                           <FieldTimeOutlined style={{ fontSize: '70px', color: '#FAAD14' }} />
-                          <span style={{ textAlign: 'center', fontSize: '18px' }}>Iniciara Pronto</span>
+                          <span style={{ textAlign: 'center', fontSize: '18px' }}>
+                            {<FormattedMessage id='live.closed' defaultMessage='Iniciará pronto' />}
+                          </span>
                         </>
                       ) : (
                         ''
@@ -193,7 +209,7 @@ class VirtualConference extends Component {
                   </Col>
                   <Col xs={16} sm={16} md={12} lg={12} xl={12} xxl={12}>
                     <div style={{ alignContent: 'center', display: 'grid', height: '100%' }}>
-                      <h1 style={{ fontWeight: 'bold', fontSize: '20px' }}>{item.name}</h1>
+                      <h1 style={{ fontWeight: 'bold', fontSize: '18px' }}>{item.name}</h1>
                       {item.habilitar_ingreso == 'open_meeting_room' ? (
                         ''
                       ) : (
