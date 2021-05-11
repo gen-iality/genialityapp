@@ -442,11 +442,14 @@ class Landing extends Component {
     });
     if (userPerfil != null) {
       var data = await this.loadDataUser(userPerfil);
+      console.log('--------------------------');
+      console.log(data);
 
-      this.setState({ userPerfil: { ...data.properties, iduser: userPerfil.iduser } });
+      this.setState({ userPerfil: { ...data.properties, iduser: userPerfil.iduser || data._id } });
 
       if (data) {
-        await this.getProperties(data._id);
+        const respProperties = await this.getProperties(data._id);
+        console.log(respProperties);
       }
     } else {
       //console.log('Perfil usuario nulo');
@@ -1488,7 +1491,9 @@ class Landing extends Component {
                                     bordered
                                     dataSource={this.state.propertiesUserPerfil && this.state.propertiesUserPerfil}
                                     renderItem={(item) =>
-                                      this.state.userPerfil[item.name] !== undefined && (
+                                      !item.visibleByContacts &&
+                                      !item.visibleByAdmin &&
+                                      this.state.userPerfil[item.name] && (
                                         <List.Item>
                                           <List.Item.Meta
                                             title={item.label}
@@ -1572,7 +1577,7 @@ class Landing extends Component {
                             </div>
                           )}
                           <Row justify='center'>
-                            <Col xs={24} sm={24} md={16} lg={18} xl={18}>
+                            <Col xs={24} sm={24} md={18} lg={18} xl={18}>
                               {/** this.props.location.pathname.match(/landing\/[a-zA-Z0-9]*\/?$/gi This component is a shortcut to landing/* route, hencefor should not be visible in that route */}
                               {/** this component is a shortcut to agenda thus should not be visible in agenda */}
 
@@ -1632,10 +1637,9 @@ class Landing extends Component {
                           <Button
                             shape='circle'
                             icon={
-                              this.state.totalNewMessages !== undefined &&
-                              this.state.totalNewMessages > 0 && (
-                                <Badge count={' '} style={{ minWidth: '10px', height: '10px', padding: '0px' }}></Badge>
-                              )
+                              <Badge count={this.state.totalNewMessages}>
+                                <MessageOutlined style={{ fontSize: '20px' }} />
+                              </Badge>
                             }
                             size='large'
                             onClick={this.showDrawerMobile}
@@ -1703,28 +1707,11 @@ class Landing extends Component {
                                         key='1'
                                         icon={
                                           <>
-                                            {this.state.totalNewMessages !== undefined &&
-                                              this.state.totalNewMessages > 0 && (
-                                                <Badge
-                                                  count={' '}
-                                                  style={{ minWidth: '10px', height: '10px', padding: '0px' }}>
-                                                  <CommentOutlined
-                                                    style={{
-                                                      fontSize: '24px',
-                                                      color: event.styles.color_icon_socialzone,
-                                                    }}
-                                                  />
-                                                </Badge>
-                                              )}
-                                            {this.state.totalNewMessages !== undefined &&
-                                              this.state.totalNewMessages == 0 && (
-                                                <CommentOutlined
-                                                  style={{
-                                                    fontSize: '24px',
-                                                    color: event.styles.color_icon_socialzone,
-                                                  }}
-                                                />
-                                              )}
+                                            <Badge count={this.state.totalNewMessages}>
+                                              <CommentOutlined
+                                                style={{ fontSize: '24px', color: event.styles.color_icon_socialzone }}
+                                              />
+                                            </Badge>
                                           </>
                                         }
                                         style={{ marginTop: '12px', marginBottom: '22px' }}

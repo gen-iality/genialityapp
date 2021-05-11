@@ -325,6 +325,8 @@ export const EventFieldsApi = {
     return await Actions.post(`/api/events/${event}/userproperties`, data);
   },
   editOne: async (data, id, event) => {
+    console.log('---- EDIT ONE------');
+    console.log(data);
     return await Actions.edit(`/api/events/${event}/userproperties`, data, id);
   },
   registerListFieldOptionTaken: async (data, id, event) => {

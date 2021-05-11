@@ -33,6 +33,7 @@ const ChatList = (props) => {
     console.log('cargando chatlist', props);
   }, []);
   const onFinish = (values) => {
+    //alert(values);
     props.setCurrentUser(values);
   };
 

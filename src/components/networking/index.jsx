@@ -636,7 +636,7 @@ class ListEventUser extends Component {
                                         asistantData.map(
                                           (property, propertyIndex) =>
                                             !property.visibleByAdmin &&
-                                            !property.visibleByContacts &&
+                                            (!property.visibleByContacts || property.visibleByContacts == 'public') &&
                                             users.properties[property.name] && (
                                               <div key={`public-field-${userIndex}-${propertyIndex}`}>
                                                 <p>

@@ -44,6 +44,7 @@ const ContactList = ({ eventId, agendarCita, tabActive }) => {
       let properties = await EventFieldsApi.getAll(eventId);
       setUserProperties(properties);
       console.log('FINISHED GET PROPERTIES');
+      console.log(properties);
     };
 
     if (tabActive === 'mis-contactos') {
@@ -107,7 +108,8 @@ const ContactList = ({ eventId, agendarCita, tabActive }) => {
                       {userProperties.map(
                         (property, key) =>
                           user[property.name] !== undefined &&
-                          !property.visibleByAdmin && (
+                          !property.visibleByAdmin &&
+                          (property.visibleByContacts || property.visibleByContacts == 'only_for_my_contacts') && (
                             <div key={'contact-property' + key}>
                               {
                                 <p>
