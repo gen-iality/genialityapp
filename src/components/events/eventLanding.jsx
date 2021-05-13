@@ -249,7 +249,7 @@ class eventLanding extends Component {
               </div>
             </div>
           )}
-          {event._id === '5f7f21217828e17d80642856' &&(
+          {event._id === '5f7f21217828e17d80642856' && (
             <div>
               <div className='containerRuedaNaranja'>
                 <Row gutter={[8, 16]} justify='center'>
@@ -294,7 +294,7 @@ class eventLanding extends Component {
             </div>
           )}
           {/* rueda naranja dos */}
-          { event._id === '609180c6013150612044b547' &&(
+          {event._id === '609180c6013150612044b547' && (
             <div>
               <div className='containerRuedaNaranja'>
                 <Row gutter={[8, 16]} justify='center'>

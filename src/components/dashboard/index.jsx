@@ -4,6 +4,7 @@ import { ApiUrl } from '../../helpers/constants';
 import IFrame from '../shared/iFrame';
 import { Card, Col, Divider, Empty, Row, Select, Space, Statistic, Table } from 'antd';
 import { EyeOutlined, FieldTimeOutlined, IdcardOutlined, MoreOutlined, UserOutlined } from '@ant-design/icons';
+import API from '../../helpers/request';
 
 const { Option } = Select;
 class DashboardEvent extends Component {
@@ -12,7 +13,21 @@ class DashboardEvent extends Component {
     this.state = {
       loading: true,
       iframeUrl: '',
+      chats: [],
     };
+  }
+
+  getChat() {
+    const { eventId } = this.props;
+    return new Promise((resolve, reject) => {
+      API.get(`/api/events/${eventId}/messages`)
+        .then(({ data }) => {
+          resolve(data.data);
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
   }
 
   componentDidMount() {
@@ -21,6 +36,11 @@ class DashboardEvent extends Component {
     if (evius_token) {
       const iframeUrl = `${ApiUrl}/es/event/${eventId}/dashboard?evius_token=${evius_token}`;
       this.setState({ iframeUrl, loading: false });
+      this.getChat().then((data) => {
+        console.log('-------chats-------');
+        console.log(data);
+        this.setState({ chats: data });
+      });
     }
   }
 

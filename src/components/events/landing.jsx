@@ -87,6 +87,7 @@ import Avatar from 'antd/lib/avatar/avatar';
 import Text from 'antd/lib/typography/Text';
 import { getCurrentEventUser, getUserByEmail } from '../networking/services';
 import AppointmentModal from '../networking/appointmentModal';
+import initUserPresence from '../../containers/userPresenceInEvent';
 
 const { setEventData } = eventActions;
 const { gotoActivity, setMainStage } = stageActions;
@@ -828,7 +829,8 @@ class Landing extends Component {
   }
   async componentDidMount() {
     await this.mountSections();
-
+    //Registra la presencia cuando se ingresa al landing del evento
+    await initUserPresence(this.state.event._id);
     if (this.state.event === null) {
       this.props.history.push('/notfound');
       return;
