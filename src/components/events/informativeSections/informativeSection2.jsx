@@ -39,7 +39,7 @@ class InformativeSection2 extends Component {
                 </h2>
 
                 <iframe
-                  style={{ width: '560px', height: '445px', margin: 'auto' }}
+                  style={{ width: '640px', height: '380px', margin: 'auto' }}
                   src='https://www.youtube.com/embed/ZD5nWJZgt2E'
                   frameborder='0'
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
@@ -49,7 +49,7 @@ class InformativeSection2 extends Component {
                 </h2>
 
                 <iframe
-                  style={{ width: '560px', height: '445px', margin: 'auto' }}
+                  style={{ width: '640px', height: '380px', margin: 'auto' }}
                   src='https://www.youtube.com/embed/Od19Fle4q6M'
                   frameborder='0'
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
@@ -61,7 +61,7 @@ class InformativeSection2 extends Component {
                 </h2>
 
                 <iframe
-                  style={{ width: '560px', height: '445px', margin: 'auto' }}
+                  style={{ width: '640px', height: '380px', margin: 'auto' }}
                   src='https://www.youtube.com/embed/videoseries?list=PL9wuymCs4-gOUS831iFNNZRMoOAq3jBlD'
                   frameborder='0'
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
@@ -72,14 +72,13 @@ class InformativeSection2 extends Component {
                 </h2>
 
                 <iframe
-                  style={{ width: '560px', height: '445px', margin: 'auto' }}
-                  src='https://www.youtube.com/embed/TdKkLW90sas'
+                  style={{ width: '640px', height: '380px', margin: 'auto' }}
+                  src='https://www.youtube.com/embed/TH_4s3fWHSQ'
                   frameborder='0'
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                   allowfullscreen></iframe>
               </>
             )}
-
             {this.props.event._id == '609180c6013150612044b547' && (
               <>
                 <h2 style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
