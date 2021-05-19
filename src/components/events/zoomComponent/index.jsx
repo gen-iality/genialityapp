@@ -4,10 +4,13 @@ import Fullscreen from 'react-full-screen';
 import { FullscreenOutlined, LineOutlined } from '@ant-design/icons';
 import SurveyForm from '../surveys';
 import API from '../../../helpers/request';
+import connect from 'react-redux/es/connect/connect';
+import { fetchPermissions } from '../../../redux/permissions/actions';
+import { fetchRol } from '../../../redux/rols/actions';
 import ConferenceTabs from './conferenceTabs';
 
 import { firestore } from '../../../helpers/firebase';
-export default class ZoomComponent extends Component {
+class ZoomComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -93,6 +96,22 @@ export default class ZoomComponent extends Component {
   }
 
   async componentDidMount() {
+    console.log('COMPONENT DID MOUNT ZOOM ----');
+    const { match, permissions, showMenu } = this.props;
+    console.log('ZOOM COMPONENTE', permissions);
+
+    try {
+      await this.props.dispatch(fetchRol());
+      let eventId = this.props.match.params.event;
+      await this.props.dispatch(fetchPermissions(eventId));
+      // const event = await EventsApi.getOne(eventId);
+      // const eventWithExtraFields = this.addNewFieldsToEvent(event);
+      // this.setState({ event: eventWithExtraFields, loading: false });
+    } catch (e) {
+      console.error(e.response);
+      // this.setState({ timeout: true, loading: false });
+    }
+
     this.setUpUserForConference();
 
     firestore
@@ -233,6 +252,7 @@ export default class ZoomComponent extends Component {
   };
 
   render() {
+    console.log('COMPONENT DID MOUNT ZOOM ----');
     const { toggleConference, event, activity } = this.props;
     let {
       url_conference,
@@ -406,3 +426,9 @@ export default class ZoomComponent extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  permissions: state.permissions,
+});
+
+export default connect(mapStateToProps)(ZoomComponent);

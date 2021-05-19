@@ -558,6 +558,7 @@ class Landing extends Component {
 
       eventUsers = []; //await EventsApi.getcurrentUserEventUsers( event._id );
       // this.monitorNewChatMessages(event, user);
+      console.log('Event user', eventUser);
     }
 
     const dateFrom = event.datetime_from.split(' ');
@@ -1293,6 +1294,7 @@ class Landing extends Component {
           <React.Fragment>
             <div className='hero-head'>
               {/* Condicion para mostrar el componente de zoom */}
+
               {toggleConferenceZoom && (
                 <ZoomComponent
                   toggleConference={this.toggleConference}
@@ -1302,6 +1304,8 @@ class Landing extends Component {
                   activity={activity}
                 />
               )}
+
+              {toggleConferenceZoom && console.log('se tiene que mostrar el componente de zoom')}
               {/* ESTO ES UNA PRUEBA PARA LA ENCUESTA EN VIVO */}
               {/* <SurveyNotification /> */}
               {loader_page ? (
