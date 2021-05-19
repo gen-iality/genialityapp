@@ -293,7 +293,7 @@ let AgendaActividadDetalle = (props) => {
   }
 
   function HostValidate(eventUser) {
-    let rolhost = '5af21f366ccde22b0776929d';
+    let rolhost = '5afaf644500a7104f77189cd';
     let host = eventUser && eventUser.rol_id === rolhost ? 1 : 0;
     return host;
   }
