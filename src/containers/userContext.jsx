@@ -1,11 +1,38 @@
-import React from 'react';
-import { firestore, fireRealtime, auth, app } from '../helpers/firebase';
-import { getCurrentUser } from '../helpers/request';
-const userContext = React.createContext({ user: {} }); // Create a context object
-//https://firebase.google.com/docs/firestore/solutions/presence
-// Fetch the current user's ID from Firebase Authentication.
-var uid = 'a'; //auth.currentUser.uid || null;
+import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { EventsApi } from '../helpers/request';
+import { GetIdEvent } from '../helpers/utils';
 
-export {
-  userContext // Export it so it can be used by other Components
-};
+const UsuarioContext = React.createContext();
+
+export function UserEventProvider({ children }) {
+  const [userEvent, setuserEvent] = useState();
+
+  useEffect(() => {
+    async function fetchUser() {
+      let eventid = GetIdEvent();
+      const eventUser = await EventsApi.getcurrentUserEventUser(eventid);
+      setuserEvent(eventUser);
+    }
+    fetchUser();
+  }, []);
+
+  const value = React.useMemo(() => {
+    return {
+      ...userEvent,
+    };
+  }, [userEvent]);
+
+  console.log('state user evet', userEvent);
+
+  return <UsuarioContext.Provider value={value}>{children}</UsuarioContext.Provider>;
+}
+
+export function UseUserEvent() {
+  const contextuser = React.useContext(UsuarioContext);
+  if (!contextuser) {
+    throw new Error('UseEventuser debe estar dentro del proveedor');
+  }
+
+  return contextuser;
+}

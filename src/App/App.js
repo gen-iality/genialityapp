@@ -3,11 +3,13 @@ import { Provider } from 'react-redux';
 import * as Cookie from 'js-cookie';
 import { parseUrl } from '../helpers/constants';
 import './App.less';
-import { userContext } from '../containers/userContext';
 import privateInstance, { Actions } from '../helpers/request';
 import store from '../redux/store';
 import MainRouter from '../containers/router';
 import 'bulma-spacing/css/bulma-spacing.min.css';
+
+//contexto
+import { UseUserEvent, UserEventProvider } from '../containers/userContext';
 
 class App extends Component {
   constructor(props) {
@@ -109,11 +111,11 @@ class App extends Component {
 */
   render() {
     return (
-      <userContext.Provider value={this.state.user}>
-        <Provider store={store}>
+      <Provider store={store}>
+        <UserEventProvider>
           <MainRouter />
-        </Provider>
-      </userContext.Provider>
+        </UserEventProvider>
+      </Provider>
     );
   }
 }

@@ -76,6 +76,7 @@ class Agenda extends Component {
   }
 
   async componentDidMount() {
+    console.log('agenda landing');
     //Se carga esta funcion para cargar los datos
 
     this.setState({ loading: true });

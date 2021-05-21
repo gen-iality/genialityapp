@@ -8,7 +8,6 @@ import ContentContainer from './content';
 import NotFoundPage from '../components/notFoundPage';
 
 import { Layout } from 'antd';
-import { userContext } from './userContext';
 //const { Header, Footer, Sider, Content } = Layout;
 
 class MainRouter extends Component {
@@ -26,16 +25,9 @@ class MainRouter extends Component {
     return (
       <Router basename='/'>
         <Layout>
-          <userContext.Consumer>
-            {(user) => {
-              return (
-                <>
-                  <Header user={user} />
-                  <ContentContainer />
-                </>
-              );
-            }}
-          </userContext.Consumer>
+          <Header />
+          <ContentContainer />
+          );
         </Layout>
       </Router>
     );

@@ -20,6 +20,9 @@ import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 import { listenSurveysData } from '../events/surveys/services';
 
+//context
+import { UseUserEvent } from '../../containers/userContext';
+
 const { TabPane } = Tabs;
 
 const { gotoActivity, setMainStage, setTabs } = StageActions;
@@ -35,6 +38,11 @@ const tailLayout = {
 };
 
 let AgendaActividadDetalle = (props) => {
+  //context user
+  let userEventContext = UseUserEvent();
+
+  console.log('AGENDA DETALLE USER EVENT', userEventContext);
+
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
   let [event, setEvent] = useState(false);
@@ -292,9 +300,9 @@ let AgendaActividadDetalle = (props) => {
     setIdSpeaker(idSpeaker);
   }
 
-  function HostValidate(eventUser) {
+  function HostValidate() {
     let rolhost = '5afb0efc500a7104f77189cf';
-    let host = eventUser && eventUser.rol_id === rolhost ? 1 : 0;
+    let host = userEventContext && userEventContext.rol_id === rolhost ? 1 : 0;
     return host;
   }
 

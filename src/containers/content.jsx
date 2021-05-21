@@ -60,7 +60,7 @@ class ContentContainer extends Component {
           <Route path='/policies' component={Policies} />
           <Route path='/about' component={About} />
           <Route path='/faqs' component={Faqs} />
-          <Route path='/singintest' component={SinginTest} />
+          {/* <Route path='/singintest' component={SinginTest} /> */}
           <Route path='/api/generatorQr/:id' component={QRedirect} />
           <Route exact path='/transition/:event' component={Transition} />
 
