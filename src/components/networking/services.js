@@ -27,7 +27,6 @@ export const getCurrentUser = (token) => {
 // Funcion que obtiene el eventUserId del usuario actual
 export const getCurrentEventUser = (eventId, userId) => {
   // eslint-disable-next-line no-unused-vars
-  console.log('NI POR EL PUTAS');
   return new Promise(async (resolve, reject) => {
     const users = await UsersApi.getAll(eventId, '?pageSize=10000');
 
