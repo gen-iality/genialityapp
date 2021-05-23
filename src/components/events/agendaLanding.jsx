@@ -8,7 +8,7 @@ import {
   SurveysApi,
   DocumentsApi,
   AttendeeApi,
-  discountCodesApi,
+  discountCodesApi
 } from '../../helpers/request';
 import AgendaActividadDetalle from './agendaActividadDetalle';
 import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge } from 'antd';
@@ -23,7 +23,7 @@ let attendee_states = {
   STATE_INVITED: '5ba8d213aac5b12a5a8ce749', //"INVITED";
   STATE_RESERVED: '5ba8d200aac5b12a5a8ce748', //"RESERVED";
   ROL_ATTENDEE: '5d7ac3f56b364a4042de9b08', //"rol id";
-  STATE_BOOKED: '5b859ed02039276ce2b996f0', //"BOOKED";
+  STATE_BOOKED: '5b859ed02039276ce2b996f0' //"BOOKED";
 };
 
 const { setNotification } = notificationsActions;
@@ -65,7 +65,7 @@ class Agenda extends Component {
       show_inscription: false,
       status: 'in_progress',
       hideBtnDetailAgenda: true,
-      userId: null,
+      userId: null
     };
 
     this.returnList = this.returnList.bind(this);
@@ -93,7 +93,7 @@ class Agenda extends Component {
 
     this.setState({
       show_inscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
-      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true,
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
     });
 
     let surveysData = await SurveysApi.getAll(event._id);
@@ -107,55 +107,26 @@ class Agenda extends Component {
       this.setState({ documents: documentsData.data });
     }
 
-    // Valida si el evento no tiene fechas especififcas, en ese caso se generan los dias que hay en el rango desde la fecha inicial hasta la fecha final del evento.
-    if (!event.dates || event.dates.length === 0) {
-      let days = [];
-      const init = Moment.tz(event.date_start, 'YYYY-MM-DD h:mm', 'America/Bogota').tz(Moment.tz.guess());
-      const end = Moment.tz(event.date_end, 'YYYY-MM-DD h:mm', 'America/Bogota').tz(Moment.tz.guess());
-      const diff = end.diff(init, 'days');
-      //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-      for (let i = 0; i < diff + 1; i++) {
-        days.push(Moment(init).add(i, 'd'));
-      }
-
-      this.setState({ days, day: days[0] });
-      //this.setState({ days, day: days[0] }, this.fetchAgenda);
-      //Si existe dates, entonces envia al array push las fechas del array dates del evento
-    } else {
-      const days = [];
-      let date = event.dates;
-      Date.parse(date);
-
-      for (var i = 0; i < date.length; i++) {
-        days.push(Moment(date[i]).format('YYYY-MM-DD'));
-      }
-
-      //this.setState({ days, day: days[0] }, this.fetchAgenda);
-    }
     this.getAgendaUser();
   }
 
+  /** extraemos los días en los que pasan actividades */
   setDaysWithAllActivities = () => {
     const { data } = this.state;
-    const getDays = [];
+    const dayswithactivities = [];
 
     data.map((activity) => {
-      const date = Moment.tz(activity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+      const datestring = Moment.tz(activity.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
         .tz(Moment.tz.guess())
         .format('YYYY-MM-DD');
 
-      const result = getDays.filter((item) => item === date);
-
+      //Revisamos que no hayamos extraido el día de otra actividad previa
+      const result = dayswithactivities.filter((item) => item === datestring);
       if (result.length === 0) {
-        getDays.push(
-          Moment.tz(activity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
-            .tz(Moment.tz.guess())
-            .format('YYYY-MM-DD')
-        );
+        dayswithactivities.push(datestring);
       }
     });
-
-    this.setState({ days: getDays });
+    this.setState({ days: dayswithactivities });
   };
 
   componentDidUpdate(prevProps) {
@@ -208,8 +179,8 @@ class Agenda extends Component {
       this.setState({
         exchangeCodeMessage: {
           type: 'success',
-          message: 'Código canjeado, habilitando el acceso...',
-        },
+          message: 'Código canjeado, habilitando el acceso...'
+        }
       });
       setTimeout(() => window.location.reload(), 500);
     } catch (e) {
@@ -223,8 +194,8 @@ class Agenda extends Component {
       this.setState({
         exchangeCodeMessage: {
           type: 'error',
-          message: msg,
-        },
+          message: msg
+        }
       });
     }
   };
@@ -333,13 +304,13 @@ class Agenda extends Component {
     Activity.Register(eventId, userId, activityId)
       .then(() => {
         notification.open({
-          message: 'Inscripción realizada',
+          message: 'Inscripción realizada'
         });
         callback(true);
       })
       .catch((err) => {
         notification.open({
-          message: err,
+          message: err
         });
       });
   };
@@ -372,7 +343,7 @@ class Agenda extends Component {
 
   showDrawer = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
   };
 
@@ -382,7 +353,7 @@ class Agenda extends Component {
 
   onClose = () => {
     this.setState({
-      visible: false,
+      visible: false
     });
   };
 
@@ -584,7 +555,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
               Registrarme
-            </Button>,
+            </Button>
           ]}>
           <p>Para poder disfrutar de este contenido debes estar registrado e iniciar sesión</p>
         </Modal>
@@ -601,7 +572,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='login' onClick={this.handleOpenModalExchangeCode}>
               Canjear código
-            </Button>,
+            </Button>
           ]}>
           <p>
             Para poder disfrutar de este contenido debes haber pagado y tener un código porfavor ingresalo a
@@ -621,7 +592,7 @@ class Agenda extends Component {
           footer={[
             <Button key='cancel' onClick={this.handleCloseModalRestrictedDevices}>
               Cancelar
-            </Button>,
+            </Button>
           ]}>
           <p>Has excedido el número de dispositivos permitido</p>
         </Modal>
@@ -638,8 +609,10 @@ class Agenda extends Component {
             </Button>,
             <Button key='login' onClick={this.exchangeCode}>
               Canjear código
-            </Button>,
+            </Button>
           ]}>
+          {' '}
+          cv '// '
           <div>
             {this.state.exchangeCodeMessage && (
               <Alert
@@ -726,7 +699,6 @@ class Agenda extends Component {
                           <p>
                             <Space>
                               <CalendarOutlined />
-
                               {Moment(day)
                                 .format('LL')
                                 .toUpperCase()}
@@ -737,6 +709,7 @@ class Agenda extends Component {
                       {this.getActivitiesByDay(day)}
                     </>
                   ))}
+
                 {event && event.styles && event.styles.hideDatesAgenda && (
                   <Tabs defaultActiveKey='0' size='large'>
                     {days.map((day, index) => (
@@ -765,11 +738,11 @@ class Agenda extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  currentActivity: state.stage.data.currentActivity,
+  currentActivity: state.stage.data.currentActivity
 });
 const mapDispatchToProps = {
   setNotification,
-  setTabs,
+  setTabs
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Agenda);

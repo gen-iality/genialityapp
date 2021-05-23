@@ -33,6 +33,7 @@ class UserModal extends Component {
   async componentDidMount() {
     const self = this;
     const { rolesList } = this.props;
+    console.log('rolesList', rolesList);
     self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : '' });
     const tickets = await eventTicketsApi.getAll(this.props.eventId);
     if (tickets.length > 0) this.setState({ tickets });

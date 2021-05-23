@@ -49,7 +49,7 @@ let AgendaActividadDetalle = (props) => {
   const [email, setEmail] = useState(null);
 
   const [configfast, setConfigfast] = useState({});
-  const { eventInfo } = props;
+  const { eventInfo, permissions } = props;
 
   const { Title } = Typography;
 
@@ -292,6 +292,12 @@ let AgendaActividadDetalle = (props) => {
     setIdSpeaker(idSpeaker);
   }
 
+  function HostValidate(eventUser) {
+    let rolhost = '5afb0efc500a7104f77189cf';
+    let host = eventUser && eventUser.rol_id === rolhost ? 1 : 0;
+    return host;
+  }
+
   const getMeetingPath = (platform) => {
     if (platform === 'zoom') {
       const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
@@ -301,7 +307,8 @@ let AgendaActividadDetalle = (props) => {
         meeting_id +
         `&userName=${props.userInfo.displayName ? props.userInfo.displayName : 'Guest'}` +
         `&email=${props.userInfo.email ? props.userInfo.email : 'emaxxxxxxil@gmail.com'}` +
-        `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}`
+        `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
+        `&host=${HostValidate(props.eventUser)}`
       );
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
@@ -966,6 +973,7 @@ const mapStateToProps = (state) => ({
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
   tabs: state.stage.data.tabs,
   generalTabs: state.tabs.generalTabs,
+  permissions: state.permissions,
 });
 
 const mapDispatchToProps = {
