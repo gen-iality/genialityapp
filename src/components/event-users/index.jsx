@@ -170,7 +170,7 @@ class ListEventUser extends Component {
     try {
       const { event } = this.props;
       const properties = event.user_properties;
-      const rolesList = await RolAttApi.byEvent(this.props.event._id);
+      const rolesList = await RolAttApi.byEventRolsGeneral();
       const badgeEvent = await BadgeApi.get(this.props.event._id);
 
       let extraFields = fieldNameEmailFirst(properties);

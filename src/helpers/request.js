@@ -567,6 +567,9 @@ export const RolAttApi = {
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/rolesattendees`);
   },
+  byEventRolsGeneral: async () => {
+    return await Actions.getAll(`api/rols`);
+  },
   getOne: async (event, id) => {
     return await Actions.get(`api/events/${event}/rolesattendees/`, id);
   },
