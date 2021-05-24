@@ -775,7 +775,7 @@ let AgendaActividadDetalle = (props) => {
                 <TabPane
                   tab={
                     <>
-                      <p style={{ marginBottom: '0px' }}>Descripción</p>
+                      <p style={{ marginBottom: '0px' }}>{intl.formatMessage({ id: 'title.description' })}</p>
                     </>
                   }
                   key='description'>
@@ -785,7 +785,7 @@ let AgendaActividadDetalle = (props) => {
                     <div></div>
                   ) : (
                     <div className='List-conferencistas'>
-                      <Title level={5}>Panelistas </Title>
+                      <Title level={5}>{intl.formatMessage({ id: 'title.panelists' })} </Title>
                       <p style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
                         {orderedHost.length > 0 ? (
                           <>
@@ -817,7 +817,7 @@ let AgendaActividadDetalle = (props) => {
                                           item.description !== null &&
                                           item.description !== undefined && (
                                             <Button className='button_lista' onClick={() => getSpeakers(item._id)}>
-                                              Ver detalle
+                                              {intl.formatMessage({ id: 'button.more.information' })}
                                             </Button>
                                           )}
                                       </div>
