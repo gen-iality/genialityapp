@@ -527,7 +527,8 @@ class Landing extends Component {
       type: null,
     });
 
-    const id = this.props.match.params.event;
+    //esto viene de los params del router de la url :event
+    const id = this.props.match.params.event_id;
 
     const user = await getCurrentUser();
     this.setState({ user, currentUser: user });

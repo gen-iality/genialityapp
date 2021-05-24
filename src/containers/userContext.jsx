@@ -9,12 +9,12 @@ export function UserEventProvider({ children }) {
   const [userEvent, setuserEvent] = useState();
 
   useEffect(() => {
-    async function fetchUser() {
+    async function fetchEventUser() {
       let eventid = GetIdEvent();
       const eventUser = await EventsApi.getcurrentUserEventUser(eventid);
       setuserEvent(eventUser);
     }
-    fetchUser();
+    fetchEventUser();
   }, []);
 
   const value = React.useMemo(() => {

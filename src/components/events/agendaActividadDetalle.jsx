@@ -316,7 +316,7 @@ let AgendaActividadDetalle = (props) => {
         `&userName=${props.userInfo.displayName ? props.userInfo.displayName : 'Guest'}` +
         `&email=${props.userInfo.email ? props.userInfo.email : 'emaxxxxxxil@gmail.com'}` +
         `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
-        `&host=${HostValidate(props.eventUser)}`
+        `&host=${HostValidate()}`
       );
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;

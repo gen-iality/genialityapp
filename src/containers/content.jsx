@@ -5,6 +5,7 @@ import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../helpers/constants';
 import asyncComponent from './AsyncComponent';
 import WithFooter from '../components/withFooter';
+import { match } from 'ramda';
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -35,7 +36,8 @@ class ContentContainer extends Component {
     return (
       <main className='main'>
         <Switch>
-          <Route path='/landing/:event' component={Landing} />
+          <Route path='/landing/:event_id' component={Landing} />
+
           <Route path='/social/:event_id' component={socialZone} />
           {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
           <Route path='/mentoriamastercard' render={() => <Redirect to='/landing/5ef49fd9c6c89039a14c6412' />} />
@@ -60,7 +62,7 @@ class ContentContainer extends Component {
           <Route path='/policies' component={Policies} />
           <Route path='/about' component={About} />
           <Route path='/faqs' component={Faqs} />
-          {/* <Route path='/singintest' component={SinginTest} /> */}
+          <Route path='/singintest' component={SinginTest} />
           <Route path='/api/generatorQr/:id' component={QRedirect} />
           <Route exact path='/transition/:event' component={Transition} />
 
