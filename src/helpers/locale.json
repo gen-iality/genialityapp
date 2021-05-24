@@ -68,6 +68,10 @@
     "button.restore.password": "Request a password",
     "button.cancel": "Cancel",
     "button.back.agenda": "Back to agenda",
+    "button.more.information": "More information",
+
+    "title.description": "Description",
+    "title.panelists": "Panelists",
 
     "form.field.required": "This field is required",
     "form.validate.message.password": "The password must contain at least 8 characters, an uppercase, a lowercase and a number",
@@ -153,6 +157,10 @@
     "button.restore.password": "Solicitar una contraseña",
     "button.cancel": "Cancelar",
     "button.back.agenda": "Volver a la agenda",
+    "button.more.information": "Ver detalle",
+
+    "title.description": "Descrición",
+    "title.panelists": "Panelistas",
 
     "form.field.required": "Este campo es obligatorio",
     "form.validate.message.password": "El password debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número",
@@ -197,6 +205,10 @@
     "button.restore.password": "Solicite uma senha",
     "button.cancel": "Cancelar",
     "button.back.agenda": "Voltar para a agenda",
+    "button.more.information": "Mais Informações",
+
+    "title.description": "Descrição",
+    "title.panelists": "Painelistas",
 
     "form.field.required": "Este campo é obrigatório",
     "form.validate.message.password": "A senha deve ter pelo menos 8 caracteres, uma maiúscula, uma minúscula e um número",
