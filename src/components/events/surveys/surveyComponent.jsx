@@ -52,7 +52,6 @@ class SurveyComponent extends Component {
     var self = this;
     const { eventId, idSurvey } = this.props;
     let surveyData = await this.loadSurvey(eventId, idSurvey);
-
     const firebaseSurvey = await getSurveyConfiguration(idSurvey);
 
     surveyData.open = firebaseSurvey.isOpened;
@@ -421,12 +420,15 @@ class SurveyComponent extends Component {
 
   /* handler cuando la encuesta cambio de pregunta */
   onCurrentPageChanged = (sender, options) => {
+    let { currentPage, surveyData } = this.state;
     if (!options.oldCurrentPage) return;
     let secondsToGo = sender.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
 
     //if (secondsToGo > 0) sender.stopTimer();
-    sender.stopTimer();
-    this.setIntervalToWaitBeforeNextPage(sender, secondsToGo);
+    if (surveyData.allow_gradable_survey === 'true') {
+      sender.stopTimer();
+      this.setIntervalToWaitBeforeNextPage(sender, secondsToGo);
+    }
   };
 
   setIntervalToWaitBeforeNextPage(survey, secondsToGo, messageType) {

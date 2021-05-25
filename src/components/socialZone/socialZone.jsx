@@ -157,23 +157,24 @@ let SocialZone = function(props) {
         let change = querySnapshot.docChanges()[0];
         setdatamsjlast(change?.doc.data());
         let userNameFirebase = null;
-        if (change.doc.data().remitente) {
-          if (
-            change.doc
-              .data()
-              .remitente.toLowerCase()
-              .indexOf('(admin)') > -1 ||
-            change.doc
-              .data()
-              .remitente.toLowerCase()
-              .indexOf('(casa)')
-          ) {
-            // QUITAR ALGUNOS PREFIJOS PARA HACER EL MATCH DE NOMBRE ******HAY QUE MEJORAR*******
-            userNameFirebase = change.doc.data().remitente.replace('(admin)', '');
-            userNameFirebase = change.doc.data().remitente.replace('(casa)', '');
+        if (change) {
+          if (change.doc.data().remitente) {
+            if (
+              change.doc
+                .data()
+                .remitente.toLowerCase()
+                .indexOf('(admin)') > -1 ||
+              change.doc
+                .data()
+                .remitente.toLowerCase()
+                .indexOf('(casa)')
+            ) {
+              // QUITAR ALGUNOS PREFIJOS PARA HACER EL MATCH DE NOMBRE ******HAY QUE MEJORAR*******
+              userNameFirebase = change.doc.data().remitente.replace('(admin)', '');
+              userNameFirebase = change.doc.data().remitente.replace('(casa)', '');
+            }
           }
         }
-
         if (change) {
           if (
             userName !== userNameFirebase &&
