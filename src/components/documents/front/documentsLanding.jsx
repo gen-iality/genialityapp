@@ -1,14 +1,15 @@
-import { notification } from 'antd'
-import React, { Component } from "react";
+import { notification } from 'antd';
+import React, { Component } from 'react';
 
 //custom
-import { getFiles } from "../services";
+import { getFiles } from '../services';
 
 import { Col, Card, Result } from 'antd';
 
-import Loading from '../../loaders/loading'
+import Loading from '../../loaders/loading';
 
-import DocumentsList from "../documentsList";
+import DocumentsList from '../documentsList';
+import { DocumentsApi } from '../../../helpers/request';
 
 // Estructura de boton para descargar documentos
 
@@ -32,64 +33,69 @@ class documentsDetail extends Component {
       documents: [],
       loading: true,
       category_id: null,
-      previewImage: "",
-      data: []
+      previewImage: '',
+      data: [],
+      folders: [],
     };
   }
 
   async componentDidMount() {
     let { documents } = this.state;
-    let data = []
+    let data = [];
 
     try {
+      let folders = await DocumentsApi.getAll(this.props.eventId);
       documents = await getFiles(this.props.eventId);
+      console.log('FOLDER AND DOCUMENT');
+      console.log(documents);
+      console.log(folders);
+      this.setState({
+        folders: folders.data,
+      });
 
       //Se itera para poder pasar un array al componente List de ant
       for (const document in documents) {
-        data.push(documents[document])
+        data.push(documents[document]);
       }
 
-      this.setState({ data }, this.removeLoader)
+      this.setState({ data }, this.removeLoader);
     } catch (error) {
-      console.error(error)
+      console.error(error);
 
       notification.error({
         message: 'Error',
-        description: 'Ha ocurrido un error obteniendo los documentos'
-      })
+        description: 'Ha ocurrido un error obteniendo los documentos',
+      });
     }
   }
 
   removeLoader = () => {
-    this.setState({ loading: false })
-  }
+    this.setState({ loading: false });
+  };
 
   render() {
-    const { data, loading } = this.state;
+    const { data, loading, folders } = this.state;
 
     if (loading) {
-      return <Loading />
+      return <Loading />;
     }
 
     return (
       <>
-        <Col xs={24} sm={20} md={20} lg={20} xl={12}
-          style={{ margin: "0 auto" }}
-        >
-          {(data && data.length > 0) && <DocumentsList data={data} />}
+        <Col xs={24} sm={20} md={20} lg={20} xl={12} style={{ margin: '0 auto' }}>
+          {folders && folders.length > 0 && <DocumentsList data={folders} files={data} />}
 
-          {(!data || !data.length) && (
-
-            <div className="site-card-border-less-wrapper">
-              <Card title="" bordered={false} >
-                <Result title="Aún no se han agregado archivos." />
+          {(!folders || !folders.length) && (
+            <div className='site-card-border-less-wrapper'>
+              <Card title='' bordered={false}>
+                <Result title='Aún no se han agregado archivos.' />
               </Card>
             </div>
           )}
         </Col>
       </>
-    )
+    );
   }
 }
 
-export default documentsDetail
+export default documentsDetail;
