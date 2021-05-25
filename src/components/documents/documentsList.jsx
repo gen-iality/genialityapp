@@ -95,7 +95,7 @@ class documentsList extends Component {
                     actions={[
                       <a key={'itemDoc' + item._id} target='_blank' href={item.file} download rel='noopener noreferrer'>
                         {item.type == 'folder' ? (
-                          <DownOutlined />
+                          ''
                         ) : (
                           <IconText text='Descargar' icon={DownloadOutlined} />
                         )}
@@ -112,9 +112,9 @@ class documentsList extends Component {
                       // </a>
                     ]}>
                     <List.Item.Meta
-                      style={{ marginRight: '10%' }}
-                      avatar={item.type == 'folder' ? <FolderOutlined /> : <FileTextOutlined />}
-                      title={item.title ? item.title : item.name}
+                      style={{ marginRight: '10%', fontSize:'20px' }}
+                      avatar={item.type == 'folder' ? <FolderOutlined  /> : <FileTextOutlined />}
+                      title={item.title ?( <span style={{fontSize:'20px'}}> {item.title} </span>)  : ( <span style={{fontSize:'20px'}}> {item.name} </span>)}
                     />
                   </List.Item>
                   {files

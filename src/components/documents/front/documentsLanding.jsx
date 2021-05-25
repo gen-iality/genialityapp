@@ -82,7 +82,7 @@ class documentsDetail extends Component {
 
     return (
       <>
-        <Col xs={24} sm={20} md={20} lg={20} xl={12} style={{ margin: '0 auto' }}>
+        <Col xs={24} sm={20} md={20} lg={20} xl={20} style={{ margin: '0 auto' }}>
           {folders && folders.length > 0 && <DocumentsList data={folders} files={data} />}
 
           {(!folders || !folders.length) && (
