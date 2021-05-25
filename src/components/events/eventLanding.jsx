@@ -84,6 +84,28 @@ class eventLanding extends Component {
               ? { marginTop: '2%' }
               : { marginTop: '0px' }
           }>
+           
+           {event._id === "5f0622f01ce76d5550058c32" ? (
+              ''
+             ):(
+               <h1 className='is-size-4-desktop has-text-weight-semibold'>{event.name}</h1>
+             )
+           }
+          {/* Si event video existe */}
+          {event.video && (
+            <div className='column is-centered mediaplayer'>
+              <ReactPlayer
+                width={'100%'}
+                height={'35vw'}
+                style={{
+                  display: 'block',
+                  margin: '0 auto',
+                }}
+                url={event.video}
+                controls
+              />
+            </div>
+          )}
           {event._id === '5f0622f01ce76d5550058c32' ? (
             <>
               <h3 style={{ fontWeight: 700 }}>
@@ -94,25 +116,10 @@ class eventLanding extends Component {
             </>
           ) : (
             <>
-              <h1 className='is-size-4-desktop has-text-weight-semibold'>{event.name}</h1>
               <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme='bubble' />
             </>
           )}
-          {/* Si event video existe */}
-          {event.video && (
-            <div className='column is-centered mediaplayer'>
-              <ReactPlayer
-                width={'100%'}
-                height={'58vw'}
-                style={{
-                  display: 'block',
-                  margin: '0 auto',
-                }}
-                url={event.video}
-                controls
-              />
-            </div>
-          )}
+         
           {/* {
             (event._id !== "5f0622f01ce76d5550058c32" && !this.state.activityId) && (
               <div>
