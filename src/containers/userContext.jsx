@@ -11,8 +11,10 @@ export function UserEventProvider({ children }) {
   useEffect(() => {
     async function fetchEventUser() {
       let eventid = GetIdEvent();
+
       const eventUser = await EventsApi.getcurrentUserEventUser(eventid);
       setuserEvent(eventUser);
+      console.log('CONTEXTOUSUARIO---', eventUser);
     }
     fetchEventUser();
   }, []);

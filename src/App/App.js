@@ -9,7 +9,8 @@ import MainRouter from '../containers/router';
 import 'bulma-spacing/css/bulma-spacing.min.css';
 
 //contexto
-import { UseUserEvent, UserEventProvider } from '../containers/userContext';
+import { UserEventProvider } from '../containers/userContext';
+import { EventProvider } from '../containers/eventContext';
 
 class App extends Component {
   constructor(props) {
@@ -112,9 +113,11 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <UserEventProvider>
-          <MainRouter />
-        </UserEventProvider>
+        <EventProvider>
+          <UserEventProvider>
+            <MainRouter />
+          </UserEventProvider>
+        </EventProvider>
       </Provider>
     );
   }

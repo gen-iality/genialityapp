@@ -22,6 +22,7 @@ import { listenSurveysData } from '../events/surveys/services';
 
 //context
 import { UseUserEvent } from '../../containers/userContext';
+import { UserEventContext } from '../../containers/eventContext';
 
 const { TabPane } = Tabs;
 
@@ -40,8 +41,9 @@ const tailLayout = {
 let AgendaActividadDetalle = (props) => {
   //context user
   let userEventContext = UseUserEvent();
+  let eventContext = UserEventContext();
 
-  console.log('AGENDA DETALLE USER EVENT', userEventContext);
+  console.log('eventContext', eventContext);
 
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
@@ -90,8 +92,8 @@ let AgendaActividadDetalle = (props) => {
 
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
-      if (props.eventUser) {
-        TicketsApi.checkInAttendee(eventInfo._id, props.eventUser._id);
+      if (userEventContext) {
+        TicketsApi.checkInAttendee(eventInfo._id, userEventContext._id);
         Activity.checkInAttendeeActivity(eventInfo._id, props.currentActivity._id, props.eventUser.account_id);
       }
     } catch (e) {
@@ -136,40 +138,40 @@ let AgendaActividadDetalle = (props) => {
    * in the backend using cloud funtions.
    */
 
-  useEffect(() => {
-    async function listeningAsistentes() {
-      if (event === null || event == undefined || event == false) return false;
+  // useEffect(() => {
+  //   async function listeningAsistentes() {
+  //     if (event === null || event == undefined || event == false) return false;
 
-      firestore
-        .collection(`event_config`)
-        .doc(event._id)
-        .onSnapshot((doc) => {
-          setConfigfast(doc.data());
-        });
+  //     firestore
+  //       .collection(`event_config`)
+  //       .doc(event._id)
+  //       .onSnapshot((doc) => {
+  //         setConfigfast(doc.data());
+  //       });
 
-      const asistentesRef = firestore.collection(`${event._id}_event_attendees`);
-      asistentesRef.onSnapshot((snapshot) => {
-        //const list = [];
-        let cuantos = 0;
-        let checkedin = 0;
-        snapshot.forEach(function(doc) {
-          if (doc.exists) {
-            cuantos++;
-            if (doc.data().checkedin_at) {
-              checkedin++;
-            }
-            //list.push(response);
-          }
-        });
-        setTotalAttendees(cuantos);
-        setTotalAttendeesCheckedin(checkedin);
-      });
-    }
+  //     const asistentesRef = firestore.collection(`${event._id}_event_attendees`);
+  //     asistentesRef.onSnapshot((snapshot) => {
+  //       //const list = [];
+  //       let cuantos = 0;
+  //       let checkedin = 0;
+  //       snapshot.forEach(function(doc) {
+  //         if (doc.exists) {
+  //           cuantos++;
+  //           if (doc.data().checkedin_at) {
+  //             checkedin++;
+  //           }
+  //           //list.push(response);
+  //         }
+  //       });
+  //       setTotalAttendees(cuantos);
+  //       setTotalAttendeesCheckedin(checkedin);
+  //     });
+  //   }
 
-    (async () => {
-      //await listeningAsistentes();
-    })();
-  }, [event]);
+  //   (async () => {
+  //     //await listeningAsistentes();
+  //   })();
+  // }, [event]);
 
   useEffect(() => {
     async function listeningSpaceRoom() {
