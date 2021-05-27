@@ -28,7 +28,7 @@ export function EventProvider({ children }) {
   return <EventContext.Provider value={value}>{children}</EventContext.Provider>;
 }
 
-export function UserEventContext() {
+export function UseEventContext() {
   const contextevent = React.useContext(EventContext);
   if (!contextevent) {
     throw new Error('eventContext debe estar dentro del proveedor');

@@ -1,47 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { Spin, Alert, Col, Card, Avatar, Row, Button } from 'antd';
-import * as Cookie from 'js-cookie';
-import { getCurrentUser, getCurrentEventUser } from './services';
 import { Networking } from '../../helpers/request';
 import { EventFieldsApi } from '../../helpers/request';
 import { formatDataToString } from '../../helpers/utils';
 
+//context
+import { UseUserEvent } from '../../Context/eventUserContext';
+import { UseEventContext } from '../../Context/eventContext';
+import { UseCurrentUser } from '../../Context/userContext';
+
 const { Meta } = Card;
 
-const ContactList = ({ eventId, agendarCita, tabActive }) => {
+const ContactList = ({ agendarCita, tabActive }) => {
   const [contactsList, setContactsList] = useState([]);
   const [messageService, setMessageService] = useState('');
-  const [currentUserId, setCurrentUserId] = useState(null);
   const [userProperties, setUserProperties] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  //contextos
+  let userEventContext = UseUserEvent();
+  let eventContext = UseEventContext();
+  let userCurrentContext = UseCurrentUser();
+
   useEffect(() => {
     setLoading(true);
-    const getuserContactList = async () => {
-      let response = await getCurrentUser(Cookie.get('evius_token'));
-      setCurrentUserId(response);
-      console.log('FINISHED GET USER CONTACT LIST');
-    };
+
     const getContactList = async () => {
-      // Se consulta el id del usuario por el token
-
-      getCurrentUser(Cookie.get('evius_token')).then(async (user) => {
-        // Servicio que obtiene el eventUserId del usuario actual
-        let eventUser = await getCurrentEventUser(eventId, user._id);
-
-        // Servicio que trae los contactos
-        Networking.getContactList(eventId, eventUser._id).then((result) => {
-          if (typeof result == 'object') {
-            setContactsList(result);
-          }
-          if (typeof result == 'string') setMessageService(result);
-          console.log('FINISHED GET CONTACT LIST');
-          setLoading(false);
-        });
+      // Servicio que trae los contactos
+      Networking.getContactList(eventContext._id, userEventContext._id).then((result) => {
+        if (typeof result == 'object') {
+          setContactsList(result);
+        }
+        if (typeof result == 'string') setMessageService(result);
+        console.log('FINISHED GET CONTACT LIST');
+        setLoading(false);
       });
     };
     const getProperties = async () => {
-      let properties = await EventFieldsApi.getAll(eventId);
+      let properties = await EventFieldsApi.getAll(eventContext._id);
       setUserProperties(properties);
       console.log('FINISHED GET PROPERTIES');
       console.log(properties);
@@ -49,13 +45,13 @@ const ContactList = ({ eventId, agendarCita, tabActive }) => {
 
     if (tabActive === 'mis-contactos') {
       getProperties();
-      getuserContactList();
+      // getuserContactList();
       getContactList();
     }
-  }, [eventId, tabActive]);
+  }, [eventContext._id, tabActive]);
 
-  if (currentUserId && !loading)
-    return currentUserId === 'guestUser' ? (
+  if (userCurrentContext._id && !loading)
+    return userCurrentContext._id === 'guestUser' ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
         <Alert
           message='Iniciar Sesión'
@@ -144,6 +140,6 @@ const ContactList = ({ eventId, agendarCita, tabActive }) => {
         </Col>
       )
     );
-  if (!currentUserId || loading) return <Spin></Spin>;
+  if (!userCurrentContext._id || loading) return <Spin></Spin>;
 };
 export default ContactList;

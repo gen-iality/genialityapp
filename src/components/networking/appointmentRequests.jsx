@@ -3,6 +3,10 @@ import moment from 'moment';
 import { find, map, pathOr, propEq, props } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import React, { useEffect, useState } from 'react';
+//context
+import { UseUserEvent } from '../../Context/eventUserContext';
+import { UseEventContext } from '../../Context/eventContext';
+import { UseCurrentUser } from '../../Context/userContext';
 
 import { acceptOrRejectAgenda, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
 
@@ -13,23 +17,23 @@ const requestStatusText = {
   accepted: 'aceptada',
 };
 
-function AppointmentRequests({ eventId, currentEventUserId, eventUsers, notificacion, currentUser }) {
+function AppointmentRequests({ eventUsers, notificacion }) {
   const [loading, setLoading] = useState(true);
   const [loading1, setLoading1] = useState(true);
   const [fetching, setFetching] = useState(false);
   const [pendingAgendas, setPendingAgendas] = useState([]);
   const [pendingAgendasSent, setPendingAgendasSent] = useState([]);
 
-  useEffect(() => {
-    console.log('Mi agenda appointment');
-  }, []);
+  //contextos
+  let userEventContext = UseUserEvent();
+  let eventContext = UseEventContext();
 
   useEffect(() => {
-    if (eventId && currentEventUserId) {
+    if (eventContext._id && userEventContext._id) {
       setLoading(true);
       setPendingAgendas([]);
 
-      getPendingAgendasFromEventUser(eventId, currentEventUserId)
+      getPendingAgendasFromEventUser(eventContext._id, userEventContext._id)
         .then((agendas) => {
           console.log('pendingAgendas', agendas);
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
@@ -50,16 +54,16 @@ function AppointmentRequests({ eventId, currentEventUserId, eventUsers, notifica
         })
         .finally(() => setLoading(false));
     }
-  }, [eventId, currentEventUserId, eventUsers]);
+  }, [eventContext._id, userEventContext._id, eventUsers]);
 
   useEffect(() => {
-    if (eventId && currentEventUserId) {
+    if (eventContext._id && userEventContext._id) {
       setLoading1(true);
       setPendingAgendasSent([]);
 
-      getPendingAgendasSent(eventId, currentEventUserId)
+      getPendingAgendasSent(eventContext._id, userEventContext._id)
         .then((agendas) => {
-          console.log('AGENDAS--', eventId, currentEventUserId, agendas, eventUsers);
+          console.log('AGENDAS--', eventContext._id, userEventContext._id, agendas, eventUsers);
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             const pendingAgendas = map((agenda) => {
               const ownerEventUser = find(propEq('_id', agenda.attendees[1]), eventUsers);
@@ -79,7 +83,7 @@ function AppointmentRequests({ eventId, currentEventUserId, eventUsers, notifica
         })
         .finally(() => setLoading1(false));
     }
-  }, [eventId, currentEventUserId, eventUsers]);
+  }, [eventContext._id, userEventContext._id, eventUsers]);
 
   return (
     <>
@@ -91,10 +95,7 @@ function AppointmentRequests({ eventId, currentEventUserId, eventUsers, notifica
             pendingAgendas.map((pendingAgenda) => (
               <RequestCard
                 notificacion={notificacion}
-                currentUser={currentUser}
                 key={`pending-${pendingAgenda.id}`}
-                eventId={eventId}
-                currentEventUserId={currentEventUserId}
                 data={pendingAgenda}
                 fetching={fetching}
                 setFetching={setFetching}
@@ -120,8 +121,6 @@ function AppointmentRequests({ eventId, currentEventUserId, eventUsers, notifica
               <RequestCard
                 notificacion={notificacion}
                 key={`pending-${pendingAgenda.id}`}
-                eventId={eventId}
-                currentEventUserId={currentEventUserId}
                 data={pendingAgenda}
                 fetching={fetching}
                 setFetching={setFetching}
@@ -142,34 +141,29 @@ function AppointmentRequests({ eventId, currentEventUserId, eventUsers, notifica
   );
 }
 
-function RequestCard({
-  data,
-  eventId,
-  currentEventUserId,
-  fetching,
-  setFetching,
-  meSended,
-  notificacion,
-  currentUser,
-}) {
+function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
   const [requestResponse, setRequestResponse] = useState('');
   const { ownerEventUser } = data;
   const userName = pathOr('', ['properties', 'names'], ownerEventUser);
   const userEmail = pathOr('', ['properties', 'email'], ownerEventUser);
+  //contextos
+  let userEventContext = UseUserEvent();
+  let eventContext = UseEventContext();
+  let userCurrentContext = UseCurrentUser();
 
   const changeAgendaStatus = (newStatus) => {
     if (!fetching) {
       setFetching(true);
-      acceptOrRejectAgenda(eventId, currentEventUserId, data, newStatus)
+      acceptOrRejectAgenda(eventContext._id, userEventContext._id, data, newStatus)
         .then(() => {
           setRequestResponse(newStatus);
           let notificationr = {
-            idReceive: currentUser._id,
+            idReceive: userCurrentContext._id,
             idEmited: data && data.id,
             state: '1',
           };
           console.log(notificationr);
-          notification(notificationr, props.currentUser._id);
+          notification(notificationr, props.userCurrentContext._id);
         })
         .catch((error) => {
           if (!error) {
@@ -189,12 +183,12 @@ function RequestCard({
             // });
 
             let notificationr = {
-              idReceive: currentUser._id,
+              idReceive: userCurrentContext._id,
               idEmited: data && data.id,
               state: '1',
             };
             console.log(notificationr);
-            notificacion(notificationr, currentUser._id);
+            notificacion(notificationr, userCurrentContext._id);
           }
         })
         .finally(() => setFetching(false));

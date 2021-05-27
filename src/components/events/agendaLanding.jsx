@@ -8,7 +8,7 @@ import {
   SurveysApi,
   DocumentsApi,
   AttendeeApi,
-  discountCodesApi
+  discountCodesApi,
 } from '../../helpers/request';
 import AgendaActividadDetalle from './agendaActividadDetalle';
 import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge } from 'antd';
@@ -16,6 +16,11 @@ import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';
 import { CalendarOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';
+//context
+import { UseUserEvent, UsuarioContext } from '../../Context/eventUserContext';
+import { UseEventContext } from '../../Context/eventContext';
+import { UseCurrentUser } from '../../Context/userContext';
+
 import { setTabs } from '../../redux/stage/actions';
 const { TabPane } = Tabs;
 let attendee_states = {
@@ -23,12 +28,14 @@ let attendee_states = {
   STATE_INVITED: '5ba8d213aac5b12a5a8ce749', //"INVITED";
   STATE_RESERVED: '5ba8d200aac5b12a5a8ce748', //"RESERVED";
   ROL_ATTENDEE: '5d7ac3f56b364a4042de9b08', //"rol id";
-  STATE_BOOKED: '5b859ed02039276ce2b996f0' //"BOOKED";
+  STATE_BOOKED: '5b859ed02039276ce2b996f0', //"BOOKED";
 };
 
 const { setNotification } = notificationsActions;
 
 class Agenda extends Component {
+  static contextType = UsuarioContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -65,7 +72,6 @@ class Agenda extends Component {
       show_inscription: false,
       status: 'in_progress',
       hideBtnDetailAgenda: true,
-      userId: null
     };
 
     this.returnList = this.returnList.bind(this);
@@ -76,17 +82,12 @@ class Agenda extends Component {
   }
 
   async componentDidMount() {
-    console.log('agenda landing');
+    console.log('agenda landing', this.context);
+
     //Se carga esta funcion para cargar los datos
 
     this.setState({ loading: true });
     await this.fetchAgenda();
-
-    //Si hay currentUser pasado por props entonces inicializamos el estado userId
-    if (this.props.currentUser) {
-      let { currentUser } = this.props;
-      this.setState({ userId: currentUser._id });
-    }
 
     this.setState({ loading: false });
 
@@ -94,7 +95,7 @@ class Agenda extends Component {
 
     this.setState({
       show_inscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
-      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true,
     });
 
     let surveysData = await SurveysApi.getAll(event._id);
@@ -135,10 +136,7 @@ class Agenda extends Component {
     //Cargamos solamente los espacios virtuales de la agenda
 
     //Si aún no ha cargado el evento no podemos hacer nada más
-    if (!this.props.event) return;
-
-    //Revisamos si el evento sigue siendo el mismo, no toca cargar nada
-    if (prevProps.event && this.props.event._id === prevProps.event._id) return;
+    if (!this.eventContext) return;
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     const filtered = this.filterByDay(this.state.days[0], this.state.list);
@@ -149,7 +147,7 @@ class Agenda extends Component {
     list.forEach((activity, index, arr) => {
       firestore
         .collection('events')
-        .doc(this.props.event._id)
+        .doc(this.eventContext._id)
         .collection('activities')
         .doc(activity._id)
         .onSnapshot((infoActivity) => {
@@ -171,17 +169,16 @@ class Agenda extends Component {
     let codeTemplateId = '5fc93d5eccba7b16a74bd538';
 
     try {
-      await discountCodesApi.exchangeCode(codeTemplateId, { code: code, event_id: this.props.event._id });
-      let eventUser = this.props.userRegistered;
-      let eventId = this.props.event._id;
+      await discountCodesApi.exchangeCode(codeTemplateId, { code: code, event_id: this.eventContext._id });
+      let eventId = this.eventContext._id;
       let data = { state_id: attendee_states.STATE_BOOKED };
-      AttendeeApi.update(eventId, data, eventUser._id);
+      AttendeeApi.update(eventId, data, this.userEventContext._id);
 
       this.setState({
         exchangeCodeMessage: {
           type: 'success',
-          message: 'Código canjeado, habilitando el acceso...'
-        }
+          message: 'Código canjeado, habilitando el acceso...',
+        },
       });
       setTimeout(() => window.location.reload(), 500);
     } catch (e) {
@@ -195,8 +192,8 @@ class Agenda extends Component {
       this.setState({
         exchangeCodeMessage: {
           type: 'error',
-          message: msg
-        }
+          message: msg,
+        },
       });
     }
   };
@@ -204,12 +201,14 @@ class Agenda extends Component {
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
     const { data } = await AgendaApi.byEvent(
-      this.props.eventId,
-      this.props.eventId === '5f99a20378f48e50a571e3b6' ? `?orderBy=[{"field":"datetime_start","order":"desc"}]` : null
+      this.eventContext._id,
+      this.eventContext._id === '5f99a20378f48e50a571e3b6'
+        ? `?orderBy=[{"field":"datetime_start","order":"desc"}]`
+        : null
     );
 
     //se consulta la api de espacios para
-    let space = await SpacesApi.byEvent(this.props.event._id);
+    let space = await SpacesApi.byEvent(this.eventContext._id);
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     //const filtered = this.filterByDay(this.state.days[0], data);
@@ -301,17 +300,17 @@ class Agenda extends Component {
   searchResult = (data) => this.setState({ toShow: !data ? [] : data });
 
   // Funcion para registrar usuario en la actividad
-  registerInActivity = async (activityId, eventId, userId, callback) => {
-    Activity.Register(eventId, userId, activityId)
+  registerInActivity = async (activityId, eventId, callback) => {
+    Activity.Register(eventId, this.userCurrentContext._id, activityId)
       .then(() => {
         notification.open({
-          message: 'Inscripción realizada'
+          message: 'Inscripción realizada',
         });
         callback(true);
       })
       .catch((err) => {
         notification.open({
-          message: err
+          message: err,
         });
       });
   };
@@ -338,13 +337,13 @@ class Agenda extends Component {
   //Funcion survey para traer las encuestas de a actividad
   async survey(activity) {
     //Con el objeto activity se extrae el _id para consultar la api y traer la encuesta de ese evento
-    const survey = await SurveysApi.getByActivity(this.props.event._id, activity._id);
+    const survey = await SurveysApi.getByActivity(this.eventContext._id, activity._id);
     this.setState({ survey: survey });
   }
 
   showDrawer = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
   };
 
@@ -354,7 +353,7 @@ class Agenda extends Component {
 
   onClose = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
@@ -370,9 +369,8 @@ class Agenda extends Component {
 
   async getAgendaUser() {
     const { event } = this.props;
-    const { userId } = this.state;
     try {
-      const infoUserAgenda = await Activity.GetUserActivity(event._id, userId);
+      const infoUserAgenda = await Activity.GetUserActivity(event._id, this.userCurrentContext._id);
       this.setState({ userAgenda: infoUserAgenda.data });
     } catch (e) {
       console.error(e);
@@ -415,28 +413,28 @@ class Agenda extends Component {
   };
 
   validationRegisterAndExchangeCode = (activity) => {
-    const { userRegistered, event } = this.props;
-    const hasPayment = event.has_payment === true || event.has_payment === 'true' ? true : false;
+    const hasPayment =
+      this.eventContext.has_payment === true || this.eventContext.has_payment === 'true' ? true : false;
 
     // Listado de eventos que requieren validación
     if (hasPayment) {
-      if (userRegistered === null) {
+      if (this.userCurrentContext === null) {
         this.handleOpenModal();
         return false;
       }
 
-      if (userRegistered.state_id !== attendee_states.STATE_BOOKED) {
+      if (this.userCurrentContext.state_id !== attendee_states.STATE_BOOKED) {
         this.handleOpenModalRestricted();
         return false;
       }
 
-      if (userRegistered.registered_devices) {
-        const checkRegisterDevice = window.localStorage.getItem('eventUser_id');
-        if (userRegistered.registered_devices < 2) {
-          if (!checkRegisterDevice || checkRegisterDevice !== userRegistered._id) {
-            userRegistered.registered_devices = userRegistered.registered_devices + 1;
-            window.localStorage.setItem('eventUser_id', userRegistered._id);
-            AttendeeApi.update(event._id, userRegistered, userRegistered._id);
+      if (this.userCurrentContext.registered_devices) {
+        const checkRegisterDevice = window.localStorage.getItem('this.userEventContext_id');
+        if (this.userCurrentContext.registered_devices < 2) {
+          if (!checkRegisterDevice || checkRegisterDevice !== this.userCurrentContext._id) {
+            this.userCurrentContext.registered_devices = this.userCurrentContext.registered_devices + 1;
+            window.localStorage.setItem('this.userEventContext_id', this.userCurrentContext._id);
+            AttendeeApi.update(this.eventContext._id, this.userCurrentContext, this.userCurrentContext._id);
           }
         } else {
           if (!checkRegisterDevice) {
@@ -445,9 +443,9 @@ class Agenda extends Component {
           }
         }
       } else {
-        userRegistered.registered_devices = 1;
-        window.localStorage.setItem('eventUser_id', userRegistered._id);
-        AttendeeApi.update(event._id, userRegistered, userRegistered._id);
+        this.userCurrentContext.registered_devices = 1;
+        window.localStorage.setItem('this.userEventContext_id', this.userCurrentContext._id);
+        AttendeeApi.update(this.eventContext._id, this.userCurrentContext, this.userCurrentContext._id);
       }
 
       this.gotoActivity(activity);
@@ -474,7 +472,8 @@ class Agenda extends Component {
 
       return (
         <div key={index} className='container_agenda-information'>
-          {(item.requires_registration || item.requires_registration === 'true') && !this.props.userRegistered ? (
+          {(item.requires_registration || item.requires_registration === 'true') &&
+          !this.props.this.userCurrentContext ? (
             <Badge.Ribbon color='red' placement='end' text='Requiere registro'>
               <AgendaActivityItem
                 item={item}
@@ -488,14 +487,11 @@ class Agenda extends Component {
                 registerStatus={isRegistered}
                 eventId={this.props.eventId}
                 event={this.props.event}
-                userId={this.state.userId}
                 btnDetailAgenda={hideBtnDetailAgenda}
                 show_inscription={show_inscription}
-                userRegistered={this.props.userRegistered}
                 handleOpenModal={this.handleOpenModal}
                 hideHours={event.styles.hideHoursAgenda}
                 handleValidatePayment={this.validationRegisterAndExchangeCode}
-                eventUser={this.props.eventUser}
                 zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
               />
             </Badge.Ribbon>
@@ -512,14 +508,11 @@ class Agenda extends Component {
               registerStatus={isRegistered}
               eventId={this.props.eventId}
               event={this.props.event}
-              userId={this.state.userId}
               btnDetailAgenda={hideBtnDetailAgenda}
               show_inscription={show_inscription}
-              userRegistered={this.props.userRegistered}
               handleOpenModal={this.handleOpenModal}
               hideHours={event.styles.hideHoursAgenda}
               handleValidatePayment={this.validationRegisterAndExchangeCode}
-              eventUser={this.props.eventUser}
               zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
             />
           )}
@@ -556,7 +549,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='submit' type='primary' loading={loading} onClick={this.props.handleOpenRegisterForm}>
               Registrarme
-            </Button>
+            </Button>,
           ]}>
           <p>Para poder disfrutar de este contenido debes estar registrado e iniciar sesión</p>
         </Modal>
@@ -573,7 +566,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='login' onClick={this.handleOpenModalExchangeCode}>
               Canjear código
-            </Button>
+            </Button>,
           ]}>
           <p>
             Para poder disfrutar de este contenido debes haber pagado y tener un código porfavor ingresalo a
@@ -593,7 +586,7 @@ class Agenda extends Component {
           footer={[
             <Button key='cancel' onClick={this.handleCloseModalRestrictedDevices}>
               Cancelar
-            </Button>
+            </Button>,
           ]}>
           <p>Has excedido el número de dispositivos permitido</p>
         </Modal>
@@ -610,7 +603,7 @@ class Agenda extends Component {
             </Button>,
             <Button key='login' onClick={this.exchangeCode}>
               Canjear código
-            </Button>
+            </Button>,
           ]}>
           {' '}
           cv '// '
@@ -644,8 +637,6 @@ class Agenda extends Component {
             currentUser={this.props.currentUser}
             collapsed={this.props.collapsed}
             toggleCollapsed={this.props.toggleCollapsed}
-            // eventUser: Determina si el usuario esta registrado en el evento
-            eventUser={this.props.userRegistered}
             event={event}
             showSection={this.props.showSection}
             zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
@@ -739,11 +730,11 @@ class Agenda extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  currentActivity: state.stage.data.currentActivity
+  currentActivity: state.stage.data.currentActivity,
 });
 const mapDispatchToProps = {
   setNotification,
-  setTabs
+  setTabs,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Agenda);

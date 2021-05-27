@@ -7,7 +7,6 @@ import { useIntl } from 'react-intl';
 import API, { EventsApi, TicketsApi, Activity } from '../../helpers/request';
 import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, PageHeader, Typography, Form, Input, Alert } from 'antd';
 import { firestore } from '../../helpers/firebase';
-import AttendeeNotAllowedCheck from './shared/attendeeNotAllowedCheck';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
 import RootPage from './surveys/rootPage';
@@ -19,10 +18,12 @@ import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined, UserOutlined 
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 import { listenSurveysData } from '../events/surveys/services';
+import { eventUserUtils } from '../../helpers/helperEventUser';
 
 //context
-import { UseUserEvent } from '../../containers/userContext';
-import { UserEventContext } from '../../containers/eventContext';
+import { UseUserEvent } from '../../Context/eventUserContext';
+import { UseEventContext } from '../../Context/eventContext';
+import { UseCurrentUser } from '../../Context/userContext';
 
 const { TabPane } = Tabs;
 
@@ -41,12 +42,10 @@ const tailLayout = {
 let AgendaActividadDetalle = (props) => {
   //context user
   let userEventContext = UseUserEvent();
-  let eventContext = UserEventContext();
-
-  console.log('eventContext', eventContext);
+  let eventContext = UseEventContext();
+  let userCurrentContext = UseCurrentUser();
 
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
-  let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
   let [event, setEvent] = useState(false);
   let [idSpeaker, setIdSpeaker] = useState(false);
   let [orderedHost, setOrderedHost] = useState([]);
@@ -93,17 +92,17 @@ let AgendaActividadDetalle = (props) => {
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
       if (userEventContext) {
-        TicketsApi.checkInAttendee(eventInfo._id, userEventContext._id);
-        Activity.checkInAttendeeActivity(eventInfo._id, props.currentActivity._id, props.eventUser.account_id);
+        TicketsApi.checkInAttendee(eventContext._id, userEventContext._id);
+        Activity.checkInAttendeeActivity(eventContext._id, props.currentActivity._id, userEventContext.account_id);
       }
     } catch (e) {
       console.error('fallo el checkin:', e);
     }
 
-    if (props?.userInfo && props.userInfo?.displayName && props.userInfo?.email) {
+    if (userCurrentContext && userCurrentContext?.displayName && userCurrentContext?.email) {
       let innerName =
-        props.eventUser && props.eventUser.properties.casa && props.eventUser.properties.casa
-          ? '(' + props.eventUser.properties.casa + ')' + props.userInfo.displayName
+        userEventContext && userEventContext.properties.casa && userEventContext.properties.casa
+          ? '(' + userEventContext.properties.casa + ')' + userCurrentContext.displayName
           : props.userInfo.displayName;
       setNames(innerName);
       setEmail(props.userInfo.email);
@@ -112,7 +111,7 @@ let AgendaActividadDetalle = (props) => {
     //Escuchando el estado de la actividad
 
     (async function() {
-      await listeningStateMeetingRoom(props.eventInfo._id, props.currentActivity._id);
+      await listeningStateMeetingRoom(eventContext._id, props.currentActivity._id);
     })();
 
     // Desmontado del componente
@@ -128,7 +127,7 @@ let AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     (async function() {
-      await listeningStateMeetingRoom(props.eventInfo._id, props.currentActivity._id);
+      await listeningStateMeetingRoom(eventContext._id, props.currentActivity._id);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentActivity._id]);
@@ -138,47 +137,12 @@ let AgendaActividadDetalle = (props) => {
    * in the backend using cloud funtions.
    */
 
-  // useEffect(() => {
-  //   async function listeningAsistentes() {
-  //     if (event === null || event == undefined || event == false) return false;
-
-  //     firestore
-  //       .collection(`event_config`)
-  //       .doc(event._id)
-  //       .onSnapshot((doc) => {
-  //         setConfigfast(doc.data());
-  //       });
-
-  //     const asistentesRef = firestore.collection(`${event._id}_event_attendees`);
-  //     asistentesRef.onSnapshot((snapshot) => {
-  //       //const list = [];
-  //       let cuantos = 0;
-  //       let checkedin = 0;
-  //       snapshot.forEach(function(doc) {
-  //         if (doc.exists) {
-  //           cuantos++;
-  //           if (doc.data().checkedin_at) {
-  //             checkedin++;
-  //           }
-  //           //list.push(response);
-  //         }
-  //       });
-  //       setTotalAttendees(cuantos);
-  //       setTotalAttendeesCheckedin(checkedin);
-  //     });
-  //   }
-
-  //   (async () => {
-  //     //await listeningAsistentes();
-  //   })();
-  // }, [event]);
-
   useEffect(() => {
     async function listeningSpaceRoom() {
       if (meeting_id === null || platform === null) return false;
       firestore
         .collection('events')
-        .doc(eventInfo._id)
+        .doc(eventContext._id)
         .collection('activities')
         .where('meeting_id', '==', meeting_id)
         .where('platform', '==', platform)
@@ -198,7 +162,7 @@ let AgendaActividadDetalle = (props) => {
     (async () => {
       await listeningSpaceRoom();
     })();
-  }, [meeting_id, platform, eventInfo]);
+  }, [meeting_id, platform, eventContext]);
 
   useEffect(() => {
     const openActivities = activitiesSpace.filter((activity) => activity.habilitar_ingreso === 'open_meeting_room');
@@ -255,7 +219,7 @@ let AgendaActividadDetalle = (props) => {
     // console.log("ACTIVIDAD SELECTED=>"+activity_id)
     firestore
       .collection('events')
-      .doc(event_id)
+      .doc(eventContext._id)
       .collection('activities')
       .doc(activity_id)
       .onSnapshot((infoActivity) => {
@@ -273,19 +237,8 @@ let AgendaActividadDetalle = (props) => {
     (async () => {
       //Id del evento
 
-      var id = props.eventInfo._id;
-      const event = await EventsApi.landingEvent(id);
+      const event = await EventsApi.landingEvent(eventContext._id);
       setEvent(event);
-
-      try {
-        const respuesta = await API.get('api/me/eventusers/event/' + id);
-
-        if (respuesta.data && respuesta.data.data && respuesta.data.data.length) {
-          setUsuarioRegistrado(true);
-        }
-      } catch (err) {
-        console.error(err);
-      }
 
       function orderHost() {
         let hosts = props.currentActivity.hosts;
@@ -296,16 +249,10 @@ let AgendaActividadDetalle = (props) => {
       }
       orderHost();
     })();
-  }, [props.eventInfo._id, props.currentActivity]);
+  }, [eventContext._id, props.currentActivity]);
 
   async function getSpeakers(idSpeaker) {
     setIdSpeaker(idSpeaker);
-  }
-
-  function HostValidate() {
-    let rolhost = '5afb0efc500a7104f77189cf';
-    let host = userEventContext && userEventContext.rol_id === rolhost ? 1 : 0;
-    return host;
   }
 
   const getMeetingPath = (platform) => {
@@ -318,7 +265,7 @@ let AgendaActividadDetalle = (props) => {
         `&userName=${props.userInfo.displayName ? props.userInfo.displayName : 'Guest'}` +
         `&email=${props.userInfo.email ? props.userInfo.email : 'emaxxxxxxil@gmail.com'}` +
         `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
-        `&host=${HostValidate()}`
+        `&host=${eventUserUtils.isHost(userEventContext, eventContext)}`
       );
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
@@ -341,12 +288,12 @@ let AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     if (props.currentActivity !== null) {
-      listenSurveysData(props.eventInfo, props.currentActivity, props.userInfo, (data) => {
+      listenSurveysData(eventContext, props.currentActivity, userCurrentContext, (data) => {
         props.setHasOpenSurveys(data.hasOpenSurveys);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.event, props.currentActivity]);
+  }, [eventContext, props.currentActivity]);
 
   {
     Moment.locale(window.navigator.language);
@@ -671,115 +618,15 @@ let AgendaActividadDetalle = (props) => {
                   />
                 </div>
               )}
-              {/*event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6' ? (
-                <></>
-              ) : (
-                <p className='has-text-left is-size-6-desktop'>
-                  {usuarioRegistrado && meetingState && (
-                    <Button
-                      type='primary'
-                      disabled={meetingState === 'open_meeting_room' && meeting_id ? false : true}
-                      onClick={() => toggleConference(true, meeting_id, currentActivity)}>
-                      {meeting_id && meetingState === 'open_meeting_room' && intl.formatMessage({ id: 'live.join' })}
-                      {meeting_id &&
-                        meetingState === 'closed_meeting_room' &&
-                        intl.formatMessage({ id: 'live.closed' })}
-                      {meeting_id && meetingState === 'ended_meeting_room' && intl.formatMessage({ id: 'live.ended' })}
-                    </Button>
-                  )}
-                </p>
-              )*/}
-              {/* <p className='has-text-left is-size-6-desktop'>
-
-                {usuarioRegistrado && (
-                  
-                  <Button
-                    type='primary'
-                    disabled={currentActivity.meeting_id ? false : true}
-                    onClick={() => toggleConference(true, currentActivity.meeting_id, currentActivity)}>
-                    {currentActivity.meeting_id ? 'Ir Conferencia en Vivo' : 'Aún no empieza Conferencia Virtual'}
-
-                  </Button>
-                )}
-              </p> */}
-
-              {/* Nombre del evento */}
-
-              {/* {currentActivity.meeting_video && (
-                <ReactPlayer
-                  style={{
-                    display: "block",
-                    margin: "0 auto",
-                  }}
-                  width="100%"
-                  height="auto"
-                  url={currentActivity.meeting_video}
-                  controls
-                />
-              )} */}
             </div>
           </header>
 
           {event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6' ? (
             <></>
           ) : (
-            <div className='calendar-category has-margin-top-7'>
-              {/* Tags de categorias */}
-              {/*currentActivity.activity_categories.map((cat, key) => (
-                <span
-                  key={key}
-                  style={{
-                    background: cat.color,
-                    color: cat.color ? 'white' : '',
-                  }}
-                  className='tag category_calendar-tag'>
-                  {cat.name}
-                </span>
-              ))*/}
-
-              {/* <span className='tag category_calendar-tag'>
-                {currentActivity.meeting_id || currentActivity.vimeo_id
-                  ? 'Tiene espacio virtual'
-                  : 'No tiene espacio Virtual'}
-              </span> */}
-            </div>
+            <div className='calendar-category has-margin-top-7'></div>
           )}
           <div className='card-content has-text-left container_calendar-description'>
-            {/*<div className='calendar-category has-margin-top-7'>
-              {/* Tags de categorias */}
-            {/* {currentActivity.activity_categories.map((cat, key) => (
-                <span
-                  key={key}
-                  style={{
-                    background: cat.color,
-                    color: cat.color ? 'white' : '',
-                  }}
-                  className='tag category_calendar-tag'>
-                  {cat.name}
-                </span>
-              ))}
-
-              <span className='tag category_calendar-tag'>               
-                {currentActivity.meeting_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
-              </span> }
-            </div>*/}
-
-            {/* Boton de para acceder a la conferencia */}
-
-            {/*
-             event.allow_register
-              -Si es un usuario anónimo y evento privado
-              --Evento Restringido: Ingresa al sistema con tu usuario para poder  acceder al evento, 
-              recuerda que debes estar previamente registrado al evento
-              --Botón de Login: [Ir a Ingreso] Se debe mostrar el botón para llevar al login
-              después del login idealmente treaerlo de regreso al evento
-
-              -Si es un usuario logueado, evento privado pero no esta registrado en el evento
-              --Evento Restringido: Debes estar previamente registrado al evento para acceder al espacio en vivo
-                comunicate con el organizador del evento
-              
-             */}
-
             <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={handleChangeLowerTabs}>
               {
                 <TabPane
@@ -897,67 +744,13 @@ let AgendaActividadDetalle = (props) => {
               )}
             </Tabs>
 
-            {/* <div>
-              {showSurvey && (
-                <div style={{}} className='has-text-left is-size-6-desktop'>
-                  <p>
-                    <b>Encuestas:</b>
-                  </p>
-                  <SurveyComponent event={event} activity={currentActivity} usuarioRegistrado={usuarioRegistrado} />
-                </div>
-              )}
-            </div>*/}
-
-            {/* {props.userInfo && props.userInfo.names ? (
-              <div />
-            ) : (
-              <div>
-                {meeting_id ? (
-                  <div>
-                    <Button
-                      type='primary'
-                      disabled={meeting_id ? false : true}
-                      onClick={() => toggleConference(true, meeting_id, currentActivity)}>
-                      Conferencia en Vivo en anónimo
-                    </Button>
-                  </div>
-                ) : (
-                  <div />
-                )}
-              </div>
-            )} */}
-
-            {/* Descripción del evento */}
-
             <div
               className='card-footer is-12 is-flex'
               style={{
                 borderTop: 'none',
                 justifyContent: 'space-between',
                 alignItems: 'flex-end',
-              }}>
-              {/* <button
-                  <div
-                    className="is-size-5-desktop has-margin-bottom-10"
-                    dangerouslySetInnerHTML={{
-                      __html: currentActivity.description
-                    }}
-                  />
-                  <div
-                    className="card-footer is-12 is-flex"
-                    style={{
-                      borderTop: "none",
-                      justifyContent: "space-between",
-                      alignItems: "flex-end"
-                    }}
-                  >
-                    {/* <button
-            className="button button-color-agenda has-text-light is-pulled-right is-medium"
-            onClick={() => this.registerInActivity(agenda._id)}
-          >
-            Inscribirme
-          </button> */}
-            </div>
+              }}></div>
           </div>
 
           <Row style={{ paddingLeft: '10px' }}>

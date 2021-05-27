@@ -6,7 +6,6 @@ import Moment from 'moment-timezone';
 import './style.scss';
 import { firestore } from '../../../helpers/firebase';
 import Icon, { LoadingOutlined, CaretRightOutlined, CheckCircleOutlined } from '@ant-design/icons';
-import { useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
 
 const EnVivoSvg = () => (
@@ -23,18 +22,12 @@ const EnVivoSvg = () => (
 const { gotoActivity } = StageActions;
 
 function AgendaActivityItem(props) {
-  const [isRegistered, setIsRegistered] = useState(false);
-  const [related_meetings, setRelatedMeetings] = useState();
   const [meetingState, setMeetingState] = useState(null);
-  const intl = useIntl();
   const EnvivoIcon = (props) => <Icon component={EnVivoSvg} {...props} />;
   const timeZone = Moment.tz.guess();
   let { item, event_image, registerStatus } = props;
 
   useEffect(() => {
-    if (registerStatus) {
-      setIsRegistered(registerStatus);
-    }
     const listeningStateMeetingRoom = async () => {
       await firestore
         .collection('languageState')
@@ -42,7 +35,6 @@ function AgendaActivityItem(props) {
         .onSnapshot((info) => {
           if (!info.exists) return;
           let related_meetings = info.data().related_meetings;
-          setRelatedMeetings(related_meetings);
         });
     };
 

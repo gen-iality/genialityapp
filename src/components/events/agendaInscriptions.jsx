@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import API, { Activity, AgendaApi, SpacesApi, SurveysApi, DocumentsApi } from '../../helpers/request';
 import * as Cookie from 'js-cookie';
 import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert, notification } from 'antd';
@@ -6,9 +6,18 @@ import AgendaActividadDetalle from './agendaActividadDetalle';
 import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { firestore } from '../../helpers/firebase';
-import { FormattedMessage } from 'react-intl';
+
+//context
+import { UseUserEvent } from '../../Context/eventUserContext';
+import { UseEventContext } from '../../Context/eventContext';
+import { UseCurrentUser } from '../../Context/userContext';
 
 class AgendaInscriptions extends Component {
+  //context user
+  userEventContext = UseUserEvent();
+  eventContext = UseEventContext();
+  userCurrentContext = UseCurrentUser();
+
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +42,7 @@ class AgendaInscriptions extends Component {
 
     firestore
       .collection('languageState')
-      .doc(event._id)
+      .doc(this.eventContext._id)
       .onSnapshot((info) => {
         if (!info.exists) return;
         let related_meetings = info.data().related_meetings;
@@ -43,10 +52,10 @@ class AgendaInscriptions extends Component {
     //Cargamos solamente los espacios virtuales de la agenda
 
     //Si aún no ha cargado el evento no podemos hacer nada más
-    if (!event) return;
+    if (!this.eventContext) return;
 
     //Revisamos si el evento sigue siendo el mismo, no toca cargar nada
-    if (prevProps.event && this.props.event._id == prevProps.event._id) return;
+    // if (prevProps.event && this.eventContext._id == prevProps.this.eventContext._id) return;
 
     this.listeningStateMeetingRoom(agendaData);
   }
@@ -55,7 +64,7 @@ class AgendaInscriptions extends Component {
     list.forEach((activity, index, arr) => {
       firestore
         .collection('events')
-        .doc(this.props.event._id)
+        .doc(this.eventContext._id)
         .collection('activities')
         .doc(activity._id)
         .onSnapshot((infoActivity) => {
@@ -74,8 +83,8 @@ class AgendaInscriptions extends Component {
     const { event } = this.props;
     this.getAgendaByUser();
 
-    let surveysData = await SurveysApi.getAll(event._id);
-    let documentsData = await DocumentsApi.getAll(event._id);
+    let surveysData = await SurveysApi.getAll(this.eventContext._id);
+    let documentsData = await DocumentsApi.getAll(this.eventContext._id);
 
     if (surveysData.data.length >= 1) {
       this.setState({ Surveys: surveysData.data });
@@ -91,15 +100,13 @@ class AgendaInscriptions extends Component {
 
   async getAgendaByUser() {
     console.log('-----------start agenda by user-');
-    const { event } = this.props;
-    let user_id = await this.getCurrentUser();
     try {
-      let infoAgenda = await AgendaApi.byEvent(event._id);
-      const infoUserAgenda = await Activity.GetUserActivity(event._id, user_id);
+      let infoAgenda = await AgendaApi.byEvent(this.eventContext._id);
+      const infoUserAgenda = await Activity.GetUserActivity(this.eventContext._id, this.userCurrentContext._id);
 
       console.log('info user agenda-------------------', infoUserAgenda);
 
-      let space = await SpacesApi.byEvent(event._id);
+      let space = await SpacesApi.byEvent(this.eventContext._id);
       let agendaData = this.filterUserAgenda(infoAgenda, infoUserAgenda);
       const data = await this.listeningStateMeetingRoom(agendaData);
       data === undefined
@@ -133,25 +140,6 @@ class AgendaInscriptions extends Component {
     }
   }
 
-  getCurrentUser = async () => {
-    let evius_token = Cookie.get('evius_token');
-
-    if (!evius_token) {
-      this.setState({ user: false });
-    } else {
-      try {
-        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
-        if (resp.status === 200) {
-          const data = resp.data;
-          // Solo se desea obtener el id del usuario
-          return data._id;
-        }
-      } catch (error) {
-        const { status } = error.response;
-      }
-    }
-  };
-
   gotoActivity(activity) {
     this.setState({ currentActivity: activity });
 
@@ -161,14 +149,12 @@ class AgendaInscriptions extends Component {
 
   async survey(activity) {
     //Con el objeto activity se extrae el _id para consultar la api y traer la encuesta de ese evento
-    const survey = await SurveysApi.getByActivity(this.props.event._id, activity._id);
+    const survey = await SurveysApi.getByActivity(this.props.this.eventContext._id, activity._id);
     this.setState({ survey: survey });
   }
 
   deleteRegisterInActivity = async (activityKey) => {
-    const { eventId } = this.props;
-
-    Activity.DeleteRegister(eventId, activityKey)
+    Activity.DeleteRegister(this.eventContext._id, activityKey)
       .then(() => {
         notification.open({
           message: 'Inscripción Eliminada',

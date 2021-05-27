@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Form, Badge } from 'antd';
-
-import { SmileOutlined } from '@ant-design/icons';
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, Form, Badge } from 'antd';
 import AppointmentModal from './appointmentModal';
 import MyAgenda from './myAgenda';
 import AppointmentRequests from './appointmentRequests';
@@ -20,10 +18,20 @@ import { userRequest } from './services';
 import ContactList from './contactList';
 import RequestList from './requestList';
 
+//context
+import { UseUserEvent } from '../../Context/eventUserContext';
+import { UseEventContext } from '../../Context/eventContext';
+import { UseCurrentUser } from '../../Context/userContext';
+
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
 class ListEventUser extends Component {
+  //contextos
+  userEventContext = UseUserEvent();
+  EventContext = UseEventContext();
+  userCurrentContext = UseCurrentUser();
+
   constructor(props) {
     super(props);
     this.state = {
@@ -62,13 +70,12 @@ class ListEventUser extends Component {
     // NO BORRAR ES UN AVANCE  PARA OPTIMIZAR LAS PETICIONES A LA API DE LA SECCION NETWORKING
     let eventUserList = [];
     // const response = await UsersApi.getAll(event._id);
-
     // if(response.data){
     //   eventUserList = response.data.filter(user => user.account_id !== )
     // }
 
     //Servicio que trae la lista de asistentes excluyendo el usuario logeado
-    eventUserList = await userRequest.getEventUserList(event._id, Cookie.get('evius_token'), this.props.currentUser);
+    eventUserList = await userRequest.getEventUserList(event._id, Cookie.get('evius_token'), this.userCurrentContext);
 
     /** Inicia destacados
      * Búscamos usuarios destacados para colocarlos de primeros en la lista(destacados), tiene varios usos cómo publicitarios
@@ -88,7 +95,7 @@ class ListEventUser extends Component {
     let matches = [];
 
     //Búscamos usuarios sugeridos según el campo sector esto es para el proyecto FENALCO
-    if (this.state.eventUser) {
+    if (this.EventContext) {
       let meproperties = this.state.eventUser.properties;
 
       //
@@ -341,7 +348,7 @@ class ListEventUser extends Component {
                                   <a
                                     onClick={() => {
                                       this.SendFriendship({
-                                        eventUserIdReceiver: user._id,
+                                        eventUserIdRaeceiver: user._id,
                                         userName: user.properties.names || user.properties.email,
                                       });
                                     }}></a>

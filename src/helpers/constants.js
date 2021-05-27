@@ -36,57 +36,57 @@ export const networks = [
   { name: 'Facebook', path: 'facebook', icon: <i className='fab fa-facebook'></i> },
   { name: 'Twitter', path: 'twitter', icon: <i className='fab fa-twitter'></i> },
   { name: 'Instagram', path: 'instagram', icon: <i className='fab fa-instagram'></i> },
-  { name: 'LinkedIn', path: 'linkedIn', icon: <i className='fab fa-linkedin'></i> }
+  { name: 'LinkedIn', path: 'linkedIn', icon: <i className='fab fa-linkedin'></i> },
 ];
 export const rolPermissions = {
   admin_activity: {
     _id: '60a5256e5f7827f40e29ff6a',
-    name: 'Administrar actividad/Anfitrión de la actividad'
+    name: 'Administrar actividad/Anfitrión de la actividad',
   },
   admin_ticket: {
     _id: '5c09261df33bd415e22dcdb2',
-    name: 'Tiquetes'
+    name: 'Tiquetes',
   },
   admin_staff: {
     _id: '5c192400f33bd41b9070cb34',
-    name: 'Asignación de roles para el evento'
+    name: 'Asignación de roles para el evento',
   },
   admin_invitations: {
     _id: '5c192410f33bd41b9070cb36',
-    name: 'Administrar invitaciones'
+    name: 'Administrar invitaciones',
   },
   admin_badge: {
     _id: '5c192450f33bd450a6022e36',
-    name: 'Modificación de la escarapela'
+    name: 'Modificación de la escarapela',
   },
   checkin: {
     _id: '5c19242ff33bd46c102ec975',
-    name: 'Realización del checking'
+    name: 'Realización del checking',
   },
   add_attendees: {
     _id: '5c192408f33bd41b9070cb35',
-    name: 'Agregar asistente'
+    name: 'Agregar asistente',
   },
   update_attendees: {
     _id: '5c19243cf33bd450a6022e33',
-    name: 'Actualización de datos del asistente'
+    name: 'Actualización de datos del asistente',
   },
   delete_attendees: {
     _id: '5c192443f33bd450a6022e34',
-    name: 'Eliminar asistente'
+    name: 'Eliminar asistente',
   },
   print_attendees: {
     _id: '5c19244af33bd450a6022e35',
-    name: 'Impresión de la escarapela del asistente'
+    name: 'Impresión de la escarapela del asistente',
   },
   history_invitations: {
     _id: '5c192428f33bd46c102ec974',
-    name: 'Historial de las invitaciones enviadas'
+    name: 'Historial de las invitaciones enviadas',
   },
   metrics: {
     _id: '5c092624f33bd415e22dcdb3',
-    name: 'Metricas del evento'
-  }
+    name: 'Metricas del evento',
+  },
 };
 export const typeInputs = [
   { value: 'text', label: 'Texto' },
@@ -103,7 +103,7 @@ export const typeInputs = [
   { value: 'complex', label: 'JSON' },
   { value: 'tituloseccion', label: 'Titulo para indicar campos relacionados' },
   { value: 'password', label: 'Password' },
-  { value: 'multiplelisttable', label: 'Selección multiple con buscar' }
+  { value: 'multiplelisttable', label: 'Selección multiple con buscar' },
 ];
 export const toolbarEditor = {
   toolbar: [
@@ -114,8 +114,8 @@ export const toolbarEditor = {
     [{ syntax: true }],
     [('bold', 'italic', 'blockquote')],
     [{ list: 'ordered' }, { list: 'bullet' }],
-    ['link', 'image']
-  ]
+    ['link', 'image'],
+  ],
 };
 
 export const imageBox =
@@ -150,3 +150,42 @@ export const icon =
   '\t<text transform="matrix(1 0 0 1 871.8398 189.939)"><tspan x="0" y="0" style="fill:#50D3C9;font-family:\'Montserrat\';font-size:122.7092px;letter-spacing:24;">.C</tspan><tspan x="159.4" y="0" style="fill:#50D3C9;font-family:\'Montserrat\';font-size:122.7092px;letter-spacing:24;">O</tspan></text>\n' +
   '</g>\n' +
   '</svg>';
+
+//new constants dolph
+
+export const fakeEventTimetable = {
+  '2020-09-24': [
+    {
+      timestamp_start: '2020-09-24T21:00:00Z',
+      timestamp_end: '2020-09-24T21:15:00Z',
+    },
+    {
+      timestamp_start: '2020-09-24T21:15:00Z',
+      timestamp_end: '2020-09-24T21:30:00Z',
+    },
+    {
+      timestamp_start: '2020-09-24T21:30:00Z',
+      timestamp_end: '2020-09-24T21:45:00Z',
+    },
+    {
+      timestamp_start: '2020-09-24T21:45:00Z',
+      timestamp_end: '2020-09-24T22:00:00Z',
+    },
+    {
+      timestamp_start: '2020-09-24T22:00:00Z',
+      timestamp_end: '2020-09-24T22:15:00Z',
+    },
+    {
+      timestamp_start: '2020-09-24T22:15:00Z',
+      timestamp_end: '2020-09-24T22:30:00Z',
+    },
+    {
+      timestamp_start: '2020-09-24T22:30:00Z',
+      timestamp_end: '2020-09-24T22:45:00Z',
+    },
+    {
+      timestamp_start: '2020-09-24T22:45:00Z',
+      timestamp_end: '2020-09-24T23:00:00Z',
+    },
+  ],
+};

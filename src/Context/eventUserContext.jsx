@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { EventsApi } from '../helpers/request';
 import { GetIdEvent } from '../helpers/utils';
 
-const UsuarioContext = React.createContext();
+export const UsuarioContext = React.createContext();
 
 export function UserEventProvider({ children }) {
   const [userEvent, setuserEvent] = useState();
@@ -25,7 +25,7 @@ export function UserEventProvider({ children }) {
     };
   }, [userEvent]);
 
-  console.log('state user evet', userEvent);
+  // console.log('state user evet', userEvent);
 
   return <UsuarioContext.Provider value={value}>{children}</UsuarioContext.Provider>;
 }
