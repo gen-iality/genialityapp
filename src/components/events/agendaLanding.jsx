@@ -17,9 +17,9 @@ import AgendaActivityItem from './AgendaActivityItem';
 import { CalendarOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';
 //context
-import { UseUserEvent, UsuarioContext } from '../../Context/eventUserContext';
-import { UseEventContext } from '../../Context/eventContext';
-import { UseCurrentUser } from '../../Context/userContext';
+import { WithEviusContext } from '../../Context/withContext';
+import { UseUserEvent } from '../../Context/eventUserContext';
+import { PropTypes } from 'react';
 
 import { setTabs } from '../../redux/stage/actions';
 const { TabPane } = Tabs;
@@ -34,7 +34,7 @@ let attendee_states = {
 const { setNotification } = notificationsActions;
 
 class Agenda extends Component {
-  static contextType = UsuarioContext;
+  // static contextTypes = UsuarioContext;
 
   constructor(props) {
     super(props);
@@ -82,7 +82,7 @@ class Agenda extends Component {
   }
 
   async componentDidMount() {
-    console.log('agenda landing', this.context);
+    console.info('CONTEXT agenda landing', this.props);
 
     //Se carga esta funcion para cargar los datos
 
@@ -147,7 +147,7 @@ class Agenda extends Component {
     list.forEach((activity, index, arr) => {
       firestore
         .collection('events')
-        .doc(this.eventContext._id)
+        .doc('5ea23acbd74d5c4b360ddde2')
         .collection('activities')
         .doc(activity._id)
         .onSnapshot((infoActivity) => {
@@ -169,8 +169,8 @@ class Agenda extends Component {
     let codeTemplateId = '5fc93d5eccba7b16a74bd538';
 
     try {
-      await discountCodesApi.exchangeCode(codeTemplateId, { code: code, event_id: this.eventContext._id });
-      let eventId = this.eventContext._id;
+      await discountCodesApi.exchangeCode(codeTemplateId, { code: code, event_id: '5ea23acbd74d5c4b360ddde2' });
+      let eventId = '5ea23acbd74d5c4b360ddde2';
       let data = { state_id: attendee_states.STATE_BOOKED };
       AttendeeApi.update(eventId, data, this.userEventContext._id);
 
@@ -201,14 +201,14 @@ class Agenda extends Component {
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
     const { data } = await AgendaApi.byEvent(
-      this.eventContext._id,
-      this.eventContext._id === '5f99a20378f48e50a571e3b6'
+      '5ea23acbd74d5c4b360ddde2',
+      '5ea23acbd74d5c4b360ddde2' === '5f99a20378f48e50a571e3b6'
         ? `?orderBy=[{"field":"datetime_start","order":"desc"}]`
         : null
     );
 
     //se consulta la api de espacios para
-    let space = await SpacesApi.byEvent(this.eventContext._id);
+    let space = await SpacesApi.byEvent('5ea23acbd74d5c4b360ddde2');
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     //const filtered = this.filterByDay(this.state.days[0], data);
@@ -337,7 +337,7 @@ class Agenda extends Component {
   //Funcion survey para traer las encuestas de a actividad
   async survey(activity) {
     //Con el objeto activity se extrae el _id para consultar la api y traer la encuesta de ese evento
-    const survey = await SurveysApi.getByActivity(this.eventContext._id, activity._id);
+    const survey = await SurveysApi.getByActivity('5ea23acbd74d5c4b360ddde2', activity._id);
     this.setState({ survey: survey });
   }
 
@@ -434,7 +434,7 @@ class Agenda extends Component {
           if (!checkRegisterDevice || checkRegisterDevice !== this.userCurrentContext._id) {
             this.userCurrentContext.registered_devices = this.userCurrentContext.registered_devices + 1;
             window.localStorage.setItem('this.userEventContext_id', this.userCurrentContext._id);
-            AttendeeApi.update(this.eventContext._id, this.userCurrentContext, this.userCurrentContext._id);
+            AttendeeApi.update('5ea23acbd74d5c4b360ddde2', this.userCurrentContext, this.userCurrentContext._id);
           }
         } else {
           if (!checkRegisterDevice) {
@@ -445,7 +445,7 @@ class Agenda extends Component {
       } else {
         this.userCurrentContext.registered_devices = 1;
         window.localStorage.setItem('this.userEventContext_id', this.userCurrentContext._id);
-        AttendeeApi.update(this.eventContext._id, this.userCurrentContext, this.userCurrentContext._id);
+        AttendeeApi.update('5ea23acbd74d5c4b360ddde2', this.userCurrentContext, this.userCurrentContext._id);
       }
 
       this.gotoActivity(activity);
@@ -731,10 +731,14 @@ class Agenda extends Component {
 
 const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
+  userContext: UseUserEvent,
 });
 const mapDispatchToProps = {
   setNotification,
   setTabs,
 };
 
+// const AgendaWithContext = WithEviusContext(Agenda);
+
 export default connect(mapStateToProps, mapDispatchToProps)(Agenda);
+// connect(s => ({data: s.value}))(({data, ...props}) => (<AgendaWithContext value={data} {...props} />))
