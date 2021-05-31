@@ -31,12 +31,12 @@ class CertificadoLanding extends Component {
         { tag: 'user.names', label: 'Nombre(s) de asistente', value: 'names' },
         { tag: 'user.email', label: 'Correo de asistente', value: 'email' },
         { tag: 'ticket.name', label: 'Nombre del tiquete', value: 'ticket.title' },
-        { tag: 'rol.name', label: 'Nombre del Rol' }
+        { tag: 'rol.name', label: 'Nombre del Rol' },
       ],
       disabled: true,
       toSearch: '',
       dataUser: [],
-      message: false
+      message: false,
     };
     this.usersRef = '';
     this.generateCert = this.generateCert.bind(this);
@@ -51,7 +51,7 @@ class CertificadoLanding extends Component {
       list.push({
         tag: `user.${field.name}`,
         value: field.name,
-        label: field.label
+        label: field.label,
       })
     );
 
@@ -75,7 +75,7 @@ class CertificadoLanding extends Component {
       const valueToSearch = e;
       const modal = Modal.success({
         title: 'Buscando usuario para: ${ valueToSearch }',
-        content: <Spin>Espera</Spin>
+        content: <Spin>Espera</Spin>,
       });
 
       const { tickets } = this.props;
@@ -107,7 +107,7 @@ class CertificadoLanding extends Component {
   async generateCert(dataUser) {
     const modal = Modal.success({
       title: 'Generando certificado',
-      content: <Spin>Espera</Spin>
+      content: <Spin>Espera</Spin>,
     });
 
     const { event } = this.props;
@@ -174,7 +174,7 @@ class CertificadoLanding extends Component {
                   <IconText
                     text='Descargar Certificado'
                     icon={DownloadOutlined}
-                    onSubmit={(e) => this.generateCert(user)}
+                    onSubmit={() => this.generateCert(user)}
                   />
                   <br />
                 </div>

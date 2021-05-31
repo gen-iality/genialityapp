@@ -1,21 +1,20 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card } from 'antd';
+import { Card } from 'antd';
 import Parser from 'html-react-parser';
-import { SearchOutlined } from '@ant-design/icons';
 
 class InformativeSection extends Component {
   constructor(props) {
     super(props);
     this.state = {
       markup: '',
-      informativeSection: null
+      informativeSection: null,
     };
   }
 
   componentDidMount() {
     this.setState({
       informativeSection: this.props.event.itemsMenu.informativeSection,
-      markup: this.props.event.itemsMenu.informativeSection.markup
+      markup: this.props.event.itemsMenu.informativeSection.markup,
     });
   }
   render() {

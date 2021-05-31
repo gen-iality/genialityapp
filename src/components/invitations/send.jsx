@@ -19,7 +19,7 @@ class SendRsvp extends Component {
     this.state = {
       rsvp: {},
       include_date: true,
-      selection: []
+      selection: [],
     };
     this.submit = this.submit.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
@@ -43,9 +43,9 @@ class SendRsvp extends Component {
         image_footer:
           this.props.event.styles && this.props.event.styles.banner_footer
             ? this.props.event.styles.banner_footer
-            : this.props.event.picture
+            : this.props.event.picture,
       },
-      selection: this.props.selection.length > 0 ? this.props.selection : this.props.location.selection
+      selection: this.props.selection.length > 0 ? this.props.selection : this.props.location.selection,
     });
   }
 
@@ -89,12 +89,12 @@ class SendRsvp extends Component {
         self.setState({
           rsvp: {
             ...self.state.rsvp,
-            [imageStateName]: image
+            [imageStateName]: image,
           },
-          [imageFieldName]: false
+          [imageFieldName]: false,
         });
       })
-      .catch((e) => {
+      .catch(() => {
         this.setState({ timeout: true, loader: false });
       });
   };
@@ -102,18 +102,18 @@ class SendRsvp extends Component {
   handleChange = (e) => {
     let { name, value } = e.target;
     this.setState({
-      rsvp: { ...this.state.rsvp, [name]: value }
+      rsvp: { ...this.state.rsvp, [name]: value },
     });
   };
 
   QuillComplement2 = (content) =>
     this.setState({
-      rsvp: { ...this.state.rsvp, message: content }
+      rsvp: { ...this.state.rsvp, message: content },
     });
 
   QuillComplement1 = (content) =>
     this.setState({
-      rsvp: { ...this.state.rsvp, content_header: content }
+      rsvp: { ...this.state.rsvp, content_header: content },
     });
 
   async submit() {
@@ -133,7 +133,7 @@ class SendRsvp extends Component {
         image_footer: rsvp.image_footer,
         image: rsvp.image,
         eventUsersIds: users,
-        include_date: include_date
+        include_date: include_date,
       };
 
       await EventsApi.sendRsvp(JSON.stringify(data), event._id);
@@ -160,7 +160,7 @@ class SendRsvp extends Component {
 
   onChangeDate(e) {
     this.setState({
-      include_date: e.target.checked
+      include_date: e.target.checked,
     });
   }
 
@@ -409,7 +409,7 @@ class SendRsvp extends Component {
                 <div className='column has-text-centered'>
                   <button
                     className='button is-primary'
-                    onClick={(e) => {
+                    onClick={() => {
                       this.setState({ modal: true });
                     }}>
                     Enviar

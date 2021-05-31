@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import API, { Activity, AgendaApi, SpacesApi, SurveysApi, DocumentsApi } from '../../helpers/request';
-import * as Cookie from 'js-cookie';
+import { Activity, AgendaApi, SpacesApi, SurveysApi, DocumentsApi } from '../../helpers/request';
 import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert, notification } from 'antd';
 import AgendaActividadDetalle from './agendaActividadDetalle';
 import Moment from 'moment-timezone';
@@ -26,7 +25,7 @@ class AgendaInscriptions extends Component {
       hideBtnDetailAgenda: false,
       Surveys: [],
       Documents: [],
-      related_meetings: []
+      related_meetings: [],
     };
     this.survey = this.survey.bind(this);
     this.gotoActivity = this.gotoActivity.bind(this);
@@ -36,10 +35,8 @@ class AgendaInscriptions extends Component {
     this.getData();
   }
 
-  async componentDidUpdate(prevProps) {
+  async componentDidUpdate() {
     const { agendaData } = this.state;
-    const { event } = this.props;
-
     firestore
       .collection('languageState')
       .doc(this.eventContext._id)
@@ -94,7 +91,7 @@ class AgendaInscriptions extends Component {
     }
 
     this.setState({
-      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true,
     });
   }
 
@@ -154,16 +151,16 @@ class AgendaInscriptions extends Component {
     Activity.DeleteRegister(this.eventContext._id, activityKey)
       .then(() => {
         notification.open({
-          message: 'Inscripción Eliminada'
+          message: 'Inscripción Eliminada',
         });
       })
-      .catch((err) => {});
+      .catch(() => {});
 
     this.getData();
   };
-  onClose = (e) => {
+  onClose = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
@@ -173,7 +170,7 @@ class AgendaInscriptions extends Component {
 
   showDrawer = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
   };
 
@@ -187,7 +184,7 @@ class AgendaInscriptions extends Component {
       Surveys,
       Documents,
       agendaData,
-      related_meetings
+      related_meetings,
     } = this.state;
     return (
       <div>
@@ -379,7 +376,7 @@ class AgendaInscriptions extends Component {
                                         width={'100%'}
                                         style={{
                                           display: 'block',
-                                          margin: '0 auto'
+                                          margin: '0 auto',
                                         }}
                                         url={item.video}
                                         //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"

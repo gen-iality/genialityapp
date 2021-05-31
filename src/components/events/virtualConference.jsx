@@ -1,14 +1,12 @@
 import React, { Component, Fragment, useState, useEffect } from 'react';
-import { Card, Button, Alert, Avatar, Row, Col, Tooltip, Space, Typography } from 'antd';
-import WithUserEventRegistered from '../shared/withUserEventRegistered';
+import { Card, Button, Avatar, Row, Col, Tooltip, Typography } from 'antd';
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment-timezone';
-import { HistoryOutlined, UserOutlined, AntDesignOutlined, FieldTimeOutlined } from '@ant-design/icons';
+import { FieldTimeOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import ENVIVO from '../../EnVivo.svg';
-//const { Meta } = Card;
 import * as StageActions from '../../redux/stage/actions';
 
 const { gotoActivity } = StageActions;
@@ -21,11 +19,9 @@ const MeetingConferenceButton = ({
   event,
   showSection,
   setActivity,
-  eventUser
+  eventUser,
 }) => {
   const [infoActivity, setInfoActivity] = useState({});
-  //const [infoEvent, setInfoEvent] = useState({});
-  const intl = useIntl();
 
   useEffect(() => {
     setInfoActivity(activity);
@@ -78,7 +74,7 @@ class VirtualConference extends Component {
       infoAgendaArr: [],
       usuarioRegistrado: this.props.usuarioRegistrado || undefined,
       event: this.props.event || undefined,
-      survey: []
+      survey: [],
     };
   }
 
@@ -184,7 +180,7 @@ class VirtualConference extends Component {
                   maxHeight: '300px',
                   minHeight: '204px',
                   marginTop: '10px',
-                  marginBottom: '10px'
+                  marginBottom: '10px',
                 }}
                 className='animate__animated animate__slideInRight'>
                 <Row justify='center' align='middle' gutter={[8, 8]}>
@@ -232,7 +228,7 @@ class VirtualConference extends Component {
                               {/* Se valido de esta forma porque el componente FormattedMessage no hacia
                                efecto en la prop del componente de Ant design */}
                             </span>
-                          )
+                          ),
                         }}>
                         {item.name}
                       </Title>
@@ -315,7 +311,7 @@ class VirtualConference extends Component {
 }
 
 const mapDispatchToProps = {
-  gotoActivity
+  gotoActivity,
 };
 
 export default connect(null, mapDispatchToProps)(VirtualConference);

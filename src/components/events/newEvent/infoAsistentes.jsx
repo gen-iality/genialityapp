@@ -133,12 +133,12 @@ class InfoAsistentes extends Component {
                     <label className='checkbox' htmlFor={`mandatory${field.uuid}`} />
                   </td>
                   <td>
-                    <button onClick={(e) => this.editField(field)}>
+                    <button onClick={() => this.editField(field)}>
                       <span className='icon'>
                         <i className='fas fa-edit' />
                       </span>
                     </button>
-                    <button onClick={(e) => this.removeField(key)}>
+                    <button onClick={() => this.removeField(key)}>
                       <span className='icon'>
                         <i className='fas fa-trash-alt' />
                       </span>
@@ -159,14 +159,14 @@ class InfoAsistentes extends Component {
         )}
         <div className='buttons is-right'>
           <button
-            onClick={(e) => {
+            onClick={() => {
               this.submit(true);
             }}
             className={`button is-primary`}>
             Crear
           </button>
           <button
-            onClick={(e) => {
+            onClick={() => {
               this.submit(false);
             }}
             className={`button is-text`}>

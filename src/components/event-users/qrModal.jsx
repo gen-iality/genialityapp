@@ -12,7 +12,7 @@ class QrModal extends Component {
     this.state = {
       tabActive: 'camera',
       facingMode: 'user',
-      qrData: {}
+      qrData: {},
     };
   }
 
@@ -84,7 +84,7 @@ class QrModal extends Component {
             });
           }
         })
-        .catch((error) => {
+        .catch(() => {
           this.setState({ found: 0 });
         });
     } else {
@@ -107,7 +107,7 @@ class QrModal extends Component {
             });
           }
         })
-        .catch((error) => {
+        .catch(() => {
           this.setState({ found: 0 });
         });
     }
@@ -165,7 +165,7 @@ class QrModal extends Component {
                   <ul>
                     <li
                       className={`${this.state.tabActive === 'camera' ? 'is-active' : ''}`}
-                      onClick={(e) => this.setState({ tabActive: 'camera' })}>
+                      onClick={() => this.setState({ tabActive: 'camera' })}>
                       <a>
                         <div className='icon is-medium'>
                           <IoIosCamera />
@@ -175,7 +175,7 @@ class QrModal extends Component {
                     </li>
                     <li
                       className={`${this.state.tabActive === 'qr' ? 'is-active' : ''}`}
-                      onClick={(e) => this.setState({ tabActive: 'qr' })}>
+                      onClick={() => this.setState({ tabActive: 'qr' })}>
                       <a>
                         <div className='icon is-medium'>
                           <IoIosQrScanner />
@@ -271,7 +271,7 @@ class QrModal extends Component {
                 {!qrData.another && (
                   <button
                     className='button is-success'
-                    onClick={(e) => {
+                    onClick={() => {
                       this.props.checkIn(qrData.user._id);
                     }}>
                     Check User
@@ -279,7 +279,7 @@ class QrModal extends Component {
                 )}
                 <button
                   className='button'
-                  onClick={(e) => {
+                  onClick={() => {
                     this.editQRUser(qrData.user);
                   }}>
                   Edit User

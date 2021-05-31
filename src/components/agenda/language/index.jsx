@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { AgendaApi } from '../../../helpers/request';
-import { Typography, Select, Form, Table, Button, InputNumber, notification, Input, Modal } from 'antd';
+import { Typography, Select, Form, Table, Button, InputNumber, notification, Input } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ModalEdit from './modalEdit';
 import { firestore } from '../../../helpers/firebase';
@@ -14,7 +14,7 @@ class ActividadLanguage extends Component {
     this.state = {
       activity: {},
       related_meetings: [],
-      visible: false
+      visible: false,
     };
     this.onFinish = this.onFinish.bind(this);
     this.deleteObject = this.deleteObject.bind(this);
@@ -36,14 +36,14 @@ class ActividadLanguage extends Component {
           return doc.data().related_meetings;
         } else {
           notification.open({
-            message: 'No hay información guardada'
+            message: 'No hay información guardada',
           });
         }
       })
-      .catch(function(error) {
+      .catch(function() {
         //
         notification.open({
-          message: 'Hubo un error, intente mas tarde'
+          message: 'Hubo un error, intente mas tarde',
         });
       });
     const info = await AgendaApi.getOne(activityId, eventId);
@@ -62,13 +62,13 @@ class ActividadLanguage extends Component {
         .doc(activityId)
         .set(info);
       notification.open({
-        message: 'Información Guardada'
+        message: 'Información Guardada',
       });
     } catch (e) {
       //
       notification.open({
         message: 'Hubo un error',
-        description: 'No se ha logrado crear la información, intente mas tarde'
+        description: 'No se ha logrado crear la información, intente mas tarde',
       });
     }
     this.loadData();
@@ -91,13 +91,13 @@ class ActividadLanguage extends Component {
         .doc(activityId)
         .update({ event_id: eventId, activity_id: activityId, related_meetings });
       notification.open({
-        message: 'Dato Eliminado'
+        message: 'Dato Eliminado',
       });
     } catch (e) {
       //
       notification.open({
         message: 'Hubo un error',
-        description: 'No se ha logrado eliminar la información, intente mas tarde'
+        description: 'No se ha logrado eliminar la información, intente mas tarde',
       });
     }
     this.loadData();
@@ -141,13 +141,13 @@ class ActividadLanguage extends Component {
         .doc(activityId)
         .update({ event_id: eventId, activity_id: activityId, related_meetings });
       notification.open({
-        message: 'Dato Actualizado'
+        message: 'Dato Actualizado',
       });
     } catch (e) {
       //
       notification.open({
         message: 'Hubo un error',
-        description: 'No se ha logrado actualizar la información, intente mas tarde'
+        description: 'No se ha logrado actualizar la información, intente mas tarde',
       });
     }
 
@@ -156,13 +156,13 @@ class ActividadLanguage extends Component {
     this.loadData();
   }
   render() {
-    const { activity, related_meetings, dataToEdit, visible, idConference } = this.state;
-    const { platform, eventId, activityId } = this.props;
+    const { activity, related_meetings, dataToEdit, visible } = this.state;
+    const { platform } = this.props;
     const columns = [
       {
         title: 'Lenguaje',
         dataIndex: 'language',
-        key: 'language'
+        key: 'language',
       },
       {
         title: 'Id de conferencia',
@@ -175,7 +175,7 @@ class ActividadLanguage extends Component {
             return <p>{value.bigmarker_id}</p>;
           }
         },
-        key: 'meeting_id'
+        key: 'meeting_id',
       },
       {
         title: 'Estado',
@@ -189,7 +189,7 @@ class ActividadLanguage extends Component {
             return <p>Conferencia Terminada</p>;
           }
         },
-        key: 'state'
+        key: 'state',
       },
       {
         title: 'Plataforma',
@@ -201,12 +201,12 @@ class ActividadLanguage extends Component {
           } else if (row.bigmarker_id !== undefined) {
             return <p>BigMarker</p>;
           }
-        }
+        },
       },
       {
         title: 'Texto Informativo',
         dataIndex: 'informative_text',
-        key: 'informative_text'
+        key: 'informative_text',
       },
       {
         title: 'Action',
@@ -219,8 +219,8 @@ class ActividadLanguage extends Component {
               <EditOutlined onClick={() => this.editObject(record)} />
             </div>
           </>
-        )
-      }
+        ),
+      },
     ];
     return (
       <>

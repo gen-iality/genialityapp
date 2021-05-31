@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ApiUrl } from '../../helpers/constants';
 
 export function getFiles(EventID) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     let response = '';
     axios
       .get(`${ApiUrl}/api/events/${EventID}/getallfiles`)
@@ -10,6 +10,6 @@ export function getFiles(EventID) {
         response = docs.data.data.length !== 0 ? docs.data.data : false;
         resolve(response);
       })
-      .catch((err) => {});
+      .catch(() => {});
   });
 }

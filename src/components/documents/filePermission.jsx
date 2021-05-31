@@ -21,7 +21,7 @@ class filePermission extends Component {
       type: '',
       format: '',
       event_id: '',
-      state: ''
+      state: '',
     };
   }
 
@@ -37,7 +37,7 @@ class filePermission extends Component {
       title: data.title,
       state: data.state,
       permissionRol: data.permissionRol,
-      permissionUser: data.permissionUser
+      permissionUser: data.permissionUser,
     });
 
     const infoRol = await RolAttApi.byEvent(this.props.event._id);
@@ -45,7 +45,7 @@ class filePermission extends Component {
 
     const users = await UsersApi.getAll(this.props.event._id, '?pageSize=10000');
     this.setState({
-      users: [...users.data]
+      users: [...users.data],
     });
     this.options();
     this.optionsRol();
@@ -81,22 +81,6 @@ class filePermission extends Component {
   goBack = () => this.setState({ redirect: true });
 
   submit = async () => {
-    const data = {
-      name: this.state.name,
-      title: this.state.title,
-      file: this.state.file,
-      type: this.state.type,
-      format: this.state.format,
-      event_id: this.state.event_id,
-      state: this.state.state,
-      permissionRol: this.state.permissionRol,
-      permissionUser: this.state.permissionUser
-    };
-
-    //
-
-    const savedData = await DocumentsApi.editOne(this.props.event._id, data, this.props.location.state.edit);
-
     window.location.href = this.props.matchUrl;
   };
 

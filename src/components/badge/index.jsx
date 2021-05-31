@@ -13,7 +13,7 @@ class Badge extends Component {
       extraFields: [],
       fontSize: [18, 22, 36, 44],
       qrSize: [32, 64, 128],
-      newField: false
+      newField: false,
     };
     this.saveBadge = this.saveBadge.bind(this);
   }
@@ -178,7 +178,7 @@ class Badge extends Component {
     const { badge } = this.state;
     const data = {
       fields_id: event._id,
-      BadgeFields: []
+      BadgeFields: [],
     };
     badge.map((item) => {
       return data.BadgeFields.push(item);
@@ -356,7 +356,7 @@ class Badge extends Component {
                               name={`switch_${key}`}
                               className='switch'
                               checked={item.line}
-                              onChange={(e) => {
+                              onChange={() => {
                                 this.toggleSwitch(key);
                               }}
                             />
@@ -375,7 +375,7 @@ class Badge extends Component {
                               name={`switch_${key}`}
                               className='switch'
                               checked={item.line}
-                              onChange={(e) => {
+                              onChange={() => {
                                 this.toggleSwitch(key);
                               }}
                             />
@@ -410,7 +410,7 @@ class Badge extends Component {
                           <div className='level-item'>
                             <button
                               className='button is-info is-small is-outlined'
-                              onClick={(e) => {
+                              onClick={() => {
                                 this.saveField(key);
                               }}>
                               Agregar
@@ -430,7 +430,7 @@ class Badge extends Component {
                         <div>
                           <button
                             className='delete'
-                            onClick={(e) => {
+                            onClick={() => {
                               this.removeField(key);
                             }}
                           />
@@ -439,7 +439,7 @@ class Badge extends Component {
                           <button className='button is-small'>
                             <span
                               className='icon is-small'
-                              onClick={(e) => {
+                              onClick={() => {
                                 this.editField(key);
                               }}>
                               <i className='fas fa-edit' />

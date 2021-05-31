@@ -13,7 +13,7 @@ class TipoAsistentes extends Component {
       list: [],
       id: '',
       deleteID: '',
-      name: ''
+      name: '',
     };
   }
 
@@ -86,7 +86,7 @@ class TipoAsistentes extends Component {
         if (result.value) {
           sweetAlert.showLoading('Espera (:', 'Borrando...');
           await RolAttApi.deleteOne(deleteID, this.props.eventID);
-          this.setState((state) => ({ id: '', name: '' }));
+          this.setState(() => ({ id: '', name: '' }));
           this.fetchItems();
           sweetAlert.hideLoading();
         }
