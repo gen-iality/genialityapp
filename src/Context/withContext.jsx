@@ -1,15 +1,15 @@
 import React from 'react';
 //import { userContext } from './eventUserContext';
 import { CurrentUserContext } from './userContext';
-import { EventContext } from './eventContext';
+import { CurrentEventContext } from './eventContext';
 
 export default function WithEviusContext(Component) {
   return function WithEviusContextComponent(props) {
     return (
-      <EventContext.Consumer>
-        {(eventContext) => (
+      <CurrentEventContext.Consumer>
+        {(event) => (
           <CurrentUserContext.Consumer>
-            {(userContext) => <Component eventa={eventContext} usera={userContext} {...props} />}
+            {(user) => <Component cEvent={event} cUser={user} {...props} />}
           </CurrentUserContext.Consumer>
         )}
         {/* {(userContext) => (
@@ -21,7 +21,7 @@ export default function WithEviusContext(Component) {
           throw new Error('CountConsumer must be used within a CountProvider');
         }
     )} */}
-      </EventContext.Consumer>
+      </CurrentEventContext.Consumer>
     );
   };
 }

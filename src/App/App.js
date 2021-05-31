@@ -10,7 +10,7 @@ import 'bulma-spacing/css/bulma-spacing.min.css';
 
 //contexto
 import { UserEventProvider } from '../Context/eventUserContext';
-import { EventProvider } from '../Context/eventContext';
+import { CurrentEventProvider } from '../Context/eventContext';
 import { CurrentUserProvider } from '../Context/userContext';
 
 class App extends Component {
@@ -37,15 +37,15 @@ class App extends Component {
 
   render() {
     return (
-      <EventProvider>
+      <CurrentEventProvider>
         <UserEventProvider>
-          <Provider store={store}>
-            <CurrentUserProvider>
+          <CurrentUserProvider>
+            <Provider store={store}>
               <MainRouter />
-            </CurrentUserProvider>
-          </Provider>
+            </Provider>
+          </CurrentUserProvider>
         </UserEventProvider>
-      </EventProvider>
+      </CurrentEventProvider>
     );
   }
 }
