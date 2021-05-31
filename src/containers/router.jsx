@@ -26,7 +26,6 @@ class MainRouter extends Component {
         <Layout>
           <Header />
           <ContentContainer />
-          );
         </Layout>
       </Router>
     );
