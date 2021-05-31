@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { Card, Row, Col, message } from 'antd';
 import { firestore } from '../../../helpers/firebase';
-import SurveyItem from '../surveyManager/surveyItem';
 import { ExternalSurvey } from '../../../helpers/request';
 import { EditOutlined } from '@ant-design/icons';
-import { SurveysApi } from '../../../helpers/request';
 
 export default class SurveyExternal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      publishedSurveys: []
+      publishedSurveys: [],
     };
   }
   componentDidMount = () => {
@@ -30,35 +28,13 @@ export default class SurveyExternal extends Component {
     }
   };
 
-  Details = async (surveyId) => {
+  Details = async () => {
     //CREAR SURVEY PARAMETROS INICIALIZADOS
-    const data = {
-      survey: null,
-      publish: 'true',
-      open: 'false',
-      allow_anonymous_answers: false,
-      allow_gradable_survey: false,
-      show_horizontal_bar: false,
-      allow_vote_value_per_user: 'false',
-      freezeGame: false,
-      event_id: this.props.event._id,
-      activity_id: this.props.activity_id,
-      points: 1,
-      initialMessage: '',
-      time_limit: 0,
-      win_Message: '',
-      neutral_Message: '',
-      lose_Message: '',
-      isGlobal: false,
-      hasMinimumScore: false,
-      minimumScore: 0
-    };
-    const save = await SurveysApi.createOne(this.props.event._id, data);
-    const idSurveyE = save._id;
+    // Revisar esta función... creo que no se usa para nada
   };
 
   updateSurvey = (survey_id, data) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       firestore
         .collection('surveys')
         .doc(survey_id)

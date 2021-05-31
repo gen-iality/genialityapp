@@ -12,7 +12,7 @@ class RelationshipFields extends Component {
       fields: [],
       state: 'disabled',
       data: [],
-      showModal: false
+      showModal: false,
     };
     this.submit = this.submit.bind(this);
   }
@@ -33,7 +33,7 @@ class RelationshipFields extends Component {
         field: info.fields_conditions.field,
         fieldToValidate: info.fields_conditions.fieldToValidate,
         state: info.fields_conditions.state,
-        value: info.fields_conditions.value
+        value: info.fields_conditions.value,
       });
       this.setState({ data });
     }
@@ -45,20 +45,6 @@ class RelationshipFields extends Component {
     this.setState({ [name]: value });
   }
 
-  async submit() {
-    const { eventId } = this.props;
-    const fields_conditions = {
-      field: this.state.field,
-      fieldToValidate: this.state.fieldToValidate,
-      state: this.state.state === 'disabled' ? 'disabled' : 'enabled',
-      value: this.state.value
-    };
-
-    const properties = {
-      fields_conditions
-    };
-    const save = await EventsApi.editOne(properties, eventId);
-  }
   getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
@@ -110,7 +96,7 @@ class RelationshipFields extends Component {
         />
       ) : (
         text
-      )
+      ),
   });
 
   handleReset = (clearFilters) => {
@@ -122,7 +108,7 @@ class RelationshipFields extends Component {
     confirm();
     this.setState({
       searchText: selectedKeys[0],
-      searchedColumn: dataIndex
+      searchedColumn: dataIndex,
     });
   };
   delete() {}
@@ -140,26 +126,26 @@ class RelationshipFields extends Component {
         dataIndex: 'field',
         key: 'field',
         width: '30%',
-        ...this.getColumnSearchProps('field')
+        ...this.getColumnSearchProps('field'),
       },
       {
         title: 'Estado',
         dataIndex: 'state',
         key: 'state',
         width: '20%',
-        ...this.getColumnSearchProps('state')
+        ...this.getColumnSearchProps('state'),
       },
       {
         title: 'Campo relacionado',
         dataIndex: 'fieldToValidate',
         key: 'fieldToValidate',
-        ...this.getColumnSearchProps('fieldToValidate')
+        ...this.getColumnSearchProps('fieldToValidate'),
       },
       {
         title: 'Valor de campo relacionado',
         dataIndex: 'value',
         key: 'value',
-        ...this.getColumnSearchProps('value')
+        ...this.getColumnSearchProps('value'),
       },
       {
         title: 'Action',
@@ -171,13 +157,13 @@ class RelationshipFields extends Component {
               Editar
             </Button>
           </>
-        )
+        ),
       },
       {
         dataIndex: '',
         key: 'x',
-        render: () => <a>Delete</a>
-      }
+        render: () => <a>Delete</a>,
+      },
     ];
     return (
       <Form layout='inline'>
@@ -239,9 +225,7 @@ class RelationshipFields extends Component {
               </div>
             );
           })}
-          <Button onClick={this.submit} style={{ marginTop: '3%' }}>
-            Guardar
-          </Button>
+          <Button style={{ marginTop: '3%' }}>Guardar</Button>
 
           <Table style={{ marginTop: '8%' }} columns={columns} dataSource={data} />
           <Modal fields={fields} show={this.state.showModal} />

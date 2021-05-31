@@ -41,7 +41,7 @@ class Service {
               tabs,
               isPublished,
               host_id,
-              host_name
+              host_name,
             })
             .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
         } else {
@@ -57,7 +57,7 @@ class Service {
               isPublished,
               host_id,
               host_name,
-              tabs: tabsSchema
+              tabs: tabsSchema,
             })
             .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
         }
@@ -89,14 +89,14 @@ class Service {
   setZoomRoom = (token, data) => {
     const url = `https://apimeetings.evius.co:6490/crearroom?token=${token}`;
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       try {
         fetch(url, {
           headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
           },
           body: JSON.stringify(data),
-          method: 'POST'
+          method: 'POST',
         })
           .then(async (response) => {
             if (response.status === 400) {
@@ -117,14 +117,14 @@ class Service {
   getZoomRoom = (data) => {
     const url = `https://apimeetings.evius.co:6490/obtenerMeeting`;
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       try {
         fetch(url, {
           headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
           },
           body: JSON.stringify(data),
-          method: 'POST'
+          method: 'POST',
         })
           .then(async (response) => await response.json())
           .then((data) => {
@@ -139,7 +139,7 @@ class Service {
   deleteZoomRoom = (event_id, meeting_id) => {
     const url = `https://apimeetings.evius.co:6490/deleteroom?meeting_id=${meeting_id}&event_id=${event_id}`;
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       try {
         fetch(url, { method: 'DELETE' }).then((response) => resolve(response));
       } catch (err) {

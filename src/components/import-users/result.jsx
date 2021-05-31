@@ -13,7 +13,7 @@ class Result extends Component {
       saved: 0,
       fails: 0,
       updated: 0,
-      step: 1
+      step: 1,
     };
   }
 
@@ -40,7 +40,7 @@ class Result extends Component {
                   ok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
-                    status: resp.status
+                    status: resp.status,
                   };
                   if (resp.status === 'UPDATED') {
                     self.setState((prevState) => {
@@ -64,13 +64,13 @@ class Result extends Component {
                   notok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
-                    status: error
+                    status: error,
                   };
                 } else {
                   notok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
-                    status: 'ERROR DESCONOCIDO'
+                    status: 'ERROR DESCONOCIDO',
                   };
                 }
                 self.setState((prevState) => {
@@ -85,7 +85,7 @@ class Result extends Component {
                   ok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
-                    status: resp.status
+                    status: resp.status,
                   };
                   if (resp.status === 'UPDATED') {
                     self.setState((prevState) => {
@@ -109,13 +109,13 @@ class Result extends Component {
                   notok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
-                    status: error
+                    status: error,
                   };
                 } else {
                   notok[key] = {
                     [extraFields[0].name]: user[extraFields[0].name],
                     [extraFields[1].name]: user[extraFields[1].name],
-                    status: 'ERROR DESCONOCIDO'
+                    status: 'ERROR DESCONOCIDO',
                   };
                 }
                 self.setState((prevState) => {
@@ -179,14 +179,14 @@ class Result extends Component {
               <ul>
                 <li
                   className={`${step === 0 ? 'is-active' : ''}`}
-                  onClick={(e) => {
+                  onClick={() => {
                     this.setState({ step: 0 });
                   }}>
                   <a>Incorrectos</a>
                 </li>
                 <li
                   className={`${step === 1 ? 'is-active' : ''}`}
-                  onClick={(e) => {
+                  onClick={() => {
                     this.setState({ step: 1 });
                   }}>
                   <a>Correctos</a>

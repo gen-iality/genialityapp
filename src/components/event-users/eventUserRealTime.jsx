@@ -24,8 +24,7 @@ function updateAttendees(currentAttendees, snapshot) {
 
   //this.setState({ localChanges });
 
-  let user,
-    acompanates = 0;
+  let user = 0;
   snapshot.docChanges().forEach((change) => {
     //
     /* change structure: type: "added",doc:doc,oldIndex: -1,newIndex: 0*/

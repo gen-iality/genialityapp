@@ -12,8 +12,8 @@ class Events extends Component {
       loading: true,
       message: {
         class: '',
-        content: ''
-      }
+        content: '',
+      },
     };
   }
 
@@ -35,7 +35,7 @@ class Events extends Component {
             <LoadingEvent />
           ) : (
             <div className='columns home is-multiline is-mobile'>
-              {this.state.events.map((event, key) => {
+              {this.state.events.map((event) => {
                 return (
                   <EventCard
                     event={event}

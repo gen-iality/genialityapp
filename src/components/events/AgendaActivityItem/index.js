@@ -33,8 +33,8 @@ function AgendaActivityItem(props) {
         .collection('languageState')
         .doc(item._id)
         .onSnapshot((info) => {
+          // revisar este if statement, no parece estar funcionando
           if (!info.exists) return;
-          let related_meetings = info.data().related_meetings;
         });
     };
 

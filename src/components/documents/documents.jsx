@@ -5,7 +5,7 @@ import { DocumentsApi } from '../../helpers/request';
 import { Link, Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import firebase from 'firebase';
-import { Modal, Button } from 'antd';
+import { Modal } from 'antd';
 
 class documents extends Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class documents extends Component {
       disabledButton: true,
       folder: '',
       id: '',
-      fileKey: new Date()
+      fileKey: new Date(),
     };
     this.getDocuments();
   }
@@ -47,7 +47,7 @@ class documents extends Component {
     //Se crea el nombre con base a la fecha y nombre del archivo
     const name = (await +new Date()) + '-' + files.name;
     this.setState({
-      title: name
+      title: name,
     });
 
     this.setState({ fileName: name });
@@ -73,7 +73,7 @@ class documents extends Component {
       title: this.state.fileName,
       file: this.state.file,
       type: 'file',
-      format: this.state.format
+      format: this.state.format,
     };
 
     await DocumentsApi.create(this.props.event._id, data);
@@ -84,9 +84,6 @@ class documents extends Component {
   };
 
   stateUploadFile = (snapshot) => {
-    //Se valida el estado del archivo si esta en pausa y esta subiendo
-    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    //
     switch (snapshot.state) {
       case firebase.storage.TaskState.PAUSED:
         //
@@ -112,9 +109,6 @@ class documents extends Component {
   };
 
   destroy = async (name, id, event) => {
-    //
-    let information = await DocumentsApi.deleteOne(event, id);
-
     const ref = firebase.storage().ref(`documents/${event}/`);
     var desertRef = ref.child(`${name}`);
     // // //Delete the file
@@ -123,7 +117,7 @@ class documents extends Component {
       .then(function() {
         //     //El dato se elimina aqui
       })
-      .catch(function(error) {
+      .catch(function() {
         //     //Si no muestra el error
       });
 
@@ -144,7 +138,7 @@ class documents extends Component {
         .then(function() {
           //El dato se elimina aqui
         })
-        .catch(function(error) {
+        .catch(function() {
           //Si no muestra el error
         });
     });
@@ -160,30 +154,30 @@ class documents extends Component {
 
     const data = {
       type: 'folder',
-      title: value
+      title: value,
     };
     await DocumentsApi.create(this.props.event._id, data);
     this.getDocuments();
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
   showModal = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
   };
 
-  handleOk = (e) => {
+  handleOk = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
-  handleCancel = (e) => {
+  handleCancel = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
@@ -192,11 +186,11 @@ class documents extends Component {
 
     if (value) {
       this.setState({
-        disabledButton: false
+        disabledButton: false,
       });
     } else {
       this.setState({
-        disabledButton: true
+        disabledButton: true,
       });
     }
   };

@@ -42,7 +42,7 @@ class Faqs extends Component {
       title: '',
       content: '',
       isLoading: false,
-      loading: true
+      loading: true,
     };
   }
 
@@ -55,7 +55,7 @@ class Faqs extends Component {
     this.setState({ list: data, loading: false });
   };
 
-  handleInputChange = (value, fieldName) => {
+  handleInputChange = (value) => {
     this.setState({ title: value });
   };
 
@@ -128,7 +128,7 @@ class Faqs extends Component {
         if (result.value) {
           sweetAlert.showLoading('Espera (:', 'Borrando...');
           await FaqsApi.deleteOne(id, this.props.eventId);
-          this.setState((state) => ({ id: '', title: '', content: '' }));
+          this.setState(() => ({ id: '', title: '', content: '' }));
           this.getFaqs();
           sweetAlert.hideLoading();
         }

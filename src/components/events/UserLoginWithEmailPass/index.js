@@ -11,7 +11,6 @@ class UserLoginWithEmailPass extends Component {
   }
 
   render() {
-    const { formTexts } = this.state;
     const { handleLoginEmailPassword, onFinishFailed, errorLogin, loading, handleOpenRecoveryPass, intl } = this.props;
     return (
       <Card title={intl.formatMessage({ id: 'login.title' })}>

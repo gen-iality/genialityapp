@@ -4,7 +4,6 @@ import Moment from 'moment';
 import { AgendaApi } from '../../helpers/request';
 import EventContent from '../events/shared/content';
 import SearchComponent from '../shared/searchTable';
-import EvenTable from '../events/shared/table';
 import { Table } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 
@@ -16,7 +15,7 @@ class ReportList extends Component {
       days: [],
       day: '',
       filtered: [],
-      toShow: []
+      toShow: [],
     };
   }
 
@@ -60,7 +59,7 @@ class ReportList extends Component {
     this.setState({
       list: data,
       filtered,
-      toShow: filtered
+      toShow: filtered,
     });
   };
 
@@ -90,11 +89,11 @@ class ReportList extends Component {
             {Moment(text.datetime_start, 'YYYY-MM-DD HH:mm').format('HH:mm')} -{' '}
             {Moment(text.datetime_end, 'YYYY-MM-DD HH:mm').format('HH:mm')}
           </a>
-        )
+        ),
       },
       {
         title: 'Actividad',
-        dataIndex: 'name'
+        dataIndex: 'name',
       },
       {
         title: 'Action',
@@ -102,12 +101,12 @@ class ReportList extends Component {
           <Link
             to={{
               pathname: `${this.props.url}/checkin/${text._id}`,
-              state: { name: text.name, id: text._id, event: this.props.event }
+              state: { name: text.name, id: text._id, event: this.props.event },
             }}>
             <RightOutlined />
           </Link>
-        )
-      }
+        ),
+      },
     ];
     return (
       <EventContent title={'CheckIn por Actividad'} classes={'agenda-list'}>

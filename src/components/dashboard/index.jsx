@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../../helpers/constants';
-import IFrame from '../shared/iFrame';
-import { Card, Col, Divider, Empty, Row, Select, Space, Statistic, Table } from 'antd';
+import { Card, Col, Empty, Row, Select, Statistic, Table } from 'antd';
 import { EyeOutlined, FieldTimeOutlined, IdcardOutlined, MoreOutlined, UserOutlined } from '@ant-design/icons';
 import API from '../../helpers/request';
 
@@ -13,7 +12,7 @@ class DashboardEvent extends Component {
     this.state = {
       loading: true,
       iframeUrl: '',
-      chats: []
+      chats: [],
     };
   }
 
@@ -47,46 +46,46 @@ class DashboardEvent extends Component {
       {
         title: 'Campaña',
         dataIndex: 'campaña',
-        key: 'campaña'
+        key: 'campaña',
       },
       {
         title: 'Nombre completo',
         dataIndex: 'nombreCom',
-        key: 'nombreCom'
+        key: 'nombreCom',
       },
       {
         title: 'Correo Electronico',
         dataIndex: 'email',
-        key: 'email'
-      }
+        key: 'email',
+      },
     ];
 
     const columns = [
       {
         title: 'Actividad',
         dataIndex: 'actividad',
-        key: 'actividad'
+        key: 'actividad',
       },
       {
         title: 'Vistas unicas',
         dataIndex: 'vistasUnicas',
-        key: 'vistasUnicas'
+        key: 'vistasUnicas',
       },
       {
         title: 'Impresiones',
         dataIndex: 'impresiones',
-        key: 'impresiones'
+        key: 'impresiones',
       },
       {
         title: 'Tiempo del usuario',
         dataIndex: 'tiempoUsuario',
-        key: 'tiempoUsuario'
+        key: 'tiempoUsuario',
       },
       {
         title: 'Acciones',
         dataIndex: 'acciones',
-        key: 'acciones'
-      }
+        key: 'acciones',
+      },
     ];
     return (
       <div>

@@ -62,7 +62,7 @@ function FileField(rawProps) {
       //this.setState( { isLoading: true } );
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
-      axios.all(uploaders).then(async (data) => {
+      axios.all(uploaders).then(async () => {
         //let temp = { ...this.state.styles };
         //temp[ imageFieldName ] = imageUrl;
 

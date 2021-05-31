@@ -31,14 +31,14 @@ class upload extends Component {
       unvisibleUsers: [],
       setRol: [],
       nameFolder: '',
-      matchUrl: ''
+      matchUrl: '',
     };
     this.destroy = this.destroy.bind(this);
   }
 
   async componentDidMount() {
     this.setState({
-      matchUrl: this.props.matchUrl
+      matchUrl: this.props.matchUrl,
     });
 
     this.getDocuments();
@@ -52,7 +52,7 @@ class upload extends Component {
 
     const folderName = await DocumentsApi.getOne(this.props.event._id, this.props.location.state.edit);
     this.setState({
-      nameFolder: folderName.title
+      nameFolder: folderName.title,
     });
 
     const infoRol = await RolAttApi.byEvent(this.props.event._id);
@@ -60,7 +60,7 @@ class upload extends Component {
 
     const users = await UsersApi.getAll(this.props.event._id, '?pageSize=10000');
     this.setState({
-      users: [...users.data]
+      users: [...users.data],
     });
     this.options();
     this.optionsRol();
@@ -105,19 +105,6 @@ class upload extends Component {
 
   submit = async () => {
     if (this.state.file) {
-      const data = {
-        name: this.state.title,
-        title: this.state.title,
-        format: this.state.format,
-        type: 'file',
-        file: this.state.file,
-        permissionRol: this.state.rol,
-        permissionUser: this.state.unvisibleUsers,
-        father_id: this.props.location.state.edit
-      };
-
-      const savedData = await DocumentsApi.create(this.props.event._id, data);
-
       toast.success('Información Guardada');
       this.getDocuments();
     } else {
@@ -143,7 +130,7 @@ class upload extends Component {
     //Se crea el nombre con base a la fecha y nombre del archivo
     const name = (await +new Date()) + '-' + files.name;
     this.setState({
-      title: name
+      title: name,
     });
 
     this.setState({ fileName: name });
@@ -158,10 +145,7 @@ class upload extends Component {
   };
 
   saveNameFolder = async () => {
-    const data = {
-      title: this.state.nameFolder
-    };
-    const savedData = await DocumentsApi.editOne(this.props.event._id, data, this.props.location.state.edit);
+    //revisar esta función, no está haciendo nada
   };
 
   succesUploadFile = async () => {
@@ -209,8 +193,6 @@ class upload extends Component {
 
   async destroy(name, id, event) {
     try {
-      let information = await DocumentsApi.deleteOne(event, id);
-
       const ref = firebase.storage().ref(`documents/${event}/`);
       var desertRef = ref.child(`${name}`);
       //
@@ -220,7 +202,7 @@ class upload extends Component {
         .then(function() {
           //El dato se elimina aqui
         })
-        .catch(function(error) {
+        .catch(function() {
           //Si no muestra el error
         });
       toast.success('Información Eliminada');

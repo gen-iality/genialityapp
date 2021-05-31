@@ -26,7 +26,7 @@ class AdminRol extends Component {
       message: {},
       modal: false,
       edit: false,
-      serverError: false
+      serverError: false,
     };
   }
 
@@ -53,7 +53,7 @@ class AdminRol extends Component {
       rol: item.role_id,
       space: item.space_id,
       id: item._id,
-      model_id: item.model_id
+      model_id: item.model_id,
     };
     this.setState(
       { user, edit: true, modal: true, found: 3, emailValid: true, nameValid: true, rolValid: true },
@@ -82,7 +82,7 @@ class AdminRol extends Component {
       toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
       self.setState({
         message: { ...self.state.message, class: 'msg_error', content: 'CONTRIBUTOR DELETED' },
-        create: false
+        create: false,
       });
       self.updateContributors();
       const user = { Nombres: '', email: '', rol: '' };
@@ -159,7 +159,7 @@ class AdminRol extends Component {
                       <button>
                         <span
                           className='icon has-text-grey'
-                          onClick={(e) => {
+                          onClick={() => {
                             this.editHelper(item);
                           }}>
                           <i className='fas fa-edit' />
@@ -168,7 +168,7 @@ class AdminRol extends Component {
                       <button>
                         <span
                           className='icon has-text-grey'
-                          onClick={(e) => {
+                          onClick={() => {
                             this.removeHelper(item);
                           }}>
                           <i className='far fa-trash-alt' />
@@ -220,7 +220,7 @@ class AdminRol extends Component {
 const mapStateToProps = (state) => ({
   roles: state.rols.items,
   loading: state.rols.loading,
-  error: state.rols.error
+  error: state.rols.error,
 });
 
 export default connect(mapStateToProps)(AdminRol);

@@ -11,7 +11,7 @@ class Preview extends Component {
       list: [],
       errorData: {},
       serverError: false,
-      auxArr: []
+      auxArr: [],
     };
   }
 
@@ -24,7 +24,7 @@ class Preview extends Component {
     const results = extraFields.map(async (item) => {
       return headers.push({ ...item, tag: item.name, used: false });
     });
-    Promise.all(results).then((completed) => {
+    Promise.all(results).then(() => {
       //Se crea el arreglo de llaves para comparar con el header
       list.map((list) => {
         return llaves.push(list.key);
@@ -139,7 +139,7 @@ class Preview extends Component {
           <button
             className='button is-primary'
             disabled={auxArr.length > 0}
-            onClick={(e) => {
+            onClick={() => {
               this.props.importUsers(list);
             }}>
             Importar
@@ -186,7 +186,7 @@ class Preview extends Component {
                                     <a
                                       className='dropdown-item'
                                       key={llave}
-                                      onClick={(e) => {
+                                      onClick={() => {
                                         self.sChange(head, index);
                                       }}>
                                       {head.tag}
