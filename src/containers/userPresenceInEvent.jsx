@@ -1,4 +1,4 @@
-import { firestore, fireRealtime, auth, app } from '../helpers/firebase';
+import { fireRealtime,app } from '../helpers/firebase';
 import { getCurrentUser } from '../helpers/request';
 
 let initUserPresence = async (event_id) => {

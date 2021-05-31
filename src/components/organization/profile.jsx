@@ -97,7 +97,7 @@ class OrganizationProfile extends Component {
         });
         toast.success(<FormattedMessage id='toast.file' defaultMessage='Ok!' />);
       })
-      .catch((e) => {
+      .catch(() => {
         toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
         this.setState({ timeout: true, loader: false });
       });
@@ -157,7 +157,7 @@ class OrganizationProfile extends Component {
           });
           toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
         })
-        .catch((e) => {
+        .catch(() => {
           toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
           this.setState({ timeout: true, loader: false });
         });

@@ -81,7 +81,7 @@ class Speaker extends Component {
         location: { state }
       } = this.props;
       this.setState({ isLoading: true });
-      const { name, profession, description_activity, description, image, order, selectedCategories } = this.state;
+      const { name, profession, description_activity, description, image, order } = this.state;
 
       const info = {
         name,

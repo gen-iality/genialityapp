@@ -4,8 +4,6 @@ import TimeStamp from 'react-timestamp';
 import { MessageOutlined, LikeOutlined, DeleteOutlined } from '@ant-design/icons';
 import CommentEditor from './commentEditor';
 import Comments from './comments';
-import * as Cookie from 'js-cookie';
-import API from '../../helpers/request';
 import '../../styles/landing/_wall.scss';
 import { saveFirebase } from './helpers';
 
@@ -137,7 +135,7 @@ class WallList extends Component {
                           icon={LikeOutlined}
                           text={(item.likes || 0) + ' Me gusta'}
                           key='list-vertical-like-o'
-                          onSubmit={(e) => {
+                          onSubmit={() => {
                             this.props.increaseLikes(item.id, event._id, user._id);
                           }}
                         />,
@@ -145,7 +143,7 @@ class WallList extends Component {
                           icon={MessageOutlined}
                           text={(item.comments || 0) + (item.comments === 1 ? ' Comentario' : ' Comentarios')}
                           key='list-vertical-message'
-                          onSubmit={(e) => {
+                          onSubmit={() => {
                             this.innershowComments(item.id, item.comments);
                           }}
                         />,

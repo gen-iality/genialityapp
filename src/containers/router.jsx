@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchCategories } from '../redux/categories/actions';
 import { fetchTypes } from '../redux/types/actions';
 import Header from './header';
 import ContentContainer from './content';
-import NotFoundPage from '../components/notFoundPage';
 
 import { Layout } from 'antd';
 //const { Header, Footer, Sider, Content } = Layout;

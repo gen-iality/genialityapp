@@ -72,7 +72,7 @@ let Tickets = (props) => {
   }
 
   //Funcion asincrona para eliminar datos
-  async function removeItem(_id) {
+  async function removeItem() {
     message.info('Ticket Eliminado');
     getTickets();
   }

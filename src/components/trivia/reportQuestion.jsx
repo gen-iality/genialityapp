@@ -55,7 +55,7 @@ class ReportQuestion extends Component {
     nameQuestion = nameQuestion.substring(0, 30);
     const { match } = this.props;
 
-    const exclude = ({ created, id_survey, id_user, _id, ...rest }) => rest;
+    const exclude = ({ ...rest }) => rest;
 
     let data = listOfUserResponse.map((item) => exclude(item));
 

@@ -90,7 +90,7 @@ class pushNotification extends Component {
         if (result.value) {
           sweetAlert.showLoading('Espera (:', 'Borrando...');
           await PushFeed.deleteOne(id, this.props.eventId);
-          this.setState((state) => ({ id: '', title: '', body: '', route: '' }));
+          this.setState(() => ({ id: '', title: '', body: '', route: '' }));
           this.fetchItem();
           sweetAlert.hideLoading();
         }

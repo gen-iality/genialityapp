@@ -23,7 +23,7 @@ class TriviaReport extends Component {
 
     SurveysApi.getOne(event._id, location.state.report)
       .then(async (response) => {
-        const votes = new Promise((resolve, reject) => {
+        const votes = new Promise((resolve) => {
           let questions = [];
 
           response.questions.forEach(async (question, index, arr) => {
@@ -36,7 +36,7 @@ class TriviaReport extends Component {
         let questions = await votes;
         this.setState({ surveyQuestions: questions, loading: false });
       })
-      .catch((err) => {
+      .catch(() => {
         //
         notification.open({
           message: 'No se registran respuestas guardadas',
@@ -48,7 +48,7 @@ class TriviaReport extends Component {
       });
   };
 
-  seeReport = (questionId) => {};
+ 
 
   toggleModal = () => {
     let { visibleModal } = this.state;

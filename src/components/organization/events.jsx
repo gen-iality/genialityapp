@@ -32,7 +32,7 @@ class OrgEvents extends Component {
                         loading ? <LoadingEvent/>:
                             <div className="columns home is-multiline is-mobile">
                                 {
-                                    events.map((event,key)=>{
+                                    events.map((event)=>{
                                         return  <EventCard event={event} key={event._id} action={''} size={'column is-one-third'} right={<div className="edit">
                                             <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
                                                                 <span className="icon is-medium">

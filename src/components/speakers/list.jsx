@@ -80,7 +80,7 @@ class SpeakersList extends Component {
                                 </Link>
                                 <button>
                                     <span className="icon has-text-grey"
-                                        onClick={(e) => { this.remove(speaker) }}><i className="far fa-trash-alt" /></span>
+                                        onClick={() => { this.remove(speaker) }}><i className="far fa-trash-alt" /></span>
                                 </button>
                             </td>
                         </tr>)

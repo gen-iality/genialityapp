@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
-import { OrganizationApi } from '../../helpers/request';
 import 'react-toastify/dist/ReactToastify.css';
 
 class Properties extends Component {
@@ -128,7 +127,6 @@ class Properties extends Component {
     this.setState({ loading: true });
     org.user_properties = fields;
     try {
-      const result = await OrganizationApi.editOne(org, org._id);
 
       self.setState({ loading: false });
       this.props.updateOrg(org);
@@ -270,7 +268,7 @@ class Properties extends Component {
                             {field.edit && (
                               <a
                                 className='level-item'
-                                onClick={(e) => {
+                                onClick={() => {
                                   this.saveField(key);
                                 }}>
                                 <span className='icon has-text-info'>
@@ -281,7 +279,7 @@ class Properties extends Component {
                             {!field.edit && (
                               <a
                                 className='level-item'
-                                onClick={(e) => {
+                                onClick={() => {
                                   this.editField(key);
                                 }}>
                                 <span className='icon has-text-black'>
@@ -291,7 +289,7 @@ class Properties extends Component {
                             )}
                             <a
                               className='level-item'
-                              onClick={(e) => {
+                              onClick={() => {
                                 this.removeField(key);
                               }}>
                               <span className='icon has-text-danger'>

@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
 import { Tooltip, Skeleton, Card, Avatar } from 'antd';
-import { UserOutlined, MessageTwoTone, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { UserOutlined, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { InitialsNameUser } from './index';
-import { prop } from 'ramda';
-import Text from 'antd/lib/typography/Text';
 
 const { Meta } = Card;
 

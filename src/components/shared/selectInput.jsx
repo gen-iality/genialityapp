@@ -12,7 +12,7 @@ class SelectInput extends Component {
         }
     }
 
-    onChange = (selectedOptions, { action, option }) => {
+    onChange = (selectedOptions, { action }) => {
         // bail if user is trying to add an option once max reached
         if (action === "select-option" && this.state.maxReached) {
             return;

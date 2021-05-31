@@ -45,7 +45,7 @@ class SearchComponent extends Component {
   //   }
   // }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = (prevProps) => {
     if (this.props.data !== prevProps.data) {
       //
     }

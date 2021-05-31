@@ -6,11 +6,8 @@ import {
   Badge,
   Tooltip,
   Tabs,
-  notification,
   Form,
-  FormGroup,
   Input,
-  Checkbox,
   Button,
   Row
 } from 'antd';
@@ -35,7 +32,7 @@ const ChatList = (props) => {
     props.setCurrentUser(values);
   };
 
-  const onFinishFailed = (errorInfo) => {};
+  const onFinishFailed = () => {};
 
   let userName = props.currentUser
     ? props.currentUser.names
@@ -46,26 +43,15 @@ const ChatList = (props) => {
   //para los eventos tipo asamblea que tienen una propiedad llamada casa que sirve para identificaar las personas
   userName = props.currentUser && props.currentUser.casa ? '(' + props.currentUser.casa + ') ' + userName : userName;
 
-  let usuarioactivo = props.currentUser?.name;
-  let [usuariofriend, setusuariofriend] = useState(userName);
-  const openNotificationWithIcon = (type) => {
-    notification[type]({
-      message: 'holap'
-      // description: 'Tienes un nuevo mensaje',
-    });
-  };
-
-  let [totalmsjpriv, settotalmsjpriv] = useState(props.totalNewMessages);
+  
 
   useEffect(() => {
     props.datamsjlast &&
       props.datamsjlast.remitente !== undefined &&
       props.datamsjlast.remitente !== null &&
       props.datamsjlast.remitente !== userName &&
-      props.totalNewMessages > 0 &&
-      settotalmsjpriv(props.totalNewMessages);
+      props.totalNewMessages > 0 
 
-    //settotalmsjpriv(props.totalNewMessages);
   }, [props.datamsjlast, props.totalNewMessages]);
 
   let [currentab, setcurrentab] = useState(props.chattab);
@@ -79,7 +65,6 @@ const ChatList = (props) => {
       if (props.currentChat) {
         props.setCurrentChat(null, null);
       }
-      setusuariofriend(null);
     }
     if (key === 'chat2') {
       if (props.currentChat) {
@@ -169,8 +154,6 @@ const ChatList = (props) => {
                       key='list-loadmore-edit'
                       onClick={() => {
                         props.setCurrentChat(item.id, item.name ? item.name : item.names);
-                        setusuariofriend(item?.names ? item.names : item.name);
-                        settotalmsjpriv(0);
                         props.setTotalNewMessages(0);
                         props.notNewMessages();
                       }}>

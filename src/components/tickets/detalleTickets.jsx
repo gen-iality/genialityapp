@@ -25,7 +25,7 @@ class DetailTickets extends Component {
         }
     }
 
-    handleOk = e => {
+    handleOk = () => {
         this.setState({
             visible: false,
         });
