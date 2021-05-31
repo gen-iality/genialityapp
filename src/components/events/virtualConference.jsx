@@ -54,16 +54,16 @@ const MeetingConferenceButton = ({
       );
 
     case 'closed_meeting_room':
-      // return <div style={{display:'grid'}}>
-      //          <span style={{color:'#7c909a'}}>El evento</span>
-      //          <span style={{fontWeight:'400', fontSize:'45px'}}>Iniciara pronto</span>
-      //        </div>
-      //  <Alert message={intl.formatMessage({ id: 'live.join.disabled' })} type='warning' showIcon />;
-      break;
+      return <></>;
+    // return <div style={{display:'grid'}}>
+    //          <span style={{color:'#7c909a'}}>El evento</span>
+    //          <span style={{fontWeight:'400', fontSize:'45px'}}>Iniciara pronto</span>
+    //        </div>
+    //  <Alert message={intl.formatMessage({ id: 'live.join.disabled' })} type='warning' showIcon />;
     case 'ended_meeting_room':
-      // return <h1 style={{fontWeight:'400', fontSize:'45px'}}>El evento ha terminado</h1>
-      //  <Alert message='El evento ha terminado' type='info' showIcon />;
-      break;
+      return <></>;
+    // return <h1 style={{fontWeight:'400', fontSize:'45px'}}>El evento ha terminado</h1>
+    //  <Alert message='El evento ha terminado' type='info' showIcon />;
     default:
       return <h1 style={{ fontWeight: '400', fontSize: '45px' }}></h1>;
     // <Alert message='Cargando...' type='warning' showIcon />;
@@ -203,6 +203,16 @@ class VirtualConference extends Component {
                           <span style={{ textAlign: 'center', fontSize: '18px' }}>
                             {<FormattedMessage id='live.closed' defaultMessage='Iniciará pronto' />}
                           </span>
+                          <MeetingConferenceButton
+                            activity={item}
+                            toggleConference={toggleConference}
+                            event={event}
+                            usuarioRegistrado={usuarioRegistrado}
+                            showSection={showSection}
+                            setActivity={gotoActivity}
+                            zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
+                            eventUser={this.props.eventUser}
+                          />
                         </>
                       ) : (
                         ''

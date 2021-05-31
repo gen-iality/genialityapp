@@ -6,6 +6,7 @@ import * as eventActions from '../../redux/event/actions';
 import * as stageActions from '../../redux/stage/actions';
 import * as notificationsActions from '../../redux/notifications/actions';
 import * as notifyNetworking from '../../redux/notifyNetworking/actions';
+import WithEviusContext from './../../Context/withContext';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
@@ -117,6 +118,19 @@ const imageCenter = {
 let notify = false;
 let notifySurvey = false;
 
+const mapStateToPropsI = (state) => ({
+  tabs: state.stage.data.tabs
+});
+
+let TestComponent = (props) => {
+  console.log('context', props);
+  return <div>a</div>;
+};
+
+let WithEviusContextTest = WithEviusContext(TestComponent);
+let WithEviusContextTestComponent = connect(mapStateToPropsI)(WithEviusContextTest);
+
+//let WithEviusContextTestComponent = TestComponent;
 class Landing extends Component {
   constructor(props) {
     super(props);
@@ -1262,6 +1276,7 @@ class Landing extends Component {
 
     return (
       <section className='section landing' style={{ backgroundColor: this.state.color, height: '100%' }}>
+        <WithEviusContextTestComponent> </WithEviusContextTestComponent>
         <AppointmentModal
           notificacion={this.addNotification}
           event={this.props.eventInfo}

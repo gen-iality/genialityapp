@@ -18,7 +18,8 @@
   },
   "rules": {
     "react/prop-types": "off",
-    "no-console": ["error", { "allow": ["warn", "error"] }],
-    "no-unused-vars": "off"
+    //"no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-unused-vars": "off",
+    "no-console": "off"
   }
 }

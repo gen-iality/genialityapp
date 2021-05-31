@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { EventsApi } from '../helpers/request';
 import { GetIdEvent } from '../helpers/utils';
 
-const EventContext = React.createContext();
+export const EventContext = React.createContext();
 
 export function EventProvider({ children }) {
   const [eventContext, seteventContext] = useState();
@@ -21,7 +21,7 @@ export function EventProvider({ children }) {
 
   const value = React.useMemo(() => {
     return {
-      ...eventContext,
+      ...eventContext
     };
   }, [eventContext]);
 

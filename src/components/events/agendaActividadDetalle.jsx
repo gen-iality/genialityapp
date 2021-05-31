@@ -101,7 +101,7 @@ let AgendaActividadDetalle = (props) => {
 
     if (userCurrentContext && userCurrentContext?.displayName && userCurrentContext?.email) {
       let innerName =
-        userEventContext && userEventContext.properties.casa && userEventContext.properties.casa
+        userEventContext && userEventContext.properties && userEventContext.properties.casa
           ? '(' + userEventContext.properties.casa + ')' + userCurrentContext.displayName
           : props.userInfo.displayName;
       setNames(innerName);

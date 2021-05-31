@@ -17,7 +17,7 @@ import AgendaActivityItem from './AgendaActivityItem';
 import { CalendarOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';
 //context
-import { WithEviusContext } from '../../Context/withContext';
+import WithEviusContext from '../../Context/withContext';
 import { UseUserEvent } from '../../Context/eventUserContext';
 
 import { setTabs } from '../../redux/stage/actions';
@@ -85,7 +85,7 @@ class Agenda extends Component {
 
     this.setState({ loading: true });
     await this.fetchAgenda();
-
+    console.log('contexto', this.props);
     this.setState({ loading: false });
 
     const { event } = this.props;
@@ -363,13 +363,14 @@ class Agenda extends Component {
   }
 
   async getAgendaUser() {
-    const { event } = this.props;
-    try {
-      const infoUserAgenda = await Activity.GetUserActivity(event._id, this.userCurrentContext._id);
-      this.setState({ userAgenda: infoUserAgenda.data });
-    } catch (e) {
-      console.error(e);
-    }
+    return;
+    // const { event } = this.props;
+    // try {
+    //   const infoUserAgenda = await Activity.GetUserActivity(event._id, this.userCurrentContext._id);
+    //   this.setState({ userAgenda: infoUserAgenda.data });
+    // } catch (e) {
+    //   console.error(e);
+    // }
   }
 
   checkInscriptionStatus(activityId) {
@@ -733,7 +734,7 @@ const mapDispatchToProps = {
   setTabs
 };
 
-// const AgendaWithContext = WithEviusContext(Agenda);
+const AgendaWithContext = WithEviusContext(Agenda);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Agenda);
-// connect(s => ({data: s.value}))(({data, ...props}) => (<AgendaWithContext value={data} {...props} />))
+export default connect(mapStateToProps, mapDispatchToProps)(AgendaWithContext);
+//export default connect(mapStateToProps, mapDispatchToProps)(Agenda);
