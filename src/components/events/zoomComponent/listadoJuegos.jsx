@@ -9,9 +9,7 @@ export default function ListadoJuegos(props) {
   const [myName, setMyName] = useState('');
   const [myScore, setMyScore] = useState('');
 
-  useEffect(() => {
-    console.log('props', props);
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     props.changeContentDisplayed('games');

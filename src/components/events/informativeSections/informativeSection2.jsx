@@ -8,16 +8,14 @@ class InformativeSection2 extends Component {
     super(props);
     this.state = {
       markup: '',
-      informativeSection1: [],
+      informativeSection1: []
     };
   }
 
   componentDidMount() {
-    console.log('ENTRO ACA');
-    console.log(this.props.event.itemsMenu.informativeSection1.markup);
     this.setState({
       markup: this.props.event.itemsMenu.informativeSection1.markup,
-      informativeSection1: this.props.event.itemsMenu.informativeSection1,
+      informativeSection1: this.props.event.itemsMenu.informativeSection1
     });
   }
   render() {
@@ -41,9 +39,9 @@ class InformativeSection2 extends Component {
                 <iframe
                   style={{ width: '640px', height: '380px', margin: 'auto' }}
                   src='https://www.youtube.com/embed/ZD5nWJZgt2E'
-                  frameborder='0'
+                  frameBorder='0'
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                  allowfullscreen></iframe>
+                  allowFullScreen></iframe>
                 <h2 style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
                   CoCrea
                 </h2>
@@ -51,9 +49,9 @@ class InformativeSection2 extends Component {
                 <iframe
                   style={{ width: '640px', height: '380px', margin: 'auto' }}
                   src='https://www.youtube.com/embed/Od19Fle4q6M'
-                  frameborder='0'
+                  frameBorder='0'
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                  allowfullscreen>
+                  allowFullScreen>
                   {' '}
                 </iframe>
                 <h2 style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
@@ -63,9 +61,9 @@ class InformativeSection2 extends Component {
                 <iframe
                   style={{ width: '640px', height: '380px', margin: 'auto' }}
                   src='https://www.youtube.com/embed/videoseries?list=PL9wuymCs4-gOUS831iFNNZRMoOAq3jBlD'
-                  frameborder='0'
+                  frameBorder='0'
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                  allowfullscreen></iframe>
+                  allowFullScreen></iframe>
 
                 <h2 style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
                   Entrénate en la Plataforma de las Ruedas de Negocio Naranja
@@ -74,9 +72,9 @@ class InformativeSection2 extends Component {
                 <iframe
                   style={{ width: '640px', height: '380px', margin: 'auto' }}
                   src='https://www.youtube.com/embed/TH_4s3fWHSQ'
-                  frameborder='0'
+                  frameBorder='0'
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                  allowfullscreen></iframe>
+                  allowFullScreen></iframe>
               </>
             )}
             {this.props.event._id == '609180c6013150612044b547' && (

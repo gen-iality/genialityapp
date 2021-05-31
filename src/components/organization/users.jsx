@@ -27,14 +27,14 @@ class OrgUsers extends Component {
       sorted: [],
       clearSearch: false,
       errorData: {},
-      serverError: false,
+      serverError: false
     };
     this.modalImport = this.modalImport.bind(this);
   }
 
   async componentDidMount() {
     const { org } = this.props;
-    console.log(org);
+
     try {
       const resp = await OrganizationApi.getUsers(org._id);
       this.setState((prevState) => {
@@ -44,27 +44,24 @@ class OrgUsers extends Component {
           users: resp.data.slice(0, 50),
           extraFields: org.user_properties,
           loading: !prevState.loading,
-          clearSearch: !prevState.clearSearch,
+          clearSearch: !prevState.clearSearch
         };
       });
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
         const { status, data } = error.response;
-        console.log('STATUS', status, status === 401);
+
         if (status === 401) this.setState({ timeout: true, loader: false });
         else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = error.message;
-        console.log('Error', error.message);
+
         if (error.request) {
-          console.log(error.request);
           errorData = error.request;
         }
         errorData.status = 708;
         this.setState({ serverError: true, loader: false, errorData });
       }
-      console.log(error.config);
     }
   }
 
@@ -92,28 +89,25 @@ class OrgUsers extends Component {
               auxArr: resp.data,
               users: resp.data.slice(0, 50),
               clearSearch: !prevState.clearSearch,
-              loading: false,
+              loading: false
             };
           });
         })
         .catch((error) => {
           if (error.response) {
-            console.log(error.response);
             const { status, data } = error.response;
-            console.log('STATUS', status, status === 401);
+
             if (status === 401) this.setState({ timeout: true, loader: false });
             else this.setState({ serverError: true, loader: false, errorData: data });
           } else {
             let errorData = error.message;
-            console.log('Error', error.message);
+
             if (error.request) {
-              console.log(error.request);
               errorData = error.request;
             }
             errorData.status = 708;
             this.setState({ serverError: true, loader: false, errorData });
           }
-          console.log(error.config);
         });
     }
     this.setState((prevState) => {
@@ -162,16 +156,12 @@ class OrgUsers extends Component {
       });
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
         const { status } = error.response;
         if (status === 401) this.setState({ timeout: true, loader: false });
         else this.setState({ serverError: true, loader: false });
       } else {
-        console.log('Error', error.message);
-        if (error.request) console.log(error.request);
-        this.setState({ serverError: true, loader: false });
+        if (error.request) this.setState({ serverError: true, loader: false });
       }
-      console.log(error.config);
     }
   }
 
@@ -314,7 +304,7 @@ const parseData = (data) => {
 const mapStateToProps = (state) => ({
   states: state.states.items,
   loading: state.states.loading,
-  error: state.states.error,
+  error: state.states.error
 });
 
 export default connect(mapStateToProps)(OrgUsers);

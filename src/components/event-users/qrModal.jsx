@@ -17,8 +17,6 @@ class QrModal extends Component {
   }
 
   handleScan = (data) => {
-    console.log('data', data, this.props.usersReq);
-
     if (!data) {
       return;
     }
@@ -88,7 +86,6 @@ class QrModal extends Component {
         })
         .catch((error) => {
           this.setState({ found: 0 });
-          console.log('Error getting documents: ', error);
         });
     } else {
       usersRef
@@ -112,7 +109,6 @@ class QrModal extends Component {
         })
         .catch((error) => {
           this.setState({ found: 0 });
-          console.log('Error getting documents: ', error);
         });
     }
   };

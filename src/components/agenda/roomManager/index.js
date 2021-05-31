@@ -36,31 +36,31 @@ class RoomManager extends Component {
       host_list: [
         {
           host_id: 'KthHMroFQK24I97YoqxBZw',
-          host_name: 'host1@evius.co',
+          host_name: 'host1@evius.co'
         },
         {
           host_id: '15DKHS_6TqWIFpwShasM4w',
-          host_name: 'host2@evius.co',
+          host_name: 'host2@evius.co'
         },
         {
           host_id: 'FIRVnSoZR7WMDajgtzf5Uw',
-          host_name: 'host3@evius.co',
+          host_name: 'host3@evius.co'
         },
         {
           host_id: 'YaXq_TW2f791cVpP8og',
-          host_name: 'host4@evius.co',
+          host_name: 'host4@evius.co'
         },
         {
           host_id: 'mSkbi8PmSSqQEWsm6FQiAA',
-          host_name: 'host5@evius.co',
-        },
+          host_name: 'host5@evius.co'
+        }
       ],
 
       // Estado de los tabs
       chat: true,
       surveys: false,
       games: false,
-      attendees: false,
+      attendees: false
     };
   }
 
@@ -119,7 +119,7 @@ class RoomManager extends Component {
         games: configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false,
         attendees: configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false,
         host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
-        host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null,
+        host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null
       });
 
       // Si en firebase ya esta inicializado el campo platfom y meeting_id se habilita el tab controller
@@ -154,7 +154,7 @@ class RoomManager extends Component {
     const { chat, surveys, games, attendees } = this.state;
     const tabs = { chat, surveys, games, attendees };
 
-    // console.log('e', typeof e, 'tab');
+    //
     // return true;
 
     if (tab === 'chat') {
@@ -197,7 +197,7 @@ class RoomManager extends Component {
       attendees,
       isPublished,
       host_id,
-      host_name,
+      host_name
     } = this.state;
     const roomInfo = { roomStatus, platform, meeting_id, isPublished, host_id, host_name };
     const tabs = { chat, surveys, games, attendees };
@@ -213,7 +213,7 @@ class RoomManager extends Component {
         host_id: null,
         host_name: null,
         hasVideoconference: false,
-        roomStatus: '',
+        roomStatus: ''
       },
       async () => await this.saveConfig()
     );
@@ -255,7 +255,7 @@ class RoomManager extends Component {
         const data = {
           event_id,
           activity_id,
-          meeting_id,
+          meeting_id
         };
         const response = await service.getZoomRoom(data);
         if (
@@ -303,7 +303,7 @@ class RoomManager extends Component {
       agenda: activity_name,
       date_start_zoom,
       date_end_zoom,
-      [host_field]: host_value,
+      [host_field]: host_value
     };
     const response = await this.state.service.setZoomRoom(evius_token, body);
 
@@ -319,7 +319,7 @@ class RoomManager extends Component {
           meeting_id,
           host_id: zoom_host_id,
           host_name: zoom_host_name,
-          hasVideoconference: true,
+          hasVideoconference: true
         },
         async () => await this.saveConfig()
       );
@@ -384,7 +384,7 @@ class RoomManager extends Component {
       isPublished,
       select_host_manual,
       host_list,
-      host_id,
+      host_id
     } = this.state;
     const { event_id, activity_id, activity_name } = this.props;
     return (

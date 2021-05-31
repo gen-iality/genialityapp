@@ -20,7 +20,6 @@ let Tickets = (props) => {
   async function getTickets() {
     const tickets = await eventTicketsApi.getAll(props.eventId);
     setTickets(tickets);
-    console.log(tickets);
   }
 
   //Funcion para crear el espacio en el array para crear el ticket
@@ -54,7 +53,7 @@ let Tickets = (props) => {
         message.info('Ticket Actualizado');
       }
     } catch (e) {
-      console.log(e);
+      e;
     }
   }
 

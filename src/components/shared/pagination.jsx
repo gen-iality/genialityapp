@@ -5,7 +5,7 @@ class Pagination extends Component {
     super(props);
     this.state = {
       pager: {},
-      datos: [],
+      datos: []
     };
   }
 
@@ -14,7 +14,7 @@ class Pagination extends Component {
     this.setPage(this.props.initialPage, auxArr);
   }
 
-  componentWillReceiveProps(nextProps) {
+  getDerivedStateFromProps(nextProps) {
     if (nextProps.items.length !== this.props.items.length || nextProps.change !== this.props.change) {
       let auxArr = nextProps.items;
       this.setPage(nextProps.initialPage, auxArr);
@@ -72,7 +72,7 @@ class Pagination extends Component {
       endPage: endPage,
       startIndex: startIndex,
       endIndex: endIndex,
-      pages: pages,
+      pages: pages
     };
   };
 

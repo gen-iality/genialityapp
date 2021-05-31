@@ -26,7 +26,7 @@ class Graphics extends Component {
       chartCreated: false,
       usersRegistered: 0,
       titleQuestion: '',
-      isMobile: window.screen.width < 800 ? true : false, // determina el tamaño del dispositivo para saber si es mobile o no
+      isMobile: window.screen.width < 800 ? true : false // determina el tamaño del dispositivo para saber si es mobile o no
     };
   }
 
@@ -134,13 +134,13 @@ class Graphics extends Component {
       // const customPlugin = {
 
       //   beforeInit: function (a, b, c) {
-      //     console.log('antes de pintar el grafico')
-      //     console.log({ a, b, c })
+      //
+      //
       //   },
       //   afterDatasetsDraw: function (context, easing) {
 
-      //     console.log('--- start format data label hbar ---')
-      //     console.log('hbar', horizontalBar)
+      //
+      //
       //     //context.clearRect(0, 0, canvas.width, canvas.height);
 
       //     var ctx = context.chart.ctx;
@@ -151,7 +151,7 @@ class Graphics extends Component {
       //           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
       //           var textY = model.y + (dataset.type == "line" ? -3 : 15);
 
-      //           console.log('soy ctx', ctx)
+      //
       //           ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
       //           ctx.textAlign = 'start';
       //           ctx.textBaseline = 'middle';
@@ -165,7 +165,7 @@ class Graphics extends Component {
 
       //           const formatDataLabel = generatedlabels[i]
 
-      //           console.log({ dataset })
+      //
       //           //ctx.clear()
       //           ctx.fillText(formatDataLabel, 0, 0);
       //           ctx.restore();
@@ -192,12 +192,12 @@ class Graphics extends Component {
             anchor: 'start',
             align: 5,
             font: {
-              size: this.state.isMobile ? 12 : 18, // otorga el tamaño de la fuente en los resultados de la encuesta segun el dispositivo
-            },
-          },
+              size: this.state.isMobile ? 12 : 18 // otorga el tamaño de la fuente en los resultados de la encuesta segun el dispositivo
+            }
+          }
         },
         legend: {
-          display: false,
+          display: false
         },
         scales: {
           yAxes: [
@@ -207,19 +207,19 @@ class Graphics extends Component {
                 fontSize: 15,
                 fontColor: '#777',
                 minor: { display: true },
-                display: false,
-              },
-            },
+                display: false
+              }
+            }
           ],
           xAxes: [
             {
               ticks: {
                 beginAtZero: true,
-                fontColor: '#777',
-              },
-            },
-          ],
-        },
+                fontColor: '#777'
+              }
+            }
+          ]
+        }
       };
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
@@ -306,7 +306,7 @@ const mapDispatchToProps = { setCurrentSurvey, setSurveyVisible };
 
 const mapStateToProps = (state) => ({
   currentSurvey: state.survey.data.currentSurvey,
-  currentActivity: state.stage.data.currentActivity,
+  currentActivity: state.stage.data.currentActivity
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Graphics);

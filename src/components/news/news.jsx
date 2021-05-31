@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import { NewsFeed, Actions } from "../../helpers/request";
-import Loading from "../loaders/loading";
-import Moment from "moment";
-import EventContent from "../events/shared/content";
-import EvenTable from "../events/shared/table";
-import TableAction from "../events/shared/tableAction";
-import { handleRequestError, sweetAlert } from "../../helpers/utils";
-import axios from "axios/index";
-import ImageInput from "../shared/imageInput";
-import { toast } from "react-toastify";
-import { FormattedMessage } from "react-intl";
+import React, { Component } from 'react';
+import { NewsFeed, Actions } from '../../helpers/request';
+import Loading from '../loaders/loading';
+import Moment from 'moment';
+import EventContent from '../events/shared/content';
+import EvenTable from '../events/shared/table';
+import TableAction from '../events/shared/tableAction';
+import { handleRequestError, sweetAlert } from '../../helpers/utils';
+import axios from 'axios/index';
+import ImageInput from '../shared/imageInput';
+import { toast } from 'react-toastify';
+import { FormattedMessage } from 'react-intl';
 
 class News extends Component {
   constructor(props) {
@@ -18,13 +18,13 @@ class News extends Component {
       event: this.props.event,
       list: [],
       data: {},
-      id: "",
-      deleteID: "",
-      title: "",
-      description_complete: "",
-      linkYoutube: "",
-      description_short: "",
-      time: "",
+      id: '',
+      deleteID: '',
+      title: '',
+      description_complete: '',
+      linkYoutube: '',
+      description_short: '',
+      time: '',
       isLoading: false,
       loading: true
     };
@@ -34,10 +34,9 @@ class News extends Component {
     this.fetchItem();
   }
 
-  changeImg = files => {
-    console.log(files);
+  changeImg = (files) => {
     const file = files[0];
-    const url = "/api/files/upload",
+    const url = '/api/files/upload',
       path = [],
       self = this;
     if (file) {
@@ -47,48 +46,44 @@ class News extends Component {
       });
 
       //envia el archivo de imagen como POST al API
-      const uploaders = files.map(file => {
+      const uploaders = files.map((file) => {
         let data = new FormData();
-        data.append("file", file);
-        return Actions.post(url, data).then(image => {
-          console.log(image);
+        data.append('file', file);
+        return Actions.post(url, data).then((image) => {
           if (image) path.push(image);
         });
       });
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
-      axios.all(uploaders).then(data => {
-        console.log(path);
-        console.log("SUCCESSFULL DONE");
+      axios.all(uploaders).then((data) => {
         self.setState({
           event: {
             ...self.state.event,
             picture: path[0]
           },
-          fileMsg: "Imagen subida con exito",
+          fileMsg: 'Imagen subida con exito',
           imageFile: null,
           path
         });
 
-        toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!" />);
+        toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
       });
     } else {
-      this.setState({ errImg: "Solo se permiten imágenes. Intentalo de nuevo" });
+      this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
     }
   };
 
   fetchItem = async () => {
     const data = await NewsFeed.byEvent(this.props.eventId);
     this.setState({ list: data, loading: false });
-    console.log(data);
   };
 
-  onChange = e => {
-    const titles = document.getElementById("title").value;
-    const desc = document.getElementById("desc").value;
-    const notice = document.getElementById("description_short").value;
-    const time = document.getElementById("time").value;
-    const linkYoutube = document.getElementById("linkYoutube").value;
+  onChange = (e) => {
+    const titles = document.getElementById('title').value;
+    const desc = document.getElementById('desc').value;
+    const notice = document.getElementById('description_short').value;
+    const time = document.getElementById('time').value;
+    const linkYoutube = document.getElementById('linkYoutube').value;
 
     this.setState({
       title: titles,
@@ -100,42 +95,42 @@ class News extends Component {
   };
 
   newRole = () => {
-    if (!this.state.list.find(({ _id }) => _id === "new")) {
-      this.setState(state => {
+    if (!this.state.list.find(({ _id }) => _id === 'new')) {
+      this.setState((state) => {
         const list = state.list.concat({
-          title: "",
-          description_complete: "",
-          description_short: "",
-          linkYoutube: "",
-          pricture: "",
-          time: "",
+          title: '',
+          description_complete: '',
+          description_short: '',
+          linkYoutube: '',
+          pricture: '',
+          time: '',
           created_at: new Date(),
-          _id: "new"
+          _id: 'new'
         });
-        return { list, id: "new" };
+        return { list, id: 'new' };
       });
     }
   };
 
   removeNewRole = () => {
-    this.setState(state => {
-      const list = state.list.filter(item => item._id !== "new");
+    this.setState((state) => {
+      const list = state.list.filter((item) => item._id !== 'new');
       return {
         list,
-        id: "",
-        title: "",
-        description_complete: "",
-        description_short: "",
-        linkYoutube: "",
-        picture: "",
-        time: ""
+        id: '',
+        title: '',
+        description_complete: '',
+        description_short: '',
+        linkYoutube: '',
+        picture: '',
+        time: ''
       };
     });
   };
 
   saveRole = async () => {
     try {
-      if (this.state.id !== "new") {
+      if (this.state.id !== 'new') {
         await NewsFeed.editOne(
           {
             title: this.state.title,
@@ -148,8 +143,8 @@ class News extends Component {
           this.state.id,
           this.props.eventId
         );
-        this.setState(state => {
-          const list = state.list.map(item => {
+        this.setState((state) => {
+          const list = state.list.map((item) => {
             if (item._id === state.id) {
               item.title = state.title;
               item.description_complete = state.description_complete;
@@ -157,18 +152,18 @@ class News extends Component {
               item.linkYoutube = state.linkYoutube;
               item.image = state.path;
               item.time = state.time;
-              toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />);
+              toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
               return item;
             } else return item;
           });
           return {
             list,
-            id: "",
-            title: "",
-            description_complete: "",
-            description_short: "",
-            linkYoutube: "",
-            time: ""
+            id: '',
+            title: '',
+            description_complete: '',
+            description_short: '',
+            linkYoutube: '',
+            time: ''
           };
         });
       } else {
@@ -183,8 +178,8 @@ class News extends Component {
           },
           this.props.eventId
         );
-        this.setState(state => {
-          const list = state.list.map(item => {
+        this.setState((state) => {
+          const list = state.list.map((item) => {
             if (item._id === state.id) {
               item.title = newRole.title;
               item.description_complete = newRole.description_complete;
@@ -194,27 +189,27 @@ class News extends Component {
               item.time = newRole.time;
               item.created_at = newRole.created_at;
               item._id = newRole._id;
-              toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />);
+              toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
               return item;
             } else return item;
           });
           return {
             list,
-            id: "",
-            title: "",
-            description_complete: "",
-            description_short: "",
-            linkYoutube: "",
-            time: ""
+            id: '',
+            title: '',
+            description_complete: '',
+            description_short: '',
+            linkYoutube: '',
+            time: ''
           };
         });
       }
     } catch (e) {
-      console.log(e);
+      e;
     }
   };
 
-  editItem = cert =>
+  editItem = (cert) =>
     this.setState({
       id: cert._id,
       title: cert.title,
@@ -225,20 +220,20 @@ class News extends Component {
       time: cert.time
     });
 
-  removeItem = id => {
-    sweetAlert.twoButton(`Está seguro de borrar este espacio`, "warning", true, "Borrar", async result => {
+  removeItem = (id) => {
+    sweetAlert.twoButton(`Está seguro de borrar este espacio`, 'warning', true, 'Borrar', async (result) => {
       try {
         if (result.value) {
-          sweetAlert.showLoading("Espera (:", "Borrando...");
+          sweetAlert.showLoading('Espera (:', 'Borrando...');
           await NewsFeed.deleteOne(id, this.props.eventId);
-          this.setState(state => ({
-            id: "",
-            title: "",
-            description_complete: "",
-            description_short: "",
-            linkYoutube: "",
-            picture: "",
-            time: ""
+          this.setState((state) => ({
+            id: '',
+            title: '',
+            description_complete: '',
+            description_short: '',
+            linkYoutube: '',
+            picture: '',
+            time: ''
           }));
           this.fetchItem();
           sweetAlert.hideLoading();
@@ -251,29 +246,29 @@ class News extends Component {
 
   goBack = () => this.props.history.goBack();
 
-  render() {    
+  render() {
     return (
       <React.Fragment>
-        <div className="column is-12 is-desktop">
+        <div className='column is-12 is-desktop'>
           <EventContent
-            title="Noticias"
+            title='Noticias'
             closeAction={this.goBack}
-            description_complete={"Agregue o edite las Noticias que se muestran en la aplicación"}
+            description_complete={'Agregue o edite las Noticias que se muestran en la aplicación'}
             addAction={this.newRole}
-            addTitle={"Nuevo espacio"}>
+            addTitle={'Nuevo espacio'}>
             {this.state.loading ? (
               <Loading />
             ) : (
-              <EvenTable head={["Titulo", "Subtitulo", "Noticia", "time", "Link de Youtube", "imagen", ""]}>
+              <EvenTable head={['Titulo', 'Subtitulo', 'Noticia', 'time', 'Link de Youtube', 'imagen', '']}>
                 {this.state.list.map((cert, key) => {
                   return (
                     <tr key={key}>
                       <td>
                         {this.state.id === cert._id ? (
                           <input
-                            className="input is-small"
-                            type="text"
-                            id="title"
+                            className='input is-small'
+                            type='text'
+                            id='title'
                             value={this.state.title}
                             onChange={this.onChange}
                           />
@@ -284,9 +279,9 @@ class News extends Component {
                       <td>
                         {this.state.id === cert._id ? (
                           <input
-                            className="input is-small"
-                            type="text"
-                            id="description_short"
+                            className='input is-small'
+                            type='text'
+                            id='description_short'
                             value={this.state.description_short}
                             onChange={this.onChange}
                           />
@@ -297,9 +292,9 @@ class News extends Component {
                       <td>
                         {this.state.id === cert._id ? (
                           <input
-                            className="input is-small"
-                            type="text"
-                            id="desc"
+                            className='input is-small'
+                            type='text'
+                            id='desc'
                             value={this.state.description_complete}
                             onChange={this.onChange}
                           />
@@ -310,9 +305,9 @@ class News extends Component {
                       <td>
                         {this.state.id === cert._id ? (
                           <input
-                            className="input is-small"
-                            type="date"
-                            id="time"
+                            className='input is-small'
+                            type='date'
+                            id='time'
                             value={this.state.time}
                             onChange={this.onChange}
                           />
@@ -323,9 +318,9 @@ class News extends Component {
                       <td>
                         {this.state.id === cert._id ? (
                           <input
-                            className="input is-small"
-                            type="text"
-                            id="linkYoutube"
+                            className='input is-small'
+                            type='text'
+                            id='linkYoutube'
                             value={this.state.linkYoutube}
                             onChange={this.onChange}
                           />
@@ -335,26 +330,26 @@ class News extends Component {
                       </td>
                       <td>
                         {this.state.id === cert._id ? (
-                          <div className="column is-5">
+                          <div className='column is-5'>
                             <ImageInput
                               picture={this.state.picture}
                               imageFile={this.state.imageFile}
-                              divClass={"drop-img"}
-                              content={<img src={this.state.picture} alt={"Imagen Perfil"} />}
-                              classDrop={"dropzone"}
+                              divClass={'drop-img'}
+                              content={<img src={this.state.picture} alt={'Imagen Perfil'} />}
+                              classDrop={'dropzone'}
                               contentDrop={
                                 <button
-                                  onClick={e => {
+                                  onClick={(e) => {
                                     e.preventDefault();
                                   }}
                                   className={`button is-primary is-inverted is-outlined ${
-                                    this.state.imageFile ? "is-loading" : ""
+                                    this.state.imageFile ? 'is-loading' : ''
                                   }`}>
                                   Cambiar foto
                                 </button>
                               }
                               contentZone={
-                                <div className="has-text-grey has-text-weight-bold has-text-centered">
+                                <div className='has-text-grey has-text-weight-bold has-text-centered'>
                                   <span>Subir foto</span>
                                   <br />
                                   <small>(Tamaño recomendado: 1280px x 960px)</small>
@@ -363,26 +358,26 @@ class News extends Component {
                               changeImg={this.changeImg}
                               errImg={this.state.errImg}
                               style={{
-                                cursor: "pointer",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                position: "relative",
-                                height: "50%",
-                                width: "40%",
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                position: 'relative',
+                                height: '50%',
+                                width: '40%',
                                 borderWidth: 2,
-                                borderColor: "#b5b5b5",
-                                borderStyle: "dashed",
+                                borderColor: '#b5b5b5',
+                                borderStyle: 'dashed',
                                 borderRadius: 10
                               }}
                             />
-                            {this.state.fileMsg && <p className="help is-success">{this.state.fileMsg}</p>}
+                            {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
                           </div>
                         ) : (
-                          <p>{cert.picture ? "Imagen Registrada" : "No hay ninguna imagen Guardada"}</p>
+                          <p>{cert.picture ? 'Imagen Registrada' : 'No hay ninguna imagen Guardada'}</p>
                         )}
                       </td>
-                      <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
+                      <td>{Moment(cert.created_at).format('DD/MM/YYYY')}</td>
                       <TableAction
                         id={this.state.id}
                         object={cert}

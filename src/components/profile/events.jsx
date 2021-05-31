@@ -20,12 +20,11 @@ class Events extends Component {
       user: {},
       error: {},
       loading: true,
-      valid: true,
+      valid: true
     };
   }
 
   async componentDidMount() {
-    console.log('Events Mount', this.props);
     let userId = this.props.match.params.id;
     try {
       const categories = await CategoriesApi.getAll();
@@ -36,7 +35,7 @@ class Events extends Component {
       this.setState({
         timeout: true,
         loading: false,
-        errorData: { status: e.response.status, message: JSON.stringify(e.response.data) },
+        errorData: { status: e.response.status, message: JSON.stringify(e.response.data) }
       });
     }
   }
@@ -85,7 +84,7 @@ class Events extends Component {
                                   <span>Administrar</span>
                                 </Space>
                               </Link>
-                            </div>,
+                            </div>
                           ]}
                         />
                       </Col>
@@ -103,7 +102,7 @@ class Events extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  addLoginInformation: bindActionCreators(addLoginInformation, dispatch),
+  addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
 });
 
 export default connect(null, mapDispatchToProps)(withRouter(Events));

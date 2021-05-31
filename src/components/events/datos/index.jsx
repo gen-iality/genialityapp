@@ -22,7 +22,7 @@ class Datos extends Component {
       loading: true,
       deleteModal: false,
       edit: false,
-      fields: [],
+      fields: []
     };
     this.eventID = this.props.eventID;
     this.html = document.querySelector('html');
@@ -107,22 +107,17 @@ class Datos extends Component {
   };
   //Funcion para cambiar el valor de los checkboxes
   async changeCheckBox(id, value, name) {
-    console.log('------CHECKBOX----------------');
-    console.log(id);
-    console.log(value);
-    console.log(name);
     try {
       let resp = await EventFieldsApi.editOne({ [name]: value }, id, this.eventID);
-      console.log('------RESPUESTA----------------');
-      console.log(resp);
+
       this.fetchFields();
       notification.open({
-        message: 'Campo Actualizado',
+        message: 'Campo Actualizado'
       });
     } catch (e) {
       notification.open({
         message: 'No se ha actualizado el campo',
-        description: 'El Campo no ha sido posible actualizarlo, intenta mas tarde',
+        description: 'El Campo no ha sido posible actualizarlo, intenta mas tarde'
       });
     }
   }
@@ -132,11 +127,11 @@ class Datos extends Component {
     const columns = [
       {
         title: 'Dato',
-        dataIndex: 'label',
+        dataIndex: 'label'
       },
       {
         title: 'Tipo de dato',
-        dataIndex: 'type',
+        dataIndex: 'type'
       },
       {
         title: 'Obligatorio',
@@ -151,7 +146,7 @@ class Datos extends Component {
             />
           ) : (
             <Checkbox checked />
-          ),
+          )
       },
       {
         title: 'Visible solo contactos',
@@ -163,7 +158,7 @@ class Datos extends Component {
             onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)}
             defaultChecked={record}
           />
-        ),
+        )
       },
       {
         title: 'Visible solo admin',
@@ -178,7 +173,7 @@ class Datos extends Component {
             />
           ) : (
             <Checkbox checked />
-          ),
+          )
       },
       {
         title: 'Action',
@@ -190,8 +185,8 @@ class Datos extends Component {
               <DeleteOutlined style={{ float: 'right' }} onClick={() => this.setState({ deleteModal: key._id })} />
             )}
           </>
-        ),
-      },
+        )
+      }
     ];
     return (
       <div>
@@ -209,7 +204,7 @@ class Datos extends Component {
                   pagination={{
                     total: fields.length,
                     pageSize: fields.length,
-                    hideOnSinglePage: true,
+                    hideOnSinglePage: true
                   }}
                 />
               </EventContent>

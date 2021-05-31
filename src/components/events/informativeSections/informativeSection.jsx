@@ -8,16 +8,14 @@ class InformativeSection extends Component {
     super(props);
     this.state = {
       markup: '',
-      informativeSection: null,
+      informativeSection: null
     };
   }
 
   componentDidMount() {
-    console.log(this.props.event.itemsMenu.informativeSection);
-    console.log(this.props.event.itemsMenu.informativeSection.markup);
     this.setState({
       informativeSection: this.props.event.itemsMenu.informativeSection,
-      markup: this.props.event.itemsMenu.informativeSection.markup,
+      markup: this.props.event.itemsMenu.informativeSection.markup
     });
   }
   render() {
@@ -41,6 +39,7 @@ class InformativeSection extends Component {
                   <a
                     href='https://www.chesskid.com/es/login'
                     target='_blank'
+                    rel='noreferrer'
                     className='ant-btn ant-btn-primary'
                     style={{ width: 180 }}>
                     Inscríbete

@@ -3,7 +3,7 @@ import { getCurrentUser } from '../helpers/request';
 
 let initUserPresence = async (event_id) => {
   const user = await getCurrentUser();
-  console.log('datafirebase initUserPresence', user, event_id);
+
   if (!user) return;
 
   initUserPresenceInner(user.uid, event_id);
@@ -12,10 +12,10 @@ let initUserPresence = async (event_id) => {
 // auth.onAuthStateChanged(function(user) {
 //   if (user) {
 //     // User is signed in.
-//     console.log('usuarop', user);
+//
 //   } else {
 //     // No user is signed in.
-//     console.log('nouser', user);
+//
 //   }
 // });
 let initUserPresenceInner = (uid, event_id) => {
@@ -57,7 +57,7 @@ let initUserPresenceInner = (uid, event_id) => {
         // resolve as soon as the server acknowledges the onDisconnect()
         // request, NOT once we've actually disconnected:
         // https://firebase.google.com/docs/reference/js/firebase.database.OnDisconnect
-        console.log('estamos conectados');
+
         // We can now safely set ourselves as 'online' knowing that the
         // server will mark us as offline once we lose connection.
         userStatusDatabaseRef.set(isOnlineForDatabase);

@@ -80,7 +80,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   if (currentRoom) {
     let userName = eventUser && eventUser.properties ? eventUser.properties.names : 'Anonimo' + new Date().getTime();
     //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=8816111496
-    //console.log("params",eventUser,currentRoom );
+    //
 
     return (
       <Row align='middle'>

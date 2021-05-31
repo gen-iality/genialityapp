@@ -29,7 +29,6 @@ export const saveFirebase = {
       return post;
     } catch (e) {
       toast.warning('Los datos necesarios no se han registrado, por favor intenta de nuevo');
-      console.log(e);
     }
   },
 
@@ -40,37 +39,32 @@ export const saveFirebase = {
       .collection('posts')
       .doc(postId);
 
-    
     var docSnap = await docRef.get();
     var doc = docSnap.data();
 
-    
     var count = doc['usersLikes'].length; //cuenta la cantidad de usuarios que han dado like
-    const array = doc['usersLikes']; //asigna a un array los uauruarios que han dado like  
-    
+    const array = doc['usersLikes']; //asigna a un array los uauruarios que han dado like
+
     // si el usuario actual no se encuntra en el array, lo guarda y suma al contador de like
-    if(array.filter(user => user == userId).length == 0){
-      array.push(userId)
-     
-      doc['usersLikes'] = array
+    if (array.filter((user) => user == userId).length == 0) {
+      array.push(userId);
+
+      doc['usersLikes'] = array;
       doc['likes'] = count + 1;
       doc['id'] = docRef.id;
       await docRef.update(doc);
-     
     }
     // si el usuario actual se encuentra en el array lo elimina y reduce el contador de like
-    else{
-      const newArray = array.filter(user => user !== userId)
-      
-      doc['usersLikes'] = newArray
+    else {
+      const newArray = array.filter((user) => user !== userId);
+
+      doc['usersLikes'] = newArray;
       doc['likes'] = count - 1;
       doc['id'] = docRef.id;
       await docRef.update(doc);
-
     }
 
     return doc;
-
   },
 
   async createComment(postId, eventId, comment, author) {
@@ -78,8 +72,8 @@ export const saveFirebase = {
       author: '',
       authorName: author.names ? author.names : author.name ? author.names : author.email,
       comment: comment,
-      date:new Date(),
-      idPost:postId,
+      date: new Date(),
+      idPost: postId
     };
     const dataPost = [];
     var docRef = await firestore
@@ -89,16 +83,16 @@ export const saveFirebase = {
       .doc(postId);
     var docSnap = await docRef.get();
     var doc = docSnap.data();
-    
+
     doc['comments'] = doc.comments ? doc.comments + 1 : 1;
     doc['id'] = docRef.id;
     await docRef.update(doc);
     let result = await firestore
-      .collection("adminPost")
+      .collection('adminPost')
       .doc(eventId)
-      .collection("comment")
+      .collection('comment')
       .doc(postId)
-      .collection("comments")
+      .collection('comments')
       .add(data);
     let posts = await firestore
       .collection('adminPost')
@@ -115,7 +109,7 @@ export const saveFirebase = {
     });
     //return result;
     //return doc;
-    return dataPost
+    return dataPost;
   },
 
   async deletePost(postId, eventId) {
@@ -138,7 +132,7 @@ export const saveFirebase = {
         .collection('adminPost')
         .doc(eventId)
         .collection('comment')
-        .doc(postId)
+        .doc(postId);
 
       var querySnapshot = await query.get();
       var querySnapshotPostId = await queryPostId.get();
@@ -150,10 +144,9 @@ export const saveFirebase = {
       }
       return true;
     } catch (e) {
-      console.log(e);
       toast.warning('La información aun no ha sido eliminada, por favor intenta de nuevo');
     }
 
     return true;
-  },
+  }
 };

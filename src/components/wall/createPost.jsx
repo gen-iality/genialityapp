@@ -42,7 +42,7 @@ class CreatePost extends Component {
       loading: false,
       visible: false,
       user: null,
-      image: '',
+      image: ''
     };
     this.savePost = this.savePost.bind(this);
     this.previewImage = this.previewImage.bind(this);
@@ -51,7 +51,6 @@ class CreatePost extends Component {
   }
 
   componentDidMount() {
-    console.log('create', this.props);
     if (this.props.user) {
       const { user } = this.props;
       this.setState({ user });
@@ -78,7 +77,7 @@ class CreatePost extends Component {
         ? this.state.user.names
         : this.state.user.name
         ? this.state.user.name
-        : this.state.user.email,
+        : this.state.user.email
     };
 
     //savepost se realiza para publicar el post
@@ -125,13 +124,13 @@ class CreatePost extends Component {
   //Funcion para enviar al estado el comentario del post
   handleChange = (e) => {
     this.setState({
-      value: e.target.value,
+      value: e.target.value
     });
   };
   //Funciones para mostrar o cerrar el modal que contiene el formulario para guardar post
   showModal = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
   };
 
@@ -219,7 +218,7 @@ class CreatePost extends Component {
                             this.setState({ hidden: false }, this.setModal2Visible(false));
                           }}>
                           Listo usar esta
-                        </Button>,
+                        </Button>
                       ]}>
                       <CameraFeed getImage={this.getImage} sendFile={this.uploadImage} />
                     </Modal>

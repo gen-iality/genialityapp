@@ -32,15 +32,13 @@ const ContactList = ({ agendarCita, tabActive }) => {
           setContactsList(result);
         }
         if (typeof result == 'string') setMessageService(result);
-        console.log('FINISHED GET CONTACT LIST');
+
         setLoading(false);
       });
     };
     const getProperties = async () => {
       let properties = await EventFieldsApi.getAll(eventContext._id);
       setUserProperties(properties);
-      console.log('FINISHED GET PROPERTIES');
-      console.log(properties);
     };
 
     if (tabActive === 'mis-contactos') {
@@ -115,7 +113,7 @@ const ContactList = ({ agendarCita, tabActive }) => {
                             </div>
                           )
                       )}
-                    </div>,
+                    </div>
                   ]}
                 />
                 <Col xs={24}>

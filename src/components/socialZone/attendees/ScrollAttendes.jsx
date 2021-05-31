@@ -16,14 +16,11 @@ const AttendeScroll = function(props) {
   const pag = 100;
 
   useEffect(() => {
-    console.log('LLEGA AQUI');
-    console.log(props.attendes);
     setfilteredlist(props.attendes);
     setPage(1);
   }, [props.attendes]);
 
   const handleInfiniteOnLoad = () => {
-    console.log('SCROLL HANDLE');
     setLoading(true);
 
     if (filteredlist.length == props.attendes.length) {
@@ -35,14 +32,14 @@ const AttendeScroll = function(props) {
 
     let ini = pag * page;
     let fin = pag * page + pag;
-    //console.log('INICIO=>' + ini);
-    //console.log('FIN=>' + fin);
+    //
+    //
 
     let newDatos = props.attendes.slice(ini, fin);
     const datosg = filteredlist.concat(newDatos);
     let pagP = page;
     pagP = pagP += 1;
-    // console.log(pagP);
+    //
 
     setfilteredlist(datosg);
     setPage(pagP++);

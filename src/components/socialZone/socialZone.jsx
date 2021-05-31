@@ -48,8 +48,6 @@ let SocialZone = function(props) {
         props.updateChat.otherUserName
       );
     }
-    console.log('PROPS');
-    console.log(props.totalMessages);
   }, [props.updateChat]);
 
   let userName = props.currentUser
@@ -111,7 +109,7 @@ let SocialZone = function(props) {
       setIsFiltered(false);
       setstrAttende('');
       setBusqueda('');
-      // console.log('BUSQUEDA CURRENT=>', (busquedaRef.current.value = ''));
+      //
       busquedaRef.current = '';
     }
   };
@@ -122,11 +120,11 @@ let SocialZone = function(props) {
   );
 
   useEffect(() => {
-    //console.log('social zone mount**********');
+    //
     const fetchData = async () => {
       const user = await getCurrentUser();
       setCurrentUser(user);
-      console.log(user);
+
       setcurrentTab('' + tab);
 
       props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
@@ -190,7 +188,7 @@ let SocialZone = function(props) {
 
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
-              },
+              }
             });
 
             newmsj > 0 && setTotalNewMessages(newmsj);
@@ -414,13 +412,13 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
   viewNotification: state.notifications.data,
-  tabs: state.stage.data.tabs,
+  tabs: state.stage.data.tabs
 });
 
 const mapDispatchToProps = {
   setMainStage,
   setNotification,
-  setCurrentSurvey,
+  setCurrentSurvey
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));

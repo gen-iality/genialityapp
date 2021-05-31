@@ -1,9 +1,9 @@
-import 'chartjs-plugin-datalabels'
-import React, { Component } from "react";
-import { Spin, Card } from "antd";
-import Chart from "chart.js";
-import { Users } from "./services";
-import { graphicsFrame } from "./frame";
+import 'chartjs-plugin-datalabels';
+import React, { Component } from 'react';
+import { Spin, Card } from 'antd';
+import Chart from 'chart.js';
+import { Users } from './services';
+import { graphicsFrame } from './frame';
 
 class Graphics extends Component {
   constructor(props) {
@@ -20,9 +20,7 @@ class Graphics extends Component {
     // this.percentPesoVoto = this.percentPesoVoto.bind(this)
   }
 
-
   componentDidMount() {
-    console.log('<<<<<<<<< start gamification >>>>>>>>>>>>>>>>>')
     this.loadData();
   }
 
@@ -36,30 +34,30 @@ class Graphics extends Component {
   percentPesoVoto = async () => {
     const { eventId } = this.props;
 
-    let totalPesoVoto = 0
-    let pesoVotoCheked = 0
-    let pointsPercent = []
-    let pointsList = []
-    const users = await Users.getUsers(eventId)
+    let totalPesoVoto = 0;
+    let pesoVotoCheked = 0;
+    let pointsPercent = [];
+    let pointsList = [];
+    const users = await Users.getUsers(eventId);
 
-    users.forEach(function (a) {
+    users.forEach(function(a) {
       if (a.checkedin_at) {
         pesoVotoCheked += parseInt(a.properties.pesovoto);
       }
       totalPesoVoto += parseInt(a.properties.pesovoto);
     });
 
-    this.props.data.pointsList.forEach(function (b) {
-      pointsPercent.push((b / totalPesoVoto * pesoVotoCheked).toFixed(2))
-    })
+    this.props.data.pointsList.forEach(function(b) {
+      pointsPercent.push(((b / totalPesoVoto) * pesoVotoCheked).toFixed(2));
+    });
 
     for (let i = 0; pointsPercent.length > i; i++) {
-      const point = parseFloat(pointsPercent[i])
-      pointsList.push(point)
+      const point = parseFloat(pointsPercent[i]);
+      pointsList.push(point);
     }
 
-    if (pointsList.length > 0) this.setState({ pointsList })
-  }
+    if (pointsList.length > 0) this.setState({ pointsList });
+  };
 
   mountChart = async () => {
     let { graphicsFrame, chartCreated, chart, dataGamification } = this.state;
@@ -74,7 +72,7 @@ class Graphics extends Component {
       // El nombre de las opciones y el conteo de las opciones
       verticalBar.data.labels = userList;
       verticalBar.data.datasets[0].data = Object.values(pointsList || []);
-      verticalBar.data.datasets[0].label = "Ranking";
+      verticalBar.data.datasets[0].label = 'Ranking';
       verticalBar.options = {
         plugins: {
           datalabels: {
@@ -82,22 +80,26 @@ class Graphics extends Component {
           }
         },
         scales: {
-          yAxes: [{
-            ticks: {
-              fontColor: '#777',
-              minor: { display: false }
+          yAxes: [
+            {
+              ticks: {
+                fontColor: '#777',
+                minor: { display: false }
+              }
             }
-          }],
-          xAxes: [{
-            ticks: {
-              fontColor: '#777',
+          ],
+          xAxes: [
+            {
+              ticks: {
+                fontColor: '#777'
+              }
             }
-          }],
+          ]
         }
-      }
+      };
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
-      const canvas = document.getElementById("chart").getContext("2d");
+      const canvas = document.getElementById('chart').getContext('2d');
       const chart = new Chart(canvas, verticalBar);
 
       this.setState({ verticalBar, chart, chartCreated: true });
@@ -105,7 +107,7 @@ class Graphics extends Component {
       // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
       chart.data.labels = userList;
       chart.data.datasets[0].data = Object.values(pointsList || []);
-      verticalBar.data.datasets[0].label = "Ranking";
+      verticalBar.data.datasets[0].label = 'Ranking';
 
       chart.update();
 
@@ -125,8 +127,8 @@ class Graphics extends Component {
 
     if (dataGamification !== null)
       return (
-        <Card style={{ backgroundColor: "rgba(227, 227, 227,0.3)", marginTop: "2%" }}>
-          <canvas style={{width:"100%"}} id="chart"></canvas>
+        <Card style={{ backgroundColor: 'rgba(227, 227, 227,0.3)', marginTop: '2%' }}>
+          <canvas style={{ width: '100%' }} id='chart'></canvas>
         </Card>
       );
 

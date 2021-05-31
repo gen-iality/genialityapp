@@ -34,7 +34,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
                   </Button>,
                   <Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item, false)}>
                     No Aceptar
-                  </Button>,
+                  </Button>
                 ]}>
                 <List.Item.Meta
                   avatar={
@@ -67,7 +67,6 @@ const InvitacionListSent = ({ list }) => {
 
   useEffect(() => {
     setInvitationsSent(list);
-    console.log(list);
   }, [list]);
 
   if (invitationsSent.length)
@@ -127,12 +126,11 @@ export default function RequestList({ eventId, notification, currentUser, notify
       // Servicio que trae las invitaciones / solicitudes recibidas
       Networking.getInvitationsReceived(eventId, eventUser._id).then(async ({ data }) => {
         setCurrentUserId(user._id);
-        console.log(data);
+
         // Solo se obtendran las invitaciones que no tengan respuesta
         if (data.length > 0) {
           let response = data.filter((item) => item.response == undefined);
 
-          console.log(response);
           setRequestListReceived(response);
           await insertNameRequested(response);
         } else {
@@ -168,7 +166,7 @@ export default function RequestList({ eventId, notification, currentUser, notify
           state: requestListReceived[i].state,
           updated_at: requestListReceived[i].updated_at,
           user_name_requesting: requestListReceived[i].id_user_requesting,
-          _id: requestListReceived[i]._id,
+          _id: requestListReceived[i]._id
         });
       }
     }
@@ -179,18 +177,16 @@ export default function RequestList({ eventId, notification, currentUser, notify
 
   // Funcion para aceptar o rechazar una invitacion o solicitud
   const sendResponseToInvitation = async (requestId, state) => {
-    console.log(requestId);
     let data = { response: state ? 'accepted' : 'rejected' };
-    console.log(data);
+
     Networking.acceptOrDeclineInvitation(eventId, requestId._id, data)
       .then(async (response) => {
         message.success('Respuesta enviada');
-        console.log(currentUser);
 
         let notificationr = {
           idReceive: currentUser._id,
           idEmited: requestId && requestId._id,
-          state: '1',
+          state: '1'
         };
         notification(notificationr, currentUser._id);
         setRequestListReceived(requestListReceived.filter((item) => item._id != requestId._id));
@@ -203,11 +199,8 @@ export default function RequestList({ eventId, notification, currentUser, notify
 
   useEffect(() => {
     if (tabActive === 'solicitudes') {
-      console.log('EJECUTADO SOLICITUDES');
       getInvitationsList();
     }
-    console.log('ACTIVE TAB');
-    console.log(tabActive);
   }, [eventId, tabActive]);
 
   if (currentUserId && !loading)

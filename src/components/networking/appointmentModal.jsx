@@ -15,44 +15,44 @@ const fakeEventTimetable = {
   '2020-09-24': [
     {
       timestamp_start: '2020-09-24T21:00:00Z',
-      timestamp_end: '2020-09-24T21:15:00Z',
+      timestamp_end: '2020-09-24T21:15:00Z'
     },
     {
       timestamp_start: '2020-09-24T21:15:00Z',
-      timestamp_end: '2020-09-24T21:30:00Z',
+      timestamp_end: '2020-09-24T21:30:00Z'
     },
     {
       timestamp_start: '2020-09-24T21:30:00Z',
-      timestamp_end: '2020-09-24T21:45:00Z',
+      timestamp_end: '2020-09-24T21:45:00Z'
     },
     {
       timestamp_start: '2020-09-24T21:45:00Z',
-      timestamp_end: '2020-09-24T22:00:00Z',
+      timestamp_end: '2020-09-24T22:00:00Z'
     },
     {
       timestamp_start: '2020-09-24T22:00:00Z',
-      timestamp_end: '2020-09-24T22:15:00Z',
+      timestamp_end: '2020-09-24T22:15:00Z'
     },
     {
       timestamp_start: '2020-09-24T22:15:00Z',
-      timestamp_end: '2020-09-24T22:30:00Z',
+      timestamp_end: '2020-09-24T22:30:00Z'
     },
     {
       timestamp_start: '2020-09-24T22:30:00Z',
-      timestamp_end: '2020-09-24T22:45:00Z',
+      timestamp_end: '2020-09-24T22:45:00Z'
     },
     {
       timestamp_start: '2020-09-24T22:45:00Z',
-      timestamp_end: '2020-09-24T23:00:00Z',
-    },
-  ],
+      timestamp_end: '2020-09-24T23:00:00Z'
+    }
+  ]
 };
 
 const { TextArea } = Input;
 const buttonStatusText = {
   free: 'Reservar',
   pending: 'Pendiente',
-  rejected: 'Rechazada',
+  rejected: 'Rechazada'
 };
 const MESSAGE_MAX_LENGTH = 200;
 
@@ -64,9 +64,8 @@ function AppointmentModal({
   targetEventUser,
   closeModal,
   notificacion,
-  idsend,
+  idsend
 }) {
-  console.log('targetEventUserId', targetEventUserId, targetEventUser);
   const eventDatesRange = getDatesRange(event.date_start, event.date_end);
   const [openAgenda, setOpenAgenda] = useState('');
   const [agendaMessage, setAgendaMessage] = useState('');
@@ -77,13 +76,13 @@ function AppointmentModal({
 
   const reloadData = async (resp, target) => {
     setReloadFlag(!reloadFlag);
-    console.log(target);
+
     notification.open({
       message: 'Solicitud enviada',
       description:
         'Le llegará un correo a la persona notificandole la solicitud, quien la aceptara o recharaza  y le llegará un correo de vuelta confirmando la respuesta',
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-      duration: 30,
+      duration: 30
     });
     var usId = await getUsersId(targetEventUserId, event._id);
 
@@ -94,9 +93,9 @@ function AppointmentModal({
       message: 'Te ha enviado solicitud de agenda',
       name: 'notification.name',
       type: 'agenda',
-      state: '0',
+      state: '0'
     };
-    console.log('RESPUESTA SEND AGENDA' + resp);
+
     await notificacion(notificationA, currentEventUserId);
   };
 
@@ -133,7 +132,7 @@ function AppointmentModal({
               const occupiedAgendas = filter(
                 whereEq({
                   timestamp_start: timetableItem.timestamp_start,
-                  timestamp_end: timetableItem.timestamp_end,
+                  timestamp_end: timetableItem.timestamp_end
                 }),
                 agendas
               );
@@ -149,7 +148,7 @@ function AppointmentModal({
                   !!occupiedAgenda &&
                   (occupiedAgenda.request_status === 'accepted' || occupiedAgenda.owner_id === currentEventUserId)
                     ? occupiedAgenda.request_status
-                    : 'free',
+                    : 'free'
               };
 
               if (isNonEmptyArray(newTimetable[date])) {
@@ -166,7 +165,7 @@ function AppointmentModal({
         console.error(error);
         notification.error({
           message: 'Error',
-          description: 'Obteniendo las citas del usuario',
+          description: 'Obteniendo las citas del usuario'
         });
       } finally {
         setLoading(false);
@@ -284,13 +283,9 @@ function AppointmentModal({
                                   targetEventUserId,
                                   targetEventUser,
                                   timetableItem,
-                                  message: agendaMessage,
+                                  message: agendaMessage
                                 })
                                   .then((resp) => {
-                                    console.log('RESP AGENDA');
-                                    console.log(resp);
-                                    console.log(targetEventUserId);
-                                    console.log(timetableItem);
                                     reloadData(resp, targetEventUserId);
                                   })
                                   .catch((error) => {
@@ -298,12 +293,12 @@ function AppointmentModal({
                                     if (!error) {
                                       notification.warning({
                                         message: 'Espacio reservado',
-                                        description: 'Este espacio de tiempo ya fué reservado',
+                                        description: 'Este espacio de tiempo ya fué reservado'
                                       });
                                     } else {
                                       notification.error({
                                         message: 'Error',
-                                        description: 'Error creando la reserva',
+                                        description: 'Error creando la reserva'
                                       });
                                     }
                                     resetModal();

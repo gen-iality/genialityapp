@@ -22,7 +22,7 @@ const { addLoginInformation, showMenu } = userActions;
 
 const { Header } = Layout;
 const zIndex = {
-  zIndex: '1',
+  zIndex: '1'
 };
 
 class Headers extends Component {
@@ -48,7 +48,7 @@ class Headers extends Component {
       showEventMenu: false,
       tabEvtType: true,
       tabEvtCat: true,
-      eventId: null,
+      eventId: null
     };
 
     this.setEventId = this.setEventId.bind(this);
@@ -57,13 +57,13 @@ class Headers extends Component {
 
   showDrawer = () => {
     this.setState({
-      showEventMenu: true,
+      showEventMenu: true
     });
   };
 
   onClose = () => {
     this.setState({
-      showEventMenu: false,
+      showEventMenu: false
     });
   };
 
@@ -74,7 +74,6 @@ class Headers extends Component {
   };
 
   async componentDidMount() {
-    console.log('header', this.props);
     const eventId = this.setEventId();
     this.setState({ eventId });
 
@@ -139,10 +138,6 @@ class Headers extends Component {
     if (prevProps && prevProps.location !== this.props.location) {
       this.handleMenu(this.props.location);
     }
-
-    if (prevProps.match !== this.props.match) {
-      console.log('match', this.props.match);
-    }
   }
 
   logout = () => {
@@ -163,7 +158,7 @@ class Headers extends Component {
       })
       .catch(function(error) {
         // An error happened.
-        console.error(error.message);
+        error;
       });
   };
 
@@ -204,7 +199,7 @@ class Headers extends Component {
                       <Button style={zIndex} onClick={this.showDrawer}>
                         {React.createElement(this.state.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
                           className: 'trigger',
-                          onClick: this.toggle,
+                          onClick: this.toggle
                         })}
                       </Button>
                     </span>
@@ -261,13 +256,13 @@ const mapStateToProps = (state) => ({
   eventMenu: state.user.menu,
   permissions: state.permissions,
   error: state.categories.error,
-  event: state.event.data,
+  event: state.event.data
 });
 
 const mapDispatchToProps = {
   setEventData,
   addLoginInformation,
-  showMenu,
+  showMenu
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Headers));

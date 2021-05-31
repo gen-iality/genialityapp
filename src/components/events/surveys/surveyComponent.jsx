@@ -21,7 +21,7 @@ const MIN_ANSWER_FEEDBACK_TIME = 5;
 const surveyStyle = {
   overFlowX: 'hidden',
   overFlowY: 'scroll',
-  minHeight: 'calc(100vh - 100px)',
+  minHeight: 'calc(100vh - 100px)'
 };
 
 class SurveyComponent extends Component {
@@ -44,7 +44,7 @@ class SurveyComponent extends Component {
       timerPausa: null,
       survey: null,
       rankingPoints: 0,
-      fiftyfitfyused: false,
+      fiftyfitfyused: false
     };
   }
 
@@ -134,7 +134,7 @@ class SurveyComponent extends Component {
             self.setState({
               surveyRealTime,
               freezeGame: surveyRealTime.freezeGame,
-              currentPage: surveyRealTime.currentPage,
+              currentPage: surveyRealTime.currentPage
             });
             resolve(surveyRealTime);
           });
@@ -185,7 +185,7 @@ class SurveyComponent extends Component {
       let textMessage = dataSurvey.initialMessage;
       dataSurvey['questions'].unshift({
         type: 'html',
-        html: `<div style='width: 90%; margin: 0 auto;'>${textMessage}</div>`,
+        html: `<div style='width: 90%; margin: 0 auto;'>${textMessage}</div>`
       });
     }
 
@@ -201,7 +201,7 @@ class SurveyComponent extends Component {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
         key: `page${index + 1}`,
-        questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey === 'true' ? false : true }],
+        questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey === 'true' ? false : true }]
       };
     });
 
@@ -267,7 +267,7 @@ class SurveyComponent extends Component {
             uid: infoUser._id,
             email: infoUser.email,
             names: infoUser.names || infoUser.displayName,
-            voteValue: surveyData.allow_vote_value_per_user === 'true' && eventUsers.length > 0 && voteWeight,
+            voteValue: surveyData.allow_vote_value_per_user === 'true' && eventUsers.length > 0 && voteWeight
           },
           infoOptionQuestion
         )
@@ -287,7 +287,7 @@ class SurveyComponent extends Component {
           {
             responseData: question.value || '',
             date: new Date(),
-            uid: 'guest',
+            uid: 'guest'
           },
           infoOptionQuestion
         )
@@ -306,7 +306,7 @@ class SurveyComponent extends Component {
     const objMessage = {
       title: '',
       subTitle: '',
-      status: state,
+      status: state
     };
 
     switch (state) {
@@ -320,7 +320,7 @@ class SurveyComponent extends Component {
             </div>
           ),
           subTitle: '',
-          icon: <SmileOutlined />,
+          icon: <SmileOutlined />
         };
 
       case 'error':
@@ -328,7 +328,7 @@ class SurveyComponent extends Component {
           ...objMessage,
           title: <div>Debido a que no respondiste correctamente no has ganado puntos.</div>,
           subTitle: '',
-          icon: <FrownOutlined />,
+          icon: <FrownOutlined />
         };
 
       case 'warning':
@@ -336,7 +336,7 @@ class SurveyComponent extends Component {
           ...objMessage,
           title: 'No has escogido ninguna opción',
           subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opción.`,
-          icon: <MehOutlined />,
+          icon: <MehOutlined />
         };
 
       case 'info':
@@ -344,7 +344,7 @@ class SurveyComponent extends Component {
           ...objMessage,
           title: 'Estamos en una pausa',
           subTitle: `El juego se encuentra en pausa. Espera hasta el moderador reanude el juego`,
-          icon: <MehOutlined />,
+          icon: <MehOutlined />
         };
 
       default:
@@ -411,7 +411,7 @@ class SurveyComponent extends Component {
       user_id: currentUser._id,
       user_name: currentUser.names,
       user_email: currentUser.email,
-      points: rankingPoints,
+      points: rankingPoints
     });
 
     Trivia.setTriviaRanking(surveyData._id, currentUser, totalPoints, surveyModel.getAllQuestions().length - 1);
@@ -602,7 +602,7 @@ class SurveyComponent extends Component {
             )}
           </>
         )}
-        {feedbackMessage.hasOwnProperty('title') && (
+        {feedbackMessage && feedbackMessage.title && (
           <Result className='animate__animated animate__rubberBand' {...feedbackMessage} extra={null} />
         )}
 
@@ -612,7 +612,7 @@ class SurveyComponent extends Component {
           surveyData.allow_anonymous_answers === true ||
           surveyData.publish === 'true' ||
           surveyData.publish === true) ? (
-          <div style={{ display: feedbackMessage.hasOwnProperty('title') || showMessageOnComplete ? 'none' : 'block' }}>
+          <div style={{ display: feedbackMessage.title || showMessageOnComplete ? 'none' : 'block' }}>
             {this.state.survey && (
               <div className='animate__animated animate__bounceInDown'>
                 {surveyData.allow_gradable_survey === 'true' && !this.state.fiftyfitfyused && (
@@ -645,7 +645,7 @@ class SurveyComponent extends Component {
               eventUser.ticket.allowed_to_vote === 'true' && (
                 <div
                   style={{
-                    display: feedbackMessage.hasOwnProperty('title') || showMessageOnComplete ? 'none' : 'block',
+                    display: feedbackMessage.title || showMessageOnComplete ? 'none' : 'block'
                   }}>
                   {this.state.survey && (
                     <Survey.Survey
@@ -674,7 +674,7 @@ const mapDispatchToProps = { setCurrentSurvey, setSurveyVisible };
 
 const mapStateToProps = (state) => ({
   currentSurvey: state.survey.data.currentSurvey,
-  currentActivity: state.stage.data.currentActivity,
+  currentActivity: state.stage.data.currentActivity
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyComponent);

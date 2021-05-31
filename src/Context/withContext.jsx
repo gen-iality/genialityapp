@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { UsuarioContext } from './eventUserContext';
 import { CurrentUserContext } from './userContext';
 
-const useUser = () => useContext(UsuarioContext);
+//const useUser = () => useContext(UsuarioContext);
 
 export const WithEviusContext = (Component) => (
   <UsuarioContext.Consumer>

@@ -14,7 +14,7 @@ const { Meta } = Card;
 
 const requestStatusText = {
   rejected: 'rechazada',
-  accepted: 'aceptada',
+  accepted: 'aceptada'
 };
 
 function AppointmentRequests({ eventUsers, notificacion }) {
@@ -35,7 +35,6 @@ function AppointmentRequests({ eventUsers, notificacion }) {
 
       getPendingAgendasFromEventUser(eventContext._id, userEventContext._id)
         .then((agendas) => {
-          console.log('pendingAgendas', agendas);
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             const pendingAgendas = map((agenda) => {
               const ownerEventUser = find(propEq('_id', agenda.owner_id), eventUsers);
@@ -49,7 +48,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Obteniendo las citas pendientes',
+            description: 'Obteniendo las citas pendientes'
           });
         })
         .finally(() => setLoading(false));
@@ -63,7 +62,6 @@ function AppointmentRequests({ eventUsers, notificacion }) {
 
       getPendingAgendasSent(eventContext._id, userEventContext._id)
         .then((agendas) => {
-          console.log('AGENDAS--', eventContext._id, userEventContext._id, agendas, eventUsers);
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             const pendingAgendas = map((agenda) => {
               const ownerEventUser = find(propEq('_id', agenda.attendees[1]), eventUsers);
@@ -71,14 +69,13 @@ function AppointmentRequests({ eventUsers, notificacion }) {
             }, agendas);
 
             setPendingAgendasSent(pendingAgendas);
-            console.log(pendingAgendas);
           }
         })
         .catch((error) => {
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Obteniendo las citas pendientes',
+            description: 'Obteniendo las citas pendientes'
           });
         })
         .finally(() => setLoading1(false));
@@ -160,21 +157,21 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
           let notificationr = {
             idReceive: userCurrentContext._id,
             idEmited: data && data.id,
-            state: '1',
+            state: '1'
           };
-          console.log(notificationr);
+
           notification(notificationr, props.userCurrentContext._id);
         })
         .catch((error) => {
           if (!error) {
             notification.error({
               message: 'Solicitud no encontrada',
-              description: 'La solicitud no existe o no esta en estado pendiente',
+              description: 'La solicitud no existe o no esta en estado pendiente'
             });
           } else if (error === 'HOURS_NOT_AVAILABLE') {
             notification.error({
               message: 'Horario agendado',
-              description: 'Ya tienes agendada esta hora',
+              description: 'Ya tienes agendada esta hora'
             });
           } else {
             // notification.error({
@@ -185,9 +182,9 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             let notificationr = {
               idReceive: userCurrentContext._id,
               idEmited: data && data.id,
-              state: '1',
+              state: '1'
             };
-            console.log(notificationr);
+
             notificacion(notificationr, userCurrentContext._id);
           }
         })

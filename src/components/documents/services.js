@@ -1,17 +1,15 @@
-import axios from "axios";
-import { ApiUrl } from "../../helpers/constants";
+import axios from 'axios';
+import { ApiUrl } from '../../helpers/constants';
 
 export function getFiles(EventID) {
-  return new Promise(async (resolve, reject) => {
-    let response = "";
-    await axios
+  return new Promise((resolve, reject) => {
+    let response = '';
+    axios
       .get(`${ApiUrl}/api/events/${EventID}/getallfiles`)
       .then((docs) => {
         response = docs.data.data.length !== 0 ? docs.data.data : false;
+        resolve(response);
       })
-      .catch((err) => {
-        console.log(err);
-      });
-    resolve(response);
+      .catch((err) => {});
   });
 }

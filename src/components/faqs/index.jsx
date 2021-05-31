@@ -1,15 +1,15 @@
-import React, { Component, useState } from "react";
-import { FaqsApi } from "../../helpers/request";
-import { toolbarEditor } from "../../helpers/constants";
-import ReactQuill from "react-quill";
-import Loading from "../loaders/loading";
-import Moment from "moment";
-import EventContent from "../events/shared/content";
-import EvenTable from "../events/shared/table";
-import TableAction from "../events/shared/tableAction";
-import { handleRequestError, sweetAlert } from "../../helpers/utils";
-import { toast } from "react-toastify";
-import { FormattedMessage } from "react-intl";
+import React, { Component, useState } from 'react';
+import { FaqsApi } from '../../helpers/request';
+import { toolbarEditor } from '../../helpers/constants';
+import ReactQuill from 'react-quill';
+import Loading from '../loaders/loading';
+import Moment from 'moment';
+import EventContent from '../events/shared/content';
+import EvenTable from '../events/shared/table';
+import TableAction from '../events/shared/tableAction';
+import { handleRequestError, sweetAlert } from '../../helpers/utils';
+import { toast } from 'react-toastify';
+import { FormattedMessage } from 'react-intl';
 
 /* Componente controlado tipo Input, todo esto para no pasar parametros usando arrow functions 
 requiere:
@@ -18,8 +18,8 @@ requiere:
 @handleInputChange función que va a atender los cambios
 */
 const ControlledInput = (props) => {
-  const [value, setValue] = useState(props.value || "");
-  const [name] = useState(props.name || "generic");
+  const [value, setValue] = useState(props.value || '');
+  const [name] = useState(props.name || 'generic');
 
   const handleInputChange = (e) => {
     let valor = e.target.value;
@@ -27,14 +27,7 @@ const ControlledInput = (props) => {
     props.handleInputChange(valor, props.name);
   };
 
-  return (
-    <input
-      type="text"
-      id={name || "generic"}
-      value={value}
-      onChange={handleInputChange}
-    />
-  );
+  return <input type='text' id={name || 'generic'} value={value} onChange={handleInputChange} />;
 };
 
 class Faqs extends Component {
@@ -44,12 +37,12 @@ class Faqs extends Component {
       event: this.props.event,
       list: [],
       data: {},
-      id: "",
-      deleteID: "",
-      title: "",
-      content: "",
+      id: '',
+      deleteID: '',
+      title: '',
+      content: '',
       isLoading: false,
-      loading: true,
+      loading: true
     };
   }
 
@@ -60,35 +53,33 @@ class Faqs extends Component {
   getFaqs = async () => {
     const data = await FaqsApi.byEvent(this.props.eventId);
     this.setState({ list: data, loading: false });
-    console.log(data);
   };
 
   handleInputChange = (value, fieldName) => {
-    console.log("CLICK", value, fieldName);
     this.setState({ title: value });
   };
 
   HandleQuillEditorChange = (contents) => this.setState({ content: contents });
 
   newFaqs = () => {
-    if (!this.state.list.find(({ _id }) => _id === "new")) {
+    if (!this.state.list.find(({ _id }) => _id === 'new')) {
       this.setState((state) => {
-        const list = state.list.concat({ title: "", content: "", _id: "new" });
-        return { list, id: "new" };
+        const list = state.list.concat({ title: '', content: '', _id: 'new' });
+        return { list, id: 'new' };
       });
     }
   };
 
   removeFaqs = () => {
     this.setState((state) => {
-      const list = state.list.filter((item) => item._id !== "new");
-      return { list, id: "", title: "", content: "" };
+      const list = state.list.filter((item) => item._id !== 'new');
+      return { list, id: '', title: '', content: '' };
     });
   };
 
   saveFaqs = async () => {
     try {
-      if (this.state.id !== "new") {
+      if (this.state.id !== 'new') {
         await FaqsApi.editOne(
           { title: this.state.title, content: this.state.content },
           this.state.id,
@@ -99,13 +90,11 @@ class Faqs extends Component {
             if (item._id === state.id) {
               item.title = state.title;
               item.content = state.content;
-              toast.success(
-                <FormattedMessage id="toast.success" defaultMessage="Ok!" />
-              );
+              toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
               return item;
             } else return item;
           });
-          return { list, id: "", title: "", content: "" };
+          return { list, id: '', title: '', content: '' };
         });
       } else {
         const newFaqs = await FaqsApi.create(
@@ -119,69 +108,56 @@ class Faqs extends Component {
               item.content = newFaqs.content;
               item.created_at = newFaqs.created_at;
               item._id = newFaqs._id;
-              toast.success(
-                <FormattedMessage id="toast.success" defaultMessage="Ok!" />
-              );
+              toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
               return item;
             } else return item;
           });
-          return { list, id: "", title: "", content: "" };
+          return { list, id: '', title: '', content: '' };
         });
       }
     } catch (e) {
-      console.log(e);
+      e;
     }
   };
 
-  editFaqs = (cert) =>
-    this.setState({ id: cert._id, title: cert.title, content: cert.content });
+  editFaqs = (cert) => this.setState({ id: cert._id, title: cert.title, content: cert.content });
 
   removeFaqs = (id) => {
-    sweetAlert.twoButton(
-      `Está seguro de borrar este espacio`,
-      "warning",
-      true,
-      "Borrar",
-      async (result) => {
-        try {
-          if (result.value) {
-            sweetAlert.showLoading("Espera (:", "Borrando...");
-            await FaqsApi.deleteOne(id, this.props.eventId);
-            this.setState((state) => ({ id: "", title: "", content: "" }));
-            this.getFaqs();
-            sweetAlert.hideLoading();
-          }
-        } catch (e) {
-          sweetAlert.showError(handleRequestError(e));
+    sweetAlert.twoButton(`Está seguro de borrar este espacio`, 'warning', true, 'Borrar', async (result) => {
+      try {
+        if (result.value) {
+          sweetAlert.showLoading('Espera (:', 'Borrando...');
+          await FaqsApi.deleteOne(id, this.props.eventId);
+          this.setState((state) => ({ id: '', title: '', content: '' }));
+          this.getFaqs();
+          sweetAlert.hideLoading();
         }
+      } catch (e) {
+        sweetAlert.showError(handleRequestError(e));
       }
-    );
+    });
   };
 
   render() {
-    
     return (
       <React.Fragment>
-        <div className="column is-12">
+        <div className='column is-12'>
           <EventContent
-            title="Preguntas Frecuentes"
-            description_complete={
-              "Agregue o edite las Preguntas Frecuentes que se muestran en la aplicación"
-            }
+            title='Preguntas Frecuentes'
+            description_complete={'Agregue o edite las Preguntas Frecuentes que se muestran en la aplicación'}
             addAction={this.newFaqs}
-            addTitle={"Nueva Pregunta"}
-          >
+            addTitle={'Nueva Pregunta'}>
             {this.state.loading ? (
               <Loading />
             ) : (
-              <EvenTable head={["Titulo", "Contenido", ""]}>
+              <EvenTable head={['Titulo', 'Contenido', '']}>
                 {this.state.list.map((cert, key) => {
                   return (
                     <tr key={key}>
                       <td>
                         {this.state.id === cert._id ? (
                           <ControlledInput
-                            name="title"
+                            name='title'
                             value={this.state.title}
                             handleInputChange={this.handleInputChange}
                           />
@@ -193,19 +169,17 @@ class Faqs extends Component {
                       <td>
                         {this.state.id === cert._id ? (
                           <ReactQuill
-                            id="desc"
+                            id='desc'
                             value={this.state.content}
                             modules={toolbarEditor}
                             onChange={this.HandleQuillEditorChange}
                           />
                         ) : (
-                          <div
-                            dangerouslySetInnerHTML={{ __html: cert.content }}
-                          />
+                          <div dangerouslySetInnerHTML={{ __html: cert.content }} />
                         )}
                       </td>
 
-                      <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
+                      <td>{Moment(cert.created_at).format('DD/MM/YYYY')}</td>
                       <TableAction
                         id={this.state.id}
                         object={cert}

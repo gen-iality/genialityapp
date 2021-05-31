@@ -14,18 +14,17 @@ export function UserEventProvider({ children }) {
 
       const eventUser = await EventsApi.getcurrentUserEventUser(eventid);
       setuserEvent(eventUser);
-      console.log('CONTEXTOUSUARIO---', eventUser);
     }
     fetchEventUser();
   }, []);
 
   const value = React.useMemo(() => {
     return {
-      ...userEvent,
+      ...userEvent
     };
   }, [userEvent]);
 
-  // console.log('state user evet', userEvent);
+  //
 
   return <UsuarioContext.Provider value={value}>{children}</UsuarioContext.Provider>;
 }

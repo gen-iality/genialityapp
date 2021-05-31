@@ -5,8 +5,6 @@ import ReactPlayer from 'react-player';
 // https://youtu.be/d6ssSYyld4o
 
 export default function PartnerDetail({ company, handleClosePartnerDetail }) {
-  console.log("company")
-  console.log(company)
   return (
     <div>
       <Row justify='start' style={{ marginBottom: '15px' }}>
@@ -28,29 +26,29 @@ export default function PartnerDetail({ company, handleClosePartnerDetail }) {
             </Row>
           )}
 
-          <div style={{ marginTop:"5vh",fontSize: "120%",fontWeight: "bold"}}>Video promocional de la empresa</div>         
+          <div style={{ marginTop: '5vh', fontSize: '120%', fontWeight: 'bold' }}>Video promocional de la empresa</div>
 
-         {company.video_url && <div className='column is-centered mediaplayer'>
+          {company.video_url && (
+            <div className='column is-centered mediaplayer'>
               <ReactPlayer
                 width={'100%'}
                 height={'40vw'}
                 style={{
-                  marginTop:'0px',
+                  marginTop: '0px',
                   display: 'block',
-                  margin: '0 auto',
+                  margin: '0 auto'
                 }}
                 url={company.video_url}
                 controls
               />
-            </div>}
-
+            </div>
+          )}
 
           <div
             style={{ textAlign: 'left', marginTop: '20px' }}
             dangerouslySetInnerHTML={{ __html: company.description }}
           />
         </Col>
-
       </Row>
     </div>
   );

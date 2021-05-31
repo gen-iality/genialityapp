@@ -1,22 +1,22 @@
-import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
-import { Form, Input, Tooltip } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { Form, Input, Tooltip } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 class SearchComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showMessage: false,
-      value: "",
+      value: '',
       auxArr: [],
       filtered: [],
-      message: ""
+      message: ''
     };
   }
 
   // componentDidMount = () => {
-  //   this.setState({ 
+  //   this.setState({
   //     data: this.props.data,
   //     kind: this.props.kind })
   // }
@@ -47,21 +47,21 @@ class SearchComponent extends Component {
 
   componentDidUpdate = (prevProps, prevState) => {
     if (this.props.data !== prevProps.data) {
-      //console.log('las props cambiaron')
+      //
     }
-  }
+  };
 
   filterByAllColums(value) {
     let arrAux;
-    if (this.props.event === "5d24e15c1c9d4400004b4e0a") {
-      arrAux = this.props.data.filter(item => {
+    if (this.props.event === '5d24e15c1c9d4400004b4e0a') {
+      arrAux = this.props.data.filter((item) => {
         if (item.properties && item.properties.dni) {
-          return item.properties.dni.search(new RegExp(value, "i")) >= 0;
+          return item.properties.dni.search(new RegExp(value, 'i')) >= 0;
         }
       });
     } else {
-      if (this.props.kind === "user") {
-        arrAux = this.props.data.filter(item => {
+      if (this.props.kind === 'user') {
+        arrAux = this.props.data.filter((item) => {
           if (!item.properties) {
             return false;
           }
@@ -71,34 +71,34 @@ class SearchComponent extends Component {
             let propertyValue = item.properties[key];
             if (!propertyValue) continue;
             propertyValue = String(propertyValue);
-            found = found || propertyValue.search(new RegExp(value, "i")) >= 0;
+            found = found || propertyValue.search(new RegExp(value, 'i')) >= 0;
           }
           return found;
         });
-      } else if (this.props.kind === "invitation") {
+      } else if (this.props.kind === 'invitation') {
         arrAux = this.props.data.filter(
-          item => item.email.search(new RegExp(value, "i")) >= 0 || item.state.search(new RegExp(value, "i")) >= 0
+          (item) => item.email.search(new RegExp(value, 'i')) >= 0 || item.state.search(new RegExp(value, 'i')) >= 0
         );
-      } else if (this.props.kind === "helpers") {
+      } else if (this.props.kind === 'helpers') {
         arrAux = this.props.data.filter(
-          item =>
-            item.user.email.search(new RegExp(value, "i")) >= 0 ||
-            item.user.displayName.search(new RegExp(value, "i")) >= 0
+          (item) =>
+            item.user.email.search(new RegExp(value, 'i')) >= 0 ||
+            item.user.displayName.search(new RegExp(value, 'i')) >= 0
         );
-      } else if (this.props.kind === "agenda") {
+      } else if (this.props.kind === 'agenda') {
         arrAux = this.props.data.filter(
-          item =>
-            item.name.search(new RegExp(value, "i")) >= 0 ||
-            item.space.name.search(new RegExp(value, "i")) >= 0 ||
-            item.hosts.find(({ name }) => name.search(new RegExp(value, "i")) >= 0)
+          (item) =>
+            item.name.search(new RegExp(value, 'i')) >= 0 ||
+            item.space.name.search(new RegExp(value, 'i')) >= 0 ||
+            item.hosts.find(({ name }) => name.search(new RegExp(value, 'i')) >= 0)
         );
-      } else if (this.props.kind === "speakers")
-        arrAux = this.props.data.filter(({ name }) => name.search(new RegExp(value, "i")) >= 0);
+      } else if (this.props.kind === 'speakers')
+        arrAux = this.props.data.filter(({ name }) => name.search(new RegExp(value, 'i')) >= 0);
     }
     return arrAux;
   }
 
-  handleFilter = input => {
+  handleFilter = (input) => {
     let value = input.target.value;
     this.setState({ value });
 
@@ -107,23 +107,23 @@ class SearchComponent extends Component {
     //   if (filtered.length > 0) this.setState({ showMessage: false, message: "", filtered });
     //   else this.setState({ showMessage: true, message: "not" });
     //   this.props.searchResult(filtered);
-    // }    
+    // }
     if (value.length >= 3) {
       let filtered = this.filterByAllColums(value);
-      if (filtered.length > 0) this.setState({ showMessage: false, message: "", filtered });
-      else this.setState({ showMessage: true, message: "not" });
+      if (filtered.length > 0) this.setState({ showMessage: false, message: '', filtered });
+      else this.setState({ showMessage: true, message: 'not' });
       this.props.searchResult(filtered);
     }
 
     if (value.length <= 2) {
       if (value.length === 0) {
-        this.setState({ showMessage: false, message: "" });
+        this.setState({ showMessage: false, message: '' });
         this.props.searchResult(this.props.data.slice(0, this.props.data.length));
       } else {
         this.setState(
           {
             showMessage: true,
-            message: "short"
+            message: 'short'
           },
           () => this.props.searchResult(false)
         );
@@ -133,14 +133,14 @@ class SearchComponent extends Component {
 
   render() {
     return (
-      <div className={this.props.classes} style={{ width: "100%" }}>
+      <div className={this.props.classes} style={{ width: '100%' }}>
         <Form.Item rules={[{ required: true }]} onSubmit={this.searchCert}>
           <Input
             id='inputSearch'
-            type="text"
-            size="large"
+            type='text'
+            size='large'
             onChange={this.handleFilter}
-            placeholder={`Buscar ${this.props.placeholder || ""}`}
+            placeholder={`Buscar ${this.props.placeholder || ''}`}
             value={this.state.value}
             suffix={
               <Tooltip>
@@ -150,8 +150,8 @@ class SearchComponent extends Component {
           />
         </Form.Item>
         {this.state.showMessage && (
-          <p className="help is-danger">
-            <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage="Help" />
+          <p className='help is-danger'>
+            <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage='Help' />
           </p>
         )}
       </div>

@@ -17,7 +17,7 @@ class RootPage extends Component {
       hasVote: false,
       guestVoteInSurvey: false,
       isLoading: true,
-      forceLoadDataState: false,
+      forceLoadDataState: false
     };
   }
 
@@ -63,7 +63,7 @@ class RootPage extends Component {
       this.setState({
         hasVote: userHasVoted !== undefined ? userHasVoted : responseCounter > 0,
         isLoading: false,
-        responseCounter,
+        responseCounter
       });
     } else {
       // Esto solo se ejecuta si no hay algun usuario logeado
@@ -80,7 +80,7 @@ class RootPage extends Component {
   // eslint-disable-next-line no-unused-vars
   getResults = (surveyData) => {
     // eslint-disable-next-line no-console
-    //console.log(surveyData);
+    //
   };
 
   render() {
@@ -93,7 +93,7 @@ class RootPage extends Component {
             backgroundSize: '100% 100%',
             backgroundRepeat: 'no-repeat',
             backgroundImage:
-              'url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/convencion_corona%2Fbg-QQSM2.jpg?alt=media&token=a13a7c60-6e42-4eb0-8ddb-01e4582ed8af")',
+              'url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/convencion_corona%2Fbg-QQSM2.jpg?alt=media&token=a13a7c60-6e42-4eb0-8ddb-01e4582ed8af")'
           }}>
           {(eventUser && eventUser.rol && eventUser.rol.name === 'Speaker') ||
           this.props.currentSurvey.isOpened === 'false' ||
@@ -138,7 +138,7 @@ const mapStateToProps = (state) => ({
   eventId: state.event.data._id,
   currentSurvey: state.survey.data.currentSurvey,
   idSurvey: state.survey.data.currentSurvey._id,
-  currentUser: state.user.data,
+  currentUser: state.user.data
 });
 
 export default connect(mapStateToProps)(RootPage);

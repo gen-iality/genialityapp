@@ -15,7 +15,7 @@ import {
   Result,
   Divider,
   Upload,
-  Select,
+  Select
 } from 'antd';
 import { ControlOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -28,19 +28,19 @@ const { Panel } = Collapse;
 const { TextArea, Password } = Input;
 
 const textLeft = {
-  textAlign: 'left',
+  textAlign: 'left'
 };
 
 const center = {
-  margin: '0 auto',
+  margin: '0 auto'
 };
 
 const validateMessages = {
   required: 'Este campo ${label} es obligatorio para completar el registro.',
   types: {
     email: '${label} no válido!',
-    regexp: 'malo',
-  },
+    regexp: 'malo'
+  }
 };
 
 const options = [
@@ -61,7 +61,7 @@ const options = [
   { value: 'Buenos dias 15', label: 'Buenos dias 15' },
   { value: 'Buenos dias 16', label: 'Buenos dias 16' },
   { value: 'Buenos dias 17', label: 'Buenos dias 17' },
-  { value: 'Buenos dias 18', label: 'Buenos dias 18' },
+  { value: 'Buenos dias 18', label: 'Buenos dias 18' }
 ];
 
 /**
@@ -125,7 +125,7 @@ export default ({
   eventUserId,
   closeModal,
   conditionals,
-  showSection,
+  showSection
 }) => {
   const intl = useIntl();
   const [user, setUser] = useState({});
@@ -215,8 +215,6 @@ export default ({
       try {
         let resp = await UsersApi.createOne(snap, eventId);
 
-        console.log('respuesta al registrar un usuario', resp);
-
         /** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
          * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
          */
@@ -239,7 +237,7 @@ export default ({
 
           setSubmittedForm(true);
           message.success(intl.formatMessage({ id: 'registration.message.created' }));
-          console.log('redirect de login', event.validateEmail, resp.data, resp.status);
+
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
           //todo el proceso de logueo depende del token en la url por eso se recarga la página
           if (event.validateEmail && resp.data.user.initial_token) {
@@ -278,9 +276,7 @@ export default ({
     }
   };
 
-  const fieldsChange = (changedField) => {
-    console.log('fieldsChange');
-  };
+  const fieldsChange = (changedField) => {};
 
   const valuesChange = (changedField, allFields) => {
     updateFieldsVisibility(conditionals, allFields);
@@ -386,7 +382,7 @@ export default ({
             <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
               <div
                 dangerouslySetInnerHTML={{
-                  __html: label,
+                  __html: label
                 }}></div>
             </div>
             <Divider />
@@ -530,7 +526,7 @@ export default ({
               required: true,
               type: 'regexp',
               pattern: new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{10,}$/),
-              message: 'El formato del password no es valido',
+              message: 'El formato del password no es valido'
             }
           : rule;
 
@@ -599,8 +595,8 @@ export default ({
                 required: intl.formatMessage({ id: 'form.field.required' }),
                 types: {
                   email: intl.formatMessage({ id: 'form.validate.message.email' }),
-                  regexp: 'malo',
-                },
+                  regexp: 'malo'
+                }
               }}
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
@@ -662,7 +658,7 @@ export default ({
               <OutsideAlerter showSection={showSection}>
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: successMessage ? successMessage.replace(/\[.*\]/gi, '') : '',
+                    __html: successMessage ? successMessage.replace(/\[.*\]/gi, '') : ''
                   }}></div>
               </OutsideAlerter>
             </Result>

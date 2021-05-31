@@ -36,7 +36,6 @@ class CommentsList extends Component {
       });
       this.setState({ dataComment });
     } catch (err) {
-      console.log('Error getting documents', err);
       this.setState({ dataComment: [] });
     }
   }

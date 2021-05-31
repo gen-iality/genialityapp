@@ -8,7 +8,7 @@ const columns = [
   {
     title: 'Documento',
     dataIndex: 'document',
-    key: 'document',
+    key: 'document'
   },
   {
     render: function(item) {
@@ -18,8 +18,8 @@ const columns = [
         </a>
       );
       return element;
-    },
-  },
+    }
+  }
 ];
 
 // Estructura de boton para descargar documentos
@@ -36,7 +36,7 @@ class documentsList extends Component {
     this.state = {
       data: this.props.data || [],
       documentDates: [],
-      loading: true,
+      loading: true
     };
   }
 
@@ -58,7 +58,7 @@ class documentsList extends Component {
         documentDates.push({
           //activity: agenda.name,
           document: data[i].title ? data[i].title : data[i].name,
-          file: data[i].file,
+          file: data[i].file
         });
       } catch (e) {
         console.error(e);
@@ -71,7 +71,6 @@ class documentsList extends Component {
   render() {
     const { documentDates, data, loading } = this.state;
     const { files } = this.props;
-    console.log(data);
 
     return (
       <div>
@@ -94,12 +93,8 @@ class documentsList extends Component {
                     //boton de descarga
                     actions={[
                       <a key={'itemDoc' + item._id} target='_blank' href={item.file} download rel='noopener noreferrer'>
-                        {item.type == 'folder' ? (
-                          ''
-                        ) : (
-                          <IconText text='Descargar' icon={DownloadOutlined} />
-                        )}
-                      </a>,
+                        {item.type == 'folder' ? '' : <IconText text='Descargar' icon={DownloadOutlined} />}
+                      </a>
                       // <a
                       //     href={ApiGoogleDocuments + encodeURIComponent(item.file)}
                       //     target="_blank"
@@ -112,15 +107,22 @@ class documentsList extends Component {
                       // </a>
                     ]}>
                     <List.Item.Meta
-                      style={{ marginRight: '10%', fontSize:'20px' }}
-                      avatar={item.type == 'folder' ? <FolderOutlined  /> : <FileTextOutlined />}
-                      title={item.title ?( <span style={{fontSize:'20px'}}> {item.title} </span>)  : ( <span style={{fontSize:'20px'}}> {item.name} </span>)}
+                      style={{ marginRight: '10%', fontSize: '20px' }}
+                      avatar={item.type == 'folder' ? <FolderOutlined /> : <FileTextOutlined />}
+                      title={
+                        item.title ? (
+                          <span style={{ fontSize: '20px' }}> {item.title} </span>
+                        ) : (
+                          <span style={{ fontSize: '20px' }}> {item.name} </span>
+                        )
+                      }
                     />
                   </List.Item>
                   {files
                     .filter((file) => file.father_id == item._id)
-                    .map((files) => (
+                    .map((files, key) => (
                       <List.Item
+                        key={key}
                         actions={[
                           <a
                             key={'itemDoc' + files._id}
@@ -133,7 +135,7 @@ class documentsList extends Component {
                             ) : (
                               <IconText text='Descargar' icon={DownloadOutlined} />
                             )}
-                          </a>,
+                          </a>
                         ]}>
                         <List.Item.Meta
                           style={{ marginRight: '10%' }}

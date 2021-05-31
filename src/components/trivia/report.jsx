@@ -1,13 +1,12 @@
-import React, { Component, Fragment } from "react";
-import { withRouter, Link } from "react-router-dom";
+import React, { Component, Fragment } from 'react';
+import { withRouter, Link } from 'react-router-dom';
 
-import EventContent from "../events/shared/content";
+import EventContent from '../events/shared/content';
 
-import { SurveysApi } from "../../helpers/request";
-import { getTotalVotes } from "./services";
+import { SurveysApi } from '../../helpers/request';
+import { getTotalVotes } from './services';
 
-import {  List, Card, Button, Spin, Empty, Row, Col, Modal, notification } from "antd";
-
+import { List, Card, Button, Spin, Empty, Row, Col, Modal, notification } from 'antd';
 
 class TriviaReport extends Component {
   constructor(props) {
@@ -15,13 +14,12 @@ class TriviaReport extends Component {
     this.state = {
       surveyQuestions: [],
       loading: true,
-      visibleModal: false,
+      visibleModal: false
     };
   }
 
   loadData = async () => {
-    const { event,  location } = this.props;
-    
+    const { event, location } = this.props;
 
     SurveysApi.getOne(event._id, location.state.report)
       .then(async (response) => {
@@ -39,19 +37,18 @@ class TriviaReport extends Component {
         this.setState({ surveyQuestions: questions, loading: false });
       })
       .catch((err) => {
-        //console.log(err)
+        //
         notification.open({
           message: 'No se registran respuestas guardadas',
-          description:
-            'No hay respuestas y/o preguntas para realizar el informe',
+          description: 'No hay respuestas y/o preguntas para realizar el informe'
         });
         this.setState({
           loading: false
-        })
+        });
       });
   };
 
-  seeReport = (questionId) => { };
+  seeReport = (questionId) => {};
 
   toggleModal = () => {
     let { visibleModal } = this.state;
@@ -71,10 +68,10 @@ class TriviaReport extends Component {
     if (!loading)
       return (
         <Fragment>
-          <EventContent title="Encuestas" closeAction={this.goBack}>
+          <EventContent title='Encuestas' closeAction={this.goBack}>
             {surveyQuestions.length > 0 ? (
               <Fragment>
-                <Row justify="end" style={{ marginBottom: 10 }}>
+                <Row justify='end' style={{ marginBottom: 10 }}>
                   <Col>
                     <Button onClick={this.toggleModal}>Votar por usuarios</Button>
                   </Col>
@@ -88,7 +85,7 @@ class TriviaReport extends Component {
                     md: 2,
                     lg: 3,
                     xl: 3,
-                    xxl: 3,
+                    xxl: 3
                   }}
                   dataSource={surveyQuestions}
                   renderItem={(item) => (
@@ -96,11 +93,11 @@ class TriviaReport extends Component {
                       <Link
                         to={{
                           pathname: `${this.props.matchUrl}/report/${item.id}`,
-                          state: { titleQuestion: item.title, surveyId: location.state.report },
+                          state: { titleQuestion: item.title, surveyId: location.state.report }
                         }}>
-                        <Card title={item.title ? item.title : "Pregunta sin Titulo"} hoverable>
+                        <Card title={item.title ? item.title : 'Pregunta sin Titulo'} hoverable>
                           {item.quantityResponses === 0
-                            ? "No se ha respondido aun la pregunta"
+                            ? 'No se ha respondido aun la pregunta'
                             : `${item.quantityResponses} usuarios han respondido la pregunta`}
                         </Card>
                       </Link>
@@ -108,7 +105,7 @@ class TriviaReport extends Component {
                   )}
                 />
                 <Modal
-                  title="Basic Modal"
+                  title='Basic Modal'
                   visible={this.state.visibleModal}
                   onOk={this.toggleModal}
                   onCancel={this.toggleModal}>
@@ -116,8 +113,8 @@ class TriviaReport extends Component {
                 </Modal>
               </Fragment>
             ) : (
-                <Empty />
-              )}
+              <Empty />
+            )}
           </EventContent>
         </Fragment>
       );

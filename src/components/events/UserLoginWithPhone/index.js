@@ -6,7 +6,7 @@ import FormTags from './constants';
 import { injectIntl } from 'react-intl';
 
 const textLeft = {
-  textAlign: 'left',
+  textAlign: 'left'
 };
 
 class UserLogin extends Component {
@@ -30,7 +30,7 @@ class UserLogin extends Component {
       errorLogin: false,
       errorValidation: false,
       eventId: this.props.eventId,
-      formTexts: FormTags('login'),
+      formTexts: FormTags('login')
     };
   }
 
@@ -38,7 +38,6 @@ class UserLogin extends Component {
     const { eventId } = this.props;
 
     //this.initializeCaptcha();
-    console.log('estado del usuario ', Cookie.get('evius_token'));
 
     await app.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -68,15 +67,11 @@ class UserLogin extends Component {
   initializeCaptcha = () => {
     let { initialValues } = this.state;
     if (Object.entries(initialValues).length == 0) {
-      //console.log( "this.reCaptchaRef:", this.reCaptchaRef, this.reCaptchaRef.current, this.reCaptchaRef.current.id );
+      //
       window.recaptchaVerifier = new app.auth.RecaptchaVerifier(this.reCaptchaRef.current.id, {
         size: 'invisible',
-        callback: function(response) {
-          console.log('response,', response);
-        },
-        'expired-callback': function() {
-          console.log('response callback expired');
-        },
+        callback: function(response) {},
+        'expired-callback': function() {}
       });
 
       window.recaptchaVerifier.render().then(function(widgetId) {
@@ -108,7 +103,7 @@ class UserLogin extends Component {
     // .signInWithPhoneNumber( phone, appVerifier )
     // .then( function ( confirmationResult ) {
     //   window.confirmationResult = confirmationResult;
-    //   console.log( "confirmationResult:", confirmationResult );
+    //
     // })
     // .catch( function ( error ) {
     //   console.error( "error:", error.message );
@@ -124,23 +119,23 @@ class UserLogin extends Component {
   };
 
   loginEmailPassword = (data) => {
-    //console.log('Start signInWithEmailAndPassword...', data)
+    //
     this.setState({ errorLogin: false });
     const respuesta = app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
-      .then((response) => console.log('response login', response))
+      .then((response) => 
       .catch(() => {
         console.error('Error: Email or password invalid');
         this.setState({ errorLogin: true });
         this.setState({ loading: false });
       });
-    //console.log('repuesta', respuesta)
+    //
   };
 
   handleLoginEmailPassword = async (values) => {
-    //console.log('Start Login...')
-    //console.log('handles',values)
+    //
+    //
     // Cookie.remove("token");
     // Cookie.remove("evius_token");
     // window.indexedDB.deleteDatabase('firebaseLocalStorageDb')
@@ -162,11 +157,9 @@ class UserLogin extends Component {
       .auth()
       .signInWithCredential(credential)
       .then((response) => {
-        console.log('response', response);
         this.setState({ errorValidation: false });
       })
       .catch((err) => {
-        console.log('upps hubo un error');
         this.setState({ errorValidation: true });
       });
     // window.confirmationResult.confirm(values.verificationCode)
@@ -178,7 +171,7 @@ class UserLogin extends Component {
     // })
     // .then((refreshToken)=>{
     //   this.setState({refreshToken: refreshToken})
-    //   console.log('*********************refreshtoken',refreshToken)
+    //   
     // })
     // .catch(function (error) {
     //  console.error(error)
@@ -248,8 +241,8 @@ class UserLogin extends Component {
                   rules={[
                     {
                       required: true,
-                      message: 'Ingrese E-Mail',
-                    },
+                      message: 'Ingrese E-Mail'
+                    }
                   ]}>
                   <Input style={{ width: '300px' }} />
                 </Form.Item>
@@ -263,8 +256,8 @@ class UserLogin extends Component {
                   rules={[
                     {
                       required: true,
-                      message: 'Ingrese su contraseña',
-                    },
+                      message: 'Ingrese su contraseña'
+                    }
                   ]}>
                   <Input type='password' style={{ width: '300px' }} />
                 </Form.Item>
@@ -312,8 +305,8 @@ class UserLogin extends Component {
                   rules={[
                     {
                       required: true,
-                      message: 'Ingrese el código de verificación',
-                    },
+                      message: 'Ingrese el código de verificación'
+                    }
                   ]}>
                   <Input />
                 </Form.Item>

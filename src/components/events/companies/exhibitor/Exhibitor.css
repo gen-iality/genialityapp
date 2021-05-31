@@ -9,7 +9,7 @@
   right: 0;
   bottom: 0;
   background-color: #101010;
-  background-image: url('/exhibitors/bg_stand.png');
+  background-image: url('./bg_stand.png');
   background-position: center bottom;
   -webkit-background-size: cover;
   background-size: cover;
@@ -28,8 +28,8 @@
   top: 41%;
   right: 29.5%;
   border-radius: 50%;
-  background-color: rgba(255,255,255,0.5);
-  background-image: url('/exhibitors/icons/play.svg');
+  background-color: rgba(255, 255, 255, 0.5);
+  background-image: url('./icons/play.svg');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 100% auto;

@@ -19,7 +19,7 @@ function EviusReactQuill(props) {
 
   //Habilitar solo para efectos de testeo del funcionamiento del componente
   // useEffect(() => {
-  //   console.log('general', props.data);
+  //
   // }, [props.data]);
 
   useEffect(() => {
@@ -89,18 +89,18 @@ function EviusReactQuill(props) {
           [{ syntax: true }],
           [('bold', 'italic', 'blockquote')],
           [{ list: 'ordered' }, { list: 'bullet' }],
-          ['link', 'image'],
+          ['link', 'image']
         ],
         handlers: {
-          image: imageHandlerUpload,
-        },
+          image: imageHandlerUpload
+        }
       },
       imageDropAndPaste: {
         // add an custom image handler
         handler: (imageDataUrl, type, imageData) => {
           imageHandler(imageDataUrl, type, imageData, reactQuilllRef);
-        },
-      },
+        }
+      }
     });
     let setupToolBarImageUploadInput = (reactQuilllRef) => {
       var ImageData = QuillImageDropAndPaste.ImageData;

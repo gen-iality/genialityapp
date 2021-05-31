@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTable, usePagination, useRowSelect } from 'react-table'
+import { useTable, usePagination, useRowSelect } from 'react-table';
 
 /**
  * 
@@ -16,28 +16,25 @@ import { useTable, usePagination, useRowSelect } from 'react-table'
  className="-highlight"} props 
  */
 export default function EviusTable(props) {
-    let { columns, data, onRowClick } = props;
-// Use the useTable Hook to send the columns and data to build the table
+  let { columns, data, onRowClick } = props;
+  // Use the useTable Hook to send the columns and data to build the table
 
-const keyHooks = hooks => {
-  console.log("HOOKS",hooks);
+  const keyHooks = (hooks) => {
+    hooks.getRowProps.push((props) => {
+      return {
+        key: `${props.index}_${Math.random()}`,
+        nuevo: 'nuevo',
+        nuevo2: 'nuevo2',
+        onClick: (a) => {},
+        ...props
+      };
+    });
+  };
 
-  hooks.getRowProps.push(props => {
-    console.log("PROPS",props)
-    return {
-      key: `${props.index}_${Math.random()}`,
-      nuevo: "nuevo",
-      nuevo2: "nuevo2",
-      onClick:(a)=>{console.log("hols",a);},
-      ...props
-    }
-  });
-};
-
-const {
+  const {
     headerGroups, // headerGroups if your table have groupings
     rows, // rows for the table based on the data passed
-    prepareRow, 
+    prepareRow,
     // The rest of these things are super handy, too ;)
     canPreviousPage,
     canNextPage,
@@ -47,19 +44,20 @@ const {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize },    
-      
-  } = useTable({
-    columns,
-    data
-  }, usePagination, useRowSelect, keyHooks);
-
-
+    state: { pageIndex, pageSize }
+  } = useTable(
+    {
+      columns,
+      data
+    },
+    usePagination,
+    useRowSelect,
+    keyHooks
+  );
 
   return (
-
     <>
-         {/* <pre>
+      {/* <pre>
         <code>
           {JSON.stringify(
             {
@@ -75,36 +73,44 @@ const {
         </code>
       </pre>*/}
 
-    <table >
-    <thead className="ant-table-thead">
-      {headerGroups.map(headerGroup => (
-        <tr {...headerGroup.getHeaderGroupProps()}>
-          {headerGroup.headers.map((column,key) => (
-            <th key={key} className="ant-table-header-column">{column.render('Header')}</th>
+      <table>
+        <thead className='ant-table-thead'>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column, key) => (
+                <th key={key} className='ant-table-header-column'>
+                  {column.render('Header')}
+                </th>
+              ))}
+            </tr>
           ))}
-        </tr>
-      ))}
-    </thead>
-    <tbody className="ant-table-tbody">
-      {rows.map((row,keyrow) => {
-        prepareRow(row);
-        console.log("ROW",row)
-        return (
-          <tr {...row.getRowProps()} onClick={(e)=>{onRowClick && onRowClick(row) }} key={keyrow} className="ant-table-row nt-table-row-level-0">
-            {row.cells.map((cell,keycell) => {
-              return <td key={keycell}>{cell.render('Cell')}</td>
-            })}
-          </tr>
-        )
-      })}
-    </tbody>
-  </table>
+        </thead>
+        <tbody className='ant-table-tbody'>
+          {rows.map((row, keyrow) => {
+            prepareRow(row);
+
+            return (
+              <tr
+                {...row.getRowProps()}
+                onClick={(e) => {
+                  onRowClick && onRowClick(row);
+                }}
+                key={keyrow}
+                className='ant-table-row nt-table-row-level-0'>
+                {row.cells.map((cell, keycell) => {
+                  return <td key={keycell}>{cell.render('Cell')}</td>;
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
 
       {/* 
         Pagination can be built however you'd like. 
         This is just a very basic UI implementation:
       */}
-      <div className="pagination">
+      <div className='pagination'>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
         </button>{' '}
@@ -126,37 +132,30 @@ const {
         <span>
           | Go to page:{' '}
           <input
-            type="number"
+            type='number'
             defaultValue={pageIndex + 1}
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              gotoPage(page)
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
             }}
             style={{ width: '100px' }}
           />
         </span>{' '}
         <select
           value={pageSize}
-          onChange={e => {
-            setPageSize(Number(e.target.value))
-          }}
-        >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
+          }}>
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
           ))}
         </select>
       </div>
-
     </>
-  
   );
-
-
-    }
-
-
+}
 
 /*  Inicio de metodo para cargar millones de datos trabajo en proceso
 

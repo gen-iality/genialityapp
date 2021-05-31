@@ -51,7 +51,7 @@ class triviaEdit extends Component {
       lose_Message: null,
 
       // Puntaje mínimo de aprobación
-      minimumScore: 0,
+      minimumScore: 0
     };
     this.submit = this.submit.bind(this);
     this.submitWithQuestions = this.submitWithQuestions.bind(this);
@@ -107,14 +107,14 @@ class triviaEdit extends Component {
         neutral_Message: Update.neutral_Message ? Update.neutral_Message : '',
         lose_Message: Update.lose_Message ? Update.lose_Message : '',
 
-        minimumScore: Update.minimumScore ? Update.minimumScore : 0,
+        minimumScore: Update.minimumScore ? Update.minimumScore : 0
       });
 
       this.getQuestions();
     } else {
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
       this.setState({
-        dataAgenda: dataAgenda.data,
+        dataAgenda: dataAgenda.data
       });
     }
   }
@@ -160,7 +160,7 @@ class triviaEdit extends Component {
       open: 'false',
       publish: 'false',
 
-      minimumScore: 0,
+      minimumScore: 0
     };
     // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
     const save = await SurveysApi.createOne(this.props.event._id, data);
@@ -181,7 +181,7 @@ class triviaEdit extends Component {
         isOpened: data.open,
         isPublished: data.publish,
 
-        minimumScore: data.minimumScore,
+        minimumScore: data.minimumScore
       },
       { eventId: this.props.event._id, name: save.survey, category: 'none' }
     );
@@ -215,7 +215,7 @@ class triviaEdit extends Component {
       open: this.state.openSurvey,
       publish: this.state.publish === 'true' || this.state.publish === true ? 'true' : 'false',
 
-      minimumScore: parseInt(this.state.minimumScore),
+      minimumScore: parseInt(this.state.minimumScore)
     };
 
     // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
@@ -237,7 +237,7 @@ class triviaEdit extends Component {
             isPublished: data.publish,
 
             minimumScore: data.minimumScore,
-            activity_id: data.activity_id,
+            activity_id: data.activity_id
           },
           { eventId: this.props.event._id, name: data.survey, category: 'none' }
         );
@@ -373,7 +373,7 @@ class triviaEdit extends Component {
   setTime_limit = (e) => {
     const { value } = e.target;
     this.setState({ time_limit: value });
-    //console.log(this.state.time_limit);
+    //
   };
 
   toggleSwitch = (variable, state) => {
@@ -415,18 +415,18 @@ class triviaEdit extends Component {
       time_limit,
       hasMinimumScore,
       minimumScore,
-      isGlobal,
+      isGlobal
     } = this.state;
     const columns = [
       {
         title: 'Pregunta',
         dataIndex: 'title',
-        key: 'title',
+        key: 'title'
       },
       {
         title: 'Tipo de Pregunta',
         dataIndex: 'type',
-        key: 'type',
+        key: 'type'
       },
       {
         title: 'Acciones',
@@ -445,8 +445,8 @@ class triviaEdit extends Component {
               </span>
             </Button>
           </div>
-        ),
-      },
+        )
+      }
     ];
     return (
       <Fragment>
@@ -670,7 +670,7 @@ class triviaEdit extends Component {
                     </Button>,
                     <Button key='submit' type='primary' loading={confirmLoading} onClick={this.sendForm}>
                       Guardar
-                    </Button>,
+                    </Button>
                   ]}>
                   <FormQuestionEdit
                     ref={this.formEditRef}

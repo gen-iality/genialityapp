@@ -18,7 +18,7 @@ class eventUsersList extends Component {
       attendeesFormatedForTable: [],
       columnsTable: [],
       selectedRowKeys: [], //Contiene los id de los usuarios, se llama de esta manera el array por funcionalidad de la tabla
-      tickets: [],
+      tickets: []
     };
     this.createTableColumns = this.createTableColumns.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
@@ -74,14 +74,14 @@ class eventUsersList extends Component {
       title: 'Chequeado',
       dataIndex: 'checkedin_at',
       ellipsis: true,
-      ...this.getColumnSearchProps('checkedin_at'),
+      ...this.getColumnSearchProps('checkedin_at')
     });
 
     if (tickets.length > 0) {
       for (let i = 0; tickets.length > i; i++) {
         filterTickets.push({
           text: tickets[i].title,
-          value: tickets[i].title,
+          value: tickets[i].title
         });
       }
     }
@@ -91,7 +91,7 @@ class eventUsersList extends Component {
       dataIndex: 'ticket',
       filters: filterTickets,
       ellipsis: true,
-      onFilter: (value, record) => record.ticket.indexOf(value) === 0,
+      onFilter: (value, record) => record.ticket.indexOf(value) === 0
     });
 
     // Se iteran las propiedades del usuario (campos a recolectar) para mostrar la información
@@ -102,7 +102,7 @@ class eventUsersList extends Component {
         dataIndex: propertiesTable[i].name,
         width: 300,
         ellipsis: true,
-        ...this.getColumnSearchProps(propertiesTable[i].name),
+        ...this.getColumnSearchProps(propertiesTable[i].name)
       });
     }
 
@@ -113,7 +113,7 @@ class eventUsersList extends Component {
         dataIndex: 'created_at',
         width: 300,
         ellipsis: true,
-        ...this.getColumnSearchProps('created_at'),
+        ...this.getColumnSearchProps('created_at')
       },
       {
         title: 'Actualizado',
@@ -121,10 +121,10 @@ class eventUsersList extends Component {
         width: 300,
         ellipsis: true,
 
-        ...this.getColumnSearchProps('updated_at'),
+        ...this.getColumnSearchProps('updated_at')
       }
     );
-    console.log(columnsTable);
+
     return columnsTable;
   }
 
@@ -193,14 +193,14 @@ class eventUsersList extends Component {
         />
       ) : (
         text
-      ),
+      )
   });
 
   handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     this.setState({
       searchText: selectedKeys[0],
-      searchedColumn: dataIndex,
+      searchedColumn: dataIndex
     });
   };
 
@@ -275,9 +275,9 @@ class eventUsersList extends Component {
           onSelect: () => {
             let newSelectedRowKeys = [];
             this.setState({ selectedRowKeys: newSelectedRowKeys });
-          },
-        },
-      ],
+          }
+        }
+      ]
     };
     return (
       <>

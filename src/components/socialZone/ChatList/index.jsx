@@ -12,7 +12,7 @@ import {
   Input,
   Checkbox,
   Button,
-  Row,
+  Row
 } from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
@@ -22,24 +22,20 @@ const { setNotification } = notificationsActions;
 
 const layout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  wrapperCol: { span: 16 }
 };
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: { offset: 8, span: 16 }
 };
 
 const ChatList = (props) => {
-  useEffect(() => {
-    console.log('cargando chatlist', props);
-  }, []);
+  useEffect(() => {}, []);
   const onFinish = (values) => {
     //alert(values);
     props.setCurrentUser(values);
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
+  const onFinishFailed = (errorInfo) => {};
 
   let userName = props.currentUser
     ? props.currentUser.names
@@ -54,7 +50,7 @@ const ChatList = (props) => {
   let [usuariofriend, setusuariofriend] = useState(userName);
   const openNotificationWithIcon = (type) => {
     notification[type]({
-      message: 'holap',
+      message: 'holap'
       // description: 'Tienes un nuevo mensaje',
     });
   };
@@ -62,9 +58,6 @@ const ChatList = (props) => {
   let [totalmsjpriv, settotalmsjpriv] = useState(props.totalNewMessages);
 
   useEffect(() => {
-    console.log(userName);
-    console.log(props.totalNewMessages);
-    console.log(props.datamsjlast);
     props.datamsjlast &&
       props.datamsjlast.remitente !== undefined &&
       props.datamsjlast.remitente !== null &&
@@ -73,7 +66,6 @@ const ChatList = (props) => {
       settotalmsjpriv(props.totalNewMessages);
 
     //settotalmsjpriv(props.totalNewMessages);
-    console.log(totalmsjpriv);
   }, [props.datamsjlast, props.totalNewMessages]);
 
   let [currentab, setcurrentab] = useState(props.chattab);
@@ -126,9 +118,6 @@ const ChatList = (props) => {
         </Form.Item>
       </Form>
     );
-
-  console.log('CHAT AVAILABLE');
-  console.log(props.availableChats);
 
   return (
     <Tabs activeKey={currentab} size='small' onChange={callback} centered>
@@ -195,7 +184,7 @@ const ChatList = (props) => {
                           <MessageTwoTone style={{ fontSize: '20px' }} />
                         )}
                       </Tooltip>
-                    </a>,
+                    </a>
                   ]}>
                   <Typography.Text mark></Typography.Text> {item.name ? item.name : item.names || '----'}
                 </List.Item>
@@ -227,11 +216,11 @@ const mapStateToProps = (state) => ({
   mainStage: state.stage.data.mainStage,
   currentSurvey: state.survey.data.currentSurvey,
   currentActivity: state.stage.data.currentActivity,
-  viewNotification: state.notifications.data,
+  viewNotification: state.notifications.data
 });
 
 const mapDispatchToProps = {
-  setNotification,
+  setNotification
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);

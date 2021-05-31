@@ -17,7 +17,7 @@ var chatFirebase = app.initializeApp(
     storageBucket: 'chatevius.appspot.com',
     messagingSenderId: '114050756597',
     appId: '1:114050756597:web:53eada24e6a5ae43fffabc',
-    measurementId: 'G-5V3L65YQKP',
+    measurementId: 'G-5V3L65YQKP'
   },
   'nameOfOtherApp'
 );
@@ -50,7 +50,7 @@ const ChatExport = ({ eventId, event }) => {
       'Septiembre',
       'Octubre',
       'Noviembre',
-      'Deciembre',
+      'Deciembre'
     ];
     var year = a.getYear() - 69;
     var month = months[a.getMonth()];
@@ -67,25 +67,27 @@ const ChatExport = ({ eventId, event }) => {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = React.useState(false);
 
+  const renderMensaje = (text, record) => <Tag color='#3895FA'>{record.text}</Tag>;
+  const renderFecha = (text) => <a>{text}</a>;
   const columns = [
     {
       title: 'usuario',
       dataIndex: 'name',
-      key: 'name',
+      key: 'name'
     },
 
     {
       title: 'Mensaje',
       key: 'text',
       dataIndex: 'text',
-      render: (text, record) => <Tag color='#3895FA'>{record.text}</Tag>,
+      render: renderMensaje
     },
     {
       title: 'Fecha',
       dataIndex: 'hora',
       key: 'hora',
-      render: (text) => <a>{text}</a>,
-    },
+      render: renderFecha
+    }
   ];
 
   const exportFile = async (e) => {
@@ -118,15 +120,13 @@ const ChatExport = ({ eventId, event }) => {
             chatId: doc.id,
             name: doc.data().name,
             text: doc.data().text,
-            hora: newtime,
+            hora: newtime
           };
           datamessagesthisevent.push(msjnew);
         });
         setdatamsjevent(datamessagesthisevent);
       })
-      .catch((err) => {
-        console.log('error firebase', err);
-      });
+      .catch((err) => {});
   }
 
   function deleteAllChat() {

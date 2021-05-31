@@ -1,29 +1,28 @@
-import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
-import * as Cookie from "js-cookie";
-import { ApiUrl, AuthUrl, icon } from "../helpers/constants";
-import API, { OrganizationApi } from "../helpers/request";
-import { FormattedMessage } from "react-intl";
-import LogOut from "../components/shared/logOut";
-import ErrorServe from "../components/modal/serverError";
-import LetterAvatar from "../components/shared/letterAvatar";
-import UserStatusAndMenu from "../components/shared/userStatusAndMenu";
-import { connect } from "react-redux";
-import { addLoginInformation, showMenu } from "../redux/user/actions";
-import { Logo } from "../../src/logo.svg";
-import MenuOld from "../components/events/shared/menu";
-import { Menu, Dropdown, Avatar, Drawer, Button, Col, Row, Layout } from "antd";
-import { DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { parseUrl } from "../helpers/constants";
+import React, { Component } from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import * as Cookie from 'js-cookie';
+import { ApiUrl, AuthUrl, icon } from '../helpers/constants';
+import API, { OrganizationApi } from '../helpers/request';
+import { FormattedMessage } from 'react-intl';
+import LogOut from '../components/shared/logOut';
+import ErrorServe from '../components/modal/serverError';
+import LetterAvatar from '../components/shared/letterAvatar';
+import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
+import { connect } from 'react-redux';
+import { addLoginInformation, showMenu } from '../redux/user/actions';
+import { Logo } from '../../src/logo.svg';
+import MenuOld from '../components/events/shared/menu';
+import { Menu, Dropdown, Avatar, Drawer, Button, Col, Row, Layout } from 'antd';
+import { DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { parseUrl } from '../helpers/constants';
 
 const { Header, Content, Footer } = Layout;
 const zIndex = {
-  zIndex: "1"
-}
+  zIndex: '1'
+};
 
 class Headers extends Component {
   constructor(props) {
-    console.log("user", props);
     super(props);
     this.props.history.listen((location, action) => {
       this.handleMenu(location);
@@ -32,7 +31,7 @@ class Headers extends Component {
     this.state = {
       selection: [],
       organizations: [],
-      name: "user",
+      name: 'user',
       user: false,
       menuOpen: false,
       timeout: false,
@@ -61,12 +60,11 @@ class Headers extends Component {
   };
 
   async componentDidMount() {
-    console.log("user componentDidMount header", this.props.user);
     /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
-    let evius_token = Cookie.get("evius_token");
+    let evius_token = Cookie.get('evius_token');
     let dataUrl = parseUrl(document.URL);
     if (dataUrl && dataUrl.token) {
-      Cookie.set("evius_token", dataUrl.token);
+      Cookie.set('evius_token', dataUrl.token);
       evius_token = dataUrl.token;
     }
     if (!evius_token) {
@@ -76,7 +74,6 @@ class Headers extends Component {
 
     try {
       const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
-      console.log("respuesta del server", resp);
 
       if (resp.status === 200 || resp.status === 201 || resp.status === 202) {
         const data = resp.data;
@@ -96,32 +93,29 @@ class Headers extends Component {
       }
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
         const { status, data } = error.response;
-        console.log("STATUS", status, status === 401);
+
         if (status === 401) this.setState({ timeout: true, loader: false });
         else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = {};
-        console.log("Error", error.message);
+
         if (error.message) {
           errorData.message = error.message;
         } else if (error.request) {
-          console.log(error.request);
           errorData.message = JSON.stringify(error.request);
         }
         errorData.status = 708;
         this.setState({ serverError: true, loader: false, errorData });
       }
-      console.log(error.config);
     }
   }
 
-  handleMenu = location => {
-    const splited = location.pathname.split("/");
-    if (splited[1] === "") {
+  handleMenu = (location) => {
+    const splited = location.pathname.split('/');
+    if (splited[1] === '') {
       this.setState({ showAdmin: false, menuOpen: false });
-    } else if (splited[1] === "event") {
+    } else if (splited[1] === 'event') {
       this.setState({ showAdmin: true, showEventMenu: false, menuOpen: false });
       window.scrollTo(0, 0);
     }
@@ -139,18 +133,18 @@ class Headers extends Component {
   }
 
   logout = () => {
-    Cookie.remove("token");
-    Cookie.remove("evius_token");
+    Cookie.remove('token');
+    Cookie.remove('evius_token');
     window.location.replace(`${AuthUrl}/logout`);
   };
 
   openMenu = () => {
-    this.setState(menuState => {
+    this.setState((menuState) => {
       return { menuOpen: !menuState.menuOpen, filterOpen: false };
     });
   };
 
-  goReport = e => {
+  goReport = (e) => {
     e.preventDefault();
     window.location.replace(`${ApiUrl}/events/reports`);
   };
@@ -162,29 +156,27 @@ class Headers extends Component {
   };
 
   render() {
-    console.log("user render header", this.props.user);
     const { timeout, serverError, errorData, photo, name, showAdmin, showEventMenu } = this.state;
     const { eventMenu, location } = this.props;
     return (
       <React.Fragment>
-        <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
-          <Menu theme="light" mode="horizontal">
-            <Row justify="space-between" align="middle">
-
+        <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
+          <Menu theme='light' mode='horizontal'>
+            <Row justify='space-between' align='middle'>
               {/*evius LOGO */}
 
-              <Row className="logo-header" justify="space-between" align="middle">
-                <Link to={"/"}>
-                  <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} />
+              <Row className='logo-header' justify='space-between' align='middle'>
+                <Link to={'/'}>
+                  <div className='icon-header' dangerouslySetInnerHTML={{ __html: icon }} />
                 </Link>
 
                 {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
                 {showAdmin && (
-                  <Col span={2} offset={3} data-target="navbarBasicExample">
-                    <span className="icon icon-menu" onClick={this.handleMenuEvent}>
+                  <Col span={2} offset={3} data-target='navbarBasicExample'>
+                    <span className='icon icon-menu' onClick={this.handleMenuEvent}>
                       <Button style={zIndex} onClick={this.showDrawer}>
                         {React.createElement(this.state.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                          className: "trigger",
+                          className: 'trigger',
                           onClick: this.toggle
                         })}
                       </Button>
@@ -221,13 +213,13 @@ class Headers extends Component {
         {/* Menu mobile */}
 
         {showAdmin && showEventMenu && (
-          <div id="navbarBasicExample" className={`${eventMenu ? "is-active" : ""}`}>
+          <div id='navbarBasicExample' className={`${eventMenu ? 'is-active' : ''}`}>
             <Drawer
-              className="hiddenMenuMobile_Landing"
-              title="Administrar evento"
+              className='hiddenMenuMobile_Landing'
+              title='Administrar evento'
               maskClosable={true}
-              bodyStyle={{ padding: "0px" }}
-              placement="left"
+              bodyStyle={{ padding: '0px' }}
+              placement='left'
               closable={true}
               onClose={this.onClose}
               visible={this.state.showEventMenu}>
@@ -243,7 +235,7 @@ class Headers extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   categories: state.categories.items,
   types: state.types.items,
   loginInfo: state.user.data,

@@ -65,7 +65,7 @@ class UserLoginContainer extends Component {
     app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
-      // .then(response => console.log('response login', response))
+      // .then(response =>
       .catch(() => {
         console.error('Error: Email or password invalid');
         this.setState({ errorLogin: true });

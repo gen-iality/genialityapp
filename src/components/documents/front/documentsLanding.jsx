@@ -35,7 +35,7 @@ class documentsDetail extends Component {
       category_id: null,
       previewImage: '',
       data: [],
-      folders: [],
+      folders: []
     };
   }
 
@@ -46,11 +46,9 @@ class documentsDetail extends Component {
     try {
       let folders = await DocumentsApi.getAll(this.props.eventId);
       documents = await getFiles(this.props.eventId);
-      console.log('FOLDER AND DOCUMENT');
-      console.log(documents);
-      console.log(folders);
+
       this.setState({
-        folders: folders.data,
+        folders: folders.data
       });
 
       //Se itera para poder pasar un array al componente List de ant
@@ -64,7 +62,7 @@ class documentsDetail extends Component {
 
       notification.error({
         message: 'Error',
-        description: 'Ha ocurrido un error obteniendo los documentos',
+        description: 'Ha ocurrido un error obteniendo los documentos'
       });
     }
   }

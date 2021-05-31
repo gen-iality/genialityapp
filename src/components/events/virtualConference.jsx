@@ -21,7 +21,7 @@ const MeetingConferenceButton = ({
   event,
   showSection,
   setActivity,
-  eventUser,
+  eventUser
 }) => {
   const [infoActivity, setInfoActivity] = useState({});
   //const [infoEvent, setInfoEvent] = useState({});
@@ -54,16 +54,16 @@ const MeetingConferenceButton = ({
       );
 
     case 'closed_meeting_room':
-    // return <div style={{display:'grid'}}>
-    //          <span style={{color:'#7c909a'}}>El evento</span>
-    //          <span style={{fontWeight:'400', fontSize:'45px'}}>Iniciara pronto</span>
-    //        </div>
-    //  <Alert message={intl.formatMessage({ id: 'live.join.disabled' })} type='warning' showIcon />;
-
+      // return <div style={{display:'grid'}}>
+      //          <span style={{color:'#7c909a'}}>El evento</span>
+      //          <span style={{fontWeight:'400', fontSize:'45px'}}>Iniciara pronto</span>
+      //        </div>
+      //  <Alert message={intl.formatMessage({ id: 'live.join.disabled' })} type='warning' showIcon />;
+      break;
     case 'ended_meeting_room':
-    // return <h1 style={{fontWeight:'400', fontSize:'45px'}}>El evento ha terminado</h1>
-    //  <Alert message='El evento ha terminado' type='info' showIcon />;
-
+      // return <h1 style={{fontWeight:'400', fontSize:'45px'}}>El evento ha terminado</h1>
+      //  <Alert message='El evento ha terminado' type='info' showIcon />;
+      break;
     default:
       return <h1 style={{ fontWeight: '400', fontSize: '45px' }}></h1>;
     // <Alert message='Cargando...' type='warning' showIcon />;
@@ -78,7 +78,7 @@ class VirtualConference extends Component {
       infoAgendaArr: [],
       usuarioRegistrado: this.props.usuarioRegistrado || undefined,
       event: this.props.event || undefined,
-      survey: [],
+      survey: []
     };
   }
 
@@ -184,7 +184,7 @@ class VirtualConference extends Component {
                   maxHeight: '300px',
                   minHeight: '204px',
                   marginTop: '10px',
-                  marginBottom: '10px',
+                  marginBottom: '10px'
                 }}
                 className='animate__animated animate__slideInRight'>
                 <Row justify='center' align='middle' gutter={[8, 8]}>
@@ -222,7 +222,7 @@ class VirtualConference extends Component {
                               {/* Se valido de esta forma porque el componente FormattedMessage no hacia
                                efecto en la prop del componente de Ant design */}
                             </span>
-                          ),
+                          )
                         }}>
                         {item.name}
                       </Title>
@@ -305,7 +305,7 @@ class VirtualConference extends Component {
 }
 
 const mapDispatchToProps = {
-  gotoActivity,
+  gotoActivity
 };
 
 export default connect(null, mapDispatchToProps)(VirtualConference);

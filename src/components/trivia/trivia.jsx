@@ -18,7 +18,7 @@ class trivia extends Component {
       activity_id: '',
       survey: '',
       publish: '',
-      shareholders: [{ name: '' }],
+      shareholders: [{ name: '' }]
     };
     this.destroy = this.destroy.bind(this);
   }
@@ -29,14 +29,14 @@ class trivia extends Component {
   // Se realiza la funcion para obtener todos los datos necesarios tanto para encuesta como para agenda
   getInformation = async () => {
     const info = await SurveysApi.getAll(this.props.event._id);
-    console.log(info.data);
+
     const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
     //Se envía al estado la data obtenida de las api
     this.setState({
       dataAgenda: dataAgenda.data,
       data: info.data,
       survey: info.survey,
-      publicada: info.publicada,
+      publicada: info.publicada
     });
   };
   // Funcion para permitir el cambio del value de los input y enviarlo al state
@@ -51,9 +51,8 @@ class trivia extends Component {
     message.loading({ content: 'Eliminando Encuesta', key: 'deleting' });
 
     SurveysApi.deleteOne(this.props.event._id, idTrivia).then(async (TriviaDestroy) => {
-      console.log(TriviaDestroy);
       let deleteSurveyInFire = await deleteSurvey(idTrivia);
-      console.log('Fire:', deleteSurveyInFire);
+
       message.success({ content: deleteSurveyInFire.message, key: 'deleting' });
       this.getInformation();
     });
@@ -64,12 +63,12 @@ class trivia extends Component {
       {
         title: 'Nombre de la encuesta',
         dataIndex: 'survey',
-        key: 'survey',
+        key: 'survey'
       },
       {
         title: 'Publicada',
         dataIndex: 'publish',
-        key: 'publish',
+        key: 'publish'
       },
       {
         title: 'Action',
@@ -87,8 +86,8 @@ class trivia extends Component {
             </Link>
             <DeleteOutlined onClick={this.destroy.bind(record.survey, record._id)} />
           </Space>
-        ),
-      },
+        )
+      }
     ];
     const { matchUrl } = this.props;
     const { data } = this.state;

@@ -41,7 +41,7 @@ class Service {
               tabs,
               isPublished,
               host_id,
-              host_name,
+              host_name
             })
             .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
         } else {
@@ -57,7 +57,7 @@ class Service {
               isPublished,
               host_id,
               host_name,
-              tabs: tabsSchema,
+              tabs: tabsSchema
             })
             .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
         }
@@ -91,18 +91,15 @@ class Service {
 
     return new Promise((resolve, reject) => {
       try {
-        console.log('fetch set zoom room');
         fetch(url, {
           headers: {
-            'content-type': 'application/json',
+            'content-type': 'application/json'
           },
           body: JSON.stringify(data),
-          method: 'POST',
+          method: 'POST'
         })
           .then(async (response) => {
-            console.log('response', response);
             if (response.status === 400) {
-              console.log('status 400', response.status);
               resolve({ message: 'No está disponible el host para la fecha/hora indicada', state: 'error' });
             } else {
               return await response.json();
@@ -122,13 +119,12 @@ class Service {
 
     return new Promise((resolve, reject) => {
       try {
-        console.log('fetch get zoom room');
         fetch(url, {
           headers: {
-            'content-type': 'application/json',
+            'content-type': 'application/json'
           },
           body: JSON.stringify(data),
-          method: 'POST',
+          method: 'POST'
         })
           .then(async (response) => await response.json())
           .then((data) => {
@@ -145,7 +141,6 @@ class Service {
 
     return new Promise((resolve, reject) => {
       try {
-        console.log('delete zoom room');
         fetch(url, { method: 'DELETE' }).then((response) => resolve(response));
       } catch (err) {
         console.error('Error: ' + err);

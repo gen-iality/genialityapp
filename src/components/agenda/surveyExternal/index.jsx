@@ -10,11 +10,11 @@ export default class SurveyExternal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      publishedSurveys: [],
+      publishedSurveys: []
     };
   }
   componentDidMount = () => {
-    //console.log("IS EXTERNAL=>"+this.props.isExternal)
+    //
     this.listenActivitySurveysExternal();
   };
 
@@ -26,12 +26,11 @@ export default class SurveyExternal extends Component {
         this.setState({ publishedSurveys: surveyList, loading: true });
       }
     } catch (error) {
-      console.log('ERROR=>' + error);
+      error;
     }
   };
 
   Details = async (surveyId) => {
-    console.log('SURVEY ID=>' + surveyId);
     //CREAR SURVEY PARAMETROS INICIALIZADOS
     const data = {
       survey: null,
@@ -52,7 +51,7 @@ export default class SurveyExternal extends Component {
       lose_Message: '',
       isGlobal: false,
       hasMinimumScore: false,
-      minimumScore: 0,
+      minimumScore: 0
     };
     const save = await SurveysApi.createOne(this.props.event._id, data);
     const idSurveyE = save._id;

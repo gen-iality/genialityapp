@@ -76,7 +76,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
             t.update(shard_ref, { [position]: new_count });
           }
 
-          // console.log(doc.data()[position]);
+          //
         });
       });
     }
@@ -126,7 +126,7 @@ export const SurveyPage = {
           reject(err);
         });
     });
-  },
+  }
 };
 
 export const SurveyAnswers = {
@@ -141,7 +141,7 @@ export const SurveyAnswers = {
       id_user: uid,
       user_email: email,
       user_name: names,
-      id_survey: surveyId,
+      id_survey: surveyId
     };
 
     if (correctAnswer !== undefined) {
@@ -182,13 +182,13 @@ export const SurveyAnswers = {
             created: date,
             id_user: uid,
             id_survey: surveyId,
-            correctAnswer,
+            correctAnswer
           }
         : {
             response: responseData,
             created: date,
             id_user: uid,
-            id_survey: surveyId,
+            id_survey: surveyId
           };
 
     countAnswers(surveyId, questionId, optionQuantity, optionIndex);
@@ -212,49 +212,51 @@ export const SurveyAnswers = {
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
   getAnswersQuestion: async (surveyId, questionId, eventId, updateData, operation) => {
     // eslint-disable-next-line no-unused-vars
-    return new Promise(async (resolve, reject) => {
-      let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
-      let options = dataSurvey.questions.find((question) => question.id === questionId);
+    return new Promise((resolve, reject) => {
+      async () => {
+        let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
+        let options = dataSurvey.questions.find((question) => question.id === questionId);
 
-      firestore
-        .collection('surveys')
-        .doc(surveyId)
-        .collection('answer_count')
-        .doc(questionId)
-        .onSnapshot((listResponse) => {
-          let result = [];
-          let total = 0;
+        firestore
+          .collection('surveys')
+          .doc(surveyId)
+          .collection('answer_count')
+          .doc(questionId)
+          .onSnapshot((listResponse) => {
+            let result = [];
+            let total = 0;
 
-          if (listResponse.exists) {
-            result = listResponse.data();
-            switch (operation) {
-              case 'onlyCount':
-                Object.keys(result).map((item) => {
-                  result[item] = [result[item]];
-                });
+            if (listResponse.exists) {
+              result = listResponse.data();
+              switch (operation) {
+                case 'onlyCount':
+                  Object.keys(result).map((item) => {
+                    result[item] = [result[item]];
+                  });
 
-                break;
+                  break;
 
-              case 'participationPercentage':
-                Object.keys(result).map((item) => {
-                  total = total + result[item];
-                });
+                case 'participationPercentage':
+                  Object.keys(result).map((item) => {
+                    total = total + result[item];
+                  });
 
-                Object.keys(result).map((item) => {
-                  const calcPercentage = Math.round((result[item] / total) * 100);
-                  result[item] = [result[item], calcPercentage];
-                });
+                  Object.keys(result).map((item) => {
+                    const calcPercentage = Math.round((result[item] / total) * 100);
+                    result[item] = [result[item], calcPercentage];
+                  });
 
-                break;
+                  break;
 
-              case 'registeredPercentage':
-                //result = result;
-                break;
+                case 'registeredPercentage':
+                  //result = result;
+                  break;
+              }
             }
-          }
 
-          updateData({ answer_count: result, options });
-        });
+            updateData({ answer_count: result, options });
+          });
+      };
     });
   },
   // Servicio para validar si un usuario ha respondido la encuesta
@@ -286,7 +288,7 @@ export const SurveyAnswers = {
           }
         });
     });
-  },
+  }
 };
 
 export const Trivia = {
@@ -303,9 +305,9 @@ export const Trivia = {
         userEmail: email,
         totalQuestions: totalQuestions,
         correctAnswers: totalPoints,
-        registerDate: new Date(),
+        registerDate: new Date()
       });
-  },
+  }
 };
 
 export const UserGamification = {
@@ -343,16 +345,14 @@ export const UserGamification = {
   registerPoints: async (eventId, userInfo) => {
     // Verifica si ya hay un documento que almacene los puntos del usuario, para crearlo o actualizarlo
     let response = await UserGamification.getUserPoints(eventId, userInfo.user_id);
-    // console.log("response:", response);
+    //
 
     if (!response.status) {
       firestore
         .collection(`${eventId}_users_gamification`)
         .doc(userInfo.user_id)
         .set({ ...userInfo, created_at: new Date(), updated_at: new Date() })
-        .then(() => {
-          console.log('Puntos registrados satisfactoriamente');
-        })
+        .then(() => {})
         .catch((err) => {
           console.error('Ha ocurrido un error', err);
         });
@@ -366,21 +366,19 @@ export const UserGamification = {
         .collection(`${eventId}_users_gamification`)
         .doc(userInfo.user_id)
         .update({ points, updated_at: new Date() })
-        .then(() => {
-          console.log('Puntos registrados satisfactoriamente');
-        })
+        .then(() => {})
         .catch((err) => {
           console.error('Ha ocurrido un error', err);
         });
     }
-  },
+  }
 };
 
 export const Users = {
   getUsers: async (eventId) => {
     const snapshot = await firestore.collection(`${eventId}_event_attendees`).get();
     return snapshot.docs.map((doc) => doc.data());
-  },
+  }
 };
 
 export const listenSurveysData = (event, activity, currentUser, callback) => {

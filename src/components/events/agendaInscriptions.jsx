@@ -26,7 +26,7 @@ class AgendaInscriptions extends Component {
       hideBtnDetailAgenda: false,
       Surveys: [],
       Documents: [],
-      related_meetings: [],
+      related_meetings: []
     };
     this.survey = this.survey.bind(this);
     this.gotoActivity = this.gotoActivity.bind(this);
@@ -46,7 +46,7 @@ class AgendaInscriptions extends Component {
       .onSnapshot((info) => {
         if (!info.exists) return;
         let related_meetings = info.data().related_meetings;
-        console.log('related_meetings****************', related_meetings);
+
         this.setState({ related_meetings });
       });
     //Cargamos solamente los espacios virtuales de la agenda
@@ -70,7 +70,7 @@ class AgendaInscriptions extends Component {
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
           let { habilitar_ingreso } = infoActivity.data();
-          console.log('habilitar ingreso', habilitar_ingreso);
+
           let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
 
           arr[index] = updatedActivityInfo;
@@ -94,17 +94,14 @@ class AgendaInscriptions extends Component {
     }
 
     this.setState({
-      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true,
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
     });
   }
 
   async getAgendaByUser() {
-    console.log('-----------start agenda by user-');
     try {
       let infoAgenda = await AgendaApi.byEvent(this.eventContext._id);
       const infoUserAgenda = await Activity.GetUserActivity(this.eventContext._id, this.userCurrentContext._id);
-
-      console.log('info user agenda-------------------', infoUserAgenda);
 
       let space = await SpacesApi.byEvent(this.eventContext._id);
       let agendaData = this.filterUserAgenda(infoAgenda, infoUserAgenda);
@@ -113,7 +110,7 @@ class AgendaInscriptions extends Component {
         ? this.setState({ agendaData, spaces: space })
         : this.setState({ agendaData: data, spaces: space });
     } catch (e) {
-      console.log(e);
+      e;
     }
   }
 
@@ -136,7 +133,7 @@ class AgendaInscriptions extends Component {
 
       return agendaData;
     } catch (e) {
-      console.log(e);
+      e;
     }
   }
 
@@ -157,18 +154,16 @@ class AgendaInscriptions extends Component {
     Activity.DeleteRegister(this.eventContext._id, activityKey)
       .then(() => {
         notification.open({
-          message: 'Inscripción Eliminada',
+          message: 'Inscripción Eliminada'
         });
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
 
     this.getData();
   };
   onClose = (e) => {
     this.setState({
-      visible: false,
+      visible: false
     });
   };
 
@@ -178,7 +173,7 @@ class AgendaInscriptions extends Component {
 
   showDrawer = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
   };
 
@@ -192,7 +187,7 @@ class AgendaInscriptions extends Component {
       Surveys,
       Documents,
       agendaData,
-      related_meetings,
+      related_meetings
     } = this.state;
     return (
       <div>
@@ -384,7 +379,7 @@ class AgendaInscriptions extends Component {
                                         width={'100%'}
                                         style={{
                                           display: 'block',
-                                          margin: '0 auto',
+                                          margin: '0 auto'
                                         }}
                                         url={item.video}
                                         //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"

@@ -38,7 +38,7 @@ function GameRanking(props) {
         var puntajes = [];
         querySnapshot.forEach(function(doc) {
           const result = doc.data();
-          console.log('ranking', result);
+
           result['score'] = result.puntaje;
           puntajes.push(result);
         });
@@ -82,7 +82,7 @@ function GameRanking(props) {
 }
 
 const mapStateToProps = (state) => ({
-  currentUser: state.user.data,
+  currentUser: state.user.data
 });
 
 export default connect(mapStateToProps)(GameRanking);

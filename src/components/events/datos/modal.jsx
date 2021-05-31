@@ -235,7 +235,6 @@ class DatosModal extends Component {
                   value={info.options}
                   //required={true}
                 />
-                {console.log('change', info)}
                 <Checkbox
                   name={`justonebyattendee`}
                   checked={info.justonebyattendee}

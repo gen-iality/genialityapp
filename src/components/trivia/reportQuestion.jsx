@@ -9,30 +9,31 @@ import EventContent from '../events/shared/content';
 
 import { Table, Divider, Button } from 'antd';
 
+let renderNombreUsuario = (name) => (!name ? <span>Usuario Invitado</span> : <span>{name}</span>);
 const columns = [
   {
     title: 'Creado',
     dataIndex: 'creation_date_text',
-    key: 'creation_date_text',
+    key: 'creation_date_text'
   },
   {
     title: 'Nombre',
     dataIndex: 'user_name',
     key: 'user_name',
-    render: (name) => (!name ? <span>Usuario Invitado</span> : <span>{name}</span>),
+    render: renderNombreUsuario
   },
   {
     title: 'Respuesta',
     dataIndex: 'response',
-    key: 'response',
-  },
+    key: 'response'
+  }
 ];
 class ReportQuestion extends Component {
   constructor(props) {
     super(props);
     this.state = {
       nameQuestion: '',
-      listOfUserResponse: [],
+      listOfUserResponse: []
     };
   }
 

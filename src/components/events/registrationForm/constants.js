@@ -4,7 +4,7 @@ const transferForm = {
   resultTitle: 'Transferencia realizada exitosamente!',
   loadingMessage: 'Realizando Transferencia',
   successMessage: 'Transferencia Realizada',
-  errorMessage: 'Error... Intentalo mas tarde',
+  errorMessage: 'Error... Intentalo mas tarde'
 };
 
 const registerForm = {
@@ -13,7 +13,7 @@ const registerForm = {
   resultTitle: 'Ha sido registrado exitosamente!',
   loadingMessage: 'Registrando Usuario',
   successMessage: '',
-  errorMessage: 'Error... Intentalo mas tarde',
+  errorMessage: 'Error... Intentalo mas tarde'
 };
 
 export const setSuccessMessageInRegisterForm = (statusResponse) => {
@@ -24,12 +24,9 @@ export default (formType) => {
   switch (formType) {
     case 'register':
       return registerForm;
-      break;
 
     case 'transfer':
       return transferForm;
-      break;
-
     default:
       break;
   }

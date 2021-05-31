@@ -1,8 +1,8 @@
 //Función para generar UUID
 import React from 'react';
-import Swal from 'sweetalert2';
 import moment from 'moment';
 import { Actions } from './request';
+import { Modal, Spin } from 'antd';
 
 export function GetIdEvent() {
   let path = window.location.pathname;
@@ -132,26 +132,28 @@ export function parseData2Excel(data, fields) {
   return info;
 }
 
+let modal = null;
 export const sweetAlert = {
-  showLoading: (title, text) =>
-    Swal.fire({
-      title,
-      text,
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-    }),
-  hideLoading: () => Swal.close(),
+  showLoading: (title, text) => {
+    modal = Modal.success({
+      title: title,
+      content: <Spin>{text}</Spin>
+    });
+  },
+
+  hideLoading: () => modal || modal.close(),
   twoButton: (title, type, showCancelButton, confirmButtonText, cb) =>
-    Swal.fire({ title, type, showCancelButton, confirmButtonText, confirmButtonColor: '#1CDCB7' }).then((result) =>
-      cb(result)
-    ),
-  showSuccess: (title, text) => Swal.fire({ title, text, type: 'success' }),
-  showError: (error) => Swal.fire({ title: error.status, text: error.message, type: 'error' }),
-  simple: (title, html, confirmLabel, confirmColor, cb) =>
-    Swal.fire({ title, html, confirmButtonColor: confirmColor, confirmButtonAriaLabel: confirmLabel }).then((result) =>
-      cb(result)
-    ),
+    Modal.confirm({
+      title: title,
+      content: <Spin>{confirmButtonText}</Spin>,
+      onOk: () => cb(),
+      okText: confirmButtonText
+      //showCancelButton
+    }),
+  showSuccess: (title, text) => Modal.success({ title: title, content: text }),
+  showError: (error) => Modal.error({ title: error.status, content: error.message }),
+  simple: (title, html, confirmLabel, cb) =>
+    Modal.info({ title: title, content: html, onOk: () => cb(), okText: confirmLabel })
 };
 
 export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-MM-DD') {
@@ -178,7 +180,7 @@ export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-M
 }
 
 export function formatDataToString(data, property) {
-  //console.log('format', data, property);
+  //
   const validationType = typeof data;
   let result = '';
   if (validationType === 'object') {

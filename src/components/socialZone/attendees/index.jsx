@@ -7,7 +7,6 @@ import InfiniteScroll from 'react-infinite-scroller';
 import AttendeScroll from './ScrollAttendes';
 
 const AttendeList = function(props) {
-  console.log('AttendeList', 'rerender');
   let [myattendelist, setmyattendelist] = useState();
 
   let [loading, setLoading] = useState(false);
@@ -38,7 +37,7 @@ const AttendeList = function(props) {
         name: props.attendeeList[key].properties.name,
         names: props.attendeeList[key].properties.names,
         status: props.attendeeListPresence[key] ? props.attendeeListPresence[key].state : 'offline',
-        email: props.attendeeList[key].properties.email,
+        email: props.attendeeList[key].properties.email
       };
 
       if (mihijo.status === 'online') {
@@ -51,14 +50,12 @@ const AttendeList = function(props) {
     });
 
     setmyattendelist(ordenadousers);
-    console.log('ordenadousers', ordenadousers);
 
     setfilteredlist(ordenadousers.slice(0, pag));
     setPage(1);
   }, [props.attendeeListPresence, props.attendeeList]);
 
   const handleInfiniteOnLoad = () => {
-    console.log('SCROLL HANDLE');
     setLoading(true);
     setHasMore(true);
 
@@ -71,18 +68,18 @@ const AttendeList = function(props) {
 
     let ini = pag * page;
     let fin = pag * page + pag;
-    //console.log('INICIO=>' + ini);
-    //console.log('FIN=>' + fin);
+    //
+    //
 
     let newDatos = myattendelist.slice(ini, fin);
     const datosg = filteredlist.concat(newDatos);
     let pagP = page;
     pagP = pagP += 1;
-    // console.log(pagP);
+    //
 
     setfilteredlist(datosg);
     setPage(pagP++);
-    //console.log('PAGE=>' + pagP);
+    //
     setLoading(false);
     setHasMore(true);
   };
@@ -111,8 +108,6 @@ const AttendeList = function(props) {
                 <a
                   key='list-loadmore-edit'
                   onClick={() => {
-                    console.log(props.currentUser);
-                    console.log(item);
                     props.createNewOneToOneChat(
                       props.currentUser.uid,
                       props.currentUser.names,
@@ -124,7 +119,7 @@ const AttendeList = function(props) {
                     <MessageTwoTone style={{ fontSize: '20px' }} />
                   </Tooltip>
                 </a>
-              ) : null,
+              ) : null
             ]}>
             <List.Item.Meta
               avatar={
@@ -147,8 +142,8 @@ const AttendeList = function(props) {
                     key='list-loadmore-edit'
                     /* onClick={() => {
                         var user = props.currentUser;
-                        console.log(props.currentUser);
-                        console.log(item);
+                        
+                        
                         props.createNewOneToOneChat(user.uid, user.names, item.iduser, item.names);
                       }} */
                   >

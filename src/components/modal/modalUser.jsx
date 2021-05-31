@@ -26,14 +26,14 @@ class UserModal extends Component {
       confirmCheck: true,
       valid: true,
       checked_in: false,
-      tickets: [],
+      tickets: []
     };
   }
 
   async componentDidMount() {
     const self = this;
     const { rolesList } = this.props;
-    console.log('rolesList', rolesList);
+
     self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : '' });
     const tickets = await eventTicketsApi.getAll(this.props.eventId);
     if (tickets.length > 0) this.setState({ tickets });
@@ -52,7 +52,7 @@ class UserModal extends Component {
         rol: value.rol_id,
         checked_in,
         userId: value._id,
-        prevState: value.state_id,
+        prevState: value.state_id
       });
     } else {
       this.props.extraFields.map((obj) => {
@@ -169,7 +169,7 @@ class UserModal extends Component {
     let qr = canvas ? canvas.toDataURL() : '';
     if (resp._id) {
       if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
-      let oIframe = this.refs.ifrmPrint;
+      let oIframe = this.ifrmPrint;
       let badge = resp.BadgeFields;
       let oDoc = oIframe.contentWindow || oIframe.contentDocument;
       if (oDoc.document) {
@@ -592,7 +592,7 @@ class UserModal extends Component {
             )}
           </div>
           <div style={{ opacity: 0, display: 'none' }}>{userId && <QRCode value={userId} />}</div>
-          <iframe title={'Print User'} ref='ifrmPrint' style={{ opacity: 0, display: 'none' }} />
+          <iframe title={'Print User'} ref={(el) => (this.ifrmPrint = el)} style={{ opacity: 0, display: 'none' }} />
         </div>
 
         <Dialog

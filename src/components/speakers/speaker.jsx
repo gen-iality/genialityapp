@@ -27,7 +27,7 @@ class Speaker extends Component {
       order: '',
       selectedCategories: [],
       categories: [],
-      isloadingSelect: { types: true, categories: true },
+      isloadingSelect: { types: true, categories: true }
     };
     this.descriptionActivity = this.descriptionActivity.bind(this);
   }
@@ -35,7 +35,7 @@ class Speaker extends Component {
   async componentDidMount() {
     const {
       eventID,
-      location: { state },
+      location: { state }
     } = this.props;
     let categories = await CategoriesAgendaApi.byEvent(this.props.eventID);
 
@@ -70,19 +70,15 @@ class Speaker extends Component {
   };
 
   chgTxt = (content) => {
-    console.log(content);
     this.setState({ description: content });
   };
 
   submit = async () => {
-    console.log('inicio submit', this.props);
-
-    console.log('inicio submit  -----------------', this.state);
     try {
       sweetAlert.showLoading('Espera (:', 'Guardando...');
       const {
         eventID,
-        location: { state },
+        location: { state }
       } = this.props;
       this.setState({ isLoading: true });
       const { name, profession, description_activity, description, image, order, selectedCategories } = this.state;
@@ -94,9 +90,9 @@ class Speaker extends Component {
         description,
         profession,
         //category_id: selectedCategories.length ? selectedCategories.value : null,
-        order: parseInt(order),
+        order: parseInt(order)
       };
-      console.log('antes de guardar', info);
+
       if (state.edit) await SpeakersApi.editOne(info, state.edit, eventID);
       else await SpeakersApi.create(eventID, info);
       sweetAlert.hideLoading();
@@ -109,7 +105,7 @@ class Speaker extends Component {
   remove = () => {
     const {
       eventID,
-      location: { state },
+      location: { state }
     } = this.props;
     if (state.edit) {
       sweetAlert.twoButton(`Está seguro de borrar a ${this.state.name}`, 'warning', true, 'Borrar', async (result) => {
@@ -133,7 +129,7 @@ class Speaker extends Component {
 
   //FN para guardar en el estado la opcion seleccionada
   selectCategory = (selectedCategories) => {
-    //console.log()
+    //
     this.setState({ selectedCategories });
   };
 
@@ -155,7 +151,7 @@ class Speaker extends Component {
       order,
       categories,
       selectedCategories,
-      isloadingSelect,
+      isloadingSelect
     } = this.state;
     if (!this.props.location.state || redirect) return <Redirect to={matchUrl} />;
     return (
@@ -290,13 +286,13 @@ const dot = (color = 'transparent') => ({
     display: 'block',
     margin: 8,
     height: 10,
-    width: 10,
-  },
+    width: 10
+  }
 });
 
 const catStyles = {
   menu: (styles) => ({ ...styles, maxHeight: 'inherit' }),
-  multiValue: (styles, { data }) => ({ ...styles, ...dot(data.item.color) }),
+  multiValue: (styles, { data }) => ({ ...styles, ...dot(data.item.color) })
 };
 
 export default withRouter(Speaker);

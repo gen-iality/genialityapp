@@ -12,7 +12,7 @@ class Wall extends Component {
     super(props);
     this.state = {
       dataPost: undefined,
-      user: undefined,
+      user: undefined
     };
   }
 
@@ -51,7 +51,7 @@ class Wall extends Component {
   increaseLikes = async (postId, eventId, userId) => {
     var updatedPost = await saveFirebase.increaseLikes(postId, this.props.event._id, userId);
     //se actualiza local
-    var updatedPost = this.state.dataPost.map(function(value, index, arr) {
+    updatedPost = this.state.dataPost.map(function(value, index, arr) {
       return value.id !== postId ? value : updatedPost;
     });
     this.setState({ dataPost: updatedPost });
@@ -66,7 +66,7 @@ class Wall extends Component {
       this.state.user.names
     );
     //se actualiza local
-    var updatedPost = this.state.dataPost.map(function(value, index, arr) {
+    updatedPost = this.state.dataPost.map(function(value, index, arr) {
       return value.id !== postId ? value : updatedPost;
     });
     this.setState({ dataPost: updatedPost });
@@ -78,7 +78,6 @@ class Wall extends Component {
     const { event } = this.props;
     return (
       <div>
-        {console.log('render user', user)}
         {/*Crear un nuevo post*/}
         {!currentCommet && (
           <div>
@@ -86,7 +85,7 @@ class Wall extends Component {
               style={{
                 display: 'flex',
                 justifyContent: 'center',
-                marginBottom: '20px',
+                marginBottom: '20px'
               }}>
               <Col xs={24} sm={20} md={20} lg={20} xl={12}>
                 <CreatePost event={event} addPosts={this.addPosts} user={user} />
@@ -133,7 +132,6 @@ class Wall extends Component {
       return dataPost;
     } catch (e) {
       return undefined;
-      console.log('Error getting documents', e);
     }
   }
 }

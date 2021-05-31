@@ -7,7 +7,7 @@ import { NavLink, Link, withRouter } from 'react-router-dom';
 import { BaseUrl } from '../../helpers/constants';
 const MenuStyle = {
   flex: 1,
-  textAlign: 'right',
+  textAlign: 'right'
 };
 
 let userStatusAndMenu = (props) => {
@@ -20,7 +20,7 @@ let userStatusAndMenu = (props) => {
   function goTo(path) {
     props.history.push(path);
   }
-  console.log('user status', props);
+
   let menu = (
     <Menu>
       <Menu.Item>

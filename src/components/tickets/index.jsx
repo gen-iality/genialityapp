@@ -21,11 +21,11 @@ class TicketInfo extends Component {
       visible: false,
       items: {},
       visibleModal: false,
-      currentEventId: null,
+      currentEventId: null
     };
     this.changeVisible = this.changeVisible.bind(this);
   }
-  async componentWillMount() {
+  async componentDidMount() {
     const token = Cookie.get('evius_token');
     const tickets = await TicketsApi.getAll(token);
     const usersInscription = [];
@@ -44,10 +44,10 @@ class TicketInfo extends Component {
           state: element.state ? element.state.name : 'Sin Confirmar',
           properties: element.properties,
           status: element.checked_in,
-          author: eventByTicket.author?.displayName,
+          author: eventByTicket.author?.displayName
         });
       }
-      console.log(element);
+
       this.setState({ usersInscription });
     });
   }
@@ -93,18 +93,19 @@ class TicketInfo extends Component {
   };
 
   getEventFields = (eventId) => {
-    return new Promise(async (resolve, reject) => {
-      const event = await EventsApi.getOne(eventId);
+    return new Promise((resolve, reject) => {
+      (async () => {
+        const event = await EventsApi.getOne(eventId);
 
-      const properties = event.user_properties;
+        const properties = event.user_properties;
 
-      // Trae la informacion para los input
-      let extraFields = fieldNameEmailFirst(properties);
-      extraFields = this.addDefaultLabels(extraFields);
-      extraFields = this.orderFieldsByWeight(extraFields);
+        // Trae la informacion para los input
+        let extraFields = fieldNameEmailFirst(properties);
+        extraFields = this.addDefaultLabels(extraFields);
+        extraFields = this.orderFieldsByWeight(extraFields);
 
-      console.log('extraFields', properties);
-      resolve(extraFields);
+        resolve(extraFields);
+      })();
     });
   };
 
@@ -122,16 +123,17 @@ class TicketInfo extends Component {
                 style={{ marginLeft: '15%', marginTop: '3%' }}
                 bordered={true}
                 actions={[
-                  <Link to={{ pathname: `/landing/${items.id}` }}>
+                  <Link key={1} to={{ pathname: `/landing/${items.id}` }}>
                     <Button> Ir al evento</Button>
                   </Link>,
                   //   <Button onClick={() => this.openModal(items.id)}>Transferir</Button>,
                   <Button
+                    key={2}
                     onClick={() => {
                       this.changeVisible(items);
                     }}>
                     Detalles
-                  </Button>,
+                  </Button>
                 ]}
                 cover={
                   <div>

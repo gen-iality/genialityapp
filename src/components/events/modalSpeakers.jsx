@@ -20,7 +20,7 @@ let ModalSpeakers = (props) => {
     setSpeakers({});
     setModalVisible(false);
   }
-  console.log(speakers);
+
   return (
     <Fragment>
       <Modal
