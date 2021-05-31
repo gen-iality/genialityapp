@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { icon } from '../../helpers/constants';
 import Dialog from './twoAction';
-import { OrganizationApi } from '../../helpers/request';
 
 class UserOrg extends Component {
   constructor(props) {

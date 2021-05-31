@@ -140,10 +140,6 @@ export default ({
   const getEventData = async (eventId) => {
     const data = await EventsApi.getOne(eventId);
     setEvent(data);
-    //Para evitar errores se verifica si la variable existe
-    if (data.validateEmail !== undefined) {
-      setValidateEmail(data.validateEmail);
-    }
   };
 
   const onFinish = async (values) => {

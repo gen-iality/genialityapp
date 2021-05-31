@@ -35,11 +35,6 @@ function ImageField(rawProps) {
     const file = files[0];
     const url = '/api/files/upload';
     if (file) {
-      // this.setState( {
-      //   imageFile: file,
-      //   event: { ...this.state.event, picture: null },
-      // } );
-
       //envia el archivo de imagen como POST al API
       const uploaders = files.map((file) => {
         let data = new FormData();
@@ -51,24 +46,10 @@ function ImageField(rawProps) {
           }
         });
       });
-
-      //this.setState( { isLoading: true } );
-
       //cuando todaslas promesas de envio de imagenes al servidor se completan
       axios.all(uploaders).then(async () => {
-        //let temp = { ...this.state.styles };
-        //temp[ imageFieldName ] = imageUrl;
-
-        //this.setState( { styles: temp, isLoading: false } );
-
-        // self.setState( {
-        //   fileMsg: "Imagen subida con exito",
-        // } );
-
         toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
       });
-    } else {
-      //this.setState( { errImg: "Solo se permiten imágenes. Intentalo de nuevo" } );
     }
   };
 
