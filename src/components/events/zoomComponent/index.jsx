@@ -45,7 +45,7 @@ class ZoomComponent extends Component {
 
       //Encuesta seleccionada actualmente
       //Se deben pasar los metodos para set y unset del estado al componente SurveyForm
-      currentSurvey: {}
+      currentSurvey: {},
     };
   }
 
@@ -70,7 +70,7 @@ class ZoomComponent extends Component {
         id: this.props.activity.bigmaker_meeting_id,
         attendee_name: displayName,
         attendee_email: email,
-        exit_uri: 'https://evius.co/landing/' + this.state.event._id
+        exit_uri: 'https://evius.co/landing/' + this.state.event._id,
       };
 
       let callresult = null;
@@ -91,13 +91,11 @@ class ZoomComponent extends Component {
       displayName,
       email,
       urllogin_bigmarker: urllogin_bigmarker,
-      error_bigmarker: error_bigmarker
+      error_bigmarker: error_bigmarker,
     });
   }
 
   async componentDidMount() {
-    const { match, permissions, showMenu } = this.props;
-
     try {
       await this.props.dispatch(fetchRol());
       let eventId = this.props.match.params.event;
@@ -129,7 +127,7 @@ class ZoomComponent extends Component {
           chat: videoConference.tabs && videoConference.tabs.chat ? videoConference.tabs.chat : false,
           surveys: videoConference.tabs && videoConference.tabs.surveys ? videoConference.tabs.surveys : false,
           games: videoConference.tabs && videoConference.tabs.games ? videoConference.tabs.games : false,
-          attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false
+          attendees: videoConference.tabs && videoConference.tabs.attendees ? videoConference.tabs.attendees : false,
         });
       });
   }
@@ -145,8 +143,8 @@ class ZoomComponent extends Component {
             position: 'fixed',
             left: '0',
             bottom: '0',
-            width: '170px'
-          }
+            width: '170px',
+          },
         });
       } else {
         this.handleActiveTab('chat');
@@ -161,8 +159,8 @@ class ZoomComponent extends Component {
           position: 'fixed',
           left: '0',
           bottom: '0',
-          width: '170px'
-        }
+          width: '170px',
+        },
       });
     }
 
@@ -178,8 +176,8 @@ class ZoomComponent extends Component {
           position: 'fixed',
           left: '0',
           bottom: '0',
-          width: '170px'
-        }
+          width: '170px',
+        },
       });
     }
 
@@ -214,7 +212,7 @@ class ZoomComponent extends Component {
   goMedium = () => {
     this.setState({
       isMedium: !this.state.isMedium,
-      isMinimize: false
+      isMinimize: false,
     });
   };
 
@@ -222,13 +220,13 @@ class ZoomComponent extends Component {
   goMinimize = () => {
     this.setState({
       isMinimize: !this.state.isMinimize,
-      isMedium: false
+      isMedium: false,
     });
   };
 
   changeContentDisplayed = (contentName) => {
     this.setState({
-      contentDisplayed: contentName
+      contentDisplayed: contentName,
     });
   };
 
@@ -265,7 +263,7 @@ class ZoomComponent extends Component {
       attendees,
       activeTab,
       conferenceStyles,
-      platform
+      platform,
     } = this.state;
     return (
       <div
@@ -425,7 +423,7 @@ class ZoomComponent extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  permissions: state.permissions
+  permissions: state.permissions,
 });
 
 export default connect(mapStateToProps)(ZoomComponent);

@@ -1,20 +1,17 @@
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs, Row, Badge, Col, notification, Button, Spin } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone, SearchOutlined } from '@ant-design/icons';
 import { getCurrentUser } from '../../helpers/request';
-import initUserPresence from '../../containers/userPresenceInEvent';
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
 import { setCurrentSurvey } from '../../redux/survey/actions';
-
 import AttendeList from './attendees/index';
 import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
-import { monitorEventPresence } from './hooks';
 import GameRanking from '../events/game/gameRanking';
 import { useRef } from 'react';
 
@@ -26,7 +23,7 @@ const { setNotification } = notificationsActions;
 
 let SocialZone = function(props) {
   const [attendeeList, setAttendeeList] = useState({});
-  const [attendeeListPresence, setAttendeeListPresence] = useState({});
+  const attendeeListPresence= useState({});
   const [currentChat, setCurrentChatInner] = useState(null);
   const [currentChatName, setCurrentChatNameInner] = useState('');
   const [availableChats, setavailableChats] = useState([]);
@@ -56,7 +53,6 @@ let SocialZone = function(props) {
     ? props.currentUser?.name
     : '---';
 
-  let usuarioactivo = props.currentUser?.name;
 
   /***********/
 
@@ -94,10 +90,10 @@ let SocialZone = function(props) {
     setCurrentChat(newId, otherUserName);
   };
 
-  const inicializada = useMemo(() => initUserPresence(event_id), [event_id]);
+  
 
   const handleChange = async (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     setBusqueda(value);
   };
 
@@ -114,10 +110,6 @@ let SocialZone = function(props) {
     }
   };
 
-  const flagmonitorEventPresence = useMemo(
-    () => monitorEventPresence(event_id, attendeeList, setAttendeeListPresence),
-    [event_id]
-  );
 
   useEffect(() => {
     //
@@ -134,7 +126,7 @@ let SocialZone = function(props) {
   }, []);
 
   //Cargar la lista de chats de una persona
-  let nombreactivouser = props.currentUser?.names;
+ 
   useEffect(() => {
     if (!event_id || !currentUser) return;
 

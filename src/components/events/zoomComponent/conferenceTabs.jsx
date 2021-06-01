@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Tabs, Button, Menu, Row, Col, Tooltip } from 'antd';
 import {
   CommentOutlined,
@@ -8,7 +8,7 @@ import {
   LeftOutlined,
   BuildOutlined,
   ArrowLeftOutlined,
-  VideoCameraOutlined
+  VideoCameraOutlined,
 } from '@ant-design/icons';
 import ListadoJuegos from './listadoJuegos';
 import LiveChat from './liveChat';
@@ -33,7 +33,7 @@ export default function ConferenceTabsComponent(props) {
       <Button onClick={() => setCollapsed(collapsed === false ? true : false)} className='zoom-collapsed_button'>
         {React.createElement(collapsed ? RightOutlined : LeftOutlined, {
           className: 'trigger',
-          onClick: () => setCollapsed(collapsed === false ? true : false)
+          onClick: () => setCollapsed(collapsed === false ? true : false),
         })}
       </Button>
       {collapsed === false ? (

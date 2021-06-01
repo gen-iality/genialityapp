@@ -4,8 +4,6 @@ import CreatePost from './createPost';
 import ListWall from './listWall';
 import { firestore } from '../../helpers/firebase';
 import { saveFirebase } from './helpers';
-import * as Cookie from 'js-cookie';
-import API from '../../helpers/request';
 
 class Wall extends Component {
   constructor(props) {
@@ -41,7 +39,7 @@ class Wall extends Component {
     await saveFirebase.deletePost(postId, this.props.event._id);
 
     //se borra local
-    var updatedPost = this.state.dataPost.filter(function(value, index, arr) {
+    var updatedPost = this.state.dataPost.filter(function(value) {
       return value.id !== postId;
     });
     this.setState({ dataPost: updatedPost });
@@ -51,7 +49,7 @@ class Wall extends Component {
   increaseLikes = async (postId, eventId, userId) => {
     var updatedPost = await saveFirebase.increaseLikes(postId, this.props.event._id, userId);
     //se actualiza local
-    updatedPost = this.state.dataPost.map(function(value, index, arr) {
+    updatedPost = this.state.dataPost.map(function(value) {
       return value.id !== postId ? value : updatedPost;
     });
     this.setState({ dataPost: updatedPost });
@@ -66,7 +64,7 @@ class Wall extends Component {
       this.state.user.names
     );
     //se actualiza local
-    updatedPost = this.state.dataPost.map(function(value, index, arr) {
+    updatedPost = this.state.dataPost.map(function(value) {
       return value.id !== postId ? value : updatedPost;
     });
     this.setState({ dataPost: updatedPost });

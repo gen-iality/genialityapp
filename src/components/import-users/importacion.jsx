@@ -11,40 +11,12 @@ class Importacion extends Component {
     super(props);
 
     this.state = {
-      showMsg: false
+      showMsg: false,
     };
     this.handleXlsFile = this.handleXlsFile.bind(this); // properly bound once
   }
 
   handleXlsFile(files) {
-    let abc = [
-      'A',
-      'B',
-      'C',
-      'D',
-      'E',
-      'F',
-      'G',
-      'H',
-      'I',
-      'J',
-      'K',
-      'L',
-      'M',
-      'N',
-      'O',
-      'P',
-      'Q',
-      'R',
-      'S',
-      'T',
-      'U',
-      'V',
-      'W',
-      'X',
-      'Y',
-      'Z'
-    ];
     const f = files[0];
     const reader = new FileReader();
     const self = this;

@@ -26,7 +26,7 @@ class UserModal extends Component {
       confirmCheck: true,
       valid: true,
       checked_in: false,
-      tickets: []
+      tickets: [],
     };
   }
 
@@ -52,7 +52,7 @@ class UserModal extends Component {
         rol: value.rol_id,
         checked_in,
         userId: value._id,
-        prevState: value.state_id
+        prevState: value.state_id,
       });
     } else {
       this.props.extraFields.map((obj) => {
@@ -525,7 +525,7 @@ class UserModal extends Component {
                           type='checkbox'
                           name={'confirmCheckIn'}
                           checked={this.state.confirmCheck}
-                          onChange={(e) => {
+                          onChange={() => {
                             this.setState((prevState) => {
                               return { confirmCheck: !prevState.confirmCheck };
                             });
@@ -573,7 +573,7 @@ class UserModal extends Component {
                         </button>
                         <button
                           className='button'
-                          onClick={(e) => {
+                          onClick={() => {
                             this.setState({ modal: true });
                           }}>
                           Borrar

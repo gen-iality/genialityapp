@@ -22,7 +22,7 @@ class FormNetwork extends Component {
                     {
                         networks.map((item,key)=>{
                             return <button className={`button column is-text`}
-                                           key={key} onClick={(e) => {this.showNetwork(item)}}>
+                                           key={key} onClick={() => {this.showNetwork(item)}}>
                                 <span className={`icon is-small ${item.path===network.path?'has-text-primary':''}`}>{item.icon}</span>
                             </button>
                         })

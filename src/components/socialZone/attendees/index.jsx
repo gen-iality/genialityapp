@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { List, Tooltip, Popover, Avatar, message, Spin, Button, Row } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { List, Tooltip, Popover, Avatar,  Spin } from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
 import InfiniteScroll from 'react-infinite-scroller';
-import AttendeScroll from './ScrollAttendes';
 
 const AttendeList = function(props) {
   let [myattendelist, setmyattendelist] = useState();
@@ -25,7 +24,6 @@ const AttendeList = function(props) {
   }, [props.busqueda]);
 
   useEffect(() => {
-    let usersorderbystatus = [];
     let ordenadousers = [];
 
     Object.keys(props.attendeeList).map((key) => {
@@ -84,12 +82,6 @@ const AttendeList = function(props) {
     setHasMore(true);
   };
 
-  const handleChange = async (e) => {
-    const { name, value } = e.target;
-
-    // BACKLOG -> porque host_id se setea siempre que se setea un estado
-    // setBusqueda(value);
-  };
 
   return (
     <InfiniteScroll

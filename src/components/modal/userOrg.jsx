@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { icon } from '../../helpers/constants';
 import Dialog from './twoAction';
-import { OrganizationApi } from '../../helpers/request';
 
 class UserOrg extends Component {
   constructor(props) {
@@ -15,7 +14,7 @@ class UserOrg extends Component {
       state: '',
       userId: 'mocionsoft',
       emailError: false,
-      valid: true
+      valid: true,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
@@ -50,15 +49,12 @@ class UserOrg extends Component {
     this.setState({ create: true });
     try {
       if (!this.state.edit) {
-        const res = await OrganizationApi.saveUser(this.props.orgId, this.state.user);
-
         message.class = 'msg_success';
         message.content = 'USER CREATED';
         toast.success(<FormattedMessage id='toast.user_saved' defaultMessage='Ok!' />);
       } else {
         message.class = 'msg_warning';
         message.content = 'USER UPDATED';
-        const res = await OrganizationApi.editUser(this.props.orgId, this.state.userId, this.state.user);
 
         message.class = 'msg_warning';
         message.content = 'USER UPDATED';
@@ -210,8 +206,6 @@ class UserOrg extends Component {
     let message = {};
     const self = this;
     try {
-      const res = await OrganizationApi.deleteUser(this.props.orgId, this.state.userId);
-
       message.class = 'msg_warning';
       message.content = 'USER DELETED';
       toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
@@ -287,7 +281,7 @@ class UserOrg extends Component {
                   {this.state.edit && (
                     <button
                       className='button'
-                      onClick={(e) => {
+                      onClick={() => {
                         this.setState({ modal: true });
                       }}>
                       Borrar

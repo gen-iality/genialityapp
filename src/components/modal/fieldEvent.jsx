@@ -8,7 +8,7 @@ class FieldEvent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      info: initModal
+      info: initModal,
     };
   }
 
@@ -31,7 +31,7 @@ class FieldEvent extends Component {
     } else this.setState({ info: { ...this.state.info, [name]: value } });
   };
   //Cambiar mandatory del campo del evento o lista
-  changeFieldCheck = (e) => {
+  changeFieldCheck = () => {
     this.setState((prevState) => {
       return { info: { ...this.state.info, mandatory: !prevState.info.mandatory } };
     });
@@ -53,7 +53,7 @@ class FieldEvent extends Component {
       case 13:
         this.setState({
           inputValue: '',
-          info: { ...this.state.info, options: [...this.state.info.options, createOption(value)] }
+          info: { ...this.state.info, options: [...this.state.info.options, createOption(value)] },
         });
         event.preventDefault();
         break;

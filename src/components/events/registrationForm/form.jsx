@@ -15,9 +15,9 @@ import {
   Result,
   Divider,
   Upload,
-  Select
+  Select,
 } from 'antd';
-import { ControlOutlined, UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
@@ -28,41 +28,12 @@ const { Panel } = Collapse;
 const { TextArea, Password } = Input;
 
 const textLeft = {
-  textAlign: 'left'
+  textAlign: 'left',
 };
 
 const center = {
-  margin: '0 auto'
+  margin: '0 auto',
 };
-
-const validateMessages = {
-  required: 'Este campo ${label} es obligatorio para completar el registro.',
-  types: {
-    email: '${label} no válido!',
-    regexp: 'malo'
-  }
-};
-
-const options = [
-  { value: 'Buenos dias 1', label: 'Buenos dias 1' },
-  { value: 'Buenos dias 2', label: 'Buenos dias 2' },
-  { value: 'Buenos dias 3', label: 'Buenos dias 3' },
-  { value: 'Buenos dias 4', label: 'Buenos dias 4' },
-  { value: 'Buenos dias 5', label: 'Buenos dias 5' },
-  { value: 'Buenos dias 6', label: 'Buenos dias 6' },
-  { value: 'Buenos dias 7', label: 'Buenos dias 7' },
-  { value: 'Buenos dias 8', label: 'Buenos dias 8' },
-  { value: 'Buenos dias 9', label: 'Buenos dias 9' },
-  { value: 'Buenos dias 10', label: 'Buenos dias 10' },
-  { value: 'Buenos dias 11', label: 'Buenos dias 11' },
-  { value: 'Buenos dias 12', label: 'Buenos dias 12' },
-  { value: 'Buenos dias 13', label: 'Buenos dias 13' },
-  { value: 'Buenos dias 14', label: 'Buenos dias 14' },
-  { value: 'Buenos dias 15', label: 'Buenos dias 15' },
-  { value: 'Buenos dias 16', label: 'Buenos dias 16' },
-  { value: 'Buenos dias 17', label: 'Buenos dias 17' },
-  { value: 'Buenos dias 18', label: 'Buenos dias 18' }
-];
 
 /**
  * Hook that alerts clicks outside of the passed ref
@@ -125,12 +96,10 @@ export default ({
   eventUserId,
   closeModal,
   conditionals,
-  showSection
+  showSection,
 }) => {
   const intl = useIntl();
-  const [user, setUser] = useState({});
   const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
-  const [validateEmail, setValidateEmail] = useState(false);
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
@@ -171,10 +140,6 @@ export default ({
   const getEventData = async (eventId) => {
     const data = await EventsApi.getOne(eventId);
     setEvent(data);
-    //Para evitar errores se verifica si la variable existe
-    if (data.validateEmail !== undefined) {
-      setValidateEmail(data.validateEmail);
-    }
   };
 
   const onFinish = async (values) => {
@@ -276,9 +241,7 @@ export default ({
     }
   };
 
-  const fieldsChange = (changedField) => {};
-
-  const valuesChange = (changedField, allFields) => {
+  const valuesChange = (allFields) => {
     updateFieldsVisibility(conditionals, allFields);
   };
 
@@ -382,7 +345,7 @@ export default ({
             <div className={`label has-text-grey ${mandatory ? 'required' : ''}`}>
               <div
                 dangerouslySetInnerHTML={{
-                  __html: label
+                  __html: label,
                 }}></div>
             </div>
             <Divider />
@@ -526,7 +489,7 @@ export default ({
               required: true,
               type: 'regexp',
               pattern: new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{10,}$/),
-              message: 'El formato del password no es valido'
+              message: 'El formato del password no es valido',
             }
           : rule;
 
@@ -595,12 +558,11 @@ export default ({
                 required: intl.formatMessage({ id: 'form.field.required' }),
                 types: {
                   email: intl.formatMessage({ id: 'form.validate.message.email' }),
-                  regexp: 'malo'
-                }
+                  regexp: 'malo',
+                },
               }}
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
-              onFieldsChange={fieldsChange}
               onValuesChange={valuesChange}>
               {renderForm()}
 
@@ -658,7 +620,7 @@ export default ({
               <OutsideAlerter showSection={showSection}>
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: successMessage ? successMessage.replace(/\[.*\]/gi, '') : ''
+                    __html: successMessage ? successMessage.replace(/\[.*\]/gi, '') : '',
                   }}></div>
               </OutsideAlerter>
             </Result>

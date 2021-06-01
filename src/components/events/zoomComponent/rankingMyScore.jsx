@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Row, Col, Card, Avatar } from 'antd';
+import React from 'react';
+import { Row, Col, Avatar } from 'antd';
 
 export default function RankingMyScore({ myScore }) {
   const { name, score } = myScore;

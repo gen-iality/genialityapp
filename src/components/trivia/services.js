@@ -1,11 +1,10 @@
 import { firestore, fireRealtime } from '../../helpers/firebase';
 import Moment from 'moment';
-import { resolve } from 'core-js/fn/promise';
 
 const refSurvey = firestore.collection('surveys');
 
 export const validateSurveyCreated = (surveyId) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     refSurvey.doc(surveyId).onSnapshot((survey) => {
       if (!survey.exists) {
         resolve(false);
@@ -16,7 +15,7 @@ export const validateSurveyCreated = (surveyId) => {
 };
 
 export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     //Abril 2021 @todo migracion de estados de firestore a firebaserealtime
     //let eventId = surveyInfo.eventId || 'general';
     let eventId = 'general';
@@ -39,7 +38,7 @@ export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
 };
 
 export const deleteSurvey = (surveyId) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     refSurvey
       .doc(surveyId)
       .delete()

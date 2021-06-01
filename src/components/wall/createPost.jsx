@@ -3,7 +3,6 @@ import CameraFeed from './cameraFeed';
 
 //custom
 import { AuthUrl } from '../../helpers/constants';
-import API from '../../helpers/request';
 import { saveFirebase } from './helpers';
 import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert } from 'antd';
 import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons';
@@ -57,7 +56,7 @@ class CreatePost extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.user !== this.props.user) {
       const { user } = this.props;
       this.setState({ user });
@@ -191,7 +190,7 @@ class CreatePost extends Component {
                   {/* Boton para abrir la camara */}
                   <Button
                     style={{ marginLeft: '3%' }}
-                    onClick={(e) => {
+                    onClick={() => {
                       this.setState({ hidden: true }, this.setModal2Visible(true));
                     }}>
                     <CameraOutlined />
@@ -204,17 +203,17 @@ class CreatePost extends Component {
                       title='Camara'
                       centered
                       visible={this.state.modal2Visible}
-                      onOk={(e) => {
+                      onOk={() => {
                         this.setState({ hidden: false }, this.setModal2Visible(false));
                       }}
-                      onCancel={(e) => {
+                      onCancel={() => {
                         this.setState({ hidden: false }, this.setModal2Visible(false));
                       }}
                       footer={[
                         <Button
                           key='submit'
                           type='primary'
-                          onClick={(e) => {
+                          onClick={() => {
                             this.setState({ hidden: false }, this.setModal2Visible(false));
                           }}>
                           Listo usar esta

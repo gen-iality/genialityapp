@@ -50,7 +50,7 @@ class trivia extends Component {
   destroy(idTrivia) {
     message.loading({ content: 'Eliminando Encuesta', key: 'deleting' });
 
-    SurveysApi.deleteOne(this.props.event._id, idTrivia).then(async (TriviaDestroy) => {
+    SurveysApi.deleteOne(this.props.event._id, idTrivia).then(async () => {
       let deleteSurveyInFire = await deleteSurvey(idTrivia);
 
       message.success({ content: deleteSurveyInFire.message, key: 'deleting' });

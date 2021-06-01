@@ -26,7 +26,7 @@ class News extends Component {
       description_short: '',
       time: '',
       isLoading: false,
-      loading: true
+      loading: true,
     };
   }
 
@@ -42,7 +42,7 @@ class News extends Component {
     if (file) {
       this.setState({
         imageFile: file,
-        event: { ...this.state.event, picture: null }
+        event: { ...this.state.event, picture: null },
       });
 
       //envia el archivo de imagen como POST al API
@@ -55,15 +55,15 @@ class News extends Component {
       });
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
-      axios.all(uploaders).then((data) => {
+      axios.all(uploaders).then(() => {
         self.setState({
           event: {
             ...self.state.event,
-            picture: path[0]
+            picture: path[0],
           },
           fileMsg: 'Imagen subida con exito',
           imageFile: null,
-          path
+          path,
         });
 
         toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
@@ -78,7 +78,7 @@ class News extends Component {
     this.setState({ list: data, loading: false });
   };
 
-  onChange = (e) => {
+  onChange = () => {
     const titles = document.getElementById('title').value;
     const desc = document.getElementById('desc').value;
     const notice = document.getElementById('description_short').value;
@@ -90,7 +90,7 @@ class News extends Component {
       description_complete: desc,
       description_short: notice,
       time: time,
-      linkYoutube: linkYoutube
+      linkYoutube: linkYoutube,
     });
   };
 
@@ -105,7 +105,7 @@ class News extends Component {
           pricture: '',
           time: '',
           created_at: new Date(),
-          _id: 'new'
+          _id: 'new',
         });
         return { list, id: 'new' };
       });
@@ -123,7 +123,7 @@ class News extends Component {
         description_short: '',
         linkYoutube: '',
         picture: '',
-        time: ''
+        time: '',
       };
     });
   };
@@ -138,7 +138,7 @@ class News extends Component {
             description_short: this.state.description_short,
             linkYoutube: this.state.linkYoutube,
             picture: this.state.path,
-            time: this.state.time
+            time: this.state.time,
           },
           this.state.id,
           this.props.eventId
@@ -163,7 +163,7 @@ class News extends Component {
             description_complete: '',
             description_short: '',
             linkYoutube: '',
-            time: ''
+            time: '',
           };
         });
       } else {
@@ -174,7 +174,7 @@ class News extends Component {
             description_short: this.state.description_short,
             linkYoutube: this.state.linkYoutube,
             image: this.state.path,
-            time: this.state.time
+            time: this.state.time,
           },
           this.props.eventId
         );
@@ -200,7 +200,7 @@ class News extends Component {
             description_complete: '',
             description_short: '',
             linkYoutube: '',
-            time: ''
+            time: '',
           };
         });
       }
@@ -217,7 +217,7 @@ class News extends Component {
       linkYoutube: cert.linkYoutube,
       description_short: cert.description_short,
       picture: cert.picture,
-      time: cert.time
+      time: cert.time,
     });
 
   removeItem = (id) => {
@@ -226,14 +226,14 @@ class News extends Component {
         if (result.value) {
           sweetAlert.showLoading('Espera (:', 'Borrando...');
           await NewsFeed.deleteOne(id, this.props.eventId);
-          this.setState((state) => ({
+          this.setState(() => ({
             id: '',
             title: '',
             description_complete: '',
             description_short: '',
             linkYoutube: '',
             picture: '',
-            time: ''
+            time: '',
           }));
           this.fetchItem();
           sweetAlert.hideLoading();
@@ -368,7 +368,7 @@ class News extends Component {
                                 borderWidth: 2,
                                 borderColor: '#b5b5b5',
                                 borderStyle: 'dashed',
-                                borderRadius: 10
+                                borderRadius: 10,
                               }}
                             />
                             {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}

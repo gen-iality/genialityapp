@@ -4,7 +4,6 @@ import WithLoading from './withLoading';
 import { Menu, Dropdown, Avatar, Button, Col, Row } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 import { NavLink, Link, withRouter } from 'react-router-dom';
-import { BaseUrl } from '../../helpers/constants';
 const MenuStyle = {
   flex: 1,
   textAlign: 'right'
@@ -17,9 +16,7 @@ let userStatusAndMenu = (props) => {
   let logout = props.logout;
   let eventId = props.eventId;
 
-  function goTo(path) {
-    props.history.push(path);
-  }
+ 
 
   let menu = (
     <Menu>

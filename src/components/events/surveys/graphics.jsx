@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import 'chartjs-plugin-datalabels';
-import { Pagination, Spin, Card, Button } from 'antd';
-import { ArrowLeftOutlined, LeftCircleFilled } from '@ant-design/icons';
+import { Pagination, Card, Button } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import Loading from './loading';
 
 import Chart from 'chart.js';
@@ -26,7 +26,7 @@ class Graphics extends Component {
       chartCreated: false,
       usersRegistered: 0,
       titleQuestion: '',
-      isMobile: window.screen.width < 800 ? true : false // determina el tamaño del dispositivo para saber si es mobile o no
+      isMobile: window.screen.width < 800 ? true : false, // determina el tamaño del dispositivo para saber si es mobile o no
     };
   }
 
@@ -192,12 +192,12 @@ class Graphics extends Component {
             anchor: 'start',
             align: 5,
             font: {
-              size: this.state.isMobile ? 12 : 18 // otorga el tamaño de la fuente en los resultados de la encuesta segun el dispositivo
-            }
-          }
+              size: this.state.isMobile ? 12 : 18, // otorga el tamaño de la fuente en los resultados de la encuesta segun el dispositivo
+            },
+          },
         },
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           yAxes: [
@@ -207,19 +207,19 @@ class Graphics extends Component {
                 fontSize: 15,
                 fontColor: '#777',
                 minor: { display: true },
-                display: false
-              }
-            }
+                display: false,
+              },
+            },
           ],
           xAxes: [
             {
               ticks: {
                 beginAtZero: true,
-                fontColor: '#777'
-              }
-            }
-          ]
-        }
+                fontColor: '#777',
+              },
+            },
+          ],
+        },
       };
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
@@ -306,7 +306,7 @@ const mapDispatchToProps = { setCurrentSurvey, setSurveyVisible };
 
 const mapStateToProps = (state) => ({
   currentSurvey: state.survey.data.currentSurvey,
-  currentActivity: state.stage.data.currentActivity
+  currentActivity: state.stage.data.currentActivity,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Graphics);

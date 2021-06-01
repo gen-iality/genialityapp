@@ -17,7 +17,7 @@ var chatFirebase = app.initializeApp(
     storageBucket: 'chatevius.appspot.com',
     messagingSenderId: '114050756597',
     appId: '1:114050756597:web:53eada24e6a5ae43fffabc',
-    measurementId: 'G-5V3L65YQKP'
+    measurementId: 'G-5V3L65YQKP',
   },
   'nameOfOtherApp'
 );
@@ -50,14 +50,13 @@ const ChatExport = ({ eventId, event }) => {
       'Septiembre',
       'Octubre',
       'Noviembre',
-      'Deciembre'
+      'Deciembre',
     ];
     var year = a.getYear() - 69;
     var month = months[a.getMonth()];
     var date = a.getDate();
     var hour = a.getHours();
     var min = a.getMinutes();
-    var sec = a.getSeconds();
     var time = date + ' ' + month + ' ' + year + ' ' + formatAMPM(hour, min);
 
     return time;
@@ -65,7 +64,6 @@ const ChatExport = ({ eventId, event }) => {
 
   let [datamsjevent, setdatamsjevent] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [visible, setVisible] = React.useState(false);
 
   const renderMensaje = (text, record) => <Tag color='#3895FA'>{record.text}</Tag>;
   const renderFecha = (text) => <a>{text}</a>;
@@ -73,21 +71,21 @@ const ChatExport = ({ eventId, event }) => {
     {
       title: 'usuario',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
     },
 
     {
       title: 'Mensaje',
       key: 'text',
       dataIndex: 'text',
-      render: renderMensaje
+      render: renderMensaje,
     },
     {
       title: 'Fecha',
       dataIndex: 'hora',
       key: 'hora',
-      render: renderFecha
-    }
+      render: renderFecha,
+    },
   ];
 
   const exportFile = async (e) => {
@@ -120,13 +118,13 @@ const ChatExport = ({ eventId, event }) => {
             chatId: doc.id,
             name: doc.data().name,
             text: doc.data().text,
-            hora: newtime
+            hora: newtime,
           };
           datamessagesthisevent.push(msjnew);
         });
         setdatamsjevent(datamessagesthisevent);
       })
-      .catch((err) => {});
+      .catch();
   }
 
   function deleteAllChat() {
@@ -165,18 +163,11 @@ const ChatExport = ({ eventId, event }) => {
         <Popconfirm
           title='¿Está seguro que desea eliminar el chat de forma permanente?'
           onConfirm={deleteAllChat}
-          onCancel={() => setVisible(false)}
           okText='Si'
           cancelText='No'
           style={{ width: '170px' }}
           icon={<QuestionCircleOutlined style={{ color: 'red' }} />}>
-          <Button
-            danger
-            onClick={() => {
-              setVisible(true);
-            }}
-            //className='button is-primary'
-          >
+          <Button danger>
             <span className='icon'>
               <i className='fas fa-trash' />
             </span>

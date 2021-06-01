@@ -17,11 +17,11 @@ const ModalEdit = ({ visible, data, onFinish }) => {
       state: data && data.state,
       informative_text: data && data.informative_text,
       meeting_id: data && data.meeting_id ? data.meeting_id : 0,
-      vimeo_id: data && data.vimeo_id ? data.vimeo_id : 0
+      vimeo_id: data && data.vimeo_id ? data.vimeo_id : 0,
     });
   }, [data, form]);
 
-  const handleCancel = async (e) => {
+  const handleCancel = async () => {
     setVisibleModal(false);
   };
 
@@ -33,7 +33,7 @@ const ModalEdit = ({ visible, data, onFinish }) => {
       footer={[
         <Button key='back' onClick={handleCancel}>
           Cerrar
-        </Button>
+        </Button>,
       ]}>
       <Form onFinish={onFinish} form={form}>
         <Form.Item label='Lenguaje' name='language'>

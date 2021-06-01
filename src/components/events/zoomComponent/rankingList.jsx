@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Avatar } from 'antd';
+import { Row, Col, Avatar } from 'antd';
 
 export default function RankingList({ data }) {
   function formatName(name) {

@@ -55,7 +55,7 @@ export const userRequest = {
       console.error(error);
     }
     return docs;
-  }
+  },
 };
 
 export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
@@ -72,7 +72,7 @@ export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
         result.docs.forEach((doc) => {
           data.push({
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
           });
         });
 
@@ -90,8 +90,6 @@ export const createAgendaToEventUser = ({
   targetEventUser,
   timetableItem,
   message,
-  name,
-  email
 }) => {
   return new Promise((resolve, reject) => {
     (async () => {
@@ -110,7 +108,7 @@ export const createAgendaToEventUser = ({
         existingAgendaResult.docs.forEach((doc) => {
           existingAgendas.push({
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
           });
         });
 
@@ -133,7 +131,7 @@ export const createAgendaToEventUser = ({
               type: 'meeting',
               timestamp_start: timetableItem.timestamp_start,
               timestamp_end: timetableItem.timestamp_end,
-              message
+              message,
             });
           // enviamos notificaciones por correo
           let data = {
@@ -144,7 +142,7 @@ export const createAgendaToEventUser = ({
             event_id: eventId,
             state: 'send',
             request_type: 'meeting',
-            start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString()
+            start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString(),
           };
 
           EventsApi.sendMeetingRequest(eventId, data);
@@ -261,7 +259,7 @@ export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newSta
         acceptedAgendasAtSameTimeResult.docs.forEach((doc) => {
           const newDataItem = {
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
           };
 
           if (newDataItem.owner_id !== currentEventUserId) {
@@ -304,7 +302,7 @@ export const getAcceptedAgendasFromEventUser = (eventId, currentEventUserId) => 
         result.docs.forEach((doc) => {
           const newDataItem = {
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
           };
 
           if (newDataItem.type !== 'reserved') {

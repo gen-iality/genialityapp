@@ -7,7 +7,7 @@ export default class SurveyManager extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      publishedSurveys: []
+      publishedSurveys: [],
     };
   }
   componentDidMount = () => {
@@ -49,7 +49,7 @@ export default class SurveyManager extends Component {
   };
 
   updateSurvey = (survey_id, data) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       //Abril 2021 @todo migracion de estados de firestore a firebaserealtime
       //let eventId = surveyInfo.eventId || 'general';
       let eventId = data.eventId || 'general';

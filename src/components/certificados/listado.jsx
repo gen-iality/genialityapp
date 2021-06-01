@@ -18,7 +18,7 @@ class List extends Component {
       deleteModal: false,
       name: '',
       rol: '',
-      message: ''
+      message: '',
     };
     this.fetchCerts = this.fetchCerts.bind(this);
     this.deleteCert = this.deleteCert.bind(this);
@@ -81,7 +81,7 @@ class List extends Component {
       if (error.response) {
         this.setState({
           message: { ...this.state.message, class: 'msg_error', content: JSON.stringify(error.response) },
-          isLoading: false
+          isLoading: false,
         });
       } else if (error.request) {
         this.setState({ serverError: true, errorData: { message: error.request, status: 708 } });
@@ -99,7 +99,7 @@ class List extends Component {
     return (
       <React.Fragment>
         <div className='has-text-right'>
-          <button className='button is-primary' onClick={(e) => this.setState({ modalCert: true })}>
+          <button className='button is-primary' onClick={() => this.setState({ modalCert: true })}>
             <span className='icon'>
               <i className='fas fa-plus' />
             </span>
@@ -130,7 +130,7 @@ class List extends Component {
                       <td>
                         <span
                           className='icon has-text-primary action_pointer'
-                          onClick={(e) => {
+                          onClick={() => {
                             this.editCert(cert);
                           }}>
                           <i className='fas fa-edit' />
@@ -139,7 +139,7 @@ class List extends Component {
                       <td className='has-text-centered'>
                         <span
                           className='icon has-text-danger action_pointer'
-                          onClick={(e) => {
+                          onClick={() => {
                             this.setState({ id: cert._id, deleteModal: true });
                           }}>
                           <i className='far fa-trash-alt' />

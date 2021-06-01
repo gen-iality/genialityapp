@@ -2,18 +2,15 @@ import React, { useState, useEffect } from 'react';
 
 import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from 'antd';
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import * as Cookie from 'js-cookie';
 import { Networking, UsersApi } from '../../helpers/request';
-import { getCurrentUser, getCurrentEventUser, getUserByEventUser } from './services';
-import { props } from 'ramda';
+import { getCurrentUser, getCurrentEventUser } from './services';
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
   const [invitationsReceived, setInvitationsReceived] = useState([]);
-  const [visibleItem, setVisibleItem] = useState(true);
 
   useEffect(() => {
     setInvitationsReceived(list);
@@ -34,7 +31,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
                   </Button>,
                   <Button key='btn-noaceptar' onClick={() => sendResponseToInvitation(item, false)}>
                     No Aceptar
-                  </Button>
+                  </Button>,
                 ]}>
                 <List.Item.Meta
                   avatar={
@@ -109,7 +106,7 @@ const InvitacionListSent = ({ list }) => {
   );
 };
 
-export default function RequestList({ eventId, notification, currentUser, notify, tabActive }) {
+export default function RequestList({ eventId, notification, currentUser, tabActive }) {
   const [requestListReceived, setRequestListReceived] = useState([]);
   const [requestListSent, setRequestListSent] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -166,7 +163,7 @@ export default function RequestList({ eventId, notification, currentUser, notify
           state: requestListReceived[i].state,
           updated_at: requestListReceived[i].updated_at,
           user_name_requesting: requestListReceived[i].id_user_requesting,
-          _id: requestListReceived[i]._id
+          _id: requestListReceived[i]._id,
         });
       }
     }
@@ -180,13 +177,13 @@ export default function RequestList({ eventId, notification, currentUser, notify
     let data = { response: state ? 'accepted' : 'rejected' };
 
     Networking.acceptOrDeclineInvitation(eventId, requestId._id, data)
-      .then(async (response) => {
+      .then(async () => {
         message.success('Respuesta enviada');
 
         let notificationr = {
           idReceive: currentUser._id,
           idEmited: requestId && requestId._id,
-          state: '1'
+          state: '1',
         };
         notification(notificationr, currentUser._id);
         setRequestListReceived(requestListReceived.filter((item) => item._id != requestId._id));

@@ -9,7 +9,7 @@ import MainRouter from '../containers/router';
 import 'bulma-spacing/css/bulma-spacing.min.css';
 
 //contexto
-import { UserEventProvider } from '../Context/eventUserContext';
+import { CurrentUserEventProvider } from '../Context/eventUserContext';
 import { CurrentEventProvider } from '../Context/eventContext';
 import { CurrentUserProvider } from '../Context/userContext';
 
@@ -17,7 +17,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: { name: 'albert' }
+      user: { name: 'albert' },
     };
   }
 
@@ -38,13 +38,13 @@ class App extends Component {
   render() {
     return (
       <CurrentEventProvider>
-        <UserEventProvider>
+        <CurrentUserEventProvider>
           <CurrentUserProvider>
             <Provider store={store}>
               <MainRouter />
             </Provider>
           </CurrentUserProvider>
-        </UserEventProvider>
+        </CurrentUserEventProvider>
       </CurrentEventProvider>
     );
   }

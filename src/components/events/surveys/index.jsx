@@ -5,39 +5,10 @@ import { Actions, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
 import SurveyList from './surveyList';
 import RootPage from './rootPage';
-import { Spin, Button, Card } from 'antd';
-import Loading from './loading';
+import { Card } from 'antd';
 import * as SurveyActions from '../../../redux/survey/actions';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
-
-const surveyButtons = {
-  text: {
-    color: 'inherit',
-  },
-};
-
-// function playFrequency(frequency) {
-//   var audioContext = new AudioContext();
-//   // create 2 second worth of audio buffer, with single channels and sampling rate of your device.
-//   var sampleRate = audioContext.sampleRate;
-//   var duration = 0.5 * sampleRate;
-//   var numChannels = 1;
-//   var buffer = audioContext.createBuffer(numChannels, duration, sampleRate);
-//   // fill the channel with the desired frequency's data
-//   var channelData = buffer.getChannelData(0);
-//   for (var i = 0; i < sampleRate; i++) {
-//     channelData[i] = Math.sin((2 * Math.PI * frequency * i) / sampleRate);
-//   }
-
-//   // create audio source node.
-//   var source = audioContext.createBufferSource();
-//   source.buffer = buffer;
-//   source.connect(audioContext.destination);
-
-//   // finally start to play
-//   source.start(0);
-// }
 
 class SurveyForm extends Component {
   constructor(props) {
@@ -158,7 +129,7 @@ class SurveyForm extends Component {
     const { currentUser } = this.props;
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
     let counterDocuments = 0;
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       firestore
         .collectionGroup('responses')
         .where('id_survey', '==', survey._id)
@@ -184,7 +155,7 @@ class SurveyForm extends Component {
     const { publishedSurveys } = this.state;
     const { currentUser } = this.props;
 
-    const checkMyResponses = new Promise((resolve, reject) => {
+    const checkMyResponses = new Promise((resolve) => {
       let filteredSurveys = [];
 
       publishedSurveys.forEach(async (survey, index, arr) => {
@@ -257,8 +228,8 @@ class SurveyForm extends Component {
   };
 
   render() {
-    const { selectedSurvey, publishedSurveys, eventUser, userVote, surveyVisible, surveyLabel } = this.state;
-    const { event, currentUser } = this.props;
+    const { eventUser, surveyLabel } = this.state;
+    const { currentUser } = this.props;
 
     if (this.props.currentSurvey !== null)
       return (

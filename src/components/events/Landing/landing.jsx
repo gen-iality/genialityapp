@@ -1,12 +1,11 @@
-import React, { Component, createRef } from 'react';
+import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-import * as eventActions from '../../redux/event/actions';
-import * as stageActions from '../../redux/stage/actions';
-import * as notificationsActions from '../../redux/notifications/actions';
-import * as notifyNetworking from '../../redux/notifyNetworking/actions';
-import WithEviusContext from './../../Context/withContext';
+import * as eventActions from '../../../redux/event/actions';
+import * as stageActions from '../../../redux/stage/actions';
+import * as notificationsActions from '../../../redux/notifications/actions';
+import * as notifyNetworking from '../../../redux/notifyNetworking/actions';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
@@ -40,50 +39,52 @@ import {
   Activity,
   getCurrentUser,
   EventFieldsApi,
-} from '../../helpers/request';
-import Loading from '../loaders/loading';
-import { BaseUrl } from '../../helpers/constants';
-import Dialog from '../modal/twoAction';
-import TicketsForm from '../tickets/formTicket';
-import CertificadoLanding from '../certificados/cerLanding';
-import AgendaForm from './agendaLanding';
-import SpeakersForm from './speakers';
-import SurveyForm from './surveys';
-import DocumentsForm from '../documents/front/documentsLanding';
-import AgendaInscriptions from './agendaInscriptions';
+} from '../../../helpers/request';
+import Loading from '../../loaders/loading';
+import { BaseUrl } from '../../../helpers/constants';
+import Dialog from '../../modal/twoAction';
+import TicketsForm from '../../tickets/formTicket';
+import CertificadoLanding from '../../certificados/cerLanding';
+import AgendaForm from '../agendaLanding';
+import SpeakersForm from '../speakers';
+import SurveyForm from '../surveys';
+import DocumentsForm from '../../documents/front/documentsLanding';
+import AgendaInscriptions from '../agendaInscriptions';
 
-import FaqsForm from '../faqsLanding';
-import NetworkingForm from '../networking';
-import MyAgendaIndepend from '../networking/myAgendaIndepend';
-import MySection from './newSection/index';
-import Companies from './companies/index';
-import WallForm from '../wall/index';
-import ZoomComponent from './zoomComponent';
-import MenuEvent from './menuEvent';
-import BannerEvent from './bannerEvent';
-import VirtualConference from './virtualConference';
-import MapComponent from './mapComponet';
-import EventLanding from './eventLanding';
+import FaqsForm from '../../faqsLanding';
+import NetworkingForm from '../../networking';
+import MyAgendaIndepend from '../../networking/myAgendaIndepend';
+import MySection from '../newSection/index';
+import Companies from '../companies/index';
+import WallForm from '../../wall/index';
+import ZoomComponent from '../zoomComponent';
+import MenuEvent from '../menuEvent';
+import BannerEvent from '../bannerEvent';
+import VirtualConference from '../virtualConference';
+import MapComponent from '../mapComponet';
+import EventLanding from '../eventLanding';
 import { toast } from 'react-toastify';
-import { formatDataToString, handleRequestError } from '../../helpers/utils';
-import Robapagina from '../shared/Animate_Img/index';
-import Trophies from './trophies';
-import InformativeSection from './informativeSections/informativeSection';
-import InformativeSection2 from './informativeSections/informativeSection2';
-import UserLogin from './UserLoginContainer';
-import Partners from './Partners';
-import SocialZone from '../../components/socialZone/socialZone';
-import { firestore } from '../../helpers/firebase';
-import { AgendaApi } from '../../helpers/request';
-import * as SurveyActions from '../../redux/survey/actions';
-import { setGeneralTabs, getGeneralTabs } from '../../redux/tabs/actions';
+import { formatDataToString, handleRequestError } from '../../../helpers/utils';
+import Robapagina from '../../shared/Animate_Img/index';
+import Trophies from '../trophies';
+import InformativeSection from '../informativeSections/informativeSection';
+import InformativeSection2 from '../informativeSections/informativeSection2';
+import UserLogin from '../UserLoginContainer';
+import Partners from '../Partners';
+import SocialZone from '../../socialZone/socialZone';
+import { firestore } from '../../../helpers/firebase';
+import { AgendaApi } from '../../../helpers/request';
+import * as SurveyActions from '../../../redux/survey/actions';
+import { setGeneralTabs, getGeneralTabs } from '../../../redux/tabs/actions';
 
 import { isMobile } from 'react-device-detect';
 import Avatar from 'antd/lib/avatar/avatar';
 import Text from 'antd/lib/typography/Text';
-import { getCurrentEventUser, getUserByEmail } from '../networking/services';
-import AppointmentModal from '../networking/appointmentModal';
-import initUserPresence from '../../containers/userPresenceInEvent';
+import { getCurrentEventUser, getUserByEmail } from '../../networking/services';
+import AppointmentModal from '../../networking/appointmentModal';
+import initUserPresence from '../../../containers/userPresenceInEvent';
+
+import { drawerButton, imageCenter } from './helpers/csshelpers';
 
 const { setEventData } = eventActions;
 const { gotoActivity, setMainStage } = stageActions;
@@ -97,35 +98,9 @@ momentLocalizer();
 
 const html = document.querySelector('html');
 
-const drawerButton = {
-  height: '46px',
-  padding: '7px 10px',
-  fontSize: '10px',
-};
-
-const imageCenter = {
-  maxWidth: '100%',
-  minWidth: '66.6667%',
-  margin: '0 auto',
-  display: 'block',
-};
-
 let notify = false;
 let notifySurvey = false;
 
-// const mapStateToPropsI = (state) => ({
-//   tabs: state.stage.data.tabs
-// });
-
-// let TestComponent = (props) => {
-//   console.log('context', props);
-//   return <div>a</div>;
-// };
-
-// let WithEviusContextTest = WithEviusContext(TestComponent);
-// let WithEviusContextTestComponent = connect(mapStateToPropsI)(WithEviusContextTest);
-
-//let WithEviusContextTestComponent = TestComponent;
 class Landing extends Component {
   constructor(props) {
     super(props);
@@ -211,7 +186,6 @@ class Landing extends Component {
     if (!event_id) {
       return [];
     }
-
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
     let $query = firestore.collection('surveys').where('eventId', '==', event_id);
 
@@ -452,10 +426,6 @@ class Landing extends Component {
       var data = await this.loadDataUser(userPerfil);
 
       this.setState({ userPerfil: { ...data.properties, iduser: userPerfil.iduser || data._id } });
-
-      if (data) {
-        const respProperties = await this.getProperties(data._id);
-      }
     } else {
       //
     }
@@ -1158,6 +1128,7 @@ class Landing extends Component {
   mountCurrentSurvey = (survey) => {
     this.setState({ currentSurvey: survey });
   };
+
   unMountCurrentSurvey = () => {
     this.setState({ currentSurvey: null });
   };
@@ -1271,7 +1242,6 @@ class Landing extends Component {
 
     return (
       <section className='section landing' style={{ backgroundColor: this.state.color, height: '100%' }}>
-        {/* <WithEviusContextTestComponent> </WithEviusContextTestComponent> */}
         <AppointmentModal
           notificacion={this.addNotification}
           event={this.props.eventInfo}
@@ -1442,7 +1412,6 @@ class Landing extends Component {
                                         size='large'
                                         shape='circle'
                                         onClick={async () => {
-                                          var us = await this.loadDataUser(this.state.userPerfil);
                                           this.collapsePerfil();
                                           this.UpdateChat(
                                             currentUser.uid,

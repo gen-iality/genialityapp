@@ -125,13 +125,13 @@ class OrgUsers extends Component {
           <td>
             <span
               className='icon has-text-primary action_pointer'
-              onClick={(e) => {
+              onClick={() => {
                 this.setState({ editUser: true, selectedUser: item, edit: true });
               }}>
               <i className='fas fa-edit' />
             </span>
           </td>
-          {extraFields.slice(0, limit).map((field, key) => {
+          {extraFields.slice(0, limit).map((field) => {
             return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>;
           })}
         </tr>
@@ -205,7 +205,7 @@ class OrgUsers extends Component {
                 <div className='column is-narrow has-text-centered'>
                   <button
                     className='button is-primary'
-                    onClick={(e) => {
+                    onClick={() => {
                       this.modalUser(false);
                     }}>
                     Agregar Usuario +
@@ -295,7 +295,7 @@ const parseData = (data) => {
   let info = [];
   data.map((item, key) => {
     info[key] = {};
-    Object.keys(item.properties).map((obj, i) => (info[key][obj] = item.properties[obj]));
+    Object.keys(item.properties).map((obj) => (info[key][obj] = item.properties[obj]));
     return info;
   });
   return info;

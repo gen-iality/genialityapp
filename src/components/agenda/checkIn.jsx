@@ -1,14 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import { RolAttApi } from '../../helpers/request';
 import EventContent from '../events/shared/content';
-import SearchComponent from '../shared/searchTable';
-import EvenTable from '../events/shared/table';
-import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from '../../helpers/utils';
+import { fieldNameEmailFirst, handleRequestError, parseData2Excel } from '../../helpers/utils';
 import { firestore } from '../../helpers/firebase';
 import Loading from '../loaders/loading';
-import Pagination from '../shared/pagination';
-import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import CheckSpace from '../event-users/checkSpace';
 import XLSX from 'xlsx';
 import { toast } from 'react-toastify';
@@ -30,7 +26,7 @@ class CheckAgenda extends Component {
       total: 0,
       checkIn: 0,
       qrModal: false,
-      selectedRowKeys: []
+      selectedRowKeys: [],
     };
     this.onSelectChange = this.onSelectChange.bind(this);
   }
@@ -59,7 +55,7 @@ class CheckAgenda extends Component {
         return item;
       });
 
-      this.setState((prevState) => {
+      this.setState(() => {
         return { attendees: newList, loading: false, total: newList.length, checkIn };
       });
       let usersData = this.createUserInformation(newList);
@@ -77,14 +73,14 @@ class CheckAgenda extends Component {
     columnsTable.push({
       title: 'Chequeado',
       dataIndex: 'checkedin_at',
-      ...this.getColumnSearchProps('checkedin_at')
+      ...this.getColumnSearchProps('checkedin_at'),
     });
 
     for (let i = 0; properties.length > i; i++) {
       columnsTable.push({
         title: properties[i].label ? properties[i].label : properties[i].name,
         dataIndex: properties[i].name,
-        ...this.getColumnSearchProps(properties[i].name)
+        ...this.getColumnSearchProps(properties[i].name),
       });
     }
 
@@ -141,7 +137,7 @@ class CheckAgenda extends Component {
         .update({
           updated_at: new Date(),
           checked_in: true,
-          checked_at: new Date()
+          checked_at: new Date(),
         })
         .then(() => {
           toast.success('Usuario Chequeado');
@@ -205,14 +201,14 @@ class CheckAgenda extends Component {
         />
       ) : (
         text
-      )
+      ),
   });
 
   handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     this.setState({
       searchText: selectedKeys[0],
-      searchedColumn: dataIndex
+      searchedColumn: dataIndex,
     });
   };
 
@@ -224,12 +220,11 @@ class CheckAgenda extends Component {
   //Funcion para enviar la data de los usuarios al componente send.jsx
   goToSendMessage = () => {
     const { attendeesForSendMessage, modalVisible } = this.state;
-    const { event, match } = this.props;
     //Actualizar el estado del padre
     if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
       this.props.history.push({
         pathname: `/event/${this.props.match.params.id}/invitados/createmessage`,
-        selection: attendeesForSendMessage
+        selection: attendeesForSendMessage,
       });
     } else {
       this.setState({ modalVisible: modalVisible === true ? false : true });
@@ -260,7 +255,7 @@ class CheckAgenda extends Component {
       checkIn,
       qrModal,
       eventID,
-      agendaID
+      agendaID,
     } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -274,9 +269,9 @@ class CheckAgenda extends Component {
           onSelect: () => {
             let newSelectedRowKeys = [];
             this.setState({ selectedRowKeys: newSelectedRowKeys });
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
     if (!this.props.location.state) return this.goBack();
     return (

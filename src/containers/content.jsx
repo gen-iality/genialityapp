@@ -5,12 +5,11 @@ import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../helpers/constants';
 import asyncComponent from './AsyncComponent';
 import WithFooter from '../components/withFooter';
-import { match } from 'ramda';
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
 const HomeProfile = asyncComponent(() => import('../components/home/profile'));
-const Landing = asyncComponent(() => import('../components/events/landing'));
+const Landing = asyncComponent(() => import('../components/events/Landing/landing'));
 const Transition = asyncComponent(() => import('../components/shared/Animate_Img/index'));
 const Events = asyncComponent(() => import('../components/events'));
 const NewEvent = asyncComponent(() => import('../components/events/newEvent'));
@@ -23,7 +22,6 @@ const Privacy = asyncComponent(() => import('../components/policies/privacyPolic
 const Policies = asyncComponent(() => import('../components/policies/policies'));
 const About = asyncComponent(() => import('../components/policies/about'));
 const Faqs = asyncComponent(() => import('../components/faqs/index'));
-const SinginTest = asyncComponent(() => import('../components/signintest'));
 const Tickets = asyncComponent(() => import('../components/tickets'));
 const socialZone = asyncComponent(() => import('../components/socialZone/socialZone'));
 const AppointmentAccept = asyncComponent(() => import('../components/networking/appointmentAccept'));
@@ -62,7 +60,6 @@ class ContentContainer extends Component {
           <Route path='/policies' component={Policies} />
           <Route path='/about' component={About} />
           <Route path='/faqs' component={Faqs} />
-          <Route path='/singintest' component={SinginTest} />
           <Route path='/api/generatorQr/:id' component={QRedirect} />
           <Route exact path='/transition/:event' component={Transition} />
 

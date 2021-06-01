@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Button } from 'antd';
-import { AuthUrl } from '../../helpers/constants';
+import { Alert } from 'antd';
 
 function WithUserEventRegistered(Component) {
   return function WihLoadingComponent(props) {

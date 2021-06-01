@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { EventsApi } from '../helpers/request';
 import { GetIdEvent } from '../helpers/utils';
 
-export const UsuarioContext = React.createContext();
+export const CurrentEventUserContext = React.createContext();
 
-export function UserEventProvider({ children }) {
+export function CurrentUserEventProvider({ children }) {
   const [userEvent, setuserEvent] = useState();
 
   useEffect(() => {
@@ -20,17 +20,17 @@ export function UserEventProvider({ children }) {
 
   const value = React.useMemo(() => {
     return {
-      ...userEvent
+      ...userEvent,
     };
   }, [userEvent]);
 
   //
 
-  return <UsuarioContext.Provider value={value}>{children}</UsuarioContext.Provider>;
+  return <CurrentEventUserContext.Provider value={value}>{children}</CurrentEventUserContext.Provider>;
 }
 
 export function UseUserEvent() {
-  const contextuser = React.useContext(UsuarioContext);
+  const contextuser = React.useContext(CurrentEventUserContext);
   if (!contextuser) {
     throw new Error('UseEventuser debe estar dentro del proveedor');
   }

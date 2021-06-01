@@ -17,7 +17,7 @@ class Espacios extends Component {
       deleteID: '',
       name: '',
       isLoading: false,
-      loading: true
+      loading: true,
     };
   }
 
@@ -90,7 +90,7 @@ class Espacios extends Component {
         if (result.value) {
           sweetAlert.showLoading('Espera (:', 'Borrando...');
           await SpacesApi.deleteOne(id, this.props.eventID);
-          this.setState((state) => ({ id: '', name: '' }));
+          this.setState(() => ({ id: '', name: '' }));
           this.fetchItem();
           sweetAlert.hideLoading();
         }

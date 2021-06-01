@@ -2,7 +2,6 @@ import { firestore, fireStorage } from '../../helpers/firebase';
 import { toast } from 'react-toastify';
 
 export const saveFirebase = {
-  async saveComment(author_id, comment, date, eventId, idPost) {},
 
   async savePost(data, eventId) {
     try {
@@ -67,14 +66,7 @@ export const saveFirebase = {
     return doc;
   },
 
-  async createComment(postId, eventId, comment, author) {
-    const data = {
-      author: '',
-      authorName: author.names ? author.names : author.name ? author.names : author.email,
-      comment: comment,
-      date: new Date(),
-      idPost: postId
-    };
+  async createComment(postId, eventId) {
     const dataPost = [];
     var docRef = await firestore
       .collection('adminPost')
@@ -87,13 +79,6 @@ export const saveFirebase = {
     doc['comments'] = doc.comments ? doc.comments + 1 : 1;
     doc['id'] = docRef.id;
     await docRef.update(doc);
-    let result = await firestore
-      .collection('adminPost')
-      .doc(eventId)
-      .collection('comment')
-      .doc(postId)
-      .collection('comments')
-      .add(data);
     let posts = await firestore
       .collection('adminPost')
       .doc(eventId)
@@ -107,8 +92,6 @@ export const saveFirebase = {
 
       dataPost.push(data);
     });
-    //return result;
-    //return doc;
     return dataPost;
   },
 
@@ -135,7 +118,6 @@ export const saveFirebase = {
         .doc(postId);
 
       var querySnapshot = await query.get();
-      var querySnapshotPostId = await queryPostId.get();
       if (querySnapshot) {
         querySnapshot.forEach(async function(doc) {
           await doc.ref.delete();

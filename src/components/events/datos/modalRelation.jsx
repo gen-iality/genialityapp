@@ -5,24 +5,24 @@ export default class ModalRelation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false
+      visible: false,
     };
   }
 
   componentDidMount() {
     this.setState({
-      visible: this.props.showModal
+      visible: this.props.showModal,
     });
   }
-  handleOk = (e) => {
+  handleOk = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
-  handleCancel = (e) => {
+  handleCancel = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 

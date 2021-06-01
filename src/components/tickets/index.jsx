@@ -64,11 +64,11 @@ class TicketInfo extends Component {
     this.setState({ visibleModal: true, currentEventId: eventId, extraFields });
   };
 
-  handleOk = (e) => {
+  handleOk = () => {
     this.setState({ visibleModal: false });
   };
 
-  handleCancel = (e) => {
+  handleCancel = () => {
     this.setState({ visibleModal: false });
   };
 
@@ -93,7 +93,7 @@ class TicketInfo extends Component {
   };
 
   getEventFields = (eventId) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       (async () => {
         const event = await EventsApi.getOne(eventId);
 
