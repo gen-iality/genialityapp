@@ -86,6 +86,8 @@ import initUserPresence from '../../../containers/userPresenceInEvent';
 
 import { drawerButton, imageCenter } from './helpers/csshelpers';
 
+import WithEviusContext from '../../../Context/withContext';
+
 const { setEventData } = eventActions;
 const { gotoActivity, setMainStage } = stageActions;
 const { setNotification } = notificationsActions;
@@ -239,13 +241,6 @@ class Landing extends Component {
   UpdateChat = (idCurentUser, currentName, idOtherUser, otherUserName) => {
     this.setState({
       updateChat: { idCurentUser, currentName, idOtherUser, otherUserName },
-    });
-  };
-
-  openNotificationWithIcon = (type) => {
-    notification[type]({
-      message: 'holap',
-      // description: 'Tienes un nuevo mensaje',
     });
   };
 
@@ -492,8 +487,6 @@ class Landing extends Component {
   }
 
   mountSections = async () => {
-    //
-    //
     let eventUser = null;
     let eventUsers = null;
     this.props.setNotification({
@@ -803,6 +796,8 @@ class Landing extends Component {
     }
   }
   async componentDidMount() {
+    console.log('props landing ', this.props);
+
     await this.mountSections();
     //Registra la presencia cuando se ingresa al landing del evento
     await initUserPresence(this.state.event._id);
@@ -820,15 +815,6 @@ class Landing extends Component {
     // Se escucha la configuracion  de los tabs del evento
     this.listenConfigurationEvent();
 
-    //ADD NOTIFICATION PRUEBA
-    /* let notification = {
-      state: '0',
-    };
-    let iduserEmmited = 'hfxofxtzuyfUiIGI8spwk1lHnEA2';
-
-    this.addNotification(notification, iduserEmmited);*/
-    //LISTENER NOTIFICATIONS NETWORKING
-    //
     if (this.state.user) {
       firestore
         .collection('notificationUser')
@@ -1176,19 +1162,6 @@ class Landing extends Component {
         });
       },
     });
-
-    /*  let key = 'updatable';
-    if (this.props.viewNotification.type == 'success') {
-      message
-        .success({ content: this.props.viewNotification.message, key, duration: 5 })
-        .then(() => this.props.setNotification({ message: null, type: null }));
-    } else if (this.props.viewNotification.type == 'warning') {
-      message
-        .warning({ content: this.props.viewNotification.message, key, duration: 5 })
-        .then(() => this.props.setNotification({ message: null, type: null }));
-    }*/
-
-    // message.success({ content: 'Loaded!', key, duration: 2 });
   };
   //Cerrar modal agenda
   closeAppointmentModal = () => {
@@ -1450,21 +1423,7 @@ class Landing extends Component {
                                 {!this.state.propertiesUserPerfil && (
                                   <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>
                                 )}
-                                {/*this.state.propertiesUserPerfil &&
-                                  this.state.propertiesUserPerfil.map(
-                                    (property, key) =>
-                                      this.state.userPerfil[property.name] !== undefined &&
-                                      !property.visibleByAdmin && (
-                                        <div key={'contact-property' + key}>
-                                          {
-                                            <p>
-                                              <strong>{property.label}</strong>:{' '}
-                                              {formatDataToString(this.state.userPerfil[property.name], property)}
-                                            </p>
-                                          }
-                                        </div>
-                                      )
-                                        )*/}
+
                                 {this.state.propertiesUserPerfil && (
                                   <List
                                     bordered
@@ -1674,12 +1633,6 @@ class Landing extends Component {
                                 <>
                                   {/* MENU DERECHO */}
 
-                                  {/* <div style={{ marginLeft: '2%', marginBottom: '3%' }}>
-                                    <Button type='link' onClick={this.toggleCollapsedN}>
-                                      <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
-                                    </Button>
-                                  </div> */}
-
                                   <Menu theme='light' style={{ backgroundColor: event.styles?.toolbarMenuSocial }}>
                                     {(this.state.generalTabs.publicChat || this.state.generalTabs.privateChat) && (
                                       <Menu.Item
@@ -1810,4 +1763,5 @@ const mapDispatchToProps = {
   setNotificationN,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Landing));
+const LandingWithContext = WithEviusContext(Landing);
+export default connect(mapStateToProps, mapDispatchToProps)(LandingWithContext);
