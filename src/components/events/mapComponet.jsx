@@ -8,11 +8,11 @@ import { Card } from 'antd';
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 class mapComponent extends Component {
-  componentDidUpdate(prevProps) {
-    if (this.props !== prevProps) {
-      this.setState({ props: this.props });
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (this.props !== prevProps) {
+  //     this.setState({ props: this.props });
+  //   }
+  // }
 
   render() {
     const { event } = this.props;
@@ -60,7 +60,7 @@ class mapComponent extends Component {
                     bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
                     defaultCenter={{
                       lat: event.location.Latitude,
-                      lng: event.location.Longitude
+                      lng: event.location.Longitude,
                     }}
                     defaultZoom={15}>
                     <AnyReactComponent lat={event.location.Latitude} lng={event.location.Longitude} text='⭐' />

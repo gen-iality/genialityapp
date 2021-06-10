@@ -19,7 +19,7 @@ export function CurrentUserProvider({ children }) {
 
   const value = React.useMemo(() => {
     return {
-      ...currentUser
+      ...currentUser,
     };
   }, [currentUser]);
 

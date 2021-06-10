@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { List, Tooltip, Popover, Avatar,  Spin } from 'antd';
+import { List, Tooltip, Popover, Avatar, Spin } from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
 import InfiniteScroll from 'react-infinite-scroller';
 
+import { UseCurrentUser } from '../../../Context/userContext';
+
 const AttendeList = function(props) {
+  //contextos
+  let cUser = UseCurrentUser();
+
   let [myattendelist, setmyattendelist] = useState();
 
   let [loading, setLoading] = useState(false);
@@ -27,15 +32,13 @@ const AttendeList = function(props) {
     let ordenadousers = [];
 
     Object.keys(props.attendeeList).map((key) => {
-      //Object.keys(props.attendeeListPresence).map((key2) => {
-      //if (key2 === key) {
       let mihijo = {
         idattendpresence: key,
         iduser: key,
         name: props.attendeeList[key].properties.name,
         names: props.attendeeList[key].properties.names,
         status: props.attendeeListPresence[key] ? props.attendeeListPresence[key].state : 'offline',
-        email: props.attendeeList[key].properties.email
+        email: props.attendeeList[key].properties.email,
       };
 
       if (mihijo.status === 'online') {
@@ -43,8 +46,6 @@ const AttendeList = function(props) {
       } else if (mihijo.status === 'offline') {
         ordenadousers.push(mihijo);
       }
-      //}
-      //});
     });
 
     setmyattendelist(ordenadousers);
@@ -58,7 +59,6 @@ const AttendeList = function(props) {
     setHasMore(true);
 
     if (filteredlist.length == myattendelist.length) {
-      // message.warning('NO HAY MAS ASISTENTES');
       setHasMore(false);
       setLoading(false);
       return;
@@ -66,14 +66,11 @@ const AttendeList = function(props) {
 
     let ini = pag * page;
     let fin = pag * page + pag;
-    //
-    //
 
     let newDatos = myattendelist.slice(ini, fin);
     const datosg = filteredlist.concat(newDatos);
     let pagP = page;
     pagP = pagP += 1;
-    //
 
     setfilteredlist(datosg);
     setPage(pagP++);
@@ -81,7 +78,6 @@ const AttendeList = function(props) {
     setLoading(false);
     setHasMore(true);
   };
-
 
   return (
     <InfiniteScroll
@@ -96,22 +92,17 @@ const AttendeList = function(props) {
         renderItem={(item) => (
           <List.Item
             actions={[
-              props.currentUser ? (
+              cUser ? (
                 <a
                   key='list-loadmore-edit'
                   onClick={() => {
-                    props.createNewOneToOneChat(
-                      props.currentUser.uid,
-                      props.currentUser.names,
-                      item.iduser,
-                      item.names
-                    );
+                    props.createNewOneToOneChat(cUser.uid, cUser.names, item.iduser, item.names);
                   }}>
                   <Tooltip title={'Chatear'}>
                     <MessageTwoTone style={{ fontSize: '20px' }} />
                   </Tooltip>
                 </a>
-              ) : null
+              ) : null,
             ]}>
             <List.Item.Meta
               avatar={
@@ -124,25 +115,13 @@ const AttendeList = function(props) {
                 )
               }
               title={
-                //props.currentUser ? (
                 <Popover
                   trigger='click'
                   style={{ padding: '0px !important', zIndex: 900 }}
                   placement='leftTop'
                   content={<PopoverInfoUser item={item} props={props} />}>
-                  <a
-                    key='list-loadmore-edit'
-                    /* onClick={() => {
-                        var user = props.currentUser;
-                        
-                        
-                        props.createNewOneToOneChat(user.uid, user.names, item.iduser, item.names);
-                      }} */
-                  >
-                    {item.names}
-                  </a>
+                  <a key='list-loadmore-edit'>{item.names}</a>
                 </Popover>
-                //) : null
               }
               description={
                 item.status === 'online' ? (

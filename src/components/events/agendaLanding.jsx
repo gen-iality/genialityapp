@@ -18,7 +18,6 @@ import { CalendarOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';
 //context
 import WithEviusContext from '../../Context/withContext';
-import { UseUserEvent } from '../../Context/eventUserContext';
 
 import { setTabs } from '../../redux/stage/actions';
 const { TabPane } = Tabs;
@@ -33,8 +32,6 @@ let attendee_states = {
 const { setNotification } = notificationsActions;
 
 class Agenda extends Component {
-  // static contextTypes = UsuarioContext;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -85,18 +82,21 @@ class Agenda extends Component {
 
     this.setState({ loading: true });
     await this.fetchAgenda();
-    console.log('contexto', this.props);
     this.setState({ loading: false });
 
-    const { event } = this.props;
-
     this.setState({
-      show_inscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
-      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true,
+      show_inscription:
+        this.props.cEvent.styles && this.props.cEvent.styles.show_inscription
+          ? this.props.cEvent.styles.show_inscription
+          : false,
+      hideBtnDetailAgenda:
+        this.props.cEvent.styles && this.props.cEvent.styles.hideBtnDetailAgenda
+          ? this.props.cEvent.styles.hideBtnDetailAgenda
+          : true,
     });
 
-    let surveysData = await SurveysApi.getAll(event._id);
-    let documentsData = await DocumentsApi.getAll(event._id);
+    let surveysData = await SurveysApi.getAll(this.props.cEvent._id);
+    let documentsData = await DocumentsApi.getAll(this.props.cEvent._id);
 
     if (surveysData.data.length >= 1) {
       this.setState({ survey: surveysData.data });
@@ -296,7 +296,7 @@ class Agenda extends Component {
 
   // Funcion para registrar usuario en la actividad
   registerInActivity = async (activityId, eventId, callback) => {
-    Activity.Register(eventId, this.userCurrentContext._id, activityId)
+    Activity.Register(eventId, this.props.cUser._id, activityId)
       .then(() => {
         notification.open({
           message: 'Inscripción realizada',
@@ -366,7 +366,7 @@ class Agenda extends Component {
     return;
     // const { event } = this.props;
     // try {
-    //   const infoUserAgenda = await Activity.GetUserActivity(event._id, this.userCurrentContext._id);
+    //   const infoUserAgenda = await Activity.GetUserActivity(event._id, this.props.cUser._id);
     //   this.setState({ userAgenda: infoUserAgenda.data });
     // } catch (e) {
     //   console.error(e);
@@ -414,23 +414,23 @@ class Agenda extends Component {
 
     // Listado de eventos que requieren validación
     if (hasPayment) {
-      if (this.userCurrentContext === null) {
+      if (this.props.cUser === null) {
         this.handleOpenModal();
         return false;
       }
 
-      if (this.userCurrentContext.state_id !== attendee_states.STATE_BOOKED) {
+      if (this.props.cUser.state_id !== attendee_states.STATE_BOOKED) {
         this.handleOpenModalRestricted();
         return false;
       }
 
-      if (this.userCurrentContext.registered_devices) {
+      if (this.props.cUser.registered_devices) {
         const checkRegisterDevice = window.localStorage.getItem('this.userEventContext_id');
-        if (this.userCurrentContext.registered_devices < 2) {
-          if (!checkRegisterDevice || checkRegisterDevice !== this.userCurrentContext._id) {
-            this.userCurrentContext.registered_devices = this.userCurrentContext.registered_devices + 1;
-            window.localStorage.setItem('this.userEventContext_id', this.userCurrentContext._id);
-            AttendeeApi.update('5ea23acbd74d5c4b360ddde2', this.userCurrentContext, this.userCurrentContext._id);
+        if (this.props.cUser.registered_devices < 2) {
+          if (!checkRegisterDevice || checkRegisterDevice !== this.props.cUser._id) {
+            this.props.cUser.registered_devices = this.props.cUser.registered_devices + 1;
+            window.localStorage.setItem('this.userEventContext_id', this.props.cUser._id);
+            AttendeeApi.update('5ea23acbd74d5c4b360ddde2', this.props.cUser, this.props.cUser._id);
           }
         } else {
           if (!checkRegisterDevice) {
@@ -439,9 +439,9 @@ class Agenda extends Component {
           }
         }
       } else {
-        this.userCurrentContext.registered_devices = 1;
-        window.localStorage.setItem('this.userEventContext_id', this.userCurrentContext._id);
-        AttendeeApi.update('5ea23acbd74d5c4b360ddde2', this.userCurrentContext, this.userCurrentContext._id);
+        this.props.cUser.registered_devices = 1;
+        window.localStorage.setItem('this.userEventContext_id', this.props.cUser._id);
+        AttendeeApi.update('5ea23acbd74d5c4b360ddde2', this.props.cUser, this.props.cUser._id);
       }
 
       this.gotoActivity(activity);
@@ -468,8 +468,7 @@ class Agenda extends Component {
 
       return (
         <div key={index} className='container_agenda-information'>
-          {(item.requires_registration || item.requires_registration === 'true') &&
-          !this.props.this.userCurrentContext ? (
+          {(item.requires_registration || item.requires_registration === 'true') && !this.props.this.props.cUser ? (
             <Badge.Ribbon color='red' placement='end' text='Requiere registro'>
               <AgendaActivityItem
                 item={item}
@@ -627,7 +626,7 @@ class Agenda extends Component {
             activity={this.props.activity}
             userEntered={this.props.userEntered}
             currentActivity={currentActivity}
-            image_event={this.props.event.styles.event_image}
+            // image_event={this.props.event.styles.event_image}s
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
             currentUser={this.props.currentUser}
@@ -727,7 +726,6 @@ class Agenda extends Component {
 
 const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
-  userContext: UseUserEvent,
 });
 const mapDispatchToProps = {
   setNotification,

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as eventActions from '../../../redux/event/actions';
 import * as stageActions from '../../../redux/stage/actions';
@@ -11,35 +10,21 @@ import momentLocalizer from 'react-widgets-moment';
 import firebase from 'firebase';
 import app from 'firebase/app';
 import ReactPlayer from 'react-player';
-import { Layout, Drawer, Button, Col, Row, Menu, Badge, notification, Space, Tooltip, List, Spin, message } from 'antd';
+import { Layout, Drawer, Button, Col, Row, Badge, notification, message } from 'antd';
 import * as Cookie from 'js-cookie';
-
 import {
   MenuOutlined,
-  CommentOutlined,
-  TeamOutlined,
   MenuUnfoldOutlined,
   MessageOutlined,
-  PieChartOutlined,
   WifiOutlined,
   PlayCircleOutlined,
   LoadingOutlined,
   DiffOutlined,
-  UsergroupAddOutlined,
-  VideoCameraAddOutlined,
   SmileOutlined,
 } from '@ant-design/icons';
 
 //custom
-import {
-  Actions,
-  EventsApi,
-  TicketsApi,
-  fireStoreApi,
-  Activity,
-  getCurrentUser,
-  EventFieldsApi,
-} from '../../../helpers/request';
+import { Actions, EventsApi, TicketsApi, fireStoreApi, Activity } from '../../../helpers/request';
 import Loading from '../../loaders/loading';
 import { BaseUrl } from '../../../helpers/constants';
 import Dialog from '../../modal/twoAction';
@@ -50,7 +35,6 @@ import SpeakersForm from '../speakers';
 import SurveyForm from '../surveys';
 import DocumentsForm from '../../documents/front/documentsLanding';
 import AgendaInscriptions from '../agendaInscriptions';
-
 import FaqsForm from '../../faqsLanding';
 import NetworkingForm from '../../networking';
 import MyAgendaIndepend from '../../networking/myAgendaIndepend';
@@ -64,7 +48,7 @@ import VirtualConference from '../virtualConference';
 import MapComponent from '../mapComponet';
 import EventLanding from '../eventLanding';
 import { toast } from 'react-toastify';
-import { formatDataToString, handleRequestError } from '../../../helpers/utils';
+import { handleRequestError } from '../../../helpers/utils';
 import Robapagina from '../../shared/Animate_Img/index';
 import Trophies from '../trophies';
 import InformativeSection from '../informativeSections/informativeSection';
@@ -76,17 +60,16 @@ import { firestore } from '../../../helpers/firebase';
 import { AgendaApi } from '../../../helpers/request';
 import * as SurveyActions from '../../../redux/survey/actions';
 import { setGeneralTabs, getGeneralTabs } from '../../../redux/tabs/actions';
-
 import { isMobile } from 'react-device-detect';
-import Avatar from 'antd/lib/avatar/avatar';
-import Text from 'antd/lib/typography/Text';
 import { getCurrentEventUser, getUserByEmail } from '../../networking/services';
 import AppointmentModal from '../../networking/appointmentModal';
 import initUserPresence from '../../../containers/userPresenceInEvent';
-
-import { drawerButton, imageCenter } from './helpers/csshelpers';
-
 import WithEviusContext from '../../../Context/withContext';
+import { listenSurveysData, publishedSurveysByActivity, monitorNewChatMessages } from '../../../helpers/helperEvent';
+import MenuRigth from './Menus/MenuRigth';
+import DrawerProfile from './DrawerProfile';
+import MenuDevices from './Menus/MenuDevices';
+import MenuTablets from './Menus/MenuTablets';
 
 const { setEventData } = eventActions;
 const { gotoActivity, setMainStage } = stageActions;
@@ -168,12 +151,6 @@ class Landing extends Component {
         attendees: true,
       },
     };
-
-    this.showLanding = this.showLanding.bind(this);
-    this.SendFriendship = this.SendFriendship.bind(this);
-    this.addNotification = this.addNotification.bind(this);
-    this.obtenerUserPerfil = this.obtenerUserPerfil.bind(this);
-    this.loadDataUser = this.loadDataUser.bind(this);
   }
 
   //METODO PARA SETEAR NEW MESSAGE
@@ -181,55 +158,6 @@ class Landing extends Component {
     this.setState({
       totalNewMessages: 0,
     });
-  };
-
-  //METODO PARA OBTENER ENCUESTAS
-  listenSurveysData = async (event_id) => {
-    if (!event_id) {
-      return [];
-    }
-    //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
-    let $query = firestore.collection('surveys').where('eventId', '==', event_id);
-
-    $query.onSnapshot(async (surveySnapShot) => {
-      // Almacena el Snapshot de todas las encuestas del evento
-
-      const eventSurveys = [];
-
-      if (surveySnapShot.size === 0) {
-        this.setState({ selectedSurvey: {}, surveyVisible: false, publishedSurveys: [] });
-        return;
-      }
-
-      surveySnapShot.forEach(function(doc) {
-        eventSurveys.push({ ...doc.data(), _id: doc.id });
-      });
-
-      this.setState({ eventSurveys });
-    });
-  };
-
-  publishedSurveysByActivity = () => {
-    const { currentActivity } = this.props;
-
-    if (currentActivity !== null) {
-      let publishedSurveys = [];
-      let surveys = this.state.eventSurveys || [];
-
-      // Listado de encuestas publicadas del evento
-      publishedSurveys = surveys.filter(
-        (survey) =>
-          (survey.isPublished === 'true' || survey.isPublished === true) &&
-          ((currentActivity && survey.activity_id === currentActivity._id) || survey.isGlobal === 'true')
-      );
-
-      if (!this.state.currentUser || Object.keys(this.state.currentUser).length === 0) {
-        publishedSurveys = publishedSurveys.filter((item) => {
-          return item.allow_anonymous_answers !== 'false';
-        });
-      }
-      this.setState({ publishedSurveys });
-    }
   };
 
   //función que abre el modal para agendar citas
@@ -244,67 +172,21 @@ class Landing extends Component {
     });
   };
 
-  listenConfigurationEvent = () => {
-    const { eventInfo } = this.props;
-    const self = this;
-    if (this.props.eventInfo) {
-      firestore
-        .collection('events')
-        .doc(eventInfo._id)
-        .onSnapshot(function(eventSnapshot) {
-          if (eventSnapshot.exists) {
-            if (eventSnapshot.data().tabs !== undefined) {
-              const generalTabs = eventSnapshot.data().tabs;
-              self.setState({ generalTabs });
-            }
-          }
-        });
-    }
-  };
-
-  monitorNewChatMessages = (event, user) => {
-    var self = this;
-    firestore
-      .collection('eventchats/' + event._id + '/userchats/' + user.uid + '/' + 'chats/')
-      .onSnapshot(function(querySnapshot) {
-        let data;
-        let totalNewMessages = 0;
-        querySnapshot.forEach((doc) => {
-          data = doc.data();
-          if (data.newMessages) {
-            totalNewMessages += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
-          }
-        });
-        self.setTotalNewMessages(totalNewMessages);
-      });
-  };
-
-  getProperties = async () => {
-    let properties = await EventFieldsApi.getAll(this.props.eventInfo._id);
-    if (properties.length > 0) {
-      this.setState({
-        propertiesUserPerfil: properties,
-      });
-      return properties;
-    }
-    return null;
-  };
   //METODO QUE PERMITE  VALIDAR SI UN EVENTO TIENE HABILITADA LA SECTION DE NETWORKING
   containsNetWorking = () => {
     if (this.state.sections != undefined) {
-      if (this.state.event.itemsMenu && this.state.event.itemsMenu['networking'] !== undefined) {
+      if (this.props.cEvent.itemsMenu && this.props.cEvent.itemsMenu['networking'] !== undefined) {
         this.setState({ containNetWorking: true });
       } else {
         this.setState({ containNetWorking: false });
       }
     }
   };
+
   //Enviar invitación de contacto
   async SendFriendship({ eventUserIdReceiver, userName }) {
-    let resp = await this.loadDataUser(this.state.user);
-
-    let eventUserId = resp._id;
-    let currentUserName = this.state.user.names || this.state.user.email;
+    let eventUserId = this.props.cUserEvent._id;
+    let currentUserName = this.props.cUser.names || this.props.cUser.email;
     let currentUser = Cookie.get('evius_token');
 
     message.loading('Enviando solicitud');
@@ -317,13 +199,13 @@ class Landing extends Component {
           id_user_requesting: eventUserIdReceiver,
           user_name_requested: currentUserName,
           user_name_requesting: userName,
-          event_id: this.props.eventInfo._id,
+          event_id: this.props.cEvent._id,
           state: 'send',
         };
 
         // Se ejecuta el servicio del api de evius
         try {
-          var respInvitation = await EventsApi.sendInvitation(this.props.eventInfo._id, data);
+          var respInvitation = await EventsApi.sendInvitation(this.props.cEvent._id, data);
           notification.open({
             message: 'Solicitud enviada',
             description:
@@ -343,6 +225,23 @@ class Landing extends Component {
       message.warning('Para enviar la solicitud es necesario iniciar sesión');
     }
   }
+
+  listenConfigurationEvent = () => {
+    const self = this;
+    if (self.props.cEvent) {
+      firestore
+        .collection('events')
+        .doc(self.props.cEvent._id)
+        .onSnapshot(function(eventSnapshot) {
+          if (eventSnapshot.exists) {
+            if (eventSnapshot.data().tabs !== undefined) {
+              const generalTabs = eventSnapshot.data().tabs;
+              self.setState({ generalTabs });
+            }
+          }
+        });
+    }
+  };
 
   setTotalNewMessages = (newMessages) => {
     this.setState({
@@ -402,13 +301,13 @@ class Landing extends Component {
 
   //PETICION PARA TRAER LOS DATOS COMPLETOS DE UN USUARIO ESPECIFICO
   loadDataUser = async (user) => {
-    const resp = await getUserByEmail(user, this.props.eventInfo._id);
+    const resp = await getUserByEmail(user, this.props.cEvent._id);
     return resp;
   };
 
   //OBTENER DATOS DEL USUARIO LOGUEADO
   async obtenerUserPerfil(id) {
-    let userp = await getCurrentEventUser(this.props.eventInfo._id, id);
+    let userp = await getCurrentEventUser(this.props.cEvent._id, id);
     return userp;
   }
 
@@ -419,7 +318,6 @@ class Landing extends Component {
     });
     if (userPerfil != null) {
       var data = await this.loadDataUser(userPerfil);
-
       this.setState({ userPerfil: { ...data.properties, iduser: userPerfil.iduser || data._id } });
     } else {
       //
@@ -489,22 +387,17 @@ class Landing extends Component {
   mountSections = async () => {
     let eventUser = null;
     let eventUsers = null;
+
     this.props.setNotification({
       message: null,
       type: null,
     });
 
-    //esto viene de los params del router de la url :event
-    const id = this.props.match.params.event_id;
-
-    const user = await getCurrentUser();
-    this.setState({ user, currentUser: user });
-
     /* Trae la información del evento con la instancia pública*/
     let event = {};
 
     try {
-      event = await EventsApi.landingEvent(id);
+      event = await EventsApi.landingEvent(this.props.cEvent._id);
     } catch (err) {
       console.error('Landing error:', err);
     }
@@ -518,14 +411,13 @@ class Landing extends Component {
       window.gtag('config', googleanlyticsid);
     }
 
-    const sessions = await Actions.getAll(`api/events/${id}/sessions`);
-    this.loadDynamicEventStyles(id);
+    const sessions = await Actions.getAll(`api/events/${this.props.cEvent._id}/sessions`);
+    this.loadDynamicEventStyles(this.props.cEvent._id);
 
-    if (event && user) {
-      eventUser = await EventsApi.getcurrentUserEventUser(event._id);
-
-      eventUsers = []; //await EventsApi.getcurrentUserEventUsers( event._id );
-      // this.monitorNewChatMessages(event, user);
+    if (this.props.cEvent && this.props.cUser) {
+      eventUser = await EventsApi.getcurrentUserEventUser(this.props.cEvent._id);
+      eventUsers = [];
+      this.setState({ totalNewMessages: monitorNewChatMessages(this.props.cEvent, this.props.cUser) });
     }
 
     const dateFrom = event.datetime_from.split(' ');
@@ -537,42 +429,40 @@ class Landing extends Component {
     event.sessions = sessions;
     event.organizer = event.organizer ? event.organizer : event.author;
     event.event_stages = event.event_stages ? event.event_stages : [];
-    let namesUser = user ? user.names || user.displayName || 'Anónimo' : 'Anónimo';
+    let namesUser = this.props.cUser ? this.props.cUser.names || this.props.cUser.displayName || 'Anónimo' : 'Anónimo';
 
     // Seteando el estado global con la informacion del evento
     this.props.setEventData(event);
 
     this.setState({
-      event,
-      eventUser,
       show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false,
-      eventUsers,
-      data: user,
-      user: user,
-      currentUser: user,
       namesUser: namesUser,
-      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== 'no' ? true : false,
+      loader_page:
+        this.props.cEvent.styles &&
+        this.props.cEvent.styles.data_loader_page &&
+        this.props.cEvent.styles.loader_page !== 'no'
+          ? true
+          : false,
     });
     let sections = {
       agenda: (
         <AgendaForm
-          event={event}
-          eventId={event._id}
+          event={this.props.cEvent}
+          eventId={this.props.cEvent._id}
           toggleConference={this.toggleConference}
           handleOpenRegisterForm={this.handleOpenRegisterForm}
           handleOpenLogin={this.handleOpenLogin}
-          //Para verificar que el usuario esta registrado en el evento
-          userRegistered={this.state.eventUser}
-          currentUser={user}
+          userRegistered={this.props.cUserEvent}
+          currentUser={this.props.cUser}
           activity={this.state.currentActivity}
-          userEntered={user}
+          userEntered={this.props.cUser}
           activeActivity={this.actualizarCurrentActivity}
           option={this.state.currentActivity ? this.state.currentActivity.option : 'N/A'}
           collapsed={this.state.collapsed}
           toggleCollapsed={this.toggleCollapsed}
           showSection={this.showSection}
           zoomExternoHandleOpen={this.zoomExternoHandleOpen}
-          eventUser={this.state.eventUser}
+          eventUser={this.props.cUserEvent}
           generalTabs={this.state.generalTabs}
           eventSurveys={this.state.eventSurveys}
           publishedSurveys={this.state.publishedSurveys}
@@ -582,13 +472,13 @@ class Landing extends Component {
         <>
           <div className='columns is-centered'>
             <TicketsForm
-              stages={event.event_stages}
-              experience={event.is_experience}
-              fees={event.fees}
-              tickets={event.tickets}
-              eventId={event._id}
-              event={this.state.event}
-              seatsConfig={event.seats_configuration}
+              stages={this.props.cEvent.event_stages}
+              experience={this.props.cEvent.is_experience}
+              fees={this.props.cEvent.fees}
+              tickets={this.props.cEvent.tickets}
+              eventId={this.props.cEvent._id}
+              event={this.props.cEvent}
+              seatsConfig={this.props.cEvent.seats_configuration}
               handleModal={this.handleModal}
               showSection={this.showSection}
             />
@@ -597,71 +487,76 @@ class Landing extends Component {
       ),
       survey: (
         <SurveyForm
-          event={event}
-          currentUser={this.state.currentUser}
+          event={this.props.cEvent}
+          currentUser={this.props.cUser}
           mountCurrentSurvey={this.mountCurrentSurvey}
           unMountCurrentSurvey={this.unMountCurrentSurvey}
         />
       ),
       certs: (
         <CertificadoLanding
-          event={event}
-          tickets={event.tickets}
-          currentUser={this.state.currentUser}
-          eventUser={this.state.eventUser}
+          event={this.props.cEvent}
+          tickets={this.props.cEvent.tickets}
+          currentUser={this.props.cUser}
+          eventUser={this.props.cUserEvent}
         />
       ),
-      speakers: <SpeakersForm eventId={event._id} event={event} />,
-      wall: <WallForm event={event} eventId={event._id} currentUser={user} />,
-      documents: <DocumentsForm event={event} eventId={event._id} />,
-      faqs: <FaqsForm event={event} eventId={event._id} />,
+      speakers: <SpeakersForm eventId={this.props.cEvent._id} event={this.props.cEvent} />,
+      wall: <WallForm event={this.props.cEvent} eventId={this.props.cEvent._id} currentUser={this.props.cUser} />,
+      documents: <DocumentsForm event={this.props.cEvent} eventId={this.props.cEvent._id} />,
+      faqs: <FaqsForm event={this.props.cEvent} eventId={this.props.cEvent._id} />,
       networking: (
         <NetworkingForm
           notification={this.addNotification}
-          event={event}
+          event={this.props.cEvent}
           agendarCita={this.AgendarCita}
           loadDataUser={this.loadDataUser}
           sendFriendship={this.SendFriendship}
           notifications={this.state.totalNotficationsN}
           notifyAgenda={this.state.notifyNetworkingAg}
           notifyAmis={this.state.notifyNetworkingAm}
-          eventId={event._id}
-          currentUser={this.state.currentUser}
+          eventId={this.props.cEvent._id}
+          currentUser={this.props.cUser}
           section={this.state.section}
         />
       ),
-      my_section: <MySection event={event} eventId={event._id} />,
+      my_section: <MySection event={this.props.cEvent} eventId={this.props.cEvent._id} />,
       companies: (
-        <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />
-      ),
-      interviews: <MyAgendaIndepend event={event} />,
-      trophies: <Trophies event={event} />,
-      my_sesions: (
-        <AgendaInscriptions
-          event={event}
-          eventId={event._id}
-          toggleConference={this.toggleConference}
-          userId={this.state.user ? this.state.user._id : null}
+        <Companies
+          event={this.props.cEvent}
+          eventId={this.props.cEvent._id}
+          goBack={this.showEvent}
+          eventUser={this.props.cUserEvent}
         />
       ),
-      informativeSection: <InformativeSection event={event} />,
-      informativeSection1: <InformativeSection2 event={event} />,
-      login: <UserLogin eventId={event._id} />,
-      partners: <Partners eventId={event._id} />,
+      interviews: <MyAgendaIndepend event={this.props.cEvent} />,
+      trophies: <Trophies event={this.props.cEvent} />,
+      my_sesions: (
+        <AgendaInscriptions
+          event={this.props.cEvent}
+          eventId={this.props.cEvent._id}
+          toggleConference={this.toggleConference}
+          userId={this.props.cUser ? this.props.cUser._id : null}
+        />
+      ),
+      informativeSection: <InformativeSection event={this.props.cEvent} />,
+      informativeSection1: <InformativeSection2 event={this.props.cEvent} />,
+      login: <UserLogin eventId={this.props.cEvent._id} />,
+      partners: <Partners eventId={this.props.cEvent._id} />,
       evento: (
         <>
           <Row justify='center'>
             <Col sm={24} md={16} lg={18} xl={18}>
-              {this.state.event && this.state.event._id !== '5f0b95ca34c8116f9b21ebd6' && (
+              {this.state.event && this.props.cEvent._id !== '5f0b95ca34c8116f9b21ebd6' && (
                 <EventLanding
-                  event={event}
-                  currentUser={this.state.currentUser}
-                  usuarioRegistrado={this.state.eventUser}
+                  event={this.props.cEvent}
+                  currentUser={this.props.cUser}
+                  usuarioRegistrado={this.props.cUserEvent}
                   toggleConference={this.toggleConference}
                   showSection={this.showSection}
                 />
               )}
-              {this.state.event && this.state.event._id === '5f0b95ca34c8116f9b21ebd6' && (
+              {this.state.event && this.props.cEvent._id === '5f0b95ca34c8116f9b21ebd6' && (
                 <>
                   <ReactPlayer
                     width={'100%'}
@@ -720,19 +615,29 @@ class Landing extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
+    //saber si se seteo bien las surveys
+    // console.log('surveys didmount', this.state.eventSurveys);
+    // console.log('publishedSurveys', this.state.generalTabs);
+
     if (prevState.generalTabs !== this.state.generalTabs) {
       this.props.setGeneralTabs(this.state.generalTabs);
     }
 
-    if (prevState.event && prevState.event._id !== this.state.event._id) {
-      this.listenSurveysData(this.state.event._id);
+    if (prevState.event && prevState.event._id !== this.props.cEvent._id) {
+      this.setState({ eventSurveys: listenSurveysData(this.props.cEvent._id) });
     }
 
     if (
       prevState.eventSurveys !== this.state.eventSurveys ||
       prevProps.currentActivity !== this.props.currentActivity
     ) {
-      this.publishedSurveysByActivity();
+      this.setState({
+        publishedSurveys: publishedSurveysByActivity(
+          this.props.currentActivity,
+          this.state.eventSurveys,
+          this.props.cUser
+        ),
+      });
     }
 
     if (prevState.publishedSurveys !== this.state.publishedSurveys) {
@@ -769,7 +674,7 @@ class Landing extends Component {
         .collection('notificationUser')
         .doc(notification.idReceive)
         .collection('events')
-        .doc(this.state.event._id)
+        .doc(this.props.cEvent._id)
         .collection('notifications')
         .doc(notification.idEmited)
         .set({
@@ -782,9 +687,9 @@ class Landing extends Component {
     } else {
       firestore
         .collection('notificationUser')
-        .doc(this.state.user?._id)
+        .doc(this.props.cUser?._id)
         .collection('events')
-        .doc(this.state.event._id)
+        .doc(this.props.cEvent._id)
         .collection('notifications')
         .doc(notification.idEmited)
         .set(
@@ -796,17 +701,32 @@ class Landing extends Component {
     }
   }
   async componentDidMount() {
-    console.log('props landing ', this.props);
+    //props generales contexto
+    console.log('props generales', this.props);
+
+    //seteo de las surveys
+    this.setState({ eventSurveys: await listenSurveysData(this.props.cEvent._id) });
+
+    //seteo de publishedSurveys
+    this.setState({
+      publishedSurveys: publishedSurveysByActivity(
+        this.props.currentActivity,
+        this.state.eventSurveys,
+        this.props.cUser
+      ),
+    });
 
     await this.mountSections();
+
     //Registra la presencia cuando se ingresa al landing del evento
-    await initUserPresence(this.state.event._id);
-    if (this.state.event === null) {
+    await initUserPresence(this.props.cEvent._id);
+    if (this.props.cEvent === null) {
       this.props.history.push('/notfound');
       return;
     }
-    const infoAgenda = await AgendaApi.byEvent(this.state.event._id);
-    await this.listenSurveysData(this.state.event._id);
+    const infoAgenda = await AgendaApi.byEvent(this.props.cEvent._id);
+
+    await listenSurveysData(this.props.cEvent._id);
 
     this.setState({
       activitiesAgenda: infoAgenda.data,
@@ -815,12 +735,12 @@ class Landing extends Component {
     // Se escucha la configuracion  de los tabs del evento
     this.listenConfigurationEvent();
 
-    if (this.state.user) {
+    if (this.props.cUser) {
       firestore
         .collection('notificationUser')
-        .doc(this.state.user?._id)
+        .doc(this.props.cUser?._id)
         .collection('events')
-        .doc(this.state.event._id)
+        .doc(this.props.cEvent._id)
         .collection('notifications')
         .onSnapshot((querySnapshot) => {
           let contNotifications = 0;
@@ -856,7 +776,7 @@ class Landing extends Component {
     //LISTENER DE ACTIVITIES  STATUS  NOTIFICATIONS POR EVENT
     firestore
       .collection('events')
-      .doc(this.state.event._id)
+      .doc(this.props.cEvent._id)
       .collection('activities')
       .onSnapshot((querySnapshot) => {
         if (querySnapshot.empty) return;
@@ -900,10 +820,10 @@ class Landing extends Component {
       });
 
     //codigo para mensajes nuevos
-    let nombreactivouser = this.state.user?.names;
+    let nombreactivouser = this.props.cUser?.names;
     var self = this;
     firestore
-      .collection('eventchats/' + this.state.event._id + '/userchats/' + this.state.user?.uid + '/' + 'chats/')
+      .collection('eventchats/' + this.props.cEvent._id + '/userchats/' + this.props.cUser?.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
         let data;
         let totalNewMessages = 0;
@@ -920,10 +840,6 @@ class Landing extends Component {
             change.doc.data().remitente !== null &&
             change.doc.data().remitente !== undefined &&
             totalNewMessages > 0 &&
-            // notification.open({
-            //   description: `Nuevo mensaje de ${change.doc.data().remitente}`,
-            //   icon: <MessageTwoTone />,
-            // });
             self.setTotalNewMessages(totalNewMessages);
         }
       });
@@ -932,8 +848,8 @@ class Landing extends Component {
     let $query = firestore.collection('surveys');
 
     //Le agregamos el filtro por evento
-    if (this.state.event && this.state.event._id) {
-      $query = $query.where('eventId', '==', this.state.event._id);
+    if (this.props.cEvent && this.props.cEvent._id) {
+      $query = $query.where('eventId', '==', this.props.cEvent._id);
     }
 
     $query.onSnapshot((surveySnapShot) => {
@@ -1038,11 +954,8 @@ class Landing extends Component {
 
   addUser = (activity) => {
     let activity_id = activity._id;
-    let eventUser = this.state.eventUser;
-    let event_id = this.state.event._id;
-
     fireStoreApi
-      .createOrUpdate(event_id, activity_id, eventUser)
+      .createOrUpdate(this.props.cEvent._id, activity_id, this.props.cUserEvent)
       .then(() => {
         toast.success('Asistente agregado a actividad');
         this.setState({ qrData: {} });
@@ -1066,12 +979,10 @@ class Landing extends Component {
     if (activity && activity.platform && activity.platform == 'zoomExterno') {
       //Este link activa a zoom externo para  hacer la conferencia fuera de EVIUS
       let name =
-        this.state.eventUser && this.state.eventUser.properties && this.state.eventUser.properties.names
-          ? this.state.eventUser.properties.names
+        this.props.cUserEvent && this.props.cUserEvent.properties && this.props.cUserEvent.properties.names
+          ? this.props.cUserEvent.properties.names
           : 'Anónimo';
       let urlMeeting = null;
-      //let urlMeeting = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
-      //let urlMeeting = 'https://zoom.us/j/' + meeting_id + '&uname=' + name;
       if (isMobile) {
         urlMeeting = 'zoomus://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
       } else {
@@ -1088,9 +999,9 @@ class Landing extends Component {
     }
 
     try {
-      if (this.state.eventUser) {
-        TicketsApi.checkInAttendee(this.state.event._id, this.state.eventUser._id);
-        Activity.checkInAttendeeActivity(this.state.event._id, activity._id, this.state.eventUser.account_id);
+      if (this.props.cUserEvent) {
+        TicketsApi.checkInAttendee(this.props.cEvent._id, this.props.cUserEvent._id);
+        Activity.checkInAttendeeActivity(this.props.cEvent._id, activity._id, this.props.cUserEvent.account_id);
       }
     } catch (e) {
       //alert( "fallo el checkin" )
@@ -1188,13 +1099,10 @@ class Landing extends Component {
     }
     window.location.href = urlMeeting;
 
-    //Registro del checkin ingresando en una sesion de zoom externo
-    const { eventInfo } = this.props;
-
     try {
       if (eventUser) {
-        TicketsApi.checkInAttendee(eventInfo._id, eventUser._id);
-        //Activity.checkInAttendeeActivity(eventInfo._id, props.currentActivity._id, eventUser.account_id);
+        TicketsApi.checkInAttendee(this.props.cEvent._id, eventUser._id);
+        //Activity.checkInAttendeeActivity(this.props.cEvent._id, props.currentActivity._id, eventUser.account_id);
       }
     } catch (e) {
       console.error('fallo el checkin:', e);
@@ -1202,24 +1110,15 @@ class Landing extends Component {
   };
 
   render() {
-    const {
-      event,
-      activity,
-      modal,
-      modalTicket,
-      toggleConferenceZoom,
-      meeting_id,
-      currentUser,
-      loader_page,
-    } = this.state;
+    const { activity, modal, modalTicket, toggleConferenceZoom, meeting_id, loader_page } = this.state;
 
     return (
       <section className='section landing' style={{ backgroundColor: this.state.color, height: '100%' }}>
         <AppointmentModal
           notificacion={this.addNotification}
-          event={this.props.eventInfo}
-          currentEventUserId={this.state.eventUser && this.state.eventUser._id}
-          eventUser={this.state.eventUser}
+          event={this.props.cEvent}
+          currentEventUserId={this.props.cUserEvent._id}
+          eventUser={this.props.cUserEvent}
           targetEventUserId={this.state.eventUserIdToMakeAppointment}
           targetEventUser={this.state.eventUserToMakeAppointment}
           closeModal={this.closeAppointmentModal}
@@ -1247,290 +1146,153 @@ class Landing extends Component {
                 <ZoomComponent
                   toggleConference={this.toggleConference}
                   meetingId={meeting_id}
-                  userEntered={currentUser}
-                  event={event}
+                  userEntered={this.props.cUser}
+                  event={this.props.cUserEvent}
                   activity={activity}
                 />
               )}
 
               {toggleConferenceZoom}
-              {/* ESTO ES UNA PRUEBA PARA LA ENCUESTA EN VIVO */}
-              {/* <SurveyNotification /> */}
+
               {loader_page ? (
-                <Robapagina event={event} eventId={event._id} showLanding={this.showLanding} />
+                <Robapagina event={this.props.cEvent} eventId={this.props.cEvent._id} showLanding={this.showLanding} />
               ) : (
                 <>
                   <Content>
                     <Layout className='site-layout'>
                       {/*Aqui empieza el menu para dispositivos >  */}
-                      <div className='hiddenMenu_Landing'>
-                        <Sider
-                          className='containerMenu_Landing'
-                          style={{
-                            backgroundColor:
-                              event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
-                          }}
-                          trigger={null}
-                          width={110}>
-                          <div className='items-menu_Landing '>
-                            {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                            <MenuEvent
-                              itemsMenu={this.state.event.itemsMenu}
-                              user={currentUser}
-                              eventId={event._id}
-                              showSection={this.showSection}
-                              collapsed={this.state.collapsed}
-                              styleText={event.styles && event.styles.textMenu ? event.styles.textMenu : '#222222'}
-                            />
-                          </div>
-                        </Sider>
-                      </div>
+                      <MenuDevices
+                        cEvent={this.props.cEvent}
+                        cUser={this.props.cUser}
+                        collapsed={this.state.collapsed}
+                        showSection={this.showSection}
+                      />
                       {/*Aqui termina el menu para dispositivos >  */}
 
                       <Layout className='site-layout'>
                         <Content className='site-layout-background'>
-                          {/* Boton que abre el menu para dispositivos > tablet  */}
-                          <div className='hiddenMenu_Landing'></div>
-
-                          {/*Aqui empieza el menu para dispositivos < tablet*/}
-
-                          <div className='hiddenMenuMobile_Landing'>
-                            <Button block style={drawerButton} onClick={this.showDrawer}>
-                              <MenuOutlined style={{ fontSize: '15px' }} />
-                              <div>Menu</div>
-                            </Button>
-                          </div>
-                          <Drawer
-                            title={event.name}
+                          <MenuTablets
+                            showDrawer={this.showDrawer}
+                            cEvent={this.props.cEvent}
                             placement={this.state.placement}
-                            closable={true}
                             onClose={this.onClose}
                             visible={this.state.visible}
-                            maskClosable={true}
-                            bodyStyle={{
-                              padding: '0px',
-                              backgroundColor:
-                                event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : 'white',
-                            }}>
-                            {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                            <MenuEvent
-                              notifications={this.state.totalNotficationsN}
-                              eventId={event._id}
-                              user={currentUser}
-                              itemsMenu={this.state.event.itemsMenu}
-                              showSection={this.showSection}
-                              styleText={event.styles && event.styles.textMenu ? event.styles.textMenu : '#222222'}
-                            />
-                          </Drawer>
+                            cUser={this.props.cUser}
+                            showSection={this.showSection}
+                            totalNotficationsN={this.state.totalNotficationsN}
+                          />
+
                           {/*Aqui empieza el drawer del perfil*/}
-                          <Drawer
-                            zIndex={5000}
-                            visible={this.state.visiblePerfil}
-                            closable={true}
-                            onClose={() => this.collapsePerfil(null)}
-                            width={'52vh'}
-                            bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
-                            <Row justify='center' style={{ paddingLeft: '10px', paddingRight: '10px' }}>
-                              <Space size={0} direction='vertical' style={{ textAlign: 'center' }}>
-                                <Avatar
-                                  size={110}
-                                  src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-                                />
-                                <Text style={{ fontSize: '20px' }}>
-                                  {this.state.userPerfil && this.state.userPerfil.names
-                                    ? this.state.userPerfil.names
-                                    : this.state.userPerfil && this.state.userPerfil.name
-                                    ? this.state.userPerfil.name
-                                    : ''}
-                                </Text>
-                                <Text type='secondary' style={{ fontSize: '16px' }}>
-                                  {this.state.userPerfil && this.state.userPerfil.email}
-                                </Text>
-                              </Space>
-                              <Col span={24}>
-                                <Row justify='center' style={{ marginTop: '20px' }}>
-                                  <Space size='middle'>
-                                    <Tooltip title='Solicitar contacto'>
-                                      <Button
-                                        size='large'
-                                        shape='circle'
-                                        onClick={async () => {
-                                          var us = await this.loadDataUser(this.state.userPerfil);
+                          <DrawerProfile
+                            visiblePerfil={this.state.visiblePerfil}
+                            collapsePerfil={this.collapsePerfil}
+                            SendFriendship={this.SendFriendship}
+                            addNotification={this.addNotification}
+                            AgendarCita={this.AgendarCita}
+                            UpdateChat={this.UpdateChat}
+                            propertiesUserPerfil={this.state.propertiesUserPerfil}
+                            cUser={this.props.cUser}
+                          />
 
-                                          this.collapsePerfil();
-
-                                          var sendResp = await this.SendFriendship({
-                                            eventUserIdReceiver: us._id,
-                                            userName: this.state.userPerfil.names || this.state.userPerfil.email,
-                                          });
-                                          if (sendResp._id) {
-                                            let notification = {
-                                              idReceive: us.account_id,
-                                              idEmited: sendResp._id,
-                                              emailEmited: currentUser.email,
-                                              message: 'Te ha enviado solicitud de amistad',
-                                              name: 'notification.name',
-                                              type: 'amistad',
-                                              state: '0',
-                                            };
-
-                                            await this.addNotification(notification, currentUser._id);
-                                          }
-                                        }}
-                                        icon={<UsergroupAddOutlined />}
-                                      />
-                                    </Tooltip>
-                                    <Tooltip title='Ir al chat privado'>
-                                      <Button
-                                        size='large'
-                                        shape='circle'
-                                        onClick={async () => {
-                                          this.collapsePerfil();
-                                          this.UpdateChat(
-                                            currentUser.uid,
-                                            currentUser.names || currentUser.name,
-                                            this.state.userPerfil.iduser,
-                                            this.state.userPerfil.names || this.state.userPerfil.name
-                                          );
-                                        }}
-                                        icon={<CommentOutlined />}
-                                      />
-                                    </Tooltip>
-                                    <Tooltip title='Solicitar cita'>
-                                      <Button
-                                        size='large'
-                                        shape='circle'
-                                        onClick={async () => {
-                                          var us = await this.loadDataUser(this.state.userPerfil);
-
-                                          if (us) {
-                                            this.collapsePerfil();
-                                            this.AgendarCita(us._id, us);
-                                          }
-                                        }}
-                                        icon={<VideoCameraAddOutlined />}
-                                      />
-                                    </Tooltip>
-                                  </Space>
-                                </Row>
-                              </Col>
-                            </Row>
-                            <Row justify='center' style={{ paddingLeft: '15px', paddingRight: '5px' }}>
-                              <Col
-                                className='asistente-list' //agrega el estilo a la barra de scroll
-                                span={24}
-                                style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'scroll' }}>
-                                {!this.state.propertiesUserPerfil && (
-                                  <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>
-                                )}
-
-                                {this.state.propertiesUserPerfil && (
-                                  <List
-                                    bordered
-                                    dataSource={this.state.propertiesUserPerfil && this.state.propertiesUserPerfil}
-                                    renderItem={(item) =>
-                                      !item.visibleByContacts &&
-                                      !item.visibleByAdmin &&
-                                      this.state.userPerfil[item.name] && (
-                                        <List.Item>
-                                          <List.Item.Meta
-                                            title={item.label}
-                                            description={formatDataToString(this.state.userPerfil[item.name], item)}
-                                          />
-                                        </List.Item>
-                                      )
-                                    }
-                                  />
-                                )}
-                              </Col>
-                            </Row>
-                          </Drawer>
-
-                          {event.styles &&
-                          event.styles.show_banner &&
-                          (event.styles.show_banner === 'true' || event.styles.show_banner === true) &&
+                          {this.props.cEvent.styles &&
+                          this.props.cEvent.styles.show_banner &&
+                          (this.props.cEvent.styles.show_banner === 'true' ||
+                            this.props.cEvent.styles.show_banner === true) &&
                           this.props.currentActivity === null ? (
                             <BannerEvent
                               bgImage={
-                                event.styles && event.styles.banner_image
-                                  ? event.styles.banner_image
-                                  : event.picture
-                                  ? event.picture
+                                this.props.cEvent.styles && this.props.cEvent.styles.banner_image
+                                  ? this.props.cEvent.styles.banner_image
+                                  : this.props.cEvent.picture
+                                  ? this.props.cEvent.picture
                                   : 'https://bulma.io/images/placeholders/1280x960.png'
                               }
-                              mobileBanner={event.styles && event.styles.mobile_banner && event.styles.mobile_banner}
-                              bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ''}
-                              title={event.name}
-                              eventId={event._id}
-                              styles={event.styles}
+                              mobileBanner={
+                                this.props.cEvent.styles &&
+                                this.props.cEvent.styles.mobile_banner &&
+                                this.props.cEvent.styles.mobile_banner
+                              }
+                              bgImageText={
+                                this.props.cEvent.styles && this.props.cEvent.styles.event_image
+                                  ? this.props.cEvent.styles.event_image
+                                  : ''
+                              }
+                              title={this.props.cEvent.name}
+                              eventId={this.props.cEvent._id}
+                              styles={this.props.cEvent.styles}
                               organizado={
-                                <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                                  {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                <Link
+                                  to={`/page/${this.props.cEvent.organizer_id}?type=${this.props.cEvent.organizer_type}`}>
+                                  {this.props.cEvent.organizer.name
+                                    ? this.props.cEvent.organizer.name
+                                    : this.props.cEvent.organizer.email}
                                 </Link>
                               }
                               place={
                                 <span>
-                                  {event.venue} {event.location.FormattedAddress}
+                                  {this.props.cEvent.venue} {this.props.cEvent.location.FormattedAddress}
                                 </span>
                               }
-                              dateStart={event.date_start}
-                              dateEnd={event.date_end}
-                              dates={event.dates}
-                              type_event={event.type_event}
+                              dateStart={this.props.cEvent.date_start}
+                              dateEnd={this.props.cEvent.date_end}
+                              dates={this.props.cEvent.dates}
+                              type_event={this.props.cEvent.type_event}
                             />
                           ) : (
                             <div>
-                              {event.styles &&
-                                event.styles.show_banner === undefined &&
+                              {this.props.cEvent.styles &&
+                                this.props.cEvent.styles.show_banner === undefined &&
                                 this.state.headerVisible &&
                                 this.props.currentActivity === null && (
                                   <BannerEvent
                                     bgImage={
-                                      event.styles && event.styles.banner_image
-                                        ? event.styles.banner_image
-                                        : event.picture
-                                        ? event.picture
+                                      this.props.cEvent.styles && this.props.cEvent.styles.banner_image
+                                        ? this.props.cEvent.styles.banner_image
+                                        : this.props.cEvent.picture
+                                        ? this.props.cEvent.picture
                                         : 'https://bulma.io/images/placeholders/1280x960.png'
                                     }
                                     bgImageText={
-                                      event.styles && event.styles.event_image ? event.styles.event_image : ''
+                                      this.props.cEvent.styles && this.props.cEvent.styles.event_image
+                                        ? this.props.cEvent.styles.event_image
+                                        : ''
                                     }
-                                    title={event.name}
+                                    title={this.props.cEvent.name}
                                     organizado={
-                                      <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                                        {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                      <Link
+                                        to={`/page/${this.props.cEvent.organizer_id}?type=${this.props.cEvent.organizer_type}`}>
+                                        {this.props.cEvent.organizer.name
+                                          ? this.props.cEvent.organizer.name
+                                          : this.props.cEvent.organizer.email}
                                       </Link>
                                     }
                                     place={
                                       <span>
-                                        {event.venue} {event.location.FormattedAddress}
+                                        {this.props.cEvent.venue} {this.props.cEvent.location.FormattedAddress}
                                       </span>
                                     }
-                                    dateStart={event.date_start}
-                                    dateEnd={event.date_end}
-                                    dates={event.dates}
-                                    type_event={event.type_event}
+                                    dateStart={this.props.cEvent.date_start}
+                                    dateEnd={this.props.cEvent.date_end}
+                                    dates={this.props.cEvent.dates}
+                                    type_event={this.props.cEvent.type_event}
                                   />
                                 )}
                             </div>
                           )}
                           <Row justify='center'>
                             <Col xs={24} sm={24} md={18} lg={18} xl={18}>
-                              {/** this.props.location.pathname.match(/landing\/[a-zA-Z0-9]*\/?$/gi This component is a shortcut to landing/* route, hencefor should not be visible in that route */}
-                              {/** this component is a shortcut to agenda thus should not be visible in agenda */}
-
                               {!(this.state.section && this.state.section === 'agenda') && (
                                 <VirtualConference
-                                  event={event}
-                                  eventUser={this.state.eventUser}
-                                  currentUser={this.state.currentUser}
-                                  usuarioRegistrado={this.state.eventUser}
+                                  event={this.props.cEvent}
+                                  eventUser={this.props.cUserEvent}
+                                  currentUser={this.props.cUser}
+                                  usuarioRegistrado={this.props.cUserEvent}
                                   toggleConference={this.toggleConference}
                                   showSection={this.showSection}
                                   zoomExternoHandleOpen={this.zoomExternoHandleOpen}
                                 />
                               )}
-                              <MapComponent event={event} />
+                              <MapComponent event={this.props.cEvent} />
                             </Col>
                           </Row>
                           <div id='visualizar' style={{ margin: '0px 2px', overflow: 'initial', textAlign: 'center' }}>
@@ -1564,9 +1326,9 @@ class Landing extends Component {
                             }}
                             second={{ title: 'Cancelar', class: '', action: this.closeModal }}
                           />
-                          {event.styles && event.styles.banner_footer && (
+                          {this.props.cEvent.styles && this.props.cEvent.styles.banner_footer && (
                             <div style={{ textAlign: 'center' }}>
-                              <img alt='image-dialog' src={event.styles.banner_footer} />
+                              <img alt='image-dialog' src={this.props.cEvent.styles.banner_footer} />
                             </div>
                           )}
                         </Content>
@@ -1601,11 +1363,9 @@ class Landing extends Component {
                             notificacion={this.addNotification}
                             sendFriendship={this.SendFriendship}
                             perfil={this.collapsePerfil}
-                            currentUser={this.state.currentUser}
                             tcollapse={this.toggleCollapsed}
                             optionselected={this.updateOption}
                             tab={this.state.tabSelected}
-                            event_id={event._id}
                             section={this.state.section}
                             containNetWorking={this.state.containNetWorking}
                             eventSurveys={this.state.eventSurveys}
@@ -1617,12 +1377,12 @@ class Landing extends Component {
 
                         {/* aqui empieza el chat del evento desktop */}
 
-                        {(this.state.generalTabs.attendees ||
-                          this.state.generalTabs.publicChat ||
-                          this.state.generalTabs.privateChat) && (
+                        {(this.state.generalTabs?.attendees ||
+                          this.state.generalTabs?.publicChat ||
+                          this.state.generalTabs?.privateChat) && (
                           <Sider
                             className='collapse-chatEvent'
-                            style={{ backgroundColor: event.styles?.toolbarMenuSocial }}
+                            style={{ backgroundColor: this.props.cEvent.styles?.toolbarMenuSocial }}
                             trigger={null}
                             theme='light'
                             collapsible
@@ -1632,67 +1392,7 @@ class Landing extends Component {
                               {this.state.collapsed ? (
                                 <>
                                   {/* MENU DERECHO */}
-
-                                  <Menu theme='light' style={{ backgroundColor: event.styles?.toolbarMenuSocial }}>
-                                    {(this.state.generalTabs.publicChat || this.state.generalTabs.privateChat) && (
-                                      <Menu.Item
-                                        key='1'
-                                        icon={
-                                          <>
-                                            <Badge count={this.state.totalNewMessages}>
-                                              <CommentOutlined
-                                                style={{ fontSize: '24px', color: event.styles.color_icon_socialzone }}
-                                              />
-                                            </Badge>
-                                          </>
-                                        }
-                                        style={{ marginTop: '12px', marginBottom: '22px' }}
-                                        onClick={() => this.toggleCollapsed(1)}></Menu.Item>
-                                    )}
-
-                                    {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una actividad*/}
-                                    {this.state.generalTabs.attendees && (
-                                      <Menu.Item
-                                        key='2'
-                                        icon={
-                                          <TeamOutlined
-                                            style={{ fontSize: '24px', color: event.styles.color_icon_socialzone }}
-                                          />
-                                        }
-                                        onClick={() => this.toggleCollapsed(2)}></Menu.Item>
-                                    )}
-                                    {this.props.currentActivity !== null &&
-                                      this.props?.tabs &&
-                                      (this.props.tabs.surveys === 'true' || this.props.tabs.surveys === true) && (
-                                        <Menu.Item
-                                          key='3'
-                                          icon={
-                                            <Badge dot={this.props.hasOpenSurveys}>
-                                              <PieChartOutlined
-                                                style={{ fontSize: '24px', color: event.styles.color_icon_socialzone }}
-                                              />
-                                            </Badge>
-                                          }
-                                          onClick={() => this.toggleCollapsed(3)}></Menu.Item>
-                                      )}
-                                    {this.props.currentActivity !== null &&
-                                      this.props?.tabs &&
-                                      (this.props.tabs.games === 'true' || this.props.tabs.games === true) && (
-                                        <Menu.Item
-                                          key='4'
-                                          icon={
-                                            <img
-                                              src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
-                                              style={{ width: '50px', height: '32px' }}
-                                              alt='Games'
-                                            />
-                                          }
-                                          onClick={() => {
-                                            this.props.setMainStage('game');
-                                            this.toggleCollapsed(4);
-                                          }}></Menu.Item>
-                                      )}
-                                  </Menu>
+                                  <MenuRigth state={this.state} toggleCollapsed={this.toggleCollapsed} />
                                 </>
                               ) : (
                                 <>
@@ -1713,12 +1413,9 @@ class Landing extends Component {
                                     tcollapse={this.toggleCollapsed}
                                     optionselected={this.updateOption}
                                     tab={this.state.tabSelected}
-                                    event={event}
                                     section={this.state.section}
-                                    event_id={event._id}
                                     containNetWorking={this.state.containNetWorking}
                                     eventSurveys={this.state.eventSurveys}
-                                    currentUser={this.state.currentUser}
                                     generalTabs={this.state.generalTabs}
                                     publishedSurveys={this.state.publishedSurveys}
                                     notNewMessages={this.notNewMessage}

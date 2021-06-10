@@ -3,7 +3,6 @@ import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useState } from 'react';
 import { Tabs, Row, Badge, Col, notification, Button, Spin } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone, SearchOutlined } from '@ant-design/icons';
-import { getCurrentUser } from '../../helpers/request';
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 import { connect } from 'react-redux';
@@ -14,16 +13,20 @@ import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
 import GameRanking from '../events/game/gameRanking';
 import { useRef } from 'react';
-
+import { UseEventContext } from '../../Context/eventContext';
+import { UseCurrentUser } from '../../Context/userContext';
 const { setMainStage } = StageActions;
-
 const { TabPane } = Tabs;
 const callback = () => {};
 const { setNotification } = notificationsActions;
 
 let SocialZone = function(props) {
+  //contextos
+  let cUser = UseCurrentUser();
+  let cEvent = UseEventContext();
+
   const [attendeeList, setAttendeeList] = useState({});
-  const attendeeListPresence= useState({});
+  const attendeeListPresence = useState({});
   const [currentChat, setCurrentChatInner] = useState(null);
   const [currentChatName, setCurrentChatNameInner] = useState('');
   const [availableChats, setavailableChats] = useState([]);
@@ -37,6 +40,8 @@ let SocialZone = function(props) {
   let busquedaRef = useRef();
 
   useEffect(() => {
+    console.log('SOCIAL ZONE DATA', cEvent);
+
     if (props.updateChat.idCurentUser) {
       createNewOneToOneChat(
         props.updateChat.idCurentUser,
@@ -47,16 +52,10 @@ let SocialZone = function(props) {
     }
   }, [props.updateChat]);
 
-  let userName = props.currentUser
-    ? props.currentUser?.names
-    : props.currentUser?.name
-    ? props.currentUser?.name
-    : '---';
-
+  let userName = props.currentUser ? cUser?.names : cUser?.name ? cUser?.name : '---';
 
   /***********/
 
-  let event_id = props.event_id;
   let tab = props.tab;
 
   let setCurrentChat = (id, chatname) => {
@@ -79,18 +78,16 @@ let SocialZone = function(props) {
     //agregamos una referencia al chat para el usuario actual
     data = { id: newId, name: otherUserName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
     firestore
-      .doc('eventchats/' + event_id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
+      .doc('eventchats/' + cEvent._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
 
     //agregamos una referencia al chat para el otro usuario del chat
     data = { id: newId, name: currentName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
     firestore
-      .doc('eventchats/' + event_id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
+      .doc('eventchats/' + cEvent._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
     setCurrentChat(newId, otherUserName);
   };
-
-  
 
   const handleChange = async (e) => {
     const { value } = e.target;
@@ -110,28 +107,18 @@ let SocialZone = function(props) {
     }
   };
 
-
   useEffect(() => {
-    //
-    const fetchData = async () => {
-      const user = await getCurrentUser();
-      setCurrentUser(user);
-
-      setcurrentTab('' + tab);
-
-      props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
-    };
+    props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
     setTotalNewMessages(props.totalMessages);
-    fetchData();
   }, []);
 
   //Cargar la lista de chats de una persona
- 
+
   useEffect(() => {
-    if (!event_id || !currentUser) return;
+    if (!cEvent._id || !currentUser) return;
 
     firestore
-      .collection('eventchats/' + event_id + '/userchats/' + currentUser.uid + '/' + 'chats/')
+      .collection('eventchats/' + cEvent._id + '/userchats/' + cUser.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
         let list = [];
         let data;
@@ -180,7 +167,7 @@ let SocialZone = function(props) {
 
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
-              }
+              },
             });
 
             newmsj > 0 && setTotalNewMessages(newmsj);
@@ -189,12 +176,12 @@ let SocialZone = function(props) {
 
         setavailableChats(list);
       });
-  }, [event_id, currentUser, props.collapse]);
+  }, [cEvent._id, cUser, props.collapse]);
 
   useEffect(() => {
-    if (!event_id) return;
+    if (!cEvent._id) return;
 
-    let colletion_name = event_id + '_event_attendees';
+    let colletion_name = cEvent._id + '_event_attendees';
     let attendee;
     firestore
       .collection(colletion_name)
@@ -211,7 +198,7 @@ let SocialZone = function(props) {
         setAttendeeList(list);
         //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
       });
-  }, [event_id]);
+  }, [cEvent._id]);
 
   return (
     <Tabs
@@ -250,12 +237,10 @@ let SocialZone = function(props) {
           <ChatList
             props={props}
             availableChats={availableChats}
-            currentUser={currentUser}
             setCurrentChat={setCurrentChat}
             currentChatName={currentChatName}
             currentChat={currentChat}
             totalNewMessages={totalNewMessages}
-            event_id={event_id}
             setTotalNewMessages={setTotalNewMessages}
             setchattab={setchattab}
             chattab={chattab}
@@ -297,15 +282,12 @@ let SocialZone = function(props) {
               ) : (
                 <AttendeList
                   agendarCita={props.agendarCita}
-                  loadDataUser={props.loadDataUser}
                   notificacion={props.notificacion}
                   sendFriendship={props.sendFriendship}
                   perfil={props.perfil}
                   section={props.section}
                   containNetWorking={props.containNetWorking}
                   busqueda={strAttende}
-                  currentUser={props.currentUser}
-                  event_id={event_id}
                   currentChat={currentChat}
                   currentChatName={currentChatName}
                   createNewOneToOneChat={createNewOneToOneChat}
@@ -335,7 +317,6 @@ let SocialZone = function(props) {
             onClick={() => {
               props.setMainStage(null);
               setcurrentTab('');
-              // props.tcollapse();
             }}>
             <Col span={24}>
               <Button
@@ -375,7 +356,6 @@ let SocialZone = function(props) {
             <Col span={4}>
               <ArrowLeftOutlined
                 onClick={() => {
-                  // props.optionselected('N/A');
                   props.setMainStage(null);
                   setcurrentTab('');
                   props.tcollapse();
@@ -404,13 +384,13 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   event: state.event.data,
   viewNotification: state.notifications.data,
-  tabs: state.stage.data.tabs
+  tabs: state.stage.data.tabs,
 });
 
 const mapDispatchToProps = {
   setMainStage,
   setNotification,
-  setCurrentSurvey
+  setCurrentSurvey,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));

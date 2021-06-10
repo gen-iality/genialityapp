@@ -17,10 +17,6 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
       {styles && styles.show_card_banner && styles.show_card_banner === 'true' && (
         <HeaderEventInfo title={title} {...props} />
       )}
-      {/* Imagen opcional para el logo o marca del evento  */}
-      {/* <div className="container-logoBanner">
-                    <img src="https://storage.googleapis.com/herba-images/evius/events/97XuEjJwHIkAyoAO1PreHOMUKMgFfM6MRmyEB5PS.jpeg" alt="" />
-                </div> */}
     </div>
   );
 };
@@ -31,7 +27,7 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
       className='banner-user-text-container'
       style={{
         backgroundSize: 'cover',
-        backgroundPosition: 'center'
+        backgroundPosition: 'center',
       }}>
       <TweenOne className='banner-user-text'>
         {/* Fecha del evento */}
@@ -110,23 +106,5 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
     </div>
   );
 }
-
-// function capitalize(val) {
-//     val = Moment(val).format("DD MMMM YYYY")
-//     return val.toLowerCase()
-//         .trim()
-//         .split(' ')
-//         .map(v => v[0].toUpperCase() + v.substr(1))
-//         .join(' ');
-// }
-
-// function capitalizeMont(val) {
-//     val = Moment(val).format("MMMM YYYY")
-//     return val.toLowerCase()
-//         .trim()
-//         .split(' ')
-//         .map(v => v[0].toUpperCase() + v.substr(1))
-//         .join(' ');
-// }
 
 export default bannerEvent;
