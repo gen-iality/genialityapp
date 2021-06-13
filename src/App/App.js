@@ -17,7 +17,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: { name: 'albert' },
+      user: { name: 'albert' }
     };
   }
 
@@ -37,15 +37,22 @@ class App extends Component {
 
   render() {
     return (
-      <CurrentEventProvider>
-        <CurrentUserEventProvider>
-          <CurrentUserProvider>
-            <Provider store={store}>
-              <MainRouter />
-            </Provider>
-          </CurrentUserProvider>
-        </CurrentUserEventProvider>
-      </CurrentEventProvider>
+      <>
+        {console.log('RENDER APP')}
+        <CurrentEventProvider>
+          {console.log('CurrentEventProvider')}
+          <CurrentUserEventProvider>
+            {console.log('CurrentUserEventProvider')}
+            <CurrentUserProvider>
+              {console.log('CurrentUserProvider')}
+              <Provider store={store}>
+                {console.log('store')}
+                <MainRouter />
+              </Provider>
+            </CurrentUserProvider>
+          </CurrentUserEventProvider>
+        </CurrentEventProvider>
+      </>
     );
   }
 }

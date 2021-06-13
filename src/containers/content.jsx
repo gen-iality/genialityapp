@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route, Redirect, withRouter, Switch } from 'react-router-dom';
 import Event from '../components/events/event';
 import * as Cookie from 'js-cookie';
@@ -26,62 +26,59 @@ const Tickets = asyncComponent(() => import('../components/tickets'));
 const socialZone = asyncComponent(() => import('../components/socialZone/socialZone'));
 const AppointmentAccept = asyncComponent(() => import('../components/networking/appointmentAccept'));
 const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
-class ContentContainer extends Component {
-  componentDidMount() {
-    this.props.history.index = 0;
-  }
-  render() {
-    return (
-      <main className='main'>
-        <Switch>
-          <Route path='/landing/:event_id' component={Landing} />
+const ContentContainer = () => {
+  //this.props.history.index = 0;
+  console.log('RENDER');
+  return (
+    <main className='main'>
+      <Switch>
+        <Route path='/landing/:event_id' component={Landing} />
 
-          <Route path='/social/:event_id' component={socialZone} />
-          {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
-          <Route path='/mentoriamastercard' render={() => <Redirect to='/landing/5ef49fd9c6c89039a14c6412' />} />
+        <Route path='/social/:event_id' component={socialZone} />
+        {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
+        <Route path='/mentoriamastercard' render={() => <Redirect to='/landing/5ef49fd9c6c89039a14c6412' />} />
 
-          <Route path='/meetupsfenalco' render={() => <Redirect to='/landing/5f0622f01ce76d5550058c32' />} />
+        <Route path='/meetupsfenalco' render={() => <Redirect to='/landing/5f0622f01ce76d5550058c32' />} />
 
-          <Route path='/evento/tpgamers' render={() => <Redirect to='/landing/5f4e41d5eae9886d464c6bf4' />} />
+        <Route path='/evento/tpgamers' render={() => <Redirect to='/landing/5f4e41d5eae9886d464c6bf4' />} />
 
-          <Route path='/notfound' component={NotFoundPage} />
-          {/* <WithFooter> */}
-          <Route path='/page/:id' component={HomeProfile} />
-          <PrivateRoute path='/my_events' component={Events} />
-          <PrivateRoute path='/event/:event' component={Event} />
-          <PrivateRoute path='/create-event' component={NewEvent} />
-          <PrivateRoute path='/profile/:id' component={MyProfile} />
-          <PrivateRoute path='/organization/:id' component={Organization} />
-          <PrivateRoute path='/purchase/:id' component={Purchase} />
-          <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
-          <PrivateRoute path='/tickets/:id' component={Tickets} />
-          <Route path='/terms' component={Terms} />
-          <Route path='/privacy' component={Privacy} />
-          <Route path='/policies' component={Policies} />
-          <Route path='/about' component={About} />
-          <Route path='/faqs' component={Faqs} />
-          <Route path='/api/generatorQr/:id' component={QRedirect} />
-          <Route exact path='/transition/:event' component={Transition} />
+        <Route path='/notfound' component={NotFoundPage} />
+        {/* <WithFooter> */}
+        <Route path='/page/:id' component={HomeProfile} />
+        <PrivateRoute path='/my_events' component={Events} />
+        <PrivateRoute path='/event/:event' component={Event} />
+        <PrivateRoute path='/create-event' component={NewEvent} />
+        <PrivateRoute path='/profile/:id' component={MyProfile} />
+        <PrivateRoute path='/organization/:id' component={Organization} />
+        <PrivateRoute path='/purchase/:id' component={Purchase} />
+        <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
+        <PrivateRoute path='/tickets/:id' component={Tickets} />
+        <Route path='/terms' component={Terms} />
+        <Route path='/privacy' component={Privacy} />
+        <Route path='/policies' component={Policies} />
+        <Route path='/about' component={About} />
+        <Route path='/faqs' component={Faqs} />
+        <Route path='/api/generatorQr/:id' component={QRedirect} />
+        <Route exact path='/transition/:event' component={Transition} />
 
-          <Route
-            path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
-            component={AppointmentAccept}
-          />
-          <Route
-            exact
-            path='/'
-            render={() => (
-              <WithFooter>
-                <Home />
-              </WithFooter>
-            )}
-          />
-          <Route component={NotFoundPage} />
-        </Switch>
-      </main>
-    );
-  }
-}
+        <Route
+          path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
+          component={AppointmentAccept}
+        />
+        <Route
+          exact
+          path='/'
+          render={() => (
+            <WithFooter>
+              <Home />
+            </WithFooter>
+          )}
+        />
+        <Route component={NotFoundPage} />
+      </Switch>
+    </main>
+  );
+};
 
 function QRedirect({ match }) {
   window.location.replace(`${ApiUrl}/api/generatorQr/${match.params.id}`);
@@ -98,7 +95,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
         <Redirect
           to={{
             pathname: '/',
-            state: { from: props.location },
+            state: { from: props.location }
           }}
         />
       )
@@ -106,4 +103,4 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   />
 );
 
-export default withRouter(ContentContainer);
+export default React.memo(ContentContainer);
