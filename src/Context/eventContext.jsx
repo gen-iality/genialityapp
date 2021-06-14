@@ -1,31 +1,37 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { EventsApi } from '../helpers/request';
 import { GetIdEvent } from '../helpers/utils';
+import eventLanding from '../components/events/eventLanding';
 
 export const CurrentEventContext = React.createContext();
 
+//status: 'LOADING' | 'LOADED' | 'error'
+let initialContextState = { status: 'LOADING', value: null };
+
 export function CurrentEventProvider({ children }) {
-  const [eventContext, seteventContext] = useState();
+  const [eventContext, setEventContext] = useState(initialContextState);
+  let { event_id } = useParams();
 
   useEffect(() => {
+    if (!event_id) return;
     async function fetchEvent() {
-      let eventid = GetIdEvent();
-
-      const eventGlobal = await EventsApi.getOne(eventid);
-      seteventContext(eventGlobal);
-      console.warn('CONTEXTOEVENTO---', eventContext);
+      console.log('CONTEXTOEVENTO eventid', event_id);
+      const eventGlobal = await EventsApi.getOne(event_id);
+      setEventContext({ status: 'LOADED', value: eventGlobal });
+      console.log('CONTEXTOEVENTO---', eventGlobal);
     }
     fetchEvent();
-  }, []);
+  }, [event_id]);
 
-  const value = React.useMemo(() => {
-    return {
-      ...eventContext
-    };
-  }, [eventContext]);
+  // const value = React.useMemo(() => {
+  //   return {
+  //     ...eventContext
+  //   };
+  // }, [eventContext]);
 
-  return <CurrentEventContext.Provider value={value}>{children}</CurrentEventContext.Provider>;
+  return <CurrentEventContext.Provider value={eventContext}>{children}</CurrentEventContext.Provider>;
 }
 
 export function UseEventContext() {

@@ -21,8 +21,9 @@ class Faqs extends Component {
   }
 
   async getFaqs() {
-    const faqsData = await FaqsApi.byEvent(this.props.eventId);
-    const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
+    let eventId = this.props.event?._id;
+    const faqsData = await FaqsApi.byEvent(eventId);
+    const info = await Actions.getAll(`/api/events/${eventId}`);
     if (info.styles !== {}) {
       this.setState({
         styles: {

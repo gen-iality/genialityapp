@@ -4,8 +4,8 @@ import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanie
 import PartnersList from '../PartnersList';
 import PartnersDetail from '../PartnersDetail';
 
-export default function Partners({ eventId }) {
-  const [companies, loadingCompanies] = useGetEventCompanies(eventId);
+export default function Partners({ event }) {
+  const [companies, loadingCompanies] = useGetEventCompanies(event._id || null);
   const [viewPartnerDetail, setViewPartnerDetail] = useState(false);
   const [partnerDetailSelected, setPartnerDetailSelected] = useState({});
 
@@ -29,12 +29,12 @@ export default function Partners({ eventId }) {
       {viewPartnerDetail ? (
         <PartnersDetail company={partnerDetailSelected} handleClosePartnerDetail={handleClosePartnerDetail} />
       ) : (
-          <PartnersList
-            companies={companies}
-            loadingCompanies={loadingCompanies}
-            handleOpenPartnerDetail={handleOpenPartnerDetail}
-          />
-        )}
+        <PartnersList
+          companies={companies}
+          loadingCompanies={loadingCompanies}
+          handleOpenPartnerDetail={handleOpenPartnerDetail}
+        />
+      )}
     </Card>
   );
 }

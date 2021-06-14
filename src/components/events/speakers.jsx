@@ -20,12 +20,14 @@ class Speakers extends Component {
       speakersWithCategory: [],
       speakersWithoutCategory: [],
       speakerCategories: [],
-      renderSpeakerCategories: false,
+      renderSpeakerCategories: false
     };
   }
 
   async componentDidMount() {
-    const { eventId } = this.props;
+    const { event } = this.props;
+    let eventId = this.props.event?._id;
+
     //Se hace la consulta a la api de speakers
     let speakers = await SpeakersApi.byEvent(eventId);
 
@@ -97,18 +99,18 @@ class Speakers extends Component {
     return maxOrder;
   }
 
-  async activitySpeakers(id) {
+  async activitySpeakers(eventId, id) {
     //Se consulta la api para traer la informacion de actividades por conferencista
-    let InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(this.props.eventId, id);
+    let InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(eventId, id);
     //Se manda al estado la consulta
     this.setState({
-      activityesBySpeaker: InfoActivityesBySpeaker.data,
+      activityesBySpeaker: InfoActivityesBySpeaker.data
     });
   }
 
-  modal(id, image, name, profession, description, category) {
+  modal(eventId, id, image, name, profession, description, category) {
     //Se llama esta funcion para cargar la consulta de actividades por conferencista
-    this.activitySpeakers(id);
+    this.activitySpeakers(eventId, id);
     // Se envian los datos al estado para mostrarlos en el modal, Esto para hacer el modal dinamico
     this.setState({
       infoSpeaker: {
@@ -116,10 +118,10 @@ class Speakers extends Component {
         nombre: name,
         cargo: profession,
         descripcion: description,
-        category,
+        category
       },
 
-      modalVisible: true,
+      modalVisible: true
     });
   }
 
@@ -150,8 +152,9 @@ class Speakers extends Component {
       speakerCategories,
       speakersWithCategory,
       speakersWithoutCategory,
-      renderSpeakerCategories,
+      renderSpeakerCategories
     } = this.state;
+    let eventId = this.props.event?._id;
     return (
       <>
         {renderSpeakerCategories && speakerCategories.length && (
@@ -167,7 +170,7 @@ class Speakers extends Component {
                         padding: '5px',
                         borderRadius: '5px',
                         backgroundColor: '#FFFFFF',
-                        boxSizing: 'border-box',
+                        boxSizing: 'border-box'
                       }}>
                       <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
                     </div>
@@ -187,6 +190,7 @@ class Speakers extends Component {
                                         speaker.description !== null
                                       ) {
                                         this.modal(
+                                          eventId,
                                           speaker._id,
                                           speaker.image,
                                           speaker.name,
@@ -218,12 +222,12 @@ class Speakers extends Component {
                                       title={[
                                         <div key={'speaker-name' + key}>
                                           <span>{speaker.name}</span>
-                                        </div>,
+                                        </div>
                                       ]}
                                       description={[
                                         <div style={{ minHeight: '100px' }} key={'speaker-description' + key}>
                                           <p>{speaker.profession}</p>
-                                        </div>,
+                                        </div>
                                       ]}
                                     />
                                   </Card>
@@ -255,6 +259,7 @@ class Speakers extends Component {
                         speaker.description !== null
                       ) {
                         this.modal(
+                          eventId,
                           speaker._id,
                           speaker.image,
                           speaker.name,
@@ -278,12 +283,12 @@ class Speakers extends Component {
                       title={[
                         <div key={'speaker-name  ' + key}>
                           <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{speaker.name}</span>
-                        </div>,
+                        </div>
                       ]}
                       description={[
                         <div key={'speaker-description  ' + key} style={{ minHeight: '100px' }}>
                           <p>{speaker.profession}</p>
-                        </div>,
+                        </div>
                       ]}
                     />
                   </Card>
@@ -303,7 +308,7 @@ class Speakers extends Component {
           footer={[
             <Button key='cerrar' type='primary' onClick={() => this.setModalVisible(false)}>
               Cerrar
-            </Button>,
+            </Button>
           ]}>
           <Row>
             {/* Imagen del conferencista */}

@@ -6,6 +6,9 @@ import { ApiUrl } from '../helpers/constants';
 import asyncComponent from './AsyncComponent';
 import WithFooter from '../components/withFooter';
 
+import { CurrentUserEventProvider } from '../Context/eventUserContext';
+import { CurrentEventProvider, CurrentEventContext } from '../Context/eventContext';
+
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
 const HomeProfile = asyncComponent(() => import('../components/home/profile'));
@@ -29,10 +32,15 @@ const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
 const ContentContainer = () => {
   //this.props.history.index = 0;
   console.log('RENDER');
+
   return (
     <main className='main'>
       <Switch>
-        <Route path='/landing/:event_id' component={Landing} />
+        <Route path='/landing/:event_id'>
+          <CurrentEventProvider>
+            <Landing />
+          </CurrentEventProvider>
+        </Route>
 
         <Route path='/social/:event_id' component={socialZone} />
         {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}

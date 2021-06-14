@@ -37,22 +37,15 @@ class App extends Component {
 
   render() {
     return (
-      <>
-        {console.log('RENDER APP')}
-        <CurrentEventProvider>
-          {console.log('CurrentEventProvider')}
-          <CurrentUserEventProvider>
-            {console.log('CurrentUserEventProvider')}
-            <CurrentUserProvider>
-              {console.log('CurrentUserProvider')}
-              <Provider store={store}>
-                {console.log('store')}
-                <MainRouter />
-              </Provider>
-            </CurrentUserProvider>
-          </CurrentUserEventProvider>
-        </CurrentEventProvider>
-      </>
+      // <CurrentEventProvider>
+      //   <CurrentUserEventProvider>
+      <CurrentUserProvider>
+        <Provider store={store}>
+          <MainRouter />
+        </Provider>
+      </CurrentUserProvider>
+      //   </CurrentUserEventProvider>
+      // </CurrentEventProvider>
     );
   }
 }

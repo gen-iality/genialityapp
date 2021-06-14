@@ -44,8 +44,9 @@ class documentsDetail extends Component {
     let data = [];
 
     try {
-      let folders = await DocumentsApi.getAll(this.props.eventId);
-      documents = await getFiles(this.props.eventId);
+      let eventId = this.props.event?._id;
+      let folders = await DocumentsApi.getAll(eventId);
+      documents = await getFiles(eventId);
 
       this.setState({
         folders: folders.data
