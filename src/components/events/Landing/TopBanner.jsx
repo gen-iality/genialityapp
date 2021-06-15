@@ -1,94 +1,49 @@
+import React from 'react';
 import BannerEvent from '../bannerEvent';
+import { Link } from 'react-router-dom';
 
-const TopBanner = () => {
+const TopBanner = ({ event, currentActivity }) => {
+  if (!event) return null;
+  console.log('event', event);
+  let styles = event && event.styles ? event.styles : {};
+  let bgImage = 'https://bulma.io/images/placeholders/1280x960.png';
+  bgImage = styles.banner_image ? styles.banner_image : bgImage;
 
-return (
-{this.props.cEvent.styles &&
-	this.props.cEvent.styles.show_banner &&
-	(this.props.cEvent.styles.show_banner === 'true' ||
-	  this.props.cEvent.styles.show_banner === true) &&
-	this.props.currentActivity === null ? (
-	  <BannerEvent
-		bgImage={
-		  this.props.cEvent.styles && this.props.cEvent.styles.banner_image
-			? this.props.cEvent.styles.banner_image
-			: this.props.cEvent.picture
-			? this.props.cEvent.picture
-			: 'https://bulma.io/images/placeholders/1280x960.png'
-		}
-		mobileBanner={
-		  this.props.cEvent.styles &&
-		  this.props.cEvent.styles.mobile_banner &&
-		  this.props.cEvent.styles.mobile_banner
-		}
-		bgImageText={
-		  this.props.cEvent.styles && this.props.cEvent.styles.event_image
-			? this.props.cEvent.styles.event_image
-			: ''
-		}
-		title={this.props.cEvent.name}
-		eventId={this.props.cEvent._id}
-		styles={this.props.cEvent.styles}
-		organizado={
-		  <Link
-			to={`/page/${this.props.cEvent.organizer_id}?type=${this.props.cEvent.organizer_type}`}>
-			{this.props.cEvent.organizer.name
-			  ? this.props.cEvent.organizer.name
-			  : this.props.cEvent.organizer.email}
-		  </Link>
-		}
-		place={
-		  <span>
-			{this.props.cEvent.venue} {this.props.cEvent.location.FormattedAddress}
-		  </span>
-		}
-		dateStart={this.props.cEvent.date_start}
-		dateEnd={this.props.cEvent.date_end}
-		dates={this.props.cEvent.dates}
-		type_event={this.props.cEvent.type_event}
-	  />
-	) : (
-	  <div>
-		{this.props.cEvent.styles &&
-		  this.props.cEvent.styles.show_banner === undefined &&
-		  this.state.headerVisible &&
-		  this.props.currentActivity === null && (
-			<BannerEvent
-			  bgImage={
-				this.props.cEvent.styles && this.props.cEvent.styles.banner_image
-				  ? this.props.cEvent.styles.banner_image
-				  : this.props.cEvent.picture
-				  ? this.props.cEvent.picture
-				  : 'https://bulma.io/images/placeholders/1280x960.png'
-			  }
-			  bgImageText={
-				this.props.cEvent.styles && this.props.cEvent.styles.event_image
-				  ? this.props.cEvent.styles.event_image
-				  : ''
-			  }
-			  title={this.props.cEvent.name}
-			  organizado={
-				<Link
-				  to={`/page/${this.props.cEvent.organizer_id}?type=${this.props.cEvent.organizer_type}`}>
-				  {this.props.cEvent.organizer.name
-					? this.props.cEvent.organizer.name
-					: this.props.cEvent.organizer.email}
-				</Link>
-			  }
-			  place={
-				<span>
-				  {this.props.cEvent.venue} {this.props.cEvent.location.FormattedAddress}
-				</span>
-			  }
-			  dateStart={this.props.cEvent.date_start}
-			  dateEnd={this.props.cEvent.date_end}
-			  dates={this.props.cEvent.dates}
-			  type_event={this.props.cEvent.type_event}
-			/>
-		  )}
-	  </div>
-	)}
-
-)}
-
+  //: event.picture
+  //? event.picture
+  //headerVisible
+  return (
+    <>
+      <h1>TOPBANNER{styles.show_banner ? 'yes' : 'false'}x</h1>
+      {(styles.show_banner === undefined || styles.show_banner === 'true') && currentActivity === null && (
+        <BannerEvent
+          bgImage={bgImage}
+          mobileBanner={styles.mobile_banner}
+          bgImageText={styles.event_image}
+          title={event.name}
+          eventId={event._id}
+          styles={styles}
+          organizado={
+            event.organizer && (
+              <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                {event.organizer.name ? event.organizer.name : event.organizer.email}
+              </Link>
+            )
+          }
+          place={
+            event.location && (
+              <span>
+                {event.venue} {event.location.FormattedAddress}
+              </span>
+            )
+          }
+          dateStart={event.date_start}
+          dateEnd={event.date_end}
+          dates={event.dates}
+          type_event={event.type_event}
+        />
+      )}
+    </>
+  );
+};
 export default TopBanner;
