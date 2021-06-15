@@ -10,3 +10,9 @@ export const imageCenter = {
   margin: '0 auto',
   display: 'block',
 };
+
+export const stylesMenuItems = {
+  height: '100%',
+  padding: '30px 0',
+  backgroundColor: 'transparent',
+};

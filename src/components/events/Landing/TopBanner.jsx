@@ -14,7 +14,7 @@ const TopBanner = ({ event, currentActivity }) => {
   //headerVisible
   return (
     <>
-      <h1>TOPBANNER{styles.show_banner ? 'yes' : 'false'}x</h1>
+      {/* <h1>TOPBANNER{styles.show_banner ? 'yes' : 'false'}x</h1> */}
       {(styles.show_banner === undefined || styles.show_banner === 'true') && currentActivity === null && (
         <BannerEvent
           bgImage={bgImage}
