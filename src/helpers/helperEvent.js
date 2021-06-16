@@ -99,3 +99,18 @@ export const zoomExternoHandleOpen = (activity, eventUser, isMobile, TicketsApi,
     console.error('fallo el checkin:', e);
   }
 };
+
+//obtener las generaltabs del evento
+
+export const GetGeneralTabsByEvent = (event_id, setgeneraltabs) => {
+  firestore
+    .collection('events')
+    .doc(event_id)
+    .onSnapshot(function(eventSnapshot) {
+      if (eventSnapshot.exists) {
+        if (eventSnapshot.data().tabs !== undefined) {
+          setgeneraltabs(eventSnapshot.data().tabs);
+        }
+      }
+    });
+};

@@ -22,7 +22,7 @@ const { addLoginInformation, showMenu } = userActions;
 
 const { Header } = Layout;
 const zIndex = {
-  zIndex: '1'
+  zIndex: '1',
 };
 
 class Headers extends Component {
@@ -48,7 +48,7 @@ class Headers extends Component {
       showEventMenu: false,
       tabEvtType: true,
       tabEvtCat: true,
-      eventId: null
+      eventId: null,
     };
 
     this.setEventId = this.setEventId.bind(this);
@@ -57,13 +57,13 @@ class Headers extends Component {
 
   showDrawer = () => {
     this.setState({
-      showEventMenu: true
+      showEventMenu: true,
     });
   };
 
   onClose = () => {
     this.setState({
-      showEventMenu: false
+      showEventMenu: false,
     });
   };
 
@@ -189,6 +189,8 @@ class Headers extends Component {
             <Row justify='space-between' align='middle'>
               {/*evius LOGO */}
 
+              {/* <h1>Lanzamiento HBOMax Región Andina</h1> */}
+
               <Row className='logo-header' justify='space-between' align='middle'>
                 {/* {this.props.event !== null && this.props.event.name} */}
                 <Link to={'/'}>{/* <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} /> */}</Link>
@@ -199,7 +201,7 @@ class Headers extends Component {
                       <Button style={zIndex} onClick={this.showDrawer}>
                         {React.createElement(this.state.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
                           className: 'trigger',
-                          onClick: this.toggle
+                          onClick: this.toggle,
                         })}
                       </Button>
                     </span>
@@ -256,13 +258,13 @@ const mapStateToProps = (state) => ({
   eventMenu: state.user.menu,
   permissions: state.permissions,
   error: state.categories.error,
-  event: state.event.data
+  event: state.event.data,
 });
 
 const mapDispatchToProps = {
   setEventData,
   addLoginInformation,
-  showMenu
+  showMenu,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Headers));

@@ -1,44 +1,48 @@
-import React from 'react';
-import { Button, Drawer } from 'antd';
+import React, { useState } from 'react';
+import { Button, Drawer, Row, Avatar } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { drawerButton, imageCenter } from '../helpers/csshelpers';
-import MenuEvent from '../../menuEvent';
+import MenuEvent from './MenuEvent';
 const MenuTablets = (props) => {
+  const [isOpen, setisOpen] = useState(false);
+
   return (
     <>
-      {/* Boton que abre el menu para dispositivos > tablet  */}
-      <div className='hiddenMenu_Landing'></div>
-
-      {/*Aqui empieza el menu para dispositivos < tablet*/}
       <div className='hiddenMenuMobile_Landing'>
-        <Button block style={drawerButton} onClick={props.showDrawer}>
+        <Button onClick={() => setisOpen(!isOpen)} block style={drawerButton}>
           <MenuOutlined style={{ fontSize: '15px' }} />
           <div>Menu</div>
         </Button>
       </div>
+
       <Drawer
-        title={props.cEvent.name}
-        placement={props.placement}
-        closable={true}
-        onClose={props.onClose}
-        visible={props.visible}
+        title={props.event.name}
+        placement='left'
+        closable={false}
+        onClose={() => setisOpen(!isOpen)}
+        visible={isOpen}
         maskClosable={true}
         bodyStyle={{
           padding: '0px',
           backgroundColor:
-            props.cEvent.styles && props.cEvent.styles.toolbarDefaultBg
-              ? props.cEvent.styles.toolbarDefaultBg
-              : 'white',
+            props.event.styles && props.event.styles.toolbarDefaultBg ? props.event.styles.toolbarDefaultBg : 'white',
         }}>
-        {props.cEvent.styles && <img src={props.cEvent.styles.event_image} style={imageCenter} />}
-        <MenuEvent
+        <Row justify='center'>
+          {props.event.styles && (
+            <Avatar size={64} icon={<img src={props.event.styles.event_image} style={imageCenter} />} />
+          )}
+        </Row>
+
+        <MenuEvent event={props.event} isMobile={true} />
+
+        {/* <MenuEvent
           notifications={props.totalNotficationsN}
-          eventId={props.cEvent._id}
+          eventId={props.event._id}
           user={props.cUser}
-          itemsMenu={props.cEvent.itemsMenu}
+          itemsMenu={props.event.itemsMenu}
           showSection={props.showSection}
-          styleText={props.cEvent.styles && props.cEvent.styles.textMenu ? props.cEvent.styles.textMenu : '#222222'}
-        />
+          styleText={props.event.styles && props.event.styles.textMenu ? props.event.styles.textMenu : '#222222'}
+        /> */}
       </Drawer>
     </>
   );

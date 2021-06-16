@@ -361,19 +361,19 @@ section.landing {
     top: 9%;
   }
   .MenuItem_event {
-    display: grid;
-    margin-bottom: 12%;
+    display: grid !important;
+    margin-bottom: 12% !important;
     padding-top: 10% !important;
     height: 65px !important;
     padding-left: 15px !important;
   }
   .menuEvent_section-text {
-    margin: -3px auto;
-    white-space: normal;
-    line-height: 13px;
-    text-align: center;
-    font-size: 10px;
-    margin-bottom: 15px;
+    margin: -3px auto !important;
+    white-space: normal !important;
+    line-height: 13px !important;
+    text-align: center !important;
+    font-size: 10px !important;
+    margin-bottom: 15px !important;
   }
   @media only screen and (max-width: $breakpoint-mobile) {
     display: none;
@@ -385,13 +385,13 @@ section.landing {
 }
 
 .hiddenMenuMobile_Landing {
-  position: fixed;
-  top: 10px;
-  left: 20px;
-  z-index: 1;
+  position: fixed !important;
+  top: 10px !important;
+  left: 20px !important;
+  z-index: 1 !important;
 
   @media screen and (min-width: '1030px') {
-    display: none;
+    display: none !important;
   }
 }
 
