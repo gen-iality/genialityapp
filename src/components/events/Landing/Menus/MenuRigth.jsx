@@ -1,18 +1,19 @@
 import React from 'react';
 import { Menu, Badge } from 'antd';
-import { CommentOutlined, TeamOutlined, PieChartOutlined, MenuOutlined } from '@ant-design/icons';
+import { CommentOutlined, TeamOutlined, PieChartOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
 
 const MenuRigth = (props) => {
   return (
-    <Menu defaultSelectedKeys={['0']} mode='none' theme='light' style={stylesMenuItems}>
+    <Menu mode='none' theme='light' style={stylesMenuItems}>
       <Menu.Item
+        className='animate__animated animate__headShake animate__slower animate__infinite'
         key='0'
         icon={
           <>
-            <MenuOutlined
+            <ArrowLeftOutlined
               style={{
-                fontSize: '31px',
+                fontSize: '25px',
                 color: props.event.styles.textMenu,
               }}
             />

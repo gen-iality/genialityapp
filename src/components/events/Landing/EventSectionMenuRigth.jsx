@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Button } from 'antd';
-import { MenuUnfoldOutlined } from '@ant-design/icons';
-import SocialMenu from './Menus/SocialMenu';
-import MenuRigth from './Menus/oldMenuRigth';
+import { MenuUnfoldOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import MenuRigth from './Menus/MenuRigth';
 const { Sider } = Layout;
 const EventSectionMenuRigth = (props) => {
   const [isCollapsed, setisCollapsed] = useState(true);
@@ -23,7 +22,6 @@ const EventSectionMenuRigth = (props) => {
       <div className='Chat-Event'>
         {isCollapsed ? (
           <>
-            {/* <SocialMenu event={props.event} /> */}
             <MenuRigth
               event={props.event}
               handleCollapsed={handleCollapsed}
@@ -34,8 +32,11 @@ const EventSectionMenuRigth = (props) => {
           </>
         ) : (
           <>
-            <Button type='link' onClick={handleCollapsed}>
-              <MenuUnfoldOutlined style={{ fontSize: '24px' }} />
+            <Button
+              className='animate__animated animate__headShake animate__slower animate__infinite'
+              type='link'
+              onClick={handleCollapsed}>
+              <ArrowRightOutlined style={{ fontSize: '24px', color: props.event.styles.textMenu }} />
             </Button>
 
             {/* <SocialZone
