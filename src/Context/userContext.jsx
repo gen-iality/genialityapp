@@ -10,7 +10,7 @@ export function CurrentUserProvider({ children }) {
   useEffect(() => {
     async function getUser() {
       let usercurrent = await getCurrentUser();
-
+      console.log('usercurrent', usercurrent);
       setCurrentUser(usercurrent);
     }
 

@@ -21,6 +21,8 @@ const ChatList = (props) => {
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
 
+  console.log('chatlist', props);
+
   const onFinish = (values) => {
     //alert(values);
     props.setCurrentUser(values);
@@ -94,11 +96,10 @@ const ChatList = (props) => {
             src={
               'https://chatevius.web.app?nombre=' +
               userName +
-              '&chatid=' +
-              'event_' +
-              cEvent._id +
+              '&chatid=event_' +
+              cEvent.value._id +
               '&eventid=' +
-              cEvent._id +
+              cEvent.value._id +
               '&userid=' +
               cUser.uid +
               '&version=0.0.2'
@@ -164,7 +165,7 @@ const ChatList = (props) => {
                 '&chatid=' +
                 props.currentChat +
                 '&eventid=' +
-                cEvent._id +
+                cEvent.value._id +
                 '&userid=' +
                 cUser.uid
               }></iframe>

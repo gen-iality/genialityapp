@@ -22,8 +22,6 @@ const { setNotification } = notificationsActions;
 
 let SocialZone = function(props) {
   //contextos
-  let cUser = UseCurrentUser();
-  let cEvent = UseEventContext();
 
   const [attendeeList, setAttendeeList] = useState({});
   const attendeeListPresence = useState({});
@@ -40,19 +38,19 @@ let SocialZone = function(props) {
   let busquedaRef = useRef();
 
   useEffect(() => {
-    console.log('SOCIAL ZONE DATA', cEvent);
+    console.log('props.cUser', props.cUser);
 
-    if (props.updateChat.idCurentUser) {
+    if (props.cUser) {
       createNewOneToOneChat(
-        props.updateChat.idCurentUser,
-        props.updateChat.currentName,
-        props.updateChat.idOtherUser,
-        props.updateChat.otherUserName
+        props.cUser._id,
+        props.cUser.names || props.cUser.name,
+        props.cUser._id,
+        props.cUser.names || props.cUser.name
       );
     }
-  }, [props.updateChat]);
+  }, [props.cUser]);
 
-  let userName = props.currentUser ? cUser?.names : cUser?.name ? cUser?.name : '---';
+  let userName = props.cUser.currentUser ? props.cUser?.names : props.cUser?.name ? props.cUser?.name : '---';
 
   /***********/
 
@@ -62,7 +60,7 @@ let SocialZone = function(props) {
     setcurrentTab('1'); //chats tab
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
-    setchattab('chat2'); //selecciona el tab de un chat privado
+    // setchattab('chat2'); //selecciona el tab de un chat privado
   };
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
@@ -78,13 +76,13 @@ let SocialZone = function(props) {
     //agregamos una referencia al chat para el usuario actual
     data = { id: newId, name: otherUserName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
     firestore
-      .doc('eventchats/' + cEvent._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
+      .doc('eventchats/' + props.cEvent._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
 
     //agregamos una referencia al chat para el otro usuario del chat
     data = { id: newId, name: currentName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
     firestore
-      .doc('eventchats/' + cEvent._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
+      .doc('eventchats/' + props.cEvent._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
     setCurrentChat(newId, otherUserName);
   };
@@ -108,17 +106,120 @@ let SocialZone = function(props) {
   };
 
   useEffect(() => {
-    props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
+    // props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
     setTotalNewMessages(props.totalMessages);
+    console.log('props.totalMessages', props.totalMessages);
   }, []);
 
   //Cargar la lista de chats de una persona
 
   useEffect(() => {
-    if (!cEvent._id || !currentUser) return;
+    if (!props.cEvent._id || !props.cUser) return;
 
     firestore
-      .collection('eventchats/' + cEvent._id + '/userchats/' + cUser.uid + '/' + 'chats/')
+      .collection('eventchats/' + props.cEvent._id + '/userchats/' + props.cUser.uid + '/' + 'chats/')
+      .onSnapshot(function(querySnapshot) {
+        let list = [];
+        let data;
+        let newmsj = 0;
+        querySnapshot.forEach((doc) => {
+          data = doc.data();
+          console.log('Dataavai', data);
+          if (data.newMessages) {
+            newmsj += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
+          }
+          list.push(data);
+        });
+
+        let change = querySnapshot.docChanges()[0];
+        setdatamsjlast(change?.doc.data());
+        let userNameFirebase = null;
+        if (change) {
+          if (change.doc.data().remitente) {
+            if (
+              change.doc
+                .data()
+                .remitente.toLowerCase()
+                .indexOf('(admin)') > -1 ||
+              change.doc
+                .data()
+                .remitente.toLowerCase()
+                .indexOf('(casa)')
+            ) {
+              // QUITAR ALGUNOS PREFIJOS PARA HACER EL MATCH DE NOMBRE ******HAY QUE MEJORAR*******
+              userNameFirebase = change.doc.data().remitente.replace('(admin)', '');
+              userNameFirebase = change.doc.data().remitente.replace('(casa)', '');
+            }
+          }
+        }
+        if (change) {
+          if (
+            userName !== userNameFirebase &&
+            change.doc.data().remitente !== null &&
+            change.doc.data().remitente !== undefined &&
+            newmsj > 0
+          ) {
+            notification.open({
+              description: `Nuevo mensaje de ${change.doc.data().remitente}`,
+              icon: <MessageTwoTone />,
+              onClick: () => {
+                setchattab('chat2');
+
+                setCurrentChat(change.doc.data().id, change.doc.data()._name);
+                notification.destroy();
+              },
+            });
+
+            newmsj > 0 && setTotalNewMessages(newmsj);
+          }
+        }
+
+        setavailableChats(list);
+      });
+  }, [props.cEvent._id, props.cUser, props.collapse]);
+
+  useEffect(() => {
+    if (!props.cEvent._id) return;
+
+    let colletion_name = props.cEvent._id + '_event_attendees';
+    let attendee;
+    firestore
+      .collection(colletion_name)
+      .orderBy('state_id', 'asc')
+      .onSnapshot(function(querySnapshot) {
+        let list = {};
+
+        querySnapshot.forEach((doc) => {
+          attendee = doc.data();
+          let localattendee = attendeeList[attendee.user?.uid] || {};
+          list[attendee.user?.uid] = { ...localattendee, ...attendee };
+        });
+
+        setAttendeeList(list);
+        //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
+      });
+  }, [props.cEvent._id]);
+
+  useEffect(() => {
+    //console.log('social zone mount**********');
+    // const fetchData = async () => {
+    //   const user = await getCurrentUser();
+    //   setCurrentUser(user);
+    //   console.log(user);
+    //   setcurrentTab('' + tab);
+    //   props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
+    // };
+    // setTotalNewMessages(props.totalMessages);
+    // fetchData();
+  }, []);
+
+  //Cargar la lista de chats de una persona
+  let nombreactivouser = props.currentUser?.names;
+  useEffect(() => {
+    if (!props.cEvent._id || !currentUser) return;
+
+    firestore
+      .collection('eventchats/' + props.cEvent._id + '/userchats/' + props.cUser.uid + '/' + 'chats/')
       .onSnapshot(function(querySnapshot) {
         let list = [];
         let data;
@@ -176,29 +277,7 @@ let SocialZone = function(props) {
 
         setavailableChats(list);
       });
-  }, [cEvent._id, cUser, props.collapse]);
-
-  useEffect(() => {
-    if (!cEvent._id) return;
-
-    let colletion_name = cEvent._id + '_event_attendees';
-    let attendee;
-    firestore
-      .collection(colletion_name)
-      .orderBy('state_id', 'asc')
-      .onSnapshot(function(querySnapshot) {
-        let list = {};
-
-        querySnapshot.forEach((doc) => {
-          attendee = doc.data();
-          let localattendee = attendeeList[attendee.user?.uid] || {};
-          list[attendee.user?.uid] = { ...localattendee, ...attendee };
-        });
-
-        setAttendeeList(list);
-        //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
-      });
-  }, [cEvent._id]);
+  }, [props.cEvent._id, currentUser, props.collapse]);
 
   return (
     <Tabs
@@ -208,11 +287,11 @@ let SocialZone = function(props) {
       onTabClick={(key) => {
         setcurrentTab(key);
 
-        if (key == '4') {
-          props.setMainStage('game');
-        }
+        // if (key == '4') {
+        //   props.setMainStage('game');
+        // }
 
-        props.optionselected(key == '2' ? 'attendees' : key == '3' ? 'survey' : key == '1' ? 'chat' : 'game');
+        // props.optionselected(key == '2' ? 'attendees' : key == '3' ? 'survey' : key == '1' ? 'chat' : 'game');
       }}>
       {(props.generalTabs.publicChat || props.generalTabs.privateChat) && (
         <TabPane
@@ -224,7 +303,7 @@ let SocialZone = function(props) {
                   onClick={() => setchattab('chat1')}
                   size='small'
                   style={{ minWidth: '10px', height: '10px', padding: '0px' }}
-                  count={' '}>
+                  count={props.totalMessages}>
                   Chats
                 </Badge>
               )}

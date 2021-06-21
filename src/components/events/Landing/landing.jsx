@@ -25,9 +25,6 @@ const iniitalstatetabs = {
   publicChat: true,
 };
 
-/**Helpers**/
-import { monitorNewChatMessages } from '../../../helpers/helperEvent';
-
 const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
@@ -37,6 +34,7 @@ const Landing = (props) => {
   let { currentActivity, tabs } = props;
 
   useEffect(() => {
+    console.log('cUser', cUser);
     cEventContext.status === 'LOADED' &&
       firestore
         .collection('events')
@@ -68,6 +66,11 @@ const Landing = (props) => {
     console.log('totalNewMessages', totalNewMessages);
   }, [cEventContext.status]);
 
+  //METODO PARA SETEAR NEW MESSAGE
+  const notNewMessage = () => {
+    settotalnewmessages(0);
+  };
+
   if (cEventContext.status === 'LOADING') return <Spin size='small' />;
 
   return (
@@ -87,7 +90,13 @@ const Landing = (props) => {
           currentActivity={currentActivity}
           tabs={tabs}
         />
-        <MenuTabletsSocialZone totalNewMessages={totalNewMessages} />
+        <MenuTabletsSocialZone
+          totalNewMessages={totalNewMessages}
+          generalTabs={generaltabs}
+          notNewMessage={notNewMessage}
+          cEvent={cEventContext.value}
+          cUser={cUser}
+        />
       </Layout>
     </Content>
   );

@@ -32,6 +32,11 @@ const AttendeList = function(props) {
     let ordenadousers = [];
 
     Object.keys(props.attendeeList).map((key) => {
+      console.log(
+        'mihijo',
+        props.attendeeListPresence[key] ? props.attendeeListPresence[key] : props.attendeeListPresence[key]
+      );
+
       let mihijo = {
         idattendpresence: key,
         iduser: key,
