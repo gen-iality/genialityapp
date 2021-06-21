@@ -11,7 +11,6 @@ import FaqsForm from '../../faqsLanding';
 import Partners from '../Partners';
 
 const EventSectionRoutes = ({ event }) => {
-  console.log('carajo', event);
   let { path } = useRouteMatch();
   if (!event) return <h1>Cargando...</h1>;
   return (

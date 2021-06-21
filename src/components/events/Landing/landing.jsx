@@ -32,6 +32,7 @@ const Landing = (props) => {
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
   let [totalNewMessages, settotalnewmessages] = useState(0);
   let { currentActivity, tabs } = props;
+  const [tabselected, settabselected] = useState('1');
 
   useEffect(() => {
     console.log('cUser', cUser);
@@ -68,6 +69,7 @@ const Landing = (props) => {
 
   //METODO PARA SETEAR NEW MESSAGE
   const notNewMessage = () => {
+    console.log('se ejecuta el borrar mensajes');
     settotalnewmessages(0);
   };
 
@@ -85,10 +87,15 @@ const Landing = (props) => {
           </Content>
         </Layout>
         <EventSectionMenuRigth
-          event={cEventContext.value}
+          cEvent={cEventContext.value}
+          cUser={cUser}
           generalTabs={generaltabs}
           currentActivity={currentActivity}
+          notNewMessage={notNewMessage}
+          totalNewMessages={totalNewMessages}
           tabs={tabs}
+          tabselected={tabselected}
+          settabselected={settabselected}
         />
         <MenuTabletsSocialZone
           totalNewMessages={totalNewMessages}
@@ -96,6 +103,8 @@ const Landing = (props) => {
           notNewMessage={notNewMessage}
           cEvent={cEventContext.value}
           cUser={cUser}
+          tabselected={tabselected}
+          settabselected={settabselected}
         />
       </Layout>
     </Content>

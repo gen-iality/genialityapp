@@ -6,7 +6,6 @@ import MenuEvent from './Menus/MenuEvent';
 const { Sider } = Layout;
 
 const EventSectionsInnerMenu = ({ event }) => {
-  console.log('render', event);
   let { url } = useRouteMatch();
   if (!event) return <Spin size='small' />;
   return (

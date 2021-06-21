@@ -29,7 +29,6 @@ let SocialZone = function(props) {
   const [currentChatName, setCurrentChatNameInner] = useState('');
   const [availableChats, setavailableChats] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [currentTab, setcurrentTab] = useState('1');
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [datamsjlast, setdatamsjlast] = useState();
   let [busqueda, setBusqueda] = useState();
@@ -38,7 +37,7 @@ let SocialZone = function(props) {
   let busquedaRef = useRef();
 
   useEffect(() => {
-    console.log('props.cUser', props.cUser);
+    // console.log('props.cUser', props.cUser);
 
     if (props.cUser) {
       createNewOneToOneChat(
@@ -50,24 +49,22 @@ let SocialZone = function(props) {
     }
   }, [props.cUser]);
 
-  let userName = props.cUser.currentUser ? props.cUser?.names : props.cUser?.name ? props.cUser?.name : '---';
+  let userName = props.cUser ? props.cUser?.names : props.cUser?.name ? props.cUser?.name : '---';
 
   /***********/
 
   let tab = props.tab;
 
   let setCurrentChat = (id, chatname) => {
-    setcurrentTab('1'); //chats tab
+    // props.settabselected('1'); //chats tab
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
-    // setchattab('chat2'); //selecciona el tab de un chat privado
+    // props.settabselected('chat2'); //selecciona el tab de un chat privado
   };
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     return ida < idb ? ida + '_' + idb : idb + '_' + ida;
   };
-
-  let [chattab, setchattab] = useState('chat1');
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
@@ -108,13 +105,13 @@ let SocialZone = function(props) {
   useEffect(() => {
     // props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
     setTotalNewMessages(props.totalMessages);
-    console.log('props.totalMessages', props.totalMessages);
+    // console.log('props.totalMessages', props);
   }, []);
 
   //Cargar la lista de chats de una persona
 
   useEffect(() => {
-    if (!props.cEvent._id || !props.cUser) return;
+    if (!props.cEvent || !props.cUser) return;
 
     firestore
       .collection('eventchats/' + props.cEvent._id + '/userchats/' + props.cUser.uid + '/' + 'chats/')
@@ -124,7 +121,7 @@ let SocialZone = function(props) {
         let newmsj = 0;
         querySnapshot.forEach((doc) => {
           data = doc.data();
-          console.log('Dataavai', data);
+          // console.log('Dataavai', data);
           if (data.newMessages) {
             newmsj += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
           }
@@ -163,7 +160,7 @@ let SocialZone = function(props) {
               description: `Nuevo mensaje de ${change.doc.data().remitente}`,
               icon: <MessageTwoTone />,
               onClick: () => {
-                setchattab('chat2');
+                props.settabselected('chat2');
 
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
@@ -176,10 +173,10 @@ let SocialZone = function(props) {
 
         setavailableChats(list);
       });
-  }, [props.cEvent._id, props.cUser, props.collapse]);
+  }, [props.cEvent, props.cUser, props.collapse]);
 
   useEffect(() => {
-    if (!props.cEvent._id) return;
+    if (!props.cEvent) return;
 
     let colletion_name = props.cEvent._id + '_event_attendees';
     let attendee;
@@ -198,7 +195,7 @@ let SocialZone = function(props) {
         setAttendeeList(list);
         //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
       });
-  }, [props.cEvent._id]);
+  }, [props.cEvent]);
 
   useEffect(() => {
     //console.log('social zone mount**********');
@@ -216,7 +213,7 @@ let SocialZone = function(props) {
   //Cargar la lista de chats de una persona
   let nombreactivouser = props.currentUser?.names;
   useEffect(() => {
-    if (!props.cEvent._id || !currentUser) return;
+    if (!props.cEvent || !currentUser) return;
 
     firestore
       .collection('eventchats/' + props.cEvent._id + '/userchats/' + props.cUser.uid + '/' + 'chats/')
@@ -264,7 +261,7 @@ let SocialZone = function(props) {
               description: `Nuevo mensaje de ${change.doc.data().remitente}`,
               icon: <MessageTwoTone />,
               onClick: () => {
-                setchattab('chat2');
+                props.settabselected('2');
 
                 setCurrentChat(change.doc.data().id, change.doc.data()._name);
                 notification.destroy();
@@ -277,15 +274,15 @@ let SocialZone = function(props) {
 
         setavailableChats(list);
       });
-  }, [props.cEvent._id, currentUser, props.collapse]);
+  }, [props.cEvent, currentUser, props.collapse]);
 
   return (
     <Tabs
-      defaultActiveKey='1'
+      defaultActiveKey='2'
       onChange={callback}
-      activeKey={currentTab}
+      activeKey={props.tabselected}
       onTabClick={(key) => {
-        setcurrentTab(key);
+        props.settabselected(key);
 
         // if (key == '4') {
         //   props.setMainStage('game');
@@ -300,7 +297,7 @@ let SocialZone = function(props) {
             <>
               {props.totalMessages !== undefined && props.totalMessages > 0 && (
                 <Badge
-                  onClick={() => setchattab('chat1')}
+                  onClick={() => props.settabselected('1')}
                   size='small'
                   style={{ minWidth: '10px', height: '10px', padding: '0px' }}
                   count={' '}>
@@ -308,7 +305,9 @@ let SocialZone = function(props) {
                 </Badge>
               )}
               {props.totalMessages !== undefined && props.totalMessages == 0 && (
-                <div onClick={() => setchattab('chat1')}>Chats</div>
+                <div style={{ color: props.cEvent.styles.textMenu }} onClick={() => props.settabselected('1')}>
+                  Chats
+                </div>
               )}
             </>
           }
@@ -321,8 +320,8 @@ let SocialZone = function(props) {
             currentChat={currentChat}
             totalNewMessages={totalNewMessages}
             setTotalNewMessages={setTotalNewMessages}
-            setchattab={setchattab}
-            chattab={chattab}
+            settabselected={props.settabselected}
+            tabselected={props.tabselected}
             setCurrentUser={setCurrentUser}
             datamsjlast={datamsjlast}
             generalTabs={props.generalTabs}
@@ -333,31 +332,39 @@ let SocialZone = function(props) {
       {props.generalTabs.attendees && (
         <>
           {' '}
-          <TabPane tab='Asistentes' key='2'>
+          <TabPane tab={<div style={{ color: props.cEvent.styles.textMenu }}>Asistentes</div>} key='2'>
             <Row>
               <Col sm={21}>
-                <div className='control' style={{ marginBottom: '10px', marginRight: '5px' }}>
-                  <input
-                    ref={busquedaRef}
-                    autoFocus
-                    className='input'
-                    type='text'
-                    name={'name'}
-                    onChange={handleChange}
-                    placeholder='Buscar...'
-                  />
-                </div>
+                {!Object.keys(attendeeList).length ? (
+                  ''
+                ) : (
+                  <div className='control' style={{ marginBottom: '10px', marginRight: '5px' }}>
+                    <input
+                      ref={busquedaRef}
+                      autoFocus
+                      className='input'
+                      type='text'
+                      name={'name'}
+                      onChange={handleChange}
+                      placeholder='Buscar...'
+                    />
+                  </div>
+                )}
               </Col>
               <Col sm={2}>
-                <Button shape='circle' onClick={searhAttende}>
-                  {!isFiltered && <SearchOutlined />}
-                  {isFiltered && 'X'}
-                </Button>
+                {!Object.keys(attendeeList).length ? null : (
+                  <Button shape='circle' onClick={searhAttende}>
+                    {!isFiltered && <SearchOutlined />}
+                    {isFiltered && 'X'}
+                  </Button>
+                )}
               </Col>
             </Row>
             <div className='asistente-list'>
               {!Object.keys(attendeeList).length ? (
-                <Spin tip='Loading...' />
+                <Row justify='center'>
+                  <p>No hay asistentes aún</p>
+                </Row>
               ) : (
                 <AttendeList
                   agendarCita={props.agendarCita}
@@ -395,7 +402,7 @@ let SocialZone = function(props) {
             style={{ display: 'pointer' }}
             onClick={() => {
               props.setMainStage(null);
-              setcurrentTab('');
+              props.settabselected('');
             }}>
             <Col span={24}>
               <Button
@@ -405,7 +412,7 @@ let SocialZone = function(props) {
                 block
                 onClick={() => {
                   props.setMainStage(null);
-                  setcurrentTab('');
+                  props.settabselected('');
                   props.tcollapse();
                 }}>
                 Volver a la Conferencia
@@ -436,7 +443,7 @@ let SocialZone = function(props) {
               <ArrowLeftOutlined
                 onClick={() => {
                   props.setMainStage(null);
-                  setcurrentTab('');
+                  props.settabselected('');
                   props.tcollapse();
                 }}
               />

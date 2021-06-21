@@ -52,6 +52,8 @@ const MenuTabletsSocialZone = (props) => {
           notNewMessages={props.notNewMessage}
           cEvent={props.cEvent}
           cUser={props.cUser}
+          tabselected={props.tabselected}
+          settabselected={props.settabselected}
         />
       </Drawer>
     </>

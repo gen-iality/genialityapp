@@ -6,10 +6,12 @@ import PopoverInfoUser from '../hooks/Popover';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { UseCurrentUser } from '../../../Context/userContext';
+import { UseEventContext } from '../../../Context/eventContext';
 
 const AttendeList = function(props) {
   //contextos
   let cUser = UseCurrentUser();
+  let cEvent = UseEventContext();
 
   let [myattendelist, setmyattendelist] = useState();
 
@@ -32,11 +34,6 @@ const AttendeList = function(props) {
     let ordenadousers = [];
 
     Object.keys(props.attendeeList).map((key) => {
-      console.log(
-        'mihijo',
-        props.attendeeListPresence[key] ? props.attendeeListPresence[key] : props.attendeeListPresence[key]
-      );
-
       let mihijo = {
         idattendpresence: key,
         iduser: key,
@@ -125,7 +122,9 @@ const AttendeList = function(props) {
                   style={{ padding: '0px !important', zIndex: 900 }}
                   placement='leftTop'
                   content={<PopoverInfoUser item={item} props={props} />}>
-                  <a key='list-loadmore-edit'>{item.names}</a>
+                  <a style={{ color: cEvent.value.styles.textMenu }} key='list-loadmore-edit'>
+                    {item.names}
+                  </a>
                 </Popover>
               }
               description={
@@ -143,11 +142,11 @@ const AttendeList = function(props) {
             />
           </List.Item>
         )}>
-        {loading && hasMore && (
+        {/* {loading && hasMore && (
           <div>
             <Spin size='large' />
           </div>
-        )}
+        )} */}
       </List>
     </InfiniteScroll>
   );

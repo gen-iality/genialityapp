@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 const TopBanner = ({ event, currentActivity }) => {
   if (!event) return null;
-  console.log('event', event);
   let styles = event && event.styles ? event.styles : {};
   let bgImage = 'https://bulma.io/images/placeholders/1280x960.png';
   bgImage = styles.banner_image ? styles.banner_image : bgImage;

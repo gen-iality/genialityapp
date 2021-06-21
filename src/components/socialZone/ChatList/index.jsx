@@ -21,8 +21,6 @@ const ChatList = (props) => {
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
 
-  console.log('chatlist', props);
-
   const onFinish = (values) => {
     //alert(values);
     props.setCurrentUser(values);
@@ -41,7 +39,7 @@ const ChatList = (props) => {
       props.totalNewMessages > 0;
   }, [props.datamsjlast, props.totalNewMessages]);
 
-  let [currentab, setcurrentab] = useState(props.chattab);
+  let [currentab, setcurrentab] = useState('chat1');
 
   useEffect(() => {
     setcurrentab(props.chattab);
@@ -89,7 +87,7 @@ const ChatList = (props) => {
   return (
     <Tabs activeKey={currentab} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
-        <TabPane tab='Público' key='chat1'>
+        <TabPane tab={<div style={{ color: cEvent.value.styles.textMenu }}>Público</div>} key='chat1'>
           <iframe
             title='chatevius'
             className='ChatEviusLan'
@@ -112,12 +110,19 @@ const ChatList = (props) => {
           tab={
             <>
               {props.totalNewMessages !== undefined && props.totalNewMessages > 0 && (
-                <Badge size='small' style={{ minWidth: '10px', height: '10px', padding: '0px' }} count={' '}>
-                  Privados{props.currentChat ? ' (ver todos)' : ''}
+                <Badge
+                  size='small'
+                  style={{ minWidth: '10px', height: '10px', padding: '0px', color: cEvent.value.styles.textMenu }}
+                  count={' '}>
+                  <div style={{ color: cEvent.value.styles.textMenu }}>
+                    Privados{props.currentChat ? ' (ver todos)' : ''}
+                  </div>
                 </Badge>
               )}
               {props.totalNewMessages !== undefined && props.totalNewMessages == 0 && (
-                <div>Privados{props.currentChat ? ' (ver todos)' : ''}</div>
+                <div style={{ color: cEvent.value.styles.textMenu }}>
+                  Privados{props.currentChat ? ' (ver todos)' : ''}
+                </div>
               )}
             </>
           }
@@ -150,7 +155,9 @@ const ChatList = (props) => {
                       </Tooltip>
                     </a>,
                   ]}>
-                  <Typography.Text mark></Typography.Text> {item.name ? item.name : item.names || '----'}
+                  <div style={{ color: cEvent.value.styles.textMenu }}>
+                    {item.name ? item.name : item.names || '----'}
+                  </div>
                 </List.Item>
               )}
             />

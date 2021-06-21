@@ -14,7 +14,7 @@ const MenuRigth = (props) => {
             <ArrowLeftOutlined
               style={{
                 fontSize: '25px',
-                color: props.event.styles.textMenu,
+                color: props.cEvent.styles.textMenu,
               }}
             />
           </>
@@ -31,15 +31,17 @@ const MenuRigth = (props) => {
                 <CommentOutlined
                   style={{
                     fontSize: '31px',
-                    color: props.event.styles.textMenu,
+                    color: props.cEvent.styles.textMenu,
                   }}
                 />
               </Badge>
             </>
           }
           style={{ marginTop: '12px', marginBottom: '22px' }}
-          // onClick={() => props.toggleCollapsed(1)}
-        ></Menu.Item>
+          onClick={() => {
+            props.handleCollapsed();
+            props.settabselected('1');
+          }}></Menu.Item>
       )}
 
       {/*bloqueado temporalmente mientras se agrega este control de manera global y no a una actividad*/}
@@ -50,12 +52,14 @@ const MenuRigth = (props) => {
             <TeamOutlined
               style={{
                 fontSize: '31px',
-                color: props.event.styles.textMenu,
+                color: props.cEvent.styles.textMenu,
               }}
             />
           }
-          // onClick={() => props.toggleCollapsed(2)}
-        ></Menu.Item>
+          onClick={() => {
+            props.handleCollapsed();
+            props.settabselected('2');
+          }}></Menu.Item>
       )}
       {props.currentActivity !== null && props.tabs && (props.tabs.surveys === 'true' || props.tabs.surveys === true) && (
         <Menu.Item
@@ -65,7 +69,7 @@ const MenuRigth = (props) => {
               <PieChartOutlined
                 style={{
                   fontSize: '31px',
-                  color: props.event.styles.textMenu,
+                  color: props.cEvent.styles.textMenu,
                 }}
               />
             </Badge>
