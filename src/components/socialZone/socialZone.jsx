@@ -303,7 +303,7 @@ let SocialZone = function(props) {
                   onClick={() => setchattab('chat1')}
                   size='small'
                   style={{ minWidth: '10px', height: '10px', padding: '0px' }}
-                  count={props.totalMessages}>
+                  count={' '}>
                   Chats
                 </Badge>
               )}

@@ -8,12 +8,13 @@ const MenuTabletsSocialZone = (props) => {
 
   return (
     <>
-      <div className='chat-evius_mobile'>
+      <div className='chat-evius_mobile  animate__animated animate__pulse animate__slower animate__infinite'>
         <Button
+          style={{ backgroundColor: props.cEvent.styles.toolbarDefaultBg }}
           shape='circle'
           icon={
             <Badge count={props.totalNewMessages}>
-              <MessageOutlined style={{ fontSize: '20px' }} />
+              <MessageOutlined style={{ fontSize: '20px', color: props.cEvent.styles.textMenu }} />
             </Badge>
           }
           size='large'
