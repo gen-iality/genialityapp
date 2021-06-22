@@ -67,13 +67,14 @@ let SocialZone = function(props) {
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
-    let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
+    let newId = generateUniqueIdFromOtherIds(props.cUser._id, idOtherUser);
     let data = {};
 
+    if (!props.cUser._id) return;
     //agregamos una referencia al chat para el usuario actual
     data = { id: newId, name: otherUserName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
     firestore
-      .doc('eventchats/' + props.cEvent._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
+      .doc('eventchats/' + props.cEvent._id + '/userchats/' + props.cUser._id + '/' + 'chats/' + newId)
       .set(data, { merge: true });
 
     //agregamos una referencia al chat para el otro usuario del chat

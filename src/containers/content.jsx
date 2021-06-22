@@ -8,6 +8,7 @@ import WithFooter from '../components/withFooter';
 
 import { CurrentUserEventProvider } from '../Context/eventUserContext';
 import { CurrentEventProvider, CurrentEventContext } from '../Context/eventContext';
+import { CurrentUserProvider } from '../Context/userContext';
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -30,15 +31,16 @@ const socialZone = asyncComponent(() => import('../components/socialZone/socialZ
 const AppointmentAccept = asyncComponent(() => import('../components/networking/appointmentAccept'));
 const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
 const ContentContainer = () => {
-  //this.props.history.index = 0;
-  console.log('RENDER');
-
   return (
     <main className='main'>
       <Switch>
         <Route path='/landing/:event_id'>
           <CurrentEventProvider>
-            <Landing />
+            <CurrentUserEventProvider>
+              <CurrentUserProvider>
+                <Landing />
+              </CurrentUserProvider>
+            </CurrentUserEventProvider>
           </CurrentEventProvider>
         </Route>
 

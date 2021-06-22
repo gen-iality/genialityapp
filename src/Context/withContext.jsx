@@ -9,9 +9,9 @@ export default function WithEviusContext(Component) {
       <CurrentEventContext.Consumer>
         {(event) => (
           <CurrentUserContext.Consumer>
-            {(user) => (
+            {(usercurrent) => (
               <CurrentEventUserContext.Consumer>
-                {(eventUser) => <Component cEvent={event} cUser={user} cUserEvent={eventUser} {...props} />}
+                {(eventuser) => <Component cEvent={event} cUser={usercurrent} cEventUser={eventuser} {...props} />}
               </CurrentEventUserContext.Consumer>
             )}
           </CurrentUserContext.Consumer>

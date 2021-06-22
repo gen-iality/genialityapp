@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
+import { UseUserEvent } from '../../../Context/eventUserContext';
 
 /** ant design */
 import { Layout, Spin } from 'antd';
@@ -28,6 +29,7 @@ const iniitalstatetabs = {
 const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
+  let cEventUser = UseUserEvent();
 
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
   let [totalNewMessages, settotalnewmessages] = useState(0);
@@ -69,21 +71,27 @@ const Landing = (props) => {
 
   //METODO PARA SETEAR NEW MESSAGE
   const notNewMessage = () => {
-    console.log('se ejecuta el borrar mensajes');
     settotalnewmessages(0);
   };
 
-  if (cEventContext.status === 'LOADING') return <Spin size='small' />;
+  if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
 
+  console.log('currenactivity', currentActivity);
   return (
-    <Content>
+    <>
       <Layout className='site-layout'>
         <EventSectionsInnerMenu event={cEventContext.value} />
         <MenuTablets event={cEventContext.value} />
         <Layout className='site-layout'>
           <Content className='site-layout-background'>
             <TopBanner event={cEventContext.value} currentActivity={currentActivity} />
-            <EventSectionRoutes event={cEventContext.value} />
+            <EventSectionRoutes
+              cEvent={cEventContext.value}
+              currentUser={cUser}
+              generaltabs={generaltabs}
+              cEventUser={cEventUser.value}
+              currentActivity={currentActivity}
+            />
           </Content>
         </Layout>
         <EventSectionMenuRigth
@@ -107,7 +115,7 @@ const Landing = (props) => {
           settabselected={settabselected}
         />
       </Layout>
-    </Content>
+    </>
   );
 };
 

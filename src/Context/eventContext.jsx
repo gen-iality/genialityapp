@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { EventsApi } from '../helpers/request';
-import { GetIdEvent } from '../helpers/utils';
-import eventLanding from '../components/events/eventLanding';
 
 export const CurrentEventContext = React.createContext();
 
@@ -24,12 +22,6 @@ export function CurrentEventProvider({ children }) {
     }
     fetchEvent();
   }, [event_id]);
-
-  // const value = React.useMemo(() => {
-  //   return {
-  //     ...eventContext
-  //   };
-  // }, [eventContext]);
 
   return <CurrentEventContext.Provider value={eventContext}>{children}</CurrentEventContext.Provider>;
 }

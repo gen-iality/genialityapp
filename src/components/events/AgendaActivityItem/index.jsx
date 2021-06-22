@@ -22,12 +22,15 @@ const EnVivoSvg = () => (
 const { gotoActivity } = StageActions;
 
 function AgendaActivityItem(props) {
+  console.log('propsactividad', props);
+
   const [meetingState, setMeetingState] = useState(null);
   const EnvivoIcon = (props) => <Icon component={EnVivoSvg} {...props} />;
   const timeZone = Moment.tz.guess();
   let { item, event_image, registerStatus } = props;
 
   useEffect(() => {
+    console.log('propsactividad', props);
     const listeningStateMeetingRoom = async () => {
       await firestore
         .collection('languageState')

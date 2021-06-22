@@ -80,23 +80,24 @@ class Agenda extends Component {
   async componentDidMount() {
     //Se carga esta funcion para cargar los datos
 
+    console.log('misprops', this.props);
     this.setState({ loading: true });
     await this.fetchAgenda();
     this.setState({ loading: false });
 
     this.setState({
       show_inscription:
-        this.props.cEvent.styles && this.props.cEvent.styles.show_inscription
-          ? this.props.cEvent.styles.show_inscription
+        this.props.cEvent.value.styles && this.props.cEvent.value.styles.show_inscription
+          ? this.props.cEvent.value.styles.show_inscription
           : false,
       hideBtnDetailAgenda:
-        this.props.cEvent.styles && this.props.cEvent.styles.hideBtnDetailAgenda
-          ? this.props.cEvent.styles.hideBtnDetailAgenda
+        this.props.cEvent.value.styles && this.props.cEvent.value.styles.hideBtnDetailAgenda
+          ? this.props.cEvent.value.styles.hideBtnDetailAgenda
           : true,
     });
 
-    let surveysData = await SurveysApi.getAll(this.props.cEvent._id);
-    let documentsData = await DocumentsApi.getAll(this.props.cEvent._id);
+    let surveysData = await SurveysApi.getAll(this.props.cEvent.value._id);
+    let documentsData = await DocumentsApi.getAll(this.props.cEvent.value._id);
 
     if (surveysData.data.length >= 1) {
       this.setState({ survey: surveysData.data });
@@ -106,7 +107,7 @@ class Agenda extends Component {
       this.setState({ documents: documentsData.data });
     }
 
-    this.getAgendaUser();
+    // this.getAgendaUser();
   }
 
   /** extraemos los días en los que pasan actividades */
@@ -133,11 +134,11 @@ class Agenda extends Component {
     //Cargamos solamente los espacios virtuales de la agenda
 
     //Si aún no ha cargado el evento no podemos hacer nada más
-    if (!this.eventContext) return;
+    if (!this.props.cEvent.status === 'LOADED') return;
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     const filtered = this.filterByDay(this.state.days[0], this.state.list);
-    this.setState({ data, filtered, toShow: filtered });
+    // this.setState({ data, filtered, toShow: filtered });
   }
 
   async listeningStateMeetingRoom(list) {
@@ -227,13 +228,13 @@ class Agenda extends Component {
           Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
           Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY')
       );
-    this.setState({ listDay: list });
+    // this.setState({ listDay: list });
 
-    for (let i = 0; list.length > i; i++) {
-      list[i].hosts.sort((a, b) => {
-        return a.order - b.order;
-      });
-    }
+    // for (let i = 0; list.length > i; i++) {
+    //   list[i].hosts.sort((a, b) => {
+    //     return a.order - b.order;
+    //   });
+    // }
 
     //Se mapea la lista para poder retornar los datos ya filtrados
     list.map((item) => {
@@ -362,17 +363,6 @@ class Agenda extends Component {
       .join(' ');
   }
 
-  async getAgendaUser() {
-    return;
-    // const { event } = this.props;
-    // try {
-    //   const infoUserAgenda = await Activity.GetUserActivity(event._id, this.props.cUser._id);
-    //   this.setState({ userAgenda: infoUserAgenda.data });
-    // } catch (e) {
-    //   console.error(e);
-    // }
-  }
-
   checkInscriptionStatus(activityId) {
     const { userAgenda } = this.state;
     if (!userAgenda) return false;
@@ -476,12 +466,12 @@ class Agenda extends Component {
                 Documents={documents}
                 Surveys={survey}
                 toggleConference={toggleConference}
-                event_image={this.props.event.styles.event_image}
+                event_image={this.props.cEvent.value.styles.event_image}
                 gotoActivity={this.gotoActivity}
                 registerInActivity={this.registerInActivity}
                 registerStatus={isRegistered}
-                eventId={this.props.eventId}
-                event={this.props.event}
+                eventId={this.props.cEvent.value._id}
+                event={this.props.cEvent.value}
                 btnDetailAgenda={hideBtnDetailAgenda}
                 show_inscription={show_inscription}
                 handleOpenModal={this.handleOpenModal}
@@ -497,12 +487,12 @@ class Agenda extends Component {
               Documents={documents}
               Surveys={survey}
               toggleConference={toggleConference}
-              event_image={this.props.event.styles.event_image}
+              event_image={this.props.cEvent.value.styles.event_image}
               gotoActivity={this.gotoActivity}
               registerInActivity={this.registerInActivity}
               registerStatus={isRegistered}
-              eventId={this.props.eventId}
-              event={this.props.event}
+              eventId={this.props.cEvent.value._id}
+              event={this.props.cEvent.value}
               btnDetailAgenda={hideBtnDetailAgenda}
               show_inscription={show_inscription}
               handleOpenModal={this.handleOpenModal}
@@ -522,6 +512,7 @@ class Agenda extends Component {
   render() {
     const { toggleConference, event, currentActivity } = this.props;
     const { days, loading, survey } = this.state;
+    console.log('currentActivity', currentActivity);
 
     {
       Moment.locale(window.navigator.language);
@@ -529,10 +520,10 @@ class Agenda extends Component {
 
     return (
       <div>
+        <h1>AGENDA PAPU</h1>
         <Modal
           visible={this.state.visibleModal}
           title='Información'
-          // onOk={this.handleOk}
           onCancel={this.handleCancelModal}
           onClose={this.handleCancelModal}
           footer={[
@@ -552,7 +543,6 @@ class Agenda extends Component {
         <Modal
           visible={this.state.visibleModalRestricted}
           title='Información'
-          // onOk={this.handleOk}
           onCancel={this.handleCancelModalRestricted}
           onClose={this.handleCancelModalRestricted}
           footer={[
@@ -575,7 +565,6 @@ class Agenda extends Component {
         <Modal
           visible={this.state.visibleModalRegisteredDevices}
           title='Información'
-          // onOk={this.handleOk}
           onCancel={this.handleCloseModalRestrictedDevices}
           onClose={this.handleCloseModalRestrictedDevices}
           footer={[
@@ -610,7 +599,6 @@ class Agenda extends Component {
                 showIcon
               />
             )}
-            {/* <Alert message="" type="info" /> */}
             <p>Ingresa el código de pago</p>
             <Input value={this.state.discountCode} onChange={(e) => this.setState({ discountCode: e.target.value })} />
           </div>
@@ -624,15 +612,15 @@ class Agenda extends Component {
             matchUrl={this.props.matchUrl}
             survey={survey}
             activity={this.props.activity}
-            userEntered={this.props.userEntered}
+            userEntered={this.props.cUser}
             currentActivity={currentActivity}
-            // image_event={this.props.event.styles.event_image}s
+            image_event={this.props.cEvent.value.styles.event_image}
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
-            currentUser={this.props.currentUser}
+            currentUser={this.props.cUser}
             collapsed={this.props.collapsed}
             toggleCollapsed={this.props.toggleCollapsed}
-            event={event}
+            event={this.props.cEvent.value}
             showSection={this.props.showSection}
             zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
             eventSurveys={this.props.eventSurveys}

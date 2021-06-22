@@ -4,26 +4,16 @@ import { getCurrentUser } from '../helpers/request';
 
 export const CurrentUserContext = React.createContext();
 
+let initialContextState = { status: 'LOADING', value: null };
+
 export function CurrentUserProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState(initialContextState);
 
-  useEffect(() => {
-    async function getUser() {
-      let usercurrent = await getCurrentUser();
-      console.log('usercurrent', usercurrent);
-      setCurrentUser(usercurrent);
-    }
-
-    getUser();
+  useEffect(async () => {
+    setCurrentUser(await getCurrentUser());
   }, []);
 
-  const value = React.useMemo(() => {
-    return {
-      ...currentUser,
-    };
-  }, [currentUser]);
-
-  return <CurrentUserContext.Provider value={value}>{children}</CurrentUserContext.Provider>;
+  return <CurrentUserContext.Provider value={currentUser}>{children}</CurrentUserContext.Provider>;
 }
 
 export function UseCurrentUser() {
