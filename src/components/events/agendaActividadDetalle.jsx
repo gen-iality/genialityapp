@@ -20,11 +20,6 @@ import SurveyDetail from '../events/surveys/surveyDetail';
 import { listenSurveysData } from '../events/surveys/services';
 import { eventUserUtils } from '../../helpers/helperEventUser';
 
-//context
-import { UseUserEvent } from '../../Context/eventUserContext';
-import { UseEventContext } from '../../Context/eventContext';
-import { UseCurrentUser } from '../../Context/userContext';
-
 const { TabPane } = Tabs;
 
 const { gotoActivity, setMainStage, setTabs } = StageActions;
@@ -40,11 +35,6 @@ const tailLayout = {
 };
 
 let AgendaActividadDetalle = (props) => {
-  //context user
-  let userEventContext = UseUserEvent();
-  let eventContext = UseEventContext();
-  let userCurrentContext = UseCurrentUser();
-
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
   let [event, setEvent] = useState(false);
   let [idSpeaker, setIdSpeaker] = useState(false);
@@ -91,18 +81,18 @@ let AgendaActividadDetalle = (props) => {
 
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
-      if (userEventContext) {
-        TicketsApi.checkInAttendee(eventContext._id, userEventContext._id);
-        Activity.checkInAttendeeActivity(eventContext._id, props.currentActivity._id, userEventContext.account_id);
+      if (props.cUser) {
+        TicketsApi.checkInAttendee(props.cEvent._id, props.cUser._id);
+        Activity.checkInAttendeeActivity(props.cEvent._id, props.currentActivity._id, props.cUser.account_id);
       }
     } catch (e) {
       console.error('fallo el checkin:', e);
     }
 
-    if (userCurrentContext && userCurrentContext?.displayName && userCurrentContext?.email) {
+    if (props.cUser && props.cUser?.displayName && props.cUser?.email) {
       let innerName =
-        userEventContext && userEventContext.properties && userEventContext.properties.casa
-          ? '(' + userEventContext.properties.casa + ')' + userCurrentContext.displayName
+        props.cUser && props.cUser.properties && props.cUser.properties.casa
+          ? '(' + props.cUser.properties.casa + ')' + props.cUser.displayName
           : props.userInfo.displayName;
       setNames(innerName);
       setEmail(props.userInfo.email);
@@ -111,7 +101,7 @@ let AgendaActividadDetalle = (props) => {
     //Escuchando el estado de la actividad
 
     (async function() {
-      await listeningStateMeetingRoom(eventContext._id, props.currentActivity._id);
+      await listeningStateMeetingRoom(props.cEvent._id, props.currentActivity._id);
     })();
 
     // Desmontado del componente
@@ -127,7 +117,7 @@ let AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     (async function() {
-      await listeningStateMeetingRoom(eventContext._id, props.currentActivity._id);
+      await listeningStateMeetingRoom(props.cEvent._id, props.currentActivity._id);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentActivity._id]);
@@ -142,7 +132,7 @@ let AgendaActividadDetalle = (props) => {
       if (meeting_id === null || platform === null) return false;
       firestore
         .collection('events')
-        .doc(eventContext._id)
+        .doc(props.cEvent._id)
         .collection('activities')
         .where('meeting_id', '==', meeting_id)
         .where('platform', '==', platform)
@@ -162,7 +152,7 @@ let AgendaActividadDetalle = (props) => {
     (async () => {
       await listeningSpaceRoom();
     })();
-  }, [meeting_id, platform, eventContext]);
+  }, [meeting_id, platform, props.cEvent]);
 
   useEffect(() => {
     const openActivities = activitiesSpace.filter((activity) => activity.habilitar_ingreso === 'open_meeting_room');
@@ -219,7 +209,7 @@ let AgendaActividadDetalle = (props) => {
     //
     firestore
       .collection('events')
-      .doc(eventContext._id)
+      .doc(props.cEvent._id)
       .collection('activities')
       .doc(activity_id)
       .onSnapshot((infoActivity) => {
@@ -237,7 +227,7 @@ let AgendaActividadDetalle = (props) => {
     (async () => {
       //Id del evento
 
-      const event = await EventsApi.landingEvent(eventContext._id);
+      const event = await EventsApi.landingEvent(props.cEvent._id);
       setEvent(event);
 
       function orderHost() {
@@ -249,7 +239,7 @@ let AgendaActividadDetalle = (props) => {
       }
       orderHost();
     })();
-  }, [eventContext._id, props.currentActivity]);
+  }, [props.cEvent._id, props.currentActivity]);
 
   async function getSpeakers(idSpeaker) {
     setIdSpeaker(idSpeaker);
@@ -265,7 +255,7 @@ let AgendaActividadDetalle = (props) => {
         `&userName=${props.userInfo.displayName ? props.userInfo.displayName : 'Guest'}` +
         `&email=${props.userInfo.email ? props.userInfo.email : 'emaxxxxxxil@gmail.com'}` +
         `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
-        `&host=${eventUserUtils.isHost(userEventContext, eventContext)}`
+        `&host=${eventUserUtils.isHost(props.cUser, props.cEvent)}`
       );
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
@@ -288,12 +278,12 @@ let AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     if (props.currentActivity !== null) {
-      listenSurveysData(eventContext, props.currentActivity, userCurrentContext, (data) => {
+      listenSurveysData(props.cEvent, props.currentActivity, props.cUser, (data) => {
         props.setHasOpenSurveys(data.hasOpenSurveys);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventContext, props.currentActivity]);
+  }, [props.cEvent, props.currentActivity]);
 
   {
     Moment.locale(window.navigator.language);
