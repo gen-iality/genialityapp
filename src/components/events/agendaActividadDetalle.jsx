@@ -35,6 +35,7 @@ const tailLayout = {
 };
 
 let AgendaActividadDetalle = (props) => {
+  console.log('propsdetalle', props);
   // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
   let [event, setEvent] = useState(false);
   let [idSpeaker, setIdSpeaker] = useState(false);
@@ -48,7 +49,6 @@ let AgendaActividadDetalle = (props) => {
   const [email, setEmail] = useState(null);
 
   const configfast = useState({});
-  const { eventInfo } = props;
 
   const { Title } = Typography;
 
@@ -510,8 +510,8 @@ let AgendaActividadDetalle = (props) => {
                       className='activity_image'
                       style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                       src={
-                        eventInfo.styles.banner_image
-                          ? eventInfo.styles.banner_image
+                        props.cEvent.styles.banner_image
+                          ? props.cEvent.styles.banner_image
                           : currentActivity.image
                           ? currentActivity.image
                           : image_event
@@ -530,8 +530,8 @@ let AgendaActividadDetalle = (props) => {
                       className='activity_image'
                       style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                       src={
-                        eventInfo.styles.banner_image
-                          ? eventInfo.styles.banner_image
+                        props.cEvent.styles.banner_image
+                          ? props.cEvent.styles.banner_image
                           : currentActivity.image
                           ? currentActivity.image
                           : image_event
@@ -570,8 +570,8 @@ let AgendaActividadDetalle = (props) => {
                           className='activity_image'
                           style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                           src={
-                            eventInfo.styles.banner_image
-                              ? eventInfo.styles.banner_image
+                            props.cEvent.styles.banner_image
+                              ? props.cEvent.styles.banner_image
                               : currentActivity.image
                               ? currentActivity.image
                               : image_event
@@ -628,7 +628,7 @@ let AgendaActividadDetalle = (props) => {
                   key='description'>
                   <div dangerouslySetInnerHTML={{ __html: currentActivity.description }}></div>
                   <br />
-                  {currentActivity.hosts.length === 0 || props.eventInfo._id === '601470367711a513cc7061c2' ? (
+                  {currentActivity.hosts.length === 0 || props.cEvent._id === '601470367711a513cc7061c2' ? (
                     <div></div>
                   ) : (
                     <div className='List-conferencistas'>
@@ -746,7 +746,7 @@ let AgendaActividadDetalle = (props) => {
           <Row style={{ paddingLeft: '10px' }}>
             <PageHeader
               onBack={() => {
-                props.showSection('agenda');
+                props.gotoActivity(null);
               }}
               subTitle={intl.formatMessage({ id: 'button.back.agenda' })}
             />
@@ -760,7 +760,6 @@ let AgendaActividadDetalle = (props) => {
 const mapStateToProps = (state) => ({
   option: state.stage.data.mainStage,
   userInfo: state.user.data,
-  eventInfo: state.event.data,
   currentActivity: state.stage.data.currentActivity,
   currentSurvey: state.survey.data.currentSurvey,
   hasOpenSurveys: state.survey.data.hasOpenSurveys,

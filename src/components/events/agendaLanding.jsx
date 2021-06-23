@@ -522,7 +522,6 @@ class Agenda extends Component {
             <AgendaActivityItem
               hasDate={
                 this.props.cEvent.value.styles.hideDatesAgendaItem == 'true' ||
-                this.props.cEvent.value.styles.hideDatesAgendaItem == true ||
                 this.props.cEvent.value.styles.hideDatesAgendaItem == undefined
                   ? true
                   : false
