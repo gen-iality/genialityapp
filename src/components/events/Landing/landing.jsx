@@ -91,6 +91,7 @@ const Landing = (props) => {
               generaltabs={generaltabs}
               cEventUser={cEventUser.value}
               currentActivity={currentActivity}
+              cUser={cUser}
             />
           </Content>
         </Layout>

@@ -9,6 +9,9 @@ import SurveyForm from '../surveys';
 import FaqsForm from '../../faqsLanding';
 import Partners from '../Partners';
 import Agenda from '../agendaLanding';
+import EventHome from '../eventHome';
+import TicketsForm from '../../tickets/formTicket';
+import WallForm from '../../wall/index';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -16,24 +19,45 @@ const EventSectionRoutes = (props) => {
   return (
     <Switch>
       <Route path={`${path}/documents`}>
-        <DocumentsForm event={event} />
+        <DocumentsForm event={props.cEvent} />
       </Route>
       <Route path={`${path}/speakers`}>
-        <SpeakersForm event={event} />
+        <SpeakersForm eventId={props.cEvent._id} event={props.cEvent} />
       </Route>
       <Route path={`${path}/surveys`}>
-        <SurveyForm event={event} />
+        <SurveyForm event={props.cEvent} />
       </Route>
       <Route path={`${path}/partners`}>
-        <Partners event={event} />
+        <Partners event={props.cEvent} />
       </Route>
       <Route path={`${path}/faqs`}>
-        <FaqsForm event={event} />
+        <FaqsForm event={props.cEvent} />
       </Route>
 
       <Route path={`${path}/evento`}>
-        <h1>EVENTO</h1>
-        {/* <CertificadoLanding event={event} /> */}
+        <EventHome cEvent={props.cEvent} cUser={props.cUser} cEventUser={props.cEventUser} />
+      </Route>
+
+      <Route path={`${path}/wall`}>
+        <WallForm event={props.cEvent} eventId={props.cEvent._id} currentUser={props.cUser} />
+      </Route>
+
+      <Route path={`${path}/tickets`}>
+        <>
+          <div className='columns is-centered'>
+            <TicketsForm
+              stages={props.cEvent.event_stages}
+              experience={props.cEvent.is_experience}
+              fees={props.cEvent.fees}
+              tickets={props.cEvent.tickets}
+              eventId={props.cEvent._id}
+              event={props.cEvent}
+              seatsConfig={props.cEvent.seats_configuration}
+              // handleModal={this.handleModal}
+              // showSection={this.showSection}
+            />
+          </div>
+        </>
       </Route>
 
       <Route path={`${path}/agenda`}>
