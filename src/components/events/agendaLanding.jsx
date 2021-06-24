@@ -564,6 +564,8 @@ class Agenda extends Component {
       Moment.locale(window.navigator.language);
     }
 
+    console.log('Idioma', this.props.cEvent.value.styles);
+
     return (
       <div>
         <Modal
@@ -727,13 +729,25 @@ class Agenda extends Component {
                   (this.props.cEvent.value.styles.hideDatesAgenda === 'true' ||
                     this.props.cEvent.value.styles.hideDatesAgenda === true ||
                     this.props.cEvent.value.styles.hideDatesAgenda == undefined) && (
-                    <Tabs defaultActiveKey='0' size='large'>
+                    <Tabs
+                      defaultActiveKey='0'
+                      size='large'
+                      tabBarStyle={{
+                        backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                        borderRadius: '50px',
+                        paddingLeft: '25px',
+                      }}>
                       {days.map((day, index) => (
                         <TabPane
                           style={{ paddingLeft: '25px', paddingRight: '25px' }}
                           tab={
                             <span
-                              style={{ fontWeight: 'bolder', color: this.props.cEvent.value.styles.color_tab_agenda }}>
+                              style={{
+                                fontWeight: 'bolder',
+                                color: this.props.cEvent.value.styles.textMenu,
+                                paddingLeft: '8px',
+                                paddingRight: '8px',
+                              }}>
                               {Moment(day)
                                 .format('LL')
                                 .toUpperCase()}
