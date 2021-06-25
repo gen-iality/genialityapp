@@ -79,7 +79,7 @@ class Agenda extends Component {
   async componentDidMount() {
     //Se carga esta funcion para cargar los datos
     console.log('DID MOUNT', this.props.cEvent.value);
-    console.log(this.props)
+   
     console.log(this.props.cEvent.value.styles.hideDatesAgenda);
     console.log(this.props.cEvent.value);
     this.setState({ loading: true });
@@ -212,13 +212,13 @@ class Agenda extends Component {
 
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
+   
     const { data } = await AgendaApi.byEvent(
       this.props.cEvent.value._id,
       this.props.cEvent.value._id === '5f99a20378f48e50a571e3b6'
         ? `?orderBy=[{"field":"datetime_start","order":"desc"}]`
         : null
-    );
-
+    );  
     //se consulta la api de espacios para
     let space = await SpacesApi.byEvent(this.props.cEvent.value._id);
 
@@ -695,8 +695,8 @@ class Agenda extends Component {
             <div className='columns is-centered'>
               <div className='container-calendar is-three-fifths'>
                 {/* ACTIVIDADES SIN AGRUPAR */}
-                {this.props.cEvent &&
-                  this.props.cEvent.styles &&
+                {this.props.cEvent.value &&
+                  this.props.cEvent.value.styles &&
                   (this.props.cEvent.value.styles.hideDatesAgenda === 'false' ||
                     this.props.cEvent.value.styles.hideDatesAgenda === false) &&
                   days.map((day) => (
