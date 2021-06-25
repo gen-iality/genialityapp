@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "private": true,
   "dependencies": {
+    "@2fd/ant-design-icons": "^2.4.1",
     "@ant-design/icons": "^4.5.0",
     "@babel/helper-call-delegate": "^7.10.3",
     "@craco/craco": "^5.6.4",
