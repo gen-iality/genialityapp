@@ -79,6 +79,7 @@ class Agenda extends Component {
   async componentDidMount() {
     //Se carga esta funcion para cargar los datos
     console.log('DID MOUNT', this.props.cEvent.value);
+    console.log(this.props)
     console.log(this.props.cEvent.value.styles.hideDatesAgenda);
     console.log(this.props.cEvent.value);
     this.setState({ loading: true });
