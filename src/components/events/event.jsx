@@ -28,6 +28,7 @@ import CheckAgenda from '../agenda/checkIn';
 import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
 import ReportNetworking from '../networking/report';
+
 //import Test from "../events/testButton"
 import { Layout } from 'antd';
 
@@ -56,6 +57,7 @@ const ConfigurationApp = asyncComponent(() => import('../App/configuration'));
 const NotificationsApp = asyncComponent(() => import('../pushNotifications/index'));
 const Wall = asyncComponent(() => import('../wall/index'));
 const NewsApp = asyncComponent(() => import('../news/news'));
+
 
 const FAQS = asyncComponent(() => import('../faqs'));
 const EventsTicket = asyncComponent(() => import('../ticketsEvent/index'));
@@ -288,7 +290,7 @@ class Event extends Component {
                 render={() => <NotificationsApp eventId={this.state.event._id} />}
               />
               <Route path={`${match.url}/news`} render={() => <NewsApp eventId={this.state.event._id} />} />
-              <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} />} />
+              <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} />} />              
               <Route
                 path={`${match.url}/ticketsEvent`}
                 render={() => <EventsTicket eventId={this.state.event._id} />}

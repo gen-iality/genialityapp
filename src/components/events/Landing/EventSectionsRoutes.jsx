@@ -12,6 +12,7 @@ import Agenda from '../agendaLanding';
 import EventHome from '../eventHome';
 import TicketsForm from '../../tickets/formTicket';
 import WallForm from '../../wall/index';
+import Ferias from '../ferias/index'
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -41,6 +42,8 @@ const EventSectionRoutes = (props) => {
       <Route path={`${path}/wall`}>
         <WallForm event={props.cEvent} eventId={props.cEvent._id} currentUser={props.cUser} />
       </Route>
+
+      <Route path={`${path}/ferias`} render={() => <Ferias event={props.cEvent} />} />
 
       <Route path={`${path}/tickets`}>
         <>

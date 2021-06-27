@@ -2,8 +2,11 @@ import React from 'react';
 import { Menu, Badge } from 'antd';
 import { CommentOutlined, TeamOutlined, PieChartOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
+import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 
 const MenuRigth = (props) => {
+  const animateIcon = 'animate__animated animate__bounceIn';
+
   return (
     <Menu mode='none' theme='light' style={stylesMenuItems}>
       <Menu.Item
@@ -26,18 +29,19 @@ const MenuRigth = (props) => {
         <Menu.Item
           key='1'
           icon={
-            <>
+            <span>
               <Badge count={props.totalNewMessages}>
                 <CommentOutlined
+                  className={animateIcon}
                   style={{
-                    fontSize: '31px',
+                    fontSize: '30px',
                     color: props.cEvent.styles.textMenu,
                   }}
                 />
               </Badge>
-            </>
+            </span>
           }
-          style={{ marginTop: '12px', marginBottom: '22px' }}
+          style={{ paddingTop: '20px' }}
           onClick={() => {
             props.handleCollapsed();
             props.settabselected('1');
@@ -50,12 +54,14 @@ const MenuRigth = (props) => {
           key='2'
           icon={
             <TeamOutlined
+              className={animateIcon}
               style={{
-                fontSize: '31px',
+                fontSize: '30px',
                 color: props.cEvent.styles.textMenu,
               }}
             />
           }
+          style={{ paddingTop: '20px' }}
           onClick={() => {
             props.handleCollapsed();
             props.settabselected('2');
@@ -65,15 +71,19 @@ const MenuRigth = (props) => {
         <Menu.Item
           key='3'
           icon={
-            <Badge dot={props.hasOpenSurveys}>
-              <PieChartOutlined
-                style={{
-                  fontSize: '31px',
-                  color: props.cEvent.styles.textMenu,
-                }}
-              />
-            </Badge>
+            <span>
+              <Badge dot={props.hasOpenSurveys}>
+                <PieChartOutlined
+                  className={animateIcon}
+                  style={{
+                    fontSize: '30px',
+                    color: props.cEvent.styles.textMenu,
+                  }}
+                />
+              </Badge>
+            </span>
           }
+          style={{ paddingTop: '20px' }}
           // onClick={() => props.toggleCollapsed(3)}
         ></Menu.Item>
       )}
@@ -81,12 +91,15 @@ const MenuRigth = (props) => {
         <Menu.Item
           key='4'
           icon={
-            <img
-              src='https://cdn0.iconfinder.com/data/icons/gaming-console/128/2-512.png'
-              style={{ width: '50px', height: '32px' }}
-              alt='Games'
+            <GamepadVariantOutline
+              className={animateIcon}
+              style={{
+                fontSize: '32px',
+                color: props.cEvent.styles.textMenu,
+              }}
             />
           }
+          style={{ paddingTop: '20px' }}
           onClick={() => {
             // props.setMainStage('game');
             // props.toggleCollapsed(4);

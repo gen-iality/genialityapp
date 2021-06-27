@@ -1,0 +1,442 @@
+ 
+ 
+ // estilos de detalles de ferias
+ .feriasdetail{
+   .title{
+     font-size: 34px;
+     font-weight: 300;
+   }
+   .video{
+     height: 600px;  
+     margin-top: 4%;
+
+   }
+ }
+
+ @media screen and (max-width: $breakpoint-mobile) {
+  .feriasdetail{
+    .title{
+      font-size: 20px;
+    }
+    .video{
+      height: 200px;
+    }
+  }
+ }
+
+@media (min-width: $breakpoint-mobile) and (max-width: $breakpoint-tablet) {
+   
+ }
+
+// estilos de componente Feriainformation
+.feriaInformation{
+  padding-left: 3vw; 
+  padding-right: 3vw;
+  margin-top: 2vw; 
+
+  .row{
+    margin-bottom: 50px;
+    .container-img{
+     text-align: center;
+     .image{
+      border-radius: 5px;
+      border: 8px solid #FFFFFF;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
+      background-color: #FFFFFF;
+     }
+    }
+    .container-information{
+      text-align:start; 
+      margin-left:10px; 
+      height:200px;
+      align-content:center;
+      display:grid;
+      .text{
+        font-size: 40px;
+        font-weight: 600;
+        line-height: 2.25rem;
+        color:black;
+      }
+      .parrafo{
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+  .feriaInformation{
+    margin-top: -115px;
+    .row{
+      .container-information{
+        text-align:center; 
+        align-content: start;
+        .text{
+          font-size: 26px;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: $breakpoint-mobile) and (max-width: $breakpoint-tablet) {
+  
+}
+/////////////////////////////////////////////////
+
+// estilos del component 
+
+.product-company{
+  padding-left: 3vw;
+  padding-right: 3vw;
+  margin-top: 2vw; 
+  
+  .row{
+    margin:2%;
+    margin-top:2%;
+    .product-img{
+     height: 260px;
+    }
+
+    .cuadro-producto{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .producto {
+      width: 200px;
+      height: 200px;
+      border-radius: 8px;
+    } 
+  .producto-informacion{
+      display: grid;
+      align-content: center;
+      height: 100%;
+      margin-left: 20px;
+      margin-right: 20px;
+      text-align: start;
+      .title {
+        font-size: 24px;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 3px;
+      }
+      
+      .etiqueta{
+        font-size: 20px;
+        font-weight: 400;
+        display: block;
+        color: #9e9e9e;
+      }
+      p{
+        font-size: 16px;
+        color: #9e9e9e;
+      }
+    } 
+  }
+
+  
+}
+
+@media screen and (max-width: $breakpoint-mobile){
+  .product-company {
+    padding-left: 0vw;
+    padding-right: 0vw;
+    margin-top: 2vw;
+    .row {
+      margin: 21px;
+      margin-top: 0%;
+      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+      border-radius: 8px 8px 0px 0px;
+      .product-img{
+        height: auto;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+      }
+      .producto {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px 8px 0px 0px;
+      }
+      .producto-informacion{
+        display: grid;
+        align-content: start;
+        height: auto;
+        margin-left: 0px;
+        margin-right: 0px;
+        text-align: center;
+        margin: 20px;
+        margin-top: 5px;
+        .title {
+          font-size: 16px;
+          font-weight: 700;
+          display: block;
+          margin-bottom: 3px;
+        }
+        .etiqueta{
+          font-size: 15px;
+        }
+        p {
+          font-size: 16px;
+          color: #9e9e9e;
+          display: none;
+        }
+      }
+    }
+  } 
+}
+  // estilos del componente contact de ferias
+
+  .contact-company{
+    padding-left: 3vw;
+    padding-right: 3vw;
+    margin-top: 2vw;
+    .boton{
+      display: none;
+    }
+    .container{
+     margin:2%;
+     margin-top:2%;
+    }
+    .col{
+      height: 200px;
+    }
+    .img-contact{
+     width: 100%;
+     height: 100%;
+     display: flex;
+     justify-content: center;
+     align-items: flex-start;
+     img{
+      width: 180px;
+      height: 180px;
+      border-radius: 8px;
+      object-fit: cover;
+     }
+    }
+    .info-contact{
+     display: grid;
+     align-content: start;
+     height: 100%;
+     margin-left: 0px;
+     margin-right: 0px;
+     text-align: start;
+     .name {
+        font-size: 24px;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 3px;
+      }
+      .position{
+        font-size: 20px;
+        font-weight: 400;
+        display: block;
+        color: #9e9e9e;
+      }
+    }
+    .redes-contact{
+        display: grid;
+        align-content: center;
+        height: 180px;
+        padding-left: 35px;
+        margin-right: 0px;
+        text-align: start;
+        /* justify-content: center; */
+        border-left: 2px solid #bdbdbd;
+        .icono{
+            margin-right: 12px;
+        }
+        .tel {
+            font-size: 18px;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 16px;
+            color: #757575;
+         }
+         .email{
+           font-size: 20px;
+           font-weight: 400;
+           display: block;
+           color: #9e9e9e;
+         }
+       }
+  }
+
+  @media screen and (max-width: $breakpoint-mobile){
+    .contact-company{
+      border: 0px solid;
+      width: 268px;
+      padding: 25px;
+      border-radius: 5px;
+      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+      margin: auto;
+      margin-top: 20px;
+      .boton{
+        display: inline;
+      }
+      .info-contact {
+        display: grid;
+        text-align: center;
+        .name {
+          font-size: 18px;
+        }
+        .position {
+          font-size: 16px;
+        }
+      }
+      .col{
+        height: auto;
+       .img-contact{
+        img {
+          width: 125px;
+          height: 125px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      } 
+      }
+      
+      .redes-contact {
+        display: none;
+      }
+    }
+  }
+// estilos del componente de lista de ferias
+  .company-list{
+    padding-left: 3vw;
+    padding-right: 3vw;
+    margin-top: 2vw;
+    .boton{
+      display: none;
+    }
+    .container{
+     margin:2%;
+     margin-top:2%;
+    }
+    .col{
+      height: 200px;
+    }
+    .img-contact{
+     width: 100%;
+     height: 100%;
+     display: flex;
+     justify-content: center;
+     align-items: flex-start;
+     img{
+      width: 200px;
+      height: 200px;
+      border-radius: 4px;
+      object-fit: cover;
+     }
+    }
+    .info-contact{
+     display: grid;
+     align-content: center;
+     height: 100%;
+     margin-left: 0px;
+     margin-right: 0px;
+     text-align: start;
+     line-height: 1;
+     .name {
+        font-size: 18px;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 3px;
+      }
+      .position{
+        font-size: 18px;
+        font-weight: 400;
+        display: block;
+        color: #9e9e9e;
+      }
+      .description {
+        margin-top: 12px;
+        color: #9e9e9e;
+        line-height: 1.4;
+      } 
+    }
+    .redes-contact{
+        display: grid;
+        align-content: center;
+        height: 180px;
+        padding-left: 35px;
+        margin-right: 0px;
+        text-align: start;
+        /* justify-content: center; */
+        border-left: 2px solid #bdbdbd;
+        line-height: 2;
+        .icono{
+            margin-right: 12px;
+        }
+        .tel {
+            font-size: 18px;
+            font-weight: 500;
+            display: block;
+            color: #757575;
+         }
+         .email{
+           font-size: 20px;
+           font-weight: 400;
+           display: block;
+           color: #9e9e9e;
+         }
+         .web{
+          font-size: 20px;
+          font-weight: 400;
+          display: block;
+          color: #9e9e9e;
+        }
+       }
+  }
+  @media screen and (max-width: $breakpoint-mobile){
+    .company-list{
+      border: 0px solid;
+      width: 268px;
+      padding: 0px;
+      border-radius: 5px;
+      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+      margin: auto;
+      margin-top: 20px;
+      padding-left: 0px;
+      padding-right: 0px;
+      .boton{
+        display: inline;
+        margin-bottom: 14px;
+      }
+      .info-contact {
+        display: grid;
+        text-align: center;
+        .name {
+          font-size: 18px;
+        }
+        .position {
+          display: none;
+        }
+        .description{
+          display: none;
+        }
+      }
+      .col{
+        height: auto;
+       .img-contact{
+        img {
+          width: 100%;
+          height: 185px;
+          border-radius: 4px 4px 0px 0px;
+          object-fit: cover;
+        }
+      } 
+      }
+      
+      .redes-contact {
+        display: none;
+      }
+    }
+  }

@@ -132,7 +132,14 @@ class MenuEvent extends Component {
         icon: 'DollarCircleOutlined',
         checked: false,
         permissions: 'public',
-      },
+      },      
+    ferias: {
+      name: 'Ferias',
+      section: 'ferias',
+      icon: 'FundProjectionScreenOutlined',
+      checked: false,
+      permissions: 'public',
+    },
     };
   }
 
