@@ -54,9 +54,10 @@ function SurveyCard(props) {
                   <>
                      {publishedSurveys && publishedSurveys.length > 0 && !loading && (
                         <Card
+                           className='card-agenda-desktop agendaHover efect-scale'
                            style={{
                               borderRadius: '10px',
-                              marginBottom: '5px',
+                              marginBottom: '8px',
                               border: '1px solid',
                               borderColor: '#0000001c',
                            }}>
