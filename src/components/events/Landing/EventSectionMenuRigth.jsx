@@ -8,7 +8,7 @@ const { Sider } = Layout;
 const EventSectionMenuRigth = (props) => {
    const [isCollapsed, setisCollapsed] = useState(true);
    let [optionselected, setOptionselected] = useState(1);
-   console.log('EventSectionMenuRigth==>>', props);
+
    function handleCollapsed() {
       setisCollapsed(!isCollapsed);
    }

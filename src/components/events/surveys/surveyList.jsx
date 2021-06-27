@@ -16,39 +16,60 @@ import SurveyCard from './components/surveyCard';
 
 /** Firebase */
 import { firestore } from '../../../helpers/firebase';
+import { result } from 'lodash-es';
+import { setTimeout } from 'core-js';
 
 const { setMainStage } = StageActions;
 const { setCurrentSurvey, setSurveyVisible, unsetCurrentSurvey } = SurveyActions;
 
 function SurveyList(props) {
-   const [publishedSurveys, setPublishedSurveys] = useState([]);
-   const [eventSurveys, setEventSurveys] = useState([]);
+   const activity = props.activity;
+   const cUser = props.currentUser;
+   const eventId = activity.event_id;
 
-   console.log('SurveyList props ==> ', props);
-   console.log('publishedSurveys ==> ', publishedSurveys);
-   console.log('eventSurveys ==> ', eventSurveys);
+   const [publishedSurveys, setPublishedSurveys] = useState([]);
+   const [loading, setLoading] = useState(false);
+   const [loadingSurveys, setLoadingSurveys] = useState(true);
+   // console.log("10_",publishedSurveys,"==>",loading,"===>>",loadingSurveys)
+   /** Listado total de las encuestas por id del evento */
+   async function surveysListByEvent(eventId, listPublishedSurveysByActivity) {
+      const surveysList = await listenSurveysData(eventId);
+
+      if (surveysList.length !== 0) {
+         listPublishedSurveysByActivity(activity, surveysList, cUser);
+         setLoading(true);
+         setLoadingSurveys(true);
+      }
+   }
+
+   /** Listado de de encuestas por actividad */
+   async function listPublishedSurveysByActivity(activity, eventSurveys, cUser) {
+      const activitySurveysList = await publishedSurveysByActivity(activity, eventSurveys, cUser);
+      if (activitySurveysList.length !== 0) {
+         setPublishedSurveys(activitySurveysList);
+         setLoading(false);
+         setLoadingSurveys(false);
+      }
+   }
+   /** callBack para ejecutar las funciones de listado de encuesta de forma asincrona */
+   function callbackPublichedSurveys(surveysListByEvent, listPublishedSurveysByActivity) {
+      surveysListByEvent(eventId, listPublishedSurveysByActivity);
+   }
 
    useEffect(() => {
-     const eventSurveysList = listenSurveysData(props.activity.event_id).then((result)=>{ return result})
-     console.log("eventSurveysList ===>",eventSurveysList)
-      setEventSurveys(eventSurveys);
-
-      if(eventSurveys){
-        setPublishedSurveys(
-          publishedSurveysByActivity(
-             props.activity,
-             eventSurveys,
-             props.currentUser
-          )
-       );
+      if (eventId && loadingSurveys) {
+         callbackPublichedSurveys(surveysListByEvent, listPublishedSurveysByActivity);
       }
    }, []);
 
-   return <SurveyCard />;
+   return (
+      <>
+         <SurveyCard publishedSurveys={publishedSurveys} loading={loading} loadingSurveys={loadingSurveys} />
+      </>
+   );
 }
 
 const mapStateToProps = (state) => ({
-   event: state.event.data,
    activity: state.stage.data.currentActivity,
    currentUser: state.user.data,
 });

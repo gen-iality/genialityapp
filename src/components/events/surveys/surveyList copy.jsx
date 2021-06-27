@@ -50,17 +50,17 @@ class SurveyList extends Component {
       };
    }
    async componentDidMount() {
-      let { event } = this.props;
+      // let { event } = this.props;
 
       // Método para escuchar todas las encuestas relacionadas con el evento
       //this.filterEventSurveys();
 
       // Verifica si el usuario esta inscrito en el evento para obtener su rol en compoente RootPage para saber si es un speaker
-      let eventUser = await this.getCurrentEvenUser(event._id);
+      // let eventUser = await this.getCurrentEvenUser(event._id);
 
-      this.setState({ eventUser: eventUser });
+      // this.setState({ eventUser: eventUser });
       // this.userVote();
-      this.getItemsMenu();
+      // this.getItemsMenu();
 
       this.setState(
          {
@@ -182,25 +182,25 @@ class SurveyList extends Component {
       }
    };
 
-   getItemsMenu = async () => {
-      let { defaultSurveyLabel } = this.state;
-      const { activity } = this.props;
-      const response = await Actions.getAll(`/api/events/${activity.event_id}`);
-      let surveyLabel = response.itemsMenu.survey || defaultSurveyLabel;
-      this.setState({ surveyLabel });
-   };
+   // getItemsMenu = async () => {
+   //    let { defaultSurveyLabel } = this.state;
+   //    const { activity } = this.props;
+   //    const response = await Actions.getAll(`/api/events/${activity.event_id}`);
+   //    let surveyLabel = response.itemsMenu.survey || defaultSurveyLabel;
+   //    this.setState({ surveyLabel });
+   // };
 
-   getCurrentEvenUser = async (eventId) => {
-      let evius_token = Cookie.get('evius_token');
-      if (!evius_token) return null;
-      let response = await TicketsApi.getByEvent(eventId, evius_token);
-      return response && response.data.length ? response.data[0] : null;
-   };
+   // getCurrentEvenUser = async (eventId) => {
+   //    let evius_token = Cookie.get('evius_token');
+   //    if (!evius_token) return null;
+   //    let response = await TicketsApi.getByEvent(eventId, evius_token);
+   //    return response && response.data.length ? response.data[0] : null;
+   // };
 
-   pluralToSingular = (char, t1, t2) => {
-      if (t1 !== undefined) return `${t1}${t2}`;
-      return '';
-   };
+   // pluralToSingular = (char, t1, t2) => {
+   //    if (t1 !== undefined) return `${t1}${t2}`;
+   //    return '';
+   // };
 
    handleClick = (currentSurvey) => {
       const { activity, setMainStage, setCurrentSurvey, setSurveyVisible } = this.props;

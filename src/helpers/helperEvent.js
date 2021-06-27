@@ -1,23 +1,43 @@
 import { firestore } from './firebase';
 import { EventFieldsApi } from './request';
 
-//METODO PARA OBTENER ENCUESTAS
+// //METODO PARA OBTENER ENCUESTAS
+// export async function listenSurveysData(event_id) {
+//   // if (!event_id) {
+//   //   return [];
+//   // }
+//   let eventSurveys = [];
+//   let $query = firestore.collection('surveys').where('eventId', '==', event_id);
+//   $query.onSnapshot(async (surveySnapShot) => {
+//     if (surveySnapShot.size === 0) {
+//       this.setState({ selectedSurvey: {}, surveyVisible: false, publishedSurveys: [] });
+//       return;
+//     }
+//     surveySnapShot.forEach(function(doc) {
+//       eventSurveys.push({ ...doc.data(), _id: doc.id });
+//     });
+//   });
+//   console.log("10_ listado de surveys en el helper: ", eventSurveys);
+//   return eventSurveys;
+// }
+
+// //METODO PARA OBTENER ENCUESTAS New
 export async function listenSurveysData(event_id) {
-  if (!event_id) {
-    return [];
-  }
-  let eventSurveys = [];
-  let $query = firestore.collection('surveys').where('eventId', '==', event_id);
-  $query.onSnapshot(async (surveySnapShot) => {
-    if (surveySnapShot.size === 0) {
-      this.setState({ selectedSurvey: {}, surveyVisible: false, publishedSurveys: [] });
-      return;
-    }
-    surveySnapShot.forEach(function(doc) {
+  return new Promise((resolve, reject)=>{
+      let query = firestore.collection("surveys").where('eventId', '==', event_id);
+  query.onSnapshot(async(querySnapshot) => {
+    let eventSurveys = [];
+    querySnapshot.forEach((doc) => {
       eventSurveys.push({ ...doc.data(), _id: doc.id });
     });
+    if(eventSurveys.length !== 0){
+      // console.log("10_", eventSurveys)
+      resolve(eventSurveys);
+    }else{
+      reject(eventSurveys)
+    }
   });
-  return eventSurveys;
+  })
 }
 
 export function publishedSurveysByActivity(currentActivity, eventSurveys, currentUser) {
