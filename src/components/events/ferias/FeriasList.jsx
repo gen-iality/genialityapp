@@ -10,8 +10,7 @@ import { useState } from 'react';
 
 const FeriasList = ({event_id, stateferia}) => {
   const [companies, loadingCompanies] = useGetEventCompanies(event_id)
-  const [companiesEvent,setCompaniesEvent]=useState([])
-  console.log("FERIAS LIST")
+  const [companiesEvent,setCompaniesEvent]=useState([])  
   useEffect(()=>{
     if(!loadingCompanies){
       console.log(companies)

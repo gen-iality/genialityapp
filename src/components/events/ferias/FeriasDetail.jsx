@@ -6,16 +6,34 @@ import Product from './product'
 import Contact from './contact'
 import { Route } from 'react-router';
 import { connect } from 'react-redux';
-import {setTopBanner}  from '../../../redux/topBanner/actions'
+import {setTopBanner}  from '../../../redux/topBanner/actions';
+import { useLocation } from "react-router-dom";
+import { getEventCompany } from '../../empresas/services.js';
 
 
 const FeriasDetail = (props) => {
+  const query = new URLSearchParams(useLocation().search);
+  const companyId = query.get('id');
+  const eventId = query.get('eventid');
+  console.log(query)
+  
   useEffect(()=>{
   props.setTopBanner(false)
   return ()=>{
     props.setTopBanner(true)
     };  
   })
+
+  useEffect(()=>{
+   obtenerEmpresa()
+
+  },[])
+
+  const obtenerEmpresa=()=>{
+  
+   
+    //getEventCompany()
+  }
 
   const { TabPane } = Tabs;
   console.log("FERIAS DETAILS")
