@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Button, Card, Tag, Result, Spin, Row, Col } from 'antd';
+import { List, Button, Card, Tag, Result, Row, Col } from 'antd';
 import { MehOutlined } from '@ant-design/icons';
 
 /** Redux */
@@ -12,7 +12,6 @@ const { setCurrentSurvey, setSurveyVisible, unsetCurrentSurvey } = SurveyActions
 
 function SurveyCard(props) {
    const {
-      loading,
       publishedSurveys,
       loadingSurveys,
       activity,
@@ -44,7 +43,7 @@ function SurveyCard(props) {
          bodyStyle={bodyStyle}
          title='Listado de Encuestas'
          headStyle={headStyle}>
-         {publishedSurveys && publishedSurveys.length === 0 && loading ? (
+         {publishedSurveys && publishedSurveys.length === 0 && !loadingSurveys ? (
             <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
          ) : (
             <List
@@ -52,7 +51,7 @@ function SurveyCard(props) {
                loading={loadingSurveys}
                renderItem={(survey) => (
                   <>
-                     {publishedSurveys && publishedSurveys.length > 0 && !loading && (
+                     {publishedSurveys && publishedSurveys.length > 0 && (
                         <Card
                            className='card-agenda-desktop agendaHover efect-scale'
                            style={{
@@ -66,7 +65,7 @@ function SurveyCard(props) {
                                  title={survey.name}
                                  style={{ textAlign: 'left' }}
                                  description={
-                                    !loading && (
+                                    
                                        <Row>
                                           {survey.userHasVoted ? (
                                              <Col>
@@ -88,13 +87,10 @@ function SurveyCard(props) {
                                              </Col>
                                           )}
                                        </Row>
-                                    )
+                                    
                                  }
                               />
-                              {loading ? (
-                                 <Spin />
-                              ) : (
-                                 <>
+                              { <>
                                     <div>
                                        <Button
                                           type={
@@ -110,7 +106,7 @@ function SurveyCard(props) {
                                        </Button>
                                     </div>
                                  </>
-                              )}
+                              }
                            </List.Item>
                         </Card>
                      )}

@@ -1,43 +1,24 @@
 import { firestore } from './firebase';
 import { EventFieldsApi } from './request';
 
-// //METODO PARA OBTENER ENCUESTAS
-// export async function listenSurveysData(event_id) {
-//   // if (!event_id) {
-//   //   return [];
-//   // }
-//   let eventSurveys = [];
-//   let $query = firestore.collection('surveys').where('eventId', '==', event_id);
-//   $query.onSnapshot(async (surveySnapShot) => {
-//     if (surveySnapShot.size === 0) {
-//       this.setState({ selectedSurvey: {}, surveyVisible: false, publishedSurveys: [] });
-//       return;
-//     }
-//     surveySnapShot.forEach(function(doc) {
-//       eventSurveys.push({ ...doc.data(), _id: doc.id });
-//     });
-//   });
-//   console.log("10_ listado de surveys en el helper: ", eventSurveys);
-//   return eventSurveys;
-// }
 
 // //METODO PARA OBTENER ENCUESTAS New
-export async function listenSurveysData(event_id) {
-  return new Promise((resolve, reject)=>{
-      let query = firestore.collection("surveys").where('eventId', '==', event_id);
-  query.onSnapshot(async(querySnapshot) => {
-    let eventSurveys = [];
-    querySnapshot.forEach((doc) => {
-      eventSurveys.push({ ...doc.data(), _id: doc.id });
-    });
-    if(eventSurveys.length !== 0){
-      // console.log("10_", eventSurveys)
-      resolve(eventSurveys);
-    }else{
-      reject(eventSurveys)
-    }
+export function listenSurveysData(event_id, setListOfEventSurveys, setLoadingSurveys, activity, cUser) {
+  firestore.collection("surveys").where("eventId", "==", event_id).where("isPublished","==", "true" )
+  .onSnapshot((querySnapshot) => {
+      let eventSurveys = [];
+      querySnapshot.forEach((doc) => {
+        eventSurveys.push({...doc.data(), _id: doc.id});
+      });
+      const publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser)
+      setListOfEventSurveys((prevSurveyList)=>{
+        //mostrar mediante alerta cuando cambie el estado publicado
+
+        return publishedSurveys
+      })
+
+      setLoadingSurveys(false)
   });
-  })
 }
 
 export function publishedSurveysByActivity(currentActivity, eventSurveys, currentUser) {
