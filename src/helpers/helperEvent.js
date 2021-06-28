@@ -1,24 +1,27 @@
 import { firestore } from './firebase';
 import { EventFieldsApi } from './request';
 
-
 // //METODO PARA OBTENER ENCUESTAS New
 export function listenSurveysData(event_id, setListOfEventSurveys, setLoadingSurveys, activity, cUser) {
-  firestore.collection("surveys").where("eventId", "==", event_id).where("isPublished","==", "true" )
-  .onSnapshot((querySnapshot) => {
+  firestore
+  .collection('surveys')
+  .where('eventId', '==', event_id)
+  .where('isPublished', '==', 'true')
+    .onSnapshot((querySnapshot) => {
       let eventSurveys = [];
       querySnapshot.forEach((doc) => {
-        eventSurveys.push({...doc.data(), _id: doc.id});
+        eventSurveys.push({ ...doc.data(), _id: doc.id });
       });
-      const publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser)
-      setListOfEventSurveys((prevSurveyList)=>{
-        //mostrar mediante alerta cuando cambie el estado publicado
-
-        return publishedSurveys
-      })
-
-      setLoadingSurveys(false)
-  });
+      const publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser);
+console.log('published surveys 10. listensurveysdata',publishedSurveys)
+          
+          setListOfEventSurveys((prevSurveyList) => {
+            //mostrar mediante alerta cuando cambie el estado publicado
+            
+            return publishedSurveys;
+          });
+          setLoadingSurveys(false);
+    });
 }
 
 export function publishedSurveysByActivity(currentActivity, eventSurveys, currentUser) {
@@ -38,7 +41,50 @@ export function publishedSurveysByActivity(currentActivity, eventSurveys, curren
     }
   }
 
-  return publishedSurveys;
+  publishedSurveys.forEach((survey,index,arr) => {
+    let counterDocuments = 0;
+    let filteredSurveys = [];
+    if (!(Object.keys(currentUser).length === 0)) {
+      firestore
+      .collectionGroup('responses')
+      .where('id_survey', '==', survey._id)
+      .where('id_user', '==', currentUser._id)
+      .get()
+      .then((result) => {
+        result.forEach(function(doc) {
+          if (doc.exists) {
+            counterDocuments++;
+          }
+        });
+        
+        if (counterDocuments > 0) {
+          filteredSurveys.push({
+            ...arr[index],
+            userHasVoted: true,
+            totalResponses: counterDocuments,
+          });
+        } else {
+          filteredSurveys.push({
+            ...arr[index],
+            userHasVoted: false,
+            totalResponses: counterDocuments,
+          });
+        }
+      });
+    } else {
+      // // Esto solo se ejecuta si no hay algun usuario logeado
+      // const guestUser = new Promise((resolve) => {
+        //   let surveyId = localStorage.getItem(`userHasVoted_${survey._id}`);
+        //   surveyId ? resolve(true) : resolve(false);
+        // });
+        // let guestHasVote = await guestUser;
+        // filteredSurveys.push({ ...arr[index], userHasVoted: guestHasVote });
+        
+        console.log('USUARIO NO LOGUEADO (GUEST)');
+      }
+    });
+
+  return filteredSurveys ;
 }
 
 //monitorear nuevos mensajes

@@ -16,10 +16,10 @@ function SurveyList(props) {
 
    const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
    const [loadingSurveys, setLoadingSurveys] = useState(true);
-
+   console.log('10.',listOfEventSurveys)
    useEffect(() => {
       if (eventId) {
-        listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, activity, cUser)
+         listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, activity, cUser)
       }
    }, [eventId]);
 
