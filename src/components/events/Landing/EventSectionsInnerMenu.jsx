@@ -3,6 +3,7 @@ import { Layout, Spin, Avatar, Row, Image } from 'antd';
 import { imageCenter } from './helpers/csshelpers';
 import { useRouteMatch } from 'react-router-dom';
 import MenuEvent from './Menus/MenuEvent';
+import { EyeOutlined } from '@ant-design/icons';
 const { Sider } = Layout;
 
 const EventSectionsInnerMenu = ({ event }) => {
@@ -24,6 +25,7 @@ const EventSectionsInnerMenu = ({ event }) => {
                 size={94}
                 icon={
                   <Image
+                    preview={{ mask: <EyeOutlined /> }}
                     alt='Logo'
                     src={event.styles.event_image}
                     style={(imageCenter, { backgroundColor: event.styles.toolbarDefaultBg, objectFit: 'contain' })}
