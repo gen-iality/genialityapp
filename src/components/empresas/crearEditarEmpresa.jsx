@@ -48,11 +48,11 @@ const validationSchema = yup.object().shape({
     //image: yup.string(),
     description: yup.string(),
   }),
-  advisor: yup.object().shape({
+  advisor: yup.object().shape([{
     //image: yup.string().url(),
     name: yup.string(),
     number: yup.string(),
-  }),
+  }]),
   services: yup.array()
     .max(SERVICES_LIMIT)
     .of(
@@ -370,26 +370,42 @@ function CrearEditarEmpresa({ event, match, history }) {
                       }
                       }
                     />
-
+                    <FieldArray
+                      name="services"
+                      render={(arrayHelpers) => {
+                        return !!values.advisor && values.values.advisor > 0
+                          ? (
+                            <>
                     <Field
                       name="advisor.name"
                       component={InputField}
                       label="Nombre del contacto advisor"
                       placeholder="Nombre del contacto advisor"
                     />
-
                     <Field
                       name="advisor.number"
                       component={InputField}
                       label="Número de contacto advisor"
                       placeholder="Número de contacto advisor"
                     />
-
                     <ImageField
                       name="advisor.image"
                       label="Imagen del contacto advisor"
                       placeholder="Url imagen"
                       maxLength={URL_MAX_LENGTH}
+                    /> </>) : (
+                      <Form.Item {...buttonsLayout}>
+                        <Button
+                          type="primary"
+                          icon={<PlusCircleOutlined />}
+                          onClick={() => {
+                            arrayHelpers.push({ url: '', network: undefined })
+                          }}
+                        >
+                          {'Agregar red social'}
+                        </Button>
+                      </Form.Item>
+                    )}}
                     />
 
                     <FieldArray
