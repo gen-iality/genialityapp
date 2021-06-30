@@ -34,6 +34,7 @@ const URL_MAX_LENGTH = 500
 const SERVICE_DESCRIPTION_MAX_LENGTH = 30
 const SERVICES_LIMIT = 4
 const SOCIAL_NETWORKS_LIMIT = 4
+const ADVISOR_LIMIT = 3
 const GALLERY_LIMIT = 30
 const CONTACT_INFO_DESCRIPTION_MAX_LENGTH = 2000
 
@@ -48,11 +49,14 @@ const validationSchema = yup.object().shape({
     //image: yup.string(),
     description: yup.string(),
   }),
-  advisor: yup.object().shape([{
+  advisor: yup.array()
+  .max(ADVISOR_LIMIT)
+  .of(yup.object().shape({
     //image: yup.string().url(),
     name: yup.string(),
     number: yup.string(),
-  }]),
+  })
+  ),
   services: yup.array()
     .max(SERVICES_LIMIT)
     .of(
@@ -90,7 +94,7 @@ export const defaultInitialValues = {
   short_description:'',
   times_and_venues: '',
   contact_info: { description: '', image: '' },
-  advisor: { name: '', image: '', number: '' },
+  advisor: [{ name: '', image: '', number: '' }],
   services: [{ description: '', image: '' }],
   brochure: "",
   webpage: '',
@@ -371,29 +375,61 @@ function CrearEditarEmpresa({ event, match, history }) {
                       }
                     />
                     <FieldArray
-                      name="services"
+                      name="advisor"
                       render={(arrayHelpers) => {
-                        return !!values.advisor && values.values.advisor > 0
+                        return !!values.advisor && values.advisor.length > 0
                           ? (
                             <>
+                              {values.advisor.map((_sn, advisorIndex) => (
+                                <div key={`advisor-item-${advisorIndex}`}>
                     <Field
-                      name="advisor.name"
+                      name={`advisor[${advisorIndex}].name`}
                       component={InputField}
-                      label="Nombre del contacto advisor"
+                      label={`Nombre del contacto advisor ${advisorIndex}`}
                       placeholder="Nombre del contacto advisor"
                     />
                     <Field
-                      name="advisor.number"
+                      name={`advisor[${advisorIndex}].number`}
                       component={InputField}
-                      label="Número de contacto advisor"
+                      label={`Número de contacto advisor ${advisorIndex}`}
                       placeholder="Número de contacto advisor"
                     />
                     <ImageField
-                      name="advisor.image"
-                      label="Imagen del contacto advisor"
+                      name={`advisor[${advisorIndex}].image`}
+                      label={`Imagen del contacto advisor ${advisorIndex}`}
                       placeholder="Url imagen"
                       maxLength={URL_MAX_LENGTH}
-                    /> </>) : (
+                    />
+                     <Form.Item {...buttonsLayout}>
+                                    {values.advisor.length > 1 && (
+                                      <Button
+                                        type="danger"
+                                        icon={<DeleteOutlined />}
+                                        onClick={() => {
+                                          arrayHelpers.remove(advisorIndex)
+                                        }}
+                                        style={{ marginRight: '20px' }}
+                                      >
+                                        {'Eliminar'}
+                                      </Button>
+                                    )}
+                                    {values.advisor.length < ADVISOR_LIMIT && advisorIndex === values.advisor.length - 1 && (
+                                      <Button
+                                        type="primary"
+                                        icon={<PlusCircleOutlined />}
+                                        onClick={() => {
+                                          arrayHelpers.push({ name: '', image: '', number: '' })
+                                        }}
+                                      >
+                                        {'Agregar advisor'}
+                                      </Button>
+                                    )}
+                                  </Form.Item>
+                    
+                    </div>
+                    )) }
+                    </>)
+                     : (
                       <Form.Item {...buttonsLayout}>
                         <Button
                           type="primary"
@@ -402,7 +438,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                             arrayHelpers.push({ url: '', network: undefined })
                           }}
                         >
-                          {'Agregar red social'}
+                          {'Agregar advisor'}
                         </Button>
                       </Form.Item>
                     )}}
