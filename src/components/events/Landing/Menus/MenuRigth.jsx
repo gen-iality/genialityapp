@@ -54,7 +54,7 @@ const MenuRigth = (props) => {
           key='2'
           icon={
             <TeamOutlined
-              className={animateIcon}
+              className={animateIcon + ' animate__delay-2s'}
               style={{
                 fontSize: '30px',
                 color: props.cEvent.styles.textMenu,
@@ -74,7 +74,7 @@ const MenuRigth = (props) => {
             <span>
               <Badge dot={props.hasOpenSurveys}>
                 <PieChartOutlined
-                  className={animateIcon}
+                  className={animateIcon + ' animate__delay-3s'}
                   style={{
                     fontSize: '30px',
                     color: props.cEvent.styles.textMenu,
@@ -92,7 +92,7 @@ const MenuRigth = (props) => {
           key='4'
           icon={
             <GamepadVariantOutline
-              className={animateIcon}
+              className={animateIcon + ' animate__delay-4s'}
               style={{
                 fontSize: '32px',
                 color: props.cEvent.styles.textMenu,

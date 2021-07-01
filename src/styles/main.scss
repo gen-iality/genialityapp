@@ -277,6 +277,9 @@ iframe {
   min-height: calc(100vh - 31px);
 }
 
+:root {
+  --animate-delay: 0.5s;
+}
 @import '~bulma/bulma';
 @import '~react-widgets/lib/scss/react-widgets';
 @import '~bulma-extensions/bulma-switch/src/sass/index';
