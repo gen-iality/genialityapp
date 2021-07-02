@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { List, Button, Card, Tag, Result, Row, Col } from 'antd';
 import { MehOutlined } from '@ant-design/icons';
 
@@ -8,7 +8,7 @@ import * as StageActions from '../../../../redux/stage/actions';
 import * as SurveyActions from '../../../../redux/survey/actions';
 
 const { setMainStage } = StageActions;
-const { setCurrentSurvey, setSurveyVisible, unsetCurrentSurvey } = SurveyActions;
+const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
 function SurveyCard(props) {
    const {
@@ -18,6 +18,7 @@ function SurveyCard(props) {
       setMainStage,
       setSurveyVisible,
       setCurrentSurvey,
+      surveyVisible,
    } = props;
 
    const headStyle = {
@@ -36,6 +37,12 @@ function SurveyCard(props) {
       }
       setCurrentSurvey(currentSurvey);
    }
+   useEffect(() => {
+      if (surveyVisible === true && publishedSurveys?.length === 1) {
+         setMainStage('surveyDetalle');
+         setCurrentSurvey(publishedSurveys[0]);
+      }
+   }, [surveyVisible])
 
    return (
       <Card
@@ -94,13 +101,12 @@ function SurveyCard(props) {
                                     <div>
                                        <Button
                                           type={
-                                             !survey.userHasVoted && survey.isOpened === 'true' ? 'primary' : 'ghost'
+                                             survey.isOpened === 'true' ? 'primary' : 'ghost'
                                           }
-                                          className={`${!survey.userHasVoted &&
-                                             survey.isOpened === 'true' &&
+                                          className={`${survey.isOpened === 'true' &&
                                              'animate__animated  animate__pulse animate__slower animate__infinite'}`}
                                           onClick={() => handleClick(survey)}>
-                                          {!survey.userHasVoted && survey.isOpened === 'true'
+                                          {survey.isOpened === 'true'
                                              ? 'Ir a Encuesta'
                                              : 'Resultados'}
                                        </Button>
@@ -119,13 +125,13 @@ function SurveyCard(props) {
 }
 const mapStateToProps = (state) => ({
    activity: state.stage.data.currentActivity,
+   surveyVisible: state.survey.data.surveyVisible,
 });
 
 const mapDispatchToProps = {
    setMainStage,
    setCurrentSurvey,
    setSurveyVisible,
-   unsetCurrentSurvey,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyCard);

@@ -125,6 +125,62 @@ class Graphics extends Component {
         horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
       }
 
+      /* El siguiente codigo actuamlente no se esta usando pero se deja como referencia
+        para implementar el servicio para acceder a los métodos de la API de chart      
+      */
+
+      //Formatear etiqueta de datos sobre la barra horizontal
+
+      // const customPlugin = {
+
+      //   beforeInit: function (a, b, c) {
+      //
+      //
+      //   },
+      //   afterDatasetsDraw: function (context, easing) {
+
+      //
+      //
+      //     //context.clearRect(0, 0, canvas.width, canvas.height);
+
+      //     var ctx = context.chart.ctx;
+
+      //     context.data.datasets.forEach(function (dataset) {
+      //       for (var i = 0; i < dataset.data.length; i++) {
+      //         if (dataset.data[i] != 0) {
+      //           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
+      //           var textY = model.y + (dataset.type == "line" ? -3 : 15);
+
+      //
+      //           ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
+      //           ctx.textAlign = 'start';
+      //           ctx.textBaseline = 'middle';
+      //           ctx.fillStyle = dataset.type == "line" ? "black" : "black";
+      //           ctx.save();
+      //           //ctx.translate(model.x, textY - 15);
+      //           //ctx.translate(21, textY - 50);
+      //           ctx.translate(21, textY - 15);
+
+      //           ctx.rotate(0);
+
+      //           const formatDataLabel = generatedlabels[i]
+
+      //
+      //           //ctx.clear()
+      //           ctx.fillText(formatDataLabel, 0, 0);
+      //           ctx.restore();
+      //         }
+      //       }
+      //     });
+      //   }
+      // }
+
+      //Chart.pluginService.register(customPlugin);
+
+      /* Fin del codigo de referencia para registrar la configuracion
+        de lo métodos de la API  de ChartJS
+      */
+
       horizontalBar.options = {
         plugins: {
           datalabels: {
@@ -214,10 +270,7 @@ class Graphics extends Component {
     if (dataSurvey.questions)
       return (
         <>
-        <Card title="RESULTADOS">
-        <h1>ESTOS SON LOS RESULTADOS DE LA ENCUESTA</h1>
-        </Card>
-          {/* <Card className='survyCard' title={this.props.currentSurvey.name}>
+          <Card className='survyCard' title={this.props.currentSurvey.name}>
             <div style={{ marginTop: 5 }}>
               {this.props.currentActivity === null && (
                 <Button
@@ -241,7 +294,7 @@ class Graphics extends Component {
               total={dataSurvey.questions.length * 10}
               onChange={this.setCurrentPage}
             />
-          </Card> */}
+          </Card>
         </>
       );
 

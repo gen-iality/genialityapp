@@ -570,6 +570,22 @@ class SurveyComponent extends Component {
             <ArrowLeftOutlined /> Volver a {surveyLabel ? surveyLabel.name : 'encuestas'}
           </Button>
         )}
+        {surveyData &&
+          surveyData.allow_gradable_survey === 'true' &&
+          (surveyData.show_horizontal_bar ? (
+            <>
+              {/* < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/> */}
+              {
+                // this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+              }
+            </>
+          ) : (
+            <>
+              {
+                // this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+              }
+            </>
+          ))}
 
         {this.state.survey && this.state.survey.state === 'completed' && (
           <>
@@ -616,7 +632,7 @@ class SurveyComponent extends Component {
                   onStarted={this.checkCurrentPage}
                   onCurrentPageChanged={this.onCurrentPageChanged}
                 /> */}
-                <h1>AQUI SE RESPONDE LA ENCUESTA</h1>
+                <h1>ESTOS SON LOS RESULTADOS DE LA ENCUESTA</h1>
               </div>
             )}
           </div>
