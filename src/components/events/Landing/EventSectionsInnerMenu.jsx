@@ -1,8 +1,9 @@
 import React from 'react';
-import { Layout, Spin, Avatar, Row } from 'antd';
+import { Layout, Spin, Avatar, Row, Image } from 'antd';
 import { imageCenter } from './helpers/csshelpers';
 import { useRouteMatch } from 'react-router-dom';
 import MenuEvent from './Menus/MenuEvent';
+import { EyeOutlined } from '@ant-design/icons';
 const { Sider } = Layout;
 
 const EventSectionsInnerMenu = ({ event }) => {
@@ -21,11 +22,13 @@ const EventSectionsInnerMenu = ({ event }) => {
           <Row justify='center' style={{ margin: 5 }}>
             {event.styles && (
               <Avatar
-                size={64}
+                size={94}
                 icon={
-                  <img
+                  <Image
+                    preview={{ mask: <EyeOutlined /> }}
+                    alt='Logo'
                     src={event.styles.event_image}
-                    style={(imageCenter, { backgroundColor: event.styles.toolbarDefaultBg })}
+                    style={(imageCenter, { backgroundColor: event.styles.toolbarDefaultBg, objectFit: 'contain' })}
                   />
                 }
               />
