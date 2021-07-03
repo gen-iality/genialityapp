@@ -12,6 +12,9 @@ export function listenSurveysData(event_id, setListOfEventSurveys, setLoadingSur
          querySnapshot.forEach((doc) => {
             eventSurveys.push({ ...doc.data(), _id: doc.id });
          });
+
+         const currentSurvey = querySnapshot.docChanges()[0].doc.data()
+
          const publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser);
 
          setListOfEventSurveys(() => {
@@ -20,7 +23,7 @@ export function listenSurveysData(event_id, setListOfEventSurveys, setLoadingSur
                   (open) => open.isOpened === true || open.isOpened === 'true'
                );
 
-               return [publishedSurveys, openSurveys];
+               return [publishedSurveys, openSurveys, currentSurvey];
             }
          });
 

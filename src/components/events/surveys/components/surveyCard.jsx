@@ -19,6 +19,7 @@ function SurveyCard(props) {
       setSurveyVisible,
       setCurrentSurvey,
       surveyVisible,
+      currentSurvey,
    } = props;
 
    const headStyle = {
@@ -28,7 +29,6 @@ function SurveyCard(props) {
       color: '#000',
    };
    const bodyStyle = { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' };
-
    function handleClick(currentSurvey) {
       if (activity !== null) {
          setMainStage('surveyDetalle');
@@ -38,11 +38,12 @@ function SurveyCard(props) {
       setCurrentSurvey(currentSurvey);
    }
    useEffect(() => {
-      if (surveyVisible === true && publishedSurveys?.length === 1) {
+      if (currentSurvey && surveyVisible === true) {
+         console.log("10_currentSurvey")
          setMainStage('surveyDetalle');
-         setCurrentSurvey(publishedSurveys[0]);
+         setCurrentSurvey(currentSurvey);
       }
-   }, [surveyVisible])
+   }, [currentSurvey, surveyVisible])
 
    return (
       <Card

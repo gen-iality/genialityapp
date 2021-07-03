@@ -22,14 +22,18 @@ function SurveyList(props) {
    const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
    const [loadingSurveys, setLoadingSurveys] = useState(true);
    const [reloadNotification, setReloadNotification] = useState(true);
+   const [currentSurvey, setCurrentSurvey] = useState(null);
    useEffect(() => {
-      if (eventId) {
+      if (eventId && listOfEventSurveys?.length === 0) {
+
+         console.log("10_If inicial")
          listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, activity, currentUser);
       }
    }, [eventId]);
-
+// console.log("10_ listOfEventSurveys", listOfEventSurveys)
    useEffect(() => {
       const autoOpenSurvey = listOfEventSurveys[0];
+      setCurrentSurvey(autoOpenSurvey)
       if (listOfEventSurveys[1]?.length >= 1) {
          setNotification({
             message: 'Encuestas abiertas',
@@ -47,14 +51,13 @@ function SurveyList(props) {
             setReloadNotification(!reloadNotification);
          }
       }
-      if (autoOpenSurvey?.length === 1 && autoOpenSurvey[0]?.isOpened === 'true') {
+      if (autoOpenSurvey && autoOpenSurvey[2]?.isOpened === 'true') {
+         console.log("10_surveylist IF")
          setSurveyVisible(true);
-      } else if (autoOpenSurvey?.length > 1 || autoOpenSurvey?.length === 0 || autoOpenSurvey === undefined) {
-         setSurveyVisible(false);
       }
    }, [listOfEventSurveys, reloadNotification]);
 
-   return <SurveyCard publishedSurveys={listOfEventSurveys[0]} loadingSurveys={loadingSurveys} />;
+   return <SurveyCard publishedSurveys={listOfEventSurveys[0]} loadingSurveys={loadingSurveys} currentSurvey={currentSurvey ? currentSurvey[2] : null} />;
 }
 
 const mapStateToProps = (state) => ({
