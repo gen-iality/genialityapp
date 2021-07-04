@@ -7,33 +7,54 @@ import { listenSurveysData } from '../../../helpers/helperEvent';
 import { connect } from 'react-redux';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import * as surveysActions from '../../../redux/survey/actions';
+import {setMainStage } from '../../../redux/stage/actions';
 
 /** Componentes */
 import SurveyCard from './components/surveyCard';
 import notifications from '../Landing/notifications';
 
 const { setNotification } = notificationsActions;
-const { setSurveyVisible } = surveysActions;
+const { setSurveyVisible,setCurrentSurvey,unsetCurrentSurvey} = surveysActions;
 
 function SurveyList(props) {
-   const { activity, currentUser, setNotification, viewNotification, setSurveyVisible } = props;
+   const { activity, currentUser, setNotification, viewNotification, setSurveyVisible,surveySelected, setMainStage,unsetCurrentSurvey, setCurrentSurvey } = props;
    const eventId = activity.event_id;
 
    const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
    const [loadingSurveys, setLoadingSurveys] = useState(true);
    const [reloadNotification, setReloadNotification] = useState(true);
-   const [currentSurvey, setCurrentSurvey] = useState(null);
+  
    useEffect(() => {
-      if (eventId && listOfEventSurveys?.length === 0) {
-
+      if (eventId) {
          console.log("10_If inicial")
-         listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, activity, currentUser);
+         listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, activity, currentUser,visualizarEncuesta,surveySelected);
       }
    }, [eventId]);
 // console.log("10_ listOfEventSurveys", listOfEventSurveys)
-   useEffect(() => {
-      const autoOpenSurvey = listOfEventSurveys[0];
-      setCurrentSurvey(autoOpenSurvey)
+
+ const visualizarEncuesta=(survey)=>{
+    console.log(survey)
+   if (survey && survey.isOpened === 'true' && survey!=null) {      
+    handleClick(survey)
+   }else{
+      setSurveyVisible(false)
+   }
+ }
+
+ const handleClick=(currentSurvey)=> {
+   if (activity !== null && currentSurvey.isOpened === 'true') {
+      console.log("ENTRO A DETALLE")
+      setMainStage('surveyDetalle'); 
+      setSurveyVisible(true)
+      setCurrentSurvey(currentSurvey)     
+   }else{    
+      setMainStage(null); 
+      setSurveyVisible(false)
+   } 
+      
+}
+   useEffect(() => { 
+        
       if (listOfEventSurveys[1]?.length >= 1) {
          setNotification({
             message: 'Encuestas abiertas',
@@ -50,25 +71,26 @@ function SurveyList(props) {
          if (viewNotification.type === null) {
             setReloadNotification(!reloadNotification);
          }
-      }
-      if (autoOpenSurvey && autoOpenSurvey[2]?.isOpened === 'true') {
-         console.log("10_surveylist IF")
-         setSurveyVisible(true);
-      }
-   }, [listOfEventSurveys, reloadNotification]);
+      }      
+   }, [listOfEventSurveys]);
 
-   return <SurveyCard publishedSurveys={listOfEventSurveys[0]} loadingSurveys={loadingSurveys} currentSurvey={currentSurvey ? currentSurvey[2] : null} />;
+   return <SurveyCard publishedSurveys={listOfEventSurveys[0]} loadingSurveys={loadingSurveys} currentSurvey={surveySelected} handleClick={handleClick} />;
 }
 
 const mapStateToProps = (state) => ({
    activity: state.stage.data.currentActivity,
    currentUser: state.user.data,
    viewNotification: state.notifications.data,
+   currentActivity:state.survey.currentActivity,
+   surveySelected:state.survey.data.currentSurvey
 });
 
 const mapDispatchToProps = {
-   setNotification,
+   setNotification,   
    setSurveyVisible,
+   setCurrentSurvey,
+   setMainStage,
+   unsetCurrentSurvey
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList);

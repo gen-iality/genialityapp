@@ -5,7 +5,7 @@ import { Pagination, Card, Button } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import Loading from './loading';
 
-import Chart from 'chart.js';
+import {Chart} from 'chart.js';
 
 import { SurveyAnswers } from './services';
 import { SurveysApi, UsersApi } from '../../../helpers/request';

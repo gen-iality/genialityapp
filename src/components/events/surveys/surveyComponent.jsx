@@ -50,7 +50,8 @@ class SurveyComponent extends Component {
 
   async componentDidMount() {
     var self = this;
-    const { eventId, idSurvey } = this.props;
+    const { eventId, idSurvey } = this.props;   
+   
     let surveyData = await this.loadSurvey(eventId, idSurvey);
     const firebaseSurvey = await getSurveyConfiguration(idSurvey);
 
@@ -74,6 +75,8 @@ class SurveyComponent extends Component {
 
     await this.getCurrentEvenUser();
   }
+
+ 
 
   /**
    * El quiztiene unos timers para controlar el tiempo por pregunta
@@ -616,7 +619,7 @@ class SurveyComponent extends Component {
                   onStarted={this.checkCurrentPage}
                   onCurrentPageChanged={this.onCurrentPageChanged}
                 /> */}
-                <h1>AQUI SE RESPONDE LA ENCUESTA</h1>
+                <h1>AQUI SE RESPONDE LA ENCUESTA{surveyData._id}</h1>
               </div>
             )}
           </div>

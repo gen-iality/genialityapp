@@ -12,12 +12,12 @@ import { Card } from 'antd';
 function RootPage(props) {
    const [hasVote, setHasVote] = useState(false);
    const [eventUser, setEventUser] = useState({});
-   const { idSurvey, currentSurvey, currentUser } = props;
-   const { eventId, seeGraphsByRole, userRole } = currentSurvey;
-
+   const {currentSurvey, currentUser,isVisible } = props;  
+   const [surveySelected, setSurveySelected]= useState(null)
+ 
    const loadData = async (idSurvey) => {
-      if (idSurvey) {
-         let eventUserdata = await getCurrentEvenUser(eventId);
+      if (idSurvey && currentSurvey!==null) {
+         let eventUserdata = await getCurrentEvenUser(currentSurvey.eventId);
          setEventUser(eventUserdata);
       }
    };
@@ -29,48 +29,66 @@ function RootPage(props) {
    };
 
    useEffect(() => {
-      if (seeGraphsByRole === true) {
-         loadData(idSurvey);
+      if (currentSurvey!==null && currentSurvey.seeGraphsByRole === true) {
+         //loadData(selectedidSurvey);
       }
-   }, []);
+   }, []);  
+   console.log("CURRENT ROOT")
+   useEffect(()=>{
+      console.log("VISIBLEEEEEEE")
+      console.log(isVisible)
+      if(isVisible){
+         console.log("A CAMBIAR")
+         setSurveySelected(currentSurvey)
+         console.log(currentSurvey)
+      }else{
+         console.log("A NULOOOOOOOOOOOOOOOOOOOOO")
+         setSurveySelected(null)
+      }
+  
+   },[currentSurvey,isVisible])
 
    return (
       <div>
-         {(eventUser && eventUser.rol && eventUser.rol.name === userRole) ||
-         currentSurvey.isOpened === 'false' ||
-         currentSurvey.isOpened === false ||
-         hasVote ? (
+         {(eventUser && eventUser.rol && eventUser.rol.name === currentSurvey.userRole) ||
+         (surveySelected!==null && (surveySelected.isOpened  === 'false' ||
+         surveySelected.isOpened === false) &&
+         hasVote==true) && (surveySelected.isPublished=='true' ||  surveySelected.isPublished==true )? (
             <>
                {/*Preparacion componente para los resultados*/}
                <Graphics
-                  idSurvey={idSurvey}
+                  idSurvey={surveySelected._id}
                   // showListSurvey={toggleSurvey}
-                  eventId={eventId}
+                  eventId={currentSurvey!=null && currentSurvey.eventId}
                   // surveyLabel={surveyLabel}
                   operation='participationPercentage' //onlyCount, participationPercentage
                />
             </>
-         ) : (
+         ) : (surveySelected!==null)&& ((surveySelected.isOpened  === 'true' ||
+         surveySelected.isOpened === true ||
+         hasVote) && (surveySelected.isPublished=='true' ||  surveySelected.isPublished==true ) )?(
             <Card className='survyCard'>
-               <SurveyComponent
+              {/* <SurveyComponent
                   // responseCounter={responseCounter}
-                  idSurvey={idSurvey}
+                  idSurvey={surveySelected._id}
                   // showListSurvey={toggleSurvey}
                   eventId={eventId}
                   currentUser={currentUser}
                   singlePage={true}
                   // surveyLabel={surveyLabel}
                   operation='participationPercentage'
-               />
+               />*/}
+               <div>{surveySelected.name}</div>
             </Card>
-         )}
+         ):(<div>YA SE CERRO ENCUESTA....!!!!</div>)}
       </div>
    );
 }
 
 const mapStateToProps = (state) => ({
    currentSurvey: state.survey.data.currentSurvey,
-   idSurvey: state.survey.data.currentSurvey._id,
+   isVisible:state.survey.data.surveyVisible,
+  // idSurvey: state.survey.data.currentSurvey._id,
    currentUser: state.user.data,
 });
 

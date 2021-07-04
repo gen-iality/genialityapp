@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect ,useState} from 'react';
 import { List, Button, Card, Tag, Result, Row, Col } from 'antd';
 import { MehOutlined } from '@ant-design/icons';
 
@@ -7,10 +7,14 @@ import { connect } from 'react-redux';
 import * as StageActions from '../../../../redux/stage/actions';
 import * as SurveyActions from '../../../../redux/survey/actions';
 
+
+
 const { setMainStage } = StageActions;
-const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
+const { setCurrentSurvey, setSurveyVisible, unsetCurrentSurvey} = SurveyActions;
+
 
 function SurveyCard(props) {
+   const [previewSurvey,setPreviewSurvey]=useState(null)
    const {
       publishedSurveys,
       loadingSurveys,
@@ -20,6 +24,8 @@ function SurveyCard(props) {
       setCurrentSurvey,
       surveyVisible,
       currentSurvey,
+      unsetCurrentSurvey,
+      currentSurveyR,
    } = props;
 
    const headStyle = {
@@ -29,21 +35,32 @@ function SurveyCard(props) {
       color: '#000',
    };
    const bodyStyle = { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' };
-   function handleClick(currentSurvey) {
-      if (activity !== null) {
-         setMainStage('surveyDetalle');
-      } else {
-         setSurveyVisible(true);
-      }
-      setCurrentSurvey(currentSurvey);
-   }
+  
    useEffect(() => {
-      if (currentSurvey && surveyVisible === true) {
-         console.log("10_currentSurvey")
-         setMainStage('surveyDetalle');
-         setCurrentSurvey(currentSurvey);
+      console.log("---------CARD-------------------")
+      console.log(previewSurvey)
+      console.log(currentSurvey)
+      console.log(currentSurveyR)
+      console.log(surveyVisible)
+
+     /* if(currentSurveyR==null){
+         unsetCurrentSurvey()
+         setMainStage(null);
+       }*/ 
+       let isDiferent=0;
+       if(previewSurvey!==null && currentSurvey!==null ){
+         if(currentSurvey._id!==previewSurvey._id && currentSurvey.isOpened==='true'){
+            isDiferent=1;
+         }
       }
-   }, [currentSurvey, surveyVisible])
+   
+      if ((currentSurvey!=null && surveyVisible === false)|| (previewSurvey===null && surveyVisible==true && isDiferent==1 ) ) {         
+         console.log("CURRENTTTTTTTTTTTTTTTTTTTT")
+         props.handleClick(currentSurvey)
+         //setSurveyVisible(true);
+         setPreviewSurvey(currentSurvey)
+        }        
+   }, [currentSurvey])
 
    return (
       <Card
@@ -67,7 +84,7 @@ function SurveyCard(props) {
                               marginBottom: '8px',
                               border: '1px solid',
                               borderColor: '#0000001c',
-                           }}>
+                           }}>                           
                            <List.Item key={survey._id}>
                               <List.Item.Meta
                                  title={survey.name}
@@ -106,7 +123,7 @@ function SurveyCard(props) {
                                           }
                                           className={`${survey.isOpened === 'true' &&
                                              'animate__animated  animate__pulse animate__slower animate__infinite'}`}
-                                          onClick={() => handleClick(survey)}>
+                                          onClick={() => props.handleClick(survey)}>
                                           {survey.isOpened === 'true'
                                              ? 'Ir a Encuesta'
                                              : 'Resultados'}
@@ -127,11 +144,13 @@ function SurveyCard(props) {
 const mapStateToProps = (state) => ({
    activity: state.stage.data.currentActivity,
    surveyVisible: state.survey.data.surveyVisible,
+   currentSurveyR:state.survey.data.currentSurvey
 });
 
 const mapDispatchToProps = {
    setMainStage,
    setCurrentSurvey,
+   unsetCurrentSurvey,
    setSurveyVisible,
 };
 
