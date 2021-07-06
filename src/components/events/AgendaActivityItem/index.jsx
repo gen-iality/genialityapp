@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Avatar, Card, Space, Timeline, Comment } from 'antd';
+import { useHistory } from "react-router-dom";
+
+
 
 import Moment from 'moment-timezone';
 import './style.scss';
@@ -23,6 +26,14 @@ const EnVivoSvg = () => (
 const { gotoActivity } = StageActions;
 
 function AgendaActivityItem(props) {
+
+  let history = useHistory();
+  let urlactivity = `/landing/${props.event._id}/activity/`;
+
+  function HandleGoActivity(activity_id) {
+    history.push(`${urlactivity}${activity_id}`);
+  }
+
   const [isRegistered, setIsRegistered] = useState(false);
   const [related_meetings, setRelatedMeetings] = useState();
   const [meetingState, setMeetingState] = useState(null);
@@ -81,7 +92,9 @@ function AgendaActivityItem(props) {
               const { eventUser, zoomExternoHandleOpen } = props;
               zoomExternoHandleOpen(item, eventUser);
             } else {
-              props.gotoActivity(item);
+              // props.gotoActivity(item);
+              HandleGoActivity(item._id)
+              
             }
           }}>
           {/* aquie empieza la agenda en estilo mobile */}

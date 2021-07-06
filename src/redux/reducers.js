@@ -10,6 +10,7 @@ import notifications from './notifications/reducers';
 import tabs from './tabs/reducers';
 import notificationsNetReducer from './notifyNetworking/reducers';
 import topBannerReducer from './topBanner/reducers';
+import virtualConferenceReducer from './virtualconference/reducers';
 
 export default {
   categories,
@@ -23,5 +24,6 @@ export default {
   notifications,
   tabs,
   notificationsNetReducer,
-  topBannerReducer
+  topBannerReducer,
+  virtualConferenceReducer
 };

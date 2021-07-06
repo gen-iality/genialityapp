@@ -79,6 +79,10 @@ class Agenda extends Component {
   async componentDidMount() {
     //Se carga esta funcion para cargar los datos
     console.log('DID MOUNT', this.props.cEvent.value);
+
+    this.props.setVirtualConference(false);
+
+
    
     console.log(this.props.cEvent.value.styles.hideDatesAgenda);
     console.log(this.props.cEvent.value);
@@ -118,8 +122,13 @@ class Agenda extends Component {
     }
 
     this.getAgendaUser();
+    
   }
 
+
+  componentWillUnmount(){
+    this.props.setVirtualConference(true)
+  }
   /** extraemos los días en los que pasan actividades */
   setDaysWithAllActivities = () => {
     const { data } = this.state;
@@ -503,7 +512,7 @@ class Agenda extends Component {
                 Surveys={survey}
                 toggleConference={toggleConference}
                 event_image={this.props.cEvent.value.styles.event_image}
-                gotoActivity={this.gotoActivity}
+                // gotoActivity={this.gotoActivity}
                 registerInActivity={this.registerInActivity}
                 registerStatus={isRegistered}
                 eventId={this.props.cEvent.value._id}
@@ -533,7 +542,7 @@ class Agenda extends Component {
               Surveys={survey}
               toggleConference={toggleConference}
               event_image={this.props.cEvent.value.styles.event_image}
-              gotoActivity={this.gotoActivity}
+              // gotoActivity={this.gotoActivity}
               registerInActivity={this.registerInActivity}
               registerStatus={isRegistered}
               eventId={this.props.cEvent.value._id}
@@ -655,7 +664,7 @@ class Agenda extends Component {
           </div>
         </Modal>
 
-        {currentActivity && (
+        {/* {currentActivity && (
           <AgendaActividadDetalle
             visible={this.state.visible}
             onClose={this.onClose}
@@ -677,7 +686,7 @@ class Agenda extends Component {
             zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
             eventSurveys={this.props.cEvent.valueSurveys}
           />
-        )}
+        )} */}
 
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && loading && (

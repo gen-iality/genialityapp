@@ -1,18 +1,20 @@
-import React, { Component, Fragment, useState, useEffect } from 'react';
-import { Card, Button, Avatar, Row, Col, Tooltip, Typography } from 'antd';
+import React, { Fragment, useState, useEffect } from 'react';
+import { Card, Button, Avatar, Row, Col, Tooltip, Typography, Spin } from 'antd';
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment-timezone';
 import { FieldTimeOutlined } from '@ant-design/icons';
-import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import ENVIVO from '../../EnVivo.svg';
+import { UseEventContext } from '../../Context/eventContext';
+import { UseUserEvent } from '../../Context/eventUserContext';
+import { Link } from 'react-router-dom';
 import * as StageActions from '../../redux/stage/actions';
 
 const { gotoActivity } = StageActions;
 const { Title } = Typography;
 
-const MeetingConferenceButton = ({
+let MeetingConferenceButton = ({
   activity,
   zoomExternoHandleOpen,
 
@@ -25,7 +27,6 @@ const MeetingConferenceButton = ({
 
   useEffect(() => {
     setInfoActivity(activity);
-    //setInfoEvent(event);
   }, [activity, event]);
 
   switch (infoActivity.habilitar_ingreso) {
@@ -51,127 +52,71 @@ const MeetingConferenceButton = ({
 
     case 'closed_meeting_room':
       return <></>;
-    // return <div style={{display:'grid'}}>
-    //          <span style={{color:'#7c909a'}}>El evento</span>
-    //          <span style={{fontWeight:'400', fontSize:'45px'}}>Iniciara pronto</span>
-    //        </div>
-    //  <Alert message={intl.formatMessage({ id: 'live.join.disabled' })} type='warning' showIcon />;
+
     case 'ended_meeting_room':
       return <></>;
-    // return <h1 style={{fontWeight:'400', fontSize:'45px'}}>El evento ha terminado</h1>
-    //  <Alert message='El evento ha terminado' type='info' showIcon />;
+
     default:
       return <h1 style={{ fontWeight: '400', fontSize: '45px' }}></h1>;
-    // <Alert message='Cargando...' type='warning' showIcon />;
   }
 };
 
-class VirtualConference extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      infoAgendaArr: [],
-      usuarioRegistrado: this.props.usuarioRegistrado || undefined,
-      event: this.props.event || undefined,
-      survey: [],
-    };
-  }
+const VirtualConference = () => {
+  let cEvent = UseEventContext();
+  let cEventUser = UseUserEvent();
+  let urlactivity = `/landing/${cEvent.value._id}/activity/`;
 
-  async componentDidMount() {
-    if (!this.props.event) return;
+  const [infoAgendaArr, setinfoAgenda] = useState([]);
+  const [agendageneral, setagendageneral] = useState(null);
+  const [bandera, setbandera] = useState(false);
 
-    let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
+  useEffect(() => {
+    async function fetchData() {
+      const response = await AgendaApi.byEvent(cEvent.value._id);
+      let withMetting = response.data.filter((activity) => activity.meeting_id != null || '' || undefined);
+      setagendageneral(withMetting);
+      setbandera(!bandera);
+    }
+    fetchData();
+  }, []);
 
-    this.setState({ infoAgendaArr: filteredAgenda });
-    //this.listeningStateMeetingRoom;
-  }
-
-  async componentDidUpdate(prevProps) {
-    //Cargamos solamente los espacios virtuales de la agenda
-
-    //Si aún no ha cargado el evento no podemos hacer nada más
-    if (!this.props.event) return;
-
-    //Revisamos si el evento sigue siendo el mismo, no toca cargar nada
-    if (prevProps.event && this.props.event._id === prevProps.event._id) return;
-
-    let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
-    this.setState(
-      { event: this.props.event, usuarioRegistrado: this.props.usuarioRegistrado, infoAgendaArr: filteredAgenda }
-      // this.listeningStateMeetingRoom
-    );
-  }
-
-  listeningStateMeetingRoom = (infoAgenda) => {
-    infoAgenda.forEach((activity, index, arr) => {
+  useEffect(() => {
+    agendageneral &&
       firestore
         .collection('events')
-        .doc(this.props.event._id)
+        .doc(cEvent.value._id)
         .collection('activities')
-        .doc(activity._id)
         .onSnapshot((infoActivity) => {
-          if (!infoActivity.exists) return;
-          let { habilitar_ingreso, isPublished, meeting_id, platform } = infoActivity.data();
-          let updatedActivityInfo = { ...arr[index], habilitar_ingreso, isPublished, meeting_id, platform };
+          let arratem = [];
 
-          arr[index] = updatedActivityInfo;
-
-          arr.forEach((activity, index, arr) => {
-            firestore
-              .collection('languageState')
-              .doc(activity._id)
-              .onSnapshot((info) => {
-                if (!info.exists) return;
-                let { related_meetings } = info.data();
-                let updatedActivityInfo = { ...arr[index], related_meetings };
-
-                arr[index] = updatedActivityInfo;
-                this.setState({ infoAgendaArr: arr });
-              });
-            this.setState({ infoAgendaArr: arr });
+         
+          infoActivity.docs.map((doc) => {
+            agendageneral.map((item) => {
+              if (item._id == doc.id) {
+                let activity;
+                let { habilitar_ingreso, isPublished, meeting_id, platform } = doc.data();
+                activity = { ...item, habilitar_ingreso, isPublished, meeting_id, platform };
+                arratem.push(activity);
+              }
+            });
           });
+          setinfoAgenda(arratem);
         });
-    });
-  };
+  }, [agendageneral, firestore]);
 
-  async filterVirtualActivities(event_id) {
-    let infoAgendaArr = [];
-
-    if (!event_id) return infoAgendaArr;
-    const infoAgenda = await AgendaApi.byEvent(event_id);
-
-    await this.listeningStateMeetingRoom(infoAgenda.data);
-
-    //Mostramos solamente las conferencias que tengan una sala virtual asignada
-    for (const prop in this.stateinfoAgendaArr) {
-      if (infoAgenda.data[prop].meeting_id) {
-        infoAgendaArr.push(infoAgenda.data[prop]);
-      }
-    }
-
-    return infoAgendaArr;
-  }
-
-  render() {
-    const { infoAgendaArr, event, usuarioRegistrado } = this.state;
-    const { toggleConference, showSection, gotoActivity } = this.props;
-    {
-      Moment.locale(window.navigator.language);
-    }
-    if (!infoAgendaArr || infoAgendaArr.length <= 0) return null;
-    return (
-      <Fragment>
-        {infoAgendaArr
-          .filter((item) => {
-            return (
-              item.habilitar_ingreso &&
-              (item.habilitar_ingreso == 'open_meeting_room' || item.habilitar_ingreso == 'closed_meeting_room') &&
-              (item.isPublished === true || item.isPublished === 'true')
-            );
-          })
-          .map((item, key) => (
-            <>
+  return (
+    <Fragment>
+      {infoAgendaArr.length > 0 ? (
+        infoAgendaArr.filter((item) => {
+          return (
+            item.habilitar_ingreso &&
+            (item.habilitar_ingreso == 'open_meeting_room' || item.habilitar_ingreso == 'closed_meeting_room') &&
+            (item.isPublished === true || item.isPublished === 'true')
+          );
+        })
+        .map((item, key) => (
+          <>
+            <Link to={`${urlactivity}${item._id}`}>
               <Card
                 key={key}
                 hoverable
@@ -199,16 +144,6 @@ class VirtualConference extends Component {
                           <span style={{ textAlign: 'center', fontSize: '18px' }}>
                             {<FormattedMessage id='live.closed' defaultMessage='Iniciará pronto' />}
                           </span>
-                          <MeetingConferenceButton
-                            activity={item}
-                            toggleConference={toggleConference}
-                            event={event}
-                            usuarioRegistrado={usuarioRegistrado}
-                            showSection={showSection}
-                            setActivity={gotoActivity}
-                            zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
-                            eventUser={this.props.eventUser}
-                          />
                         </>
                       ) : (
                         ''
@@ -226,7 +161,7 @@ class VirtualConference extends Component {
                             <span style={{ color: '#2D7FD6', fontSize: '14px' }}>
                               {Moment.locale() == 'en' ? 'More' : 'Ver más'}{' '}
                               {/* Se valido de esta forma porque el componente FormattedMessage no hacia
-                               efecto en la prop del componente de Ant design */}
+                             efecto en la prop del componente de Ant design */}
                             </span>
                           ),
                         }}>
@@ -256,13 +191,9 @@ class VirtualConference extends Component {
                     <div>
                       <MeetingConferenceButton
                         activity={item}
-                        toggleConference={toggleConference}
-                        event={event}
-                        usuarioRegistrado={usuarioRegistrado}
-                        showSection={showSection}
+                        event={cEvent.value}
                         setActivity={gotoActivity}
-                        zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
-                        eventUser={this.props.eventUser}
+                        eventUser={cEventUser.value}
                       />
                     </div>
                   </Col>
@@ -303,15 +234,14 @@ class VirtualConference extends Component {
                   </Col>
                 </Row>
               </Card>
-            </>
-          ))}
-      </Fragment>
-    );
-  }
-}
-
-const mapDispatchToProps = {
-  gotoActivity,
+            </Link>
+          </>
+        ))
+      ) : (
+        <Spin tip='Cargando...' />
+      )}
+    </Fragment>
+  );
 };
 
-export default connect(null, mapDispatchToProps)(VirtualConference);
+export default VirtualConference;

@@ -68,6 +68,8 @@ const EventSectionMenuRigth = (props) => {
                      settabselected={props.settabselected}
                   />
                </>
+
+               
             )}
          </div>
       </Sider>
