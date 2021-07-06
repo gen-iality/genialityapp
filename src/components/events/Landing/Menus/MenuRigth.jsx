@@ -3,10 +3,13 @@ import { Menu, Badge } from 'antd';
 import { CommentOutlined, TeamOutlined, PieChartOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 const MenuRigth = (props) => {
   const animateIcon = 'animate__animated animate__bounceIn';
 
+  console.log("props menu",props)
   return (
     <Menu mode='none' theme='light' style={stylesMenuItems}>
       <Menu.Item
@@ -109,4 +112,12 @@ const MenuRigth = (props) => {
   );
 };
 
-export default MenuRigth;
+
+const mapStateToProps = (state) => ({
+  currentActivity: state.stage.data.currentActivity,
+});
+
+
+export default connect(mapStateToProps, null)(withRouter(MenuRigth));
+
+

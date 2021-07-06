@@ -50,9 +50,8 @@ let AgendaActividadDetalle = (props) => {
   const [names, setNames] = useState(null);
   const [email, setEmail] = useState(null);
   const [currentActivity, setcurrentActivity] = useState(null);
-
   let urlBack = `/landing/${props.cEvent._id}/agenda`;
-  let urlActivity = `/landing/${props.cEvent._id}7activity/${activity_id}`;
+  
   
   const configfast = useState({});
 
@@ -76,7 +75,7 @@ let AgendaActividadDetalle = (props) => {
     getActividad().then((result) => {
       setcurrentActivity(result);
       orderHost(result.hosts);
-      console.log('result', result);
+      props.gotoActivity(result)
     });
 
     props.setTopBanner(false);
