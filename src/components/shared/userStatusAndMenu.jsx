@@ -4,6 +4,10 @@ import WithLoading from './withLoading';
 import { Menu, Dropdown, Avatar, Button, Col, Row } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 import { NavLink, Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import {setViewPerfil}  from '../../redux/viewPerfil/actions';
+
+
 const MenuStyle = {
   flex: 1,
   textAlign: 'right'
@@ -21,7 +25,7 @@ let userStatusAndMenu = (props) => {
   let menu = (
     <Menu>
       <Menu.Item>
-        <NavLink exact to={`/profile/${eventId}`}>
+        <NavLink onClick={(e)=>{e.preventDefault();props.location.pathname.includes("landing")?props.setViewPerfil(false):alert("LLORALO")}} to={""}>
           <FormattedMessage id='header.profile' defaultMessage='Perfil' />
         </NavLink>
       </Menu.Item>
@@ -88,5 +92,9 @@ let userStatusAndMenu = (props) => {
   //<img src={photo} alt={`avatar_${name}`} className="author-image is-hidden-mobile" />
   return <React.Fragment>{user ? loggedInuser : loggedOutUser}</React.Fragment>;
 };
+ 
+const mapDispatchToProps = {  
+  setViewPerfil,
+};
 
-export default WithLoading(withRouter(userStatusAndMenu));
+export default connect(null, mapDispatchToProps) ( WithLoading(withRouter(userStatusAndMenu)));

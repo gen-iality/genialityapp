@@ -2,16 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Button } from 'antd';
 import { MenuUnfoldOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import SocialZone from '../../socialZone/socialZone';
+import {setViewPerfil}  from '../../../redux/viewPerfil/actions';
 
 import MenuRigth from './Menus/MenuRigth';
+import { connect } from 'react-redux';
+import { set } from 'lodash-es';
 const { Sider } = Layout;
 const EventSectionMenuRigth = (props) => {
    const [isCollapsed, setisCollapsed] = useState(true);
+   const [tab, setTab] = useState(1);
    let [optionselected, setOptionselected] = useState(1);
 
-   function handleCollapsed() {
-      setisCollapsed(!isCollapsed);
+   function handleCollapsed() {  
+      props.setViewPerfil(!isCollapsed)
+      setisCollapsed(!isCollapsed);     
    }
+
+   useEffect(()=>{
+      setisCollapsed(props.viewPerfil); 
+      props.viewPerfil? setTab(1):setTab(2)
+   },[props.viewPerfil])
 
    return (
       <Sider
@@ -19,9 +29,9 @@ const EventSectionMenuRigth = (props) => {
          style={{ backgroundColor: props.cEvent.styles.toolbarDefaultBg }}
          trigger={null}
          width={400}
-         collapsed={isCollapsed}>
+         collapsed={isCollapsed && props.viewPerfil }>
          <div className='Chat-Event'>
-            {isCollapsed ? (
+            { isCollapsed && props.viewPerfil  ? (
                <>
                   <MenuRigth
                      cEvent={props.cEvent}
@@ -52,10 +62,10 @@ const EventSectionMenuRigth = (props) => {
                      // obtenerPerfil={this.obtenerUserPerfil}
                      // notificacion={this.addNotification}
                      // sendFriendship={this.SendFriendship}
-                     // perfil={this.collapsePerfil}
+                     perfil={collapsePerfil}
                      // tcollapse={this.toggleCollapsed}
                      optionselected={optionselected}
-                     tab={1}
+                     tab={2}
                      // section={this.state.section}
                      // containNetWorking={this.state.containNetWorking}
                      // eventSurveys={this.state.eventSurveys}
@@ -75,5 +85,13 @@ const EventSectionMenuRigth = (props) => {
       </Sider>
    );
 };
-
-export default EventSectionMenuRigth;
+const mapStateToProps = (state) => ({
+   viewPerfil: state. viewPerfilReducer.view,
+   
+ });
+ 
+ const mapDispatchToProps = {  
+   setViewPerfil,
+ };
+ 
+ export default connect(mapStateToProps, mapDispatchToProps) (EventSectionMenuRigth);
