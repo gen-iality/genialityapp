@@ -10,12 +10,14 @@ import { set } from 'lodash-es';
 import Avatar from 'antd/lib/avatar/avatar';
 import Text from 'antd/lib/typography/Text';
 import { formatDataToString } from '../../../helpers/utils';
+import { EventFieldsApi } from '../../../helpers/request';
 const { Sider } = Layout;
 const EventSectionMenuRigth = (props) => {
    const [isCollapsed, setisCollapsed] = useState(true);
    const [visiblePerfil, setVisiblePerfil] = useState(true);
    const [userPerfil, setUserPerfil] = useState(true);
    const [tab, setTab] = useState(1);
+   const [propertiesUserPerfil, setPropertiesUserPerfil]=useState(null)
    let [optionselected, setOptionselected] = useState(1);
 
    function handleCollapsed() {       
@@ -26,9 +28,7 @@ const EventSectionMenuRigth = (props) => {
       console.log(userPerfil);
       setVisiblePerfil(true); 
       if (userPerfil != null) {
-        var data = await this.loadDataUser(userPerfil);
-        console.log('--------------------------');
-        console.log(data);
+        var data = await this.loadDataUser(userPerfil);        
   
         setUserPerfil({ ...data.properties, iduser: userPerfil.iduser || data._id });
   
@@ -37,13 +37,22 @@ const EventSectionMenuRigth = (props) => {
           console.log(respProperties);
         }
       } else {
-        setUserPerfil(props.cUser)
+        setUserPerfil(props.cUser)       
+        setPropertiesUserPerfil(props.cEventUser.user_properties) 
       }
     }
 
+    async function getProperties(){
+      let properties = await EventFieldsApi.getAll(this.props.eventInfo._id);
+      if (properties.length > 0) {
+        setPropertiesUserPerfil(properties)        
+        return properties;
+      }
+      return null;
+    }
+
    useEffect(()=>{
-      setisCollapsed(props.viewPerfil); 
-      props.viewPerfil? setTab(1):setTab(2)
+    collapsePerfil(null)
    },[props.viewPerfil])
 
    return (
@@ -133,7 +142,7 @@ const EventSectionMenuRigth = (props) => {
                                 <Row justify='center' style={{ marginTop: '20px' }}>
                                   <Space size='middle'>
                                     <Tooltip title='Solicitar contacto'>
-                                      <Button
+                                    {userPerfil._id!==props.cUser._id  &&<Button
                                         size='large'
                                         shape='circle'
                                         onClick={async () => null/* {
@@ -160,10 +169,10 @@ const EventSectionMenuRigth = (props) => {
                                           }
                                         }}*/}
                                         icon={<UsergroupAddOutlined />}
-                                      />
+                                      />}
                                     </Tooltip>
                                     <Tooltip title='Ir al chat privado'>
-                                      <Button
+                                    {userPerfil._id!==props.cUser._id && <Button
                                         size='large'
                                         shape='circle'
                                         onClick={async () => {
@@ -177,10 +186,10 @@ const EventSectionMenuRigth = (props) => {
                                           );
                                         }}
                                         icon={<CommentOutlined />}
-                                      />
+                                      />}
                                     </Tooltip>
                                     <Tooltip title='Solicitar cita'>
-                                      <Button
+                                    {userPerfil._id!==props.cUser._id && <Button
                                         size='large'
                                         shape='circle'
                                         onClick={async () => {
@@ -193,7 +202,7 @@ const EventSectionMenuRigth = (props) => {
                                           }
                                         }}
                                         icon={<VideoCameraAddOutlined />}
-                                      />
+                                      />}
                                     </Tooltip>
                                   </Space>
                                 </Row>
@@ -227,9 +236,10 @@ const EventSectionMenuRigth = (props) => {
                                     bordered
                                     dataSource={propertiesUserPerfil && propertiesUserPerfil}
                                     renderItem={(item) =>
-                                      !item.visibleByContacts &&
-                                      !item.visibleByAdmin &&
+                                     (((!item.visibleByContacts || item.visibleByContacts=='public') &&
+                                      !item.visibleByAdmin) || (userPerfil._id==props.cUser._id)) &&
                                       userPerfil[item.name] && (
+                                        
                                         <List.Item>
                                           <List.Item.Meta
                                             title={item.label}

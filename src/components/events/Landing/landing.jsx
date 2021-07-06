@@ -102,6 +102,7 @@ const Landing = (props) => {
         <EventSectionMenuRigth
           cEvent={cEventContext.value}
           cUser={cUser}
+          cEventUser={cEventUser.value}
           generalTabs={generaltabs}
           currentActivity={currentActivity}
           notNewMessage={notNewMessage}
