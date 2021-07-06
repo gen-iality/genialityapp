@@ -2,7 +2,14 @@ import { firestore } from './firebase';
 import { EventFieldsApi } from './request';
 
 // //METODO PARA OBTENER ENCUESTAS New
-export function listenSurveysData(event_id, setListOfEventSurveys, setLoadingSurveys, activity, cUser,visualizarEncuesta) {
+export function listenSurveysData(
+   event_id,
+   setListOfEventSurveys,
+   setLoadingSurveys,
+   activity,
+   cUser,
+   visualizarEncuesta
+) {
    firestore
       .collection('surveys')
       .where('eventId', '==', event_id)
@@ -12,26 +19,26 @@ export function listenSurveysData(event_id, setListOfEventSurveys, setLoadingSur
          querySnapshot.forEach((doc) => {
             eventSurveys.push({ ...doc.data(), _id: doc.id });
          });
-        console.log("---------------ACA---------------------")
+
          querySnapshot.docChanges().forEach((doc) => {
-            console.log(doc.doc.data())
-         }); 
-         console.log(querySnapshot.docChanges()[0]) 
-                 
-         const currentSurvey = querySnapshot.docChanges().length>0 && querySnapshot.docChanges()[0].type==='modified' ?{...querySnapshot.docChanges()[0].doc.data(),_id:querySnapshot.docChanges()[0].doc.id}:null
-         if(querySnapshot.docChanges().length>0){
-            console.log("ACTUALIZO CURRENT")
-            visualizarEncuesta(currentSurvey)
+            console.log(doc.doc.data());
+         });
+         console.log(querySnapshot.docChanges()[0]);
+
+         const currentSurvey =
+            querySnapshot.docChanges().length > 0 && querySnapshot.docChanges()[0].type === 'modified'
+               ? { ...querySnapshot.docChanges()[0].doc.data(), _id: querySnapshot.docChanges()[0].doc.id }
+               : null;
+         if (querySnapshot.docChanges().length > 0) {
+            visualizarEncuesta(currentSurvey);
          }
          const publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser);
 
          setListOfEventSurveys(() => {
             if (publishedSurveys) {
-               const openSurveys = publishedSurveys.filter(
-                  (open) => open.isOpened === true || open.isOpened === 'true'
-               );
+               // const openSurveys = currentSurvey.filter((open) => open.isOpened === true || open.isOpened === 'true');
 
-               return [publishedSurveys, openSurveys, currentSurvey];
+               return [publishedSurveys, currentSurvey];
             }
          });
 
