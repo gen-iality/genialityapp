@@ -7,15 +7,7 @@ import { WifiOutlined, PlayCircleOutlined, LoadingOutlined, DiffOutlined } from 
 function notifications(setNotification, viewNotification) {
    notification.open({
       message: `${viewNotification.message}`,
-      description: viewNotification.description.map((notificationOpenSurveys, index) => {
-         return (
-            <>
-               <h1 key={index}>
-                  {index + 1}. {notificationOpenSurveys.name}
-               </h1>
-            </>
-         );
-      }),
+      description: viewNotification.description,
       icon:
          viewNotification.type == 'open' ? (
             <WifiOutlined />
