@@ -41,6 +41,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/activity/:activity_id`}>
           <AgendaActividadDetalle
+          setVirtualConference={props.setVirtualConference}
             // visible={this.state.visible}
             // onClose={this.onClose}
             // showDrawer={this.showDrawer}
@@ -128,7 +129,12 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/agenda`}>
-          <Agenda activity={props.currentActivity} generalTabs={props.generalTabs} currentUser={props.cUser} setVirtualConference={props.setVirtualConference} />
+          <Agenda
+            activity={props.currentActivity}
+            generalTabs={props.generalTabs}
+            currentUser={props.cUser}
+            setVirtualConference={props.setVirtualConference}
+          />
         </Route>
       </Switch>
     </>

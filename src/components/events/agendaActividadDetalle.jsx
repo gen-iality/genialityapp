@@ -80,8 +80,10 @@ let AgendaActividadDetalle = (props) => {
     });
 
     props.setTopBanner(false);
+    props.setVirtualConference(false);
     return () => {
       props.setTopBanner(true);
+      props.setVirtualConference(true);
     };
   }, [activity_id]);
 
