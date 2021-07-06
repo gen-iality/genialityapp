@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Avatar } from 'antd';
+import {UseEventContext} from '../../../Context/eventContext'
 
-export default function RankingList({ data,cEvent }) {
+export default function RankingList({data}) {
   function formatName(name) {
     const result = decodeURIComponent(name);
     return result;
@@ -9,13 +10,16 @@ export default function RankingList({ data,cEvent }) {
 
   const [list, setList] = useState([]);
 
+  let cEvent = UseEventContext();
+
   useEffect(() => {
     setList(data);
   }, [data]);
 
+  console.log("rankingprops",cEvent.value);
   return (
     <div style={{ marginTop: 16 }}>
-      <h3 style={{ fontSize: '14px', fontWeight: '700',color:cEvent.styles.textMenu }}>Ranking de jugadores</h3>
+      <h3 style={{ fontSize: '14px', fontWeight: '700',color:cEvent.value.styles.textMenu }}>Ranking de jugadores</h3>
       <div className='container-ranking' style={{ marginTop: 16 }}>
         {list.length > 0 ? (
           list.map((item, key) => (
@@ -28,10 +32,10 @@ export default function RankingList({ data,cEvent }) {
                   </Avatar>
                 </Col>
                 <Col span={12}>
-                  <h3 style={{color:cEvent.styles.textMenu}}>{formatName(item.name)}</h3>
+                  <h3 style={{color:cEvent.value.styles.textMenu}}>{formatName(item.name)}</h3>
                 </Col>
                 <Col span={6}>
-                  <h4 style={{color:cEvent.styles.textMenu}}>{item.score} Pts</h4>
+                  <h4 style={{color:cEvent.value.styles.textMenu}}>{item.score} Pts</h4>
                 </Col>
               </Row>
             </div>
