@@ -382,6 +382,9 @@ export const Users = {
 };
 
 export const listenSurveysData = (event, activity, currentUser, callback) => {
+
+  // console.log("lo que recibo",event,activity, currentUser,)
+
   //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
   let $query = firestore.collection('surveys');
 
