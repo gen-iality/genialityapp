@@ -10,6 +10,8 @@ import { set } from 'lodash-es';
 const { Sider } = Layout;
 const EventSectionMenuRigth = (props) => {
    const [isCollapsed, setisCollapsed] = useState(true);
+   const [visiblePerfil, setVisiblePerfil] = useState(true);
+   const [userPerfil, setUserPerfil] = useState(true);
    const [tab, setTab] = useState(1);
    let [optionselected, setOptionselected] = useState(1);
 
@@ -17,6 +19,25 @@ const EventSectionMenuRigth = (props) => {
       props.setViewPerfil(!isCollapsed)
       setisCollapsed(!isCollapsed);     
    }
+  async function collapsePerfil  (userPerfil) {
+      console.log('USER PERFIL COLLAPASE');
+      console.log(userPerfil);
+      setVisiblePerfil(true); 
+      if (userPerfil != null) {
+        var data = await this.loadDataUser(userPerfil);
+        console.log('--------------------------');
+        console.log(data);
+  
+        setUserPerfil({ ...data.properties, iduser: userPerfil.iduser || data._id });
+  
+        if (data) {
+          const respProperties = await this.getProperties(data._id);
+          console.log(respProperties);
+        }
+      } else {
+        setUserPerfil(props.cUser)
+      }
+    }
 
    useEffect(()=>{
       setisCollapsed(props.viewPerfil); 
@@ -53,7 +74,7 @@ const EventSectionMenuRigth = (props) => {
                      <ArrowRightOutlined style={{ fontSize: '24px', color: props.cEvent.styles.textMenu }} />
                   </Button>
 
-                  <SocialZone
+                 { !visiblePerfil ? <SocialZone
                      // updateChat={this.state.updateChat}
                      // collapse={this.state.collapsed}
                      totalMessages={props.totalNewMessages}
@@ -62,7 +83,7 @@ const EventSectionMenuRigth = (props) => {
                      // obtenerPerfil={this.obtenerUserPerfil}
                      // notificacion={this.addNotification}
                      // sendFriendship={this.SendFriendship}
-                     perfil={collapsePerfil}
+                     //perfil={collapsePerfil}
                      // tcollapse={this.toggleCollapsed}
                      optionselected={optionselected}
                      tab={2}
@@ -76,7 +97,7 @@ const EventSectionMenuRigth = (props) => {
                      cUser={props.cUser}
                      tabselected={props.tabselected}
                      settabselected={props.settabselected}
-                  />
+                  />:<div>Visualizar Perfil</div>}
                </>
 
                
