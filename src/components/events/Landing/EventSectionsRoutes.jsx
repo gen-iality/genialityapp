@@ -41,7 +41,7 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/activity/:activity_id`}>
           <AgendaActividadDetalle
-          setVirtualConference={props.setVirtualConference}
+            setVirtualConference={props.setVirtualConference}
             // visible={this.state.visible}
             // onClose={this.onClose}
             // showDrawer={this.showDrawer}

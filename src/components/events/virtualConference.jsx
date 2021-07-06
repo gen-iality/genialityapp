@@ -42,7 +42,6 @@ let MeetingConferenceButton = ({
                 zoomExternoHandleOpen(activity, eventUser);
               } else {
                 setActivity(activity);
-                showSection('agenda', true);
               }
             }}>
             <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />

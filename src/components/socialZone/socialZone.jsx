@@ -393,7 +393,7 @@ let SocialZone = function(props) {
           tab={
             <div style={{ marginBottom: '0px' }}>
               <Badge dot={props.hasOpenSurveys} size='default'>
-                Encuestas
+                <span style={{ color: props.cEvent.styles.textMenu }}>Encuestas</span>
               </Badge>
             </div>
           }
@@ -433,7 +433,9 @@ let SocialZone = function(props) {
           className='asistente-survey-list'
           tab={
             <>
-              <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-hidden'>
+              <p
+                style={{ marginBottom: '0px', color: props.cEvent.styles.textMenu }}
+                className='lowerTabs__mobile-hidden'>
                 Juegos
               </p>
             </>
@@ -442,6 +444,7 @@ let SocialZone = function(props) {
           <Row justify='space-between'>
             <Col span={4}>
               <ArrowLeftOutlined
+              style={{color: props.cEvent.styles.textMenu}}
                 onClick={() => {
                   props.setMainStage(null);
                   props.settabselected('');
@@ -450,14 +453,14 @@ let SocialZone = function(props) {
               />
             </Col>
             <Col span={14}>
-              <h2 style={{ fontWeight: '700' }}> Volver a la Conferencia </h2>
+              <h2 style={{ fontWeight: '700', color: props.cEvent.styles.textMenu }}> Volver a la Conferencia </h2>
             </Col>
             <Col span={4}>
-              <VideoCameraOutlined />
+              <VideoCameraOutlined style={{color: props.cEvent.styles.textMenu}}/>
             </Col>
           </Row>
 
-          <GameRanking />
+          <GameRanking currentUser={currentUser}  cEvent={props.cEvent} />
         </TabPane>
       )}
     </Tabs>

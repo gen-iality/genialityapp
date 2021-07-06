@@ -9,7 +9,6 @@ import { withRouter } from 'react-router-dom';
 const MenuRigth = (props) => {
   const animateIcon = 'animate__animated animate__bounceIn';
 
-  console.log("props menu",props)
   return (
     <Menu mode='none' theme='light' style={stylesMenuItems}>
       <Menu.Item
@@ -87,7 +86,10 @@ const MenuRigth = (props) => {
             </span>
           }
           style={{ paddingTop: '20px' }}
-          // onClick={() => props.toggleCollapsed(3)}
+           onClick={() =>  {
+            props.handleCollapsed();
+            props.settabselected('3');
+           }}
         ></Menu.Item>
       )}
       {props.currentActivity !== null && props.tabs && (props.tabs.games === 'true' || props.tabs.games === true) && (
@@ -104,8 +106,8 @@ const MenuRigth = (props) => {
           }
           style={{ paddingTop: '20px' }}
           onClick={() => {
-            // props.setMainStage('game');
-            // props.toggleCollapsed(4);
+            props.handleCollapsed();
+            props.settabselected('4');
           }}></Menu.Item>
       )}
     </Menu>
