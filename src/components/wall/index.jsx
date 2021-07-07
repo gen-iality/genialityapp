@@ -4,6 +4,7 @@ import CreatePost from './createPost';
 import ListWall from './listWall';
 import { firestore } from '../../helpers/firebase';
 import { saveFirebase } from './helpers';
+import withContext from '../../Context/withContext'
 
 class Wall extends Component {
   constructor(props) {
@@ -16,10 +17,8 @@ class Wall extends Component {
 
   componentDidMount() {
     this.getPost();
-
-    if (this.props.currentUser) {
-      const { currentUser } = this.props;
-      this.setState({ user: currentUser });
+    if (this.props.cEventUser.value) {
+      this.setState({ user: this.props.cEventUser.value });
     }
   }
 
@@ -36,7 +35,7 @@ class Wall extends Component {
   deletePost = async (postId) => {
     //window.confirm("Seguro deseas borrar esta publicación");
     //se borra en el API
-    await saveFirebase.deletePost(postId, this.props.event._id);
+    await saveFirebase.deletePost(postId, this.props.cEvent.value._id);
 
     //se borra local
     var updatedPost = this.state.dataPost.filter(function(value) {
@@ -46,8 +45,8 @@ class Wall extends Component {
     return true;
   };
 
-  increaseLikes = async (postId, eventId, userId) => {
-    var updatedPost = await saveFirebase.increaseLikes(postId, this.props.event._id, userId);
+  increaseLikes = async (postId,  userId) => {
+    var updatedPost = await saveFirebase.increaseLikes(postId, this.props.cEvent.value._id, userId);
     //se actualiza local
     updatedPost = this.state.dataPost.map(function(value) {
       return value.id !== postId ? value : updatedPost;
@@ -58,7 +57,7 @@ class Wall extends Component {
   createComment = async (postId, message) => {
     var updatedPost = await saveFirebase.createComment(
       postId,
-      this.props.event._id,
+      this.props.cEvent.value._id,
       message,
       this.state.user._id,
       this.state.user.names
@@ -73,7 +72,6 @@ class Wall extends Component {
 
   render() {
     const { currentCommet, user } = this.state;
-    const { event } = this.props;
     return (
       <div>
         {/*Crear un nuevo post*/}
@@ -86,11 +84,11 @@ class Wall extends Component {
                 marginBottom: '20px'
               }}>
               <Col xs={24} sm={20} md={20} lg={20} xl={12}>
-                <CreatePost event={event} addPosts={this.addPosts} user={user} />
+                <CreatePost addPosts={this.addPosts}/>
                 <ListWall
                   createComment={this.createComment}
-                  event={event}
-                  user={user}
+                  event={this.props.cEvent.value}
+                  user={this.props.cUser}
                   key={this.state.keyList}
                   dataPost={this.state.dataPost}
                   deletePost={this.deletePost}
@@ -111,7 +109,7 @@ class Wall extends Component {
     try {
       let adminPostRef = firestore
         .collection('adminPost')
-        .doc(this.props.event._id)
+        .doc(this.props.cEvent.value._id)
         .collection('posts')
         .orderBy('datePost', 'desc');
       let snapshot = await adminPostRef.get();
@@ -134,4 +132,5 @@ class Wall extends Component {
   }
 }
 
-export default Wall;
+let WallWithContext = withContext(Wall)
+export default WallWithContext;
