@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { List, Typography, Badge, Tooltip, Tabs, Form, Input, Button, Row, Space } from 'antd';
-import { MessageTwoTone } from '@ant-design/icons';
+import { ExclamationCircleOutlined, MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
+const { Text } = Typography;
 
 const layout = {
   labelCol: { span: 6 },
@@ -63,7 +64,7 @@ const ChatList = (props) => {
     setcurrentab(key);
   }
 
-  if (cUser)
+  if (!cUser)
     return (
       <Form {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
         <Row justify='center'>
@@ -75,8 +76,17 @@ const ChatList = (props) => {
               />
             </strong>
           </h1>
+          <Space>
+            <ExclamationCircleOutlined style={{ color: '#faad14' }} />
+            <Text type='secondary'>
+              <FormattedMessage
+                id='form.message.socialzone'
+                defaultMessage='Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.'
+              />
+            </Text>
+          </Space>
         </Row>
-        <Row justify='center'>
+        <Row justify='center' style={{ paddingTop: '10px' }}>
           <Form.Item
             label={intl.formatMessage({ id: 'form.label.name' })}
             name='name'
@@ -91,13 +101,13 @@ const ChatList = (props) => {
 
         <Row justify='center'>
           <Space size='large'>
-            <Form.Item {...tailLayout}>
+            <Form.Item>
               <Button type='primary'>
                 <FormattedMessage id='form.button.register' defaultMessage='Registrarme' />
               </Button>
             </Form.Item>
 
-            <Form.Item {...tailLayout}>
+            <Form.Item>
               <Button type='dashed' htmlType='submit'>
                 <FormattedMessage id='form.button.enter' defaultMessage='Entrar' />
               </Button>

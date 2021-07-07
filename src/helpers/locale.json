@@ -82,7 +82,8 @@
     "form.title.socialzone": "Enter your information to participate in the chat",
     "form.label.name": "Name",
     "form.button.enter": "Enter",
-    "form.button.register": "Register",
+    "form.button.register": "Register to the event",
+    "form.message.socialzone":"This form is only valid to participate in the chat, if you want to enjoy the event in its entirety you must register.",
 
     "login.title": "Login",
     "restore.login.title": "Restore password",
@@ -175,7 +176,8 @@
     "form.title.socialzone": "Ingresa tus datos para participar en el chat",
     "form.label.name": "Nombre",
     "form.button.enter": "Entrar",
-    "form.button.register": "Registrarme",
+    "form.button.register": "Registrarme al evento",
+    "form.message.socialzone":"Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.",
     
 
     "login.title": "Iniciar sesión",
@@ -228,7 +230,8 @@
     "form.title.socialzone": "Insira suas informações para participar do chat",
     "form.label.name": "Nome",
     "form.button.enter": "Entrem",
-    "form.button.register": "Registro",
+    "form.button.register": "Inscreva-se no evento",
+    "form.message.socialzone":"Este formulário só é válido para participar do chat, se quiser curtir o evento na íntegra é necessário se cadastrar.s",
 
     "login.title": "Iniciar sessão",
     "restore.login.title": "Restaurar senha",
