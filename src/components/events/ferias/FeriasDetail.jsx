@@ -4,18 +4,38 @@ import FeriasBanner from './feriaBanner.jsx'
 import Information from './information.jsx'
 import Product from './product'
 import Contact from './contact'
-import { Route } from 'react-router';
+import { Route, withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import {setTopBanner}  from '../../../redux/topBanner/actions'
+import {setTopBanner}  from '../../../redux/topBanner/actions';
+//import { useLocation } from "react-router-dom";
+import { getEventCompany } from '../../empresas/services.js';
+import { compose } from 'redux';
 
 
 const FeriasDetail = (props) => {
+  console.log("DETAILS COMPANY")
+  console.log(props)
+  
   useEffect(()=>{
   props.setTopBanner(false)
   return ()=>{
     props.setTopBanner(true)
     };  
   })
+
+  useEffect(()=>{
+  // obtenerEmpresa()
+  /*const {match}= props;
+  console.log("MATHS")*/
+
+
+  },[])
+
+  const obtenerEmpresa=()=>{
+  
+   
+    //getEventCompany()
+  }
 
   const { TabPane } = Tabs;
   console.log("FERIAS DETAILS")
@@ -58,6 +78,7 @@ const FeriasDetail = (props) => {
     }
   ]
   return <div className='feriasdetail'>
+    
     <div style={{position:'relative'}}>
      <FeriasBanner
       imagen={'https://chipichape.com.co/tienda/administracion//uploads/1564087046-juan%20valdez2%20banner.jpg'} />
@@ -153,14 +174,17 @@ const FeriasDetail = (props) => {
       </div>
   </div>
 };
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state,{params}) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
-  view:state.topBannerReducer.view
+  view:state.topBannerReducer.view,
+  params:params
 });
 
 const mapDispatchToProps = {
   setTopBanner 
 };
 
-export default connect(mapStateToProps, mapDispatchToProps) (FeriasDetail);
+
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps) (FeriasDetail)) ;
