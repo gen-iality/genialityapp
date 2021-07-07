@@ -5,9 +5,10 @@ import { Card } from 'antd';
 import ReactQuill from 'react-quill';
 import ReactPlayer from 'react-player';
 import { Row, Col } from 'antd';
-import { EventsApi, AgendaApi } from '../../helpers/request';
+import {  AgendaApi } from '../../helpers/request';
 import { parseUrl } from '../../helpers/constants';
 import AgendaActividadDetalle from '../../components/events/agendaActividadDetalle';
+import withContext from '../../Context/withContext';
 
 class eventLanding extends Component {
   constructor(props) {
@@ -21,20 +22,6 @@ class eventLanding extends Component {
   }
 
   async componentDidMount() {
-    const { event } = this.props;
-
-    if (this.props.currentUser !== null) {
-      const eventUser = await EventsApi.getcurrentUserEventUser(event._id);
-      if (eventUser !== null) {
-        this.setState({
-          eventUser,
-          eventUserId: eventUser._id,
-          currentUserName: eventUser.names || eventUser.email,
-        });
-      }
-    } else {
-      this.setState({ onPage: 'event' });
-    }
     this.setState({ onPage: 'event' });
   }
 
@@ -42,12 +29,9 @@ class eventLanding extends Component {
     //Utilizada para concatenar parametros
     this.currentUrl = window.location.href;
     this.urlParams = parseUrl(this.currentUrl);
-
-    const { event } = this.props;
-
     //Si existe el activity_id por urlParams entonces seteamos el estado
     if (this.urlParams.activity_id) {
-      const activity = await AgendaApi.getOne(this.urlParams.activity_id, event._id);
+      const activity = await AgendaApi.getOne(this.urlParams.activity_id, this.props.cEvent.value._id);
       this.setState({
         activityId: this.urlParams.activity_id,
         activityDetail: activity,
@@ -63,16 +47,7 @@ class eventLanding extends Component {
     this.setState({ onClick: true });
   }
 
-  /* Consultar las actividades de la agenda del evento */
-  getActivities = async (eventId) => {
-    // Se consulta a la api de agenda
-    const { data } = await AgendaApi.byEvent(eventId);
-    return data;
-  };
-
   render() {
-    const { event } = this.props;
-
     return (
       <div style={{ marginBottom: 12 }}>
         <Card
@@ -80,19 +55,19 @@ class eventLanding extends Component {
           bodyStyle={{ padding: '25px 5px' }}
           bordered={true}
           style={
-            event.styles && event.styles.show_card_banner && event.styles.show_card_banner === true
+            this.props.cEvent.value.styles &&
+            this.props.cEvent.value.styles.show_card_banner &&
+            this.props.cEvent.value.styles.show_card_banner === true
               ? { marginTop: '2%' }
               : { marginTop: '0px' }
           }>
-           
-           {event._id === "5f0622f01ce76d5550058c32" ? (
-              ''
-             ):(
-               <h1 className='is-size-4-desktop has-text-weight-semibold'>{event.name}</h1>
-             )
-           }
+          {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' ? (
+            ''
+          ) : (
+            <h1 className='is-size-4-desktop has-text-weight-semibold'>{this.props.cEvent.value.name}</h1>
+          )}
           {/* Si event video existe */}
-          {event.video && (
+          {this.props.cEvent.value.video && (
             <div className='column is-centered mediaplayer'>
               <ReactPlayer
                 width={'100%'}
@@ -101,12 +76,12 @@ class eventLanding extends Component {
                   display: 'block',
                   margin: '0 auto',
                 }}
-                url={event.video}
+                url={this.props.cEvent.value.video}
                 controls
               />
             </div>
           )}
-          {event._id === '5f0622f01ce76d5550058c32' ? (
+          {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' ? (
             <>
               <h3 style={{ fontWeight: 700 }}>
                 {' '}
@@ -116,19 +91,17 @@ class eventLanding extends Component {
             </>
           ) : (
             <>
-              <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme='bubble' />
+              <ReactQuill
+                value={this.props.cEvent.value.description}
+                modules={{ toolbar: false }}
+                readOnly={true}
+                theme='bubble'
+              />
             </>
           )}
-         
-          {/* {
-            (event._id !== "5f0622f01ce76d5550058c32" && !this.state.activityId) && (
-              <div>
-                <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
-              </div>
-            )
-          } */}
+
           {/*Contenedor personalizado FENALCO*/}
-          {event._id === '5f0622f01ce76d5550058c32' && (
+          {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' && (
             <div>
               <div className='containerfenalco'>
                 <Row gutter={[8, 16]} justify='center'>
@@ -161,7 +134,7 @@ class eventLanding extends Component {
               </div>
             </div>
           )}
-          {event._id === '60413a3cf215e97bb908bec9' && (
+          {this.props.cEvent.value._id === '60413a3cf215e97bb908bec9' && (
             <div>
               <div className='containerfenalco'>
                 <Row gutter={[8, 16]} justify='center'>
@@ -194,7 +167,7 @@ class eventLanding extends Component {
               </div>
             </div>
           )}
-          {event._id === '5f282d98c32fa03a4299582d' && (
+          {this.props.cEvent.value._id === '5f282d98c32fa03a4299582d' && (
             <div>
               <div className='containerfenalco'>
                 <Row gutter={[8, 16]} justify='center'>
@@ -228,7 +201,7 @@ class eventLanding extends Component {
             </div>
           )}
           {/*Contenedor personalizado COMPENSAR - Detalle del Evento*/}
-          {event._id === '5f4e41d5eae9886d464c6bf4' && !this.state.activityId && (
+          {this.props.cEvent.value._id === '5f4e41d5eae9886d464c6bf4' && !this.state.activityId && (
             <div>
               <div className='containerGaming'>
                 <Row gutter={[12, 12]}>
@@ -256,7 +229,7 @@ class eventLanding extends Component {
               </div>
             </div>
           )}
-          {event._id === '5f7f21217828e17d80642856' && (
+          {this.props.cEvent.value._id === '5f7f21217828e17d80642856' && (
             <div>
               <div className='containerRuedaNaranja'>
                 <Row gutter={[8, 16]} justify='center'>
@@ -301,7 +274,7 @@ class eventLanding extends Component {
             </div>
           )}
           {/* rueda naranja dos */}
-          {event._id === '609180c6013150612044b547' && (
+          {this.props.cEvent.value._id === '609180c6013150612044b547' && (
             <div>
               <div className='containerRuedaNaranja'>
                 <Row gutter={[8, 16]} justify='center'>
@@ -345,7 +318,7 @@ class eventLanding extends Component {
               </div>
             </div>
           )}
-          {event._id === '5f92d0cee5e2552f1b7c8ea2' && (
+          {this.props.cEvent.value._id === '5f92d0cee5e2552f1b7c8ea2' && (
             <div>
               <div className='containerRuedaNaranja'>
                 <Row gutter={[8, 16]} justify='center'>
@@ -390,7 +363,7 @@ class eventLanding extends Component {
           )}
         </Card>
         {/*Contenedor personalizado COMPENSAR - Detalle de la actividad del evento*/}
-        {event._id === '5f4e41d5eae9886d464c6bf4' && this.state.activityId && (
+        {this.props.cEvent.value._id === '5f4e41d5eae9886d464c6bf4' && this.state.activityId && (
           <AgendaActividadDetalle currentActivity={this.state.activityDetail} />
         )}
       </div>
@@ -398,4 +371,5 @@ class eventLanding extends Component {
   }
 }
 
-export default withRouter(eventLanding);
+let EventLandingWithContext = withContext(eventLanding);
+export default withRouter(EventLandingWithContext);
