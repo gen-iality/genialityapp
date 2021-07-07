@@ -9,3 +9,17 @@
   font-size: 11px !important;
   }
 }
+
+.ant-upload-select-picture-card {
+    width: 125px !important; 
+    height: 125px !important;
+    margin-right: 8px !important;
+    margin-bottom: 8px !important;
+    text-align: center !important;
+    vertical-align: top !important;
+    background-color: #fafafa !important;
+    border: 1px solid #d9d9d9 !important;
+    border-radius: 70px !important;
+    cursor: pointer !important;
+    transition: border-color 0.3s !important;
+}

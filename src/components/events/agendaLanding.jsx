@@ -574,7 +574,7 @@ class Agenda extends Component {
       Moment.locale(window.navigator.language);
     }
 
-    console.log('Idioma', this.props.cEvent.value.styles);
+    
 
     return (
       <div>
