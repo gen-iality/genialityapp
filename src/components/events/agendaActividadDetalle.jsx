@@ -304,21 +304,11 @@ let AgendaActividadDetalle = (props) => {
   };
 
   // aquie esta los estados del drawer y el modal
-  const [visible, setVisible] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [visible, setVisible] = useState(props.isVisible);
   const [rankingVisible, setRankingVisible] = useState(true);
   const [width, setWidth ] = useState('70%');
-  const [onclose, setOnclose] = useState(false)
-  const handleOk = () => {
-      setIsModalVisible(false);
-    };
-  
-    const handleCancel = () => {
-      setIsModalVisible(false);
-    };
-  const showWidth =()=>{
+ 
 
-  }
   const showRanking=()=>{
     if(window.screen.width >= 768){
        setWidth('70%')
@@ -337,15 +327,16 @@ let AgendaActividadDetalle = (props) => {
     }
       setRankingVisible(!rankingVisible)
   }
-  const showModal = () => {
-      setIsModalVisible(true);
-    };
   // const showDrawer = () => { // esta funcion activa rl drawer
   //   setVisible(false) 
   //  };
-  const onClose = () => {  // esta funcion desactiva rl drawer
-    setVisible(false) 
-  };
+  function onClose () {  // esta funcion desactiva rl drawer
+    // setVisible(false) 
+    if(props.isVisible===true){
+     props.setSurveyVisible(false)
+    }
+    
+  }
 
   // constante de ranking
   const hasRanking = true
@@ -579,7 +570,40 @@ let AgendaActividadDetalle = (props) => {
                   />
                 </div>
               )} */}
-
+               {option == 'surveyDetalle' && (
+                <>
+                  <Drawer
+                      closeIcon={<CloseOutlined />}
+                      placement="right"
+                      // closable={true}
+                      visible={props.isVisible}
+                      onClose={onClose}
+                      width={window.screen.width >= 768 ? rankingVisible == false ? '100%':'70%': '100%'}
+                    >
+                      <div style={{width:'100%', display:'inline-block', paddingBottom:'10px'}}>
+                       <Button 
+                        type="primary"
+                        onClick={showRanking} 
+                         >
+                          {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
+                      </Button> 
+                      </div>
+                      
+                      <Row gutter={[8,8]} justify='center'>
+                        <Col  xl={rankingVisible == true ? 24 : 16} xxl={rankingVisible == true ? 24 : 16} >
+                          <RootPage/>
+                        </Col>
+                        <Col hidden={rankingVisible}  xl={8} xxl={8} >
+                          <div style={{width:'100%'}}>
+                            <div style={{justifyContent:'center', display:'grid'}}>
+                              {hasRanking && <RankingTrivia/>}
+                              </div>
+                          </div>
+                        </Col>  
+                      </Row>
+                    </Drawer>
+                </>
+              )}
               {option == 'game' && <Game />}
 
               {(meetingState === '' || meetingState == null) &&
@@ -834,40 +858,6 @@ let AgendaActividadDetalle = (props) => {
           </Link> */}
         </Card>
       </div>
-      {option == 'surveyDetalle' && (
-                <>
-                  <Drawer
-                      closeIcon={<CloseOutlined />}
-                      placement="right"
-                      // closable={true}
-                      visible={visible}
-                      onClose={onClose}
-                      width={window.screen.width >= 768 ? rankingVisible == false ? '100%':'70%': '100%'}
-                    >
-                      <div style={{width:'100%', display:'inline-block', paddingBottom:'10px'}}>
-                       <Button 
-                        type="primary"
-                        onClick={showRanking} 
-                         >
-                          {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
-                      </Button> 
-                      </div>
-                      
-                      <Row gutter={[8,8]} justify='center'>
-                        <Col  xl={rankingVisible == true ? 24 : 16} xxl={rankingVisible == true ? 24 : 16} >
-                          <RootPage/>
-                        </Col>
-                        <Col hidden={rankingVisible}  xl={8} xxl={8} >
-                          <div style={{width:'100%'}}>
-                            <div style={{justifyContent:'center', display:'grid'}}>
-                              {hasRanking && <RankingTrivia/>}
-                              </div>
-                          </div>
-                        </Col>  
-                      </Row>
-                    </Drawer>
-                </>
-              )}
     </div>
   );
 };
@@ -881,6 +871,7 @@ const mapStateToProps = (state) => ({
   tabs: state.stage.data.tabs,
   generalTabs: state.tabs.generalTabs,
   permissions: state.permissions,
+  isVisible: state.survey.data.surveyVisible,
 });
 
 const mapDispatchToProps = {
