@@ -79,6 +79,10 @@
     "form.missing.required.fields": "Missing required fields",
     "form.label.password": "Password",
     "form.validate.message.email.password.error": "Email or password was not correct",
+    "form.title.socialzone": "Enter your information to participate in the chat",
+    "form.label.name": "Name",
+    "form.button.enter": "Enter",
+    "form.button.register": "Register",
 
     "login.title": "Login",
     "restore.login.title": "Restore password",
@@ -168,6 +172,11 @@
     "form.missing.required.fields": "Faltan por completar algunos campos",
     "form.label.password": "Contraseña",
     "form.validate.message.email.password.error": "Email o Contraseña incorrecta",
+    "form.title.socialzone": "Ingresa tus datos para participar en el chat",
+    "form.label.name": "Nombre",
+    "form.button.enter": "Entrar",
+    "form.button.register": "Registrarme",
+    
 
     "login.title": "Iniciar sesión",
     "restore.login.title": "Restablecer contraseña",
@@ -216,6 +225,10 @@
     "form.missing.required.fields": "Campos obrigatórios ausentes",
     "form.label.password": "Senha",
     "form.validate.message.email.password.error": "Email ou senha incorretos",
+    "form.title.socialzone": "Insira suas informações para participar do chat",
+    "form.label.name": "Nome",
+    "form.button.enter": "Entrem",
+    "form.button.register": "Registro",
 
     "login.title": "Iniciar sessão",
     "restore.login.title": "Restaurar senha",
