@@ -6,7 +6,7 @@ import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { useIntl } from 'react-intl';
 import { TicketsApi, Activity, AgendaApi } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, Input, Alert } from 'antd';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, Input, Alert, Drawer} from 'antd';
 import { firestore } from '../../helpers/firebase';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
@@ -15,9 +15,10 @@ import * as StageActions from '../../redux/stage/actions';
 import * as SurveyActions from '../../redux/survey/actions';
 import Game from './game';
 import EnVivo from '../../EnVivo.svg';
-import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined, UserOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined, UserOutlined, CloseOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
+import RankingTrivia from './surveys/rankingTrivia';
 import { listenSurveysData } from '../events/surveys/services';
 import { eventUserUtils } from '../../helpers/helperEventUser';
 import { useParams } from 'react-router-dom';
@@ -302,6 +303,53 @@ let AgendaActividadDetalle = (props) => {
     zoomExternoHandleOpen(currentActivity, eventUser);
   };
 
+  // aquie esta los estados del drawer y el modal
+  const [visible, setVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [rankingVisible, setRankingVisible] = useState(true);
+  const [width, setWidth ] = useState('70%');
+  const [onclose, setOnclose] = useState(false)
+  const handleOk = () => {
+      setIsModalVisible(false);
+    };
+  
+    const handleCancel = () => {
+      setIsModalVisible(false);
+    };
+  const showWidth =()=>{
+
+  }
+  const showRanking=()=>{
+    if(window.screen.width >= 768){
+       setWidth('70%')
+       if(rankingVisible == false){
+        setWidth('100%')
+       }{
+        setWidth('70%')
+       }
+    }else{
+      setWidth('100%')
+      if(rankingVisible == false){
+        setWidth('100%')
+       }{
+        setWidth('70%')
+       }
+    }
+      setRankingVisible(!rankingVisible)
+  }
+  const showModal = () => {
+      setIsModalVisible(true);
+    };
+  // const showDrawer = () => { // esta funcion activa rl drawer
+  //   setVisible(false) 
+  //  };
+  const onClose = () => {  // esta funcion desactiva rl drawer
+    setVisible(false) 
+  };
+
+  // constante de ranking
+  const hasRanking = true
+
   return (
     <div className='is-centered'>
       <div className=' container_agenda-information container-calendar2 is-three-fifths'>
@@ -518,7 +566,7 @@ let AgendaActividadDetalle = (props) => {
                   </>
                 )}
 
-              {option == 'surveyDetalle' && (
+              {/* {option == 'surveyDetalle' && (
                 <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
                   <RootPage
                   // event={event}
@@ -530,7 +578,7 @@ let AgendaActividadDetalle = (props) => {
                   // unMountCurrentSurvey={unMountCurrentSurvey}
                   />
                 </div>
-              )}
+              )} */}
 
               {option == 'game' && <Game />}
 
@@ -786,6 +834,40 @@ let AgendaActividadDetalle = (props) => {
           </Link> */}
         </Card>
       </div>
+      {option == 'surveyDetalle' && (
+                <>
+                  <Drawer
+                      closeIcon={<CloseOutlined />}
+                      placement="right"
+                      // closable={true}
+                      visible={visible}
+                      onClose={onClose}
+                      width={window.screen.width >= 768 ? rankingVisible == false ? '100%':'70%': '100%'}
+                    >
+                      <div style={{width:'100%', display:'inline-block', paddingBottom:'10px'}}>
+                       <Button 
+                        type="primary"
+                        onClick={showRanking} 
+                         >
+                          {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
+                      </Button> 
+                      </div>
+                      
+                      <Row gutter={[8,8]} justify='center'>
+                        <Col  xl={rankingVisible == true ? 24 : 16} xxl={rankingVisible == true ? 24 : 16} >
+                          <RootPage/>
+                        </Col>
+                        <Col hidden={rankingVisible}  xl={8} xxl={8} >
+                          <div style={{width:'100%'}}>
+                            <div style={{justifyContent:'center', display:'grid'}}>
+                              {hasRanking && <RankingTrivia/>}
+                              </div>
+                          </div>
+                        </Col>  
+                      </Row>
+                    </Drawer>
+                </>
+              )}
     </div>
   );
 };
