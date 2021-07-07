@@ -21,6 +21,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
+import ImgCrop from 'antd-img-crop'
 
 // import InputFile from "./inputFile"
 const { Option } = Select;
@@ -323,6 +324,7 @@ export default ({
       }
       let input = (
         <Input
+          disabled={m.name == 'email' && initialValues.email ? true : false}
           {...props}
           addonBefore={
             labelPosition === 'izquierda' && (
@@ -550,6 +552,21 @@ export default ({
             }
             bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
+
+            <div style={{textAlign:'center'}}>
+              <ImgCrop rotate>
+                <Upload
+                  accept='image/png,image/jpeg'
+                  action='https://api.evius.co/api/files/upload/'
+                  multiple={false}
+                  listType='picture-card'
+                  maxCount={1}
+                  beforeUpload={beforeUpload}>
+                  <Button icon={<UploadOutlined />}>Avatar</Button>
+                </Upload>
+              </ImgCrop>
+            </div>
+
             <Form
               form={form}
               layout='vertical'
