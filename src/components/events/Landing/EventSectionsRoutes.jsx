@@ -22,6 +22,7 @@ import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import MyAgendaIndepend from '../../networking/myAgendaIndepend';
 import NetworkingForm from '../../networking';
 import InformativeSection2 from '../informativeSections/informativeSection2';
+import InformativeSection from '../informativeSections/informativeSection';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -50,6 +51,10 @@ const EventSectionRoutes = (props) => {
 
         <Route path={`${path}/informativeSection1`}>
           <InformativeSection2 />
+        </Route>
+
+        <Route path={`${path}/informativeSection`}>
+          <InformativeSection />
         </Route>
 
         <Route path={`${path}/activity/:activity_id`}>

@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Card } from 'antd';
 import Parser from 'html-react-parser';
+import withContext from '../../../Context/withContext'
 
 class InformativeSection extends Component {
   constructor(props) {
@@ -13,8 +14,8 @@ class InformativeSection extends Component {
 
   componentDidMount() {
     this.setState({
-      informativeSection: this.props.event.itemsMenu.informativeSection,
-      markup: this.props.event.itemsMenu.informativeSection.markup,
+      informativeSection: this.props.cEvent.value.itemsMenu.informativeSection,
+      markup: this.props.cEvent.value.itemsMenu.informativeSection.markup,
     });
   }
   render() {
@@ -27,7 +28,7 @@ class InformativeSection extends Component {
               title={informativeSection.name || 'clasificación'}
               bordered={false}
               style={{ width: 1000, margin: 'auto' }}>
-              {this.props.event._id === '60797bfb2a9cc06ce973a1f4' && (
+              {this.props.cEvent.value._id === '60797bfb2a9cc06ce973a1f4' && (
                 <>
                   <p>
                     Llega el momento que tanto hemos esperado 😃 Inscribite al #IIITorneodeAjedrezdelCaribeALaRuedaRueda
@@ -54,4 +55,5 @@ class InformativeSection extends Component {
   }
 }
 
-export default InformativeSection;
+let InformativeSection2WithContext  = withContext(InformativeSection)
+export default InformativeSection2WithContext;

@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { Card } from 'antd';
+import React, { Component } from 'react';
+import { Card,Row } from 'antd';
 import Parser from 'html-react-parser';
 import ReactPlayer from 'react-player';
 import withContext from '../../../Context/withContext'
@@ -23,7 +23,7 @@ class InformativeSection2 extends Component {
 
     const { markup, informativeSection1 } = this.state;
     return (
-      <Fragment>
+      <Row justify="center">
         {informativeSection1 && (
           <div className='site-card-border-less-wrapper'>
             {this.props.cEvent.value._id != '609180c6013150612044b547' && this.props.cEvent.value._id != '60797bfb2a9cc06ce973a1f4' && (
@@ -116,7 +116,7 @@ class InformativeSection2 extends Component {
             )}
           </div>
         )}
-      </Fragment>
+      </Row>
     );
   }
 }
