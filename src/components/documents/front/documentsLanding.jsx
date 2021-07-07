@@ -1,30 +1,11 @@
 import { notification } from 'antd';
 import React, { Component } from 'react';
-
-//custom
 import { getFiles } from '../services';
-
 import { Col, Card, Result } from 'antd';
-
 import Loading from '../../loaders/loading';
-
 import DocumentsList from '../documentsList';
 import { DocumentsApi } from '../../../helpers/request';
-
-// Estructura de boton para descargar documentos
-
-// const IconText = ({ icon, text, onSubmit }) => (
-//     <Button
-//         htmlType="submit"
-//         type="link"
-//         href={onSubmit}
-//         target="_blank"
-//     >
-
-//         {React.createElement(icon, { style: { marginRight: 8 } })}
-//         {text}
-//     </Button>
-// );
+import withContext from '../../../Context/withContext'
 
 class documentsDetail extends Component {
   constructor(props) {
@@ -44,7 +25,7 @@ class documentsDetail extends Component {
     let data = [];
 
     try {
-      let eventId = this.props.event?._id;
+      let eventId = this.props.cEvent.value?._id;
       let folders = await DocumentsApi.getAll(eventId);
       documents = await getFiles(eventId);
 
@@ -97,4 +78,5 @@ class documentsDetail extends Component {
   }
 }
 
-export default documentsDetail;
+let DocumentsWithContext = withContext(documentsDetail)
+export default DocumentsWithContext;

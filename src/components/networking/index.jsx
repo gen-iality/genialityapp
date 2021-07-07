@@ -9,29 +9,17 @@ import Pagination from '../shared/pagination';
 import Loading from '../loaders/loading';
 import EventContent from '../events/shared/content';
 import FilterNetworking from './FilterNetworking';
-
 import * as Cookie from 'js-cookie';
 import { EventsApi, EventFieldsApi } from '../../helpers/request';
 import { formatDataToString } from '../../helpers/utils';
-
 import { userRequest } from './services';
 import ContactList from './contactList';
 import RequestList from './requestList';
-
-//context
-import { UseUserEvent } from '../../Context/eventUserContext';
-import { UseEventContext } from '../../Context/eventContext';
-import { UseCurrentUser } from '../../Context/userContext';
-
+import withContext from '../../Context/withContext';
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
 class ListEventUser extends Component {
-  //contextos
-  userEventContext = UseUserEvent();
-  EventContext = UseEventContext();
-  userCurrentContext = UseCurrentUser();
-
   constructor(props) {
     super(props);
     this.state = {
@@ -65,7 +53,6 @@ class ListEventUser extends Component {
 
   loadData = async () => {
     let { changeItem } = this.state;
-    const { event } = this.props;
 
     // NO BORRAR ES UN AVANCE  PARA OPTIMIZAR LAS PETICIONES A LA API DE LA SECCION NETWORKING
     let eventUserList = [];
@@ -75,7 +62,11 @@ class ListEventUser extends Component {
     // }
 
     //Servicio que trae la lista de asistentes excluyendo el usuario logeado
-    eventUserList = await userRequest.getEventUserList(event._id, Cookie.get('evius_token'), this.userCurrentContext);
+    eventUserList = await userRequest.getEventUserList(
+      this.props.cEvent.value._id,
+      Cookie.get('evius_token'),
+      this.userCurrentContext
+    );
 
     /** Inicia destacados
      * Búscamos usuarios destacados para colocarlos de primeros en la lista(destacados), tiene varios usos cómo publicitarios
@@ -443,7 +434,7 @@ class ListEventUser extends Component {
                         placeholder={''}
                         data={usersFiltered}
                         kind={'user'}
-                        event={this.props.event._id}
+                        event={this.props.cEvent.value._id}
                         searchResult={this.searchResult}
                         clear={this.state.clearSearch}
                         styles={{ width: '300px' }}
@@ -454,7 +445,7 @@ class ListEventUser extends Component {
 
                 <Row justify='space-around' gutter={[16, 16]}>
                   {/*Alerta quemado para el eventop de finanzas de clima*/}
-                  {event._id === '5f9708a2e4c9eb75713f8cc6' && (
+                  {this.props.cEvent.value._id === '5f9708a2e4c9eb75713f8cc6' && (
                     <>
                       <Alert
                         message='Sugerencias de Busqueda'
@@ -471,7 +462,7 @@ class ListEventUser extends Component {
                         <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
-                            properties={this.props.event.user_properties || []}
+                            properties={this.props.cEvent.value.user_properties || []}
                             filterProperty={'participacomo'}
                             handleSelect={this.handleSelectFilter}
                           />
@@ -481,7 +472,7 @@ class ListEventUser extends Component {
                         <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
-                            properties={this.props.event.user_properties || []}
+                            properties={this.props.cEvent.value.user_properties || []}
                             filterProperty={'sector'}
                             handleSelect={this.handleSelectFilter}
                           />
@@ -491,13 +482,13 @@ class ListEventUser extends Component {
                   )}
 
                   {/*Ruedas de negocio naranja videojuegos*/}
-                  {event._id === '5f92d0cee5e2552f1b7c8ea2' && (
+                  {this.props.cEvent.value._id === '5f92d0cee5e2552f1b7c8ea2' && (
                     <>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
                         <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
-                            properties={this.props.event.user_properties || []}
+                            properties={this.props.cEvent.value.user_properties || []}
                             filterProperty={'participascomo'}
                             handleSelect={this.handleSelectFilter}
                           />
@@ -507,7 +498,7 @@ class ListEventUser extends Component {
                         <Form.Item label='Tipo de participante' name='filterSector' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
-                            properties={this.props.event.user_properties || []}
+                            properties={this.props.cEvent.value.user_properties || []}
                             filterProperty={'tipodeparticipante'}
                             handleSelect={this.handleSelectFilter}
                           />
@@ -517,13 +508,13 @@ class ListEventUser extends Component {
                   )}
 
                   {/*Ruedas de negocio naranja*/}
-                  {event._id === '5f7f21217828e17d80642856' && (
+                  {this.props.cEvent.value._id === '5f7f21217828e17d80642856' && (
                     <>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
                         <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
-                            properties={this.props.event.user_properties || []}
+                            properties={this.props.cEvent.value.user_properties || []}
                             filterProperty={'participacomo'}
                             handleSelect={this.handleSelectFilter}
                           />
@@ -533,7 +524,7 @@ class ListEventUser extends Component {
                         <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
-                            properties={this.props.event.user_properties || []}
+                            properties={this.props.cEvent.value.user_properties || []}
                             filterProperty={'queproductooservicioofreces'}
                             handleSelect={this.handleSelectFilter}
                           />
@@ -543,13 +534,13 @@ class ListEventUser extends Component {
                   )}
 
                   {/*Fenalco Meetups*/}
-                  {event._id === '5f0622f01ce76d5550058c32' && (
+                  {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' && (
                     <>
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
                         <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
-                            properties={this.props.event.user_properties || []}
+                            properties={this.props.cEvent.value.user_properties || []}
                             filterProperty={'asistecomo'}
                             handleSelect={this.handleSelectFilter}
                           />
@@ -559,7 +550,7 @@ class ListEventUser extends Component {
                         <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
                           <FilterNetworking
                             id='filterSector'
-                            properties={this.props.event.user_properties || []}
+                            properties={this.props.cEvent.value.user_properties || []}
                             filterProperty={'sector'}
                             handleSelect={this.handleSelectFilter}
                           />
@@ -711,7 +702,7 @@ class ListEventUser extends Component {
             <TabPane tab='Mis Contactos' key='mis-contactos'>
               <ContactList
                 agendarCita={this.props.agendarCita}
-                eventId={this.props.event._id}
+                eventId={this.props.cEvent.value._id}
                 section={this.props.section}
                 tabActive={this.state.activeTab}
               />
@@ -733,7 +724,7 @@ class ListEventUser extends Component {
                 notify={this.props.notifyAmis}
                 currentUser={this.props.currentUser}
                 notification={this.props.notification}
-                eventId={this.props.event._id}
+                eventId={this.props.cEvent.value._id}
                 tabActive={this.state.activeTab}
               />
             </TabPane>
@@ -752,7 +743,7 @@ class ListEventUser extends Component {
               key='solicitudes-de-citas'>
               {activeTab === 'solicitudes-de-citas' && (
                 <AppointmentRequests
-                  eventId={event._id}
+                  eventId={this.props.cEvent.value._id}
                   currentEventUserId={eventUserId}
                   currentUser={this.props.currentUser}
                   notificacion={this.props.notification}
@@ -763,7 +754,12 @@ class ListEventUser extends Component {
 
             <TabPane tab='Mi agenda' key='mi-agenda'>
               {activeTab === 'mi-agenda' && (
-                <MyAgenda event={event} eventUser={eventUser} currentEventUserId={eventUserId} eventUsers={users} />
+                <MyAgenda
+                  event={this.props.cEvent.value}
+                  eventUser={eventUser}
+                  currentEventUserId={eventUserId}
+                  eventUsers={users}
+                />
               )}
             </TabPane>
           </Tabs>
@@ -772,4 +768,6 @@ class ListEventUser extends Component {
     );
   }
 }
-export default ListEventUser;
+
+let ListEventUserWithContext = withContext(ListEventUser);
+export default ListEventUserWithContext;

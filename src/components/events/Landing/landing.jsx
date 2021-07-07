@@ -15,8 +15,6 @@ import EventSectionMenuRigth from './EventSectionMenuRigth';
 import MenuTablets from './Menus/MenuTablets';
 import MenuTabletsSocialZone from './Menus/MenuTabletsSocialZone';
 
-
-
 /** Firebase */
 import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
@@ -31,17 +29,15 @@ const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
-  
- 
 
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
   let [totalNewMessages, settotalnewmessages] = useState(0);
   let { currentActivity, tabs } = props;
   const [tabselected, settabselected] = useState('1');
-  console.log('propsredux',props.view)
+
+
   useEffect(() => {
-    console.log('cUser', cUser);
-    //props.dispatch(getTopBanner)    
+
     cEventContext.status === 'LOADED' &&
       firestore
         .collection('events')
@@ -80,7 +76,7 @@ const Landing = (props) => {
 
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
 
-  console.log('currenactivity', currentActivity);
+
   return (
     <>
       <Layout className='site-layout'>
@@ -88,7 +84,7 @@ const Landing = (props) => {
         <MenuTablets event={cEventContext.value} />
         <Layout className='site-layout'>
           <Content className='site-layout-background'>
-           {props.view && <TopBanner event={cEventContext.value} currentActivity={currentActivity} />}
+            {props.view && <TopBanner event={cEventContext.value} currentActivity={currentActivity} />}
             <EventSectionRoutes
               cEvent={cEventContext.value}
               currentUser={cUser}
@@ -96,6 +92,7 @@ const Landing = (props) => {
               cEventUser={cEventUser.value}
               currentActivity={currentActivity}
               cUser={cUser}
+              // addNotification={addNotification}
             />
           </Content>
         </Layout>
@@ -128,7 +125,7 @@ const Landing = (props) => {
 const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
-  view:state.topBannerReducer.view
+  view: state.topBannerReducer.view,
 });
 
 const mapDispatchToProps = {};

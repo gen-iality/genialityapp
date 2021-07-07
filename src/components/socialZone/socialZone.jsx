@@ -403,7 +403,7 @@ let SocialZone = function(props) {
             style={{ display: 'pointer' }}
             onClick={() => {
               props.setMainStage(null);
-              props.settabselected('');
+              props.settabselected('1');
             }}>
             <Col span={24}>
               <Button
@@ -413,8 +413,8 @@ let SocialZone = function(props) {
                 block
                 onClick={() => {
                   props.setMainStage(null);
-                  props.settabselected('');
-                  props.tcollapse();
+                  props.settabselected('1');
+                  // props.tcollapse();
                 }}>
                 Volver a la Conferencia
               </Button>
