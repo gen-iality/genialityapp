@@ -67,7 +67,7 @@ const ChatList = (props) => {
     setcurrentab(key);
   }
 
-  if (cUser)
+  if (!cUser)
     return (
       <Form {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
         <Row justify='center'>
