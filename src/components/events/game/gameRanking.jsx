@@ -10,7 +10,7 @@ function GameRanking(props) {
   const [myName, setMyName] = useState('');
   const [myScore, setMyScore] = useState('');
 
-  const { currentUser } = props;
+  const { currentUser,cEvent } = props;
 
   useEffect(() => {
     let gameId = '0biWfCwWbUGhbZmfhkvu';
@@ -54,7 +54,7 @@ function GameRanking(props) {
           <Row justify='center'>
             {myName !== '' && myScore !== '' && (
               <>
-                <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px' }}>Mi Puntaje</h3>
+                <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px', color:cEvent.styles.textMenu }}>Mi Puntaje</h3>
                 <div className='card-games-ranking ranking-user'>
                   <Row justify='space-between'>
                     <Col span={6}>
@@ -64,16 +64,16 @@ function GameRanking(props) {
                       </Avatar>
                     </Col>
                     <Col span={12}>
-                      <h3 style={{ fontWeight: '700' }}>{currentUser.displayName}</h3>
+                      <h3 style={{ fontWeight: '700',color:cEvent.styles.textMenu }}>{currentUser.displayName}</h3>
                     </Col>
                     <Col span={6}>
-                      <h4>{myScore} pts</h4>
+                      <h4 style={{color:cEvent.styles.textMenu}}>{myScore} pts</h4>
                     </Col>
                   </Row>
                 </div>
               </>
             )}
-            <RankingList data={ranking} />
+            <RankingList data={ranking} cEvent={cEvent} />
           </Row>
         </>
       )}

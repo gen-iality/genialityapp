@@ -3,9 +3,13 @@ import { Card } from 'antd';
 import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
 import PartnersList from '../PartnersList';
 import PartnersDetail from '../PartnersDetail';
+import {UseEventContext} from '../../../Context/eventContext';
 
-export default function Partners({ event }) {
-  const [companies, loadingCompanies] = useGetEventCompanies(event._id || null);
+export default function Partners() {
+
+  let cEvent = UseEventContext();
+
+  const [companies, loadingCompanies] = useGetEventCompanies(cEvent.value&&cEvent.value._id || null);
   const [viewPartnerDetail, setViewPartnerDetail] = useState(false);
   const [partnerDetailSelected, setPartnerDetailSelected] = useState({});
 

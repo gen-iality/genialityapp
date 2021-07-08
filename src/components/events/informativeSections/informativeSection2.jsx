@@ -1,7 +1,8 @@
-import React, { Component, Fragment } from 'react';
-import { Card } from 'antd';
+import React, { Component } from 'react';
+import { Card,Row } from 'antd';
 import Parser from 'html-react-parser';
 import ReactPlayer from 'react-player';
+import withContext from '../../../Context/withContext'
 
 class InformativeSection2 extends Component {
   constructor(props) {
@@ -14,23 +15,24 @@ class InformativeSection2 extends Component {
 
   componentDidMount() {
     this.setState({
-      markup: this.props.event.itemsMenu.informativeSection1.markup,
-      informativeSection1: this.props.event.itemsMenu.informativeSection1
+      markup: this.props.cEvent.value.itemsMenu.informativeSection1.markup,
+      informativeSection1: this.props.cEvent.value.itemsMenu.informativeSection1
     });
   }
   render() {
+
     const { markup, informativeSection1 } = this.state;
     return (
-      <Fragment>
+      <Row justify="center">
         {informativeSection1 && (
           <div className='site-card-border-less-wrapper'>
-            {this.props.event._id != '609180c6013150612044b547' && this.props.event._id != '60797bfb2a9cc06ce973a1f4' && (
+            {this.props.cEvent.value._id != '609180c6013150612044b547' && this.props.cEvent.value._id != '60797bfb2a9cc06ce973a1f4' && (
               <Card title={informativeSection1.name} bordered={false} style={{ width: 1000 }}>
                 {Parser(markup)}
               </Card>
             )}
 
-            {this.props.event._id == '609180c6013150612044b547' && (
+            {this.props.cEvent.value._id == '609180c6013150612044b547' && (
               <>
                 <h2 style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
                   conferencia - Miguel Uribe Vender
@@ -77,7 +79,7 @@ class InformativeSection2 extends Component {
                   allowFullScreen></iframe>
               </>
             )}
-            {this.props.event._id == '609180c6013150612044b547' && (
+            {this.props.cEvent.value._id == '609180c6013150612044b547' && (
               <>
                 <h2 style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
                   Charla con Yury Buenaventura
@@ -91,7 +93,7 @@ class InformativeSection2 extends Component {
               </>
             )}
 
-            {this.props.event._id == '609180c6013150612044b547' && (
+            {this.props.cEvent.value._id == '609180c6013150612044b547' && (
               <>
                 <h2 style={{ fontWeight: 700, fontSize: '23px', borderBottom: '1px solid #C0BAB9', marginTop: '25px' }}>
                   Charla con María Alejandra Silva de BURO
@@ -105,7 +107,7 @@ class InformativeSection2 extends Component {
               </>
             )}
 
-            {this.props.event._id == '60797bfb2a9cc06ce973a1f4' && (
+            {this.props.cEvent.value._id == '60797bfb2a9cc06ce973a1f4' && (
               <>
                 <iframe
                   src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/EventoAjedrez%2Freglamento.pdf?alt=media&token=5f2bc8a1-8929-4990-927d-f84d9afb2146'
@@ -114,9 +116,10 @@ class InformativeSection2 extends Component {
             )}
           </div>
         )}
-      </Fragment>
+      </Row>
     );
   }
 }
 
-export default InformativeSection2;
+let InformativeSection2WithContext = withContext(InformativeSection2)
+export default InformativeSection2WithContext;

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { useIntl } from 'react-intl';
-import { EventsApi, TicketsApi, Activity } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, PageHeader, Typography, Form, Input, Alert } from 'antd';
+import { TicketsApi, Activity, AgendaApi } from '../../helpers/request';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, Input, Alert, Drawer} from 'antd';
 import { firestore } from '../../helpers/firebase';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
@@ -14,11 +15,14 @@ import * as StageActions from '../../redux/stage/actions';
 import * as SurveyActions from '../../redux/survey/actions';
 import Game from './game';
 import EnVivo from '../../EnVivo.svg';
-import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined, UserOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined, UserOutlined, CloseOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
+import RankingTrivia from './surveys/rankingTrivia';
 import { listenSurveysData } from '../events/surveys/services';
 import { eventUserUtils } from '../../helpers/helperEventUser';
+import { useParams } from 'react-router-dom';
+import { setTopBanner } from '../../redux/topBanner/actions';
 
 const { TabPane } = Tabs;
 
@@ -35,8 +39,7 @@ const tailLayout = {
 };
 
 let AgendaActividadDetalle = (props) => {
-  console.log('propsdetalle', props);
-  // Informacion del usuario Actual, en caso que no haya sesion viene un null por props
+  let { activity_id } = useParams();
   let [event, setEvent] = useState(false);
   let [idSpeaker, setIdSpeaker] = useState(false);
   let [orderedHost, setOrderedHost] = useState([]);
@@ -47,12 +50,42 @@ let AgendaActividadDetalle = (props) => {
   const totalAttendeesCheckedin = useState(0);
   const [names, setNames] = useState(null);
   const [email, setEmail] = useState(null);
-
+  const [currentActivity, setcurrentActivity] = useState(null);
+  let urlBack = `/landing/${props.cEvent._id}/agenda`;
+  
+  
   const configfast = useState({});
 
   const { Title } = Typography;
 
   const intl = useIntl();
+
+  //obtener la actividad por id
+  useEffect(() => {
+    async function getActividad() {
+      return await AgendaApi.getOne(activity_id, props.cEvent._id);
+    }
+
+    function orderHost(hosts) {
+      hosts.sort(function(a, b) {
+        return a.order - b.order;
+      });
+      setOrderedHost(hosts);
+    }
+
+    getActividad().then((result) => {
+      setcurrentActivity(result);
+      orderHost(result.hosts);
+      props.gotoActivity(result)
+    });
+
+    props.setTopBanner(false);
+    props.setVirtualConference(false);
+    return () => {
+      props.setTopBanner(true);
+      props.setVirtualConference(true);
+    };
+  }, [activity_id]);
 
   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
   const [videoStyles, setVideoStyles] = useState(null);
@@ -83,7 +116,7 @@ let AgendaActividadDetalle = (props) => {
     try {
       if (props.cUser) {
         TicketsApi.checkInAttendee(props.cEvent._id, props.cUser._id);
-        Activity.checkInAttendeeActivity(props.cEvent._id, props.currentActivity._id, props.cUser.account_id);
+        Activity.checkInAttendeeActivity(props.cEvent._id, activity_id, props.cUser.account_id);
       }
     } catch (e) {
       console.error('fallo el checkin:', e);
@@ -101,7 +134,7 @@ let AgendaActividadDetalle = (props) => {
     //Escuchando el estado de la actividad
 
     (async function() {
-      await listeningStateMeetingRoom(props.cEvent._id, props.currentActivity._id);
+      await listeningStateMeetingRoom(props.cEvent._id, activity_id);
     })();
 
     // Desmontado del componente
@@ -112,20 +145,13 @@ let AgendaActividadDetalle = (props) => {
       props.setSurveyVisible(false);
       window.removeEventListener('resize', mediaQueryMatches);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     (async function() {
-      await listeningStateMeetingRoom(props.cEvent._id, props.currentActivity._id);
+      await listeningStateMeetingRoom(props.cEvent._id, activity_id);
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.currentActivity._id]);
-
-  /**
-   * Calculating total real attendees this could be done less costly
-   * in the backend using cloud funtions.
-   */
+  }, [activity_id]);
 
   useEffect(() => {
     async function listeningSpaceRoom() {
@@ -206,10 +232,12 @@ let AgendaActividadDetalle = (props) => {
   }
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
+
+    // console.log("que esta llegando",event_id,activity_id);
     //
     firestore
       .collection('events')
-      .doc(props.cEvent._id)
+      .doc(event_id)
       .collection('activities')
       .doc(activity_id)
       .onSnapshot((infoActivity) => {
@@ -222,24 +250,6 @@ let AgendaActividadDetalle = (props) => {
         props.setTabs(tabs);
       });
   }
-
-  useEffect(() => {
-    (async () => {
-      //Id del evento
-
-      const event = await EventsApi.landingEvent(props.cEvent._id);
-      setEvent(event);
-
-      function orderHost() {
-        let hosts = props.currentActivity.hosts;
-        hosts.sort(function(a, b) {
-          return a.order - b.order;
-        });
-        setOrderedHost(hosts);
-      }
-      orderHost();
-    })();
-  }, [props.cEvent._id, props.currentActivity]);
 
   async function getSpeakers(idSpeaker) {
     setIdSpeaker(idSpeaker);
@@ -274,16 +284,15 @@ let AgendaActividadDetalle = (props) => {
     screenWidth <= 768 ? setIsMobile(true) : setIsMobile(false);
   };
 
-  const { currentActivity, image_event } = props;
+  const { image_event } = props;
 
   useEffect(() => {
-    if (props.currentActivity !== null) {
-      listenSurveysData(props.cEvent, props.currentActivity, props.cUser, (data) => {
+    if (currentActivity) {
+      listenSurveysData(props.cEvent, currentActivity, props.cUser, (data) => {
         props.setHasOpenSurveys(data.hasOpenSurveys);
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.cEvent, props.currentActivity]);
+  }, [props.cEvent, currentActivity]);
 
   {
     Moment.locale(window.navigator.language);
@@ -293,6 +302,44 @@ let AgendaActividadDetalle = (props) => {
     const { zoomExternoHandleOpen, eventUser, currentActivity } = props;
     zoomExternoHandleOpen(currentActivity, eventUser);
   };
+
+  // aquie esta los estados del drawer y el modal
+  const [visible, setVisible] = useState(props.isVisible);
+  const [rankingVisible, setRankingVisible] = useState(true);
+  const [width, setWidth ] = useState('70%');
+ 
+
+  const showRanking=()=>{
+    if(window.screen.width >= 768){
+       setWidth('70%')
+       if(rankingVisible == false){
+        setWidth('100%')
+       }{
+        setWidth('70%')
+       }
+    }else{
+      setWidth('100%')
+      if(rankingVisible == false){
+        setWidth('100%')
+       }{
+        setWidth('70%')
+       }
+    }
+      setRankingVisible(!rankingVisible)
+  }
+  // const showDrawer = () => { // esta funcion activa rl drawer
+  //   setVisible(false) 
+  //  };
+  function onClose () {  // esta funcion desactiva rl drawer
+    // setVisible(false) 
+    if(props.isVisible===true){
+     props.setSurveyVisible(false)
+    }
+    
+  }
+
+  // constante de ranking
+  const hasRanking = true
 
   return (
     <div className='is-centered'>
@@ -306,6 +353,21 @@ let AgendaActividadDetalle = (props) => {
           }>
           <Row align='middle'>
             <Col
+              xs={{ order: 2, span: 8 }}
+              sm={{ order: 2, span: 8 }}
+              md={{ order: 1, span: 4 }}
+              lg={{ order: 1, span: 4 }}
+              xl={{ order: 1, span: 4 }}
+              style={{ padding: '4px' }}>
+              <Link to={`${urlBack}`}>
+                <Row style={{ paddingLeft: '10px' }}>
+                  <Button type='primary' shape='round' icon={<ArrowLeftOutlined />} size='small'>
+                    Volver a la agenda
+                  </Button>
+                </Row>
+              </Link>
+            </Col>
+            <Col
               xs={{ order: 2, span: 4 }}
               sm={{ order: 2, span: 4 }}
               md={{ order: 1, span: 2 }}
@@ -313,19 +375,21 @@ let AgendaActividadDetalle = (props) => {
               xl={{ order: 1, span: 2 }}
               style={{ padding: '4px' }}>
               <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
-                {meetingState === 'open_meeting_room' || stateSpace ? (
-                  <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
-                ) : meetingState === 'ended_meeting_room' && currentActivity.video ? (
-                  <CaretRightOutlined style={{ fontSize: '30px' }} />
-                ) : meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
-                  <CheckCircleOutlined style={{ fontSize: '30px' }} />
-                ) : meetingState === '' || meetingState == null ? (
-                  <></>
-                ) : meetingState === 'closed_meeting_room' ? (
-                  <LoadingOutlined style={{ fontSize: '30px' }} />
-                ) : (
-                  ''
-                )}
+                <Col>
+                  {meetingState === 'open_meeting_room' || stateSpace ? (
+                    <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
+                  ) : meetingState === 'ended_meeting_room' && currentActivity.video ? (
+                    <CaretRightOutlined style={{ fontSize: '30px' }} />
+                  ) : meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
+                    <CheckCircleOutlined style={{ fontSize: '30px' }} />
+                  ) : meetingState === '' || meetingState == null ? (
+                    <></>
+                  ) : meetingState === 'closed_meeting_room' ? (
+                    <LoadingOutlined style={{ fontSize: '30px' }} />
+                  ) : (
+                    ''
+                  )}
+                </Col>
               </Row>
               <Row
                 style={{
@@ -355,7 +419,7 @@ let AgendaActividadDetalle = (props) => {
               style={{ display: 'flex' }}>
               <div style={{ padding: '8px' }}>
                 <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
-                  {currentActivity.name}
+                  {currentActivity && currentActivity.name}
                   {configfast && configfast.enableCount && (
                     <>
                       ( &nbsp;
@@ -387,14 +451,22 @@ let AgendaActividadDetalle = (props) => {
                       <></>
                     ) : (
                       <div>
-                        {Moment.tz(currentActivity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                        {Moment.tz(
+                          currentActivity && currentActivity.datetime_start,
+                          'YYYY-MM-DD h:mm',
+                          'America/Bogota'
+                        )
                           .tz(Moment.tz.guess())
                           .format('DD MMM YYYY')}{' '}
-                        {Moment.tz(currentActivity.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                        {Moment.tz(
+                          currentActivity && currentActivity.datetime_start,
+                          'YYYY-MM-DD h:mm',
+                          'America/Bogota'
+                        )
                           .tz(Moment.tz.guess())
                           .format('h:mm a z')}{' '}
                         -{' '}
-                        {Moment.tz(currentActivity.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                        {Moment.tz(currentActivity && currentActivity.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
                           .tz(Moment.tz.guess())
                           .format('h:mm a z')}
                       </div>
@@ -460,8 +532,8 @@ let AgendaActividadDetalle = (props) => {
                       <>
                         {platform === 'zoomExterno' ? (
                           openZoomExterno()
-                        ) : (props.currentUser && currentActivity.requires_registration) ||
-                          !currentActivity.requires_registration ? (
+                        ) : (props.currentUser && currentActivity && currentActivity.requires_registration) ||
+                          (currentActivity && !currentActivity.requires_registration) ? (
                           <>
                             <iframe
                               src={getMeetingPath(platform)}
@@ -485,7 +557,7 @@ let AgendaActividadDetalle = (props) => {
                   </>
                 )}
 
-              {option == 'surveyDetalle' && (
+              {/* {option == 'surveyDetalle' && (
                 <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
                   <RootPage
                   // event={event}
@@ -497,8 +569,41 @@ let AgendaActividadDetalle = (props) => {
                   // unMountCurrentSurvey={unMountCurrentSurvey}
                   />
                 </div>
+              )} */}
+               {option == 'surveyDetalle' && (
+                <>
+                  <Drawer
+                      closeIcon={<CloseOutlined />}
+                      placement="right"
+                      // closable={true}
+                      visible={props.isVisible}
+                      onClose={onClose}
+                      width={window.screen.width >= 768 ? rankingVisible == false ? '100%':'70%': '100%'}
+                    >
+                      <div style={{width:'100%', display:'inline-block', paddingBottom:'10px'}}>
+                       <Button 
+                        type="primary"
+                        onClick={showRanking} 
+                         >
+                          {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
+                      </Button> 
+                      </div>
+                      
+                      <Row gutter={[8,8]} justify='center'>
+                        <Col  xl={rankingVisible == true ? 24 : 16} xxl={rankingVisible == true ? 24 : 16} >
+                          <RootPage/>
+                        </Col>
+                        <Col hidden={rankingVisible}  xl={8} xxl={8} >
+                          <div style={{width:'100%'}}>
+                            <div style={{justifyContent:'center', display:'grid'}}>
+                              {hasRanking && <RankingTrivia/>}
+                              </div>
+                          </div>
+                        </Col>  
+                      </Row>
+                    </Drawer>
+                </>
               )}
-
               {option == 'game' && <Game />}
 
               {(meetingState === '' || meetingState == null) &&
@@ -593,7 +698,7 @@ let AgendaActividadDetalle = (props) => {
                   </Col>
                 </Row>
               )}
-              {currentActivity.secondvideo && (
+              {currentActivity && currentActivity.secondvideo && (
                 <div className='column is-centered mediaplayer'>
                   <strong>Pt. 2</strong>
                   <ReactPlayer
@@ -602,7 +707,7 @@ let AgendaActividadDetalle = (props) => {
                       display: 'block',
                       margin: '0 auto',
                     }}
-                    url={currentActivity.secondvideo}
+                    url={currentActivity && currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                     controls
                   />
@@ -626,9 +731,10 @@ let AgendaActividadDetalle = (props) => {
                     </>
                   }
                   key='description'>
-                  <div dangerouslySetInnerHTML={{ __html: currentActivity.description }}></div>
+                  <div dangerouslySetInnerHTML={{ __html: currentActivity && currentActivity.description }}></div>
                   <br />
-                  {currentActivity.hosts.length === 0 || props.cEvent._id === '601470367711a513cc7061c2' ? (
+                  {(currentActivity && currentActivity.hosts.length === 0) ||
+                  props.cEvent._id === '601470367711a513cc7061c2' ? (
                     <div></div>
                   ) : (
                     <div className='List-conferencistas'>
@@ -743,14 +849,13 @@ let AgendaActividadDetalle = (props) => {
               }}></div>
           </div>
 
-          <Row style={{ paddingLeft: '10px' }}>
-            <PageHeader
-              onBack={() => {
-                props.gotoActivity(null);
-              }}
-              subTitle={intl.formatMessage({ id: 'button.back.agenda' })}
-            />
-          </Row>
+          {/* <Link to={`${urlBack}`}>
+            <Row style={{ paddingLeft: '10px' }}>
+              <ArrowLeftOutlined>
+                <span>AJA</span>
+              </ArrowLeftOutlined>
+            </Row>
+          </Link> */}
         </Card>
       </div>
     </div>
@@ -766,6 +871,7 @@ const mapStateToProps = (state) => ({
   tabs: state.stage.data.tabs,
   generalTabs: state.tabs.generalTabs,
   permissions: state.permissions,
+  isVisible: state.survey.data.surveyVisible,
 });
 
 const mapDispatchToProps = {
@@ -775,6 +881,7 @@ const mapDispatchToProps = {
   setSurveyVisible,
   setHasOpenSurveys,
   setTabs,
+  setTopBanner,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));

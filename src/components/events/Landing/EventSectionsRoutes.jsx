@@ -1,5 +1,7 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Spin } from 'antd';
 /** --------------------
  *  secciones del evento
  * ---------------------*/
@@ -12,83 +14,131 @@ import Agenda from '../agendaLanding';
 import EventHome from '../eventHome';
 import TicketsForm from '../../tickets/formTicket';
 import WallForm from '../../wall/index';
-import Ferias from '../ferias/index'
+import Ferias from '../ferias/index';
+import VirtualConference from '../virtualConference';
+import CertificadoLanding from '../../certificados/cerLanding';
+import AgendaActividadDetalle from '../agendaActividadDetalle';
+import { setVirtualConference } from '../../../redux/virtualconference/actions';
+import MyAgendaIndepend from '../../networking/myAgendaIndepend';
+import NetworkingForm from '../../networking';
+import InformativeSection2 from '../informativeSections/informativeSection2';
+import InformativeSection from '../informativeSections/informativeSection';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  if (!props.cEvent) return <h1>Cargando...</h1>;
+  if (!props.cEvent) return <Spin size='large' tip='Cargando...' />;
+
   return (
-    <Switch>
-      <Route path={`${path}/documents`}>
-        <DocumentsForm event={props.cEvent} />
-      </Route>
-      <Route path={`${path}/speakers`}>
-        <SpeakersForm eventId={props.cEvent._id} event={props.cEvent} />
-      </Route>
-      <Route path={`${path}/surveys`}>
-        <SurveyForm event={props.cEvent} />
-      </Route>
-      <Route path={`${path}/partners`}>
-        <Partners event={props.cEvent} />
-      </Route>
-      <Route path={`${path}/faqs`}>
-        <FaqsForm event={props.cEvent} />
-      </Route>
+    <>
+      {props.viewVirtualconference && <VirtualConference />}
 
-      <Route path={`${path}/evento`}>
-        <EventHome cEvent={props.cEvent} cUser={props.cUser} cEventUser={props.cEventUser} />
-      </Route>
+      <Switch>
+        <Route exact path={`${path}/`}>
+          <EventHome />
+        </Route>
 
-      <Route path={`${path}/wall`}>
-        <WallForm event={props.cEvent} eventId={props.cEvent._id} currentUser={props.cUser} />
-      </Route>
+        <Route path={`${path}/documents`}>
+          <DocumentsForm />
+        </Route>
 
-      <Route path={`${path}/ferias`} render={() => <Ferias event={props.cEvent} />} />
+        <Route path={`${path}/interviews`}>
+          <MyAgendaIndepend />
+        </Route>
 
-      <Route path={`${path}/tickets`}>
-        <>
-          <div className='columns is-centered'>
-            <TicketsForm
-              stages={props.cEvent.event_stages}
-              experience={props.cEvent.is_experience}
-              fees={props.cEvent.fees}
-              tickets={props.cEvent.tickets}
-              eventId={props.cEvent._id}
+        <Route path={`${path}/networking`}>
+          <NetworkingForm />
+        </Route>
+
+        <Route path={`${path}/informativeSection1`}>
+          <InformativeSection2 />
+        </Route>
+
+        <Route path={`${path}/informativeSection`}>
+          <InformativeSection />
+        </Route>
+
+        <Route path={`${path}/activity/:activity_id`}>
+          <AgendaActividadDetalle
+            setVirtualConference={props.setVirtualConference}
+            image_event={props.cEvent.styles.event_image}
+            currentUser={props.cUser}
+            eventUser={props.cEventUser}
+            cEvent={props.cEvent}
+            cUser={props.cUser}
+          />
+        </Route>
+
+        <Route path={`${path}/speakers`}>
+          <SpeakersForm eventId={props.cEvent._id} event={props.cEvent} />
+        </Route>
+        <Route path={`${path}/surveys`}>
+          <SurveyForm event={props.cEvent} />
+        </Route>
+        <Route path={`${path}/partners`}>
+          <Partners />
+        </Route>
+        <Route path={`${path}/faqs`}>
+          <FaqsForm event={props.cEvent} />
+        </Route>
+
+        <Route path={`${path}/evento`}>
+          <EventHome />
+        </Route>
+
+        <Route path={`${path}/wall`}>
+          <WallForm event={props.cEvent} eventId={props.cEvent._id} currentUser={props.cUser} />
+        </Route>
+
+        <Route path={`${path}/ferias`}>
+          <Ferias event={props.cEvent} />
+        </Route>
+
+        <Route path={`${path}/tickets`}>
+          <>
+            <div className='columns is-centered'>
+              <TicketsForm
+                stages={props.cEvent.event_stages}
+                experience={props.cEvent.is_experience}
+                fees={props.cEvent.fees}
+                tickets={props.cEvent.tickets}
+                eventId={props.cEvent._id}
+                event={props.cEvent}
+                seatsConfig={props.cEvent.seats_configuration}
+              />
+            </div>
+          </>
+        </Route>
+
+        <Route path={`${path}/certs`}>
+          <>
+            <CertificadoLanding
               event={props.cEvent}
-              seatsConfig={props.cEvent.seats_configuration}
-              // handleModal={this.handleModal}
-              // showSection={this.showSection}
+              tickets={props.cEvent.tickets}
+              currentUser={props.cUser}
+              eventUser={props.cEventUser}
             />
-          </div>
-        </>
-      </Route>
+          </>
+        </Route>
 
-      <Route path={`${path}/agenda`}>
-        <Agenda
-          // cEvent={props.cEvent}
-          // eventId={props.cEvent._id}
-          // toggleConference={this.toggleConference}
-          // handleOpenRegisterForm={this.handleOpenRegisterForm}
-          // handleOpenLogin={this.handleOpenLogin}
-          // userRegistered={props.cEventUser}
-          // currentUser={props.cUser}
-          activity={props.currentActivity}
-          // userEntered={props.cUser}
-          // activeActivity={this.actualizarCurrentActivity}
-          // option={this.state.currentActivity ? this.state.currentActivity.option : 'N/A'}
-          // collapsed={this.state.collapsed}
-          // toggleCollapsed={this.toggleCollapsed}
-          // showSection={this.showSection}
-          // zoomExternoHandleOpen={this.zoomExternoHandleOpen}
-          // eventUser={props.cUserEvent}
-          generalTabs={props.generalTabs}
-          // cUser={props.cUser}
-          currentUser={props.currentUser}
-          // eventSurveys={this.state.eventSurveys}
-          // publishedSurveys={this.state.publishedSurveys}
-        />
-      </Route>
-    </Switch>
+        <Route path={`${path}/agenda`}>
+          <Agenda
+            activity={props.currentActivity}
+            generalTabs={props.generalTabs}
+            currentUser={props.cUser}
+            setVirtualConference={props.setVirtualConference}
+          />
+        </Route>
+      </Switch>
+    </>
   );
 };
-export default EventSectionRoutes;
+
+const mapStateToProps = (state) => ({
+  viewVirtualconference: state.virtualConferenceReducer.view,
+});
+
+const mapDispatchToProps = {
+  setVirtualConference,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventSectionRoutes);

@@ -8,6 +8,7 @@ import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert } from 'antd
 import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 const { TextArea } = Input;
+import withContext  from '../../Context/withContext'
 
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
   <div>
@@ -49,38 +50,25 @@ class CreatePost extends Component {
     this.getImage = this.getImage.bind(this);
   }
 
-  componentDidMount() {
-    if (this.props.user) {
-      const { user } = this.props;
-      this.setState({ user });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.user !== this.props.user) {
-      const { user } = this.props;
-      this.setState({ user });
-    }
-  }
 
   //Funcion para guardar el post y enviar el mensaje de publicacion
   async savePost() {
     let data = {
       urlImage: this.state.image,
       post: this.state.value,
-      author: this.state.user._id,
+      author: this.props.cUser._id,
       datePost: new Date(),
       likes: 0,
       usersLikes: [],
-      authorName: this.state.user.names
-        ? this.state.user.names
-        : this.state.user.name
-        ? this.state.user.name
-        : this.state.user.email
+      authorName: this.props.cUser.names
+        ? this.props.cUser.names
+        : this.props.cUser.name
+        ? this.props.cUser.name
+        : this.props.cUser.email
     };
 
     //savepost se realiza para publicar el post
-    var newPost = await saveFirebase.savePost(data, this.props.event._id);
+    var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
 
     this.setState({ value: '', image: '', showInfo: true });
     this.setState({ showInfo: false, visible: false, keyList: Date.now() });
@@ -147,22 +135,18 @@ class CreatePost extends Component {
   };
 
   render() {
-    const { user, visible, hidden, image, submitting, value } = this.state;
+    const { visible, hidden, image, submitting, value } = this.state;
     return (
       <div>
-        {/* Se renueva el formulario de publicacion de post para poder mostrar el respectivo mensaje o modal */}
-        {
-          // Si showInfo es falso muestra el modal, de lo contrario muestra el mensaje this.state.showInfo === true ? (
-        }
 
         <div>
-          {user && (
+          {this.props.cUser && (
             <Button style={{ marginBottom: '3%' }} type='primary' onClick={this.showModal}>
               Crear Publicación
             </Button>
           )}
 
-          {!user && (
+          {!this.props.cUser && (
             <Alert
               message={
                 <p>
@@ -249,4 +233,6 @@ class CreatePost extends Component {
   }
 }
 
-export default CreatePost;
+
+let CreatePostWithContext = withContext(CreatePost)
+export default CreatePostWithContext;

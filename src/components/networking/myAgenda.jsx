@@ -5,7 +5,6 @@ import { find, map, mergeRight, path, pathOr, propEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import React, { useEffect, useMemo, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
-
 import { getDatesRange } from '../../helpers/utils';
 import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
 

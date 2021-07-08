@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import MyAgenda from './myAgenda';
-import { getCurrentUser, getCurrentEventUser, userRequest } from './services';
+import { userRequest } from './services';
 import * as Cookie from 'js-cookie';
 import { Spin } from 'antd';
+import withContext from '../../Context/withContext';
 
 class AgendaIndepent extends Component {
   constructor(props) {
@@ -16,38 +17,32 @@ class AgendaIndepent extends Component {
   }
 
   async componentDidMount() {
-    const { event } = this.props;
-    let currentUser = Cookie.get('evius_token');
-
-    if (currentUser) {
-      let eventUserList = await userRequest.getEventUserList(event._id, Cookie.get('evius_token'), currentUser);
-      let user = await getCurrentUser(currentUser);
-      const eventUser = await getCurrentEventUser(event._id, user._id);
+    if (this.props.cUser) {
+      let eventUserList = await userRequest.getEventUserList(
+        this.props.cEvent.value._id,
+        Cookie.get('evius_token'),
+        this.props.cUser
+      );
 
       this.setState({
         users: eventUserList,
-        eventUser,
-        eventUserId: eventUser._id,
-        currentUserName: eventUser.names || eventUser.email,
         loading: false,
       });
     }
   }
 
   render() {
-    const { event } = this.props;
-    const { eventUserId, users, loading, eventUser } = this.state;
+    const { users, loading } = this.state;
     return (
       <Fragment>
         {loading ? (
           <Spin />
         ) : (
           <MyAgenda
-            event={event}
-            eventUser={eventUser}
-            currentEventUserId={eventUserId}
+            event={this.props.cEvent.value}
+            eventUser={this.props.cEventUser.value}
+            currentEventUserId={this.props.cEventUser.value._id}
             eventUsers={users}
-            {...this.props}
           />
         )}
       </Fragment>
@@ -55,4 +50,5 @@ class AgendaIndepent extends Component {
   }
 }
 
-export default withRouter(AgendaIndepent);
+let AgendaIndepentWithContext = withContext(AgendaIndepent);
+export default withRouter(AgendaIndepentWithContext);

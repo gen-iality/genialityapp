@@ -3,6 +3,8 @@ import { Menu, Badge } from 'antd';
 import { CommentOutlined, TeamOutlined, PieChartOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 const MenuRigth = (props) => {
   const animateIcon = 'animate__animated animate__bounceIn';
@@ -84,7 +86,10 @@ const MenuRigth = (props) => {
             </span>
           }
           style={{ paddingTop: '20px' }}
-          // onClick={() => props.toggleCollapsed(3)}
+           onClick={() =>  {
+            props.handleCollapsed();
+            props.settabselected('3');
+           }}
         ></Menu.Item>
       )}
       {props.currentActivity !== null && props.tabs && (props.tabs.games === 'true' || props.tabs.games === true) && (
@@ -101,12 +106,20 @@ const MenuRigth = (props) => {
           }
           style={{ paddingTop: '20px' }}
           onClick={() => {
-            // props.setMainStage('game');
-            // props.toggleCollapsed(4);
+            props.handleCollapsed();
+            props.settabselected('4');
           }}></Menu.Item>
       )}
     </Menu>
   );
 };
 
-export default MenuRigth;
+
+const mapStateToProps = (state) => ({
+  currentActivity: state.stage.data.currentActivity,
+});
+
+
+export default connect(mapStateToProps, null)(withRouter(MenuRigth));
+
+
