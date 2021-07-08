@@ -28,15 +28,15 @@ const buttonsLayout = {
 };
 
 const NAME_MAX_LENGTH = 100
-const DESCRIPTION_MAX_LENGTH = 700
+const DESCRIPTION_MAX_LENGTH = 1000
 const TIMES_AND_VENUES_MAX_LENGTH = 100
 const URL_MAX_LENGTH = 500
-const SERVICE_DESCRIPTION_MAX_LENGTH = 700
-const SERVICES_LIMIT = 4
+const SERVICE_DESCRIPTION_MAX_LENGTH = 1000
+//const SERVICES_LIMIT = 4
 const SOCIAL_NETWORKS_LIMIT = 4
-const ADVISOR_LIMIT = 3
+//const ADVISOR_LIMIT = 3
 const GALLERY_LIMIT = 30
-const CONTACT_INFO_DESCRIPTION_MAX_LENGTH = 2000
+const CONTACT_INFO_DESCRIPTION_MAX_LENGTH = 1000
 
 const validationSchema = yup.object().shape({
   name: yup.string()
@@ -52,7 +52,7 @@ const validationSchema = yup.object().shape({
     description: yup.string(),
   }),
   advisor: yup.array()
-  .max(ADVISOR_LIMIT)
+  //.max(ADVISOR_LIMIT)
   .of(yup.object().shape({
     //image: yup.string().url(),
     name: yup.string(),
@@ -60,7 +60,7 @@ const validationSchema = yup.object().shape({
   })
   ),
   services: yup.array()
-    .max(SERVICES_LIMIT)
+    //.max(SERVICES_LIMIT)
     .of(
       yup.object().shape({
         description: yup.string(),
@@ -265,7 +265,9 @@ function CrearEditarEmpresa({ event, match, history }) {
                                         {'Eliminar'}
                                       </Button>
                                     )}
-                                    {values.services.length < SERVICES_LIMIT && serviceIndex === values.services.length - 1 && (
+
+                                    {/* values.services.length < SERVICES_LIMIT && */}
+                                    {serviceIndex === values.services.length - 1 && (
                                       <Button
                                         type="primary"
                                         icon={<PlusCircleOutlined />}
@@ -425,7 +427,8 @@ function CrearEditarEmpresa({ event, match, history }) {
                                         {'Eliminar'}
                                       </Button>
                                     )}
-                                    {values.advisor.length < ADVISOR_LIMIT && advisorIndex === values.advisor.length - 1 && (
+                                    {/*values.advisor.length < ADVISOR_LIMIT && */}
+                                    {advisorIndex === values.advisor.length - 1 && (
                                       <Button
                                         type="primary"
                                         icon={<PlusCircleOutlined />}
