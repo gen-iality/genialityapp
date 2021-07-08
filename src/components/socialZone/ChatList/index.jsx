@@ -6,9 +6,11 @@ import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useHistory } from "react-router-dom"
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 const { Text } = Typography;
+
 
 const layout = {
   labelCol: { span: 6 },
@@ -19,10 +21,11 @@ const tailLayout = {
 };
 
 const ChatList = (props) => {
+  const history = useHistory();
   //contextos
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
-
+ 
   const onFinish = (values) => {
     //alert(values);
     props.setCurrentUser(values);
@@ -102,7 +105,7 @@ const ChatList = (props) => {
         <Row justify='center'>
           <Space size='large'>
             <Form.Item>
-              <Button type='primary'>
+              <Button  onClick={ () => history.push(`/landing/${cEvent.value._id}/tickets`)} type='primary'>
                 <FormattedMessage id='form.button.register' defaultMessage='Registrarme' />
               </Button>
             </Form.Item>
