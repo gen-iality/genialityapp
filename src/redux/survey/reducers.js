@@ -4,7 +4,7 @@ const initialState = {
   data: {
     currentSurvey: null,
     surveyVisible: false,
-    result: false,
+    result: 'view',
     hasOpenSurveys: false,
   },
   loading: false,

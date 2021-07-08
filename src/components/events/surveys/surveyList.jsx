@@ -14,7 +14,7 @@ import SurveyCard from './components/surveyCard';
 import notifications from '../Landing/notifications';
 
 const { setNotification } = notificationsActions;
-const { setSurveyVisible, setCurrentSurvey, setSurveyResult } = surveysActions;
+const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
    const {
@@ -22,7 +22,6 @@ function SurveyList(props) {
       currentUser,
       setNotification,
       viewNotification,
-      setSurveyVisible,
       surveySelected,
       setMainStage,
       setCurrentSurvey,
@@ -52,26 +51,21 @@ function SurveyList(props) {
       if (survey && survey.isOpened === 'true' && survey !== null) {
          handleClick(survey);
       } else {
-         setSurveyVisible(false);
          setCurrentSurvey(survey);
       }
    };
-   
+
    const handleClick = (currentSurvey) => {
       if (activity !== null && currentSurvey.isOpened === 'true') {
-         setMainStage('surveyDetalle');
-         setSurveyVisible(true);
-         setCurrentSurvey(currentSurvey);
-         setSurveyResult(false)
-      } else if(activity !== null && currentSurvey.isOpened === 'false') {
-         setSurveyResult(true)
-         setMainStage('surveyDetalle');
-         setSurveyVisible(true);
-         setCurrentSurvey(currentSurvey);
-      }else{
-         setMainStage(null);
-         setSurveyVisible(false);
+         // setMainStage('surveyDetalle');
+         // setSurveyVisible(true);
+         setSurveyResult('view');
+      } else if (activity !== null && currentSurvey.isOpened === 'false') {
+         setSurveyResult('results');
+         // setMainStage('surveyDetalle');
+         // setSurveyVisible(true);
       }
+      setCurrentSurvey(currentSurvey);
    };
    useEffect(() => {
       if (listOfEventSurveys[1]?.length >= 1) {
@@ -113,7 +107,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
    setNotification,
-   setSurveyVisible,
    setCurrentSurvey,
    setMainStage,
    setSurveyResult,
