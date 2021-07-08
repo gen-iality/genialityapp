@@ -85,6 +85,13 @@
     "form.button.register": "Register to the event",
     "form.message.socialzone":"This form is only valid to participate in the chat, if you want to enjoy the event in its entirety you must register.",
 
+    "tabs.attendees.socialzone":"Attendees",
+    "tabs.surveys.socialzone":"Surveys",
+    "tabs.games.socialzone":"Games",
+    "tabs.public.socialzone":"Public",
+    "tabs.private.socialzone":"Private",
+    "tabs.private.socialzone.message":"See all",
+    
     "login.title": "Login",
     "restore.login.title": "Restore password",
     "restore.login.success": "A new password has been sent to your email",
@@ -179,6 +186,12 @@
     "form.button.register": "Registrarme al evento",
     "form.message.socialzone":"Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.",
     
+    "tabs.attendees.socialzone":"Asistentes",
+    "tabs.surveys.socialzone":"Encuestas",
+    "tabs.games.socialzone":"Juegos",
+    "tabs.public.socialzone":"Público",
+    "tabs.private.socialzone":"Privados",
+    "tabs.private.socialzone.message":"Ver todos",
 
     "login.title": "Iniciar sesión",
     "restore.login.title": "Restablecer contraseña",
@@ -232,6 +245,14 @@
     "form.button.enter": "Entrem",
     "form.button.register": "Inscreva-se no evento",
     "form.message.socialzone":"Este formulário só é válido para participar do chat, se quiser curtir o evento na íntegra é necessário se cadastrar.s",
+
+    "tabs.attendees.socialzone":"Participantes",
+    "tabs.surveys.socialzone":"Pesquisas",
+    "tabs.games.socialzone":"Jogos",
+    "tabs.public.socialzone":"Público",
+    "tabs.private.socialzone":"Privados",
+    "tabs.private.socialzone.message":"Ver tudo",
+    
 
     "login.title": "Iniciar sessão",
     "restore.login.title": "Restaurar senha",

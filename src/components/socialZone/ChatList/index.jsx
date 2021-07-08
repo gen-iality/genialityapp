@@ -120,7 +120,7 @@ const ChatList = (props) => {
   return (
     <Tabs activeKey={currentab} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
-        <TabPane tab={<div style={{ color: cEvent.value.styles.textMenu }}>Público</div>} key='chat1'>
+        <TabPane tab={<div style={{ color: cEvent.value.styles.textMenu }}><FormattedMessage id='tabs.public.socialzone' defaultMessage='Público' /></div>} key='chat1'>
           <iframe
             title='chatevius'
             className='ChatEviusLan'
@@ -148,13 +148,13 @@ const ChatList = (props) => {
                   style={{ minWidth: '10px', height: '10px', padding: '0px', color: cEvent.value.styles.textMenu }}
                   count={' '}>
                   <div style={{ color: cEvent.value.styles.textMenu }}>
-                    Privados{props.currentChat ? ' (ver todos)' : ''}
+                  <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />{props.currentChat ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )` : ''}
                   </div>
                 </Badge>
               )}
               {props.totalNewMessages !== undefined && props.totalNewMessages == 0 && (
                 <div style={{ color: cEvent.value.styles.textMenu }}>
-                  Privados{props.currentChat ? ' (ver todos)' : ''}
+                  <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />{props.currentChat ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )` : ''}
                 </div>
               )}
             </>
