@@ -28,10 +28,10 @@ const buttonsLayout = {
 };
 
 const NAME_MAX_LENGTH = 100
-const DESCRIPTION_MAX_LENGTH = 500
+const DESCRIPTION_MAX_LENGTH = 700
 const TIMES_AND_VENUES_MAX_LENGTH = 100
 const URL_MAX_LENGTH = 500
-const SERVICE_DESCRIPTION_MAX_LENGTH = 30
+const SERVICE_DESCRIPTION_MAX_LENGTH = 700
 const SERVICES_LIMIT = 4
 const SOCIAL_NETWORKS_LIMIT = 4
 const ADVISOR_LIMIT = 3
@@ -40,7 +40,9 @@ const CONTACT_INFO_DESCRIPTION_MAX_LENGTH = 2000
 
 const validationSchema = yup.object().shape({
   name: yup.string()
-    .max(NAME_MAX_LENGTH),
+  .max(NAME_MAX_LENGTH)
+  .min(3,'Ingrese un nombre de empresa válido')
+  .required('El nombre de la empresa es requerido'),
   description: yup.string(),
   short_description: yup.string(),
   stand_image: yup.string(),
@@ -62,7 +64,8 @@ const validationSchema = yup.object().shape({
     .of(
       yup.object().shape({
         description: yup.string(),
-        //image: yup.string().url()
+        //image: yup.string().url(),
+        nombre: yup.string().min(3,'nombre de servicio no válido').required('El nombre del servicio es requerido')
       })
     ),
   webpage: yup.string()
@@ -225,6 +228,15 @@ function CrearEditarEmpresa({ event, match, history }) {
                             <>
                               {values.services.map((_service, serviceIndex) => (
                                 <div key={`service-item-${serviceIndex}`}>
+                                    <Field
+                                      name={`services[${serviceIndex}].nombre`}
+                                      component={InputField}
+                                      label={`Nombre servicio ${serviceIndex + 1}`}
+                                      placeholder="Nombre del servicio"
+                                      maxLength={20}
+                                    />
+
+
                                   <RichTextComponentField
                                     name={`services[${serviceIndex}].description`}
                                     label={`Descripción servicio ${serviceIndex + 1}`}
