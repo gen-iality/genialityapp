@@ -14,7 +14,7 @@ import SurveyCard from './components/surveyCard';
 import notifications from '../Landing/notifications';
 
 const { setNotification } = notificationsActions;
-const { setSurveyVisible, setCurrentSurvey } = surveysActions;
+const { setSurveyVisible, setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
    const {
@@ -26,6 +26,7 @@ function SurveyList(props) {
       surveySelected,
       setMainStage,
       setCurrentSurvey,
+      setSurveyResult,
    } = props;
    const eventId = activity.event_id;
 
@@ -48,19 +49,26 @@ function SurveyList(props) {
    }, [eventId]);
 
    const visualizarEncuesta = (survey) => {
-      if (survey && survey.isOpened === 'true' && survey != null) {
+      if (survey && survey.isOpened === 'true' && survey !== null) {
          handleClick(survey);
       } else {
          setSurveyVisible(false);
+         setCurrentSurvey(survey);
       }
    };
-
+   
    const handleClick = (currentSurvey) => {
       if (activity !== null && currentSurvey.isOpened === 'true') {
          setMainStage('surveyDetalle');
          setSurveyVisible(true);
          setCurrentSurvey(currentSurvey);
-      } else {
+         setSurveyResult(false)
+      } else if(activity !== null && currentSurvey.isOpened === 'false') {
+         setSurveyResult(true)
+         setMainStage('surveyDetalle');
+         setSurveyVisible(true);
+         setCurrentSurvey(currentSurvey);
+      }else{
          setMainStage(null);
          setSurveyVisible(false);
       }
@@ -108,6 +116,7 @@ const mapDispatchToProps = {
    setSurveyVisible,
    setCurrentSurvey,
    setMainStage,
+   setSurveyResult,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList);

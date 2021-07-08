@@ -27,7 +27,7 @@ import { setTopBanner } from '../../redux/topBanner/actions';
 const { TabPane } = Tabs;
 
 const { gotoActivity, setMainStage, setTabs } = StageActions;
-const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys } = SurveyActions;
+const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys, unsetCurrentSurvey } = SurveyActions;
 
 const layout = {
   labelCol: { span: 8 },
@@ -191,7 +191,7 @@ let AgendaActividadDetalle = (props) => {
   }, [activitiesSpace]);
 
   useEffect(() => {
-    if (option === 'surveyDetalle' || option === 'game') {
+    if (/*option === 'surveyDetalle' ||*/ option === 'game') {
       const sharedProperties = {
         position: 'fixed',
         right: '0',
@@ -304,7 +304,7 @@ let AgendaActividadDetalle = (props) => {
   };
 
   // aquie esta los estados del drawer y el modal
-  const [visible, setVisible] = useState(props.isVisible);
+  const [visible, setVisible] = useState(false);
   const [rankingVisible, setRankingVisible] = useState(true);
   const [width, setWidth ] = useState('70%');
  
@@ -327,15 +327,15 @@ let AgendaActividadDetalle = (props) => {
     }
       setRankingVisible(!rankingVisible)
   }
-  // const showDrawer = () => { // esta funcion activa rl drawer
-  //   setVisible(false) 
-  //  };
+
+   useEffect(() => {
+    setVisible(true)
+  }, [props.isVisible])
+
   function onClose () {  // esta funcion desactiva rl drawer
-    // setVisible(false) 
-    if(props.isVisible===true){
-     props.setSurveyVisible(false)
-    }
-    
+    setVisible(false)
+    props.unsetCurrentSurvey();
+    props.setMainStage(null);
   }
 
   // constante de ranking
@@ -576,7 +576,7 @@ let AgendaActividadDetalle = (props) => {
                       closeIcon={<CloseOutlined />}
                       placement="right"
                       // closable={true}
-                      visible={props.isVisible}
+                      visible={visible}
                       onClose={onClose}
                       width={window.screen.width >= 768 ? rankingVisible == false ? '100%':'70%': '100%'}
                     >
@@ -882,6 +882,7 @@ const mapDispatchToProps = {
   setHasOpenSurveys,
   setTabs,
   setTopBanner,
+  unsetCurrentSurvey,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));

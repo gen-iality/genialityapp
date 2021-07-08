@@ -52,7 +52,7 @@ class SurveyComponent extends Component {
     var self = this;
     const { eventId, idSurvey, event } = this.props;
 
-    this.StyleColorSurvey(event.styles); // asigna los colores del evento para la UI de la encuesta
+    this.StyleColorSurvey(event?.styles); // asigna los colores del evento para la UI de la encuesta
     let surveyData = await this.loadSurvey(eventId, idSurvey);
     const firebaseSurvey = await getSurveyConfiguration(idSurvey);
 
@@ -560,7 +560,7 @@ class SurveyComponent extends Component {
     var defaultThemeColors = Survey.StylesManager.ThemeColors['modern'];
     // Validacion para evitar el color blanco en la ui de la encuesta
     let color =
-      styles.textMenu == '#FFFFFF' || styles.textMenu == '#ffffff' ? styles.toolbarDefaultBg : styles.textMenu;
+      styles?.textMenu == '#FFFFFF' || styles?.textMenu == '#ffffff' ? styles?.toolbarDefaultBg : styles?.textMenu;
     // le da el color a los botones de check de las respuestas
     defaultThemeColors['$border-color'] = color;
     //--------------------------------------------------------
@@ -651,7 +651,7 @@ class SurveyComponent extends Component {
                   onStarted={this.checkCurrentPage}
                   onCurrentPageChanged={this.onCurrentPageChanged}
                 /> */}
-                <h1>AQUI SE RESPONDE LA ENCUESTA{surveyData._id}</h1>
+                <h1>Esta es la encuesta: ==={this.props.currentSurvey.name} === </h1>
               </div>
             )}
           </div>
