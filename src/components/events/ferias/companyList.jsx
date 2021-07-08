@@ -22,7 +22,7 @@ function Companylist(props) {
                  <div className='redes-contact'>
                    <span className='tel'> <PhoneOutlined className='icono'/> {props.tel} </span>
                    <span className='email'> <MailOutlined className='icono'/> {props.email} </span>
-                   <span className='web'> <GlobalOutlined  className='icono'/> {props.pagweb} </span>
+                   <span className='web'> <GlobalOutlined  className='icono'/><a rel="noreferrer" href={props.pagweb} target="_blank"> {props.pagweb}</a> </span>
                  </div>
                  <Button type='default' className='boton' size='large'>
                     ver mas detalles
