@@ -81,7 +81,7 @@
     "form.validate.message.email.password.error": "Email or password was not correct",
     "form.title.socialzone": "Enter your information to participate in the chat",
     "form.label.name": "Name",
-    "form.button.enter": "Enter",
+    "form.button.enter": "Enter the chat",
     "form.button.register": "Register to the event",
     "form.message.socialzone":"This form is only valid to participate in the chat, if you want to enjoy the event in its entirety you must register.",
 
@@ -182,7 +182,7 @@
     "form.validate.message.email.password.error": "Email o Contraseña incorrecta",
     "form.title.socialzone": "Ingresa tus datos para participar en el chat",
     "form.label.name": "Nombre",
-    "form.button.enter": "Entrar",
+    "form.button.enter": "Entrar en el chat",
     "form.button.register": "Registrarme al evento",
     "form.message.socialzone":"Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.",
     
@@ -242,7 +242,7 @@
     "form.validate.message.email.password.error": "Email ou senha incorretos",
     "form.title.socialzone": "Insira suas informações para participar do chat",
     "form.label.name": "Nome",
-    "form.button.enter": "Entrem",
+    "form.button.enter": "Entrem no chat",
     "form.button.register": "Inscreva-se no evento",
     "form.message.socialzone":"Este formulário só é válido para participar do chat, se quiser curtir o evento na íntegra é necessário se cadastrar.s",
 
