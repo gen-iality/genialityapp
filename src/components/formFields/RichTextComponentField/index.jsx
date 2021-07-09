@@ -37,6 +37,8 @@ function RichTextComponentField ( rawProps ) {
     <Field
       name={ name }
       validate={ validate }
+      onPaste={true}
+
     >
       {( { field, form, meta } ) => {
         const fieldError = meta.touched && meta.error
@@ -45,13 +47,13 @@ function RichTextComponentField ( rawProps ) {
           <FormItem
             label={ formItemProps.label }
             required={ formItemProps.required }
-            help={ fieldError }
+            help={ fieldError }            
             validateStatus={ fieldError ? "error" : undefined }
           >
             <ReactQuill
               ref={ editorRef }
               modules={ toolbarEditor }
-              { ...props }
+              { ...props }              
               value={ field.value }
               onBlur={ () => form.setFieldTouched( field.name, true ) }
               onChange={ ( newValue, _delta, _source, editor ) => {

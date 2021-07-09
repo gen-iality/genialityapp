@@ -15,6 +15,7 @@ import GameRanking from '../events/game/gameRanking';
 import { useRef } from 'react';
 import { UseEventContext } from '../../Context/eventContext';
 import { UseCurrentUser } from '../../Context/userContext';
+import { FormattedMessage } from 'react-intl';
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
 const callback = () => {};
@@ -333,7 +334,13 @@ let SocialZone = function(props) {
       {props.generalTabs.attendees && (
         <>
           {' '}
-          <TabPane tab={<div style={{ color: props.cEvent.styles.textMenu }}>Asistentes</div>} key='2'>
+          <TabPane
+            tab={
+              <div style={{ color: props.cEvent.styles.textMenu }}>
+                <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
+              </div>
+            }
+            key='2'>
             <Row>
               <Col sm={21}>
                 {!Object.keys(attendeeList).length ? (
@@ -393,7 +400,7 @@ let SocialZone = function(props) {
           tab={
             <div style={{ marginBottom: '0px' }}>
               <Badge dot={props.hasOpenSurveys} size='default'>
-                <span style={{ color: props.cEvent.styles.textMenu }}>Encuestas</span>
+                <span style={{ color: props.cEvent.styles.textMenu }}><FormattedMessage id='tabs.surveys.socialzone' defaultMessage='Encuestas' /></span>
               </Badge>
             </div>
           }
@@ -436,7 +443,7 @@ let SocialZone = function(props) {
               <p
                 style={{ marginBottom: '0px', color: props.cEvent.styles.textMenu }}
                 className='lowerTabs__mobile-hidden'>
-                Juegos
+                <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
               </p>
             </>
           }
@@ -444,7 +451,7 @@ let SocialZone = function(props) {
           <Row justify='space-between'>
             <Col span={4}>
               <ArrowLeftOutlined
-              style={{color: props.cEvent.styles.textMenu}}
+                style={{ color: props.cEvent.styles.textMenu }}
                 onClick={() => {
                   props.setMainStage(null);
                   props.settabselected('');
@@ -456,11 +463,11 @@ let SocialZone = function(props) {
               <h2 style={{ fontWeight: '700', color: props.cEvent.styles.textMenu }}> Volver a la Conferencia </h2>
             </Col>
             <Col span={4}>
-              <VideoCameraOutlined style={{color: props.cEvent.styles.textMenu}}/>
+              <VideoCameraOutlined style={{ color: props.cEvent.styles.textMenu }} />
             </Col>
           </Row>
 
-          <GameRanking currentUser={currentUser}  cEvent={props.cEvent} />
+          <GameRanking currentUser={currentUser} cEvent={props.cEvent} />
         </TabPane>
       )}
     </Tabs>

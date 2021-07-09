@@ -30,8 +30,8 @@ const FeriasList = ({event_id, stateferia}) => {
               img={company.list_image} 
               name={company.name}
               position={company.position}
-              tel={company.advisor && company.advisor.number}
-              email={company.email}
+              tel={company.advisor && company.telefono}
+              email={company.advisor&&company.email}
               description={company.short_description}
               pagweb={company.webpage}
                 /> 
