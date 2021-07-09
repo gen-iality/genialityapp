@@ -25,16 +25,17 @@ const ChatList = (props) => {
   //contextos
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
+  const [bandera, setbandera] = useState()
  
   const onFinish = (values) => {
-    //alert(values);
-    props.setCurrentUser(values);
+    cUser.value = values;
+    setbandera('')
   };
 
-  let userName = cUser ? (cUser.names ? cUser.names : cUser.name) : undefined;
+  let userName = cUser.value ? (cUser.value.names ? cUser.value.names : cUser.value.name) : undefined;
 
   //para los eventos tipo asamblea que tienen una propiedad llamada casa que sirve para identificaar las personas
-  userName = cUser && cUser.casa ? '(' + cUser.casa + ') ' + userName : userName;
+  userName = cUser.value && cUser.value.casa ? '(' + cUser.value.casa + ') ' + userName : userName;
 
   useEffect(() => {
     props.datamsjlast &&
@@ -67,7 +68,7 @@ const ChatList = (props) => {
     setcurrentab(key);
   }
 
-  if (!cUser)
+  if (!cUser.value)
     return (
       <Form {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
         <Row justify='center'>
@@ -135,7 +136,7 @@ const ChatList = (props) => {
               '&eventid=' +
               cEvent.value._id +
               '&userid=' +
-              cUser.uid +
+              cUser.value.uid +
               '&version=0.0.2'
             }></iframe>
         </TabPane>
@@ -210,7 +211,7 @@ const ChatList = (props) => {
                 '&eventid=' +
                 cEvent.value._id +
                 '&userid=' +
-                cUser.uid
+                cUser.value.uid
               }></iframe>
           )}
         </TabPane>
