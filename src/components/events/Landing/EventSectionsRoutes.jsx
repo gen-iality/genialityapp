@@ -65,6 +65,7 @@ const EventSectionRoutes = (props) => {
             eventUser={props.cEventUser}
             cEvent={props.cEvent}
             cUser={props.cUser}
+           
           />
         </Route>
 
