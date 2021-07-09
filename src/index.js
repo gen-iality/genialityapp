@@ -23,7 +23,6 @@ const messages = localeData[languageWithoutRegionCode] || localeData[language] |
 
 ReactDOM.render(
   <>
-    {console.log('RENDER ROOT')}
     <IntlProvider locale={languageWithoutRegionCode} messages={messages} defaultLocale='es'>
       <App />
     </IntlProvider>

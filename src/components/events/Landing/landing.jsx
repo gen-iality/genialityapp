@@ -66,7 +66,7 @@ const Landing = (props) => {
           });
         });
 
-    console.log('totalNewMessages', totalNewMessages);
+    // console.log('totalNewMessages', totalNewMessages);
   }, [cEventContext.status]);
 
   //METODO PARA SETEAR NEW MESSAGE
