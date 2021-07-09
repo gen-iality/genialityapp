@@ -50,30 +50,30 @@ class SurveyComponent extends Component {
 
   async componentDidMount() {
     var self = this;
-    const { eventId, idSurvey } = this.props;   
-   
-    let surveyData = await this.loadSurvey(eventId, idSurvey);
-    const firebaseSurvey = await getSurveyConfiguration(idSurvey);
+    const { eventId, idSurvey, event } = this.props;
+    // this.StyleColorSurvey(event?.styles); // asigna los colores del evento para la UI de la encuesta
+    // let surveyData = await this.loadSurvey(eventId, idSurvey);
+    // const firebaseSurvey = await getSurveyConfiguration(idSurvey);
 
-    surveyData.open = firebaseSurvey.isOpened;
-    surveyData.publish = firebaseSurvey.isPublished;
-    surveyData.freezeGame = firebaseSurvey.freezeGame;
+    // surveyData.open = firebaseSurvey.isOpened;
+    // surveyData.publish = firebaseSurvey.isPublished;
+    // surveyData.freezeGame = firebaseSurvey.freezeGame;
 
-    let survey = new Survey.Model(surveyData);
+    // let survey = new Survey.Model(surveyData);
 
-    await this.listenAndUpdateStateSurveyRealTime(idSurvey);
+    // await this.listenAndUpdateStateSurveyRealTime(idSurvey);
 
-    /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
-    que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
-    sino se presentar comportamientos raros.
-    */
-    self.setState({ surveyData, idSurvey, survey });
-    self.survey = survey;
+    // /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
+    // que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
+    // sino se presentar comportamientos raros.
+    // */
+    // self.setState({ surveyData, idSurvey, survey });
+    // self.survey = survey;
 
-    // Esto permite obtener datos para la grafica de gamificacion
-    UserGamification.getListPoints(eventId, this.getRankingList);
+    // // Esto permite obtener datos para la grafica de gamificacion
+    // UserGamification.getListPoints(eventId, this.getRankingList);
 
-    await this.getCurrentEvenUser();
+    // await this.getCurrentEvenUser();
   }
 
  
@@ -553,6 +553,37 @@ class SurveyComponent extends Component {
       }
     }
   };
+   /* Funcion para asignar los colores del evento a la UI del componente survey */
+   StyleColorSurvey = (styles) => {
+    //extrae las propiedades por defecto del thema 'modern' para modificarl los colores
+    var defaultThemeColors = Survey.StylesManager.ThemeColors['modern'];
+    // Validacion para evitar el color blanco en la ui de la encuesta
+    let color =
+      styles?.textMenu == '#FFFFFF' || styles?.textMenu == '#ffffff' ? styles?.toolbarDefaultBg : styles?.textMenu;
+    // le da el color a los botones de check de las respuestas
+    defaultThemeColors['$border-color'] = color;
+    //--------------------------------------------------------
+    // le da el color a los chulitos del boton de check en la respuesta
+    defaultThemeColors['$checkmark-color'] = '#FFFFFF';
+    //--------------------------------------------------------
+    // cambio el color de la barra y el boton, tambien al seleccionar cambia el color del relleno de check
+    defaultThemeColors['$main-color'] = color;
+    //--------------------------------------------------------
+    // cambia el color del relleno del check y del la barra de del scroll
+    defaultThemeColors['$main-hover-color'] = color;
+    //--------------------------------------------------------
+    // cambia el color al texto de progreso
+    defaultThemeColors['$progress-text-color'] = color;
+    //--------------------------------------------------------
+    // asigna el color de fondo para la pregunta al momento de escoger una respuesta. Actualmente transparente
+    defaultThemeColors['$answer-background-color'] = '#ffffff00';
+    //--------------------------------------------------------
+    // defaultThemeColors["$text-color"] = color; //le da color al texto de las repuestas
+    // defaultThemeColors["$add-button-color"] = "color"; // color se aplico en fondo del la barra de scroll
+
+    Survey.StylesManager.applyTheme('modern');
+  };
+
 
   render() {
     let { surveyData, feedbackMessage, showMessageOnComplete, eventUsers } = this.state;
@@ -619,7 +650,7 @@ class SurveyComponent extends Component {
                   onStarted={this.checkCurrentPage}
                   onCurrentPageChanged={this.onCurrentPageChanged}
                 /> */}
-                <h1>AQUI SE RESPONDE LA ENCUESTA{surveyData._id}</h1>
+                <h1>Esta es la encuesta: ==={this.props.currentSurvey.name} === </h1>
               </div>
             )}
           </div>

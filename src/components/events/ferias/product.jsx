@@ -16,7 +16,12 @@ function products(props) {
               <div className='producto-informacion'>
                 <span className='title'>{props.title} </span>
                 <span className='etiqueta'>{props.etiqueta} </span>
-                <p>{props.description}</p>
+                <p>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: props.description && props.description,
+                    }}></div>
+              </p>
               </div>
             </Col>
           </Row>

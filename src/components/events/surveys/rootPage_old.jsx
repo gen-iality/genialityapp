@@ -86,7 +86,7 @@ class RootPage extends Component {
 
   render() {
     let { hasVote, isLoading, guestVoteInSurvey, responseCounter, eventUser } = this.state;
-    const { toggleSurvey, surveyLabel, currentUser, eventId, idSurvey } = this.props;
+    const { toggleSurvey, surveyLabel, currentUser, eventId, idSurvey, event} = this.props;
     if (!isLoading)
       return (
         <div
@@ -120,6 +120,7 @@ class RootPage extends Component {
                 idSurvey={idSurvey}
                 showListSurvey={toggleSurvey}
                 eventId={eventId}
+                event={event}
                 currentUser={currentUser}
                 singlePage={true}
                 surveyLabel={surveyLabel}

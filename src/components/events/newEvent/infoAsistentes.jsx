@@ -16,6 +16,8 @@ class InfoAsistentes extends Component {
 
   componentDidMount() {
     const fields = this.props.data;
+    fields[0]={type:'Texto',label:'Avatar',mandatory:false,description:'Imagen de perfil',options: [] }
+  
     this.setState({ fields });
   }
 
@@ -115,9 +117,24 @@ class InfoAsistentes extends Component {
                 />
                 <label className='checkbox' htmlFor={'mandName'} />
               </td>
+              <td />             
+            </tr>
+            <tr>
+            <td>Imagen</td>
+              <td>Avatar</td>
+              <td>
+                <input
+                  className='is-checkradio is-primary'
+                  type='checkbox'
+                  id={'mandAvatar'}
+                  checked={true}
+                  disabled={true}
+                />
+                <label className='checkbox' htmlFor={'mandName'} />
+              </td>
               <td />
             </tr>
-            {fields.map((field, key) => {
+            {fields.slice(1).map((field, key) => {
               return (
                 <tr key={key}>
                   <td>{field.type}</td>

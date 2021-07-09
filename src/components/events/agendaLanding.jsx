@@ -77,18 +77,9 @@ class Agenda extends Component {
   }
 
   async componentDidMount() {
-    //Se carga esta funcion para cargar los datos
-    console.log('DID MOUNT', this.props.cEvent.value);
 
     this.props.setVirtualConference(false);
-
-
-   
-    console.log(this.props.cEvent.value.styles.hideDatesAgenda);
-    console.log(this.props.cEvent.value);
     this.setState({ loading: true });
-    console.log(this.props.cEvent.value.styles.hideDatesAgendaItem);
-    console.log(this.props.cEvent.value.styles.hideDatesAgenda);
     await this.fetchAgenda();
 
     //Si hay currentUser pasado por props entonces inicializamos el estado userId
@@ -133,7 +124,6 @@ class Agenda extends Component {
   setDaysWithAllActivities = () => {
     const { data } = this.state;
     const dayswithactivities = [];
-    console.log('dataacti', data);
     data.map((activity) => {
       const datestring = Moment.tz(activity.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
         .tz(Moment.tz.guess())

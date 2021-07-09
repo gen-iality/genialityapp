@@ -14,7 +14,7 @@ import SurveyCard from './components/surveyCard';
 import notifications from '../Landing/notifications';
 
 const { setNotification } = notificationsActions;
-const { setSurveyVisible, setCurrentSurvey } = surveysActions;
+const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
    const {
@@ -22,10 +22,10 @@ function SurveyList(props) {
       currentUser,
       setNotification,
       viewNotification,
-      setSurveyVisible,
       surveySelected,
       setMainStage,
       setCurrentSurvey,
+      setSurveyResult,
    } = props;
    const eventId = activity.event_id;
 
@@ -48,22 +48,27 @@ function SurveyList(props) {
    }, [eventId]);
 
    const visualizarEncuesta = (survey) => {
-      if (survey && survey.isOpened === 'true' && survey != null) {
+      if (survey && survey.isOpened === 'true' && survey !== null) {
          handleClick(survey);
+         console.log("10. en el if")
       } else {
-         setSurveyVisible(false);
+         console.log("10. en el else")
+         setCurrentSurvey(survey);
+         setSurveyResult('closedSurvey')
       }
    };
 
    const handleClick = (currentSurvey) => {
       if (activity !== null && currentSurvey.isOpened === 'true') {
-         setMainStage('surveyDetalle');
-         setSurveyVisible(true);
-         setCurrentSurvey(currentSurvey);
-      } else {
-         setMainStage(null);
-         setSurveyVisible(false);
+         // setMainStage('surveyDetalle');
+         // setSurveyVisible(true);
+         setSurveyResult('view');
+      } else if (activity !== null && currentSurvey.isOpened === 'false') {
+         setSurveyResult('results');
+         // setMainStage('surveyDetalle');
+         // setSurveyVisible(true);
       }
+      setCurrentSurvey(currentSurvey);
    };
    useEffect(() => {
       if (listOfEventSurveys[1]?.length >= 1) {
@@ -105,9 +110,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
    setNotification,
-   setSurveyVisible,
    setCurrentSurvey,
    setMainStage,
+   setSurveyResult,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList);

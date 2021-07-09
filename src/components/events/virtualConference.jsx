@@ -17,9 +17,7 @@ const { Title } = Typography;
 let MeetingConferenceButton = ({
   activity,
   zoomExternoHandleOpen,
-
   event,
-  showSection,
   setActivity,
   eventUser,
 }) => {
@@ -104,7 +102,7 @@ const VirtualConference = () => {
 
   return (
     <Fragment>
-      {infoAgendaArr.length > 0 ? (
+      {infoAgendaArr.length > 0 && (
         infoAgendaArr
           .filter((item) => {
           
@@ -244,8 +242,6 @@ const VirtualConference = () => {
               </Link>
             </>
           ))
-      ) : (
-        <Spin tip='Cargando...' />
       )}
     </Fragment>
   );

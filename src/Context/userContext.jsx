@@ -10,7 +10,8 @@ export function CurrentUserProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(initialContextState);
 
   useEffect(async () => {
-    setCurrentUser(await getCurrentUser());
+    let dataUser = await getCurrentUser();
+    setCurrentUser({ status: 'LOADING', value: dataUser });
   }, []);
 
   return <CurrentUserContext.Provider value={currentUser}>{children}</CurrentUserContext.Provider>;
