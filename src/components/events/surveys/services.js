@@ -212,8 +212,6 @@ export const SurveyAnswers = {
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
   getAnswersQuestion: async (surveyId, questionId, eventId, updateData, operation) => {
     // eslint-disable-next-line no-unused-vars
-    return new Promise((resolve, reject) => {
-      async () => {
         let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
         let options = dataSurvey.questions.find((question) => question.id === questionId);
 
@@ -256,8 +254,6 @@ export const SurveyAnswers = {
 
             updateData({ answer_count: result, options });
           });
-      };
-    });
   },
   // Servicio para validar si un usuario ha respondido la encuesta
   getUserById: async (eventId, survey, userId, onlyQuantityDocs) => {

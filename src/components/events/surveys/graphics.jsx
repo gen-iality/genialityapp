@@ -306,7 +306,7 @@ class Graphics extends Component {
     let { dataSurvey, currentPage, titleQuestion, dataVotos } = this.state;
     const { Paragraph, Text } = Typography;
     const { surveyLabel } = this.props;
-
+    // console.log("10. ==> 1.dataSurvey, 2.currentPage, 3.titleQuestion, 4.dataVotos", "1-- ",dataSurvey, "2-- ",currentPage, "3-- ",titleQuestion, "4-- ",dataVotos)
     if (dataSurvey.questions)
       return (
         <>
