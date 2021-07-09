@@ -200,7 +200,7 @@ export const EventsApi = {
 
   sendInvitation: async (eventId, data) => {
     return await Actions.post(`/api/events/${eventId}/invitation`, data);
-  },
+  },  
   sendRsvp: async (data, id) => {
     return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data);
   },
@@ -219,6 +219,15 @@ export const EventsApi = {
   },
   getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`, true);
+  },
+  metrics: async (id) => {
+    return await Actions.getOne(`/api/events/${id}/`, 'totalmetricsbyevent');
+  },
+  metricsByActivity: async (id) => {
+    return await Actions.getOne(`/api/events/${id}/`, 'totalmetricsbyactivity');
+  },
+  metricsRegisterBydate: async (id,type) => {
+    return await Actions.get(`/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}`);
   },
 };
 

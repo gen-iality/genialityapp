@@ -5,16 +5,15 @@ import { Tooltip, Button, Card, Col, message, Row, Select, Statistic, Table, Spa
 import { EyeOutlined, FieldTimeOutlined, IdcardOutlined, MoreOutlined, UserOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import {  totalsMetricasEventsDetails, totalsMetricasMail, totalsMetricasActivityDetails
-,metricasRegisterByDate,queryReportGnal, queryReportGnalByMoth} from './serviceAnalytics';
+,metricasRegisterByDate,queryReportGnal, queryReportGnalByMoth,setDataGraphic,
+exportDataReport,obtenerMetricasByView,updateMetricasActivity} from './serviceAnalytics';
 import 'chartjs-plugin-datalabels';
 import { Bar, Line } from 'react-chartjs-2';
 import XLSX from 'xlsx';
 import ReactToPrint from 'react-to-print';
 import Moment from 'moment';
 
-//CONSTANTES COLORES DE GRAFICAS
-const backgroud = 'rgba(80, 211, 201, 0.7)';
-const lineBackground = 'rgba(80, 211, 201, 1)';
+
 
 // const [google, setGoogle] = useState(null)
 class DashboardEvent extends Component {
@@ -50,16 +49,12 @@ class DashboardEvent extends Component {
       desc7: 'Impresiones totales del evento',
       loadingMetrics:true //Permite controlar la carga de las métricas
     };
-    this.handleChange = this.handleChange.bind(this);  }
+  }
 
 
   //Función que permite totalizar los valores por campaña
   totalsMails(list) {
-    let totalClicked = 0,
-      totalDeliverd = 0,
-      totalOpened = 0,
-      totalSent = 0,
-      totalBounced = 0;
+    let totalClicked = 0, totalDeliverd = 0,   totalOpened = 0,   totalSent = 0,     totalBounced = 0;
     list.map((m, index) => {
       totalClicked += m.total_clicked ? m.total_clicked : 0;
       totalDeliverd += m.total_delivered ? m.total_delivered : 0;
@@ -67,46 +62,14 @@ class DashboardEvent extends Component {
       totalSent += m.total_sent ? m.total_sent : 0;
       totalBounced += m.total_bounced ? m.total_bounced : 0;
     });
-    this.setState({
-      totalSent,
-      totalClicked,
-      totalDeliverd,
-      totalBounced,
-      totalOpened,
-    });
+    this.setState({ totalSent,  totalClicked,  totalDeliverd,   totalBounced,   totalOpened,  });
   }
 
   //Función que permite exportar los reportes formato excel
-  exportReport = (datos, name, type, namesheet) => {
-    let { metricsRegister, metricsGraphics } = this.state;
-    console.log(metricsGraphics);
-    let data = [];
-    if (datos.length > 0) {
-      if (type == 'register') {
-        data = datos.map((item) => {
-          return { fecha: item.date, cantidadregistros: item.quantity };
-        });
-      }
-      if (type == 'views') {
-        data = datos.map((item) => {
-          return { fecha: Moment(item.month).format('YYYY-MM-DD'), 'cantidad de visitas': item.view };
-        });
-      }
-
-      if (type == 'time') {
-        data = datos.map((item) => {
-          return {
-            fecha: Moment(item.month).format('YYYY-MM-DD'),
-            'tiempoPromedio(min)': parseFloat(item.time).toFixed(2),
-          };
-        });
-      }
-
-      for (let i = 0; data.length > i; i++) {
-        if (Array.isArray(data[i].response)) {
-          data[i].response = data[i].response.toString();
-        }
-      }
+  exportReport =async (datos, name, type, namesheet) => {
+   
+    let data= await exportDataReport(datos,type);
+     if(data){
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, `${namesheet}`);
@@ -116,35 +79,14 @@ class DashboardEvent extends Component {
     }
   };
 
-  //Función que permite obtener metricas por vistas de actividad
-  obtenerMetricasByView = (view) => {
-    let metrics = this.state.metricsGaByActivity.filter((m) => m.view == view)[0];
-    return metrics;
-  };
 
-  //Función que permite obtener las métricas por cada actividad
-  updateMetricasActivity = (data) => {
-    if (data.length > 0) {     
-      let metricsActivity = [];
-      data.map((activity) => {
-        let metricsView = this.obtenerMetricasByView('/landing/' + this.props.eventId + '/activity/' + activity.name);
-        let metricaActivity = {
-          name: activity.name,
-          view: metricsView ? metricsView.metrics[0] : 0,
-          prints: 0,
-          time: metricsView ? (metricsView.metrics[4] / 60).toFixed(2) + ' min' : '0 min',
-        };
-        
-        metricsActivity.push(metricaActivity);
-      });
-      this.setState({ metricsActivity });
-    }
-  };
+
+ 
+
   componentDidMount() {
     // fin de la peticion a analytics
     const evius_token = Cookie.get('evius_token');
     const { eventId } = this.props;
-
     if (evius_token) {
       const iframeUrl = `${ApiUrl}/es/event/${eventId}/dashboard?evius_token=${evius_token}`;
       this.setState({ iframeUrl, loading: false });
@@ -167,67 +109,31 @@ class DashboardEvent extends Component {
     }
   }
   //Función que permite obtener las métricas generales del evento
-  obtenerMetricas = (data) => {
+  obtenerMetricas = async (data) => {
     const { eventId } = this.props;  
-    queryReportGnal(eventId).then((resp) => { 
-      console.log(resp)      
-      const dataEvents = resp.rows;
-      const totalMetrics = resp.totalsForAllResults;      
-      let metrics = [];
-      dataEvents.map((data, i) => {
-        let objeto = {
-          view: dataEvents[i][0],
-          metrics: Array.from(dataEvents[i].slice(1,dataEvents[i].length)),
-        };       
-        metrics.push(objeto);
-      });
-      let totalAvg=parseFloat(totalMetrics["ga:avgTimeOnPage"]);
-      this.setState({
-        metricsGnal: {
-          ...this.state.metricsGnal,
-          total_checkIn: totalMetrics["ga:sessions"],
-          avg_time: (totalAvg/60).toFixed(2),
-        },
-        metricsGaByActivity: metrics,
-        metricsGaByActivityGnal: metrics,
-      });
-      this.updateMetricasActivity(data);
-      queryReportGnalByMoth(eventId).then((respuesta) => {  
-        console.log(respuesta)     
-       let datos = respuesta.rows;
-        console.log(datos);
-        let totalMetrics = [];
-        datos.map((dat) => {
-          let metric = {
-            month: dat[0],
-            view: dat[1],
-            time: (dat[2]/60).toFixed(2),
-          };
-          totalMetrics.push(metric);
-        });        
+    let metricsgnal= await queryReportGnal(eventId);    
+      let metricsActivity= await updateMetricasActivity(data,eventId,metricsgnal.metrics);
+      let metricsGraphics= await queryReportGnalByMoth(eventId)
         this.setState({
-          metricsGraphics: totalMetrics,
+          metricsGraphics: metricsGraphics,
+          metricsGnal: {
+            ...this.state.metricsGnal,
+            total_checkIn: metricsgnal.totalMetrics["ga:sessions"],
+            avg_time: (metricsgnal.totalAvg/60).toFixed(2),          
+          },
+          metricsGaByActivity: metricsgnal.metrics,
+          metricsGaByActivityGnal: metricsgnal.metrics,
+          metricsActivity,
           loadingMetrics:false
         });
         this.graficRegistros();
         this.graficAttendees();
-        this.graficPrintouts();
-      });
-    });
+        this.graficPrintouts();     
+    
   };
-  //VIEW REGISTER
-  handleChange(value) {    
-    this.setState({
-      viewRegister: parseInt(value),
-    });
-    this.graficRegistros();
-    this.graficAttendees();
-    this.graficPrintouts();
-  }
   //GRAFICA REGISTROS POR DIA
   async graficRegistros() {
-    let labels = [],
-      values = [];
+    let labels = [], values = [];
     let metricsRegister = await metricasRegisterByDate(this.props.eventId);
     if (metricsRegister) {
       metricsRegister.map((metric) => {
@@ -237,7 +143,7 @@ class DashboardEvent extends Component {
     }
     this.setState({
       metricsRegister,
-      registrosDia: this.setDataGraphic(
+      registrosDia: setDataGraphic(
         labels.slice(-this.state.viewRegister),
         values.slice(-this.state.viewRegister),
         'Registros'
@@ -247,8 +153,7 @@ class DashboardEvent extends Component {
 
   //GRAFICA ASISTENTES POR DIA
   async graficAttendees() {
-    let labels = [],
-      values = [];
+    let labels = [],  values = [];
     let metricsAttendees = this.state.metricsGraphics;
     if (metricsAttendees) {
       metricsAttendees.map((metric) => {
@@ -257,7 +162,7 @@ class DashboardEvent extends Component {
       });
     }
     this.setState({
-      attendesDay: this.setDataGraphic(
+      attendesDay: setDataGraphic(
         labels.slice(-this.state.viewRegister),
         values.slice(-this.state.viewRegister),
         'Vistas totales del evento'
@@ -267,11 +172,8 @@ class DashboardEvent extends Component {
 
   //GRAFICA ASISTENTES POR DIA
   async graficPrintouts() {
-    let labels = [],
-      values = [];
+    let labels = [], values = [];
     let metricsAttendees = this.state.metricsGraphics;
-    console.log('GRAFICA ACA');
-    console.log(metricsAttendees);
     if (metricsAttendees) {
       metricsAttendees.map((metric) => {
         labels.push(metric.month);
@@ -279,7 +181,7 @@ class DashboardEvent extends Component {
       });
     }
     this.setState({
-      printoutsDay: this.setDataGraphic(
+      printoutsDay: setDataGraphic(
         labels.slice(-this.state.viewRegister),
         values.slice(-this.state.viewRegister),
         'Tiempo promedio de permanencia'
@@ -287,22 +189,7 @@ class DashboardEvent extends Component {
     });
   }
 
-  //FUNCION QUE PERMITE CREAR OBJETO PARA ASIGNAR A LA GRAFICA
-  setDataGraphic(labels, values, name) {
-    let data = {
-      labels: labels,
-      datasets: [
-        {
-          label: name,
-          data: values,
-          fill: false,
-          backgroundColor: backgroud,
-          borderColor: lineBackground,
-        },
-      ],
-    };
-    return data;
-  }
+ 
 
   //Opciones para las gráficas
   options = {
