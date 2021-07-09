@@ -13,8 +13,7 @@ const initialState = {
 export default function eventReducer(state = initialState, action) {
   switch (action.type) {
     case SET_CURRENT_SURVEY:
-      console.log("REDUXXXX")
-      console.log(action.payload )
+   
       return {
         ...state,
         data: { ...state.data, currentSurvey: action.payload },

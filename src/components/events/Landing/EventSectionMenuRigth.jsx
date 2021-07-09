@@ -24,8 +24,7 @@ const EventSectionMenuRigth = (props) => {
       setisCollapsed(!isCollapsed);     
    }
   async function collapsePerfil  (userPerfil) {
-      console.log('USER PERFIL COLLAPASE');
-      console.log(userPerfil);
+     
       setVisiblePerfil(true); 
       if (userPerfil != null) {
         var data = await this.loadDataUser(userPerfil);        

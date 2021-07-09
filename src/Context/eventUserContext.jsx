@@ -17,7 +17,6 @@ export function CurrentUserEventProvider({ children }) {
     async function fetchEvent() {
       const eventUserGlobal = await EventsApi.getOne(event_id);
       setuserEvent({ status: 'LOADED', value: eventUserGlobal });
-      console.log('CONTEXTOEVENTO2---', eventUserGlobal);
     }
     fetchEvent();
   }, [event_id]);

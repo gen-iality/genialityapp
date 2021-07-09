@@ -6,6 +6,7 @@ import CommentEditor from './commentEditor';
 import Comments from './comments';
 import '../../styles/landing/_wall.scss';
 import { saveFirebase } from './helpers';
+import withContext from '../../Context/withContext'
 
 const IconText = ({ icon, text, onSubmit }) => (
   <Button htmlType='submit' type='link' onClick={onSubmit} style={{ color: 'gray' }}>
@@ -32,7 +33,7 @@ class WallList extends Component {
       user: undefined,
       commenting: null,
       displayedComments: {},
-      event: this.props.event || {}
+      event: this.props.cEvent.value || {}
     };
   }
 
@@ -81,25 +82,15 @@ class WallList extends Component {
     if (prevProps.dataPost !== this.props.dataPost) {
       this.setState({ dataPost: this.props.dataPost });
     }
-
-    if (prevProps.user !== this.props.user) {
-      this.setState({ user: this.props.user });
-    }
   }
 
-  async componentDidMount() {
-    if (this.props.user) {
-      const { user } = this.props;
-      this.setState({ user });
-    }
-  }
 
   gotoCommentList() {
     this.setState({ currentCommet: null });
   }
 
   render() {
-    const { dataPost, user, event } = this.state;
+    const { dataPost,event } = this.state;
 
     return (
       <Fragment>
@@ -136,7 +127,7 @@ class WallList extends Component {
                           text={(item.likes || 0) + ' Me gusta'}
                           key='list-vertical-like-o'
                           onSubmit={() => {
-                            this.props.increaseLikes(item.id, event._id, user._id);
+                            this.props.increaseLikes(item.id, event._id, this.props.cUser._id);
                           }}
                         />,
                         <IconText
@@ -148,7 +139,7 @@ class WallList extends Component {
                           }}
                         />,
                         <>
-                          {user && (user._id === item.author || user.email === item.author) && (
+                          {this.props.cUser && (this.props.cUser._id === item.author || this.props.cUser.email === item.author) && (
                             <>
                               <Popconfirm
                                 title='Seguro deseas eliminar este mensaje?'
@@ -201,7 +192,7 @@ class WallList extends Component {
                       onSubmit={(comment) => {
                         this.innerCreateComment(item, comment);
                       }}
-                      user={user}
+                      user={this.props.cUser}
                     />
                   </Card>
                 )}
@@ -214,4 +205,5 @@ class WallList extends Component {
   }
 }
 
-export default WallList;
+let WallListwithContext = withContext(WallList)
+export default WallListwithContext ;

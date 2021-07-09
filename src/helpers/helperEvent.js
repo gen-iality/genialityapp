@@ -21,9 +21,9 @@ export function listenSurveysData(
          });
 
          querySnapshot.docChanges().forEach((doc) => {
-            console.log(doc.doc.data());
+            // console.log(doc.doc.data());
          });
-         console.log(querySnapshot.docChanges()[0]);
+         // console.log(querySnapshot.docChanges()[0]);
 
          const currentSurvey =
             querySnapshot.docChanges().length > 0 && querySnapshot.docChanges()[0].type === 'modified'
