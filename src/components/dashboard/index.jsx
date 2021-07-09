@@ -4,7 +4,7 @@ import { ApiUrl } from '../../helpers/constants';
 import { Tooltip, Button, Card, Col, message, Row, Select, Statistic, Table, Space, Spin } from 'antd';
 import { EyeOutlined, FieldTimeOutlined, IdcardOutlined, MoreOutlined, UserOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import {totalsMetricasEventsDetails, totalsMetricasMail, totalsMetricasActivityDetails, metricasRegisterByDate} from '../networking/services';
+import {  totalsMetricasEventsDetails, totalsMetricasMail, totalsMetricasActivityDetails,  metricasRegisterByDate} from './serviceAnalytics';
 import 'chartjs-plugin-datalabels';
 import { queryReportGnal, queryReportGnalByMoth } from '../networking/analytics';
 
@@ -20,6 +20,7 @@ const lineBackground = 'rgba(80, 211, 201, 1)';
 
 const { Option } = Select;
 
+// const [google, setGoogle] = useState(null)
 class DashboardEvent extends Component {
   constructor(props) {
     super(props);
@@ -53,8 +54,7 @@ class DashboardEvent extends Component {
       desc7: 'Impresiones totales del evento',
       loadingMetrics:true //Permite controlar la carga de las métricas
     };
- 
-  }
+    this.handleChange = this.handleChange.bind(this);  }
 
 
   //Función que permite totalizar los valores por campaña
@@ -152,15 +152,13 @@ class DashboardEvent extends Component {
     if (evius_token) {
       const iframeUrl = `${ApiUrl}/es/event/${eventId}/dashboard?evius_token=${evius_token}`;
       this.setState({ iframeUrl, loading: false });
-      totalsMetricasMail(this.props.eventId).then((data) => {
-        this.setState({ totalmails: data });
-        this.totalsMails(data);
-        totalsMetricasEventsDetails(this.props.eventId).then((data) => {
-          this.setState({ metricsGnal: data });
-        });
-        totalsMetricasActivityDetails(this.props.eventId).then((data) => {
-          this.setState({ metricsActivity: data });
-          this.obtenerMetricas(data);
+      totalsMetricasMail(this.props.eventId).then((datametricsMail) => {      
+        totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {
+          totalsMetricasActivityDetails(this.props.eventId).then((dataMetricsActivity) => {
+            this.setState({ totalmails: datametricsMail,metricsActivity: dataMetricsActivity, metricsGnal: dataMetricsGnal  });
+            this.obtenerMetricas(data);
+            this.totalsMails(data);          
+          });
         });
       });
 
@@ -221,7 +219,15 @@ class DashboardEvent extends Component {
       });
     });
   };
-
+  //VIEW REGISTER
+  handleChange(value) {    
+    this.setState({
+      viewRegister: parseInt(value),
+    });
+    this.graficRegistros();
+    this.graficAttendees();
+    this.graficPrintouts();
+  }
   //GRAFICA REGISTROS POR DIA
   async graficRegistros() {
     let labels = [],
