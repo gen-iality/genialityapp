@@ -152,8 +152,8 @@ class DashboardEvent extends Component {
         totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {
           totalsMetricasActivityDetails(this.props.eventId).then((dataMetricsActivity) => {
             this.setState({ totalmails: datametricsMail,metricsActivity: dataMetricsActivity, metricsGnal: dataMetricsGnal  });
-            this.obtenerMetricas(data);
-            this.totalsMails(data);          
+            this.obtenerMetricas(dataMetricsActivity);
+            this.totalsMails(datametricsMail);          
           });
         });
       });
