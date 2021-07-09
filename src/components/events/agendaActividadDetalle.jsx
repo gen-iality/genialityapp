@@ -23,9 +23,9 @@ import { listenSurveysData } from '../events/surveys/services';
 import { eventUserUtils } from '../../helpers/helperEventUser';
 import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';
+import withContext from '../../Context/withContext';
 
 const { TabPane } = Tabs;
-
 const { gotoActivity, setMainStage, setTabs } = StageActions;
 const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys, unsetCurrentSurvey } = SurveyActions;
 
@@ -40,7 +40,6 @@ const tailLayout = {
 
 let AgendaActividadDetalle = (props) => {
   let { activity_id } = useParams();
-  let [event, setEvent] = useState(false);
   let [idSpeaker, setIdSpeaker] = useState(false);
   let [orderedHost, setOrderedHost] = useState([]);
   const [meetingState, setMeetingState] = useState(null);
@@ -51,7 +50,7 @@ let AgendaActividadDetalle = (props) => {
   const [names, setNames] = useState(null);
   const [email, setEmail] = useState(null);
   const [currentActivity, setcurrentActivity] = useState(null);
-  let urlBack = `/landing/${props.cEvent._id}/agenda`;
+  let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
   
   
   const configfast = useState({});
@@ -63,7 +62,7 @@ let AgendaActividadDetalle = (props) => {
   //obtener la actividad por id
   useEffect(() => {
     async function getActividad() {
-      return await AgendaApi.getOne(activity_id, props.cEvent._id);
+      return await AgendaApi.getOne(activity_id, props.cEvent.value._id);
     }
 
     function orderHost(hosts) {
@@ -115,8 +114,8 @@ let AgendaActividadDetalle = (props) => {
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
       if (props.cUser) {
-        TicketsApi.checkInAttendee(props.cEvent._id, props.cUser._id);
-        Activity.checkInAttendeeActivity(props.cEvent._id, activity_id, props.cUser.account_id);
+        TicketsApi.checkInAttendee(props.cEvent.value._id, props.cUser._id);
+        Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.account_id);
       }
     } catch (e) {
       console.error('fallo el checkin:', e);
@@ -126,15 +125,15 @@ let AgendaActividadDetalle = (props) => {
       let innerName =
         props.cUser && props.cUser.properties && props.cUser.properties.casa
           ? '(' + props.cUser.properties.casa + ')' + props.cUser.displayName
-          : props.userInfo.displayName;
+          : props.cUser.displayName;
       setNames(innerName);
-      setEmail(props.userInfo.email);
+      setEmail(props.cUser.email);
     }
 
     //Escuchando el estado de la actividad
 
     (async function() {
-      await listeningStateMeetingRoom(props.cEvent._id, activity_id);
+      await listeningStateMeetingRoom(props.cEvent.value._id, activity_id);
     })();
 
     // Desmontado del componente
@@ -149,7 +148,7 @@ let AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     (async function() {
-      await listeningStateMeetingRoom(props.cEvent._id, activity_id);
+      await listeningStateMeetingRoom(props.cEvent.value._id, activity_id);
     })();
   }, [activity_id]);
 
@@ -158,7 +157,7 @@ let AgendaActividadDetalle = (props) => {
       if (meeting_id === null || platform === null) return false;
       firestore
         .collection('events')
-        .doc(props.cEvent._id)
+        .doc(props.cEvent.value._id)
         .collection('activities')
         .where('meeting_id', '==', meeting_id)
         .where('platform', '==', platform)
@@ -178,7 +177,7 @@ let AgendaActividadDetalle = (props) => {
     (async () => {
       await listeningSpaceRoom();
     })();
-  }, [meeting_id, platform, props.cEvent]);
+  }, [meeting_id, platform, props.cEvent.value]);
 
   useEffect(() => {
     const openActivities = activitiesSpace.filter((activity) => activity.habilitar_ingreso === 'open_meeting_room');
@@ -262,10 +261,10 @@ let AgendaActividadDetalle = (props) => {
       return (
         url_conference +
         meeting_id +
-        `&userName=${props.userInfo.displayName ? props.userInfo.displayName : 'Guest'}` +
-        `&email=${props.userInfo.email ? props.userInfo.email : 'emaxxxxxxil@gmail.com'}` +
+        `&userName=${props.cUser.displayName ? props.cUser.displayName : 'Guest'}` +
+        `&email=${props.cUser.email ? props.cUser.email : 'emaxxxxxxil@gmail.com'}` +
         `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
-        `&host=${eventUserUtils.isHost(props.cUser, props.cEvent)}`
+        `&host=${eventUserUtils.isHost(props.cUser, props.cEvent.value)}`
       );
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
@@ -288,11 +287,11 @@ let AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     if (currentActivity) {
-      listenSurveysData(props.cEvent, currentActivity, props.cUser, (data) => {
+      listenSurveysData(props.cEvent.value, currentActivity, props.cUser, (data) => {
         props.setHasOpenSurveys(data.hasOpenSurveys);
       });
     }
-  }, [props.cEvent, currentActivity]);
+  }, [props.cEvent.value, currentActivity]);
 
   {
     Moment.locale(window.navigator.language);
@@ -341,7 +340,7 @@ let AgendaActividadDetalle = (props) => {
         <Card
           style={{ padding: '1 !important' }}
           className={
-            event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6'
+            props.cEvent.value._id === '5fca68b7e2f869277cfa31b0' || props.cEvent.value._id === '5f99a20378f48e50a571e3b6'
               ? 'magicland-agenda_information'
               : 'agenda_information'
           }>
@@ -439,9 +438,9 @@ let AgendaActividadDetalle = (props) => {
                     md={{ order: 1, span: 24 }}
                     lg={{ order: 3, span: 6 }}
                     xl={{ order: 3, span: 4 }}>
-                    {event._id === '5f99a20378f48e50a571e3b6' ||
-                    event._id === '5fca68b7e2f869277cfa31b0' ||
-                    event.id === '60061bfac8c0284c432069c8' ? (
+                    {props.cEvent.value._id === '5f99a20378f48e50a571e3b6' ||
+                    props.cEvent.value._id === '5fca68b7e2f869277cfa31b0' ||
+                    props.cEvent.value.id === '60061bfac8c0284c432069c8' ? (
                       <></>
                     ) : (
                       <div>
@@ -580,8 +579,8 @@ let AgendaActividadDetalle = (props) => {
                       className='activity_image'
                       style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                       src={
-                        props.cEvent.styles.banner_image
-                          ? props.cEvent.styles.banner_image
+                        props.cEvent.value.styles.banner_image
+                          ? props.cEvent.value.styles.banner_image
                           : currentActivity.image
                           ? currentActivity.image
                           : image_event
@@ -600,8 +599,8 @@ let AgendaActividadDetalle = (props) => {
                       className='activity_image'
                       style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                       src={
-                        props.cEvent.styles.banner_image
-                          ? props.cEvent.styles.banner_image
+                        props.cEvent.value.styles.banner_image
+                          ? props.cEvent.value.styles.banner_image
                           : currentActivity.image
                           ? currentActivity.image
                           : image_event
@@ -640,8 +639,8 @@ let AgendaActividadDetalle = (props) => {
                           className='activity_image'
                           style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                           src={
-                            props.cEvent.styles.banner_image
-                              ? props.cEvent.styles.banner_image
+                            props.cEvent.value.styles.banner_image
+                              ? props.cEvent.value.styles.banner_image
                               : currentActivity.image
                               ? currentActivity.image
                               : image_event
@@ -653,7 +652,7 @@ let AgendaActividadDetalle = (props) => {
                 </>
               )}
               {/*logo quemado de aval para el evento de magicland */}
-              {(event._id === '5f99a20378f48e50a571e3b6' || event._id === '5fca68b7e2f869277cfa31b0') && (
+              {(props.cEvent.value._id === '5f99a20378f48e50a571e3b6' || props.cEvent.value._id === '5fca68b7e2f869277cfa31b0') && (
                 <Row justify='center' style={{ marginTop: '6%' }}>
                   <Col span={24}>
                     <img
@@ -681,7 +680,7 @@ let AgendaActividadDetalle = (props) => {
             </div>
           </header>
 
-          {event._id === '5fca68b7e2f869277cfa31b0' || event._id === '5f99a20378f48e50a571e3b6' ? (
+          {props.cEvent.value._id === '5fca68b7e2f869277cfa31b0' || props.cEvent.value._id === '5f99a20378f48e50a571e3b6' ? (
             <></>
           ) : (
             <div className='calendar-category has-margin-top-7'></div>
@@ -699,7 +698,7 @@ let AgendaActividadDetalle = (props) => {
                   <div dangerouslySetInnerHTML={{ __html: currentActivity && currentActivity.description }}></div>
                   <br />
                   {(currentActivity && currentActivity.hosts.length === 0) ||
-                  props.cEvent._id === '601470367711a513cc7061c2' ? (
+                  props.cEvent.value._id === '601470367711a513cc7061c2' ? (
                     <div></div>
                   ) : (
                     <div className='List-conferencistas'>
@@ -891,4 +890,5 @@ const mapDispatchToProps = {
   unsetCurrentSurvey,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalle));
+let AgendaActividadDetalleWithContext = withContext(AgendaActividadDetalle)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalleWithContext));

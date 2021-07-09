@@ -51,7 +51,6 @@ class SurveyComponent extends Component {
   async componentDidMount() {
     var self = this;
     const { eventId, idSurvey, event } = this.props;
-    console.log("10. ==>", eventId, idSurvey)
     // this.StyleColorSurvey(event?.styles); // asigna los colores del evento para la UI de la encuesta
     // let surveyData = await this.loadSurvey(eventId, idSurvey);
     // const firebaseSurvey = await getSurveyConfiguration(idSurvey);

@@ -15,10 +15,8 @@ export function CurrentEventProvider({ children }) {
   useEffect(() => {
     if (!event_id) return;
     async function fetchEvent() {
-      console.log('CONTEXTOEVENTO eventid', event_id);
       const eventGlobal = await EventsApi.getOne(event_id);
       setEventContext({ status: 'LOADED', value: eventGlobal });
-      console.log('CONTEXTOEVENTO---', eventGlobal);
     }
     fetchEvent();
   }, [event_id]);
