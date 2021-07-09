@@ -58,19 +58,11 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/activity/:activity_id`}>
-          <AgendaActividadDetalle
-            setVirtualConference={props.setVirtualConference}
-            image_event={props.cEvent.styles.event_image}
-            currentUser={props.cUser}
-            eventUser={props.cEventUser}
-            cEvent={props.cEvent}
-            cUser={props.cUser}
-           
-          />
+          <AgendaActividadDetalle setVirtualConference={props.setVirtualConference} />
         </Route>
 
         <Route path={`${path}/speakers`}>
-          <SpeakersForm eventId={props.cEvent._id} event={props.cEvent} />
+          <SpeakersForm />
         </Route>
         <Route path={`${path}/surveys`}>
           <SurveyForm event={props.cEvent} />
@@ -87,37 +79,24 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/wall`}>
-          <WallForm event={props.cEvent} eventId={props.cEvent._id} currentUser={props.cUser} />
+          <WallForm />
         </Route>
 
         <Route path={`${path}/ferias`}>
-          <Ferias event={props.cEvent} />
+          <Ferias />
         </Route>
 
         <Route path={`${path}/tickets`}>
           <>
             <div className='columns is-centered'>
-              <TicketsForm
-                stages={props.cEvent.event_stages}
-                experience={props.cEvent.is_experience}
-                fees={props.cEvent.fees}
-                tickets={props.cEvent.tickets}
-                eventId={props.cEvent._id}
-                event={props.cEvent}
-                seatsConfig={props.cEvent.seats_configuration}
-              />
+              <TicketsForm />
             </div>
           </>
         </Route>
 
         <Route path={`${path}/certs`}>
           <>
-            <CertificadoLanding
-              event={props.cEvent}
-              tickets={props.cEvent.tickets}
-              currentUser={props.cUser}
-              eventUser={props.cEventUser}
-            />
+            <CertificadoLanding />
           </>
         </Route>
 

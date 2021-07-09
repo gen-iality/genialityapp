@@ -5,6 +5,7 @@ import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../helpe
 import Moment from 'moment';
 import { Card, Avatar, Button, Modal, Row, Col } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import withContext from '../../Context/withContext';
 
 const { Meta } = Card;
 
@@ -25,14 +26,12 @@ class Speakers extends Component {
   }
 
   async componentDidMount() {
-    const { event } = this.props;
-    let eventId = this.props.event?._id;
 
     //Se hace la consulta a la api de speakers
-    let speakers = await SpeakersApi.byEvent(eventId);
+    let speakers = await SpeakersApi.byEvent(this.props.cEvent.value._id);
 
     //consultamos las categorias del evento
-    let categories = await CategoriesAgendaApi.byEvent(eventId);
+    let categories = await CategoriesAgendaApi.byEvent(this.props.cEvent.value._id);
 
     //Recorremos las categorias si tienen el campo orden
     //en caso que no lo tengan le asignamos el ultimo orden basado en el maximo valor que exista
@@ -110,7 +109,7 @@ class Speakers extends Component {
 
   modal(eventId, id, image, name, profession, description, category) {
     //Se llama esta funcion para cargar la consulta de actividades por conferencista
-    this.activitySpeakers(eventId, id);
+    this.activitySpeakers(this.props.cEvent.value._id, id);
     // Se envian los datos al estado para mostrarlos en el modal, Esto para hacer el modal dinamico
     this.setState({
       infoSpeaker: {
@@ -154,7 +153,9 @@ class Speakers extends Component {
       speakersWithoutCategory,
       renderSpeakerCategories
     } = this.state;
-    let eventId = this.props.event?._id;
+
+    let eventId = this.props.cEvent.value._id;
+
     return (
       <>
         {renderSpeakerCategories && speakerCategories.length && (
@@ -366,4 +367,5 @@ class Speakers extends Component {
   }
 }
 
-export default Speakers;
+let SpeakerswithContext  =  withContext(Speakers)
+export default SpeakerswithContext;

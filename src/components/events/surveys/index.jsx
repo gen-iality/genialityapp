@@ -4,7 +4,7 @@ import * as Cookie from 'js-cookie';
 import { Actions, TicketsApi } from '../../../helpers/request';
 import { firestore } from '../../../helpers/firebase';
 import SurveyList from './surveyList';
-import RootPage from './rootPage';
+import SurveyDetailPage from './SurveyDetailPage';
 import { Card } from 'antd';
 import * as SurveyActions from '../../../redux/survey/actions';
 
@@ -44,7 +44,7 @@ class SurveyForm extends Component {
     // Método para escuchar todas las encuestas relacionadas con el evento
     await this.listenSurveysData();
 
-    // Verifica si el usuario esta inscrito en el evento para obtener su rol en compoente RootPage para saber si es un speaker
+    // Verifica si el usuario esta inscrito en el evento para obtener su rol en compoente SurveyDetailPage para saber si es un speaker
     let eventUser = await this.getCurrentEvenUser(event._id);
 
     this.setState({ eventUser: eventUser });
@@ -234,7 +234,7 @@ class SurveyForm extends Component {
     if (this.props.currentSurvey !== null)
       return (
         this.props.surveyVisible !== false && (
-          <RootPage
+          <SurveyDetailPage
           //selectedSurvey={selectedSurvey} // -> modificado en rootpage por currentsurvey
           //userHasVoted={selectedSurvey.userHasVoted} // -> modificado en rootpage por currentsurvey
           //idSurvey={selectedSurvey._id}

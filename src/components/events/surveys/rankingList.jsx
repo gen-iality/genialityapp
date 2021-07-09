@@ -16,7 +16,6 @@ export default function RankingList({data}) {
     setList(data);
   }, [data]);
 
-  console.log("rankingprops",cEvent.value);
   return (
     <div style={{ marginTop: 16 }}>
       <h3 style={{ fontSize: '14px', fontWeight: '700',color:cEvent.value.styles.textMenu }}>Ranking de jugadores</h3>

@@ -4,6 +4,7 @@ import { fieldNameEmailFirst } from '../../helpers/utils';
 import * as Cookie from 'js-cookie';
 import FormComponent from './registrationForm/form';
 import { Spin, Skeleton } from 'antd';
+import withContext from '../../Context/withContext';
 
 class UserRegistration extends Component {
   constructor(props) {
@@ -47,8 +48,8 @@ class UserRegistration extends Component {
         const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
         if (resp.status === 200) {
           const data = resp.data;
-          eventUser = await EventsApi.getcurrentUserEventUser(this.props.eventId);
-          const tickets = await TicketsApi.getByEvent(this.props.eventId, evius_token);
+          eventUser = await EventsApi.getcurrentUserEventUser(this.props.cEvent.value._id);
+          const tickets = await TicketsApi.getByEvent(this.props.cEvent.value._id, evius_token);
 
           this.setState({
             currentUser: data,
@@ -67,7 +68,7 @@ class UserRegistration extends Component {
 
   async componentDidMount() {
     // Trae la informacion del evento
-    const event = await EventsApi.getOne(this.props.eventId);
+    const event = await EventsApi.getOne(this.props.cEvent.value._id);
 
     const properties = event.user_properties;
     const conditionals = event.fields_conditions ? event.fields_conditions : [];
@@ -81,14 +82,15 @@ class UserRegistration extends Component {
 
   render() {
     let { registeredUser, loading, initialValues, extraFields, eventUser, conditionals } = this.state;
-    const { eventId } = this.props;
+  
+
     if (!loading)
       return !registeredUser ? (
         <React.Fragment>
           {/* initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals } */}
           <FormComponent
             initialValues={initialValues}
-            eventId={eventId}
+            eventId={this.props.cEvent.value._id}
             eventUser={eventUser}
             extraFieldsOriginal={extraFields}
             conditionals={conditionals}
@@ -99,7 +101,7 @@ class UserRegistration extends Component {
         <FormComponent
           showSection={this.props.showSection}
           initialValues={initialValues}
-          eventId={eventId}
+          eventId={this.props.cEvent.value._id}
           eventUser={eventUser}
           extraFieldsOriginal={extraFields}
           conditionals={conditionals}
@@ -119,4 +121,6 @@ class UserRegistration extends Component {
   }
 }
 
-export default UserRegistration;
+
+let UserRegistrationwithContext = withContext(UserRegistration);
+export default UserRegistrationwithContext ;

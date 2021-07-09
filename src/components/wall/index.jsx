@@ -71,7 +71,7 @@ class Wall extends Component {
   };
 
   render() {
-    const { currentCommet, user } = this.state;
+    const { currentCommet} = this.state;
     return (
       <div>
         {/*Crear un nuevo post*/}
@@ -87,8 +87,6 @@ class Wall extends Component {
                 <CreatePost addPosts={this.addPosts}/>
                 <ListWall
                   createComment={this.createComment}
-                  event={this.props.cEvent.value}
-                  user={this.props.cUser}
                   key={this.state.keyList}
                   dataPost={this.state.dataPost}
                   deletePost={this.deletePost}
