@@ -51,29 +51,29 @@ class SurveyComponent extends Component {
   async componentDidMount() {
     var self = this;
     const { eventId, idSurvey, event } = this.props;
-    // this.StyleColorSurvey(event?.styles); // asigna los colores del evento para la UI de la encuesta
-    // let surveyData = await this.loadSurvey(eventId, idSurvey);
-    // const firebaseSurvey = await getSurveyConfiguration(idSurvey);
+    this.StyleColorSurvey(event?.styles); // asigna los colores del evento para la UI de la encuesta
+    let surveyData = await this.loadSurvey(eventId, idSurvey);
+    const firebaseSurvey = await getSurveyConfiguration(idSurvey);
 
-    // surveyData.open = firebaseSurvey.isOpened;
-    // surveyData.publish = firebaseSurvey.isPublished;
-    // surveyData.freezeGame = firebaseSurvey.freezeGame;
+    surveyData.open = firebaseSurvey.isOpened;
+    surveyData.publish = firebaseSurvey.isPublished;
+    surveyData.freezeGame = firebaseSurvey.freezeGame;
 
-    // let survey = new Survey.Model(surveyData);
+    let survey = new Survey.Model(surveyData);
 
-    // await this.listenAndUpdateStateSurveyRealTime(idSurvey);
+    await this.listenAndUpdateStateSurveyRealTime(idSurvey);
 
-    // /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
-    // que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
-    // sino se presentar comportamientos raros.
-    // */
-    // self.setState({ surveyData, idSurvey, survey });
-    // self.survey = survey;
+    /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
+    que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
+    sino se presentar comportamientos raros.
+    */
+    self.setState({ surveyData, idSurvey, survey });
+    self.survey = survey;
 
-    // // Esto permite obtener datos para la grafica de gamificacion
-    // UserGamification.getListPoints(eventId, this.getRankingList);
+    // Esto permite obtener datos para la grafica de gamificacion
+    UserGamification.getListPoints(eventId, this.getRankingList);
 
-    // await this.getCurrentEvenUser();
+    await this.getCurrentEvenUser();
   }
 
  
@@ -641,7 +641,7 @@ class SurveyComponent extends Component {
                     </Button>
                   </div>
                 )}
-                {/* <Survey.Survey
+                <Survey.Survey
                   model={this.state.survey}
                   onComplete={(surveyModel) => this.sendData(surveyModel, 'completed')}
                   onPartialSend={(surveyModel) => this.sendData(surveyModel, 'partial')}
@@ -649,8 +649,8 @@ class SurveyComponent extends Component {
                   onTimerPanelInfoText={this.setCounterMessage}
                   onStarted={this.checkCurrentPage}
                   onCurrentPageChanged={this.onCurrentPageChanged}
-                /> */}
-                <h1>Esta es la encuesta: ==={this.props.currentSurvey.name} === </h1>
+                />
+                {/* <h1>La <strong>{this.props.currentSurvey.name}</strong> ha sido abierta</h1> */}
               </div>
             )}
           </div>

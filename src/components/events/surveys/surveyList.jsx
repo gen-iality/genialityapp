@@ -50,9 +50,7 @@ function SurveyList(props) {
    const visualizarEncuesta = (survey) => {
       if (survey && survey.isOpened === 'true' && survey !== null) {
          handleClick(survey);
-         console.log("10. en el if")
       } else {
-         console.log("10. en el else")
          setCurrentSurvey(survey);
          setSurveyResult('closedSurvey')
       }
