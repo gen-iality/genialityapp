@@ -1,5 +1,17 @@
 import { EventsApi } from "../../helpers/request";
 
+export const totalsMetricasMail = async (eventId) => {
+  return new Promise((resolve, reject) => {
+    fetch(`http://18.211.124.171/api/events/${eventId}/messages`)
+      .then((response) => response.json())
+      .then(({ data }) => {
+        resolve(data);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+};
 
 export const totalsMetricasMailDetails = async (eventId, idBell) => {
     return new Promise((resolve, reject) => {
