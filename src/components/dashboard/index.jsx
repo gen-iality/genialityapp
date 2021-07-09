@@ -4,21 +4,17 @@ import { ApiUrl } from '../../helpers/constants';
 import { Tooltip, Button, Card, Col, message, Row, Select, Statistic, Table, Space, Spin } from 'antd';
 import { EyeOutlined, FieldTimeOutlined, IdcardOutlined, MoreOutlined, UserOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import {  totalsMetricasEventsDetails, totalsMetricasMail, totalsMetricasActivityDetails,  metricasRegisterByDate} from './serviceAnalytics';
+import {  totalsMetricasEventsDetails, totalsMetricasMail, totalsMetricasActivityDetails
+,metricasRegisterByDate,queryReportGnal, queryReportGnalByMoth} from './serviceAnalytics';
 import 'chartjs-plugin-datalabels';
-import { queryReportGnal, queryReportGnalByMoth } from '../networking/analytics';
-
 import { Bar, Line } from 'react-chartjs-2';
 import XLSX from 'xlsx';
 import ReactToPrint from 'react-to-print';
-
 import Moment from 'moment';
 
 //CONSTANTES COLORES DE GRAFICAS
 const backgroud = 'rgba(80, 211, 201, 0.7)';
 const lineBackground = 'rgba(80, 211, 201, 1)';
-
-const { Option } = Select;
 
 // const [google, setGoogle] = useState(null)
 class DashboardEvent extends Component {
