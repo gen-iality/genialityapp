@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {Tabs, Row, Col} from 'antd'
+import {Tabs, Row, Col, Card, Image} from 'antd'
 import FeriasBanner from './feriaBanner.jsx'
 import Information from './information.jsx'
 import Product from './product'
@@ -37,6 +37,7 @@ const FeriasDetail = (props) => {
     console.log("DATOS EMPRESA")
     console.log(resp)
     setCompanyDetail(resp)
+    
   })
 
   },[])
@@ -105,6 +106,16 @@ const FeriasDetail = (props) => {
                   }
               </div>
     
+            </TabPane>
+            <TabPane tab="Galería" key="4">
+              <>
+              {companyDetail && companyDetail.gallery.length>0 && companyDetail.gallery.map((imagen,index)=>
+                <Card style={{ width: 300,float:'left', marginLeft:20 }} key={'gallery-'+index}
+                hoverable
+                 cover={<Image alt="example" src={imagen.image} />}
+                />
+              )}
+              </>
             </TabPane>
           </Tabs>
 
