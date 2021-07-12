@@ -5,9 +5,13 @@ import SurveyComponent from './surveyComponent';
 import { Card } from 'antd';
 import ClosedSurvey from './components/closedSurvey';
 
+/** Context´s */
+import { UseCurrentUser } from '../../../Context/userContext';
+
 function SurveyDetailPage(props) {
    // const [hasVote, setHasVote] = useState(false);
-   const { currentSurvey, currentUser, surveyResult } = props;
+   const { currentSurvey, surveyResult } = props;
+   const currentUser = UseCurrentUser();
 
    if (!currentSurvey) {
       return <h1>No hay nada publicado</h1>;
@@ -49,7 +53,6 @@ const mapStateToProps = (state) => ({
    currentSurvey: state.survey.data.currentSurvey,
    isVisible: state.survey.data.surveyVisible,
    surveyResult: state.survey.data.result,
-   currentUser: state.user.data,
 });
 
 export default connect(mapStateToProps)(SurveyDetailPage);
