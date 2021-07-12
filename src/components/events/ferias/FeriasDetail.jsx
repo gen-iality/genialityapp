@@ -65,7 +65,6 @@ const FeriasDetail = (props) => {
     </div>
 
       <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '2vw' }}>
-        <Row>
             <Tabs defaultActiveKey="1" tabPosition='top'>
             <TabPane tab="Video" key="1" >
             <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span>
@@ -108,7 +107,6 @@ const FeriasDetail = (props) => {
     
             </TabPane>
           </Tabs>
-        </Row>
 
 
       {/* componente  de Productos */}
