@@ -21,7 +21,8 @@ import { UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
-import ImgCrop from 'antd-img-crop'
+import ImgCrop from 'antd-img-crop';
+import {saveImageStorage} from '../../../helpers/helperSaveImage'
 
 // import InputFile from "./inputFile"
 const { Option } = Select;
@@ -39,7 +40,7 @@ const center = {
 /**
  * Hook that alerts clicks outside of the passed ref
  */
-function useOutsideAlerter(props) {
+function useOutsideAlerter(props) { 
   useEffect(() => {
     /**
      * Alert if clicked on outside of element
@@ -111,6 +112,8 @@ export default ({
   const [password, setPassword] = useState('');
   const [event, setEvent] = useState(null);
   const [loggedurl, setLogguedurl] = useState(null);
+  const [imageAvatar,setImageAvatar]=useState(null);
+  let [ImgUrl,setImgUrl]=useState('')
 
   // const [ fileSave, setFileSave ] = useState( [] )
 
@@ -145,9 +148,14 @@ export default ({
 
   const onFinish = async (values) => {
     values.password = password;
+    let ruta=await saveImageStorage(imageAvatar.fileList[0].thumbUrl);
+    console.log("RUTA==>",ruta);
+    if(ruta!==''){
+      values.picture=ruta;
+    }
     // values.files = fileSave
 
-    setGeneralFormErrorMessageVisible(false);
+   setGeneralFormErrorMessageVisible(false);
     setNotLoggedAndRegister(false);
 
     const key = 'registerUserService';
@@ -181,13 +189,13 @@ export default ({
       try {
         let resp = await UsersApi.createOne(snap, eventId);
 
-        /** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
-         * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
-         */
+        // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
+         // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
+         //
         let camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
         updateTakenOptionInTakeableList(camposConOpcionTomada, values, eventId);
 
-        /** FIN CAMPO LISTA  tipo justonebyattendee */
+        //FIN CAMPO LISTA  tipo justonebyattendee //
 
         if (resp.status !== 'UPDATED') {
           setSuccessMessageInRegisterForm(resp.status);
@@ -280,12 +288,14 @@ export default ({
     let allFields = eventUser && eventUser['properties'] ? eventUser['properties'] : [];
     updateFieldsVisibility(conditionals, allFields);
   };
-
+  
+  
   const beforeUpload = (file) => {
     // const isJpgOrPng = file.type === 'application/pdf';
     // if (!isJpgOrPng) {
     //   message.error('You can only upload PDF file!');
     // }
+   
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
       message.error('Image must smaller than 5MB!');
@@ -310,7 +320,7 @@ export default ({
       let description = m.description;
       let labelPosition = m.labelPosition;
       let target = name;
-      let value = eventUser && eventUser['properties'] ? eventUser['properties'][target] : '';
+      let value = eventUser && eventUser['properties'] ? eventUser['properties'][target] : '';   
 
       //no entiendo b esto para que funciona
       if (conditionals.state === 'enabled') {
@@ -390,7 +400,8 @@ export default ({
         );
       }
 
-      if (type === 'file') {
+      if (type === 'file' && name!=='picture') {
+        
         input = (
           <Upload
             accept='application/pdf'
@@ -480,6 +491,23 @@ export default ({
         );
       }
 
+      if(name==='picture'){
+        ImgUrl=ImgUrl!==''?ImgUrl: value!==''?[{url:value}]:undefined;
+       input=( <div style={{textAlign:'center'}}>
+        <ImgCrop rotate>
+          <Upload
+            accept='image/png,image/jpeg'
+            onChange={(file)=>{setImageAvatar(file);console.log(file);setImgUrl(file.fileList)}}
+            multiple={false}
+            listType='picture-card'
+            maxCount={1}
+            fileList={ImgUrl}
+            beforeUpload={beforeUpload}>
+            <Button icon={<UploadOutlined />}>Avatar</Button>
+          </Upload>
+        </ImgCrop>
+      </div>)      }
+
       let rule = name == 'email' || name == 'names' ? { required: true } : { required: mandatory };
 
       //esogemos el tipo de validación para email
@@ -540,8 +568,8 @@ export default ({
     return formUI;
   };
 
-  return (
-    <>
+  return (    
+    <>  {console.log("RENDER")}  
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
           <Card
@@ -551,21 +579,7 @@ export default ({
                 : intl.formatMessage({ id: 'registration.title.create' })
             }
             bodyStyle={textLeft}>
-            {/* //Renderiza el formulario */}
-
-            <div style={{textAlign:'center'}}>
-              <ImgCrop rotate>
-                <Upload
-                  accept='image/png,image/jpeg'
-                  action='https://api.evius.co/api/files/upload/'
-                  multiple={false}
-                  listType='picture-card'
-                  maxCount={1}
-                  beforeUpload={beforeUpload}>
-                  <Button icon={<UploadOutlined />}>Avatar</Button>
-                </Upload>
-              </ImgCrop>
-            </div>
+            {/* //Renderiza el formulario */}   
 
             <Form
               form={form}
