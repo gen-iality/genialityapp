@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
 import {
@@ -114,6 +114,7 @@ export default ({
   const [loggedurl, setLogguedurl] = useState(null);
   const [imageAvatar,setImageAvatar]=useState(null);
   let [ImgUrl,setImgUrl]=useState('')
+ 
 
   // const [ fileSave, setFileSave ] = useState( [] )
 
@@ -127,7 +128,7 @@ export default ({
 
     getEventData(eventId);
     form.resetFields();
-
+    console.log("EJECUTADO EFFECT")   
     if (window.fbq) {
       window.fbq('track', 'CompleteRegistration');
     }
@@ -148,11 +149,13 @@ export default ({
 
   const onFinish = async (values) => {
     values.password = password;
-    let ruta=await saveImageStorage(imageAvatar.fileList[0].thumbUrl);
-    console.log("RUTA==>",ruta);
-    if(ruta!==''){
-      values.picture=ruta;
-    }
+    let ruta='';
+    if(imageAvatar.fileList.length>0){
+      ruta=await saveImageStorage(imageAvatar.fileList[0].thumbUrl);
+    }    
+    console.log("RUTA==>",ruta);   
+    values.picture=ruta;
+    
     // values.files = fileSave
 
    setGeneralFormErrorMessageVisible(false);
@@ -306,7 +309,7 @@ export default ({
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
-  const renderForm = () => {
+  const renderForm =  useCallback(() => {
     if (!extraFields) return '';
     let formUI = extraFields.map((m, key) => {
       if (m.visibleByAdmin == true) {
@@ -400,7 +403,7 @@ export default ({
         );
       }
 
-      if (type === 'file' && name!=='picture') {
+      if (type === 'file') {
         
         input = (
           <Upload
@@ -492,7 +495,9 @@ export default ({
       }
 
       if(name==='picture'){
-        ImgUrl=ImgUrl!==''?ImgUrl: value!==''?[{url:value}]:undefined;
+        ImgUrl=ImgUrl!==''?ImgUrl: value!=='' && value!==null?[{url:value}]:undefined;
+        console.log(value)
+        console.log(ImgUrl)
        input=( <div style={{textAlign:'center'}}>
         <ImgCrop rotate>
           <Upload
@@ -566,7 +571,7 @@ export default ({
       );
     });
     return formUI;
-  };
+  });
 
   return (    
     <>  {console.log("RENDER")}  
