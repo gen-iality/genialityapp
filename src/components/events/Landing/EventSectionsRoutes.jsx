@@ -71,7 +71,7 @@ const EventSectionRoutes = (props) => {
           <Partners />
         </Route>
         <Route path={`${path}/faqs`}>
-          <FaqsForm event={props.cEvent} />
+          <FaqsForm />
         </Route>
 
         <Route path={`${path}/evento`}>
@@ -104,7 +104,6 @@ const EventSectionRoutes = (props) => {
           <Agenda
             activity={props.currentActivity}
             generalTabs={props.generalTabs}
-            currentUser={props.cUser}
             setVirtualConference={props.setVirtualConference}
           />
         </Route>
