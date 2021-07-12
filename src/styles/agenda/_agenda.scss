@@ -351,9 +351,10 @@
 .card-agenda-desktop {
   // hora de la agenda
   .agenda-hora {
-    margin-top: 10%;
+    display: flex;
+    align-items: center;
     text-align: center;
-    vertical-align: middle;
+
     .contenedor-estado-agenda {
       height: 79px;
       font-size: 10px;
@@ -412,8 +413,8 @@
     object-fit: cover;
     //max-height: 100%;
     border-radius: 5px;
-    //height: 100%;
-    width: 85%;
+    height: 100%;
+    width: 100%;
     object-position: center;
   }
 }
