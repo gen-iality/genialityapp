@@ -307,7 +307,7 @@ export const Trivia = {
 };
 
 export const UserGamification = {
-  getListPoints: (eventId, getRankingList) => {
+  getListPoints: (eventId, setRankingList) => {
     firestore.collection(`${eventId}_users_gamification`).onSnapshot((docs) => {
       let userList = [];
       let pointsList = [];
@@ -315,7 +315,7 @@ export const UserGamification = {
         userList.push(infoDoc.data().user_name);
         pointsList.push(infoDoc.data().points);
       });
-      getRankingList({ userList, pointsList });
+      setRankingList({ userList, pointsList });
     });
   },
   // Servicio que obtiene los puntos de un usuario
