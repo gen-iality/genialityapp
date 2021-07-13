@@ -24,9 +24,11 @@ const FeriasList = ({event_id, stateferia}) => {
       {loadingCompanies && <Spin size="small"/>}
       
       {
-          companiesEvent.length>0 && companiesEvent.map((company,index)=>
-            <Link key={index} to={`/landing/${event_id}/ferias/${company.id}/detailsCompany`}>
+          companiesEvent.length>0 && companiesEvent.map((company,index)=>           
               <Companylist
+              eventId={event_id}
+              companyId={company.id}
+              key={'companyList'+index}
               img={company.list_image} 
               name={company.name}
               position={company.position}
@@ -34,8 +36,7 @@ const FeriasList = ({event_id, stateferia}) => {
               email={company.advisor&&company.email}
               description={company.short_description}
               pagweb={company.webpage}
-                /> 
-            </Link>
+                />             
             )
             }
       {companiesEvent.length==0 && <Empty />}

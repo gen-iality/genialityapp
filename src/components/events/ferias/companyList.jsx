@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {Row, Col, Tabs, Button, } from 'antd'
 import {PhoneOutlined, MailOutlined,GlobalOutlined} from '@ant-design/icons';
+import { useHistory } from 'react-router';
 
 function Companylist(props) {
+  const history=useHistory()
+  const [disableRedirect,setDisableRedirect]=useState(true)  
     return(
-      <div className='company-list'>
+      <div className='company-list' onClick={()=>{ setDisableRedirect(false);!disableRedirect && history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`)} }>
         <Row className='container' gutter={[10,10]} >
                <Col xs={24} sm={24} md={24} lg={6} xl={6} className='col'>            
                  <div  className='img-contact' > 
@@ -20,9 +23,9 @@ function Companylist(props) {
                </Col>
                <Col xs={24} sm={24} md={24} lg={9} xl={9}>
                  <div className='redes-contact'>
-                   <span className='tel'> <PhoneOutlined className='icono'/> {props.tel} </span>
-                   <span className='email'> <MailOutlined className='icono'/> {props.email} </span>
-                   <span className='web'> <GlobalOutlined  className='icono'/><a rel="noreferrer" href={props.pagweb} target="_blank"> {props.pagweb}</a> </span>
+                  { props.tel && <span className='tel'> <PhoneOutlined className='icono'/> {props.tel} </span>}
+                  {props.email && <span className='email'> <MailOutlined className='icono'/> {props.email} </span>}
+                  {props.pagweb &&<span className='web'> <GlobalOutlined  className='icono'/><a rel="noreferrer" onClick={()=>{setDisableRedirect(true);window.open(`${props.pagweb}`, '_blank')}} target="_blank"> {props.pagweb}</a> </span>}
                  </div>
                  <Button type='default' className='boton' size='large'>
                     ver mas detalles
