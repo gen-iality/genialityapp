@@ -100,7 +100,7 @@ const FeriasDetail = (props) => {
                 }}></div>
             </Row>
           </TabPane>
-          <TabPane tab='Productos o Servicios' key='2'>
+          <TabPane tab='Productos y Servicios' key='2'>
             {/* componente  de Productos */}
             <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
               {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
@@ -130,6 +130,7 @@ const FeriasDetail = (props) => {
                     img={contactos.image}
                     name={contactos.name}
                     position={contactos.cargo}
+                    codPais={contactos.codPais}
                     tel={contactos.number}
                     email={contactos.email}
                   />
@@ -143,9 +144,14 @@ const FeriasDetail = (props) => {
                 companyDetail.gallery.map((imagen, index) => (
                   <Col xs={24} sm={12} md={8} lg={8} xl={6} xxl={6} key={'gallery-' + index}>
                     <Card
-                      bodyStyle={{padding:'0px', margin:'0px'}}
+                      bodyStyle={{ padding: '0px', margin: '0px' }}
                       bordered={false}
-                      cover={<Image alt={'Imagen'+index+'-Galeria-' + companyDetail.name.replace(/\s+/g, '-') } src={imagen.image} />}
+                      cover={
+                        <Image
+                          alt={'Imagen' + index + '-Galeria-' + companyDetail.name.replace(/\s+/g, '-')}
+                          src={imagen.image}
+                        />
+                      }
                       style={{ width: '100%', height: '100%' }}></Card>
                   </Col>
                 ))}
