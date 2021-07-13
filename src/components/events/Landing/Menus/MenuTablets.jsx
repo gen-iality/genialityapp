@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Button, Drawer, Row, Avatar } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { drawerButton, imageCenter } from '../helpers/csshelpers';
+import { UseEventContext } from '../../../../Context/eventContext';
 import MenuEvent from './MenuEvent';
-const MenuTablets = (props) => {
+const MenuTablets = () => {
   const [isOpen, setisOpen] = useState(false);
+  let cEvent = UseEventContext();
 
   return (
     <>
@@ -16,7 +18,7 @@ const MenuTablets = (props) => {
       </div>
 
       <Drawer
-        title={props.event.name}
+        title={cEvent.value.name}
         placement='left'
         closable={false}
         onClose={() => setisOpen(!isOpen)}
@@ -25,24 +27,17 @@ const MenuTablets = (props) => {
         bodyStyle={{
           padding: '0px',
           backgroundColor:
-            props.event.styles && props.event.styles.toolbarDefaultBg ? props.event.styles.toolbarDefaultBg : 'white',
+            cEvent.value.styles && cEvent.value.styles.toolbarDefaultBg
+              ? cEvent.value.styles.toolbarDefaultBg
+              : 'white',
         }}>
         <Row justify='center'>
-          {props.event.styles && (
-            <Avatar size={64} icon={<img src={props.event.styles.event_image} style={imageCenter} />} />
+          {cEvent.value.styles && (
+            <Avatar size={64} icon={<img src={cEvent.value.styles.event_image} style={imageCenter} />} />
           )}
         </Row>
 
-        <MenuEvent event={props.event} isMobile={true} />
-
-        {/* <MenuEvent
-          notifications={props.totalNotficationsN}
-          eventId={props.event._id}
-          user={props.cUser}
-          itemsMenu={props.event.itemsMenu}
-          showSection={props.showSection}
-          styleText={props.event.styles && props.event.styles.textMenu ? props.event.styles.textMenu : '#222222'}
-        /> */}
+        <MenuEvent isMobile={true} />
       </Drawer>
     </>
   );

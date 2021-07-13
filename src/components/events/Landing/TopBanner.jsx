@@ -1,16 +1,17 @@
 import React from 'react';
 import BannerEvent from '../bannerEvent';
 import { Link } from 'react-router-dom';
+import { UseEventContext } from '../../../Context/eventContext';
 
-const TopBanner = ({ event, currentActivity }) => {
+const TopBanner = ({ currentActivity }) => {
+  let cEvent = UseEventContext();
+  let event = cEvent.value;
+
   if (!event) return null;
   let styles = event && event.styles ? event.styles : {};
   let bgImage = 'https://bulma.io/images/placeholders/1280x960.png';
   bgImage = styles.banner_image ? styles.banner_image : bgImage;
 
-  //: event.picture
-  //? event.picture
-  //headerVisible
   return (
     <>
       {/* <h1>TOPBANNER{styles.show_banner ? 'yes' : 'false'}x</h1> */}

@@ -19,7 +19,6 @@ const MenuTabletsSocialZone = (props) => {
           }
           size='large'
           onClick={() => setisDrawerVisible(!isDrawerVisible)}
-          // style={this.state.visibleChat == true ? { display: 'none' } : {}}
         ></Button>
       </div>
 

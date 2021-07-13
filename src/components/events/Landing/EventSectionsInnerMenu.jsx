@@ -1,13 +1,15 @@
 import React from 'react';
 import { Layout, Spin, Avatar, Row, Image } from 'antd';
 import { imageCenter } from './helpers/csshelpers';
-import { useRouteMatch } from 'react-router-dom';
 import MenuEvent from './Menus/MenuEvent';
 import { EyeOutlined } from '@ant-design/icons';
+import {UseEventContext} from '../../../Context/eventContext'
 const { Sider } = Layout;
 
-const EventSectionsInnerMenu = ({ event }) => {
-  let { url } = useRouteMatch();
+const EventSectionsInnerMenu = () => {
+  let cEvent = UseEventContext();
+  let event = cEvent.value;
+  
   if (!event) return <Spin size='small' />;
   return (
     <>
@@ -35,7 +37,7 @@ const EventSectionsInnerMenu = ({ event }) => {
             )}
           </Row>
           <div className='items-menu_Landing'>
-            <MenuEvent event={event} />
+            <MenuEvent />
           </div>
         </Sider>
       </div>
