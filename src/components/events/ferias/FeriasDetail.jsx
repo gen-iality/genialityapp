@@ -111,9 +111,9 @@ const FeriasDetail = (props) => {
               <>
               {companyDetail && companyDetail.gallery.length>0 && companyDetail.gallery.map((imagen,index)=>
                 <Card style={{ width: 300,float:'left', marginLeft:20 }} key={'gallery-'+index}
-                hoverable
-                 cover={<Image alt="example" src={imagen.image} />}
-                />
+                hoverable>
+                   <Image alt="example" src={imagen.image} />
+                </Card>
               )}
               </>
             </TabPane>
