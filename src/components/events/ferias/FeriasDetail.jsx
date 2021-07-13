@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {Tabs, Row, Col} from 'antd'
+import {Tabs, Row, Col, Card, Image} from 'antd'
 import FeriasBanner from './feriaBanner.jsx'
 import Information from './information.jsx'
 import Product from './product'
@@ -10,92 +10,62 @@ import {setTopBanner}  from '../../../redux/topBanner/actions';
 //import { useLocation } from "react-router-dom";
 import { getEventCompany } from '../../empresas/services.js';
 import { compose } from 'redux';
+import { useState } from 'react';
+import { setVirtualConference } from '../../../redux/virtualconference/actions';
 
 
 const FeriasDetail = (props) => {
-  console.log("DETAILS COMPANY")
-  console.log(props)
+  
+  const [companyDetail,setCompanyDetail]=useState();
   
   useEffect(()=>{
   props.setTopBanner(false)
+  props.setVirtualConference(false)
   return ()=>{
     props.setTopBanner(true)
+    props.setVirtualConference(true)
     };  
   })
 
   useEffect(()=>{
-  // obtenerEmpresa()
-  /*const {match}= props;
-  console.log("MATHS")*/
-
+  
+  const {match}= props;
+  let eventId=match.params.event_id;
+  let idCompany=match.params.id;
+  
+  obtenerEmpresa( eventId,idCompany).then((resp)=>{
+    console.log("DATOS EMPRESA")
+    console.log(resp)
+    setCompanyDetail(resp)
+    
+  })
 
   },[])
 
-  const obtenerEmpresa=()=>{
-  
-   
-    //getEventCompany()
+  const obtenerEmpresa=async (eventId,idCompany)=>{   
+   let resp= await getEventCompany(eventId,idCompany);
+   return resp;
   }
 
   const { TabPane } = Tabs;
-  console.log("FERIAS DETAILS")
-  const product = [
-    {
-      imgProduct:'https://uploads-ssl.webflow.com/5f96ebdef1eebdb8cfb53e8c/60161ef9ebd9172ffa95c150_insumos%20juan%20valdez%20cafe.jpg',
-      title:'Nombre del producto',
-      etiqueta:'producto',
-      description:'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Commodi hic laudantium, laboriosam  perferendis aspernatur voluptatem sint quibusdam. Assumenda, esse. Reprehenderit facilis, odiodolorum qui amet a voluptatem, perss',
-    },
-    {
-      imgProduct:'https://uploads-ssl.webflow.com/5f96ebdef1eebdb8cfb53e8c/60161ef9ebd9172ffa95c150_insumos%20juan%20valdez%20cafe.jpg',
-      title:'Nombre del producto',
-      etiqueta:'producto',
-      description:'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Commodi hic laudantium, laboriosam  perferendis aspernatur voluptatem sint quibusdam. Assumenda, esse. Reprehenderit facilis, odiodolorum qui amet a voluptatem, perss',
-    },
-    {
-      imgProduct:'https://uploads-ssl.webflow.com/5f96ebdef1eebdb8cfb53e8c/60161ef9ebd9172ffa95c150_insumos%20juan%20valdez%20cafe.jpg',
-      title:'Nombre del producto',
-      etiqueta:'producto',
-      description:'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Commodi hic laudantium, laboriosam  perferendis aspernatur voluptatem sint quibusdam. Assumenda, esse. Reprehenderit facilis, odiodolorum qui amet a voluptatem, perss',
-    }
-  ]
-  const contact = [
-    {
-      key:'1',
-      img:'https://www.trendtic.cl/wp-content/uploads/2018/05/003-Rub%C3%A9n-Belluomo-INFOR-2018.jpg',
-      name:'Juan camilo',
-      position:'administrador',
-      tel:'3204521254',
-      email:'juancamilo@gmail.com'
-    },
-    {
-      key:'1',
-      img:'https://kchcomunicacion.com/wp-content/uploads/2020/06/daniela-kreimer.jpg',
-      name:'Andrea Garzon',
-      position:'administrador',
-      tel:'3204521254',
-      email:'juancamilo@gmail.com'
-    }
-  ]
+
   return <div className='feriasdetail'>
     
     <div style={{position:'relative'}}>
      <FeriasBanner
-      imagen={'https://chipichape.com.co/tienda/administracion//uploads/1564087046-juan%20valdez2%20banner.jpg'} />
+      imagen={companyDetail?companyDetail.stand_image:'https://chipichape.com.co/tienda/administracion//uploads/1564087046-juan%20valdez2%20banner.jpg'} />
       <div className='container-information'>
        <Information
-        ImgCompany='https://www.parquecomercialguacari.com/web/wp-content/uploads/2020/02/juan-valdez-cafe.jpg'
-        titleCompany='JUAN VALDEZ CAFÉ'
-        Description='Lorem, ipsum dolor sit amet consectetur adipisicing elit. Commodi hic laudantium, laboriosam
-          perferendis aspernatur voluptatem sint quibusdam. Assumenda, esse. Reprehenderit facilis, odio
-          dolorum qui amet a voluptatem, perspiciatis quibusdam explicabo dolore, id architecto
-          doloribus perferendis impedit ipsam fugiat? Rerum impedit quisquam, placeat accusamus debitis
-          officia laboriosam, et totam quaerat veniam autem pariatur. Rem, sit eius!'/> 
+        ImgCompany={companyDetail ? companyDetail.list_image:'https://www.parquecomercialguacari.com/web/wp-content/uploads/2020/02/juan-valdez-cafe.jpg'}
+        titleCompany={companyDetail && companyDetail.name}
+        Description={ <div
+          dangerouslySetInnerHTML={{
+            __html: companyDetail && companyDetail.description,
+          }}></div>}/> 
       </div> 
     </div>
 
       <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '2vw' }}>
-        <Row>
             <Tabs defaultActiveKey="1" tabPosition='top'>
             <TabPane tab="Video" key="1" >
             <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span>
@@ -107,12 +77,12 @@ const FeriasDetail = (props) => {
                 {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
                 <div style={{ paddingLeft: '5vw', paddingRight: '5vw'}}>
                   {
-                    product.map((prod,index)=>
+                    companyDetail && companyDetail.services.map((prod,index)=>
                     <Product
                       key={index}
-                      imgProduct={prod.imgProduct}
-                      title={prod.title}
-                      etiqueta={prod.etiqueta}
+                      imgProduct={prod.image}
+                      title={prod.nombre}
+                      etiqueta={prod.category}
                       description={prod.description} />
                     )
                   } </div>    
@@ -123,13 +93,13 @@ const FeriasDetail = (props) => {
               <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
                 {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
                   {
-                  contact.map((contactos,index)=>
+                  companyDetail && companyDetail.advisor.length>0 && companyDetail.advisor.map((contactos,index)=>
                     <Contact
                     key={'contacts'+index}
-                    img={contactos.img} 
+                    img={contactos.image} 
                     name={contactos.name}
-                    position={contactos.position}
-                    tel={contactos.tel}
+                    position={contactos.cargo}
+                    tel={contactos.number}
                     email={contactos.email}
                       /> 
                   )
@@ -137,8 +107,17 @@ const FeriasDetail = (props) => {
               </div>
     
             </TabPane>
+            <TabPane tab="Galería" key="4">
+              <>
+              {companyDetail && companyDetail.gallery.length>0 && companyDetail.gallery.map((imagen,index)=>
+                <Card style={{ width: 300,float:'left', marginLeft:20 }} key={'gallery-'+index}
+                hoverable>
+                   <Image alt="example" src={imagen.image} />
+                </Card>
+              )}
+              </>
+            </TabPane>
           </Tabs>
-        </Row>
 
 
       {/* componente  de Productos */}
@@ -182,7 +161,8 @@ const mapStateToProps = (state,{params}) => ({
 });
 
 const mapDispatchToProps = {
-  setTopBanner 
+  setTopBanner,
+  setVirtualConference
 };
 
 

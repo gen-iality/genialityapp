@@ -200,7 +200,7 @@ export const EventsApi = {
 
   sendInvitation: async (eventId, data) => {
     return await Actions.post(`/api/events/${eventId}/invitation`, data);
-  },
+  },  
   sendRsvp: async (data, id) => {
     return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data);
   },
@@ -219,6 +219,15 @@ export const EventsApi = {
   },
   getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`, true);
+  },
+  metrics: async (id) => {
+    return await Actions.getOne(`/api/events/${id}/`, 'totalmetricsbyevent');
+  },
+  metricsByActivity: async (id) => {
+    return await Actions.getOne(`/api/events/${id}/`, 'totalmetricsbyactivity');
+  },
+  metricsRegisterBydate: async (id,type) => {
+    return await Actions.get(`/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}`);
   },
 };
 
@@ -548,11 +557,11 @@ export const FaqsApi = {
   getOne: async (id) => {
     return await Actions.get(`api/events/${id}/faqs/`, id);
   },
-  editOne: async (data, id) => {
-    return await Actions.edit(`api/events/${id}/faqs`, data, id);
+  editOne: async (data, id,eventId) => {
+    return await Actions.edit(`api/events/${eventId}/faqs`, data, id);
   },
-  deleteOne: async (id) => {
-    return await Actions.delete(`api/events/${id}/faqs`, id);
+  deleteOne: async (id,eventId) => {
+    return await Actions.delete(`api/events/${eventId}/faqs`, id);
   },
   create: async (data, id) => {
     return await Actions.create(`api/events/${id}/faqs`, data);

@@ -7,8 +7,8 @@ import { getEventCompaniesStandTypes } from '../services';
 
 function stringToOptionMapper(value) {
   return {
-    value,
-    label: value,
+    value:value.value||value,
+    label: value.label||value,    
   };
 }
 

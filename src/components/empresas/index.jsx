@@ -3,6 +3,7 @@ import { Route, Switch, withRouter } from "react-router-dom";
 
 import CrearEditarEmpresa from "./crearEditarEmpresa";
 import Empresas from "./empresas";
+import Stands from './gestionStands';
 
 function EmpresasRoutes({ event, match }) {
   const matchUrl = match.url
@@ -19,6 +20,11 @@ function EmpresasRoutes({ event, match }) {
         exact
         path={`${matchUrl}/crear`}
         render={(routeProps) => <CrearEditarEmpresa {...routeProps} event={event} />}
+      />
+       <Route
+        exact
+        path={`${matchUrl}/Stands`}
+        render={(routeProps) => <Stands {...routeProps} event={event} />}
       />
 
       <Route

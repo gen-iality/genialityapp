@@ -104,8 +104,6 @@ const Landing = (props) => {
           totalNewMessages={totalNewMessages}
           generalTabs={generaltabs}
           notNewMessage={notNewMessage}
-          cEvent={cEventContext.value}
-          cUser={cUser}
           tabselected={tabselected}
           settabselected={settabselected}
         />

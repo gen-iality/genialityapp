@@ -14,8 +14,8 @@ import ChatList from './ChatList';
 import GameRanking from '../events/game/gameRanking';
 import { useRef } from 'react';
 import { UseEventContext } from '../../Context/eventContext';
-import { UseUserEvent } from '../../Context/eventUserContext';
 import { UseCurrentUser } from '../../Context/userContext';
+import { FormattedMessage } from 'react-intl';
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
 const callback = () => {};
@@ -24,7 +24,6 @@ const { setNotification } = notificationsActions;
 let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
-  let cEventUser = UseUserEvent();
   let cUser = UseCurrentUser();
 
   const [attendeeList, setAttendeeList] = useState({});
@@ -264,7 +263,6 @@ let SocialZone = function(props) {
 
   return (
     <Tabs
-    
       defaultActiveKey='2'
       onChange={callback}
       activeKey={props.tabselected}
@@ -416,7 +414,7 @@ let SocialZone = function(props) {
               <p
                 style={{ marginBottom: '0px', color: cEvent.value.styles.textMenu }}
                 className='lowerTabs__mobile-hidden'>
-                Juegos
+                <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
               </p>
             </>
           }

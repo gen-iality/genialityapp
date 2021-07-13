@@ -1226,7 +1226,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.2.0":
+"@babel/runtime@^7.14.5", "@babel/runtime@^7.2.0":
   version "7.14.6"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.14.6.tgz#535203bc0892efc7dec60bdc27b2ecf6e409062d"
   integrity sha512-/PCB2uJ7oM44tz8YhC4Z/6PeOKXp4K588f+5M3clr1M4zbqztlo0XEfJ2LEzj/FgwfgGcIdl8n7YYjTCI0BYwg==
@@ -3074,6 +3074,14 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   integrity sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==
   dependencies:
     color-convert "^2.0.1"
+
+antd-img-crop@^3.14.2:
+  version "3.14.2"
+  resolved "https://registry.yarnpkg.com/antd-img-crop/-/antd-img-crop-3.14.2.tgz#cb367928fd825a0f34bd5d3b0bcbdc9a7510bf9a"
+  integrity sha512-jzhMNxuTFkMifaCA/hM2TDhp99o0HTmo0qxv8xlA0xTVA3Lj2RPTsa71kSujAAHJm7Ox4gyXx9v3KVakZaHY3A==
+  dependencies:
+    "@babel/runtime" "^7.14.5"
+    react-easy-crop "^3.5.1"
 
 antd@^4:
   version "4.16.0"
@@ -10887,6 +10895,11 @@ normalize-url@^3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
+normalize-wheel@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/normalize-wheel/-/normalize-wheel-1.0.1.tgz#aec886affdb045070d856447df62ecf86146ec45"
+  integrity sha1-rsiGr/2wRQcNhWRH32Ls+GFG7EU=
+
 npm-run-path@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/npm-run-path/-/npm-run-path-2.0.2.tgz#35a9232dfa35d7067b4cb2ddf2357b1871536c5f"
@@ -13513,6 +13526,14 @@ react-dynamic-input@^0.1.5:
     react "^16.8.6"
     typescript "^3.4.4"
 
+react-easy-crop@^3.5.1:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-3.5.2.tgz#1fc65249e82db407c8c875159589a8029a9b7a06"
+  integrity sha512-cwSGO/wk42XDpEyrdAcnQ6OJetVDZZO2ry1i19+kSGZQ750aN06RU9y9z95B5QI6sW3SnaWQRKv5r5GSqVV//g==
+  dependencies:
+    normalize-wheel "^1.0.1"
+    tslib "2.0.1"
+
 react-error-overlay@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-4.0.1.tgz#417addb0814a90f3a7082eacba7cee588d00da89"
@@ -13965,6 +13986,13 @@ react-timestamp@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/react-timestamp/-/react-timestamp-5.1.0.tgz#fb2ee03fee3f2d2d1ea457d26b8f19e8817644f9"
   integrity sha512-JWiHW3HJAJZvtAi1Th1sqGe1RRflEkz/63Cw6nFQfUIxHQUN3XPsEkQO1TVCLWLMRyCKmSZpGTJp9qs28Ug3FQ==
+
+react-to-print@^2.12.6:
+  version "2.12.6"
+  resolved "https://registry.yarnpkg.com/react-to-print/-/react-to-print-2.12.6.tgz#ac4537e12528ce865a1a652dcdfb19c5b20c9cce"
+  integrity sha512-O4hpQZX8pOd3W910n+WkT9Jvpd3tFcEWqTFHrm69bCGI/Nh5g2CoLrzaXObQW9BA9mK1K4+3qG88Q6DAJs+oWg==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-toastify@^4.4.0:
   version "4.5.2"
@@ -16168,6 +16196,11 @@ tsconfig-paths@^3.9.0:
     json5 "^1.0.1"
     minimist "^1.2.0"
     strip-bom "^3.0.0"
+
+tslib@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.1.tgz#410eb0d113e5b6356490eec749603725b021b43e"
+  integrity sha512-SgIkNheinmEBgx1IUNirK0TUD4X9yjjBRTqqjggWCU3pUEqIk3/Uwl3yRixYKT6WjQuGiwDv4NomL3wqRCj+CQ==
 
 tslib@^1.10.0, tslib@^1.11.1, tslib@^1.8.1:
   version "1.14.1"

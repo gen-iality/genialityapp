@@ -280,6 +280,12 @@ iframe {
 :root {
   --animate-delay: 0.5s;
 }
+.ql-clipboard {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;    
+}
 @import '~bulma/bulma';
 @import '~react-widgets/lib/scss/react-widgets';
 @import '~bulma-extensions/bulma-switch/src/sass/index';

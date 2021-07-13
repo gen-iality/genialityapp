@@ -10,7 +10,7 @@ import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, In
 import { firestore } from '../../helpers/firebase';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
-import RootPage from './surveys/rootPage';
+import SurveyDetailPage from './surveys/SurveyDetailPage';
 import * as StageActions from '../../redux/stage/actions';
 import * as SurveyActions from '../../redux/survey/actions';
 import Game from './game';
@@ -27,7 +27,7 @@ import withContext from '../../Context/withContext';
 
 const { TabPane } = Tabs;
 const { gotoActivity, setMainStage, setTabs } = StageActions;
-const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys } = SurveyActions;
+const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys, unsetCurrentSurvey } = SurveyActions;
 
 const layout = {
   labelCol: { span: 8 },
@@ -97,7 +97,7 @@ let AgendaActividadDetalle = (props) => {
   const [stateSpace, setStateSpace] = useState(true);
 
   const [activeTab, setActiveTab] = useState('description');
-  let option = props.option;
+  let mainStageContent = props.mainStageContent;
 
   //Estado para detección si la vista es para mobile
   const [isMobile, setIsMobile] = useState(false);
@@ -190,7 +190,7 @@ let AgendaActividadDetalle = (props) => {
   }, [activitiesSpace]);
 
   useEffect(() => {
-    if (option === 'surveyDetalle' || option === 'game') {
+    if (/*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === 'game') {
       const sharedProperties = {
         position: 'fixed',
         right: '0',
@@ -220,7 +220,7 @@ let AgendaActividadDetalle = (props) => {
       setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
       setVideoButtonStyles({ display: 'none' });
     }
-  }, [option, isMobile]);
+  }, [mainStageContent, isMobile]);
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
@@ -303,7 +303,6 @@ let AgendaActividadDetalle = (props) => {
   };
 
   // aquie esta los estados del drawer y el modal
-  const [visible, setVisible] = useState(props.isVisible);
   const [rankingVisible, setRankingVisible] = useState(true);
   const [width, setWidth ] = useState('70%');
  
@@ -326,15 +325,10 @@ let AgendaActividadDetalle = (props) => {
     }
       setRankingVisible(!rankingVisible)
   }
-  // const showDrawer = () => { // esta funcion activa rl drawer
-  //   setVisible(false) 
-  //  };
+
   function onClose () {  // esta funcion desactiva rl drawer
-    // setVisible(false) 
-    if(props.isVisible===true){
-     props.setSurveyVisible(false)
-    }
-    
+    props.unsetCurrentSurvey();
+    props.setMainStage(null);
   }
 
   // constante de ranking
@@ -489,8 +483,8 @@ let AgendaActividadDetalle = (props) => {
               {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
 
               {(meetingState === 'open_meeting_room' || stateSpace) &&
-                // option !== 'surveyDetalle' &&
-                // option !== 'games' &&
+                // mainStageContent !== 'surveyDetalle' &&
+                // mainStageContent !== 'games' &&
 
                 platform !== '' &&
                 platform !== null && (
@@ -556,9 +550,9 @@ let AgendaActividadDetalle = (props) => {
                   </>
                 )}
 
-              {/* {option == 'surveyDetalle' && (
+              {/* {mainStageContent == 'surveyDetalle' && (
                 <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
-                  <RootPage
+                  <SurveyDetailPage
                   // event={event}
                   // currentUser={props.userEntered}
                   // activity={props.activity}
@@ -569,46 +563,17 @@ let AgendaActividadDetalle = (props) => {
                   />
                 </div>
               )} */}
-               {option == 'surveyDetalle' && (
+               {mainStageContent == 'surveyDetalle' && (
                 <>
-                  <Drawer
-                      closeIcon={<CloseOutlined />}
-                      placement="right"
-                      // closable={true}
-                      visible={props.isVisible}
-                      onClose={onClose}
-                      width={window.screen.width >= 768 ? rankingVisible == false ? '100%':'70%': '100%'}
-                    >
-                      <div style={{width:'100%', display:'inline-block', paddingBottom:'10px'}}>
-                       <Button 
-                        type="primary"
-                        onClick={showRanking} 
-                         >
-                          {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
-                      </Button> 
-                      </div>
-                      
-                      <Row gutter={[8,8]} justify='center'>
-                        <Col  xl={rankingVisible == true ? 24 : 16} xxl={rankingVisible == true ? 24 : 16} >
-                          <RootPage/>
-                        </Col>
-                        <Col hidden={rankingVisible}  xl={8} xxl={8} >
-                          <div style={{width:'100%'}}>
-                            <div style={{justifyContent:'center', display:'grid'}}>
-                              {hasRanking && <RankingTrivia/>}
-                              </div>
-                          </div>
-                        </Col>  
-                      </Row>
-                    </Drawer>
+                  <h1>Encuestas MainStage</h1>
                 </>
               )}
-              {option == 'game' && <Game />}
+              {mainStageContent == 'game' && <Game />}
 
               {(meetingState === '' || meetingState == null) &&
                 stateSpace === false &&
-                option !== 'surveyDetalle' &&
-                option !== 'game' && (
+                mainStageContent !== 'surveyDetalle' &&
+                mainStageContent !== 'game' && (
                   <div className='column is-centered mediaplayer'>
                     <img
                       className='activity_image'
@@ -626,8 +591,8 @@ let AgendaActividadDetalle = (props) => {
                 )}
 
               {meetingState === 'closed_meeting_room' &&
-                option !== 'surveyDetalle' &&
-                option !== 'game' &&
+                mainStageContent !== 'surveyDetalle' &&
+                mainStageContent !== 'game' &&
                 stateSpace === false && (
                   <div className='column is-centered mediaplayer'>
                     <img
@@ -648,8 +613,8 @@ let AgendaActividadDetalle = (props) => {
               {meetingState === 'ended_meeting_room' &&
               currentActivity.video &&
               stateSpace === false &&
-              option !== 'surveyDetalle' &&
-              option !== 'game' ? (
+              mainStageContent !== 'surveyDetalle' &&
+              mainStageContent !== 'game' ? (
                 <div className='column is-centered mediaplayer'>
                   <ReactPlayer
                     width={'100%'}
@@ -667,8 +632,8 @@ let AgendaActividadDetalle = (props) => {
                   {meetingState === 'ended_meeting_room' &&
                     (currentActivity.image || image_event) &&
                     stateSpace === false &&
-                    option !== 'surveyDetalle' &&
-                    option !== 'game' && (
+                    mainStageContent !== 'surveyDetalle' &&
+                    mainStageContent !== 'game' && (
                       <div>
                         <img
                           className='activity_image'
@@ -857,12 +822,53 @@ let AgendaActividadDetalle = (props) => {
           </Link> */}
         </Card>
       </div>
+
+
+
+
+
+
+
+
+
+
+{/* Drawer encuestas */}
+      <Drawer
+                      closeIcon={<CloseOutlined />}
+                      placement="right"
+                      // closable={true}
+                      visible={props.currentSurvey}
+                      onClose={onClose}
+                      width={window.screen.width >= 768 ? rankingVisible == false ? '100%':'70%': '100%'}
+                    >
+                      <div style={{width:'100%', display:'inline-block', paddingBottom:'10px'}}>
+                       <Button 
+                        type="primary"
+                        onClick={showRanking} 
+                         >
+                          {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
+                      </Button> 
+                      </div>
+                      
+                      <Row gutter={[8,8]} justify='center'>
+                        <Col  xl={rankingVisible == true ? 24 : 16} xxl={rankingVisible == true ? 24 : 16} >
+                          <SurveyDetailPage/>
+                        </Col>
+                        <Col hidden={rankingVisible}  xl={8} xxl={8} >
+                          <div style={{width:'100%'}}>
+                            <div style={{justifyContent:'center', display:'grid'}}>
+                              {hasRanking && <RankingTrivia/>}
+                              </div>
+                          </div>
+                        </Col>  
+                      </Row>
+                    </Drawer>
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  option: state.stage.data.mainStage,
+  mainStageContent: state.stage.data.mainStage,
   userInfo: state.user.data,
   currentActivity: state.stage.data.currentActivity,
   currentSurvey: state.survey.data.currentSurvey,
@@ -881,6 +887,7 @@ const mapDispatchToProps = {
   setHasOpenSurveys,
   setTabs,
   setTopBanner,
+  unsetCurrentSurvey,
 };
 
 let AgendaActividadDetalleWithContext = withContext(AgendaActividadDetalle)

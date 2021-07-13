@@ -54,15 +54,15 @@ const EventSectionMenuRigth = (props) => {
                 <ArrowRightOutlined style={{ fontSize: '24px', color: cEvent.value.styles.textMenu }} />
               </Button>
 
-              {/* <SocialZone
+              <SocialZone
                 totalMessages={props.totalNewMessages}
                 optionselected={optionselected}
-                tab={2}
+                tab={1}
                 generalTabs={props.generalTabs}
                 notNewMessages={props.notNewMessage}
                 tabselected={props.tabselected}
                 settabselected={props.settabselected}
-              /> */}
+              />
             </>
           )}
         </div>

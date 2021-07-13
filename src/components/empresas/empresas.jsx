@@ -43,6 +43,14 @@ function Empresas({ event, match }) {
             : <Tag color="red">{'Oculto'}</Tag>
         }
       },
+      {
+        title: '',
+        dataIndex: 'eliminar',
+        render(visible) {
+          return <Button>Eliminar</Button>
+            
+        }
+      },
     ]
   }, [match.url])
 
@@ -54,10 +62,15 @@ function Empresas({ event, match }) {
     <div>
       <Title level={4}>{'Empresas'}</Title>
 
-      <Row justify="end" style={{ marginBottom: '10px' }}>
+      <Row justify="end" style={{ marginBottom: '10px' }}>     
         <Link to={`${match.url}/crear`}>
           <Button type="primary" icon={<PlusCircleOutlined />}>
             {'Crear empresa'}
+          </Button>
+        </Link>
+        <Link style={{marginLeft:20}} to={`${match.url}/Stands`}>
+          <Button type="primary" icon={<PlusCircleOutlined />}>
+            {'Gestionar stands'}
           </Button>
         </Link>
       </Row>
