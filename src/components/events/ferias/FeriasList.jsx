@@ -6,41 +6,44 @@ import { useEffect } from 'react';
 import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
 import { useState } from 'react';
 
+const FeriasList = ({ event_id, stateferia }) => {
+  const [companies, loadingCompanies] = useGetEventCompanies(event_id);
+  const [companiesEvent, setCompaniesEvent] = useState([]);
 
-
-const FeriasList = ({event_id, stateferia}) => {
-  const [companies, loadingCompanies] = useGetEventCompanies(event_id)
-  const [companiesEvent,setCompaniesEvent]=useState([])  
-  useEffect(()=>{
-    if(!loadingCompanies){
-      console.log(companies)
-      setCompaniesEvent(companies)
+  useEffect(() => {
+    if (!loadingCompanies) {
+      console.log(companies);
+      setCompaniesEvent(companies);
     }
-    
-  },[loadingCompanies]) 
-  
-  return (
-    <div>    
-      {loadingCompanies && <Spin size="small"/>}
-      
-      {
-          companiesEvent.length>0 && companiesEvent.map((company,index)=>           
-              <Companylist
-              eventId={event_id}
-              companyId={company.id}
-              key={'companyList'+index}
-              img={company.list_image} 
-              name={company.name}
-              position={company.position}
-              tel={company.advisor && company.telefono}
-              email={company.advisor&&company.email}
-              description={company.short_description}
-              pagweb={company.webpage}
-                />             
-            )
-            }
-      {companiesEvent.length==0 && <Empty />}
+  }, [loadingCompanies]);
 
+  console.log(companiesEvent);
+
+  return (
+    <div>
+      {loadingCompanies && <Spin size='small' />}
+
+      {companiesEvent.length > 0 &&
+        companiesEvent.map(
+          (company, index) =>
+            company.visible && (              
+                <Companylist
+                key={'companyList'+index}
+                  img={
+                    company.list_image === ''
+                      ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo' // imagen por defecto si no encuentra una imagen guardada
+                      : company.list_image
+                  }
+                  name={company.name}
+                  position={company.position}
+                  tel={company.advisor && company.telefono}
+                  email={company.advisor && company.email}
+                  description={company.short_description}
+                  pagweb={company.webpage}
+                />              
+            )
+        )}
+      {companiesEvent.length == 0 && <Empty />}
     </div>
   );
 };
