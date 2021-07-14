@@ -13,21 +13,17 @@ import { setMainStage } from '../../../redux/stage/actions';
 import SurveyCard from './components/surveyCard';
 import notifications from '../Landing/notifications';
 
+/** Context´s */
+import { UseCurrentUser } from '../../../Context/userContext';
+
 const { setNotification } = notificationsActions;
 const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
-   const {
-      activity,
-      currentUser,
-      setNotification,
-      viewNotification,
-      surveySelected,
-      setMainStage,
-      setCurrentSurvey,
-      setSurveyResult,
-   } = props;
+   const { activity, setNotification, viewNotification, surveySelected, setCurrentSurvey, setSurveyResult } = props;
+
    const eventId = activity.event_id;
+   const currentUser = UseCurrentUser();
 
    const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
    const [loadingSurveys, setLoadingSurveys] = useState(true);
@@ -50,11 +46,9 @@ function SurveyList(props) {
    const visualizarEncuesta = (survey) => {
       if (survey && survey.isOpened === 'true' && survey !== null) {
          handleClick(survey);
-         console.log("10. en el if")
       } else {
-         console.log("10. en el else")
          setCurrentSurvey(survey);
-         setSurveyResult('closedSurvey')
+         setSurveyResult('closedSurvey');
       }
    };
 
@@ -102,7 +96,6 @@ function SurveyList(props) {
 
 const mapStateToProps = (state) => ({
    activity: state.stage.data.currentActivity,
-   currentUser: state.user.data,
    viewNotification: state.notifications.data,
    currentActivity: state.survey.currentActivity,
    surveySelected: state.survey.data.currentSurvey,
