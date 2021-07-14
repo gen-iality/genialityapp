@@ -111,7 +111,7 @@ export const getTriviaRanking = (surveyId) => {
   });
 };
 
-export const getSurveyConfiguration = (surveyId) => {
+export const getSurveyConfiguration = (surveyId, setFreezeGame) => {
   return new Promise((resolve, reject) => {
     if (!surveyId) {
       reject('Survey ID required');
@@ -120,10 +120,14 @@ export const getSurveyConfiguration = (surveyId) => {
     firestore
       .collection('surveys')
       .doc(surveyId)
-      .get()
-      .then((result) => {
+      .onSnapshot((result) => {
         if (result.exists) {
           const data = result.data();
+          if(data.freezeGame === "true"){
+            setFreezeGame(true)
+          }else{
+            setFreezeGame(false)
+          }
           resolve(data);
         }
       });

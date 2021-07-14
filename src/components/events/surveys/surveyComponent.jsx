@@ -29,52 +29,21 @@ function SurveyComponent(props) {
    const [voteWeight, setVoteWeight] = useState(0);
    const [freezeGame, setFreezeGame] = useState(false);
    const [showMessageOnComplete, setShowMessageOnComplete] = useState(false);
-   const [currentPage, setCurrentPage] = useState(null);
    const [timerPausa, setTimerPausa] = useState(null);
    const [survey, setSurvey] = useState(null);
    const [rankingPoints, setRankingPoints] = useState(0);
    const [fiftyfitfyused, setFiftyfitfyused] = useState(false);
 
-   // async function listenAndUpdateStateSurveyRealTime(idSurvey) {
-   //    let currentPageNo = 0;
-
-   //    const promiseA = new Promise((resolve, reject) => {
-   //       try {
-   //          firestore
-   //             .collection('surveys')
-   //             .doc(idSurvey)
-   //             .onSnapshot(async (doc) => {
-   //                let surveyRealTime = doc.data();
-
-   //                //revisando si estamos retomando la encuesta en alguna página particular
-   //                if (currentUser && currentUser.value._id) {
-   //                   currentPageNo = await SurveyPage.getCurrentPage(idSurvey, currentUser.value._id);
-   //                   surveyRealTime.currentPage = currentPageNo ? currentPageNo : 0;
-   //                }
-
-   //                setCurrentPage(surveyRealTime.currentPage);
-   //                setFreezeGame(surveyRealTime.freezeGame);
-   //                resolve(surveyRealTime);
-   //             });
-   //       } catch (e) {
-   //          reject(e);
-   //       }
-   //    });
-
-   //    return promiseA;
-   // }
-
    async function startingSurveyComponent() {
       let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyData);
-      const firebaseSurvey = await getSurveyConfiguration(idSurvey);
+      const firebaseSurvey = await getSurveyConfiguration(idSurvey, setFreezeGame);
 
       loadSurveyData.open = firebaseSurvey.isOpened;
       loadSurveyData.publish = firebaseSurvey.isPublished;
       loadSurveyData.freezeGame = firebaseSurvey.freezeGame;
 
       const surveyModelData = new Survey.Model(loadSurveyData);
-
-      // await listenAndUpdateStateSurveyRealTime(idSurvey);
+      // se quito  la funcion " await listenAndUpdateStateSurveyRealTime(idSurvey)" ya que lo unico que hacia era validar si la encuesta estaba en pausa, ademas generaba un bug en el cual la encuesta siempre estaba pausada
 
       setSurveyData(loadSurveyData);
       setSurvey(surveyModelData);
@@ -164,10 +133,6 @@ function SurveyComponent(props) {
 
    // Funcion que cambia el mensaje por defecto para el contador
    function setCounterMessage(survey, options) {
-      // Aqui se obtiene el tiempo limite de la encuesta
-      // let countDown = Moment.utc((survey.maxTimeToFinish - survey.timeSpent) * 1000).format("mm:ss");
-      // let timeTotal = Moment.utc(survey.maxTimeToFinish * 1000).format("mm:ss");
-
       // Aqui se obtiene el tiempo limite por pregunta
       let countDown = Moment.utc((survey.maxTimeToFinishPage - survey.currentPage.timeSpent) * 1000).format('mm:ss');
       let timeTotal = Moment.utc(survey.maxTimeToFinishPage * 1000).format('mm:ss');
