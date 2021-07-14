@@ -54,7 +54,7 @@ const FeriasDetail = (props) => {
           imagen={
             companyDetail
               ? companyDetail.stand_image
-              : 'https://chipichape.com.co/tienda/administracion//uploads/1564087046-juan%20valdez2%20banner.jpg'
+              : 'http://via.placeholder.com/1500x540/50D3C9/FFFFFF?text=Banner%20empresa'
           }
         />
         <div className='container-information'>
@@ -62,7 +62,7 @@ const FeriasDetail = (props) => {
             ImgCompany={
               companyDetail
                 ? companyDetail.list_image
-                : 'https://www.parquecomercialguacari.com/web/wp-content/uploads/2020/02/juan-valdez-cafe.jpg'
+                : 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo'
             }
             titleCompany={companyDetail && companyDetail.name}
             Description={
