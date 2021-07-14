@@ -19,7 +19,7 @@ import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined, UserOutlined,
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 import RankingTrivia from './surveys/rankingTrivia';
-import { listenSurveysData } from '../events/surveys/services';
+import { listenSurveysData } from '../events/surveys/services/services';
 import { eventUserUtils } from '../../helpers/helperEventUser';
 import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';

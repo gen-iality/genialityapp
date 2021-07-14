@@ -1,4 +1,3 @@
-import React from 'react';
 import { SurveysApi } from '../../../../helpers/request';
 import * as Survey from 'survey-react';
 
