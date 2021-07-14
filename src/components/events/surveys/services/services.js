@@ -53,7 +53,6 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
       ({ surveyId, message, questionId, optionIndex }) => {
          // Se valida si el voto tiene valor de lo contrario sumara 1
          let vote = typeof voteValue == 'number' ? parseFloat(voteValue) : 1;
-
          const shard_ref = firestore
             .collection('surveys')
             .doc(surveyId)
@@ -112,9 +111,6 @@ export const SurveyPage = {
 
    // Actualiza la pagina actual de la encuesta
    setCurrentPage: (surveyId, uid, currentPageNo) => {
-      console.log("10. ==>", "1", surveyId)
-      console.log("10. ==>", "2", uid)
-      console.log("10. ==>", "3", currentPageNo)
       return new Promise((resolve, reject) => {
          let metaData = { currentPageNo: currentPageNo };
          firestore

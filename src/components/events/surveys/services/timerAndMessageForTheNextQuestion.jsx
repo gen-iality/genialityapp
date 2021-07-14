@@ -2,7 +2,7 @@ import StateMessages from './stateMessages';
 
 const MIN_ANSWER_FEEDBACK_TIME = 5;
 
-function TimerForTheNextQuestion(
+function TimerAndMessageForTheNextQuestion(
    survey,
    secondsToGo,
    messageType,
@@ -41,4 +41,4 @@ function TimerForTheNextQuestion(
    setTimerPausa(timer);
 }
 
-export default TimerForTheNextQuestion;
+export default TimerAndMessageForTheNextQuestion;

@@ -11,7 +11,7 @@ import * as Survey from 'survey-react';
 import InternarlSurveyStyles from './components/internarlSurveyStyles';
 import LoadSelectedSurvey from './services/loadSelectedSurvey';
 import RegisterVote from './services/registerVote';
-import TimerForTheNextQuestion from './services/timerForTheNextQuestion';
+import TimerAndMessageForTheNextQuestion from './services/timerAndMessageForTheNextQuestion';
 import HelpFiftyFifty from './services/helpFiftyFifty';
 import MessageWhenCompletingSurvey from './services/messageWhenCompletingSurvey';
 
@@ -30,42 +30,39 @@ function SurveyComponent(props) {
    const [freezeGame, setFreezeGame] = useState(false);
    const [showMessageOnComplete, setShowMessageOnComplete] = useState(false);
    const [currentPage, setCurrentPage] = useState(null);
-   const [surveyRealTime, setSurveyRealTime] = useState(null);
    const [timerPausa, setTimerPausa] = useState(null);
    const [survey, setSurvey] = useState(null);
-   let [rankingPoints, setRankingPoints] = useState(0);
+   const [rankingPoints, setRankingPoints] = useState(0);
    const [fiftyfitfyused, setFiftyfitfyused] = useState(false);
 
+   // async function listenAndUpdateStateSurveyRealTime(idSurvey) {
+   //    let currentPageNo = 0;
 
-   async function listenAndUpdateStateSurveyRealTime(idSurvey) {
-      let currentPageNo = 0;
+   //    const promiseA = new Promise((resolve, reject) => {
+   //       try {
+   //          firestore
+   //             .collection('surveys')
+   //             .doc(idSurvey)
+   //             .onSnapshot(async (doc) => {
+   //                let surveyRealTime = doc.data();
 
-      const promiseA = new Promise((resolve, reject) => {
-         try {
-            firestore
-               .collection('surveys')
-               .doc(idSurvey)
-               .onSnapshot(async (doc) => {
-                  let surveyRealTime = doc.data();
+   //                //revisando si estamos retomando la encuesta en alguna página particular
+   //                if (currentUser && currentUser.value._id) {
+   //                   currentPageNo = await SurveyPage.getCurrentPage(idSurvey, currentUser.value._id);
+   //                   surveyRealTime.currentPage = currentPageNo ? currentPageNo : 0;
+   //                }
 
-                  //revisando si estamos retomando la encuesta en alguna página particular
-                  if (currentUser && currentUser.value._id) {
-                     currentPageNo = await SurveyPage.getCurrentPage(idSurvey, currentUser.value._id);
-                     surveyRealTime.currentPage = currentPageNo ? currentPageNo : 0;
-                  }
+   //                setCurrentPage(surveyRealTime.currentPage);
+   //                setFreezeGame(surveyRealTime.freezeGame);
+   //                resolve(surveyRealTime);
+   //             });
+   //       } catch (e) {
+   //          reject(e);
+   //       }
+   //    });
 
-                  setSurveyRealTime(surveyRealTime);
-                  setCurrentPage(surveyRealTime.currentPage);
-                  setFreezeGame(surveyRealTime.freezeGame);
-                  resolve(surveyRealTime);
-               });
-         } catch (e) {
-            reject(e);
-         }
-      });
-
-      return promiseA;
-   }
+   //    return promiseA;
+   // }
 
    async function startingSurveyComponent() {
       let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyData);
@@ -77,7 +74,7 @@ function SurveyComponent(props) {
 
       const surveyModelData = new Survey.Model(loadSurveyData);
 
-      await listenAndUpdateStateSurveyRealTime(idSurvey);
+      // await listenAndUpdateStateSurveyRealTime(idSurvey);
 
       setSurveyData(loadSurveyData);
       setSurvey(surveyModelData);
@@ -93,11 +90,11 @@ function SurveyComponent(props) {
       InternarlSurveyStyles(eventStyles);
 
       startingSurveyComponent();
-   }, []);
+   }, [idSurvey]);
 
    useEffect(() => {
       /**
-       * Timers para controlar el tiempo por pregunta, estos se deben detener o el quiz siguira avanzando y errando la logica ya que cambia la pregunta que se esta respondiendo
+       * Timers para controlar el tiempo por pregunta, estos se deben detener o el quiz seguira avanzando errando la logica ya que cambia la pregunta que se esta respondiendo
        */
       if (survey) {
          survey.stopTimer();
@@ -105,25 +102,31 @@ function SurveyComponent(props) {
       if (timerPausa) {
          clearInterval(timerPausa);
       }
-   }, [survey]);
+   }, [survey, idSurvey]);
 
-
-
-   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
+   // Funcion para enviar la informacion de las respuestas
    async function sendData(surveyModel) {
       setRankingPoints(0);
 
-      let rankingPointsThisPage;
+      let pointsEarnedPerQuestion;
       await Promise.all(
          surveyModel.currentPage.questions.map(async (question) => {
-            let { rankingPoints } = await RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
-            if (rankingPoints)
-               rankingPointsThisPage = rankingPointsThisPage ? rankingPointsThisPage + rankingPoints : rankingPoints;
-            registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser.value, eventId);
-            return rankingPoints;
+            let { pointsForCorrectAnswer } = await RegisterVote(
+               surveyData,
+               question,
+               currentUser,
+               eventUsers,
+               voteWeight
+            );
+            if (pointsForCorrectAnswer) {
+               pointsEarnedPerQuestion = pointsForCorrectAnswer;
+            }
+            registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
+            return pointsForCorrectAnswer;
          })
       );
-      setRankingPoints(rankingPointsThisPage);
+
+      setRankingPoints(pointsEarnedPerQuestion);
 
       if (!(Object.keys(currentUser).length === 0)) {
          //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
@@ -140,7 +143,6 @@ function SurveyComponent(props) {
    }
 
    function registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId) {
-
       if (rankingPoints == undefined || rankingPoints == 0) return;
       if (surveyData.allow_gradable_survey !== 'true') return;
 
@@ -173,12 +175,13 @@ function SurveyComponent(props) {
       options.text = `Tienes ${timeTotal} para responder la pregunta. Quedan ${countDown}`;
    }
 
+   /* handler cuando la encuesta inicia, este sirve para retomar la encuesta donde vayan todos los demas usuarios */
    function onStartedSurvey(survey) {
-      // Este condicional sirve para retomar la encuesta donde vayan todos los demas usuarios
+      //
       if (surveyData.allow_gradable_survey === 'true') {
          if (freezeGame) {
             survey.stopTimer();
-            TimerForTheNextQuestion(
+            TimerAndMessageForTheNextQuestion(
                survey,
                0,
                'info',
@@ -199,7 +202,7 @@ function SurveyComponent(props) {
 
       if (surveyData.allow_gradable_survey === 'true') {
          sender.stopTimer();
-         TimerForTheNextQuestion(
+         TimerAndMessageForTheNextQuestion(
             sender,
             secondsToGo,
             '',
