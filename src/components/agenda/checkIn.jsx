@@ -362,15 +362,15 @@ class CheckAgenda extends Component {
                 <Button onClick={() => this.goToSendMessage()}>Enviar comunicación / Correo</Button>                
               </div>
               <div className='column is-narrow has-text-centered button-c is-centered'>
-              <div className='tags is-centered '>
-                <span className='tag is-light'>{total}</span>
+              <div className='tags is-centered '>                
                 <span className='tag is-white'>Total</span>
+                <span className='tag is-light'>{total}</span>
               </div>
               </div>
               <div className='column is-narrow has-text-centered button-c is-centered'>
-              <div className='tags is-centered'>
-                <span className='tag is-primary'>{checkIn}</span>
+              <div className='tags is-centered'>                
                 <span className='tag is-white'>Ingresados</span>
+                <span className='tag is-primary'>{checkIn}</span>
               </div>
               </div>
               <div className='column is-narrow has-text-centered button-c is-centered'>

@@ -41,12 +41,12 @@ class ReportList extends Component {
         days.push(Moment(date[i]).format('MMMM-DD'));
       }
 
-      this.setState({ days: date, day: Moment(days[i]).format('MMMM-DD') }, this.fetchAgenda);
+      this.setState({ days: date }, this.fetchAgenda);
     } else {
       for (let i = 0; i < diff + 1; i++) {
         days.push(Moment(init).add(i, 'd'));
       }
-      this.setState({ days, day: days[0].format('MMMM-DD') }, this.fetchAgenda);
+      this.setState({ days }, this.fetchAgenda);
     }
   }
 
@@ -58,7 +58,7 @@ class ReportList extends Component {
     //     item.remaining_capacity = item.remaining_capacity ? item.remaining_capacity : item.capacity;
     //     return item;
     // });
-    const filtered = this.filterByDay(this.state.days[0], data);
+    const filtered = this.filterByDay(this.state.day, data);
     this.setState({
       list: data,
       filtered,
