@@ -8,11 +8,14 @@ import { FormattedMessage } from 'react-intl';
 import CheckSpace from '../event-users/checkSpace';
 import XLSX from 'xlsx';
 import { toast } from 'react-toastify';
-import { Activity } from '../../helpers/request';
+import { Activity, RolAttApi } from '../../helpers/request';
 import { Table, Input, Button, Space } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, UserAddOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import UserModal from '../modal/modalUser';
+
 const html = document.querySelector('html');
+
 
 class CheckAgenda extends Component {
   constructor(props) {
@@ -26,39 +29,56 @@ class CheckAgenda extends Component {
       total: 0,
       checkIn: 0,
       qrModal: false,
+      editUser:false, 
+      extraFields:[], 
       selectedRowKeys: [],
+      ticket:null,
+      ticketsOptions:null,
+      spacesEvents: [],
     };
     this.onSelectChange = this.onSelectChange.bind(this);
+    this.cargarUsuarios=this.cargarUsuarios.bind(this);
   }
 
   async componentDidMount() {
+   this.cargarUsuarios()
+  }
+
+  async cargarUsuarios(){
     try {
       const { event } = this.props;
       const agendaID = this.props.match.params.id;
       let { checkIn } = this.state;
       const properties = event.user_properties;
+      const rolesList = await RolAttApi.byEventRolsGeneral();
+   
 
       this.createColumnsTable(properties);
 
       //Parse de campos para mostrar primero el nombre, email y luego el resto
       const eventFields = fieldNameEmailFirst(properties);
 
-      this.setState({ eventFields, agendaID, eventID: event._id });
+      this.setState({ eventFields, agendaID, eventID: event._id,rolesList });
       let newList = [...this.state.attendees];
-
+      console.log("Cargando lista")
       newList = await Activity.getActivyAssitantsAdmin(this.props.event._id, agendaID);
+      console.log(newList )
       newList = newList.map((item) => {
         let attendee = item.attendee
           ? item.attendee
-          : { properties: { email: item.user.email, names: item.user.displayName } };
+          : item.user? { properties: { email: item.user.email, names: item.user.displayName } }:null;
         item = { ...item, ...attendee };
         return item;
       });
+      
+      console.log(newList)
 
       this.setState(() => {
         return { attendees: newList, loading: false, total: newList.length, checkIn };
       });
       let usersData = this.createUserInformation(newList);
+      console.log("usersData")
+      console.log(usersData)
       this.setState({ usersData });
     } catch (error) {
       const errorData = handleRequestError(error);
@@ -91,9 +111,12 @@ class CheckAgenda extends Component {
   createUserInformation(newList) {
     let usersData = [];
     for (let i = 0; newList.length > i; i++) {
-      let newUser = newList[i].properties;
-      newUser.key = newList[i]._id;
-      usersData.push(newUser);
+      if(newList[i].properties){
+        let newUser = newList[i].properties;
+        newUser.key = newList[i]._id;
+        usersData.push(newUser);
+      }
+     
     }
     return usersData;
   }
@@ -103,7 +126,9 @@ class CheckAgenda extends Component {
     e.preventDefault();
     e.stopPropagation();
     //Se trae el listado total y se ordenan por fecha de creación
-    const attendees = [...this.state.attendees].sort((a, b) => b.created_at - a.created_at);
+    let attendessFilter=this.state.attendees;
+    attendessFilter=attendessFilter.filter((attendes)=>attendes.user!==null)
+    const attendees = [...attendessFilter].sort((a, b) => b.created_at - a.created_at);    
     const data = await parseData2Excel(attendees, this.state.eventFields);
     const ws = await XLSX.utils.json_to_sheet(data);
     const wb = await XLSX.utils.book_new();
@@ -118,10 +143,22 @@ class CheckAgenda extends Component {
       return { qrModal: !prevState.qrModal };
     });
   };
+  addUser = () => {
+    html.classList.add('is-clipped');
+    this.setState((prevState) => {
+      return { editUser: !prevState.editUser, edit: false };
+    });
+  };
   closeQRModal = () => {
     html.classList.remove('is-clipped');
     this.setState((prevState) => {
       return { qrModal: !prevState.qrModal };
+    });
+  };
+  modalUser = () => {
+    html.classList.remove('is-clipped');
+    this.setState((prevState) => {
+      return { editUser: !prevState.editUser, edit: undefined };
     });
   };
 
@@ -257,6 +294,7 @@ class CheckAgenda extends Component {
       eventID,
       agendaID,
     } = this.state;
+    console.log(eventID)
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -276,6 +314,26 @@ class CheckAgenda extends Component {
     if (!this.props.location.state) return this.goBack();
     return (
       <Fragment>
+         {!this.props.loading && this.state.editUser && (
+          <UserModal
+            handleModal={this.modalUser}
+            modal={this.state.editUser}
+            eventId={eventID}
+            ticket={this.state.ticket}
+            tickets={this.state.listTickets}
+            rolesList={this.state.rolesList}
+            value={this.state.selectedUser}
+            checkIn={this.checkIn}
+            badgeEvent={this.state.badgeEvent}
+            extraFields={this.state.eventFields}
+            spacesEvent={this.state.spacesEvent}
+            edit={this.state.edit}
+            byActivity={true}
+            activityId={this.state.agendaID}
+            updateView={this.cargarUsuarios}
+            substractSyncQuantity={this.substractSyncQuantity}
+          />
+        )}
         <EventContent
           title={`CheckIn: ${this.props.location.state.name}`}
           closeAction={this.goBack}
@@ -301,15 +359,31 @@ class CheckAgenda extends Component {
                 </button>
               </div>
               <div className='column is-narrow has-text-centered button-c is-centered'>
-                <Button onClick={() => this.goToSendMessage()}>Enviar comunicación / Correo</Button>
+                <Button onClick={() => this.goToSendMessage()}>Enviar comunicación / Correo</Button>                
               </div>
-              <div className='tags is-centered'>
+              <div className='column is-narrow has-text-centered button-c is-centered'>
+              <div className='tags is-centered '>
                 <span className='tag is-light'>{total}</span>
                 <span className='tag is-white'>Total</span>
               </div>
+              </div>
+              <div className='column is-narrow has-text-centered button-c is-centered'>
               <div className='tags is-centered'>
                 <span className='tag is-primary'>{checkIn}</span>
                 <span className='tag is-white'>Ingresados</span>
+              </div>
+              </div>
+              <div className='column is-narrow has-text-centered button-c is-centered'>
+                <button className='button is-inverted' onClick={this.addUser}>
+                <span className='icon'>
+                <UserAddOutlined />
+                </span>
+                  <span className='text-button'>Agregar usuario</span>
+                </button>
+              </div>
+              <div className='column is-narrow has-text-centered button-c is-centered'>
+                <Button onClick={() =>this.props.history.push( `/event/${this.props.event._id}/invitados`)}>Importar Usuario</Button>
+               
               </div>
             </div>
           </div>

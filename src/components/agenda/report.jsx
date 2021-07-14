@@ -4,8 +4,10 @@ import Moment from 'moment';
 import { AgendaApi } from '../../helpers/request';
 import EventContent from '../events/shared/content';
 import SearchComponent from '../shared/searchTable';
-import { Table } from 'antd';
+import { Select, Table } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
+const { Option } = Select;
+
 
 class ReportList extends Component {
   constructor(props) {
@@ -17,6 +19,7 @@ class ReportList extends Component {
       filtered: [],
       toShow: [],
     };
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
@@ -64,12 +67,22 @@ class ReportList extends Component {
   };
 
   filterByDay(day, agenda) {
-    const list = agenda.filter(
+    let list;
+    if(day && day!=''){
+     list = agenda.filter(
       (agenda) =>
         Moment(agenda.datetime_start, ['YYYY-MM-DD']).format('YYYY-MM-DD') ===
         Moment(day, ['YYYY-MM-DD']).format('YYYY-MM-DD')
     );
+    }else{
+     list=agenda;
+    }
     return list;
+  }
+
+handleChange(date){
+  console.log( Moment(date, ['YYYY-MM-DD']).format('YYYY-MM-DD'))
+  this.selectDay(date)
   }
 
   selectDay = (day) => {
@@ -83,11 +96,18 @@ class ReportList extends Component {
     const { days, day, filtered, toShow } = this.state;
     const columns = [
       {
-        title: 'Hora',
+        title: 'Fecha inicio',
         render: (text) => (
           <a>
-            {Moment(text.datetime_start, 'YYYY-MM-DD HH:mm').format('HH:mm')} -{' '}
-            {Moment(text.datetime_end, 'YYYY-MM-DD HH:mm').format('HH:mm')}
+            {Moment(text.datetime_start, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm')}            
+          </a>
+        ),
+      },
+      {
+        title: 'Fecha fin',
+        render: (text) => (
+          <a>           
+            {Moment(text.datetime_end, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm')}
           </a>
         ),
       },
@@ -110,22 +130,19 @@ class ReportList extends Component {
     ];
     return (
       <EventContent title={'CheckIn por Actividad'} classes={'agenda-list'}>
-        <nav className='level'>
-          <div className='level-left'>
+      
+      <Select value={day} style={{ width: 120 }} onChange={this.handleChange}>
+        <Option value={''}>Todos</Option>
             {days.map((date, key) => (
-              <div
-                onClick={() => this.selectDay(date)}
-                key={key}
-                className={`level-item date ${
-                  Moment(date).format('MMMM-DD') === Moment(day).format('MMMM-DD') ? 'active' : ''
-                }`}>
-                <p className='subtitle is-5'>
-                  <strong>{Moment(date, ['YYYY-MM-DD']).format('MMMM-DD')}</strong>
-                </p>
-              </div>
+              <Option
+               value= {Moment(date, ['YYYY-MM-DD']).format('YYYY-MM-DD')}
+                key={'OptionDate'+key}
+                >            
+                  {Moment(date, ['YYYY-MM-DD']).format('MMMM-DD')}               
+              </Option>
             ))}
-          </div>
-        </nav>
+          </Select>       
+        
         <SearchComponent
           data={filtered}
           placeholder={'por Nombre, Espacio o Conferencista'}
