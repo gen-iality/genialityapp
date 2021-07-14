@@ -3,9 +3,10 @@ import { Row, Col, Modal, Button, Typography, Space } from 'antd';
 import { PhoneOutlined, MailOutlined, GlobalOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 
-const history=useHistory();
+
 function Companylist(props) {
   const { Text } = Typography;
+  const history=useHistory();
 
   function showModal(info) {
     Modal.info({
@@ -38,7 +39,7 @@ function Companylist(props) {
       ),
     });
   }
-
+ 
   return (
     <div className='company-list'>
       <Row className='container' gutter={[10, 10]}>
