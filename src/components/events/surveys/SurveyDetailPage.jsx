@@ -2,15 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Graphics from './graphics';
 import SurveyComponent from './surveyComponent';
-import * as surveysActions from '../../../redux/survey/actions';
-import { Button, Card } from 'antd';
+import { Card } from 'antd';
+import ClosedSurvey from './components/closedSurvey';
 
-const { setSurveyResult } = surveysActions;
+/** Context´s */
+import { UseCurrentUser } from '../../../Context/userContext';
 
 function SurveyDetailPage(props) {
    // const [hasVote, setHasVote] = useState(false);
-   const { currentSurvey, currentUser, surveyResult, setSurveyResult } = props;
-   console.log('10. surveyResult ====> ', surveyResult);
+   const { currentSurvey, surveyResult } = props;
+   const currentUser = UseCurrentUser();
+
    if (!currentSurvey) {
       return <h1>No hay nada publicado</h1>;
    }
@@ -42,12 +44,7 @@ function SurveyDetailPage(props) {
                {/* <div>{surveySelected.name}</div> */}
             </Card>
          )}
-         {surveyResult === 'closedSurvey' && (
-            <Card title={`${currentSurvey.name}`} className='survyCard'>
-               <h1>Encuesta finalizada</h1>
-               <Button onClick={() => setSurveyResult('results')}>Ir a resultados</Button>
-            </Card>
-         )}
+         {surveyResult === 'closedSurvey' && <ClosedSurvey />}
       </div>
    );
 }
@@ -56,9 +53,6 @@ const mapStateToProps = (state) => ({
    currentSurvey: state.survey.data.currentSurvey,
    isVisible: state.survey.data.surveyVisible,
    surveyResult: state.survey.data.result,
-   currentUser: state.user.data,
 });
-const mapDispatchToProps = {
-   setSurveyResult,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(SurveyDetailPage);
+
+export default connect(mapStateToProps)(SurveyDetailPage);

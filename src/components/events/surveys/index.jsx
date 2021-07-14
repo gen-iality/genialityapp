@@ -7,6 +7,7 @@ import SurveyList from './surveyList';
 import SurveyDetailPage from './SurveyDetailPage';
 import { Card } from 'antd';
 import * as SurveyActions from '../../../redux/survey/actions';
+import withContext from '../../../Context/withContext';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
@@ -39,13 +40,11 @@ class SurveyForm extends Component {
   }
 
   async componentDidMount() {
-    let { event } = this.props;
-
     // Método para escuchar todas las encuestas relacionadas con el evento
     await this.listenSurveysData();
-
-    // Verifica si el usuario esta inscrito en el evento para obtener su rol en compoente SurveyDetailPage para saber si es un speaker
-    let eventUser = await this.getCurrentEvenUser(event._id);
+    
+    let eventUser = await this.getCurrentEvenUser(this.props.cEvent.value._id);
+  
 
     this.setState({ eventUser: eventUser });
     // this.userVote();
@@ -53,14 +52,14 @@ class SurveyForm extends Component {
   }
 
   listenSurveysData = async () => {
-    const { event, activity } = this.props;
+    const {activity } = this.props;
 
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
     let $query = firestore.collection('surveys');
 
     //Le agregamos el filtro por evento
-    if (event && event._id) {
-      $query = $query.where('eventId', '==', event._id);
+    if (this.props.cEvent.value && this.props.cEvent.value._id) {
+      $query = $query.where('eventId', '==', this.props.cEvent.value._id);
     }
 
     $query.onSnapshot(async (surveySnapShot) => {
@@ -92,11 +91,7 @@ class SurveyForm extends Component {
     });
   };
 
-  // eslint-disable-next-line no-unused-vars
-  openSurvey = (currentSurvey) => {
-    // eslint-disable-next-line no-console
-  };
-
+  
   surveyVisible = () => {
     // if (this.state.publishedSurveys.length === 1 && !this.state.surveyVisible) {
     //   this.toggleSurvey(this.state.publishedSurveys[0]);
@@ -109,10 +104,7 @@ class SurveyForm extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     //this.listenSurveysData(prevProps);
-    if (this.props.usuarioRegistrado !== prevProps.usuarioRegistrado) {
-      this.setState({ usuarioRegistrado: this.props.usuarioRegistrado });
-    }
-
+   
     //Método que permite al componente conectar con un componente superior y subir el estado  de la encuesta actual seleccionada
     if (prevState.selectedSurvey !== this.state.selectedSurvey) {
       this.props.mountCurrentSurvey(this.state.selectedSurvey);
@@ -126,14 +118,15 @@ class SurveyForm extends Component {
   }
 
   queryMyResponses = async (survey) => {
-    const { currentUser } = this.props;
+
+
     //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
     let counterDocuments = 0;
     return new Promise((resolve) => {
       firestore
         .collectionGroup('responses')
         .where('id_survey', '==', survey._id)
-        .where('id_user', '==', currentUser._id)
+        .where('id_user', '==', this.props.cUser.value._id)
         .get()
         .then((result) => {
           result.forEach(function(doc) {
@@ -153,13 +146,12 @@ class SurveyForm extends Component {
 
   callback = async () => {
     const { publishedSurveys } = this.state;
-    const { currentUser } = this.props;
 
     const checkMyResponses = new Promise((resolve) => {
       let filteredSurveys = [];
 
       publishedSurveys.forEach(async (survey, index, arr) => {
-        if (currentUser) {
+        if (this.props.cUser.value._id) {
           const result = await this.queryMyResponses(survey);
           filteredSurveys.push({
             ...arr[index],
@@ -190,15 +182,13 @@ class SurveyForm extends Component {
   getCurrentEvenUser = async (eventId) => {
     let evius_token = Cookie.get('evius_token');
     if (!evius_token) return null;
-    let response = await TicketsApi.getByEvent(eventId, evius_token);
+    let response = await TicketsApi.getByEvent(this.props.cEvent.value._id, evius_token);
     return response && response.data.length ? response.data[0] : null;
   };
 
   getItemsMenu = async () => {
     let { defaultSurveyLabel } = this.state;
-    const { event } = this.props;
-    const response = await Actions.getAll(`/api/events/${event._id}`);
-
+    const response = await Actions.getAll(`/api/events/${this.props.cEvent.value._id}`);
     let surveyLabel = response.itemsMenu.survey || defaultSurveyLabel;
     this.setState({ surveyLabel });
   };
@@ -300,4 +290,6 @@ const mapDispatchToProps = {
   setSurveyVisible,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SurveyForm);
+
+let SurveyFormWithContext = withContext(SurveyForm)
+export default connect(mapStateToProps, mapDispatchToProps)(SurveyFormWithContext);

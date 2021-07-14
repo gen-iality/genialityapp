@@ -1,11 +1,16 @@
 import React from 'react';
-import { Menu, Row } from 'antd';
+import { Menu } from 'antd';
 import { useRouteMatch, Link } from 'react-router-dom';
 import * as iconComponents from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
+import {UseEventContext} from '../../../../Context/eventContext'
 
-const MenuEvent = ({ event, isMobile }) => {
+const MenuEvent = ({isMobile }) => {
   let { url } = useRouteMatch();
+  let cEvent = UseEventContext();
+  let event = cEvent.value;
+
+
   return (
     <>
       {!isMobile ? (

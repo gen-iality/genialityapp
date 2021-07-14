@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { FaqsApi, Actions } from '../../helpers/request';
+import { FaqsApi } from '../../helpers/request';
 import { Collapse, Col } from 'antd';
-
+import withContext from '../../Context/withContext'
 const { Panel } = Collapse;
 
 const center = {
@@ -21,17 +21,17 @@ class Faqs extends Component {
   }
 
   async getFaqs() {
-    let eventId = this.props.event?._id;
+    let eventId = this.props.cEvent.value?._id;
     const faqsData = await FaqsApi.byEvent(eventId);
     // const info = await Actions.getAll(`/api/events/${eventId}`);
-    if (this.props.event.styles !== {}) {
+    if (this.props.cEvent.value.styles !== {}) {
       this.setState({
         styles: {
           textAlign: 'left',
           fontWeight: 500,
           backgroundColor:
-            this.props.event.styles.toolbarDefaultBg !== '#ffffff'
-              ? this.props.event.styles.toolbarDefaultBg
+            this.props.cEvent.value.styles.toolbarDefaultBg !== '#ffffff'
+              ? this.props.cEvent.value.styles.toolbarDefaultBg
               : '#7d8485d4',
         },
       });
@@ -46,13 +46,13 @@ class Faqs extends Component {
           className='collapse_question'
           style={{
             backgroundColor:
-              this.props.event.styles.toolbarDefaultBg !== '#ffffff'
-                ? this.props.event.styles.toolbarDefaultBg
+              this.props.cEvent.value.styles.toolbarDefaultBg !== '#ffffff'
+                ? this.props.cEvent.value.styles.toolbarDefaultBg
                 : '#7d8485d4',
           }}
           defaultActiveKey={['3']}>
           {faqsData.map((faqs, key) => (
-            <Panel key={key} header={<span style={{ color: this.props.event.styles.textMenu }}>{faqs.title}</span>}>
+            <Panel key={key} header={<span style={{ color: this.props.cEvent.value.styles.textMenu }}>{faqs.title}</span>}>
               <div dangerouslySetInnerHTML={{ __html: faqs.content }} />
             </Panel>
           ))}
@@ -62,4 +62,5 @@ class Faqs extends Component {
   }
 }
 
-export default Faqs;
+let FaqsWithContext = withContext(Faqs)
+export default FaqsWithContext ;
