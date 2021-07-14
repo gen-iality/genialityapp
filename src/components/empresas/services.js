@@ -73,7 +73,7 @@ export const getEventCompaniesStandTypes = (eventId) => {
         const result = await firestore
           .collection('event_companies')
           .doc(eventId)
-          .get();
+          .get();       
         const eventCompaniesDoc = result.data();
         const standTypes = path(['stand_types'], eventCompaniesDoc);
 

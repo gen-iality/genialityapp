@@ -564,6 +564,7 @@ class Agenda extends Component {
       Moment.locale(window.navigator.language);
     }
 
+    
 
     return (
       <div>

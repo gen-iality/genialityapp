@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {Tabs, Row, Col} from 'antd'
+import {Tabs, Row, Col, Card, Image} from 'antd'
 import FeriasBanner from './feriaBanner.jsx'
 import Information from './information.jsx'
 import Product from './product'
@@ -37,6 +37,7 @@ const FeriasDetail = (props) => {
     console.log("DATOS EMPRESA")
     console.log(resp)
     setCompanyDetail(resp)
+    
   })
 
   },[])
@@ -65,7 +66,6 @@ const FeriasDetail = (props) => {
     </div>
 
       <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '2vw' }}>
-        <Row>
             <Tabs defaultActiveKey="1" tabPosition='top'>
             <TabPane tab="Video" key="1" >
             <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span>
@@ -107,8 +107,17 @@ const FeriasDetail = (props) => {
               </div>
     
             </TabPane>
+            <TabPane tab="Galería" key="4">
+              <>
+              {companyDetail && companyDetail.gallery.length>0 && companyDetail.gallery.map((imagen,index)=>
+                <Card style={{ width: 300,float:'left', marginLeft:20 }} key={'gallery-'+index}
+                hoverable>
+                   <Image alt="example" src={imagen.image} />
+                </Card>
+              )}
+              </>
+            </TabPane>
           </Tabs>
-        </Row>
 
 
       {/* componente  de Productos */}

@@ -10,7 +10,14 @@
 .react-player > div {
   position: absolute; // Scaling will occur since parent is relative now
 }
-
+.container-bannerEvent{
+  width: 100%;
+  overflow: hidden;
+  height: 540px;
+  @media only screen and (max-width: $breakpoint-mobile) {
+    height: auto;
+  }
+}
 .name-event {
   display: inline-flex;
   color: #4462dc;

@@ -112,7 +112,8 @@ class NewEvent extends Component {
         data_loader_page: null,
       },
     };
-    try {
+    
+ try {
       const result = await Actions.create('/api/events', data);
       this.setState({ loading: false });
       if (result._id) {

@@ -80,26 +80,18 @@ const Landing = (props) => {
   return (
     <>
       <Layout className='site-layout'>
-        <EventSectionsInnerMenu event={cEventContext.value} />
-        <MenuTablets event={cEventContext.value} />
+        <EventSectionsInnerMenu  />
+        <MenuTablets  />
         <Layout className='site-layout'>
           <Content className='site-layout-background'>
-            {props.view && <TopBanner event={cEventContext.value} currentActivity={currentActivity} />}
+            {props.view && <TopBanner  currentActivity={currentActivity} />}
             <EventSectionRoutes
-              cEvent={cEventContext.value}
-              currentUser={cUser}
               generaltabs={generaltabs}
-              cEventUser={cEventUser.value}
               currentActivity={currentActivity}
-              cUser={cUser}
-              // addNotification={addNotification}
             />
           </Content>
         </Layout>
         <EventSectionMenuRigth
-          cEvent={cEventContext.value}
-          cUser={cUser}
-          cEventUser={cEventUser.value}
           generalTabs={generaltabs}
           currentActivity={currentActivity}
           notNewMessage={notNewMessage}
@@ -112,8 +104,6 @@ const Landing = (props) => {
           totalNewMessages={totalNewMessages}
           generalTabs={generaltabs}
           notNewMessage={notNewMessage}
-          cEvent={cEventContext.value}
-          cUser={cUser}
           tabselected={tabselected}
           settabselected={settabselected}
         />

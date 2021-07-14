@@ -351,28 +351,33 @@
 .card-agenda-desktop {
   // hora de la agenda
   .agenda-hora {
-    margin-top: 10%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
     .contenedor-estado-agenda {
       height: 79px;
-      font-size: 8px;
-      margin-left: -8px;
-      margin-top: '3%';
+      font-size: 10px;
+      margin-left: 0%;
+      margin-top: 3%;
+      padding-left: 20%;
+      padding-right: 20%;
     }
     .ant-timeline-item-last > .ant-timeline-item-content {
-      min-height: 22px;
+      min-height: 24px;
     }
 
     .ant-timeline-item-content {
       position: relative;
       top: -7.001px;
-      margin: 0px 0 0 -2px;
+      margin: 0px 0 0 20px;
       word-break: break-word;
     }
 
     .ant-timeline-item {
       position: relative;
       margin: 0;
-      padding-bottom: 11px;
+      padding-bottom: 25px;
       font-size: 14px;
       list-style: none;
     }
@@ -406,8 +411,8 @@
   }
   .agenda-imagen {
     object-fit: cover;
-    max-height: 100%;
-    border-radius: 3px;
+    //max-height: 100%;
+    border-radius: 5px;
     height: 100%;
     width: 100%;
     object-position: center;

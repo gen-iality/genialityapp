@@ -47,7 +47,7 @@
     }
     .container-information{
       text-align:start; 
-      margin-left:10px; 
+      margin-left:20px; 
       height:200px;
       align-content:center;
       display:grid;
@@ -279,7 +279,8 @@
       margin: auto;
       margin-top: 20px;
       .boton{
-        display: inline;
+        display: block;
+        margin: auto;
       }
       .info-contact {
         display: grid;

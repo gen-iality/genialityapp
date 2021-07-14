@@ -16,7 +16,14 @@ class InfoAsistentes extends Component {
 
   componentDidMount() {
     const fields = this.props.data;
-    fields[0]={type:'Texto',label:'Avatar',mandatory:false,description:'Imagen de perfil',options: [] }
+    /*fields[0]={name:'image'
+    ,mandatory:true
+    ,label:'Avatar'
+    ,description:'Imagen de perfil'
+    ,type:'text'
+    ,options:[],    
+     uuid :uniqueID() 
+  }*/
   
     this.setState({ fields });
   }
@@ -35,6 +42,7 @@ class InfoAsistentes extends Component {
       const info = Object.assign({}, field);
       info.uuid = uniqueID();
       this.setState({ fields: [...this.state.fields, info], modal: false, edit: false, newField: false });
+      console.log(info)
     }
   };
   //Editar campo en el evento
@@ -155,7 +163,7 @@ class InfoAsistentes extends Component {
                         <i className='fas fa-edit' />
                       </span>
                     </button>
-                    <button onClick={() => this.removeField(key)}>
+                    <button onClick={() => this.removeField(key+1)}>
                       <span className='icon'>
                         <i className='fas fa-trash-alt' />
                       </span>

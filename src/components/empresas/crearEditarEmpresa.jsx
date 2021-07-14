@@ -46,7 +46,8 @@ const validationSchema = yup.object().shape({
     .required('El nombre de la empresa es requerido'),
   description: yup.string(),
   short_description: yup.string(),
-  stand_image: yup.string(),
+  stand_image: yup.string().required("la imagen es requerida"),
+  list_image: yup.string().required("la imagen es requerida"),
   times_and_venues: yup.string(),
   contact_info: yup.object().shape({
     //image: yup.string(),
@@ -186,17 +187,11 @@ function CrearEditarEmpresa({ event, match, history }) {
                       label='Nombre empresa *'
                       placeholder='Nombre empresa'
                       maxLength={NAME_MAX_LENGTH}
-                    />
-                    <Field
-                      name='visitors_space_id'
-                      component={InputField}
-                      label='Visitors space id'
-                      placeholder='Visitors space id'
-                    />
+                    />                 
 
                     <Field name='video_url' component={InputField} label='Video principal' placeholder='Url video' />
 
-                    <ImageField name='stand_image' label='Imagen principal' />
+                    <ImageField required name='stand_image' label='Imagen principal' />
 
                     <ImageField name='list_image' label='Imagen Para listado' />
 
@@ -207,12 +202,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                       label='Descripción Corta'
                       maxLength={DESCRIPTION_MAX_LENGTH}
                     />
-
-                    <RichTextComponentField
-                      name='times_and_venues'
-                      label='Información de sedes y horarios'
-                      maxLength={TIMES_AND_VENUES_MAX_LENGTH}
-                    />
+                
                    <Field name='telefono' component={InputField} label='Teléfono de contacto' placeholder='teléfono' />
                    <Field name='email' component={InputField} label='correo de contacto' placeholder='ejemplo@ejemplo.com' />
                    <Field name='webpage' component={InputField} label='Página web' placeholder='Url página web' />
