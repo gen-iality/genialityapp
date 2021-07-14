@@ -26,7 +26,6 @@ import InformativeSection from '../informativeSections/informativeSection';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  if (!props.cEvent) return <Spin size='large' tip='Cargando...' />;
 
   return (
     <>
@@ -65,13 +64,13 @@ const EventSectionRoutes = (props) => {
           <SpeakersForm />
         </Route>
         <Route path={`${path}/surveys`}>
-          <SurveyForm event={props.cEvent} />
+          <SurveyForm  />
         </Route>
         <Route path={`${path}/partners`}>
           <Partners />
         </Route>
         <Route path={`${path}/faqs`}>
-          <FaqsForm event={props.cEvent} />
+          <FaqsForm />
         </Route>
 
         <Route path={`${path}/evento`}>
@@ -104,7 +103,6 @@ const EventSectionRoutes = (props) => {
           <Agenda
             activity={props.currentActivity}
             generalTabs={props.generalTabs}
-            currentUser={props.cUser}
             setVirtualConference={props.setVirtualConference}
           />
         </Route>
