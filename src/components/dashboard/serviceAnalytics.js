@@ -72,15 +72,16 @@ export const queryReportGnal = async (eventID) => {
     const devEvius='http://apiprueba.evius.co/api/googleanalytics';
     let fechaActual=moment().format("YYYY-MM-DD")
     const data={
-      startDate: "2019-01-01",
+      startDate: "2021-06-01",
       endDate: fechaActual,     
-      filtersExpression: `ga:pagePath=@/landing/${eventID};ga:pagePath!@token`,
+      filtersExpression: `ga:pagePath=@/landing/${eventID};ga:pagePath!@token;ga:pagePath!@fbclid`,
       metrics: "ga:pageviews, ga:users, ga:sessions, ga:sessionDuration, ga:avgTimeOnPage",
       dimensions: "ga:pagePath",
       fieldName: "ga:pagePath",
       sortOrder: "ASCENDING"
     }  
-
+    //paveview=impresiones
+    //Usuarios totales del evento ga:sessions
     let resp=await fetch(devEvius, {
       headers: {
         'content-type': 'application/json',
@@ -91,8 +92,10 @@ export const queryReportGnal = async (eventID) => {
     })
     let respjson= await resp.json()
     const dataEvents = respjson.rows;
+    console.log(dataEvents)
     const totalMetrics = respjson.totalsForAllResults;      
     let metrics = [];
+    if(dataEvents!=null){
     dataEvents.map((data, i) => {
       let objeto = {
         view: dataEvents[i][0],
@@ -101,7 +104,8 @@ export const queryReportGnal = async (eventID) => {
       metrics.push(objeto);
     });
     let totalAvg=parseFloat(totalMetrics["ga:avgTimeOnPage"]);   
-   return {metrics,totalAvg,totalMetrics};       
+   return {metrics,totalAvg,totalMetrics}; 
+  }      
 };
 
 //Esta funcion trae datos por fecha
@@ -112,7 +116,7 @@ export const queryReportGnalByMoth = async (eventID) => {
     startDate: "2019-01-01",
     endDate: fechaActual,     
     filtersExpression: `ga:pagePath=@/landing/${eventID};ga:pagePath!@token`,
-    metrics: "ga:pageviews, ga:avgTimeOnPage, ga:pageviewsPerSession",
+    metrics: "ga:pageviews, ga:sessions,ga:avgTimeOnPage, ga:pageviewsPerSession,ga:users",
     dimensions: "ga:date",
     fieldName: "ga:date",
     sortOrder: "ASCENDING"
@@ -126,13 +130,14 @@ export const queryReportGnalByMoth = async (eventID) => {
       method: 'POST'
     })
     let respjson= await resp.json()
-    let datos = respjson.rows;        
+    let datos = respjson.rows;  
+    console.log(datos)      
         let totalMetrics = [];
         datos.map((dat) => {
           let metric = {
-            month: dat[0],
-            view: dat[1],
-            time: (dat[2]/60).toFixed(2),
+            month: moment(dat[0]).format("YYYY-MM-DD"),
+            view: dat[2],
+            time: dat[1]? parseInt(dat[1]):0,
           };
           totalMetrics.push(metric);
         });
@@ -158,6 +163,7 @@ export const queryReportGnalByMoth = async (eventID) => {
     //Función que permite obtener metricas por vistas de actividad
    export const obtenerMetricasByView = (view,metricsGnal) => {
       let metrics = metricsGnal.filter((m) => m.view == view)[0];
+      console.log(metricsGnal)
       return metrics;
     };
 
@@ -173,7 +179,7 @@ export const queryReportGnalByMoth = async (eventID) => {
       }
       if (type == 'views') {
         data = datos.map((item) => {
-          return { fecha: moment(item.month).format('YYYY-MM-DD'), 'cantidad de visitas': item.view };
+          return { fecha: moment(item.month).format('YYYY-MM-DD'), 'Número de usuarios': item.view };
         });
       }
 
@@ -181,7 +187,7 @@ export const queryReportGnalByMoth = async (eventID) => {
         data = datos.map((item) => {
           return {
             fecha: moment(item.month).format('YYYY-MM-DD'),
-            'tiempoPromedio(min)': parseFloat(item.time).toFixed(2),
+            'Número de visitas': parseFloat(item.time).toFixed(2),
           };
         });
       }
@@ -203,10 +209,12 @@ export const queryReportGnalByMoth = async (eventID) => {
       let metricsActivity = [];
       data.map((activity) => {
         let metricsView = obtenerMetricasByView('/landing/' + eventId + '/activity/' + activity.name,metricsGActivity);
+        console.log("METRICS VIEW")
+        console.log(metricsView)
         let metricaActivity = {
           name: activity.name,
-          view: metricsView ? metricsView.metrics[0] : 0,
-          prints: 0,
+          view: metricsView ? metricsView.metrics[1] : 0,
+          prints: metricsView ? metricsView.metrics[0] : 0,
           time: metricsView ? (metricsView.metrics[4] / 60).toFixed(2) + ' min' : '0 min',
         };
         

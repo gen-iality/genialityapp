@@ -43,9 +43,9 @@ class DashboardEvent extends Component {
       desc1: 'Cantidad de usuarios registrados por día',
       desc2: 'Total de usuarios registrados en el evento',
       desc3: 'Duración promedio de un usuario en el evento',
-      desc4: 'Total de visitas por día',
+      desc4: 'Total de usuarios que visitan el evento por día',
       desc5: 'Visitas totales de los usuarios',
-      desc6: 'Tiempo promedio de permanencia de los usuarios en el evento',
+      desc6: 'Visitas realizadas al evento',
       desc7: 'Impresiones totales del evento',
       loadingMetrics:true //Permite controlar la carga de las métricas
     };
@@ -91,11 +91,25 @@ class DashboardEvent extends Component {
       const iframeUrl = `${ApiUrl}/es/event/${eventId}/dashboard?evius_token=${evius_token}`;
       this.setState({ iframeUrl, loading: false });
       totalsMetricasMail(this.props.eventId).then((datametricsMail) => {      
-        totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {
+        totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {          
           totalsMetricasActivityDetails(this.props.eventId).then((dataMetricsActivity) => {
-            this.setState({ totalmails: datametricsMail,metricsActivity: dataMetricsActivity, metricsGnal: dataMetricsGnal  });
-            this.obtenerMetricas(dataMetricsActivity);
-            this.totalsMails(datametricsMail);          
+            if(dataMetricsActivity.length>0){
+              console.log(dataMetricsActivity)
+              this.setState({ totalmails: datametricsMail,metricsActivity: dataMetricsActivity, metricsGnal: dataMetricsGnal  });
+              this.obtenerMetricas(dataMetricsActivity);
+            }
+            else{
+              this.setState({                
+                loadingMetrics:false,
+                totalmails: datametricsMail,
+                metricsGnal: dataMetricsGnal
+              })
+              this.totalsMails(datametricsMail);
+              this.graficRegistros();
+              this.graficAttendees();
+              this.graficPrintouts(); 
+              
+            }                  
           });
         });
       });
@@ -119,7 +133,8 @@ class DashboardEvent extends Component {
           metricsGnal: {
             ...this.state.metricsGnal,
             total_checkIn: metricsgnal.totalMetrics["ga:sessions"],
-            avg_time: (metricsgnal.totalAvg/60).toFixed(2),          
+            avg_time: (metricsgnal.totalAvg/60).toFixed(2),
+            total_printouts:metricsgnal.totalMetrics["ga:pageviews"]         
           },
           metricsGaByActivity: metricsgnal.metrics,
           metricsGaByActivityGnal: metricsgnal.metrics,
@@ -165,7 +180,7 @@ class DashboardEvent extends Component {
       attendesDay: setDataGraphic(
         labels.slice(-this.state.viewRegister),
         values.slice(-this.state.viewRegister),
-        'Vistas totales del evento'
+        'Numeros de usuarios que visitan el evento (últimos 7 días)'
       ),
     });
   }
@@ -177,14 +192,14 @@ class DashboardEvent extends Component {
     if (metricsAttendees) {
       metricsAttendees.map((metric) => {
         labels.push(metric.month);
-        values.push(Number.parseFloat(metric.time).toFixed(2));
+        values.push(Number.parseFloat(metric.time));
       });
     }
     this.setState({
       printoutsDay: setDataGraphic(
         labels.slice(-this.state.viewRegister),
         values.slice(-this.state.viewRegister),
-        'Tiempo promedio de permanencia'
+        'Número de visitas al evento (últimos 7 días)'
       ),
     });
   }
@@ -238,12 +253,12 @@ class DashboardEvent extends Component {
         key: 'name',
       },
       {
-        title: 'Vistas unicas',
+        title: 'Número de usuarios',
         dataIndex: 'view',
         key: 'view',
       },
       {
-        title: 'Impresiones',
+        title: 'Visitas totales',
         dataIndex: 'prints',
         key: 'prints',
       },
@@ -308,7 +323,7 @@ class DashboardEvent extends Component {
                 <Col span={24}>
                   <Row justify='end'>
                     <Button
-                      onClick={() => this.exportReport(this.state.metricsGraphics, 'Visitas', 'views', 'ViewsByDay')}>
+                      onClick={() => this.exportReport(this.state.metricsGraphics, 'userVisitors', 'views', 'usersByDay')}>
                       Exportar
                     </Button>
                   </Row>
@@ -324,7 +339,7 @@ class DashboardEvent extends Component {
                       <Statistic
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                         valueStyle={{ fontSize: '38px' }}
-                        title='Visitas unicas totales del evento'
+                        title='Total usuarios que visitan el evento'
                         value={this.state.metricsGnal ? this.state.metricsGnal.total_checkIn : 0}
                         prefix={<UserOutlined />}
                       />
@@ -337,7 +352,7 @@ class DashboardEvent extends Component {
               <Row justify='end'>
                 <Button
                   onClick={() =>
-                    this.exportReport(this.state.metricsGraphics, 'TiempoPromedio', 'time', 'avgTimeByDay')
+                    this.exportReport(this.state.metricsGraphics, 'Visitas', 'time', 'ViewsByDay')
                   }>
                   Exportar
                 </Button>
@@ -356,7 +371,7 @@ class DashboardEvent extends Component {
                       <Statistic
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                         valueStyle={{ fontSize: '38px' }}
-                        title='Impresiones totales del evento'
+                        title='Visitas totales del evento'
                         value={this.state.metricsGnal ? this.state.metricsGnal.total_printouts : 0}
                         prefix={<EyeOutlined />}
                       />
