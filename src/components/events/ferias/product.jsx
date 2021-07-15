@@ -1,35 +1,47 @@
 import React from 'react';
-import { Row, Col } from 'antd';
+import { Tooltip, Card, Image, Typography, Badge } from 'antd';
+import ShoppingOutlineIcon from '@2fd/ant-design-icons/lib/ShoppingOutline';
+import HandshakeOutlineIcon from '@2fd/ant-design-icons/lib/HandshakeOutline';
 
 function products(props) {
+  const { Paragraph } = Typography;
+
   return (
     <>
-      <div className='product-company'>
-        <Row gutter={[16, 16]} className='row'>
-          <Col xs={24} sm={24} md={24} lg={6} xl={6} className='product-img'>
-            <div className='cuadro-producto'>
-              <img
-                className='producto'
-                src={
-                  props.imgProduct === '' ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Item' : props.imgProduct
-                }
-              />
-            </div>
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={18} xl={18}>
-            <div className='producto-informacion'>
-              <span className='title'>{props.title} </span>
-              <span className='etiqueta'>{props.etiqueta} </span>
-              <p>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: props.description && props.description,
-                  }}></div>
-              </p>
-            </div>
-          </Col>
-        </Row>
-      </div>
+      <Card
+        style={{}}
+        bodyStyle={{ padding: '10px' }}
+        cover={
+          <Image
+            height={220}
+            alt={'Imagen-item-' + props.title.replace(/\s+/g, '-')}
+            src={props.imgProduct === '' ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Item' : props.imgProduct}
+          />
+        }
+        className='product-company'>
+        <Card.Meta
+          avatar={
+            props.etiqueta && props.etiqueta === 'Producto' ? (
+              <Tooltip title='Producto'>
+                <ShoppingOutlineIcon style={{ fontSize: '18px' }} />
+              </Tooltip>
+            ) : (
+              <Tooltip title='Servicio'>
+                <HandshakeOutlineIcon style={{ fontSize: '18px' }} />
+              </Tooltip>
+            )
+          }
+          title={props.title}
+          description={
+            <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: <Badge count={'Ver más'}></Badge> }}>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: props.description && props.description,
+                }}></p>
+            </Paragraph>
+          }
+        />
+      </Card>
     </>
   );
 }
