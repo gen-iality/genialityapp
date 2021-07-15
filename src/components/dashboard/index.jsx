@@ -2,18 +2,34 @@ import React, { Component } from 'react';
 import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../../helpers/constants';
 import { Tooltip, Button, Card, Col, message, Row, Select, Statistic, Table, Space, Spin } from 'antd';
-import { EyeOutlined, FieldTimeOutlined, IdcardOutlined, MoreOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  EyeOutlined,
+  FieldTimeOutlined,
+  FileExcelOutlined,
+  FilePdfOutlined,
+  IdcardOutlined,
+  MoreOutlined,
+  NotificationOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import {  totalsMetricasEventsDetails, totalsMetricasMail, totalsMetricasActivityDetails
-,metricasRegisterByDate,queryReportGnal, queryReportGnalByMoth,setDataGraphic,
-exportDataReport,obtenerMetricasByView,updateMetricasActivity} from './serviceAnalytics';
+import {
+  totalsMetricasEventsDetails,
+  totalsMetricasMail,
+  totalsMetricasActivityDetails,
+  metricasRegisterByDate,
+  queryReportGnal,
+  queryReportGnalByMoth,
+  setDataGraphic,
+  exportDataReport,
+  obtenerMetricasByView,
+  updateMetricasActivity,
+} from './serviceAnalytics';
 import 'chartjs-plugin-datalabels';
 import { Bar, Line } from 'react-chartjs-2';
 import XLSX from 'xlsx';
 import ReactToPrint from 'react-to-print';
 import Moment from 'moment';
-
-
 
 // const [google, setGoogle] = useState(null)
 class DashboardEvent extends Component {
@@ -47,14 +63,17 @@ class DashboardEvent extends Component {
       desc5: 'Visitas totales de los usuarios',
       desc6: 'Tiempo promedio de permanencia de los usuarios en el evento',
       desc7: 'Impresiones totales del evento',
-      loadingMetrics:true //Permite controlar la carga de las métricas
+      loadingMetrics: true, //Permite controlar la carga de las métricas
     };
   }
 
-
   //Función que permite totalizar los valores por campaña
   totalsMails(list) {
-    let totalClicked = 0, totalDeliverd = 0,   totalOpened = 0,   totalSent = 0,     totalBounced = 0;
+    let totalClicked = 0,
+      totalDeliverd = 0,
+      totalOpened = 0,
+      totalSent = 0,
+      totalBounced = 0;
     list.map((m, index) => {
       totalClicked += m.total_clicked ? m.total_clicked : 0;
       totalDeliverd += m.total_delivered ? m.total_delivered : 0;
@@ -62,14 +81,13 @@ class DashboardEvent extends Component {
       totalSent += m.total_sent ? m.total_sent : 0;
       totalBounced += m.total_bounced ? m.total_bounced : 0;
     });
-    this.setState({ totalSent,  totalClicked,  totalDeliverd,   totalBounced,   totalOpened,  });
+    this.setState({ totalSent, totalClicked, totalDeliverd, totalBounced, totalOpened });
   }
 
   //Función que permite exportar los reportes formato excel
-  exportReport =async (datos, name, type, namesheet) => {
-   
-    let data= await exportDataReport(datos,type);
-     if(data){
+  exportReport = async (datos, name, type, namesheet) => {
+    let data = await exportDataReport(datos, type);
+    if (data) {
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, `${namesheet}`);
@@ -79,10 +97,6 @@ class DashboardEvent extends Component {
     }
   };
 
-
-
- 
-
   componentDidMount() {
     // fin de la peticion a analytics
     const evius_token = Cookie.get('evius_token');
@@ -90,12 +104,16 @@ class DashboardEvent extends Component {
     if (evius_token) {
       const iframeUrl = `${ApiUrl}/es/event/${eventId}/dashboard?evius_token=${evius_token}`;
       this.setState({ iframeUrl, loading: false });
-      totalsMetricasMail(this.props.eventId).then((datametricsMail) => {      
+      totalsMetricasMail(this.props.eventId).then((datametricsMail) => {
         totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {
           totalsMetricasActivityDetails(this.props.eventId).then((dataMetricsActivity) => {
-            this.setState({ totalmails: datametricsMail,metricsActivity: dataMetricsActivity, metricsGnal: dataMetricsGnal  });
+            this.setState({
+              totalmails: datametricsMail,
+              metricsActivity: dataMetricsActivity,
+              metricsGnal: dataMetricsGnal,
+            });
             this.obtenerMetricas(dataMetricsActivity);
-            this.totalsMails(datametricsMail);          
+            this.totalsMails(datametricsMail);
           });
         });
       });
@@ -103,37 +121,35 @@ class DashboardEvent extends Component {
       //MOSTRAR GRAFICAS INICIALES
       //this.graficRegistros();
       //this.graficAttendees();
-      //this.graficPrintouts();     
-     
-    
+      //this.graficPrintouts();
     }
   }
   //Función que permite obtener las métricas generales del evento
   obtenerMetricas = async (data) => {
-    const { eventId } = this.props;  
-    let metricsgnal= await queryReportGnal(eventId);    
-      let metricsActivity= await updateMetricasActivity(data,eventId,metricsgnal.metrics);
-      let metricsGraphics= await queryReportGnalByMoth(eventId)
-        this.setState({
-          metricsGraphics: metricsGraphics,
-          metricsGnal: {
-            ...this.state.metricsGnal,
-            total_checkIn: metricsgnal.totalMetrics["ga:sessions"],
-            avg_time: (metricsgnal.totalAvg/60).toFixed(2),          
-          },
-          metricsGaByActivity: metricsgnal.metrics,
-          metricsGaByActivityGnal: metricsgnal.metrics,
-          metricsActivity,
-          loadingMetrics:false
-        });
-        this.graficRegistros();
-        this.graficAttendees();
-        this.graficPrintouts();     
-    
+    const { eventId } = this.props;
+    let metricsgnal = await queryReportGnal(eventId);
+    let metricsActivity = await updateMetricasActivity(data, eventId, metricsgnal.metrics);
+    let metricsGraphics = await queryReportGnalByMoth(eventId);
+    this.setState({
+      metricsGraphics: metricsGraphics,
+      metricsGnal: {
+        ...this.state.metricsGnal,
+        total_checkIn: metricsgnal.totalMetrics['ga:sessions'],
+        avg_time: (metricsgnal.totalAvg / 60).toFixed(2),
+      },
+      metricsGaByActivity: metricsgnal.metrics,
+      metricsGaByActivityGnal: metricsgnal.metrics,
+      metricsActivity,
+      loadingMetrics: false,
+    });
+    this.graficRegistros();
+    this.graficAttendees();
+    this.graficPrintouts();
   };
   //GRAFICA REGISTROS POR DIA
   async graficRegistros() {
-    let labels = [], values = [];
+    let labels = [],
+      values = [];
     let metricsRegister = await metricasRegisterByDate(this.props.eventId);
     if (metricsRegister) {
       metricsRegister.map((metric) => {
@@ -153,7 +169,8 @@ class DashboardEvent extends Component {
 
   //GRAFICA ASISTENTES POR DIA
   async graficAttendees() {
-    let labels = [],  values = [];
+    let labels = [],
+      values = [];
     let metricsAttendees = this.state.metricsGraphics;
     if (metricsAttendees) {
       metricsAttendees.map((metric) => {
@@ -172,7 +189,8 @@ class DashboardEvent extends Component {
 
   //GRAFICA ASISTENTES POR DIA
   async graficPrintouts() {
-    let labels = [], values = [];
+    let labels = [],
+      values = [];
     let metricsAttendees = this.state.metricsGraphics;
     if (metricsAttendees) {
       metricsAttendees.map((metric) => {
@@ -188,8 +206,6 @@ class DashboardEvent extends Component {
       ),
     });
   }
-
- 
 
   //Opciones para las gráficas
   options = {
@@ -253,27 +269,32 @@ class DashboardEvent extends Component {
         key: 'time',
       },
     ];
-    return (
-      !this.state.loadingMetrics?<>
-        <div ref={(el) => (this.componentRef = el)}>         
+    return !this.state.loadingMetrics ? (
+      <>
+        <div ref={(el) => (this.componentRef = el)}>
           <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
             <Col span={18}>
-              <Row justify='end'>
-                <Button
-                  onClick={() =>
-                    this.exportReport(this.state.metricsRegister, 'Register', 'register', 'registerByDay')
-                  }>
-                  Exportar
-                </Button>
-              </Row>
-              <Tooltip title={this.state.desc1} placement='top'>
-                <Card>{this.state.registrosDia && <Line data={this.state.registrosDia} options={this.options} />}</Card>
+              <Tooltip title={this.state.desc1} placement='top' mouseEnterDelay={0.5}>
+                <Card>
+                  <Row justify='end'>
+                    <Button
+                      style={{ color: '#1F6E43' }}
+                      shape='round'
+                      icon={<FileExcelOutlined />}
+                      onClick={() =>
+                        this.exportReport(this.state.metricsRegister, 'Register', 'register', 'registerByDay')
+                      }>
+                      Exportar
+                    </Button>
+                  </Row>
+                  {this.state.registrosDia && <Line data={this.state.registrosDia} options={this.options} />}
+                </Card>
               </Tooltip>
             </Col>
             <Col span={6}>
               <Row gutter={(32, 32)}>
                 <Col span={24}>
-                  <Tooltip title={this.state.desc2} placement='top'>
+                  <Tooltip title={this.state.desc2} placement='top' mouseEnterDelay={0.5}>
                     <Card hoverable>
                       <Statistic
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
@@ -286,7 +307,7 @@ class DashboardEvent extends Component {
                   </Tooltip>
                 </Col>
                 <Col span={24}>
-                  <Tooltip title={this.state.desc3} placement='top'>
+                  <Tooltip title={this.state.desc3} placement='top' mouseEnterDelay={0.5}>
                     <Card hoverable>
                       <Statistic
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
@@ -306,20 +327,25 @@ class DashboardEvent extends Component {
             <Col span={12}>
               <Row justify='center'>
                 <Col span={24}>
-                  <Row justify='end'>
-                    <Button
-                      onClick={() => this.exportReport(this.state.metricsGraphics, 'Visitas', 'views', 'ViewsByDay')}>
-                      Exportar
-                    </Button>
-                  </Row>
-                  <Tooltip title={this.state.desc4} placement='top'>
+                  <Tooltip title={this.state.desc4} placement='top' mouseEnterDelay={0.5}>
                     <Card>
+                      <Row justify='end'>
+                        <Button
+                          style={{ color: '#1F6E43' }}
+                          shape='round'
+                          icon={<FileExcelOutlined />}
+                          onClick={() =>
+                            this.exportReport(this.state.metricsGraphics, 'Visitas', 'views', 'ViewsByDay')
+                          }>
+                          Exportar
+                        </Button>
+                      </Row>
                       {this.state.attendesDay && <Bar data={this.state.attendesDay} options={this.options} />}
                     </Card>
                   </Tooltip>
                 </Col>
                 <Col span={12}>
-                  <Tooltip title={this.state.desc5} placement='top'>
+                  <Tooltip title={this.state.desc5} placement='top' mouseEnterDelay={0.5}>
                     <Card>
                       <Statistic
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
@@ -334,24 +360,27 @@ class DashboardEvent extends Component {
               </Row>
             </Col>
             <Col span={12}>
-              <Row justify='end'>
-                <Button
-                  onClick={() =>
-                    this.exportReport(this.state.metricsGraphics, 'TiempoPromedio', 'time', 'avgTimeByDay')
-                  }>
-                  Exportar
-                </Button>
-              </Row>
               <Row justify='center'>
                 <Col span={24}>
-                  <Tooltip title={this.state.desc6} placement='top'>
+                  <Tooltip title={this.state.desc6} placement='top' mouseEnterDelay={0.5}>
                     <Card>
+                      <Row justify='end'>
+                        <Button
+                          style={{ color: '#1F6E43' }}
+                          shape='round'
+                          icon={<FileExcelOutlined />}
+                          onClick={() =>
+                            this.exportReport(this.state.metricsGraphics, 'TiempoPromedio', 'time', 'avgTimeByDay')
+                          }>
+                          Exportar
+                        </Button>
+                      </Row>
                       {this.state.printoutsDay && <Line data={this.state.printoutsDay} options={this.options} />}
                     </Card>
                   </Tooltip>
                 </Col>
                 <Col span={12}>
-                  <Tooltip title={this.state.desc7} placement='top'>
+                  <Tooltip title={this.state.desc7} placement='top' mouseEnterDelay={0.5}>
                     <Card>
                       <Statistic
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
@@ -370,7 +399,7 @@ class DashboardEvent extends Component {
             <Col span={24}>
               <Card
                 headStyle={{ border: 'none' }}
-                title={'Metricas por actividades del evento'}
+                title={'Métricas por actividades del evento'}
                 extra={<MoreOutlined />}>
                 <Table
                   dataSource={this.state.metricsActivity}
@@ -445,8 +474,12 @@ class DashboardEvent extends Component {
                   </Col>
                 </Row>
                 <Row>
-                  <Button onClick={() => this.props.history.push(`/event/${this.props.eventId}/messages`)}>
-                    Ver detalle
+                  <Button
+                   
+                    shape='round'
+                    icon={<NotificationOutlined />}
+                    onClick={() => this.props.history.push(`/event/${this.props.eventId}/messages`)}>
+                    Ver correos
                   </Button>
                 </Row>
               </Card>
@@ -456,14 +489,23 @@ class DashboardEvent extends Component {
         <ReactToPrint
           trigger={() => {
             return (
-              <Row justify='end'>
-                <Button disabled={this.state.metricsGaByActivity.length == 0}>Exportar métricas</Button>
+              <Row justify='end' style={{ paddingTop: '10px' }}>
+                <Button
+                  danger
+                  style={{ color: '#F70D09' }}
+                  shape='round'
+                  icon={<FilePdfOutlined />}
+                  disabled={this.state.metricsGaByActivity.length == 0}>
+                  Exportar métricas
+                </Button>
               </Row>
             );
           }}
           content={() => this.componentRef}
         />
-      </>:<Row justify="center" align="middle" >
+      </>
+    ) : (
+      <Row justify='center' align='middle'>
         <Spin />
       </Row>
     );

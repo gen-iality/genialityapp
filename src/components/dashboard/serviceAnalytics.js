@@ -130,7 +130,7 @@ export const queryReportGnalByMoth = async (eventID) => {
   let totalMetrics = [];
   datos.map((dat) => {
     let metric = {
-      month: moment(dat[0]).format('YYYY-MM-DD'),
+      month: moment(dat[0]).format('YYYY/MM/DD'),
       view: dat[1],
       time: (dat[2] / 60).toFixed(2),
     };
