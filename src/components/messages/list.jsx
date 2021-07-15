@@ -5,7 +5,8 @@ import { Link, withRouter } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa';
 import API from '../../helpers/request';
 import { Button, Row, Space, Typography } from 'antd';
-import { ExclamationCircleOutlined, ReloadOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, LineChartOutlined, ReloadOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router';
 
 const { Text } = Typography;
 
@@ -13,6 +14,8 @@ function InvitationsList(props) {
   const { match, eventId } = props;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const history = useHistory();
 
   useEffect(() => {
     (async function() {
@@ -98,9 +101,21 @@ function InvitationsList(props) {
           <ExclamationCircleOutlined style={{ color: '#faad14' }} />
           <Text type='secondary'>La información en la tabla puede demorar un tiempo en reflejarse.</Text>
         </Space>
-        <Button onClick={getData} shape='round' size='small' type='primary' icon={<ReloadOutlined />}>
-          Actualizar tabla
-        </Button>
+        <Space>
+          <Button
+            onClick={() => {
+              history.push(`/event/${eventId}/dashboard`);
+            }}
+            shape='round'
+            size='middle'
+            type='ghost'
+            icon={<LineChartOutlined style={{ fontSize: '16px' }} />}>
+            Ver estadísticas
+          </Button>
+          <Button onClick={getData} shape='round' size='middle' type='primary' icon={<ReloadOutlined />}>
+            Actualizar tabla
+          </Button>
+        </Space>
       </Row>
       <Table loading={loading} columns={columns} dataSource={data} />
     </>

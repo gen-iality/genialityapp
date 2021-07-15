@@ -3,10 +3,9 @@ import { Row, Col, Modal, Button, Typography, Space } from 'antd';
 import { PhoneOutlined, MailOutlined, GlobalOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 
-
 function Companylist(props) {
   const { Text } = Typography;
-  const history=useHistory();
+  const history = useHistory();
 
   function showModal(info) {
     Modal.info({
@@ -39,16 +38,33 @@ function Companylist(props) {
       ),
     });
   }
- 
+
   return (
     <div className='company-list'>
       <Row className='container' gutter={[10, 10]}>
-        <Col xs={24} sm={24} md={24} lg={6} xl={6} className='col' onClick={()=>{ history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`)}} >
+        <Col
+          xs={24}
+          sm={24}
+          md={24}
+          lg={6}
+          xl={6}
+          className='col'
+          onClick={() => {
+            history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`);
+          }}>
           <div className='img-contact'>
             <img className='img' src={props.img} />
           </div>
         </Col>
-        <Col xs={24} sm={24} md={24} lg={9} xl={9} onClick={()=>{ history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`)}}>
+        <Col
+          xs={24}
+          sm={24}
+          md={24}
+          lg={9}
+          xl={9}
+          onClick={() => {
+            history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`);
+          }}>
           <div className='info-contact'>
             <span className='name'>{props.name}</span>
             <span className='position'>{props.position} </span>
@@ -73,7 +89,12 @@ function Companylist(props) {
               {props.pagweb && (
                 <span className='web'>
                   <GlobalOutlined className='icono' />
-                  <a rel='noreferrer' onClick={()=>{window.open(`${props.pagweb}`, '_blank')}} target="_blank"> 
+                  <a
+                    rel='noreferrer'
+                    onClick={() => {
+                      window.open(`${props.pagweb}`, '_blank');
+                    }}
+                    target='_blank'>
                     {props.pagweb}
                   </a>
                 </span>
