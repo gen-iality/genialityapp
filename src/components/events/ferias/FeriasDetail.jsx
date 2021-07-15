@@ -29,6 +29,7 @@ const FeriasDetail = (props) => {
   });
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     const { match } = props;
     let eventId = match.params.event_id;
     let idCompany = match.params.id;
