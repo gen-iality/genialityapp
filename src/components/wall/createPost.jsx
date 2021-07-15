@@ -161,24 +161,29 @@ class CreatePost extends Component {
             />
           )}
 
-          <Modal visible={visible} title='Publicaciones' onOk={this.handleOk} onCancel={this.handleCancel} footer={[]}>
+          <Modal visible={visible} title='Publicaciones' onOk={this.handleOk} onCancel={this.handleCancel} footer={[]}>           
             <Row>
               <Col style={{ textAlign: 'center' }} xs={24} sm={24} md={24} lg={24} xl={24}>
-                <div>
+                <Space>
                   {/* Boton para subir foto desde la galeria del dispositivo */}
-                  <Button type='primary'>
-                    <input key={this.state.inputKey} className='file-input' type='file' onChange={this.previewImage} />
-                    <span>Subir Foto</span>
-                    <CloudUploadOutlined />
-                  </Button>
+                   <Space className='file-label ant-btn ant-btn-primary' >
+                    <input key={this.state.inputKey} style={{width:120}} className='file-input ' type='file' onChange={this.previewImage} />
+                    <span style={{paddingLeft:2}}>Subir Foto</span>
+                    <span><CloudUploadOutlined /></span>
+                   </Space>
+                   
+                  
+                  
                   {/* Boton para abrir la camara */}
+                  <Space>
                   <Button
                     style={{ marginLeft: '3%' }}
-                    onClick={() => {
+                    onClick={(e) => {
                       this.setState({ hidden: true }, this.setModal2Visible(true));
                     }}>
                     <CameraOutlined />
                   </Button>
+                  </Space>
                   {/* Modal para camara  */}
 
                   <div hidden={hidden} className='App'>
@@ -187,26 +192,26 @@ class CreatePost extends Component {
                       title='Camara'
                       centered
                       visible={this.state.modal2Visible}
-                      onOk={() => {
+                      onOk={(e) => {
                         this.setState({ hidden: false }, this.setModal2Visible(false));
                       }}
-                      onCancel={() => {
+                      onCancel={(e) => {
                         this.setState({ hidden: false }, this.setModal2Visible(false));
                       }}
                       footer={[
                         <Button
                           key='submit'
                           type='primary'
-                          onClick={() => {
+                          onClick={(e) => {
                             this.setState({ hidden: false }, this.setModal2Visible(false));
                           }}>
                           Listo usar esta
-                        </Button>
+                        </Button>,
                       ]}>
                       <CameraFeed getImage={this.getImage} sendFile={this.uploadImage} />
                     </Modal>
                   </div>
-                </div>
+                </Space>
                 <div>
                   {image && (
                     <Card
