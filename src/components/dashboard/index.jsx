@@ -176,7 +176,7 @@ class DashboardEvent extends Component {
       registrosDia: setDataGraphic(
         labels.slice(-this.state.viewRegister),
         values.slice(-this.state.viewRegister),
-        'Registros'
+        'Número de usuarios registrados (últimos 7 días)'
       ),
     });
   }
@@ -196,7 +196,7 @@ class DashboardEvent extends Component {
       attendesDay: setDataGraphic(
         labels.slice(-this.state.viewRegister),
         values.slice(-this.state.viewRegister),
-        'Números de usuarios que visitan el evento (últimos 7 días)'
+        'Número de usuarios que visitan el evento (últimos 7 días)'
       ),
     });
   }
@@ -216,7 +216,7 @@ class DashboardEvent extends Component {
       printoutsDay: setDataGraphic(
         labels.slice(-this.state.viewRegister),
         values.slice(-this.state.viewRegister),
-        'Número de visitas al evento (últimos 7 días)'
+        'Número de visitas del evento (últimos 7 días)'
       ),
     });
   }
