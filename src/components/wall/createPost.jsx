@@ -4,21 +4,21 @@ import CameraFeed from './cameraFeed';
 //custom
 import { AuthUrl } from '../../helpers/constants';
 import { saveFirebase } from './helpers';
-import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert, Space } from 'antd';
+import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert, Space, Spin } from 'antd';
 import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 const { TextArea } = Input;
 import withContext  from '../../Context/withContext'
 
-const Editor = ({ onChange, onSubmit, submitting, value }) => (
+const Editor = ({ onChange, onSubmit, submitting, value,loadingsave }) => (
   <div>
     <Form.Item>
       <TextArea placeholder='¿Qué está pasando?' rows={4} onChange={onChange} value={value} />
     </Form.Item>
 
     <Form.Item>
-      <Button id='submitPost' htmlType='submit' loading={submitting} onClick={onSubmit} type='primary'>
-        Enviar
+      <Button id='submitPost' style={{background: loadingsave?'white':'#333F44'}} htmlType='submit' loading={submitting} onClick={onSubmit} type='primary'>
+       {loadingsave?<><Spin /> <span style={{color:'#333F44'}}>Por Favor espere...</span></>:'Enviar'} 
       </Button>
     </Form.Item>
   </div>
@@ -42,7 +42,8 @@ class CreatePost extends Component {
       loading: false,
       visible: false,
       user: null,
-      image: ''
+      image: '',
+      loadingsave:false
     };
     this.savePost = this.savePost.bind(this);
     this.previewImage = this.previewImage.bind(this);
@@ -53,6 +54,9 @@ class CreatePost extends Component {
 
   //Funcion para guardar el post y enviar el mensaje de publicacion
   async savePost() {
+    this.setState({
+      loadingsave:true
+    })
     let data = {
       urlImage: this.state.image,
       post: this.state.value,
@@ -70,7 +74,7 @@ class CreatePost extends Component {
     //savepost se realiza para publicar el post
     var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
 
-    this.setState({ value: '', image: '', showInfo: true });
+    this.setState({ value: '', image: '', showInfo: true,loadingsave:false });
     this.setState({ showInfo: false, visible: false, keyList: Date.now() });
     message.success('Mensaje Publicado');
     this.props.addPosts(newPost);
@@ -228,7 +232,7 @@ class CreatePost extends Component {
 
             <Comment
               content={
-                <Editor onChange={this.handleChange} onSubmit={this.savePost} submitting={submitting} value={value} />
+                <Editor onChange={this.handleChange} onSubmit={this.savePost} submitting={submitting} value={value} loadingsave={this.state.loadingsave} />
               }
             />
           </Modal>
