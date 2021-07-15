@@ -60,24 +60,25 @@ class CreatePost extends Component {
     let data = {
       urlImage: this.state.image,
       post: this.state.value,
-      author: this.props.cUser._id,
+      author: this.props.cUser.value._id,
       datePost: new Date(),
       likes: 0,
       usersLikes: [],
-      authorName: this.props.cUser.names
-        ? this.props.cUser.names
-        : this.props.cUser.name
-        ? this.props.cUser.name
-        : this.props.cUser.email
+      authorName: this.props.cUser.value.names
+        ? this.props.cUser.value.names
+        : this.props.cUser.value.name
+        ? this.props.cUser.value.name
+        : this.props.cUser.value.email
     };
+   
 
     //savepost se realiza para publicar el post
     var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
 
-    this.setState({ value: '', image: '', showInfo: true,loadingsave:false });
-    this.setState({ showInfo: false, visible: false, keyList: Date.now() });
-    message.success('Mensaje Publicado');
-    this.props.addPosts(newPost);
+   this.setState({ value: '', image: '', showInfo: true,loadingsave:false });
+   this.setState({ showInfo: false, visible: false, keyList: Date.now() });
+   message.success('Mensaje Publicado');
+   this.props.addPosts(newPost);
   }
 
   //Funcion para mostrar el archivo, se pasa a base64 para poder mostrarlo

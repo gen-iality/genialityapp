@@ -18,6 +18,7 @@ const IconText = ({ icon, text, onSubmit }) => (
 class WallList extends Component {
   constructor(props) {
     super(props);
+    console.log(props)
 
     this.state = {
       submitting: false,
@@ -117,6 +118,8 @@ class WallList extends Component {
                 // Aqui se mapea al array del state
                 renderItem={(item) => (
                   <Card style={{ marginBottom: '20px' }}>
+                    {console.log("ITEM P=====>")}
+                    {console.log(item)}
                     <List.Item
                       key={item.id}
                       style={{ padding: '0px' }}
@@ -127,7 +130,7 @@ class WallList extends Component {
                           text={(item.likes || 0) + ' Me gusta'}
                           key='list-vertical-like-o'
                           onSubmit={() => {
-                            this.props.increaseLikes(item.id, event._id, this.props.cUser._id);
+                            this.props.increaseLikes(item.id, event._id, this.props.cUser.value._id);
                           }}
                         />,
                         <IconText
@@ -139,8 +142,8 @@ class WallList extends Component {
                           }}
                         />,
                         <>
-                          {this.props.cUser && (this.props.cUser._id === item.author || this.props.cUser.email === item.author) && (
-                            <>
+                          {(this.props.cUser.value && (this.props.cUser.value._id.trim() === item.author.trim()))&& (
+                            <>                           
                               <Popconfirm
                                 title='Seguro deseas eliminar este mensaje?'
                                 onConfirm={() => this.innerDeletePost(item.id)}>
