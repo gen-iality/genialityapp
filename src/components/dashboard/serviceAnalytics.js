@@ -188,10 +188,11 @@ export const queryReportGnalByMoth = async (eventID) => {
         data = datos.map((item) => {
           return {
             fecha: moment(item.month).format('YYYY-MM-DD'),
-            'Número de visitas': parseFloat(item.time).toFixed(2),
+            'Número de visitas': parseFloat(item.time).toFixed(0),
           };
         });
       }
+      return data;
     }
   }
 

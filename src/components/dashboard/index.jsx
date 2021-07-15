@@ -112,6 +112,7 @@ class DashboardEvent extends Component {
               console.log(dataMetricsActivity)
               this.setState({ totalmails: datametricsMail,metricsActivity: dataMetricsActivity, metricsGnal: dataMetricsGnal  });
               this.obtenerMetricas(dataMetricsActivity);
+              this.totalsMails(datametricsMail);
             }
             else{
               this.setState({                
@@ -195,7 +196,7 @@ class DashboardEvent extends Component {
       attendesDay: setDataGraphic(
         labels.slice(-this.state.viewRegister),
         values.slice(-this.state.viewRegister),
-        'Numeros de usuarios que visitan el evento (últimos 7 días)'
+        'Números de usuarios que visitan el evento (últimos 7 días)'
       ),
     });
   }
@@ -325,7 +326,7 @@ class DashboardEvent extends Component {
                       <Statistic
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                         valueStyle={{ fontSize: '36px' }}
-                        title='Duracion promedio de un usuario'
+                        title='Duración promedio de un usuario'
                         value={this.state.metricsGnal ? this.state.metricsGnal.avg_time : 0}
                         prefix={<FieldTimeOutlined />}
                         suffix='min'
@@ -383,7 +384,7 @@ class DashboardEvent extends Component {
                           shape='round'
                           icon={<FileExcelOutlined />}
                           onClick={() =>
-                            this.exportReport(this.state.metricsGraphics, 'TiempoPromedio', 'time', 'avgTimeByDay')
+                            this.exportReport(this.state.metricsGraphics, 'Número de visitas', 'time', 'visitasByDia')
                           }>
                           Exportar
                         </Button>
