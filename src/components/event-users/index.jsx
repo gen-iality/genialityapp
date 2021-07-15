@@ -18,6 +18,7 @@ import { TicketsApi } from '../../helpers/request';
 import { Table } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
+import { Link } from 'react-router-dom';
 
 /*            switch (field.type) {
               case "boolean":
@@ -555,6 +556,7 @@ class ListEventUser extends Component {
               </p>
             </div>
           </div>
+          <Link to={`/event/${this.props.event._id}/invitados`}>Importar usuarios</Link>
           <div className='columns'>
             <div className='is-flex-touch columns container-options'>
               <div className='column is-narrow has-text-centered button-c is-centered'>

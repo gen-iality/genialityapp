@@ -1,127 +1,166 @@
 import React, { useEffect } from 'react';
-import {Tabs, Row, Col, Card, Image} from 'antd'
-import FeriasBanner from './feriaBanner.jsx'
-import Information from './information.jsx'
-import Product from './product'
-import Contact from './contact'
+import { Tabs, Row, Col, Card, Image, Typography } from 'antd';
+import FeriasBanner from './feriaBanner.jsx';
+import Information from './information.jsx';
+import Product from './product';
+import Contact from './contact';
 import { Route, withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import {setTopBanner}  from '../../../redux/topBanner/actions';
+import { setTopBanner } from '../../../redux/topBanner/actions';
 //import { useLocation } from "react-router-dom";
 import { getEventCompany } from '../../empresas/services.js';
 import { compose } from 'redux';
 import { useState } from 'react';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
-
+import ReactPlayer from 'react-player';
 
 const FeriasDetail = (props) => {
-  
-  const [companyDetail,setCompanyDetail]=useState();
-  
-  useEffect(()=>{
-  props.setTopBanner(false)
-  props.setVirtualConference(false)
-  return ()=>{
-    props.setTopBanner(true)
-    props.setVirtualConference(true)
-    };  
-  })
+  const [companyDetail, setCompanyDetail] = useState();
 
-  useEffect(()=>{
-  
-  const {match}= props;
-  let eventId=match.params.event_id;
-  let idCompany=match.params.id;
-  
-  obtenerEmpresa( eventId,idCompany).then((resp)=>{
-    console.log("DATOS EMPRESA")
-    console.log(resp)
-    setCompanyDetail(resp)
-    
-  })
+  const { Title } = Typography;
 
-  },[])
+  useEffect(() => {
+    props.setTopBanner(false);
+    props.setVirtualConference(false);
+    return () => {
+      props.setTopBanner(true);
+      props.setVirtualConference(true);
+    };
+  });
 
-  const obtenerEmpresa=async (eventId,idCompany)=>{   
-   let resp= await getEventCompany(eventId,idCompany);
-   return resp;
-  }
+  useEffect(() => {
+    const { match } = props;
+    let eventId = match.params.event_id;
+    let idCompany = match.params.id;
+
+    obtenerEmpresa(eventId, idCompany).then((resp) => {
+      console.log('DATOS EMPRESA');
+      console.log(resp);
+      setCompanyDetail(resp);
+    });
+  }, []);
+
+  const obtenerEmpresa = async (eventId, idCompany) => {
+    let resp = await getEventCompany(eventId, idCompany);
+    return resp;
+  };
 
   const { TabPane } = Tabs;
+  console.log('Empresa', companyDetail);
+  return (
+    <div className='feriasdetail'>
+      <div style={{ position: 'relative' }}>
+        <FeriasBanner
+          imagen={
+            companyDetail
+              ? companyDetail.stand_image
+              : 'http://via.placeholder.com/1500x540/50D3C9/FFFFFF?text=Banner%20empresa'
+          }
+        />
+        <div className='container-information'>
+          <Information
+            ImgCompany={
+              companyDetail
+                ? companyDetail.list_image
+                : 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo'
+            }
+            titleCompany={companyDetail && companyDetail.name}
+            Description={
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: companyDetail && companyDetail.short_description,
+                }}></div>
+            }
+          />
+        </div>
+      </div>
 
-  return <div className='feriasdetail'>
-    
-    <div style={{position:'relative'}}>
-     <FeriasBanner
-      imagen={companyDetail?companyDetail.stand_image:'https://chipichape.com.co/tienda/administracion//uploads/1564087046-juan%20valdez2%20banner.jpg'} />
-      <div className='container-information'>
-       <Information
-        ImgCompany={companyDetail ? companyDetail.list_image:'https://www.parquecomercialguacari.com/web/wp-content/uploads/2020/02/juan-valdez-cafe.jpg'}
-        titleCompany={companyDetail && companyDetail.name}
-        Description={ <div
-          dangerouslySetInnerHTML={{
-            __html: companyDetail && companyDetail.description,
-          }}></div>}/> 
-      </div> 
-    </div>
-
-      <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '2vw' }}>
-            <Tabs defaultActiveKey="1" tabPosition='top'>
-            <TabPane tab="Video" key="1" >
-            <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span>
-            <iframe width="100%"  className='video' src="https://www.youtube.com/embed/bA_PwyZwqM4" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScree></iframe>
-            </TabPane>
-            <TabPane tab="Productos o Servicios" key="2">
-             {/* componente  de Productos */}
-              <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
-                {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
-                <div style={{ paddingLeft: '5vw', paddingRight: '5vw'}}>
-                  {
-                    companyDetail && companyDetail.services.map((prod,index)=>
+      <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '2vw', marginBottom: '4vw' }}>
+        <Tabs defaultActiveKey='1' tabPosition='top'>
+          <TabPane tab='Información' key='1'>
+            {/* <span className='title'>
+              using Lorem Ipsum is that it has a more-or-less normal distribution of letters
+            </span> */}
+            {companyDetail && companyDetail.video_url && (
+              <iframe
+                width='100%'
+                className='video'
+                src={companyDetail.video_url}
+                title='Video empresa'
+                frameBorder='0'
+                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                allowFullScree></iframe>
+            )}
+            <Row style={{ paddingTop: '10px' }}>
+              <Title level={4}>Descripción</Title>
+              <div
+                style={{ fontSize: '18px' }}
+                dangerouslySetInnerHTML={{
+                  __html: companyDetail && companyDetail.description,
+                }}></div>
+            </Row>
+          </TabPane>
+          <TabPane tab='Productos y Servicios' key='2'>
+            {/* componente  de Productos */}
+            <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
+              {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
+              <div style={{ paddingLeft: '5vw', paddingRight: '5vw' }}>
+                {companyDetail &&
+                  companyDetail.services.map((prod, index) => (
                     <Product
                       key={index}
                       imgProduct={prod.image}
                       title={prod.nombre}
                       etiqueta={prod.category}
-                      description={prod.description} />
-                    )
-                  } </div>    
+                      description={prod.description}
+                    />
+                  ))}{' '}
               </div>
-            </TabPane>
-            <TabPane tab="Contactos" key="3">
-               {/* componente  de contactos */}
-              <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
-                {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
-                  {
-                  companyDetail && companyDetail.advisor.length>0 && companyDetail.advisor.map((contactos,index)=>
-                    <Contact
-                    key={'contacts'+index}
-                    img={contactos.image} 
+            </div>
+          </TabPane>
+          <TabPane tab='Contactos' key='3'>
+            {/* componente  de contactos */}
+            <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
+              {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
+              {companyDetail &&
+                companyDetail.advisor.length > 0 &&
+                companyDetail.advisor.map((contactos, index) => (
+                  <Contact
+                    key={'contacts' + index}
+                    img={contactos.image}
                     name={contactos.name}
                     position={contactos.cargo}
+                    codPais={contactos.codPais}
                     tel={contactos.number}
                     email={contactos.email}
-                      /> 
-                  )
-                  }
-              </div>
-    
-            </TabPane>
-            <TabPane tab="Galería" key="4">
-              <>
-              {companyDetail && companyDetail.gallery.length>0 && companyDetail.gallery.map((imagen,index)=>
-                <Card style={{ width: 300,float:'left', marginLeft:20 }} key={'gallery-'+index}
-                hoverable>
-                   <Image alt="example" src={imagen.image} />
-                </Card>
-              )}
-              </>
-            </TabPane>
-          </Tabs>
+                  />
+                ))}
+            </div>
+          </TabPane>
+          <TabPane tab='Galería' key='4'>
+            <Row gutter={[16, 16]}>
+              {companyDetail &&
+                companyDetail.gallery.length > 0 &&
+                companyDetail.gallery.map((imagen, index) => (
+                  <Col xs={24} sm={12} md={8} lg={8} xl={6} xxl={6} key={'gallery-' + index}>
+                    <Card
+                      bodyStyle={{ padding: '0px', margin: '0px' }}
+                      bordered={false}
+                      cover={
+                        <Image
+                          alt={'Imagen' + index + '-Galeria-' + companyDetail.name.replace(/\s+/g, '-')}
+                          src={imagen.image}
+                        />
+                      }
+                      style={{ width: '100%', height: '100%' }}></Card>
+                  </Col>
+                ))}
+            </Row>
+          </TabPane>
+        </Tabs>
 
-
-      {/* componente  de Productos */}
-      {/* <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '6vw' }}>
+        {/* componente  de Productos */}
+        {/* <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '6vw' }}>
         <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span>
         <div style={{ paddingLeft: '5vw', paddingRight: '5vw', marginTop: '6vw' }}>
           {
@@ -134,8 +173,8 @@ const FeriasDetail = (props) => {
             )
           } </div>    
       </div> */}
-        
-      {/* componente  de contactos */}
+
+        {/* componente  de contactos */}
         {/* <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '6vw' }}>
           <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span>
             {
@@ -151,20 +190,19 @@ const FeriasDetail = (props) => {
             }
         </div> */}
       </div>
-  </div>
+    </div>
+  );
 };
-const mapStateToProps = (state,{params}) => ({
+const mapStateToProps = (state, { params }) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
-  view:state.topBannerReducer.view,
-  params:params
+  view: state.topBannerReducer.view,
+  params: params,
 });
 
 const mapDispatchToProps = {
   setTopBanner,
-  setVirtualConference
+  setVirtualConference,
 };
 
-
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps) (FeriasDetail)) ;
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FeriasDetail));
