@@ -88,6 +88,7 @@
     "react-table": "^7.0.4",
     "react-tabs": "^3.1.0",
     "react-timestamp": "^5.1.0",
+    "react-to-print": "^2.12.6",
     "react-toastify": "^4.4.0",
     "react-widgets": "^4.4.6",
     "react-widgets-moment": "^4.0.19",
@@ -95,11 +96,10 @@
     "redux": "^4",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "survey-react": "^1.5.18",
+    "survey-react": "^1.8.56",
     "swiper": "^6.0.4",
     "xlsx": "^0.13.5",
-    "yup": "^0.29.2",
-    "react-to-print": "^2.12.6"
+    "yup": "^0.29.2"
   },
   "scripts": {
     "start": "craco --max_old_space_size=4096 start",
