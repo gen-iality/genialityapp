@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Moment from 'moment';
 import { Result, Button } from 'antd';
 import { BulbOutlined } from '@ant-design/icons';
-import { firestore } from '../../../helpers/firebase';
 import { SurveyPage, UserGamification, Trivia, getCurrentEvenUser } from './services/services';
-import { getSurveyConfiguration } from '../../trivia/services';
 import Graphics from './graphics';
 import { UseEventContext } from '../../../Context/eventContext';
 import * as Survey from 'survey-react';
@@ -14,6 +11,8 @@ import RegisterVote from './services/registerVote';
 import TimerAndMessageForTheNextQuestion from './services/timerAndMessageForTheNextQuestion';
 import HelpFiftyFifty from './services/helpFiftyFifty';
 import MessageWhenCompletingSurvey from './services/messageWhenCompletingSurvey';
+import RealTimeSurveyListening from './services/realTimeSurveyListening';
+import TimeLimitPerQuestion from './services/timeLimitPerQuestion';
 
 function SurveyComponent(props) {
    const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
@@ -21,10 +20,9 @@ function SurveyComponent(props) {
    const cEvent = UseEventContext();
    const eventStyles = cEvent.value.styles;
 
-   let [surveyData, setSurveyData] = useState({});
+   const [surveyData, setSurveyData] = useState({});
    const [rankingList, setRankingList] = useState([]); // Este estado se usa para gamification
    const [feedbackMessage, setFeedbackMessage] = useState({});
-   let [totalPoints, setTotalPoints] = useState(0);
    const [eventUsers, setEventUsers] = useState([]);
    const [voteWeight, setVoteWeight] = useState(0);
    const [freezeGame, setFreezeGame] = useState(false);
@@ -33,33 +31,22 @@ function SurveyComponent(props) {
    const [survey, setSurvey] = useState(null);
    const [rankingPoints, setRankingPoints] = useState(0);
    const [fiftyfitfyused, setFiftyfitfyused] = useState(false);
-
-   async function startingSurveyComponent() {
-      let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyData);
-      const firebaseSurvey = await getSurveyConfiguration(idSurvey, setFreezeGame);
-
-      loadSurveyData.open = firebaseSurvey.isOpened;
-      loadSurveyData.publish = firebaseSurvey.isPublished;
-      loadSurveyData.freezeGame = firebaseSurvey.freezeGame;
-
-      const surveyModelData = new Survey.Model(loadSurveyData);
-      // se quito  la funcion " await listenAndUpdateStateSurveyRealTime(idSurvey)" ya que lo unico que hacia era validar si la encuesta estaba en pausa, ademas generaba un bug en el cual la encuesta siempre estaba pausada
-
-      setSurveyData(loadSurveyData);
-      setSurvey(surveyModelData);
-
-      // Esto permite obtener datos para la grafica de gamificacion
-      UserGamification.getListPoints(eventId, setRankingList);
-
-      await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
-   }
+   const [realTimeSurvey, setRealTimeSurvey] = useState(null);
+   let [totalPoints, setTotalPoints] = useState(0);
 
    useEffect(() => {
       // asigna los colores del evento para la UI de la encuesta
       InternarlSurveyStyles(eventStyles);
 
-      startingSurveyComponent();
+      //listener que nos permite saber los cambios de la encuesta en tiempo real
+      RealTimeSurveyListening(idSurvey, currentUser, setFreezeGame, setRealTimeSurvey);
    }, [idSurvey]);
+
+   useEffect(() => {
+      if (realTimeSurvey) {
+         startingSurveyComponent();
+      }
+   }, [realTimeSurvey]);
 
    useEffect(() => {
       /**
@@ -73,11 +60,30 @@ function SurveyComponent(props) {
       }
    }, [survey, idSurvey]);
 
+   async function startingSurveyComponent() {
+      let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyData);
+
+      loadSurveyData.open = realTimeSurvey.isOpened;
+      loadSurveyData.publish = realTimeSurvey.isPublished;
+      loadSurveyData.freezeGame = realTimeSurvey.freezeGame;
+
+      const surveyModelData = new Survey.Model(loadSurveyData);
+
+      setSurveyData(loadSurveyData);
+      setSurvey(surveyModelData);
+
+      // Esto permite obtener datos para la grafica de gamificacion
+      UserGamification.getListPoints(eventId, setRankingList);
+
+      //Se obtiene el EventUser para los casos que se necesite saber el peso voto
+      await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
+   }
+
    // Funcion para enviar la informacion de las respuestas
    async function sendData(surveyModel) {
       setRankingPoints(0);
 
-      let pointsEarnedPerQuestion;
+      // let pointsEarnedPerQuestion;
       await Promise.all(
          surveyModel.currentPage.questions.map(async (question) => {
             let { pointsForCorrectAnswer } = await RegisterVote(
@@ -88,14 +94,13 @@ function SurveyComponent(props) {
                voteWeight
             );
             if (pointsForCorrectAnswer) {
-               pointsEarnedPerQuestion = pointsForCorrectAnswer;
+               // pointsEarnedPerQuestion = pointsForCorrectAnswer;
+               setRankingPoints(pointsForCorrectAnswer);
             }
             registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
             return pointsForCorrectAnswer;
          })
       );
-
-      setRankingPoints(pointsEarnedPerQuestion);
 
       if (!(Object.keys(currentUser).length === 0)) {
          //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
@@ -131,30 +136,21 @@ function SurveyComponent(props) {
       // message.success({ content: responseMessage });
    }
 
-   // Funcion que cambia el mensaje por defecto para el contador
-   function setCounterMessage(survey, options) {
-      // Aqui se obtiene el tiempo limite por pregunta
-      let countDown = Moment.utc((survey.maxTimeToFinishPage - survey.currentPage.timeSpent) * 1000).format('mm:ss');
-      let timeTotal = Moment.utc(survey.maxTimeToFinishPage * 1000).format('mm:ss');
-
-      options.text = `Tienes ${timeTotal} para responder la pregunta. Quedan ${countDown}`;
-   }
-
    /* handler cuando la encuesta inicia, este sirve para retomar la encuesta donde vayan todos los demas usuarios */
    function onStartedSurvey(survey) {
       //
       if (surveyData.allow_gradable_survey === 'true') {
-         if (freezeGame) {
+         if (freezeGame === 'true') {
             survey.stopTimer();
             TimerAndMessageForTheNextQuestion(
                survey,
                0,
-               'info',
                setTimerPausa,
                setFeedbackMessage,
                setShowMessageOnComplete,
                rankingPoints,
-               freezeGame
+               freezeGame,
+               'info'
             );
          }
       }
@@ -170,7 +166,6 @@ function SurveyComponent(props) {
          TimerAndMessageForTheNextQuestion(
             sender,
             secondsToGo,
-            '',
             setTimerPausa,
             setFeedbackMessage,
             setShowMessageOnComplete,
@@ -224,7 +219,7 @@ function SurveyComponent(props) {
                            onCompleting={(surveyModel) =>
                               MessageWhenCompletingSurvey(surveyModel, surveyData, totalPoints)
                            }
-                           onTimerPanelInfoText={setCounterMessage}
+                           onTimerPanelInfoText={TimeLimitPerQuestion}
                            onStarted={onStartedSurvey}
                            onCurrentPageChanged={onCurrentPageChanged}
                         />

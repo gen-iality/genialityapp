@@ -1,8 +1,7 @@
 import { SurveyAnswers } from './services';
 
 // Componente que ejecuta el servicio para registar votos
-function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
-
+function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight, setRankingPoints) {
    return new Promise((resolve, reject) => {
       // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
       let optionIndex = [];
@@ -25,7 +24,7 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
             question.value.forEach((value) => {
                optionIndex = [...optionIndex, question.choices.findIndex((item) => item.propertyHash.value === value)];
             });
-            console.log("10. ===> optionIndex if <==", optionIndex)
+            console.log('10. ===> optionIndex if <==', optionIndex);
          } else {
             // Funcion que retorna si la opcion escogida es la respuesta correcta
             correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
@@ -33,12 +32,13 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
             if (correctAnswer) pointsForCorrectAnswer += surveyPoints;
             // Busca el index de la opcion escogida
             optionIndex = question.choices.findIndex((item) => item.propertyHash.value === question.value);
+
+            console.log('10. ===> optionIndex else <==', optionIndex);
          }
          optionQuantity = question.choices.length;
       }
-console.log("10. ===> optionIndex else <==", optionIndex)
-// console.log("10. ===> question.value <==", question.value)
-// console.log("10. ===> question.choices <==", question.choices)
+      // console.log("10. ===> question.value <==", question.value)
+      // console.log("10. ===> question.choices <==", question.choices)
       let infoOptionQuestion =
          surveyData.allow_gradable_survey === 'true'
             ? { optionQuantity, optionIndex, correctAnswer }
@@ -62,7 +62,6 @@ console.log("10. ===> optionIndex else <==", optionIndex)
          )
             .then((result) => {
                resolve({ responseMessage: result, pointsForCorrectAnswer });
-
             })
             .catch((err) => {
                reject({ responseMessage: err });

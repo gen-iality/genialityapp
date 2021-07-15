@@ -5,12 +5,12 @@ const MIN_ANSWER_FEEDBACK_TIME = 5;
 function TimerAndMessageForTheNextQuestion(
    survey,
    secondsToGo,
-   messageType,
    setTimerPausa,
    setFeedbackMessage,
    setShowMessageOnComplete,
    rankingPoints,
-   freezeGame
+   freezeGame,
+   messageType,
 ) {
    secondsToGo = secondsToGo ? secondsToGo : 0;
    secondsToGo += MIN_ANSWER_FEEDBACK_TIME;
