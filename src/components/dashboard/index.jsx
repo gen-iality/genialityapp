@@ -94,6 +94,7 @@ class DashboardEvent extends Component {
         totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {          
           totalsMetricasActivityDetails(this.props.eventId).then((dataMetricsActivity) => {
             if(dataMetricsActivity.length>0){
+              console.log("ENTRO ACA")
               console.log(dataMetricsActivity)
               this.setState({ totalmails: datametricsMail,metricsActivity: dataMetricsActivity, metricsGnal: dataMetricsGnal  });
               this.obtenerMetricas(dataMetricsActivity);

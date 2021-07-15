@@ -46,8 +46,8 @@ const validationSchema = yup.object().shape({
     .required('El nombre de la empresa es requerido'),
   description: yup.string(),
   short_description: yup.string(),
-  stand_image: yup.string().required("la imagen es requerida"),
-  list_image: yup.string().required("la imagen es requerida"),
+  stand_image: yup.string().required('la imagen es requerida'),
+  list_image: yup.string().required('la imagen es requerida'),
   times_and_venues: yup.string(),
   contact_info: yup.object().shape({
     //image: yup.string(),
@@ -60,9 +60,10 @@ const validationSchema = yup.object().shape({
       yup.object().shape({
         //image: yup.string().url(),
         name: yup.string().required('Este campo es requerido'),
+        codPais: yup.string().required('Este campo es requerido'),
         number: yup.string().required('Este campo es requerido'),
         cargo: yup.string().required('Este campo es requerido'),
-        email:yup.string().required('Este campo es requerido')
+        email: yup.string().required('Este campo es requerido'),
       })
     ),
   services: yup
@@ -83,12 +84,8 @@ const validationSchema = yup.object().shape({
     .string()
     .url()
     .max(URL_MAX_LENGTH),
-  email: yup
-    .string()    
-    .max(40),
-  telefono: yup
-    .string()    
-    .max(10),
+  email: yup.string().max(40),
+  telefono: yup.string().max(10),
   video_url: yup
     .string()
     .url()
@@ -124,8 +121,8 @@ export const defaultInitialValues = {
   services: [],
   brochure: '',
   webpage: '',
-  telefono:'',
-  email:'',
+  telefono: '',
+  email: '',
   video_url: '',
   social_networks: [],
   gallery: [],
@@ -148,12 +145,12 @@ function CrearEditarEmpresa({ event, match, history }) {
         message: 'Error',
         description: isNewRecord ? 'Ocurrió un error creando la empresa' : 'Ocurrió un error actualizando la empresa',
       };
-     console.log(paramsArray)
+      console.log(paramsArray);
       setSubmitting(true);
       apply(createOrEdit, paramsArray)
         .then(() => history.push(`/event/${event._id}/empresas`))
         .catch((error) => {
-          console.log("ERROR")
+          console.log('ERROR');
           console.error(error);
           notification.error(errorObject);
           setSubmitting(false);
@@ -165,7 +162,7 @@ function CrearEditarEmpresa({ event, match, history }) {
   if (loadingStandTypes || loadingSocialNetworks || loadingInitialValues) {
     return <Loading />;
   }
- 
+
   return (
     <div>
       <Title level={4}>{!companyId ? 'Crear empresa' : 'Editar empresa'}</Title>
@@ -185,28 +182,42 @@ function CrearEditarEmpresa({ event, match, history }) {
                       name='name'
                       component={InputField}
                       label='Nombre empresa *'
-                      placeholder='Nombre empresa'
+                      placeholder='Ingrese el nombre de su empresa o stand'
                       maxLength={NAME_MAX_LENGTH}
-                    />                 
+                    />
 
-                    <Field name='video_url' component={InputField} label='Video principal' placeholder='Url video' />
+                    <Field name='video_url' component={InputField} label='Video' placeholder='Url video' />
 
-                    <ImageField required name='stand_image' label='Imagen principal' />
+                    <ImageField required name='stand_image' label='Banner de la empresa' />
 
-                    <ImageField name='list_image' label='Imagen Para listado' />
+                    <ImageField name='list_image' label='Logo de la empresa' />
 
-                    <RichTextComponentField name='description' label='Descripción' maxLength={DESCRIPTION_MAX_LENGTH} />
+                    <RichTextComponentField
+                      name='description'
+                      label='Descripción larga'
+                      maxLength={DESCRIPTION_MAX_LENGTH}
+                    />
 
                     <RichTextComponentField
                       name='short_description'
                       label='Descripción Corta'
                       maxLength={DESCRIPTION_MAX_LENGTH}
                     />
-                
-                   <Field name='telefono' component={InputField} label='Teléfono de contacto' placeholder='teléfono' />
-                   <Field name='email' component={InputField} label='correo de contacto' placeholder='ejemplo@ejemplo.com' />
-                   <Field name='webpage' component={InputField} label='Página web' placeholder='Url página web' />
-                   {/* <ImageField
+
+                    <Field
+                      name='telefono'
+                      component={InputField}
+                      label='Teléfono de la empresa'
+                      placeholder='Ingrese su telefono'
+                    />
+                    <Field
+                      name='email'
+                      component={InputField}
+                      label='correo de la empresa'
+                      placeholder='ejemplo@ejemplo.com'
+                    />
+                    <Field name='webpage' component={InputField} label='Página web' placeholder='Url página web' />
+                    {/* <ImageField
                       name='contact_info.image'
                       label='Imagen de información de contacto'
                       placeholder='Url imagen'
@@ -227,7 +238,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                       options={standTypesOptions}
                     />
 
-                    <FileField name='brochure' label='Brochure' placeholder='' />                   
+                    <FileField name='brochure' label='Brochure' placeholder='' />
 
                     <FieldArray
                       name='services'
@@ -247,9 +258,12 @@ function CrearEditarEmpresa({ event, match, history }) {
                                 <Field
                                   name={`services[${serviceIndex}].category`}
                                   component={SelectField}
-                                  label={`Categoría ${serviceIndex + 1}`}
+                                  label={`Categoría servicio ${serviceIndex + 1}`}
                                   placeholder='Categoría'
-                                  options={[{value:'Servicio',label:'Servicio'},{value:'Producto',label:'Producto'}]}
+                                  options={[
+                                    { value: 'Servicio', label: 'Servicio' },
+                                    { value: 'Producto', label: 'Producto' },
+                                  ]}
                                 />
 
                                 <RichTextComponentField
@@ -381,30 +395,36 @@ function CrearEditarEmpresa({ event, match, history }) {
                                 <Field
                                   name={`advisor[${advisorIndex}].name`}
                                   component={InputField}
-                                  label={`Nombre del contacto advisor ${advisorIndex+1}`}
+                                  label={`Nombre del contacto advisor ${advisorIndex + 1}`}
                                   placeholder='Nombre del contacto advisor'
                                 />
                                 <Field
                                   name={`advisor[${advisorIndex}].cargo`}
                                   component={InputField}
-                                  label={`Cargo del advisor ${advisorIndex+1}`}
+                                  label={`Cargo del advisor ${advisorIndex + 1}`}
                                   placeholder='Cargo advisor'
                                 />
-                                 <Field
+                                <Field
+                                  name={`advisor[${advisorIndex}].codPais`}
+                                  component={InputField}
+                                  label={`Codigo del pais advisor ${advisorIndex + 1}`}
+                                  placeholder='Ingrese el codigo internacional de su pais sin agregar (+)'
+                                />
+                                <Field
                                   name={`advisor[${advisorIndex}].number`}
                                   component={InputField}
-                                  label={`Número de contacto advisor ${advisorIndex+1}`}
+                                  label={`Número de contacto advisor ${advisorIndex + 1}`}
                                   placeholder='Número de contacto advisor'
                                 />
                                 <Field
                                   name={`advisor[${advisorIndex}].email`}
                                   component={InputField}
-                                  label={`Email de contacto advisor ${advisorIndex+1}`}
+                                  label={`Email de contacto advisor ${advisorIndex + 1}`}
                                   placeholder='Email de contacto advisor'
                                 />
                                 <ImageField
                                   name={`advisor[${advisorIndex}].image`}
-                                  label={`Imagen del contacto advisor ${advisorIndex+1}`}
+                                  label={`Imagen del contacto advisor ${advisorIndex + 1}`}
                                   placeholder='Url imagen'
                                   maxLength={URL_MAX_LENGTH}
                                 />
@@ -426,7 +446,14 @@ function CrearEditarEmpresa({ event, match, history }) {
                                       type='primary'
                                       icon={<PlusCircleOutlined />}
                                       onClick={() => {
-                                        arrayHelpers.push({ name: '', image: '', number: '',email:'',cargo:'' });
+                                        arrayHelpers.push({
+                                          name: '',
+                                          image: '',
+                                          codPais: '',
+                                          number: '',
+                                          email: '',
+                                          cargo: '',
+                                        });
                                       }}>
                                       {'Agregar advisor'}
                                     </Button>
@@ -441,7 +468,14 @@ function CrearEditarEmpresa({ event, match, history }) {
                               type='primary'
                               icon={<PlusCircleOutlined />}
                               onClick={() => {
-                                arrayHelpers.push({ name: '', image: '', number: '',email:'',cargo:'' });
+                                arrayHelpers.push({
+                                  name: '',
+                                  image: '',
+                                  codPais: '',
+                                  number: '',
+                                  email: '',
+                                  cargo: '',
+                                });
                               }}>
                               {'Agregar advisor'}
                             </Button>

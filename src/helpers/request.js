@@ -690,6 +690,7 @@ export const ExternalSurvey = async (meeting_id) => {
 export const Activity = {
   Register: async (event, user_id, activity_id) => {
     var info = { event_id: event, user_id, activity_id };
+    console.log(info)
     return await Actions.create(`api/events/${event}/activities_attendees`, info);
   },
   GetUserActivity: async (event, user_id) => {

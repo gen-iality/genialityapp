@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { app, firestore } from '../../helpers/firebase';
-import { eventTicketsApi } from '../../helpers/request';
+import { Activity, eventTicketsApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import Dialog from './twoAction';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
@@ -31,7 +31,7 @@ class UserModal extends Component {
   }
 
   async componentDidMount() {
-    const self = this;
+    const self = this;    
     const { rolesList } = this.props;
 
     self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : '' });
@@ -67,7 +67,8 @@ class UserModal extends Component {
     this.setState({ user: {}, edit: false });
   }
 
-  handleSubmit = async (e) => {
+  handleSubmit = async (e) => {    
+
     e.preventDefault();
     e.stopPropagation();
     const snap = { properties: this.state.user, rol_id: this.state.rol };
@@ -85,10 +86,20 @@ class UserModal extends Component {
             .format('YYYY-MM-D H:mm:ss');
           snap.checkedin_at = checkedin_at;
         }
-        await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
+        console.log(this.props)
+        let respAddEvento= await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
+        console.log(respAddEvento.data.user)
+       if(this.props.byActivity && respAddEvento.data.user){
+          let respActivity=await Activity.Register(this.props.eventId,respAddEvento.data.user._id, this.props.activityId)
+          console.log(respActivity)
+          this.props.updateView();
+          this.closeModal();
+         
+        }  
         toast.success(<FormattedMessage id='toast.user_saved' defaultMessage='Ok!' />);
       } else {
         await Actions.put(`/api/events/${this.props.eventId}/eventusers/${this.state.userId}`, snap);
+       
         toast.info(<FormattedMessage id='toast.user_edited' defaultMessage='Ok!' />);
       }
     } catch (error) {
@@ -97,7 +108,7 @@ class UserModal extends Component {
       message.content = 'User can`t be updated';
     }
 
-    this.setState({ message, create: false });
+    this.setState({ message, create: false });  
   };
 
   handleSubmitFireStore() {

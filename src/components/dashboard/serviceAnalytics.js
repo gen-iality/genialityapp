@@ -1,7 +1,7 @@
-import { EventsApi } from "../../helpers/request";
-import moment from "moment";
+import { EventsApi } from '../../helpers/request';
+import moment from 'moment';
 //METRICAS QUE SE PUEDEN OBTENER
- /*let startDate = '7daysAgo'
+/*let startDate = '7daysAgo'
     let endDate = 'today'
     let metrics = [
       'ga:users', //The total number of users for the requested time period.
@@ -33,39 +33,39 @@ export const totalsMetricasMail = async (eventId) => {
 };
 
 export const totalsMetricasMailDetails = async (eventId, idBell) => {
-    return new Promise((resolve, reject) => {
-      fetch(`http://18.211.124.171/api/events/${eventId}/message/${idBell}/messageUser`)
-        .then((response) => response.json())
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((e) => {
-          reject(e);
-        });
-    });
-  };
-  
-  export const totalsMetricasEventsDetails = async (eventId) => {
-    const metrics = await EventsApi.metrics(eventId)  
-    return  metrics;
-  };
-  
-  export const totalsMetricasActivityDetails = async (eventId) => {
-    const metrics = await EventsApi.metricsByActivity(eventId)  
-    return  metrics;
-  };
-  
-  export const metricasRegisterByDate = async (eventId) => { 
-    const metrics = await EventsApi.metricsRegisterBydate(eventId,"created_at");  
-    console.log(metrics)  
-    return  metrics;
-  };
-  
-  export const metricasCheckedByDate = async (eventId) => { 
-    const metrics = await EventsApi.metricsRegisterBydate(eventId,"checkedin_at");  
-    console.log(metrics)  
-    return  metrics;
-  };
+  return new Promise((resolve, reject) => {
+    fetch(`http://18.211.124.171/api/events/${eventId}/message/${idBell}/messageUser`)
+      .then((response) => response.json())
+      .then(({ data }) => {
+        resolve(data);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+};
+
+export const totalsMetricasEventsDetails = async (eventId) => {
+  const metrics = await EventsApi.metrics(eventId);
+  return metrics;
+};
+
+export const totalsMetricasActivityDetails = async (eventId) => {
+  const metrics = await EventsApi.metricsByActivity(eventId);
+  return metrics;
+};
+
+export const metricasRegisterByDate = async (eventId) => {
+  const metrics = await EventsApi.metricsRegisterBydate(eventId, 'created_at');
+  console.log(metrics);
+  return metrics;
+};
+
+export const metricasCheckedByDate = async (eventId) => {
+  const metrics = await EventsApi.metricsRegisterBydate(eventId, 'checkedin_at');
+  console.log(metrics);
+  return metrics;
+};
 
 //Esta funcion realiza la consulta de los datos a la API de analytics
 export const queryReportGnal = async (eventID) => {
@@ -110,11 +110,11 @@ export const queryReportGnal = async (eventID) => {
 
 //Esta funcion trae datos por fecha
 export const queryReportGnalByMoth = async (eventID) => {
-  const devEvius='http://apiprueba.evius.co/api/googleanalytics';  
-  let fechaActual=moment().format("YYYY-MM-DD")  
-  const data={
-    startDate: "2019-01-01",
-    endDate: fechaActual,     
+  const devEvius = 'http://apiprueba.evius.co/api/googleanalytics';
+  let fechaActual = moment().format('YYYY-MM-DD');
+  const data = {
+    startDate: '2019-01-01',
+    endDate: fechaActual,
     filtersExpression: `ga:pagePath=@/landing/${eventID};ga:pagePath!@token`,
     metrics: "ga:pageviews, ga:sessions,ga:avgTimeOnPage, ga:pageviewsPerSession,ga:users",
     dimensions: "ga:date",
@@ -166,6 +166,7 @@ export const queryReportGnalByMoth = async (eventID) => {
       console.log(metricsGnal)
       return metrics;
     };
+   
 
       //Función que permite exportar los reportes formato excel
   export const exportDataReport = (datos,type) => {    
@@ -191,17 +192,10 @@ export const queryReportGnalByMoth = async (eventID) => {
           };
         });
       }
-
-      for (let i = 0; data.length > i; i++) {
-        if (Array.isArray(data[i].response)) {
-          data[i].response = data[i].response.toString();
-        }
-      }
-      return data;
-    } else {
-      return null
     }
-  };
+  }
+
+
 
    //Función que permite obtener las métricas por cada actividad
   export const updateMetricasActivity = (data,eventId,metricsGActivity) => {
@@ -217,9 +211,8 @@ export const queryReportGnalByMoth = async (eventID) => {
           prints: metricsView ? metricsView.metrics[0] : 0,
           time: metricsView ? (metricsView.metrics[4] / 60).toFixed(2) + ' min' : '0 min',
         };
-        
-        metricsActivity.push(metricaActivity);
+        metricsActivity.push(metricaActivity)
       });
       return metricsActivity;
-    }
-  }
+    }    
+  } 
