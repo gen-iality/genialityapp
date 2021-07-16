@@ -2,15 +2,15 @@ import StateMessages from './stateMessages';
 
 const MIN_ANSWER_FEEDBACK_TIME = 5;
 
-function TimerForTheNextQuestion(
+function TimerAndMessageForTheNextQuestion(
    survey,
    secondsToGo,
-   messageType,
    setTimerPausa,
    setFeedbackMessage,
    setShowMessageOnComplete,
    rankingPoints,
-   freezeGame
+   freezeGame,
+   messageType
 ) {
    secondsToGo = secondsToGo ? secondsToGo : 0;
    secondsToGo += MIN_ANSWER_FEEDBACK_TIME;
@@ -35,10 +35,12 @@ function TimerForTheNextQuestion(
          setShowMessageOnComplete(false);
          setFeedbackMessage({});
          survey.startTimer();
+         survey.showTimerPanel = 'top';
+         survey.showTimerPanelMode = 'page';
       }
    }, 1000);
 
    setTimerPausa(timer);
 }
 
-export default TimerForTheNextQuestion;
+export default TimerAndMessageForTheNextQuestion;

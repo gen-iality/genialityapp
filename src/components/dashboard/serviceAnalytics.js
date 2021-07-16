@@ -56,9 +56,15 @@ export const totalsMetricasActivityDetails = async (eventId) => {
 };
 
 export const metricasRegisterByDate = async (eventId) => {
-  const metrics = await EventsApi.metricsRegisterBydate(eventId, 'created_at');
-  console.log(metrics);
-  return metrics;
+  let listmetric=[]
+  let metrics = await EventsApi.metricsRegisterBydate(eventId, 'created_at');
+  console.log(metrics)
+  metrics.map((metric)=>{
+    metric={...metric,date:moment(metric.date).format("YYYY/MM/DD")}
+    listmetric.push(metric)
+  })
+ 
+  return listmetric;
 };
 
 export const metricasCheckedByDate = async (eventId) => {
@@ -135,7 +141,7 @@ export const queryReportGnalByMoth = async (eventID) => {
         let totalMetrics = [];
         datos.map((dat) => {
           let metric = {
-            month: moment(dat[0]).format("YYYY-MM-DD"),
+            month: moment(dat[0]).format("YYYY/MM/DD"),
             view: dat[2],
             time: dat[1]? parseInt(dat[1]):0,
           };
@@ -155,6 +161,7 @@ export const queryReportGnalByMoth = async (eventID) => {
           fill: false,
           backgroundColor: backgroud,
           borderColor: lineBackground,
+          tension:0.3
         },
       ],
     };

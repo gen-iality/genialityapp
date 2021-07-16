@@ -5,7 +5,7 @@ import { Pagination, Spin, Card, Button, Row, Col, Typography } from 'antd';
 import { ArrowLeftOutlined, LeftCircleFilled } from '@ant-design/icons';
 import Loading from './loading';
 
-import Chart from 'chart.js';
+import Chart from 'chart.js/auto';
 
 import { SurveyAnswers } from './services/services';
 import { SurveysApi, UsersApi } from '../../../helpers/request';
@@ -222,6 +222,12 @@ class Graphics extends Component {
       */
 
       horizontalBar.options = {
+        responsive: true,
+        title: {
+          fontSize: 16,
+          display: true,
+          text: '',
+        },
         plugins: {
           datalabels: {
             color: '#333',
@@ -240,7 +246,7 @@ class Graphics extends Component {
           display: false,
         },
         scales: {
-          yAxes: [
+          y: [
             {
               ticks: {
                 beginAtZero: true,
@@ -251,7 +257,7 @@ class Graphics extends Component {
               },
             },
           ],
-          xAxes: [
+          x: [
             {
               ticks: {
                 beginAtZero: true,
@@ -260,6 +266,7 @@ class Graphics extends Component {
             },
           ],
         },
+        indexAxis: 'y'
       };
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico

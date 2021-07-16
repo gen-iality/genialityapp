@@ -53,7 +53,6 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
       ({ surveyId, message, questionId, optionIndex }) => {
          // Se valida si el voto tiene valor de lo contrario sumara 1
          let vote = typeof voteValue == 'number' ? parseFloat(voteValue) : 1;
-
          const shard_ref = firestore
             .collection('surveys')
             .doc(surveyId)
@@ -67,17 +66,19 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
          return firestore.runTransaction((t) => {
             return t.get(shard_ref).then((doc) => {
                // Condiciona si tiene mas de una opcion escogida
-               if (position && position.length && position.length > 1) {
+               if (position && position.length && position.length > 0) {
                   position.forEach((element) => {
-                     const new_count = doc.data()[element] + vote;
-                     t.update(shard_ref, { [element]: new_count });
+                     if(element >= 0){
+                        const new_count = doc.data()[element] + vote;
+                        t.update(shard_ref, { [element]: new_count });
+                     }
                   });
                } else {
-                  const new_count = doc.data()[position] + vote;
-                  t.update(shard_ref, { [position]: new_count });
+                  if(typeof(position) === "number"){
+                     const new_count = doc.data()[position] + vote;
+                     t.update(shard_ref, { [position]: new_count });
+                  }
                }
-
-               //
             });
          });
       }
@@ -112,9 +113,6 @@ export const SurveyPage = {
 
    // Actualiza la pagina actual de la encuesta
    setCurrentPage: (surveyId, uid, currentPageNo) => {
-      console.log("10. ==>", "1", surveyId)
-      console.log("10. ==>", "2", uid)
-      console.log("10. ==>", "3", currentPageNo)
       return new Promise((resolve, reject) => {
          let metaData = { currentPageNo: currentPageNo };
          firestore
