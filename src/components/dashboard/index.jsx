@@ -224,12 +224,23 @@ class DashboardEvent extends Component {
 
   //Opciones para las gráficas
   options = {
+    layout: {
+      padding: '0',
+    },
+    elements: {
+      point: {
+        pointStyle: 'circle',
+        radius: '5',
+        hoverRadius: '6',
+      },
+    },
     plugins: {
       datalabels: {
         display: true,
         color: 'black',
       },
       legend: {
+        display: true,
         labels: {
           font: {
             size: '12',
