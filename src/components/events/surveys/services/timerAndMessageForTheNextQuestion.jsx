@@ -32,7 +32,7 @@ function TimerAndMessageForTheNextQuestion(
       setFeedbackMessage(mensaje);
 
       if (secondsToGo <= 0 && freezeGame === "false") {
-         setShowOrHideSurvey(false)
+         setShowOrHideSurvey(true)
          clearInterval(timer);
          setShowMessageOnComplete(false);
          setFeedbackMessage({});

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Result, Button } from 'antd';
-import { BulbOutlined } from '@ant-design/icons';
+import { BulbOutlined, LoadingOutlined } from '@ant-design/icons';
 import { SurveyPage, UserGamification, Trivia, getCurrentEvenUser } from './services/services';
 import Graphics from './graphics';
 import { UseEventContext } from '../../../Context/eventContext';
@@ -19,10 +19,10 @@ function SurveyComponent(props) {
 
    const cEvent = UseEventContext();
    const eventStyles = cEvent.value.styles;
-
+   const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
    const [surveyData, setSurveyData] = useState({});
    const [rankingList, setRankingList] = useState([]); // Este estado se usa para gamification
-   const [feedbackMessage, setFeedbackMessage] = useState({});
+   const [feedbackMessage, setFeedbackMessage] = useState({ icon: loaderIcon });
    const [eventUsers, setEventUsers] = useState([]);
    const [voteWeight, setVoteWeight] = useState(0);
    const [freezeGame, setFreezeGame] = useState(false);
@@ -33,8 +33,7 @@ function SurveyComponent(props) {
    const [fiftyfitfyused, setFiftyfitfyused] = useState(false);
    let [totalPoints, setTotalPoints] = useState(0);
    let [onCurrentPageChanged, setOnCurrentPageChanged] = useState(0);
-   let [showOrHideSurvey, setShowOrHideSurvey] = useState(false); // nos permite ocultar la siguiente pregunta antes de que pueda ser mostrada
-
+   let [showOrHideSurvey, setShowOrHideSurvey] = useState(true); // nos permite ocultar la siguiente pregunta antes de que pueda ser mostrada
 
    useEffect(() => {
       // asigna los colores del evento para la UI de la encuesta
@@ -142,7 +141,7 @@ function SurveyComponent(props) {
       if (!onCurrentPageChanged?.options?.oldCurrentPage) return;
       let secondsToGo =
          onCurrentPageChanged.surveyModel.maxTimeToFinishPage - onCurrentPageChanged.options.oldCurrentPage.timeSpent;
-         setShowOrHideSurvey(true)
+      setShowOrHideSurvey(false);
       if (surveyData.allow_gradable_survey === 'true') {
          onCurrentPageChanged.surveyModel.stopTimer();
          TimerAndMessageForTheNextQuestion(
@@ -153,7 +152,7 @@ function SurveyComponent(props) {
             setShowMessageOnComplete,
             rankingPoints,
             freezeGame,
-            setShowOrHideSurvey,
+            setShowOrHideSurvey
          );
       }
    }, [onCurrentPageChanged]);
@@ -174,8 +173,9 @@ function SurveyComponent(props) {
                )}
             </>
          )}
-         {feedbackMessage && feedbackMessage.title && (
-            <Result className='animate__animated animate__rubberBand' {...feedbackMessage} extra={null} />
+
+         {!showOrHideSurvey && (
+            <Result className='animate__animated animate__fadeIn' {...feedbackMessage} extra={null} />
          )}
 
          {//Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
@@ -184,7 +184,7 @@ function SurveyComponent(props) {
                surveyData.allow_anonymous_answers === true ||
                surveyData.publish === 'true' ||
                surveyData.publish === true) && (
-               <div style={{ display: showOrHideSurvey ? 'none' : 'block' }}>
+               <div style={{ display: showOrHideSurvey ? 'block' : 'none' }}>
                   {surveyJsModel && (
                      <div className='animate__animated animate__bounceInDown'>
                         {surveyData.allow_gradable_survey === 'true' && !fiftyfitfyused && (
@@ -207,7 +207,7 @@ function SurveyComponent(props) {
                            onTimerPanelInfoText={TimeLimitPerQuestion}
                            onStarted={onStartedSurvey}
                            onCurrentPageChanged={(surveyModel, options) =>
-                              setOnCurrentPageChanged({ surveyModel, options }, setShowOrHideSurvey(false))
+                              setOnCurrentPageChanged({ surveyModel, options }, setShowOrHideSurvey(true))
                            }
                         />
                      </div>
