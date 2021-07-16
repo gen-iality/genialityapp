@@ -31,23 +31,18 @@ function SurveyComponent(props) {
    const [surveyJsModel, setSurveyJsModel] = useState(null);
    const [rankingPoints, setRankingPoints] = useState(0);
    const [fiftyfitfyused, setFiftyfitfyused] = useState(false);
-   const [realTimeSurvey, setRealTimeSurvey] = useState(null);
    let [totalPoints, setTotalPoints] = useState(0);
    let [onCurrentPageChanged, setOnCurrentPageChanged] = useState(0);
+   let [showOrHideSurvey, setShowOrHideSurvey] = useState(false); // nos permite ocultar la siguiente pregunta antes de que pueda ser mostrada
+
 
    useEffect(() => {
       // asigna los colores del evento para la UI de la encuesta
       InternarlSurveyStyles(eventStyles);
 
       //listener que nos permite saber los cambios de la encuesta en tiempo real
-      RealTimeSurveyListening(idSurvey, currentUser, setFreezeGame, setRealTimeSurvey);
+      RealTimeSurveyListening(idSurvey, currentUser, startingSurveyComponent);
    }, [idSurvey]);
-
-   useEffect(() => {
-      if (realTimeSurvey) {
-         startingSurveyComponent();
-      }
-   }, [realTimeSurvey]);
 
    useEffect(() => {
       /**
@@ -61,18 +56,13 @@ function SurveyComponent(props) {
       }
    }, [surveyJsModel, idSurvey]);
 
-   async function startingSurveyComponent() {
-      let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, realTimeSurvey);
+   async function startingSurveyComponent(surveyRealTime) {
+      setFreezeGame(surveyRealTime.freezeGame);
+      let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyRealTime);
 
-      loadSurveyData.open = realTimeSurvey.isOpened;
-      loadSurveyData.publish = realTimeSurvey.isPublished;
-      loadSurveyData.freezeGame = realTimeSurvey.freezeGame;
-      /** logo, posicion y medidas del logo */
-      loadSurveyData.logo = 'https://surveyjs.io/favicon.ico';
-      loadSurveyData.logoPosition = 'top';
-      loadSurveyData.logoWidth = 60;
-      loadSurveyData.logoHeight = 60;
-      loadSurveyData.logoFit = 'contain';
+      loadSurveyData.open = surveyRealTime.isOpened;
+      loadSurveyData.publish = surveyRealTime.isPublished;
+      loadSurveyData.freezeGame = surveyRealTime.freezeGame;
 
       const surveyModelData = new Survey.Model(loadSurveyData);
 
@@ -85,21 +75,12 @@ function SurveyComponent(props) {
       //Se obtiene el EventUser para los casos que se necesite saber el peso voto
       await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
    }
-
    // Funcion para enviar la informacion de las respuestas
    function sendData(surveyModel) {
       setRankingPoints(0);
-
       surveyModel.currentPage.questions.map(async (question) => {
-         const pointsForCorrectAnswer = RegisterVote(
-            surveyData,
-            question,
-            currentUser,
-            eventUsers,
-            voteWeight,
-            setRankingPoints
-         );
-
+         const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
+         setRankingPoints(pointsForCorrectAnswer);
          registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
       });
 
@@ -161,7 +142,7 @@ function SurveyComponent(props) {
       if (!onCurrentPageChanged?.options?.oldCurrentPage) return;
       let secondsToGo =
          onCurrentPageChanged.surveyModel.maxTimeToFinishPage - onCurrentPageChanged.options.oldCurrentPage.timeSpent;
-
+         setShowOrHideSurvey(true)
       if (surveyData.allow_gradable_survey === 'true') {
          onCurrentPageChanged.surveyModel.stopTimer();
          TimerAndMessageForTheNextQuestion(
@@ -171,29 +152,11 @@ function SurveyComponent(props) {
             setFeedbackMessage,
             setShowMessageOnComplete,
             rankingPoints,
-            freezeGame
+            freezeGame,
+            setShowOrHideSurvey,
          );
       }
-   }, [rankingPoints]);
-
-   /* handler cuando la encuesta cambio de pregunta */
-   // function onCurrentPageChanged(sender, options) {
-   //    if (!options.oldCurrentPage) return;
-   //    let secondsToGo = sender.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
-
-   //    if (surveyData.allow_gradable_survey === 'true') {
-   //       sender.stopTimer();
-   //       TimerAndMessageForTheNextQuestion(
-   //          sender,
-   //          secondsToGo,
-   //          setTimerPausa,
-   //          setFeedbackMessage,
-   //          setShowMessageOnComplete,
-   //          rankingPoints,
-   //          freezeGame
-   //       );
-   //    }
-   // }
+   }, [onCurrentPageChanged]);
 
    if (!surveyData) return 'Cargando...';
    return (
@@ -221,7 +184,7 @@ function SurveyComponent(props) {
                surveyData.allow_anonymous_answers === true ||
                surveyData.publish === 'true' ||
                surveyData.publish === true) && (
-               <div style={{ display: feedbackMessage.title || showMessageOnComplete ? 'none' : 'block' }}>
+               <div style={{ display: showOrHideSurvey ? 'none' : 'block' }}>
                   {surveyJsModel && (
                      <div className='animate__animated animate__bounceInDown'>
                         {surveyData.allow_gradable_survey === 'true' && !fiftyfitfyused && (
@@ -244,7 +207,7 @@ function SurveyComponent(props) {
                            onTimerPanelInfoText={TimeLimitPerQuestion}
                            onStarted={onStartedSurvey}
                            onCurrentPageChanged={(surveyModel, options) =>
-                              setOnCurrentPageChanged({ surveyModel, options })
+                              setOnCurrentPageChanged({ surveyModel, options }, setShowOrHideSurvey(false))
                            }
                         />
                      </div>
