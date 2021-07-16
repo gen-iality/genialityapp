@@ -141,8 +141,9 @@ function SurveyComponent(props) {
       if (!onCurrentPageChanged?.options?.oldCurrentPage) return;
       let secondsToGo =
          onCurrentPageChanged.surveyModel.maxTimeToFinishPage - onCurrentPageChanged.options.oldCurrentPage.timeSpent;
-      setShowOrHideSurvey(false);
+
       if (surveyData.allow_gradable_survey === 'true') {
+         setShowOrHideSurvey(false);
          onCurrentPageChanged.surveyModel.stopTimer();
          TimerAndMessageForTheNextQuestion(
             onCurrentPageChanged.surveyModel,
@@ -174,7 +175,7 @@ function SurveyComponent(props) {
             </>
          )}
 
-         {!showOrHideSurvey && (
+         {!showOrHideSurvey && surveyData.allow_gradable_survey === 'true' && (
             <Result className='animate__animated animate__fadeIn' {...feedbackMessage} extra={null} />
          )}
 
