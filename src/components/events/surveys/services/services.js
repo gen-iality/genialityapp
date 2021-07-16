@@ -68,7 +68,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
                // Condiciona si tiene mas de una opcion escogida
                if (position && position.length && position.length > 0) {
                   position.forEach((element) => {
-                     if(element > 0){
+                     if(element >= 0){
                         const new_count = doc.data()[element] + vote;
                         t.update(shard_ref, { [element]: new_count });
                      }

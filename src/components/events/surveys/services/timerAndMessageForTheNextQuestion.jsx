@@ -10,7 +10,7 @@ function TimerAndMessageForTheNextQuestion(
    setShowMessageOnComplete,
    rankingPoints,
    freezeGame,
-   messageType,
+   messageType
 ) {
    secondsToGo = secondsToGo ? secondsToGo : 0;
    secondsToGo += MIN_ANSWER_FEEDBACK_TIME;
@@ -35,8 +35,8 @@ function TimerAndMessageForTheNextQuestion(
          setShowMessageOnComplete(false);
          setFeedbackMessage({});
          survey.startTimer();
-         survey.showTimerPanel = "top"
-         survey.showTimerPanelMode = "page";
+         survey.showTimerPanel = 'top';
+         survey.showTimerPanelMode = 'page';
       }
    }, 1000);
 

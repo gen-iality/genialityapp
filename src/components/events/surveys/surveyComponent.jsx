@@ -28,11 +28,12 @@ function SurveyComponent(props) {
    const [freezeGame, setFreezeGame] = useState(false);
    const [showMessageOnComplete, setShowMessageOnComplete] = useState(false);
    const [timerPausa, setTimerPausa] = useState(null);
-   const [survey, setSurvey] = useState(null);
+   const [surveyJsModel, setSurveyJsModel] = useState(null);
    const [rankingPoints, setRankingPoints] = useState(0);
    const [fiftyfitfyused, setFiftyfitfyused] = useState(false);
    const [realTimeSurvey, setRealTimeSurvey] = useState(null);
    let [totalPoints, setTotalPoints] = useState(0);
+   let [onCurrentPageChanged, setOnCurrentPageChanged] = useState(0);
 
    useEffect(() => {
       // asigna los colores del evento para la UI de la encuesta
@@ -52,25 +53,31 @@ function SurveyComponent(props) {
       /**
        * Timers para controlar el tiempo por pregunta, estos se deben detener o el quiz seguira avanzando errando la logica ya que cambia la pregunta que se esta respondiendo
        */
-      if (survey) {
-         survey.stopTimer();
+      if (surveyJsModel) {
+         surveyJsModel.stopTimer();
       }
       if (timerPausa) {
          clearInterval(timerPausa);
       }
-   }, [survey, idSurvey]);
+   }, [surveyJsModel, idSurvey]);
 
    async function startingSurveyComponent() {
-      let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyData);
+      let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, realTimeSurvey);
 
       loadSurveyData.open = realTimeSurvey.isOpened;
       loadSurveyData.publish = realTimeSurvey.isPublished;
       loadSurveyData.freezeGame = realTimeSurvey.freezeGame;
+      /** logo, posicion y medidas del logo */
+      loadSurveyData.logo = 'https://surveyjs.io/favicon.ico';
+      loadSurveyData.logoPosition = 'top';
+      loadSurveyData.logoWidth = 60;
+      loadSurveyData.logoHeight = 60;
+      loadSurveyData.logoFit = 'contain';
 
       const surveyModelData = new Survey.Model(loadSurveyData);
 
       setSurveyData(loadSurveyData);
-      setSurvey(surveyModelData);
+      setSurveyJsModel(surveyModelData);
 
       // Esto permite obtener datos para la grafica de gamificacion
       UserGamification.getListPoints(eventId, setRankingList);
@@ -80,27 +87,21 @@ function SurveyComponent(props) {
    }
 
    // Funcion para enviar la informacion de las respuestas
-   async function sendData(surveyModel) {
+   function sendData(surveyModel) {
       setRankingPoints(0);
 
-      // let pointsEarnedPerQuestion;
-      await Promise.all(
-         surveyModel.currentPage.questions.map(async (question) => {
-            let { pointsForCorrectAnswer } = await RegisterVote(
-               surveyData,
-               question,
-               currentUser,
-               eventUsers,
-               voteWeight
-            );
-            if (pointsForCorrectAnswer) {
-               // pointsEarnedPerQuestion = pointsForCorrectAnswer;
-               setRankingPoints(pointsForCorrectAnswer);
-            }
-            registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
-            return pointsForCorrectAnswer;
-         })
-      );
+      surveyModel.currentPage.questions.map(async (question) => {
+         const pointsForCorrectAnswer = RegisterVote(
+            surveyData,
+            question,
+            currentUser,
+            eventUsers,
+            voteWeight,
+            setRankingPoints
+         );
+
+         registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
+      });
 
       if (!(Object.keys(currentUser).length === 0)) {
          //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
@@ -137,13 +138,12 @@ function SurveyComponent(props) {
    }
 
    /* handler cuando la encuesta inicia, este sirve para retomar la encuesta donde vayan todos los demas usuarios */
-   function onStartedSurvey(survey) {
-      //
+   function onStartedSurvey(surveyJsModel) {
       if (surveyData.allow_gradable_survey === 'true') {
          if (freezeGame === 'true') {
-            survey.stopTimer();
+            surveyJsModel.stopTimer();
             TimerAndMessageForTheNextQuestion(
-               survey,
+               surveyJsModel,
                0,
                setTimerPausa,
                setFeedbackMessage,
@@ -157,14 +157,15 @@ function SurveyComponent(props) {
    }
 
    /* handler cuando la encuesta cambio de pregunta */
-   function onCurrentPageChanged(sender, options) {
-      if (!options.oldCurrentPage) return;
-      let secondsToGo = sender.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+   useEffect(() => {
+      if (!onCurrentPageChanged?.options?.oldCurrentPage) return;
+      let secondsToGo =
+         onCurrentPageChanged.surveyModel.maxTimeToFinishPage - onCurrentPageChanged.options.oldCurrentPage.timeSpent;
 
       if (surveyData.allow_gradable_survey === 'true') {
-         sender.stopTimer();
+         onCurrentPageChanged.surveyModel.stopTimer();
          TimerAndMessageForTheNextQuestion(
-            sender,
+            onCurrentPageChanged.surveyModel,
             secondsToGo,
             setTimerPausa,
             setFeedbackMessage,
@@ -173,12 +174,31 @@ function SurveyComponent(props) {
             freezeGame
          );
       }
-   }
+   }, [rankingPoints]);
+
+   /* handler cuando la encuesta cambio de pregunta */
+   // function onCurrentPageChanged(sender, options) {
+   //    if (!options.oldCurrentPage) return;
+   //    let secondsToGo = sender.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+
+   //    if (surveyData.allow_gradable_survey === 'true') {
+   //       sender.stopTimer();
+   //       TimerAndMessageForTheNextQuestion(
+   //          sender,
+   //          secondsToGo,
+   //          setTimerPausa,
+   //          setFeedbackMessage,
+   //          setShowMessageOnComplete,
+   //          rankingPoints,
+   //          freezeGame
+   //       );
+   //    }
+   // }
 
    if (!surveyData) return 'Cargando...';
    return (
       <div>
-         {survey && survey.state === 'completed' && (
+         {surveyJsModel && surveyJsModel.state === 'completed' && (
             <>
                {surveyData && surveyData.allow_gradable_survey !== 'true' && (
                   <Graphics
@@ -202,10 +222,12 @@ function SurveyComponent(props) {
                surveyData.publish === 'true' ||
                surveyData.publish === true) && (
                <div style={{ display: feedbackMessage.title || showMessageOnComplete ? 'none' : 'block' }}>
-                  {survey && (
+                  {surveyJsModel && (
                      <div className='animate__animated animate__bounceInDown'>
                         {surveyData.allow_gradable_survey === 'true' && !fiftyfitfyused && (
-                           <div className='survy-comodin' onClick={() => HelpFiftyFifty(setFiftyfitfyused, survey)}>
+                           <div
+                              className='survy-comodin'
+                              onClick={() => HelpFiftyFifty(setFiftyfitfyused, surveyJsModel)}>
                               <Button>
                                  {' '}
                                  50 / 50 <BulbOutlined />
@@ -213,7 +235,7 @@ function SurveyComponent(props) {
                            </div>
                         )}
                         <Survey.Survey
-                           model={survey}
+                           model={surveyJsModel}
                            onComplete={(surveyModel) => sendData(surveyModel, 'completed')}
                            onPartialSend={(surveyModel) => sendData(surveyModel, 'partial')}
                            onCompleting={(surveyModel) =>
@@ -221,7 +243,9 @@ function SurveyComponent(props) {
                            }
                            onTimerPanelInfoText={TimeLimitPerQuestion}
                            onStarted={onStartedSurvey}
-                           onCurrentPageChanged={onCurrentPageChanged}
+                           onCurrentPageChanged={(surveyModel, options) =>
+                              setOnCurrentPageChanged({ surveyModel, options })
+                           }
                         />
                      </div>
                   )}
