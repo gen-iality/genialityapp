@@ -150,6 +150,7 @@ export const setDataGraphic = (labels, values, name) => {
         fill: false,
         backgroundColor: backgroud,
         borderColor: lineBackground,
+        tension:0.3,
       },
     ],
   };

@@ -1,7 +1,7 @@
 import 'chartjs-plugin-datalabels';
 import React, { Component } from 'react';
 import { Spin, Card } from 'antd';
-import Chart from 'chart.js';
+import Chart from 'chart.js/auto';
 import { Users } from './services';
 import { graphicsFrame } from './frame';
 
@@ -80,7 +80,7 @@ class Graphics extends Component {
           }
         },
         scales: {
-          yAxes: [
+          y: [
             {
               ticks: {
                 fontColor: '#777',
@@ -88,14 +88,15 @@ class Graphics extends Component {
               }
             }
           ],
-          xAxes: [
+          x: [
             {
               ticks: {
                 fontColor: '#777'
               }
             }
           ]
-        }
+        },
+        indexAxis: 'x',
       };
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico

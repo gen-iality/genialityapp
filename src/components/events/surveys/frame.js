@@ -45,7 +45,7 @@ const colorBars = {
 
 export const graphicsFrame = {
   horizontalBar: {
-    type: 'horizontalBar',
+    type: 'bar',
     data: {
       labels: [],
       datasets: [
@@ -61,6 +61,7 @@ export const graphicsFrame = {
       title: {
         fontSize: 16,
         display: true,
+        text: '',
       },
       responsive: true,
       animation: {
@@ -73,7 +74,7 @@ export const graphicsFrame = {
         },
       },
       scales: {
-        xAxes: [
+        x: [
           {
             ticks: {
               beginAtZero: true,
@@ -84,7 +85,7 @@ export const graphicsFrame = {
             },
           },
         ],
-        yAxes: [
+        y: [
           {
             ticks: {
               display: false,
@@ -98,6 +99,7 @@ export const graphicsFrame = {
         ],
       },
     },
+    indexAxis: 'y',
   },
   verticalBar: {
     type: 'bar',
@@ -116,6 +118,7 @@ export const graphicsFrame = {
       title: {
         fontSize: 16,
         display: true,
+        text: ''
       },
       responsive: true,
       animation: {
@@ -128,7 +131,7 @@ export const graphicsFrame = {
         },
       },
       scales: {
-        xAxes: [
+        x: [
           {
             ticks: {
               beginAtZero: true,
@@ -139,7 +142,7 @@ export const graphicsFrame = {
             },
           },
         ],
-        yAxes: [
+        y: [
           {
             ticks: {
               beginAtZero: true,
@@ -151,6 +154,7 @@ export const graphicsFrame = {
           },
         ],
       },
+    indexAxis: 'x',
     },
   },
 };
