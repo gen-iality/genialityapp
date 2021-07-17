@@ -4,9 +4,7 @@ import { ApiUrl } from '../../helpers/constants';
 import { Tooltip, Button, Card, Col, message, Row, Select, Statistic, Table, Space, Spin } from 'antd';
 import {
   EyeOutlined,
-  FieldTimeOutlined,
-  FileExcelOutlined,
-  FilePdfOutlined,
+  FieldTimeOutlined, 
   IdcardOutlined,
   MoreOutlined,
   NotificationOutlined,
@@ -27,16 +25,12 @@ import {
 } from './serviceAnalytics';
 import 'chartjs-plugin-datalabels';
 import { Bar, Line } from 'react-chartjs-2';
-import XLSX from 'xlsx';
-import ReactToPrint from 'react-to-print';
-import Moment from 'moment';
-import PrintDashboardEvent from './printDashboard';
-
+import '../../styles/dashboard/_index.css';
 
 // const [google, setGoogle] = useState(null)
-class DashboardEvent extends Component {
+class PrintDashboardEvent extends Component {
   constructor(props) {
-    super(props);    
+    super(props);
     this.state = {
       loading: true,
       iframeUrl: '',
@@ -65,23 +59,10 @@ class DashboardEvent extends Component {
       desc5: 'Visitas totales de los usuarios',
       desc6: 'Visitas realizadas al evento',
       desc7: 'Impresiones totales del evento',
-      loadingMetrics: true, 
-      printButton:true,
-      //Permite controlar la carga de las métricas
+      loadingMetrics: true, //Permite controlar la carga de las métricas
     };
-    this.displayButton = this.displayButton.bind(this);
-    this.visibilityButton=this.visibilityButton.bind(this);
   }
-  displayButton=(self)=>{
-   self.setState({
-     printButton:false
-   })
-  }
-  visibilityButton=()=>{
-    this.setState({
-      printButton:true
-    })
-   }
+
   //Función que permite totalizar los valores por campaña
   totalsMails(list) {
     let totalClicked = 0,
@@ -99,18 +80,7 @@ class DashboardEvent extends Component {
     this.setState({ totalSent, totalClicked, totalDeliverd, totalBounced, totalOpened });
   }
 
-  //Función que permite exportar los reportes formato excel
-  exportReport = async (datos, name, type, namesheet) => {
-    let data = await exportDataReport(datos, type);
-    if (data) {
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, `${namesheet}`);
-      XLSX.writeFile(wb, `${name}_${this.props.eventId}_${Moment().format('DDMMYY')}.xls`);
-    } else {
-      message.error('No existen datos que exportar');
-    }
-  };
+  
 
   componentDidMount() {
     // fin de la peticion a analytics
@@ -300,22 +270,11 @@ class DashboardEvent extends Component {
     ];
     return !this.state.loadingMetrics ? (
       <>
-        <div>
+        <div className='print-source'>
           <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
             <Col span={18}>
               <Tooltip title={this.state.desc1} placement='top' mouseEnterDelay={0.5}>
-                <Card>
-                  {this.state.printButton &&<Row justify='end'>
-                    <Button
-                      style={{ color: '#1F6E43' }}
-                      shape='round'
-                      icon={<FileExcelOutlined />}
-                      onClick={() =>
-                        this.exportReport(this.state.metricsRegister, 'Register', 'register', 'registerByDay')
-                      }>
-                      Exportar
-                    </Button>
-                  </Row>}
+                <Card>                  
                   {this.state.registrosDia && <Line data={this.state.registrosDia} options={this.options} />}
                 </Card>
               </Tooltip>
@@ -357,18 +316,7 @@ class DashboardEvent extends Component {
               <Row justify='center'>
                 <Col span={24}>
                   <Tooltip title={this.state.desc4} placement='top' mouseEnterDelay={0.5}>
-                    <Card>
-                     {this.state.printButton && <Row justify='end'>
-                        <Button
-                          style={{ color: '#1F6E43' }}
-                          shape='round'
-                          icon={<FileExcelOutlined />}
-                          onClick={() =>
-                            this.exportReport(this.state.metricsGraphics, 'Visitas', 'views', 'ViewsByDay')
-                          }>
-                          Exportar
-                        </Button>
-                      </Row>}
+                    <Card>                     
                       {this.state.attendesDay && <Bar data={this.state.attendesDay} options={this.options} />}
                     </Card>
                   </Tooltip>
@@ -392,18 +340,7 @@ class DashboardEvent extends Component {
               <Row justify='center'>
                 <Col span={24}>
                   <Tooltip title={this.state.desc6} placement='top' mouseEnterDelay={0.5}>
-                    <Card>
-                     {this.state.printButton && <Row justify='end'>
-                        <Button                        
-                          style={{ color: '#1F6E43',display:this.state.printButton?'block':'none' }}
-                          shape='round'
-                          icon={<FileExcelOutlined />}
-                          onClick={() =>
-                            this.exportReport(this.state.metricsGraphics, 'Número de visitas', 'time', 'visitasByDia')
-                          }>
-                          Exportar
-                        </Button>
-                      </Row>}
+                    <Card>                     
                       {this.state.printoutsDay && <Line data={this.state.printoutsDay} options={this.options} />}
                     </Card>
                   </Tooltip>
@@ -434,7 +371,7 @@ class DashboardEvent extends Component {
                   dataSource={this.state.metricsActivity}
                   columns={columns}
                   size='small'
-                  pagination={{ pageSize: 5 }}
+                  pagination={false}
                 />
               </Card>
             </Col>
@@ -501,41 +438,12 @@ class DashboardEvent extends Component {
                       />
                     </Card>
                   </Col>
-                </Row>
-                <Row>
-                  <Button
-                   
-                    shape='round'
-                    icon={<NotificationOutlined />}
-                    onClick={() => this.props.history.push(`/event/${this.props.eventId}/messages`)}>
-                    Ver correos
-                  </Button>
-                </Row>
+                </Row>               
               </Card>
             </Col>
           </Row>
-        </div>            
-      <div  ref={el => (this.componentRef = el)} >
-        <PrintDashboardEvent eventId={this.props.eventId}/>
-      </div>
-      <ReactToPrint
-          onBeforePrint={()=>this.displayButton(this)}        
-          trigger={() => {
-            return (
-             <Row justify='end' style={{ paddingTop: '10px' }}>
-                <Button
-                  danger
-                  style={{ color: '#F70D09' }}
-                  shape='round'
-                  icon={<FilePdfOutlined />}
-                  disabled={this.state.metricsGaByActivity.length == 0}>
-                  Exportar métricas
-                </Button>
-              </Row>
-            );
-          }}
-          content={() => this.componentRef}
-        />
+        </div>       
+      
       </>
     ) : (
       <Row justify='center' align='middle'>
@@ -545,4 +453,4 @@ class DashboardEvent extends Component {
   }
 }
 
-export default withRouter(DashboardEvent);
+export default withRouter(PrintDashboardEvent);
