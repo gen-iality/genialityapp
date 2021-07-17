@@ -66,7 +66,7 @@ class DashboardEvent extends Component {
       desc6: 'Visitas realizadas al evento',
       desc7: 'Impresiones totales del evento',
       loadingMetrics: true, 
-      printButton:true,
+      
       //Permite controlar la carga de las métricas
     };
     this.displayButton = this.displayButton.bind(this);
@@ -305,7 +305,7 @@ class DashboardEvent extends Component {
             <Col span={18}>
               <Tooltip title={this.state.desc1} placement='top' mouseEnterDelay={0.5}>
                 <Card>
-                  {this.state.printButton &&<Row justify='end'>
+                  <Row justify='end'>
                     <Button
                       style={{ color: '#1F6E43' }}
                       shape='round'
@@ -315,7 +315,7 @@ class DashboardEvent extends Component {
                       }>
                       Exportar
                     </Button>
-                  </Row>}
+                  </Row>
                   {this.state.registrosDia && <Line data={this.state.registrosDia} options={this.options} />}
                 </Card>
               </Tooltip>
@@ -358,7 +358,7 @@ class DashboardEvent extends Component {
                 <Col span={24}>
                   <Tooltip title={this.state.desc4} placement='top' mouseEnterDelay={0.5}>
                     <Card>
-                     {this.state.printButton && <Row justify='end'>
+                      <Row justify='end'>
                         <Button
                           style={{ color: '#1F6E43' }}
                           shape='round'
@@ -368,7 +368,7 @@ class DashboardEvent extends Component {
                           }>
                           Exportar
                         </Button>
-                      </Row>}
+                      </Row>
                       {this.state.attendesDay && <Bar data={this.state.attendesDay} options={this.options} />}
                     </Card>
                   </Tooltip>
