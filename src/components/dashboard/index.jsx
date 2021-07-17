@@ -30,6 +30,7 @@ import { Bar, Line } from 'react-chartjs-2';
 import XLSX from 'xlsx';
 import ReactToPrint from 'react-to-print';
 import Moment from 'moment';
+import API from '../../helpers/request';
 
 
 
@@ -66,7 +67,8 @@ class DashboardEvent extends Component {
       desc6: 'Visitas realizadas al evento',
       desc7: 'Impresiones totales del evento',
       loadingMetrics: true, 
-      printButton:true
+      printButton:true,
+      mailsDetails:[]
       
       //Permite controlar la carga de las métricas
     };
@@ -114,6 +116,56 @@ class DashboardEvent extends Component {
       message.error('No existen datos que exportar');
     }
   };
+   fetchDataMails() {
+     console.log("DATA MAILS")
+    return new Promise((resolve, reject) => {
+      API.get(`/api/events/${this.props.eventId}/messages`)
+        .then(({ data }) => {
+          resolve(data.data);
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
+  }
+   columnsMail = [
+    {
+      title: 'Asunto',
+      dataIndex: 'subject',
+      key: 'subject',
+      render: (text) => <span>{text}</span>,
+    },
+    {
+      title: '# Correos',
+      dataIndex: 'number_of_recipients',
+      key: 'recipients',
+      render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+    },
+    {
+      title: 'Entregados',
+      dataIndex: 'total_delivered',
+      key: 'sent',
+      render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+    },
+    {
+      title: 'Rebotados',
+      dataIndex: 'total_bounced',
+      key: 'bounced',
+      render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+    },
+    {
+      title: 'Abiertos',
+      dataIndex: 'total_opened',
+      key: 'opened',
+      render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+    },
+    {
+      title: 'Clicked',
+      dataIndex: 'total_clicked',
+      key: 'clicked',
+      render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+    },
+  ];
 
   componentDidMount() {
     // fin de la peticion a analytics
@@ -131,6 +183,11 @@ class DashboardEvent extends Component {
               this.setState({ totalmails: datametricsMail,metricsActivity: dataMetricsActivity, metricsGnal: dataMetricsGnal  });
               this.obtenerMetricas(dataMetricsActivity);
               this.totalsMails(datametricsMail);
+              this.fetchDataMails().then((resp)=>{
+                this.setState({
+                  mailsDetails:resp
+                },()=>{console.log("MAILS DETAILS");console.log(resp)})
+              })
             }
             else{
               this.setState({                
@@ -514,6 +571,7 @@ class DashboardEvent extends Component {
                     Ver correos
                   </Button>
                 </Row>}
+               {!this.state.printButton &&  <Table pagination={false} loading={this.state.loadingMetrics} columns={this.columnsMail} dataSource={this.state.mailsDetails} />}
               </Card>
             </Col>
           </Row>
