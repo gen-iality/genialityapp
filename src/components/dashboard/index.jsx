@@ -30,7 +30,7 @@ import { Bar, Line } from 'react-chartjs-2';
 import XLSX from 'xlsx';
 import ReactToPrint from 'react-to-print';
 import Moment from 'moment';
-import PrintDashboardEvent from './printDashboard';
+
 
 
 // const [google, setGoogle] = useState(null)
@@ -66,22 +66,25 @@ class DashboardEvent extends Component {
       desc6: 'Visitas realizadas al evento',
       desc7: 'Impresiones totales del evento',
       loadingMetrics: true, 
+      printButton:true
       
       //Permite controlar la carga de las métricas
     };
     this.displayButton = this.displayButton.bind(this);
-    this.visibilityButton=this.visibilityButton.bind(this);
+   
   }
   displayButton=(self)=>{
+    return new Promise((resolve, reject) => {
+      self.setState({ printButton:false }, () => resolve());
+    });    
+  }
+
+  visibleButton=(self)=>{    
    self.setState({
-     printButton:false
+     printButton:true
    })
   }
-  visibilityButton=()=>{
-    this.setState({
-      printButton:true
-    })
-   }
+  
   //Función que permite totalizar los valores por campaña
   totalsMails(list) {
     let totalClicked = 0,
@@ -300,12 +303,12 @@ class DashboardEvent extends Component {
     ];
     return !this.state.loadingMetrics ? (
       <>
-        <div>
+        <div ref={el => (this.componentRef = el)}>
           <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
             <Col span={18}>
               <Tooltip title={this.state.desc1} placement='top' mouseEnterDelay={0.5}>
                 <Card>
-                  <Row justify='end'>
+                 {this.state.printButton &&  <Row justify='end'>
                     <Button
                       style={{ color: '#1F6E43' }}
                       shape='round'
@@ -315,7 +318,7 @@ class DashboardEvent extends Component {
                       }>
                       Exportar
                     </Button>
-                  </Row>
+                  </Row>}
                   {this.state.registrosDia && <Line data={this.state.registrosDia} options={this.options} />}
                 </Card>
               </Tooltip>
@@ -358,7 +361,7 @@ class DashboardEvent extends Component {
                 <Col span={24}>
                   <Tooltip title={this.state.desc4} placement='top' mouseEnterDelay={0.5}>
                     <Card>
-                      <Row justify='end'>
+                    {this.state.printButton && <Row justify='end'>
                         <Button
                           style={{ color: '#1F6E43' }}
                           shape='round'
@@ -368,7 +371,7 @@ class DashboardEvent extends Component {
                           }>
                           Exportar
                         </Button>
-                      </Row>
+                      </Row>}
                       {this.state.attendesDay && <Bar data={this.state.attendesDay} options={this.options} />}
                     </Card>
                   </Tooltip>
@@ -434,7 +437,7 @@ class DashboardEvent extends Component {
                   dataSource={this.state.metricsActivity}
                   columns={columns}
                   size='small'
-                  pagination={{ pageSize: 5 }}
+                  pagination={this.state.printButton?{ pageSize: 5 }:false}
                 />
               </Card>
             </Col>
@@ -442,7 +445,7 @@ class DashboardEvent extends Component {
           <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
             <Col span={24}>
               <Card headStyle={{ border: 'none' }} title={'Métricas de correos'}>
-                <Row justify='center' style={{ marginBottom: 20 }}>
+               {this.state.printButton && <Row justify='center' style={{ marginBottom: 20 }}>
                   <Card>
                     <Statistic
                       valueStyle={{ fontSize: '36px', textAlign: 'center' }}
@@ -450,8 +453,8 @@ class DashboardEvent extends Component {
                       value={this.state.totalmails.length}
                     />
                   </Card>
-                </Row>
-                <Row justify='space-around' align='middle' gutter={[8, 8]}>
+                </Row>}
+             {this.state.printButton && <Row justify='space-around' align='middle' gutter={[8, 8]}>
                   <Col span={4}>
                     <Card>
                       <Statistic
@@ -501,8 +504,8 @@ class DashboardEvent extends Component {
                       />
                     </Card>
                   </Col>
-                </Row>
-                <Row>
+                </Row>}
+               {this.state.printButton && <Row>
                   <Button
                    
                     shape='round'
@@ -510,16 +513,16 @@ class DashboardEvent extends Component {
                     onClick={() => this.props.history.push(`/event/${this.props.eventId}/messages`)}>
                     Ver correos
                   </Button>
-                </Row>
+                </Row>}
               </Card>
             </Col>
           </Row>
         </div>            
-      <div  ref={el => (this.componentRef = el)} >
-        <PrintDashboardEvent eventId={this.props.eventId}/>
-      </div>
+     
       <ReactToPrint
-          onBeforePrint={()=>this.displayButton(this)}        
+          onBeforeGetContent={()=>this.displayButton(this)} 
+          onAfterPrint={()=>this.visibleButton(this)} 
+          documentTitle={'Métricas del evento'}      
           trigger={() => {
             return (
              <Row justify='end' style={{ paddingTop: '10px' }}>
