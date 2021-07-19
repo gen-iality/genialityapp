@@ -1,5 +1,6 @@
 import { SurveysApi } from '../../../../helpers/request';
 import * as Survey from 'survey-react';
+import { data } from 'jquery';
 
 async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
    /** Este componente nos permite cargar datos de la encuesta seleccionada */
@@ -9,6 +10,13 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
    Survey.JsonObject.metaData.addProperty('question', 'points');
 
    let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
+
+   /** Posición del botón next*/
+   dataSurvey.showNavigationButtons = 'top';
+   /** Texto del botón next */
+   dataSurvey.pageNextText = 'Responder';
+   /** Texto del botón complete */
+   dataSurvey.completeText = 'Finalizar';
 
    /** logo - posicion y medidas */
    dataSurvey.logo = 'https://portal.evius.co/wp-content/uploads/2021/03/logo_3.png';

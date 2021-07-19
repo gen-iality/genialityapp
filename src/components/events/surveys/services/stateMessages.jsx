@@ -16,7 +16,7 @@ function StateMessages(state, questionPoints) {
             title: (
                <div>
                   Has ganado <span style={{ fontWeight: 'bold', fontSize: '130%' }}>{questionPoints} punto(s)</span>,
-                  respondiendo correctamente la pregunta.
+                  respondiendo correctamente.
                </div>
             ),
             subTitle: '',
