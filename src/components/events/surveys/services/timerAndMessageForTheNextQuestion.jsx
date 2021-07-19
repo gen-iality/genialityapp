@@ -10,6 +10,7 @@ function TimerAndMessageForTheNextQuestion(
    setShowMessageOnComplete,
    rankingPoints,
    freezeGame,
+   setShowOrHideSurvey,
    messageType
 ) {
    secondsToGo = secondsToGo ? secondsToGo : 0;
@@ -30,7 +31,8 @@ function TimerAndMessageForTheNextQuestion(
       mensaje.subTitle = secondsToGo > 0 ? mensaje_espera + ' ' + secondsToGo : mensaje_congelado;
       setFeedbackMessage(mensaje);
 
-      if (secondsToGo <= 0 && !freezeGame) {
+      if (secondsToGo <= 0 && freezeGame === "false") {
+         setShowOrHideSurvey(true)
          clearInterval(timer);
          setShowMessageOnComplete(false);
          setFeedbackMessage({});
