@@ -5,11 +5,20 @@ import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
 import { useState } from 'react';
+import { connect } from 'react-redux';
+import { setVirtualConference } from '../../../redux/virtualconference/actions';
+import { props } from 'ramda';
 
-const FeriasList = ({ event_id, stateferia }) => {
+const FeriasList = ({ event_id,setVirtualConference }) => {
   const [companies, loadingCompanies] = useGetEventCompanies(event_id);
   const [companiesEvent, setCompaniesEvent] = useState([]);
-
+  //EFECTO PARA OCULTAR Y MOSTRAR VIRTUAL CONFERENCE
+  useEffect(()=>{
+  setVirtualConference(false)
+  return ()=>{
+    setVirtualConference(true) 
+  }
+  },[])
   useEffect(() => {
     if (!loadingCompanies) {
       setCompaniesEvent(companies);
@@ -46,5 +55,7 @@ const FeriasList = ({ event_id, stateferia }) => {
     </div>
   );
 };
-
-export default FeriasList;
+const mapDispatchToProps = {
+  setVirtualConference
+};
+export default  connect(null,mapDispatchToProps)(FeriasList) ;
