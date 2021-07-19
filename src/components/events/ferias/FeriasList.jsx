@@ -12,12 +12,9 @@ const FeriasList = ({ event_id, stateferia }) => {
 
   useEffect(() => {
     if (!loadingCompanies) {
-      console.log(companies);
       setCompaniesEvent(companies);
     }
   }, [loadingCompanies]);
-
-  console.log(companiesEvent);
 
   return (
     <div>
@@ -26,23 +23,23 @@ const FeriasList = ({ event_id, stateferia }) => {
       {companiesEvent.length > 0 &&
         companiesEvent.map(
           (company, index) =>
-            company.visible && (              
-                <Companylist
-                key={'companyList'+index}
-                  img={
-                    company.list_image === ''
-                      ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo' // imagen por defecto si no encuentra una imagen guardada
-                      : company.list_image
-                  }
-                  eventId={event_id}
-                  name={company.name}
-                  position={company.position}
-                  tel={company.advisor && company.telefono}
-                  email={company.advisor && company.email}
-                  description={company.short_description}
-                  pagweb={company.webpage}
-                  companyId={company.id}
-                />              
+            company.visible && (
+              <Companylist
+                key={'companyList' + index}
+                img={
+                  company.list_image === ''
+                    ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo' // imagen por defecto si no encuentra una imagen guardada
+                    : company.list_image
+                }
+                eventId={event_id}
+                name={company.name}
+                position={company.position}
+                tel={company.advisor && company.telefono}
+                email={company.advisor && company.email}
+                description={company.short_description}
+                pagweb={company.webpage}
+                companyId={company.id}
+              />
             )
         )}
       {companiesEvent.length == 0 && <Empty />}

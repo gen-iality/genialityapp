@@ -61,7 +61,10 @@ function Contact(props) {
       <Row className='container' gutter={[10, 10]}>
         <Col xs={24} sm={24} md={24} lg={6} xl={6} className='col'>
           <div className='img-contact'>
-            <img className='img' src={props.img === '' ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Item' : props.img } />
+            <img
+              className='img'
+              src={props.img === '' ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Item' : props.img}
+            />
           </div>
         </Col>
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>

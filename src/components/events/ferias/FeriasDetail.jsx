@@ -29,6 +29,7 @@ const FeriasDetail = (props) => {
   });
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     const { match } = props;
     let eventId = match.params.event_id;
     let idCompany = match.params.id;
@@ -46,7 +47,7 @@ const FeriasDetail = (props) => {
   };
 
   const { TabPane } = Tabs;
-  console.log('Empresa', companyDetail);
+
   return (
     <div className='feriasdetail'>
       <div style={{ position: 'relative' }}>
@@ -60,9 +61,7 @@ const FeriasDetail = (props) => {
         <div className='container-information'>
           <Information
             ImgCompany={
-              companyDetail
-                ? companyDetail.list_image
-                : 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo'
+              companyDetail ? companyDetail.list_image : 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo'
             }
             titleCompany={companyDetail && companyDetail.name}
             Description={
@@ -75,7 +74,14 @@ const FeriasDetail = (props) => {
         </div>
       </div>
 
-      <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '2vw', marginBottom: '4vw' }}>
+      <div
+        style={{
+          paddingLeft: '3vw',
+          paddingRight: '3vw',
+          marginTop: '2vw',
+          marginBottom: '4vw',
+          paddingBottom: '4vw',
+        }}>
         <Tabs defaultActiveKey='1' tabPosition='top'>
           <TabPane tab='Información' key='1'>
             {/* <span className='title'>
@@ -104,17 +110,21 @@ const FeriasDetail = (props) => {
             {/* componente  de Productos */}
             <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
               {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
-              <div style={{ paddingLeft: '5vw', paddingRight: '5vw' }}>
-                {companyDetail &&
-                  companyDetail.services.map((prod, index) => (
-                    <Product
-                      key={index}
-                      imgProduct={prod.image}
-                      title={prod.nombre}
-                      etiqueta={prod.category}
-                      description={prod.description}
-                    />
-                  ))}{' '}
+              <div style={{}}>
+                <Row gutter={[16, 16]}>
+                  {companyDetail &&
+                    companyDetail.services.map((prod, index) => (
+                      <Col xs={24} sm={12} md={8} lg={8} xl={6} xxl={6} key={'PoS-' + index}>
+                        <Product
+                          key={index}
+                          imgProduct={prod.image}
+                          title={prod.nombre}
+                          etiqueta={prod.category}
+                          description={prod.description}
+                        />
+                      </Col>
+                    ))}
+                </Row>
               </div>
             </div>
           </TabPane>

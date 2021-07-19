@@ -4,21 +4,21 @@ import CameraFeed from './cameraFeed';
 //custom
 import { AuthUrl } from '../../helpers/constants';
 import { saveFirebase } from './helpers';
-import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert } from 'antd';
+import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert, Space, Spin } from 'antd';
 import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 const { TextArea } = Input;
 import withContext  from '../../Context/withContext'
 
-const Editor = ({ onChange, onSubmit, submitting, value }) => (
+const Editor = ({ onChange, onSubmit, submitting, value,loadingsave }) => (
   <div>
     <Form.Item>
       <TextArea placeholder='¿Qué está pasando?' rows={4} onChange={onChange} value={value} />
     </Form.Item>
 
     <Form.Item>
-      <Button id='submitPost' htmlType='submit' loading={submitting} onClick={onSubmit} type='primary'>
-        Enviar
+      <Button id='submitPost' style={{background: loadingsave?'white':'#333F44'}} htmlType='submit' loading={submitting} onClick={onSubmit} type='primary'>
+       {loadingsave?<><Spin /> <span style={{color:'#333F44'}}>Por Favor espere...</span></>:'Enviar'} 
       </Button>
     </Form.Item>
   </div>
@@ -42,7 +42,8 @@ class CreatePost extends Component {
       loading: false,
       visible: false,
       user: null,
-      image: ''
+      image: '',
+      loadingsave:false
     };
     this.savePost = this.savePost.bind(this);
     this.previewImage = this.previewImage.bind(this);
@@ -53,27 +54,31 @@ class CreatePost extends Component {
 
   //Funcion para guardar el post y enviar el mensaje de publicacion
   async savePost() {
+    this.setState({
+      loadingsave:true
+    })
     let data = {
       urlImage: this.state.image,
       post: this.state.value,
-      author: this.props.cUser._id,
+      author: this.props.cUser.value._id,
       datePost: new Date(),
       likes: 0,
       usersLikes: [],
-      authorName: this.props.cUser.names
-        ? this.props.cUser.names
-        : this.props.cUser.name
-        ? this.props.cUser.name
-        : this.props.cUser.email
+      authorName: this.props.cUser.value.names
+        ? this.props.cUser.value.names
+        : this.props.cUser.value.name
+        ? this.props.cUser.value.name
+        : this.props.cUser.value.email
     };
+   
 
     //savepost se realiza para publicar el post
     var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
 
-    this.setState({ value: '', image: '', showInfo: true });
-    this.setState({ showInfo: false, visible: false, keyList: Date.now() });
-    message.success('Mensaje Publicado');
-    this.props.addPosts(newPost);
+   this.setState({ value: '', image: '', showInfo: true,loadingsave:false });
+   this.setState({ showInfo: false, visible: false, keyList: Date.now() });
+   message.success('Mensaje Publicado');
+   this.props.addPosts(newPost);
   }
 
   //Funcion para mostrar el archivo, se pasa a base64 para poder mostrarlo
@@ -161,24 +166,29 @@ class CreatePost extends Component {
             />
           )}
 
-          <Modal visible={visible} title='Publicaciones' onOk={this.handleOk} onCancel={this.handleCancel} footer={[]}>
+          <Modal visible={visible} title='Publicaciones' onOk={this.handleOk} onCancel={this.handleCancel} footer={[]}>           
             <Row>
               <Col style={{ textAlign: 'center' }} xs={24} sm={24} md={24} lg={24} xl={24}>
-                <div>
+                <Space>
                   {/* Boton para subir foto desde la galeria del dispositivo */}
-                  <Button type='primary'>
-                    <input key={this.state.inputKey} className='file-input' type='file' onChange={this.previewImage} />
-                    <span>Subir Foto</span>
-                    <CloudUploadOutlined />
-                  </Button>
+                   <Space className='file-label ant-btn ant-btn-primary' >
+                    <input key={this.state.inputKey} style={{width:120}} className='file-input ' type='file' onChange={this.previewImage} />
+                    <span style={{paddingLeft:2}}>Subir Foto</span>
+                    <span><CloudUploadOutlined /></span>
+                   </Space>
+                   
+                  
+                  
                   {/* Boton para abrir la camara */}
+                  <Space>
                   <Button
                     style={{ marginLeft: '3%' }}
-                    onClick={() => {
+                    onClick={(e) => {
                       this.setState({ hidden: true }, this.setModal2Visible(true));
                     }}>
                     <CameraOutlined />
                   </Button>
+                  </Space>
                   {/* Modal para camara  */}
 
                   <div hidden={hidden} className='App'>
@@ -187,26 +197,26 @@ class CreatePost extends Component {
                       title='Camara'
                       centered
                       visible={this.state.modal2Visible}
-                      onOk={() => {
+                      onOk={(e) => {
                         this.setState({ hidden: false }, this.setModal2Visible(false));
                       }}
-                      onCancel={() => {
+                      onCancel={(e) => {
                         this.setState({ hidden: false }, this.setModal2Visible(false));
                       }}
                       footer={[
                         <Button
                           key='submit'
                           type='primary'
-                          onClick={() => {
+                          onClick={(e) => {
                             this.setState({ hidden: false }, this.setModal2Visible(false));
                           }}>
                           Listo usar esta
-                        </Button>
+                        </Button>,
                       ]}>
                       <CameraFeed getImage={this.getImage} sendFile={this.uploadImage} />
                     </Modal>
                   </div>
-                </div>
+                </Space>
                 <div>
                   {image && (
                     <Card
@@ -223,7 +233,7 @@ class CreatePost extends Component {
 
             <Comment
               content={
-                <Editor onChange={this.handleChange} onSubmit={this.savePost} submitting={submitting} value={value} />
+                <Editor onChange={this.handleChange} onSubmit={this.savePost} submitting={submitting} value={value} loadingsave={this.state.loadingsave} />
               }
             />
           </Modal>
