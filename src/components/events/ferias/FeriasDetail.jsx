@@ -35,8 +35,7 @@ const FeriasDetail = (props) => {
     let idCompany = match.params.id;
 
     obtenerEmpresa(eventId, idCompany).then((resp) => {
-      console.log('DATOS EMPRESA');
-      console.log(resp);
+ 
       setCompanyDetail(resp);
     });
   }, []);

@@ -229,6 +229,9 @@ export const EventsApi = {
   metricsRegisterBydate: async (id,type) => {
     return await Actions.get(`/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}`);
   },
+  getGallery: async (eventId) => {
+    return await Actions.get(`/api/events/${eventId}/galleries`);
+  },
 };
 
 export const InvitationsApi = {
