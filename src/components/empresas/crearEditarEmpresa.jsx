@@ -78,6 +78,10 @@ const validationSchema = yup.object().shape({
           .min(3, 'nombre de servicio no válido')
           .required('El nombre del servicio es requerido'),
         category: yup.string(),
+        web_url: yup
+          .string()
+          .url()
+          .max(URL_MAX_LENGTH),
       })
     ),
   webpage: yup
@@ -272,6 +276,13 @@ function CrearEditarEmpresa({ event, match, history }) {
                                   maxLength={SERVICE_DESCRIPTION_MAX_LENGTH}
                                 />
 
+                                <Field
+                                  name={`services[${serviceIndex}].web_url`}
+                                  component={InputField}
+                                  label='Web Url'
+                                  placeholder='Enlace para ver tu producto o servicio en tu web'
+                                />
+
                                 <ImageField
                                   name={`services[${serviceIndex}].image`}
                                   label={`Imagen servicio ${serviceIndex + 1}`}
@@ -298,7 +309,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                                       type='primary'
                                       icon={<PlusCircleOutlined />}
                                       onClick={() => {
-                                        arrayHelpers.push({ description: '', image: '' });
+                                        arrayHelpers.push({ description: '', image: '', web_url:'' });
                                       }}>
                                       {'Agregar servicio'}
                                     </Button>
@@ -313,7 +324,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                               type='primary'
                               icon={<PlusCircleOutlined />}
                               onClick={() => {
-                                arrayHelpers.push({ description: '', image: '' });
+                                arrayHelpers.push({ description: '', image: '',web_url:'' });
                               }}>
                               {'Agregar servicio'}
                             </Button>

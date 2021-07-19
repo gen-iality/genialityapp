@@ -67,6 +67,8 @@ class DashboardEvent extends Component {
       desc6: 'Visitas realizadas al evento',
       desc7: 'Impresiones totales del evento',
       loadingMetrics: true, 
+      //TRUE:MUESTRA UI
+      //FALSE: PARA IMPRIMIR
       printButton:true,
       mailsDetails:[]
       
@@ -174,13 +176,17 @@ class DashboardEvent extends Component {
     if (evius_token) {
       const iframeUrl = `${ApiUrl}/es/event/${eventId}/dashboard?evius_token=${evius_token}`;
       this.setState({ iframeUrl, loading: false });
-      totalsMetricasMail(this.props.eventId).then((datametricsMail) => {      
-        totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {          
+      totalsMetricasMail(this.props.eventId).then((datametricsMail) => {
+        totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {
           totalsMetricasActivityDetails(this.props.eventId).then((dataMetricsActivity) => {
-            if(dataMetricsActivity.length>0){
-              console.log("ENTRO ACA")
-              console.log(dataMetricsActivity)
-              this.setState({ totalmails: datametricsMail,metricsActivity: dataMetricsActivity, metricsGnal: dataMetricsGnal  });
+            if (dataMetricsActivity.length > 0) {
+              console.log('ENTRO ACA');
+              console.log(dataMetricsActivity);
+              this.setState({
+                totalmails: datametricsMail,
+                metricsActivity: dataMetricsActivity,
+                metricsGnal: dataMetricsGnal,
+              });
               this.obtenerMetricas(dataMetricsActivity);
               this.totalsMails(datametricsMail);
               this.fetchDataMails().then((resp)=>{
@@ -193,14 +199,13 @@ class DashboardEvent extends Component {
               this.setState({                
                 loadingMetrics:false,
                 totalmails: datametricsMail,
-                metricsGnal: dataMetricsGnal
-              })
+                metricsGnal: dataMetricsGnal,
+              });
               this.totalsMails(datametricsMail);
               this.graficRegistros();
               this.graficAttendees();
-              this.graficPrintouts(); 
-              
-            }                  
+              this.graficPrintouts();
+            }
           });
         });
       });
@@ -213,27 +218,26 @@ class DashboardEvent extends Component {
   }
   //Función que permite obtener las métricas generales del evento
   obtenerMetricas = async (data) => {
-    const { eventId } = this.props;  
-    let metricsgnal= await queryReportGnal(eventId);    
-      let metricsActivity= await updateMetricasActivity(data,eventId,metricsgnal.metrics);
-      let metricsGraphics= await queryReportGnalByMoth(eventId)
-        this.setState({
-          metricsGraphics: metricsGraphics,
-          metricsGnal: {
-            ...this.state.metricsGnal,
-            total_checkIn: metricsgnal.totalMetrics["ga:sessions"],
-            avg_time: (metricsgnal.totalAvg/60).toFixed(2),
-            total_printouts:metricsgnal.totalMetrics["ga:pageviews"]         
-          },
-          metricsGaByActivity: metricsgnal.metrics,
-          metricsGaByActivityGnal: metricsgnal.metrics,
-          metricsActivity,
-          loadingMetrics:false
-        });
-        this.graficRegistros();
-        this.graficAttendees();
-        this.graficPrintouts();     
-    
+    const { eventId } = this.props;
+    let metricsgnal = await queryReportGnal(eventId);
+    let metricsActivity = await updateMetricasActivity(data, eventId, metricsgnal.metrics);
+    let metricsGraphics = await queryReportGnalByMoth(eventId);
+    this.setState({
+      metricsGraphics: metricsGraphics,
+      metricsGnal: {
+        ...this.state.metricsGnal,
+        total_checkIn: metricsgnal.totalMetrics['ga:sessions'],
+        avg_time: (metricsgnal.totalAvg / 60).toFixed(2),
+        total_printouts: metricsgnal.totalMetrics['ga:pageviews'],
+      },
+      metricsGaByActivity: metricsgnal.metrics,
+      metricsGaByActivityGnal: metricsgnal.metrics,
+      metricsActivity,
+      loadingMetrics: false,
+    });
+    this.graficRegistros();
+    this.graficAttendees();
+    this.graficPrintouts();
   };
   //GRAFICA REGISTROS POR DIA
   async graficRegistros() {
@@ -298,10 +302,29 @@ class DashboardEvent extends Component {
 
   //Opciones para las gráficas
   options = {
+    layout: {
+      padding: '0',
+    },
+    elements: {
+      point: {
+        pointStyle: 'circle',
+        radius: '5',
+        hoverRadius: '6',
+      },
+    },
     plugins: {
       datalabels: {
         display: true,
         color: 'black',
+      },
+      legend: {
+        display: true,
+        labels: {
+          font: {
+            size: '12',
+            family: "'Montserrat', sans-serif", // para probar si afecta la fuente cambiar Montserrat por Papyrus
+          },
+        },
       },
     },
     responsive: true,
@@ -564,7 +587,6 @@ class DashboardEvent extends Component {
                 </Row>}
                {this.state.printButton && <Row>
                   <Button
-                   
                     shape='round'
                     icon={<NotificationOutlined />}
                     onClick={() => this.props.history.push(`/event/${this.props.eventId}/messages`)}>
