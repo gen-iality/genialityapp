@@ -1,9 +1,23 @@
+import { notification  } from 'antd';
 /** Componente que gestiona la Ayuda del 50/50 */
 function HelpFiftyFifty(setFiftyfitfyused, survey) {
+
+   const openNotificationWithIcon = config => {
+      notification[config.type]({
+        message: config.title,
+        description: config.description,
+      });
+    };
+
    let question = survey.currentPage.questions[0];
 
    if (!(question.correctAnswer && question.choices && question.choices.length > 2)) {
-      alert('Menos de dos opciones no podemos borrar alguna');
+      const config = {
+         type : "error",
+         title:'Lo sentimos',
+         description:'Menos de tres opciones no podemos borrar alguna'
+      }
+      openNotificationWithIcon(config)
       return;
    }
    let choices = question.choices;
@@ -16,7 +30,12 @@ function HelpFiftyFifty(setFiftyfitfyused, survey) {
    });
    question.choices = choices;
    setFiftyfitfyused(true);
-   alert('has usado la ayuda  del 50/50');
+   const config = {
+      type : "success",
+      title:'¡Súper!',
+      description:'Acabas de usar la ayuda del 50/50'
+   }
+   openNotificationWithIcon(config)
 }
 
 export default HelpFiftyFifty;

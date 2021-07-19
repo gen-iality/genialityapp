@@ -2,7 +2,7 @@ import React from 'react';
 import { firestore } from '../../../../helpers/firebase';
 import { SurveyPage } from './services';
 
-function RealTimeSurveyListening(idSurvey, currentUser, setFreezeGame, realTimeSurvey) {
+function RealTimeSurveyListening(idSurvey, currentUser, startingSurveyComponent) {
    //    let currentPageNo = 0;
 
    firestore
@@ -16,9 +16,7 @@ function RealTimeSurveyListening(idSurvey, currentUser, setFreezeGame, realTimeS
          //     currentPageNo = await SurveyPage.getCurrentPage(idSurvey, currentUser._id);
          //     surveyRealTime.currentPage = currentPageNo ? currentPageNo : 0;
          //  }
-
-         setFreezeGame(surveyRealTime.freezeGame);
-         realTimeSurvey(surveyRealTime);
+         startingSurveyComponent(surveyRealTime);
       });
 }
 

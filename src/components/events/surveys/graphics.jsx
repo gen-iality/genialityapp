@@ -93,42 +93,48 @@ class Graphics extends Component {
           break;
       }
     }
-   
-    // {console.log('porcentaje',totalPercentResponse)}
-    
+
     let generatedlabels = [];
     let totalVotosUsuarios = 0;
+    let porcentaj_answer=0;
+    let colorB=[];
+    let list = []
+
+    const alphabet = ['A','B','C','D','E'];
+
     //Se iguala options.choices[a] a una cadena string dinamica para agregar la cantidad de votos de la respuesta
     for (let a = 0; options.choices.length > a; a++) {
+      colorB = horizontalBar.data.datasets[0].backgroundColor[a]
       // options.choices[a] = `${options.choices[a]}:` + `${answer_count[a]} Voto(s): ${totalPercentResponse[a]} %`}
       switch (operation) {
         case 'onlyCount':
           generatedlabels[a] =
             answer_count && answer_count[a] ? options.choices[a] + ` ${answer_count[a][0]} Voto(s)` : '0 Votos';
-            this.state.dataVotos.push({
-              voto: answer_count[a][0],
-              porcentaje: answer_count[a][1],
-              answer:options.choices[a],
-              option:options.choices[a].length == 1 ? options.choices[a] : 
-              options.choices[a].length == 2 ? options.choices[a] : 'text',
-            });
           break;
         case 'participationPercentage':
           generatedlabels[a] =
             answer_count && answer_count[a]
               ? ` ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n ${options.choices[a]}`
               : '0 Votos'
-              this.state.dataVotos.push({
-                voto: answer_count[a][0],
-                porcentaje: answer_count[a][1],
-                answer:options.choices[a],
-                option:options.choices[a].length == 1 ? options.choices[a] : 
-                options.choices[a].length == 2 ? options.choices[a] : 'text',
-              });
           break;
       }
+      porcentaj_answer = answer_count[a][1] 
+
+      list.push({
+        voto: answer_count[a][0],
+        porcentaje: answer_count[a][1],
+        answer:options.choices[a],
+        option:(options.choices[a].length == 2 ) ? options.choices[a]: alphabet[a],
+        color:colorB
+        // option:options.choices[a].length == 1 ? options.choices[a] : 
+        // options.choices[a].length == 2 ? options.choices[a] : 'text',
+      });
       totalVotosUsuarios = totalVotosUsuarios + answer_count[a][0];
     }
+
+    this.setState({
+      dataVotos:list
+    })
 
     let respuestadVotos = 0
     let porcentajeUsuarios = 0
@@ -136,16 +142,13 @@ class Graphics extends Component {
 
     respuestadVotos = this.state.totalUser - totalVotosUsuarios;
     porcentajeUsuarios= parseInt((respuestadVotos * 100) / this.state.totalUser)
-    console.log("10. --- respuestadVotos", respuestadVotos)
-    console.log("10. --- porcentajeUsuarios", porcentajeUsuarios)
+
     this.setState.resultVotos ={
       sumadVotacion: totalVotosUsuarios,
       usuariosSinRespuesta: respuestadVotos,
       porcentajevotos: porcentajeUsuarios
     }
 
-  
-    // {console.log('generatedLabel',generatedlabels)}
     let formatterTitle = options.title;
     this.setState({ titleQuestion: formatterTitle });
     if (options.title && options.title.length > 70) formatterTitle = this.divideString(options.title);
@@ -160,10 +163,10 @@ class Graphics extends Component {
       horizontalBar.options.title.text = formatterTitle;
 
       //Si es un examen Marcamos la respuesta correcta en verde
-      if (options.correctAnswerIndex) {
-        horizontalBar.data.datasets[0].backgroundColor = [];
-        horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
-      }
+      // if (options.correctAnswerIndex) {
+      //   horizontalBar.data.datasets[0].backgroundColor = [];
+      //   horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
+      // }
 
       /* El siguiente codigo actuamlente no se esta usando pero se deja como referencia
         para implementar el servicio para acceder a los métodos de la API de chart
@@ -281,10 +284,10 @@ class Graphics extends Component {
       chart.options.title.text = formatterTitle;
 
       //Si es un examen Marcamos la respuesta correcta en verde
-      if (options.correctAnswerIndex) {
-        horizontalBar.data.datasets[0].backgroundColor = [];
-        horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
-      }
+      // if (options.correctAnswerIndex) {
+      //   horizontalBar.data.datasets[0].backgroundColor = [];
+      //   horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
+      // }
       chart.update();
 
       this.setState({ chart });
@@ -313,7 +316,7 @@ class Graphics extends Component {
     let { dataSurvey, currentPage, titleQuestion, dataVotos } = this.state;
     const { Paragraph, Text } = Typography;
     const { surveyLabel } = this.props;
-    // console.log("10. ==> 1.dataSurvey, 2.currentPage, 3.titleQuestion, 4.dataVotos", "1-- ",dataSurvey, "2-- ",currentPage, "3-- ",titleQuestion, "4-- ",dataVotos)
+
     if (dataSurvey.questions)
       return (
         <>
@@ -353,7 +356,7 @@ class Graphics extends Component {
               <div style={{width:'320px', borderRadius:'6px', boxShadow:'0px 4px 4px 0px #00000040', marginTop:'12px', marginBottom:'12px'}}>
               <Row>
                 <Col span={votos.option == 2 ? 8 : 5} style={{width:'100%'}}>
-                  <div  style={{height:'100%', width:'100%', backgroundColor:'red', borderRadius:'4px 0px 0px 4px'}}>
+                  <div  style={{height:'100%', width:'100%', backgroundColor:`${votos.color}`, borderRadius:'4px 0px 0px 4px'}}>
                     <span style={{justifyContent:'center', alignContent:'center', height:'100%', color:'white', display:'grid', fontSize:'24px'}}>{votos.option.toUpperCase()} </span>
                   </div>
                 </Col>
@@ -380,7 +383,7 @@ class Graphics extends Component {
             <div style={{height:'76px', width:'320px', borderRadius:'6px', boxShadow:'0px 4px 4px 0px #00000040'}}>  
               <Row>
                 <Col span={8}>
-                  <div  style={{height:'76px', width:'100%', backgroundColor:'red', borderRadius:'4px 0px 0px 4px'}}>
+                  <div  style={{height:'76px', width:'100%', backgroundColor:'#9e9e9e', borderRadius:'4px 0px 0px 4px'}}>
                     <span style={{justifyContent:'center', alignContent:'center', height:'100%', color:'white', display:'grid', fontSize:'18px', textAlign:'center'}}>Sin responder</span>
                   </div>
                 </Col>
