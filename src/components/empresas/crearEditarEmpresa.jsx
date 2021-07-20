@@ -279,7 +279,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                                 <Field
                                   name={`services[${serviceIndex}].web_url`}
                                   component={InputField}
-                                  label='Web Url'
+                                  label={`Web url ${serviceIndex + 1}`}
                                   placeholder='Enlace para ver tu producto o servicio en tu web'
                                 />
 

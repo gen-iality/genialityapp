@@ -41,7 +41,7 @@ function Companylist(props) {
 
   return (
     <div className='company-list'>
-      <Row className='container' gutter={[10, 10]}>
+      <Row className='container' gutter={[10, 10]} style={{ cursor: 'pointer' }}>
         <Col
           xs={24}
           sm={24}

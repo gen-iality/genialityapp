@@ -121,6 +121,7 @@ const FeriasDetail = (props) => {
                           title={prod.nombre}
                           etiqueta={prod.category}
                           description={prod.description}
+                          url={prod.web_url}
                         />
                       </Col>
                     ))}
