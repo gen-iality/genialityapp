@@ -382,7 +382,7 @@ class CheckAgenda extends Component {
                 </button>
               </div>
               <div className='column is-narrow has-text-centered button-c is-centered'>
-                <Button onClick={() =>this.props.history.push( `/event/${this.props.event._id}/invitados`)}>Importar Usuario</Button>
+                <Button onClick={() =>this.props.history.push( `/event/${this.props.event._id}/invitados/importar-excel`)}>Importar Usuario</Button>
                
               </div>
             </div>

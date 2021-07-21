@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Col, Modal, Button, Typography, Space } from 'antd';
 import { PhoneOutlined, MailOutlined, GlobalOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 function Companylist(props) {
   const { Text } = Typography;
@@ -61,16 +62,14 @@ function Companylist(props) {
           sm={24}
           md={24}
           lg={9}
-          xl={9}
-          onClick={() => {
-            history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`);
-          }}>
+          xl={9}>
           <div className='info-contact'>
             <span className='name'>{props.name}</span>
             <span className='position'>{props.position} </span>
             <span className='description'>
               <div dangerouslySetInnerHTML={{ __html: props.description }} />
             </span>
+            <span style={{marginTop:15}}><Link to={`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`}>Ver más</Link></span>
           </div>
         </Col>
         {props.tel || props.email || props.pagweb ? (

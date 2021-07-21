@@ -84,7 +84,11 @@ const EventSectionRoutes = (props) => {
         <Route path={`${path}/ferias`}>
           <Ferias />
         </Route>
-
+        <Route path={`${path}/noticias`}>
+          <div>
+            Acá las noticias
+          </div>
+        </Route>
         <Route path={`${path}/tickets`}>
           <>
             <div className='columns is-centered'>

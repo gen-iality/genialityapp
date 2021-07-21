@@ -152,12 +152,12 @@ class InformativeSection extends Component {
                key={"Cardgallery"+galery.id}
                style={{ marginLeft:20, width: 300,marginBottom:20,marginRight:20 }}
                cover={<img alt='example' src={galery.image} />}
-               actions={[
-                <div key={'act-'+galery.id}>$ {galery.price}</div>,
+               extra={<div onClick={null}key={'act-'+galery.id}>$ {galery.price}</div>}
+               title={galery.name}
+               actions={[              
                  <div onClick={()=>this.props.cUser.value?this.pujar(galery):this.setState({isModalVisibleRegister:true})}  key={'act2-'+galery.id} ><SettingOutlined key='setting' /> Pujar</div>              
                ]}>
-               <Meta               
-                 title={galery.name}
+               <Meta            
                  description={galery.description}
                />
              </Card>)}
