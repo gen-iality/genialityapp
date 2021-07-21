@@ -1,13 +1,12 @@
 import { Empty, Spin } from 'antd';
 import React from 'react';
 import Companylist from './companyList';
-import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import { props } from 'ramda';
+
 
 const FeriasList = ({ event_id,setVirtualConference }) => {
   const [companies, loadingCompanies] = useGetEventCompanies(event_id);

@@ -2,9 +2,12 @@ import React, { Component, Fragment } from 'react';
 import { Alert, Button, Card, Col, Input, Row, Space } from 'antd';
 import withContext from '../../../Context/withContext';
 import { EventsApi } from '../../../helpers/request';
-import {  SettingOutlined } from '@ant-design/icons';
+import {  SettingOutlined, WarningOutlined } from '@ant-design/icons';
 import Meta from 'antd/lib/card/Meta';
 import Modal from 'antd/lib/modal/Modal';
+import { connect } from 'react-redux';
+import { setVirtualConference } from '../../../redux/virtualconference/actions';
+import { withRouter } from 'react-router';
 
 class InformativeSection extends Component {
   constructor(props) {
@@ -16,11 +19,14 @@ class InformativeSection extends Component {
       isModalVisible:false,
       selectedGalery:null,
       value_oferta:null,
-      valueoff:false
+      valueoff:false,
+      isModalVisibleRegister:false
     };
   }
 
   componentDidMount() {
+    this.props.setVirtualConference(false)
+    console.log(this.props)
     this.setState({
       informativeSection: this.props.cEvent.value.itemsMenu.informativeSection,
       markup: this.props.cEvent.value.itemsMenu.informativeSection.markup,
@@ -37,6 +43,10 @@ class InformativeSection extends Component {
     });
   }
 
+  componentWillUnmount(){
+    this.props.setVirtualConference(true)
+  }
+
   showModal = () => {
    console.log( this.state.selectedGalery?.price)
    console.log(this.state.value_oferta) 
@@ -47,12 +57,14 @@ class InformativeSection extends Component {
     
   };
   // CUANDO SE OFRECE UN PRODUCTO
-  handleOk = () => {   
+  handleOk = async () => { 
+    //validación para campo oferta vacío  
     if(this.state.value_oferta===null || this.state.value_oferta===""){
       this.setState({
         valueoff:true
       })     
       return false;
+      //validación para oferta mayor al precio base
     }else if(this.state.value_oferta!==null || this.state.value_oferta!==""){
       if ( parseFloat(this.state.value_oferta)<this.state.selectedGalery.price){
         this.setState({
@@ -60,9 +72,14 @@ class InformativeSection extends Component {
         }) 
         return false;
       }else{
+        //gestionar y guardar valor de oferta
         let items=this.state.galeries;
         let newPuja={...this.state.selectedGalery,price:this.state.value_oferta}
         let newItems=items.map((item)=>{if(item._id===this.state.selectedGalery._id){return newPuja}else{return item}})
+        let oferta={valueOffered:parseFloat(this.state.value_oferta)}
+        let resp=await EventsApi.storeGalley(this.props.cEvent.value._id,this.state.selectedGalery._id,oferta);
+        console.log("RESPUESTA OFERTA")
+        console.log(resp)
         this.inputOferta.value = "";        
         this.setState({         
           valueoff:false,
@@ -74,7 +91,11 @@ class InformativeSection extends Component {
       }    
     }    
   };
-
+  //ir a registrar usuario
+  registerUser=()=>{
+    this.props.history.push(`/landing/${this.props.cEvent.value._id}/tickets`)
+  }
+  //Cerrar modal
   handleCancel = () => {
     this.setState({
       isModalVisible:false
@@ -124,20 +145,22 @@ class InformativeSection extends Component {
             </Card>
             
             <Row className='site-card-border-less-wrapper' style={{ width:'67vw',margin:'auto'}}>
-            {this.state.galeries.length > 0 ? this.state.galeries.map((galery)=>
-              <div key={'container'+galery.id}> <Card           
-               key={galery.id}
+            {this.state.galeries.length > 0 ? 
+            <Row key={'container'}>
+            {this.state.galeries.map((galery)=>
+               <Card           
+               key={"Cardgallery"+galery.id}
                style={{ marginLeft:20, width: 300,marginBottom:20,marginRight:20 }}
                cover={<img alt='example' src={galery.image} />}
                actions={[
                 <div key={'act-'+galery.id}>$ {galery.price}</div>,
-                 <div onClick={()=>this.pujar(galery)}  key={'act2-'+galery.id} ><SettingOutlined key='setting' /> Pujar</div>              
+                 <div onClick={()=>this.props.cUser.value?this.pujar(galery):this.setState({isModalVisibleRegister:true})}  key={'act2-'+galery.id} ><SettingOutlined key='setting' /> Pujar</div>              
                ]}>
                <Meta               
                  title={galery.name}
                  description={galery.description}
                />
-             </Card>
+             </Card>)}
                 <Modal okText='Ofrecer' cancelText='Cancelar' centered title={this.state.selectedGalery!=null && this.state.selectedGalery.name} visible={this.state.isModalVisible} onOk={this.handleOk} onCancel={this.handleCancel}>
                  <Row >
                    <Col span={16}>
@@ -155,8 +178,19 @@ class InformativeSection extends Component {
                  </Col>
                  </Row>
                 </Modal>
-                </div>
-            ): (
+
+                <Modal okText='Registrarme' cancelText='Cancelar' centered title={"Iniciar sesión"} visible={this.state.isModalVisibleRegister} onOk={this.registerUser} onCancel={()=>this.setState({isModalVisibleRegister:false})}>
+                 <Row justify={'center'}>
+                 <WarningOutlined style={{ fontSize: '80px', color: '#08c',marginBottom:'20px' }}/>
+                 </Row>
+                 <Row justify='center'>               
+                 <Col gutter={10}>
+                     <p>Para poder realizar una oferta a este producto debes <strong>iniciar sesión</strong> ó  <strong>registrarte</strong></p>
+                 </Col>
+                 </Row>                 
+                </Modal>
+                </Row>
+            : (
               <div>Aún no existen artículos en la galería</div>
             )}
             </Row>
@@ -166,6 +200,9 @@ class InformativeSection extends Component {
     );
   }
 }
+const mapDispatchToProps = {
+  setVirtualConference
+};
 
-let InformativeSection2WithContext = withContext(InformativeSection);
+let InformativeSection2WithContext = connect(null,mapDispatchToProps)(withContext(withRouter( InformativeSection)));
 export default InformativeSection2WithContext;
