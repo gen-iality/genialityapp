@@ -170,9 +170,6 @@ class ListEventUser extends Component {
 
   async componentDidMount() {
     let self = this;
-    console.log("DID MOUNT")
-    console.log(this.props)
-
     this.checkFirebasePersistence();
     try {
       const { event } = this.props;
