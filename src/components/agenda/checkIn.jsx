@@ -13,6 +13,7 @@ import { Table, Input, Button, Space } from 'antd';
 import { SearchOutlined, UserAddOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import UserModal from '../modal/modalUser';
+import Moment from 'moment';
 
 const html = document.querySelector('html');
 
@@ -35,16 +36,40 @@ class CheckAgenda extends Component {
       ticket:null,
       ticketsOptions:null,
       spacesEvents: [],
+      userRef: null,
+      properties:null
     };
     this.onSelectChange = this.onSelectChange.bind(this);
     this.cargarUsuarios=this.cargarUsuarios.bind(this);
   }
 
   async componentDidMount() {
-   this.cargarUsuarios()
+    let self=this;
+   this.cargarUsuarios(self)
   }
 
-  async cargarUsuarios(){
+  async obtaincheckin(user,ref){
+    console.log(user)
+    let  resp= await ref.doc(user._id).get()
+       console.log(resp.exists)
+      let userNew={...user,checkedin_at:resp.exists?new Date(resp.data().checkedin_at.seconds*1000):false}
+      return userNew
+    
+    
+  }
+
+  async obtenerCheckinAttende(ref,listuser){
+   
+    let arrlist=[]
+    for(let user of listuser){
+      let userNew= await this.obtaincheckin(user,ref)
+      arrlist.push(userNew)
+    }
+    console.log(arrlist)
+    return arrlist;
+  }
+
+  async cargarUsuarios(self){
     try {
       const { event } = this.props;
       const agendaID = this.props.match.params.id;
@@ -52,13 +77,13 @@ class CheckAgenda extends Component {
       const properties = event.user_properties;
       const rolesList = await RolAttApi.byEventRolsGeneral();
    
-
-      this.createColumnsTable(properties);
-
+      let userRef=firestore.collection(`${event._id}_event_attendees`).doc("activity").collection(`${agendaID}`);
+      this.createColumnsTable(properties,self);
+      
       //Parse de campos para mostrar primero el nombre, email y luego el resto
       const eventFields = fieldNameEmailFirst(properties);
 
-      this.setState({ eventFields, agendaID, eventID: event._id,rolesList });
+      this.setState({ eventFields, agendaID, eventID: event._id,rolesList,userRef });
       let newList = [...this.state.attendees];
       console.log("Cargando lista")
       newList = await Activity.getActivyAssitantsAdmin(this.props.event._id, agendaID);
@@ -70,11 +95,11 @@ class CheckAgenda extends Component {
         item = { ...item, ...attendee };
         return item;
       });
-      
+      newList= await this.obtenerCheckinAttende(userRef,newList) ;
       console.log(newList)
 
       this.setState(() => {
-        return { attendees: newList, loading: false, total: newList.length, checkIn };
+        return { attendees: newList, loading: false, total: newList.length, checkIn,properties };
       });
       let usersData = this.createUserInformation(newList);
       console.log("usersData")
@@ -86,14 +111,46 @@ class CheckAgenda extends Component {
     }
   }
 
+  checkedincomponent = (text, item, index) => {   
+   console.log(item)
+   const self=this;
+    return item.checkedin_at ? (
+      <p>{Moment(item.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
+    ) : (
+      <div>
+        <input
+          className='is-checkradio is-primary is-small'
+          id={'checkinUser' + item._id}
+          disabled={item.checkedin_at}
+          type='checkbox'
+          name={'checkinUser' + item._id}
+          checked={item.checkedin_at}
+          // eslint-disable-next-line no-unused-vars
+          onChange={(e) => {
+          
+           self.checkIn(item._id);
+          }}
+        />
+        <label htmlFor={'checkinUser' + item._id} />
+      </div>
+    );
+  };
+
   //Funcion para crear columnas para la tabla de ant
-  createColumnsTable(properties) {
+  createColumnsTable(properties,self) {
+ 
     let columnsTable = [];
+    let editColumn = {
+      title: 'Editar',
+      key: 'edit',
+      render: self.editcomponent,
+    };
+    columnsTable.push(editColumn)
 
     columnsTable.push({
       title: 'Chequeado',
       dataIndex: 'checkedin_at',
-      ...this.getColumnSearchProps('checkedin_at'),
+      render: self.checkedincomponent,  
     });
 
     for (let i = 0; properties.length > i; i++) {
@@ -109,17 +166,43 @@ class CheckAgenda extends Component {
 
   //Funcion para crear la lista de usuarios para la tabla de ant
   createUserInformation(newList) {
+    console.log(newList)
     let usersData = [];
-    for (let i = 0; newList.length > i; i++) {
+    for (let i = 0; newList.length > i; i++) { 
+      console.log(newList[i]) 
+      
       if(newList[i].properties){
+        console.log("INGRESO")
         let newUser = newList[i].properties;
         newUser.key = newList[i]._id;
+        newUser.checkedin_at=newList[i].checkedin_at
+        /*console.log(newUser.checkedin_at)
+        console.log(newList[i].checkedin_at)
+        console.log(newUser)*/
+        newUser._id=newList[i]._id
         usersData.push(newUser);
       }
      
     }
+    console.log(usersData)
     return usersData;
   }
+
+  editcomponent = (text, item, index) => {
+    return (
+      <span
+        className='icon has-text-grey action_pointer'
+        data-tooltip={'Editar'}
+        // eslint-disable-next-line no-unused-vars
+        onClick={(e) => {
+          this.setState({
+            editUser:true
+          });
+        }}>
+        <i className='fas fa-edit' />
+      </span>
+    );
+  };
 
   //FN para exportar listado a excel
   exportFile = async (e) => {
@@ -163,17 +246,26 @@ class CheckAgenda extends Component {
   };
 
   //FN para checkin
-  checkIn = (id) => {
+  checkIn = async (id) => {
     const { attendees } = this.state;
+    
     //Se busca en el listado total con el id
-    const user = attendees.find(({ attendee_id }) => attendee_id === id);
+    const user = attendees.find(({ _id }) => _id === id);
+ 
     //Sino está chequeado se chequea
-    if (!user.checked_in) {
-      const userRef = firestore.collection(`/${this.props.event._id}_event_attendees`).doc(user._id);
+    if (!user.checked_in) {      
+      let doc= await this.state.userRef.doc(user._id).get()
+      console.log(this.state.userRef)
+      console.log(doc.exists)
+      const userRef = this.state.userRef;
+     /* if(doc.exists){ 
+        console.log("EXISTE")       
       userRef
         .update({
+          ...user,      
           updated_at: new Date(),
           checked_in: true,
+          checkedin_at:new Date(),
           checked_at: new Date(),
         })
         .then(() => {
@@ -183,7 +275,36 @@ class CheckAgenda extends Component {
           console.error('Error updating document: ', error);
           toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
         });
+    }else{*/
+      console.log(user._id)
+     this.state.userRef.doc(user._id)
+      .set({
+        ...user ,    
+        updated_at: new Date(),
+        checked_in: true,
+        checkedin_at:new Date(),
+        checked_at: new Date(),
+      })
+      .then(() => {
+       
+        toast.success('Usuario Chequeado');
+        let updateAttendes= this.state.usersData.map((attendee)=>{if (attendee._id===id){ return {          
+            ...user.properties,
+            key:user._id, 
+            _id:user._id,
+            updated_at: new Date(),
+            checked_in: true,
+            checkedin_at:new Date(),
+            checked_at: new Date()
+          }}else {return attendee} })
+          this.setState({attendees:updateAttendes,usersData:updateAttendes})
+      })
+      .catch((error) => {
+        console.error('Error updating document: ', error);
+        toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+      });
     }
+   
   };
 
   //Funcion para filtrar los usuarios de la tabla
@@ -272,6 +393,7 @@ class CheckAgenda extends Component {
   onSelectChange(idEventUsers) {
     const { attendees } = this.state;
     let attendeesForSendMessage = [];
+    alert("A CHECKIN")
 
     for (let i = 0; idEventUsers.length > i; i++) {
       attendeesForSendMessage = attendees.filter((item) => idEventUsers.indexOf(item._id) !== -1);
@@ -298,19 +420,9 @@ class CheckAgenda extends Component {
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
-      selections: [
-        Table.SELECTION_ALL,
-        {
-          key: 'deselect',
-          text: 'Deselect all Data',
-          width: '30%',
-          onSelect: () => {
-            let newSelectedRowKeys = [];
-            this.setState({ selectedRowKeys: newSelectedRowKeys });
-          },
-        },
-      ],
+      
     };
+    console.log('RENDER')
     if (!this.props.location.state) return this.goBack();
     return (
       <Fragment>
@@ -398,7 +510,7 @@ class CheckAgenda extends Component {
               scroll={{ x: 1500 }}
               sticky
               pagination={{ position: ['bottomCenter'] }}
-              rowSelection={rowSelection}
+              //rowSelection={rowSelection}
               columns={columnsTable}
               dataSource={usersData}
             />
