@@ -78,8 +78,11 @@ class Graphics extends Component {
 
   updateData = ({ options, answer_count }) => {
     let { graphicsFrame, chartCreated, chart } = this.state;
-    let { horizontalBar } = graphicsFrame;
+    let { horizontalBar, ChartPie, verticalBar } = graphicsFrame;
     const { operation } = this.props;
+
+    let graphyType = this.state.dataSurvey.graphyType 
+    let graphy = graphyType === ChartPie.type || window.screen.width <= 800 ? ChartPie : graphyType === horizontalBar.indexAxis ?  horizontalBar : verticalBar
 
     let totalPercentResponse = {};
     //se realiza iteracion para calcular porcentaje
@@ -104,7 +107,7 @@ class Graphics extends Component {
 
     //Se iguala options.choices[a] a una cadena string dinamica para agregar la cantidad de votos de la respuesta
     for (let a = 0; options.choices.length > a; a++) {
-      colorB = horizontalBar.data.datasets[0].backgroundColor[a]
+      colorB = graphy.data.datasets[0].backgroundColor[a]
       // options.choices[a] = `${options.choices[a]}:` + `${answer_count[a]} Voto(s): ${totalPercentResponse[a]} %`}
       switch (operation) {
         case 'onlyCount':
@@ -114,7 +117,7 @@ class Graphics extends Component {
         case 'participationPercentage':
           generatedlabels[a] =
             answer_count && answer_count[a]
-              ? ` ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n ${options.choices[a]}`
+              ? ` ${(options.choices[a].length == 2 ) ? options.choices[a]: alphabet[a]}  ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n `
               : '0 Votos'
           break;
       }
@@ -143,11 +146,13 @@ class Graphics extends Component {
     respuestadVotos = this.state.totalUser - totalVotosUsuarios;
     porcentajeUsuarios= parseInt((respuestadVotos * 100) / this.state.totalUser)
 
-    this.setState.resultVotos ={
-      sumadVotacion: totalVotosUsuarios,
-      usuariosSinRespuesta: respuestadVotos,
-      porcentajevotos: porcentajeUsuarios
-    }
+    this.setState({
+      resultVotos:{
+        sumadVotacion: totalVotosUsuarios,
+        usuariosSinRespuesta: respuestadVotos,
+        porcentajevotos: porcentajeUsuarios
+      }
+    });
 
     let formatterTitle = options.title;
     this.setState({ titleQuestion: formatterTitle });
@@ -158,14 +163,14 @@ class Graphics extends Component {
     if (!chartCreated) {
       // Se asignan los valores obtenidos de los servicios
       // El nombre de las opciones y el conteo de las opciones
-      horizontalBar.data.labels = generatedlabels;
-      horizontalBar.data.datasets[0].data = Object.values(totalPercentResponse || []);
-      horizontalBar.options.title.text = formatterTitle;
+      graphy.data.labels = generatedlabels;
+      graphy.data.datasets[0].data = Object.values(totalPercentResponse || []);
+      graphy.options.title.text = formatterTitle;
 
       //Si es un examen Marcamos la respuesta correcta en verde
       // if (options.correctAnswerIndex) {
-      //   horizontalBar.data.datasets[0].backgroundColor = [];
-      //   horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
+      //   graphy.data.datasets[0].backgroundColor = [];
+      //   graphy.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
       // }
 
       /* El siguiente codigo actuamlente no se esta usando pero se deja como referencia
@@ -183,7 +188,7 @@ class Graphics extends Component {
       //   afterDatasetsDraw: function (context, easing) {
 
       //     console.log('--- start format data label hbar ---')
-      //     console.log('hbar', horizontalBar)
+      //     console.log('hbar', graphy)
       //     //context.clearRect(0, 0, canvas.width, canvas.height);
 
       //     var ctx = context.chart.ctx;
@@ -224,7 +229,7 @@ class Graphics extends Component {
         de lo métodos de la API  de ChartJS
       */
 
-      horizontalBar.options = {
+        graphy.options = {
         responsive: true,
         title: {
           fontSize: 16,
@@ -241,7 +246,7 @@ class Graphics extends Component {
             anchor: 'start',
             align: 5,
             font: {
-              size: this.state.isMobile ? 12 : 18, // otorga el tamaño de la fuente en los resultados de la encuesta segun el dispositivo
+              size: this.state.isMobile ? 12 : 22, // otorga el tamaño de la fuente en los resultados de la encuesta segun el dispositivo
             },
           },
         },
@@ -269,14 +274,14 @@ class Graphics extends Component {
             },
           ],
         },
-        indexAxis: 'y'
+        indexAxis: graphyType
       };
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
       const canvas = document.getElementById('chart').getContext('2d');
-      const chart = new Chart(canvas, horizontalBar);
+      const chart = new Chart(canvas, graphy);
 
-      this.setState({ horizontalBar, chart, chartCreated: true });
+      this.setState({ graphy, chart, chartCreated: true });
     } else {
       // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
       chart.data.labels = generatedlabels;
@@ -285,8 +290,8 @@ class Graphics extends Component {
 
       //Si es un examen Marcamos la respuesta correcta en verde
       // if (options.correctAnswerIndex) {
-      //   horizontalBar.data.datasets[0].backgroundColor = [];
-      //   horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
+      //   graphy.data.datasets[0].backgroundColor = [];
+      //   graphy.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
       // }
       chart.update();
 
@@ -335,9 +340,9 @@ class Graphics extends Component {
                 </Button>
               )}
             </div>
-            <Card bodyStyle={{padding:'0'}}>
-              <strong>{titleQuestion}</strong>
-              <canvas style={{ width: '100%' }} id='chart'></canvas>
+            <strong style={{ fontSize:'16px' }}>{titleQuestion}</strong>
+            <Card bodyStyle={{paddingLeft:'200px', paddingRight:'200px', paddingTop:'0px', paddingBottom:'0px'}} >
+              <canvas  id='chart'></canvas>
             </Card>
 
             <br />

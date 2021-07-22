@@ -40,7 +40,7 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
    // Esto permite ocultar el boton de devolver en la encuesta
    dataSurvey.showPrevButton = false;
    // Asigna textos al completar encuesta y al ver la encuesta vacia
-   dataSurvey.completedHtml = 'Gracias por completar la encuesta!';
+   dataSurvey.completedHtml = 'Gracias por contestar!';
    //dataSurvey.questionsOnPageMode = 'singlePage';
    if (dataSurvey.allow_gradable_survey === 'true' && dataSurvey.initialMessage) {
       // Permite mostrar el contador y asigna el tiempo limite de la encuesta y por pagina
