@@ -412,15 +412,15 @@ class DashboardEvent extends Component {
       <>
         <div ref={(el) => (this.componentRef = el)}>
           <Row justify='start'>
-            {this.state.printButton ? (
-              ''
-            ) : (
-              <img
-                style={{ height: '200px', width: '1920px', objectFit: 'cover' }}
-                src='http://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
-                alt='evius'
-              />
-            )}
+            <img
+              style={{ height: '200px', width: '1920px', objectFit: 'contain' }}
+              src={
+                'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MetricsBanner%2Fcabezote2.jpg?alt=media&token=0f65b3ed-47f3-4c98-a616-db9a6a7b6ae3' ||
+                'http://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
+              }
+              alt='evius'
+            />
+
             {this.state.printButton ? (
               ''
             ) : (
@@ -453,7 +453,6 @@ class DashboardEvent extends Component {
 
             <Col span={this.state.printButton ? 6 : 24}>
               <Row gutter={(32, 32)}>
-
                 <Col span={24}>
                   <Tooltip title={this.state.desc2} placement='top' mouseEnterDelay={0.5}>
                     <Card hoverable>
@@ -482,7 +481,6 @@ class DashboardEvent extends Component {
                     </Card>
                   </Tooltip>
                 </Col>
-
               </Row>
             </Col>
           </Row>
@@ -522,45 +520,44 @@ class DashboardEvent extends Component {
                 </Card>
               </Tooltip>
             </Col>
-            
-                <Col span={this.state.printButton ? 18 : 24}>
-                  <Tooltip title={this.state.desc6} placement='top' mouseEnterDelay={0.5}>
-                    <Card>
-                      {this.state.printButton && (
-                        <Row justify='end'>
-                          <Button
-                            style={{ color: '#1F6E43', display: this.state.printButton ? 'block' : 'none' }}
-                            shape='round'
-                            icon={<FileExcelOutlined />}
-                            onClick={() =>
-                              this.exportReport(this.state.metricsGraphics, 'Número de visitas', 'time', 'visitasByDia')
-                            }>
-                            Exportar
-                          </Button>
-                        </Row>
-                      )}
-                      {this.state.printoutsDay && (
-                        <Row justify='center'>
-                          <Line data={this.state.printoutsDay} options={this.options} />
-                        </Row>
-                      )}
-                    </Card>
-                  </Tooltip>
-                </Col>
-                <Col span={this.state.printButton ? 6 : 24}>
-                  <Tooltip title={this.state.desc7} placement='top' mouseEnterDelay={0.5}>
-                    <Card>
-                      <Statistic
-                        groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
-                        valueStyle={{ fontSize: '38px' }}
-                        title='Visitas totales del evento'
-                        value={this.state.metricsGnal ? this.state.metricsGnal.total_printouts : 0}
-                        prefix={<EyeOutlined />}
-                      />
-                    </Card>
-                  </Tooltip>
-                </Col>
-             
+
+            <Col span={this.state.printButton ? 18 : 24}>
+              <Tooltip title={this.state.desc6} placement='top' mouseEnterDelay={0.5}>
+                <Card>
+                  {this.state.printButton && (
+                    <Row justify='end'>
+                      <Button
+                        style={{ color: '#1F6E43', display: this.state.printButton ? 'block' : 'none' }}
+                        shape='round'
+                        icon={<FileExcelOutlined />}
+                        onClick={() =>
+                          this.exportReport(this.state.metricsGraphics, 'Número de visitas', 'time', 'visitasByDia')
+                        }>
+                        Exportar
+                      </Button>
+                    </Row>
+                  )}
+                  {this.state.printoutsDay && (
+                    <Row justify='center'>
+                      <Line data={this.state.printoutsDay} options={this.options} />
+                    </Row>
+                  )}
+                </Card>
+              </Tooltip>
+            </Col>
+            <Col span={this.state.printButton ? 6 : 24}>
+              <Tooltip title={this.state.desc7} placement='top' mouseEnterDelay={0.5}>
+                <Card>
+                  <Statistic
+                    groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
+                    valueStyle={{ fontSize: '38px' }}
+                    title='Visitas totales del evento'
+                    value={this.state.metricsGnal ? this.state.metricsGnal.total_printouts : 0}
+                    prefix={<EyeOutlined />}
+                  />
+                </Card>
+              </Tooltip>
+            </Col>
           </Row>
           <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
             <Col span={24}>
@@ -665,13 +662,23 @@ class DashboardEvent extends Component {
               </Card>
             </Col>
           </Row>
+          <Row justify='start'>
+          <img
+            style={{ height: '200px', width: '1920px', objectFit: 'contain' }}
+            src={
+              'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MetricsBanner%2Fcabezote-sin-texto.jpg?alt=media&token=67e3e7cb-9c5f-489b-9eb0-e3526e204e34' ||
+              'http://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
+            }
+            alt='evius'
+          />
+        </Row>
         </div>
 
         <ReactToPrint
           pageStyle={pageStyle}
           onBeforeGetContent={() => this.displayButton(this)}
           onAfterPrint={() => this.visibleButton(this)}
-          documentTitle={'Métricas del evento'}
+          documentTitle={'Métricas del evento ' + this.props.eventName }
           trigger={() => {
             return (
               <Row justify='end' style={{ paddingTop: '10px' }}>
@@ -688,6 +695,7 @@ class DashboardEvent extends Component {
           }}
           content={() => this.componentRef}
         />
+        
       </>
     ) : (
       <Row justify='center' align='middle'>
