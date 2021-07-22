@@ -524,8 +524,8 @@ export const NewsFeed = {
   byEvent: async (id) => {
     return await Actions.getAll(`api/events/${id}/newsfeed`).then(({ data }) => data);
   },
-  getOne: async (id) => {
-    return await Actions.get(`api/events/${id}/newsfeed/`, id);
+  getOne: async (eventId,idnew) => {
+    return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}`);
   },
   editOne: async (data, id) => {
     return await Actions.edit(`api/events/${id}/newsfeed`, data, id);

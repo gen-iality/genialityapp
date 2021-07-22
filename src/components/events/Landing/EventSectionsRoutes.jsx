@@ -23,6 +23,7 @@ import MyAgendaIndepend from '../../networking/myAgendaIndepend';
 import NetworkingForm from '../../networking';
 import InformativeSection2 from '../informativeSections/informativeSection2';
 import InformativeSection from '../informativeSections/informativeSection';
+import Noticias from '../noticias';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -85,9 +86,7 @@ const EventSectionRoutes = (props) => {
           <Ferias />
         </Route>
         <Route path={`${path}/noticias`}>
-          <div>
-            Acá las noticias
-          </div>
+          <Noticias />
         </Route>
         <Route path={`${path}/tickets`}>
           <>
