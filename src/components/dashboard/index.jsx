@@ -30,11 +30,14 @@ import { Bar, Line } from 'react-chartjs-2';
 import XLSX from 'xlsx';
 import ReactToPrint from 'react-to-print';
 import Moment from 'moment';
+import API from '../../helpers/request';
+
+
 
 // const [google, setGoogle] = useState(null)
 class DashboardEvent extends Component {
   constructor(props) {
-    super(props);
+    super(props);    
     this.state = {
       loading: true,
       iframeUrl: '',
@@ -63,10 +66,29 @@ class DashboardEvent extends Component {
       desc5: 'Visitas totales de los usuarios',
       desc6: 'Visitas realizadas al evento',
       desc7: 'Impresiones totales del evento',
-      loadingMetrics: true, //Permite controlar la carga de las métricas
+      loadingMetrics: true, 
+      //TRUE:MUESTRA UI
+      //FALSE: PARA IMPRIMIR
+      printButton:true,
+      mailsDetails:[]
+      
+      //Permite controlar la carga de las métricas
     };
+    this.displayButton = this.displayButton.bind(this);
+   
+  }
+  displayButton=(self)=>{
+    return new Promise((resolve, reject) => {
+      self.setState({ printButton:false }, () => resolve());
+    });    
   }
 
+  visibleButton=(self)=>{    
+   self.setState({
+     printButton:true
+   })
+  }
+  
   //Función que permite totalizar los valores por campaña
   totalsMails(list) {
     let totalClicked = 0,
@@ -96,6 +118,56 @@ class DashboardEvent extends Component {
       message.error('No existen datos que exportar');
     }
   };
+   fetchDataMails() {
+     console.log("DATA MAILS")
+    return new Promise((resolve, reject) => {
+      API.get(`/api/events/${this.props.eventId}/messages`)
+        .then(({ data }) => {
+          resolve(data.data);
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
+  }
+   columnsMail = [
+    {
+      title: 'Asunto',
+      dataIndex: 'subject',
+      key: 'subject',
+      render: (text) => <span>{text}</span>,
+    },
+    {
+      title: '# Correos',
+      dataIndex: 'number_of_recipients',
+      key: 'recipients',
+      render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+    },
+    {
+      title: 'Entregados',
+      dataIndex: 'total_delivered',
+      key: 'sent',
+      render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+    },
+    {
+      title: 'Rebotados',
+      dataIndex: 'total_bounced',
+      key: 'bounced',
+      render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+    },
+    {
+      title: 'Abiertos',
+      dataIndex: 'total_opened',
+      key: 'opened',
+      render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+    },
+    {
+      title: 'Clicked',
+      dataIndex: 'total_clicked',
+      key: 'clicked',
+      render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
+    },
+  ];
 
   componentDidMount() {
     // fin de la peticion a analytics
@@ -104,28 +176,36 @@ class DashboardEvent extends Component {
     if (evius_token) {
       const iframeUrl = `${ApiUrl}/es/event/${eventId}/dashboard?evius_token=${evius_token}`;
       this.setState({ iframeUrl, loading: false });
-      totalsMetricasMail(this.props.eventId).then((datametricsMail) => {      
-        totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {          
+      totalsMetricasMail(this.props.eventId).then((datametricsMail) => {
+        totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {
           totalsMetricasActivityDetails(this.props.eventId).then((dataMetricsActivity) => {
-            if(dataMetricsActivity.length>0){
-              console.log("ENTRO ACA")
-              console.log(dataMetricsActivity)
-              this.setState({ totalmails: datametricsMail,metricsActivity: dataMetricsActivity, metricsGnal: dataMetricsGnal  });
+            if (dataMetricsActivity.length > 0) {
+              console.log('ENTRO ACA');
+              console.log(dataMetricsActivity);
+              this.setState({
+                totalmails: datametricsMail,
+                metricsActivity: dataMetricsActivity,
+                metricsGnal: dataMetricsGnal,
+              });
               this.obtenerMetricas(dataMetricsActivity);
               this.totalsMails(datametricsMail);
+              this.fetchDataMails().then((resp)=>{
+                this.setState({
+                  mailsDetails:resp
+                },()=>{console.log("MAILS DETAILS");console.log(resp)})
+              })
             }
             else{
               this.setState({                
                 loadingMetrics:false,
                 totalmails: datametricsMail,
-                metricsGnal: dataMetricsGnal
-              })
+                metricsGnal: dataMetricsGnal,
+              });
               this.totalsMails(datametricsMail);
               this.graficRegistros();
               this.graficAttendees();
-              this.graficPrintouts(); 
-              
-            }                  
+              this.graficPrintouts();
+            }
           });
         });
       });
@@ -138,27 +218,26 @@ class DashboardEvent extends Component {
   }
   //Función que permite obtener las métricas generales del evento
   obtenerMetricas = async (data) => {
-    const { eventId } = this.props;  
-    let metricsgnal= await queryReportGnal(eventId);    
-      let metricsActivity= await updateMetricasActivity(data,eventId,metricsgnal.metrics);
-      let metricsGraphics= await queryReportGnalByMoth(eventId)
-        this.setState({
-          metricsGraphics: metricsGraphics,
-          metricsGnal: {
-            ...this.state.metricsGnal,
-            total_checkIn: metricsgnal.totalMetrics["ga:sessions"],
-            avg_time: (metricsgnal.totalAvg/60).toFixed(2),
-            total_printouts:metricsgnal.totalMetrics["ga:pageviews"]         
-          },
-          metricsGaByActivity: metricsgnal.metrics,
-          metricsGaByActivityGnal: metricsgnal.metrics,
-          metricsActivity,
-          loadingMetrics:false
-        });
-        this.graficRegistros();
-        this.graficAttendees();
-        this.graficPrintouts();     
-    
+    const { eventId } = this.props;
+    let metricsgnal = await queryReportGnal(eventId);
+    let metricsActivity = await updateMetricasActivity(data, eventId, metricsgnal.metrics);
+    let metricsGraphics = await queryReportGnalByMoth(eventId);
+    this.setState({
+      metricsGraphics: metricsGraphics,
+      metricsGnal: {
+        ...this.state.metricsGnal,
+        total_checkIn: metricsgnal.totalMetrics['ga:sessions'],
+        avg_time: (metricsgnal.totalAvg / 60).toFixed(2),
+        total_printouts: metricsgnal.totalMetrics['ga:pageviews'],
+      },
+      metricsGaByActivity: metricsgnal.metrics,
+      metricsGaByActivityGnal: metricsgnal.metrics,
+      metricsActivity,
+      loadingMetrics: false,
+    });
+    this.graficRegistros();
+    this.graficAttendees();
+    this.graficPrintouts();
   };
   //GRAFICA REGISTROS POR DIA
   async graficRegistros() {
@@ -223,10 +302,29 @@ class DashboardEvent extends Component {
 
   //Opciones para las gráficas
   options = {
+    layout: {
+      padding: '0',
+    },
+    elements: {
+      point: {
+        pointStyle: 'circle',
+        radius: '5',
+        hoverRadius: '6',
+      },
+    },
     plugins: {
       datalabels: {
         display: true,
         color: 'black',
+      },
+      legend: {
+        display: true,
+        labels: {
+          font: {
+            size: '12',
+            family: "'Montserrat', sans-serif", // para probar si afecta la fuente cambiar Montserrat por Papyrus
+          },
+        },
       },
     },
     responsive: true,
@@ -285,12 +383,12 @@ class DashboardEvent extends Component {
     ];
     return !this.state.loadingMetrics ? (
       <>
-        <div ref={(el) => (this.componentRef = el)}>
+        <div ref={el => (this.componentRef = el)}>
           <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
             <Col span={18}>
               <Tooltip title={this.state.desc1} placement='top' mouseEnterDelay={0.5}>
                 <Card>
-                  <Row justify='end'>
+                 {this.state.printButton &&  <Row justify='end'>
                     <Button
                       style={{ color: '#1F6E43' }}
                       shape='round'
@@ -300,7 +398,7 @@ class DashboardEvent extends Component {
                       }>
                       Exportar
                     </Button>
-                  </Row>
+                  </Row>}
                   {this.state.registrosDia && <Line data={this.state.registrosDia} options={this.options} />}
                 </Card>
               </Tooltip>
@@ -343,7 +441,7 @@ class DashboardEvent extends Component {
                 <Col span={24}>
                   <Tooltip title={this.state.desc4} placement='top' mouseEnterDelay={0.5}>
                     <Card>
-                      <Row justify='end'>
+                    {this.state.printButton && <Row justify='end'>
                         <Button
                           style={{ color: '#1F6E43' }}
                           shape='round'
@@ -353,7 +451,7 @@ class DashboardEvent extends Component {
                           }>
                           Exportar
                         </Button>
-                      </Row>
+                      </Row>}
                       {this.state.attendesDay && <Bar data={this.state.attendesDay} options={this.options} />}
                     </Card>
                   </Tooltip>
@@ -378,9 +476,9 @@ class DashboardEvent extends Component {
                 <Col span={24}>
                   <Tooltip title={this.state.desc6} placement='top' mouseEnterDelay={0.5}>
                     <Card>
-                      <Row justify='end'>
-                        <Button
-                          style={{ color: '#1F6E43' }}
+                     {this.state.printButton && <Row justify='end'>
+                        <Button                        
+                          style={{ color: '#1F6E43',display:this.state.printButton?'block':'none' }}
                           shape='round'
                           icon={<FileExcelOutlined />}
                           onClick={() =>
@@ -388,7 +486,7 @@ class DashboardEvent extends Component {
                           }>
                           Exportar
                         </Button>
-                      </Row>
+                      </Row>}
                       {this.state.printoutsDay && <Line data={this.state.printoutsDay} options={this.options} />}
                     </Card>
                   </Tooltip>
@@ -419,7 +517,7 @@ class DashboardEvent extends Component {
                   dataSource={this.state.metricsActivity}
                   columns={columns}
                   size='small'
-                  pagination={{ pageSize: 5 }}
+                  pagination={this.state.printButton?{ pageSize: 5 }:false}
                 />
               </Card>
             </Col>
@@ -427,7 +525,7 @@ class DashboardEvent extends Component {
           <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
             <Col span={24}>
               <Card headStyle={{ border: 'none' }} title={'Métricas de correos'}>
-                <Row justify='center' style={{ marginBottom: 20 }}>
+               {this.state.printButton && <Row justify='center' style={{ marginBottom: 20 }}>
                   <Card>
                     <Statistic
                       valueStyle={{ fontSize: '36px', textAlign: 'center' }}
@@ -435,8 +533,8 @@ class DashboardEvent extends Component {
                       value={this.state.totalmails.length}
                     />
                   </Card>
-                </Row>
-                <Row justify='space-around' align='middle' gutter={[8, 8]}>
+                </Row>}
+             {this.state.printButton && <Row justify='space-around' align='middle' gutter={[8, 8]}>
                   <Col span={4}>
                     <Card>
                       <Statistic
@@ -486,24 +584,28 @@ class DashboardEvent extends Component {
                       />
                     </Card>
                   </Col>
-                </Row>
-                <Row>
+                </Row>}
+               {this.state.printButton && <Row>
                   <Button
-                   
                     shape='round'
                     icon={<NotificationOutlined />}
                     onClick={() => this.props.history.push(`/event/${this.props.eventId}/messages`)}>
                     Ver correos
                   </Button>
-                </Row>
+                </Row>}
+               {!this.state.printButton &&  <Table pagination={false} loading={this.state.loadingMetrics} columns={this.columnsMail} dataSource={this.state.mailsDetails} />}
               </Card>
             </Col>
           </Row>
-        </div>
-        <ReactToPrint
+        </div>            
+     
+      <ReactToPrint
+          onBeforeGetContent={()=>this.displayButton(this)} 
+          onAfterPrint={()=>this.visibleButton(this)} 
+          documentTitle={'Métricas del evento'}      
           trigger={() => {
             return (
-              <Row justify='end' style={{ paddingTop: '10px' }}>
+             <Row justify='end' style={{ paddingTop: '10px' }}>
                 <Button
                   danger
                   style={{ color: '#F70D09' }}

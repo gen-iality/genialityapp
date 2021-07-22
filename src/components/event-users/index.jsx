@@ -14,11 +14,14 @@ import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } 
 import EventContent from '../events/shared/content';
 import Moment from 'moment';
 import { TicketsApi } from '../../helpers/request';
-
-import { Table } from 'antd';
+import { Button, Card, Col, Drawer, Row, Statistic, Table,Typography } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
+import { FullscreenOutlined } from '@ant-design/icons';
+
+const {Title}=Typography;
+
 
 /*            switch (field.type) {
               case "boolean":
@@ -86,6 +89,7 @@ class ListEventUser extends Component {
       percent_unchecked: 0,
       totalPesoVoto: 0,
       configfast: {},
+      isModalVisible: false,
     };
   }
 
@@ -166,6 +170,8 @@ class ListEventUser extends Component {
 
   async componentDidMount() {
     let self = this;
+    console.log("DID MOUNT")
+    console.log(this.props)
 
     this.checkFirebasePersistence();
     try {
@@ -247,7 +253,16 @@ class ListEventUser extends Component {
                 0
               ) * 100
             ) / 100;
-          this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight });
+             //total de pesos
+             let totalWithWeight =
+             Math.round(
+               updatedAttendees.reduce(
+                 (acc, item) => acc + (parseFloat(item.pesovoto ? item.pesovoto : 1)),
+                 0
+               ) * 100
+             ) / 100;
+           this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight,totalWithWeight });
+          
 
           for (let i = 0; i < updatedAttendees.length; i++) {
             // Arreglo temporal para que se muestre el listado de usuarios sin romperse
@@ -467,6 +482,13 @@ class ListEventUser extends Component {
     this.setState({ typeScanner: 'options' });
   };
 
+  showModal = () => {
+    this.setState({ isModalVisible: true });
+  };
+  hideModal = () => {
+    this.setState({ isModalVisible: false });
+  };
+
   render() {
     const {
       timeout,
@@ -489,6 +511,14 @@ class ListEventUser extends Component {
       event: { event_stages },
     } = this.props;
 
+    const inscritos =
+    this.state.configfast && this.state.configfast.totalAttendees
+      ? this.state.configfast.totalAttendees
+      : usersReq.length;
+
+      const participantes = Math.round((totalCheckedIn / inscritos) * 100);
+    const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
+
     return (
       <React.Fragment>
         {disabledPersistence && (
@@ -509,39 +539,29 @@ class ListEventUser extends Component {
           </div>
 
           <div className='columns checkin-tags-wrapper is-flex-touch'>
-            <div>
+          <div>
               <div className='tags' style={{ flexWrap: 'nowrap' }}>
-                <span className='tag is-white'>Total</span>
-                <span className='tag is-light'>
-                  {(this.state.configfast && this.state.configfast.totalAttendees
-                    ? this.state.configfast.totalAttendees
-                    : usersReq.length) || 0}
-                </span>
+                <span className='tag is-white'>Inscritos:</span>
+                <span className='tag is-light'>{inscritos || 0}</span>
 
-                <span className='tag is-white'>Asistido</span>
-                <span className='tag is-light'>{totalCheckedIn}</span>
-
-                <span className='tag is-white'>% Asistencia</span>
-                <span className='tag is-light'>
-                  {Math.round(
-                    (totalCheckedInWithWeight /
-                      (this.state.configfast && this.state.configfast.totalAttendees
-                        ? this.state.configfast.totalAttendees
-                        : usersReq.length)) *
-                      100 *
-                      100
-                  ) / 100}
-                </span>
+                <span className='tag is-white'>Participantes:</span>
+                <span className='tag is-light'>{totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}</span>
 
                 {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
                   <>
-                    <span className='tag is-white'>Total Pesos</span>
-                    <span className='tag is-light'>{totalCheckedInWithWeight}</span>
+                    <span className='tag is-white'>Asistencia por Coeficientes:</span>
+                    <span className='tag is-light'>
+                      {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
+                    </span>
                   </>
                 )}
+                <span className='tag is-white'>
+                  <Button shape='rounds' type='primary' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                    Expandir
+                  </Button>
+                </span>
               </div>
             </div>
-
             {// localChanges &&
             quantityUsersSync > 0 && localChanges === 'Local' && (
               <div className='is-4 column'>
@@ -688,19 +708,19 @@ class ListEventUser extends Component {
 
         {!this.props.loading && editUser && (
           <UserModal
-            handleModal={this.modalUser}
-            modal={editUser}
-            eventId={this.props.eventId}
-            ticket={ticket}
-            tickets={this.state.listTickets}
-            rolesList={this.state.rolesList}
-            value={this.state.selectedUser}
-            checkIn={this.checkIn}
-            badgeEvent={this.state.badgeEvent}
-            extraFields={this.state.extraFields}
-            spacesEvent={spacesEvent}
-            edit={this.state.edit}
-            substractSyncQuantity={this.substractSyncQuantity}
+          handleModal={this.modalUser}
+          modal={editUser}
+          eventId={this.props.eventId}
+          ticket={ticket}
+          tickets={this.state.listTickets}
+          rolesList={this.state.rolesList}
+          value={this.state.selectedUser}
+          checkIn={this.checkIn}
+          badgeEvent={this.state.badgeEvent}
+          extraFields={this.state.extraFields}
+          spacesEvent={spacesEvent}
+          edit={this.state.edit}
+          substractSyncQuantity={this.substractSyncQuantity}
           />
         )}
         {this.state.qrModal && (
@@ -716,8 +736,79 @@ class ListEventUser extends Component {
           />
         )}
         {timeout && <ErrorServe errorData={this.state.errorData} />}
+        
+        <Drawer
+          title='Estadísticas'
+          visible={this.state.isModalVisible}
+          closable={false}
+          footer={[
+            <Button style={{ float: 'right' }} type='primary' size='large' onClick={this.hideModal} key='close'>
+              Cerrar
+            </Button>,
+            <div key='fecha' style={{ float: 'left' }}>
+              <Title level={5}>
+                Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+              </Title>
+            </div>,
+          ]}
+          style={{ top: 0 }}
+          width='100vw'>
+          <Row align='middle' justify='center' style={{}}>
+            <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
+              <Row align='middle'>
+                <Card bodyStyle={{paddingLeft:'0px',paddingRight:'0px'}} bordered={false} cover={this.props.event.styles.event_image?(<img style={{objectFit:'cover', width:'100vw'}} src={this.props.event.styles.event_image} alt="Logo evento" />):''}>
+                  {this.props.event.name? (<Card.Meta description={<Title level={5}>{this.props.event.name}</Title>} />):''}
+                </Card>
+              </Row>
+            </Col>
+            <Col  xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>
+              <Row align='middle'>
+                <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+                  <Card bodyStyle={{}} style={{}} bordered={false}>
+                    <Statistic
+                      valueStyle={{ fontSize: '80px', textAlign: 'center' }}
+                      title={
+                        <Title level={2} style={{ textAlign: 'center', color: '#b5b5b5' }}>
+                          Inscritos
+                        </Title>
+                      }
+                      value={inscritos || 0}
+                    />
+                  </Card>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+                  <Card bodyStyle={{}} style={{}} bordered={false}>
+                    <Statistic
+                      valueStyle={{ fontSize: '80px', textAlign: 'center' }}
+                      title={
+                        <Title level={2} style={{ textAlign: 'center', color: '#b5b5b5' }}>
+                          Participantes
+                        </Title>
+                      }
+                      value={totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}
+                    />
+                  </Card>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                  <Card bodyStyle={{}} style={{}} bordered={false}>
+                    <Statistic
+                      valueStyle={{ fontSize: '80px', textAlign: 'center' }}
+                      title={
+                        <Title level={2} style={{ textAlign: 'center', color: '#b5b5b5' }}>
+                          Asistencia por Coeficientes
+                        </Title>
+                      }
+                      value={totalCheckedInWithWeight + '/'+this.state.totalWithWeight + ' (' + Math.round((totalCheckedInWithWeight/this.state.totalWithWeight)*100) + '%)'}
+                    />
+                  </Card>
+                </Col>
+              </Row>
+            </Col>          
+          </Row>
+        </Drawer>
       </React.Fragment>
     );
   }
 }
+
 export default ListEventUser;

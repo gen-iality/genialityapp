@@ -44,15 +44,16 @@ class UserModal extends Component {
       Object.keys(value.properties).map((obj) => {
         return (user[obj] = value.properties[obj]);
       });
-      let checked_in = value.checked_in && value.checked_at ? value.checked_at.toDate() : false;
+      let checked_in = value.checkedin_at?true : false;
       this.setState({
         user,
         ticket_id: value.ticket_id,
         edit: true,
         rol: value.rol_id,
-        checked_in,
+        confirmCheck:checked_in,
         userId: value._id,
         prevState: value.state_id,
+        valid:false
       });
     } else {
       this.props.extraFields.map((obj) => {
@@ -98,9 +99,20 @@ class UserModal extends Component {
         }  
         toast.success(<FormattedMessage id='toast.user_saved' defaultMessage='Ok!' />);
       } else {
-        await Actions.put(`/api/events/${this.props.eventId}/eventusers/${this.state.userId}`, snap);
-       
+        if(this.state.confirmCheck){
+          let checkedin_at = new Date();
+          checkedin_at = Moment(checkedin_at)
+            .add(5, 'hours')
+            .format('YYYY-MM-D H:mm:ss');
+          snap.checkedin_at = checkedin_at;
+          snap.checked_in=true;
+        }else{
+          snap.checkedin_at="";
+          snap.checked_in=false;
+        }
+        await Actions.put(`/api/events/${this.props.eventId}/eventusers/${this.state.userId}`, snap);       
         toast.info(<FormattedMessage id='toast.user_edited' defaultMessage='Ok!' />);
+        this.closeModal();
       }
     } catch (error) {
       console.error('Error updating document: ', error);
@@ -528,7 +540,7 @@ class UserModal extends Component {
                         </select>
                       </div>
                     </div>
-                    {!this.state.edit && (
+                    {(
                       <div className='control control-container'>
                         <input
                           className='is-checkradio is-primary is-small'

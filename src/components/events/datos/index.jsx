@@ -10,6 +10,7 @@ import { Tabs, Table, Checkbox, notification } from 'antd';
 import RelationField from './relationshipFields';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import DragDrop from './dragDrop';
+import { firestore } from '../../../helpers/firebase';
 
 const { TabPane } = Tabs;
 
@@ -62,6 +63,24 @@ class Datos extends Component {
     try {
       if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
       else await EventFieldsApi.createOne(field, this.eventID);
+      let totaluser= await firestore.collection(`${this.eventID}_event_attendees`).get();
+     
+    if(totaluser.docs.length>0 && field.name=='pesovoto' ){
+     firestore.collection(`${this.eventID}_event_attendees`).get().then((resp)=>{
+         if(resp.docs.length>0){
+           resp.docs.map((doc)=>{
+            
+            var datos=doc.data();            
+              console.log(datos)
+              var objectP=datos.properties;              
+               var properties=objectP
+               objectP={...objectP,pesovoto:properties&&properties.pesovoto?properties.pesovoto:1}         
+               datos.properties=objectP;              
+              firestore.collection(`${this.eventID}_event_attendees`).doc(doc.id).set(datos)            
+          })
+         }
+        });
+      }
       await this.fetchFields();
       this.setState({ modal: false, edit: false, newField: false });
     } catch (e) {

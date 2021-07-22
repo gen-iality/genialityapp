@@ -109,7 +109,7 @@ export const queryReportGnal = async (eventID) => {
       };       
       metrics.push(objeto);
     });
-    let totalAvg=parseFloat(totalMetrics["ga:avgTimeOnPage"]);   
+    let totalAvg=parseFloat(totalMetrics["ga:sessionDuration"]/totalMetrics["ga:users"]);   
    return {metrics,totalAvg,totalMetrics}; 
   }      
 };
@@ -122,7 +122,7 @@ export const queryReportGnalByMoth = async (eventID) => {
     startDate: '2019-01-01',
     endDate: fechaActual,
     filtersExpression: `ga:pagePath=@/landing/${eventID};ga:pagePath!@token`,
-    metrics: "ga:pageviews, ga:sessions,ga:avgTimeOnPage, ga:pageviewsPerSession,ga:users",
+    metrics: "ga:pageviews, ga:sessions,ga:avgTimeOnPage, ga:pageviewsPerSession,ga:users,ga:sessionDuration",
     dimensions: "ga:date",
     fieldName: "ga:date",
     sortOrder: "ASCENDING"
@@ -210,9 +210,7 @@ export const queryReportGnalByMoth = async (eventID) => {
     if (data.length > 0) {     
       let metricsActivity = [];
       data.map((activity) => {
-        let metricsView = obtenerMetricasByView('/landing/' + eventId + '/activity/' + activity.name,metricsGActivity);
-        console.log("METRICS VIEW")
-        console.log(metricsView)
+        let metricsView = obtenerMetricasByView('/landing/' + eventId + '/activity/' + activity.name,metricsGActivity);        
         let metricaActivity = {
           name: activity.name,
           view: metricsView ? metricsView.metrics[1] : 0,
