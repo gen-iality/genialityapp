@@ -35,10 +35,11 @@ import API from '../../helpers/request';
 // const [google, setGoogle] = useState(null)
 
 const { Title } = Typography;
+//ESTILOS PAGINA PDF
 const pageStyle = `
   
   @page {
-    
+    size: 220mm 280mm;
   }
 
   @media all {
