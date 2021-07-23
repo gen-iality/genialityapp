@@ -248,6 +248,8 @@ class CheckAgenda extends Component {
     console.log(snap)
     const user = snap!=null?{...snap,_id:id,ticket_id:''}: attendees.find(({ _id }) => _id === id);
     const userRef = this.state.userRef;
+    console.log("USER SNAP")
+    console.log(user)
     let doc= await this.state.userRef.doc(user._id).get()  
     //Sino está chequeado se chequea  
     user.checked_in=check!==null?check:!user.checked_in;
