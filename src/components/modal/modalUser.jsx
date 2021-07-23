@@ -113,11 +113,13 @@ class UserModal extends Component {
         }
       
         let respAddEvento= await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
-        console.log(respAddEvento.data.user)
+       // console.log(respAddEvento.data)
        if(this.props.byActivity && respAddEvento.data.user){
           let respActivity=await Activity.Register(this.props.eventId,respAddEvento.data.user._id, this.props.activityId)
-          console.log(respActivity)
-          await this.props.checkinActivity(this.state.userId,snap.checked_in,snap)   
+          //console.log(respActivity)
+          await this.props.checkinActivity(respAddEvento.data._id,snap.checked_in,snap,false)
+          
+          await this.props.updateView()   
           this.closeModal();         
         }  
         toast.success(<FormattedMessage id='toast.user_saved' defaultMessage='Ok!' />);

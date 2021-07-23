@@ -49,10 +49,11 @@ class CheckAgenda extends Component {
   }
 
   //FUNCION QUE OBTIENE CHECKIN DE FIREBASE
-  async obtaincheckin(user,ref){    
+  async obtaincheckin(user,ref){  
+    
     let  resp= await ref.doc(user._id).get()       
       let userNew={...user,checkedin_at:resp.exists && resp.data().checkedin_at!==null && resp.data().checkedin_at!=='' && resp.data().checkedin_at ?new Date(resp.data().checkedin_at.seconds*1000):false}
-      console.log(userNew)
+   
       return userNew    
   }
 
@@ -63,11 +64,14 @@ class CheckAgenda extends Component {
       let userNew= await this.obtaincheckin(user,ref)
       arrlist.push(userNew)
     }
-    console.log(arrlist)
+    
     return arrlist;
   }
 
   async cargarUsuarios(self){
+    if(!self){
+      self=this
+    }   
     try {
       const { event } = this.props;
       const agendaID = this.props.match.params.id;
@@ -83,9 +87,9 @@ class CheckAgenda extends Component {
 
       this.setState({ eventFields, agendaID, eventID: event._id,rolesList,userRef });
       let newList = [...this.state.attendees];
-      console.log("Cargando lista")
+      
       newList = await Activity.getActivyAssitantsAdmin(this.props.event._id, agendaID);
-      console.log(newList )
+     
       newList = newList.map((item) => {
         let attendee = item.attendee
           ? item.attendee
@@ -94,14 +98,13 @@ class CheckAgenda extends Component {
         return item;
       });
       newList= await this.obtenerCheckinAttende(userRef,newList) ;
-      console.log(newList)
+      
 
       this.setState(() => {
         return { attendees: newList, loading: false, total: newList.length, checkIn,properties };
       });
       let usersData = this.createUserInformation(newList);
-      console.log("usersData")
-      console.log(usersData)
+     
       this.setState({ usersData });
     } catch (error) {
       const errorData = handleRequestError(error);
@@ -164,7 +167,7 @@ class CheckAgenda extends Component {
 
   //Funcion para crear la lista de usuarios para la tabla de ant
   createUserInformation(newList) {
-    console.log(newList)
+    
     let usersData = [];
     for (let i = 0; newList.length > i; i++) {      
       if(newList[i].properties){        
@@ -177,7 +180,7 @@ class CheckAgenda extends Component {
       }
      
     }
-    console.log(usersData)
+    
     return usersData;
   }
   openEditModalUser = (item) => {
@@ -241,19 +244,18 @@ class CheckAgenda extends Component {
   };
 
   //FN para checkin
-  checkIn = async (id,check=null,snap=null) => {
+  checkIn = async (id,check=null,snap=null,edit=true) => {
     const { attendees } = this.state;
     
     //Se busca en el listado total con el id
-    console.log(snap)
+    
     const user = snap!=null?{...snap,_id:id,ticket_id:''}: attendees.find(({ _id }) => _id === id);
     const userRef = this.state.userRef;
-    console.log("USER SNAP")
-    console.log(user)
+ 
     let doc= await this.state.userRef.doc(user._id).get()  
     //Sino está chequeado se chequea  
     user.checked_in=check!==null?check:!user.checked_in;
-    console.log(check)
+    
       userRef.doc(user._id)
       .set({
         ...user ,    
@@ -265,7 +267,10 @@ class CheckAgenda extends Component {
       .then(() => {
        
         toast.success('Usuario Chequeado');
-        this.updateAttendeesList(id,user);
+        if(edit){
+          this.updateAttendeesList(id,user);
+        }
+        
       })
       .catch((error) => {
         console.error('Error updating document: ', error);
@@ -278,8 +283,8 @@ class CheckAgenda extends Component {
   updateAttendeesList=(id,user,check)=>{
     const { attendees } = this.state; 
     const addUser = attendees.find(({ _id }) => _id === id); 
-    console.log("ADD USER===>")
-    console.log(addUser)
+ 
+ 
     if(addUser){
     let updateAttendes= this.state.usersData.map((attendee)=>{if (attendee._id===id){ return {          
       ...user.properties || user,
@@ -293,8 +298,9 @@ class CheckAgenda extends Component {
     }}else {return attendee} })
     this.setState({attendees:updateAttendes,usersData:updateAttendes})
   }else{
-    console.log("AGREGAR")
+  
     let updateAttendes=this.state.usersData;
+ 
     updateAttendes.push({          
       ...user.properties || user,
       key:id, 
@@ -305,6 +311,7 @@ class CheckAgenda extends Component {
       checkedin_at:user.checked_in?new Date():false,
       checked_at: new Date()
     });
+   
     this.setState({attendees:updateAttendes,usersData:updateAttendes})
   }  
   }
@@ -411,7 +418,7 @@ class CheckAgenda extends Component {
       eventID,
       agendaID,
     } = this.state;
-   // console.log(eventID)
+ 
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
