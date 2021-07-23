@@ -273,7 +273,12 @@ class CheckAgenda extends Component {
    
   };
 
-  updateAttendeesList=(id,user,check)=>{   
+  updateAttendeesList=(id,user,check)=>{
+    const { attendees } = this.state; 
+    const addUser = attendees.find(({ _id }) => _id === id); 
+    console.log("ADD USER===>")
+    console.log(addUser)
+    if(addUser){
     let updateAttendes= this.state.usersData.map((attendee)=>{if (attendee._id===id){ return {          
       ...user.properties || user,
       key:attendee._id, 
@@ -285,6 +290,21 @@ class CheckAgenda extends Component {
       checked_at: new Date()
     }}else {return attendee} })
     this.setState({attendees:updateAttendes,usersData:updateAttendes})
+  }else{
+    console.log("AGREGAR")
+    let updateAttendes=this.state.usersData;
+    updateAttendes.push({          
+      ...user.properties || user,
+      key:id, 
+      rol:user.rol_id,
+      _id:id,
+      updated_at: new Date(),
+      checked_in: user.checked_in,
+      checkedin_at:user.checked_in?new Date():false,
+      checked_at: new Date()
+    });
+    this.setState({attendees:updateAttendes,usersData:updateAttendes})
+  }  
   }
 
   //Funcion para filtrar los usuarios de la tabla
@@ -357,16 +377,9 @@ class CheckAgenda extends Component {
 
   //Funcion para enviar la data de los usuarios al componente send.jsx
   goToSendMessage = () => {
-    const { attendeesForSendMessage, modalVisible } = this.state;
-    //Actualizar el estado del padre
-    if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
       this.props.history.push({
-        pathname: `/event/${this.props.match.params.id}/invitados/createmessage`,
-        selection: attendeesForSendMessage,
-      });
-    } else {
-      this.setState({ modalVisible: modalVisible === true ? false : true });
-    }
+        pathname: `/event/${this.props.match.params.id}/invitados`        
+      });    
   };
 
   //Funcion que reune los id de los usuarios para enviar al estado
