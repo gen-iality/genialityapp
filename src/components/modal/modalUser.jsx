@@ -106,15 +106,20 @@ class UserModal extends Component {
             .add(5, 'hours')
             .format('YYYY-MM-D H:mm:ss');
           snap.checkedin_at = checkedin_at;
+          snap.checked_in=true;
+        }else{
+          snap.checkedin_at="";
+          snap.checked_in=false;
         }
-        console.log(snap)
-        console.log(this.props)
+      
         let respAddEvento= await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
-        console.log(respAddEvento.data.user)
+       // console.log(respAddEvento.data)
        if(this.props.byActivity && respAddEvento.data.user){
           let respActivity=await Activity.Register(this.props.eventId,respAddEvento.data.user._id, this.props.activityId)
-          console.log(respActivity)
-          this.props.updateView();
+          //console.log(respActivity)
+          await this.props.checkinActivity(respAddEvento.data._id,snap.checked_in,snap,false)
+          
+          await this.props.updateView()   
           this.closeModal();         
         }  
         toast.success(<FormattedMessage id='toast.user_saved' defaultMessage='Ok!' />);
@@ -131,9 +136,7 @@ class UserModal extends Component {
           snap.checkedin_at="";
           snap.checked_in=false;
         }
-        console.log(snap)
-        console.log(this.state.userId)
-        console.log(this.props.eventId)
+        
         let respAddEvento= await Actions.put(`/api/events/${this.props.eventId}/eventusers/${this.state.userId}`, snap);  
         console.log(respAddEvento.user)
         if(this.props.byActivity && respAddEvento.user){ 

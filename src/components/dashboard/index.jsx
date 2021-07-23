@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../../helpers/constants';
-import { Tooltip, Button, Card, Col, message, Row, Select, Statistic, Table, Space, Spin } from 'antd';
+import { Tooltip, Button, Card, Col, message, Row, Select, Statistic, Table, Space, Spin, Typography } from 'antd';
 import {
   EyeOutlined,
   FieldTimeOutlined,
@@ -32,12 +32,34 @@ import ReactToPrint from 'react-to-print';
 import Moment from 'moment';
 import API from '../../helpers/request';
 
-
-
 // const [google, setGoogle] = useState(null)
+
+const { Title } = Typography;
+//ESTILOS PAGINA PDF
+const pageStyle = `
+  
+  @page {
+    size: 220mm 280mm;
+  }
+
+  @media all {
+    .pagebreak {
+      margin-top: 5rem;
+      display: block;
+      
+    }
+  }
+
+  @media print {
+    .pagebreak {
+      page-break-before: always;
+    }
+  }
+`;
+
 class DashboardEvent extends Component {
   constructor(props) {
-    super(props);    
+    super(props);
     this.state = {
       loading: true,
       iframeUrl: '',
@@ -66,29 +88,29 @@ class DashboardEvent extends Component {
       desc5: 'Visitas totales de los usuarios',
       desc6: 'Visitas realizadas al evento',
       desc7: 'Impresiones totales del evento',
-      loadingMetrics: true, 
+      loadingMetrics: true,
       //TRUE:MUESTRA UI
       //FALSE: PARA IMPRIMIR
-      printButton:true,
-      mailsDetails:[]
-      
+      printButton: true,
+      mailsDetails: [],
+
       //Permite controlar la carga de las métricas
     };
     this.displayButton = this.displayButton.bind(this);
-   
-  }
-  displayButton=(self)=>{
-    return new Promise((resolve, reject) => {
-      self.setState({ printButton:false }, () => resolve());
-    });    
   }
 
-  visibleButton=(self)=>{    
-   self.setState({
-     printButton:true
-   })
-  }
-  
+  displayButton = (self) => {
+    return new Promise((resolve, reject) => {
+      self.setState({ printButton: false }, () => resolve(true));
+    });
+  };
+
+  visibleButton = (self) => {
+    self.setState({
+      printButton: true,
+    });
+  };
+
   //Función que permite totalizar los valores por campaña
   totalsMails(list) {
     let totalClicked = 0,
@@ -118,8 +140,8 @@ class DashboardEvent extends Component {
       message.error('No existen datos que exportar');
     }
   };
-   fetchDataMails() {
-     console.log("DATA MAILS")
+  fetchDataMails() {
+    console.log('DATA MAILS');
     return new Promise((resolve, reject) => {
       API.get(`/api/events/${this.props.eventId}/messages`)
         .then(({ data }) => {
@@ -130,7 +152,7 @@ class DashboardEvent extends Component {
         });
     });
   }
-   columnsMail = [
+  columnsMail = [
     {
       title: 'Asunto',
       dataIndex: 'subject',
@@ -138,7 +160,7 @@ class DashboardEvent extends Component {
       render: (text) => <span>{text}</span>,
     },
     {
-      title: '# Correos',
+      title: 'Enviados',
       dataIndex: 'number_of_recipients',
       key: 'recipients',
       render: (text) => <div style={{ textAlign: 'center' }}>{text}</div>,
@@ -189,15 +211,20 @@ class DashboardEvent extends Component {
               });
               this.obtenerMetricas(dataMetricsActivity);
               this.totalsMails(datametricsMail);
-              this.fetchDataMails().then((resp)=>{
-                this.setState({
-                  mailsDetails:resp
-                },()=>{console.log("MAILS DETAILS");console.log(resp)})
-              })
-            }
-            else{
-              this.setState({                
-                loadingMetrics:false,
+              this.fetchDataMails().then((resp) => {
+                this.setState(
+                  {
+                    mailsDetails: resp,
+                  },
+                  () => {
+                    console.log('MAILS DETAILS');
+                    console.log(resp);
+                  }
+                );
+              });
+            } else {
+              this.setState({
+                loadingMetrics: false,
                 totalmails: datametricsMail,
                 metricsGnal: dataMetricsGnal,
               });
@@ -341,6 +368,7 @@ class DashboardEvent extends Component {
   };
 
   render() {
+    console.log(this.props);
     const columnsEmail = [
       {
         title: 'Campaña',
@@ -383,27 +411,48 @@ class DashboardEvent extends Component {
     ];
     return !this.state.loadingMetrics ? (
       <>
-        <div ref={el => (this.componentRef = el)}>
+        <div ref={(el) => (this.componentRef = el)}>
+          <Row justify='start'>
+            <img
+              style={{ height: '200px', width: '1920px', objectFit: 'contain' }}
+              src={
+                'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MetricsBanner%2Fcabezote2.jpg?alt=media&token=0f65b3ed-47f3-4c98-a616-db9a6a7b6ae3' ||
+                'http://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
+              }
+              alt='evius'
+            />
+
+            {this.state.printButton ? (
+              ''
+            ) : (
+              <Title style={{ paddingTop: '20px' }} level={2}>
+                {this.props.eventName}
+              </Title>
+            )}
+          </Row>
           <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
-            <Col span={18}>
+            <Col span={this.state.printButton ? 18 : 24}>
               <Tooltip title={this.state.desc1} placement='top' mouseEnterDelay={0.5}>
                 <Card>
-                 {this.state.printButton &&  <Row justify='end'>
-                    <Button
-                      style={{ color: '#1F6E43' }}
-                      shape='round'
-                      icon={<FileExcelOutlined />}
-                      onClick={() =>
-                        this.exportReport(this.state.metricsRegister, 'Register', 'register', 'registerByDay')
-                      }>
-                      Exportar
-                    </Button>
-                  </Row>}
+                  {this.state.printButton && (
+                    <Row justify='end'>
+                      <Button
+                        style={{ color: '#1F6E43' }}
+                        shape='round'
+                        icon={<FileExcelOutlined />}
+                        onClick={() =>
+                          this.exportReport(this.state.metricsRegister, 'Register', 'register', 'registerByDay')
+                        }>
+                        Exportar
+                      </Button>
+                    </Row>
+                  )}
                   {this.state.registrosDia && <Line data={this.state.registrosDia} options={this.options} />}
                 </Card>
               </Tooltip>
             </Col>
-            <Col span={6}>
+
+            <Col span={this.state.printButton ? 6 : 24}>
               <Row gutter={(32, 32)}>
                 <Col span={24}>
                   <Tooltip title={this.state.desc2} placement='top' mouseEnterDelay={0.5}>
@@ -418,7 +467,8 @@ class DashboardEvent extends Component {
                     </Card>
                   </Tooltip>
                 </Col>
-                <Col span={24}>
+
+                <Col className={this.state.printButton ? '' : 'pagebreak'} span={24}>
                   <Tooltip title={this.state.desc3} placement='top' mouseEnterDelay={0.5}>
                     <Card hoverable>
                       <Statistic
@@ -436,75 +486,78 @@ class DashboardEvent extends Component {
             </Col>
           </Row>
           <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
-            <Col span={12}>
-              <Row justify='center'>
-                <Col span={24}>
-                  <Tooltip title={this.state.desc4} placement='top' mouseEnterDelay={0.5}>
-                    <Card>
-                    {this.state.printButton && <Row justify='end'>
-                        <Button
-                          style={{ color: '#1F6E43' }}
-                          shape='round'
-                          icon={<FileExcelOutlined />}
-                          onClick={() =>
-                            this.exportReport(this.state.metricsGraphics, 'Visitas', 'views', 'ViewsByDay')
-                          }>
-                          Exportar
-                        </Button>
-                      </Row>}
-                      {this.state.attendesDay && <Bar data={this.state.attendesDay} options={this.options} />}
-                    </Card>
-                  </Tooltip>
-                </Col>
-                <Col span={12}>
-                  <Tooltip title={this.state.desc5} placement='top' mouseEnterDelay={0.5}>
-                    <Card>
-                      <Statistic
-                        groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
-                        valueStyle={{ fontSize: '38px' }}
-                        title='Total usuarios que visitan el evento'
-                        value={this.state.metricsGnal ? this.state.metricsGnal.total_checkIn : 0}
-                        prefix={<UserOutlined />}
-                      />
-                    </Card>
-                  </Tooltip>
-                </Col>
-              </Row>
+            <Col className={this.state.printButton ? '' : 'pagebreak'} span={this.state.printButton ? 18 : 24}>
+              <Tooltip title={this.state.desc4} placement='top' mouseEnterDelay={0.5}>
+                <Card>
+                  {this.state.printButton && (
+                    <Row justify='end'>
+                      <Button
+                        style={{ color: '#1F6E43' }}
+                        shape='round'
+                        icon={<FileExcelOutlined />}
+                        onClick={() => this.exportReport(this.state.metricsGraphics, 'Visitas', 'views', 'ViewsByDay')}>
+                        Exportar
+                      </Button>
+                    </Row>
+                  )}
+                  {this.state.attendesDay && (
+                    <Row justify='center'>
+                      <Bar data={this.state.attendesDay} options={this.options} />
+                    </Row>
+                  )}
+                </Card>
+              </Tooltip>
             </Col>
-            <Col span={12}>
-              <Row justify='center'>
-                <Col span={24}>
-                  <Tooltip title={this.state.desc6} placement='top' mouseEnterDelay={0.5}>
-                    <Card>
-                     {this.state.printButton && <Row justify='end'>
-                        <Button                        
-                          style={{ color: '#1F6E43',display:this.state.printButton?'block':'none' }}
-                          shape='round'
-                          icon={<FileExcelOutlined />}
-                          onClick={() =>
-                            this.exportReport(this.state.metricsGraphics, 'Número de visitas', 'time', 'visitasByDia')
-                          }>
-                          Exportar
-                        </Button>
-                      </Row>}
-                      {this.state.printoutsDay && <Line data={this.state.printoutsDay} options={this.options} />}
-                    </Card>
-                  </Tooltip>
-                </Col>
-                <Col span={12}>
-                  <Tooltip title={this.state.desc7} placement='top' mouseEnterDelay={0.5}>
-                    <Card>
-                      <Statistic
-                        groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
-                        valueStyle={{ fontSize: '38px' }}
-                        title='Visitas totales del evento'
-                        value={this.state.metricsGnal ? this.state.metricsGnal.total_printouts : 0}
-                        prefix={<EyeOutlined />}
-                      />
-                    </Card>
-                  </Tooltip>
-                </Col>
-              </Row>
+            <Col span={this.state.printButton ? 6 : 24}>
+              <Tooltip title={this.state.desc5} placement='top' mouseEnterDelay={0.5}>
+                <Card>
+                  <Statistic
+                    groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
+                    valueStyle={{ fontSize: '38px' }}
+                    title='Total usuarios que visitan el evento'
+                    value={this.state.metricsGnal ? this.state.metricsGnal.total_checkIn : 0}
+                    prefix={<UserOutlined />}
+                  />
+                </Card>
+              </Tooltip>
+            </Col>
+
+            <Col span={this.state.printButton ? 18 : 24}>
+              <Tooltip title={this.state.desc6} placement='top' mouseEnterDelay={0.5}>
+                <Card>
+                  {this.state.printButton && (
+                    <Row justify='end'>
+                      <Button
+                        style={{ color: '#1F6E43', display: this.state.printButton ? 'block' : 'none' }}
+                        shape='round'
+                        icon={<FileExcelOutlined />}
+                        onClick={() =>
+                          this.exportReport(this.state.metricsGraphics, 'Número de visitas', 'time', 'visitasByDia')
+                        }>
+                        Exportar
+                      </Button>
+                    </Row>
+                  )}
+                  {this.state.printoutsDay && (
+                    <Row justify='center'>
+                      <Line data={this.state.printoutsDay} options={this.options} />
+                    </Row>
+                  )}
+                </Card>
+              </Tooltip>
+            </Col>
+            <Col span={this.state.printButton ? 6 : 24}>
+              <Tooltip title={this.state.desc7} placement='top' mouseEnterDelay={0.5}>
+                <Card>
+                  <Statistic
+                    groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
+                    valueStyle={{ fontSize: '38px' }}
+                    title='Visitas totales del evento'
+                    value={this.state.metricsGnal ? this.state.metricsGnal.total_printouts : 0}
+                    prefix={<EyeOutlined />}
+                  />
+                </Card>
+              </Tooltip>
             </Col>
           </Row>
           <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
@@ -517,7 +570,7 @@ class DashboardEvent extends Component {
                   dataSource={this.state.metricsActivity}
                   columns={columns}
                   size='small'
-                  pagination={this.state.printButton?{ pageSize: 5 }:false}
+                  pagination={this.state.printButton ? { pageSize: 5 } : false}
                 />
               </Card>
             </Col>
@@ -525,87 +578,111 @@ class DashboardEvent extends Component {
           <Row gutter={(32, 32)} align='middle' justify='space-between' style={{ paddingTop: '20px' }}>
             <Col span={24}>
               <Card headStyle={{ border: 'none' }} title={'Métricas de correos'}>
-               {this.state.printButton && <Row justify='center' style={{ marginBottom: 20 }}>
-                  <Card>
-                    <Statistic
-                      valueStyle={{ fontSize: '36px', textAlign: 'center' }}
-                      title={<h3 style={{ textAlign: 'center' }}>CAMPAÑAS</h3>}
-                      value={this.state.totalmails.length}
-                    />
-                  </Card>
-                </Row>}
-             {this.state.printButton && <Row justify='space-around' align='middle' gutter={[8, 8]}>
-                  <Col span={4}>
+                {this.state.printButton && (
+                  <Row justify='center' style={{ marginBottom: 20 }}>
                     <Card>
                       <Statistic
                         valueStyle={{ fontSize: '36px', textAlign: 'center' }}
-                        title={<h3 style={{ textAlign: 'center' }}>ENTREGADOS</h3>}
-                        value={this.state.totalDeliverd}
+                        title={<h3 style={{ textAlign: 'center' }}>CAMPAÑAS</h3>}
+                        value={this.state.totalmails.length}
                       />
                     </Card>
-                  </Col>
+                  </Row>
+                )}
+                {this.state.printButton && (
+                  <Row justify='space-around' align='middle' gutter={[8, 8]}>
+                    <Col span={4}>
+                      <Card>
+                        <Statistic
+                          valueStyle={{ fontSize: '36px', textAlign: 'center' }}
+                          title={<h3 style={{ textAlign: 'center' }}>ENTREGADOS</h3>}
+                          value={this.state.totalDeliverd}
+                        />
+                      </Card>
+                    </Col>
 
-                  <Col span={4}>
-                    <Card>
-                      <Statistic
-                        valueStyle={{ fontSize: '36px', textAlign: 'center' }}
-                        title={<h3 style={{ textAlign: 'center' }}>REBOTADOS</h3>}
-                        value={this.state.totalBounced}
-                      />
-                    </Card>
-                  </Col>
+                    <Col span={4}>
+                      <Card>
+                        <Statistic
+                          valueStyle={{ fontSize: '36px', textAlign: 'center' }}
+                          title={<h3 style={{ textAlign: 'center' }}>REBOTADOS</h3>}
+                          value={this.state.totalBounced}
+                        />
+                      </Card>
+                    </Col>
 
-                  <Col span={8}>
-                    <Card>
-                      <Statistic
-                        valueStyle={{ fontSize: '48px', textAlign: 'center' }}
-                        title={<h2 style={{ textAlign: 'center' }}>ENVIADOS</h2>}
-                        value={this.state.totalSent}
-                      />
-                    </Card>
-                  </Col>
+                    <Col span={8}>
+                      <Card>
+                        <Statistic
+                          valueStyle={{ fontSize: '48px', textAlign: 'center' }}
+                          title={<h2 style={{ textAlign: 'center' }}>ENVIADOS</h2>}
+                          value={this.state.totalSent}
+                        />
+                      </Card>
+                    </Col>
 
-                  <Col span={4}>
-                    <Card hoverable bordered={false}>
-                      <Statistic
-                        valueStyle={{ fontSize: '36px', textAlign: 'center' }}
-                        title={<h3 style={{ textAlign: 'center' }}>ABIERTOS</h3>}
-                        value={this.state.totalOpened}
-                      />
-                    </Card>
-                  </Col>
+                    <Col span={4}>
+                      <Card>
+                        <Statistic
+                          valueStyle={{ fontSize: '36px', textAlign: 'center' }}
+                          title={<h3 style={{ textAlign: 'center' }}>ABIERTOS</h3>}
+                          value={this.state.totalOpened}
+                        />
+                      </Card>
+                    </Col>
 
-                  <Col span={4}>
-                    <Card>
-                      <Statistic
-                        valueStyle={{ fontSize: '36px', textAlign: 'center' }}
-                        title={<h3 style={{ textAlign: 'center' }}>CLICS</h3>}
-                        value={this.state.totalClicked}
-                      />
-                    </Card>
-                  </Col>
-                </Row>}
-               {this.state.printButton && <Row>
-                  <Button
-                    shape='round'
-                    icon={<NotificationOutlined />}
-                    onClick={() => this.props.history.push(`/event/${this.props.eventId}/messages`)}>
-                    Ver correos
-                  </Button>
-                </Row>}
-               {!this.state.printButton &&  <Table pagination={false} loading={this.state.loadingMetrics} columns={this.columnsMail} dataSource={this.state.mailsDetails} />}
+                    <Col span={4}>
+                      <Card>
+                        <Statistic
+                          valueStyle={{ fontSize: '36px', textAlign: 'center' }}
+                          title={<h3 style={{ textAlign: 'center' }}>CLICS</h3>}
+                          value={this.state.totalClicked}
+                        />
+                      </Card>
+                    </Col>
+                  </Row>
+                )}
+                {this.state.printButton && (
+                  <Row>
+                    <Button
+                      shape='round'
+                      icon={<NotificationOutlined />}
+                      onClick={() => this.props.history.push(`/event/${this.props.eventId}/messages`)}>
+                      Ver correos
+                    </Button>
+                  </Row>
+                )}
+                {!this.state.printButton && (
+                  <Table
+                    pagination={false}
+                    loading={this.state.loadingMetrics}
+                    columns={this.columnsMail}
+                    dataSource={this.state.mailsDetails}
+                  />
+                )}
               </Card>
             </Col>
           </Row>
-        </div>            
-     
-      <ReactToPrint
-          onBeforeGetContent={()=>this.displayButton(this)} 
-          onAfterPrint={()=>this.visibleButton(this)} 
-          documentTitle={'Métricas del evento'}      
+          <Row justify='start'>
+          <img
+            style={{ height: '200px', width: '1920px', objectFit: 'contain' }}
+            src={
+              'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MetricsBanner%2Fcabezote-sin-texto.jpg?alt=media&token=67e3e7cb-9c5f-489b-9eb0-e3526e204e34' ||
+              'http://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
+            }
+            alt='evius'
+          />
+        </Row>
+        </div>
+
+        <ReactToPrint
+          pageStyle={pageStyle}
+          onBeforeGetContent={() => this.displayButton(this)}
+          onAfterPrint={() => this.visibleButton(this)}
+          documentTitle={'Métricas del evento ' + this.props.eventName }
           trigger={() => {
             return (
-             <Row justify='end' style={{ paddingTop: '10px' }}>
+              <Row justify='end' style={{ paddingTop: '10px' }}>
                 <Button
                   danger
                   style={{ color: '#F70D09' }}
@@ -619,6 +696,7 @@ class DashboardEvent extends Component {
           }}
           content={() => this.componentRef}
         />
+        
       </>
     ) : (
       <Row justify='center' align='middle'>
