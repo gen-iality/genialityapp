@@ -48,18 +48,16 @@ class CheckAgenda extends Component {
    this.cargarUsuarios(self)
   }
 
-  async obtaincheckin(user,ref){
-    console.log(user)
-    let  resp= await ref.doc(user._id).get()
-       console.log(resp.exists)
-      let userNew={...user,checkedin_at:resp.exists?new Date(resp.data().checkedin_at.seconds*1000):false}
-      return userNew
-    
-    
+  //FUNCION QUE OBTIENE CHECKIN DE FIREBASE
+  async obtaincheckin(user,ref){    
+    let  resp= await ref.doc(user._id).get()       
+      let userNew={...user,checkedin_at:resp.exists && resp.data().checkedin_at!==null && resp.data().checkedin_at!=='' && resp.data().checkedin_at ?new Date(resp.data().checkedin_at.seconds*1000):false}
+      console.log(userNew)
+      return userNew    
   }
 
-  async obtenerCheckinAttende(ref,listuser){
-   
+  //FUNCION QUE LLAMA A FIREBASE PARA OBTENER CHECKIN POR CADA USUARIO
+  async obtenerCheckinAttende(ref,listuser){   
     let arrlist=[]
     for(let user of listuser){
       let userNew= await this.obtaincheckin(user,ref)
@@ -111,8 +109,8 @@ class CheckAgenda extends Component {
     }
   }
 
-  checkedincomponent = (text, item, index) => {   
-   console.log(item)
+  checkedincomponent = (text, item, index) => {  
+  
    const self=this;
     return item.checkedin_at ? (
       <p>{Moment(item.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
@@ -168,17 +166,12 @@ class CheckAgenda extends Component {
   createUserInformation(newList) {
     console.log(newList)
     let usersData = [];
-    for (let i = 0; newList.length > i; i++) { 
-      console.log(newList[i]) 
-      
-      if(newList[i].properties){
-        console.log("INGRESO")
+    for (let i = 0; newList.length > i; i++) {      
+      if(newList[i].properties){        
         let newUser = newList[i].properties;
         newUser.key = newList[i]._id;
-        newUser.checkedin_at=newList[i].checkedin_at
-        /*console.log(newUser.checkedin_at)
-        console.log(newList[i].checkedin_at)
-        console.log(newUser)*/
+        newUser.rol=newList[i].rol_id;
+        newUser.checkedin_at=newList[i].checkedin_at        
         newUser._id=newList[i]._id
         usersData.push(newUser);
       }
@@ -187,6 +180,10 @@ class CheckAgenda extends Component {
     console.log(usersData)
     return usersData;
   }
+  openEditModalUser = (item) => {
+    html.classList.add('is-clipped');
+    this.setState({ editUser: true, selectedUser: item, edit: true });
+  };
 
   editcomponent = (text, item, index) => {
     return (
@@ -195,9 +192,7 @@ class CheckAgenda extends Component {
         data-tooltip={'Editar'}
         // eslint-disable-next-line no-unused-vars
         onClick={(e) => {
-          this.setState({
-            editUser:true
-          });
+          this.openEditModalUser(item)
         }}>
         <i className='fas fa-edit' />
       </span>
@@ -246,66 +241,51 @@ class CheckAgenda extends Component {
   };
 
   //FN para checkin
-  checkIn = async (id) => {
+  checkIn = async (id,check=null,snap=null) => {
     const { attendees } = this.state;
     
     //Se busca en el listado total con el id
-    const user = attendees.find(({ _id }) => _id === id);
- 
-    //Sino está chequeado se chequea
-    if (!user.checked_in) {      
-      let doc= await this.state.userRef.doc(user._id).get()
-      console.log(this.state.userRef)
-      console.log(doc.exists)
-      const userRef = this.state.userRef;
-     /* if(doc.exists){ 
-        console.log("EXISTE")       
-      userRef
-        .update({
-          ...user,      
-          updated_at: new Date(),
-          checked_in: true,
-          checkedin_at:new Date(),
-          checked_at: new Date(),
-        })
-        .then(() => {
-          toast.success('Usuario Chequeado');
-        })
-        .catch((error) => {
-          console.error('Error updating document: ', error);
-          toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
-        });
-    }else{*/
-      console.log(user._id)
-     this.state.userRef.doc(user._id)
+    console.log(snap)
+    const user = snap!=null?{...snap,_id:id,ticket_id:''}: attendees.find(({ _id }) => _id === id);
+    const userRef = this.state.userRef;
+    let doc= await this.state.userRef.doc(user._id).get()  
+    //Sino está chequeado se chequea  
+    user.checked_in=check!==null?check:!user.checked_in;
+    console.log(check)
+      userRef.doc(user._id)
       .set({
         ...user ,    
         updated_at: new Date(),
-        checked_in: true,
-        checkedin_at:new Date(),
+        checked_in:user.checked_in,
+        checkedin_at: user.checked_in?new Date():null,
         checked_at: new Date(),
       })
       .then(() => {
        
         toast.success('Usuario Chequeado');
-        let updateAttendes= this.state.usersData.map((attendee)=>{if (attendee._id===id){ return {          
-            ...user.properties,
-            key:user._id, 
-            _id:user._id,
-            updated_at: new Date(),
-            checked_in: true,
-            checkedin_at:new Date(),
-            checked_at: new Date()
-          }}else {return attendee} })
-          this.setState({attendees:updateAttendes,usersData:updateAttendes})
+        this.updateAttendeesList(id,user);
       })
       .catch((error) => {
         console.error('Error updating document: ', error);
         toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       });
-    }
+    
    
   };
+
+  updateAttendeesList=(id,user,check)=>{   
+    let updateAttendes= this.state.usersData.map((attendee)=>{if (attendee._id===id){ return {          
+      ...user.properties || user,
+      key:attendee._id, 
+      rol:user.rol_id,
+      _id:attendee._id,
+      updated_at: new Date(),
+      checked_in: user.checked_in,
+      checkedin_at:user.checked_in?new Date():false,
+      checked_at: new Date()
+    }}else {return attendee} })
+    this.setState({attendees:updateAttendes,usersData:updateAttendes})
+  }
 
   //Funcion para filtrar los usuarios de la tabla
   getColumnSearchProps = (dataIndex) => ({
@@ -416,13 +396,13 @@ class CheckAgenda extends Component {
       eventID,
       agendaID,
     } = this.state;
-    console.log(eventID)
+   // console.log(eventID)
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
       
     };
-    console.log('RENDER')
+ 
     if (!this.props.location.state) return this.goBack();
     return (
       <Fragment>
@@ -443,6 +423,8 @@ class CheckAgenda extends Component {
             byActivity={true}
             activityId={this.state.agendaID}
             updateView={this.cargarUsuarios}
+            checkinActivity={this.checkIn}
+            updateList={this.updateAttendeesList}
             substractSyncQuantity={this.substractSyncQuantity}
           />
         )}
@@ -509,6 +491,7 @@ class CheckAgenda extends Component {
             <Table
               scroll={{ x: 1500 }}
               sticky
+              className='table-striped-rows'
               pagination={{ position: ['bottomCenter'] }}
               //rowSelection={rowSelection}
               columns={columnsTable}
