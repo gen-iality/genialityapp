@@ -5,7 +5,8 @@ import withContext from '../../../Context/withContext';
 import { withRouter } from 'react-router';
 import { useState } from 'react';
 import { NewsFeed } from '../../../helpers/request';
-import { Card, Row, Spin,Col } from 'antd';
+import { Card, Row, Spin,Col, Space, Badge } from 'antd';
+import { CalendarOutlined } from '@ant-design/icons';
 import Meta from 'antd/lib/card/Meta';
 import { Link } from 'react-router-dom';
 
@@ -39,11 +40,12 @@ const NoticiasList=({setVirtualConference, match})=>{
            {noticias && noticias.length>0 && noticias.map((news)=>
             <>
             <Col span={8}>
-            <Card
-                          
+            <Badge.Ribbon text="Nuevo" color="cyan"> 
+            <Card 
+                bodyStyle={{padding:'15px'}}        
                 cover={
                 <img
-                    style={{height:'28vh'}}
+                    style={{height:'28vh', objectFit:'cover'}}
                     alt="example"
                     src={news && news.image ? news.image[0]:imgNotFound}
                 />
@@ -52,12 +54,23 @@ const NoticiasList=({setVirtualConference, match})=>{
                     <Link to={`/landing/${eventId}/noticias/${news._id}/detailsNoticia`}key={'viewMore'}>Ver más</Link>         
                 ]}
             >
-                <Meta          
+                <div>
+                  <Space direction='vertical'>
+                      <h2 style={{fontWeight:'700', marginBottom:'0px'}}>{news.title}</h2>
+                      <p style={{color:'#9e9e9e'}}>{news.description_short}</p>
+                  </Space>
+                </div>
+                {/* <Meta          
                 title={`${news.title}`}
                 description={news.description_short}
-                />
-                <Row style={{marginTop:30,color:'rgba(0, 0, 0, 0.6)'}}>{`Fecha publicación: ${news.time}`}</Row>
+                style={{fontWeight:'700', marginBottom:'0px'}}
+                /> */}
+                <Space direction='horizontal'>
+                <CalendarOutlined style={{fontSize:'15px'}} />
+                <Row style={{color:'rgba(0, 0, 0, 0.6)'}}>{`Fecha publicación: ${news.time}`}</Row>
+                </Space>
             </Card>
+            </Badge.Ribbon>
             </Col>          
            </>
            )}
