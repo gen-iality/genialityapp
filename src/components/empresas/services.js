@@ -54,7 +54,7 @@ export const getEventCompanies = (eventId) => {
         const result = await firestore
           .collection('event_companies')
           .doc(eventId)
-          .collection('companies')
+          .collection('companies')//.orderBy("order")
           .get();
         const data = map(dataMapper, result.docs);
 
