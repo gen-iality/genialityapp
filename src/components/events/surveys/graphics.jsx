@@ -319,8 +319,15 @@ class Graphics extends Component {
 
   render() {
     let { dataSurvey, currentPage, titleQuestion, dataVotos } = this.state;
+    let { ChartPie } = graphicsFrame;
     const { Paragraph, Text } = Typography;
     const { surveyLabel } = this.props;
+    const Stylepie = {
+      paddingLeft:'300px', 
+      paddingRight:'300px', 
+      paddingTop:'0px', 
+      paddingBottom:'0px'
+    }
 
     if (dataSurvey.questions)
       return (
@@ -341,7 +348,7 @@ class Graphics extends Component {
               )}
             </div>
             <strong style={{ fontSize:'16px' }}>{titleQuestion}</strong>
-            <Card bodyStyle={{paddingLeft:'200px', paddingRight:'200px', paddingTop:'0px', paddingBottom:'0px'}} >
+            <Card bodyStyle={this.state.dataSurvey.graphyType === ChartPie.type ? Stylepie : {padding:'0px'}} >
               <canvas  id='chart'></canvas>
             </Card>
 
