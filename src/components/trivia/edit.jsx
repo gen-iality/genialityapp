@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
 import { toast } from 'react-toastify';
-import { Button, Row, Col, Table, Modal, Input, Switch, message } from 'antd';
+import { Button, Row, Col, Table, Modal, Input, Switch, message, Select } from 'antd';
 import FormQuestionEdit from './formEdit';
 
 class triviaEdit extends Component {
@@ -97,6 +97,7 @@ class triviaEdit extends Component {
 
         survey: Update.survey,
         show_horizontal_bar: Update.show_horizontal_bar || true,
+        graphyType:  Update.graphyType ? Update.graphyType :'Horizontal',
         allow_vote_value_per_user: Update.allow_vote_value_per_user || 'false',
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
@@ -139,6 +140,7 @@ class triviaEdit extends Component {
     const data = {
       survey: this.state.survey,
       show_horizontal_bar: this.state.show_horizontal_bar === 'true' ? true : false,
+      graphyType: this.state.graphyType,
       allow_vote_value_per_user: 'false',
       event_id: this.props.event._id,
       activity_id: this.state.activity_id,
@@ -195,6 +197,7 @@ class triviaEdit extends Component {
     const data = {
       survey: this.state.survey,
       show_horizontal_bar: this.state.show_horizontal_bar === 'true' ? true : false,
+      graphyType: this.state.graphyType,
       allow_vote_value_per_user: this.state.allow_vote_value_per_user,
       activity_id: this.state.activity_id,
       points: this.state.points ? parseInt(this.state.points) : 1,
@@ -417,6 +420,7 @@ class triviaEdit extends Component {
       minimumScore,
       isGlobal
     } = this.state;
+    const { Option } = Select;
     const columns = [
       {
         title: 'Pregunta',
@@ -519,10 +523,15 @@ class triviaEdit extends Component {
               <label style={{ marginTop: '3%' }} className='label'>
                 Mostrar grafica de barras Horizontal
               </label>
-              <Switch
+              {/* <Switch
                 checked={show_horizontal_bar === 'true' || show_horizontal_bar === true}
                 onChange={(checked) => this.setState({ show_horizontal_bar: checked ? 'true' : 'false' })}
-              />
+              /> */}
+              <Select defaultValue={this.state.graphyType} style={{ width: 120 }} onChange={(graphy)=>this.setState({graphyType: graphy})}>
+                <Option value="y">Horizontal</Option>
+                <Option value="x">vertical</Option>
+                <Option value="pie">torta</Option>
+              </Select>
             </div>
           )}
           {this.state.idSurvey && (

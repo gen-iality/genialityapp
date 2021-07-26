@@ -1,5 +1,6 @@
 import { SurveysApi } from '../../../../helpers/request';
 import * as Survey from 'survey-react';
+import { data } from 'jquery';
 
 async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
    /** Este componente nos permite cargar datos de la encuesta seleccionada */
@@ -9,6 +10,13 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
    Survey.JsonObject.metaData.addProperty('question', 'points');
 
    let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
+
+   /** Posición del botón next*/
+   dataSurvey.showNavigationButtons = 'top';
+   /** Texto del botón next */
+   dataSurvey.pageNextText = 'Responder';
+   /** Texto del botón complete */
+   dataSurvey.completeText = 'Finalizar';
 
    /** logo - posicion y medidas */
    dataSurvey.logo = 'https://portal.evius.co/wp-content/uploads/2021/03/logo_3.png';
@@ -32,7 +40,7 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
    // Esto permite ocultar el boton de devolver en la encuesta
    dataSurvey.showPrevButton = false;
    // Asigna textos al completar encuesta y al ver la encuesta vacia
-   dataSurvey.completedHtml = 'Gracias por completar la encuesta!';
+   dataSurvey.completedHtml = 'Gracias por contestar!';
    //dataSurvey.questionsOnPageMode = 'singlePage';
    if (dataSurvey.allow_gradable_survey === 'true' && dataSurvey.initialMessage) {
       // Permite mostrar el contador y asigna el tiempo limite de la encuesta y por pagina
