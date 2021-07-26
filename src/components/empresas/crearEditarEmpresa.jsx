@@ -17,6 +17,9 @@ import useGetCompanyInitialValues from './customHooks/useGetCompanyInitialValues
 import useGetEventCompaniesStandTypesOptions from './customHooks/useGetEventCompaniesStandTypesOptions';
 import useGetEventCompaniesSocialNetworksOptions from './customHooks/useGetEventCompaniesSocialNetworksOptions';
 import { createEventCompany, updateEventCompany } from './services';
+import { useEffect } from 'react';
+import { firestore } from '../../helpers/firebase';
+import { useState } from 'react';
 
 const { Title } = Typography;
 const formLayout = {
@@ -139,12 +142,24 @@ function CrearEditarEmpresa({ event, match, history }) {
   const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(event._id);
   const [socialNetworksOptions, loadingSocialNetworks] = useGetEventCompaniesSocialNetworksOptions(event._id);
   const [initialValues, loadingInitialValues] = useGetCompanyInitialValues(event._id, companyId);
+  const [tamanio,setTamanio]=useState(0)
+
+  useEffect(()=>{
+    firestore
+    .collection('event_companies')
+    .doc(event._id)
+    .collection('companies').get().then((resp)=>{
+      setTamanio(resp.docs.length)
+      console.log("TAMAÑO",resp.docs.length)}
+    )
+   
+  },[])
 
   const onSubmit = useCallback(
     (values, { setSubmitting }) => {
       const isNewRecord = !companyId;
       const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany;
-      const paramsArray = isNewRecord ? [event._id, values] : [event._id, companyId, values];
+      const paramsArray = isNewRecord ? [event._id, values,tamanio] : [event._id, companyId, values];
       const errorObject = {
         message: 'Error',
         description: isNewRecord ? 'Ocurrió un error creando la empresa' : 'Ocurrió un error actualizando la empresa',
@@ -160,7 +175,7 @@ function CrearEditarEmpresa({ event, match, history }) {
           setSubmitting(false);
         });
     },
-    [history, event._id, companyId]
+    [history, event._id, companyId,tamanio]
   );
 
   if (loadingStandTypes || loadingSocialNetworks || loadingInitialValues) {

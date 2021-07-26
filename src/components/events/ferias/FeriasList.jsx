@@ -7,10 +7,12 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import {setTopBanner} from '../../../redux/topBanner/actions';
+import { firestore } from '../../../helpers/firebase';
 
 const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
   const [companies, loadingCompanies] = useGetEventCompanies(event_id);
   const [companiesEvent, setCompaniesEvent] = useState([]);
+  const [config,setConfig]=useState(null)
   //EFECTO PARA OCULTAR Y MOSTRAR VIRTUAL CONFERENCE
   useEffect(()=>{
   setVirtualConference(false);
@@ -23,7 +25,15 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
   },[])
   useEffect(() => {
     if (!loadingCompanies) {
-      setCompaniesEvent(companies);
+      firestore
+      .collection('event_companies')
+      .doc(event_id).onSnapshot((resp)=>{
+        setConfig(resp.data().config)
+        setCompaniesEvent(companies);
+        console.log(resp.data())
+        console.log(resp.data().config.visualization)
+      })
+      
     }
   }, [loadingCompanies]);
 
@@ -31,7 +41,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
     <div>
       {loadingCompanies && <Spin size='small' />}
 
-      {companiesEvent.length > 0 &&
+      {companiesEvent.length > 0 && config.visualization==='list' &&
         companiesEvent.map(
           (company, index) =>
             company.visible && (
@@ -53,6 +63,11 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
               />
             )
         )}
+       {/*PARA OTRO TIPO DE VISUALIZACION */} 
+      {companiesEvent.length > 0 && config.visualization==='stand' &&
+        companiesEvent.map(
+          (company, index) =>
+            company.visible && ( <div>otra visualizaciòn</div>))}
       {companiesEvent.length == 0 && <Empty />}
     </div>
   );

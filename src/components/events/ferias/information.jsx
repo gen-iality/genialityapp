@@ -1,5 +1,6 @@
 import React from 'react';
 import { Col, Row, Typography, Badge, Skeleton, Spin, Space, Divider, Image } from 'antd';
+import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 
 function feriaInformation(props) {
   const { Title, Text, Paragraph } = Typography;
@@ -34,10 +35,46 @@ function feriaInformation(props) {
                   }}
                   style={{ marginTop: '18px', fontSize: '16px', color: '#9e9e9e' }}></Paragraph>
                 <span className='parrafo'>{props.Description}</span>
+                {props.companyDetail && (props.companyDetail.telefono || props.companyDetail.email || props.companyDetail.webpage) ? (
+          <Row  style={{ fontSize: '14px',marginTop:12}}>
+            
+              {props.companyDetail.telefono && (
+                <Col><span className='tel' style={{marginRight:20}}>
+                  <PhoneOutlined className='icono' /> {props.companyDetail.telefono}
+                </span>
+                </Col>
+              )}
+              {props.companyDetail.email && (
+                <Col style={{marginRight:20}}>
+                <span className='email'>
+                  <MailOutlined className='icono' /> {props.companyDetail.email}
+                </span>
+                </Col>
+              )}
+              {props.companyDetail.webpage && (
+                <Col><span className='web'>
+                  <GlobalOutlined style={{marginRight:5}} className='icono' />
+                  <a
+                    rel='noreferrer'
+                    onClick={() => {
+                      window.open(`${props.companyDetail.pagweb}`, '_blank');
+                    }}
+                    target='_blank'>
+                    {props.companyDetail.webpage}
+                  </a>
+                </span>
+                </Col>
+              )}
+                     
+          </Row>
+        ) : (
+          ''
+        )}
               </Col>
             </Row>
           </Col>
         </Row>
+       
       </div>
     </>
   );

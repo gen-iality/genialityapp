@@ -1,5 +1,5 @@
 import { Button, Empty, message, Row, Table, Tag, Typography } from 'antd'
-import { DragOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons'
+import { DragOutlined, PlusCircleOutlined, SaveOutlined, SettingOutlined } from '@ant-design/icons'
 import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
@@ -22,7 +22,7 @@ function Empresas({ event, match }) {
 
   useEffect(()=>{
     
-    if(companies.length>0 && companyList.length==0){
+    if(companies.length>0){
       let newCompanies=companies.map((company,ind)=>{       
         return {...company,index: company.index? company.index: ind+1} 
         })
@@ -30,7 +30,7 @@ function Empresas({ event, match }) {
         newCompanies= newCompanies.sort(function(a, b) {
          return a.index-b.index;
         });
-     
+       console.log("EJECUTADO EFECCCCT")
         setCompanyList(newCompanies)
     }  
   },[companies])
@@ -40,15 +40,17 @@ function Empresas({ event, match }) {
   const SortableContainer = sortableContainer(props => <tbody {...props} />);
   const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 
-  const orderCompany=async()=>{
+  const orderCompany=async(updateList)=>{
     message.loading("Por favor espere..")
-    for(let i=0;i<companyList.length;i++){
-      companyList[i].index=i+1;     
-      var {id , ...company} =  companyList[i];
+    console.log(companyList)
+    let companies=updateList?updateList:companyList
+    for(let i=0;i<companies.length;i++){
+      companies[i].index=i+1;     
+      var {id , ...company} =  companies[i];
       await firestore
           .collection('event_companies')
           .doc(event._id)
-          .collection('companies').doc(companyList[i].id).set({
+          .collection('companies').doc(companies[i].id).set({
             ...company
           },{merge: true})
     }    
@@ -56,8 +58,24 @@ function Empresas({ event, match }) {
     
   }
 
-  const companyColumns = useMemo(() => {
-    return [
+  function deleteCompany(id){
+    console.log(event._id)
+    firestore
+      .collection('event_companies')
+      .doc(event._id)
+      .collection('companies').doc(id).delete().then((resp)=>{
+            
+        let updateList= companyList.filter(company=>company.id!==id);     
+      setCompanyList(updateList);
+         orderCompany(updateList).then((r)=>{
+           console.log("TERMINO DE ACTUALIZAR INDEX=>")
+         })
+      });
+  
+ }
+
+
+ let companyColumns = [
       {
         title: '',
         dataIndex: 'sort',
@@ -94,14 +112,14 @@ function Empresas({ event, match }) {
       },
       {
         title: '',
-        dataIndex: 'eliminar',
-        render(visible) {
-          return <Button>Eliminar</Button>
+        dataIndex: 'id',
+        render(value,record) {
+          return <Button onClick={()=>deleteCompany(value)}>Eliminar</Button>
             
         }
       },
     ]
-  }, [match.url])
+  
 
   if (loadingCompanies) {
     return <Loading />
@@ -149,9 +167,9 @@ function Empresas({ event, match }) {
             {'Crear empresa'}
           </Button>
         </Link>
-        <Link style={{marginLeft:20}} to={`${match.url}/Stands`}>
-          <Button type="primary" icon={<PlusCircleOutlined />}>
-            {'Gestionar stands'}
+        <Link style={{marginLeft:20}} to={`${match.url}/configuration`}>
+          <Button type="primary" icon={<SettingOutlined />}>
+            {'Configuración'}
           </Button>
         </Link>
         <Button onClick={()=>orderCompany()} style={{marginLeft:20}} type="primary" icon={<SaveOutlined />}>
