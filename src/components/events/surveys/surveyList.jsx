@@ -52,7 +52,7 @@ function SurveyList(props) {
       }
    };
 
-   const handleClick = (currentSurvey) => {
+   const handleClick = (currentSurvey, status) => {
       if (activity !== null && currentSurvey.isOpened === 'true') {
          // setMainStage('surveyDetalle');
          // setSurveyVisible(true);
@@ -61,6 +61,10 @@ function SurveyList(props) {
          setSurveyResult('results');
          // setMainStage('surveyDetalle');
          // setSurveyVisible(true);
+      }
+      if (status === 'results') {
+         setSurveyResult('results');
+         console.log('10. aqui');
       }
       setCurrentSurvey(currentSurvey);
    };
@@ -88,7 +92,7 @@ function SurveyList(props) {
       <SurveyCard
          publishedSurveys={listOfEventSurveys[0]}
          loadingSurveys={loadingSurveys}
-         currentSurvey={surveySelected}
+         currentUser={currentUser}
          handleClick={handleClick}
       />
    );
