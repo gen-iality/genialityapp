@@ -7,11 +7,9 @@ import {
    MehOutlined,
    SyncOutlined,
 } from '@ant-design/icons';
-import { ListenUserCompletedSurvey } from '../services/userCompletedSurvey';
 
 function SurveyCard(props) {
-   const [userHasVoted, setUserHasVoted] = useState();
-   const { publishedSurveys, loadingSurveys, currentUser, handleClick } = props;
+   const { publishedSurveys, loadingSurveys, handleClick, surveyStatusProgress } = props;
 
    const headStyle = {
       fontWeight: 300,
@@ -20,34 +18,6 @@ function SurveyCard(props) {
       color: '#000',
    };
    const bodyStyle = { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' };
-
-   function userCompletedSurvey() {
-      if (publishedSurveys) {
-         publishedSurveys.map((survey) => {
-            ListenUserCompletedSurvey(survey, currentUser, setUserHasVoted);
-         });
-      }
-   }
-
-   useEffect(() => {
-      userCompletedSurvey();
-   }, [publishedSurveys]);
-
-   useEffect(() => {
-      console.log("10. ==> ", userHasVoted)
-      if (userHasVoted) {
-         /** Se realiza filtro por id de la encuesta y luego se asigna a la data de la encuesta la propiedad userHasVote */
-         let surveyFilter = publishedSurveys?.find((filter) => filter._id === userHasVoted.surveyId);
-         Object.defineProperties(surveyFilter, {
-            userHasVoted: {
-               value: userHasVoted.completeSurvey,
-               writable: true
-            },
-         });
-      }
-   }, [userHasVoted]);
-
-   
 
    return (
       <Card
@@ -79,23 +49,29 @@ function SurveyCard(props) {
                                  style={{ textAlign: 'left' }}
                                  description={
                                     <Row>
-                                       {survey.userHasVoted ? (
+                                       {!surveyStatusProgress ||
+                                       !surveyStatusProgress[survey._id] ||
+                                       !surveyStatusProgress[survey._id].surveyCompleted ? (
                                           <Col style={{ marginBottom: '3px' }}>
-                                             <Tag icon={<CheckCircleOutlined />} color='success'>
-                                                Contestada
+                                             <Tag icon={<ExclamationCircleOutlined />} color='warning'>
+                                                Sin Contestar
                                              </Tag>
                                           </Col>
-                                       ) : survey.userHasVoted === false ? (
+                                       ) : surveyStatusProgress[survey._id].surveyCompleted === 'running' ? (
                                           <Col style={{ marginBottom: '3px' }}>
                                              <Tag icon={<SyncOutlined spin />} color='geekblue'>
                                                 En progreso
                                              </Tag>
                                           </Col>
+                                       ) : surveyStatusProgress[survey._id].surveyCompleted === 'completed' ? (
+                                          <Col style={{ marginBottom: '3px' }}>
+                                             <Tag icon={<CheckCircleOutlined />} color='success'>
+                                                Completado
+                                             </Tag>
+                                          </Col>
                                        ) : (
                                           <Col style={{ marginBottom: '3px' }}>
-                                             <Tag icon={<ExclamationCircleOutlined />} color='warning'>
-                                                Sin Contestar
-                                             </Tag>
+                                             <Tag color='red'>Error</Tag>
                                           </Col>
                                        )}
                                        {survey.isOpened && (
@@ -119,11 +95,29 @@ function SurveyCard(props) {
                                  <>
                                     <div>
                                        <Button
-                                          type={survey.isOpened === 'true' && survey.userHasVoted !== true ? 'primary' : 'ghost'}
+                                          type={
+                                             survey.isOpened === 'true' &&
+                                             (!surveyStatusProgress ||
+                                                !surveyStatusProgress[survey._id] ||
+                                                !surveyStatusProgress[survey._id].surveyCompleted !== 'completed')
+                                                ? 'primary'
+                                                : 'ghost'
+                                          }
                                           className={`${survey.isOpened === 'true' &&
                                              'animate__animated  animate__pulse animate__slower animate__infinite'}`}
-                                          onClick={() =>{survey.userHasVoted !== true ? handleClick(survey) : handleClick(survey, 'results')}}>
-                                          {survey.isOpened === 'true' && survey.userHasVoted !== true ? 'Ir a Encuesta' : 'Resultados'}
+                                          onClick={() => {
+                                             !surveyStatusProgress ||
+                                             !surveyStatusProgress[survey._id] ||
+                                             !surveyStatusProgress[survey._id].surveyCompleted !== 'completed'
+                                                ? handleClick(survey)
+                                                : handleClick(survey, 'results');
+                                          }}>
+                                          {survey.isOpened === 'true' &&
+                                          (!surveyStatusProgress ||
+                                             !surveyStatusProgress[survey._id] ||
+                                             !surveyStatusProgress[survey._id].surveyCompleted !== 'completed')
+                                             ? 'Ir a Encuesta'
+                                             : 'Resultados'}
                                        </Button>
                                     </div>
                                  </>

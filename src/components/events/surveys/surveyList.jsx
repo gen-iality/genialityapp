@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import * as surveysActions from '../../../redux/survey/actions';
 import { setMainStage } from '../../../redux/stage/actions';
+import InitSurveysCompletedListener from './services/initSurveyCompletedListener';
 
 /** Componentes */
 import SurveyCard from './components/surveyCard';
@@ -20,7 +21,7 @@ const { setNotification } = notificationsActions;
 const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
-   const { activity, setNotification, viewNotification, surveySelected, setCurrentSurvey, setSurveyResult } = props;
+   const { activity, setNotification, viewNotification, surveySelected, setCurrentSurvey, setSurveyResult, surveyStatusProgress } = props;
 
    const eventId = activity.event_id;
    const currentUser = UseCurrentUser();
@@ -28,6 +29,7 @@ function SurveyList(props) {
    const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
    const [loadingSurveys, setLoadingSurveys] = useState(true);
    const [reloadNotification, setReloadNotification] = useState(true);
+   // const [surveyStatusProgress, setSurveyStatusProgress] = useState({});
 
    useEffect(() => {
       if (eventId) {
@@ -42,6 +44,11 @@ function SurveyList(props) {
          );
       }
    }, [eventId]);
+
+   // console.log("surveyStatusProgress", surveyStatusProgress)
+   // useEffect(() => {
+   //    InitSurveysCompletedListener(currentUser, setSurveyStatusProgress);
+   // }, [eventId]);
 
    const visualizarEncuesta = (survey) => {
       if (survey && survey.isOpened === 'true' && survey !== null) {
@@ -91,6 +98,7 @@ function SurveyList(props) {
    return (
       <SurveyCard
          publishedSurveys={listOfEventSurveys[0]}
+         surveyStatusProgress={surveyStatusProgress}
          loadingSurveys={loadingSurveys}
          currentUser={currentUser}
          handleClick={handleClick}

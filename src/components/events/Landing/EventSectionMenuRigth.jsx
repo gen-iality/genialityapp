@@ -11,12 +11,14 @@ import { formatDataToString } from '../../../helpers/utils';
 const { Sider } = Layout;
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
+import InitSurveysCompletedListener from '../surveys/services/initSurveyCompletedListener';
 
 const EventSectionMenuRigth = (props) => {
   const [isCollapsed, setisCollapsed] = useState(true);
   const [visiblePerfil, setVisiblePerfil] = useState(true);
   const [userPerfil, setUserPerfil] = useState(true);
   const [propertiesUserPerfil, setPropertiesUserPerfil] = useState(null);
+  const [surveyStatusProgress, setSurveyStatusProgress] = useState({});
   let [optionselected, setOptionselected] = useState(1);
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
@@ -24,6 +26,9 @@ const EventSectionMenuRigth = (props) => {
   function handleCollapsed() {
     setisCollapsed(!isCollapsed);
   }
+  useEffect(() => {
+    InitSurveysCompletedListener(cUser, setSurveyStatusProgress);
+ }, []);
 
   return (
     <Sider
@@ -53,7 +58,6 @@ const EventSectionMenuRigth = (props) => {
                 onClick={handleCollapsed}>
                 <ArrowRightOutlined style={{ fontSize: '24px', color: cEvent.value.styles.textMenu }} />
               </Button>
-
               <SocialZone
                 totalMessages={props.totalNewMessages}
                 optionselected={optionselected}
@@ -62,6 +66,7 @@ const EventSectionMenuRigth = (props) => {
                 notNewMessages={props.notNewMessage}
                 tabselected={props.tabselected}
                 settabselected={props.settabselected}
+                surveyStatusProgress={surveyStatusProgress}
               />
             </>
           )}

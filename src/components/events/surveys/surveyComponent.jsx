@@ -13,7 +13,7 @@ import HelpFiftyFifty from './services/helpFiftyFifty';
 import MessageWhenCompletingSurvey from './services/messageWhenCompletingSurvey';
 import RealTimeSurveyListening from './services/realTimeSurveyListening';
 import TimeLimitPerQuestion from './services/timeLimitPerQuestion';
-import { SetUserCompletedSurvey } from './services/userCompletedSurvey';
+import SetUserCompletedSurvey from './services/setUserCompletedSurvey';
 
 function SurveyComponent(props) {
    const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
@@ -78,14 +78,15 @@ function SurveyComponent(props) {
    // Funcion para enviar la informacion de las respuestas
    function sendData(surveyModel) {
       setRankingPoints(0);
-      surveyModel.currentPage.questions.map(async (question) => {
-         const status = surveyModel.state === 'completed'
+      const status = surveyModel.state;
 
-         if (status) {
-            SetUserCompletedSurvey(surveyData, currentUser,status);
-         }else{
-            SetUserCompletedSurvey(surveyData, currentUser,status);
-         }
+      if (status) {
+         SetUserCompletedSurvey(surveyData, currentUser, status);
+      } else {
+         SetUserCompletedSurvey(surveyData, currentUser, status);
+      }
+
+      surveyModel.currentPage.questions.map(async (question) => {
          const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
          setRankingPoints(pointsForCorrectAnswer);
          registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);

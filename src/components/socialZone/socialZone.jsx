@@ -399,7 +399,8 @@ let SocialZone = function(props) {
             </Col>
           </Row>
           {props.currentSurvey === null ? (
-            <SurveyList eventSurveys={props.eventSurveys} publishedSurveys={props.publishedSurveys} />
+            <SurveyList eventSurveys={props.eventSurveys} publishedSurveys={props.publishedSurveys}
+            surveyStatusProgress={props.surveyStatusProgress} />
           ) : (
             <SurveyDetail />
           )}
