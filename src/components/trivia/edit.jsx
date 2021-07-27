@@ -521,7 +521,7 @@ class triviaEdit extends Component {
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: '3%' }} className='label'>
-                Mostrar grafica de barras Horizontal
+                Mostrar grafica
               </label>
               {/* <Switch
                 checked={show_horizontal_bar === 'true' || show_horizontal_bar === true}
