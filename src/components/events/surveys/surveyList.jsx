@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import * as surveysActions from '../../../redux/survey/actions';
 import { setMainStage } from '../../../redux/stage/actions';
-import InitSurveysCompletedListener from './services/initSurveyCompletedListener';
 
 /** Componentes */
 import SurveyCard from './components/surveyCard';
@@ -21,34 +20,21 @@ const { setNotification } = notificationsActions;
 const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
-   const { activity, setNotification, viewNotification, surveySelected, setCurrentSurvey, setSurveyResult, surveyStatusProgress } = props;
+   const {
+      activity,
+      setNotification,
+      viewNotification,
+      setCurrentSurvey,
+      setSurveyResult,
+      surveyStatusProgress,
+      listOfEventSurveys,
+      loadingSurveys,
+   } = props;
 
    const eventId = activity.event_id;
    const currentUser = UseCurrentUser();
 
-   const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
-   const [loadingSurveys, setLoadingSurveys] = useState(true);
    const [reloadNotification, setReloadNotification] = useState(true);
-   // const [surveyStatusProgress, setSurveyStatusProgress] = useState({});
-
-   useEffect(() => {
-      if (eventId) {
-         listenSurveysData(
-            eventId,
-            setListOfEventSurveys,
-            setLoadingSurveys,
-            activity,
-            currentUser,
-            visualizarEncuesta,
-            surveySelected
-         );
-      }
-   }, [eventId]);
-
-   // console.log("surveyStatusProgress", surveyStatusProgress)
-   // useEffect(() => {
-   //    InitSurveysCompletedListener(currentUser, setSurveyStatusProgress);
-   // }, [eventId]);
 
    const visualizarEncuesta = (survey) => {
       if (survey && survey.isOpened === 'true' && survey !== null) {
@@ -61,20 +47,16 @@ function SurveyList(props) {
 
    const handleClick = (currentSurvey, status) => {
       if (activity !== null && currentSurvey.isOpened === 'true') {
-         // setMainStage('surveyDetalle');
-         // setSurveyVisible(true);
          setSurveyResult('view');
       } else if (activity !== null && currentSurvey.isOpened === 'false') {
          setSurveyResult('results');
-         // setMainStage('surveyDetalle');
-         // setSurveyVisible(true);
       }
       if (status === 'results') {
          setSurveyResult('results');
-         console.log('10. aqui');
       }
       setCurrentSurvey(currentSurvey);
    };
+
    useEffect(() => {
       if (listOfEventSurveys[1]?.length >= 1) {
          setNotification({
@@ -110,7 +92,6 @@ const mapStateToProps = (state) => ({
    activity: state.stage.data.currentActivity,
    viewNotification: state.notifications.data,
    currentActivity: state.survey.currentActivity,
-   surveySelected: state.survey.data.currentSurvey,
 });
 
 const mapDispatchToProps = {

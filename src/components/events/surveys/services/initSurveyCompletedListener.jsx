@@ -10,16 +10,18 @@ async function InitSurveysCompletedListener(currentUser,setSurveyStatusProgress)
 
    // console.log('10. Se ejecuta la funcion del listener');
 
-   firebaseRef.onSnapshot((snapShot) => {
+   const unSuscribe = firebaseRef.onSnapshot((snapShot) => {
       let surveysCompleted = {};
       snapShot.forEach((data) => {
          if (data.data()) {
             surveysCompleted[data.id] = data.data();
-            console.log('10. initSurveysCompletedListener ', data.data());
+            // console.log('10. initSurveysCompletedListener ', data.data());
          }
       });
       setSurveyStatusProgress(surveysCompleted);
    });
+
+   return unSuscribe
 }
 
 export default InitSurveysCompletedListener;

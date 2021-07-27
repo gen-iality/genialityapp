@@ -400,7 +400,9 @@ let SocialZone = function(props) {
           </Row>
           {props.currentSurvey === null ? (
             <SurveyList eventSurveys={props.eventSurveys} publishedSurveys={props.publishedSurveys}
-            surveyStatusProgress={props.surveyStatusProgress} />
+            surveyStatusProgress={props.surveyStatusProgress}
+            listOfEventSurveys={props.listOfEventSurveys}
+            loadingSurveys={props.loadingSurveys} />
           ) : (
             <SurveyDetail />
           )}
