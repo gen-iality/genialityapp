@@ -31,19 +31,9 @@ function SurveyList(props) {
       loadingSurveys,
    } = props;
 
-   const eventId = activity.event_id;
    const currentUser = UseCurrentUser();
 
    const [reloadNotification, setReloadNotification] = useState(true);
-
-   const visualizarEncuesta = (survey) => {
-      if (survey && survey.isOpened === 'true' && survey !== null) {
-         handleClick(survey);
-      } else {
-         setCurrentSurvey(survey);
-         setSurveyResult('closedSurvey');
-      }
-   };
 
    const handleClick = (currentSurvey, status) => {
       if (activity !== null && currentSurvey.isOpened === 'true') {
