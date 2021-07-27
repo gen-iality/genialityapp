@@ -45,7 +45,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
       {companiesEvent.length > 0 && config.visualization==='list' && (
       <MiniBanner/>
        )}
-      {companiesEvent.length > 0 && config.visualization==='list' &&
+      {companiesEvent.length > 0 && (config.visualization==='list' || !config.visualization)  &&
         companiesEvent.map(
           (company, index) =>
             company.visible && (
