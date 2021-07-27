@@ -143,7 +143,7 @@ class Graphics extends Component {
     let porcentajeUsuarios = 0
     let respuestatotal = 0;
 
-    respuestadVotos = this.state.totalUser - totalVotosUsuarios;
+    respuestadVotos = totalVotosUsuarios - this.state.totalUser;
     porcentajeUsuarios= parseInt((respuestadVotos * 100) / this.state.totalUser)
 
     this.setState({
@@ -402,8 +402,8 @@ class Graphics extends Component {
                 <Col span={16}>
                   <div style={{marginLeft:'12px', marginRight:'12px', fontWeight:'600', display:'grid',alignContent:'center', height:'100%',}}>
                     <div>
-                      <span style={{fontSize:'24px', fontWeight:'500'}}>{this.state.resultVotos.usuariosSinRespuesta} Voto(s)</span>
-                      <span style={{fontSize:'24px', fontWeight:'500', float:'right'}}>{this.state.resultVotos.porcentajevotos} % </span>
+                      <span style={{fontSize:'22px', fontWeight:'500'}}>{this.state.resultVotos.usuariosSinRespuesta} Voto(s)</span>
+                      <span style={{fontSize:'22px', fontWeight:'500', float:'right'}}>{this.state.resultVotos.porcentajevotos} % </span>
                     </div>
                   </div>
                 </Col>
