@@ -41,7 +41,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
     <div>
       {loadingCompanies && <Spin size='small' />}
 
-      {companiesEvent.length > 0 && config.visualization==='list' &&
+      {companiesEvent.length > 0 && (config.visualization==='list' || !config.visualization)  &&
         companiesEvent.map(
           (company, index) =>
             company.visible && (

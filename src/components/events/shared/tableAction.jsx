@@ -15,7 +15,7 @@ export default function TableAction({ ...props }) {
           </span>
         </button>
       ) : (
-        <button data-tooltip='Editar'>
+        <button style={{marginLeft:20,marginRight:20}} data-tooltip='Editar'>
           <span className='icon' onClick={() => editItem(object)}>
             <i className='fas fa-edit' />
           </span>
