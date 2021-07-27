@@ -54,7 +54,7 @@ export const getEventCompanies = (eventId) => {
         const result = await firestore
           .collection('event_companies')
           .doc(eventId)
-          .collection('companies')
+          .collection('companies')//.orderBy("order")
           .get();
         const data = map(dataMapper, result.docs);
 
@@ -138,24 +138,30 @@ export const getEventCompany = (eventId, companyId) => {
   });
 };
 
-export const createEventCompany = (eventId, data) => {
-  const payload = pick(companyFormKeys, data);
+export const createEventCompany = (eventId, data,tamanio) => {
+  let payload = pick(companyFormKeys, data);
+     console.log("TAMAÑO CREATE EVENT=>"+tamanio)
 
-  return new Promise((resolve, reject) => {
-    (async () => {
-      try {
-        const newCompany = await firestore
-          .collection('event_companies')
-          .doc(eventId)
-          .collection('companies')
-          .add(payload);
-        resolve(newCompany.id);
-      } catch (error) {
-        reject(error);
-      }
-    })();
-  });
-};
+          return new Promise((resolve, reject) => {
+            (async () => {
+              try { 
+                if(tamanio){
+                  payload={...payload,index:tamanio+1}   
+                }             
+                          
+             
+                const newCompany = await firestore
+                  .collection('event_companies')
+                  .doc(eventId)
+                  .collection('companies')
+                  .add(payload);
+                resolve(newCompany.id);
+              } catch (error) {
+                reject(error);
+              }
+            })();
+          });
+        };
 
 export const updateEventCompany = (eventId, companyId, data) => {
   const payload = pick(companyFormKeys, data);

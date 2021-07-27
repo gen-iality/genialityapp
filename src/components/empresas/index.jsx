@@ -23,11 +23,9 @@ function EmpresasRoutes({ event, match }) {
       />
        <Route
         exact
-        path={`${matchUrl}/Stands`}
+        path={`${matchUrl}/configuration`}
         render={(routeProps) => <Stands {...routeProps} event={event} />}
-      />
-
-      <Route
+      />      <Route
         exact
         path={`${matchUrl}/editar/:companyId`}
         render={(routeProps) => <CrearEditarEmpresa {...routeProps} event={event} />}

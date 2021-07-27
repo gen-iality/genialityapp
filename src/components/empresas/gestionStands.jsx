@@ -1,5 +1,5 @@
-import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Empty, Input, Row,Form,Modal,Col, Divider} from 'antd';
+import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Empty, Input, Row,Form,Modal,Col, Divider, Space, Card, message} from 'antd';
 
 //import Form from 'antd/lib/form/Form';
 //import Modal from 'antd/lib/modal/Modal';
@@ -10,6 +10,9 @@ import { Link } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
 
 import useGetEventCompaniesStandTypesOptions from './customHooks/useGetEventCompaniesStandTypesOptions';
+import { Select } from 'antd';
+
+const { Option } = Select;
 
 
 const Stands=(props)=>{
@@ -19,7 +22,35 @@ const Stands=(props)=>{
     const[selectedStand,setSelectedStand]=useState(null)
     const[nameStand,setNameStand]=useState(null)
     const[documentEmpresa, setDocumentEmpresa]=useState(null)
-  
+    const [visualization,setVisualization]=useState('list');
+    const [config,setconfig]=useState(null)
+
+
+    function handleChange(value) {
+      console.log(`selected ${value}`);
+      setVisualization(value)
+    }
+
+   async function obtenerConfig(){
+     let config= await firestore
+          .collection('event_companies')
+          .doc(props.event._id).get();
+          console.log(config.data())
+          setconfig(config.data())
+        if(config.data().config){
+          setVisualization(config.data().config.visualization)
+        }
+    }
+
+    async function saveConfiguration(){
+      message.loading("Por favor espere...")
+      let config= await firestore
+      .collection('event_companies')
+      .doc(props.event._id).set({
+        config:  {visualization:visualization}
+      },{merge:true})
+      message.success("Configuración guardada correctamente")
+    } 
     
       const editStand=async ()=>{
         
@@ -50,10 +81,12 @@ const Stands=(props)=>{
 
       function obtenerStand(record){
           
-        if(record){
+        if(record!=null){
           setSelectedStand(record)
           setNameStand(record.value)
-        }     
+        } else{
+          setNameStand(null)
+        }    
       }
      const HandlerEditText= (e) => {
         const value = e.target.value;   
@@ -62,11 +95,12 @@ const Stands=(props)=>{
       const handleCancel = () => {
         setEditStands(false);
       }
-      
+      useEffect(()=>{
+        obtenerConfig();
+      },[])
 
       useEffect(()=>{ 
-        console.log("STANDS ACA")
-        console.log(standTypesOptions)    
+         
         if(standTypesOptions){
           let listStands=[]
           standTypesOptions.map((stands,indx)=>{
@@ -78,31 +112,41 @@ const Stands=(props)=>{
           .get().then((resp)=>{
             setStands(listStands)    
             setDocumentEmpresa(resp.data())                   
-            console.log("MODIFICO")
+            
           }); 
                  
-        }       
+        } 
 
       },[standTypesOptions])
-      return(<div>        
-        <Modal title="Editar stand" visible={editStands} onOk={editStand}  onCancel={handleCancel}>
-          <Form>
-        <Form.Item label="Nombre">
-          <Input value={nameStand && nameStand} onChange={(e) => HandlerEditText(e)}/>
-        </Form.Item>             
-        </Form>
-      </Modal>
-
-        <Row style={{width:700, marginBottom:20}}> <Link to={`/event/${props.event._id}/empresas`}><ArrowLeftOutlined /></Link> <div style={{marginLeft:30}}>Stands</div>
+      return(<div> 
+        <Row style={{width:700, marginBottom:20}}> <Link to={`/event/${props.event._id}/empresas`}><ArrowLeftOutlined /></Link> <div style={{marginLeft:30}}>Configuración</div>
          </Row>
-        <Row style={{width:700, marginBottom:20}} justify='end'>
-        <Button onClick={()=>{setEditStands(true);obtenerStand(null)}} type="primary" icon={<PlusCircleOutlined />}>
-            {'Agregar stand'}
+     
+
+        <Space direction="vertical" style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+          <Card style={{width:700}} title="Configuración general" >
+              <Row>
+            <span>Visualización: </span> 
+            <Select value={visualization} style={{ width: 220,marginLeft:30 }} onChange={handleChange}>
+              <Option value="list">Listado</Option>
+              <Option value="stand">Stand</Option>         
+            </Select>
+            <Button style={{marginLeft:35}} onClick={()=>saveConfiguration()} type="primary" icon={<SaveOutlined />}>
+            {'Guardar'}
           </Button>
-        </Row>
-        <div style={{width:700}}>
+            </Row>
+          </Card>
+          <Card style={{width:700}} title="Configuración de stands" 
+          extra={
+            <Button onClick={()=>{setEditStands(true);obtenerStand(null)}} type="primary" icon={<PlusCircleOutlined />}>
+            {'Agregar stand'}
+          </Button>}>
+          <div style={{width:700}}>
+          
         <Row justify='space-between' ><Col span={6}>Nombre</Col><Col span={6}>Valor</Col><Col span={6}>Opciones</Col></Row>
-      <Divider></Divider>
+        <Row style={{width:660}}>
+        <Divider></Divider>
+        </Row>
          {standsList && standsList.map((stand,index)=>(<Row style={{borderBottom:'1px solid light-gray',marginBottom:'2px'}} key={'rowstand-'+index} justify='space-between'>
            <Col span={6} key={'stand-'+index}> {stand.label}</Col>
            <Col span={6} key={'standv-'+index}> {stand.value}</Col> 
@@ -110,7 +154,19 @@ const Stands=(props)=>{
            <Button style={{marginRight:3}} size='small' onClick={()=>{setEditStands(true);obtenerStand(stand)}}><EditOutlined /></Button>
            <Button onClick={()=>{deleteStand(index)}} size='small'><DeleteOutlined /></Button></Col> 
            </Row> ))}
-           </div>
+           </div>     
+           
+        <Modal title="Editar stand" visible={editStands} onOk={editStand}  onCancel={handleCancel}>
+          <Form>
+        <Form.Item label="Nombre">
+          <Input value={nameStand && nameStand} onChange={(e) => HandlerEditText(e)}/>
+        </Form.Item>             
+        </Form>
+      </Modal>
+      </Card>
+      </Space>
+        
+     
     </div>)
 }
 
