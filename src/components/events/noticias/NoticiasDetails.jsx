@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import { useState } from 'react';
 import { NewsFeed } from '../../../helpers/request';
 import { Card, Row, Spin,Col, Space } from 'antd';
+import NoticiaList from './NoticiasList'
 import Meta from 'antd/lib/card/Meta';
 
 
@@ -39,6 +40,10 @@ const NoticiasDetails=({setVirtualConference, match})=>{
            {loading && <Spin/>}
            {noticia && 
            <Col style={{padding:'30px 100px'}}>
+               <iframe style={{height:'500px'}} width="100%" height="auto" src="https://www.youtube.com/embed/a1oXvugkgPs" title="YouTube video player" 
+                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
+                    {/* <Meta title={noticia && noticia.description_short} description={noticia && noticia.description_complete} /> */}
+                    <Row style={{marginTop:30}} justify={'end'}>Actualizado: {noticia && noticia.updated_at}</Row>
                   <Card
                   title={noticia && noticia.title} 
                   extra={noticia && noticia.time}                   
@@ -49,12 +54,9 @@ const NoticiasDetails=({setVirtualConference, match})=>{
                       <p style={{color:'#9e9e9e'}}>{noticia && noticia.description_complete}</p>
                   </Space>
                 </div>
-                <iframe style={{height:'500px'}} width="100%" height="auto" src="https://www.youtube.com/embed/a1oXvugkgPs" title="YouTube video player" 
-                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
-                    {/* <Meta title={noticia && noticia.description_short} description={noticia && noticia.description_complete} /> */}
-                    <Row style={{marginTop:30}} justify={'end'}>Actualizado: {noticia && noticia.updated_at}</Row>
                 </Card>
             </Col>}
+            <NoticiaList/>
         </>
         );
 }
