@@ -170,9 +170,6 @@ class ListEventUser extends Component {
 
   async componentDidMount() {
     let self = this;
-    console.log("DID MOUNT")
-    console.log(this.props)
-
     this.checkFirebasePersistence();
     try {
       const { event } = this.props;
@@ -575,8 +572,7 @@ class ListEventUser extends Component {
                 Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
               </p>
             </div>
-          </div>
-          <Link to={`/event/${this.props.event._id}/invitados`}>Importar usuarios</Link>
+          </div>         
           <div className='columns'>
             <div className='is-flex-touch columns container-options'>
               <div className='column is-narrow has-text-centered button-c is-centered'>
@@ -586,6 +582,7 @@ class ListEventUser extends Component {
                   </span>
                   <span className='text-button'>Agregar Usuario</span>
                 </button>
+               <Row><span style={{fontSize:10}}> <Link to={`/event/${this.props.event._id}/invitados/importar-excel`}>Importar usuarios</Link></span></Row> 
               </div>
               {usersReq.length > 0 && (
                 <div className='column is-narrow has-text-centered export button-c is-centered'>

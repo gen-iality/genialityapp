@@ -270,7 +270,7 @@ class Event extends Component {
                 <Route path={`${match.url}/pages`} component={Pages} />
               )}
 
-              <Route path={`${match.url}/dashboard`} render={() => <DashboardEvent eventId={this.state.event._id} />} />
+              <Route path={`${match.url}/dashboard`} render={() => <DashboardEvent eventName={this.state.event.name} eventId={this.state.event._id} />} />
               <Route path={`${match.url}/orders`} render={() => <OrdersEvent eventId={this.state.event._id} />} />
               <Route path={`${match.url}/certificados`} render={() => <ListCertificados event={this.state.event} />} />
               <Route path={`${match.url}/espacios`} render={() => <Espacios eventID={this.state.event._id} />} />

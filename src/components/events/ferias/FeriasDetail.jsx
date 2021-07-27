@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Tabs, Row, Col, Card, Image, Typography } from 'antd';
+import { Tabs, Row, Col, Card, Image, Typography, Button } from 'antd';
 import FeriasBanner from './feriaBanner.jsx';
 import Information from './information.jsx';
 import Product from './product';
@@ -13,6 +13,7 @@ import { compose } from 'redux';
 import { useState } from 'react';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import ReactPlayer from 'react-player';
+import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 
 const FeriasDetail = (props) => {
   const [companyDetail, setCompanyDetail] = useState();
@@ -34,10 +35,9 @@ const FeriasDetail = (props) => {
     let eventId = match.params.event_id;
     let idCompany = match.params.id;
 
-    obtenerEmpresa(eventId, idCompany).then((resp) => {
-      console.log('DATOS EMPRESA');
-      console.log(resp);
+    obtenerEmpresa(eventId, idCompany).then((resp) => { 
       setCompanyDetail(resp);
+      console.log(resp)
     });
   }, []);
 
@@ -105,6 +105,41 @@ const FeriasDetail = (props) => {
                   __html: companyDetail && companyDetail.description,
                 }}></div>
             </Row>
+            {companyDetail && (companyDetail.telefono || companyDetail.email || companyDetail.webpage) ? (
+          <Row justify={'space-between'} style={{ fontSize: '18px',marginTop:25,borderTop:'2px solid #bdbdbd', paddingTop:30 }}>
+            
+              {companyDetail.telefono && (
+                <Col><span className='tel'>
+                  <PhoneOutlined className='icono' /> {companyDetail.telefono}
+                </span>
+                </Col>
+              )}
+              {companyDetail.email && (
+                <Col>
+                <span className='email'>
+                  <MailOutlined className='icono' /> {companyDetail.email}
+                </span>
+                </Col>
+              )}
+              {companyDetail.webpage && (
+                <Col><span className='web'>
+                  <GlobalOutlined className='icono' />
+                  <a
+                    rel='noreferrer'
+                    onClick={() => {
+                      window.open(`${companyDetail.pagweb}`, '_blank');
+                    }}
+                    target='_blank'>
+                    {companyDetail.webpage}
+                  </a>
+                </span>
+                </Col>
+              )}
+                     
+          </Row>
+        ) : (
+          ''
+        )}
           </TabPane>
           <TabPane tab='Productos y Servicios' key='2'>
             {/* componente  de Productos */}
@@ -121,6 +156,7 @@ const FeriasDetail = (props) => {
                           title={prod.nombre}
                           etiqueta={prod.category}
                           description={prod.description}
+                          url={prod.web_url}
                         />
                       </Col>
                     ))}

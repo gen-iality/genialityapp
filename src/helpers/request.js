@@ -229,8 +229,14 @@ export const EventsApi = {
   metricsRegisterBydate: async (id,type) => {
     return await Actions.get(`/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}`);
   },
+  //obtener gallery subasta silenciosa
+  getGallery: async (eventId) => {
+    return await Actions.get(`/api/events/${eventId}/galleries`);
+  },
+  storeGalley:async(eventId,galleryId,data)=>{
+    return await Actions.post(`/api/events/${eventId}/galleries/${galleryId}/silentauctionmail`,data)
+  }
 };
-
 export const InvitationsApi = {
   getAll: async (id) => {
     return await Actions.getAll(`/api/events/${id}/invitation`);
@@ -518,8 +524,8 @@ export const NewsFeed = {
   byEvent: async (id) => {
     return await Actions.getAll(`api/events/${id}/newsfeed`).then(({ data }) => data);
   },
-  getOne: async (id) => {
-    return await Actions.get(`api/events/${id}/newsfeed/`, id);
+  getOne: async (eventId,idnew) => {
+    return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}`);
   },
   editOne: async (data, id) => {
     return await Actions.edit(`api/events/${id}/newsfeed`, data, id);

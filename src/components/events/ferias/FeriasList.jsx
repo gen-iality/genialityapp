@@ -1,22 +1,24 @@
 import { Empty, Spin } from 'antd';
 import React from 'react';
 import Companylist from './companyList';
-import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import { props } from 'ramda';
+import {setTopBanner} from '../../../redux/topBanner/actions';
 
-const FeriasList = ({ event_id,setVirtualConference }) => {
+const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
   const [companies, loadingCompanies] = useGetEventCompanies(event_id);
   const [companiesEvent, setCompaniesEvent] = useState([]);
   //EFECTO PARA OCULTAR Y MOSTRAR VIRTUAL CONFERENCE
   useEffect(()=>{
-  setVirtualConference(false)
+  setVirtualConference(false);
+  setTopBanner(false);
+
   return ()=>{
-    setVirtualConference(true) 
+    setVirtualConference(true);
+    setTopBanner(true); 
   }
   },[])
   useEffect(() => {
@@ -56,6 +58,7 @@ const FeriasList = ({ event_id,setVirtualConference }) => {
   );
 };
 const mapDispatchToProps = {
-  setVirtualConference
+  setVirtualConference,
+  setTopBanner
 };
 export default  connect(null,mapDispatchToProps)(FeriasList) ;

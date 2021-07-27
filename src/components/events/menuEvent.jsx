@@ -140,6 +140,13 @@ class MenuEvent extends Component {
       checked: false,
       permissions: 'public',
     },
+    noticias: {
+      name: 'Noticias',
+      section: 'noticias',
+      icon: 'NotificationOutlined',
+      checked: false,
+      permissions: 'public',
+    },
     };
   }
 

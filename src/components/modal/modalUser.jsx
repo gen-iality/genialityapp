@@ -41,20 +41,40 @@ class UserModal extends Component {
     let user = {};
     if (this.props.edit) {
       const { value } = this.props;
-      Object.keys(value.properties).map((obj) => {
-        return (user[obj] = value.properties[obj]);
-      });
-      let checked_in = value.checkedin_at?true : false;
-      this.setState({
-        user,
-        ticket_id: value.ticket_id,
-        edit: true,
-        rol: value.rol_id,
-        confirmCheck:checked_in,
-        userId: value._id,
-        prevState: value.state_id,
-        valid:false
-      });
+      if(value.properties){
+        Object.keys(value.properties).map((obj) => {
+          return (user[obj] = value.properties[obj]);
+        });
+        let checked_in = value.checkedin_at?true : false;
+        this.setState({
+          user,
+          ticket_id: value.ticket_id,
+          edit: true,
+          rol: value.rol_id,
+          confirmCheck:checked_in,
+          userId: value._id,
+          prevState: value.state_id,
+          valid:false
+        });
+      }else{
+        console.log("NO EXISTE PROPERTIES")
+        console.log(value)
+        Object.keys(value).map((obj) => {
+          return (user[obj] = value[obj]);
+        });
+        let checked_in = value.checkedin_at?true : false;
+        this.setState({
+          user,
+          ticket_id: value.ticket_id,
+          edit: true,
+          rol: value.rol,
+          confirmCheck:checked_in,
+          userId: value._id,
+          prevState: value.state_id,
+          valid:false
+        },()=>console.log(this.state.userId));
+      }
+     
     } else {
       this.props.extraFields.map((obj) => {
         user[obj.name] = obj.type === 'boolean' ? false : obj.type === 'number' ? 0 : '';
@@ -73,7 +93,7 @@ class UserModal extends Component {
     e.preventDefault();
     e.stopPropagation();
     const snap = { properties: this.state.user, rol_id: this.state.rol };
-
+    
     let message = {};
     this.setState({ create: true });
     snap.ticket_id = this.state.ticket_id;
@@ -86,19 +106,25 @@ class UserModal extends Component {
             .add(5, 'hours')
             .format('YYYY-MM-D H:mm:ss');
           snap.checkedin_at = checkedin_at;
+          snap.checked_in=true;
+        }else{
+          snap.checkedin_at="";
+          snap.checked_in=false;
         }
-        console.log(this.props)
+      
         let respAddEvento= await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
-        console.log(respAddEvento.data.user)
+       // console.log(respAddEvento.data)
        if(this.props.byActivity && respAddEvento.data.user){
           let respActivity=await Activity.Register(this.props.eventId,respAddEvento.data.user._id, this.props.activityId)
-          console.log(respActivity)
-          this.props.updateView();
-          this.closeModal();
-         
+          //console.log(respActivity)
+          await this.props.checkinActivity(respAddEvento.data._id,snap.checked_in,snap,false)
+          
+          await this.props.updateView()   
+          this.closeModal();         
         }  
         toast.success(<FormattedMessage id='toast.user_saved' defaultMessage='Ok!' />);
       } else {
+        
         if(this.state.confirmCheck){
           let checkedin_at = new Date();
           checkedin_at = Moment(checkedin_at)
@@ -110,7 +136,13 @@ class UserModal extends Component {
           snap.checkedin_at="";
           snap.checked_in=false;
         }
-        await Actions.put(`/api/events/${this.props.eventId}/eventusers/${this.state.userId}`, snap);       
+        
+        let respAddEvento= await Actions.put(`/api/events/${this.props.eventId}/eventusers/${this.state.userId}`, snap);  
+        console.log(respAddEvento.user)
+        if(this.props.byActivity && respAddEvento.user){ 
+          await this.props.checkinActivity(this.state.userId,snap.checked_in,snap)         
+           this.closeModal();         
+         }       
         toast.info(<FormattedMessage id='toast.user_edited' defaultMessage='Ok!' />);
         this.closeModal();
       }

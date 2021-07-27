@@ -13,6 +13,7 @@ import { Table, Input, Button, Space } from 'antd';
 import { SearchOutlined, UserAddOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import UserModal from '../modal/modalUser';
+import Moment from 'moment';
 
 const html = document.querySelector('html');
 
@@ -35,16 +36,42 @@ class CheckAgenda extends Component {
       ticket:null,
       ticketsOptions:null,
       spacesEvents: [],
+      userRef: null,
+      properties:null
     };
     this.onSelectChange = this.onSelectChange.bind(this);
     this.cargarUsuarios=this.cargarUsuarios.bind(this);
   }
 
   async componentDidMount() {
-   this.cargarUsuarios()
+    let self=this;
+   this.cargarUsuarios(self)
   }
 
-  async cargarUsuarios(){
+  //FUNCION QUE OBTIENE CHECKIN DE FIREBASE
+  async obtaincheckin(user,ref){  
+    
+    let  resp= await ref.doc(user._id).get()       
+      let userNew={...user,checkedin_at:resp.exists && resp.data().checkedin_at!==null && resp.data().checkedin_at!=='' && resp.data().checkedin_at ?new Date(resp.data().checkedin_at.seconds*1000):false}
+   
+      return userNew    
+  }
+
+  //FUNCION QUE LLAMA A FIREBASE PARA OBTENER CHECKIN POR CADA USUARIO
+  async obtenerCheckinAttende(ref,listuser){   
+    let arrlist=[]
+    for(let user of listuser){
+      let userNew= await this.obtaincheckin(user,ref)
+      arrlist.push(userNew)
+    }
+    
+    return arrlist;
+  }
+
+  async cargarUsuarios(self){
+    if(!self){
+      self=this
+    }   
     try {
       const { event } = this.props;
       const agendaID = this.props.match.params.id;
@@ -52,17 +79,17 @@ class CheckAgenda extends Component {
       const properties = event.user_properties;
       const rolesList = await RolAttApi.byEventRolsGeneral();
    
-
-      this.createColumnsTable(properties);
-
+      let userRef=firestore.collection(`${event._id}_event_attendees`).doc("activity").collection(`${agendaID}`);
+      this.createColumnsTable(properties,self);
+      
       //Parse de campos para mostrar primero el nombre, email y luego el resto
       const eventFields = fieldNameEmailFirst(properties);
 
-      this.setState({ eventFields, agendaID, eventID: event._id,rolesList });
+      this.setState({ eventFields, agendaID, eventID: event._id,rolesList,userRef });
       let newList = [...this.state.attendees];
-      console.log("Cargando lista")
+      
       newList = await Activity.getActivyAssitantsAdmin(this.props.event._id, agendaID);
-      console.log(newList )
+     
       newList = newList.map((item) => {
         let attendee = item.attendee
           ? item.attendee
@@ -70,15 +97,14 @@ class CheckAgenda extends Component {
         item = { ...item, ...attendee };
         return item;
       });
+      newList= await this.obtenerCheckinAttende(userRef,newList) ;
       
-      console.log(newList)
 
       this.setState(() => {
-        return { attendees: newList, loading: false, total: newList.length, checkIn };
+        return { attendees: newList, loading: false, total: newList.length, checkIn,properties };
       });
       let usersData = this.createUserInformation(newList);
-      console.log("usersData")
-      console.log(usersData)
+     
       this.setState({ usersData });
     } catch (error) {
       const errorData = handleRequestError(error);
@@ -86,14 +112,46 @@ class CheckAgenda extends Component {
     }
   }
 
+  checkedincomponent = (text, item, index) => {  
+  
+   const self=this;
+    return item.checkedin_at ? (
+      <p>{Moment(item.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
+    ) : (
+      <div>
+        <input
+          className='is-checkradio is-primary is-small'
+          id={'checkinUser' + item._id}
+          disabled={item.checkedin_at}
+          type='checkbox'
+          name={'checkinUser' + item._id}
+          checked={item.checkedin_at}
+          // eslint-disable-next-line no-unused-vars
+          onChange={(e) => {
+          
+           self.checkIn(item._id);
+          }}
+        />
+        <label htmlFor={'checkinUser' + item._id} />
+      </div>
+    );
+  };
+
   //Funcion para crear columnas para la tabla de ant
-  createColumnsTable(properties) {
+  createColumnsTable(properties,self) {
+ 
     let columnsTable = [];
+    let editColumn = {
+      title: 'Editar',
+      key: 'edit',
+      render: self.editcomponent,
+    };
+    columnsTable.push(editColumn)
 
     columnsTable.push({
       title: 'Chequeado',
       dataIndex: 'checkedin_at',
-      ...this.getColumnSearchProps('checkedin_at'),
+      render: self.checkedincomponent,  
     });
 
     for (let i = 0; properties.length > i; i++) {
@@ -109,17 +167,40 @@ class CheckAgenda extends Component {
 
   //Funcion para crear la lista de usuarios para la tabla de ant
   createUserInformation(newList) {
+    
     let usersData = [];
-    for (let i = 0; newList.length > i; i++) {
-      if(newList[i].properties){
+    for (let i = 0; newList.length > i; i++) {      
+      if(newList[i].properties){        
         let newUser = newList[i].properties;
         newUser.key = newList[i]._id;
+        newUser.rol=newList[i].rol_id;
+        newUser.checkedin_at=newList[i].checkedin_at        
+        newUser._id=newList[i]._id
         usersData.push(newUser);
       }
      
     }
+    
     return usersData;
   }
+  openEditModalUser = (item) => {
+    html.classList.add('is-clipped');
+    this.setState({ editUser: true, selectedUser: item, edit: true });
+  };
+
+  editcomponent = (text, item, index) => {
+    return (
+      <span
+        className='icon has-text-grey action_pointer'
+        data-tooltip={'Editar'}
+        // eslint-disable-next-line no-unused-vars
+        onClick={(e) => {
+          this.openEditModalUser(item)
+        }}>
+        <i className='fas fa-edit' />
+      </span>
+    );
+  };
 
   //FN para exportar listado a excel
   exportFile = async (e) => {
@@ -163,28 +244,77 @@ class CheckAgenda extends Component {
   };
 
   //FN para checkin
-  checkIn = (id) => {
+  checkIn = async (id,check=null,snap=null,edit=true) => {
     const { attendees } = this.state;
+    
     //Se busca en el listado total con el id
-    const user = attendees.find(({ attendee_id }) => attendee_id === id);
-    //Sino está chequeado se chequea
-    if (!user.checked_in) {
-      const userRef = firestore.collection(`/${this.props.event._id}_event_attendees`).doc(user._id);
-      userRef
-        .update({
-          updated_at: new Date(),
-          checked_in: true,
-          checked_at: new Date(),
-        })
-        .then(() => {
-          toast.success('Usuario Chequeado');
-        })
-        .catch((error) => {
-          console.error('Error updating document: ', error);
-          toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
-        });
-    }
+    
+    const user = snap!=null?{...snap,_id:id,ticket_id:''}: attendees.find(({ _id }) => _id === id);
+    const userRef = this.state.userRef;
+ 
+    let doc= await this.state.userRef.doc(user._id).get()  
+    //Sino está chequeado se chequea  
+    user.checked_in=check!==null?check:!user.checked_in;
+    
+      userRef.doc(user._id)
+      .set({
+        ...user ,    
+        updated_at: new Date(),
+        checked_in:user.checked_in,
+        checkedin_at: user.checked_in?new Date():null,
+        checked_at: new Date(),
+      })
+      .then(() => {
+       
+        toast.success('Usuario Chequeado');
+        if(edit){
+          this.updateAttendeesList(id,user);
+        }
+        
+      })
+      .catch((error) => {
+        console.error('Error updating document: ', error);
+        toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
+      });
+    
+   
   };
+
+  updateAttendeesList=(id,user,check)=>{
+    const { attendees } = this.state; 
+    const addUser = attendees.find(({ _id }) => _id === id); 
+ 
+ 
+    if(addUser){
+    let updateAttendes= this.state.usersData.map((attendee)=>{if (attendee._id===id){ return {          
+      ...user.properties || user,
+      key:attendee._id, 
+      rol:user.rol_id,
+      _id:attendee._id,
+      updated_at: new Date(),
+      checked_in: user.checked_in,
+      checkedin_at:user.checked_in?new Date():false,
+      checked_at: new Date()
+    }}else {return attendee} })
+    this.setState({attendees:updateAttendes,usersData:updateAttendes})
+  }else{
+  
+    let updateAttendes=this.state.usersData;
+ 
+    updateAttendes.push({          
+      ...user.properties || user,
+      key:id, 
+      rol:user.rol_id,
+      _id:id,
+      updated_at: new Date(),
+      checked_in: user.checked_in,
+      checkedin_at:user.checked_in?new Date():false,
+      checked_at: new Date()
+    });
+   
+    this.setState({attendees:updateAttendes,usersData:updateAttendes})
+  }  
+  }
 
   //Funcion para filtrar los usuarios de la tabla
   getColumnSearchProps = (dataIndex) => ({
@@ -256,22 +386,16 @@ class CheckAgenda extends Component {
 
   //Funcion para enviar la data de los usuarios al componente send.jsx
   goToSendMessage = () => {
-    const { attendeesForSendMessage, modalVisible } = this.state;
-    //Actualizar el estado del padre
-    if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
       this.props.history.push({
-        pathname: `/event/${this.props.match.params.id}/invitados/createmessage`,
-        selection: attendeesForSendMessage,
-      });
-    } else {
-      this.setState({ modalVisible: modalVisible === true ? false : true });
-    }
+        pathname: `/event/${this.props.match.params.id}/invitados`        
+      });    
   };
 
   //Funcion que reune los id de los usuarios para enviar al estado
   onSelectChange(idEventUsers) {
     const { attendees } = this.state;
     let attendeesForSendMessage = [];
+    alert("A CHECKIN")
 
     for (let i = 0; idEventUsers.length > i; i++) {
       attendeesForSendMessage = attendees.filter((item) => idEventUsers.indexOf(item._id) !== -1);
@@ -294,23 +418,13 @@ class CheckAgenda extends Component {
       eventID,
       agendaID,
     } = this.state;
-    console.log(eventID)
+ 
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
-      selections: [
-        Table.SELECTION_ALL,
-        {
-          key: 'deselect',
-          text: 'Deselect all Data',
-          width: '30%',
-          onSelect: () => {
-            let newSelectedRowKeys = [];
-            this.setState({ selectedRowKeys: newSelectedRowKeys });
-          },
-        },
-      ],
+      
     };
+ 
     if (!this.props.location.state) return this.goBack();
     return (
       <Fragment>
@@ -331,6 +445,8 @@ class CheckAgenda extends Component {
             byActivity={true}
             activityId={this.state.agendaID}
             updateView={this.cargarUsuarios}
+            checkinActivity={this.checkIn}
+            updateList={this.updateAttendeesList}
             substractSyncQuantity={this.substractSyncQuantity}
           />
         )}
@@ -382,7 +498,7 @@ class CheckAgenda extends Component {
                 </button>
               </div>
               <div className='column is-narrow has-text-centered button-c is-centered'>
-                <Button onClick={() =>this.props.history.push( `/event/${this.props.event._id}/invitados`)}>Importar Usuario</Button>
+                <Button onClick={() =>this.props.history.push( `/event/${this.props.event._id}/invitados/importar-excel`)}>Importar Usuario</Button>
                
               </div>
             </div>
@@ -397,8 +513,9 @@ class CheckAgenda extends Component {
             <Table
               scroll={{ x: 1500 }}
               sticky
+              className='table-striped-rows'
               pagination={{ position: ['bottomCenter'] }}
-              rowSelection={rowSelection}
+              //rowSelection={rowSelection}
               columns={columnsTable}
               dataSource={usersData}
             />
