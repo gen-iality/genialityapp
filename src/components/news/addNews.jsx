@@ -151,8 +151,8 @@ function AddNews(props) {
                   description_complete: description,
                   description_short: descriptionShort,
                   linkYoutube: noticia.linkYoutube || null,
-                  image: [picture],
-                  time: fecha.format("YYYY-DD-MM HH:mm:ss"),
+                  image: picture!==null?[picture]:null,
+                  time: fecha.format("YYYY-DD-MM"),
                 },
                 noticia._id,
                 props.eventId
@@ -169,8 +169,8 @@ function AddNews(props) {
                   description_complete: description,
                   description_short: descriptionShort,
                   linkYoutube: noticia.linkYoutube || null,
-                  image: [picture],
-                  time: fecha.format("YYYY-DD-MM HH:mm:ss"),
+                  image: picture!==null?[picture]:null,
+                  time: fecha.format("YYYY-DD-MM"),
                 },
                 props.eventId
               ); 
@@ -275,7 +275,7 @@ function AddNews(props) {
           </Form.Item>
           <Form.Item label='Fecha:'
             name={'fechaNoticia'}>        
-            <DatePicker showTime value={fecha} onChange={onChangeDate} />
+            <DatePicker  value={fecha} onChange={onChangeDate} />
             {error!=null && error.fecha && <small style={{color:'red'}}>Fecha no válida</small>}
           </Form.Item>
          
