@@ -144,14 +144,14 @@ function AddNews(props) {
     if(validators && validators.video==false &&   validators.picture == false && validators.descriptionShort == false && validators.description == false ){
         try {
             if (idNew!==undefined) {
-             alert("A EDITAR")
+             
             let resp= await NewsFeed.editOne(
                 {
                   title: noticia.title,
                   description_complete: description,
                   description_short: descriptionShort,
                   linkYoutube: noticia.linkYoutube || null,
-                  image: picture,
+                  image: [picture],
                   time: fecha.format("YYYY-DD-MM HH:mm:ss"),
                 },
                 noticia._id,
@@ -169,7 +169,7 @@ function AddNews(props) {
                   description_complete: description,
                   description_short: descriptionShort,
                   linkYoutube: noticia.linkYoutube || null,
-                  image: picture,
+                  image: [picture],
                   time: fecha.format("YYYY-DD-MM HH:mm:ss"),
                 },
                 props.eventId
