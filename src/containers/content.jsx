@@ -30,6 +30,7 @@ const Tickets = asyncComponent(() => import('../components/tickets'));
 const socialZone = asyncComponent(() => import('../components/socialZone/socialZone'));
 const AppointmentAccept = asyncComponent(() => import('../components/networking/appointmentAccept'));
 const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
+const QueryTesting = asyncComponent(() => import('../components/events/surveys/components/queryTesting'));
 const ContentContainer = () => {
   return (
     <main className='main'>
@@ -68,6 +69,8 @@ const ContentContainer = () => {
         <Route path='/policies' component={Policies} />
         <Route path='/about' component={About} />
         <Route path='/faqs' component={Faqs} />
+        {/* Ruta para realizar pruebas de consultas a firebase */}
+        <Route path='/queryTesting' component={QueryTesting} />
         <Route path='/api/generatorQr/:id' component={QRedirect} />
         <Route exact path='/transition/:event' component={Transition} />
 
