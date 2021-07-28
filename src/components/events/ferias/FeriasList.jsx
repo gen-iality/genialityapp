@@ -15,6 +15,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
   const [companies, loadingCompanies] = useGetEventCompanies(event_id);
   const [companiesEvent, setCompaniesEvent] = useState([]);
   const [config,setConfig]=useState(null)
+  const [standsColor,setStandsColor]=useState()
   //EFECTO PARA OCULTAR Y MOSTRAR VIRTUAL CONFERENCE
   useEffect(()=>{
   setVirtualConference(false);
@@ -30,15 +31,25 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
       firestore
       .collection('event_companies')
       .doc(event_id).onSnapshot((resp)=>{
+        let standTypesOptions=resp.data().stand_types;
+        setStandsColor(standTypesOptions)
         setConfig(resp.data().config)
-        setCompaniesEvent(companies);
+        let companiesSort=companies.sort((a,b)=>a.index && b.index  && a.index-b.index)
+        setCompaniesEvent(companiesSort);
+        console.log(companies)
         console.log(resp.data())
         console.log(resp.data().config.visualization)
-      })
-      
-    }
-  }, [loadingCompanies]);
+      })   
+    }    
 
+  }, [loadingCompanies]);
+  const obtenerColor=(stand)=>{
+    let colorList=standsColor.filter((colors)=>colors.label===stand)
+    if(colorList.length>0){
+      return colorList[0].color
+    }
+    return "#2C2A29";
+  }
   return (
     <div>
       {loadingCompanies && <Spin size='small' />}
@@ -64,6 +75,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
                 description={company.short_description}
                 pagweb={company.webpage}
                 companyId={company.id}
+                colorStand={obtenerColor(company.stand_type)}
               />
             )
         )}

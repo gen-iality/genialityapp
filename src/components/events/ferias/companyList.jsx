@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 function Companylist(props) {
   const { Text } = Typography;
   const history = useHistory();
+  console.log(props)
 
   function showModal(info) {
     Modal.info({
@@ -41,7 +42,7 @@ function Companylist(props) {
   }
 
   return (
-    <div className='company-list'>
+    <div className='company-list' style={{border:`1px solid ${props.colorStand}`}}>
       <Row className='container' gutter={[10, 10]} style={{ cursor: 'pointer' }}>
         <Col
           xs={24}

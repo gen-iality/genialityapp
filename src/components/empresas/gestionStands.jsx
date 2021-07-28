@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Empty, Input, Row,Form,Modal,Col, Divider, Space, Card, message} from 'antd';
+import { Button, Empty, Input, Row,Form,Modal,Col, Divider, Space, Card, message, Alert, Table} from 'antd';
 
 //import Form from 'antd/lib/form/Form';
 //import Modal from 'antd/lib/modal/Modal';
@@ -17,7 +17,7 @@ const { Option } = Select;
 
 
 const Stands=(props)=>{
-    const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(props.event._id);
+
     const[standsList,setStands]=useState()
     const[editStands,setEditStands]=useState(false)
     const[selectedStand,setSelectedStand]=useState(null)
@@ -25,10 +25,49 @@ const Stands=(props)=>{
     const[documentEmpresa, setDocumentEmpresa]=useState(null)
     const [visualization,setVisualization]=useState('list');
     const [config,setconfig]=useState(null)
-    const [colorStand,setColorStand]=useState("toolbarDefaultBg")
+    const [colorStand,setColorStand]=useState("#2C2A29")
     const [viewModalColor,setViewModalColor]=useState(false)
     const [noValid,setNoValid]=useState(false)
+    
 
+    let columns = [
+      {
+        title: 'Nombre',
+        dataIndex: 'label',
+        key: 'label',
+      },
+      {
+        title: 'Valor',
+        dataIndex: 'value',
+        key: 'value',
+      },
+      {
+
+        title: 'Color',
+        dataIndex: 'color',
+        key: 'color',
+        render(key,record){
+          return  <input
+          type='color'                    
+          style={{  width: '60%',height:31,marginTop:1}}
+          value={record.color}
+          disabled
+          onClick={()=>null}
+          onChange={null}
+        />
+        }
+      },
+      {
+        title: 'Opciones',
+        dataIndex: 'id',
+        key: 'id',
+        render(key,record){
+         return <>
+          <Button style={{marginRight:3}} size='small' onClick={()=>{setEditStands(true); setViewModalColor(false); setNoValid(false);obtenerStand(record)}}><EditOutlined /></Button>
+           <Button onClick={()=>{deleteStand(key)}} size='small'><DeleteOutlined /></Button>
+        </>}
+      },
+    ];
 
     function handleChange(value) {
       console.log(`selected ${value}`);
@@ -63,7 +102,8 @@ const Stands=(props)=>{
          selectedStand!=null? list[selectedStand.id]=selectedStandEdit:list.push(selectedStandEdit);             
         let modifyObject={...documentEmpresa,stand_types:list}
         await actualizarData(modifyObject)
-         setStands(list)
+        console.log(list)
+         
          handleCancel()  
         }else{
           setNoValid(true)
@@ -74,7 +114,8 @@ const Stands=(props)=>{
       await firestore
           .collection('event_companies')
           .doc(props.event._id)
-          .set(data);        
+          .set(data); 
+          obtenerStands()       
     }
 
     const handleClickSelectColor = () => {
@@ -86,17 +127,16 @@ const Stands=(props)=>{
       list=list.filter((stand)=>stand.id!==id);
       console.log(list)
       let modifyObject={...documentEmpresa,stand_types:list}
-      await actualizarData(modifyObject)
-      setStands(list)
+      await actualizarData(modifyObject)     
     }
 
       function obtenerStand(record){
-          console.log(record)
+         // console.log(record)
         if(record!=null){
           if(record.color){
             setColorStand(record.color)
           }else{
-            setColorStand("toolbarDefaultBg")
+            setColorStand("")
           }
           setSelectedStand(record)
           setNameStand(record.value)
@@ -119,36 +159,37 @@ const Stands=(props)=>{
       }
       useEffect(()=>{
         obtenerConfig();
+        obtenerStands();
       },[])
-
-      useEffect(()=>{ 
-         console.log(standTypesOptions)
-        if(standTypesOptions){
+      const obtenerStands= ()=>{
+        firestore
+        .collection('event_companies')
+        .doc(props.event._id)
+        .get().then((resp)=>{
+           
+          setDocumentEmpresa(resp.data())
+          let standTypesOptions=resp.data().stand_types;
           let listStands=[]
           standTypesOptions.map((stands,indx)=>{
             stands.label.label!==null&&listStands.push({...stands,id:indx})
-          })
-          console.log(listStands)
-          firestore
-          .collection('event_companies')
-          .doc(props.event._id)
-          .get().then((resp)=>{
-            setStands(listStands)    
-            setDocumentEmpresa(resp.data())                   
-            
-          }); 
+          }) 
+          setStands(listStands)                   
+          
+        }); 
                  
-        } 
-
-      },[standTypesOptions])
+       
+      }
       return(<div> 
         <Row style={{width:700, marginBottom:20}}> <Link to={`/event/${props.event._id}/empresas`}><ArrowLeftOutlined /></Link> <div style={{marginLeft:30}}>Configuración</div>
          </Row>
      
 
         <Space direction="vertical" style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-          <Card style={{width:700}} title="Configuración general" >
-              <Row>
+          <Card style={{width:700}} >
+            <Row>
+            <Alert message={"Visualización: Permite cambiar la forma de visualizar las empresas en la sección de ferias, por defecto se muestra en forma de listado"}   />
+            </Row>
+              <Row style={{marginTop:20}}>
             <span>Visualización: </span> 
             <Select value={visualization} style={{ width: 220,marginLeft:30 }} onChange={handleChange}>
               <Option value="list">Listado</Option>
@@ -159,24 +200,21 @@ const Stands=(props)=>{
           </Button>
             </Row>
           </Card>
-          <Card style={{width:700}} title="Configuración de stands" 
+          <Card style={{width:700}} title="Tipos de stands" 
           extra={
-            <Button onClick={()=>{setEditStands(true);setColorStand("toolbarDefaultBg");setViewModalColor(false);setNoValid(false);obtenerStand(null)}} type="primary" icon={<PlusCircleOutlined />}>
-            {'Agregar stand'}
+            <Button onClick={()=>{setEditStands(true);setColorStand("#2C2A29");setViewModalColor(false);setNoValid(false);obtenerStand(null)}} type="primary" icon={<PlusCircleOutlined />}>
+            {'Agregar tipo de stand'}
           </Button>}>
           <div style={{width:700}}>
           
-        <Row justify='space-between' ><Col span={6}>Nombre</Col><Col span={6}>Valor</Col><Col span={6}>Opciones</Col></Row>
-        <Row style={{width:660}}>
-        <Divider></Divider>
-        </Row>
-         {standsList&& standsList.map((stand,index)=>(<Row style={{borderBottom:'1px solid light-gray',marginBottom:'2px'}} key={'rowstand-'+index} justify='space-between'>
-           <Col span={6} key={'stand-'+index}> {stand.label}</Col>
-           <Col span={6} key={'standv-'+index}> {stand.value}</Col> 
-           <Col style={{marginBottom:3}} span={6} key={'buttons-'+index}> 
-           <Button style={{marginRight:3}} size='small' onClick={()=>{setEditStands(true); setViewModalColor(false); setNoValid(false);obtenerStand(stand)}}><EditOutlined /></Button>
-           <Button onClick={()=>{deleteStand(index)}} size='small'><DeleteOutlined /></Button></Col> 
-           </Row> ))}
+        
+       <Row> 
+         <Table 
+         style={{width:'90%'}}
+          columns={columns}
+          dataSource={standsList&& standsList}
+        /> 
+        </Row>    
            </div>     
            
         <Modal title={selectedStand?"Editar stand":"Agregar stand"} visible={editStands} onOk={editStand}  onCancel={handleCancel}>
