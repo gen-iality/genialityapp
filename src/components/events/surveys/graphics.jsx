@@ -253,7 +253,7 @@ class Graphics extends Component {
             display: true,
             labels: {
               font: {
-                size: '18',
+                size:  this.state.isMobile ? '12':'18',
                 family: "'Montserrat', sans-serif", // para probar si afecta la fuente cambiar Montserrat por Papyrus
               },
             },
