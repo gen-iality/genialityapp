@@ -33,25 +33,26 @@ const NoticiasDetails=({setVirtualConference, match})=>{
         return ()=>{
          setVirtualConference(true);
         }
-    },[])
+    },[match.params.id])
 
     return (
         <>  
            {loading && <Spin/>}
            {noticia && 
            <Col style={{padding:'30px 100px'}}>
-               <iframe style={{height:'500px'}} width="100%" height="auto" src="https://www.youtube.com/embed/a1oXvugkgPs" title="YouTube video player" 
-                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
+               
                     {/* <Meta title={noticia && noticia.description_short} description={noticia && noticia.description_complete} /> */}
                     <Row style={{marginTop:30}} justify={'end'}>Actualizado: {noticia && noticia.updated_at}</Row>
                   <Card
                   title={noticia && noticia.title} 
                   extra={noticia && noticia.time}                   
-                  cover={<img style={{height:'55vh', objectFit:'cover'}} alt="imagen noticia" src={noticia && noticia.image?noticia.image[0]:imgNotFound} />}>
+                  cover={noticia && (noticia.linkYoutube===null || noticia.linkYoutube==="") && <img style={{height:'55vh', objectFit:'cover'}} alt="imagen noticia" src={noticia && noticia.image && noticia.image[0]!==null?noticia.image[0]:imgNotFound} />}>
                 <div>
+                  { noticia && noticia.linkYoutube!==null && noticia.linkYoutube!=="" && <iframe style={{height:'500px'}} width="100%" height="auto" src={noticia.linkYoutube} title="YouTube video player" 
+                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>}
                   <Space direction='vertical' style={{width:'100%'}}>
-                      <h2 style={{fontSize:'22px', marginBottom:'0px'}}>{noticia && noticia.description_short}</h2>
-                      <p style={{color:'#9e9e9e'}}>{noticia && noticia.description_complete}</p>
+                      <h2 style={{fontSize:'22px', marginBottom:'0px'}}>{noticia && <div dangerouslySetInnerHTML={{ __html: noticia.description_short}}></div>}</h2>
+                      <p style={{color:'#9e9e9e'}}>{noticia && <div dangerouslySetInnerHTML={{ __html: noticia.description_complete}}></div>}</p>
                   </Space>
                 </div>
                 </Card>

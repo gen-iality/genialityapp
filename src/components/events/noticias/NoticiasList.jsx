@@ -42,7 +42,7 @@ const NoticiasList=({setVirtualConference, match})=>{
            <Row style={{padding:'30px 25px'}}  gutter={24}>
            {noticias && noticias.length>0 && noticias.map((news)=>
             <>
-            <Col span={8}>
+            <Col style={{paddingBottom:'30px'}} span={8}>
             <Badge.Ribbon text="Nuevo" color="cyan"> 
             <Card 
                 bodyStyle={{padding:'15px'}}        
@@ -50,7 +50,7 @@ const NoticiasList=({setVirtualConference, match})=>{
                 <img
                     style={{height:'28vh', objectFit:'cover'}}
                     alt="example"
-                    src={news && news.image ? news.image[0]:imgNotFound}
+                    src={news && news.image && news.image[0]!=null? news.image[0]:imgNotFound}
                 />
                 }
                 actions={[
