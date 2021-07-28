@@ -245,13 +245,21 @@ class Graphics extends Component {
             textAlign: 'left',
             anchor: 'start',
             align: 5,
-            font: {
-              size: this.state.isMobile ? 12 : 22, // otorga el tamaño de la fuente en los resultados de la encuesta segun el dispositivo
-            },
+            // font: {
+            //   size: this.state.isMobile ? 12 : 22, // otorga el tamaño de la fuente en los resultados de la encuesta segun el dispositivo
+            // },
           },
+          legend: {
+            display: true,
+            labels: {
+              font: {
+                size:  this.state.isMobile ? '12':'18',
+                family: "'Montserrat', sans-serif", // para probar si afecta la fuente cambiar Montserrat por Papyrus
+                textAlign:'left'
+              },
+            },
         },
-        legend: {
-          display: false,
+       
         },
         scales: {
           y: [

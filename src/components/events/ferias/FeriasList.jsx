@@ -1,4 +1,4 @@
-import { Empty, Spin, Col, Row} from 'antd';
+import { Empty, Spin, Col, Row, Tag} from 'antd';
 import React from 'react';
 import Companylist from './companyList';
 import { useEffect } from 'react';
@@ -54,10 +54,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
   }
   return (
     <div>
-      {loadingCompanies && <Spin size='small' />}
-      {companiesEvent.length > 0 && config.visualization==='list' && (
       <MiniBanner/>
-       )}
       {companiesEvent.length > 0 && (config.visualization==='list' || !config.visualization)  &&
         companiesEvent.map(
           (company, index) =>
@@ -97,6 +94,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
                 }
                 eventId={event_id}
                 name={company.name}
+                color={obtenerColor(company.stand_type)}
               />
               </Col> 
             
