@@ -18,18 +18,38 @@ function FeriasStand (props) {
         }}
       />  
     </div> */}
-        <div className='mini-banner'
-          style={{ border:'2px solid #9e9e9e', borderRadius:'12px', width:'60%', display:'block', margin:'auto'}}>
+    <div style={{position:'relative'}}>
+      <div className='mini-banner'
+          style={{ border:`2px solid  ${props.color}`, 
+          borderRadius:'12px', 
+          width:'60%',
+          position:'absolute', 
+          left:'50%', 
+          transform:'translateX(-50%)', 
+          top:'2px',
+          backgroundColor:'white'}}>
             <img
                 src={props.image}
                 style={{
                 width: '100%',
-                border:'10px solid white', borderRadius:'15px',
+                border:`10px solid white`, borderRadius:'12px',
                 height:'20vh',
                 objectFit:'contain'
                 }}
             />  
-            </div>
+        </div>
+            <img
+                src={'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Stand_ferias%2Fstand.png?alt=media&token=4de289cb-5f22-4c9f-81b1-300df0815490'}
+                style={{
+                width: '100%',
+                border:`10px solid white`, borderRadius:'12px',
+                height:'70vh',
+                objectFit:'contain'
+                }}
+            />  
+    </div>
+        
+
      </>
     ); 
 }
