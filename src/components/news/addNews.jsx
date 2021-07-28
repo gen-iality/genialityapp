@@ -41,6 +41,14 @@ function AddNews(props) {
   useEffect(()=>{
   if(props.match.params.id){
    setIdNew(props.match.params.id)
+   NewsFeed.getOne(props.eventId,props.match.params.id).then((notice)=>{
+    console.log(notice)
+    setPicture(notice.image)
+    setDescriptionShort(notice.description_short)
+    setDescription(notice.description_complete)
+    setFecha(moment(notice.created_at))
+    setNoticia(notice)
+   })
   }
   },[])
 
@@ -136,27 +144,31 @@ function AddNews(props) {
     if(validators && validators.video==false &&   validators.picture == false && validators.descriptionShort == false && validators.description == false ){
         try {
             if (idNew!==undefined) {
-              await NewsFeed.editOne(
+             alert("A EDITAR")
+            let resp= await NewsFeed.editOne(
                 {
-                  title: this.state.title,
-                  description_complete: this.state.description_complete,
-                  description_short: this.state.description_short,
-                  linkYoutube: this.state.linkYoutube,
-                  picture: this.state.path,
-                  time: this.state.time,
-                },
-                this.state.id,
-                this.props.eventId
-              );
-              
-            } else {
-                alert("A GUARDAR")
-              const newRole = await NewsFeed.create(
-                {
-                  title: noticia.titulo,
+                  title: noticia.title,
                   description_complete: description,
                   description_short: descriptionShort,
-                  linkYoutube: noticia.video,
+                  linkYoutube: noticia.linkYoutube || null,
+                  image: picture,
+                  time: fecha.format("YYYY-DD-MM HH:mm:ss"),
+                },
+                noticia._id,
+                props.eventId
+              );
+              if(resp){                
+                  props.history.push(`/event/${props.eventId}/news`)                   
+              }
+              
+            } else {
+               // alert("A GUARDAR")
+              const newRole = await NewsFeed.create(
+                {
+                  title: noticia.title,
+                  description_complete: description,
+                  description_short: descriptionShort,
+                  linkYoutube: noticia.linkYoutube || null,
                   image: picture,
                   time: fecha.format("YYYY-DD-MM HH:mm:ss"),
                 },
@@ -180,7 +192,7 @@ function AddNews(props) {
       <Card style={{ width: 950, margin: 'auto', marginTop: 30 }}>
         <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} onFinish={saveNew}>
           <Form.Item
-            name={'titulo'}
+            //name={'title'}
             label={
               <Col span={4}>
                 <label style={{ marginTop: '2%' }} className='label'>
@@ -190,10 +202,10 @@ function AddNews(props) {
             }
             rules={[{ required: true, message: 'Ingrese el título de la noticia' }]}>
             <Input
-              value={noticia && noticia.titulo}
+              value={noticia && noticia.title}
               placeholder='Título de la noticia'
               name={'survey'}
-              onChange={(e) => changeInput(e, 'titulo')}
+              onChange={(e) => changeInput(e, 'title')}
             />
           </Form.Item>
           <Form.Item 
@@ -251,13 +263,13 @@ function AddNews(props) {
            
             </Form.Item>
           <Form.Item label='Link del video:'
-            name={'videoUrl'}>        
+            >        
             <Input
-              value={noticia && noticia.video}
+              value={noticia && noticia.linkYoutube}
               type='url'
               placeholder='www.video.com'
               name={'noticia'}
-              onChange={(e) => changeInput(e, 'video')}
+              onChange={(e) => changeInput(e, 'linkYoutube')}
             />
             {error!=null && error.video && <small style={{color:'red'}}>Link de video no válido</small>}
           </Form.Item>

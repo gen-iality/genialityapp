@@ -10,17 +10,19 @@ import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import FeriaStand from './FeriasStand'
 import {setTopBanner} from '../../../redux/topBanner/actions';
 import { firestore } from '../../../helpers/firebase';
+import withContext from '../../../Context/withContext';
 
-const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
+const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
   const [companies, loadingCompanies] = useGetEventCompanies(event_id);
   const [companiesEvent, setCompaniesEvent] = useState([]);
   const [config,setConfig]=useState(null)
   const [standsColor,setStandsColor]=useState()
+  const [imageBanner, setBannerImage]=useState()
   //EFECTO PARA OCULTAR Y MOSTRAR VIRTUAL CONFERENCE
   useEffect(()=>{
   setVirtualConference(false);
   setTopBanner(false);
-
+  setBannerImage(cEvent.value.banner_image)
   return ()=>{
     setVirtualConference(true);
     setTopBanner(true); 
@@ -108,4 +110,4 @@ const mapDispatchToProps = {
   setVirtualConference,
   setTopBanner
 };
-export default  connect(null,mapDispatchToProps)(FeriasList) ;
+export default  connect(null,mapDispatchToProps)(withContext(FeriasList)) ;

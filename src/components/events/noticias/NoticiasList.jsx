@@ -61,7 +61,7 @@ const NoticiasList=({setVirtualConference, match})=>{
                   <Space direction='vertical' style={{width:'100%'}}>
                       <h2 style={{fontWeight:'700', marginBottom:'0px'}}>{news.title}</h2>
                       {/* <p style={{color:'#9e9e9e'}}>{news.description_short}</p> */}
-                      <Paragraph style={{color:'#9e9e9e'}} ellipsis={ellipsis,{rows:3}}>{news.description_short}</Paragraph>
+                      <Paragraph style={{color:'#9e9e9e'}} ellipsis={ellipsis,{rows:3}}><div dangerouslySetInnerHTML={{ __html: news && news.descriptionShort}}></div></Paragraph>
                   </Space>
                 </div>
                 {/* <Meta          
