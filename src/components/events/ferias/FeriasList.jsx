@@ -54,7 +54,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
   }
   return (
     <div>
-      <MiniBanner/>
+      <MiniBanner banner={imageBanner} />
       {companiesEvent.length > 0 && (config.visualization==='list' || !config.visualization)  &&
         companiesEvent.map(
           (company, index) =>
@@ -85,7 +85,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
           companiesEvent.map(
             (company, index) =>
               company.visible && (
-              <Col key={index}span={8} >
+              <Col key={index} sm={24} xs={24} md={12} lg={12} xl={8}xxl={8} >
               <FeriaStand
                 image={
                   company.list_image === ''
@@ -94,6 +94,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
                 }
                 eventId={event_id}
                 name={company.name}
+                companyId={company.id}
                 color={obtenerColor(company.stand_type)}
               />
               </Col> 

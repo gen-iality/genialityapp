@@ -1,10 +1,8 @@
-import { fromValue } from 'long';
 import React from 'react'
-import FeriasBanner from './feriaBanner'
-import {Row, Col} from 'antd'
-import { prop } from 'dom7';
+import { useHistory } from 'react-router';
 
 function FeriasStand (props) {
+  const history = useHistory();
     return(
      <>
       {/* <div className='mini-banner'
@@ -18,7 +16,10 @@ function FeriasStand (props) {
         }}
       />  
     </div> */}
-    <div style={{position:'relative'}}>
+    <div style={{position:'relative'}} 
+     onClick={() => {
+            history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`);
+          }}>
       <div className='mini-banner'
           style={{ border:`2px solid  ${props.color}`, 
           borderRadius:'12px', 
