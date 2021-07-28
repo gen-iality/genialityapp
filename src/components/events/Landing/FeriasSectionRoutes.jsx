@@ -5,6 +5,7 @@ import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
  * ---------------------*/
  import FeriasDetail from '../../events/ferias/FeriasDetail';
  import FeriasList from '../../events/ferias/FeriasList';
+ import FeriasStand from '../../events/ferias/FeriasStand';
  import {UseEventContext} from '../../../Context/eventContext'
 
 const FeriasSectionRoutes = () => {
@@ -15,7 +16,7 @@ const FeriasSectionRoutes = () => {
   return (
     <Switch>
       <Route exact path={`${path}`}>
-        <FeriasList event_id={cEvent.value._id} />
+         <FeriasList event_id={cEvent.value._id} />
       </Route>
       <Route path={`${path}/:id/detailsCompany`}>
         <FeriasDetail  eventId={cEvent.value._id}/>

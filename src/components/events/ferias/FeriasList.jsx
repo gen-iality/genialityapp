@@ -1,11 +1,13 @@
-import { Empty, Spin } from 'antd';
+import { Empty, Spin, Col, Row} from 'antd';
 import React from 'react';
 import Companylist from './companyList';
 import { useEffect } from 'react';
 import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
+import MiniBanner from './MiniBanner';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
+import FeriaStand from './FeriasStand'
 import {setTopBanner} from '../../../redux/topBanner/actions';
 import { firestore } from '../../../helpers/firebase';
 
@@ -40,7 +42,9 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
   return (
     <div>
       {loadingCompanies && <Spin size='small' />}
-
+      {companiesEvent.length > 0 && config.visualization==='list' && (
+      <MiniBanner/>
+       )}
       {companiesEvent.length > 0 && (config.visualization==='list' || !config.visualization)  &&
         companiesEvent.map(
           (company, index) =>
@@ -64,10 +68,26 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner }) => {
             )
         )}
        {/*PARA OTRO TIPO DE VISUALIZACION */} 
-      {companiesEvent.length > 0 && config.visualization==='stand' &&
-        companiesEvent.map(
-          (company, index) =>
-            company.visible && ( <div>otra visualizaciòn</div>))}
+       
+       <Row>
+        {companiesEvent.length > 0 && config.visualization==='stand' &&
+          companiesEvent.map(
+            (company, index) =>
+              company.visible && (
+              <Col key={index}span={8} >
+              <FeriaStand
+                image={
+                  company.list_image === ''
+                    ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo' // imagen por defecto si no encuentra una imagen guardada
+                    : company.list_image
+                }
+                eventId={event_id}
+                name={company.name}
+              />
+              </Col> 
+            
+              ))} 
+        </Row>
       {companiesEvent.length == 0 && <Empty />}
     </div>
   );
