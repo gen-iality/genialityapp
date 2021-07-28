@@ -91,7 +91,7 @@ const Stands=(props)=>{
     }
 
       function obtenerStand(record){
-          
+          console.log(record)
         if(record!=null){
           if(record.color){
             setColorStand(record.color)

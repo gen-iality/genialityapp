@@ -3,13 +3,15 @@ import { Button, Card, Col, Row } from 'antd';
 import React, { Component } from 'react';
 import { useState } from 'react';
 import { withRouter } from 'react-router';
-import { Input, Form } from 'antd';
+import { Input, Form,DatePicker } from 'antd';
 import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
 import { toast } from 'react-toastify';
-import { Actions } from '../../helpers/request';
+import { Actions, NewsFeed } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
+import moment from 'moment';
+import { useEffect } from 'react';
 
 export const toolbarEditor = {
   toolbar: [
@@ -33,6 +35,14 @@ function AddNews(props) {
   const [errImg, setErrImg] = useState();
   const [fileMsg, setFileMsg] = useState();
   const [error, setError] = useState(null);
+  const [idNew, setIdNew] = useState();
+  const [fecha, setFecha] = useState(moment());
+
+  useEffect(()=>{
+  if(props.match.params.id){
+   setIdNew(props.match.params.id)
+  }
+  },[])
 
   const changeInput = (e, key) => {
     setNoticia({ ...noticia, [key]: e.target.value });
@@ -67,6 +77,10 @@ function AddNews(props) {
     }
   };
 
+  function onChangeDate(date, dateString) {
+        setFecha(date)
+  }
+
   const changeDescriptionShort = (e) => {
     if (descriptionShort.length < 600) {
       setDescriptionShort(e);
@@ -82,8 +96,12 @@ function AddNews(props) {
       alert('NO PUEDE ESCRIBIR MAS');
     }
   };
+  const isUrl = string => {
+    try { return Boolean(new URL(string)); }
+    catch(e){ return false; }
+}
 
-  const saveNew = () => {
+  const saveNew = async () => {
     let validators = {};
    
     if (description === '') {
@@ -101,8 +119,58 @@ function AddNews(props) {
     } else {
       validators.picture = false;
     }
+   
+    if (fecha === null && fecha!=="" && !fecha) {
+        validators.fecha = true;
+      } else {
+        validators.fecha = false;
+        
+      }
+ if(noticia){
+    if(noticia.video!='' && noticia.video!==null && !isUrl(noticia.video)){
+        validators.video = false;
+    }
+ }
+    
     setError(validators);
-    console.log(validators);
+    if(validators && validators.video==false &&   validators.picture == false && validators.descriptionShort == false && validators.description == false ){
+        try {
+            if (idNew!==undefined) {
+              await NewsFeed.editOne(
+                {
+                  title: this.state.title,
+                  description_complete: this.state.description_complete,
+                  description_short: this.state.description_short,
+                  linkYoutube: this.state.linkYoutube,
+                  picture: this.state.path,
+                  time: this.state.time,
+                },
+                this.state.id,
+                this.props.eventId
+              );
+              
+            } else {
+                alert("A GUARDAR")
+              const newRole = await NewsFeed.create(
+                {
+                  title: noticia.titulo,
+                  description_complete: description,
+                  description_short: descriptionShort,
+                  linkYoutube: noticia.video,
+                  image: picture,
+                  time: fecha.format("YYYY-DD-MM HH:mm:ss"),
+                },
+                props.eventId
+              ); 
+              console.log(newRole) 
+              if(newRole){
+                  props.history.push(`/event/${props.eventId}/news`)
+              }          
+            }
+          } catch (e) {
+            e;
+          }
+    }
   };
   return (
     <div>
@@ -183,16 +251,22 @@ function AddNews(props) {
            
             </Form.Item>
           <Form.Item label='Link del video:'
-          name={'videoUrl'}>
-         
+            name={'videoUrl'}>        
             <Input
               value={noticia && noticia.video}
               type='url'
               placeholder='www.video.com'
-              name={'survey'}
+              name={'noticia'}
               onChange={(e) => changeInput(e, 'video')}
             />
+            {error!=null && error.video && <small style={{color:'red'}}>Link de video no válido</small>}
           </Form.Item>
+          <Form.Item label='Fecha:'
+            name={'fechaNoticia'}>        
+            <DatePicker showTime value={fecha} onChange={onChangeDate} />
+            {error!=null && error.fecha && <small style={{color:'red'}}>Fecha no válida</small>}
+          </Form.Item>
+         
 
           <Form.Item wrapperCol={{ offset: 5, span: 18 }}>
             <Button type='primary' htmlType='submit'>

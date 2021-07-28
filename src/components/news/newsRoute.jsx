@@ -18,8 +18,8 @@ const NewsSectionRoutes = (props) =>
     <Route exact path={`${path}/`}>         
          <News {...props}/>
      </Route>       
-      <Route exact path={`${path}/addnoticia`}>
-       <AddNews />
+      <Route path={`${path}/addnoticia/:id?`}>
+       <AddNews {...props} />
       </Route>        
     </Switch>
     
