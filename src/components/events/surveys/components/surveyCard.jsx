@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { List, Button, Card, Tag, Result, Row, Col } from 'antd';
-import { MehOutlined } from '@ant-design/icons';
-
-/** Redux */
-import { connect } from 'react-redux';
+import {
+   CheckCircleOutlined,
+   CloseCircleOutlined,
+   ExclamationCircleOutlined,
+   MehOutlined,
+   SyncOutlined,
+} from '@ant-design/icons';
 
 function SurveyCard(props) {
-   const [previewSurvey, setPreviewSurvey] = useState(null);
-   const { publishedSurveys, loadingSurveys, surveyVisible, currentSurvey } = props;
+   const { publishedSurveys, loadingSurveys, handleClick, surveyStatusProgress } = props;
 
    const headStyle = {
       fontWeight: 300,
@@ -16,23 +18,6 @@ function SurveyCard(props) {
       color: '#000',
    };
    const bodyStyle = { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' };
-
-   useEffect(() => {
-      let isDiferent = 0;
-      if (previewSurvey !== null && currentSurvey !== null) {
-         if (currentSurvey._id !== previewSurvey._id && currentSurvey.isOpened === 'true') {
-            isDiferent = 1;
-         }
-      }
-
-      if (
-         (currentSurvey != null && surveyVisible === false) ||
-         (previewSurvey === null && surveyVisible == true && isDiferent == 1)
-      ) {
-         props.handleClick(currentSurvey);
-         setPreviewSurvey(currentSurvey);
-      }
-   }, [currentSurvey]);
 
    return (
       <Card
@@ -44,6 +29,7 @@ function SurveyCard(props) {
             <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
          ) : (
             <List
+               style={{ overflowY: 'auto', height: '600px', overflowX: 'hidden' }}
                dataSource={publishedSurveys}
                loading={loadingSurveys}
                renderItem={(survey) => (
@@ -63,22 +49,42 @@ function SurveyCard(props) {
                                  style={{ textAlign: 'left' }}
                                  description={
                                     <Row>
-                                       {survey.userHasVoted ? (
-                                          <Col>
-                                             <Tag color='success'>Contestada</Tag>
+                                       {!surveyStatusProgress ||
+                                       !surveyStatusProgress[survey._id] ||
+                                       !surveyStatusProgress[survey._id].surveyCompleted ? (
+                                          <Col style={{ marginBottom: '3px' }}>
+                                             <Tag icon={<ExclamationCircleOutlined />} color='warning'>
+                                                Sin Contestar
+                                             </Tag>
+                                          </Col>
+                                       ) : surveyStatusProgress[survey._id].surveyCompleted === 'running' ? (
+                                          <Col style={{ marginBottom: '3px' }}>
+                                             <Tag icon={<SyncOutlined spin />} color='geekblue'>
+                                                En progreso
+                                             </Tag>
+                                          </Col>
+                                       ) : surveyStatusProgress[survey._id].surveyCompleted === 'completed' ? (
+                                          <Col style={{ marginBottom: '3px' }}>
+                                             <Tag icon={<CheckCircleOutlined />} color='success'>
+                                                Completado
+                                             </Tag>
                                           </Col>
                                        ) : (
-                                          <Col>
-                                             <Tag color='warning'>Sin Contestar</Tag>
+                                          <Col style={{ marginBottom: '3px' }}>
+                                             <Tag color='red'>Error</Tag>
                                           </Col>
                                        )}
                                        {survey.isOpened && (
-                                          <Col>
+                                          <Col style={{ marginBottom: '3px' }}>
                                              {' '}
                                              {survey.isOpened == 'true' || survey.isOpened == true ? (
-                                                <Tag color='green'>Abierta</Tag>
+                                                <Tag icon={<CheckCircleOutlined />} color='green'>
+                                                   Abierta
+                                                </Tag>
                                              ) : (
-                                                <Tag color='red'>Cerrada</Tag>
+                                                <Tag icon={<CloseCircleOutlined />} color='red'>
+                                                   Cerrada
+                                                </Tag>
                                              )}
                                           </Col>
                                        )}
@@ -89,11 +95,29 @@ function SurveyCard(props) {
                                  <>
                                     <div>
                                        <Button
-                                          type={survey.isOpened === 'true' ? 'primary' : 'ghost'}
+                                          type={
+                                             survey.isOpened === 'true' &&
+                                             (surveyStatusProgress &&
+                                                surveyStatusProgress[survey._id] &&
+                                                surveyStatusProgress[survey._id].surveyCompleted !== 'completed')
+                                                ? 'primary'
+                                                : 'ghost'
+                                          }
                                           className={`${survey.isOpened === 'true' &&
                                              'animate__animated  animate__pulse animate__slower animate__infinite'}`}
-                                          onClick={() => props.handleClick(survey)}>
-                                          {survey.isOpened === 'true' ? 'Ir a Encuesta' : 'Resultados'}
+                                          onClick={() => {
+                                             surveyStatusProgress &&
+                                             surveyStatusProgress[survey._id] &&
+                                             surveyStatusProgress[survey._id].surveyCompleted !== 'completed'
+                                                ? handleClick(survey)
+                                                : handleClick(survey, 'results');
+                                          }}>
+                                          {survey.isOpened === 'true' &&
+                                          (surveyStatusProgress &&
+                                             surveyStatusProgress[survey._id] &&
+                                             surveyStatusProgress[survey._id].surveyCompleted !== 'completed')
+                                             ? 'Ir a Encuesta'
+                                             : 'Resultados'}
                                        </Button>
                                     </div>
                                  </>
@@ -108,8 +132,5 @@ function SurveyCard(props) {
       </Card>
    );
 }
-const mapStateToProps = (state) => ({
-   surveyVisible: state.survey.data.surveyVisible,
-});
 
-export default connect(mapStateToProps)(SurveyCard);
+export default SurveyCard;

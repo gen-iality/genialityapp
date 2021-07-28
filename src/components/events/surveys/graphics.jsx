@@ -143,7 +143,7 @@ class Graphics extends Component {
     let porcentajeUsuarios = 0
     let respuestatotal = 0;
 
-    respuestadVotos = this.state.totalUser - totalVotosUsuarios;
+    respuestadVotos = totalVotosUsuarios - this.state.totalUser;
     porcentajeUsuarios= parseInt((respuestadVotos * 100) / this.state.totalUser)
 
     this.setState({
@@ -327,8 +327,15 @@ class Graphics extends Component {
 
   render() {
     let { dataSurvey, currentPage, titleQuestion, dataVotos } = this.state;
+    let { ChartPie } = graphicsFrame;
     const { Paragraph, Text } = Typography;
     const { surveyLabel } = this.props;
+    const Stylepie = {
+      paddingLeft:'300px', 
+      paddingRight:'300px', 
+      paddingTop:'0px', 
+      paddingBottom:'0px'
+    }
 
     if (dataSurvey.questions)
       return (
@@ -349,7 +356,7 @@ class Graphics extends Component {
               )}
             </div>
             <strong style={{ fontSize:'16px' }}>{titleQuestion}</strong>
-            <Card bodyStyle={{paddingLeft:'200px', paddingRight:'200px', paddingTop:'0px', paddingBottom:'0px'}} >
+            <Card bodyStyle={this.state.dataSurvey.graphyType === ChartPie.type ? Stylepie : {padding:'0px'}} >
               <canvas  id='chart'></canvas>
             </Card>
 
@@ -403,8 +410,8 @@ class Graphics extends Component {
                 <Col span={16}>
                   <div style={{marginLeft:'12px', marginRight:'12px', fontWeight:'600', display:'grid',alignContent:'center', height:'100%',}}>
                     <div>
-                      <span style={{fontSize:'24px', fontWeight:'500'}}>{this.state.resultVotos.usuariosSinRespuesta} Voto(s)</span>
-                      <span style={{fontSize:'24px', fontWeight:'500', float:'right'}}>{this.state.resultVotos.porcentajevotos} % </span>
+                      <span style={{fontSize:'22px', fontWeight:'500'}}>{this.state.resultVotos.usuariosSinRespuesta} Voto(s)</span>
+                      <span style={{fontSize:'22px', fontWeight:'500', float:'right'}}>{this.state.resultVotos.porcentajevotos} % </span>
                     </div>
                   </div>
                 </Col>

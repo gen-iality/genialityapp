@@ -109,6 +109,8 @@ iframe {
 }
 .sv-container-modern {
   margin-bottom: 10%;
+  overflow-y: scroll;
+  height: 70vh;
   @media screen and (max-width: $breakpoint-mobile) {
     overflow-y: scroll;
     margin-top: 2%;
@@ -123,6 +125,7 @@ iframe {
 }
 
 .sv-question__content {
+  margin-right: 2.05em;
   margin-top: 2em;
 }
 

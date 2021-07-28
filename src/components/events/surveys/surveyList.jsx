@@ -20,50 +20,33 @@ const { setNotification } = notificationsActions;
 const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
-   const { activity, setNotification, viewNotification, surveySelected, setCurrentSurvey, setSurveyResult } = props;
+   const {
+      activity,
+      setNotification,
+      viewNotification,
+      setCurrentSurvey,
+      setSurveyResult,
+      surveyStatusProgress,
+      listOfEventSurveys,
+      loadingSurveys,
+   } = props;
 
-   const eventId = activity.event_id;
    const currentUser = UseCurrentUser();
 
-   const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
-   const [loadingSurveys, setLoadingSurveys] = useState(true);
    const [reloadNotification, setReloadNotification] = useState(true);
 
-   useEffect(() => {
-      if (eventId) {
-         listenSurveysData(
-            eventId,
-            setListOfEventSurveys,
-            setLoadingSurveys,
-            activity,
-            currentUser,
-            visualizarEncuesta,
-            surveySelected
-         );
-      }
-   }, [eventId]);
-
-   const visualizarEncuesta = (survey) => {
-      if (survey && survey.isOpened === 'true' && survey !== null) {
-         handleClick(survey);
-      } else {
-         setCurrentSurvey(survey);
-         setSurveyResult('closedSurvey');
-      }
-   };
-
-   const handleClick = (currentSurvey) => {
+   const handleClick = (currentSurvey, status) => {
       if (activity !== null && currentSurvey.isOpened === 'true') {
-         // setMainStage('surveyDetalle');
-         // setSurveyVisible(true);
          setSurveyResult('view');
       } else if (activity !== null && currentSurvey.isOpened === 'false') {
          setSurveyResult('results');
-         // setMainStage('surveyDetalle');
-         // setSurveyVisible(true);
+      }
+      if (status === 'results') {
+         setSurveyResult('results');
       }
       setCurrentSurvey(currentSurvey);
    };
+
    useEffect(() => {
       if (listOfEventSurveys[1]?.length >= 1) {
          setNotification({
@@ -87,8 +70,9 @@ function SurveyList(props) {
    return (
       <SurveyCard
          publishedSurveys={listOfEventSurveys[0]}
+         surveyStatusProgress={surveyStatusProgress}
          loadingSurveys={loadingSurveys}
-         currentSurvey={surveySelected}
+         currentUser={currentUser}
          handleClick={handleClick}
       />
    );
@@ -98,7 +82,6 @@ const mapStateToProps = (state) => ({
    activity: state.stage.data.currentActivity,
    viewNotification: state.notifications.data,
    currentActivity: state.survey.currentActivity,
-   surveySelected: state.survey.data.currentSurvey,
 });
 
 const mapDispatchToProps = {
