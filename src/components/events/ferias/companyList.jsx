@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Modal, Button, Typography, Space, Tag } from 'antd';
+import { Row, Col, Modal, Button, Typography, Space, Tag, Badge, Card } from 'antd';
 import { PhoneOutlined, MailOutlined, GlobalOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -43,13 +43,14 @@ function Companylist(props) {
 
   return (
     <div className='company-list'>
-      <Row className='container' gutter={[10, 10]} 
-      style={{ cursor: 'pointer', 
+      <Badge.Ribbon text="Hippies" color={props.colorStand}>
+      <Card style={{ cursor: 'pointer', 
       border:`1px solid ${props.colorStand}`, 
       paddingBottom:'12px', 
       paddingTop:'12px', 
       margin:'auto',
-      borderRadius:'5px'}} >
+      borderRadius:'5px'}}>
+      <Row className='container' gutter={[10, 10]}  >
         <Col
           xs={24}
           sm={24}
@@ -115,7 +116,8 @@ function Companylist(props) {
         ) : (
           ''
         )}
-      </Row>
+      </Row></Card>
+      </Badge.Ribbon>
     </div>
   );
 }

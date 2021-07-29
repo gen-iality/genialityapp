@@ -1,4 +1,4 @@
-import { Empty, Spin, Col, Row, Tag} from 'antd';
+import { Empty, Spin, Col, Row, Tag, Badge} from 'antd';
 import React from 'react';
 import Companylist from './companyList';
 import { useEffect } from 'react';
