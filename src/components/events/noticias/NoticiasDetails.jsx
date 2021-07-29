@@ -82,7 +82,7 @@ const NoticiasDetails = ({ setVirtualConference, match,setTopBanner  }) => {
           </Card>
         </Col>
       )}
-      <NoticiaList />
+      <NoticiaList size={3} />
     </>
   );
 };
