@@ -79,7 +79,7 @@ function SurveyComponent(props) {
    function sendData(surveyModel) {
       setRankingPoints(0);
       const status = surveyModel.state;
-
+console.log("10. data ", surveyModel)
       if (status) {
          SetUserCompletedSurvey(surveyData, currentUser, status);
       } else {

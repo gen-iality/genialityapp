@@ -21,7 +21,10 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
 
          if (correctAnswer) pointsForCorrectAnswer += surveyPoints;
          question.value.forEach((value) => {
-            optionIndex = [...optionIndex, question.choices.findIndex((item) => item.propertyHash.value === value)];
+            optionIndex = [
+               ...optionIndex,
+               question.choices.findIndex((item) => item.propertyHash.value === value || item.itemValue === value),
+            ];
          });
          // console.log('10. ===> optionIndex if <==', optionIndex);
       } else {
@@ -30,7 +33,9 @@ function RegisterVote(surveyData, question, infoUser, eventUsers, voteWeight) {
 
          if (correctAnswer) pointsForCorrectAnswer += surveyPoints;
          // Busca el index de la opcion escogida
-         optionIndex = question.choices.findIndex((item) => item.propertyHash.value === question.value);
+         optionIndex = question.choices.findIndex(
+            (item) => item.propertyHash.value === question.value || item.itemValue === question.value
+         );
          // console.log('10. ===> optionIndex else <==', optionIndex);
       }
       optionQuantity = question.choices.length;

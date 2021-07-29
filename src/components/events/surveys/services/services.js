@@ -68,15 +68,19 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
                // Condiciona si tiene mas de una opcion escogida
                if (position && position.length && position.length > 0) {
                   position.forEach((element) => {
-                     if(element >= 0){
-                        const new_count = doc.data()[element] + vote;
-                        t.update(shard_ref, { [element]: new_count });
+                     if (typeof element === 'number') {
+                        if (element >= 0) {
+                           const new_count = doc.data()[element] + vote;
+                           t.update(shard_ref, { [element]: new_count });
+                        }
                      }
                   });
                } else {
-                  if(typeof(position) === "number"){
-                     const new_count = doc.data()[position] + vote;
-                     t.update(shard_ref, { [position]: new_count });
+                  if (typeof position === 'number') {
+                     if (position >= 0) {
+                        const new_count = doc.data()[position] + vote;
+                        t.update(shard_ref, { [position]: new_count });
+                     }
                   }
                }
             });
@@ -230,19 +234,31 @@ export const SurveyAnswers = {
                switch (operation) {
                   case 'onlyCount':
                      Object.keys(result).map((item) => {
-                        result[item] = [result[item]];
+                        if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                           if (parseInt(item) >= 0) {
+                              result[item] = [result[item]];
+                           }
+                        }
                      });
 
                      break;
 
                   case 'participationPercentage':
                      Object.keys(result).map((item) => {
-                        total = total + result[item];
+                        if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                           if (parseInt(item) >= 0) {
+                              total = total + result[item];
+                           }
+                        }
                      });
 
                      Object.keys(result).map((item) => {
-                        const calcPercentage = Math.round((result[item] / total) * 100);
-                        result[item] = [result[item], calcPercentage];
+                        if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                           if (parseInt(item) >= 0) {
+                              const calcPercentage = Math.round((result[item] / total) * 100);
+                              result[item] = [result[item], calcPercentage];
+                           }
+                        }
                      });
 
                      break;

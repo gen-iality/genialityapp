@@ -13,20 +13,21 @@ function QueryTesting() {
    const [totalTime, setTotalTime] = useState(null);
    const [validationStartTime, setValidationStartTime] = useState();
 
+   /** Ingreso de datos a la DB */
    function insertionInTheDatabase(insertions) {
       const firebaseRef = firestore
          .collection('surveys')
          .doc('s1u2r3v4e5y6_7i8d')
          .collection('answersbyquestion')
          .doc('q1u2e3s4t5i6o7n8_9i0d')
-         .collection('responses')
-         .doc(`a1t2t3e4n5d6e7e8_9i0d#${insertions}`);
+         .collection('responses');
 
-      firebaseRef.set({
+      firebaseRef.add({
          answer: insertions,
       });
    }
 
+   /** Listener que permite recuperar toda la data y guardarla en un array */
    async function dataBaseListener() {
       //    console.log("10. se ejecuta el listener")
       const firebaseRef = firestore
@@ -47,49 +48,41 @@ function QueryTesting() {
 
          snapShot.docChanges().length > 0 &&
          (snapShot.docChanges()[0].type === 'modified' || snapShot.docChanges()[0].type === 'removed')
-            ? start()
+            ? startTimer()
             : null;
       });
 
       return unSuscribe;
    }
 
-   function start() {
-      const startTime = moment(new Date());
-      console.log("10. startTime ", startTime)
-      setValidationStartTime(startTime);
+   /** inicia el cronometro */
+   function startTimer() {
+      setTotalTime(null);
+      const startTimer = moment(new Date());
+      // console.log("10. startTimer ", startTimer)
+      setValidationStartTime(startTimer);
    }
 
-   function end() {
+   /** detiene el cronometro */
+   function endTimer() {
       const endTime = moment(new Date());
-      // let timeDiff = endTime - validationStartTime; //in ms
-      // // strip the ms
-
-      // timeDiff /= 1000;
-      // // get seconds
-      // let seconds = Math.round(timeDiff);
-      // // console.log('10. seconds ', seconds);
-      console.log("10. endTime ", endTime)
-      const seconds = endTime.diff(validationStartTime, 'seconds');
-      console.log('10. seconds   ', seconds);
+      // console.log("10. endTime ", endTime)
+      const seconds = endTime.diff(validationStartTime);
+      // console.log('10. seconds   ', seconds);
       setTotalTime(seconds);
    }
 
+   /** accion del formulario de antd que se ejecuta al hacer clic en el boton Realizar prueba */
    const onFinish = (values) => {
       const { insertionNumber } = values;
-      start();
+      startTimer();
       for (let insertions = 0; insertions < insertionNumber; insertions++) {
          insertionInTheDatabase(insertions + 1);
       }
    };
 
-   useEffect(() => {
-      const unSuscribe = dataBaseListener();
-      start();
-      return () => unSuscribe;
-   }, []);
-
-   useEffect(() => {
+   /** promedio por respuestas, como las respuestas se guardan con un campo answer de tipo number aqui se promedia esa data */
+   function averagePerResponses() {
       if (data && data.length > 0) {
          let average = data.reduce((sumTotal, rest) => {
             return sumTotal + rest.answer;
@@ -101,7 +94,19 @@ function QueryTesting() {
       } else {
          setTotalAverageData(null);
       }
-      return end();
+   }
+
+   /** se inicializa el listener y el cronometro, ademas se cierra el listener al salir del componente */
+   useEffect(() => {
+      const unSuscribe = dataBaseListener();
+      startTimer();
+      return () => unSuscribe;
+   }, []);
+
+   /** Se ejecuta el promedio cada que el listener cambia, ademas cuando ya no se ejecuta el efecto se detiene el contador */
+   useEffect(() => {
+      averagePerResponses();
+      return endTimer();
    }, [data]);
 
    return (
@@ -147,7 +152,7 @@ function QueryTesting() {
                      <h1>Tiempo</h1>
                      {totalTime !== null ? (
                         <Tag color='success'>
-                           <h1>{totalTime} Segundos</h1>
+                           <h1>{totalTime} M.Segundos</h1>
                         </Tag>
                      ) : (
                         <h1>Aun no hay tiempos</h1>
@@ -155,10 +160,10 @@ function QueryTesting() {
                   </div>
                </Card>
                {/* Prueba botones para probar funciones para medir tiempo */}
-               {/* <Button type='primary' onClick={start}>
+               {/* <Button type='primary' onClick={startTimer}>
                   iniciar
                </Button>
-               <Button type='primary' onClick={end}>
+               <Button type='primary' onClick={endTimer}>
                   detener
                </Button> */}
             </Card>
