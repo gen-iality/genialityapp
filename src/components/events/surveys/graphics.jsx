@@ -236,6 +236,7 @@ class Graphics extends Component {
           display: true,
           text: '',
         },
+        position:'left',
         plugins: {
           datalabels: {
             color: '#333',
@@ -258,6 +259,7 @@ class Graphics extends Component {
                 textAlign:'left'
               },
             },
+            position:'left',
         },
        
         },

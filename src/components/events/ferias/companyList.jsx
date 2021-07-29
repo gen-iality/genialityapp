@@ -43,8 +43,8 @@ function Companylist(props) {
 
   return (
     <div className='company-list'>
-      <Badge.Ribbon text="Hippies" color={props.colorStand}>
-      <Card style={{ cursor: 'pointer', 
+      <Badge.Ribbon text={props.text} color={props.colorStand}>
+      <Card bodyStyle={{padding:'12px'}} style={{ cursor: 'pointer', 
       border:`1px solid ${props.colorStand}`, 
       paddingBottom:'12px', 
       paddingTop:'12px', 

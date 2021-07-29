@@ -1,5 +1,6 @@
 import React from 'react'
 import { useHistory } from 'react-router';
+import {Badge} from 'antd'
 
 function FeriasStand (props) {
   const history = useHistory();
@@ -16,6 +17,7 @@ function FeriasStand (props) {
         }}
       />  
     </div> */}
+    
     <div style={{position:'relative'}} 
      onClick={() => {
             history.push(`/landing/${props.eventId}/ferias/${props.companyId}/detailsCompany`);
@@ -29,6 +31,7 @@ function FeriasStand (props) {
           transform:'translateX(-50%)', 
           top:'2px',
           backgroundColor:'white'}}>
+          <Badge.Ribbon text={props.text} color={props.color}>
             <img
                 src={props.image}
                 style={{
@@ -37,7 +40,7 @@ function FeriasStand (props) {
                 height:'20vh',
                 objectFit:'contain'
                 }}
-            />  
+            /> </Badge.Ribbon>  
         </div>
             <img
                 src={'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Stand_ferias%2Fstand.png?alt=media&token=4de289cb-5f22-4c9f-81b1-300df0815490'}

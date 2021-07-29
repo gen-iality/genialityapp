@@ -18,6 +18,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
   const [config,setConfig]=useState(null)
   const [standsColor,setStandsColor]=useState()
   const [imageBanner, setBannerImage]=useState()
+  const [typeStand, setTypeStand] = useState()
   //EFECTO PARA OCULTAR Y MOSTRAR VIRTUAL CONFERENCE
   useEffect(()=>{
   setVirtualConference(false);
@@ -34,6 +35,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
       .collection('event_companies')
       .doc(event_id).onSnapshot((resp)=>{
         let standTypesOptions=resp.data().stand_types;
+        setTypeStand(standTypesOptions)
         setStandsColor(standTypesOptions)
         setConfig(resp.data().config)
         let companiesSort=companies.sort((a,b)=>a.index && b.index  && a.index-b.index)
@@ -51,6 +53,14 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
       return colorList[0].color
     }
     return "#2C2A29";
+  }
+  const obtenertLabel=(stand)=>{ 
+    let labelList= typeStand.filter((colors)=>colors.label===stand)
+   console.log('label----2',labelList)
+   if(labelList.length>0){
+    return labelList[0].label
+  }
+  return "nuevo";
   }
   return (
     <div>
@@ -75,6 +85,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
                 pagweb={company.webpage}
                 companyId={company.id}
                 colorStand={obtenerColor(company.stand_type)}
+                 text={obtenertLabel(company.stand_type)}
               />
             )
         )}
@@ -96,6 +107,7 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
                 name={company.name}
                 companyId={company.id}
                 color={obtenerColor(company.stand_type)}
+                text={obtenertLabel(company.stand_type)} 
               />
               </Col> 
             

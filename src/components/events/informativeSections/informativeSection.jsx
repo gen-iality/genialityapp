@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Alert, Button, Card, Col, Input, Row, Space } from 'antd';
+import { Alert, Button, Card, Col, Input, Row, Space, Typography } from 'antd';
 import withContext from '../../../Context/withContext';
 import { EventsApi } from '../../../helpers/request';
 import {  SettingOutlined, WarningOutlined } from '@ant-design/icons';
@@ -20,10 +20,11 @@ class InformativeSection extends Component {
       selectedGalery:null,
       value_oferta:null,
       valueoff:false,
-      isModalVisibleRegister:false
+      isModalVisibleRegister:false,
+      ellipsis:true
     };
   }
-
+  
   componentDidMount() {
     this.props.setVirtualConference(false)
     console.log(this.props)
@@ -114,7 +115,8 @@ class InformativeSection extends Component {
     },()=>this.showModal())
   }
   render() {
-    const { markup, informativeSection } = this.state;
+    const { markup, informativeSection, ellipsis } = this.state;
+    const { Paragraph } = Typography;
     return (
       <Fragment>
         {informativeSection !== null && (
@@ -182,8 +184,9 @@ class InformativeSection extends Component {
                     </Space>                  */}
                  </Col>
                  <Col span={12}>
-                    <Space direction='vertical'>            
-                      <span className="mock-block">{this.state.selectedGalery!=null && <span><strong>Descripción: </strong><div>{this.state.selectedGalery.description}</div> </span>}</span>
+                    <Space direction='vertical' style={{width:'100%'}}>            
+                      <span className="mock-block">{this.state.selectedGalery!=null && <span><strong>Descripción: </strong>
+                      <Paragraph ellipsis={ellipsis ? { rows: 2, expandable: true, symbol: 'more' } : false}>{this.state.selectedGalery.description}</Paragraph> </span>}</span>
                     <Row gutter={[12,12]}> 
                       <Col span={12}>
                       <span><strong>Oferta actual</strong></span>
