@@ -215,10 +215,15 @@ class DashboardEvent extends Component {
                 this.setState(
                   {
                     mailsDetails: resp,
+                    loadingMetrics :false
                   },
                   () => {
                     console.log('MAILS DETAILS');
                     console.log(resp);
+                    this.totalsMails(datametricsMail);
+                    this.graficRegistros();
+                    this.graficAttendees();
+                    this.graficPrintouts();
                   }
                 );
               });

@@ -637,7 +637,7 @@ export default ({
               </Row>
             </Form>
 
-            {/*<div id="afrus-container-form" style={{height:'500px'}} data-form="Zm9ybS0yMTU2LW9yZ2FuaXphdGlvbi0xNDYx"></div>*/}
+            <div id="afrus-container-form" style={{height:'500px'}} data-form="Zm9ybS0yMTU2LW9yZ2FuaXphdGlvbi0xNDYx"></div>
            
             
           </Card>
