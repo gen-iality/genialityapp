@@ -10,6 +10,7 @@ import axios from 'axios/index';
 import ImageInput from '../shared/imageInput';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
+import { withRouter } from 'react-router';
 
 class News extends Component {
   constructor(props) {
@@ -74,7 +75,7 @@ class News extends Component {
   };
 
   fetchItem = async () => {
-    const data = await NewsFeed.byEvent(this.props.eventId);
+    const data = await NewsFeed.byEvent(this.props.eventId);    
     this.setState({ list: data, loading: false });
   };
 
@@ -95,7 +96,7 @@ class News extends Component {
   };
 
   newRole = () => {
-    if (!this.state.list.find(({ _id }) => _id === 'new')) {
+    /*if (!this.state.list.find(({ _id }) => _id === 'new')) {
       this.setState((state) => {
         const list = state.list.concat({
           title: '',
@@ -109,7 +110,9 @@ class News extends Component {
         });
         return { list, id: 'new' };
       });
-    }
+    }*/
+    
+    this.props.history.push(`/event/${this.props.eventId}/news/addnoticia`)
   };
 
   removeNewRole = () => {
@@ -209,16 +212,12 @@ class News extends Component {
     }
   };
 
-  editItem = (cert) =>
-    this.setState({
-      id: cert._id,
-      title: cert.title,
-      description_complete: cert.description_complete,
-      linkYoutube: cert.linkYoutube,
-      description_short: cert.description_short,
-      picture: cert.picture,
-      time: cert.time,
-    });
+  editItem = (cert) =>{
+    console.log(cert)
+    this.props.history.push(`/event/${this.props.eventId}/news/addnoticia/${cert._id}`)
+  }
+    
+  
 
   removeItem = (id) => {
     sweetAlert.twoButton(`Está seguro de borrar este espacio`, 'warning', true, 'Borrar', async (result) => {
@@ -259,11 +258,11 @@ class News extends Component {
             {this.state.loading ? (
               <Loading />
             ) : (
-              <EvenTable head={['Titulo', 'Subtitulo', 'Noticia', 'time', 'Link de Youtube', 'imagen', '']}>
+              <EvenTable head={['Titulo', 'Fecha publicación','']} headStyle={[{"width":"300px"},{"width":"200px"}]} >
                 {this.state.list.map((cert, key) => {
                   return (
-                    <tr key={key}>
-                      <td>
+                    <tr className='ant-table-row ant-table-row-level-0' key={key}>
+                      <td className='ant-table-cell'>
                         {this.state.id === cert._id ? (
                           <input
                             className='input is-small'
@@ -275,34 +274,8 @@ class News extends Component {
                         ) : (
                           <p>{cert.title}</p>
                         )}
-                      </td>
-                      <td>
-                        {this.state.id === cert._id ? (
-                          <input
-                            className='input is-small'
-                            type='text'
-                            id='description_short'
-                            value={this.state.description_short}
-                            onChange={this.onChange}
-                          />
-                        ) : (
-                          <p>{cert.description_short}</p>
-                        )}
-                      </td>
-                      <td>
-                        {this.state.id === cert._id ? (
-                          <input
-                            className='input is-small'
-                            type='text'
-                            id='desc'
-                            value={this.state.description_complete}
-                            onChange={this.onChange}
-                          />
-                        ) : (
-                          <p>{cert.description_complete}</p>
-                        )}
-                      </td>
-                      <td>
+                      </td>                 
+                      <td className='ant-table-cell'>
                         {this.state.id === cert._id ? (
                           <input
                             className='input is-small'
@@ -314,21 +287,8 @@ class News extends Component {
                         ) : (
                           <p>{cert.time}</p>
                         )}
-                      </td>
-                      <td>
-                        {this.state.id === cert._id ? (
-                          <input
-                            className='input is-small'
-                            type='text'
-                            id='linkYoutube'
-                            value={this.state.linkYoutube}
-                            onChange={this.onChange}
-                          />
-                        ) : (
-                          <p>{cert.linkYoutube}</p>
-                        )}
-                      </td>
-                      <td>
+                      </td>                     
+                     {/* <td>
                         {this.state.id === cert._id ? (
                           <div className='column is-5'>
                             <ImageInput
@@ -376,8 +336,8 @@ class News extends Component {
                         ) : (
                           <p>{cert.picture ? 'Imagen Registrada' : 'No hay ninguna imagen Guardada'}</p>
                         )}
-                      </td>
-                      <td>{Moment(cert.created_at).format('DD/MM/YYYY')}</td>
+                      </td>*/}
+                   
                       <TableAction
                         id={this.state.id}
                         object={cert}
@@ -399,4 +359,4 @@ class News extends Component {
   }
 }
 
-export default News;
+export default withRouter(News);

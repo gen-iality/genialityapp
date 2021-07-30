@@ -58,6 +58,7 @@ export const graphicsFrame = {
          ],
       },
       options: {
+         position:'left',
          title: {
             fontSize: 16,
             display: true,
@@ -115,6 +116,7 @@ export const graphicsFrame = {
          ],
       },
       options: {
+         position:'left',
          title: {
             fontSize: 16,
             display: true,
@@ -171,6 +173,7 @@ export const graphicsFrame = {
          ],
       },
       options: {
+         position:'left',
          title: {
             fontSize: 16,
             display: true,

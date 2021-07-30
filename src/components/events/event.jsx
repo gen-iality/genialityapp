@@ -28,6 +28,7 @@ import CheckAgenda from '../agenda/checkIn';
 import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
 import ReportNetworking from '../networking/report';
+import NewsSectionRoutes from '../news/newsRoute' ;
 
 //import Test from "../events/testButton"
 import { Layout } from 'antd';
@@ -258,9 +259,9 @@ class Event extends Component {
                 />
               )}
 
-              {permissions.data.ids.includes(rolPermissions._id) && (
-                <Route path={`${match.url}/news`} render={() => <NewsApp eventId={this.state.event._id} />} />
-              )}
+              {/*{permissions.data.ids.includes(rolPermissions._id) && (
+                <Route path={`${match.url}/news`} render={() => <NewsSectionRoutes eventId={this.state.event._id} event={this.state.event} />} />
+              )}*/}
 
               {permissions.data.ids.includes(rolPermissions._id) && (
                 <Route path={`${match.url}/falqs`} render={() => <FAQS eventId={this.state.event._id} />} />
@@ -289,7 +290,9 @@ class Event extends Component {
                 path={`${match.url}/notificationsApp`}
                 render={() => <NotificationsApp eventId={this.state.event._id} />}
               />
-              <Route path={`${match.url}/news`} render={() => <NewsApp eventId={this.state.event._id} />} />
+              <Route  path={`${match.url}/news`}>
+              <NewsSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
+              </Route>
               <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} />} />              
               <Route
                 path={`${match.url}/ticketsEvent`}

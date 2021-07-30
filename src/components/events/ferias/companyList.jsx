@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Modal, Button, Typography, Space } from 'antd';
+import { Row, Col, Modal, Button, Typography, Space, Tag, Badge, Card } from 'antd';
 import { PhoneOutlined, MailOutlined, GlobalOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 function Companylist(props) {
   const { Text } = Typography;
   const history = useHistory();
+  console.log(props)
 
   function showModal(info) {
     Modal.info({
@@ -42,7 +43,14 @@ function Companylist(props) {
 
   return (
     <div className='company-list'>
-      <Row className='container' gutter={[10, 10]} style={{ cursor: 'pointer' }}>
+      <Badge.Ribbon text={props.text} color={props.colorStand}>
+      <Card bodyStyle={{padding:'12px'}} style={{ cursor: 'pointer', 
+      border:`1px solid ${props.colorStand}`, 
+      paddingBottom:'12px', 
+      paddingTop:'12px', 
+      margin:'auto',
+      borderRadius:'5px'}}>
+      <Row className='container' gutter={[10, 10]}  >
         <Col
           xs={24}
           sm={24}
@@ -64,7 +72,7 @@ function Companylist(props) {
           lg={9}
           xl={9}>
           <div className='info-contact'>
-            <span className='name'>{props.name}</span>
+            <span className='name'><Tag color={props.colorStand} style={{height:'12px'}}/>{props.name} </span>
             <span className='position'>{props.position} </span>
             <span className='description'>
               <div dangerouslySetInnerHTML={{ __html: props.description }} />
@@ -108,7 +116,8 @@ function Companylist(props) {
         ) : (
           ''
         )}
-      </Row>
+      </Row></Card>
+      </Badge.Ribbon>
     </div>
   );
 }

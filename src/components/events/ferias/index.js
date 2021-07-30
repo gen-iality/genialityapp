@@ -1,6 +1,7 @@
 import React from 'react';
 import FeriasSectionRoutes from '../Landing/FeriasSectionRoutes';
-const Ferias = () => {
+const Ferias = (props) => {
+  
   return <FeriasSectionRoutes />;
 };
 export default Ferias;

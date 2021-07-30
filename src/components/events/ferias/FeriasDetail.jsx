@@ -60,6 +60,7 @@ const FeriasDetail = (props) => {
         />
         <div className='container-information'>
           <Information
+          companyDetail={companyDetail}
             ImgCompany={
               companyDetail ? companyDetail.list_image : 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo'
             }
@@ -71,6 +72,7 @@ const FeriasDetail = (props) => {
                 }}></div>
             }
           />
+         
         </div>
       </div>
 
@@ -105,41 +107,7 @@ const FeriasDetail = (props) => {
                   __html: companyDetail && companyDetail.description,
                 }}></div>
             </Row>
-            {companyDetail && (companyDetail.telefono || companyDetail.email || companyDetail.webpage) ? (
-          <Row justify={'space-between'} style={{ fontSize: '18px',marginTop:25,borderTop:'2px solid #bdbdbd', paddingTop:30 }}>
-            
-              {companyDetail.telefono && (
-                <Col><span className='tel'>
-                  <PhoneOutlined className='icono' /> {companyDetail.telefono}
-                </span>
-                </Col>
-              )}
-              {companyDetail.email && (
-                <Col>
-                <span className='email'>
-                  <MailOutlined className='icono' /> {companyDetail.email}
-                </span>
-                </Col>
-              )}
-              {companyDetail.webpage && (
-                <Col><span className='web'>
-                  <GlobalOutlined className='icono' />
-                  <a
-                    rel='noreferrer'
-                    onClick={() => {
-                      window.open(`${companyDetail.pagweb}`, '_blank');
-                    }}
-                    target='_blank'>
-                    {companyDetail.webpage}
-                  </a>
-                </span>
-                </Col>
-              )}
-                     
-          </Row>
-        ) : (
-          ''
-        )}
+          
           </TabPane>
           <TabPane tab='Productos y Servicios' key='2'>
             {/* componente  de Productos */}

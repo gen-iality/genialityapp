@@ -8,7 +8,8 @@ import { getEventCompaniesStandTypes } from '../services';
 function stringToOptionMapper(value) {
   return {
     value:value.value||value,
-    label: value.label||value,    
+    label: value.label||value, 
+    color:value.color || null  
   };
 }
 

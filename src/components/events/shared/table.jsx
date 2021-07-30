@@ -4,17 +4,19 @@ import "react-tabs/style/react-tabs.css"
 export default function EvenTable ( { ...props } ) {
     return (
         //<Table columns={columns} dataSource={data} size="middle" />
-        <table>
+        <div className='ant-table-content'>
+        <table style={{tableLayout:'auto'}}>
             {props.head &&
-                <thead>
-                    <tr>
+                <thead className='ant-table-thead'>
+                    <tr >
                         { props.head.map( ( name, idx ) => <th key={ idx } style={ props.headStyle && props.headStyle[ idx ] }>{ name }</th> ) }
                     </tr>
                 </thead>
             }
-            <tbody>
+            <tbody className='ant-table-tbody'>
                 { props.children }
             </tbody>
         </table>
+        </div>
     )
 }
