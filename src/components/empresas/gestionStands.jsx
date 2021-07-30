@@ -171,7 +171,7 @@ const Stands=(props)=>{
           let standTypesOptions=resp.data().stand_types;
           let listStands=[]
           standTypesOptions.map((stands,indx)=>{
-            stands.label.label!==null&&listStands.push({...stands,id:indx})
+            stands.label && stands.label.label!==null&&listStands.push({...stands,id:indx})
           }) 
           setStands(listStands)                   
           
