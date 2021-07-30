@@ -30,7 +30,7 @@ function SurveyComponent(props) {
    const [showMessageOnComplete, setShowMessageOnComplete] = useState(false);
    const [timerPausa, setTimerPausa] = useState(null);
    const [surveyJsModel, setSurveyJsModel] = useState(null);
-   const [rankingPoints, setRankingPoints] = useState(0);
+   const [rankingPoints, setRankingPoints] = useState(null);
    const [fiftyfitfyused, setFiftyfitfyused] = useState(false);
    let [totalPoints, setTotalPoints] = useState(0);
    let [onCurrentPageChanged, setOnCurrentPageChanged] = useState(0);
@@ -76,8 +76,8 @@ function SurveyComponent(props) {
       await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
    }
    // Funcion para enviar la informacion de las respuestas
-   function sendData(surveyModel) {
-      setRankingPoints(0);
+   async function sendData(surveyModel) {
+      setRankingPoints(null);
       const status = surveyModel.state;
 
       if (status) {
@@ -85,13 +85,19 @@ function SurveyComponent(props) {
       } else {
          SetUserCompletedSurvey(surveyData, currentUser, status);
       }
+      const question = surveyModel.currentPage.questions[0];
+      /** for para pruebas de rendimiento envio de respuestas masivas */
+      // for (let insertions = 0; insertions < 100; insertions++) {
+      //    console.log("10. insertions ", insertions)
+      //    let currentUsers = { ...currentUser.value, _id: 'EdwinVilla1990#' + insertions };
+      //    let userData = { ...currentUser, value: currentUsers };
+      //    await RegisterVote(surveyData, question, userData, eventUsers, voteWeight);
+      // }
 
-      surveyModel.currentPage.questions.map(async (question) => {
-         const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
-         setRankingPoints(pointsForCorrectAnswer);
-         registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
-      });
+      const pointsForCorrectAnswer = await RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
 
+      setRankingPoints(pointsForCorrectAnswer);
+      registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
       if (!(Object.keys(currentUser).length === 0)) {
          //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
          SurveyPage.setCurrentPage(surveyData._id, currentUser.value._id, surveyModel.currentPageNo);
@@ -107,7 +113,7 @@ function SurveyComponent(props) {
    }
 
    function registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId) {
-      if (rankingPoints == undefined || rankingPoints == 0) return;
+      if (rankingPoints === undefined || rankingPoints === 0) return;
       if (surveyData.allow_gradable_survey !== 'true') return;
 
       //para guardar el score en el ranking
@@ -146,26 +152,35 @@ function SurveyComponent(props) {
    }
 
    /* handler cuando la encuesta cambio de pregunta */
-   useEffect(() => {
+   function onCurrentSurveyPageChanged() {
       if (!onCurrentPageChanged?.options?.oldCurrentPage) return;
       let secondsToGo =
          onCurrentPageChanged.surveyModel.maxTimeToFinishPage - onCurrentPageChanged.options.oldCurrentPage.timeSpent;
+      const status = onCurrentPageChanged.surveyModel.state;
 
       if (surveyData.allow_gradable_survey === 'true') {
          setShowOrHideSurvey(false);
-         onCurrentPageChanged.surveyModel.stopTimer();
-         TimerAndMessageForTheNextQuestion(
-            onCurrentPageChanged.surveyModel,
-            secondsToGo,
-            setTimerPausa,
-            setFeedbackMessage,
-            setShowMessageOnComplete,
-            rankingPoints,
-            freezeGame,
-            setShowOrHideSurvey
-         );
+         if (rankingPoints !== null && status === 'running') {
+            onCurrentPageChanged.surveyModel.stopTimer();
+            TimerAndMessageForTheNextQuestion(
+               onCurrentPageChanged.surveyModel,
+               secondsToGo,
+               setTimerPausa,
+               setFeedbackMessage,
+               setShowMessageOnComplete,
+               rankingPoints,
+               freezeGame,
+               setShowOrHideSurvey
+            );
+         } else if (status === 'completed') {
+            setShowOrHideSurvey(true);
+         }
       }
-   }, [onCurrentPageChanged]);
+   }
+
+   useEffect(() => {
+      onCurrentSurveyPageChanged();
+   }, [onCurrentPageChanged, rankingPoints]);
 
    if (!surveyData) return 'Cargando...';
    return (

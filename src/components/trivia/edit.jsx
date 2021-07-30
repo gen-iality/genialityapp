@@ -86,7 +86,7 @@ class triviaEdit extends Component {
 
         // Survey Config
         allow_anonymous_answers: firebaseSurvey.allow_anonymous_answers || this.state.allow_anonymous_answers,
-        allow_gradable_survey: firebaseSurvey.allow_anonymous_answers || this.state.allow_gradable_survey,
+        allow_gradable_survey: firebaseSurvey.allow_gradable_survey ? firebaseSurvey.allow_gradable_survey : 'false' || this.state.allow_gradable_survey,
         hasMinimumScore: firebaseSurvey.hasMinimumScore || this.state.hasMinimumScore,
         isGlobal: firebaseSurvey.isGlobal || this.state.isGlobal,
 
@@ -192,64 +192,83 @@ class triviaEdit extends Component {
   }
 
   async submitWithQuestions() {
-    message.loading({ content: 'Actualizando información', key: 'updating' });
+    
     //Se recogen los datos a actualizar
-    const data = {
-      survey: this.state.survey,
-      show_horizontal_bar: this.state.show_horizontal_bar === 'true' ? true : false,
-      graphyType: this.state.graphyType,
-      allow_vote_value_per_user: this.state.allow_vote_value_per_user,
-      activity_id: this.state.activity_id,
-      points: this.state.points ? parseInt(this.state.points) : 1,
-      initialMessage: this.state.initialMessage,
-      time_limit: parseInt(this.state.time_limit),
-      win_Message: this.state.win_Message,
-      neutral_Message: this.state.neutral_Message,
-      lose_Message: this.state.lose_Message,
+    let isValid=true;
+    if (this.state.allow_gradable_survey==='true'){
+      if(this.state.question){
+        if(this.state.question.length>0){
+          for(let preg of this.state.question ){
+             if(!preg.correctAnswer){
+              isValid=false; 
+              break;           
+             }
+          }          
+        }
+      }     
+    }
 
-      // Survey Config
-      allow_anonymous_answers: this.state.allow_anonymous_answers,
-      allow_gradable_survey: this.state.allow_gradable_survey,
-      hasMinimumScore: this.state.hasMinimumScore,
-      isGlobal: this.state.isGlobal,
-
-      //Survey State
-      freezeGame: this.state.freezeGame === 'true' ? true : false,
-      open: this.state.openSurvey,
-      publish: this.state.publish === 'true' || this.state.publish === true ? 'true' : 'false',
-
-      minimumScore: parseInt(this.state.minimumScore)
-    };
-
-    // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
-    SurveysApi.editOne(data, this.state.idSurvey, this.props.event._id)
-      .then(async () => {
-        // Esto permite almacenar los estados en firebase
-        let setDataInFire = await createOrUpdateSurvey(
-          this.state.idSurvey,
-          {
-            //Survey config
-            allow_anonymous_answers: data.allow_anonymous_answers,
-            allow_gradable_survey: data.allow_gradable_survey,
-            hasMinimumScore: data.hasMinimumScore,
-            isGlobal: data.isGlobal,
-
-            // Survey State
-            freezeGame: data.freezeGame,
-            isOpened: data.open,
-            isPublished: data.publish,
-
-            minimumScore: data.minimumScore,
-            activity_id: data.activity_id
-          },
-          { eventId: this.props.event._id, name: data.survey, category: 'none' }
-        );
-
-        message.success({ content: setDataInFire.message, key: 'updating' });
-      })
-      .catch((err) => {
-        console.error('Hubo un error', err);
-      });
+    if(isValid){
+      message.loading({ content: 'Actualizando información', key: 'updating' });
+      const data = {
+        survey: this.state.survey,
+        show_horizontal_bar: this.state.show_horizontal_bar === 'true' ? true : false,
+        allow_vote_value_per_user: this.state.allow_vote_value_per_user,
+        activity_id: this.state.activity_id,
+        points: this.state.points ? parseInt(this.state.points) : 1,
+        initialMessage: this.state.initialMessage,
+        time_limit: parseInt(this.state.time_limit),
+        win_Message: this.state.win_Message,
+        neutral_Message: this.state.neutral_Message,
+        lose_Message: this.state.lose_Message,
+  
+        // Survey Config
+        allow_anonymous_answers: this.state.allow_anonymous_answers,
+        allow_gradable_survey: this.state.allow_gradable_survey,
+        hasMinimumScore: this.state.hasMinimumScore,
+        isGlobal: this.state.isGlobal,
+  
+        //Survey State
+        freezeGame: this.state.freezeGame === 'true' ? true : false,
+        open: this.state.openSurvey,
+        publish: this.state.publish === 'true' || this.state.publish === true ? 'true' : 'false',
+  
+        minimumScore: parseInt(this.state.minimumScore),
+      };
+  
+      // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
+      SurveysApi.editOne(data, this.state.idSurvey, this.props.event._id)
+        .then(async () => {
+          // Esto permite almacenar los estados en firebase
+          let setDataInFire = await createOrUpdateSurvey(
+            this.state.idSurvey,
+            {
+              //Survey config
+              allow_anonymous_answers: data.allow_anonymous_answers,
+              allow_gradable_survey: data.allow_gradable_survey,
+              hasMinimumScore: data.hasMinimumScore,
+              isGlobal: data.isGlobal,
+  
+              // Survey State
+              freezeGame: data.freezeGame,
+              isOpened: data.open,
+              isPublished: data.publish,
+  
+              minimumScore: data.minimumScore,
+              activity_id: data.activity_id,
+            },
+            { eventId: this.props.event._id, name: data.survey, category: 'none' }
+          );
+  
+          message.success({ content: setDataInFire.message, key: 'updating' });
+        })
+        .catch((err) => {
+          console.error('Hubo un error', err);
+        });
+    }else{
+      message.error({ content: 'Esta encuesta es calificable, hay preguntas sin respuesta correcta asignada', key: 'updating' });
+    }
+  
   }
 
   // Funcion para generar un id a cada pregunta 'esto es temporal'

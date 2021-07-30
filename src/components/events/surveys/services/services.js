@@ -48,41 +48,49 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
 
 // Funcion para realizar conteo de las opciones por pregunta
 const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteValue) => {
-   createAndInitializeCount(surveyId, questionId, optionQuantity, optionIndex, voteValue).then(
-      // eslint-disable-next-line no-unused-vars
-      ({ surveyId, message, questionId, optionIndex }) => {
-         // Se valida si el voto tiene valor de lo contrario sumara 1
-         let vote = typeof voteValue == 'number' ? parseFloat(voteValue) : 1;
-         const shard_ref = firestore
-            .collection('surveys')
-            .doc(surveyId)
-            .collection('answer_count')
-            .doc(questionId);
+   return new Promise((resolve, reject) => {
+      createAndInitializeCount(surveyId, questionId, optionQuantity, optionIndex, voteValue).then(
+         // eslint-disable-next-line no-unused-vars
+         ({ surveyId, message, questionId, optionIndex }) => {
+            // Se valida si el voto tiene valor de lo contrario sumara 1
+            let vote = typeof voteValue == 'number' ? parseFloat(voteValue) : 1;
+            const shard_ref = firestore
+               .collection('surveys')
+               .doc(surveyId)
+               .collection('answer_count')
+               .doc(questionId);
 
-         // Se obtiene el index de la opcion escogida
-         const position = optionIndex;
+            // Se obtiene el index de la opcion escogida
+            const position = optionIndex;
 
-         // Update count in a transaction
-         return firestore.runTransaction((t) => {
-            return t.get(shard_ref).then((doc) => {
-               // Condiciona si tiene mas de una opcion escogida
-               if (position && position.length && position.length > 0) {
-                  position.forEach((element) => {
-                     if(element >= 0){
-                        const new_count = doc.data()[element] + vote;
-                        t.update(shard_ref, { [element]: new_count });
+            // Update count in a transaction
+            return firestore.runTransaction((t) => {
+               return t.get(shard_ref).then((doc) => {
+                  // Condiciona si tiene mas de una opcion escogida
+                  if (position && position.length && position.length > 0) {
+                     position.forEach((element) => {
+                        if (typeof element === 'number') {
+                           if (element >= 0) {
+                              const new_count = doc.data()[element] + vote;
+                              t.update(shard_ref, { [element]: new_count });
+                              resolve(true);
+                           }
+                        }
+                     });
+                  } else {
+                     if (typeof position === 'number') {
+                        if (position >= 0) {
+                           const new_count = doc.data()[position] + vote;
+                           t.update(shard_ref, { [position]: new_count });
+                           resolve(true);
+                        }
                      }
-                  });
-               } else {
-                  if(typeof(position) === "number"){
-                     const new_count = doc.data()[position] + vote;
-                     t.update(shard_ref, { [position]: new_count });
                   }
-               }
+               });
             });
-         });
-      }
-   );
+         }
+      );
+   });
 };
 
 export const SurveyPage = {
@@ -148,11 +156,9 @@ export const SurveyAnswers = {
       if (correctAnswer !== undefined) {
          data['correctAnswer'] = correctAnswer;
       }
-
       if (typeof responseData !== 'undefined') {
-         countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue);
+         await countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue);
       }
-
       return new Promise((resolve, reject) => {
          firestore
             .collection('surveys')
@@ -230,19 +236,31 @@ export const SurveyAnswers = {
                switch (operation) {
                   case 'onlyCount':
                      Object.keys(result).map((item) => {
-                        result[item] = [result[item]];
+                        if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                           if (parseInt(item) >= 0) {
+                              result[item] = [result[item]];
+                           }
+                        }
                      });
 
                      break;
 
                   case 'participationPercentage':
                      Object.keys(result).map((item) => {
-                        total = total + result[item];
+                        if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                           if (parseInt(item) >= 0) {
+                              total = total + result[item];
+                           }
+                        }
                      });
 
                      Object.keys(result).map((item) => {
-                        const calcPercentage = Math.round((result[item] / total) * 100);
-                        result[item] = [result[item], calcPercentage];
+                        if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                           if (parseInt(item) >= 0) {
+                              const calcPercentage = Math.round((result[item] / total) * 100);
+                              result[item] = [result[item], calcPercentage];
+                           }
+                        }
                      });
 
                      break;
