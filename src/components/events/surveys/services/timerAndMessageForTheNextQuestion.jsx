@@ -31,8 +31,8 @@ function TimerAndMessageForTheNextQuestion(
       mensaje.subTitle = secondsToGo > 0 ? mensaje_espera + ' ' + secondsToGo : mensaje_congelado;
       setFeedbackMessage(mensaje);
 
-      if (secondsToGo <= 0 && freezeGame === "false") {
-         setShowOrHideSurvey(true)
+      if (secondsToGo <= 0 && (freezeGame === false || freezeGame === 'false')) {
+         setShowOrHideSurvey(true);
          clearInterval(timer);
          setShowMessageOnComplete(false);
          setFeedbackMessage({});
