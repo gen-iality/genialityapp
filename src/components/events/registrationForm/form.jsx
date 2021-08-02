@@ -574,7 +574,7 @@ export default ({
   });
 
   return (    
-    <>  {console.log("RENDER")}  
+    <>   
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
           <Card
@@ -601,6 +601,7 @@ export default ({
               onFinishFailed={showGeneralMessage}
               onValuesChange={valuesChange}>
               {renderForm()}
+             
 
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
@@ -635,6 +636,10 @@ export default ({
                 </Col>
               </Row>
             </Form>
+
+            <div id="afrus-container-form" style={{height:'500px'}} data-form="Zm9ybS0yMTU2LW9yZ2FuaXphdGlvbi0xNDYx"></div>
+           
+            
           </Card>
         ) : (
           <Card>

@@ -228,7 +228,7 @@ class TicketsForm extends Component {
   render() {
     return (
       <>
-        <UserRegistration extraFields={[]}  />
+       <UserRegistration extraFields={[]}  />   
       </>
     );
   }
