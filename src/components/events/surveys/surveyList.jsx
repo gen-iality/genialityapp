@@ -30,9 +30,7 @@ function SurveyList(props) {
       listOfEventSurveys,
       loadingSurveys,
    } = props;
-   console.log("10. 1  ", surveyStatusProgress)
-   console.log("10. 2  ", listOfEventSurveys)
-   console.log("10. 3  ", loadingSurveys)
+
    const currentUser = UseCurrentUser();
 
    const handleClick = (currentSurvey, status) => {
