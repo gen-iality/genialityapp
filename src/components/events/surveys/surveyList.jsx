@@ -30,10 +30,10 @@ function SurveyList(props) {
       listOfEventSurveys,
       loadingSurveys,
    } = props;
-
+   console.log("10. 1  ", surveyStatusProgress)
+   console.log("10. 2  ", listOfEventSurveys)
+   console.log("10. 3  ", loadingSurveys)
    const currentUser = UseCurrentUser();
-
-   const [reloadNotification, setReloadNotification] = useState(true);
 
    const handleClick = (currentSurvey, status) => {
       if (activity !== null && currentSurvey.isOpened === 'true') {
@@ -47,29 +47,9 @@ function SurveyList(props) {
       setCurrentSurvey(currentSurvey);
    };
 
-   useEffect(() => {
-      if (listOfEventSurveys[1]?.length >= 1) {
-         setNotification({
-            message: 'Encuestas abiertas',
-            description: listOfEventSurveys[1].name,
-            type: 'survey',
-         });
-         if (viewNotification.type !== null) {
-            notifications(setNotification, viewNotification);
-            setNotification({
-               message: null,
-               type: null,
-            });
-         }
-         if (viewNotification.type === null) {
-            setReloadNotification(!reloadNotification);
-         }
-      }
-   }, [listOfEventSurveys, reloadNotification]);
-
    return (
       <SurveyCard
-         publishedSurveys={listOfEventSurveys[0]}
+         publishedSurveys={listOfEventSurveys}
          surveyStatusProgress={surveyStatusProgress}
          loadingSurveys={loadingSurveys}
          currentUser={currentUser}

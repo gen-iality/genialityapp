@@ -788,7 +788,12 @@ let AgendaActividadDetalle = (props) => {
                       </p>
                     </>
                   }>
-                  {props.currentSurvey === null ? <SurveyList eventSurveys={props.eventSurveys} /> : <SurveyDetail />}
+                  {props.currentSurvey === null ? <SurveyList 
+                  eventSurveys={props.eventSurveys}
+                  surveyStatusProgress={props.surveyStatusProgress}
+                  listOfEventSurveys={props.listOfEventSurveys}
+                  loadingSurveys={props.loadingSurveys}
+                   /> : <SurveyDetail />}
                 </TabPane>
               )}
               {props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (

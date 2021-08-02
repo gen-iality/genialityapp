@@ -30,18 +30,16 @@ export function listenSurveysData(
          : null;
          if (querySnapshot.docChanges().length > 0) {
             const surveyData = querySnapshot.docChanges()[0].doc.data()
-            // if(surveyData.isPublished === "true" && surveyData.isOpened === "true"){
-            // }
-            visualizarEncuesta(currentSurvey);
+            if(surveyData.isPublished === "true" && surveyData.isOpened === "true"){
+               visualizarEncuesta(currentSurvey);
+            }
             // console.log("10. ",querySnapshot.docChanges()[0].doc.data());
          }
          const publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser);
 
          setListOfEventSurveys(() => {
             if (publishedSurveys) {
-               // const openSurveys = currentSurvey.filter((open) => open.isOpened === true || open.isOpened === 'true');
-
-               return [publishedSurveys, currentSurvey];
+               return publishedSurveys;
             }
          });
 
