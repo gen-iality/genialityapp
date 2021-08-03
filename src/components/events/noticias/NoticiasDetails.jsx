@@ -43,12 +43,18 @@ const NoticiasDetails = ({ setVirtualConference, match,setTopBanner  }) => {
       {noticia && (
         <Col style={{ padding: '30px 100px' }}>
           {/* <Meta title={noticia && noticia.description_short} description={noticia && noticia.description_complete} /> */}
-          <Row style={{ marginTop: 30 }} justify={'end'}>
+          <Space direction='vertical'>
+          <div style={{textAlign:'center'}}>
+            <h1 style={{fontSize:'2vw', fontWeight:'700', marginBottom:'3px'}}>{noticia && noticia.title}</h1>    
+            <span>{noticia && noticia.time}  |  Actualizado: {noticia && noticia.updated_at}</span>
+          </div>
+          {/* <Row style={{ marginTop: 30 }} justify={'end'}>
             Actualizado: {noticia && noticia.updated_at}
-          </Row>
+          </Row> */}
           <Card
-            title={noticia && noticia.title}
-            extra={noticia && noticia.time}
+            // title={noticia && noticia.title}
+            // extra={noticia && noticia.time}
+            bordered={false}
             cover={
               noticia &&
               (noticia.linkYoutube === null || noticia.linkYoutube === '') && (
@@ -80,9 +86,11 @@ const NoticiasDetails = ({ setVirtualConference, match,setTopBanner  }) => {
               </Space>
             </div>
           </Card>
+          </Space>
+          <NoticiaList size={3} />
         </Col>
       )}
-      <NoticiaList size={3} />
+      
     </>
   );
 };
