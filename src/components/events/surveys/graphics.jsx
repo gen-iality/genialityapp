@@ -28,6 +28,7 @@ class Graphics extends Component {
       usersRegistered: 0,
       titleQuestion: '',
       isMobile: window.screen.width < 800 ? true : false, // determina el tamaño del dispositivo para saber si es mobile o no
+      isTablet: window.screen.width < 1020 ,
       dataVotos:[],
       totalUser: 0 ,
       totalVotosUser: 0,
@@ -60,7 +61,7 @@ class Graphics extends Component {
     const response = await SurveysApi.getOne(eventId, idSurvey);
     const usersRegistered = await UsersApi.getAll(this.props.eventId);
     let totalUsersRegistered = 0;
-   
+
     //Se realiza sumatoria de usuarios checkeados para realizar calculo de porcentaje
     for (let i = 0; usersRegistered.data.length > i; i++) {
       if (usersRegistered.data[i].checkedin_at) {
@@ -81,7 +82,7 @@ class Graphics extends Component {
     let { horizontalBar, ChartPie, verticalBar } = graphicsFrame;
     const { operation } = this.props;
 
-    let graphyType = this.state.dataSurvey.graphyType 
+    let graphyType = this.state.dataSurvey.graphyType
     let graphy = graphyType === ChartPie.type || window.screen.width <= 800 ? ChartPie : graphyType === horizontalBar.indexAxis ?  horizontalBar : verticalBar
 
     let totalPercentResponse = {};
@@ -121,15 +122,15 @@ class Graphics extends Component {
               : '0 Votos'
           break;
       }
-      porcentaj_answer = answer_count[a][1] 
+      porcentaj_answer = answer_count[a][1]
 
       list.push({
         voto: answer_count[a][0],
         porcentaje: answer_count[a][1],
         answer:options.choices[a],
-        option:(options.choices[a].length == 2 ) ? options.choices[a]: alphabet[a],
+        option:(options.choices[a] == 'SI' || options.choices[a] == 'si'  ) ? options.choices[a]: alphabet[a],
         color:colorB
-        // option:options.choices[a].length == 1 ? options.choices[a] : 
+        // option:options.choices[a].length == 1 ? options.choices[a] :
         // options.choices[a].length == 2 ? options.choices[a] : 'text',
       });
       totalVotosUsuarios = totalVotosUsuarios + answer_count[a][0];
@@ -259,12 +260,12 @@ class Graphics extends Component {
                 textAlign:'left',
                 boxWidth:'50'
               },
-             
-            }, 
-            maxWidth:'300',
-            position:'left',
+
+            },
+            maxWidth:'250',
+            position:this.state.isMobile ?'top':'left',
         },
-       
+
         },
         scales: {
           y: [
@@ -336,9 +337,9 @@ class Graphics extends Component {
     const { Paragraph, Text } = Typography;
     const { surveyLabel } = this.props;
     const Stylepie = {
-      paddingLeft:'300px', 
-      paddingRight:'300px', 
-      paddingTop:'0px', 
+      paddingLeft:'300px',
+      paddingRight:'300px',
+      paddingTop:'0px',
       paddingBottom:'0px'
     }
 
@@ -362,11 +363,13 @@ class Graphics extends Component {
             </div>
             <strong style={{ fontSize:'16px' }}>{titleQuestion}</strong>
             {/* esta validacion es para que tomo los estilos la torta */}
-            {/* 
+            {/*
              */}
             <Card bodyStyle={ {padding:'0px'}} >
               <Row justify='center'>
-              <canvas  id='chart' width='800' height='500'></canvas>
+              <canvas  id='chart' width='600' height='400'
+              // style={{width:'500px', height:'700px'}}
+              ></canvas>
               </Row>
             </Card>
 
@@ -377,9 +380,9 @@ class Graphics extends Component {
               onChange={this.setCurrentPage}
             />
           </Card>
-          <br /> 
+          <br />
           <Row>
-           { dataVotos.map((votos, key)=>( 
+           { dataVotos.map((votos, key)=>(
              <>
               <br />
               <Col key={key} xs={24} sm={24} md={12} lg={12} xl={8} xxl={8} >
@@ -394,23 +397,23 @@ class Graphics extends Component {
                   <div style={{marginLeft:'12px', marginRight:'12px', fontWeight:'600', marginTop:'4px'}}>
                     <div  style={{fontSize:'14px', fontWeight:'600'}}>
                          <span>{votos.voto} Voto(s)</span>
-                         <span style={{float:'right', fontSize:'16px'}}>{votos.porcentaje} % </span>      
+                         <span style={{float:'right', fontSize:'16px'}}>{votos.porcentaje} % </span>
                     </div>
                      <div>
                     <Paragraph style={{color:'gray '}} ellipsis={true && { rows: 2, expandable: true, symbol: 'more' }}>
                       {votos.answer}
-                    </Paragraph> 
+                    </Paragraph>
                     </div>
                   </div>
                 </Col>
               </Row>
-            </div> </Col> 
+            </div> </Col>
             </>
            ))
           }
             <br />
             <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8}>
-            <div style={{height:'76px', width:'320px', borderRadius:'6px', boxShadow:'0px 4px 4px 0px #00000040'}}>  
+            <div style={{height:'76px', width:'320px', borderRadius:'6px', boxShadow:'0px 4px 4px 0px #00000040'}}>
               <Row>
                 <Col span={8}>
                   <div  style={{height:'76px', width:'100%', backgroundColor:'#9e9e9e', borderRadius:'4px 0px 0px 4px'}}>
@@ -426,9 +429,9 @@ class Graphics extends Component {
                   </div>
                 </Col>
               </Row>
-            </div> 
-             </Col> 
-          </Row> 
+            </div>
+             </Col>
+          </Row>
         </>
       );
 
