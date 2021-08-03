@@ -211,6 +211,7 @@ class triviaEdit extends Component {
     if(isValid){
       message.loading({ content: 'Actualizando información', key: 'updating' });
       const data = {
+        graphyType: this.state.graphyType,
         survey: this.state.survey,
         show_horizontal_bar: this.state.show_horizontal_bar === 'true' ? true : false,
         allow_vote_value_per_user: this.state.allow_vote_value_per_user,
@@ -438,7 +439,7 @@ class triviaEdit extends Component {
       hasMinimumScore,
       minimumScore,
       isGlobal
-    } = this.state;
+    } = this.state;console.log("10. this.state.graphyType", this.state.graphyType)
     const { Option } = Select;
     const columns = [
       {
