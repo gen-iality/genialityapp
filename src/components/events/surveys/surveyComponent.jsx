@@ -13,7 +13,7 @@ import HelpFiftyFifty from './services/helpFiftyFifty';
 import MessageWhenCompletingSurvey from './services/messageWhenCompletingSurvey';
 import RealTimeSurveyListening from './services/realTimeSurveyListening';
 import TimeLimitPerQuestion from './services/timeLimitPerQuestion';
-import SetCurrentUserSurveyStatus from './services/SetCurrentUserSurveyStatus';
+import SetCurrentUserSurveyStatus from './services/setCurrentUserSurveyStatus';
 
 function SurveyComponent(props) {
    const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;

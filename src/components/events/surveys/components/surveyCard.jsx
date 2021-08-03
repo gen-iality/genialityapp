@@ -66,7 +66,7 @@ function SurveyCard(props) {
                                        ) : surveyStatusProgress[survey._id].surveyCompleted === 'completed' ? (
                                           <Col style={{ marginBottom: '3px' }}>
                                              <Tag icon={<CheckCircleOutlined />} color='success'>
-                                                Completado
+                                                Completada
                                              </Tag>
                                           </Col>
                                        ) : (
@@ -96,10 +96,10 @@ function SurveyCard(props) {
                                     <div>
                                        <Button
                                           type={
-                                             survey.isOpened === 'true' &&
-                                             surveyStatusProgress &&
-                                             surveyStatusProgress[survey._id] &&
-                                             surveyStatusProgress[survey._id].surveyCompleted === 'completed'
+                                             (surveyStatusProgress &&
+                                                surveyStatusProgress[survey._id] &&
+                                                surveyStatusProgress[survey._id].surveyCompleted === 'completed') ||
+                                             survey.isOpened === 'false'
                                                 ? ' ghost'
                                                 : 'primary'
                                           }
@@ -112,10 +112,10 @@ function SurveyCard(props) {
                                                 ? handleClick(survey, 'results')
                                                 : handleClick(survey);
                                           }}>
-                                          {survey.isOpened === 'true' &&
-                                          surveyStatusProgress &&
-                                          surveyStatusProgress[survey._id] &&
-                                          surveyStatusProgress[survey._id].surveyCompleted === 'completed'
+                                          {(surveyStatusProgress &&
+                                             surveyStatusProgress[survey._id] &&
+                                             surveyStatusProgress[survey._id].surveyCompleted === 'completed') ||
+                                          survey.isOpened === 'false'
                                              ? 'Resultados'
                                              : 'Ir a Encuesta'}
                                        </Button>
