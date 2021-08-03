@@ -142,7 +142,7 @@ const NoticiasList = ({ setVirtualConference, match,size }) => {
               </Col>
             </>
           ))}
-         {size && <Button block onClick={viewAll} style={{fontSize:'20px', height:'auto'}}>{ !viewMenos ?'Ver más':'Ver menos'}</Button>}
+         {size && <Button type='primary' block onClick={viewAll} style={{fontSize:'18px', height:'auto'}}>{ !viewMenos ?'Ver más':'Ver menos'}</Button>}
       </Row>
     </>
   );

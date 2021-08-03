@@ -230,7 +230,7 @@ class Graphics extends Component {
       */
 
         graphy.options = {
-        responsive: true,
+        responsive:this.state.isMobile || this.state.dataSurvey.graphyType !== ChartPie.type ? true : false,
         title: {
           fontSize: 16,
           display: true,
@@ -256,9 +256,12 @@ class Graphics extends Component {
               font: {
                 size:  this.state.isMobile ? '12':'18',
                 family: "'Montserrat', sans-serif", // para probar si afecta la fuente cambiar Montserrat por Papyrus
-                textAlign:'left'
+                textAlign:'left',
+                boxWidth:'50'
               },
-            },
+             
+            }, 
+            maxWidth:'300',
             position:'left',
         },
        
@@ -358,8 +361,13 @@ class Graphics extends Component {
               )}
             </div>
             <strong style={{ fontSize:'16px' }}>{titleQuestion}</strong>
-            <Card bodyStyle={this.state.dataSurvey.graphyType === ChartPie.type ? Stylepie : {padding:'0px'}} >
-              <canvas  id='chart'></canvas>
+            {/* esta validacion es para que tomo los estilos la torta */}
+            {/* 
+             */}
+            <Card bodyStyle={ {padding:'0px'}} >
+              <Row justify='center'>
+              <canvas  id='chart' width='800' height='500'></canvas>
+              </Row>
             </Card>
 
             <br />
