@@ -3,7 +3,6 @@ import { Layout, Button, Drawer, Row, Space, Tooltip, Col, Spin, List } from 'an
 import { ArrowRightOutlined, UsergroupAddOutlined, CommentOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
 import SocialZone from '../../socialZone/socialZone';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
-import { setCurrentSurvey, setSurveyResult } from '../../../redux/survey/actions';
 import MenuRigth from './Menus/MenuRigth';
 import { connect } from 'react-redux';
 import Avatar from 'antd/lib/avatar/avatar';
@@ -12,60 +11,19 @@ import { formatDataToString } from '../../../helpers/utils';
 const { Sider } = Layout;
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
-import { listenSurveysData } from '../../../helpers/helperEvent';
-import InitSurveysCompletedListener from '../surveys/services/initSurveyCompletedListener';
 
 const EventSectionMenuRigth = (props) => {
    const [isCollapsed, setisCollapsed] = useState(true);
    const [visiblePerfil, setVisiblePerfil] = useState(true);
    const [userPerfil, setUserPerfil] = useState(true);
    const [propertiesUserPerfil, setPropertiesUserPerfil] = useState(null);
-   const [surveyStatusProgress, setSurveyStatusProgress] = useState({});
-   /** listado de encuestas por actividad */
-   const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
-   /** loader para el listado de encuestas */
-   const [loadingSurveys, setLoadingSurveys] = useState(true);
    let [optionselected, setOptionselected] = useState(1);
    let cEvent = UseEventContext();
    let cUser = UseCurrentUser();
 
-   const { activity, setSurveyResult, setCurrentSurvey } = props;
-   const eventId = cEvent.value._id;
-
    function handleCollapsed() {
       setisCollapsed(!isCollapsed);
    }
-
-   /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
-   function visualizarEncuesta(survey) {
-      if (survey && survey.isOpened === 'true' && survey !== null) {
-         if (activity !== null && survey.isOpened === 'true') {
-            setSurveyResult('view');
-         } else if (activity !== null && survey.isOpened === 'false') {
-            setSurveyResult('results');
-         }
-         if (status === 'results') {
-            setSurveyResult('results');
-         }
-         setCurrentSurvey(survey);
-      } else {
-         setCurrentSurvey(survey);
-         setSurveyResult('closedSurvey');
-      }
-   }
-
-   /** Listener que permite obtener la data del estado de las encuestas, "abierto, cerrado, en progreso" */
-   useEffect(() => {
-      const unSuscribe = InitSurveysCompletedListener(cUser, setSurveyStatusProgress);
-      return unSuscribe;
-   }, []);
-
-   /** Listener para obtener todas las encuestas por actividad */
-   useEffect(() => {
-      if (activity) {
-         listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, activity, cUser, visualizarEncuesta);
-      }
-   }, [activity]);
 
    return (
       <Sider
@@ -103,9 +61,9 @@ const EventSectionMenuRigth = (props) => {
                         notNewMessages={props.notNewMessage}
                         tabselected={props.tabselected}
                         settabselected={props.settabselected}
-                        surveyStatusProgress={surveyStatusProgress}
-                        listOfEventSurveys={listOfEventSurveys}
-                        loadingSurveys={loadingSurveys}
+                        surveyStatusProgress={props.surveyStatusProgress}
+                        listOfEventSurveys={props.listOfEventSurveys}
+                        loadingSurveys={props.loadingSurveys}
                      />
                   </>
                )}
@@ -216,13 +174,10 @@ const EventSectionMenuRigth = (props) => {
 };
 const mapStateToProps = (state) => ({
    viewPerfil: state.viewPerfilReducer.view,
-   activity: state.stage.data.currentActivity,
 });
 
 const mapDispatchToProps = {
    setViewPerfil,
-   setCurrentSurvey,
-   setSurveyResult,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventSectionMenuRigth);

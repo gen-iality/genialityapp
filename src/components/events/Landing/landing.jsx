@@ -15,9 +15,15 @@ import EventSectionMenuRigth from './EventSectionMenuRigth';
 import MenuTablets from './Menus/MenuTablets';
 import MenuTabletsSocialZone from './Menus/MenuTabletsSocialZone';
 
+/** Functions */
+import { listenSurveysData } from '../../../helpers/helperEvent';
+import InitSurveysCompletedListener from '../surveys/services/initSurveyCompletedListener';
+
 /** Firebase */
 import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
+/** redux surveys */
+import { setCurrentSurvey, setSurveyResult } from '../../../redux/survey/actions';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -32,9 +38,15 @@ const Landing = (props) => {
 
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
   let [totalNewMessages, settotalnewmessages] = useState(0);
-  let { currentActivity, tabs } = props;
+  let { currentActivity, tabs, setCurrentSurvey, setSurveyResult, } = props;
   const [tabselected, settabselected] = useState('1');
-
+   /** listado de encuestas por actividad */
+   const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
+   /** loader para el listado de encuestas */
+   const [loadingSurveys, setLoadingSurveys] = useState(true);
+   /** estado de las encuestas, "abierto, cerrado, en progreso  */
+   const [surveyStatusProgress, setSurveyStatusProgress] = useState({});
+   const eventId = cEventContext?.value?._id;
 
   useEffect(() => {
 
@@ -74,6 +86,39 @@ const Landing = (props) => {
     settotalnewmessages(0);
   };
 
+     /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
+     function visualizarEncuesta(survey) {
+      if (survey && survey.isOpened === 'true' && survey !== null) {
+         if (currentActivity !== null && survey.isOpened === 'true') {
+            setSurveyResult('view');
+         } else if (currentActivity !== null && survey.isOpened === 'false') {
+            setSurveyResult('results');
+         }
+         if (status === 'results') {
+            setSurveyResult('results');
+         }
+         setCurrentSurvey(survey);
+      } else {
+         setCurrentSurvey(survey);
+         setSurveyResult('closedSurvey');
+      }
+   }
+
+   /** Listener que permite obtener la data del estado de las encuestas, "abierto, cerrado, en progreso" */
+   useEffect(() => {
+     if(cUser.value !== null){
+       const unSuscribe = InitSurveysCompletedListener(cUser, setSurveyStatusProgress);
+       return unSuscribe;
+     }
+   }, [cUser]);
+
+   /** Listener para obtener todas las encuestas por actividad */
+   useEffect(() => {
+      if (currentActivity) {
+         listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, currentActivity, cUser, visualizarEncuesta);
+      }
+   }, [currentActivity]);
+
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
 
 
@@ -88,6 +133,9 @@ const Landing = (props) => {
             <EventSectionRoutes
               generaltabs={generaltabs}
               currentActivity={currentActivity}
+              surveyStatusProgress={surveyStatusProgress}
+              listOfEventSurveys={listOfEventSurveys}
+              loadingSurveys={loadingSurveys}
             />
           </Content>
         </Layout>
@@ -99,6 +147,9 @@ const Landing = (props) => {
           tabs={tabs}
           tabselected={tabselected}
           settabselected={settabselected}
+          surveyStatusProgress={surveyStatusProgress}
+          listOfEventSurveys={listOfEventSurveys}
+          loadingSurveys={loadingSurveys}
         />
         <MenuTabletsSocialZone
           totalNewMessages={totalNewMessages}
@@ -106,6 +157,9 @@ const Landing = (props) => {
           notNewMessage={notNewMessage}
           tabselected={tabselected}
           settabselected={settabselected}
+          surveyStatusProgress={surveyStatusProgress}
+          listOfEventSurveys={listOfEventSurveys}
+          loadingSurveys={loadingSurveys}
         />
       </Layout>
     </>
@@ -118,5 +172,8 @@ const mapStateToProps = (state) => ({
   view: state.topBannerReducer.view,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  setCurrentSurvey,
+  setSurveyResult,
+};
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);

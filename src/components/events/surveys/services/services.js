@@ -71,7 +71,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
                      position.forEach((element) => {
                         if (typeof element === 'number') {
                            if (element >= 0) {
-                              const new_count = doc.data()[element] + vote;
+                              const new_count = doc.data()[element] ? doc.data()[element] + vote : vote;
                               t.update(shard_ref, { [element]: new_count });
                               resolve(true);
                            }
@@ -80,7 +80,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
                   } else {
                      if (typeof position === 'number') {
                         if (position >= 0) {
-                           const new_count = doc.data()[position] + vote;
+                           const new_count = doc.data()[position] + vote ? doc.data()[position] + vote : vote;
                            t.update(shard_ref, { [position]: new_count });
                            resolve(true);
                         }
