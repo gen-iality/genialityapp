@@ -92,7 +92,7 @@ class NewEvent extends Component {
         toolbarDefaultBg: '#FFFFFF',
         brandDark: '#FFFFFF',
         brandLight: '#FFFFFF',
-        textMenu: '#FFFFFF',
+        textMenu: '#00000',
         activeText: '#FFFFFF',
         bgButtonsEvent: '#FFFFFF',
         banner_image_email: null,
