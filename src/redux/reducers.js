@@ -12,6 +12,7 @@ import notificationsNetReducer from './notifyNetworking/reducers';
 import topBannerReducer from './topBanner/reducers';
 import virtualConferenceReducer from './virtualconference/reducers';
 import viewPerfilReducer from './viewPerfil/reducers';
+import spaceNetworkingReducer from './networking/reducers'
 
 export default {
   categories,
@@ -27,5 +28,6 @@ export default {
   notificationsNetReducer,
   topBannerReducer,
   virtualConferenceReducer,
-  viewPerfilReducer
+  viewPerfilReducer,
+  spaceNetworkingReducer
 };
