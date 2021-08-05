@@ -42,7 +42,9 @@ function Companylist(props) {
               <GlobalOutlined />
               <Text>
                 <a rel='noreferrer' href={props.pagweb} target='_blank'>
-                  {props.pagweb}
+                  <Text style={{ width: '50vw' }} ellipsis={true}>
+                    {props.pagweb}
+                  </Text>
                 </a>
               </Text>
             </Space>
@@ -124,7 +126,9 @@ function Companylist(props) {
                           window.open(`${props.pagweb}`, '_blank');
                         }}
                         target='_blank'>
-                        {props.pagweb}
+                        <Text style={{ width: '20vw' }} ellipsis={true}>
+                          {props.pagweb}
+                        </Text>
                       </a>
                     </span>
                   )}
