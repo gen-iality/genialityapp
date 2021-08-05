@@ -80,8 +80,8 @@ export const getEventCompaniesStandTypes = (eventId) => {
         if (isNonEmptyArray(standTypes)) {
           resolve(standTypes);
         } else {
-          createEventDefaultStandTypes(eventId);
-          reject();
+         // createEventDefaultStandTypes(eventId);
+         resolve([])
         }
       } catch (error) {
         reject(error);
@@ -147,6 +147,8 @@ export const createEventCompany = (eventId, data,tamanio) => {
               try { 
                 if(tamanio){
                   payload={...payload,index:tamanio+1}   
+                }else{
+                  payload={...payload,index:1}   
                 }             
                           
              

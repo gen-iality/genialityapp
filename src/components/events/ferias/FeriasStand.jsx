@@ -29,7 +29,7 @@ function FeriasStand (props) {
           position:'absolute', 
           left:'50%', 
           transform:'translateX(-50%)', 
-          top:'2px',
+          top:'20px',
           backgroundColor:'white'}}>
           <Badge.Ribbon text={props.text} color={props.color}>
             <img
@@ -43,11 +43,11 @@ function FeriasStand (props) {
             /> </Badge.Ribbon>  
         </div>
             <img
-                src={'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Stand_ferias%2Fstand.png?alt=media&token=4de289cb-5f22-4c9f-81b1-300df0815490'}
+                src={'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/evius%2FViews%2F2021-08-04.png?alt=media&token=fc7df0fa-1b18-406f-8d0a-59bf030a5372'}
                 style={{
                 width: '100%',
                 border:`10px solid white`, borderRadius:'12px',
-                height:'70vh',
+                height:'35vh',
                 objectFit:'contain'
                 }}
             />  
