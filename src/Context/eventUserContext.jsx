@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { EventsApi } from '../helpers/request';
+import { EventsApi, getCurrentUser } from '../helpers/request';
 import { GetIdEvent } from '../helpers/utils';
 import { useParams } from 'react-router-dom';
 
@@ -14,8 +14,8 @@ export function CurrentUserEventProvider({ children }) {
 
   useEffect(() => {
     if (!event_id) return;
-    async function fetchEvent() {
-      const eventUserGlobal = await EventsApi.getOne(event_id);
+    async function fetchEvent() {      
+      const eventUserGlobal = await EventsApi.getcurrentUserEventUser(event_id);
       setuserEvent({ status: 'LOADED', value: eventUserGlobal });
     }
     fetchEvent();
