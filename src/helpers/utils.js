@@ -141,7 +141,7 @@ export const sweetAlert = {
     });
   },
 
-  hideLoading: () => modal || modal.close(),
+  hideLoading: () => Modal.destroyAll(),
   twoButton: (title, type, showCancelButton, confirmButtonText, cb) =>
     Modal.confirm({
       title: title,
