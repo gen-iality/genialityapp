@@ -4,7 +4,9 @@ import CreatePost from './createPost';
 import ListWall from './listWall';
 import { firestore } from '../../helpers/firebase';
 import { saveFirebase } from './helpers';
-import withContext from '../../Context/withContext'
+import withContext from '../../Context/withContext';
+import { setVirtualConference } from '../../redux/virtualconference/actions';
+import { connect } from 'react-redux';
 
 class Wall extends Component {
   constructor(props) {
@@ -17,9 +19,14 @@ class Wall extends Component {
 
   componentDidMount() {
     this.getPost();
+    this.props.setVirtualConference(false);
     if (this.props.cEventUser.value) {
       this.setState({ user: this.props.cEventUser.value });
     }
+  }
+
+  componentWillUnmount(){
+    this.props.setVirtualConference(true);
   }
 
   getPost = async () => {
@@ -130,5 +137,9 @@ class Wall extends Component {
   }
 }
 
+const mapDispatchToProps = {
+  setVirtualConference  
+};
+
 let WallWithContext = withContext(Wall)
-export default WallWithContext;
+export default  connect(null,mapDispatchToProps) (WallWithContext);

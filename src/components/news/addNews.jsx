@@ -93,7 +93,7 @@ function AddNews(props) {
     if (descriptionShort.length < 600) {
       setDescriptionShort(e);
     } else {
-      alert('NO PUEDE ESCRIBIR MAS');
+      //alert('NO PUEDE ESCRIBIR MAS');
     }
   };
 
@@ -101,7 +101,7 @@ function AddNews(props) {
     if (description.length < 10000) {
       setDescription(e);
     } else {
-      alert('NO PUEDE ESCRIBIR MAS');
+      //alert('NO PUEDE ESCRIBIR MAS');
     }
   };
   const isUrl = string => {

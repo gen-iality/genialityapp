@@ -212,6 +212,7 @@ class triviaEdit extends Component {
       message.loading({ content: 'Actualizando información', key: 'updating' });
       const data = {
         survey: this.state.survey,
+        
         show_horizontal_bar: this.state.show_horizontal_bar === 'true' ? true : false,
         allow_vote_value_per_user: this.state.allow_vote_value_per_user,
         activity_id: this.state.activity_id,
