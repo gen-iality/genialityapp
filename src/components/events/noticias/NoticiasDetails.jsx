@@ -6,7 +6,7 @@ import withContext from '../../../Context/withContext';
 import { withRouter } from 'react-router';
 import { useState } from 'react';
 import { NewsFeed } from '../../../helpers/request';
-import { Card, Row, Spin, Col, Space } from 'antd';
+import { Card, Row, Spin, Col, Space, Tag } from 'antd';
 import NoticiaList from './NoticiasList';
 
 
@@ -87,6 +87,7 @@ const NoticiasDetails = ({ setVirtualConference, match,setTopBanner  }) => {
             </div>
           </Card>
           </Space>
+          <Tag color="#87d068">Ver mas Noticias</Tag>
           <NoticiaList size={3} />
         </Col>
       )}
