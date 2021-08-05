@@ -30,7 +30,7 @@ function Empresas({ event, match }) {
         newCompanies= newCompanies.sort(function(a, b) {
          return a.index-b.index;
         });
-       console.log("EJECUTADO EFECCCCT")
+       //console.log("EJECUTADO EFECCCCT")
         setCompanyList(newCompanies)
     }  
   },[companies])

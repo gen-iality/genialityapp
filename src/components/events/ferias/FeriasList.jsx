@@ -1,79 +1,103 @@
-import { Empty, Spin, Col, Row, Tag, Badge} from 'antd';
-import React from 'react';
-import Companylist from './companyList';
-import { useEffect } from 'react';
-import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
-import MiniBanner from './MiniBanner';
-import { useState } from 'react';
-import { connect } from 'react-redux';
-import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import FeriaStand from './FeriasStand'
-import {setTopBanner} from '../../../redux/topBanner/actions';
-import { firestore } from '../../../helpers/firebase';
-import withContext from '../../../Context/withContext';
+import { Empty, Spin, Col, Row, Tag, Badge } from "antd";
+import React from "react";
+import Companylist from "./companyList";
+import { useEffect } from "react";
+import useGetEventCompanies from "../../empresas/customHooks/useGetEventCompanies";
+import MiniBanner from "./MiniBanner";
+import { useState } from "react";
+import { connect } from "react-redux";
+import { setVirtualConference } from "../../../redux/virtualconference/actions";
+import FeriaStand from "./FeriasStand";
+import { setTopBanner } from "../../../redux/topBanner/actions";
+import { firestore } from "../../../helpers/firebase";
+import withContext from "../../../Context/withContext";
 
-const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
+const FeriasList = ({
+  event_id,
+  setVirtualConference,
+  setTopBanner,
+  cEvent,
+}) => {
   const [companies, loadingCompanies] = useGetEventCompanies(event_id);
   const [companiesEvent, setCompaniesEvent] = useState([]);
-  const [config,setConfig]=useState(null)
-  const [standsColor,setStandsColor]=useState()
-  const [imageBanner, setBannerImage]=useState()
-  const [typeStand, setTypeStand] = useState()
+  const [config, setConfig] = useState(null);
+  const [standsColor, setStandsColor] = useState();
+  const [imageBanner, setBannerImage] = useState();
+  const [typeStand, setTypeStand] = useState();
   //EFECTO PARA OCULTAR Y MOSTRAR VIRTUAL CONFERENCE
-  useEffect(()=>{
-  setVirtualConference(false);
-  setTopBanner(false);
-  setBannerImage(cEvent.value.banner_image)
-  return ()=>{
-    setVirtualConference(true);
-    setTopBanner(true); 
-  }
-  },[])
+  useEffect(() => {
+    setVirtualConference(false);
+    setTopBanner(false);
+    setBannerImage(cEvent.value.banner_image);
+    return () => {
+      setVirtualConference(true);
+      setTopBanner(true);
+    };
+  }, []);
   useEffect(() => {
     if (!loadingCompanies) {
       firestore
-      .collection('event_companies')
-      .doc(event_id).onSnapshot((resp)=>{
-        let standTypesOptions=resp.data().stand_types;
-        setTypeStand(standTypesOptions)
-        setStandsColor(standTypesOptions)
-        setConfig(resp.data().config)
-        let companiesSort=companies.sort((a,b)=>a.index && b.index  && a.index-b.index)
-        setCompaniesEvent(companiesSort);
-        console.log(companies)
-        console.log(resp.data())
-        console.log(resp.data().config.visualization)
-      })   
-    }    
-
-  }, [loadingCompanies]);
-  const obtenerColor=(stand)=>{
-    let colorList=standsColor.filter((colors)=>colors.label===stand)
-    if(colorList.length>0){
-      return colorList[0].color
+        .collection("event_companies")
+        .doc(event_id)
+        .onSnapshot((resp) => {
+          let standTypesOptions = resp.data().stand_types;
+          setTypeStand(standTypesOptions);
+          setStandsColor(standTypesOptions);
+          setConfig(resp.data().config);
+          let companiesSort = companies.sort(
+            (a, b) => a.index && b.index && a.index - b.index
+          );
+          setCompaniesEvent(companiesSort);
+         // console.log(companies);
+         // console.log(resp.data());
+         // console.log(resp.data().config.visualization);
+        });
     }
+  }, [loadingCompanies]);
+  const obtenerColor = (stand) => {
+    if (standsColor) {
+      let colorList = standsColor.filter((colors) => colors.label === stand);
+      if (colorList.length > 0) {
+        return colorList[0].color;
+      }
+    }
+
     return "#2C2A29";
-  }
-  const obtenertLabel=(stand)=>{ 
-    let labelList= typeStand.filter((colors)=>colors.label===stand)
-   console.log('label----2',labelList)
-   if(labelList.length>0){
-    return labelList[0].label
-  }
-  return "nuevo";
+  };
+  const obtenertLabel = (stand) => {
+    if (typeStand) {
+      let labelList = typeStand.filter((colors) => colors.label === stand);
+      console.log("label----2", labelList);
+      if (labelList.length > 0) {
+        return labelList[0].label;
+      }
+    }
+
+    return "nuevo";
+  };
+
+  const isListVisualization=()=>{
+   if(!config){
+     return true;
+   }else if(config.visualization === "list" || !config.visualization){
+     return true
+   }else{
+     return false
+   }
   }
   return (
     <div>
       <MiniBanner banner={imageBanner} />
-      {companiesEvent.length > 0 && (config.visualization==='list' || !config.visualization)  &&
+      {companiesEvent.length > 0 &&
+        isListVisualization() &&
         companiesEvent.map(
           (company, index) =>
             company.visible && (
               <Companylist
-                key={'companyList' + index}
+                key={"companyList" + index}
                 img={
-                  company.list_image === ''
-                    ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo' // imagen por defecto si no encuentra una imagen guardada
+                  company.list_image === ""
+                    ? "https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo" // imagen por defecto si no encuentra una imagen guardada
                     : company.list_image
                 }
                 eventId={event_id}
@@ -85,40 +109,41 @@ const FeriasList = ({ event_id,setVirtualConference,setTopBanner,cEvent }) => {
                 pagweb={company.webpage}
                 companyId={company.id}
                 colorStand={obtenerColor(company.stand_type)}
-                 text={obtenertLabel(company.stand_type)}
+                text={obtenertLabel(company.stand_type)}
               />
             )
         )}
-       {/*PARA OTRO TIPO DE VISUALIZACION */} 
-       
-       <Row>
-        {companiesEvent.length > 0 && config.visualization==='stand' &&
+      {/*PARA OTRO TIPO DE VISUALIZACION */}
+
+      <Row>
+        {companiesEvent.length > 0 &&
+          !isListVisualization() &&
           companiesEvent.map(
             (company, index) =>
               company.visible && (
-              <Col key={index} sm={24} xs={24} md={12} lg={12} xl={8}xxl={8} >
-              <FeriaStand
-                image={
-                  company.list_image === ''
-                    ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo' // imagen por defecto si no encuentra una imagen guardada
-                    : company.list_image
-                }
-                eventId={event_id}
-                name={company.name}
-                companyId={company.id}
-                color={obtenerColor(company.stand_type)}
-                text={obtenertLabel(company.stand_type)} 
-              />
-              </Col> 
-            
-              ))} 
-        </Row>
+                <Col key={index} sm={24} xs={24} md={12} lg={12} xl={8} xxl={8}>
+                  <FeriaStand
+                    image={
+                      company.list_image === ""
+                        ? "https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo" // imagen por defecto si no encuentra una imagen guardada
+                        : company.list_image
+                    }
+                    eventId={event_id}
+                    name={company.name}
+                    companyId={company.id}
+                    color={obtenerColor(company.stand_type)}
+                    text={obtenertLabel(company.stand_type)}
+                  />
+                </Col>
+              )
+          )}
+      </Row>
       {companiesEvent.length == 0 && <Empty />}
     </div>
   );
 };
 const mapDispatchToProps = {
   setVirtualConference,
-  setTopBanner
+  setTopBanner,
 };
-export default  connect(null,mapDispatchToProps)(withContext(FeriasList)) ;
+export default connect(null, mapDispatchToProps)(withContext(FeriasList));

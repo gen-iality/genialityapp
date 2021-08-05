@@ -36,10 +36,10 @@ function useGetEventCompaniesSocialNetworksOptions(eventId) {
       .catch((error) => {
         console.error(error);
 
-        notification.error({
+      /*  notification.error({
           message: 'Error',
           description: 'Error obteniendo las redes sociales',
-        });
+        });*/
       })
       .finally(() => setLoadingData(false));
   }, [reloadFlag, eventId]);

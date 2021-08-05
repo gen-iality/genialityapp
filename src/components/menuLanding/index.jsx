@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Typography, Select, Card, Input, Button, Col, Row } from 'antd';
+import { Typography, Select, Card, Input, Button, Col, Row, message, Spin } from 'antd';
 import { Actions } from '../../helpers/request';
 import { toast } from 'react-toastify';
 const { Title } = Typography;
@@ -223,6 +223,12 @@ class menuLanding extends Component {
   }
 
   async submit() {
+    
+    const loadingSave=  message.open({
+        key:'loading',
+        type: 'loading',
+        content: <> Por favor espere..</>,        
+      });
     const { itemsMenu } = this.state;
     let menu = this.orderItemsMenu(itemsMenu);
     const newMenu = { itemsMenu: { ...menu } };
@@ -235,6 +241,12 @@ class menuLanding extends Component {
 
     await Actions.put(`api/events/${this.props.event._id}`, newMenu);
     toast.success('Información guardada');
+    message.destroy(loadingSave.key);
+    message.open({
+      type: 'success', 
+      content: <> Información guardada correctamente</>,
+      
+    });
   }
 
   async mapActiveItemsToAvailable(key) {
