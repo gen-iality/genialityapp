@@ -94,11 +94,14 @@ const AttendeList = function(props) {
         renderItem={(item) => (
           <List.Item
             actions={[
-              cUser ? (
+              cUser.value ? (
                 <a
                   key='list-loadmore-edit'
                   onClick={() => {
-                    props.createNewOneToOneChat(cUser.uid, cUser.names, item.iduser, item.names);
+                    props.createNewOneToOneChat(cUser.value.uid, cUser.value.names, item.iduser, item.names);
+                    props.settabselected('1');
+                    props.setCurrentChat(item.iduser, item.name ? item.name : item.names);
+                    props.setchattab('chat2');
                   }}>
                   <Tooltip title={'Chatear'}>
                     <MessageTwoTone style={{ fontSize: '20px' }} />

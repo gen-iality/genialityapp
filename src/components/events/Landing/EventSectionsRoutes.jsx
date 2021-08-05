@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spin } from 'antd';
@@ -19,6 +19,7 @@ import VirtualConference from '../virtualConference';
 import CertificadoLanding from '../../certificados/cerLanding';
 import AgendaActividadDetalle from '../agendaActividadDetalle';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
+import { setSpaceNetworking } from '../../../redux/networking/actions';
 import MyAgendaIndepend from '../../networking/myAgendaIndepend';
 import NetworkingForm from '../../networking';
 import InformativeSection2 from '../informativeSections/informativeSection2';
@@ -28,6 +29,9 @@ import Noticias from '../noticias';
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
 
+  useEffect(() => {
+    console.log('ver social zone', props.viewSocialZoneNetworking);
+  }, []);
   return (
     <>
       {props.viewVirtualconference && <VirtualConference />}
@@ -46,6 +50,7 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/networking`}>
+          
           <NetworkingForm />
         </Route>
 
@@ -58,18 +63,19 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/activity/:activity_id`}>
-          <AgendaActividadDetalle 
-          setVirtualConference={props.setVirtualConference} 
-          surveyStatusProgress={props.surveyStatusProgress}
-          listOfEventSurveys={props.listOfEventSurveys}
-          loadingSurveys={props.loadingSurveys}/>
+          <AgendaActividadDetalle
+            setVirtualConference={props.setVirtualConference}
+            surveyStatusProgress={props.surveyStatusProgress}
+            listOfEventSurveys={props.listOfEventSurveys}
+            loadingSurveys={props.loadingSurveys}
+          />
         </Route>
 
         <Route path={`${path}/speakers`}>
           <SpeakersForm />
         </Route>
         <Route path={`${path}/surveys`}>
-          <SurveyForm  />
+          <SurveyForm />
         </Route>
         <Route path={`${path}/partners`}>
           <Partners />
@@ -120,10 +126,12 @@ const EventSectionRoutes = (props) => {
 
 const mapStateToProps = (state) => ({
   viewVirtualconference: state.virtualConferenceReducer.view,
+  viewSocialZoneNetworking: state.spaceNetworkingReducer.view,
 });
 
 const mapDispatchToProps = {
   setVirtualConference,
+  setSpaceNetworking,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventSectionRoutes);

@@ -38,17 +38,18 @@ const Landing = (props) => {
 
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
   let [totalNewMessages, settotalnewmessages] = useState(0);
-  let { currentActivity, tabs, setCurrentSurvey, setSurveyResult, } = props;
+  let { currentActivity, tabs, setCurrentSurvey, setSurveyResult } = props;
   const [tabselected, settabselected] = useState('1');
-   /** listado de encuestas por actividad */
-   const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
-   /** loader para el listado de encuestas */
-   const [loadingSurveys, setLoadingSurveys] = useState(true);
-   /** estado de las encuestas, "abierto, cerrado, en progreso  */
-   const [surveyStatusProgress, setSurveyStatusProgress] = useState({});
-   const eventId = cEventContext?.value?._id;
+  /** listado de encuestas por actividad */
+  const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
+  /** loader para el listado de encuestas */
+  const [loadingSurveys, setLoadingSurveys] = useState(true);
+  /** estado de las encuestas, "abierto, cerrado, en progreso  */
+  const [surveyStatusProgress, setSurveyStatusProgress] = useState({});
+  const [eventId, seteventId] = useState(null);
 
   useEffect(() => {
+    cEventContext.status === 'LOADED' && seteventId(cEventContext.value._id);
 
     cEventContext.status === 'LOADED' &&
       firestore
@@ -86,50 +87,49 @@ const Landing = (props) => {
     settotalnewmessages(0);
   };
 
-     /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
-     function visualizarEncuesta(survey) {
-      if (survey && survey.isOpened === 'true' && survey !== null) {
-         if (currentActivity !== null && survey.isOpened === 'true') {
-            setSurveyResult('view');
-         } else if (currentActivity !== null && survey.isOpened === 'false') {
-            setSurveyResult('results');
-         }
-         if (status === 'results') {
-            setSurveyResult('results');
-         }
-         setCurrentSurvey(survey);
-      } else {
-         setCurrentSurvey(survey);
-         setSurveyResult('closedSurvey');
+  /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
+  function visualizarEncuesta(survey) {
+    if (survey && survey.isOpened === 'true' && survey !== null) {
+      if (currentActivity !== null && survey.isOpened === 'true') {
+        setSurveyResult('view');
+      } else if (currentActivity !== null && survey.isOpened === 'false') {
+        setSurveyResult('results');
       }
-   }
-
-   /** Listener que permite obtener la data del estado de las encuestas, "abierto, cerrado, en progreso" */
-   useEffect(() => {
-     if(cUser.value !== null){
-       const unSuscribe = InitSurveysCompletedListener(cUser, setSurveyStatusProgress);
-       return unSuscribe;
-     }
-   }, [cUser]);
-
-   /** Listener para obtener todas las encuestas por actividad */
-   useEffect(() => {
-      if (currentActivity) {
-         listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, currentActivity, cUser, visualizarEncuesta);
+      if (status === 'results') {
+        setSurveyResult('results');
       }
-   }, [currentActivity]);
+      setCurrentSurvey(survey);
+    } else {
+      setCurrentSurvey(survey);
+      setSurveyResult('closedSurvey');
+    }
+  }
+
+  /** Listener que permite obtener la data del estado de las encuestas, "abierto, cerrado, en progreso" */
+  useEffect(() => {
+    if (cUser.value !== null) {
+      const unSuscribe = InitSurveysCompletedListener(cUser, setSurveyStatusProgress);
+      return unSuscribe;
+    }
+  }, [cUser]);
+
+  /** Listener para obtener todas las encuestas por actividad */
+  useEffect(() => {
+    if (currentActivity) {
+      listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, currentActivity, cUser, visualizarEncuesta);
+    }
+  }, [currentActivity]);
 
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
-
 
   return (
     <>
       <Layout className='site-layout'>
-        <EventSectionsInnerMenu  />
-        <MenuTablets  />
+        <EventSectionsInnerMenu />
+        <MenuTablets />
         <Layout className='site-layout'>
           <Content className='site-layout-background'>
-            {props.view && <TopBanner  currentActivity={currentActivity} />}
+            {props.view && <TopBanner currentActivity={currentActivity} />}
             <EventSectionRoutes
               generaltabs={generaltabs}
               currentActivity={currentActivity}

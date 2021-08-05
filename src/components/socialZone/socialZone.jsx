@@ -29,7 +29,7 @@ let SocialZone = function(props) {
   const [attendeeList, setAttendeeList] = useState({});
   const attendeeListPresence = useState({});
   const [currentChat, setCurrentChatInner] = useState(null);
-  const [currentChatName, setCurrentChatNameInner] = useState('');
+  const [currentChatName, setCurrentChatNameInner] = useState('ni idea');
   const [availableChats, setavailableChats] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
@@ -39,21 +39,7 @@ let SocialZone = function(props) {
   let [isFiltered, setIsFiltered] = useState(false);
   let busquedaRef = useRef();
 
-  useEffect(() => {
-    // console.log('cUser.value',cUser.value);
-
-    if (cUser.value) {
-      createNewOneToOneChat(
-        cUser.value._id,
-        cUser.value.names || cUser.value.name,
-        cUser.value._id,
-        cUser.value.names || cUser.value.name
-      );
-    }
-  }, [cUser.value]);
-
   let userName = cUser.value ? cUser.value?.names : cUser.value?.name ? cUser.value?.name : '---';
-
 
   let setCurrentChat = (id, chatname) => {
     setCurrentChatInner(id);
@@ -65,8 +51,11 @@ let SocialZone = function(props) {
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
+    console.log('que le mando', idcurrentUser, currentName, idOtherUser, otherUserName);
     let newId = generateUniqueIdFromOtherIds(cUser.value._id, idOtherUser);
     let data = {};
+
+    console.log('newid', newId);
 
     if (!cUser.value._id) return;
     //agregamos una referencia al chat para el usuario actual
@@ -80,6 +69,8 @@ let SocialZone = function(props) {
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
+
+    console.log("como se crea el chgat",data)
     setCurrentChat(newId, otherUserName);
   };
 
@@ -196,7 +187,6 @@ let SocialZone = function(props) {
       });
   }, [cEvent.value]);
 
-
   useEffect(() => {
     if (!cEvent.value || !currentUser) return;
 
@@ -278,7 +268,7 @@ let SocialZone = function(props) {
                 <Badge
                   onClick={() => props.settabselected('1')}
                   size='small'
-                  style={{ minWidth: '10px', height: '10px', padding: '0px',color:"black" }}
+                  style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
                   count={' '}>
                   Chats
                 </Badge>
@@ -305,6 +295,8 @@ let SocialZone = function(props) {
             datamsjlast={datamsjlast}
             generalTabs={props.generalTabs}
             notNewMessages={props.notNewMessages}
+            chattab={props.chattab}
+            setchattab={props.setchattab}
           />
         </TabPane>
       )}
@@ -346,6 +338,7 @@ let SocialZone = function(props) {
                 </Row>
               ) : (
                 <AttendeList
+                  setCurrentChat={setCurrentChat}
                   agendarCita={props.agendarCita}
                   notificacion={props.notificacion}
                   sendFriendship={props.sendFriendship}
@@ -358,6 +351,8 @@ let SocialZone = function(props) {
                   createNewOneToOneChat={createNewOneToOneChat}
                   attendeeList={attendeeList}
                   attendeeListPresence={attendeeListPresence}
+                  settabselected={props.settabselected}
+                  setchattab={props.setchattab}
                 />
               )}
             </div>
@@ -399,10 +394,13 @@ let SocialZone = function(props) {
             </Col>
           </Row>
           {props.currentSurvey === null ? (
-            <SurveyList eventSurveys={props.eventSurveys} publishedSurveys={props.publishedSurveys}
-            surveyStatusProgress={props.surveyStatusProgress}
-            listOfEventSurveys={props.listOfEventSurveys}
-            loadingSurveys={props.loadingSurveys} />
+            <SurveyList
+              eventSurveys={props.eventSurveys}
+              publishedSurveys={props.publishedSurveys}
+              surveyStatusProgress={props.surveyStatusProgress}
+              listOfEventSurveys={props.listOfEventSurveys}
+              loadingSurveys={props.loadingSurveys}
+            />
           ) : (
             <SurveyDetail />
           )}

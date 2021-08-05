@@ -6,7 +6,7 @@ import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { useIntl } from 'react-intl';
 import { TicketsApi, Activity, AgendaApi } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, Input, Alert, Drawer} from 'antd';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, Input, Alert, Drawer } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
@@ -15,7 +15,13 @@ import * as StageActions from '../../redux/stage/actions';
 import * as SurveyActions from '../../redux/survey/actions';
 import Game from './game';
 import EnVivo from '../../EnVivo.svg';
-import { CaretRightOutlined, CheckCircleOutlined, LoadingOutlined, UserOutlined, CloseOutlined } from '@ant-design/icons';
+import {
+  CaretRightOutlined,
+  CheckCircleOutlined,
+  LoadingOutlined,
+  UserOutlined,
+  CloseOutlined,
+} from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 import RankingTrivia from './surveys/rankingTrivia';
@@ -23,6 +29,7 @@ import { listenSurveysData } from '../events/surveys/services/services';
 import { eventUserUtils } from '../../helpers/helperEventUser';
 import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';
+import { setSpaceNetworking } from '../../redux/networking/actions';
 import withContext from '../../Context/withContext';
 
 const { TabPane } = Tabs;
@@ -51,8 +58,7 @@ let AgendaActividadDetalle = (props) => {
   const [email, setEmail] = useState(null);
   const [currentActivity, setcurrentActivity] = useState(null);
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
-  
-  
+
   const configfast = useState({});
 
   const { Title } = Typography;
@@ -61,6 +67,7 @@ let AgendaActividadDetalle = (props) => {
 
   //obtener la actividad por id
   useEffect(() => {
+    console.log('mis props', props);
     async function getActividad() {
       return await AgendaApi.getOne(activity_id, props.cEvent.value._id);
     }
@@ -75,16 +82,18 @@ let AgendaActividadDetalle = (props) => {
     getActividad().then((result) => {
       setcurrentActivity(result);
       orderHost(result.hosts);
-      props.gotoActivity(result)
+      props.gotoActivity(result);
     });
 
     props.setTopBanner(false);
     props.setVirtualConference(false);
+    props.setSpaceNetworking(false);
     return () => {
       props.setTopBanner(true);
       props.setVirtualConference(true);
+      props.setSpaceNetworking(true);
     };
-  }, [activity_id]);
+  }, []);
 
   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
   const [videoStyles, setVideoStyles] = useState(null);
@@ -231,7 +240,6 @@ let AgendaActividadDetalle = (props) => {
   }
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
-
     // console.log("que esta llegando",event_id,activity_id);
     //
     firestore
@@ -304,35 +312,37 @@ let AgendaActividadDetalle = (props) => {
 
   // aquie esta los estados del drawer y el modal
   const [rankingVisible, setRankingVisible] = useState(true);
-  const [width, setWidth ] = useState('70%');
- 
+  const [width, setWidth] = useState('70%');
 
-  const showRanking=()=>{
-    if(window.screen.width >= 768){
-       setWidth('70%')
-       if(rankingVisible == false){
-        setWidth('100%')
-       }{
-        setWidth('70%')
-       }
-    }else{
-      setWidth('100%')
-      if(rankingVisible == false){
-        setWidth('100%')
-       }{
-        setWidth('70%')
-       }
+  const showRanking = () => {
+    if (window.screen.width >= 768) {
+      setWidth('70%');
+      if (rankingVisible == false) {
+        setWidth('100%');
+      }
+      {
+        setWidth('70%');
+      }
+    } else {
+      setWidth('100%');
+      if (rankingVisible == false) {
+        setWidth('100%');
+      }
+      {
+        setWidth('70%');
+      }
     }
-      setRankingVisible(!rankingVisible)
-  }
+    setRankingVisible(!rankingVisible);
+  };
 
-  function onClose () {  // esta funcion desactiva rl drawer
+  function onClose() {
+    // esta funcion desactiva rl drawer
     props.unsetCurrentSurvey();
     props.setMainStage(null);
   }
 
   // constante de ranking
-  const hasRanking = true
+  const hasRanking = true;
 
   return (
     <div className='is-centered'>
@@ -340,7 +350,8 @@ let AgendaActividadDetalle = (props) => {
         <Card
           style={{ padding: '1 !important' }}
           className={
-            props.cEvent.value._id === '5fca68b7e2f869277cfa31b0' || props.cEvent.value._id === '5f99a20378f48e50a571e3b6'
+            props.cEvent.value._id === '5fca68b7e2f869277cfa31b0' ||
+            props.cEvent.value._id === '5f99a20378f48e50a571e3b6'
               ? 'magicland-agenda_information'
               : 'agenda_information'
           }>
@@ -371,9 +382,10 @@ let AgendaActividadDetalle = (props) => {
                 <Col>
                   {meetingState === 'open_meeting_room' || stateSpace ? (
                     <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
-                  ) : meetingState === 'ended_meeting_room' && currentActivity.video ? (
+                  ) : meetingState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video ? (
                     <CaretRightOutlined style={{ fontSize: '30px' }} />
-                  ) : meetingState === 'ended_meeting_room' && (currentActivity.image || image_event) ? (
+                  ) : meetingState === 'ended_meeting_room' &&
+                    ((currentActivity !== null && currentActivity.image) || image_event) ? (
                     <CheckCircleOutlined style={{ fontSize: '30px' }} />
                   ) : meetingState === '' || meetingState == null ? (
                     <></>
@@ -394,9 +406,10 @@ let AgendaActividadDetalle = (props) => {
                 }}>
                 {meetingState === 'open_meeting_room' || stateSpace
                   ? 'En vivo'
-                  : meetingState === 'ended_meeting_room' && currentActivity.video
+                  : meetingState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video
                   ? 'Grabado'
-                  : meetingState === 'ended_meeting_room' && (currentActivity.image || image_event)
+                  : meetingState === 'ended_meeting_room' &&
+                    ((currentActivity !== null && currentActivity.image) || image_event)
                   ? 'Terminada'
                   : meetingState === 'closed_meeting_room'
                   ? 'Por iniciar'
@@ -412,7 +425,7 @@ let AgendaActividadDetalle = (props) => {
               style={{ display: 'flex' }}>
               <div style={{ padding: '8px' }}>
                 <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
-                  {currentActivity && currentActivity.name}
+                  {currentActivity !== null && currentActivity.name}
                   {configfast && configfast.enableCount && (
                     <>
                       ( &nbsp;
@@ -445,28 +458,32 @@ let AgendaActividadDetalle = (props) => {
                     ) : (
                       <div>
                         {Moment.tz(
-                          currentActivity && currentActivity.datetime_start,
+                          currentActivity !== null && currentActivity.datetime_start,
                           'YYYY-MM-DD h:mm',
                           'America/Bogota'
                         )
                           .tz(Moment.tz.guess())
                           .format('DD MMM YYYY')}{' '}
                         {Moment.tz(
-                          currentActivity && currentActivity.datetime_start,
+                          currentActivity !== null && currentActivity.datetime_start,
                           'YYYY-MM-DD h:mm',
                           'America/Bogota'
                         )
                           .tz(Moment.tz.guess())
                           .format('h:mm a z')}{' '}
                         -{' '}
-                        {Moment.tz(currentActivity && currentActivity.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                        {Moment.tz(
+                          currentActivity !== null && currentActivity.datetime_end,
+                          'YYYY-MM-DD h:mm',
+                          'America/Bogota'
+                        )
                           .tz(Moment.tz.guess())
                           .format('h:mm a z')}
                       </div>
                     )}
                   </div>
 
-                  {currentActivity && currentActivity.space && currentActivity.space.name}
+                  {currentActivity !== null && currentActivity.space && currentActivity.space.name}
                 </Row>
               </div>
             </Col>
@@ -525,8 +542,8 @@ let AgendaActividadDetalle = (props) => {
                       <>
                         {platform === 'zoomExterno' ? (
                           openZoomExterno()
-                        ) : (props.currentUser && currentActivity && currentActivity.requires_registration) ||
-                          (currentActivity && !currentActivity.requires_registration) ? (
+                        ) : (props.currentUser && currentActivity !== null && currentActivity.requires_registration) ||
+                          (currentActivity !== null && !currentActivity.requires_registration) ? (
                           <>
                             <iframe
                               src={getMeetingPath(platform)}
@@ -563,7 +580,7 @@ let AgendaActividadDetalle = (props) => {
                   />
                 </div>
               )} */}
-               {mainStageContent == 'surveyDetalle' && (
+              {mainStageContent == 'surveyDetalle' && (
                 <>
                   <h1>Encuestas MainStage</h1>
                 </>
@@ -611,6 +628,7 @@ let AgendaActividadDetalle = (props) => {
                 )}
 
               {meetingState === 'ended_meeting_room' &&
+              currentActivity !== null &&
               currentActivity.video &&
               stateSpace === false &&
               mainStageContent !== 'surveyDetalle' &&
@@ -622,7 +640,7 @@ let AgendaActividadDetalle = (props) => {
                       display: 'block',
                       margin: '0 auto',
                     }}
-                    url={currentActivity.video}
+                    url={currentActivity !== null && currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                     controls
                   />
@@ -630,7 +648,7 @@ let AgendaActividadDetalle = (props) => {
               ) : (
                 <>
                   {meetingState === 'ended_meeting_room' &&
-                    (currentActivity.image || image_event) &&
+                    ((currentActivity !== null && currentActivity.image) || image_event) &&
                     stateSpace === false &&
                     mainStageContent !== 'surveyDetalle' &&
                     mainStageContent !== 'game' && (
@@ -652,7 +670,8 @@ let AgendaActividadDetalle = (props) => {
                 </>
               )}
               {/*logo quemado de aval para el evento de magicland */}
-              {(props.cEvent.value._id === '5f99a20378f48e50a571e3b6' || props.cEvent.value._id === '5fca68b7e2f869277cfa31b0') && (
+              {(props.cEvent.value._id === '5f99a20378f48e50a571e3b6' ||
+                props.cEvent.value._id === '5fca68b7e2f869277cfa31b0') && (
                 <Row justify='center' style={{ marginTop: '6%' }}>
                   <Col span={24}>
                     <img
@@ -662,7 +681,7 @@ let AgendaActividadDetalle = (props) => {
                   </Col>
                 </Row>
               )}
-              {currentActivity && currentActivity.secondvideo && (
+              {currentActivity !== null && currentActivity.secondvideo && (
                 <div className='column is-centered mediaplayer'>
                   <strong>Pt. 2</strong>
                   <ReactPlayer
@@ -671,7 +690,7 @@ let AgendaActividadDetalle = (props) => {
                       display: 'block',
                       margin: '0 auto',
                     }}
-                    url={currentActivity && currentActivity.secondvideo}
+                    url={currentActivity !== null && currentActivity.secondvideo}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                     controls
                   />
@@ -680,7 +699,8 @@ let AgendaActividadDetalle = (props) => {
             </div>
           </header>
 
-          {props.cEvent.value._id === '5fca68b7e2f869277cfa31b0' || props.cEvent.value._id === '5f99a20378f48e50a571e3b6' ? (
+          {props.cEvent.value._id === '5fca68b7e2f869277cfa31b0' ||
+          props.cEvent.value._id === '5f99a20378f48e50a571e3b6' ? (
             <></>
           ) : (
             <div className='calendar-category has-margin-top-7'></div>
@@ -695,9 +715,10 @@ let AgendaActividadDetalle = (props) => {
                     </>
                   }
                   key='description'>
-                  <div dangerouslySetInnerHTML={{ __html: currentActivity && currentActivity.description }}></div>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: currentActivity !== null && currentActivity.description }}></div>
                   <br />
-                  {(currentActivity && currentActivity.hosts.length === 0) ||
+                  {(currentActivity !== null && currentActivity.hosts.length === 0) ||
                   props.cEvent.value._id === '601470367711a513cc7061c2' ? (
                     <div></div>
                   ) : (
@@ -758,24 +779,26 @@ let AgendaActividadDetalle = (props) => {
                 </TabPane>
               }
 
-              {currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
-                <TabPane
-                  tab={
-                    <>
-                      <p style={{ marginBottom: '0px' }}>Documentos</p>
-                    </>
-                  }
-                  key='docs'>
-                  <div>
-                    <div style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
-                      <b>Documentos:</b> &nbsp;
-                      <div>
-                        <DocumentsList data={currentActivity.selected_document} />
+              {currentActivity !== null &&
+                currentActivity.selected_document &&
+                currentActivity.selected_document.length > 0 && (
+                  <TabPane
+                    tab={
+                      <>
+                        <p style={{ marginBottom: '0px' }}>Documentos</p>
+                      </>
+                    }
+                    key='docs'>
+                    <div>
+                      <div style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
+                        <b>Documentos:</b> &nbsp;
+                        <div>
+                          <DocumentsList data={currentActivity !== null && currentActivity.selected_document} />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </TabPane>
-              )}
+                  </TabPane>
+                )}
 
               {props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
                 <TabPane
@@ -788,12 +811,16 @@ let AgendaActividadDetalle = (props) => {
                       </p>
                     </>
                   }>
-                  {props.currentSurvey === null ? <SurveyList 
-                  eventSurveys={props.eventSurveys}
-                  surveyStatusProgress={props.surveyStatusProgress}
-                  listOfEventSurveys={props.listOfEventSurveys}
-                  loadingSurveys={props.loadingSurveys}
-                   /> : <SurveyDetail />}
+                  {props.currentSurvey === null ? (
+                    <SurveyList
+                      eventSurveys={props.eventSurveys}
+                      surveyStatusProgress={props.surveyStatusProgress}
+                      listOfEventSurveys={props.listOfEventSurveys}
+                      loadingSurveys={props.loadingSurveys}
+                    />
+                  ) : (
+                    <SurveyDetail />
+                  )}
                 </TabPane>
               )}
               {props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
@@ -828,46 +855,31 @@ let AgendaActividadDetalle = (props) => {
         </Card>
       </div>
 
-
-
-
-
-
-
-
-
-
-{/* Drawer encuestas */}
+      {/* Drawer encuestas */}
       <Drawer
-                      closeIcon={<CloseOutlined />}
-                      placement="right"
-                      // closable={true}
-                      visible={props.currentSurvey}
-                      onClose={onClose}
-                      width={window.screen.width >= 768 ? rankingVisible == false ? '100%':'70%': '100%'}
-                    >
-                      <div style={{width:'100%', display:'inline-block', paddingBottom:'10px'}}>
-                       <Button 
-                        type="primary"
-                        onClick={showRanking} 
-                         >
-                          {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
-                      </Button> 
-                      </div>
-                      
-                      <Row gutter={[8,8]} justify='center'>
-                        <Col  xl={rankingVisible == true ? 24 : 16} xxl={rankingVisible == true ? 24 : 16} >
-                          <SurveyDetailPage/>
-                        </Col>
-                        <Col hidden={rankingVisible}  xl={8} xxl={8} >
-                          <div style={{width:'100%'}}>
-                            <div style={{justifyContent:'center', display:'grid'}}>
-                              {hasRanking && <RankingTrivia/>}
-                              </div>
-                          </div>
-                        </Col>  
-                      </Row>
-                    </Drawer>
+        closeIcon={<CloseOutlined />}
+        placement='right'
+        // closable={true}
+        visible={props.currentSurvey}
+        onClose={onClose}
+        width={window.screen.width >= 768 ? (rankingVisible == false ? '100%' : '70%') : '100%'}>
+        <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
+          <Button type='primary' onClick={showRanking}>
+            {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
+          </Button>
+        </div>
+
+        <Row gutter={[8, 8]} justify='center'>
+          <Col xl={rankingVisible == true ? 24 : 16} xxl={rankingVisible == true ? 24 : 16}>
+            <SurveyDetailPage />
+          </Col>
+          <Col hidden={rankingVisible} xl={8} xxl={8}>
+            <div style={{ width: '100%' }}>
+              <div style={{ justifyContent: 'center', display: 'grid' }}>{hasRanking && <RankingTrivia />}</div>
+            </div>
+          </Col>
+        </Row>
+      </Drawer>
     </div>
   );
 };
@@ -882,6 +894,7 @@ const mapStateToProps = (state) => ({
   generalTabs: state.tabs.generalTabs,
   permissions: state.permissions,
   isVisible: state.survey.data.surveyVisible,
+  viewSocialZoneNetworking: state.spaceNetworkingReducer.view,
 });
 
 const mapDispatchToProps = {
@@ -893,7 +906,8 @@ const mapDispatchToProps = {
   setTabs,
   setTopBanner,
   unsetCurrentSurvey,
+  setSpaceNetworking,
 };
 
-let AgendaActividadDetalleWithContext = withContext(AgendaActividadDetalle)
+let AgendaActividadDetalleWithContext = withContext(AgendaActividadDetalle);
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalleWithContext));
