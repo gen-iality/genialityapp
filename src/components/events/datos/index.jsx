@@ -156,7 +156,7 @@ class Datos extends Component {
         dataIndex: 'mandatory',
         align: 'center',
         render: (record, key) =>
-          key.name !== 'email' && key.name !== 'names'? (
+          key.name !== 'email' && key.name !== 'names' && key.name!=='picture'? (
             <Checkbox name='mandatory' onChange={() => this.changeCheckBox()} defaultChecked={record} />
           ) : (
             <Checkbox checked />
@@ -175,7 +175,7 @@ class Datos extends Component {
         dataIndex: 'visibleByAdmin',
         align: 'center',
         render: (record, key) =>
-          key.name !== 'email' && key.name !== 'names' ? (
+          key.name !== 'email' && key.name !== 'names' && key.name!=='picture' ? (
             <Checkbox name='visibleByAdmin' onChange={() => this.changeCheckBox()} defaultChecked={record} />
           ) : (
             <Checkbox checked />
