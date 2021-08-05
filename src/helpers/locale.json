@@ -46,7 +46,7 @@
     "live.starts_in": "activity starts in",
 
     "live.ended": "Event ended",
-    "live.ended.video": "Event ended. Watch the video here",
+    "live.ended.video": "Event Ended. Look at the video",
     "live.closed": "Coming soon",
     "live": "Live",
     "registration.title.create": "Register",
@@ -146,7 +146,7 @@
     "live.join.disabled": "El evento iniciará pronto",
     "live.starts_in": "La sesión inicia en",
     "live.ended": "Evento Terminado.",
-    "live.ended.video": "Evento Terminado. Observa el video Aquí",
+    "live.ended.video": "Evento Terminado. Mira el vídeo",
     "live.closed": "Iniciará pronto",
     "live": "En vivo",
 
@@ -207,7 +207,7 @@
     "live.join.disabled": "O evento irá iniciar em breve",
     "live.starts_in": "O evento começa as",
     "live.ended": "Evento encerrado.",
-    "live.ended.video": "Evento encerrado. Assista a gravação aqui",
+    "live.ended.video": "Evento encerrado. Olha o vídeo",
     "live.closed": "Em breve",
     "live": "Ao vivo",
     "registration.title.create": "Formulário de Registro",
