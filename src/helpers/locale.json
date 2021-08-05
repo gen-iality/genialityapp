@@ -67,7 +67,7 @@
     "button.forget.password": "I forgot my password",
     "button.restore.password": "Request a password",
     "button.cancel": "Cancel",
-    "button.back.agenda": "Back to agenda",
+    "button.back.agenda": "Return",
     "button.more.information": "More information",
 
     "title.description": "Description",
@@ -168,7 +168,7 @@
     "button.forget.password": "Olvidé mi contraseña",
     "button.restore.password": "Solicitar una contraseña",
     "button.cancel": "Cancelar",
-    "button.back.agenda": "Volver a la agenda",
+    "button.back.agenda": "Volver",
     "button.more.information": "Ver detalle",
 
     "title.description": "Descripción",
@@ -228,7 +228,7 @@
     "button.forget.password": "Esqueci a minha senha",
     "button.restore.password": "Solicite uma senha",
     "button.cancel": "Cancelar",
-    "button.back.agenda": "Voltar para a agenda",
+    "button.back.agenda": "Retorna",
     "button.more.information": "Mais Informações",
 
     "title.description": "Descrição",
