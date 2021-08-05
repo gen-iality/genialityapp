@@ -65,14 +65,18 @@ class ListEventUser extends Component {
     eventUserList = await userRequest.getEventUserList(
       this.props.cEvent.value._id,
       Cookie.get('evius_token'),
-      this.userCurrentContext
+      this.state.eventUser
     );
+    console.log("USERS LIST")
+    console.log(eventUserList)
 
     /** Inicia destacados
      * Búscamos usuarios destacados para colocarlos de primeros en la lista(destacados), tiene varios usos cómo publicitarios
      * estos tienen una propiedad llamada destacados, en un futuro debemos poner esto cómo un rol de asistente para facilitar
      * la administración por el momento este valor se esta quemando directamente en la base de datos
      */
+
+    if(eventUserList && eventUserList.length>0 ){
     let destacados = [];
     destacados = eventUserList.filter((asistente) => asistente.destacado && asistente.destacado == true);
     if (destacados && destacados.length >= 0) {
@@ -192,8 +196,9 @@ class ListEventUser extends Component {
       }
     }
 
-    let asistantData = await EventFieldsApi.getAll(event._id);
-
+    let asistantData = await EventFieldsApi.getAll(this.props.cEvent.value._id);
+     console.log("ASISTANT DATA")
+     console.log(asistantData)
     this.setState((prevState) => {
       return {
         userReq: eventUserList, //request original
@@ -206,14 +211,22 @@ class ListEventUser extends Component {
         matches,
       };
     });
+  }else{
+    this.setState({
+      loading:false
+    })
+  }
   };
 
   // Funcion que trae el eventUserId del usuario actual
   getInfoCurrentUser = async () => {
-    const { event, currentUser } = this.props;
-
+    const event  = this.props.cEvent.value;
+    const currentUser=this.props.cEventUser.value;
+    console.log(this.props)
     if (currentUser) {
+      alert("SI CURRENT USER")
       const eventUser = await EventsApi.getcurrentUserEventUser(event._id);
+      console.log(eventUser)
 
       if (eventUser !== null) {
         this.setState({ eventUser, eventUserId: eventUser._id, currentUserName: eventUser.names || eventUser.email });
@@ -318,7 +331,7 @@ class ListEventUser extends Component {
                     <Loading />
                     <h2 className='has-text-centered'>Cargando...</h2>
                   </Fragment>
-                ) : (
+                ) : !this.state.loading && users.length>0?(
                   <div className='card-Networking'>
                     <div className='container' justify='center'>
                       <Row justify='space-between'>
@@ -409,7 +422,7 @@ class ListEventUser extends Component {
                       </Row>
                     </div>
                   </div>
-                )}
+                ):(<div>No existen usuarios</div>)}
               </div>
             </TabPane>
 
@@ -611,7 +624,7 @@ class ListEventUser extends Component {
                             headStyle={
                               users.destacado && users.destacado == true
                                 ? { backgroundColor: '#6ddab5' }
-                                : { backgroundColor: event.styles.toolbarDefaultBg }
+                                : { backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg }
                             }
                             style={{ width: '100%', marginTop: '2%', marginBottom: '2%', textAlign: 'left' }}
                             bordered={true}>
@@ -693,7 +706,8 @@ class ListEventUser extends Component {
                     </Row>
 
                     {/* Paginacion para mostrar datos de una manera mas ordenada */}
-                    <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
+                    {!this.state.loading && users.length>0 &&<Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />}
+                    {!this.state.loading && users.length==0  && <div>No existen usuarios</div>}
                   </div>
                 )}
               </div>
