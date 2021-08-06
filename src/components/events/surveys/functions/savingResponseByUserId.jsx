@@ -1,4 +1,4 @@
-import { SurveyAnswers } from './services';
+import { SurveyAnswers } from '../services/services';
 
 function SavingResponseByUserId(surveyData, question, infoUser, eventUsers, voteWeight, infoOptionQuestion) {
    SurveyAnswers.registerWithUID(

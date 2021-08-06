@@ -6,14 +6,14 @@ import Graphics from './graphics';
 import { UseEventContext } from '../../../Context/eventContext';
 import * as Survey from 'survey-react';
 import InternarlSurveyStyles from './components/internarlSurveyStyles';
-import LoadSelectedSurvey from './services/loadSelectedSurvey';
-import RegisterVote from './services/registerVote';
-import TimerAndMessageForTheNextQuestion from './services/timerAndMessageForTheNextQuestion';
-import HelpFiftyFifty from './services/helpFiftyFifty';
-import MessageWhenCompletingSurvey from './services/messageWhenCompletingSurvey';
-import RealTimeSurveyListening from './services/realTimeSurveyListening';
-import TimeLimitPerQuestion from './services/timeLimitPerQuestion';
-import SetCurrentUserSurveyStatus from './services/setCurrentUserSurveyStatus';
+import LoadSelectedSurvey from './functions/loadSelectedSurvey';
+import RegisterVote from './functions/registerVote';
+import TimerAndMessageForTheNextQuestion from './functions/timerAndMessageForTheNextQuestion';
+import HelpFiftyFifty from './functions/helpFiftyFifty';
+import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey';
+import RealTimeSurveyListening from './functions/realTimeSurveyListening';
+import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
+import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
 import { firestore, fireRealtime } from '../../../helpers/firebase';
 
 function SurveyComponent(props) {
@@ -82,7 +82,7 @@ function SurveyComponent(props) {
       setRankingPoints(null);
       const status = surveyModel.state;
 
-      // SetCurrentUserSurveyStatus(surveyData, currentUser, status);
+      SetCurrentUserSurveyStatus(surveyData, currentUser, status);
 
       const question = surveyModel.currentPage.questions[0];
 
