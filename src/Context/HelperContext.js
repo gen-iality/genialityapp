@@ -1,4 +1,4 @@
-import React, { createContex, createContext, useEffect } from 'react';
+import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
 import { firestore } from '../helpers/firebase';
 import { AgendaApi } from '../helpers/request';
