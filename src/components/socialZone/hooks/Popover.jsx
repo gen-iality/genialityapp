@@ -1,19 +1,21 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Tooltip, Skeleton, Card, Avatar } from 'antd';
 import { UserOutlined, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { InitialsNameUser } from './index';
+import { HelperContext } from '../../../Context/HelperContext';
+import { useContext } from 'react';
 
 const { Meta } = Card;
 
 const PopoverInfoUser = ({ item, props }) => {
-  useEffect(() => {}, []);
+  let { containtNetworking } = useContext(HelperContext);
 
   return (
     <Skeleton loading={false} avatar active>
       <Card
         style={{ width: 300, padding: '0', color: 'black' }}
         actions={[
-          props.containNetWorking && (
+          containtNetworking && (
             <Tooltip
               title='Ver perfil'
               onClick={() => {
@@ -22,31 +24,15 @@ const PopoverInfoUser = ({ item, props }) => {
               <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
             </Tooltip>
           ),
-          /* props.containNetWorking && (
-            <Tooltip title='Chat(Hablar)'>
-              <MessageTwoTone
-                onClick={() =>
-                  props.createNewOneToOneChat(
-                    props.currentUser.uid,
-                    props.currentUser.names,
-                    item.user.uid,
-                    item.user.names
-                  )
-                }
-                style={{ fontSize: '20px', color: '#1890FF' }}
-              />
-              ,
-            </Tooltip>
-          ),
- */
-          props.containNetWorking && (
+
+          !containtNetworking && (
             <Tooltip
               onClick={async () => {
                 var us = await props.loadDataUser(item);
 
                 var sendResp = await props.sendFriendship({
                   eventUserIdReceiver: us._id,
-                  userName: item.names || item.email
+                  userName: item.names || item.email || item.name,
                 });
                 if (sendResp._id) {
                   let notification = {
@@ -56,7 +42,7 @@ const PopoverInfoUser = ({ item, props }) => {
                     message: 'Te ha enviado solicitud de amistad',
                     name: 'notification.name',
                     type: 'amistad',
-                    state: '0'
+                    state: '0',
                   };
 
                   await props.notificacion(notification, props.currentUser._id);
@@ -67,7 +53,7 @@ const PopoverInfoUser = ({ item, props }) => {
             </Tooltip>
           ),
 
-          props.containNetWorking && (
+          !containtNetworking && (
             <Tooltip title='Agendar cita'>
               <VideoCameraOutlined
                 onClick={async () => {
@@ -81,7 +67,7 @@ const PopoverInfoUser = ({ item, props }) => {
               />
               ,
             </Tooltip>
-          )
+          ),
         ]}>
         <Meta
           avatar={
@@ -89,7 +75,7 @@ const PopoverInfoUser = ({ item, props }) => {
               <Avatar src={item.user?.image} />
             ) : (
               <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={30}>
-                {InitialsNameUser(item.names)}
+                {InitialsNameUser(item.name ? item.name : 'User')}
               </Avatar>
             )
           }
@@ -102,7 +88,7 @@ const PopoverInfoUser = ({ item, props }) => {
                     }
                   : null
               }>
-              {item.names}
+              {item.name ? item.name : item.names}
             </a>
           }
           description={item.email}

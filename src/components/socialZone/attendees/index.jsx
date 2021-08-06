@@ -22,8 +22,6 @@ const AttendeList = function(props) {
 
   const pag = 15;
 
-  
-
   useEffect(() => {
     let ordenadousers = [];
 
@@ -58,7 +56,6 @@ const AttendeList = function(props) {
       console.log(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
     }
   }, [props.busqueda]);
-  
 
   const handleInfiniteOnLoad = () => {
     setLoading(true);
@@ -84,7 +81,6 @@ const AttendeList = function(props) {
     setLoading(false);
     setHasMore(true);
   };
-
 
   const styleListAttende = {
     background: 'white',
@@ -129,7 +125,7 @@ const AttendeList = function(props) {
                 item.currentUser?.image ? (
                   <Avatar src={item.currentUser?.image} />
                 ) : (
-                  <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={30}>
+                  <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={40}>
                     {InitialsNameUser(item.names)}
                   </Avatar>
                 )
@@ -159,13 +155,7 @@ const AttendeList = function(props) {
               }
             />
           </List.Item>
-        )}>
-        {/* {loading && hasMore && (
-          <div>
-            <Spin size='large' />
-          </div>
-        )} */}
-      </List>
+        )}></List>
     </InfiniteScroll>
   );
 };

@@ -1,15 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { List, Typography, Badge, Tooltip, Tabs, Form, Input, Button, Row, Space } from 'antd';
+import { List, Typography, Badge, Tooltip, Tabs, Form, Input, Button, Row, Space, Avatar, Popover } from 'antd';
 import { ExclamationCircleOutlined, MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { InitialsNameUser } from '../hooks';
+import PopoverInfoUser from '../hooks/Popover';
 import { useHistory } from 'react-router-dom';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 const { Text } = Typography;
+
+const styleItemCard = {
+  backgroundColor: 'white',
+  padding: 15,
+  margin: 6,
+  border: '1px solid #cccccc',
+  borderRadius: '10px',
+};
+
+const styleList = {
+  padding: 5,
+  borderRadius: '10px',
+  backgroundColor: '#ffffff63',
+  overflow: 'auto',
+};
 
 const layout = {
   labelCol: { span: 6 },
@@ -46,6 +63,8 @@ const ChatList = (props) => {
 
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();
+  let [usuariofriend, setusuariofriend] = useState(userName);
+  let [totalmsjpriv, settotalmsjpriv] = useState(0);
 
   function callback(key) {
     if (key === 'chat1') {
@@ -167,43 +186,55 @@ const ChatList = (props) => {
           key='chat2'>
           {!props.currentChat && (
             <List
-              header={<div></div>}
-              footer={<div></div>}
-              bordered
+              style={styleList}
               dataSource={props.availableChats}
               renderItem={(item) => (
                 <List.Item
+                  style={styleItemCard}
                   actions={[
                     <a
                       key='list-loadmore-edit'
                       onClick={() => {
                         props.setCurrentChat(item.id, item.name ? item.name : item.names);
+                        setusuariofriend(item?.names ? item.names : item.name);
+                        settotalmsjpriv(0);
                         props.setTotalNewMessages(0);
                         props.notNewMessages();
                       }}>
                       <Tooltip title='Chatear'>
                         {item.newMessages && item.newMessages.length > 0 && (
                           <Badge count={' '} style={{ minWidth: '10px', height: '10px', padding: '0px' }}>
-                            <MessageTwoTone style={{ fontSize: '20px' }} />
+                            <MessageTwoTone style={{ fontSize: '27px' }} />
                           </Badge>
                         )}
                         {item.newMessages && item.newMessages.length == 0 && (
-                          <MessageTwoTone style={{ fontSize: '20px' }} />
+                          <MessageTwoTone style={{ fontSize: '27px' }} />
                         )}
                       </Tooltip>
                     </a>,
                   ]}>
-                  <div style={{ color: cEvent.value.styles.textMenu }}>
-                    {item.name ? item.name : item.names || '----'}
-                  </div>
+                  <List.Item.Meta
+                    avatar={
+                      item.currentUser?.image ? (
+                        <Avatar src={item.currentUser?.image} />
+                      ) : (
+                        <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={30}>
+                          {InitialsNameUser(item.name ? item.name : 'User')}
+                        </Avatar>
+                      )
+                    }
+                    title={
+                      <a style={{ color: 'black' }} key='list-loadmore-edit'>
+                        {item.name ? item.name : item.names}
+                      </a>
+                    }
+                  />
                 </List.Item>
               )}
             />
           )}
           {props.currentChat && (
             <>
-              {' '}
-              {console.log("estatvuel", props.currentChat)}
               <iframe
                 title='chatevius'
                 className='ChatEviusLan'
