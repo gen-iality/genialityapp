@@ -37,15 +37,13 @@ class App extends Component {
 
   render() {
     return (
-      // <CurrentEventProvider>
-      //   <CurrentUserEventProvider>
+     
       <CurrentUserProvider>
         <Provider store={store}>
           <MainRouter />
         </Provider>
       </CurrentUserProvider>
-      //   </CurrentUserEventProvider>
-      // </CurrentEventProvider>
+      
     );
   }
 }

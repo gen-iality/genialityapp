@@ -9,6 +9,7 @@ import WithFooter from '../components/withFooter';
 import { CurrentUserEventProvider } from '../Context/eventUserContext';
 import { CurrentEventProvider, CurrentEventContext } from '../Context/eventContext';
 import { CurrentUserProvider } from '../Context/userContext';
+import { HelperContextProvider } from '../Context/HelperContext';
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -31,6 +32,7 @@ const socialZone = asyncComponent(() => import('../components/socialZone/socialZ
 const AppointmentAccept = asyncComponent(() => import('../components/networking/appointmentAccept'));
 const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
 const QueryTesting = asyncComponent(() => import('../components/events/surveys/components/queryTesting'));
+
 const ContentContainer = () => {
   return (
     <main className='main'>
@@ -39,7 +41,9 @@ const ContentContainer = () => {
           <CurrentEventProvider>
             <CurrentUserEventProvider>
               <CurrentUserProvider>
-                <Landing />
+                <HelperContextProvider>
+                  <Landing />
+                </HelperContextProvider>
               </CurrentUserProvider>
             </CurrentUserEventProvider>
           </CurrentEventProvider>

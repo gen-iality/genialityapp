@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { connect } from 'react-redux';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
-
+import { HelperContext } from '../../../Context/HelperContext';
 /** ant design */
-import { Layout, Spin } from 'antd';
+import { Layout, Spin, notification } from 'antd';
 
 /** Components */
 import TopBanner from './TopBanner';
@@ -24,6 +24,7 @@ import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
 /** redux surveys */
 import { setCurrentSurvey, setSurveyResult } from '../../../redux/survey/actions';
+import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined } from '@ant-design/icons';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -31,10 +32,46 @@ const iniitalstatetabs = {
   publicChat: true,
 };
 
+const IconRender = (type) => {
+  let iconRender;
+  switch (type) {
+    case 'open':
+      iconRender = <DesktopOutlined style={{ color: '#108ee9' }} />;
+      break;
+
+    case 'close':
+      iconRender = <LoadingOutlined style={{ color: 'red' }} />;
+      break;
+
+    case 'ended':
+      iconRender = <IssuesCloseOutlined />;
+      break;
+  }
+  return iconRender;
+};
+
 const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
+  let { isNotification, ChangeActiveNotification } = useContext(HelperContext);
+
+  const NotificationHelper = ({ message, type }) => {
+    notification.open({
+      message: 'Nueva notificación',
+      description: message,
+      icon: IconRender(type),
+      onClose: () => {
+        ChangeActiveNotification(false, 'none', 'none');
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (isNotification.notify) {
+      NotificationHelper(isNotification);
+    }
+  }, [isNotification]);
 
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
   let [totalNewMessages, settotalnewmessages] = useState(0);
