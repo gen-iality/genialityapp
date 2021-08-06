@@ -21,10 +21,10 @@ const { TabPane } = Tabs;
 const callback = () => {};
 const { setNotification } = notificationsActions;
 const styleTabAttendes = {
-  backgroundColor:"#ffffff4d",
-  padding:5,
-  borderRadius:'10px'
-}
+  backgroundColor: '#ffffff4d',
+  padding: 5,
+  borderRadius: '10px',
+};
 
 let SocialZone = function(props) {
   //contextos
@@ -39,7 +39,7 @@ let SocialZone = function(props) {
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [datamsjlast, setdatamsjlast] = useState();
-  let [busqueda, setBusqueda] = useState();
+  let [busqueda, setBusqueda] = useState(null);
   let [strAttende, setstrAttende] = useState();
   let [isFiltered, setIsFiltered] = useState(false);
   let busquedaRef = useRef();
@@ -85,15 +85,16 @@ let SocialZone = function(props) {
   };
 
   const searhAttende = () => {
+    console.log('busqueda');
     if (!isFiltered && (busqueda != undefined || busqueda != '')) {
       setstrAttende(busqueda);
       setIsFiltered(true);
     } else {
       setIsFiltered(false);
       setstrAttende('');
-      setBusqueda('');
+      setBusqueda(null);
       //
-      busquedaRef.current = '';
+      busquedaRef.current.value = '';
     }
   };
 
@@ -309,21 +310,21 @@ let SocialZone = function(props) {
         <>
           {' '}
           <TabPane
-          style={styleTabAttendes}
+            style={styleTabAttendes}
             tab={
               <div style={{ color: cEvent.value.styles.textMenu }}>
                 <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
               </div>
             }
             key='2'>
-            <Row >
+            <Row>
               <Col sm={21}>
                 {!Object.keys(attendeeList).length ? (
                   ''
                 ) : (
-                  <div className='control' style={{ marginBottom: '10px', marginRight: '5px',color:"white"}}>
+                  <div className='control' style={{ marginBottom: '10px', marginRight: '5px', color: 'white' }}>
                     <input
-                    style={{color:"white"}}
+                      style={{ color: 'white' }}
                       ref={busquedaRef}
                       autoFocus
                       className='input'
@@ -337,10 +338,14 @@ let SocialZone = function(props) {
               </Col>
               <Col sm={2}>
                 {!Object.keys(attendeeList).length ? null : (
-                  <Button shape='circle' onClick={searhAttende}>
-                    {!isFiltered && <SearchOutlined />}
-                    {isFiltered && 'X'}
-                  </Button>
+                  <>
+                    {busqueda !== null && (
+                      <Button shape='circle' onClick={searhAttende}>
+                        {!isFiltered && <SearchOutlined />}
+                        {isFiltered && 'X'}
+                      </Button>
+                    )}
+                  </>
                 )}
               </Col>
             </Row>

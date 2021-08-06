@@ -22,14 +22,7 @@ const AttendeList = function(props) {
 
   const pag = 15;
 
-  useEffect(() => {
-    if (props.busqueda == undefined || props.busqueda == '') {
-      myattendelist && setfilteredlist(myattendelist.slice(0, pag));
-    } else {
-      setfilteredlist(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
-      console.log(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
-    }
-  }, [props.busqueda]);
+  
 
   useEffect(() => {
     let ordenadousers = [];
@@ -57,6 +50,16 @@ const AttendeList = function(props) {
     setPage(1);
   }, [props.attendeeListPresence, props.attendeeList]);
 
+  useEffect(() => {
+    if (props.busqueda == undefined || props.busqueda == '') {
+      myattendelist && setfilteredlist(myattendelist.slice(0, pag));
+    } else {
+      setfilteredlist(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
+      console.log(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
+    }
+  }, [props.busqueda]);
+  
+
   const handleInfiniteOnLoad = () => {
     setLoading(true);
     setHasMore(true);
@@ -82,7 +85,6 @@ const AttendeList = function(props) {
     setHasMore(true);
   };
 
-  console.log('----filtered list---', props.attendeeList);
 
   const styleListAttende = {
     background: 'white',
