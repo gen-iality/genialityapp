@@ -27,6 +27,7 @@ const AttendeList = function(props) {
       myattendelist && setfilteredlist(myattendelist.slice(0, pag));
     } else {
       setfilteredlist(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
+      console.log(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
     }
   }, [props.busqueda]);
 
@@ -81,6 +82,17 @@ const AttendeList = function(props) {
     setHasMore(true);
   };
 
+  console.log('----filtered list---', props.attendeeList);
+
+  const styleListAttende = {
+    background: 'white',
+    color: 'black',
+    padding: 5,
+    margin: 10,
+    display: 'flex',
+    border: '1px solid #cccccc',
+    borderRadius: '8px',
+  };
   return (
     <InfiniteScroll
       initialLoad={false}
@@ -93,6 +105,7 @@ const AttendeList = function(props) {
         dataSource={filteredlist && filteredlist}
         renderItem={(item) => (
           <List.Item
+            style={styleListAttende}
             actions={[
               cUser.value ? (
                 <a
@@ -102,9 +115,9 @@ const AttendeList = function(props) {
                     props.settabselected('1');
                     props.setCurrentChat(item.iduser, item.name ? item.name : item.names);
                     props.setchattab('chat2');
-                   }}>
+                  }}>
                   <Tooltip title={'Chatear'}>
-                    <MessageTwoTone style={{ fontSize: '20px' }} />
+                    <MessageTwoTone style={{ fontSize: '27px' }} />
                   </Tooltip>
                 </a>
               ) : null,
@@ -125,7 +138,7 @@ const AttendeList = function(props) {
                   style={{ padding: '0px !important', zIndex: 900 }}
                   placement='leftTop'
                   content={<PopoverInfoUser item={item} props={props} />}>
-                  <a style={{ color: cEvent.value.styles.textMenu }} key='list-loadmore-edit'>
+                  <a style={{ color: 'black' }} key='list-loadmore-edit'>
                     {item.names}
                   </a>
                 </Popover>

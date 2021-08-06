@@ -20,6 +20,11 @@ const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
 const callback = () => {};
 const { setNotification } = notificationsActions;
+const styleTabAttendes = {
+  backgroundColor:"#ffffff4d",
+  padding:5,
+  borderRadius:'10px'
+}
 
 let SocialZone = function(props) {
   //contextos
@@ -304,26 +309,28 @@ let SocialZone = function(props) {
         <>
           {' '}
           <TabPane
+          style={styleTabAttendes}
             tab={
               <div style={{ color: cEvent.value.styles.textMenu }}>
                 <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
               </div>
             }
             key='2'>
-            <Row>
+            <Row >
               <Col sm={21}>
                 {!Object.keys(attendeeList).length ? (
                   ''
                 ) : (
-                  <div className='control' style={{ marginBottom: '10px', marginRight: '5px' }}>
+                  <div className='control' style={{ marginBottom: '10px', marginRight: '5px',color:"white"}}>
                     <input
+                    style={{color:"white"}}
                       ref={busquedaRef}
                       autoFocus
                       className='input'
                       type='text'
                       name={'name'}
                       onChange={handleChange}
-                      placeholder='Buscar...'
+                      placeholder='Buscar Participante...'
                     />
                   </div>
                 )}
