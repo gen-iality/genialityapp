@@ -70,7 +70,7 @@ let SocialZone = function(props) {
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
 
-    console.log("como se crea el chgat",data)
+    console.log('como se crea el chgat', data);
     setCurrentChat(newId, otherUserName);
   };
 
@@ -303,7 +303,13 @@ let SocialZone = function(props) {
       {props.generalTabs.attendees && (
         <>
           {' '}
-          <TabPane tab={<div style={{ color: cEvent.value.styles.textMenu }}>Asistentes</div>} key='2'>
+          <TabPane
+            tab={
+              <div style={{ color: cEvent.value.styles.textMenu }}>
+                <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
+              </div>
+            }
+            key='2'>
             <Row>
               <Col sm={21}>
                 {!Object.keys(attendeeList).length ? (
@@ -366,7 +372,9 @@ let SocialZone = function(props) {
           tab={
             <div style={{ marginBottom: '0px' }}>
               <Badge dot={props.hasOpenSurveys} size='default'>
-                <span style={{ color: cEvent.value.styles.textMenu }}>Encuestas</span>
+                <span style={{ color: cEvent.value.styles.textMenu }}>
+                  <FormattedMessage id='tabs.surveys.socialzone' defaultMessage='Encuestas' />
+                </span>
               </Badge>
             </div>
           }

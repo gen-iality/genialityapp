@@ -22,7 +22,7 @@ const EventSectionsInnerMenu = () => {
           trigger={null}
           width={110}>
           <Row justify='center' style={{ margin: 5 }}>
-            {event.styles && (
+            {event.styles && event.styles.event_image && (
               <Avatar
                 size={94}
                 icon={

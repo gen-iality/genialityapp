@@ -102,7 +102,7 @@ const AttendeList = function(props) {
                     props.settabselected('1');
                     props.setCurrentChat(item.iduser, item.name ? item.name : item.names);
                     props.setchattab('chat2');
-                  }}>
+                   }}>
                   <Tooltip title={'Chatear'}>
                     <MessageTwoTone style={{ fontSize: '20px' }} />
                   </Tooltip>

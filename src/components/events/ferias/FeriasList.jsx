@@ -73,7 +73,7 @@ const FeriasList = ({
       }
     }
 
-    return "nuevo";
+    return "Stand";
   };
 
   const isListVisualization=()=>{
@@ -86,7 +86,7 @@ const FeriasList = ({
    }
   }
   return (
-    <div>
+    <div style={{paddingBottom:'30px'}}>
       <MiniBanner banner={imageBanner} />
       {companiesEvent.length > 0 &&
         isListVisualization() &&
