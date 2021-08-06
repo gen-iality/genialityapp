@@ -84,6 +84,7 @@ export const HelperContextProvider = ({ children }) => {
           }
         });
     }
+    
     if (cEvent.value) {
       fetchActivityChange();
     }
