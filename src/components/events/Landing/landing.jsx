@@ -24,7 +24,7 @@ import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
 /** redux surveys */
 import { setCurrentSurvey, setSurveyResult } from '../../../redux/survey/actions';
-import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined } from '@ant-design/icons';
+import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -46,6 +46,10 @@ const IconRender = (type) => {
     case 'ended':
       iconRender = <IssuesCloseOutlined />;
       break;
+
+    case 'networking':
+      iconRender = <NotificationOutlined />;
+    break;
   }
   return iconRender;
 };

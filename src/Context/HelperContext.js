@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { firestore } from '../helpers/firebase';
 import { AgendaApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
+import {UseCurrentUser} from './userContext';
 
 export const HelperContext = createContext();
 
@@ -14,9 +15,13 @@ const initialStateNotification = {
 
 export const HelperContextProvider = ({ children }) => {
   let cEvent = UseEventContext();
+  let cUser =UseCurrentUser()
   const [containtNetworking, setcontaintNetworking] = useState(false);
   const [infoAgenda, setinfoAgenda] = useState(null);
   const [isNotification, setisNotification] = useState(initialStateNotification);
+  const [totalSolicitudAmistad, setTotalSolicitudAmistad] = useState(0);
+  const [totalsolicitudAgenda, setTotalsolicitudAgenda] = useState(0);
+  const [totalsolicitudes, setTotalsolicitudes] = useState(0);
 
   const ChangeActiveNotification = (notify, message, type) => {
     setisNotification({
@@ -89,6 +94,57 @@ export const HelperContextProvider = ({ children }) => {
       fetchActivityChange();
     }
   }, []);
+
+  useEffect(()=>{
+    console.log("USER")
+    console.log(cUser)
+     async function fetchNetworkingChange(){
+       console.log("ID USER==>"+ cUser.value._id)
+    //5e9caaa1d74d5c2f6a02a3c2
+        firestore
+          .collection('notificationUser')
+          .doc(cUser.value._id)
+          .collection('events')
+          .doc(cEvent.value._id)
+          .collection('notifications')
+          .onSnapshot((querySnapshot) => {
+            console.log("SNAPSHOT")
+            let contNotifications = 0;
+            let notAg = [];
+            let notAm = [];
+            //console.log(querySnapshot.docs[0].data());
+            let change = querySnapshot.docChanges()[0];
+            console.log(change)
+            querySnapshot.docs.forEach((doc) => {
+              let notification = doc.data();
+  
+              if (notification.state === '0') {
+                contNotifications++;
+              }  
+              //Notificacion tipo agenda
+              if (notification.type == 'agenda' && notification.state === '0') {
+                notAg.push(doc.data());
+              }
+              //Notificacion otra
+              if (notification.type == 'amistad' && notification.state === '0') {
+                notAm.push(doc.data());
+              }        
+            });
+            setTotalSolicitudAmistad(notAm.length)
+            setTotalsolicitudAgenda(notAg.length)
+
+            if(change.doc.data() && change.newIndex>0 ){             
+             // alert("NUEVA NOTIFICACION")
+              ChangeActiveNotification(true, change.doc.data().message, 'networking');
+            }
+          });
+     }
+
+     if (cUser.value!=null && cEvent.value!=null) {
+      fetchNetworkingChange();
+      console.log("ENTRO ACA")
+    }
+  },[cUser.value,cEvent.value]);
 
   return (
     <HelperContext.Provider value={{ containtNetworking, infoAgenda, isNotification, ChangeActiveNotification }}>

@@ -1,8 +1,8 @@
 import { getUserByEmail } from "../components/networking/services";
 import * as Cookie from 'js-cookie';
 import { EventsApi } from "./request";
-import { firestore } from "firebase";
-import { notification } from "antd";
+import { firestore } from "./firebase";
+
 
 export const  SendFriendship= async({ eventUserIdReceiver, userName },userActual,event)=> {
     console.log( eventUserIdReceiver, userName ,userActual,event)
@@ -47,23 +47,15 @@ export const  SendFriendship= async({ eventUserIdReceiver, userName },userActual
     return resp;
   };
 
- export const openNotification = (title,message) => {
-    notification.open({
-      message: title,
-      description: message,
-      onClick: () => {
-        console.log('Notification Clicked!');
-      },
-    });
-  };
-
- export const  addNotification=(notification)=> {
+ export const  addNotification=(notification,event,user)=> {
+   console.log(notification)
+   console.log(event)
     if (notification.emailEmited != null) {
       firestore
         .collection('notificationUser')
         .doc(notification.idReceive)
         .collection('events')
-        .doc(this.state.event._id)
+        .doc(event._id)
         .collection('notifications')
         .doc(notification.idEmited)
         .set({
@@ -76,9 +68,9 @@ export const  SendFriendship= async({ eventUserIdReceiver, userName },userActual
     } else {
       firestore
         .collection('notificationUser')
-        .doc(this.state.user?._id)
+        .doc(user._id)
         .collection('events')
-        .doc(this.state.event._id)
+        .doc(event._id)
         .collection('notifications')
         .doc(notification.idEmited)
         .set(
