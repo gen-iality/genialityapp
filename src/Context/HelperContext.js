@@ -53,6 +53,7 @@ export const HelperContextProvider = ({ children }) => {
     /*NOTIFICACIONES POR ACTIVIDAD*/
 
     async function fetchActivityChange() {
+      console.log('spanchot');
       firestore
         .collection('events')
         .doc(cEvent.value._id)
@@ -84,11 +85,11 @@ export const HelperContextProvider = ({ children }) => {
           }
         });
     }
-    
-    if (cEvent.value) {
+
+    if (cEvent.value != null) {
       fetchActivityChange();
     }
-  }, []);
+  }, [cEvent.value, firestore, infoAgenda]);
 
   return (
     <HelperContext.Provider value={{ containtNetworking, infoAgenda, isNotification, ChangeActiveNotification }}>
