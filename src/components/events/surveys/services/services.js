@@ -4,50 +4,6 @@ import * as Cookie from 'js-cookie';
 import updateTotalVoteMultipleAnswer from './updateTotalVoteMultipleAnswer';
 import updateTotalVoteSingleAnswer from './updateTotalVoteSingleAnswer';
 
-// Funcion para crear e inicializar la collecion del conteo de las respuestas por preguntas
-const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIndex, voteValue) => {
-   // eslint-disable-next-line no-unused-vars
-   return new Promise((resolve, reject) => {
-      // Se referencia la colleccion a usar
-      const ref_quantity = firestore
-         .collection('surveys')
-         .doc(surveyId)
-         .collection('answer_count')
-         .doc(questionId);
-
-      // Se valida si el voto tiene valor de lo contrario sumara 1
-      let vote = typeof voteValue == 'number' ? parseFloat(voteValue) : 1;
-
-      // Se crea un objeto que se asociara a las opciones de las preguntas
-      // Y se inicializan con valores en 0, para luego realizar el conteo
-      let firstData = {};
-      for (var i = 0; i < optionQuantity; i++) {
-         let idResponse = i.toString();
-
-         // Se valida si se escogio mas de una opcion en la pregunta o no
-         if (optionIndex && optionIndex.length && optionIndex.length > 1) {
-            firstData[idResponse] = optionIndex.includes(i) ? vote : 0;
-         } else {
-            firstData[idResponse] = optionIndex == idResponse ? vote : 0;
-         }
-      }
-
-      // Valida si la colleccion existe, si no, se asigna el arreglo con valores iniciales
-      ref_quantity.get().then((data) => {
-         if (!data.exists) {
-            ref_quantity.set(firstData);
-         }
-      });
-
-      // Se resuelve la promesa si la coleccion ya existe
-      ref_quantity.get().then((data) => {
-         if (data.exists) {
-            resolve({ message: 'Existe el documento', optionIndex, surveyId, questionId });
-         }
-      });
-   });
-};
-
 // Funcion para realizar conteo de las opciones por pregunta
 const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteValue) => {
    // Se valida si el voto tiene valor de lo contrario sumara 1
@@ -63,6 +19,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
    const randomNumber = Math.random() * (0.8 - 0.3) + 0.3;
    const toleranceTime = Math.round(randomNumber * 100) / 100;
 
+   /** setTimeOut que nos permite crear delay entre insersiones ya que si no se pone firebase RealTime espera el bloque completo de transacciones para actualizarlas y se incrementan los tiempos de respuesta */
    setTimeout(() => {
       realTimeRef.transaction((questionAnswerCount) => {
          if (questionAnswerCount) {

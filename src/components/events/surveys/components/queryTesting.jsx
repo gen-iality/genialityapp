@@ -179,6 +179,45 @@ function QueryTesting() {
    //    RegisterVote(surveyData, question, userData, eventUsers, voteWeight);
    // }
 
+   /** CODIGO PRUEBAS PARA LAS GRAFICAS para usar este codigo se comenta el actual de la funcion countAnswers*/
+   /** index aleatorio para pruebas en las graficas */
+   // const randomValue = Math.random() * (2 - 0) + 0;
+   // const randomIdex = parseInt(randomValue.toFixed());
+   // setTimeout(() => {
+   //    realTimeRef.transaction((questionAnswerCount) => {
+   //       if (questionAnswerCount) {
+   //          if (optionIndex && optionIndex.length && optionIndex.length > 0) {
+   //             optionIndex.forEach((element) => {
+   //                if (element >= 0) {
+   //                   questionAnswerCount[element] += vote;
+   //                }
+   //             });
+   //          } else {
+   //             if (optionIndex >= 0) {
+   //                questionAnswerCount[randomIdex] += vote;
+   //             }
+   //          }
+   //       } else {
+   //          // Se crea un objeto que se asociara a las opciones de las preguntas
+   //          // Y se inicializan con valores en 0, para luego realizar el conteo
+   //          let firstData = {};
+   //          for (var i = 0; i < optionQuantity; i++) {
+   //             let idResponse = i.toString();
+
+   //             // Se valida si se escogio mas de una opcion en la pregunta o no
+   //             if (optionIndex && optionIndex.length && optionIndex.length > 0) {
+   //                firstData[idResponse] = optionIndex.includes(i) ? vote : 0;
+   //             } else {
+   //                firstData[idResponse] = optionIndex == idResponse ? vote : 0;
+   //             }
+   //          }
+
+   //          // Valida si la colleccion existe, si no, se asigna el arreglo con valores iniciales
+   //          questionAnswerCount = firstData;
+   //       }
+   //       return questionAnswerCount;
+   //    });
+
    return (
       <Row justify='center' align='middle' style={{ minHeight: '100vh', textAlign: 'center' }}>
          <Col>
