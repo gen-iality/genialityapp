@@ -169,7 +169,7 @@ function AppointmentModal({
       idReceive: usId.account_id,
       idEmited: resp,
       emailEmited: 'email@gmail.com',
-      message: 'Te ha enviado solicitud de agenda',
+      message: 'te ha enviado cita',
       name: 'notification.name',
       type: 'agenda',
       state: '0'

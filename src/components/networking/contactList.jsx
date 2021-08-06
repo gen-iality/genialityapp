@@ -11,12 +11,12 @@ import { UseCurrentUser } from '../../Context/userContext';
 
 const { Meta } = Card;
 
-const ContactList = ({ tabActive }) => {
+const ContactList = ({ tabActive,agendarCita }) => {
   const [contactsList, setContactsList] = useState([]);
   const [messageService, setMessageService] = useState('');
   const [userProperties, setUserProperties] = useState([]);
   const [loading, setLoading] = useState(false);
- console.log("TAB ACTIVE==>"+tabActive)
+ //console.log("TAB ACTIVE==>"+tabActive)
   //contextos
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
@@ -31,7 +31,8 @@ const ContactList = ({ tabActive }) => {
         if (typeof result == 'object') {
           setContactsList(result);
         }
-        if (typeof result == 'string') setMessageService(result);             
+        if (typeof result == 'string') setMessageService(result);
+             
         setLoading(false);
       });
     };
@@ -120,7 +121,7 @@ const ContactList = ({ tabActive }) => {
                     block
                     size='large'
                     style={{ backgroundColor: '#363636', color: 'white' }}
-                    onClick={() => null/*agendarCita(contact._id, contact)*/}>
+                    onClick={() => agendarCita(contact._id, contact)}>
                     {'Agendar cita'}
                   </Button>
                 </Col>
