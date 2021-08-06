@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Result, Button } from 'antd';
 import { BulbOutlined, LoadingOutlined } from '@ant-design/icons';
-import { SurveyPage, UserGamification, Trivia, getCurrentEvenUser } from './services/services';
+import { SurveyPage } from './services/services';
+import UserGamification from './services/userGamificationService';
+import getCurrentEvenUser from './services/getCurrentEventUserService';
+import setUserPointsPerSurvey from './services/setUserPointsPerSurveyService';
 import Graphics from './graphics';
 import { UseEventContext } from '../../../Context/eventContext';
 import * as Survey from 'survey-react';
@@ -14,7 +17,7 @@ import MessageWhenCompletingSurvey from './functions/messageWhenCompletingSurvey
 import RealTimeSurveyListening from './functions/realTimeSurveyListening';
 import TimeLimitPerQuestion from './functions/timeLimitPerQuestion';
 import SetCurrentUserSurveyStatus from './functions/setCurrentUserSurveyStatus';
-import { firestore, fireRealtime } from '../../../helpers/firebase';
+// import { firestore, fireRealtime } from '../../../helpers/firebase';
 
 function SurveyComponent(props) {
    const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
@@ -120,7 +123,7 @@ function SurveyComponent(props) {
          points: rankingPoints,
       });
 
-      Trivia.setTriviaRanking(surveyData._id, currentUser, totalPoints, surveyModel.getAllQuestions().length - 1);
+      setUserPointsPerSurvey(surveyData._id, currentUser, totalPoints, surveyModel.getAllQuestions().length - 1);
       // message.success({ content: responseMessage });
    }
 

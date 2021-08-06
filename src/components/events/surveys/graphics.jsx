@@ -7,7 +7,7 @@ import Loading from './loading';
 
 import Chart from 'chart.js/auto';
 
-import { SurveyAnswers } from './services/services';
+import SurveyAnswers from './services/surveyAnswersService';
 import { SurveysApi, UsersApi } from '../../../helpers/request';
 import { graphicsFrame } from './frame';
 
