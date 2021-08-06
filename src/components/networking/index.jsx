@@ -16,7 +16,7 @@ import { userRequest } from "./services";
 import ContactList from "./contactList";
 import RequestList from "./requestList";
 import withContext from "../../Context/withContext";
-import { SendFriendship } from "../../helpers/netWorkingFunctions";
+import { addNotification, SendFriendship } from "../../helpers/netWorkingFunctions";
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
@@ -54,7 +54,9 @@ class ListEventUser extends Component {
   closeAppointmentModal = () => {
     this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
   };
-
+  agendarCita=(iduser, user)=>{
+    this.setState({ eventUserIdToMakeAppointment:iduser, eventUserToMakeAppointment:user });
+  }
   loadData = async () => {
     let { changeItem } = this.state;
 
@@ -519,11 +521,7 @@ class ListEventUser extends Component {
                                             <Button
                                               type="primary"
                                               onClick={() => {
-                                                this.setState({
-                                                  eventUserIdToMakeAppointment:
-                                                    user._id,
-                                                  eventUserToMakeAppointment: user,
-                                                });
+                                                this.agendarCita(user._id,user);
                                               }}
                                             >
                                               {"Agendar cita"}
@@ -913,26 +911,25 @@ class ListEventUser extends Component {
                                                 users.properties.names ||
                                                 users.properties.email,
                                             },this.props.cEventUser.value,this.props.cEvent.value);
-                                            console.log("RESPUESTA FRIENDSHIP")
-                                            console.log(sendResp)
+                                            //console.log("RESPUESTA FRIENDSHIP")
+                                            //console.log(sendResp)
                                            
                                             let us=this.props.cEventUser.value;
                                             console.log(this.props.cEventUser.value)
                                          
                                             if (sendResp._id) {
-                                              let notificationU = {
-                                                idReceive: us
-                                                  ? us._id
-                                                  : users.account_id,
+                                              let notification = {
+                                                idReceive: us.account_id,
                                                 idEmited: sendResp._id,
-                                                emailEmited:this.props.cEventUser.value.email                                         ,
-                                                message:
-                                                  "Te ha enviado solicitud de amistad",
-                                                name: "notification.name",
-                                                type: "amistad",
-                                                state: "0",
+                                                emailEmited: this.props.cEventUser.value.email || this.props.cEventUser.value.user.email  ,
+                                                message: (this.props.cEventUser.value.names ||  this.props.cEventUser.value.user.names)+ 'te ha enviado solicitud de amistad',
+                                                name: 'notification.name',
+                                                type: 'amistad',
+                                                state: '0',
                                               };
-                                             /* await this.props.notification(
+                                             
+                                              addNotification(notification,this.props.cEvent.value,this.props.cEventUser.value)
+                                             /*await this.props.notification(
                                                 notificationU,
                                                 this.props.cEventUser.value._id
                                               );*/
@@ -980,7 +977,7 @@ class ListEventUser extends Component {
 
             <TabPane tab="Mis Contactos" key="mis-contactos">
               <ContactList
-                agendarCita={this.props.agendarCita}
+                agendarCita={this.agendarCita}
                 eventId={this.props.cEvent.value._id}                
                 tabActive={this.state.activeTab}
               />

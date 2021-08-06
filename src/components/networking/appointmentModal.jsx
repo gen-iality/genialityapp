@@ -169,7 +169,7 @@ function AppointmentModal({
       idReceive: usId.account_id,
       idEmited: resp,
       emailEmited: 'email@gmail.com',
-      message: 'Te ha enviado solicitud de agenda',
+      message: 'te ha enviado cita',
       name: 'notification.name',
       type: 'agenda',
       state: '0'
@@ -177,110 +177,6 @@ function AppointmentModal({
 
     await addNotification(notificationA,cEvent.value, cEventUser.value);
   }
-/*  useEffect(() => {
-    console.log( cEventUser,
-      targetEventUserId,
-      targetEventUser,
-      closeModal,
-      cEvent)
-    if (!(cEvent.status!=='LOADED')) return;
-    console.log("ENTRO ACA")
-
-    if (!(cEvent.value._id && targetEventUserId &&  cEventUser.value._id)) {
-      return;
-    }
-
-    const loadData = async () => {
-      setLoading(true);
-      setTimetable({});
-      setAgendaMessage('');
-      setOpenAgenda('');
-
-      try {
-        const agendas = await getAgendasFromEventUser(cEvent.value._id, targetEventUserId);
-
-        const newTimetable = {};
-        const eventTimetable = pathOr(fakeEventTimetable, ['timetable'], cEvent.value); // TODO: -> cambiar fakeEventTimetable por {}
-        const dates = keys(eventTimetable);
-
-        dates.forEach((date) => {
-          if (isNonEmptyArray(eventTimetable[date])) {
-            eventTimetable[date].forEach((timetableItem) => {
-              const occupiedAgendas = filter(
-                whereEq({
-                  timestamp_start: timetableItem.timestamp_start,
-                  timestamp_end: timetableItem.timestamp_end
-                }),
-                agendas
-              );
-
-              const occupiedAgendaFromMe = find(propEq('owner_id', cEventUser.value._id), occupiedAgendas);
-              const occupiedAcceptedAgenda = find(propEq('request_status', 'accepted'), occupiedAgendas);
-              const occupiedAgenda = occupiedAgendaFromMe || occupiedAcceptedAgenda;
-
-              const newTimetableItem = {
-                ...timetableItem,
-                id: occupiedAgenda ? occupiedAgenda.id : null,
-                status:
-                  !!occupiedAgenda &&
-                  (occupiedAgenda.request_status === 'accepted' || occupiedAgenda.owner_id === cEventUser.value._id)
-                    ? occupiedAgenda.request_status
-                    : 'free'
-              };
-
-              if (isNonEmptyArray(newTimetable[date])) {
-                newTimetable[date].push(newTimetableItem);
-              } else {
-                newTimetable[date] = [newTimetableItem];
-              }
-            });
-          }
-        });
-
-        setTimetable(newTimetable);
-      } catch (error) {
-        console.error(error);
-        notification.error({
-          message: 'Error',
-          description: 'Obteniendo las citas del usuario'
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
-  }, [reloadFlag, cEventUser.value._id, targetEventUserId]);*/
-
- /* if (!cEvent.value) return null;
-
-  const eventDatesRange = cEvent.value && getDatesRange(cEvent.value.date_start, cEvent.value.date_end);
-  if (eventDatesRange) setSelectedDate(eventDatesRange[0]);
-  const reloadData = async (resp) => {
-    setReloadFlag(!reloadFlag);
-
-    notification.open({
-      message: 'Solicitud enviada',
-      description:
-        'Le llegará un correo a la persona notificandole la solicitud, quien la aceptara o recharaza  y le llegará un correo de vuelta confirmando la respuesta',
-      icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-      duration: 30
-    });
-    var usId = await getUsersId(targetEventUserId, event._id);
-
-    let notificationA = {
-      idReceive: usId.account_id,
-      idEmited: resp,
-      emailEmited: 'email@gmail.com',
-      message: 'Te ha enviado solicitud de agenda',
-      name: 'notification.name',
-      type: 'agenda',
-      state: '0'
-    };
-
-    //await notificacion(notificationA, cEventUser.value._id);
-  };*/
-
   const resetModal = () => {
     closeModal();
     setSelectedDate(eventDatesRange[0]);

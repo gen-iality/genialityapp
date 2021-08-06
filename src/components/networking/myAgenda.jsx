@@ -179,7 +179,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     </>
                   ))
                 ) : (
-                  <Card>{'No tienes citas agendadas para esta fecha'}</Card>
+                  <Card style={{textAlign:'center'}}>{'No tienes citas agendadas para esta fecha'}</Card>
                 )}
               </TabPane>
             );
