@@ -115,7 +115,7 @@ export const HelperContextProvider = ({ children }) => {
             let notAm = [];
             //console.log(querySnapshot.docs[0].data());
             let change = querySnapshot.docChanges()[0];
-            console.log(change)
+            
             querySnapshot.docs.forEach((doc) => {
               let notification = doc.data();
   
@@ -133,11 +133,12 @@ export const HelperContextProvider = ({ children }) => {
             });
             setTotalSolicitudAmistad(notAm.length)
             setTotalsolicitudAgenda(notAg.length)
-
+           if(change){
             if(change.doc.data() && change.newIndex>0 ){             
              // alert("NUEVA NOTIFICACION")
               ChangeActiveNotification(true, change.doc.data().message, 'networking');
             }
+          }
           });
      }
 

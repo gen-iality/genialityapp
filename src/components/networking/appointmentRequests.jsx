@@ -29,12 +29,14 @@ function AppointmentRequests({ eventUsers, notificacion }) {
   let eventContext = UseEventContext();
 
   useEffect(() => {
-    if (eventContext._id && userEventContext._id) {
+    if (eventContext.value._id && userEventContext.value._id) {
       setLoading(true);
       setPendingAgendas([]);
 
-      getPendingAgendasFromEventUser(eventContext._id, userEventContext._id)
+      getPendingAgendasFromEventUser(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
+          console.log("PENDING AGENDAS")
+          console.log(agendas)
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             const pendingAgendas = map((agenda) => {
               const ownerEventUser = find(propEq('_id', agenda.owner_id), eventUsers);
@@ -53,14 +55,15 @@ function AppointmentRequests({ eventUsers, notificacion }) {
         })
         .finally(() => setLoading(false));
     }
+   
   }, [eventContext._id, userEventContext._id, eventUsers]);
 
   useEffect(() => {
-    if (eventContext._id && userEventContext._id) {
+    if (eventContext.value._id && userEventContext.value._id) {
       setLoading1(true);
       setPendingAgendasSent([]);
 
-      getPendingAgendasSent(eventContext._id, userEventContext._id)
+      getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             const pendingAgendas = map((agenda) => {
@@ -69,7 +72,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
             }, agendas);
 
             setPendingAgendasSent(pendingAgendas);
-          }
+          } 
         })
         .catch((error) => {
           console.error(error);
@@ -80,7 +83,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
         })
         .finally(() => setLoading1(false));
     }
-  }, [eventContext._id, userEventContext._id, eventUsers]);
+  }, [eventContext.value._id, userEventContext.value._id, eventUsers]);
 
   return (
     <>
@@ -99,7 +102,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
               />
             ))
           ) : (
-            <Card>{'No tienes solicitudes actualmente'}</Card>
+            <Card style={{textAlign:'center'}}>{'No tienes solicitudes actualmente'}</Card>
           ))}
 
         {loading && (
