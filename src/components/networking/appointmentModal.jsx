@@ -153,7 +153,7 @@ function AppointmentModal({
   },[cEvent.status,targetEventUserId,reloadFlag])
 
   async function reloadData (resp){
-    setReloadFlag(!reloadFlag);
+   setReloadFlag(!reloadFlag);
 
     notification.open({
       message: 'Solicitud enviada',
@@ -163,7 +163,7 @@ function AppointmentModal({
       duration: 30
     });
     var usId = await getUsersId(targetEventUserId, cEvent.value._id);
-    console.log()
+    console.log(usId)
 
     let notificationA = {
       idReceive: usId.account_id,
@@ -175,7 +175,7 @@ function AppointmentModal({
       state: '0'
     };
 
-    await addNotification(notificationA, cEventUser.value._id);
+    await addNotification(notificationA,cEvent.value, cEventUser.value);
   }
 /*  useEffect(() => {
     console.log( cEventUser,

@@ -981,8 +981,7 @@ class ListEventUser extends Component {
             <TabPane tab="Mis Contactos" key="mis-contactos">
               <ContactList
                 agendarCita={this.props.agendarCita}
-                eventId={this.props.cEvent.value._id}
-                section={this.props.section}
+                eventId={this.props.cEvent.value._id}                
                 tabActive={this.state.activeTab}
               />
             </TabPane>

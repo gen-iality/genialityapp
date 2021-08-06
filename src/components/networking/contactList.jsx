@@ -11,12 +11,12 @@ import { UseCurrentUser } from '../../Context/userContext';
 
 const { Meta } = Card;
 
-const ContactList = ({ agendarCita, tabActive }) => {
+const ContactList = ({ tabActive }) => {
   const [contactsList, setContactsList] = useState([]);
   const [messageService, setMessageService] = useState('');
   const [userProperties, setUserProperties] = useState([]);
   const [loading, setLoading] = useState(false);
-
+ console.log("TAB ACTIVE==>"+tabActive)
   //contextos
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
@@ -27,18 +27,16 @@ const ContactList = ({ agendarCita, tabActive }) => {
 
     const getContactList = async () => {
       // Servicio que trae los contactos
-      Networking.getContactList(eventContext.value._id, userEventContext._id).then((result) => {
+      Networking.getContactList(eventContext.value._id, userEventContext.value._id).then((result) => {
         if (typeof result == 'object') {
           setContactsList(result);
         }
-        if (typeof result == 'string') setMessageService(result);
-        console.log("TERMINO CONTACT LIST")
-
+        if (typeof result == 'string') setMessageService(result);             
         setLoading(false);
       });
     };
     const getProperties = async () => {
-      let properties = await EventFieldsApi.getAll(eventContext.value._id);
+      let properties = await EventFieldsApi.getAll(eventContext.value._id);     
       setUserProperties(properties);
     };
 
@@ -122,7 +120,7 @@ const ContactList = ({ agendarCita, tabActive }) => {
                     block
                     size='large'
                     style={{ backgroundColor: '#363636', color: 'white' }}
-                    onClick={() => agendarCita(contact._id, contact)}>
+                    onClick={() => null/*agendarCita(contact._id, contact)*/}>
                     {'Agendar cita'}
                   </Button>
                 </Col>
