@@ -11,6 +11,22 @@ const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 const { Text } = Typography;
 
+const styleItemCard = {
+  backgroundColor: 'white',
+  padding: 15,
+  margin: 6,
+  display: 'flex',
+  border: '1px solid #cccccc',
+  borderRadius: '10px',
+};
+
+const styleList = {
+  padding: 5,
+  borderRadius: '10px',
+  backgroundColor:"#ffffff63",
+  overflow:"auto"
+};
+
 const layout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 18 },
@@ -167,12 +183,11 @@ const ChatList = (props) => {
           key='chat2'>
           {!props.currentChat && (
             <List
-              header={<div></div>}
-              footer={<div></div>}
-              bordered
+              style={styleList}
               dataSource={props.availableChats}
               renderItem={(item) => (
                 <List.Item
+                  style={styleItemCard}
                   actions={[
                     <a
                       key='list-loadmore-edit'
@@ -184,26 +199,22 @@ const ChatList = (props) => {
                       <Tooltip title='Chatear'>
                         {item.newMessages && item.newMessages.length > 0 && (
                           <Badge count={' '} style={{ minWidth: '10px', height: '10px', padding: '0px' }}>
-                            <MessageTwoTone style={{ fontSize: '20px' }} />
+                            <MessageTwoTone style={{ fontSize: '27px' }} />
                           </Badge>
                         )}
                         {item.newMessages && item.newMessages.length == 0 && (
-                          <MessageTwoTone style={{ fontSize: '20px' }} />
+                          <MessageTwoTone style={{ fontSize: '27px' }} />
                         )}
                       </Tooltip>
                     </a>,
                   ]}>
-                  <div style={{ color: cEvent.value.styles.textMenu }}>
-                    {item.name ? item.name : item.names || '----'}
-                  </div>
+                  <div style={{ color: 'black' }}>{item.name ? item.name : item.names || '----'}</div>
                 </List.Item>
               )}
             />
           )}
           {props.currentChat && (
             <>
-              {' '}
-              {console.log("estatvuel", props.currentChat)}
               <iframe
                 title='chatevius'
                 className='ChatEviusLan'
