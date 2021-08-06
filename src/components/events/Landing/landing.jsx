@@ -75,6 +75,7 @@ const Landing = (props) => {
     if (isNotification.notify) {
       NotificationHelper(isNotification);
     }
+    console.log('Notification',isNotification)
   }, [isNotification]);
 
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
