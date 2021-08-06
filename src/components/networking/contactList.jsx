@@ -27,17 +27,18 @@ const ContactList = ({ agendarCita, tabActive }) => {
 
     const getContactList = async () => {
       // Servicio que trae los contactos
-      Networking.getContactList(eventContext._id, userEventContext._id).then((result) => {
+      Networking.getContactList(eventContext.value._id, userEventContext._id).then((result) => {
         if (typeof result == 'object') {
           setContactsList(result);
         }
         if (typeof result == 'string') setMessageService(result);
+        console.log("TERMINO CONTACT LIST")
 
         setLoading(false);
       });
     };
     const getProperties = async () => {
-      let properties = await EventFieldsApi.getAll(eventContext._id);
+      let properties = await EventFieldsApi.getAll(eventContext.value._id);
       setUserProperties(properties);
     };
 
@@ -46,10 +47,10 @@ const ContactList = ({ agendarCita, tabActive }) => {
       // getuserContactList();
       getContactList();
     }
-  }, [eventContext._id, tabActive]);
+  }, [eventContext.value._id, tabActive]);
 
-  if (userCurrentContext._id && !loading)
-    return userCurrentContext._id === 'guestUser' ? (
+  if (userCurrentContext.value._id && !loading)
+    return userCurrentContext.value._id === 'guestUser' ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
         <Alert
           message='Iniciar Sesión'
@@ -134,7 +135,7 @@ const ContactList = ({ agendarCita, tabActive }) => {
       contactsList.length == 0 &&
       !loading && (
         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-          <Card>{messageService}</Card>
+          <Card style={{textAlign:'center'}} >{messageService}</Card>
         </Col>
       )
     );
