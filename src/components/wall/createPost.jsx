@@ -17,9 +17,10 @@ const Editor = ({ onChange, onSubmit, submitting, value,loadingsave }) => (
     </Form.Item>
 
     <Form.Item>
-      <Button id='submitPost' style={{background: loadingsave?'white':'#333F44'}} htmlType='submit' loading={submitting} onClick={onSubmit} type='primary'>
-       {loadingsave?<><Spin /> <span style={{color:'#333F44'}}>Por Favor espere...</span></>:'Enviar'} 
-      </Button>
+     {!loadingsave && <Button id='submitPost' style={{background: loadingsave?'white':'#333F44'}} htmlType='submit' loading={submitting} onClick={onSubmit} type='primary'>
+       Enviar
+      </Button>}
+      {loadingsave&&<><Spin /> <span style={{color:'#333F44'}}>Por Favor espere...</span></>}
     </Form.Item>
   </div>
 );
@@ -146,7 +147,7 @@ class CreatePost extends Component {
 
         <div>
           {this.props.cUser && (
-            <Button style={{ marginBottom: '3%' }} type='primary' onClick={this.showModal}>
+            <Button style={{ marginBottom: '3%',marginTop:'3%' }} type='primary' onClick={this.showModal}>
               Crear Publicación
             </Button>
           )}

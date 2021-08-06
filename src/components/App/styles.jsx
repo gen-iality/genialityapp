@@ -6,7 +6,7 @@ import { Actions } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 import LogOut from '../shared/logOut';
 import { SketchPicker } from 'react-color';
-import { Button, Card, Typography } from 'antd';
+import { Button, Card, message, Typography } from 'antd';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
 
@@ -276,6 +276,7 @@ class Styles extends Component {
   async componentDidMount() {
     const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
     info.styles = info.styles ? info.styles : {};
+    console.log('Marlon',info)
 
     if (info.styles) {
       this.setState({
@@ -386,6 +387,11 @@ class Styles extends Component {
 
   //Se realiza una funcion asincrona submit para enviar los datos a la api
   async submit(e) {
+    const loadingSave=  message.open({
+      key:'loading',
+      type: 'loading',
+      content: <> Por favor espere..</>,        
+    });
     if (e !== undefined) {
       e.preventDefault();
       e.stopPropagation();
@@ -401,10 +407,22 @@ class Styles extends Component {
       this.setState({ loading: false });
       if (info._id) {
         toast.success(<FormattedMessage id='toast.success' defaultMessage='Ok!' />);
+        message.destroy(loadingSave.key);
+        message.open({
+          type: 'success', 
+          content: <> Información guardada correctamente</>,
+          
+        });
       } else {
         toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
         this.setState({ msg: 'Cant Create', create: false });
+        message.destroy(loadingSave.key);
+        message.open({
+          type: 'error', 
+          content: <> Error al guardar</>,          
+        });      
       }
+     
     } catch (error) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       if (error.response) {
@@ -422,9 +440,16 @@ class Styles extends Component {
         }
 
         this.setState({ serverError: true, loader: false, errorData });
-      }
-      console.error(error.config);
+        message.destroy(loadingSave.key);
+        message.open({
+          type: 'error', 
+          content: <> Error al guardar</>,
+          
+        });
+      }     
     }
+   
+  
   }
 
   onColorChange = function(color, fieldName) {

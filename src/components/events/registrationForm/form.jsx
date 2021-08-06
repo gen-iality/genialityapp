@@ -150,11 +150,13 @@ export default ({
   const onFinish = async (values) => {
     values.password = password;
     let ruta='';
+    if(imageAvatar){
     if(imageAvatar.fileList.length>0){
       ruta=await saveImageStorage(imageAvatar.fileList[0].thumbUrl);
     }    
     console.log("RUTA==>",ruta);   
     values.picture=ruta;
+  }
     
     // values.files = fileSave
 

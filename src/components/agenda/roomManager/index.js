@@ -417,8 +417,7 @@ class RoomManager extends Component {
                   deleteZoomRoom={this.deleteZoomRoom}
                 />
               )}
-            </TabPane>
-            {hasVideoconference && (
+            </TabPane>            
               <TabPane tab='Controlador' key='controller'>
                 {loading ? (
                   <Spin />
@@ -434,8 +433,7 @@ class RoomManager extends Component {
                     handleTabsController={this.handleTabsController}
                   />
                 )}
-              </TabPane>
-            )}
+              </TabPane>            
           </Tabs>
         )}
       </Card>

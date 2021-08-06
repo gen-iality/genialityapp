@@ -234,7 +234,7 @@ function AgendaActivityItem(props) {
                               )}
 
                               {(meetingState == '' || meetingState == null) && <></>}
-                              <p style={{ fontSize: '14px' }}>
+                              <p style={{ fontSize: '12px' }}>
                                 {meetingState == 'open_meeting_room'
                                   ? intl.formatMessage({ id: 'live' })
                                   : meetingState == 'ended_meeting_room' && item.video
@@ -374,7 +374,16 @@ function AgendaActivityItem(props) {
                   </Space>
                 </Col>
                 <Col md={8} lg={5} xl={5} style={{ textAlign: 'right' }}>
-                  <img className='agenda-imagen' src={item.image ? item.image : event_image} />
+                  <img
+                    className='agenda-imagen'
+                    src={
+                      item.image
+                        ? item.image
+                        : event_image
+                        ? event_image
+                        : 'https://via.placeholder.com/300/FFFFFF/FFFFFF?Text=imagen'
+                    }
+                  />
                 </Col>
               </Row>
             </Card>

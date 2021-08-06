@@ -6,11 +6,10 @@ import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useHistory } from "react-router-dom"
+import { useHistory } from 'react-router-dom';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 const { Text } = Typography;
-
 
 const layout = {
   labelCol: { span: 6 },
@@ -25,11 +24,11 @@ const ChatList = (props) => {
   //contextos
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
-  const [bandera, setbandera] = useState()
- 
+  const [bandera, setbandera] = useState();
+
   const onFinish = (values) => {
     cUser.value = values;
-    setbandera('')
+    setbandera('');
   };
 
   let userName = cUser.value ? (cUser.value.names ? cUser.value.names : cUser.value.name) : undefined;
@@ -45,14 +44,8 @@ const ChatList = (props) => {
       props.totalNewMessages > 0;
   }, [props.datamsjlast, props.totalNewMessages]);
 
-  let [currentab, setcurrentab] = useState('chat1');
-
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();
-
-  useEffect(() => {
-    setcurrentab(props.chattab);
-  }, [props.chattab]);
 
   function callback(key) {
     if (key === 'chat1') {
@@ -65,7 +58,7 @@ const ChatList = (props) => {
         props.setCurrentChat(null, null);
       }
     }
-    setcurrentab(key);
+    props.setchattab(key);
   }
 
   if (!cUser.value)
@@ -106,7 +99,7 @@ const ChatList = (props) => {
         <Row justify='center'>
           <Space size='large'>
             <Form.Item>
-              <Button  onClick={ () => history.push(`/landing/${cEvent.value._id}/tickets`)} type='primary'>
+              <Button onClick={() => history.push(`/landing/${cEvent.value._id}/tickets`)} type='primary'>
                 <FormattedMessage id='form.button.register' defaultMessage='Registrarme' />
               </Button>
             </Form.Item>
@@ -122,9 +115,15 @@ const ChatList = (props) => {
     );
 
   return (
-    <Tabs activeKey={currentab} size='small' onChange={callback} centered>
+    <Tabs activeKey={props.chattab} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
-        <TabPane tab={<div style={{ color: cEvent.value.styles.textMenu }}><FormattedMessage id='tabs.public.socialzone' defaultMessage='Público' /></div>} key='chat1'>
+        <TabPane
+          tab={
+            <div style={{ color: cEvent.value.styles.textMenu }}>
+              <FormattedMessage id='tabs.public.socialzone' defaultMessage='Público' />
+            </div>
+          }
+          key='chat1'>
           <iframe
             title='chatevius'
             className='ChatEviusLan'
@@ -152,13 +151,15 @@ const ChatList = (props) => {
                   style={{ minWidth: '10px', height: '10px', padding: '0px', color: cEvent.value.styles.textMenu }}
                   count={' '}>
                   <div style={{ color: cEvent.value.styles.textMenu }}>
-                  <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />{props.currentChat ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )` : ''}
+                    <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />
+                    {props.currentChat ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )` : ''}
                   </div>
                 </Badge>
               )}
               {props.totalNewMessages !== undefined && props.totalNewMessages == 0 && (
                 <div style={{ color: cEvent.value.styles.textMenu }}>
-                  <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />{props.currentChat ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )` : ''}
+                  <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />
+                  {props.currentChat ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )` : ''}
                 </div>
               )}
             </>
@@ -200,19 +201,23 @@ const ChatList = (props) => {
             />
           )}
           {props.currentChat && (
-            <iframe
-              title='chatevius'
-              className='ChatEviusLan'
-              src={
-                'https://chatevius.web.app?nombre=' +
-                userName +
-                '&chatid=' +
-                props.currentChat +
-                '&eventid=' +
-                cEvent.value._id +
-                '&userid=' +
-                cUser.value.uid
-              }></iframe>
+            <>
+              {' '}
+              {console.log("estatvuel", props.currentChat)}
+              <iframe
+                title='chatevius'
+                className='ChatEviusLan'
+                src={
+                  'https://chatevius.web.app?nombre=' +
+                  userName +
+                  '&chatid=' +
+                  props.currentChat +
+                  '&eventid=' +
+                  cEvent.value._id +
+                  '&userid=' +
+                  cUser.value.uid
+                }></iframe>
+            </>
           )}
         </TabPane>
       )}

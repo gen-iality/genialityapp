@@ -36,10 +36,10 @@ function useGetEventCompaniesStandTypesOptions(eventId) {
       .catch((error) => {
         console.error(error);
 
-        notification.error({
+      /*  notification.error({
           message: 'Error',
           description: 'Error obteniendo los tipos de stand de las empresas',
-        });
+        });*/
       })
       .finally(() => setLoadingData(false));
   }, [reloadFlag, eventId]);
