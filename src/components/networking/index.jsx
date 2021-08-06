@@ -35,7 +35,7 @@ class ListEventUser extends Component {
       eventUserId: null,
       currentUserName: null,
       eventUserIdToMakeAppointment: null,
-      eventUserToMakeAppointment: null,
+      eventUserToMakeAppointment: null,     
       asistantData: [],
       matches: [],
       filterSector: null,
@@ -50,6 +50,9 @@ class ListEventUser extends Component {
 
   changeActiveTab = (activeTab) => {
     this.setState({ activeTab });
+  };
+  closeAppointmentModal = () => {
+    this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
   };
 
   loadData = async () => {
@@ -93,7 +96,7 @@ class ListEventUser extends Component {
       let matches = [];
 
       //Búscamos usuarios sugeridos según el campo sector esto es para el proyecto FENALCO
-      if (this.EventContext) {
+      if (this.props.cEvent.value) {
         let meproperties = this.state.eventUser.properties;
 
         //
@@ -266,11 +269,11 @@ class ListEventUser extends Component {
   // Funcion que trae el eventUserId del usuario actual
   getInfoCurrentUser = async () => {
     const event = this.props.cEvent.value;
-    const currentUser = this.props.cEventUser.value;
+    const eventUser = this.props.cEventUser.value;
     console.log(this.props);
-    if (currentUser) {
-      alert("SI CURRENT USER");
-      const eventUser = await EventsApi.getcurrentUserEventUser(event._id);
+    if (eventUser) {
+     
+     // const eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       console.log(eventUser);
 
       if (eventUser !== null) {
@@ -352,6 +355,7 @@ class ListEventUser extends Component {
 
     console.log("LENGTH");
     console.log(users.length);
+    console.log(usersFiltered)
 
     return (
       <div style={{ padding: "12px" }}>
@@ -546,14 +550,11 @@ class ListEventUser extends Component {
             </TabPane>
 
             <TabPane tab="Todos los Asistentes" key="asistentes">
-              <AppointmentModal
-                event={event}
-                currentEventUserId={eventUserId}
-                eventUser={eventUser}
-                targetEventUserId={eventUserIdToMakeAppointment}
-                targetEventUser={eventUserToMakeAppointment}
+            { <AppointmentModal              
+                targetEventUserId={this.state.eventUserIdToMakeAppointment}
+                targetEventUser={this.state.eventUserToMakeAppointment}
                 closeModal={this.closeAppointmentModal}
-              />
+             />}
               <Form>
                 <Row justify="space-around" gutter={[16, 16]}>
                   <Col
@@ -893,10 +894,8 @@ class ListEventUser extends Component {
                                             color: "white",
                                           }}
                                           onClick={() => {
-                                            this.props.agendarCita(
-                                              users._id,
-                                              users
-                                            );
+                                            this.setState({ eventUserIdToMakeAppointment: users._id, eventUserToMakeAppointment: users });
+                                            //alert("ACA")
                                           }}
                                         >
                                           {"Agendar cita"}

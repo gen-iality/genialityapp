@@ -4,6 +4,7 @@ import { EventsApi, getCurrentUser } from '../helpers/request';
 import { GetIdEvent } from '../helpers/utils';
 import { useParams } from 'react-router-dom';
 
+
 export const CurrentEventUserContext = React.createContext();
 
 let initialContextState = { status: 'LOADING', value: null };
