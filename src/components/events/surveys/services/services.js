@@ -216,57 +216,50 @@ export const SurveyAnswers = {
       let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
       let options = dataSurvey.questions.find((question) => question.id === questionId);
 
-      firestore
-         .collection('surveys')
-         .doc(surveyId)
-         .collection('answer_count')
-         .doc(questionId)
-         .onSnapshot((listResponse) => {
+      const realTimeRef = fireRealtime.ref(`surveys/${surveyId}/answer_count/${questionId}`);
+
+      realTimeRef.on('value', (listResponse) => {
+         if (listResponse.exists()) {
             let result = [];
             let total = 0;
-
-            if (listResponse.exists) {
-               result = listResponse.data();
-               switch (operation) {
-                  case 'onlyCount':
-                     Object.keys(result).map((item) => {
-                        if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
-                           if (parseInt(item) >= 0) {
-                              result[item] = [result[item]];
-                           }
+            result = listResponse.val();
+            switch (operation) {
+               case 'onlyCount':
+                  Object.keys(result).map((item) => {
+                     if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                        if (parseInt(item) >= 0) {
+                           result[item] = [result[item]];
                         }
-                     });
+                     }
+                  });
+                  break;
 
-                     break;
-
-                  case 'participationPercentage':
-                     Object.keys(result).map((item) => {
-                        if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
-                           if (parseInt(item) >= 0) {
-                              total = total + result[item];
-                           }
+               case 'participationPercentage':
+                  Object.keys(result).map((item) => {
+                     if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                        if (parseInt(item) >= 0) {
+                           total = total + result[item];
                         }
-                     });
+                     }
+                  });
 
-                     Object.keys(result).map((item) => {
-                        if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
-                           if (parseInt(item) >= 0) {
-                              const calcPercentage = Math.round((result[item] / total) * 100);
-                              result[item] = [result[item], calcPercentage];
-                           }
+                  Object.keys(result).map((item) => {
+                     if (Number.isInteger(parseInt(item)) && Number.isInteger(result[item])) {
+                        if (parseInt(item) >= 0) {
+                           const calcPercentage = Math.round((result[item] / total) * 100);
+                           result[item] = [result[item], calcPercentage];
                         }
-                     });
+                     }
+                  });
+                  break;
 
-                     break;
-
-                  case 'registeredPercentage':
-                     //result = result;
-                     break;
-               }
+               case 'registeredPercentage':
+                  //result = result;
+                  break;
             }
-
             updateData({ answer_count: result, options });
-         });
+         }
+      });
    },
    // Servicio para validar si un usuario ha respondido la encuesta
    getUserById: async (eventId, survey, userId, onlyQuantityDocs) => {

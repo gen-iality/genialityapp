@@ -82,26 +82,32 @@ function SurveyComponent(props) {
       setRankingPoints(null);
       const status = surveyModel.state;
 
-      SetCurrentUserSurveyStatus(surveyData, currentUser, status);
+      // SetCurrentUserSurveyStatus(surveyData, currentUser, status);
 
       const question = surveyModel.currentPage.questions[0];
 
-      const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
-
-      setRankingPoints(pointsForCorrectAnswer);
-      registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
-      if (!(Object.keys(currentUser).length === 0)) {
-         //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
-         SurveyPage.setCurrentPage(surveyData._id, currentUser.value._id, surveyModel.currentPageNo);
+      for (let insertions = 0; insertions < 100; insertions++) {
+         let currentUsers = { ...currentUser.value, _id: 'EdwinVilla1990#' + insertions };
+         let userData = { ...currentUser, value: currentUsers };
+         RegisterVote(surveyData, question, userData, eventUsers, voteWeight);
       }
 
-      let isLastPage = surveyModel.isLastPage;
+      // const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
 
-      if (surveyData.allow_gradable_survey === 'true') {
-         if (isLastPage) {
-            setShowMessageOnComplete(false);
-         }
-      }
+      // setRankingPoints(pointsForCorrectAnswer);
+      // registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
+      // if (!(Object.keys(currentUser).length === 0)) {
+      //    //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
+      //    SurveyPage.setCurrentPage(surveyData._id, currentUser.value._id, surveyModel.currentPageNo);
+      // }
+
+      // let isLastPage = surveyModel.isLastPage;
+
+      // if (surveyData.allow_gradable_survey === 'true') {
+      //    if (isLastPage) {
+      //       setShowMessageOnComplete(false);
+      //    }
+      // }
    }
 
    function registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId) {
