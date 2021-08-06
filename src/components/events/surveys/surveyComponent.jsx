@@ -14,16 +14,17 @@ import MessageWhenCompletingSurvey from './services/messageWhenCompletingSurvey'
 import RealTimeSurveyListening from './services/realTimeSurveyListening';
 import TimeLimitPerQuestion from './services/timeLimitPerQuestion';
 import SetCurrentUserSurveyStatus from './services/setCurrentUserSurveyStatus';
+import { firestore, fireRealtime } from '../../../helpers/firebase';
 
 function SurveyComponent(props) {
    const { eventId, idSurvey, surveyLabel, operation, showListSurvey, currentUser } = props;
-
+   var chronometerStartTime, chronometerEndTime; // variables para medir tiempo en las pruebas
    const cEvent = UseEventContext();
    const eventStyles = cEvent.value.styles;
    const loaderIcon = <LoadingOutlined style={{ color: '#2bf4d5' }} />;
    const [surveyData, setSurveyData] = useState({});
    const [rankingList, setRankingList] = useState([]); // Este estado se usa para gamification
-   const [feedbackMessage, setFeedbackMessage] = useState({ icon: loaderIcon });
+   const [feedbackMessage, setFeedbackMessage] = useState();
    const [eventUsers, setEventUsers] = useState([]);
    const [voteWeight, setVoteWeight] = useState(0);
    const [freezeGame, setFreezeGame] = useState(false);
@@ -75,6 +76,7 @@ function SurveyComponent(props) {
       //Se obtiene el EventUser para los casos que se necesite saber el peso voto
       await getCurrentEvenUser(eventId, setEventUsers, setVoteWeight);
    }
+
    // Funcion para enviar la informacion de las respuestas
    async function sendData(surveyModel) {
       setRankingPoints(null);
@@ -83,15 +85,8 @@ function SurveyComponent(props) {
       SetCurrentUserSurveyStatus(surveyData, currentUser, status);
 
       const question = surveyModel.currentPage.questions[0];
-      /** for para pruebas de rendimiento envio de respuestas masivas */
-      // for (let insertions = 0; insertions < 100; insertions++) {
-      //    console.log("10. insertions ", insertions)
-      //    let currentUsers = { ...currentUser.value, _id: 'EdwinVilla1990#' + insertions };
-      //    let userData = { ...currentUser, value: currentUsers };
-      //    await RegisterVote(surveyData, question, userData, eventUsers, voteWeight);
-      // }
 
-      const pointsForCorrectAnswer = await RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
+      const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
 
       setRankingPoints(pointsForCorrectAnswer);
       registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
@@ -157,7 +152,8 @@ function SurveyComponent(props) {
 
       if (surveyData.allow_gradable_survey === 'true') {
          setShowOrHideSurvey(false);
-         if (rankingPoints !== null && status === 'running') {
+         setFeedbackMessage({ icon: loaderIcon });
+         if (status === 'running') {
             onCurrentPageChanged.surveyModel.stopTimer();
             TimerAndMessageForTheNextQuestion(
                onCurrentPageChanged.surveyModel,
@@ -177,7 +173,7 @@ function SurveyComponent(props) {
 
    useEffect(() => {
       onCurrentSurveyPageChanged();
-   }, [onCurrentPageChanged, rankingPoints]);
+   }, [onCurrentPageChanged]);
 
    if (!surveyData) return 'Cargando...';
    return (
@@ -219,6 +215,7 @@ function SurveyComponent(props) {
                               </Button>
                            </div>
                         )}
+
                         <Survey.Survey
                            model={surveyJsModel}
                            onComplete={(surveyModel) => sendData(surveyModel, 'completed')}

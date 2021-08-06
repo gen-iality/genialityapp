@@ -1,7 +1,7 @@
 import SingleAnswerType from './singleAnswerType';
 import MultipleAnswerType from './multipleAnswerType';
 
-function TypeOfResponses(question) {
+function GetResponsesIndex(question) {
    return new Promise((resolve, reject) => {
       if (typeof question.value === 'object') {
          // Busca el index de la opcion escogida
@@ -16,4 +16,4 @@ function TypeOfResponses(question) {
    });
 }
 
-export default TypeOfResponses;
+export default GetResponsesIndex;

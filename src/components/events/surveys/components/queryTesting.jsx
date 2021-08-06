@@ -109,6 +109,76 @@ function QueryTesting() {
       return endTimer();
    }, [data]);
 
+   /** Prueba tansacciones desde RealTimeDatabase con worker*/
+   // let variables = {
+   //     surveyId, questionId, optionIndex, vote
+   // }
+
+   // const worker = new Worker('/workers/webWorkers.js');
+   // worker.addEventListener('message', e => {
+   //     console.log('10.', e.data);
+   // });
+   // worker.postMessage(variables);
+
+   // /** inicia el cronometro para las pruebas*/
+   // function startTimer() {
+   //    props.setTotalTime(null);
+   //    chronometerStartTime = new Date();
+   //    // console.log('10. startTimer ', startTime);
+   // }
+
+   // /** detiene el cronometro para las pruebas*/
+   // function endTimer() {
+   //    chronometerEndTime = new Date();
+   //    var timeDiff = chronometerEndTime - chronometerStartTime; //in ms
+   //    // console.log('10. seconds   ', seconds);
+   //    props.setTotalTime(timeDiff);
+   // }
+
+   /**para consultar en firebase firestore */
+   // const shard_ref = firestore
+   //    .collection('surveys')
+   //    .doc(surveyData._id)
+   //    .collection('answer_count')
+   //    .doc(question.id);
+
+   // shard_ref.onSnapshot((doc) => {
+   //    if (doc.data()) {
+   //       props.setCountRegisters(doc.data()[0]);
+   //       endTimer();
+   //    }
+   // });
+
+   // setInterval(()=>{
+   //    props.setCountRegisters((count)=>{
+   //       console.log("10. count " ,count)
+   //       return ++count
+   //    });
+   // }, 1000)
+
+   /** para consultas en firebase RealTime */
+   // const realTimeRef = fireRealtime.ref(`surveys/${surveyData._id}/answer_count/${question.id}`);
+   // console.log("render realTimeRef")
+   // realTimeRef.on('value',(snapshot) => {
+   //    if (snapshot) {
+   //       const data = snapshot.val()
+   //       if(data[0] > 100){
+   //          props.setCountRegisters(data[0]);
+
+   //       }
+   //       endTimer();
+   //       // console.log('10. data', data[0]);
+   //    }
+   // });
+
+   // startTimer();
+   /** for para pruebas de rendimiento envio de respuestas masivas en las encuestas*/
+   // for (let insertions = 0; insertions < 1000; insertions++) {
+   //    let currentUsers = { ...currentUser.value, _id: 'EdwinVilla1990#' + insertions };
+   //    let userData = { ...currentUser, value: currentUsers };
+   //    RegisterVote(surveyData, question, userData, eventUsers, voteWeight);
+   // }
+
    return (
       <Row justify='center' align='middle' style={{ minHeight: '100vh', textAlign: 'center' }}>
          <Col>

@@ -439,7 +439,7 @@ class triviaEdit extends Component {
       hasMinimumScore,
       minimumScore,
       isGlobal
-    } = this.state;console.log("10. this.state.graphyType", this.state.graphyType)
+    } = this.state;
     const { Option } = Select;
     const columns = [
       {
