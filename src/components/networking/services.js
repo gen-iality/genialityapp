@@ -94,7 +94,7 @@ export const createAgendaToEventUser = ({
   targetEventUser,
   timetableItem,
   message,
-}) => {
+}) => { 
   return new Promise((resolve, reject) => {
     (async () => {
       try {

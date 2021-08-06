@@ -1,6 +1,8 @@
 import { getUserByEmail } from "../components/networking/services";
 import * as Cookie from 'js-cookie';
 import { EventsApi } from "./request";
+import { firestore } from "firebase";
+import { notification } from "antd";
 
 export const  SendFriendship= async({ eventUserIdReceiver, userName },userActual,event)=> {
     console.log( eventUserIdReceiver, userName ,userActual,event)
@@ -44,6 +46,49 @@ export const  SendFriendship= async({ eventUserIdReceiver, userName },userActual
     const resp = await getUserByEmail(user, event._id);
     return resp;
   };
+
+ export const openNotification = (title,message) => {
+    notification.open({
+      message: title,
+      description: message,
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
+  };
+
+ export const  addNotification=(notification)=> {
+    if (notification.emailEmited != null) {
+      firestore
+        .collection('notificationUser')
+        .doc(notification.idReceive)
+        .collection('events')
+        .doc(this.state.event._id)
+        .collection('notifications')
+        .doc(notification.idEmited)
+        .set({
+          emailEmited: notification.emailEmited,
+          message: notification.message,
+          name: notification.name,
+          state: notification.state,
+          type: notification.type,
+        });
+    } else {
+      firestore
+        .collection('notificationUser')
+        .doc(this.state.user?._id)
+        .collection('events')
+        .doc(this.state.event._id)
+        .collection('notifications')
+        .doc(notification.idEmited)
+        .set(
+          {
+            state: notification.state,
+          },
+          { merge: true }
+        );
+    }
+  }
 
 /* SUCCESS
  notification.open({

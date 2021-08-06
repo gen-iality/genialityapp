@@ -101,6 +101,7 @@ class SearchComponent extends Component {
   handleFilter = (input) => {
     let value = input.target.value;
     this.setState({ value });
+    
 
     // if(value === '*'){
     //   let filtered = this.filterByAllColums('');
