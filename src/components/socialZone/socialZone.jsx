@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
 import React, { useEffect, useState } from 'react';
-import { Tabs, Row, Badge, Col, notification, Button } from 'antd';
+import { Tabs, Row, Badge, Col, notification, Button, Alert } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone, SearchOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
@@ -16,6 +16,7 @@ import { useRef } from 'react';
 import { UseEventContext } from '../../Context/eventContext';
 import { UseCurrentUser } from '../../Context/userContext';
 import { FormattedMessage } from 'react-intl';
+import { useHistory } from "react-router-dom";
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
 const callback = () => {};
@@ -43,6 +44,7 @@ let SocialZone = function(props) {
   let [strAttende, setstrAttende] = useState();
   let [isFiltered, setIsFiltered] = useState(false);
   let busquedaRef = useRef();
+  let history = useHistory();
 
   let userName = cUser.value ? cUser.value?.names : cUser.value?.name ? cUser.value?.name : '---';
 
@@ -197,7 +199,9 @@ let SocialZone = function(props) {
       });
   }, [cEvent.value]);
 
-
+  function redirectRegister() {
+    history.push(`/landing/${cEvent.value._id}/tickets`);
+  }
 
   return (
     <Tabs
@@ -355,7 +359,7 @@ let SocialZone = function(props) {
               </Button>
             </Col>
           </Row>
-          {props.currentSurvey === null ? (
+          {props.currentSurvey === null && cUser.value!==null ? (
             <SurveyList
               eventSurveys={props.eventSurveys}
               publishedSurveys={props.publishedSurveys}
@@ -363,9 +367,12 @@ let SocialZone = function(props) {
               listOfEventSurveys={props.listOfEventSurveys}
               loadingSurveys={props.loadingSurveys}
             />
-          ) : (
+          ) : props.currentSurvey !== null && cUser.value!==null ? (
             <SurveyDetail />
-          )}
+          ):<div style={{paddingTop:30}}>
+              <Alert  showIcon message="Para poder responder una encuesta debes ser usuario del sistema" type="warning" />
+              <Row style={{marginTop:30}} justify='center'><Button onClick={redirectRegister} >Registrarme</Button></Row>
+            </div>}
         </TabPane>
       )}
 
