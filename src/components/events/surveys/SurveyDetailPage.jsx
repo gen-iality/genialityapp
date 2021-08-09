@@ -30,7 +30,7 @@ function SurveyDetailPage(props) {
             />
          )}
          {surveyResult === 'view' && (
-            <Card title={`${currentSurvey.name}`} className='survyCard'>
+            <Card className='survyCard'>
                <SurveyComponent
                   // responseCounter={responseCounter}
                   idSurvey={currentSurvey._id}
