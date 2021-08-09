@@ -6,8 +6,11 @@ import { createOrUpdateSurvey, getSurveyConfiguration } from './services';
 import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
-import { toast } from 'react-toastify';
-import { Button, Row, Col, Table, Modal, Input, Switch, message, Select } from 'antd';
+import { Button, Row, Col, Table, Modal, Input, Switch, message, Select, Tag } from 'antd';
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+} from '@ant-design/icons';
 import FormQuestionEdit from './formEdit';
 
 class triviaEdit extends Component {
@@ -281,6 +284,7 @@ class triviaEdit extends Component {
       d = Math.floor(d / 16);
       return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
     });
+
     return uuid;
   };
 
@@ -304,7 +308,7 @@ class triviaEdit extends Component {
       let newListQuestion = question.filter((infoQuestion) => infoQuestion.id !== questionId);
 
       this.setState({ question: newListQuestion });
-      toast.success(response);
+      message.success({ content: response, key: 'updating' });
     });
   };
 
@@ -445,13 +449,30 @@ class triviaEdit extends Component {
     const columns = [
       {
         title: 'Pregunta',
-        dataIndex: 'title',
-        key: 'title'
+        key: 'title',
+        render: e => {
+          return (
+            <>
+            <div style={{marginBottom:'10px'}}>{e.correctAnswer ? <Tag icon={<CheckCircleOutlined />}color="success">Respuesta asignada</Tag> : <Tag icon={<CloseCircleOutlined />}  color="error">Sin respuesta asignada</Tag>}</div>
+          <div>{e.title}</div>
+          </>
+          );
+        }
       },
       {
         title: 'Tipo de Pregunta',
         dataIndex: 'type',
         key: 'type'
+      },
+      {
+        title: "# de posibles respuestas",
+        key: "choices",
+        align: 'center',
+        render: e => {
+          return (
+          <div>{e.choices.length}</div>
+          );
+        }
       },
       {
         title: 'Acciones',
