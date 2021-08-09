@@ -8,7 +8,8 @@ import { UseUserEvent } from '../../Context/eventUserContext';
 import { UseEventContext } from '../../Context/eventContext';
 import { UseCurrentUser } from '../../Context/userContext';
 
-import { acceptOrRejectAgenda, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
+import { acceptOrRejectAgenda, getPendingAgendasSent } from './services';
+import { addNotification } from '../../helpers/netWorkingFunctions';
 
 const { Meta } = Card;
 
@@ -29,11 +30,12 @@ function AppointmentRequests({ eventUsers, notificacion }) {
   let eventContext = UseEventContext();
 
   useEffect(() => {
+    if(eventContext.value!=null && userEventContext.value!==null){
     if (eventContext.value._id && userEventContext.value._id) {
       setLoading(true);
       setPendingAgendas([]);
 
-      getPendingAgendasFromEventUser(eventContext.value._id, userEventContext.value._id)
+      getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
           console.log("PENDING AGENDAS")
           console.log(agendas)
@@ -44,6 +46,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
             }, agendas);
 
             setPendingAgendas(pendingAgendas);
+            setLoading1(false)
           }
         })
         .catch((error) => {
@@ -55,23 +58,27 @@ function AppointmentRequests({ eventUsers, notificacion }) {
         })
         .finally(() => setLoading(false));
     }
+  }
    
-  }, [eventContext._id, userEventContext._id, eventUsers]);
+  }, [eventContext.value, userEventContext.value, eventUsers]);
 
   useEffect(() => {
+    if(eventContext && userEventContext){
     if (eventContext.value._id && userEventContext.value._id) {
       setLoading1(true);
-      setPendingAgendasSent([]);
+      //setPendingAgendasSent([]);
 
       getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
+            
             const pendingAgendas = map((agenda) => {
               const ownerEventUser = find(propEq('_id', agenda.attendees[1]), eventUsers);
               return { ...agenda, ownerEventUser };
             }, agendas);
 
             setPendingAgendasSent(pendingAgendas);
+            setLoading(false)
           } 
         })
         .catch((error) => {
@@ -83,13 +90,14 @@ function AppointmentRequests({ eventUsers, notificacion }) {
         })
         .finally(() => setLoading1(false));
     }
-  }, [eventContext.value._id, userEventContext.value._id, eventUsers]);
+  }
+  }, [eventContext.value, userEventContext.value, eventUsers]);
 
   return (
     <>
       <div>
         <Divider>{'Solicitudes de citas recibidas pendientes'}</Divider>
-
+        {console.log(pendingAgendas)}
         {!loading &&
           (pendingAgendas.length > 0 ? (
             pendingAgendas.map((pendingAgenda) => (
@@ -128,7 +136,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
               />
             ))
           ) : (
-            <Card>{'No tienes solicitudes actualmente'}</Card>
+            <Card style={{textAlign:'center'}}>{'No tienes solicitudes actualmente'}</Card>
           ))}
 
         {loading1 && (
@@ -154,16 +162,17 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
   const changeAgendaStatus = (newStatus) => {
     if (!fetching) {
       setFetching(true);
-      acceptOrRejectAgenda(eventContext._id, userEventContext._id, data, newStatus)
+      acceptOrRejectAgenda(eventContext.value._id, userEventContext.value._id, data, newStatus)
         .then(() => {
           setRequestResponse(newStatus);
           let notificationr = {
-            idReceive: userCurrentContext._id,
+            idReceive: userCurrentContext.value._id,
             idEmited: data && data.id,
             state: '1'
           };
-
-          notification(notificationr, props.userCurrentContext._id);
+          addNotification(notificationr,eventContext.value,userCurrentContext.value)
+          console.log("LLEGO ACA")
+         // notification(notificationr, props.userCurrentContext._id);
         })
         .catch((error) => {
           if (!error) {
@@ -183,12 +192,12 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             // });
 
             let notificationr = {
-              idReceive: userCurrentContext._id,
+              idReceive: userCurrentContext.value._id,
               idEmited: data && data.id,
               state: '1'
             };
 
-            notificacion(notificationr, userCurrentContext._id);
+            addNotification(notificationr,eventContext.value, userCurrentContext.value)
           }
         })
         .finally(() => setFetching(false));

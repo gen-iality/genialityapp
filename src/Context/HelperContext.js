@@ -118,6 +118,7 @@ export const HelperContextProvider = ({ children }) => {
             
             querySnapshot.docs.forEach((doc) => {
               let notification = doc.data();
+              console.log(notification)
   
               if (notification.state === '0') {
                 contNotifications++;
@@ -129,10 +130,13 @@ export const HelperContextProvider = ({ children }) => {
               //Notificacion otra
               if (notification.type == 'amistad' && notification.state === '0') {
                 notAm.push(doc.data());
-              }        
+              }  
+                   
             });
             setTotalSolicitudAmistad(notAm.length)
-            setTotalsolicitudAgenda(notAg.length)
+            setTotalsolicitudAgenda(notAg.length) 
+            setTotalsolicitudes((notAm.length+notAg.length))
+           
            if(change){
             if(change.doc.data() && change.newIndex>0 ){             
              // alert("NUEVA NOTIFICACION")
@@ -144,12 +148,12 @@ export const HelperContextProvider = ({ children }) => {
 
      if (cUser.value!=null && cEvent.value!=null) {
       fetchNetworkingChange();
-      console.log("ENTRO ACA")
+      
     }
   },[cUser.value,cEvent.value]);
 
   return (
-    <HelperContext.Provider value={{ containtNetworking, infoAgenda, isNotification, ChangeActiveNotification }}>
+    <HelperContext.Provider value={{ containtNetworking, infoAgenda, isNotification, ChangeActiveNotification, totalSolicitudAmistad,totalsolicitudAgenda,totalsolicitudes }}>
       {children}
     </HelperContext.Provider>
   );
