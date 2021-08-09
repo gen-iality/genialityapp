@@ -366,7 +366,7 @@ let AgendaActividadDetalle = (props) => {
               <Link to={`${urlBack}`}>
                 <Row style={{ paddingLeft: '10px' }}>
                   <Button type='primary' shape='round' icon={<ArrowLeftOutlined />} size='small'>
-                  {intl.formatMessage({ id: 'button.back.agenda' })}
+                    {intl.formatMessage({ id: 'button.back.agenda' })}
                   </Button>
                 </Row>
               </Link>
@@ -596,7 +596,7 @@ let AgendaActividadDetalle = (props) => {
                       className='activity_image'
                       style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                       src={
-                         props.cEvent.value.styles?.banner_image
+                        props.cEvent.value.styles?.banner_image
                           ? props.cEvent.value.styles?.banner_image
                           : currentActivity?.image
                           ? currentActivity?.image
@@ -616,10 +616,10 @@ let AgendaActividadDetalle = (props) => {
                       className='activity_image'
                       style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
                       src={
-                        props.cEvent.value.styles.banner_image
-                          ? props.cEvent.value.styles.banner_image
-                          : currentActivity.image
-                          ? currentActivity.image
+                        props.cEvent.status == 'LOADED' && props.cEvent.value.styles.banner_image
+                          ? props.cEvent.value.styles?.banner_image
+                          : currentActivity?.image
+                          ? currentActivity?.image
                           : image_event
                       }
                       alt='Activity'
