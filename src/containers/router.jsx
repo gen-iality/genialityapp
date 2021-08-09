@@ -16,6 +16,7 @@ class MainRouter extends Component {
   }
 
   componentDidMount() {
+    console.log("thispropsmainrouter",this.props)
     this.props.dispatch(fetchCategories());
     this.props.dispatch(fetchTypes());
   }

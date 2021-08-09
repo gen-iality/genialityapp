@@ -13,11 +13,17 @@ export default function WithEviusContext(Component) {
             {(usercurrent) => (
               <CurrentEventUserContext.Consumer>
                 {(eventuser) => (
-                  <HelperContext>
-                  {(helper)=>(
-                    <Component cEvent={event} cUser={usercurrent} cEventUser={eventuser} {...props} cHelper={helper} />
-                  )}
-                  </HelperContext>
+                  <HelperContext.Consumer>
+                    {(helper) => (
+                      <Component
+                        cEvent={event}
+                        cUser={usercurrent}
+                        cEventUser={eventuser}
+                        {...props}
+                        cHelper={helper}
+                      />
+                    )}
+                  </HelperContext.Consumer>
                 )}
               </CurrentEventUserContext.Consumer>
             )}

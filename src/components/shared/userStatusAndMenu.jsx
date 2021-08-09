@@ -12,6 +12,13 @@ const MenuStyle = {
   textAlign: 'right',
 };
 
+const ItemStyle = {
+  backgroundColor: 'white',
+  border: '1px solid #cccccc',
+  padding: 5,
+  margin: 5,
+};
+
 let userStatusAndMenu = (props) => {
   let user = props.user;
   let photo = props.photo;
@@ -21,40 +28,38 @@ let userStatusAndMenu = (props) => {
 
   let menu = (
     <Menu>
-      <Menu.Item>
+      <Menu.Item style={ItemStyle}>
         <NavLink
           onClick={(e) => {
             e.preventDefault();
-            props.location.pathname.includes('landing') ? props.setViewPerfil(false) : null;
+            props.location.pathname.includes('landing')
+              ? props.setViewPerfil({ view: true, perfil: props.loginInfo })
+              : null;
           }}
           to={''}>
-          <FormattedMessage id='header.profile' defaultMessage='Perfil' />
+          <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
         </NavLink>
       </Menu.Item>
-      <Menu.Item>
+      <Menu.Item style={ItemStyle}>
         <Link to={`/tickets/${eventId}`}>
           <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
         </Link>
       </Menu.Item>
-      <Menu.Item>
+      <Menu.Item style={ItemStyle}>
         <NavLink exact to={`/eventEdit/${eventId}#events`}>
           <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
         </NavLink>
       </Menu.Item>
-      {/* <Menu.Item>
-        <Link to={`/purchase/${eventId}`}>
-          <FormattedMessage id="header.purchase" defaultMessage="Compras" />
-        </Link>
-      </Menu.Item> */}
-      <Menu.Item>
+
+      <Menu.Item style={ItemStyle}>
         <Link to={'/create-event'}>
-          <Button type='primary'>
+          <Button type='primary' size='medium'>
             <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
           </Button>
         </Link>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item>
+      <Menu.Item style={ItemStyle}>
         <a onClick={logout}>
           <LogoutOutlined /> &nbsp;&nbsp;
           <FormattedMessage id='header.logout' defaultMessage='Log Out' />
@@ -63,13 +68,7 @@ let userStatusAndMenu = (props) => {
     </Menu>
   );
 
-  let loggedOutUser = (
-    <div style={MenuStyle}>
-      {/* <Button type="primary" className="btn-log" onClick={logout}>
-        <FormattedMessage id="header.login" defaultMessage="Sign In" />
-      </Button> */}
-    </div>
-  );
+  let loggedOutUser = <div style={MenuStyle}></div>;
 
   let loggedInuser = (
     <Row style={MenuStyle}>
@@ -91,7 +90,6 @@ let userStatusAndMenu = (props) => {
     </Row>
   );
 
-  //<img src={photo} alt={`avatar_${name}`} className="author-image is-hidden-mobile" />
   return <React.Fragment>{user ? loggedInuser : loggedOutUser}</React.Fragment>;
 };
 

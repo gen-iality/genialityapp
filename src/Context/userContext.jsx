@@ -11,8 +11,6 @@ export function CurrentUserProvider({ children }) {
 
   useEffect(async () => {
     let dataUser = await getCurrentUser();
-    console.log("DATA USER")
-    console.log(dataUser)
     setCurrentUser({ status: 'LOADING', value: dataUser });
   }, []);
 

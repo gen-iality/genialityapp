@@ -3,19 +3,15 @@ import { Badge, Col, Menu, Row } from 'antd';
 import { useRouteMatch, Link } from 'react-router-dom';
 import * as iconComponents from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
-import {UseEventContext} from '../../../../Context/eventContext'
+import { UseEventContext } from '../../../../Context/eventContext';
 import { HelperContext } from '../../../../Context/HelperContext';
 
-
-const MenuEvent = ({isMobile }) => {
+const MenuEvent = ({ isMobile }) => {
   let { url } = useRouteMatch();
   let cEvent = UseEventContext();
   let { totalsolicitudes } = useContext(HelperContext);
-  
 
   let event = cEvent.value;
-  
-
 
   return (
     <>
@@ -24,54 +20,54 @@ const MenuEvent = ({isMobile }) => {
           {Object.keys(event.itemsMenu).map((key) => {
             //icono personalizado
             let IconoComponente = iconComponents[event.itemsMenu[key].icon];
-           
-          return(
-             key=='networking'? ( 
-               
-               <Menu.Item
-                style={{ position: 'relative', color: event.styles.textMenu }}
-                key={event.itemsMenu[key].section}
-                className='MenuItem_event'>
-                  <Badge  count={totalsolicitudes}>
-                <Col>
-                <Row><IconoComponente style={{ margin: '0 auto', fontSize: '22px', color: event.styles.textMenu }} />   </Row>             
-               <Row><Link
-                  className='menuEvent_section-text'
-                  style={{ color: event.styles.textMenu }}
-                  to={`${url}/${event.itemsMenu[key].section}`}>
-                  {` ${event.itemsMenu[key].name}`}
-                </Link>
-                </Row>
-                </Col>
-                </Badge>
-              </Menu.Item>
-             ):
-             key !=='networking' &&(
+
+            return key == 'networking' ? (
               <Menu.Item
                 style={{ position: 'relative', color: event.styles.textMenu }}
                 key={event.itemsMenu[key].section}
                 className='MenuItem_event'>
-                <IconoComponente style={{ margin: '0 auto', fontSize: '22px', color: event.styles.textMenu }} />                
-               <Link
-                  className='menuEvent_section-text'
-                  style={{ color: event.styles.textMenu }}
-                  to={`${url}/${event.itemsMenu[key].section}`}>
-                  {` ${event.itemsMenu[key].name}`}
-                </Link>
-              </Menu.Item>))
-            
+                <Badge key={event.itemsMenu[key].section} count={totalsolicitudes}>
+                  <Col key={event.itemsMenu[key].section}>
+                    <Row key={event.itemsMenu[key].section}>
+                      <IconoComponente style={{ margin: '0 auto', fontSize: '22px', color: event.styles.textMenu }} />{' '}
+                    </Row>
+                    <Row key={event.itemsMenu[key].section}>
+                      <Link
+                        className='menuEvent_section-text'
+                        style={{ color: event.styles.textMenu }}
+                        to={`${url}/${event.itemsMenu[key].section}`}>
+                        {` ${event.itemsMenu[key].name}`}
+                      </Link>
+                    </Row>
+                  </Col>
+                </Badge>
+              </Menu.Item>
+            ) : (
+              key !== 'networking' && (
+                <Menu.Item
+                  style={{ position: 'relative', color: event.styles.textMenu }}
+                  key={event.itemsMenu[key].section}
+                  className='MenuItem_event'>
+                  <IconoComponente style={{ margin: '0 auto', fontSize: '22px', color: event.styles.textMenu }} />
+                  <Link
+                    className='menuEvent_section-text'
+                    style={{ color: event.styles.textMenu }}
+                    to={`${url}/${event.itemsMenu[key].section}`}>
+                    {` ${event.itemsMenu[key].name}`}
+                  </Link>
+                </Menu.Item>
+              )
+            );
           })}
         </Menu>
       ) : (
         isMobile && (
           <Menu style={stylesMenuItems} mode='vertical' defaultSelectedKeys={['1']}>
             {Object.keys(event.itemsMenu).map((key) => {
-              
               //icono personalizado
               let IconoComponente = iconComponents[event.itemsMenu[key].icon];
-             
+
               return (
-                
                 <Menu.Item
                   style={{ position: 'relative', color: event.styles.textMenu }}
                   key={event.itemsMenu[key].section}
