@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment,useContext } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { Row, Button, Col, Card, Avatar, Alert, Tabs, Form, Badge } from "antd";
 import AppointmentModal from "./appointmentModal";
@@ -17,10 +17,12 @@ import ContactList from "./contactList";
 import RequestList from "./requestList";
 import withContext from "../../Context/withContext";
 import { addNotification, SendFriendship } from "../../helpers/netWorkingFunctions";
+import { HelperContext } from '../../Context/HelperContext';
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
 class ListEventUser extends Component {
+ 
   constructor(props) {
     super(props);
     this.state = {
@@ -41,11 +43,15 @@ class ListEventUser extends Component {
       filterSector: null,
       typeAssistant: null,
     };
+    
   }
+  
 
   async componentDidMount() {
     await this.getInfoCurrentUser();
     this.loadData();
+    console.log("total solicitud")
+    console.log(this.props)
   }
 
   changeActiveTab = (activeTab) => {
@@ -951,14 +957,14 @@ class ListEventUser extends Component {
                     </Row>
 
                     {/* Paginacion para mostrar datos de una manera mas ordenada */}
-                    {!this.state.loading && users.length > 0 && (
+                    {!this.state.loading && users.length > 0 && this.props.cEventUser.value && (
                       <Pagination
                         items={users}
                         change={this.state.changeItem}
                         onChangePage={this.onChangePage}
                       />
                     )}
-                    {!this.state.loading && users.length == 0 && (
+                    {!this.state.loading && users.length == 0 &&  this.props.cEventUser.value && (
                       <Col
                         xs={24}
                         sm={22}
@@ -970,6 +976,14 @@ class ListEventUser extends Component {
                         <Card style={{textAlign:'center'}} >{"No existen usuarios"}</Card>
                       </Col>
                     )}
+
+                    {!this.state.loading && !this.props.cEventUser.value &&
+                      <Alert
+                      message='Iniciar Sesión'
+                      description='Para poder ver los asistentes es necesario iniciar sesión.'
+                      type='info'
+                      showIcon
+                    />}
                   </div>
                 )}
               </div>
@@ -987,25 +1001,26 @@ class ListEventUser extends Component {
               tab={
                 <div style={{ position: "relative" }}>
                   Solicitudes de contacto{" "}
-                  {this.props.notifyAmis &&
-                    this.props.notifyAmis.length > 0 && (
+                  {console.log(this.props.cHelper.totalSolicitudAmistad)}
+                  {this.props.cHelper.totalSolicitudAmistad !== "0" && (
                       <Badge
                         style={{
                           position: "absolute",
                           top: "-21px",
                           right: "-13px",
                         }}
-                        count={this.props.notifyAmis.length}
+                        count={ this.props.cHelper.totalSolicitudAmistad > 0?this.props.cHelper.totalSolicitudAmistad:""}
                       ></Badge>
                     )}
                 </div>
               }
               key="solicitudes"
             >
-              <RequestList
-                notify={this.props.notifyAmis}
-                currentUser={this.props.currentUser}
-                notification={this.props.notification}
+              <RequestList                
+                currentUser={this.props.cEventUser.value}
+                currentUserAc={this.props.cUser.value}
+                event={this.props.cEvent.value}
+                //notification={this.props.notification}
                 eventId={this.props.cEvent.value._id}
                 tabActive={this.state.activeTab}
               />
@@ -1014,16 +1029,16 @@ class ListEventUser extends Component {
             <TabPane
               tab={
                 <div style={{ position: "relative" }}>
-                  Solicitudes de citas{" "}
-                  {this.props.notifyAgenda &&
-                    this.props.notifyAgenda.length > 0 && (
+                  Solicitudes de citas
+                  {console.log( this.props.cHelper.totalsolicitudAgenda >0)}
+                  {this.props.cHelper.totalsolicitudAgenda >0 && (
                       <Badge
                         style={{
                           position: "absolute",
                           top: "-21px",
                           right: "-13px",
                         }}
-                        count={this.props.notifyAgenda.length}
+                        count={this.props.cHelper.totalsolicitudAgenda>0 &&this.props.cHelper.totalsolicitudAgenda}
                       ></Badge>
                     )}
                 </div>
@@ -1045,8 +1060,8 @@ class ListEventUser extends Component {
               {activeTab === "mi-agenda" && (
                 <MyAgenda
                   event={this.props.cEvent.value}
-                  eventUser={eventUser}
-                  currentEventUserId={eventUserId}
+                  eventUser={this.props.cEventUser.value}
+                  currentEventUserId={this.props.cEventUser.value._id}
                   eventUsers={users}
                 />
               )}

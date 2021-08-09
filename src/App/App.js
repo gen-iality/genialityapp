@@ -7,17 +7,14 @@ import privateInstance, { Actions } from '../helpers/request';
 import store from '../redux/store';
 import MainRouter from '../containers/router';
 import 'bulma-spacing/css/bulma-spacing.min.css';
+import withContext from '../Context/withContext';
 
-//contexto
-import { CurrentUserEventProvider } from '../Context/eventUserContext';
-import { CurrentEventProvider } from '../Context/eventContext';
-import { CurrentUserProvider } from '../Context/userContext';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: { name: 'albert' }
+      user: { name: 'albert' },
     };
   }
 
@@ -37,15 +34,11 @@ class App extends Component {
 
   render() {
     return (
-     
-      <CurrentUserProvider>
-        <Provider store={store}>
-          <MainRouter />
-        </Provider>
-      </CurrentUserProvider>
-      
+      <Provider store={store}>
+        <MainRouter />
+      </Provider>
     );
   }
 }
-
-export default App;
+let AppwithContext = withContext(App);
+export default AppwithContext;

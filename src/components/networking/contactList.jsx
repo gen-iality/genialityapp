@@ -41,15 +41,17 @@ const ContactList = ({ tabActive,agendarCita }) => {
       setUserProperties(properties);
     };
 
-    if (tabActive === 'mis-contactos') {
+    if (tabActive === 'mis-contactos' && eventContext.value && userCurrentContext.value) {
       getProperties();
       // getuserContactList();
       getContactList();
+    }else{
+      setLoading(false);
     }
   }, [eventContext.value._id, tabActive]);
 
-  if (userCurrentContext.value._id && !loading)
-    return userCurrentContext.value._id === 'guestUser' ? (
+  if (!loading)
+    return userCurrentContext.value===null ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
         <Alert
           message='Iniciar Sesión'
@@ -138,6 +140,7 @@ const ContactList = ({ tabActive,agendarCita }) => {
         </Col>
       )
     );
-  if (!userCurrentContext._id || loading) return <Spin></Spin>;
+  if (userCurrentContext.value || loading) return <Spin></Spin>;
+  if (!userCurrentContext.value ) return <Spin></Spin>;
 };
 export default ContactList;

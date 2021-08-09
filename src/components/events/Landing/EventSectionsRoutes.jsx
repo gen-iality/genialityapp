@@ -29,9 +29,6 @@ import Noticias from '../noticias';
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
 
-  useEffect(() => {
-    console.log('ver social zone', props.viewSocialZoneNetworking);
-  }, []);
   return (
     <>
       {props.viewVirtualconference && <VirtualConference />}
@@ -50,7 +47,6 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/networking`}>
-          
           <NetworkingForm />
         </Route>
 
