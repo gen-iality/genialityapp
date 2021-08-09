@@ -17,7 +17,7 @@ import MenuTabletsSocialZone from './Menus/MenuTabletsSocialZone';
 
 /** Functions */
 import { listenSurveysData } from '../../../helpers/helperEvent';
-import InitSurveysCompletedListener from '../surveys/services/initSurveyCompletedListener';
+import InitSurveysCompletedListener from '../surveys/functions/initSurveyCompletedListener';
 
 /** Firebase */
 import { firestore } from '../../../helpers/firebase';
@@ -92,7 +92,6 @@ const Landing = (props) => {
     if (isNotification.notify) {
       NotificationHelper(isNotification);
     }
-    console.log('Notification', isNotification);
   }, [isNotification]);
 
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);

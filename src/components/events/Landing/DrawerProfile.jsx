@@ -1,57 +1,68 @@
-import React, { useState } from 'react';
-import PropertiesProfile from './PropertiesProfile';
-import ContactRequest from './ContactRequest';
+import React, { useState, useEffect, useContext } from 'react';
 import Avatar from 'antd/lib/avatar/avatar';
 import Text from 'antd/lib/typography/Text';
-import { Layout, Button, Drawer, Row, Space, Tooltip, Col, Spin, List } from 'antd';
-import { ArrowRightOutlined, UsergroupAddOutlined, CommentOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
+import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List } from 'antd';
+import { UsergroupAddOutlined, CommentOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
 import { UseCurrentUser } from '../../../Context/userContext';
+import { UseUserEvent } from '../../../Context/eventUserContext';
 import { formatDataToString } from '../../../helpers/utils';
-const DrawerProfile = (props) => {
-  const [visiblePerfil, setVisiblePerfil] = useState(true);
-  const [userPerfil, setUserPerfil] = useState(true);
-  const [propertiesUserPerfil, setPropertiesUserPerfil] = useState(null);
+import { HelperContext } from '../../../Context/HelperContext';
+import { setViewPerfil } from '../../../redux/viewPerfil/actions';
+import { connect } from 'react-redux';
 
+const DrawerProfile = (props) => {
   let cUser = UseCurrentUser();
+  let cEventUser = UseUserEvent();
+  let { propertiesProfile } = useContext(HelperContext);
+
+  console.log('eventuserdrawer', cEventUser);
+  console.log('properties', propertiesProfile);
   return (
     <Drawer
       zIndex={5000}
-      visible={visiblePerfil}
+      visible={props.viewPerfil}
       closable={true}
       onClose={() => props.setViewPerfil(!props.viewPerfil)}
       width={'52vh'}
       bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
       <Row justify='center' style={{ paddingLeft: '10px', paddingRight: '10px' }}>
         <Space size={0} direction='vertical' style={{ textAlign: 'center' }}>
-          <Avatar size={110} src='https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png' />
+          <Avatar
+            size={110}
+            src='https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png'
+          />
           <Text style={{ fontSize: '20px' }}>
-            {userPerfil && userPerfil.names ? userPerfil.names : userPerfil && userPerfil.name ? userPerfil.name : ''}
+            {props.profileuser && props.profileuser.names
+              ? props.profileuser.names
+              : props.profileuser && props.profileuser.name
+              ? props.profileuser.name
+              : ''}
           </Text>
           <Text type='secondary' style={{ fontSize: '16px' }}>
-            {userPerfil && userPerfil.email}
+            {props.profileuser && props.profileuser.email}
           </Text>
         </Space>
         <Col span={24}>
           <Row justify='center' style={{ marginTop: '20px' }}>
             <Space size='middle'>
               <Tooltip title='Solicitar contacto'>
-                {userPerfil._id !== cUser.value._id && (
+                {props.profileuser && props.profileuser._id !== cUser.value._id && (
                   <Button size='large' shape='circle' icon={<UsergroupAddOutlined />} />
                 )}
               </Tooltip>
               <Tooltip title='Ir al chat privado'>
-                {userPerfil._id !== cUser.value._id && (
+                {props.profileuser && props.profileuser._id !== cUser.value._id && (
                   <Button
                     size='large'
                     shape='circle'
                     onClick={async () => {
-                      var us = await this.loadDataUser(this.state.userPerfil);
+                      var us = await this.loadDataUser(props.profileuser);
                       this.collapsePerfil();
                       this.UpdateChat(
                         cUser.value.uid,
                         cUser.value.names || cUser.value.name,
-                        this.state.userPerfil.iduser,
-                        this.state.userPerfil.names || this.state.userPerfil.name
+                        props.profileuser.iduser,
+                        props.profileuser.names || props.profileuser.name
                       );
                     }}
                     icon={<CommentOutlined />}
@@ -59,14 +70,14 @@ const DrawerProfile = (props) => {
                 )}
               </Tooltip>
               <Tooltip title='Solicitar cita'>
-                {userPerfil._id !== cUser.value._id && (
+                {props.profileuser._id !== cUser.value._id && (
                   <Button
                     size='large'
                     shape='circle'
                     onClick={async () => {
-                      var us = await this.loadDataUser(this.state.userPerfil);
+                      var us = await this.loadDataUser(props.profileuser);
                       console.log('USER PERFIL=>', us);
-                      console.log(this.state.userPerfil);
+                      console.log(props.profileuser);
                       if (us) {
                         this.collapsePerfil();
                         this.AgendarCita(us._id, us);
@@ -85,27 +96,56 @@ const DrawerProfile = (props) => {
           className='asistente-list' //agrega el estilo a la barra de scroll
           span={24}
           style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'scroll' }}>
-          {!propertiesUserPerfil && <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>}
+          {!props.profileuser && <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>}
 
-          {propertiesUserPerfil && (
+          {props.profileuser._id == cUser.value._id ? (
             <List
               bordered
-              dataSource={propertiesUserPerfil && propertiesUserPerfil}
+              dataSource={propertiesProfile && propertiesProfile.propertiesUserPerfil}
               renderItem={(item) =>
                 (((!item.visibleByContacts || item.visibleByContacts == 'public') && !item.visibleByAdmin) ||
-                  userPerfil._id == cUser.value._id) &&
-                userPerfil[item.name] && (
+                  props.profileuser._id == cUser.value._id) &&
+                props.profileuser[item.name] && (
                   <List.Item>
-                    <List.Item.Meta title={item.label} description={formatDataToString(userPerfil[item.name], item)} />
+                    <List.Item.Meta
+                      title={item.label}
+                      description={formatDataToString(props.profileuser[item.name], item)}
+                    />
                   </List.Item>
                 )
               }
             />
+          ) : (
+            <h1>es otro perfil</h1>
           )}
+          {/* {props.profileuser && (
+            <List
+              bordered
+              dataSource={props.profileuser && props.profileuser}
+              renderItem={(item) =>
+                (((!item.visibleByContacts || item.visibleByContacts == 'public') && !item.visibleByAdmin) ||
+                  props.profileuser._id == cUser.value._id) &&
+                props.profileuser[item.name] && (
+                  <List.Item>
+                    <List.Item.Meta title={item.label} description={formatDataToString(props.profileuser[item.name], item)} />
+                  </List.Item>
+                )
+              }
+            />
+          )} */}
         </Col>
       </Row>
     </Drawer>
   );
 };
 
-export default DrawerProfile;
+const mapStateToProps = (state) => ({
+  viewPerfil: state.viewPerfilReducer.view,
+  profileuser: state.viewPerfilReducer.perfil,
+});
+
+const mapDispatchToProps = {
+  setViewPerfil,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerProfile);

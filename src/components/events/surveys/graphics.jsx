@@ -7,7 +7,7 @@ import Loading from './loading';
 
 import Chart from 'chart.js/auto';
 
-import { SurveyAnswers } from './services/services';
+import SurveyAnswers from './services/surveyAnswersService';
 import { SurveysApi, UsersApi } from '../../../helpers/request';
 import { graphicsFrame } from './frame';
 
@@ -144,7 +144,7 @@ class Graphics extends Component {
     let porcentajeUsuarios = 0
     let respuestatotal = 0;
 
-    respuestadVotos = totalVotosUsuarios - this.state.totalUser;
+    respuestadVotos = this.state.totalUser - totalVotosUsuarios;
     porcentajeUsuarios= parseInt((respuestadVotos * 100) / this.state.totalUser)
 
     this.setState({

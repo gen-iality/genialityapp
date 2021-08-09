@@ -1,7 +1,7 @@
 import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
 import { firestore } from '../helpers/firebase';
-import { AgendaApi } from '../helpers/request';
+import { AgendaApi,EventFieldsApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
 import { UseCurrentUser } from './userContext';
 
@@ -22,6 +22,19 @@ export const HelperContextProvider = ({ children }) => {
   const [totalSolicitudAmistad, setTotalSolicitudAmistad] = useState(0);
   const [totalsolicitudAgenda, setTotalsolicitudAgenda] = useState(0);
   const [totalsolicitudes, setTotalsolicitudes] = useState(0);
+  const [isOpenDrawerProfile, setisOpenDrawerProfile] = useState(false);
+  const [propertiesProfile, setpropertiesProfile] = useState();
+
+  const getProperties = async (eventId) => {
+    let properties = await EventFieldsApi.getAll(eventId);
+    if (properties.length > 0) {
+      setpropertiesProfile({
+        propertiesUserPerfil: properties,
+      });
+      return properties;
+    }
+    return null;
+  };
 
   const ChangeActiveNotification = (notify, message, type, activity) => {
     setisNotification({
@@ -30,6 +43,10 @@ export const HelperContextProvider = ({ children }) => {
       type,
       activity,
     });
+  };
+
+  const HandleChangeDrawerProfile = () => {
+    setisOpenDrawerProfile(!isOpenDrawerProfile);
   };
 
   const GetInfoAgenda = async () => {
@@ -52,6 +69,7 @@ export const HelperContextProvider = ({ children }) => {
     if (cEvent.value != null) {
       containsNetWorking();
       GetInfoAgenda();
+      getProperties(cEvent.value._id)
     }
   }, [cEvent.value]);
 
@@ -59,7 +77,6 @@ export const HelperContextProvider = ({ children }) => {
     /*NOTIFICACIONES POR ACTIVIDAD*/
 
     async function fetchActivityChange() {
-      console.log('spanchot');
       firestore
         .collection('events')
         .doc(cEvent.value._id)
@@ -98,11 +115,7 @@ export const HelperContextProvider = ({ children }) => {
   }, [cEvent.value, firestore, infoAgenda]);
 
   useEffect(() => {
-    console.log('USER');
-    console.log(cUser);
     async function fetchNetworkingChange() {
-      console.log('ID USER==>' + cUser.value._id);
-      //5e9caaa1d74d5c2f6a02a3c2
       firestore
         .collection('notificationUser')
         .doc(cUser.value._id)
@@ -110,11 +123,9 @@ export const HelperContextProvider = ({ children }) => {
         .doc(cEvent.value._id)
         .collection('notifications')
         .onSnapshot((querySnapshot) => {
-          console.log('SNAPSHOT');
           let contNotifications = 0;
           let notAg = [];
           let notAm = [];
-          //console.log(querySnapshot.docs[0].data());
           let change = querySnapshot.docChanges()[0];
 
           querySnapshot.docs.forEach((doc) => {
@@ -134,6 +145,8 @@ export const HelperContextProvider = ({ children }) => {
           });
           setTotalSolicitudAmistad(notAm.length);
           setTotalsolicitudAgenda(notAg.length);
+          setTotalsolicitudes(notAm.length + notAg.length);
+
           if (change) {
             if (change.doc.data() && change.newIndex > 0) {
               // alert("NUEVA NOTIFICACION")
@@ -145,12 +158,22 @@ export const HelperContextProvider = ({ children }) => {
 
     if (cUser.value != null && cEvent.value != null) {
       fetchNetworkingChange();
-      console.log('ENTRO ACA');
     }
   }, [cUser.value, cEvent.value]);
 
   return (
-    <HelperContext.Provider value={{ containtNetworking, infoAgenda, isNotification, ChangeActiveNotification }}>
+    <HelperContext.Provider
+      value={{
+        containtNetworking,
+        infoAgenda,
+        isNotification,
+        ChangeActiveNotification,
+        totalSolicitudAmistad,
+        totalsolicitudAgenda,
+        totalsolicitudes,
+        HandleChangeDrawerProfile,
+        propertiesProfile
+      }}>
       {children}
     </HelperContext.Provider>
   );

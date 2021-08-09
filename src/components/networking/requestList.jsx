@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,} from 'react';
 
 import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from 'antd';
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as Cookie from 'js-cookie';
 import { Networking, UsersApi } from '../../helpers/request';
 import { getCurrentUser, getCurrentEventUser } from './services';
+import { addNotification } from '../../helpers/netWorkingFunctions';
+
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
@@ -106,23 +108,28 @@ const InvitacionListSent = ({ list }) => {
   );
 };
 
-export default function RequestList({ eventId, notification, currentUser, tabActive }) {
+export default function RequestList({ eventId, currentUser, tabActive,event, currentUserAc }) {
   const [requestListReceived, setRequestListReceived] = useState([]);
   const [requestListSent, setRequestListSent] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  
+  
+  console.log( eventId, currentUser, tabActive )
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
     // Se consulta el id del usuario por el token
     setLoading(true);
+    if(Cookie.get('evius_token')){
     getCurrentUser(Cookie.get('evius_token')).then(async (user) => {
       // Servicio que obtiene el eventUserId del usuario actual
-      let eventUser = await getCurrentEventUser(eventId, user._id);
+      let eventUser = currentUser;
 
       // Servicio que trae las invitaciones / solicitudes recibidas
       Networking.getInvitationsReceived(eventId, eventUser._id).then(async ({ data }) => {
-        setCurrentUserId(user._id);
+        console.log("DATA RECEIVED")
+        console.log(data)
+        setCurrentUserId(eventUser._id);
 
         // Solo se obtendran las invitaciones que no tengan respuesta
         if (data.length > 0) {
@@ -141,10 +148,15 @@ export default function RequestList({ eventId, notification, currentUser, tabAct
         if (data.length > 0) setRequestListSent(data.filter((item) => !item.response || item.response === 'rejected'));
       });
     });
+    }else{
+      setLoading(false);
+    }
   };
 
   //Funcion para insertar dentro de requestListReceivedNew el nombre de quien envia la solicitud de contacto
   const insertNameRequested = async (requestListReceived) => {
+    console.log("ITENNAME INSERT");
+    console.log(requestListReceived)
     //Se crea un nuevo array
     let requestListReceivedNew = [];
     //Se itera el array que llega para obtener los datos
@@ -181,11 +193,12 @@ export default function RequestList({ eventId, notification, currentUser, tabAct
         message.success('Respuesta enviada');
 
         let notificationr = {
-          idReceive: currentUser._id,
+          idReceive: currentUserAc._id,
           idEmited: requestId && requestId._id,
           state: '1',
         };
-        notification(notificationr, currentUser._id);
+       // notification(notificationr, currentUser._id);
+       addNotification(notificationr,event,currentUserAc)       
         setRequestListReceived(requestListReceived.filter((item) => item._id != requestId._id));
       })
       .catch((err) => {
@@ -200,8 +213,8 @@ export default function RequestList({ eventId, notification, currentUser, tabAct
     }
   }, [eventId, tabActive]);
 
-  if (currentUserId && !loading)
-    return currentUserId === 'guestUser' ? (
+  if (!loading)
+    return currentUser === null ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
         <Alert
           message='Iniciar Sesión'
@@ -218,5 +231,6 @@ export default function RequestList({ eventId, notification, currentUser, tabAct
         <InvitacionListSent list={requestListSent} />
       </div>
     );
-  if (loading || !currentUserId) return <Spin></Spin>;
+  if (loading) return <Spin></Spin>;
+
 }

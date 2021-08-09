@@ -1,6 +1,6 @@
 import React from 'react';
 import { firestore } from '../../../../helpers/firebase';
-import { SurveyPage } from './services';
+import { SurveyPage } from '../services/services';
 
 function RealTimeSurveyListening(idSurvey, currentUser, startingSurveyComponent) {
    //    let currentPageNo = 0;

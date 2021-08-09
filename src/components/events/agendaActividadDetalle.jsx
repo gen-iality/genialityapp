@@ -25,7 +25,7 @@ import {
 import SurveyList from '../events/surveys/surveyList';
 import SurveyDetail from '../events/surveys/surveyDetail';
 import RankingTrivia from './surveys/rankingTrivia';
-import { listenSurveysData } from '../events/surveys/services/services';
+import listenSurveysData from '../events/surveys/services/listenSurveysDataToAgendaActividadDetalle';
 import { eventUserUtils } from '../../helpers/helperEventUser';
 import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';

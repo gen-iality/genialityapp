@@ -4,7 +4,7 @@ import { EventsApi } from "./request";
 import { firestore } from "./firebase";
 
 
-export const  SendFriendship= async({ eventUserIdReceiver, userName },userActual,event)=> {
+export const  SendFriendship= async({ eventUserIdReceiver, userName, },userActual,event)=> {
     console.log( eventUserIdReceiver, userName ,userActual,event)
     let eventUserId=userActual._id
     console.log(userActual)  
@@ -50,7 +50,8 @@ export const  SendFriendship= async({ eventUserIdReceiver, userName },userActual
  export const  addNotification=(notification,event,user)=> {
    console.log(notification)
    console.log(event)
-    if (notification.emailEmited != null) {
+    if (notification.emailEmited != null &&notification.emailEmited  ) {
+      console.log("ACAAAA IF")
       firestore
         .collection('notificationUser')
         .doc(notification.idReceive)
@@ -66,6 +67,11 @@ export const  SendFriendship= async({ eventUserIdReceiver, userName },userActual
           type: notification.type,
         });
     } else {
+      console.log("ACAAAA ELSE")
+      console.log(user._id);
+      console.log(event._id);
+      console.log(notification.idEmited)
+      console.log(notification.state)
       firestore
         .collection('notificationUser')
         .doc(user._id)

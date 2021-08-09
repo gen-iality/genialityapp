@@ -7,7 +7,6 @@ import MenuRigth from './Menus/MenuRigth';
 import { connect } from 'react-redux';
 const { Sider } = Layout;
 import { UseEventContext } from '../../../Context/eventContext';
-import { UseCurrentUser } from '../../../Context/userContext';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
 import DrawerProfile from './DrawerProfile';
 
@@ -28,7 +27,7 @@ const EventSectionMenuRigth = (props) => {
       trigger={null}
       width={400}
       collapsed={props.viewSocialZoneNetworking}>
-      {props.viewPerfil ? (
+      {!props.viewPerfil ? (
         <div className='Chat-Event'>
           {props.viewSocialZoneNetworking ? (
             <>
