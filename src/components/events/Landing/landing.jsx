@@ -5,7 +5,7 @@ import { UseCurrentUser } from '../../../Context/userContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { HelperContext } from '../../../Context/HelperContext';
 /** ant design */
-import { Layout, Spin, notification } from 'antd';
+import { Layout, Spin, notification, Button } from 'antd';
 
 /** Components */
 import TopBanner from './TopBanner';
@@ -25,6 +25,9 @@ const { Content } = Layout;
 /** redux surveys */
 import { setCurrentSurvey, setSurveyResult } from '../../../redux/survey/actions';
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
+
+/*react router*/
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -49,7 +52,7 @@ const IconRender = (type) => {
 
     case 'networking':
       iconRender = <NotificationOutlined />;
-    break;
+      break;
   }
   return iconRender;
 };
@@ -60,7 +63,20 @@ const Landing = (props) => {
   let cEventUser = UseUserEvent();
   let { isNotification, ChangeActiveNotification } = useContext(HelperContext);
 
-  const NotificationHelper = ({ message, type }) => {
+  const ButtonRender = (status, activity) => {
+    return status == 'open' ? (
+      <Button
+        type='primary'
+        size='small'
+        onClick={() =>
+          window.location.replace(`${window.location.origin}/landing/${cEventContext.value._id}/activity/${activity}`)
+        }>
+        Ir a la actividad
+      </Button>
+    ) : null;
+  };
+
+  const NotificationHelper = ({ message, type, activity }) => {
     notification.open({
       message: 'Nueva notificación',
       description: message,
@@ -68,6 +84,7 @@ const Landing = (props) => {
       onClose: () => {
         ChangeActiveNotification(false, 'none', 'none');
       },
+      btn: ButtonRender(type, activity),
     });
   };
 
@@ -75,7 +92,7 @@ const Landing = (props) => {
     if (isNotification.notify) {
       NotificationHelper(isNotification);
     }
-    console.log('Notification',isNotification)
+    console.log('Notification', isNotification);
   }, [isNotification]);
 
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { firestore } from '../helpers/firebase';
 import { AgendaApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
-import {UseCurrentUser} from './userContext';
+import { UseCurrentUser } from './userContext';
 
 export const HelperContext = createContext();
 
@@ -15,7 +15,7 @@ const initialStateNotification = {
 
 export const HelperContextProvider = ({ children }) => {
   let cEvent = UseEventContext();
-  let cUser =UseCurrentUser()
+  let cUser = UseCurrentUser();
   const [containtNetworking, setcontaintNetworking] = useState(false);
   const [infoAgenda, setinfoAgenda] = useState(null);
   const [isNotification, setisNotification] = useState(initialStateNotification);
@@ -23,11 +23,12 @@ export const HelperContextProvider = ({ children }) => {
   const [totalsolicitudAgenda, setTotalsolicitudAgenda] = useState(0);
   const [totalsolicitudes, setTotalsolicitudes] = useState(0);
 
-  const ChangeActiveNotification = (notify, message, type) => {
+  const ChangeActiveNotification = (notify, message, type, activity) => {
     setisNotification({
       notify,
       message,
       type,
+      activity,
     });
   };
 
@@ -72,21 +73,21 @@ export const HelperContextProvider = ({ children }) => {
             change.type === 'modified'
           ) {
             let message = obtenerNombreActivity(change.doc.id)?.name + ' está en vivo..';
-            ChangeActiveNotification(true, message, 'open');
+            ChangeActiveNotification(true, message, 'open', change.doc.id);
           } else if (
             change.doc.data().habilitar_ingreso == 'ended_meeting_room' &&
             obtenerNombreActivity(change.doc.id)?.name != null &&
             change.type === 'modified'
           ) {
             let message = obtenerNombreActivity(change.doc.id)?.name + 'ha terminado..';
-            ChangeActiveNotification(true, message, 'ended');
+            ChangeActiveNotification(true, message, 'ended', change.doc.id);
           } else if (
             change.doc.data().habilitar_ingreso == 'closed_meeting_room' &&
             change.type === 'modified' &&
             obtenerNombreActivity(change.doc.id)?.name != null
           ) {
             let message = obtenerNombreActivity(change.doc.id)?.name + 'está por iniciar';
-            ChangeActiveNotification(true, message, 'close');
+            ChangeActiveNotification(true, message, 'close', change.doc.id);
           }
         });
     }
@@ -96,57 +97,57 @@ export const HelperContextProvider = ({ children }) => {
     }
   }, [cEvent.value, firestore, infoAgenda]);
 
-  useEffect(()=>{
-    console.log("USER")
-    console.log(cUser)
-     async function fetchNetworkingChange(){
-       console.log("ID USER==>"+ cUser.value._id)
-    //5e9caaa1d74d5c2f6a02a3c2
-        firestore
-          .collection('notificationUser')
-          .doc(cUser.value._id)
-          .collection('events')
-          .doc(cEvent.value._id)
-          .collection('notifications')
-          .onSnapshot((querySnapshot) => {
-            console.log("SNAPSHOT")
-            let contNotifications = 0;
-            let notAg = [];
-            let notAm = [];
-            //console.log(querySnapshot.docs[0].data());
-            let change = querySnapshot.docChanges()[0];
-            
-            querySnapshot.docs.forEach((doc) => {
-              let notification = doc.data();
-  
-              if (notification.state === '0') {
-                contNotifications++;
-              }  
-              //Notificacion tipo agenda
-              if (notification.type == 'agenda' && notification.state === '0') {
-                notAg.push(doc.data());
-              }
-              //Notificacion otra
-              if (notification.type == 'amistad' && notification.state === '0') {
-                notAm.push(doc.data());
-              }        
-            });
-            setTotalSolicitudAmistad(notAm.length)
-            setTotalsolicitudAgenda(notAg.length)
-           if(change){
-            if(change.doc.data() && change.newIndex>0 ){             
-             // alert("NUEVA NOTIFICACION")
+  useEffect(() => {
+    console.log('USER');
+    console.log(cUser);
+    async function fetchNetworkingChange() {
+      console.log('ID USER==>' + cUser.value._id);
+      //5e9caaa1d74d5c2f6a02a3c2
+      firestore
+        .collection('notificationUser')
+        .doc(cUser.value._id)
+        .collection('events')
+        .doc(cEvent.value._id)
+        .collection('notifications')
+        .onSnapshot((querySnapshot) => {
+          console.log('SNAPSHOT');
+          let contNotifications = 0;
+          let notAg = [];
+          let notAm = [];
+          //console.log(querySnapshot.docs[0].data());
+          let change = querySnapshot.docChanges()[0];
+
+          querySnapshot.docs.forEach((doc) => {
+            let notification = doc.data();
+
+            if (notification.state === '0') {
+              contNotifications++;
+            }
+            //Notificacion tipo agenda
+            if (notification.type == 'agenda' && notification.state === '0') {
+              notAg.push(doc.data());
+            }
+            //Notificacion otra
+            if (notification.type == 'amistad' && notification.state === '0') {
+              notAm.push(doc.data());
+            }
+          });
+          setTotalSolicitudAmistad(notAm.length);
+          setTotalsolicitudAgenda(notAg.length);
+          if (change) {
+            if (change.doc.data() && change.newIndex > 0) {
+              // alert("NUEVA NOTIFICACION")
               ChangeActiveNotification(true, change.doc.data().message, 'networking');
             }
           }
-          });
-     }
-
-     if (cUser.value!=null && cEvent.value!=null) {
-      fetchNetworkingChange();
-      console.log("ENTRO ACA")
+        });
     }
-  },[cUser.value,cEvent.value]);
+
+    if (cUser.value != null && cEvent.value != null) {
+      fetchNetworkingChange();
+      console.log('ENTRO ACA');
+    }
+  }, [cUser.value, cEvent.value]);
 
   return (
     <HelperContext.Provider value={{ containtNetworking, infoAgenda, isNotification, ChangeActiveNotification }}>
