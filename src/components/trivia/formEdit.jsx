@@ -2,7 +2,7 @@ import React, { useState, useEffect, forwardRef } from 'react';
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from './constants';
 import { SurveysApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
-import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload } from 'antd';
+import { Form, Input, Button, Select, Spin, Radio, Checkbox, Upload, message } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Actions } from '../../helpers/request';
 
@@ -151,22 +151,23 @@ const FormEdit = (
         if (values.type === option.text) values.type = option.value;
       });
     }
-
     // eslint-disable-next-line no-unused-vars
+    const pointsValue = values.points ? values.points :'1'
+    const dataValues = {...values, points: pointsValue}
     const exclude = ({ questionOptions, ...rest }) => rest;
     if (questionIndex === undefined) {
-      return SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then(() => {
+      return SurveysApi.createQuestion(eventId, surveyId, exclude(dataValues)).then(() => {
         form.resetFields();
-        closeModal({ questionIndex, data: exclude(values) }, 'created');
-        toast.success('Pregunta creada');
+        closeModal({ questionIndex, data: exclude(dataValues) }, 'created');
+        message.success({ content: 'Pregunta creada', key: 'updating' });
       });
     }
 
-    SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(values))
+    SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(dataValues))
       .then(() => {
         form.resetFields();
-        closeModal({ questionIndex, data: exclude(values) }, 'updated');
-        toast.success('pregunta actualizada');
+        closeModal({ questionIndex, data: exclude(dataValues) }, 'updated');
+        message.success({ content: 'pregunta actualizada', key: 'updating' });
       })
       .catch((err) => toast.error('No se pudo actualizar la pregunta: ', err));
   };
