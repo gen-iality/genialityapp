@@ -2,6 +2,7 @@ import React from 'react';
 import { CurrentUserContext } from './userContext';
 import { CurrentEventContext } from './eventContext';
 import { CurrentEventUserContext } from './eventUserContext';
+import HelperContext from './HelperContext';
 
 export default function WithEviusContext(Component) {
   return function WithEviusContextComponent(props) {
@@ -11,7 +12,19 @@ export default function WithEviusContext(Component) {
           <CurrentUserContext.Consumer>
             {(usercurrent) => (
               <CurrentEventUserContext.Consumer>
-                {(eventuser) => <Component cEvent={event} cUser={usercurrent} cEventUser={eventuser} {...props} />}
+                {(eventuser) => (
+                  <HelperContext.Consumer>
+                    {(helper) => (
+                      <Component
+                        cEvent={event}
+                        cUser={usercurrent}
+                        cEventUser={eventuser}
+                        {...props}
+                        cHelper={helper}
+                      />
+                    )}
+                  </HelperContext.Consumer>
+                )}
               </CurrentEventUserContext.Consumer>
             )}
           </CurrentUserContext.Consumer>

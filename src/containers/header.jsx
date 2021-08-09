@@ -7,15 +7,14 @@ import { OrganizationApi, getCurrentUser } from '../helpers/request';
 import LogOut from '../components/shared/logOut';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
-
 import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
 import * as eventActions from '../redux/event/actions';
-
 import MenuOld from '../components/events/shared/menu';
 import { Menu, Drawer, Button, Col, Row, Layout } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { parseUrl } from '../helpers/constants';
+import withContext from '../Context/withContext';
 
 const { setEventData } = eventActions;
 const { addLoginInformation, showMenu } = userActions;
@@ -74,6 +73,9 @@ class Headers extends Component {
   };
 
   async componentDidMount() {
+  
+  
+
     const eventId = this.setEventId();
     this.setState({ eventId });
 
@@ -221,6 +223,7 @@ class Headers extends Component {
                 eventId={this.state.id}
                 logout={this.logout}
                 openMenu={this.openMenu}
+                loginInfo={this.props.loginInfo}
               />
             </Row>
           </Menu>
@@ -267,4 +270,5 @@ const mapDispatchToProps = {
   showMenu,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Headers));
+let HeaderWithContext = withContext(Headers);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HeaderWithContext));
