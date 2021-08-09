@@ -211,6 +211,7 @@ class triviaEdit extends Component {
     if(isValid){
       message.loading({ content: 'Actualizando información', key: 'updating' });
       const data = {
+        graphyType: this.state.graphyType,
         survey: this.state.survey,
         
         show_horizontal_bar: this.state.show_horizontal_bar === 'true' ? true : false,
