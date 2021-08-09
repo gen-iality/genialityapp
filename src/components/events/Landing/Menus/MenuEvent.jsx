@@ -24,8 +24,7 @@ const MenuEvent = ({isMobile }) => {
           {Object.keys(event.itemsMenu).map((key) => {
             //icono personalizado
             let IconoComponente = iconComponents[event.itemsMenu[key].icon];
-            {console.log("MENU ITEM")}
-            {console.log(event.itemsMenu)}
+           
           return(
              key=='networking'? ( 
                

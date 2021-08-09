@@ -361,9 +361,7 @@ class ListEventUser extends Component {
       matches,
     } = this.state;
 
-    console.log("LENGTH");
-    console.log(users.length);
-    console.log(usersFiltered)
+
 
     return (
       <div style={{ padding: "12px" }}>

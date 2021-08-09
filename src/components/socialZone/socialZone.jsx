@@ -47,6 +47,8 @@ let SocialZone = function(props) {
   let userName = cUser.value ? cUser.value?.names : cUser.value?.name ? cUser.value?.name : '---';
 
   let setCurrentChat = (id, chatname) => {
+    console.log("chat name")
+    console.log(chatname)
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
   };
@@ -64,18 +66,19 @@ let SocialZone = function(props) {
 
     if (!cUser.value._id) return;
     //agregamos una referencia al chat para el usuario actual
-    data = { id: newId, name: otherUserName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
+    data = { id: newId, name: otherUserName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone',remitente:currentName };
     firestore
-      .doc('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value._id + '/' + 'chats/' + newId)
-      .set(data, { merge: true });
+      .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)    
+      .set({...data}, { merge: true });     
 
     //agregamos una referencia al chat para el otro usuario del chat
-    data = { id: newId, name: currentName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
+    data = { id: newId, name: currentName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone',remitente:otherUserName };
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
-      .set(data, { merge: true });
+      .set({...data}, { merge: true });
 
     console.log('como se crea el chgat', data);
+    console.log(otherUserName)
     setCurrentChat(newId, otherUserName);
   };
 
@@ -107,7 +110,8 @@ let SocialZone = function(props) {
   //Cargar la lista de chats de una persona
 
   useEffect(() => {
-    if (!cEvent.value || !cUser.value) return;
+    if (cEvent.value==null || cUser.value==null) return;
+    console.log("EFECT 1")
 
     firestore
       .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
@@ -158,7 +162,7 @@ let SocialZone = function(props) {
               onClick: () => {
                 props.settabselected('chat2');
 
-                setCurrentChat(change.doc.data().id, change.doc.data()._name);
+                setCurrentChat(change.doc.data().id, change.doc.data().name);
                 notification.destroy();
               },
             });
@@ -172,8 +176,8 @@ let SocialZone = function(props) {
   }, [cEvent.value, cUser.value, props.collapse]);
 
   useEffect(() => {
-    if (!cEvent.value) return;
-
+    if (cEvent.value==null) return;
+   console.log("EFFECT 2")
     let colletion_name = cEvent.value._id + '_event_attendees';
     let attendee;
     firestore
@@ -193,69 +197,7 @@ let SocialZone = function(props) {
       });
   }, [cEvent.value]);
 
-  useEffect(() => {
-    if (!cEvent.value || !currentUser) return;
 
-    firestore
-      .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
-      .onSnapshot(function(querySnapshot) {
-        let list = [];
-        let data;
-        let newmsj = 0;
-        querySnapshot.forEach((doc) => {
-          data = doc.data();
-          if (data.newMessages) {
-            newmsj += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
-          }
-          list.push(data);
-        });
-
-        let change = querySnapshot.docChanges()[0];
-        setdatamsjlast(change?.doc.data());
-        let userNameFirebase = null;
-        if (change) {
-          if (change.doc.data().remitente) {
-            if (
-              change.doc
-                .data()
-                .remitente.toLowerCase()
-                .indexOf('(admin)') > -1 ||
-              change.doc
-                .data()
-                .remitente.toLowerCase()
-                .indexOf('(casa)')
-            ) {
-              // QUITAR ALGUNOS PREFIJOS PARA HACER EL MATCH DE NOMBRE ******HAY QUE MEJORAR*******
-              userNameFirebase = change.doc.data().remitente.replace('(admin)', '');
-              userNameFirebase = change.doc.data().remitente.replace('(casa)', '');
-            }
-          }
-        }
-        if (change) {
-          if (
-            userName !== userNameFirebase &&
-            change.doc.data().remitente !== null &&
-            change.doc.data().remitente !== undefined &&
-            newmsj > 0
-          ) {
-            notification.open({
-              description: `Nuevo mensaje de ${change.doc.data().remitente}`,
-              icon: <MessageTwoTone />,
-              onClick: () => {
-                props.settabselected('2');
-
-                setCurrentChat(change.doc.data().id, change.doc.data()._name);
-                notification.destroy();
-              },
-            });
-
-            newmsj > 0 && setTotalNewMessages(newmsj);
-          }
-        }
-
-        setavailableChats(list);
-      });
-  }, [cEvent.value, currentUser, props.collapse]);
 
   return (
     <Tabs

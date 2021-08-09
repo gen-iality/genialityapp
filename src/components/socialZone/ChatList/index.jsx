@@ -42,13 +42,15 @@ const ChatList = (props) => {
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
   const [bandera, setbandera] = useState();
+  const [userNameChat, SetUserNameChat] = useState("");
 
   const onFinish = (values) => {
     cUser.value = values;
     setbandera('');
   };
+  console.log(props)
 
-  let userName = cUser.value ? (cUser.value.names ? cUser.value.names : cUser.value.name) : undefined;
+  let userName = props.currentChatName;
 
   //para los eventos tipo asamblea que tienen una propiedad llamada casa que sirve para identificaar las personas
   userName = cUser.value && cUser.value.casa ? '(' + cUser.value.casa + ') ' + userName : userName;
@@ -59,7 +61,14 @@ const ChatList = (props) => {
       props.datamsjlast.remitente !== null &&
       props.datamsjlast.remitente !== userName &&
       props.totalNewMessages > 0;
+    
   }, [props.datamsjlast, props.totalNewMessages]);
+  
+  useEffect(()=>{
+    if(userName!=null){
+      SetUserNameChat(userName)
+    }
+  },[userName])
 
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();
@@ -147,7 +156,7 @@ const ChatList = (props) => {
             title='chatevius'
             className='ChatEviusLan'
             src={
-              'https://chatevius.web.app?nombre=' +
+              'https://chatevius.web.app?nombre=pr' +
               userName +
               '&chatid=event_' +
               cEvent.value._id +
@@ -233,14 +242,17 @@ const ChatList = (props) => {
               )}
             />
           )}
+          {console.log("Name==>",props.currentChatName)}
+          {console.log(props.currentChat)}
+          {console.log(cUser.value.uid)}          
           {props.currentChat && (
-            <>
+            <>                   
               <iframe
                 title='chatevius'
                 className='ChatEviusLan'
                 src={
                   'https://chatevius.web.app?nombre=' +
-                  userName +
+                  userName+
                   '&chatid=' +
                   props.currentChat +
                   '&eventid=' +
