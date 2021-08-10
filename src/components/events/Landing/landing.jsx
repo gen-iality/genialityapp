@@ -147,6 +147,9 @@ const Landing = (props) => {
 
   /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
   function visualizarEncuesta(survey) {
+    if (!survey){
+      setCurrentSurvey(null);
+    }
     if (survey && survey.isOpened === 'true' && survey !== null) {
       if (currentActivity !== null && survey.isOpened === 'true') {
         setSurveyResult('view');
