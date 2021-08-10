@@ -12,7 +12,6 @@ import { SurveysApi, UsersApi } from '../../../helpers/request';
 import { graphicsFrame } from './frame';
 
 import * as SurveyActions from '../../../redux/survey/actions';
-import { data } from 'jquery';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 

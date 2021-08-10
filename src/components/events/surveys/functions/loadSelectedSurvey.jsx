@@ -1,6 +1,5 @@
 import { SurveysApi } from '../../../../helpers/request';
 import * as Survey from 'survey-react';
-import { data } from 'jquery';
 
 async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
    /** Este componente nos permite cargar datos de la encuesta seleccionada */
