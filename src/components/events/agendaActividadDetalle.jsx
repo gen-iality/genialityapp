@@ -927,6 +927,7 @@ const mapStateToProps = (state) => ({
   permissions: state.permissions,
   isVisible: state.survey.data.surveyVisible,
   viewSocialZoneNetworking: state.spaceNetworkingReducer.view,
+
 });
 
 const mapDispatchToProps = {
