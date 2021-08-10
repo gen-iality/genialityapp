@@ -358,22 +358,17 @@ export default ({
         />
       );
 
-      if (type === 'phone') {
+      if (type === 'codearea') {
         input = (
-          <Input
-            addonBefore={
-              <Select style={{ width: '180px' }} placeholder='Codigo de area del pais'>
-                {areaCode.map((code, key) => {
-                  return (
-                    <option key={key} value={code.value}>
-                      {code.label + ' (+' + code.value + ')'}
-                    </option>
-                  );
-                })}
-              </Select>
-            }
-            placeholder='Numero'
-          />
+          <Select style={{ width: '100%' }} placeholder='Codigo de area del pais'>
+            {areaCode.map((code, key) => {
+              return (
+                <option key={key} value={code.value}>
+                  {code.label + ' (+' + code.value + ')'}
+                </option>
+              );
+            })}
+          </Select>
         );
       }
 
