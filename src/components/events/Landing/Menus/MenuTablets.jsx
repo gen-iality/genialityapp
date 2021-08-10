@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Drawer, Row, Avatar } from 'antd';
-import { MenuOutlined } from '@ant-design/icons';
+import { Button, Drawer, Row, Avatar, Image } from 'antd';
+import { EyeOutlined, MenuOutlined } from '@ant-design/icons';
 import { drawerButton, imageCenter } from '../helpers/csshelpers';
 import { UseEventContext } from '../../../../Context/eventContext';
 import MenuEvent from './MenuEvent';
@@ -32,8 +32,13 @@ const MenuTablets = () => {
               : 'white',
         }}>
         <Row justify='center'>
-          {cEvent.value.styles && (
-            <Avatar size={64} icon={<img src={cEvent.value.styles.event_image} style={imageCenter} />} />
+          {cEvent.value.styles && cEvent.value.styles.event_image && (
+            <Image
+              preview={{ mask: <EyeOutlined /> }}
+              alt='Logo'
+              src={cEvent.value.styles.event_image}
+              style={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg, objectFit: 'cover' }}
+            />
           )}
         </Row>
 
