@@ -887,9 +887,7 @@ let AgendaActividadDetalle = (props) => {
             </Row>
           </Link> */}
         </Card>
-      </div>
-      {console.log('USUARIO')}
-      {console.log(props.cUser.value)}
+      </div> 
       {/* Drawer encuestas */}
       <Drawer
         closeIcon={<CloseOutlined />}
