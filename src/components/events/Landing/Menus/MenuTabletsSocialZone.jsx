@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Badge, Drawer } from 'antd';
-import { MessageOutlined } from '@ant-design/icons';
+import { Button, Badge, Drawer, Space } from 'antd';
+import { MessageOutlined, PieChartOutlined } from '@ant-design/icons';
 import SocialZone from '../../../socialZone/socialZone';
 import { UseEventContext } from '../../../../Context/eventContext';
 
@@ -11,23 +11,36 @@ const MenuTabletsSocialZone = (props) => {
   // console.log("10. 1  ", props.surveyStatusProgress)
   // console.log("10. 2  ", props.listOfEventSurveys)
   // console.log("10. 3  ", props.loadingSurveys)
+  console.log('Marlon',props)
   return (
     <>
       <div className='chat-evius_mobile  animate__animated animate__pulse animate__slower animate__infinite'>
-        <Button
-          style={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
-          shape='circle'
-          icon={
-            <Badge count={props.totalNewMessages}>
-              <MessageOutlined style={{ fontSize: '20px', color: cEvent.value.styles.textMenu }} />
-            </Badge>
-          }
-          size='large'
-          onClick={() => setisDrawerVisible(!isDrawerVisible)}></Button>
+        <Space direction='horizontal' size='small'>
+          <Button
+            style={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
+            shape='circle'
+            icon={
+              <Badge count={props.totalNewMessages}>
+                <MessageOutlined style={{ fontSize: '20px', color: cEvent.value.styles.textMenu }} />
+              </Badge>
+            }
+            size='large'
+            onClick={() => setisDrawerVisible(!isDrawerVisible)}></Button>
+          <Button
+            style={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
+            shape='circle'
+            icon={
+              <Badge count={props.totalNewMessages}>
+                <PieChartOutlined style={{ fontSize: '20px', color: cEvent.value.styles.textMenu }} />
+              </Badge>
+            }
+            size='large'
+            onClick={() => setisDrawerVisible(!isDrawerVisible)}></Button>
+        </Space>
       </div>
 
       <Drawer
-       bodyStyle={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
+        bodyStyle={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
         height={450}
         placement='bottom'
         closable={true}
