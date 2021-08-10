@@ -385,7 +385,7 @@ class Graphics extends Component {
            { dataVotos.map((votos, key)=>(
              <>
               <br />
-              <Col key={key} xs={24} sm={24} md={12} lg={12} xl={8} xxl={8} >
+              <Col key={key} xs={24} sm={24} md={12} lg={12} xl={12} xxl={8} >
               <div style={{width:'320px', borderRadius:'6px', boxShadow:'0px 4px 4px 0px #00000040', marginTop:'12px', marginBottom:'12px'}}>
               <Row>
                 <Col span={votos.option == 2 ? 8 : 5} style={{width:'100%'}}>
@@ -412,7 +412,7 @@ class Graphics extends Component {
            ))
           }
             <br />
-            <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
             <div style={{height:'76px', width:'320px', borderRadius:'6px', boxShadow:'0px 4px 4px 0px #00000040'}}>
               <Row>
                 <Col span={8}>
