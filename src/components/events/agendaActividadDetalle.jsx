@@ -836,7 +836,6 @@ let AgendaActividadDetalle = (props) => {
                   {props.currentSurvey === null && props.cUser.value !== null ? (
                     <SurveyList
                       eventSurveys={props.eventSurveys}
-                      surveyStatusProgress={props.surveyStatusProgress}
                       listOfEventSurveys={props.listOfEventSurveys}
                       loadingSurveys={props.loadingSurveys}
                     />

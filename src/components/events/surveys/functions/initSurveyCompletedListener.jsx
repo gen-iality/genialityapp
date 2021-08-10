@@ -1,6 +1,6 @@
 import { firestore } from '../../../../helpers/firebase';
 
-async function InitSurveysCompletedListener(currentUser,setSurveyStatusProgress) {
+async function InitSurveysCompletedListener(currentUser,setCurrentSurveyStatus) {
    const userId = currentUser.value._id;
 
    const firebaseRef = firestore
@@ -18,7 +18,7 @@ async function InitSurveysCompletedListener(currentUser,setSurveyStatusProgress)
             // console.log('10. initSurveysCompletedListener ', data.data());
          }
       });
-      setSurveyStatusProgress(surveysCompleted);
+      setCurrentSurveyStatus(surveysCompleted);
    });
 
    return unSuscribe
