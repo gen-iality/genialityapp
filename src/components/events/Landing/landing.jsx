@@ -153,9 +153,6 @@ const Landing = (props) => {
       } else if (currentActivity !== null && survey.isOpened === 'false') {
         setSurveyResult('results');
       }
-      if (status === 'results') {
-        setSurveyResult('results');
-      }
       setCurrentSurvey(survey);
     } else {
       setCurrentSurvey(survey);
