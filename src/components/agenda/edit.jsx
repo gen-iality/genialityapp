@@ -996,6 +996,10 @@ class AgendaEdit extends Component {
           )}
         </TabPane>
         <TabPane tab='Espacio Virtual' key='3'>
+        {loading ? (
+              <Loading />
+            ) : (
+          <>
           <RoomManager
             event_id={this.props.event._id}
             activity_id={this.state.activity_id}
@@ -1014,7 +1018,7 @@ class AgendaEdit extends Component {
               event_id={this.props.event._id}
               activity_id={this.state.activity_id}
             />
-          )}
+          )}</>)}
         </TabPane>
         <TabPane tab='Avanzado' key='4'>
           <Row>

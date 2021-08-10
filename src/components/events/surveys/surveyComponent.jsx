@@ -70,7 +70,8 @@ function SurveyComponent(props) {
          loadSurveyData.freezeGame = surveyRealTime.freezeGame;
       }
 
-      const surveyModelData = new Survey.Model(loadSurveyData);
+      let surveyModelData = new Survey.Model(loadSurveyData);
+      surveyModelData.currentPageNo = surveyRealTime.currentPage;
 
       setSurveyData(loadSurveyData);
       setInitialSurveyModel(surveyModelData);
