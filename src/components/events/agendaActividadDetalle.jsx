@@ -867,13 +867,14 @@ let AgendaActividadDetalle = (props) => {
           </Link> */}
         </Card>
       </div>
-
+      {console.log("USUARIO")}
+     {console.log(props.cUser.value)}
       {/* Drawer encuestas */}
       <Drawer
         closeIcon={<CloseOutlined />}
         placement='right'
         // closable={true}
-        visible={props.currentSurvey}
+        visible={props.currentSurvey && props.cUser.value!==null}
         onClose={onClose}
         width={window.screen.width >= 768 ? (rankingVisible == false ? '100%' : '70%') : '100%'}>
         <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>

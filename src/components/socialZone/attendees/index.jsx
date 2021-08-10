@@ -102,17 +102,22 @@ const AttendeList = function(props) {
         itemLayout='horizontal'
         dataSource={filteredlist && filteredlist}
         renderItem={(item) => (
+   
           <List.Item
             style={styleListAttende}
             actions={[
+              
               cUser.value ? (
                 <a
                   key='list-loadmore-edit'
-                  onClick={() => {
-                    props.createNewOneToOneChat(cUser.value.uid, cUser.value.names, item.iduser, item.names);
+                  onClick={() => {                    
+                    props.createNewOneToOneChat(cUser.value.uid, cUser.value.names || cUser.value.name , item.iduser, item.names || item.name);
                     props.settabselected('1');
                     props.setCurrentChat(item.iduser, item.name ? item.name : item.names);
+                    console.log("ITEM ACA")
+                    console.log(item.name ? item.name : item.names)
                     props.setchattab('chat2');
+                    console.log(item)
                   }}>
                   <Tooltip title={'Chatear'}>
                     <MessageTwoTone style={{ fontSize: '27px' }} />
