@@ -8,7 +8,7 @@ const { setSurveyResult } = surveysActions;
 function ClosedSurvey(props) {
     const { currentSurvey, setSurveyResult } = props;
    return (
-      <Card title={`${currentSurvey.name}`} className='survyCard'>
+      <Card className='survyCard'>
          <h1>
             La <strong>{currentSurvey.name}</strong> ha finalizado
          </h1>

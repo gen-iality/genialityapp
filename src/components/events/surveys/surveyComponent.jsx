@@ -183,7 +183,7 @@ function SurveyComponent(props) {
       <div>
          {surveyJsModel && surveyJsModel.state === 'completed' && (
             <>
-               {surveyData && surveyData.allow_gradable_survey !== 'true' && (
+               {surveyData && (surveyData.allow_gradable_survey === 'false' || surveyData.allow_gradable_survey === false) && (
                   <Graphics
                      idSurvey={idSurvey}
                      eventId={eventId}
