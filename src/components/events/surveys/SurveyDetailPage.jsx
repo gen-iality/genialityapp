@@ -21,7 +21,7 @@ function SurveyDetailPage(props) {
    
    const isCompleted=(id)=>{
        if(currentSurveyStatus &&
-      currentSurveyStatus[id] &&   currentSurveyStatus[id].surveyCompleted === 'completed' && surveyResult!=='closedSurvey'){
+         currentSurveyStatus[id] &&  currentSurveyStatus[id].surveyCompleted === 'completed' && surveyResult!=='closedSurvey'){
          return true;
       }
       return false;
@@ -29,9 +29,7 @@ function SurveyDetailPage(props) {
 
    return (
       <div>
-         {/* (eventUser && eventUser.rol && eventUser.rol.name === currentSurvey.userRole) validacion por rol */}
-         {console.log("COMPLETE=>",isCompleted(currentSurvey._id))}
-         {console.log("RESULT==>"+surveyResult)}
+         {/* (eventUser && eventUser.rol && eventUser.rol.name === currentSurvey.userRole) validacion por rol */}        
          {(surveyResult === 'results' || isCompleted(currentSurvey._id)) && (
             <Graphics
                idSurvey={currentSurvey._id}
