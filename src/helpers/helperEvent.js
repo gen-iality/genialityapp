@@ -38,9 +38,9 @@ export function listenSurveysData(
           case 'modified':
           default:
             currentSurvey = { ...lastChange.doc.data(), _id: lastChange.doc.id };
-            if (currentSurvey.isPublished === 'true' && currentSurvey.isOpened === 'true') {
+            //if (currentSurvey.isPublished === 'true' && currentSurvey.isOpened === 'true') {
               visualizarEncuesta(currentSurvey);
-            }
+            //}
          break;
         }
       }

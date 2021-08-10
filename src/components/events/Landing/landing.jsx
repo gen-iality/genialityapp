@@ -148,6 +148,7 @@ const Landing = (props) => {
 
   /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
   function visualizarEncuesta(survey) {
+    console.log('cambios encuestas vis',survey);
     if (!survey){
       setCurrentSurvey(null);
     }
