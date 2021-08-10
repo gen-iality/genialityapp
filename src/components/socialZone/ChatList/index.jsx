@@ -25,7 +25,6 @@ const styleList = {
   padding: 5,
   borderRadius: '10px',
   backgroundColor: '#ffffff63',
-  overflow: 'auto',
 };
 
 const layout = {
@@ -186,6 +185,7 @@ const ChatList = (props) => {
           key='chat2'>
           {!props.currentChat && (
             <List
+            className="asistente-list"
               style={styleList}
               dataSource={props.availableChats}
               renderItem={(item) => (

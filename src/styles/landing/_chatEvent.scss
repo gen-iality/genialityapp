@@ -54,9 +54,9 @@
   width: 9px;
 }
 .asistente-list::-webkit-scrollbar-thumb {
-  background-color: rgb(73, 75, 75);
+  background-color: rgba(73, 75, 75, 0.5);
   border-radius: 20px;
-  border: 2px solid rgb(73, 75, 75);
+  border: 2px solid rgba(73, 75, 75, 0.5);
 }
 .asistente-list::-webkit-scrollbar-track-piece {
   background-color: #f5f5f500;
