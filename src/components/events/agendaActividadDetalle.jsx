@@ -291,15 +291,18 @@ let AgendaActividadDetalle = (props) => {
     screenWidth <= 768 ? setIsMobile(true) : setIsMobile(false);
   };
 
-  const { image_event, } = props;
-  console.log('Marlon',props)
+  const { image_event } = props;
+  console.log('Marlon', props);
 
-  const colorTexto = props.cEvent.value.styles.textMenu
-  const colorFondo = props.cEvent.value.styles.toolbarDefaultBg
+  const colorTexto = props.cEvent.value.styles.textMenu;
+  const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
 
-  
-
-  const imagePlaceHolder = "http://via.placeholder.com/1500x540/"+colorFondo.replace('#','')+"/"+colorTexto.replace('#','')+"?text=EVIUS.co"
+  const imagePlaceHolder =
+    'http://via.placeholder.com/1500x540/' +
+    colorFondo.replace('#', '') +
+    '/' +
+    colorTexto.replace('#', '') +
+    '?text=EVIUS.co';
 
   useEffect(() => {
     if (currentActivity) {
@@ -628,7 +631,9 @@ let AgendaActividadDetalle = (props) => {
                           ? props.cEvent.value.styles?.banner_image
                           : currentActivity?.image
                           ? currentActivity?.image
-                          : image_event ? image_event : imagePlaceHolder
+                          : image_event
+                          ? image_event
+                          : imagePlaceHolder
                       }
                       alt='Activity'
                     />
