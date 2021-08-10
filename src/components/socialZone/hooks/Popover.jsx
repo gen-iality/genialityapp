@@ -19,7 +19,7 @@ const PopoverInfoUser = ({ item, props }) => {
             <Tooltip
               title='Ver perfil'
               onClick={() => {
-                props.perfil(item);
+               alert("opcion desactivada temporalmente, recomendacion (desactive networking de este evento)")
               }}>
               <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
             </Tooltip>

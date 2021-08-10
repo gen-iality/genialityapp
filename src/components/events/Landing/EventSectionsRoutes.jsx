@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spin } from 'antd';
 /** --------------------
@@ -25,9 +25,17 @@ import NetworkingForm from '../../networking';
 import InformativeSection2 from '../informativeSections/informativeSection2';
 import InformativeSection from '../informativeSections/informativeSection';
 import Noticias from '../noticias';
+import withContext from '../../../Context/withContext';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
+  console.log('EVENT SECTIONS ROW');
+  let redirect;
+  if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
+    redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
+  } else {
+    redirect = 'evento';
+  }
 
   return (
     <>
@@ -35,7 +43,7 @@ const EventSectionRoutes = (props) => {
 
       <Switch>
         <Route exact path={`${path}/`}>
-          <EventHome />
+          <Redirect to={`/landing/${props.cEvent.value._id}/${redirect}`} />
         </Route>
 
         <Route path={`${path}/documents`}>
@@ -130,4 +138,5 @@ const mapDispatchToProps = {
   setSpaceNetworking,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EventSectionRoutes);
+let eventSectionsContext = withContext(EventSectionRoutes);
+export default connect(mapStateToProps, mapDispatchToProps)(eventSectionsContext);

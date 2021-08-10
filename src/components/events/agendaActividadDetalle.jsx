@@ -31,6 +31,7 @@ import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';
 import { setSpaceNetworking } from '../../redux/networking/actions';
 import withContext from '../../Context/withContext';
+import { useHistory } from "react-router-dom";
 
 const { TabPane } = Tabs;
 const { gotoActivity, setMainStage, setTabs } = StageActions;
@@ -58,13 +59,14 @@ let AgendaActividadDetalle = (props) => {
   const [email, setEmail] = useState(null);
   const [currentActivity, setcurrentActivity] = useState(null);
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
+  let history = useHistory();
 
   const configfast = useState({});
 
   const { Title } = Typography;
 
   const intl = useIntl();
-
+  
   //obtener la actividad por id
   useEffect(() => {
     console.log('mis props', props);
@@ -239,6 +241,10 @@ let AgendaActividadDetalle = (props) => {
     }
   }
 
+  function redirectRegister() {
+    history.push(`/landing/${props.cEvent.value._id}/tickets`);
+  }
+
   async function listeningStateMeetingRoom(event_id, activity_id) {
     // console.log("que esta llegando",event_id,activity_id);
     //
@@ -292,7 +298,7 @@ let AgendaActividadDetalle = (props) => {
   };
 
   const { image_event } = props;
-  console.log('Marlon', props);
+  
 
   const colorTexto = props.cEvent.value.styles.textMenu;
   const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
@@ -824,16 +830,19 @@ let AgendaActividadDetalle = (props) => {
                       </p>
                     </>
                   }>
-                  {props.currentSurvey === null ? (
+                  {props.currentSurvey === null && props.cUser.value!==null ? (
                     <SurveyList
                       eventSurveys={props.eventSurveys}
                       surveyStatusProgress={props.surveyStatusProgress}
                       listOfEventSurveys={props.listOfEventSurveys}
                       loadingSurveys={props.loadingSurveys}
                     />
-                  ) : (
+                  ) :props.currentSurvey !== null && props.cUser.value!==null ? (
                     <SurveyDetail />
-                  )}
+                  ):<div style={{paddingTop:30}}>
+                      <Alert  showIcon message="Para poder responder una encuesta debes ser usuario del sistema" type="warning" />
+                      <Row style={{marginTop:30}} justify='center'><Button onClick={redirectRegister} >Registrarme</Button></Row>
+                    </div>}
                 </TabPane>
               )}
               {props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (

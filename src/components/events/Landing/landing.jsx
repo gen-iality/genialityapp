@@ -62,6 +62,7 @@ const Landing = (props) => {
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
   let { isNotification, ChangeActiveNotification } = useContext(HelperContext);
+  const [chattab, setchattab] = useState('chat1');
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -208,6 +209,8 @@ const Landing = (props) => {
           surveyStatusProgress={surveyStatusProgress}
           listOfEventSurveys={listOfEventSurveys}
           loadingSurveys={loadingSurveys}
+          setchattab={setchattab}
+          chattab={chattab}
         />
         <MenuTabletsSocialZone
           totalNewMessages={totalNewMessages}
@@ -218,6 +221,8 @@ const Landing = (props) => {
           surveyStatusProgress={surveyStatusProgress}
           listOfEventSurveys={listOfEventSurveys}
           loadingSurveys={loadingSurveys}
+          setchattab={setchattab}
+          chattab={chattab}
         />
       </Layout>
     </>

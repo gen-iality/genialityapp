@@ -11,8 +11,6 @@ import { setSpaceNetworking } from '../../../redux/networking/actions';
 import DrawerProfile from './DrawerProfile';
 
 const EventSectionMenuRigth = (props) => {
-  const [chattab, setchattab] = useState('chat1');
-
   let [optionselected, setOptionselected] = useState(1);
   let cEvent = UseEventContext();
 
@@ -38,8 +36,8 @@ const EventSectionMenuRigth = (props) => {
                 generalTabs={props.generalTabs}
                 tabselected={props.tabselected}
                 settabselected={props.settabselected}
-                setchattab={setchattab}
-                chattab={chattab}
+                setchattab={props.setchattab}
+                chattab={props.chattab}
               />
             </>
           ) : (
@@ -61,8 +59,8 @@ const EventSectionMenuRigth = (props) => {
                 surveyStatusProgress={props.surveyStatusProgress}
                 listOfEventSurveys={props.listOfEventSurveys}
                 loadingSurveys={props.loadingSurveys}
-                setchattab={setchattab}
-                chattab={chattab}
+                setchattab={props.setchattab}
+                chattab={props.chattab}
               />
             </>
           )}

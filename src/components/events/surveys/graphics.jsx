@@ -230,7 +230,7 @@ class Graphics extends Component {
       */
 
         graphy.options = {
-        responsive:this.state.isMobile || this.state.dataSurvey.graphyType !== ChartPie.type ? true : false,
+        responsive:this.state.isMobile ? true : false,
         title: {
           fontSize: 16,
           display: true,
