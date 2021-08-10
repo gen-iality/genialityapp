@@ -292,7 +292,7 @@ let AgendaActividadDetalle = (props) => {
   };
 
   const { image_event } = props;
-  console.log('Marlon', props);
+  
 
   const colorTexto = props.cEvent.value.styles.textMenu;
   const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
