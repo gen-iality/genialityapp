@@ -215,6 +215,7 @@ const Landing = (props) => {
         />
         <MenuTabletsSocialZone
           totalNewMessages={totalNewMessages}
+          currentActivity={currentActivity}
           generalTabs={generaltabs}
           notNewMessage={notNewMessage}
           tabselected={tabselected}

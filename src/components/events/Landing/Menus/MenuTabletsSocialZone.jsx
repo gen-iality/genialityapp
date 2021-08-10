@@ -3,11 +3,15 @@ import { Button, Badge, Drawer, Space } from 'antd';
 import { MessageOutlined, PieChartOutlined } from '@ant-design/icons';
 import SocialZone from '../../../socialZone/socialZone';
 import { UseEventContext } from '../../../../Context/eventContext';
+import { connect } from 'react-redux';
 
 const MenuTabletsSocialZone = (props) => {
   const [isDrawerVisible, setisDrawerVisible] = useState(false);
-  let [optionselected, setOptionselected] = useState(1);
+  let [optionselected, setOptionselected] = useState('1');
   let cEvent = UseEventContext();
+  console.log(" MenuTabletsSocialZone")
+  console.log(props)
+
   return (
     <>
       <div className='chat-evius_mobile  animate__animated animate__pulse animate__slower animate__infinite'>
@@ -21,17 +25,17 @@ const MenuTabletsSocialZone = (props) => {
               </Badge>
             }
             size='large'
-            onClick={() => setisDrawerVisible(!isDrawerVisible)}></Button>
-          <Button
+            onClick={() =>{ setOptionselected('1');setisDrawerVisible(!isDrawerVisible)}}></Button>
+       {props.currentActivity && (props.listOfEventSurveys && props.listOfEventSurveys.length>0) &&  <Button
             style={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
             shape='circle'
             icon={
-              <Badge count={props.totalNewMessages}>
+              <Badge dot={props.hasOpenSurveys}>
                 <PieChartOutlined style={{ fontSize: '20px', color: cEvent.value.styles.textMenu }} />
               </Badge>
             }
             size='large'
-            onClick={() => setisDrawerVisible(!isDrawerVisible)}></Button>
+            onClick={() =>{setOptionselected('3');setisDrawerVisible(!isDrawerVisible)}}></Button>}
         </Space>
       </div>
 
@@ -50,7 +54,7 @@ const MenuTabletsSocialZone = (props) => {
           tab={1}
           generalTabs={props.generalTabs}
           notNewMessages={props.notNewMessage}
-          tabselected={props.tabselected}
+          tabselected={optionselected}
           settabselected={props.settabselected}
           surveyStatusProgress={props.surveyStatusProgress}
           listOfEventSurveys={props.listOfEventSurveys}
@@ -63,4 +67,9 @@ const MenuTabletsSocialZone = (props) => {
   );
 };
 
-export default MenuTabletsSocialZone;
+const mapStateToProps = (state) => ({
+  hasOpenSurveys: state.survey.data.hasOpenSurveys,
+
+});
+
+export default connect(mapStateToProps, null)(MenuTabletsSocialZone);
