@@ -31,7 +31,7 @@ import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';
 import { setSpaceNetworking } from '../../redux/networking/actions';
 import withContext from '../../Context/withContext';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
 const { TabPane } = Tabs;
 const { gotoActivity, setMainStage, setTabs } = StageActions;
@@ -66,7 +66,7 @@ let AgendaActividadDetalle = (props) => {
   const { Title } = Typography;
 
   const intl = useIntl();
-  
+
   //obtener la actividad por id
   useEffect(() => {
     console.log('mis props', props);
@@ -298,13 +298,12 @@ let AgendaActividadDetalle = (props) => {
   };
 
   const { image_event } = props;
-  
 
   const colorTexto = props.cEvent.value.styles.textMenu;
   const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
 
   const imagePlaceHolder =
-    'http://via.placeholder.com/1500x540/' +
+    'https://via.placeholder.com/1500x540/' +
     colorFondo.replace('#', '') +
     '/' +
     colorTexto.replace('#', '') +
@@ -618,6 +617,8 @@ let AgendaActividadDetalle = (props) => {
                           : currentActivity?.image
                           ? currentActivity?.image
                           : image_event
+                          ? image_event
+                          : imagePlaceHolder
                       }
                       alt='Activity'
                     />
@@ -681,6 +682,8 @@ let AgendaActividadDetalle = (props) => {
                               : currentActivity.image
                               ? currentActivity.image
                               : image_event
+                              ? image_event
+                              : imagePlaceHolder
                           }
                           alt='Activity'
                         />
@@ -830,19 +833,27 @@ let AgendaActividadDetalle = (props) => {
                       </p>
                     </>
                   }>
-                  {props.currentSurvey === null && props.cUser.value!==null ? (
+                  {props.currentSurvey === null && props.cUser.value !== null ? (
                     <SurveyList
                       eventSurveys={props.eventSurveys}
                       surveyStatusProgress={props.surveyStatusProgress}
                       listOfEventSurveys={props.listOfEventSurveys}
                       loadingSurveys={props.loadingSurveys}
                     />
-                  ) :props.currentSurvey !== null && props.cUser.value!==null ? (
+                  ) : props.currentSurvey !== null && props.cUser.value !== null ? (
                     <SurveyDetail />
-                  ):<div style={{paddingTop:30}}>
-                      <Alert  showIcon message="Para poder responder una encuesta debes ser usuario del sistema" type="warning" />
-                      <Row style={{marginTop:30}} justify='center'><Button onClick={redirectRegister} >Registrarme</Button></Row>
-                    </div>}
+                  ) : (
+                    <div style={{ paddingTop: 30 }}>
+                      <Alert
+                        showIcon
+                        message='Para poder responder una encuesta debes ser usuario del sistema'
+                        type='warning'
+                      />
+                      <Row style={{ marginTop: 30 }} justify='center'>
+                        <Button onClick={redirectRegister}>Registrarme</Button>
+                      </Row>
+                    </div>
+                  )}
                 </TabPane>
               )}
               {props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
@@ -876,14 +887,14 @@ let AgendaActividadDetalle = (props) => {
           </Link> */}
         </Card>
       </div>
-      {console.log("USUARIO")}
-     {console.log(props.cUser.value)}
+      {console.log('USUARIO')}
+      {console.log(props.cUser.value)}
       {/* Drawer encuestas */}
       <Drawer
         closeIcon={<CloseOutlined />}
         placement='right'
         // closable={true}
-        visible={props.currentSurvey && props.cUser.value!==null}
+        visible={props.currentSurvey && props.cUser.value !== null}
         onClose={onClose}
         width={window.screen.width >= 768 ? (rankingVisible == false ? '100%' : '70%') : '100%'}>
         <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
