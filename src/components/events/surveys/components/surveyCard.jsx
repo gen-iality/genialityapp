@@ -74,10 +74,10 @@ function SurveyCard(props) {
                                              <Tag color='red'>Error</Tag>
                                           </Col>
                                        )}
-                                       {survey.isOpened && (
+                                       {survey && (
                                           <Col style={{ marginBottom: '3px' }}>
                                              {' '}
-                                             {survey.isOpened == 'true' || survey.isOpened == true ? (
+                                             {survey.isOpened === 'true' || survey.isOpened === true ? (
                                                 <Tag icon={<CheckCircleOutlined />} color='green'>
                                                    Abierta
                                                 </Tag>
@@ -99,7 +99,7 @@ function SurveyCard(props) {
                                              (surveyStatusProgress &&
                                                 surveyStatusProgress[survey._id] &&
                                                 surveyStatusProgress[survey._id].surveyCompleted === 'completed') ||
-                                             survey.isOpened === 'false'
+                                             survey.isOpened === 'false' || survey.isOpened === false
                                                 ? ' ghost'
                                                 : 'primary'
                                           }
@@ -115,7 +115,7 @@ function SurveyCard(props) {
                                           {(surveyStatusProgress &&
                                              surveyStatusProgress[survey._id] &&
                                              surveyStatusProgress[survey._id].surveyCompleted === 'completed') ||
-                                          survey.isOpened === 'false'
+                                          survey.isOpened === 'false' || survey.isOpened === false
                                              ? 'Resultados'
                                              : 'Ir a Encuesta'}
                                        </Button>
