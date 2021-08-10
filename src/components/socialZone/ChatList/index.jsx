@@ -85,7 +85,7 @@ const ChatList = (props) => {
         props.setCurrentChat(null, null);
       }
     }
-    props.setchattab(key);
+    // props.setchattab(key);
   }
 
   if (!cUser.value)
