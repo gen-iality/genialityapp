@@ -19,7 +19,7 @@ function SurveyCard(props) {
       color: '#000',
    };
    const bodyStyle = { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' };
-console.log("10. currentSurveyStatus ", currentSurveyStatus)
+
    return (
       <Card
          style={{ borderRadius: '10px', marginTop: '6px' }}

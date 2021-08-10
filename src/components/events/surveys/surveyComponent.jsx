@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Result, Button } from 'antd';
-import { BulbOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Result } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import { SurveyPage } from './services/services';
 import UserGamification from './services/userGamificationService';
 import getCurrentEvenUser from './services/getCurrentEventUserService';
@@ -64,10 +64,11 @@ function SurveyComponent(props) {
    async function startingSurveyComponent(surveyRealTime) {
       setFreezeGame(surveyRealTime.freezeGame);
       let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyRealTime);
-
-      loadSurveyData.open = surveyRealTime.isOpened;
-      loadSurveyData.publish = surveyRealTime.isPublished;
-      loadSurveyData.freezeGame = surveyRealTime.freezeGame;
+      if (loadSurveyData) {
+         loadSurveyData.open = surveyRealTime.isOpened;
+         loadSurveyData.publish = surveyRealTime.isPublished;
+         loadSurveyData.freezeGame = surveyRealTime.freezeGame;
+      }
 
       const surveyModelData = new Survey.Model(loadSurveyData);
 
@@ -207,10 +208,10 @@ function SurveyComponent(props) {
                surveyData.allow_anonymous_answers === true ||
                surveyData.publish === 'true' ||
                surveyData.publish === true) && (
-               <div style={{ display: showOrHideSurvey ? 'block' : 'none', opacity: '0.5' }}>
+               <div style={{ display: showOrHideSurvey ? 'block' : 'none' }}>
                   {initialSurveyModel && (
                      <div className='animate__animated animate__bounceInDown'>
-                        {surveyData.allow_gradable_survey === 'true' && !fiftyfitfyused && (
+                        {/* {surveyData.allow_gradable_survey === 'true' && !fiftyfitfyused && (
                            <div
                               className='survy-comodin'
                               onClick={() => HelpFiftyFifty(setFiftyfitfyused, initialSurveyModel)}>
@@ -219,7 +220,7 @@ function SurveyComponent(props) {
                                  50 / 50 <BulbOutlined />
                               </Button>
                            </div>
-                        )}
+                        )} */}
 
                         <Survey.Survey
                            model={initialSurveyModel}
