@@ -17,7 +17,7 @@ const MenuEvent = ({ isMobile }) => {
     <>
       {!isMobile ? (
         <Menu style={stylesMenuItems} mode='inline' defaultSelectedKeys={['1']}>
-          {Object.keys(event.itemsMenu).map((key) => {
+          {event.itemsMenu&&Object.keys(event.itemsMenu).map((key) => {
             //icono personalizado
             let IconoComponente = iconComponents[event.itemsMenu[key].icon];
 
@@ -63,7 +63,7 @@ const MenuEvent = ({ isMobile }) => {
       ) : (
         isMobile && (
           <Menu style={stylesMenuItems} mode='vertical' defaultSelectedKeys={['1']}>
-            {Object.keys(event.itemsMenu).map((key) => {
+            {event.itemsMenu&&Object.keys(event.itemsMenu).map((key) => {
               //icono personalizado
               let IconoComponente = iconComponents[event.itemsMenu[key].icon];
 

@@ -27,16 +27,15 @@ import InformativeSection from '../informativeSections/informativeSection';
 import Noticias from '../noticias';
 import withContext from '../../../Context/withContext';
 
-
-
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  console.log("EVENT SECTIONS ROW")
-  let redirect = props.cEvent.value!==null ? props.cEvent.value.itemsMenu &&Object.keys(props.cEvent.value.itemsMenu)[0]:'evento';
-  console.log("OBJECT 0")
-  console.log(Object.keys(props.cEvent.value.itemsMenu)[0])
-
- 
+  console.log('EVENT SECTIONS ROW');
+  let redirect;
+  if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
+    redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
+  } else {
+    redirect = 'evento';
+  }
 
   return (
     <>
@@ -44,7 +43,7 @@ const EventSectionRoutes = (props) => {
 
       <Switch>
         <Route exact path={`${path}/`}>
-          <Redirect to={`/landing/${props.cEvent.value._id}/${redirect}`}/>
+          <Redirect to={`/landing/${props.cEvent.value._id}/${redirect}`} />
         </Route>
 
         <Route path={`${path}/documents`}>
@@ -139,5 +138,5 @@ const mapDispatchToProps = {
   setSpaceNetworking,
 };
 
-let eventSectionsContext= withContext(EventSectionRoutes)
+let eventSectionsContext = withContext(EventSectionRoutes);
 export default connect(mapStateToProps, mapDispatchToProps)(eventSectionsContext);
