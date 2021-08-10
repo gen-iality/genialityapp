@@ -3,13 +3,13 @@ import { Layout, Spin, Avatar, Row, Image } from 'antd';
 import { imageCenter } from './helpers/csshelpers';
 import MenuEvent from './Menus/MenuEvent';
 import { EyeOutlined } from '@ant-design/icons';
-import {UseEventContext} from '../../../Context/eventContext'
+import { UseEventContext } from '../../../Context/eventContext';
 const { Sider } = Layout;
 
 const EventSectionsInnerMenu = () => {
   let cEvent = UseEventContext();
   let event = cEvent.value;
-  
+
   if (!event) return <Spin size='small' />;
   return (
     <>
@@ -23,16 +23,11 @@ const EventSectionsInnerMenu = () => {
           width={110}>
           <Row justify='center' style={{ margin: 5 }}>
             {event.styles && event.styles.event_image && (
-              <Avatar
-                size={94}
-                icon={
-                  <Image
-                    preview={{ mask: <EyeOutlined /> }}
-                    alt='Logo'
-                    src={event.styles.event_image}
-                    style={(imageCenter, { backgroundColor: event.styles.toolbarDefaultBg, objectFit: 'contain' })}
-                  />
-                }
+              <Image
+                preview={{ mask: <EyeOutlined /> }}
+                alt='Logo'
+                src={event.styles.event_image}
+                style={{ backgroundColor: event.styles.toolbarDefaultBg, objectFit: 'cover' }}
               />
             )}
           </Row>
