@@ -188,7 +188,7 @@ const Landing = (props) => {
         <EventSectionsInnerMenu />
         <MenuTablets />
         <Layout className='site-layout'>
-          <Content className='site-layout-background'>
+          <Content className='site-layout-background' style={{paddingBottom:'15vh'}}>
             {props.view && <TopBanner currentActivity={currentActivity} />}
             <EventSectionRoutes
               generaltabs={generaltabs}
