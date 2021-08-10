@@ -8,9 +8,7 @@ const MenuTabletsSocialZone = (props) => {
   const [isDrawerVisible, setisDrawerVisible] = useState(false);
   let [optionselected, setOptionselected] = useState(1);
   let cEvent = UseEventContext();
-  // console.log("10. 1  ", props.surveyStatusProgress)
-  // console.log("10. 2  ", props.listOfEventSurveys)
-  // console.log("10. 3  ", props.loadingSurveys)
+
   return (
     <>
       <div className='chat-evius_mobile  animate__animated animate__pulse animate__slower animate__infinite'>
@@ -27,7 +25,7 @@ const MenuTabletsSocialZone = (props) => {
       </div>
 
       <Drawer
-       bodyStyle={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
+        bodyStyle={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
         height={450}
         placement='bottom'
         closable={true}
@@ -46,6 +44,8 @@ const MenuTabletsSocialZone = (props) => {
           surveyStatusProgress={props.surveyStatusProgress}
           listOfEventSurveys={props.listOfEventSurveys}
           loadingSurveys={props.loadingSurveys}
+          setchattab={props.setchattab}
+          chattab={props.chattab}
         />
       </Drawer>
     </>

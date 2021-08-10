@@ -56,7 +56,7 @@ export const HelperContextProvider = ({ children }) => {
 
   const containsNetWorking = () => {
     if (cEvent.value != undefined) {
-      cEvent.value.itemsMenu['networking'] !== undefined && setcontaintNetworking(true);
+      cEvent.value.itemsMenu && cEvent.value.itemsMenu['networking'] !== undefined && setcontaintNetworking(true);
     }
   };
 

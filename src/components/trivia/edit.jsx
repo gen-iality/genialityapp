@@ -82,11 +82,11 @@ class triviaEdit extends Component {
       //Se obtiene el listado de actividades del evento para listarlas en la lista desplegable para relacionar la encuesta con una actividad
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
 
-      //Se envan al estado para poderlos utilizar en el markup
+      //Se envian al estado para poderlos utilizar en el markup
       this.setState({
         idSurvey: Update._id,
         _id: Update._id,
-
+ 
         // Survey Config
         allow_anonymous_answers: firebaseSurvey.allow_anonymous_answers || this.state.allow_anonymous_answers,
         allow_gradable_survey: firebaseSurvey.allow_gradable_survey ? firebaseSurvey.allow_gradable_survey : 'false' || this.state.allow_gradable_survey,
@@ -216,7 +216,6 @@ class triviaEdit extends Component {
       const data = {
         graphyType: this.state.graphyType,
         survey: this.state.survey,
-        
         show_horizontal_bar: this.state.show_horizontal_bar === 'true' ? true : false,
         allow_vote_value_per_user: this.state.allow_vote_value_per_user,
         activity_id: this.state.activity_id,
