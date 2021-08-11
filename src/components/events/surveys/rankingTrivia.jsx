@@ -3,6 +3,7 @@ import { firestore } from '../../../helpers/firebase';
 import RankingList from './rankingList';
 import RankingMyScore from './rankingMyScore';
 import { connect } from 'react-redux';
+import { Divider } from 'antd';
 
 function RankingTrivia(props) {
   const [ranking, setRanking] = useState([]);
@@ -69,6 +70,7 @@ function RankingTrivia(props) {
       {!(Object.keys(currentUser).length === 0) && (
         <>
           <RankingMyScore myScore={myScore} />
+          <Divider/>
           <RankingList data={ranking} />
         </>
       )}

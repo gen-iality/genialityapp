@@ -127,7 +127,7 @@ function SurveyComponent(props) {
          user_email: currentUser.email,
          points: rankingPoints,
       });
-      console.log('10. totalPoints', rankingPoints);
+
       setUserPointsPerSurvey(surveyData._id, currentUser, rankingPoints, surveyModel.getAllQuestions().length - 1);
       // message.success({ content: responseMessage });
    }
