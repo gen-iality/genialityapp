@@ -1,8 +1,9 @@
-import { SET_CURRENT_SURVEY, UNSET_CURRENT_SURVEY, SET_SURVEY_VISIBLE, SET_HAS_OPEN_SURVEYS,GET_CURRENT_SURVEY, SET_SURVEY_RESULT } from './actions';
+import { SET_CURRENT_SURVEY, UNSET_CURRENT_SURVEY, SET_SURVEY_VISIBLE, SET_HAS_OPEN_SURVEYS,GET_CURRENT_SURVEY, SET_SURVEY_RESULT, SET_CURRENT_SURVEY_STATUS } from './actions';
 
 const initialState = {
   data: {
     currentSurvey: null,
+    currentSurveyStatus: null,
     surveyVisible: false,
     result: 'view',
     hasOpenSurveys: false,
@@ -18,6 +19,14 @@ export default function eventReducer(state = initialState, action) {
       return {
         ...state,
         data: { ...state.data, currentSurvey: action.payload },
+        loading: true,
+        error: null,
+      };
+
+    case SET_CURRENT_SURVEY_STATUS:
+      return {
+        ...state,
+        data: { ...state.data, currentSurveyStatus: action.payload },
         loading: true,
         error: null,
       };

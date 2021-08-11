@@ -18,7 +18,6 @@ function SurveyList(props) {
       activity,
       setCurrentSurvey,
       setSurveyResult,
-      surveyStatusProgress,
       listOfEventSurveys,
       loadingSurveys,
    } = props;
@@ -40,7 +39,6 @@ function SurveyList(props) {
    return (
       <SurveyCard
          publishedSurveys={listOfEventSurveys}
-         surveyStatusProgress={surveyStatusProgress}
          loadingSurveys={loadingSurveys}
          currentUser={currentUser}
          handleClick={handleClick}

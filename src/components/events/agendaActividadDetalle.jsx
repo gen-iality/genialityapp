@@ -124,9 +124,10 @@ let AgendaActividadDetalle = (props) => {
 
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
-      if (props.cUser) {
-        TicketsApi.checkInAttendee(props.cEvent.value._id, props.cUser._id);
-        Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.account_id);
+      if (props.cEventUser) {
+        console.log("propsagenda",props)
+        TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
+        Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.value._id);
       }
     } catch (e) {
       console.error('fallo el checkin:', e);
@@ -836,7 +837,6 @@ let AgendaActividadDetalle = (props) => {
                   {props.currentSurvey === null && props.cUser.value !== null ? (
                     <SurveyList
                       eventSurveys={props.eventSurveys}
-                      surveyStatusProgress={props.surveyStatusProgress}
                       listOfEventSurveys={props.listOfEventSurveys}
                       loadingSurveys={props.loadingSurveys}
                     />
@@ -886,9 +886,7 @@ let AgendaActividadDetalle = (props) => {
             </Row>
           </Link> */}
         </Card>
-      </div>
-      {console.log('USUARIO')}
-      {console.log(props.cUser.value)}
+      </div> 
       {/* Drawer encuestas */}
       <Drawer
         closeIcon={<CloseOutlined />}
@@ -929,6 +927,7 @@ const mapStateToProps = (state) => ({
   permissions: state.permissions,
   isVisible: state.survey.data.surveyVisible,
   viewSocialZoneNetworking: state.spaceNetworkingReducer.view,
+
 });
 
 const mapDispatchToProps = {

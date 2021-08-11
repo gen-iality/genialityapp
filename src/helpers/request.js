@@ -717,6 +717,7 @@ export const Activity = {
       activity_id,
       checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss'),
     };
+    console.log("datarecibo",data)
     let result = await Actions.put(`api/events/${event_id}/activities_attendees/checkin`, data);
     return result;
   },

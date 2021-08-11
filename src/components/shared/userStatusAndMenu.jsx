@@ -14,7 +14,7 @@ const MenuStyle = {
 
 const ItemStyle = {
   backgroundColor: 'white',
-  border: '1px solid #cccccc',
+  //border: '1px solid #cccccc',
   padding: 5,
   margin: 5,
 };
