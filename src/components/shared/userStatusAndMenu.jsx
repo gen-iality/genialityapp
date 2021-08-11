@@ -1,8 +1,8 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import WithLoading from './withLoading';
-import { Menu, Dropdown, Avatar, Button, Col, Row } from 'antd';
-import { LogoutOutlined } from '@ant-design/icons';
+import { Menu, Dropdown, Avatar, Button, Col, Row, Space } from 'antd';
+import { DownOutlined, LogoutOutlined } from '@ant-design/icons';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
@@ -61,7 +61,7 @@ let userStatusAndMenu = (props) => {
       <Menu.Divider />
       <Menu.Item style={ItemStyle}>
         <a onClick={logout}>
-          <LogoutOutlined /> &nbsp;&nbsp;
+          <LogoutOutlined />
           <FormattedMessage id='header.logout' defaultMessage='Log Out' />
         </a>
       </Menu.Item>
@@ -73,17 +73,20 @@ let userStatusAndMenu = (props) => {
   let loggedInuser = (
     <Row style={MenuStyle}>
       <Col style={MenuStyle}>
-        <Dropdown overlay={menu}>
-          <a onClick={(e) => e.preventDefault()}>
-            {photo ? (
-              <Avatar src={photo} />
-            ) : (
-              <Avatar className='avatar_menu-user'>
-                {name && name.charAt(0).toUpperCase()}
-                {name && name.substring(name.indexOf(' ') + 1, name.indexOf(' ') + 2)}
-              </Avatar>
-            )}
-            <span className='name_menu-user'>&nbsp;&nbsp;{name}&nbsp;&nbsp;</span>
+        <Dropdown arrow overlay={menu} >
+          <a onClick={(e) => e.preventDefault()} >
+            <Space className='shadowHover' style={{height:'40px', backgroundColor:'white', borderRadius:'50px', paddingLeft:'5px', paddingRight:'5px'}}>
+              {photo ? (
+                <Avatar src={photo} />
+              ) : (
+                <Avatar className='avatar_menu-user'>
+                  {name && name.charAt(0).toUpperCase()}
+                  {name && name.substring(name.indexOf(' ') + 1, name.indexOf(' ') + 2)}
+                </Avatar>
+              )}
+              <span className='name_menu-user'>{name}</span>
+              <DownOutlined style={{fontSize:'12px'}} />
+            </Space>
           </a>
         </Dropdown>
       </Col>
