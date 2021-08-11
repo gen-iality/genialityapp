@@ -365,7 +365,7 @@ let SocialZone = function(props) {
               props.setMainStage(null);
               props.settabselected('1');
             }}>
-            <Col span={24}>
+            {/* <Col span={24}>
               <Button
                 style={{ backgroundColor: '#1cdcb7', color: '#ffffff' }}
                 size='large'
@@ -378,7 +378,7 @@ let SocialZone = function(props) {
                 }}>
                 Volver a la Conferencia
               </Button>
-            </Col>
+            </Col> */}
           </Row>
           {props.currentSurvey === null && cUser.value !== null ? (
             <SurveyList

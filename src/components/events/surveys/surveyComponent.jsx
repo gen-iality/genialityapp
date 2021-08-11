@@ -56,6 +56,7 @@ function SurveyComponent(props) {
       if (initialSurveyModel) {
          initialSurveyModel.stopTimer();
       }
+
       if (timerPausa) {
          clearInterval(timerPausa);
       }
@@ -63,8 +64,9 @@ function SurveyComponent(props) {
 
    async function startingSurveyComponent(surveyRealTime) {
       setFreezeGame(surveyRealTime.freezeGame);
+
       let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyRealTime);
-      if (loadSurveyData) {         
+      if (loadSurveyData) {
          loadSurveyData.open = surveyRealTime.isOpened;
          loadSurveyData.publish = surveyRealTime.isPublished;
          loadSurveyData.freezeGame = surveyRealTime.freezeGame;
@@ -114,13 +116,9 @@ function SurveyComponent(props) {
       if (rankingPoints === undefined || rankingPoints === 0) return;
       if (surveyData.allow_gradable_survey !== 'true') return;
 
-      /** Obtenemos el puntaje por si se retomo la encuesta */
-      let userScore = await UserGamification.getUserPoints(eventId, currentUser._id);
-      let userPointsData = userScore.data.points;
-
       //para guardar el score en el ranking
-      userPointsData += rankingPoints;
-      setTotalPoints(userPointsData);
+      // totalPoints += rankingPoints;
+      setTotalPoints(rankingPoints);
 
       // Ejecuta serivicio para registrar puntos
       await UserGamification.registerPoints(eventId, {
@@ -130,7 +128,7 @@ function SurveyComponent(props) {
          points: rankingPoints,
       });
 
-      setUserPointsPerSurvey(surveyData._id, currentUser, userPointsData, surveyModel.getAllQuestions().length - 1);
+      setUserPointsPerSurvey(surveyData._id, currentUser, rankingPoints, surveyModel.getAllQuestions().length - 1);
       // message.success({ content: responseMessage });
    }
 

@@ -1,8 +1,19 @@
 import { firestore } from '../../../../helpers/firebase';
 
-function setUserPointsPerSurvey(surveyId, user, totalPoints, totalQuestions) {
+async function setUserPointsPerSurvey(surveyId, user, totalPoints, totalQuestions) {
    const { email, _id } = user;
    const userName = user.names ? user.names : user.name ? user.name : 'Anonymous';
+   const doc = await firestore
+      .collection('surveys')
+      .doc(surveyId)
+      .collection('ranking')
+      .doc(_id)
+      .get();
+
+   let partialPoints = 0;
+   if (doc && doc.data() && doc.data().correctAnswers) {
+      partialPoints = doc.data().correctAnswers;
+   }
    //Guarda el puntaje del usuario
    firestore
       .collection('surveys')
@@ -13,7 +24,7 @@ function setUserPointsPerSurvey(surveyId, user, totalPoints, totalQuestions) {
          userName: userName,
          userEmail: email,
          totalQuestions: totalQuestions,
-         correctAnswers: totalPoints,
+         correctAnswers: totalPoints + partialPoints,
          registerDate: new Date(),
       });
 }
