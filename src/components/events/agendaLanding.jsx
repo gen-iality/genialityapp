@@ -103,9 +103,9 @@ class Agenda extends Component {
 
     let surveysData = await SurveysApi.getAll(this.props.cEvent.value._id);
     let documentsData = await DocumentsApi.getAll(this.props.cEvent.value._id);
-    console.log("-------DATOS---------")
+   /* console.log("-------DATOS---------")
     console.log(surveysData)
-    console.log(documentsData)
+    console.log(documentsData)*/
 
     if (surveysData.data.length >= 1) {
       this.setState({ survey: surveysData.data });

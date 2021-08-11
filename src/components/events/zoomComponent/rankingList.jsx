@@ -13,9 +13,12 @@ export default function RankingList({ data }) {
     setList(data);
   }, [data]);
 
+  console.log("DATOS RANKING")
+  console.log(data)
+
   return (
     <div style={{ marginTop: 16 }}>
-      <h3 style={{ fontSize: '14px', fontWeight: '700' }}>Ranking de jugadores</h3>
+      <h3 style={{ fontSize: '14px', fontWeight: '700',color:"red !important" }}>Ranking de jugadores</h3>
       <div className='container-ranking' style={{ marginTop: 16 }}>
         {list.length > 0 ? (
           list.map((item, key) => (
@@ -27,11 +30,11 @@ export default function RankingList({ data }) {
                     {item.name && item.name.substring(item.name.indexOf(' ') + 1, item.name.indexOf(' ') + 2)}
                   </Avatar>
                 </Col>
-                <Col span={12}>
-                  <h3>{formatName(item.name)}</h3>
+                <Col  span={12}>
+                  <h3 style={{color:"red !important"}} >{formatName(item.name)}</h3>
                 </Col>
                 <Col span={6}>
-                  <h4>{item.score} Pts</h4>
+                  <h4 style={{color:"red !important"}} >{item.score} Pts</h4>
                 </Col>
               </Row>
             </div>

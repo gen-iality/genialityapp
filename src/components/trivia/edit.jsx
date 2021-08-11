@@ -201,6 +201,8 @@ class triviaEdit extends Component {
     
     //Se recogen los datos a actualizar
     let isValid=true;
+    let isValidInitial=true;
+    let initialMessage=this.state.initialMessage;
     if (this.state.allow_gradable_survey==='true'){
       if(this.state.question){
         if(this.state.question.length>0){
@@ -213,9 +215,16 @@ class triviaEdit extends Component {
         }
       }     
     }
+    if(this.state.allow_gradable_survey=='true' && (this.state.initialMessage===""|| this.state.initialMessage===null )){
+      isValidInitial=false
+    }
+    
+    
+    
 
-    if(isValid){
+    if(isValid && isValidInitial ){
       message.loading({ content: 'Actualizando información', key: 'updating' });
+      
       const data = {
         graphyType: this.state.graphyType,
         survey: this.state.survey,
@@ -223,7 +232,7 @@ class triviaEdit extends Component {
         allow_vote_value_per_user: this.state.allow_vote_value_per_user,
         activity_id: this.state.activity_id,
         points: this.state.points ? parseInt(this.state.points) : 1,
-        initialMessage: this.state.initialMessage,
+        initialMessage: initialMessage,
         time_limit: parseInt(this.state.time_limit),
         win_Message: this.state.win_Message,
         neutral_Message: this.state.neutral_Message,
@@ -275,7 +284,12 @@ class triviaEdit extends Component {
           console.error('Hubo un error', err);
         });
     }else{
+      if(!isValid){
       message.error({ content: 'Esta encuesta es calificable, hay preguntas sin respuesta correcta asignada', key: 'updating' });
+      }
+      if(!isValidInitial){
+        message.error({ content: 'Esta encuesta es calificable, debe asignar un mensaje inicial', key: 'isValidInitial' });
+      }
     }
   
   }
