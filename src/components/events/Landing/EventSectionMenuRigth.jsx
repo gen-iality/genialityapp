@@ -26,7 +26,7 @@ const EventSectionMenuRigth = (props) => {
       width={400}
       collapsed={props.viewSocialZoneNetworking}>
       {!props.viewPerfil ? (
-        <div className='Chat-Event'>
+        <div className='Chat-Event' style={{height:'100%'}}>
           {props.viewSocialZoneNetworking ? (
             <>
               <MenuRigth

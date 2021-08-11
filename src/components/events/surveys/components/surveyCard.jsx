@@ -31,6 +31,7 @@ function SurveyCard(props) {
          ) : (
             <List
                style={{ overflowY: 'auto', height: '600px', overflowX: 'hidden' }}
+               className='asistente-list'
                dataSource={publishedSurveys}
                loading={loadingSurveys}
                renderItem={(survey) => (

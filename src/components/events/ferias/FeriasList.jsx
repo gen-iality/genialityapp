@@ -28,7 +28,8 @@ const FeriasList = ({
   useEffect(() => {
     setVirtualConference(false);
     setTopBanner(false);
-    setBannerImage(cEvent.value.banner_image);
+    setBannerImage(cEvent.value.styles.banner_image);
+    {console.log('imagen baner--->', cEvent.value)}
     return () => {
       setVirtualConference(true);
       setTopBanner(true);
