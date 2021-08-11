@@ -95,7 +95,7 @@ function SurveyComponent(props) {
       const pointsForCorrectAnswer = RegisterVote(surveyData, question, currentUser, eventUsers, voteWeight);
 
       setRankingPoints(pointsForCorrectAnswer);
-      registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
+      await registerRankingPoints(pointsForCorrectAnswer, surveyModel, surveyData, currentUser.value, eventId);
       if (!(Object.keys(currentUser).length === 0)) {
          //Actualizamos la página actúal, sobretodo por si se cae la conexión regresar a la última pregunta
          SurveyPage.setCurrentPage(surveyData._id, currentUser.value._id, surveyModel.currentPageNo);
@@ -110,23 +110,27 @@ function SurveyComponent(props) {
       }
    }
 
-   function registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId) {
+   async function registerRankingPoints(rankingPoints, surveyModel, surveyData, currentUser, eventId) {
       if (rankingPoints === undefined || rankingPoints === 0) return;
       if (surveyData.allow_gradable_survey !== 'true') return;
 
+      /** Obtenemos el puntaje por si se retomo la encuesta */
+      let userScore = await UserGamification.getUserPoints(eventId, currentUser._id);
+      let userPointsData = userScore.data.points;
+
       //para guardar el score en el ranking
-      totalPoints += rankingPoints;
-      setTotalPoints(totalPoints);
+      userPointsData += rankingPoints;
+      setTotalPoints(userPointsData);
 
       // Ejecuta serivicio para registrar puntos
-      UserGamification.registerPoints(eventId, {
+      await UserGamification.registerPoints(eventId, {
          user_id: currentUser._id,
          user_name: currentUser.names,
          user_email: currentUser.email,
          points: rankingPoints,
       });
 
-      setUserPointsPerSurvey(surveyData._id, currentUser, totalPoints, surveyModel.getAllQuestions().length - 1);
+      setUserPointsPerSurvey(surveyData._id, currentUser, userPointsData, surveyModel.getAllQuestions().length - 1);
       // message.success({ content: responseMessage });
    }
 

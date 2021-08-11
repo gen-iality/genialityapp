@@ -14,7 +14,7 @@ function RealTimeSurveyListening(idSurvey, currentUser, startingSurveyComponent)
          //revisando si estamos retomando la encuesta en alguna página particular
          if (currentUser && currentUser.value._id) {
             currentPageNo = await SurveyPage.getCurrentPage(idSurvey, currentUser.value._id);
-            surveyRealTime.currentPage = currentPageNo ? currentPageNo : 0;
+            surveyRealTime.currentPage = currentPageNo ? currentPageNo: 0;
          }
          startingSurveyComponent(surveyRealTime);
       });
