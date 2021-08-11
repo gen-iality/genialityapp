@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { List, Button, Card, Tag, Result, Row, Col } from 'antd';
+import { List, Button, Card, Tag, Result, Row, Col, Typography } from 'antd';
 import {
    CheckCircleOutlined,
    CloseCircleOutlined,
@@ -11,6 +11,7 @@ import {
 
 function SurveyCard(props) {
    const { publishedSurveys, loadingSurveys, handleClick, currentSurveyStatus } = props;
+   const {Title} = Typography
 
    const headStyle = {
       fontWeight: 300,
@@ -47,10 +48,11 @@ function SurveyCard(props) {
                            }}>
                            <List.Item key={survey._id}>
                               <List.Item.Meta
-                                 title={survey.name}
+                                 title={<Title level={5}>{survey.name}</Title>}
                                  style={{ textAlign: 'left' }}
                                  description={
                                     <Row>
+                                       <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12} >
                                        {!currentSurveyStatus ||
                                        !currentSurveyStatus[survey._id] ||
                                        !currentSurveyStatus[survey._id].surveyCompleted ? (
@@ -90,12 +92,10 @@ function SurveyCard(props) {
                                              )}
                                           </Col>
                                        )}
-                                    </Row>
-                                 }
-                              />
-                              {
-                                 <>
-                                    <div>
+                                       </Col>
+                                       <Col  xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+                                    {
+                                       <>
                                        <Button
                                           type={
                                              (currentSurveyStatus &&
@@ -120,10 +120,13 @@ function SurveyCard(props) {
                                           survey.isOpened === 'false' || survey.isOpened === false
                                              ? 'Resultados'
                                              : 'Ir a Encuesta'}
-                                       </Button>
-                                    </div>
-                                 </>
-                              }
+                                       </Button>  
+                                    </>
+                                     }
+                                      </Col>
+                                    </Row>
+                                 }
+                              />
                            </List.Item>
                         </Card>
                      )}

@@ -75,6 +75,7 @@ iframe {
   @media screen and (max-width: $breakpoint-mobile) {
     margin-left: 4%;
     margin-right: 4%;
+    overflow-x: hidden;
   }
 }
 
@@ -289,6 +290,20 @@ iframe {
   -ms-user-select: text;
   user-select: text;    
 }
+
+.video{
+  width: 100%;
+  height: 42rem;
+  transition: all 300ms ease 0s;
+
+
+  @media screen and (max-width: $breakpoint-mobile) {
+    width: 100%;
+    height: 22rem;
+    transition: all 300ms ease 0s;
+  }
+}
+
 @import '~bulma/bulma';
 @import '~react-widgets/lib/scss/react-widgets';
 @import '~bulma-extensions/bulma-switch/src/sass/index';
