@@ -26,7 +26,6 @@ function SurveyDetail(props) {
         onClick={handleClick}>
         Volver al listado de encuestas
       </Button>
-      {hasRanking && <RankingTrivia />}
     </Card>
   );
 }
