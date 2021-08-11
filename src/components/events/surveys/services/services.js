@@ -29,7 +29,7 @@ export const SurveyPage = {
    // Actualiza la pagina actual de la encuesta
    setCurrentPage: (surveyId, uid, currentPageNo) => {
       return new Promise((resolve, reject) => {
-         let metaData = { currentPageNo: currentPageNo };
+         let metaData = { currentPageNo: currentPageNo};
          firestore
             .collection('surveys')
             .doc(surveyId)
