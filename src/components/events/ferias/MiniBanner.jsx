@@ -10,7 +10,7 @@ function MiniBanner (props) {
         style={{
           width: '100%',
           border:'15px solid white', borderRadius:'15px',
-          height:'450px', objectFit:'cover',
+          height:'450px', objectFit:'contain',
           // height:'50vh'
         }}
       />  
