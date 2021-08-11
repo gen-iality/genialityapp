@@ -53,20 +53,20 @@ function SurveyComponent(props) {
       /**
        * Timers para controlar el tiempo por pregunta, estos se deben detener o el quiz seguira avanzando errando la logica ya que cambia la pregunta que se esta respondiendo
        */
-      if (initialSurveyModel) {console.log("10. HOLA IF 1")
+      if (initialSurveyModel) {
          initialSurveyModel.stopTimer();
       }
-      console.log("10. timer", timerPausa)
-      if (timerPausa) {console.log("10. HOLA IF 2")
+
+      if (timerPausa) {
          clearInterval(timerPausa);
       }
    }, [initialSurveyModel, idSurvey]);
 
    async function startingSurveyComponent(surveyRealTime) {
       setFreezeGame(surveyRealTime.freezeGame);
-      console.log("10. startingSurveyComponent ", surveyRealTime.freezeGame)
+
       let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyRealTime);
-      if (loadSurveyData) {         
+      if (loadSurveyData) {
          loadSurveyData.open = surveyRealTime.isOpened;
          loadSurveyData.publish = surveyRealTime.isPublished;
          loadSurveyData.freezeGame = surveyRealTime.freezeGame;
@@ -116,13 +116,9 @@ function SurveyComponent(props) {
       if (rankingPoints === undefined || rankingPoints === 0) return;
       if (surveyData.allow_gradable_survey !== 'true') return;
 
-      /** Obtenemos el puntaje por si se retomo la encuesta */
-      let userScore = await UserGamification.getUserPoints(eventId, currentUser._id);
-      let userPointsData = userScore.data ? userScore.data.pointspoints : 0;
-
       //para guardar el score en el ranking
-      userPointsData += rankingPoints;
-      setTotalPoints(userPointsData);
+      // totalPoints += rankingPoints;
+      setTotalPoints(rankingPoints);
 
       // Ejecuta serivicio para registrar puntos
       await UserGamification.registerPoints(eventId, {
@@ -131,8 +127,8 @@ function SurveyComponent(props) {
          user_email: currentUser.email,
          points: rankingPoints,
       });
-
-      setUserPointsPerSurvey(surveyData._id, currentUser, userPointsData, surveyModel.getAllQuestions().length - 1);
+      console.log('10. totalPoints', rankingPoints);
+      setUserPointsPerSurvey(surveyData._id, currentUser, rankingPoints, surveyModel.getAllQuestions().length - 1);
       // message.success({ content: responseMessage });
    }
 

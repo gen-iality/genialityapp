@@ -31,10 +31,10 @@ export default function RankingList({data}) {
                   </Avatar>
                 </Col>
                 <Col span={12}>
-                  <h3 style={{color:cEvent.value.styles.textMenu}}>{formatName(item.name)}</h3>
+                  <h3 style={{ fontWeight: '700' }}>{formatName(item.name)}</h3>
                 </Col>
                 <Col span={6}>
-                  <h4 style={{color:cEvent.value.styles.textMenu}}>{item.score} Pts</h4>
+                  <h4 >{item.score} Pts</h4>
                 </Col>
               </Row>
             </div>
