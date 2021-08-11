@@ -46,12 +46,14 @@ class triviaEdit extends Component {
       time_limit: 0,
       show_horizontal_bar: true,
       allow_vote_value_per_user: false,
+      ranking:false,
 
       // mensajes para encuestas calificables
       initialMessage: null,
       win_Message: null,
       neutral_Message: null,
       lose_Message: null,
+      graphyType:'y',
 
       // Puntaje mínimo de aprobación
       minimumScore: 0
@@ -100,7 +102,7 @@ class triviaEdit extends Component {
 
         survey: Update.survey,
         show_horizontal_bar: Update.show_horizontal_bar || true,
-        graphyType:  Update.graphyType ? Update.graphyType :'Horizontal',
+        graphyType:  Update.graphyType ? Update.graphyType :'y',
         allow_vote_value_per_user: Update.allow_vote_value_per_user || 'false',
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
@@ -110,6 +112,7 @@ class triviaEdit extends Component {
         win_Message: Update.win_Message ? Update.win_Message : '',
         neutral_Message: Update.neutral_Message ? Update.neutral_Message : '',
         lose_Message: Update.lose_Message ? Update.lose_Message : '',
+        ranking:Update.rankingVisible?Update.rankingVisible:'false',
 
         minimumScore: Update.minimumScore ? Update.minimumScore : 0
       });
@@ -231,6 +234,7 @@ class triviaEdit extends Component {
         allow_gradable_survey: this.state.allow_gradable_survey,
         hasMinimumScore: this.state.hasMinimumScore,
         isGlobal: this.state.isGlobal,
+        rankingVisible:this.state.ranking,
   
         //Survey State
         freezeGame: this.state.freezeGame === 'true' ? true : false,
@@ -257,6 +261,7 @@ class triviaEdit extends Component {
               freezeGame: data.freezeGame,
               isOpened: data.open,
               isPublished: data.publish,
+              rankingVisible:data.rankingVisible,
   
               minimumScore: data.minimumScore,
               activity_id: data.activity_id,
@@ -404,7 +409,7 @@ class triviaEdit extends Component {
   };
 
   toggleSwitch = (variable, state) => {
-    let { allow_gradable_survey, allow_vote_value_per_user } = this.state;
+    let { allow_gradable_survey, allow_vote_value_per_user,ranking } = this.state;
     switch (variable) {
       case 'allow_gradable_survey':
         if (state && allow_vote_value_per_user === 'true')
@@ -415,8 +420,14 @@ class triviaEdit extends Component {
       case 'allow_vote_value_per_user':
         if (state && allow_gradable_survey === 'true')
           return this.setState({ allow_vote_value_per_user: 'true', allow_gradable_survey: 'false' });
-        this.setState({ allow_vote_value_per_user: state ? 'true' : 'false' });
+       
         break;
+
+        case 'ranking':
+          this.setState({ ranking: ranking==='true'? 'false' :'true'});
+       // this.setState({ allow_vote_value_per_user: state ? 'true' : 'false' });
+        break;
+
 
       default:
         break;
@@ -442,7 +453,8 @@ class triviaEdit extends Component {
       time_limit,
       hasMinimumScore,
       minimumScore,
-      isGlobal
+      isGlobal,
+      ranking
     } = this.state;
     const { Option } = Select;
     const columns = [
@@ -608,6 +620,15 @@ class triviaEdit extends Component {
                 <Switch
                   checked={allow_gradable_survey === 'true' || allow_gradable_survey === true}
                   onChange={(checked) => this.toggleSwitch('allow_gradable_survey', checked)}
+                />
+              </div>
+              <div>
+                <label style={{ marginTop: '3%' }} className='label'>
+                  Habilitar ranking
+                </label>
+                <Switch
+                  checked={ranking=== 'true' || ranking === true}
+                  onChange={(checked) => this.toggleSwitch('ranking', checked)}
                 />
               </div>
               {(allow_gradable_survey === 'true' || allow_gradable_survey === true) && (

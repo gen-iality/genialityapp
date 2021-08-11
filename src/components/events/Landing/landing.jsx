@@ -175,7 +175,7 @@ const Landing = (props) => {
   /** Listener para obtener todas las encuestas por actividad */
   useEffect(() => {
     if (currentActivity) {
-      listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, currentActivity, cUser, visualizarEncuesta);
+      listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, currentActivity, cUser, visualizarEncuesta);      
     }
   }, [currentActivity]);
 
