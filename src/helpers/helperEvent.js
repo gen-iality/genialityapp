@@ -17,6 +17,8 @@ export function listenSurveysData(
     .onSnapshot((querySnapshot) => {
       let eventSurveys = [];
       querySnapshot.forEach((doc) => {
+        console.log("DATA ENCUESTA")
+        console.log(doc.data())
         eventSurveys.push({ ...doc.data(), _id: doc.id });
       });
 

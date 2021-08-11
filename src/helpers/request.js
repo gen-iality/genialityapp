@@ -330,7 +330,7 @@ export const EventFieldsApi = {
     return await Actions.getAll(`/api/events/${event}/userproperties`);
   },
   getOne: async (event, id) => {
-    return await Actions.getOne(`/api/events/${event}/userproperties`, id);
+    return await Actions.getOne(`/api/events/${event}/userproperties/`, id);
   },
   createOne: async (data, event) => {
     return await Actions.post(`/api/events/${event}/userproperties`, data);
@@ -717,7 +717,6 @@ export const Activity = {
       activity_id,
       checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss'),
     };
-    console.log("datarecibo",data)
     let result = await Actions.put(`api/events/${event_id}/activities_attendees/checkin`, data);
     return result;
   },

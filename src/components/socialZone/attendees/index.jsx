@@ -24,17 +24,20 @@ const AttendeList = function(props) {
 
   useEffect(() => {
     let ordenadousers = [];
+    console.log('attendes',  props.attendeeListPresence);
 
     Object.keys(props.attendeeList).map((key) => {
       let mihijo = {
         idattendpresence: key,
-        iduser: key,
+        iduser: props.attendeeList[key].account_id,
         name: props.attendeeList[key].properties.name,
         names: props.attendeeList[key].properties.names,
         status: props.attendeeListPresence[key] ? props.attendeeListPresence[key].state : 'offline',
         email: props.attendeeList[key].properties.email,
+        properties: props.attendeeList[key].properties,
       };
 
+      console.log("presence",props.attendeeListPresence[key])
       if (mihijo.status === 'online') {
         ordenadousers.unshift(mihijo);
       } else if (mihijo.status === 'offline') {
@@ -102,22 +105,25 @@ const AttendeList = function(props) {
         itemLayout='horizontal'
         dataSource={filteredlist && filteredlist}
         renderItem={(item) => (
-   
           <List.Item
             style={styleListAttende}
             actions={[
-              
               cUser.value ? (
                 <a
                   key='list-loadmore-edit'
-                  onClick={() => {                    
-                    props.createNewOneToOneChat(cUser.value.uid, cUser.value.names || cUser.value.name , item.iduser, item.names || item.name);
+                  onClick={() => {
+                    props.createNewOneToOneChat(
+                      cUser.value.uid,
+                      cUser.value.names || cUser.value.name,
+                      item.iduser,
+                      item.names || item.name
+                    );
                     props.settabselected('1');
                     props.setCurrentChat(item.iduser, item.name ? item.name : item.names);
-                    console.log("ITEM ACA")
-                    console.log(item.name ? item.name : item.names)
+                    console.log('ITEM ACA');
+                    console.log(item.name ? item.name : item.names);
                     props.setchattab('chat2');
-                    console.log(item)
+                    console.log(item);
                   }}>
                   <Tooltip title={'Chatear'}>
                     <MessageTwoTone style={{ fontSize: '27px' }} />

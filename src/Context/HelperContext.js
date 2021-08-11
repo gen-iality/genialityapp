@@ -1,7 +1,7 @@
 import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
 import { firestore } from '../helpers/firebase';
-import { AgendaApi,EventFieldsApi } from '../helpers/request';
+import { AgendaApi, EventFieldsApi, EventsApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
 import { UseCurrentUser } from './userContext';
 
@@ -36,6 +36,13 @@ export const HelperContextProvider = ({ children }) => {
     return null;
   };
 
+  const getPropertiesUserWithId = async (id) => {
+    const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
+    const dataproperties = await EventsApi.getEventUser(eventUser._id, cEvent.value._id);
+
+    console.log('properties: ', dataproperties);
+  };
+
   const ChangeActiveNotification = (notify, message, type, activity) => {
     setisNotification({
       notify,
@@ -46,6 +53,7 @@ export const HelperContextProvider = ({ children }) => {
   };
 
   const HandleChangeDrawerProfile = () => {
+    console.log('llamando drawer perfil');
     setisOpenDrawerProfile(!isOpenDrawerProfile);
   };
 
@@ -69,7 +77,7 @@ export const HelperContextProvider = ({ children }) => {
     if (cEvent.value != null) {
       containsNetWorking();
       GetInfoAgenda();
-      getProperties(cEvent.value._id)
+      getProperties(cEvent.value._id);
     }
   }, [cEvent.value]);
 
@@ -172,7 +180,8 @@ export const HelperContextProvider = ({ children }) => {
         totalsolicitudAgenda,
         totalsolicitudes,
         HandleChangeDrawerProfile,
-        propertiesProfile
+        propertiesProfile,
+        getPropertiesUserWithId,
       }}>
       {children}
     </HelperContext.Provider>
