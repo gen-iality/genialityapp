@@ -10,13 +10,13 @@ function RankingTrivia(props) {
 
   const { currentSurvey, currentUser } = props;
   useEffect(() => {
-    console.log("RANKING")
-    console.log(currentSurvey)
+    console.log('RANKING');
+    console.log(currentSurvey);
     if (!currentSurvey) return;
     if (!(Object.keys(currentUser).length === 0)) {
       const initialValues = {
         name: currentUser.names ? currentUser.names : currentUser.name,
-        score: 0
+        score: 0,
       };
 
       firestore
@@ -50,7 +50,7 @@ function RankingTrivia(props) {
               const result = player.data();
               players.push({
                 name: result.userName,
-                score: result.correctAnswers
+                score: result.correctAnswers,
               });
             });
 
@@ -78,7 +78,7 @@ function RankingTrivia(props) {
 
 const mapStateToProps = (state) => ({
   currentUser: state.user.data,
-  currentSurvey: state.survey.data.currentSurvey
+  currentSurvey: state.survey.data.currentSurvey,
 });
 
 export default connect(mapStateToProps)(RankingTrivia);
