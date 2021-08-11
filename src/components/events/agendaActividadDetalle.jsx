@@ -506,8 +506,8 @@ let AgendaActividadDetalle = (props) => {
             </Col>
           </Row>
 
-          <header className='card-header columns '>
-            <div className='is-block is-12 column is-paddingless'>
+          <header >
+            <div>
               {/* Hora del evento */}
               {/* <p className='card-header-title has-padding-left-0 '>
                 {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
@@ -568,7 +568,7 @@ let AgendaActividadDetalle = (props) => {
                               allow='autoplay; fullscreen; camera *;microphone *'
                               allowFullScreen
                               allowusermedia
-                              style={videoStyles}></iframe>
+                              className='video'></iframe>
                             <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
                           </>
                         ) : (
