@@ -75,6 +75,7 @@ iframe {
   @media screen and (max-width: $breakpoint-mobile) {
     margin-left: 4%;
     margin-right: 4%;
+    overflow-x: hidden;
   }
 }
 
