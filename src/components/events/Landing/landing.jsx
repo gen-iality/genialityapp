@@ -196,6 +196,11 @@ const Landing = (props) => {
               loadingSurveys={loadingSurveys}
             />
           </Content>
+          {cEventContext.value.styles && cEventContext.value.styles.banner_footer && (
+                            <div style={{ textAlign: 'center' }}>
+                              <img alt='image-dialog' src={cEventContext.value.styles.banner_footer} />
+                            </div>
+          )}
         </Layout>
         <EventSectionMenuRigth
           generalTabs={generaltabs}
@@ -221,7 +226,7 @@ const Landing = (props) => {
           loadingSurveys={loadingSurveys}
           setchattab={setchattab}
           chattab={chattab}
-        />
+        />     
       </Layout>
     </>
   );
