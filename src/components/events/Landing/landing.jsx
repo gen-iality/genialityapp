@@ -23,7 +23,7 @@ import InitSurveysCompletedListener from '../surveys/functions/initSurveyComplet
 import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
 /** redux surveys */
-import { setCurrentSurvey, setSurveyResult } from '../../../redux/survey/actions';
+import { setCurrentSurvey, setSurveyResult, setCurrentSurveyStatus } from '../../../redux/survey/actions';
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
 /*react router*/
@@ -104,7 +104,6 @@ const Landing = (props) => {
   /** loader para el listado de encuestas */
   const [loadingSurveys, setLoadingSurveys] = useState(true);
   /** estado de las encuestas, "abierto, cerrado, en progreso  */
-  const [surveyStatusProgress, setSurveyStatusProgress] = useState({});
   const [eventId, seteventId] = useState(null);
 
   useEffect(() => {
@@ -168,7 +167,7 @@ const Landing = (props) => {
   /** Listener que permite obtener la data del estado de las encuestas, "abierto, cerrado, en progreso" */
   useEffect(() => {
     if (cUser.value !== null) {
-      const unSuscribe = InitSurveysCompletedListener(cUser, setSurveyStatusProgress);
+      const unSuscribe = InitSurveysCompletedListener(cUser, props.setCurrentSurveyStatus);
       return unSuscribe;
     }
   }, [cUser]);
@@ -188,12 +187,11 @@ const Landing = (props) => {
         <EventSectionsInnerMenu />
         <MenuTablets />
         <Layout className='site-layout'>
-          <Content className='site-layout-background'>
+          <Content className='site-layout-background' style={{paddingBottom:'15vh'}}>
             {props.view && <TopBanner currentActivity={currentActivity} />}
             <EventSectionRoutes
               generaltabs={generaltabs}
               currentActivity={currentActivity}
-              surveyStatusProgress={surveyStatusProgress}
               listOfEventSurveys={listOfEventSurveys}
               loadingSurveys={loadingSurveys}
             />
@@ -207,7 +205,6 @@ const Landing = (props) => {
           tabs={tabs}
           tabselected={tabselected}
           settabselected={settabselected}
-          surveyStatusProgress={surveyStatusProgress}
           listOfEventSurveys={listOfEventSurveys}
           loadingSurveys={loadingSurveys}
           setchattab={setchattab}
@@ -215,11 +212,11 @@ const Landing = (props) => {
         />
         <MenuTabletsSocialZone
           totalNewMessages={totalNewMessages}
+          currentActivity={currentActivity}
           generalTabs={generaltabs}
           notNewMessage={notNewMessage}
           tabselected={tabselected}
           settabselected={settabselected}
-          surveyStatusProgress={surveyStatusProgress}
           listOfEventSurveys={listOfEventSurveys}
           loadingSurveys={loadingSurveys}
           setchattab={setchattab}
@@ -239,5 +236,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   setCurrentSurvey,
   setSurveyResult,
+  setCurrentSurveyStatus,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);

@@ -276,7 +276,7 @@ class Styles extends Component {
   async componentDidMount() {
     const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
     info.styles = info.styles ? info.styles : {};
-    console.log('Marlon',info)
+    
 
     if (info.styles) {
       this.setState({

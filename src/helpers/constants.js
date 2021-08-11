@@ -104,7 +104,7 @@ export const typeInputs = [
   { value: 'tituloseccion', label: 'Titulo para indicar campos relacionados' },
   { value: 'password', label: 'Password' },
   { value: 'multiplelisttable', label: 'Selección multiple con buscar' },
-  { value: 'phone', label: 'Telefono / Celular' },
+  { value: 'codearea', label: 'Código de área para números' },
 ];
 export const toolbarEditor = {
   toolbar: [

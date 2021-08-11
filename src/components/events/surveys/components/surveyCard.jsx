@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import { List, Button, Card, Tag, Result, Row, Col } from 'antd';
 import {
    CheckCircleOutlined,
@@ -9,7 +10,7 @@ import {
 } from '@ant-design/icons';
 
 function SurveyCard(props) {
-   const { publishedSurveys, loadingSurveys, handleClick, surveyStatusProgress } = props;
+   const { publishedSurveys, loadingSurveys, handleClick, currentSurveyStatus } = props;
 
    const headStyle = {
       fontWeight: 300,
@@ -50,21 +51,21 @@ function SurveyCard(props) {
                                  style={{ textAlign: 'left' }}
                                  description={
                                     <Row>
-                                       {!surveyStatusProgress ||
-                                       !surveyStatusProgress[survey._id] ||
-                                       !surveyStatusProgress[survey._id].surveyCompleted ? (
+                                       {!currentSurveyStatus ||
+                                       !currentSurveyStatus[survey._id] ||
+                                       !currentSurveyStatus[survey._id].surveyCompleted ? (
                                           <Col style={{ marginBottom: '3px' }}>
                                              <Tag icon={<ExclamationCircleOutlined />} color='warning'>
                                                 Sin Contestar
                                              </Tag>
                                           </Col>
-                                       ) : surveyStatusProgress[survey._id].surveyCompleted === 'running' ? (
+                                       ) : currentSurveyStatus[survey._id].surveyCompleted === 'running' ? (
                                           <Col style={{ marginBottom: '3px' }}>
                                              <Tag icon={<SyncOutlined spin />} color='geekblue'>
                                                 En progreso
                                              </Tag>
                                           </Col>
-                                       ) : surveyStatusProgress[survey._id].surveyCompleted === 'completed' ? (
+                                       ) : currentSurveyStatus[survey._id].surveyCompleted === 'completed' ? (
                                           <Col style={{ marginBottom: '3px' }}>
                                              <Tag icon={<CheckCircleOutlined />} color='success'>
                                                 Completada
@@ -75,10 +76,10 @@ function SurveyCard(props) {
                                              <Tag color='red'>Error</Tag>
                                           </Col>
                                        )}
-                                       {survey.isOpened && (
+                                       {survey && (
                                           <Col style={{ marginBottom: '3px' }}>
                                              {' '}
-                                             {survey.isOpened == 'true' || survey.isOpened == true ? (
+                                             {survey.isOpened === 'true' || survey.isOpened === true ? (
                                                 <Tag icon={<CheckCircleOutlined />} color='green'>
                                                    Abierta
                                                 </Tag>
@@ -97,26 +98,26 @@ function SurveyCard(props) {
                                     <div>
                                        <Button
                                           type={
-                                             (surveyStatusProgress &&
-                                                surveyStatusProgress[survey._id] &&
-                                                surveyStatusProgress[survey._id].surveyCompleted === 'completed') ||
-                                             survey.isOpened === 'false'
+                                             (currentSurveyStatus &&
+                                                currentSurveyStatus[survey._id] &&
+                                                currentSurveyStatus[survey._id].surveyCompleted === 'completed') ||
+                                             survey.isOpened === 'false' || survey.isOpened === false
                                                 ? ' ghost'
                                                 : 'primary'
                                           }
                                           className={`${survey.isOpened === 'true' &&
                                              'animate__animated  animate__pulse animate__slower animate__infinite'}`}
                                           onClick={() => {
-                                             surveyStatusProgress &&
-                                             surveyStatusProgress[survey._id] &&
-                                             surveyStatusProgress[survey._id].surveyCompleted === 'completed'
+                                             currentSurveyStatus &&
+                                             currentSurveyStatus[survey._id] &&
+                                             currentSurveyStatus[survey._id].surveyCompleted === 'completed'
                                                 ? handleClick(survey, 'results')
                                                 : handleClick(survey);
                                           }}>
-                                          {(surveyStatusProgress &&
-                                             surveyStatusProgress[survey._id] &&
-                                             surveyStatusProgress[survey._id].surveyCompleted === 'completed') ||
-                                          survey.isOpened === 'false'
+                                          {(currentSurveyStatus &&
+                                             currentSurveyStatus[survey._id] &&
+                                             currentSurveyStatus[survey._id].surveyCompleted === 'completed') ||
+                                          survey.isOpened === 'false' || survey.isOpened === false
                                              ? 'Resultados'
                                              : 'Ir a Encuesta'}
                                        </Button>
@@ -134,4 +135,10 @@ function SurveyCard(props) {
    );
 }
 
-export default SurveyCard;
+const mapDispatchToProps = {};
+
+const mapStateToProps = (state) => ({
+   currentSurveyStatus: state.survey.data.currentSurveyStatus,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SurveyCard);

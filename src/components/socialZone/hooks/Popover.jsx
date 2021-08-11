@@ -8,7 +8,7 @@ import { useContext } from 'react';
 const { Meta } = Card;
 
 const PopoverInfoUser = ({ item, props }) => {
-  let { containtNetworking } = useContext(HelperContext);
+  let { containtNetworking, HandleChangeDrawerProfile } = useContext(HelperContext);
 
   return (
     <Skeleton loading={false} avatar active>
@@ -16,11 +16,7 @@ const PopoverInfoUser = ({ item, props }) => {
         style={{ width: 300, padding: '0', color: 'black' }}
         actions={[
           containtNetworking && (
-            <Tooltip
-              title='Ver perfil'
-              onClick={() => {
-               alert("opcion desactivada temporalmente, recomendacion (desactive networking de este evento)")
-              }}>
+            <Tooltip title='Ver perfil' onClick={() => HandleChangeDrawerProfile()}>
               <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
             </Tooltip>
           ),
