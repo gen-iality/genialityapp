@@ -363,7 +363,6 @@ let SocialZone = function(props) {
             <SurveyList
               eventSurveys={props.eventSurveys}
               publishedSurveys={props.publishedSurveys}
-              surveyStatusProgress={props.surveyStatusProgress}
               listOfEventSurveys={props.listOfEventSurveys}
               loadingSurveys={props.loadingSurveys}
             />
