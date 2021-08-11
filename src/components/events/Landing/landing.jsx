@@ -26,8 +26,7 @@ const { Content } = Layout;
 import { setCurrentSurvey, setSurveyResult, setCurrentSurveyStatus } from '../../../redux/survey/actions';
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
-/*react router*/
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import EviusFooter from './EviusFooter';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -147,8 +146,8 @@ const Landing = (props) => {
 
   /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
   function visualizarEncuesta(survey) {
-    console.log('cambios encuestas vis',survey);
-    if (!survey){
+    console.log('cambios encuestas vis', survey);
+    if (!survey) {
       setCurrentSurvey(null);
     }
     if (survey && survey.isOpened === 'true' && survey !== null) {
@@ -175,7 +174,7 @@ const Landing = (props) => {
   /** Listener para obtener todas las encuestas por actividad */
   useEffect(() => {
     if (currentActivity) {
-      listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, currentActivity, cUser, visualizarEncuesta);      
+      listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, currentActivity, cUser, visualizarEncuesta);
     }
   }, [currentActivity]);
 
@@ -187,7 +186,7 @@ const Landing = (props) => {
         <EventSectionsInnerMenu />
         <MenuTablets />
         <Layout className='site-layout'>
-          <Content className='site-layout-background' style={{paddingBottom:'15vh'}}>
+          <Content className='site-layout-background' style={{ paddingBottom: '15vh' }}>
             {props.view && <TopBanner currentActivity={currentActivity} />}
             <EventSectionRoutes
               generaltabs={generaltabs}
@@ -196,11 +195,7 @@ const Landing = (props) => {
               loadingSurveys={loadingSurveys}
             />
           </Content>
-          {cEventContext.value.styles && cEventContext.value.styles.banner_footer && (
-                            <div style={{ textAlign: 'center' }}>
-                              <img alt='image-dialog' src={cEventContext.value.styles.banner_footer} />
-                            </div>
-          )}
+          <EviusFooter />
         </Layout>
         <EventSectionMenuRigth
           generalTabs={generaltabs}
@@ -226,7 +221,7 @@ const Landing = (props) => {
           loadingSurveys={loadingSurveys}
           setchattab={setchattab}
           chattab={chattab}
-        />     
+        />
       </Layout>
     </>
   );
