@@ -43,8 +43,7 @@
 
 .asistente-list {
   overflow-y: scroll;
-  height: 80vh;
-  
+  height: 70vh;
 }
 .asistente-chat-list {
   height: 80vh;
@@ -69,12 +68,12 @@
     display: block;
     position: fixed;
     z-index: 999999939;
-    top: 11%;
-    right: 2%;
+    top: 1%;
+    right: 20%;
 
     .ant-btn-icon-only.ant-btn-lg {
-      width: 40px;
-      height: 40px;
+      width: 45px;
+      height: 45px;
       padding: 4.9px 0;
       font-size: 14px;
       border-radius: 48px;

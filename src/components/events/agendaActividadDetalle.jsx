@@ -837,7 +837,6 @@ let AgendaActividadDetalle = (props) => {
                   {props.currentSurvey === null && props.cUser.value !== null ? (
                     <SurveyList
                       eventSurveys={props.eventSurveys}
-                      surveyStatusProgress={props.surveyStatusProgress}
                       listOfEventSurveys={props.listOfEventSurveys}
                       loadingSurveys={props.loadingSurveys}
                     />
@@ -887,9 +886,7 @@ let AgendaActividadDetalle = (props) => {
             </Row>
           </Link> */}
         </Card>
-      </div>
-      {console.log('USUARIO')}
-      {console.log(props.cUser.value)}
+      </div> 
       {/* Drawer encuestas */}
       <Drawer
         closeIcon={<CloseOutlined />}
@@ -930,6 +927,7 @@ const mapStateToProps = (state) => ({
   permissions: state.permissions,
   isVisible: state.survey.data.surveyVisible,
   viewSocialZoneNetworking: state.spaceNetworkingReducer.view,
+
 });
 
 const mapDispatchToProps = {

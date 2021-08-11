@@ -15,7 +15,7 @@ import AgendaActividadDetalle from './agendaActividadDetalle';
 import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';
-import { CalendarOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, CalendarOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import * as notificationsActions from '../../redux/notifications/actions';
 import { setTabs } from '../../redux/stage/actions';
 const { TabPane } = Tabs;
@@ -730,23 +730,24 @@ class Agenda extends Component {
                     this.props.cEvent.value.styles.hideDatesAgenda === true ||
                     this.props.cEvent.value.styles.hideDatesAgenda == undefined) && (
                     <Tabs
+                      //tabBarExtraContent={{right:<DoubleRightOutlined />, left:<DoubleLeftOutlined/>}}
                       defaultActiveKey='0'
                       size='large'
+                      style={{paddingTop:'5px'}}
                       tabBarStyle={{
                         backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                        borderRadius: '50px',
+                        borderRadius: '10px',
                         paddingLeft: '25px',
                       }}>
                       {days.map((day, index) => (
                         <TabPane
-                          style={{ paddingLeft: '25px', paddingRight: '25px' }}
+                          //style={{ paddingLeft: '25px', paddingRight: '25px' }}
                           tab={
                             <span
                               style={{
                                 fontWeight: 'bolder',
                                 color: this.props.cEvent.value.styles.textMenu,
-                                paddingLeft: '8px',
-                                paddingRight: '8px',
+                                backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
                               }}>
                               {Moment(day)
                                 .format('LL')

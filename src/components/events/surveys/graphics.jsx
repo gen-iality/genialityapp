@@ -66,10 +66,11 @@ class Graphics extends Component {
       if (usersRegistered.data[i].checkedin_at) {
         totalUsersRegistered = totalUsersRegistered + 1;
       }
-    }
-    this.state.totalUser = totalUsersRegistered
-
-    this.setState({ dataSurvey: response, usersRegistered: totalUsersRegistered }, this.mountChart);
+    }   
+    console.log("usuarios registrados")
+    console.log(totalUsersRegistered )
+    console.log(usersRegistered.data)
+    this.setState({ dataSurvey: response, usersRegistered: totalUsersRegistered,totalUser:totalUsersRegistered }, this.mountChart);
   };
 
   setCurrentPage = (page) => {
@@ -142,9 +143,10 @@ class Graphics extends Component {
     let respuestadVotos = 0
     let porcentajeUsuarios = 0
     let respuestatotal = 0;
-
+ 
     respuestadVotos = this.state.totalUser - totalVotosUsuarios;
-    porcentajeUsuarios= parseInt((respuestadVotos * 100) / this.state.totalUser)
+    respuestadVotos=respuestadVotos>0?respuestadVotos:0;
+    porcentajeUsuarios= respuestadVotos>0?parseInt((respuestadVotos * 100) / this.state.totalUser):0
 
     this.setState({
       resultVotos:{

@@ -10,17 +10,27 @@ import { UseCurrentUser } from '../../../Context/userContext';
 
 function SurveyDetailPage(props) {
    // const [hasVote, setHasVote] = useState(false);
-   const { currentSurvey, surveyResult } = props;
+   const { currentSurvey, surveyResult,currentSurveyStatus } = props;
    const currentUser = UseCurrentUser();
+ 
+  
 
    if (!currentSurvey) {
       return <h1>No hay nada publicado</h1>;
    }
+      
+   const isCompleted=(id)=>{
+       if(currentSurveyStatus &&
+         currentSurveyStatus[id] &&  currentSurveyStatus[id].surveyCompleted === 'completed' && surveyResult!=='closedSurvey'){
+         return true;
+      }
+      return false;
+   }
 
    return (
       <div>
-         {/* (eventUser && eventUser.rol && eventUser.rol.name === currentSurvey.userRole) validacion por rol */}
-         {surveyResult === 'results' && (
+         {/* (eventUser && eventUser.rol && eventUser.rol.name === currentSurvey.userRole) validacion por rol */}        
+         {(surveyResult === 'results' || isCompleted(currentSurvey._id)) && (
             <Graphics
                idSurvey={currentSurvey._id}
                // showListSurvey={toggleSurvey}
@@ -29,7 +39,7 @@ function SurveyDetailPage(props) {
                operation='participationPercentage' //onlyCount, participationPercentage
             />
          )}
-         {surveyResult === 'view' && (
+         {surveyResult === 'view' && !isCompleted(currentSurvey._id)  && (
             <Card className='survyCard'>
                <SurveyComponent
                   // responseCounter={responseCounter}
@@ -44,7 +54,7 @@ function SurveyDetailPage(props) {
                {/* <div>{surveySelected.name}</div> */}
             </Card>
          )}
-         {surveyResult === 'closedSurvey' && <ClosedSurvey />}
+         {surveyResult === 'closedSurvey'  && <ClosedSurvey />}
       </div>
    );
 }
@@ -53,6 +63,7 @@ const mapStateToProps = (state) => ({
    currentSurvey: state.survey.data.currentSurvey,
    isVisible: state.survey.data.surveyVisible,
    surveyResult: state.survey.data.result,
+   currentSurveyStatus: state.survey.data.currentSurveyStatus,
 });
 
 export default connect(mapStateToProps)(SurveyDetailPage);

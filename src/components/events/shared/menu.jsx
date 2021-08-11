@@ -76,20 +76,20 @@ class MenuConfig extends Component {
               </span>
             }>
             <Menu.Item key='1'>
-              <NavLink onClick={this.handleClick} to={`${url}/agenda`}>
                 Agenda/Actividades
+              <NavLink onClick={this.handleClick} to={`${url}/agenda`}>
               </NavLink>
             </Menu.Item>
 
             <Menu.Item key='empresas'>
+                Empresas
               <NavLink onClick={this.handleClick} to={`${url}/empresas`}>
-                {'Empresas'}
               </NavLink>
             </Menu.Item>
 
             <Menu.Item key='2'>
-              <NavLink onClick={this.handleClick} to={`${url}/speakers`}>
                 Conferencistas
+              <NavLink onClick={this.handleClick} to={`${url}/speakers`}>
               </NavLink>
             </Menu.Item>
 
@@ -100,38 +100,38 @@ class MenuConfig extends Component {
             </Menu.Item>
 
             <Menu.Item key='4'>
-              <NavLink onClick={this.handleClick} to={`${url}/certificados`}>
                 Certificados
+              <NavLink onClick={this.handleClick} to={`${url}/certificados`}>
               </NavLink>
             </Menu.Item>
 
             <Menu.Item key='5'>
-              <NavLink onClick={this.handleClick} to={`${url}/trivia`}>
                 Encuestas
+              <NavLink onClick={this.handleClick} to={`${url}/trivia`}>
               </NavLink>
             </Menu.Item>
 
             <Menu.Item key='6'>
-              <NavLink onClick={this.handleClick} to={`${url}/news`}>
                 Noticias
+              <NavLink onClick={this.handleClick} to={`${url}/news`}>
               </NavLink>
             </Menu.Item>
 
             <Menu.Item key='7'>
-              <NavLink onClick={this.handleClick} to={`${url}/faqs`}>
                 Preguntas Frecuentes
+              <NavLink onClick={this.handleClick} to={`${url}/faqs`}>
               </NavLink>
             </Menu.Item>
 
             <Menu.Item key='8'>
-              <NavLink onClick={this.handleClick} to={`${url}/documents`}>
                 Documentos
+              <NavLink onClick={this.handleClick} to={`${url}/documents`}>
               </NavLink>
             </Menu.Item>
 
-            <Menu.Item key='8'>
-              <NavLink onClick={this.handleClick} to={`${url}/reportNetworking`}>
+            <Menu.Item key='9'>
                 Reporte de Networking
+              <NavLink onClick={this.handleClick} to={`${url}/reportNetworking`}>
               </NavLink>
             </Menu.Item>
 
@@ -151,14 +151,14 @@ class MenuConfig extends Component {
               </span>
             }>
             <Menu.Item key='10'>
-              <NavLink onClick={this.handleClick} to={`${url}/main`}>
                 Datos del evento
+              <NavLink onClick={this.handleClick} to={`${url}/main`}>
               </NavLink>
             </Menu.Item>
 
             <Menu.Item key='11'>
-              <NavLink onClick={this.handleClick} to={`${url}/styles`}>
                 Apariencia del evento
+              <NavLink onClick={this.handleClick} to={`${url}/styles`}>
               </NavLink>
             </Menu.Item>
 
@@ -169,14 +169,14 @@ class MenuConfig extends Component {
               </Menu.Item> */}
 
             <Menu.Item key='13'>
-              <NavLink onClick={this.handleClick} to={`${url}/menuLanding`}>
                 Habilitar secciones del evento
+              <NavLink onClick={this.handleClick} to={`${url}/menuLanding`}>
               </NavLink>
             </Menu.Item>
 
-            <Menu.Item key='13'>
-              <NavLink onClick={this.handleClick} to={`${url}/ticketsEvent`}>
+            <Menu.Item key='14'>
                 Configuración de tickets
+              <NavLink onClick={this.handleClick} to={`${url}/ticketsEvent`}>
               </NavLink>
             </Menu.Item>
           </SubMenu>
@@ -192,28 +192,28 @@ class MenuConfig extends Component {
                 <span>Configuración Asistentes</span>
               </span>
             }>
-            <Menu.Item key='13'>
-              <NavLink onClick={this.handleClick} to={`${url}/datos`}>
-                Datos/Campos a recolectar de asistentes
-              </NavLink>
-            </Menu.Item>
-
-            <Menu.Item key='14'>
-              <NavLink onClick={this.handleClick} to={`${url}/confirmacion-registro`}>
-                Confirmación registro
-              </NavLink>
-            </Menu.Item>
-
             <Menu.Item key='15'>
-              <NavLink onClick={this.handleClick} to={`${url}/tipo-asistentes`}>
+                Datos/Campos a recolectar de asistentes
+              <NavLink onClick={this.handleClick} to={`${url}/datos`}>
+              </NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='16'>
+                Confirmación registro
+              <NavLink onClick={this.handleClick} to={`${url}/confirmacion-registro`}>
+              </NavLink>
+            </Menu.Item>
+
+            <Menu.Item key='17'>
                 Tipo de asistentes
+              <NavLink onClick={this.handleClick} to={`${url}/tipo-asistentes`}>
               </NavLink>
             </Menu.Item>
 
             {permissions.data.ids.includes(rolPermissions.admin_staff._id) && false && (
-              <Menu.Item key='16'>
-                <NavLink onClick={this.handleClick} to={`${url}/staff`}>
+              <Menu.Item key='18'>
                   Organizadores
+                <NavLink onClick={this.handleClick} to={`${url}/staff`}>
                 </NavLink>
               </Menu.Item>
             )}
@@ -229,34 +229,34 @@ class MenuConfig extends Component {
                 <span>Asistentes</span>
               </span>
             }>
-            <Menu.Item key='25'>
-              <NavLink onClick={this.handleClick} to={`${url}/assistants`}>
+            <Menu.Item key='19'>
                 Asistentes / Checkin
+              <NavLink onClick={this.handleClick} to={`${url}/assistants`}>
               </NavLink>
             </Menu.Item>
 
-            <Menu.Item key='26'>
-              <NavLink onClick={this.handleClick} to={`${url}/checkin-actividad`}>
+            <Menu.Item key='20'>
                 Check In por Actividad
+              <NavLink onClick={this.handleClick} to={`${url}/checkin-actividad`}>
               </NavLink>
             </Menu.Item>
 
             <Menu.Item>
-              <NavLink onClick={this.handleClick} to={`${url}/chatexport`}>
                 Gestion de Chats
+              <NavLink onClick={this.handleClick} to={`${url}/chatexport`}>
               </NavLink>
             </Menu.Item>
 
-            <Menu.Item key='16'>
-              <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
+            <Menu.Item key='21'>
                 Enviar Correos a Asistentes
+              <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
               </NavLink>
             </Menu.Item>
 
             {permissions.data.ids.includes(rolPermissions.admin_badge._id) && (
-              <Menu.Item key='24'>
-                <NavLink onClick={this.handleClick} to={`${url}/badge`}>
+              <Menu.Item key='22'>
                   Configurarr Escarapela
+                <NavLink onClick={this.handleClick} to={`${url}/badge`}>
                 </NavLink>
               </Menu.Item>
             )}
@@ -272,22 +272,19 @@ class MenuConfig extends Component {
                   <span>Invitados</span>
                 </span>
               }>
-              <Menu.Item key='16'>
-                <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
-                  Invitados sin confirmar
-                </NavLink>
+              <Menu.Item key='23'>
+                Invitados sin confirmar
+                <NavLink onClick={this.handleClick} to={`${url}/invitados`}></NavLink>
               </Menu.Item>
 
-              <Menu.Item key='18'>
-                <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
-                  Enviar información a invitados sin confirmar
-                </NavLink>
+              <Menu.Item key='24'>
+                Enviar información a invitados sin confirmar
+                <NavLink onClick={this.handleClick} to={`${url}/invitados`}></NavLink>
               </Menu.Item>
 
-              <Menu.Item key='19'>
-                <NavLink onClick={this.handleClick} to={`${url}/messages`}>
-                  Invitaciones pasadas
-                </NavLink>
+              <Menu.Item key='25'>
+                Invitaciones pasadas
+                <NavLink onClick={this.handleClick} to={`${url}/messages`}></NavLink>
               </Menu.Item>
             </SubMenu>
           )}
@@ -302,22 +299,19 @@ class MenuConfig extends Component {
                   <span>Comunicaciones</span>
                 </span>
               }>
-              <Menu.Item key='20'>
-                <NavLink onClick={this.handleClick} to={`${url}/messages`}>
-                  Comunicaciones enviadas
-                </NavLink>
+              <Menu.Item key='26'>
+                Comunicaciones enviadas
+                <NavLink onClick={this.handleClick} to={`${url}/messages`}></NavLink>
               </Menu.Item>
 
-              <Menu.Item key='21'>
-                <NavLink onClick={this.handleClick} to={`${url}/notificationsApp`}>
-                  Push Notificaciones
-                </NavLink>
+              <Menu.Item key='27'>
+                Push Notificaciones
+                <NavLink onClick={this.handleClick} to={`${url}/notificationsApp`}></NavLink>
               </Menu.Item>
 
-              <Menu.Item key='22'>
-                <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
-                  Enviar información a asistenes
-                </NavLink>
+              <Menu.Item key='28'>
+                Enviar información a asistenes
+                <NavLink onClick={this.handleClick} to={`${url}/invitados`}></NavLink>
               </Menu.Item>
             </SubMenu>
           )}
@@ -356,9 +350,8 @@ class MenuConfig extends Component {
               </span>
             }>
             <Menu.Item key='29'>
-              <NavLink onClick={this.handleClick} to={`${url}/dashboard`}>
-                Estadísticas del evento
-              </NavLink>
+              Estadísticas del evento
+              <NavLink onClick={this.handleClick} to={`${url}/dashboard`}></NavLink>
             </Menu.Item>
           </SubMenu>
         </Menu>

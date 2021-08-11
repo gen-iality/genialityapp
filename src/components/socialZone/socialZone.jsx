@@ -347,7 +347,7 @@ let SocialZone = function(props) {
 
       {props.currentActivity !== null && props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
         <TabPane
-          className='asistente-survey-list'
+          className='asistente-survey-list asistente-list'
           tab={
             <div style={{ marginBottom: '0px' }}>
               <Badge dot={props.hasOpenSurveys} size='default'>
@@ -384,7 +384,6 @@ let SocialZone = function(props) {
             <SurveyList
               eventSurveys={props.eventSurveys}
               publishedSurveys={props.publishedSurveys}
-              surveyStatusProgress={props.surveyStatusProgress}
               listOfEventSurveys={props.listOfEventSurveys}
               loadingSurveys={props.loadingSurveys}
             />
@@ -418,7 +417,7 @@ let SocialZone = function(props) {
             </>
           }
           key='4'>
-          <Row justify='space-between'>
+          <Row justify='space-between' >
             <Col span={4}>
               <ArrowLeftOutlined
                 style={{ color: cEvent.value.styles.textMenu }}
