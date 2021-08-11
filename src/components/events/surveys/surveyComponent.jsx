@@ -53,16 +53,18 @@ function SurveyComponent(props) {
       /**
        * Timers para controlar el tiempo por pregunta, estos se deben detener o el quiz seguira avanzando errando la logica ya que cambia la pregunta que se esta respondiendo
        */
-      if (initialSurveyModel) {
+      if (initialSurveyModel) {console.log("10. HOLA IF 1")
          initialSurveyModel.stopTimer();
       }
-      if (timerPausa) {
+      console.log("10. timer", timerPausa)
+      if (timerPausa) {console.log("10. HOLA IF 2")
          clearInterval(timerPausa);
       }
    }, [initialSurveyModel, idSurvey]);
 
    async function startingSurveyComponent(surveyRealTime) {
       setFreezeGame(surveyRealTime.freezeGame);
+      console.log("10. startingSurveyComponent ", surveyRealTime.freezeGame)
       let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyRealTime);
       if (loadSurveyData) {         
          loadSurveyData.open = surveyRealTime.isOpened;
@@ -116,7 +118,7 @@ function SurveyComponent(props) {
 
       /** Obtenemos el puntaje por si se retomo la encuesta */
       let userScore = await UserGamification.getUserPoints(eventId, currentUser._id);
-      let userPointsData = userScore.data.points;
+      let userPointsData = userScore.data ? userScore.data.pointspoints : 0;
 
       //para guardar el score en el ranking
       userPointsData += rankingPoints;
