@@ -18,7 +18,7 @@ function SurveyDetailPage(props) {
    if (!currentSurvey) {
       return <h1>No hay nada publicado</h1>;
    }
-   
+      
    const isCompleted=(id)=>{
        if(currentSurveyStatus &&
          currentSurveyStatus[id] &&  currentSurveyStatus[id].surveyCompleted === 'completed' && surveyResult!=='closedSurvey'){

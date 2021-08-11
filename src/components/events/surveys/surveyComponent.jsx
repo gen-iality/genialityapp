@@ -64,7 +64,7 @@ function SurveyComponent(props) {
    async function startingSurveyComponent(surveyRealTime) {
       setFreezeGame(surveyRealTime.freezeGame);
       let loadSurveyData = await LoadSelectedSurvey(eventId, idSurvey, surveyRealTime);
-      if (loadSurveyData) {
+      if (loadSurveyData) {         
          loadSurveyData.open = surveyRealTime.isOpened;
          loadSurveyData.publish = surveyRealTime.isPublished;
          loadSurveyData.freezeGame = surveyRealTime.freezeGame;

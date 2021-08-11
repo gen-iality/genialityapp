@@ -55,7 +55,7 @@ const MenuTabletsSocialZone = (props) => {
           generalTabs={props.generalTabs}
           notNewMessages={props.notNewMessage}
           tabselected={optionselected}
-          settabselected={props.settabselected}
+          settabselected={setOptionselected}
           listOfEventSurveys={props.listOfEventSurveys}
           loadingSurveys={props.loadingSurveys}
           setchattab={props.setchattab}
