@@ -97,7 +97,6 @@ class Graphics extends Component {
           break;
       }
     }
-
     let generatedlabels = [];
     let totalVotosUsuarios = 0;
     let porcentaj_answer=0;
@@ -135,7 +134,7 @@ class Graphics extends Component {
       });
       totalVotosUsuarios = totalVotosUsuarios + answer_count[a][0];
     }
-
+  //console.log("LIST",list)
     this.setState({
       dataVotos:list
     })

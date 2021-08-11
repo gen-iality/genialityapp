@@ -888,6 +888,8 @@ let AgendaActividadDetalle = (props) => {
         </Card>
       </div> 
       {/* Drawer encuestas */}
+      {console.log("CURRENT_SURVEY")}
+      {console.log(props.currentSurvey)}
       <Drawer
         closeIcon={<CloseOutlined />}
         placement='right'
@@ -896,9 +898,9 @@ let AgendaActividadDetalle = (props) => {
         onClose={onClose}
         width={window.screen.width >= 768 ? (rankingVisible == false ? '100%' : '70%') : '100%'}>
         <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
-          <Button type='primary' onClick={showRanking}>
+          {props.currentSurvey && props.currentSurvey.rankingVisible && props.currentSurvey.rankingVisible=='true' && <Button type='primary' onClick={showRanking}>
             {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
-          </Button>
+          </Button>}
         </div>
 
         <Row gutter={[8, 8]} justify='center'>

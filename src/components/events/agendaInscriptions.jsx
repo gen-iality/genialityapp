@@ -83,6 +83,7 @@ class AgendaInscriptions extends Component {
     let surveysData = await SurveysApi.getAll(this.eventContext._id);
     let documentsData = await DocumentsApi.getAll(this.eventContext._id);
 
+
     if (surveysData.data.length >= 1) {
       this.setState({ Surveys: surveysData.data });
     }
