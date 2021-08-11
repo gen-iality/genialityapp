@@ -18,7 +18,7 @@ export default function RankingList({data}) {
 
   return (
     <div style={{ marginTop: 16 }}>
-      <h3 style={{ fontSize: '14px', fontWeight: '700',color:cEvent.value.styles.textMenu }}>Ranking de jugadores</h3>
+      <h3 style={{ fontSize: '14px', fontWeight: '700' }}>Ranking de jugadores</h3>
       <div className='container-ranking' style={{ marginTop: 16 }}>
         {list.length > 0 ? (
           list.map((item, key) => (
