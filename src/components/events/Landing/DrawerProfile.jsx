@@ -17,12 +17,13 @@ const DrawerProfile = (props) => {
 
   console.log('eventuserdrawer', cEventUser);
   console.log('properties', propertiesProfile);
+  
   return (
     <Drawer
       zIndex={5000}
       visible={props.viewPerfil}
       closable={true}
-      onClose={() => props.setViewPerfil(!props.viewPerfil)}
+      onClose={() => props.setViewPerfil({ view: !props.viewPerfil, perfil: null })}
       width={'52vh'}
       bodyStyle={{ paddingRight: '0px', paddingLeft: '0px' }}>
       <Row justify='center' style={{ paddingLeft: '10px', paddingRight: '10px' }}>
@@ -58,12 +59,12 @@ const DrawerProfile = (props) => {
                     onClick={async () => {
                       var us = await this.loadDataUser(props.profileuser);
                       this.collapsePerfil();
-                      this.UpdateChat(
-                        cUser.value.uid,
-                        cUser.value.names || cUser.value.name,
-                        props.profileuser.iduser,
-                        props.profileuser.names || props.profileuser.name
-                      );
+                      // this.UpdateChat(
+                      //   cUser.value.uid,
+                      //   cUser.value.names || cUser.value.name,
+                      //   props.profileuser.iduser,
+                      //   props.profileuser.names || props.profileuser.name
+                      // );
                     }}
                     icon={<CommentOutlined />}
                   />

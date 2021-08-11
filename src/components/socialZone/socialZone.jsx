@@ -16,7 +16,8 @@ import { useRef } from 'react';
 import { UseEventContext } from '../../Context/eventContext';
 import { UseCurrentUser } from '../../Context/userContext';
 import { FormattedMessage } from 'react-intl';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
+import { monitorEventPresence } from './hooks';
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
 const callback = () => {};
@@ -33,7 +34,7 @@ let SocialZone = function(props) {
   let cUser = UseCurrentUser();
 
   const [attendeeList, setAttendeeList] = useState({});
-  const attendeeListPresence = useState({});
+  const [attendeeListPresence, setAttendeeListPresence] = useState({});
   const [currentChat, setCurrentChatInner] = useState(null);
   const [currentChatName, setCurrentChatNameInner] = useState('ni idea');
   const [availableChats, setavailableChats] = useState([]);
@@ -49,12 +50,13 @@ let SocialZone = function(props) {
   let userName = cUser.value ? cUser.value?.names : cUser.value?.name ? cUser.value?.name : '---';
 
   let setCurrentChat = (id, chatname) => {
-    console.log("chat name")
-    console.log(chatname)
+    console.log('chat name');
+    console.log(chatname);
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
   };
 
+  
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     return ida < idb ? ida + '_' + idb : idb + '_' + ida;
   };
@@ -68,19 +70,31 @@ let SocialZone = function(props) {
 
     if (!cUser.value._id) return;
     //agregamos una referencia al chat para el usuario actual
-    data = { id: newId, name: otherUserName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone',remitente:currentName };
+    data = {
+      id: newId,
+      name: otherUserName || '--',
+      participants: [idcurrentUser, idOtherUser],
+      type: 'onetoone',
+      remitente: currentName,
+    };
     firestore
-      .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)    
-      .set({...data}, { merge: true });     
+      .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
+      .set({ ...data }, { merge: true });
 
     //agregamos una referencia al chat para el otro usuario del chat
-    data = { id: newId, name: currentName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone',remitente:otherUserName };
+    data = {
+      id: newId,
+      name: currentName || '--',
+      participants: [idcurrentUser, idOtherUser],
+      type: 'onetoone',
+      remitente: otherUserName,
+    };
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
-      .set({...data}, { merge: true });
+      .set({ ...data }, { merge: true });
 
     console.log('como se crea el chgat', data);
-    console.log(otherUserName)
+    console.log(otherUserName);
     setCurrentChat(newId, otherUserName);
   };
 
@@ -111,9 +125,38 @@ let SocialZone = function(props) {
 
   //Cargar la lista de chats de una persona
 
+ 
+
   useEffect(() => {
-    if (cEvent.value==null || cUser.value==null) return;
-    console.log("EFECT 1")
+    if (cEvent.value == null) return;
+    console.log('EFFECT 2');
+    let colletion_name = cEvent.value._id + '_event_attendees';
+    let attendee;
+    firestore
+      .collection(colletion_name)
+      .orderBy('state_id', 'asc')
+      .onSnapshot(function(querySnapshot) {
+        let list = {};
+
+        querySnapshot.forEach((doc) => {
+          attendee = doc.data();
+          let localattendee = attendeeList[attendee.user?.uid] || {};
+          list[attendee.user?.uid] = { ...localattendee, ...attendee };
+        });
+
+        setAttendeeList(list);
+
+        //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
+      });
+  }, [cEvent.value]);
+
+
+
+
+  useEffect(() => {
+    if (cEvent.value == null || cUser.value == null) return;
+    console.log('EFECT 1');
+    // monitorEventPresence(cUser.value._id, attendeeList, setAttendeeListPresence)
 
     firestore
       .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
@@ -175,29 +218,7 @@ let SocialZone = function(props) {
 
         setavailableChats(list);
       });
-  }, [cEvent.value, cUser.value, props.collapse]);
-
-  useEffect(() => {
-    if (cEvent.value==null) return;
-   console.log("EFFECT 2")
-    let colletion_name = cEvent.value._id + '_event_attendees';
-    let attendee;
-    firestore
-      .collection(colletion_name)
-      .orderBy('state_id', 'asc')
-      .onSnapshot(function(querySnapshot) {
-        let list = {};
-
-        querySnapshot.forEach((doc) => {
-          attendee = doc.data();
-          let localattendee = attendeeList[attendee.user?.uid] || {};
-          list[attendee.user?.uid] = { ...localattendee, ...attendee };
-        });
-
-        setAttendeeList(list);
-        //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
-      });
-  }, [cEvent.value]);
+  }, [cEvent.value, cUser.value, props.collapse, attendeeList]);
 
   function redirectRegister() {
     history.push(`/landing/${cEvent.value._id}/tickets`);
@@ -359,7 +380,7 @@ let SocialZone = function(props) {
               </Button>
             </Col>
           </Row>
-          {props.currentSurvey === null && cUser.value!==null ? (
+          {props.currentSurvey === null && cUser.value !== null ? (
             <SurveyList
               eventSurveys={props.eventSurveys}
               publishedSurveys={props.publishedSurveys}
@@ -367,12 +388,20 @@ let SocialZone = function(props) {
               listOfEventSurveys={props.listOfEventSurveys}
               loadingSurveys={props.loadingSurveys}
             />
-          ) : props.currentSurvey !== null && cUser.value!==null ? (
+          ) : props.currentSurvey !== null && cUser.value !== null ? (
             <SurveyDetail />
-          ):<div style={{paddingTop:30}}>
-              <Alert  showIcon message="Para poder responder una encuesta debes ser usuario del sistema" type="warning" />
-              <Row style={{marginTop:30}} justify='center'><Button onClick={redirectRegister} >Registrarme</Button></Row>
-            </div>}
+          ) : (
+            <div style={{ paddingTop: 30 }}>
+              <Alert
+                showIcon
+                message='Para poder responder una encuesta debes ser usuario del sistema'
+                type='warning'
+              />
+              <Row style={{ marginTop: 30 }} justify='center'>
+                <Button onClick={redirectRegister}>Registrarme</Button>
+              </Row>
+            </div>
+          )}
         </TabPane>
       )}
 
