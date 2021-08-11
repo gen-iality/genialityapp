@@ -25,7 +25,7 @@ const PopoverInfoUser = (props) => {
       <Card
         style={{ width: 300, padding: '0', color: 'black' }}
         actions={[
-          containtNetworking && (
+          !containtNetworking && (
             <Tooltip title='Ver perfil'>
               <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
             </Tooltip>
