@@ -24,6 +24,7 @@ export const HelperContextProvider = ({ children }) => {
   const [totalsolicitudes, setTotalsolicitudes] = useState(0);
   const [isOpenDrawerProfile, setisOpenDrawerProfile] = useState(false);
   const [propertiesProfile, setpropertiesProfile] = useState();
+  const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null)
 
   const getProperties = async (eventId) => {
     let properties = await EventFieldsApi.getAll(eventId);
@@ -38,9 +39,12 @@ export const HelperContextProvider = ({ children }) => {
 
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
-    const dataproperties = await EventsApi.getEventUser(eventUser._id, cEvent.value._id);
-
-    console.log('properties: ', dataproperties);
+    const dataproperties = await EventFieldsApi.getOne(cEvent.value._id,eventUser._id);
+    console.log('====================================');
+    console.log("data",eventUser.properties);
+    console.log('====================================');
+    // console.log('properties: ', eventUser);
+    setpropertiesOtherprofile(eventUser.properties)
   };
 
   const ChangeActiveNotification = (notify, message, type, activity) => {
@@ -182,6 +186,7 @@ export const HelperContextProvider = ({ children }) => {
         HandleChangeDrawerProfile,
         propertiesProfile,
         getPropertiesUserWithId,
+        propertiesOtherprofile
       }}>
       {children}
     </HelperContext.Provider>
