@@ -142,6 +142,7 @@ const ChatList = (props) => {
       </Form>
     );
 
+    // console.log("username",userName)
   return (
     <Tabs activeKey={props.chattab} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
@@ -156,7 +157,7 @@ const ChatList = (props) => {
             title='chatevius'
             className='ChatEviusLan'
             src={
-              'https://chatevius.web.app?nombre=pr' +
+              'https://chatevius.web.app?nombre=' +
               userName +
               '&chatid=event_' +
               cEvent.value._id +
@@ -244,7 +245,7 @@ const ChatList = (props) => {
             />
           )}
           {console.log("Name==>",props.currentChatName)}
-          {console.log(props.currentChat)}
+          {console.log("currentchat",props.currentChat)}
           {console.log(cUser.value.uid)}          
           {props.currentChat && (
             <>                   
