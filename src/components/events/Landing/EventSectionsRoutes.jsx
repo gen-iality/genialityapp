@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Spin } from 'antd';
+import { Card, Spin } from 'antd';
 /** --------------------
  *  secciones del evento
  * ---------------------*/
@@ -26,6 +26,7 @@ import InformativeSection2 from '../informativeSections/informativeSection2';
 import InformativeSection from '../informativeSections/informativeSection';
 import Noticias from '../noticias';
 import withContext from '../../../Context/withContext';
+import { IssuesCloseOutlined } from '@ant-design/icons';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -114,7 +115,13 @@ const EventSectionRoutes = (props) => {
             <CertificadoLanding />
           </>
         </Route>
-
+        <Route path={`${path}/producto`}>
+           <div>
+             <Card style={{textAlign:'center', marginLeft:30,marginRight:30,marginTop:60}}>
+             <IssuesCloseOutlined  style={{marginRight:20, fontSize:20}} />La subasta se ha cerrado
+             </Card>
+           </div>
+        </Route>
         <Route path={`${path}/agenda`}>
           <Agenda
             activity={props.currentActivity}

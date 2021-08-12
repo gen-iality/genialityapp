@@ -178,6 +178,13 @@ class menuLanding extends Component {
           checked: false,
           permissions: 'public',
         },
+        producto: {
+          name: 'Producto',
+          section: 'producto',
+          icon: 'ShopOutlined ',
+          checked: false,
+          permissions: 'public',
+        },
       },
       values: {},
       itemsMenu: {},
@@ -252,7 +259,10 @@ class menuLanding extends Component {
   async mapActiveItemsToAvailable(key) {
     let menuBase = { ...this.state.menu };
     let itemsMenuDB = { ...this.state.itemsMenu };
+    console.log("items menù",itemsMenuDB)
+    console.log("primero=>",menuBase[key])
     menuBase[key].checked = !menuBase[key].checked;
+    console.log("segundo=>",menuBase[key])
 
     if (menuBase[key].checked) {
       itemsMenuDB[key] = menuBase[key];
@@ -304,6 +314,7 @@ class menuLanding extends Component {
         <Title level={3}>Habilitar secciones del evento</Title>
         <h3>(Podrás guardar la configuración de tu menú en la parte inferior)</h3>
         <Row gutter={16}>
+          {console.log("MENU SECTIONS ",this.state.menu)}
           {Object.keys(this.state.menu).map((key) => {
             return (
               <div key={key}>

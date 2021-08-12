@@ -5,13 +5,22 @@ import * as iconComponents from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
 import { UseEventContext } from '../../../../Context/eventContext';
 import { HelperContext } from '../../../../Context/HelperContext';
+import { UseCurrentUser } from '../../../../Context/userContext';
 
 const MenuEvent = ({ isMobile }) => {
   let { url } = useRouteMatch();
   let cEvent = UseEventContext();
+  let cUser=UseCurrentUser();
   let { totalsolicitudes } = useContext(HelperContext);
 
   let event = cEvent.value;
+
+  const isVisibleSection=(section)=>{
+    if((section.permissions && section.permissions=='public') || (section.permissions && section.permissions=='assistants')&& cUser.value!=null) {
+      return true;
+    }
+    return false;
+  }
 
   return (
     <>
@@ -19,9 +28,10 @@ const MenuEvent = ({ isMobile }) => {
         <Menu style={stylesMenuItems} mode='inline' defaultSelectedKeys={['1']}>
           {event.itemsMenu&&Object.keys(event.itemsMenu).map((key) => {
             //icono personalizado
+            console.log("Item=>",event.itemsMenu[key]);
             let IconoComponente = iconComponents[event.itemsMenu[key].icon];
-
-            return key == 'networking' ? (
+           
+            return key == 'networking' && isVisibleSection(event.itemsMenu[key])? (
               <Menu.Item
                 style={{ position: 'relative', color: event.styles.textMenu }}
                 key={event.itemsMenu[key].section}
@@ -43,7 +53,7 @@ const MenuEvent = ({ isMobile }) => {
                 </Badge>
               </Menu.Item>
             ) : (
-              key !== 'networking' && (
+              key !== 'networking' && isVisibleSection(event.itemsMenu[key]) && (
                 <Menu.Item
                   style={{ position: 'relative', color: event.styles.textMenu }}
                   key={event.itemsMenu[key].section}
@@ -55,8 +65,8 @@ const MenuEvent = ({ isMobile }) => {
                     to={`${url}/${event.itemsMenu[key].section}`}>
                     {` ${event.itemsMenu[key].name}`}
                   </Link>
-                </Menu.Item>
-              )
+                </Menu.Item> 
+              )             
             );
           })}
         </Menu>
