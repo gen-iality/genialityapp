@@ -10,6 +10,7 @@ import withContext from '../../../../Context/withContext'
 const MenuRigth = (props) => {
   const animateIcon = 'animate__animated animate__bounceIn';
 
+
   return (
     <Menu mode='none' theme='light' style={stylesMenuItems}>
       <Menu.Item
@@ -38,7 +39,7 @@ const MenuRigth = (props) => {
                   className={animateIcon}
                   style={{
                     fontSize: '30px',
-                    color: props.cEvent.value.styles.textMenu,
+                    color: props.cEvent.value.styles?.textMenu,
                   }}
                 />
               </Badge>
@@ -60,7 +61,7 @@ const MenuRigth = (props) => {
               className={animateIcon + ' animate__delay-2s'}
               style={{
                 fontSize: '30px',
-                color: props.cEvent.value.styles.textMenu,
+                color: props.cEvent.value.styles?.textMenu,
               }}
             />
           }
@@ -80,7 +81,7 @@ const MenuRigth = (props) => {
                   className={animateIcon + ' animate__delay-3s'}
                   style={{
                     fontSize: '30px',
-                    color: props.cEvent.value.styles.textMenu,
+                    color: props.cEvent.value.styles?.textMenu,
                   }}
                 />
               </Badge>
@@ -101,7 +102,7 @@ const MenuRigth = (props) => {
               className={animateIcon + ' animate__delay-4s'}
               style={{
                 fontSize: '32px',
-                color: props.cEvent.value.styles.textMenu,
+                color: props.cEvent.value.styles?.textMenu,
               }}
             />
           }
