@@ -52,7 +52,7 @@ const ChatList = (props) => {
   let userName = props.currentChatName;
 
   //para los eventos tipo asamblea que tienen una propiedad llamada casa que sirve para identificaar las personas
-  userName = cUser.value && cUser.value.casa ? '(' + cUser.value.casa + ') ' + userName : userName;
+  // userName = cUser.value && cUser.value.casa ? '(' + cUser.value.casa + ') ' + userName : userName;
 
   useEffect(() => {
     props.datamsjlast &&
@@ -142,7 +142,10 @@ const ChatList = (props) => {
       </Form>
     );
 
-    // console.log("username",userName)
+    
+    let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
+
+    console.log("userNameActive",userNameActive)
   return (
     <Tabs activeKey={props.chattab} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
@@ -158,7 +161,7 @@ const ChatList = (props) => {
             className='ChatEviusLan'
             src={
               'https://chatevius.web.app?nombre=' +
-              userName +
+              userNameActive +
               '&chatid=event_' +
               cEvent.value._id +
               '&eventid=' +
