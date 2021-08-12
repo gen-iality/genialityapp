@@ -336,7 +336,7 @@ export const EventFieldsApi = {
     return await Actions.getAll(`/api/events/${event}/userproperties`);
   },
   getOne: async (event, id) => {
-    return await Actions.getOne(`/api/events/${event}/userproperties/`, id);
+    return await Actions.getOne(`/api/events/${event}/userproperties/${id}`);
   },
   createOne: async (data, event) => {
     return await Actions.post(`/api/events/${event}/userproperties`, data);

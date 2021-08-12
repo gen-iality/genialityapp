@@ -23,7 +23,7 @@ function SurveyCard(props) {
 
    return (
       <Card
-         style={{ borderRadius: '10px', marginTop: '6px' }}
+         style={{ borderRadius: '10px', marginTop: '6px'}}
          bodyStyle={bodyStyle}
          title='Listado de Encuestas'
          headStyle={headStyle}>
@@ -31,7 +31,7 @@ function SurveyCard(props) {
             <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
          ) : (
             <List
-               style={{ overflowY: 'auto', height: '600px', overflowX: 'hidden' }}
+               style={{ overflowY: 'auto', height: 'auto', overflowX: 'hidden' }}
                className='asistente-list'
                dataSource={publishedSurveys}
                loading={loadingSurveys}

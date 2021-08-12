@@ -27,11 +27,11 @@ class Graphics extends Component {
       usersRegistered: 0,
       titleQuestion: '',
       isMobile: window.screen.width < 800 ? true : false, // determina el tamaño del dispositivo para saber si es mobile o no
-      isTablet: window.screen.width < 1020 ,
-      dataVotos:[],
-      totalUser: 0 ,
+      isTablet: window.screen.width < 1020,
+      dataVotos: [],
+      totalUser: 0,
       totalVotosUser: 0,
-      resultVotos:{}
+      resultVotos: {},
     };
   }
 
@@ -66,11 +66,14 @@ class Graphics extends Component {
       if (usersRegistered.data[i].checkedin_at) {
         totalUsersRegistered = totalUsersRegistered + 1;
       }
-    }   
-    console.log("usuarios registrados")
-    console.log(totalUsersRegistered )
-    console.log(usersRegistered.data)
-    this.setState({ dataSurvey: response, usersRegistered: totalUsersRegistered,totalUser:totalUsersRegistered }, this.mountChart);
+    }
+    console.log('usuarios registrados');
+    console.log(totalUsersRegistered);
+    console.log(usersRegistered.data);
+    this.setState(
+      { dataSurvey: response, usersRegistered: totalUsersRegistered, totalUser: totalUsersRegistered },
+      this.mountChart
+    );
   };
 
   setCurrentPage = (page) => {
@@ -82,8 +85,13 @@ class Graphics extends Component {
     let { horizontalBar, ChartPie, verticalBar } = graphicsFrame;
     const { operation } = this.props;
 
-    let graphyType = this.state.dataSurvey.graphyType
-    let graphy = graphyType === ChartPie.type || window.screen.width <= 800 ? ChartPie : graphyType === horizontalBar.indexAxis ?  horizontalBar : verticalBar
+    let graphyType = this.state.dataSurvey.graphyType;
+    let graphy =
+      graphyType === ChartPie.type || window.screen.width <= 800
+        ? ChartPie
+        : graphyType === horizontalBar.indexAxis
+        ? horizontalBar
+        : verticalBar;
 
     let totalPercentResponse = {};
     //se realiza iteracion para calcular porcentaje
@@ -99,15 +107,15 @@ class Graphics extends Component {
     }
     let generatedlabels = [];
     let totalVotosUsuarios = 0;
-    let porcentaj_answer=0;
-    let colorB=[];
-    let list = []
+    let porcentaj_answer = 0;
+    let colorB = [];
+    let list = [];
 
-    const alphabet = ['A','B','C','D','E'];
+    const alphabet = ['A', 'B', 'C', 'D', 'E'];
 
     //Se iguala options.choices[a] a una cadena string dinamica para agregar la cantidad de votos de la respuesta
     for (let a = 0; options.choices.length > a; a++) {
-      colorB = graphy.data.datasets[0].backgroundColor[a]
+      colorB = graphy.data.datasets[0].backgroundColor[a];
       // options.choices[a] = `${options.choices[a]}:` + `${answer_count[a]} Voto(s): ${totalPercentResponse[a]} %`}
       switch (operation) {
         case 'onlyCount':
@@ -117,42 +125,44 @@ class Graphics extends Component {
         case 'participationPercentage':
           generatedlabels[a] =
             answer_count && answer_count[a]
-              ? ` ${(options.choices[a].length == 2 ) ? options.choices[a]: alphabet[a]}  ${answer_count[a][0]} Voto(s), ${answer_count[a][1]}% \n `
-              : '0 Votos'
+              ? ` ${options.choices[a].length == 2 ? options.choices[a] : alphabet[a]}  ${
+                  answer_count[a][0]
+                } Voto(s), ${answer_count[a][1]}% \n `
+              : '0 Votos';
           break;
       }
-      porcentaj_answer = answer_count[a][1]
+      porcentaj_answer = answer_count[a][1];
 
       list.push({
         voto: answer_count[a][0],
         porcentaje: answer_count[a][1],
-        answer:options.choices[a],
-        option:(options.choices[a] == 'SI' || options.choices[a] == 'si'  ) ? options.choices[a]: alphabet[a],
-        color:colorB
+        answer: options.choices[a],
+        option: options.choices[a] == 'SI' || options.choices[a] == 'si' ? options.choices[a] : alphabet[a],
+        color: colorB,
         // option:options.choices[a].length == 1 ? options.choices[a] :
         // options.choices[a].length == 2 ? options.choices[a] : 'text',
       });
       totalVotosUsuarios = totalVotosUsuarios + answer_count[a][0];
     }
-  //console.log("LIST",list)
+    //console.log("LIST",list)
     this.setState({
-      dataVotos:list
-    })
+      dataVotos: list,
+    });
 
-    let respuestadVotos = 0
-    let porcentajeUsuarios = 0
+    let respuestadVotos = 0;
+    let porcentajeUsuarios = 0;
     let respuestatotal = 0;
- 
+
     respuestadVotos = this.state.totalUser - totalVotosUsuarios;
-    respuestadVotos=respuestadVotos>0?respuestadVotos:0;
-    porcentajeUsuarios= respuestadVotos>0?parseInt((respuestadVotos * 100) / this.state.totalUser):0
+    respuestadVotos = respuestadVotos > 0 ? respuestadVotos : 0;
+    porcentajeUsuarios = respuestadVotos > 0 ? parseInt((respuestadVotos * 100) / this.state.totalUser) : 0;
 
     this.setState({
-      resultVotos:{
+      resultVotos: {
         sumadVotacion: totalVotosUsuarios,
         usuariosSinRespuesta: respuestadVotos,
-        porcentajevotos: porcentajeUsuarios
-      }
+        porcentajevotos: porcentajeUsuarios,
+      },
     });
 
     let formatterTitle = options.title;
@@ -230,14 +240,14 @@ class Graphics extends Component {
         de lo métodos de la API  de ChartJS
       */
 
-        graphy.options = {
-        responsive:this.state.isMobile ? true : false,
+      graphy.options = {
+        responsive: this.state.isMobile ? true : false,
         title: {
           fontSize: 16,
           display: true,
           text: '',
         },
-        position:'left',
+        position: 'left',
         plugins: {
           datalabels: {
             color: '#333',
@@ -255,17 +265,15 @@ class Graphics extends Component {
             display: true,
             labels: {
               font: {
-                size:  this.state.isMobile ? '12':'18',
+                size: this.state.isMobile ? '12' : '18',
                 family: "'Montserrat', sans-serif", // para probar si afecta la fuente cambiar Montserrat por Papyrus
-                textAlign:'left',
-                boxWidth:'50'
+                textAlign: 'left',
+                boxWidth: '50',
               },
-
             },
-            maxWidth:'250',
-            position:this.state.isMobile ?'top':'left',
-        },
-
+            maxWidth: '250',
+            position: this.state.isMobile ? 'top' : 'left',
+          },
         },
         scales: {
           y: [
@@ -288,14 +296,16 @@ class Graphics extends Component {
             },
           ],
         },
-        indexAxis: graphyType
+        indexAxis: graphyType,
       };
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
-      const canvas = document.getElementById('chart').getContext('2d');
-      const chart = new Chart(canvas, graphy);
-
-      this.setState({ graphy, chart, chartCreated: true });
+      let chart;
+      if (document.getElementById('chart')) {
+        const canvas = document.getElementById('chart').getContext('2d');
+        chart = new Chart(canvas, graphy);
+        this.setState({ graphy, chart, chartCreated: true });
+      }
     } else {
       // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
       chart.data.labels = generatedlabels;
@@ -337,17 +347,17 @@ class Graphics extends Component {
     const { Paragraph, Text } = Typography;
     const { surveyLabel } = this.props;
     const Stylepie = {
-      paddingLeft:'300px',
-      paddingRight:'300px',
-      paddingTop:'0px',
-      paddingBottom:'0px'
-    }
+      paddingLeft: '300px',
+      paddingRight: '300px',
+      paddingTop: '0px',
+      paddingBottom: '0px',
+    };
 
     if (dataSurvey.questions)
       return (
         <>
-          <Card bodyStyle={{padding:'0'}} className='survyCard'>
-            <strong style={{ fontSize:'18px' }}>{this.props.currentSurvey.name}</strong>
+          <Card bodyStyle={{ padding: '0' }} className='survyCard'>
+            <strong style={{ fontSize: '18px' }}>{this.props.currentSurvey.name}</strong>
             <div style={{ marginTop: 5 }}>
               {this.props.currentActivity === null && (
                 <Button
@@ -361,15 +371,18 @@ class Graphics extends Component {
                 </Button>
               )}
             </div>
-            <strong style={{ fontSize:'16px' }}>{titleQuestion}</strong>
+            <strong style={{ fontSize: '16px' }}>{titleQuestion}</strong>
             {/* esta validacion es para que tomo los estilos la torta */}
             {/*
              */}
-            <Card bodyStyle={ {padding:'0px'}} >
+            <Card bodyStyle={{ padding: '0px' }}>
               <Row justify='center'>
-              <canvas  id='chart' width='600' height='400'
-              // style={{width:'500px', height:'700px'}}
-              ></canvas>
+                <canvas
+                  id='chart'
+                  width='600'
+                  height='400'
+                  // style={{width:'500px', height:'700px'}}
+                ></canvas>
               </Row>
             </Card>
 
@@ -382,55 +395,117 @@ class Graphics extends Component {
           </Card>
           <br />
           <Row>
-           { dataVotos.map((votos, key)=>(
-             <>
-              <br />
-              <Col key={key} xs={24} sm={24} md={12} lg={12} xl={12} xxl={8} >
-              <div style={{width:'320px', borderRadius:'6px', boxShadow:'0px 4px 4px 0px #00000040', marginTop:'12px', marginBottom:'12px'}}>
-              <Row>
-                <Col span={votos.option == 2 ? 8 : 5} style={{width:'100%'}}>
-                  <div  style={{height:'100%', width:'100%', backgroundColor:`${votos.color}`, borderRadius:'4px 0px 0px 4px'}}>
-                    <span style={{justifyContent:'center', alignContent:'center', height:'100%', color:'white', display:'grid', fontSize:'24px'}}>{votos.option.toUpperCase()} </span>
-                  </div>
+            {dataVotos.map((votos, key) => (
+              <>
+                <br />
+                <Col key={key} xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
+                  <div
+                    style={{
+                      width: '320px',
+                      borderRadius: '6px',
+                      boxShadow: '0px 4px 4px 0px #00000040',
+                      marginTop: '12px',
+                      marginBottom: '12px',
+                    }}>
+                    <Row>
+                      <Col span={votos.option == 2 ? 8 : 5} style={{ width: '100%' }}>
+                        <div
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                            backgroundColor: `${votos.color}`,
+                            borderRadius: '4px 0px 0px 4px',
+                          }}>
+                          <span
+                            style={{
+                              justifyContent: 'center',
+                              alignContent: 'center',
+                              height: '100%',
+                              color: 'white',
+                              display: 'grid',
+                              fontSize: '24px',
+                            }}>
+                            {votos.option.toUpperCase()}{' '}
+                          </span>
+                        </div>
+                      </Col>
+                      <Col span={votos.option == 2 ? 16 : 19}>
+                        <div style={{ marginLeft: '12px', marginRight: '12px', fontWeight: '600', marginTop: '4px' }}>
+                          <div style={{ fontSize: '14px', fontWeight: '600' }}>
+                            <span>{votos.voto} Voto(s)</span>
+                            <span style={{ float: 'right', fontSize: '16px' }}>{votos.porcentaje} % </span>
+                          </div>
+                          <div>
+                            <Paragraph
+                              style={{ color: 'gray ' }}
+                              ellipsis={true && { rows: 2, expandable: true, symbol: 'more' }}>
+                              {votos.answer}
+                            </Paragraph>
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>{' '}
                 </Col>
-                <Col span={votos.option == 2 ? 16 : 19}>
-                  <div style={{marginLeft:'12px', marginRight:'12px', fontWeight:'600', marginTop:'4px'}}>
-                    <div  style={{fontSize:'14px', fontWeight:'600'}}>
-                         <span>{votos.voto} Voto(s)</span>
-                         <span style={{float:'right', fontSize:'16px'}}>{votos.porcentaje} % </span>
-                    </div>
-                     <div>
-                    <Paragraph style={{color:'gray '}} ellipsis={true && { rows: 2, expandable: true, symbol: 'more' }}>
-                      {votos.answer}
-                    </Paragraph>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </div> </Col>
-            </>
-           ))
-          }
+              </>
+            ))}
             <br />
-            <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
-            <div style={{height:'76px', width:'320px', borderRadius:'6px', boxShadow:'0px 4px 4px 0px #00000040'}}>
-              <Row>
-                <Col span={8}>
-                  <div  style={{height:'76px', width:'100%', backgroundColor:'#9e9e9e', borderRadius:'4px 0px 0px 4px'}}>
-                    <span style={{justifyContent:'center', alignContent:'center', height:'100%', color:'white', display:'grid', fontSize:'18px', textAlign:'center'}}>Sin responder</span>
-                  </div>
-                </Col>
-                <Col span={16}>
-                  <div style={{marginLeft:'12px', marginRight:'12px', fontWeight:'600', display:'grid',alignContent:'center', height:'100%',}}>
-                    <div>
-                      <span style={{fontSize:'22px', fontWeight:'500'}}>{this.state.resultVotos.usuariosSinRespuesta} Voto(s)</span>
-                      <span style={{fontSize:'22px', fontWeight:'500', float:'right'}}>{this.state.resultVotos.porcentajevotos} % </span>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </div>
-             </Col>
+            {this.props.currentSurvey.showNoVotos && this.props.currentSurvey.showNoVotos === 'true' && (
+              <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
+                <div
+                  style={{
+                    height: '76px',
+                    width: '320px',
+                    borderRadius: '6px',
+                    boxShadow: '0px 4px 4px 0px #00000040',
+                  }}>
+                  <Row>
+                    <Col span={8}>
+                      <div
+                        style={{
+                          height: '76px',
+                          width: '100%',
+                          backgroundColor: '#9e9e9e',
+                          borderRadius: '4px 0px 0px 4px',
+                        }}>
+                        <span
+                          style={{
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            height: '100%',
+                            color: 'white',
+                            display: 'grid',
+                            fontSize: '18px',
+                            textAlign: 'center',
+                          }}>
+                          Sin responder
+                        </span>
+                      </div>
+                    </Col>
+                    <Col span={16}>
+                      <div
+                        style={{
+                          marginLeft: '12px',
+                          marginRight: '12px',
+                          fontWeight: '600',
+                          display: 'grid',
+                          alignContent: 'center',
+                          height: '100%',
+                        }}>
+                        <div>
+                          <span style={{ fontSize: '22px', fontWeight: '500' }}>
+                            {this.state.resultVotos.usuariosSinRespuesta} Voto(s)
+                          </span>
+                          <span style={{ fontSize: '22px', fontWeight: '500', float: 'right' }}>
+                            {this.state.resultVotos.porcentajevotos} %{' '}
+                          </span>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+              </Col>
+            )}
           </Row>
         </>
       );

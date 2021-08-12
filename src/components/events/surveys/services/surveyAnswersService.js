@@ -74,6 +74,9 @@ const surveyAnswers = {
    },
    // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
    getAnswersQuestion: async (surveyId, questionId, eventId, updateData, operation) => {
+
+      console.log("reguero con suero",surveyId, questionId, eventId, updateData, operation)
+
       // eslint-disable-next-line no-unused-vars
       let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
       let options = dataSurvey.questions.find((question) => question.id === questionId);

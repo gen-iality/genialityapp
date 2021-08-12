@@ -21,7 +21,7 @@ const EventSectionMenuRigth = (props) => {
   return (
     <Sider
       className='collapse-chatEvent'
-      style={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
+      style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
       trigger={null}
       width={400}
       collapsed={props.viewSocialZoneNetworking}>
