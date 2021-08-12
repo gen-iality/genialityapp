@@ -450,7 +450,7 @@ class Graphics extends Component {
               </>
             ))}
             <br />
-            {this.props.currentSurvey.showNoVotos === 'true' && (
+            {this.props.currentSurvey.showNoVotos && this.props.currentSurvey.showNoVotos === 'true' && (
               <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
                 <div
                   style={{
