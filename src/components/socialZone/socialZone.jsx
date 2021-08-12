@@ -52,14 +52,13 @@ let SocialZone = function(props) {
   let setCurrentChat = (id, chatname) => {
     console.log('chat name');
     console.log('====================================');
-    console.log("chatname",chatname);
+    console.log('chatname', chatname);
     console.log('====================================');
     console.log(chatname);
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
   };
 
-  
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     return ida < idb ? ida + '_' + idb : idb + '_' + ida;
   };
@@ -128,11 +127,8 @@ let SocialZone = function(props) {
 
   //Cargar la lista de chats de una persona
 
- 
-
   useEffect(() => {
     if (cEvent.value == null) return;
-    console.log('EFFECT 2');
     let colletion_name = cEvent.value._id + '_event_attendees';
     let attendee;
     firestore
@@ -153,13 +149,8 @@ let SocialZone = function(props) {
       });
   }, [cEvent.value]);
 
-
-
-
   useEffect(() => {
     if (cEvent.value == null || cUser.value == null) return;
-    console.log('EFECT 1');
-    // monitorEventPresence(cUser.value._id, attendeeList, setAttendeeListPresence)
 
     firestore
       .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
@@ -420,7 +411,7 @@ let SocialZone = function(props) {
             </>
           }
           key='4'>
-          <Row justify='space-between' >
+          <Row justify='space-between'>
             <Col span={4}>
               <ArrowLeftOutlined
                 style={{ color: cEvent.value.styles.textMenu }}

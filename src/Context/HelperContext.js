@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { firestore } from '../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
+import {getUserEvent} from '../components/networking/services';
 import { UseCurrentUser } from './userContext';
 
 export const HelperContext = createContext();
@@ -41,9 +42,8 @@ export const HelperContextProvider = ({ children }) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
     const dataproperties = await EventFieldsApi.getOne(cEvent.value._id,eventUser._id);
     console.log('====================================');
-    console.log("data",eventUser.properties);
+    console.log("properties: " , eventUser.properties);
     console.log('====================================');
-    // console.log('properties: ', eventUser);
     setpropertiesOtherprofile(eventUser.properties)
   };
 

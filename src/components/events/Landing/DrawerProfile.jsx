@@ -1,23 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import Avatar from 'antd/lib/avatar/avatar';
 import Text from 'antd/lib/typography/Text';
 import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List } from 'antd';
 import { UsergroupAddOutlined, CommentOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
 import { UseCurrentUser } from '../../../Context/userContext';
-import { UseUserEvent } from '../../../Context/eventUserContext';
 import { formatDataToString } from '../../../helpers/utils';
+import ProfileAttende from './ProfileAttende';
 import { HelperContext } from '../../../Context/HelperContext';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { connect } from 'react-redux';
 
 const DrawerProfile = (props) => {
   let cUser = UseCurrentUser();
-  let cEventUser = UseUserEvent();
   let { propertiesProfile } = useContext(HelperContext);
 
-  console.log('eventuserdrawer', cEventUser);
-  console.log('properties', propertiesProfile);
-  
   return (
     <Drawer
       zIndex={5000}
@@ -117,7 +113,7 @@ const DrawerProfile = (props) => {
               }
             />
           ) : (
-            <h1>es otro perfil</h1>
+            <ProfileAttende />
           )}
           {/* {props.profileuser && (
             <List
