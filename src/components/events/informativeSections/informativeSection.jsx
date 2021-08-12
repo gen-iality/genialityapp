@@ -197,7 +197,8 @@ class InformativeSection extends Component {
                         <Input ref={el => this.inputOferta = el} type='number' style={{width:'100%'}} min={this.state.selectedGalery!==null && this.state.selectedGalery.price } max={99999999} value={this.state.value_oferta!==null && this.state.value_oferta } onChange={this.onChangeValue} />
                         {this.state.valueoff && <span style={{color:'red',fontSize:8}}>Valor a ofrecer incorrecto</span>}
                       </Col>            
-                    </Row> </Space>   
+                    </Row> 
+                    </Space>   
                  </Col>
                  </Row>
                 </Modal>
