@@ -37,6 +37,7 @@ class triviaEdit extends Component {
       allow_gradable_survey: false,
       hasMinimumScore: 'false', // Si la encuesta calificable requiere un puntaje minimo de aprobación
       isGlobal: 'false', // determina si la encuesta esta disponible desde cualquier actividad
+      showNoVotos:'false',
 
       // estado de la encuesta
       freezeGame: false,
@@ -94,6 +95,7 @@ class triviaEdit extends Component {
         allow_gradable_survey: firebaseSurvey.allow_gradable_survey ? firebaseSurvey.allow_gradable_survey : 'false' || this.state.allow_gradable_survey,
         hasMinimumScore: firebaseSurvey.hasMinimumScore || this.state.hasMinimumScore,
         isGlobal: firebaseSurvey.isGlobal || this.state.isGlobal,
+        showNoVotos: firebaseSurvey.showNoVotos || this.state.showNoVotos,
 
         // Survey State
         freezeGame: firebaseSurvey.freezeGame || this.state.freezeGame,
@@ -162,6 +164,7 @@ class triviaEdit extends Component {
       allow_gradable_survey: 'false',
       hasMinimumScore: false,
       isGlobal: false,
+      showNoVotos:false,
 
       //Survey state
       freezeGame: this.state.freezeGame === 'true' ? true : false,
@@ -183,6 +186,7 @@ class triviaEdit extends Component {
         allow_gradable_survey: data.allow_gradable_survey,
         hasMinimumScore: data.hasMinimumScore,
         isGlobal: data.isGlobal,
+        showNoVotos: data.showNoVotos,
 
         //survey state
         freezeGame: data.freezeGame,
@@ -244,6 +248,7 @@ class triviaEdit extends Component {
         hasMinimumScore: this.state.hasMinimumScore,
         isGlobal: this.state.isGlobal,
         rankingVisible:this.state.ranking,
+        showNoVotos: this.state.showNoVotos,
   
         //Survey State
         freezeGame: this.state.freezeGame === 'true' ? true : false,
@@ -265,6 +270,7 @@ class triviaEdit extends Component {
               allow_gradable_survey: data.allow_gradable_survey,
               hasMinimumScore: data.hasMinimumScore,
               isGlobal: data.isGlobal,
+              showNoVotos:data.showNoVotos,
   
               // Survey State
               freezeGame: data.freezeGame,
@@ -468,7 +474,8 @@ class triviaEdit extends Component {
       hasMinimumScore,
       minimumScore,
       isGlobal,
-      ranking
+      ranking,
+      showNoVotos
     } = this.state;
     const { Option } = Select;
     const columns = [
@@ -597,10 +604,22 @@ class triviaEdit extends Component {
               <Select defaultValue={this.state.graphyType} style={{ width: 120 }} onChange={(graphy)=>this.setState({graphyType: graphy})}>
                 <Option value="y">Horizontal</Option>
                 <Option value="x">vertical</Option>
-                <Option value="pie">torta</Option>
+                <Option value="pie">Torta</Option>
               </Select>
             </div>
           )}
+           {this.state.idSurvey && (
+            <div>
+              <label style={{ marginTop: '3%' }} className='label'>
+                Mostrar porcentaje de sin votar en las graficas)
+              </label>
+              <Switch
+                checked={showNoVotos === 'true' || showNoVotos === true}
+                onChange={(checked) => this.setState({ showNoVotos: checked ? 'true' : 'false' })}
+              />
+            </div>
+          )}
+
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: '3%' }} className='label'>
