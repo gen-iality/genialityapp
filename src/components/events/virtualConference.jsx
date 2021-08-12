@@ -14,13 +14,7 @@ import * as StageActions from '../../redux/stage/actions';
 const { gotoActivity } = StageActions;
 const { Title } = Typography;
 
-let MeetingConferenceButton = ({
-  activity,
-  zoomExternoHandleOpen,
-  event,
-  setActivity,
-  eventUser,
-}) => {
+let MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setActivity, eventUser }) => {
   const [infoActivity, setInfoActivity] = useState({});
 
   useEffect(() => {
@@ -70,8 +64,8 @@ const VirtualConference = () => {
   useEffect(() => {
     async function fetchData() {
       const response = await AgendaApi.byEvent(cEvent.value._id);
-      let withMetting = response.data.filter((activity) => activity.meeting_id != null || '' || undefined);
-      setagendageneral(withMetting);
+      // let withMetting = response.data.filter((activity) => activity.meeting_id != null || '' || undefined);
+      setagendageneral(response.data);
       setbandera(!bandera);
     }
     fetchData();
@@ -90,36 +84,40 @@ const VirtualConference = () => {
             agendageneral.map((item) => {
               if (item._id == doc.id) {
                 let activity;
-                let { habilitar_ingreso, isPublished, meeting_id, platform } = doc.data();
-                activity = { ...item, habilitar_ingreso, isPublished, meeting_id, platform };
-                arratem.push(activity);
+                let { habilitar_ingreso, isPublished, meeting_id, platform, vimeo_id } = doc.data();
+                console.log('existe meeting', meeting_id, item.name, habilitar_ingreso);
+                if (
+                  habilitar_ingreso != 'ended_meeting_room' &&
+                  isPublished &&
+                  habilitar_ingreso != '' &&
+                  (meeting_id != null || vimeo_id != null)
+                ) {
+                  activity = { ...item, habilitar_ingreso, isPublished, meeting_id, platform };
+                  arratem.push(activity);
+                }
               }
             });
           });
+          console.log('cual queda', arratem);
           setinfoAgenda(arratem);
         });
   }, [agendageneral, firestore]);
 
   return (
     <Fragment>
-      {infoAgendaArr.length > 0 && (
+      {infoAgendaArr.length > 0 &&
         infoAgendaArr
           .filter((item) => {
-          
-
             return (
               item.habilitar_ingreso &&
               (item.habilitar_ingreso == 'open_meeting_room' || item.habilitar_ingreso == 'closed_meeting_room') &&
               (item.isPublished === true || item.isPublished === 'true')
             );
-            
           })
-          
+
           .map((item, key) => (
-            
             <>
-              <Link
-                to={item.habilitar_ingreso=='open_meeting_room' &&`${urlactivity}${item._id}`}>
+              <Link to={item.habilitar_ingreso == 'open_meeting_room' && `${urlactivity}${item._id}`}>
                 <Card
                   key={key}
                   hoverable
@@ -241,8 +239,7 @@ const VirtualConference = () => {
                 </Card>
               </Link>
             </>
-          ))
-      )}
+          ))}
     </Fragment>
   );
 };
