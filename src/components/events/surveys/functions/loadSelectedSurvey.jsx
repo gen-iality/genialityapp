@@ -18,11 +18,11 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
    dataSurvey.completeText = 'Finalizar';
 
    /** logo - posicion y medidas */
-   dataSurvey.logo = 'https://portal.evius.co/wp-content/uploads/2021/03/logo_3.png';
-   dataSurvey.logoPosition = 'top';
-   dataSurvey.logoWidth = 180;
-   dataSurvey.logoHeight = 180;
-   dataSurvey.logoFit = 'contain';
+   // dataSurvey.logo = 'https://portal.evius.co/wp-content/uploads/2021/03/logo_3.png';
+   // dataSurvey.logoPosition = 'top';
+   // dataSurvey.logoWidth = 180;
+   // dataSurvey.logoHeight = 180;
+   // dataSurvey.logoFit = 'contain';
 
    // Automáticamente se envia la respuesta y el formulario al contestar la ultima
    dataSurvey.goNextPageAutomatic = false;
