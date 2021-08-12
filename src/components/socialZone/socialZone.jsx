@@ -52,14 +52,13 @@ let SocialZone = function(props) {
   let setCurrentChat = (id, chatname) => {
     console.log('chat name');
     console.log('====================================');
-    console.log("chatname",chatname);
+    console.log('chatname', chatname);
     console.log('====================================');
     console.log(chatname);
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
   };
 
-  
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     return ida < idb ? ida + '_' + idb : idb + '_' + ida;
   };
@@ -128,8 +127,6 @@ let SocialZone = function(props) {
 
   //Cargar la lista de chats de una persona
 
- 
-
   useEffect(() => {
     if (cEvent.value == null) return;
     console.log('EFFECT 2');
@@ -152,9 +149,6 @@ let SocialZone = function(props) {
         //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
       });
   }, [cEvent.value]);
-
-
-
 
   useEffect(() => {
     if (cEvent.value == null || cUser.value == null) return;
@@ -420,7 +414,7 @@ let SocialZone = function(props) {
             </>
           }
           key='4'>
-          <Row justify='space-between' >
+          <Row justify='space-between'>
             <Col span={4}>
               <ArrowLeftOutlined
                 style={{ color: cEvent.value.styles.textMenu }}
