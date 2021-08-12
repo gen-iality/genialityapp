@@ -36,7 +36,7 @@ let SocialZone = function(props) {
   const [attendeeList, setAttendeeList] = useState({});
   const [attendeeListPresence, setAttendeeListPresence] = useState({});
   const [currentChat, setCurrentChatInner] = useState(null);
-  const [currentChatName, setCurrentChatNameInner] = useState('ni idea');
+  const [currentChatName, setCurrentChatNameInner] = useState('');
   const [availableChats, setavailableChats] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
@@ -51,6 +51,9 @@ let SocialZone = function(props) {
 
   let setCurrentChat = (id, chatname) => {
     console.log('chat name');
+    console.log('====================================');
+    console.log("chatname",chatname);
+    console.log('====================================');
     console.log(chatname);
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
