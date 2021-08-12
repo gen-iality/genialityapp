@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { EventsApi } from '../../../helpers/request';
 import withContext from '../../../Context/withContext';
-import { IssuesCloseOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
 import { Card, Row } from 'antd';
 import { useEffect } from 'react';
 import ProductCard from './productCard';
 
 const ProductList = (props) => {
   const [products, setProducts] = useState([]);
+  let history = useHistory();
+
   useEffect(() => {
-    obtenerGaleria();
-    console.log('EVENT==>', props.cEvent.value._id);
+    obtenerGaleria();    
   }, []);
 
   const obtenerGaleria = () => {
-    EventsApi.getGallery(props.cEvent.value._id).then((resp) => {
+    EventsApi.getProducts(props.cEvent.value._id).then((resp) => {
       if (resp && resp.data) {
         setProducts(resp.data);
       }
@@ -24,14 +25,13 @@ const ProductList = (props) => {
     <>
       {/*<Card style={{textAlign:'center', marginLeft:30,marginRight:30,marginTop:60}}>
             <IssuesCloseOutlined  style={{marginRight:20, fontSize:20}} />La subasta se ha cerrado
-         </Card>*/}
-      {products.length > 0 && 'Lista de productos'}
+         </Card>*/}     
       {products.length > 0 && (
         <Row className='site-card-border-less-wrapper' style={{ width: '75vw', margin: 'auto' }}>
           {products.length > 0 && (
             <Row key={'container'}>
               {products.map((galery) => (
-                <ProductCard key={galery.id} galery={galery} />
+                <ProductCard history={history} eventId={props.cEvent.value._id} key={galery.id} galery={galery} />
               ))}
             </Row>
           )}
