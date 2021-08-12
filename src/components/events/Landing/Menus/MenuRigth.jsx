@@ -20,7 +20,7 @@ const MenuRigth = (props) => {
             <ArrowLeftOutlined
               style={{
                 fontSize: '25px',
-                color: props.cEvent.value.styles.textMenu,
+                color: props.cEvent.value.styles?.textMenu,
               }}
             />
           </>
