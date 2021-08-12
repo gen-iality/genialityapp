@@ -304,10 +304,8 @@ class Graphics extends Component {
       if (document.getElementById('chart')) {
         const canvas = document.getElementById('chart').getContext('2d');
         chart = new Chart(canvas, graphy);
-      this.setState({ graphy, chart, chartCreated: true });
-
+        this.setState({ graphy, chart, chartCreated: true });
       }
-
     } else {
       // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
       chart.data.labels = generatedlabels;
@@ -452,55 +450,62 @@ class Graphics extends Component {
               </>
             ))}
             <br />
-            <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
-              <div
-                style={{ height: '76px', width: '320px', borderRadius: '6px', boxShadow: '0px 4px 4px 0px #00000040' }}>
-                <Row>
-                  <Col span={8}>
-                    <div
-                      style={{
-                        height: '76px',
-                        width: '100%',
-                        backgroundColor: '#9e9e9e',
-                        borderRadius: '4px 0px 0px 4px',
-                      }}>
-                      <span
+            {this.props.currentSurvey.showNoVotos && this.props.currentSurvey.showNoVotos === 'true' && (
+              <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
+                <div
+                  style={{
+                    height: '76px',
+                    width: '320px',
+                    borderRadius: '6px',
+                    boxShadow: '0px 4px 4px 0px #00000040',
+                  }}>
+                  <Row>
+                    <Col span={8}>
+                      <div
                         style={{
-                          justifyContent: 'center',
-                          alignContent: 'center',
-                          height: '100%',
-                          color: 'white',
-                          display: 'grid',
-                          fontSize: '18px',
-                          textAlign: 'center',
+                          height: '76px',
+                          width: '100%',
+                          backgroundColor: '#9e9e9e',
+                          borderRadius: '4px 0px 0px 4px',
                         }}>
-                        Sin responder
-                      </span>
-                    </div>
-                  </Col>
-                  <Col span={16}>
-                    <div
-                      style={{
-                        marginLeft: '12px',
-                        marginRight: '12px',
-                        fontWeight: '600',
-                        display: 'grid',
-                        alignContent: 'center',
-                        height: '100%',
-                      }}>
-                      <div>
-                        <span style={{ fontSize: '22px', fontWeight: '500' }}>
-                          {this.state.resultVotos.usuariosSinRespuesta} Voto(s)
-                        </span>
-                        <span style={{ fontSize: '22px', fontWeight: '500', float: 'right' }}>
-                          {this.state.resultVotos.porcentajevotos} %{' '}
+                        <span
+                          style={{
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            height: '100%',
+                            color: 'white',
+                            display: 'grid',
+                            fontSize: '18px',
+                            textAlign: 'center',
+                          }}>
+                          Sin responder
                         </span>
                       </div>
-                    </div>
-                  </Col>
-                </Row>
-              </div>
-            </Col>
+                    </Col>
+                    <Col span={16}>
+                      <div
+                        style={{
+                          marginLeft: '12px',
+                          marginRight: '12px',
+                          fontWeight: '600',
+                          display: 'grid',
+                          alignContent: 'center',
+                          height: '100%',
+                        }}>
+                        <div>
+                          <span style={{ fontSize: '22px', fontWeight: '500' }}>
+                            {this.state.resultVotos.usuariosSinRespuesta} Voto(s)
+                          </span>
+                          <span style={{ fontSize: '22px', fontWeight: '500', float: 'right' }}>
+                            {this.state.resultVotos.porcentajevotos} %{' '}
+                          </span>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+              </Col>
+            )}
           </Row>
         </>
       );

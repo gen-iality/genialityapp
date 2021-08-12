@@ -29,6 +29,7 @@ import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
 import ReportNetworking from '../networking/report';
 import NewsSectionRoutes from '../news/newsRoute' ;
+import ProductSectionRoutes from '../products/productsRoute' ;
 
 //import Test from "../events/testButton"
 import { Layout } from 'antd';
@@ -292,6 +293,9 @@ class Event extends Component {
               />
               <Route  path={`${match.url}/news`}>
               <NewsSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
+              </Route>
+              <Route  path={`${match.url}/product`}>
+              <ProductSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
               </Route>
               <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} />} />              
               <Route

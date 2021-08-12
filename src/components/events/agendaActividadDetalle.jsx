@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, FileDoneOutlined, PieChartOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { useIntl } from 'react-intl';
 import { TicketsApi, Activity, AgendaApi } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, Input, Alert, Drawer } from 'antd';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, Input, Alert, Drawer, Space } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
@@ -125,7 +125,7 @@ let AgendaActividadDetalle = (props) => {
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
       if (props.cEventUser) {
-        console.log("propsagenda",props)
+        console.log('propsagenda', props);
         TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
         Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.value._id);
       }
@@ -506,7 +506,7 @@ let AgendaActividadDetalle = (props) => {
             </Col>
           </Row>
 
-          <header >
+          <header>
             <div>
               {/* Hora del evento */}
               {/* <p className='card-header-title has-padding-left-0 '>
@@ -886,21 +886,74 @@ let AgendaActividadDetalle = (props) => {
             </Row>
           </Link> */}
         </Card>
-      </div> 
+      </div>
       {/* Drawer encuestas */}
-      {console.log("CURRENT_SURVEY")}
-      {console.log(props.currentSurvey)}
+     
+      {console.log('CURRENT_SURVEY',props.currentSurvey)}
       <Drawer
-        closeIcon={<CloseOutlined />}
+        title={
+          props.currentSurvey && props.currentSurvey?.allow_gradable_survey ?
+          <Space>
+            {props.currentSurvey.allow_gradable_survey ==='false' ? <PieChartOutlined
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '24px',
+                height: '40px',
+                width: '40px',
+                borderRadius: '8px',
+                color: `${colorTexto}`,
+                backgroundColor: `${colorFondo}`,
+              }}
+            />: <FileDoneOutlined
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '24px',
+              height: '40px',
+              width: '40px',
+              borderRadius: '8px',
+              color: `${colorTexto}`,
+              backgroundColor: `${colorFondo}`,
+            }}
+          />}
+            <Space direction='vertical' size={-3}>
+              {props.currentSurvey?.name}
+              {props.currentSurvey.allow_gradable_survey === 'true'&& <span style={{fontSize:'12px', color:'#52c41a'}}>Calificable</span>}
+            </Space>
+          </Space> :
+          <Space>
+            <PieChartOutlined
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '24px',
+                height: '40px',
+                width: '40px',
+                borderRadius: '8px',
+                color: `${colorTexto}`,
+                backgroundColor: `${colorFondo}`,
+              }}
+            />
+            {props.currentSurvey?.name}
+          </Space>
+        }
+        bodyStyle={{ padding: '10px' }}
+        closeIcon={<CloseOutlined style={{fontSize:'24px'}} />}
         placement='right'
         // closable={true}
         visible={props.currentSurvey && props.cUser.value !== null}
         onClose={onClose}
         width={window.screen.width >= 768 ? (rankingVisible == false ? '100%' : '70%') : '100%'}>
         <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
-          {props.currentSurvey && props.currentSurvey.rankingVisible && props.currentSurvey.rankingVisible=='true' && <Button type='primary' onClick={showRanking}>
-            {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
-          </Button>}
+          {props.currentSurvey && props.currentSurvey.rankingVisible && props.currentSurvey.rankingVisible == 'true' && (
+            <Button type='primary' onClick={showRanking}>
+              {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
+            </Button>
+          )}
         </div>
 
         <Row gutter={[8, 8]} justify='center'>
@@ -929,7 +982,6 @@ const mapStateToProps = (state) => ({
   permissions: state.permissions,
   isVisible: state.survey.data.surveyVisible,
   viewSocialZoneNetworking: state.spaceNetworkingReducer.view,
-
 });
 
 const mapDispatchToProps = {

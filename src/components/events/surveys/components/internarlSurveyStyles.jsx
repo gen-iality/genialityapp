@@ -12,7 +12,7 @@ function InternarlSurveyStyles(eventStyles) {
    /** Color a los botones de check de las respuestas */
    defaultThemeColors['$border-color'] = color;
    /** Color a los chulitos del boton de check en la respuesta */
-   defaultThemeColors['$checkmark-color'] = '#FFFFFF';
+   defaultThemeColors['$checkmark-color'] = color;
 
    /** Color de la barra y el boton, tambien al seleccionar cambia el color del relleno de check */
    defaultThemeColors['$main-color'] = color;

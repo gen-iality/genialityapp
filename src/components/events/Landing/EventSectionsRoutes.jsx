@@ -31,7 +31,6 @@ import Productos from '../producto';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  console.log('EVENT SECTIONS ROW');
   let redirect;
   if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
     redirect = Object.keys(props.cEvent.value.itemsMenu)[0];

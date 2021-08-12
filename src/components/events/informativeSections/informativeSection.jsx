@@ -33,7 +33,7 @@ class InformativeSection extends Component {
       markup: this.props.cEvent.value.itemsMenu.informativeSection.markup,
     });
     //OBTENER GALERIA
-    EventsApi.getGallery(this.props.cEvent.value._id).then((resp) => {
+    EventsApi.getProducts(this.props.cEvent.value._id).then((resp) => {
       console.log('GALERIA');
       console.log(resp.data);
       if (resp && resp.data) {
@@ -78,7 +78,7 @@ class InformativeSection extends Component {
         let newPuja={...this.state.selectedGalery,price:this.state.value_oferta}
         let newItems=items.map((item)=>{if(item._id===this.state.selectedGalery._id){return newPuja}else{return item}})
         let oferta={valueOffered:parseFloat(this.state.value_oferta)}
-        let resp=await EventsApi.storeGalley(this.props.cEvent.value._id,this.state.selectedGalery._id,oferta);
+        let resp=await EventsApi.storeProducts(this.props.cEvent.value._id,this.state.selectedGalery._id,oferta);
         console.log("RESPUESTA OFERTA")
         console.log(resp)
         this.inputOferta.value = "";        

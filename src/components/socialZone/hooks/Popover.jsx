@@ -11,12 +11,12 @@ import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 const { Meta } = Card;
 
 const PopoverInfoUser = (props) => {
-  let { containtNetworking, getPropertiesUserWithId,propertiesProfile, propertiesOtherprofile } = useContext(HelperContext);
+  let { containtNetworking, getPropertiesUserWithId, propertiesProfile, propertiesOtherprofile } = useContext(
+    HelperContext
+  );
 
   useEffect(() => {
     let iduser = props.item.iduser;
-    console.log('idusuario', iduser);
-    console.log("compareishon",propertiesProfile)
     getPropertiesUserWithId(iduser);
   }, []);
 
@@ -26,7 +26,9 @@ const PopoverInfoUser = (props) => {
         style={{ width: 300, padding: '0', color: 'black' }}
         actions={[
           containtNetworking && (
-            <Tooltip title='Ver perfil' onClick={()=>props.setViewPerfil({view:true, perfil:propertiesOtherprofile})}>
+            <Tooltip
+              title='Ver perfil'
+              onClick={() => props.setViewPerfil({ view: true, perfil: propertiesOtherprofile })}>
               <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
             </Tooltip>
           ),

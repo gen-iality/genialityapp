@@ -229,12 +229,18 @@ export const EventsApi = {
   metricsRegisterBydate: async (id,type) => {
     return await Actions.get(`/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}`);
   },
-  //obtener gallery subasta silenciosa
-  getGallery: async (eventId) => {
-    return await Actions.get(`/api/events/${eventId}/galleries`);
+  //obtener products subasta silenciosa
+  getProducts: async (eventId) => {
+    return await Actions.get(`/api/events/${eventId}/products`);
   },
-  storeGalley:async(eventId,galleryId,data)=>{
-    return await Actions.post(`/api/events/${eventId}/galleries/${galleryId}/silentauctionmail`,data)
+  createProducts: async (data, id) => {
+    return await Actions.create(`api/events/${id}/products`, data);
+  },
+  getOneProduct: async (eventId,idnew) => {
+    return await Actions.get(`api/events/${eventId}/products/${idnew}`);
+  },
+  storeProducts:async(eventId,galleryId,data)=>{
+    return await Actions.post(`/api/events/${eventId}/products/${galleryId}/silentauctionmail`,data)
   }
 };
 export const InvitationsApi = {
@@ -330,7 +336,7 @@ export const EventFieldsApi = {
     return await Actions.getAll(`/api/events/${event}/userproperties`);
   },
   getOne: async (event, id) => {
-    return await Actions.getOne(`/api/events/${event}/userproperties/`, id);
+    return await Actions.getOne(`/api/events/${event}/userproperties/${id}`);
   },
   createOne: async (data, event) => {
     return await Actions.post(`/api/events/${event}/userproperties`, data);

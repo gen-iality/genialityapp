@@ -9,8 +9,6 @@ const MenuTabletsSocialZone = (props) => {
   const [isDrawerVisible, setisDrawerVisible] = useState(false);
   let [optionselected, setOptionselected] = useState('1');
   let cEvent = UseEventContext();
-  console.log(" MenuTabletsSocialZone")
-  console.log(props)
 
   return (
     <>
@@ -25,22 +23,30 @@ const MenuTabletsSocialZone = (props) => {
               </Badge>
             }
             size='large'
-            onClick={() =>{ setOptionselected('1');setisDrawerVisible(!isDrawerVisible)}}></Button>
-       {props.currentActivity && (props.listOfEventSurveys && props.listOfEventSurveys.length>0) &&  <Button
-            style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
-            shape='circle'
-            icon={
-              <Badge dot={props.hasOpenSurveys}>
-                <PieChartOutlined style={{ fontSize: '20px', color: cEvent.value.styles?.textMenu }} />
-              </Badge>
-            }
-            size='large'
-            onClick={() =>{setOptionselected('3');setisDrawerVisible(!isDrawerVisible)}}></Button>}
+            onClick={() => {
+              setOptionselected('1');
+              setisDrawerVisible(!isDrawerVisible);
+            }}></Button>
+          {props.currentActivity && props.listOfEventSurveys && props.listOfEventSurveys.length > 0 && (
+            <Button
+              style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
+              shape='circle'
+              icon={
+                <Badge dot={props.hasOpenSurveys}>
+                  <PieChartOutlined style={{ fontSize: '20px', color: cEvent.value.styles?.textMenu }} />
+                </Badge>
+              }
+              size='large'
+              onClick={() => {
+                setOptionselected('3');
+                setisDrawerVisible(!isDrawerVisible);
+              }}></Button>
+          )}
         </Space>
       </div>
 
       <Drawer
-        style={{zIndex:'5'}}
+        style={{ zIndex: '5' }}
         bodyStyle={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
         height={450}
         placement='bottom'
@@ -69,7 +75,6 @@ const MenuTabletsSocialZone = (props) => {
 
 const mapStateToProps = (state) => ({
   hasOpenSurveys: state.survey.data.hasOpenSurveys,
-
 });
 
 export default connect(mapStateToProps, null)(MenuTabletsSocialZone);
