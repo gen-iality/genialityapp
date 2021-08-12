@@ -421,18 +421,13 @@ class UserModal extends Component {
       if (field.type === 'email')     
         valid =(user[field.name] && user[field.name].length > 5 && user[field.name].length < 61 && EMAIL_REGEX.test(user[field.name]))|| false;       
       if (field.type === 'text' || field.type === 'list'|| field.type=='country' || field.type=='city' || field.type === 'date' )
-        valid = (user[field.name] && user[field.name].length > 0 && user[field.name] !== '' && user[field.name]!==null )|| false;
-        console.log("IS TEXT")
+        valid = (user[field.name] && user[field.name].length > 0 && user[field.name] !== '' && user[field.name]!==null )|| false;        
       if (field.type === 'number') valid = (user[field.name] &&  user[field.name].length>6 && parseInt(user[field.name])>0)|| false;
       if (field.type === 'boolean') valid = typeof user[field.name] === 'boolean'|| false;
       //valid=valid?valid:false;
       return (validations[field.name] = valid);
-    });
-    console.log("VALIDATIONS==>",validations)
-    let valid = Object.values(validations).includes(false);
-    
-    //valid=valid?valid:false;
-    console.log("VALID DESPUES DE==>",valid)
+    });   
+    let valid = Object.values(validations).includes(false); 
     this.setState({ valid: valid });
   };
 
