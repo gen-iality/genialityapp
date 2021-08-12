@@ -1,9 +1,15 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect } from 'react'
 import { Alert, Button, Card, Col, Input, Row, Space, Typography } from 'antd';
+import { withRouter } from 'react-router-dom';
 
 
-function DetailInformation () {
+function DetailsProduct (props) {
   const {Title, Text} = Typography
+
+  useEffect(()=>{
+    let idProduct=props.match.params.id;
+    console.log("ID PRODUCT==>",idProduct)
+  },[])
 
     return (
         <>
@@ -46,4 +52,4 @@ Su nombre, La Gioconda (la alegre, en castellano), deriva de la tesis más acept
     )
 }
 
-export default DetailInformation;
+export default withRouter(DetailsProduct);

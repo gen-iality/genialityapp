@@ -57,8 +57,7 @@ class UserModal extends Component {
           valid:false
         });
       }else{
-        console.log("NO EXISTE PROPERTIES")
-        console.log(value)
+    
         Object.keys(value).map((obj) => {
           return (user[obj] = value[obj]);
         });
@@ -123,8 +122,7 @@ class UserModal extends Component {
           this.closeModal();         
         }  
         toast.success(<FormattedMessage id='toast.user_saved' defaultMessage='Ok!' />);
-      } else {
-        
+      } else {        
         if(this.state.confirmCheck){
           let checkedin_at = new Date();
           checkedin_at = Moment(checkedin_at)
@@ -417,18 +415,25 @@ class UserModal extends Component {
       { user } = this.state,
       mandatories = extraFields.filter((field) => field.mandatory),
       validations = [];
+      let errors=0;
     mandatories.map((field, key) => {
-      let valid;
-      if (field.type === 'email')
-        valid = user[field.name].length > 5 && user[field.name].length < 61 && EMAIL_REGEX.test(user[field.name]);
-      if (field.type === 'text' || field.type === 'list')
-        valid = user[field.name] && user[field.name].length > 0 && user[field.name] !== '';
-      if (field.type === 'number') valid = user[field.name] && user[field.name] >= 0;
-      if (field.type === 'boolean') valid = typeof user[field.name] === 'boolean';
-      return (validations[key] = valid);
+      
+      if (field.type === 'email')     
+        valid =(user[field.name] && user[field.name].length > 5 && user[field.name].length < 61 && EMAIL_REGEX.test(user[field.name]))|| false;       
+      if (field.type === 'text' || field.type === 'list'|| field.type=='country' || field.type=='city' || field.type === 'date' )
+        valid = (user[field.name] && user[field.name].length > 0 && user[field.name] !== '' && user[field.name]!==null )|| false;
+        console.log("IS TEXT")
+      if (field.type === 'number') valid = (user[field.name] &&  user[field.name].length>6 && parseInt(user[field.name])>0)|| false;
+      if (field.type === 'boolean') valid = typeof user[field.name] === 'boolean'|| false;
+      //valid=valid?valid:false;
+      return (validations[field.name] = valid);
     });
-    const valid = validations.reduce((sum, next) => sum && next, true);
-    this.setState({ valid: !valid });
+    console.log("VALIDATIONS==>",validations)
+    let valid = Object.values(validations).includes(false);
+    
+    //valid=valid?valid:false;
+    console.log("VALID DESPUES DE==>",valid)
+    this.setState({ valid: valid });
   };
 
   deleteUser = async () => {

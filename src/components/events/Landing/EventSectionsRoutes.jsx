@@ -27,6 +27,7 @@ import InformativeSection from '../informativeSections/informativeSection';
 import Noticias from '../noticias';
 import withContext from '../../../Context/withContext';
 import { IssuesCloseOutlined } from '@ant-design/icons';
+import Productos from '../producto';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -116,11 +117,7 @@ const EventSectionRoutes = (props) => {
           </>
         </Route>
         <Route path={`${path}/producto`}>
-           <div>
-             <Card style={{textAlign:'center', marginLeft:30,marginRight:30,marginTop:60}}>
-             <IssuesCloseOutlined  style={{marginRight:20, fontSize:20}} />La subasta se ha cerrado
-             </Card>
-           </div>
+           <Productos/>
         </Route>
         <Route path={`${path}/agenda`}>
           <Agenda

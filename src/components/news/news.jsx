@@ -228,7 +228,8 @@ class News extends Component {
       try {
         if (result) {
           sweetAlert.showLoading('Espera (:', 'Borrando...');          
-          await NewsFeed.deleteOne(this.props.eventId,id);
+         let resp= await NewsFeed.deleteOne(this.props.eventId,id);
+         console.log("RESPUESTA DELETE==>",resp)
           this.setState(() => ({
             id: '',
             title: '',
