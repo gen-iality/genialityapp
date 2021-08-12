@@ -41,13 +41,13 @@ const ChatList = (props) => {
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
   const [bandera, setbandera] = useState();
-  const [userNameChat, SetUserNameChat] = useState("");
+  const [userNameChat, SetUserNameChat] = useState('');
 
   const onFinish = (values) => {
     cUser.value = values;
     setbandera('');
   };
-  console.log(props)
+  console.log(props);
 
   let userName = props.currentChatName;
 
@@ -60,14 +60,13 @@ const ChatList = (props) => {
       props.datamsjlast.remitente !== null &&
       props.datamsjlast.remitente !== userName &&
       props.totalNewMessages > 0;
-    
   }, [props.datamsjlast, props.totalNewMessages]);
-  
-  useEffect(()=>{
-    if(userName!=null){
-      SetUserNameChat(userName)
+
+  useEffect(() => {
+    if (userName != null) {
+      SetUserNameChat(userName);
     }
-  },[userName])
+  }, [userName]);
 
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();
@@ -142,10 +141,8 @@ const ChatList = (props) => {
       </Form>
     );
 
-    
-    let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
+  let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
 
-    console.log("userNameActive",userNameActive)
   return (
     <Tabs activeKey={props.chattab} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
@@ -199,7 +196,7 @@ const ChatList = (props) => {
           key='chat2'>
           {!props.currentChat && (
             <List
-            className="asistente-list"
+              className='asistente-list'
               style={styleList}
               dataSource={props.availableChats}
               renderItem={(item) => (
@@ -247,17 +244,15 @@ const ChatList = (props) => {
               )}
             />
           )}
-          {console.log("Name==>",props.currentChatName)}
-          {console.log("currentchat",props.currentChat)}
-          {console.log(cUser.value.uid)}          
+
           {props.currentChat && (
-            <>                   
+            <>
               <iframe
                 title='chatevius'
                 className='ChatEviusLan'
                 src={
                   'https://chatevius.web.app?nombre=' +
-                  userName+
+                  userName +
                   '&chatid=' +
                   props.currentChat +
                   '&eventid=' +

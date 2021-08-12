@@ -24,8 +24,7 @@ const AttendeList = function(props) {
 
   useEffect(() => {
     let ordenadousers = [];
-    console.log('attendes',  props.attendeeListPresence);
-
+    
     Object.keys(props.attendeeList).map((key) => {
       let mihijo = {
         idattendpresence: key,
@@ -37,7 +36,6 @@ const AttendeList = function(props) {
         properties: props.attendeeList[key].properties,
       };
 
-      console.log("presence",props.attendeeListPresence[key])
       if (mihijo.status === 'online') {
         ordenadousers.unshift(mihijo);
       } else if (mihijo.status === 'offline') {

@@ -6,7 +6,7 @@ import CommentEditor from './commentEditor';
 import Comments from './comments';
 import '../../styles/landing/_wall.scss';
 import { saveFirebase } from './helpers';
-import withContext from '../../Context/withContext'
+import withContext from '../../Context/withContext';
 
 const IconText = ({ icon, text, onSubmit }) => (
   <Button htmlType='submit' type='link' onClick={onSubmit} style={{ color: 'gray' }}>
@@ -18,7 +18,6 @@ const IconText = ({ icon, text, onSubmit }) => (
 class WallList extends Component {
   constructor(props) {
     super(props);
-    console.log(props)
 
     this.state = {
       submitting: false,
@@ -34,7 +33,7 @@ class WallList extends Component {
       user: undefined,
       commenting: null,
       displayedComments: {},
-      event: this.props.cEvent.value || {}
+      event: this.props.cEvent.value || {},
     };
   }
 
@@ -85,13 +84,12 @@ class WallList extends Component {
     }
   }
 
-
   gotoCommentList() {
     this.setState({ currentCommet: null });
   }
 
   render() {
-    const { dataPost,event } = this.state;
+    const { dataPost, event } = this.state;
 
     return (
       <Fragment>
@@ -118,12 +116,9 @@ class WallList extends Component {
                 // Aqui se mapea al array del state
                 renderItem={(item) => (
                   <Card style={{ marginBottom: '20px' }}>
-                    {console.log("ITEM P=====>")}
-                    {console.log(item)}
                     <List.Item
                       key={item.id}
                       style={{ padding: '0px' }}
-                      // Se importa el boton de like y el de redireccionamiento al detalle del post
                       actions={[
                         <IconText
                           icon={LikeOutlined}
@@ -142,8 +137,8 @@ class WallList extends Component {
                           }}
                         />,
                         <>
-                          {(this.props.cUser.value && (this.props.cUser.value._id.trim() === item.author.trim()))&& (
-                            <>                           
+                          {this.props.cUser.value && this.props.cUser.value._id.trim() === item.author.trim() && (
+                            <>
                               <Popconfirm
                                 title='Seguro deseas eliminar este mensaje?'
                                 onConfirm={() => this.innerDeletePost(item.id)}>
@@ -152,7 +147,7 @@ class WallList extends Component {
                               {this.state.deleting === item.id && <Spin />}
                             </>
                           )}
-                        </>
+                        </>,
                       ]}>
                       <List.Item.Meta
                         avatar={
@@ -182,7 +177,7 @@ class WallList extends Component {
                           width={'100%'}
                           style={{
                             display: 'block',
-                            margin: '0 auto'
+                            margin: '0 auto',
                           }}
                           alt='logo'
                           src={item.urlImage}
@@ -208,5 +203,5 @@ class WallList extends Component {
   }
 }
 
-let WallListwithContext = withContext(WallList)
-export default WallListwithContext ;
+let WallListwithContext = withContext(WallList);
+export default WallListwithContext;

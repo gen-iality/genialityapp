@@ -129,7 +129,6 @@ let SocialZone = function(props) {
 
   useEffect(() => {
     if (cEvent.value == null) return;
-    console.log('EFFECT 2');
     let colletion_name = cEvent.value._id + '_event_attendees';
     let attendee;
     firestore
@@ -152,8 +151,6 @@ let SocialZone = function(props) {
 
   useEffect(() => {
     if (cEvent.value == null || cUser.value == null) return;
-    console.log('EFECT 1');
-    // monitorEventPresence(cUser.value._id, attendeeList, setAttendeeListPresence)
 
     firestore
       .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')

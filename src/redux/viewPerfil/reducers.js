@@ -8,7 +8,6 @@ const initialState = {
 };
 
 export default function viewPerfilReducer(state = initialState, action) {
-  console.log('state redux perfil', action.payload);
   switch (action.type) {
     case SET_VIEW_PERFIL:
       return {

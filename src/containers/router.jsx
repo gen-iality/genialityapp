@@ -5,9 +5,8 @@ import { fetchCategories } from '../redux/categories/actions';
 import { fetchTypes } from '../redux/types/actions';
 import Header from './header';
 import ContentContainer from './content';
-
 import { Layout } from 'antd';
-//const { Header, Footer, Sider, Content } = Layout;
+
 
 class MainRouter extends Component {
   constructor(props) {
@@ -16,7 +15,6 @@ class MainRouter extends Component {
   }
 
   componentDidMount() {
-    console.log("thispropsmainrouter",this.props)
     this.props.dispatch(fetchCategories());
     this.props.dispatch(fetchTypes());
   }
