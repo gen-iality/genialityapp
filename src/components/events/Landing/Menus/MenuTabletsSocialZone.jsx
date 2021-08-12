@@ -17,21 +17,21 @@ const MenuTabletsSocialZone = (props) => {
       <div className='chat-evius_mobile  animate__animated animate__pulse animate__slower animate__infinite'>
         <Space direction='horizontal' size='small'>
           <Button
-            style={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
+            style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
             shape='circle'
             icon={
               <Badge count={props.totalNewMessages}>
-                <MessageOutlined style={{ fontSize: '20px', color: cEvent.value.styles.textMenu }} />
+                <MessageOutlined style={{ fontSize: '20px', color: cEvent.value.styles?.textMenu }} />
               </Badge>
             }
             size='large'
             onClick={() =>{ setOptionselected('1');setisDrawerVisible(!isDrawerVisible)}}></Button>
        {props.currentActivity && (props.listOfEventSurveys && props.listOfEventSurveys.length>0) &&  <Button
-            style={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
+            style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
             shape='circle'
             icon={
               <Badge dot={props.hasOpenSurveys}>
-                <PieChartOutlined style={{ fontSize: '20px', color: cEvent.value.styles.textMenu }} />
+                <PieChartOutlined style={{ fontSize: '20px', color: cEvent.value.styles?.textMenu }} />
               </Badge>
             }
             size='large'
@@ -41,7 +41,7 @@ const MenuTabletsSocialZone = (props) => {
 
       <Drawer
         style={{zIndex:'5'}}
-        bodyStyle={{ backgroundColor: cEvent.value.styles.toolbarDefaultBg }}
+        bodyStyle={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
         height={450}
         placement='bottom'
         closable={true}

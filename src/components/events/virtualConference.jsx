@@ -84,16 +84,21 @@ const VirtualConference = () => {
             agendageneral.map((item) => {
               if (item._id == doc.id) {
                 let activity;
-                let { habilitar_ingreso, isPublished, meeting_id, platform } = doc.data();
+                let { habilitar_ingreso, isPublished, meeting_id, platform, vimeo_id } = doc.data();
                 console.log('existe meeting', meeting_id, item.name, habilitar_ingreso);
-                if (habilitar_ingreso != 'ended_meeting_room' && isPublished && habilitar_ingreso != '') {
+                if (
+                  habilitar_ingreso != 'ended_meeting_room' &&
+                  isPublished &&
+                  habilitar_ingreso != '' &&
+                  (meeting_id != null || vimeo_id != null)
+                ) {
                   activity = { ...item, habilitar_ingreso, isPublished, meeting_id, platform };
                   arratem.push(activity);
                 }
               }
             });
           });
-          console.log("cual queda",arratem)
+          console.log('cual queda', arratem);
           setinfoAgenda(arratem);
         });
   }, [agendageneral, firestore]);

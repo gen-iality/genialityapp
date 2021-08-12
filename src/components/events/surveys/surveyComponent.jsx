@@ -74,7 +74,10 @@ function SurveyComponent(props) {
 
       let surveyModelData = new Survey.Model(loadSurveyData);
       surveyModelData.currentPageNo = surveyRealTime.currentPage;
-
+      surveyModelData.locale = "es";
+      console.log('====================================');
+      console.log("surveyModelData: " ,surveyModelData );
+      console.log('====================================');
       setSurveyData(loadSurveyData);
       setInitialSurveyModel(surveyModelData);
 
