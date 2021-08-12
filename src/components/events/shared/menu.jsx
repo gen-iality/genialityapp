@@ -135,6 +135,12 @@ class MenuConfig extends Component {
               </NavLink>
             </Menu.Item>
 
+            <Menu.Item key='10'>
+                Producto
+              <NavLink onClick={this.handleClick} to={`${url}/product`}>
+              </NavLink>
+            </Menu.Item>
+
             {/* <Menu.Item key="9">
                 <NavLink onClick={this.handleClick} to={`${url}/pages`}>
                   Agregar sección
@@ -150,13 +156,13 @@ class MenuConfig extends Component {
                 <span>Configuración General</span>
               </span>
             }>
-            <Menu.Item key='10'>
+            <Menu.Item key='11'>
                 Datos del evento
               <NavLink onClick={this.handleClick} to={`${url}/main`}>
               </NavLink>
             </Menu.Item>
 
-            <Menu.Item key='11'>
+            <Menu.Item key='12'>
                 Apariencia del evento
               <NavLink onClick={this.handleClick} to={`${url}/styles`}>
               </NavLink>
