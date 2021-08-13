@@ -4,7 +4,6 @@ import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusCircleOutl
 import { EventsApi } from '../../helpers/request';
 import Loading from '../loaders/loading';
 import { withRouter } from 'react-router';
-import htmlParser from 'html-react-parser';
 
 const { Column } = Table;
 const { confirm } = Modal;
@@ -14,11 +13,7 @@ class Product extends Component {
    constructor(props) {
       super(props);
       this.state = {
-         event: this.props.event,
          list: [],
-         data: {},
-         deleteID: '',
-         isLoading: false,
          loading: true,
       };
    }
@@ -37,6 +32,7 @@ class Product extends Component {
    };
 
    removeProduct = (data) => {
+      let self = this
       confirm({
          title: 'Hola',
          icon: <ExclamationCircleOutlined />,
@@ -44,7 +40,7 @@ class Product extends Component {
          onOk() {
             return new Promise((resolve, reject) => {
                EventsApi.deleteProduct(data.event_id, data._id).then((res) => {
-                  // this.fetchItem();
+                  self.fetchItem();
                   if (res === 1) {
                      message.success('Producto eliminado correctamente');
                      resolve(true);
@@ -68,7 +64,7 @@ class Product extends Component {
    render() {
       return (
          <div>
-            <Title level={4}>{'Crear producto'}</Title>
+            <Title level={4}>{'Producto'}</Title>
 
             <Row justify='end' style={{ marginBottom: '10px' }}>
                <Button onClick={this.newProduct} type='primary' icon={<PlusCircleOutlined />}>
@@ -81,14 +77,13 @@ class Product extends Component {
             ) : (
                <Table
                   size='small'
-                  bordered
+                  rowKey='index'
                   dataSource={this.state.list}
                   pagination={{ pageSize: 6, position: ['bottomCenter'] }}
                   scroll={{ x: 1300 }}>
-                  <Column key='_id' title='Nombre' dataIndex='name' align='center' />
                   <Column
                      key='_id'
-                     title='Descripción'
+                     title='Nombre'
                      align='center'
                      render={(data, index) => (
                         <Paragraph
@@ -97,35 +92,31 @@ class Product extends Component {
                               expandable: true,
                               symbol: <span style={{ color: '#2D7FD6', fontSize: '14px' }}>Ver mas</span>,
                            }}>
-                           {htmlParser(data.description)}
+                           {data.name}
                         </Paragraph>
                      )}
                   />
-
+                  <Column key='_id' title='Por' align='center' dataIndex='by' />
                   <Column key='_id' title='Valor' dataIndex='price' align='center' />
-
                   <Column
                      key='_id'
                      title='Imagenes del producto'
                      align='center'
                      render={(data, index) => (
                         <Space key={index} size='small'>
-                           <Tooltip key={index} placement='topLeft' title='Vista previa'>
-                              {data.image.map((images, index) => {
-                                 return <Image key={index} width={100} src={images} />;
-                              })}
-                           </Tooltip>
+                           {data.image && data.image.map((images, index) => {
+                              return <Image key={index} width={70} src={images} />;
+                           })}
                         </Space>
                      )}
                   />
-
                   <Column
                      title='Herramientas'
                      key='_id'
                      align='center'
                      fixed='right'
                      render={(data, index) => (
-                        <Space key={index} size='large'>
+                        <Space key={index} size='small'>
                            <Tooltip key={index} placement='topLeft' title='Editar'>
                               <Button
                                  key={index}
