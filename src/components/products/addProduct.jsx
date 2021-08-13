@@ -1,15 +1,12 @@
+import React from 'react';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Row, Input, Form, message } from 'antd';
-import React, { Component } from 'react';
+import { Button, Card, Row, Input, Form, message } from 'antd';
 import { useState } from 'react';
 import { withRouter } from 'react-router';
 import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
-import { toast } from 'react-toastify';
-import { Actions, NewsFeed, EventsApi } from '../../helpers/request';
-import { FormattedMessage } from 'react-intl';
-import moment from 'moment';
+import { Actions, EventsApi } from '../../helpers/request';
 import { useEffect } from 'react';
 
 export const toolbarEditor = {
@@ -214,9 +211,7 @@ function AddProduct(props) {
                      name={'creator'}
                      onChange={(e) => changeInput(e, 'creator')}
                   />
-                  {error != null && error.creator && (
-                     <small style={{ color: 'red' }}>Este campo es requerido</small>
-                  )}
+                  {error != null && error.creator && <small style={{ color: 'red' }}>Este campo es requerido</small>}
                </Form.Item>
                <Form.Item
                   label={
@@ -253,6 +248,8 @@ function AddProduct(props) {
                      </label>
                   }>
                   <ImageInput
+                     width={1080}
+                     height={1080}
                      picture={picture}
                      imageFile={imageFile}
                      divClass={'drop-img'}
@@ -299,6 +296,8 @@ function AddProduct(props) {
                      </label>
                   }>
                   <ImageInput
+                     width={1080}
+                     height={1080}
                      picture={optionalPicture}
                      imageFile={imageFileOptional}
                      divClass={'drop-img'}

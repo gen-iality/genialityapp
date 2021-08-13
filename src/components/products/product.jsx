@@ -32,7 +32,7 @@ class Product extends Component {
    };
 
    removeProduct = (data) => {
-      let self = this
+      let self = this;
       confirm({
          title: 'Hola',
          icon: <ExclamationCircleOutlined />,
@@ -85,7 +85,7 @@ class Product extends Component {
                      key='_id'
                      title='Nombre'
                      align='center'
-                     render={(data, index) => (
+                     render={(data) => (
                         <Paragraph
                            ellipsis={{
                               rows: 3,
@@ -104,9 +104,10 @@ class Product extends Component {
                      align='center'
                      render={(data, index) => (
                         <Space key={index} size='small'>
-                           {data.image && data.image.map((images, index) => {
-                              return <Image key={index} width={70} src={images} />;
-                           })}
+                           {data.image &&
+                              data.image.map((images, index) => {
+                                 return <Image key={index} width={70} src={images} />;
+                              })}
                         </Space>
                      )}
                   />
