@@ -211,9 +211,7 @@ function AddProduct(props) {
                      name={'creator'}
                      onChange={(e) => changeInput(e, 'creator')}
                   />
-                  {error != null && error.creator && (
-                     <small style={{ color: 'red' }}>Este campo es requerido</small>
-                  )}
+                  {error != null && error.creator && <small style={{ color: 'red' }}>Este campo es requerido</small>}
                </Form.Item>
                <Form.Item
                   label={
@@ -250,6 +248,8 @@ function AddProduct(props) {
                      </label>
                   }>
                   <ImageInput
+                     width={1080}
+                     height={1080}
                      picture={picture}
                      imageFile={imageFile}
                      divClass={'drop-img'}
@@ -296,6 +296,8 @@ function AddProduct(props) {
                      </label>
                   }>
                   <ImageInput
+                     width={1080}
+                     height={1080}
                      picture={optionalPicture}
                      imageFile={imageFileOptional}
                      divClass={'drop-img'}
