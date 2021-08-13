@@ -5,8 +5,7 @@ import * as Cookie from 'js-cookie';
 import { toast } from 'react-toastify';
 import UserRegistration from '../events/userRegistration';
 import withContext from '../../Context/withContext';
-import TicketsEvent from './ticketComponent';
-import { Col, Row } from 'antd';
+
 
 class TicketsForm extends Component {
   constructor(props) {
@@ -262,12 +261,12 @@ class TicketsForm extends Component {
     } = this;
     return (
       <>
-        <Row>
-          <Col span={16}>
+          
+          
             <UserRegistration extraFields={[]} />
-          </Col>
-          <Col span={8}>
-            <TicketsEvent
+          
+         {/* <Col span={8}>
+          <TicketsEvent
               changeStep={changeStep}
               onClick={onClick}
               handleQuantity={handleQuantity}
@@ -289,8 +288,8 @@ class TicketsForm extends Component {
               currencyFormatConfig={this.state.currencyFormatConfig}
               removeTicket={this.removeTicket}
             />
-          </Col>
-        </Row>
+           </Col>*/}
+        
       </>
     );
   }

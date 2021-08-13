@@ -19,13 +19,14 @@ import {
   Space,
   InputNumber,
 } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
 import ImgCrop from 'antd-img-crop';
 import { saveImageStorage } from '../../../helpers/helperSaveImage';
 import { areaCode } from '../../../helpers/constants';
+import TypeRegister from '../../tickets/typeRegister';
 
 // import InputFile from "./inputFile"
 const { Option } = Select;
@@ -119,6 +120,7 @@ export default ({
   const [loggedurl, setLogguedurl] = useState(null);
   const [imageAvatar, setImageAvatar] = useState(null);
   let [ImgUrl, setImgUrl] = useState('');
+  const [typeRegister,setTypeRegister]=useState('free')
 
   // const [ fileSave, setFileSave ] = useState( [] )
 
@@ -152,6 +154,7 @@ export default ({
   };
 
   const onFinish = async (values) => {
+    console.log('VALUES===>',values)
     values.password = password;
     let ruta = '';
     if (imageAvatar) {
@@ -172,7 +175,7 @@ export default ({
     // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
     message.loading({ content: intl.formatMessage({ id: 'registration.message.loading' }), key }, 10);
 
-    const snap = { properties: values };
+    const snap = { properties: {...values,typeRegister:typeRegister} };
 
     let textMessage = {};
     textMessage.key = key;
@@ -601,6 +604,7 @@ export default ({
 
   return (
     <>
+    {console.log("PROPS==>",eventId)}
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
           <Card 
@@ -611,7 +615,7 @@ export default ({
             }
             bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
-
+            {/*eventId && eventId=='60cb7c70a9e4de51ac7945a2' &&  !eventUser && <TypeRegister typeRegister={typeRegister} setTypeRegister={setTypeRegister} /> */}
             <Form
               form={form}
               layout='vertical'
@@ -626,7 +630,10 @@ export default ({
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
               onValuesChange={valuesChange}>
+                {eventId && eventId=='60cb7c70a9e4de51ac7945a2'  && <Row justify={'center'} style={{marginBottom:30}} ><Card style={{width:700,margin:'auto',background:'#F7C2C6'}}><InfoCircleOutlined /> Una vez registrado para acceder a la puja de obras debes realizar la donación</Card></Row>}
               {renderForm()}
+
+             
 
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
@@ -635,6 +642,7 @@ export default ({
                   )}
                 </Col>
               </Row>
+              
 
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
@@ -648,6 +656,7 @@ export default ({
                     />
                   )}
                 </Col>
+              
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <Form.Item>
                     <Button type='primary' htmlType='submit'>
@@ -657,6 +666,7 @@ export default ({
                         ? 'Votar y Enviar'
                         : intl.formatMessage({ id: 'registration.button.create' })}
                     </Button>
+                    {eventId && eventId=='60cb7c70a9e4de51ac7945a2' && eventUser && <Button style={{marginLeft:20}}>Donar</Button> }
                   </Form.Item>
                 </Col>
               </Row>
