@@ -1,15 +1,12 @@
+import React from 'react';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Row, Input, Form, message } from 'antd';
-import React, { Component } from 'react';
+import { Button, Card, Row, Input, Form, message } from 'antd';
 import { useState } from 'react';
 import { withRouter } from 'react-router';
 import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
-import { toast } from 'react-toastify';
-import { Actions, NewsFeed, EventsApi } from '../../helpers/request';
-import { FormattedMessage } from 'react-intl';
-import moment from 'moment';
+import { Actions, EventsApi } from '../../helpers/request';
 import { useEffect } from 'react';
 
 export const toolbarEditor = {
