@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Tooltip, Space, Button, Image, Modal, message } from 'antd';
+import { Table, Tooltip, Space, Button, Image, Modal, message, Typography } from 'antd';
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { EventsApi } from '../../helpers/request';
 import Loading from '../loaders/loading';
@@ -14,6 +14,7 @@ import { reject } from 'ramda';
 
 const { Column } = Table;
 const { confirm } = Modal;
+const { Paragraph } = Typography;
 
 class Product extends Component {
    constructor(props) {
@@ -89,23 +90,27 @@ class Product extends Component {
                         dataSource={this.state.list}
                         pagination={{ pageSize: 6, position: ['bottomCenter'] }}
                         scroll={{ x: 1300 }}>
-                        <Column key='id' title='Nombre' dataIndex='name' align='center' />
+                        <Column key='_id' title='Nombre' dataIndex='name' align='center' />
                         <Column
-                           key='id'
+                           key='_id'
                            title='Descripción'
-                           // dataIndex='description'
                            align='center'
                            render={(data, index) => (
-                              <Space key={index} size='small'>
+                              <Paragraph
+                                 ellipsis={{
+                                    rows: 3,
+                                    expandable: true,
+                                    symbol: <span style={{ color: '#2D7FD6', fontSize: '14px' }}>Ver mas</span>,
+                                 }}>
                                  {htmlParser(data.description)}
-                              </Space>
+                              </Paragraph>
                            )}
                         />
 
-                        <Column key='id' title='Valor' dataIndex='price' align='center' />
+                        <Column key='_id' title='Valor' dataIndex='price' align='center' />
 
                         <Column
-                           key='id'
+                           key='_id'
                            title='Imagenes del producto'
                            align='center'
                            render={(data, index) => (
@@ -121,7 +126,7 @@ class Product extends Component {
 
                         <Column
                            title='Herramientas'
-                           key='action'
+                           key='_id'
                            align='center'
                            fixed='right'
                            render={(data, index) => (
