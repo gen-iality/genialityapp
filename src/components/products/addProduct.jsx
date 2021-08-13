@@ -204,18 +204,18 @@ function AddProduct(props) {
                <Form.Item
                   label={
                      <label style={{ marginTop: '2%' }} className='label'>
-                        Autor <label style={{ color: 'red' }}>*</label>
+                        Por <label style={{ color: 'red' }}>*</label>
                      </label>
                   }
                   rules={[{ required: true, message: 'Ingrese el nombre del autor o creador la producto' }]}>
                   <Input
                      value={creator}
-                     placeholder='Nombre del autor o creador'
+                     placeholder='Nombre del autor, creador o descripcion corta'
                      name={'creator'}
                      onChange={(e) => changeInput(e, 'creator')}
                   />
                   {error != null && error.creator && (
-                     <small style={{ color: 'red' }}>El nombre del autor o creador del producto es requerido</small>
+                     <small style={{ color: 'red' }}>Este campo es requerido</small>
                   )}
                </Form.Item>
                <Form.Item
