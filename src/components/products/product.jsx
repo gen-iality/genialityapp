@@ -1,32 +1,19 @@
 import React, { Component } from 'react';
-import { Table, Tooltip, Space, Button, Image } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { NewsFeed, Actions, EventsApi } from '../../helpers/request';
+import { Table, Tooltip, Space, Button, Image, Modal, message, Typography, Row } from 'antd';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { EventsApi } from '../../helpers/request';
 import Loading from '../loaders/loading';
-import EventContent from '../events/shared/content';
-import { handleRequestError, sweetAlert } from '../../helpers/utils';
-import axios from 'axios/index';
-import { toast } from 'react-toastify';
-import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router';
 
 const { Column } = Table;
+const { confirm } = Modal;
+const { Title, Paragraph } = Typography;
 
 class Product extends Component {
    constructor(props) {
       super(props);
       this.state = {
-         event: this.props.event,
          list: [],
-         data: {},
-         id: '',
-         deleteID: '',
-         title: '',
-         description_complete: '',
-         linkYoutube: '',
-         description_short: '',
-         time: '',
-         isLoading: false,
          loading: true,
       };
    }
@@ -34,45 +21,6 @@ class Product extends Component {
    componentDidMount() {
       this.fetchItem();
    }
-
-   changeImg = (files) => {
-      const file = files[0];
-      const url = '/api/files/upload',
-         path = [],
-         self = this;
-      if (file) {
-         this.setState({
-            imageFile: file,
-            event: { ...this.state.event, picture: null },
-         });
-
-         //envia el archivo de imagen como POST al API
-         const uploaders = files.map((file) => {
-            let data = new FormData();
-            data.append('file', file);
-            return Actions.post(url, data).then((image) => {
-               if (image) path.push(image);
-            });
-         });
-
-         //cuando todaslas promesas de envio de imagenes al servidor se completan
-         axios.all(uploaders).then(() => {
-            self.setState({
-               event: {
-                  ...self.state.event,
-                  picture: path[0],
-               },
-               fileMsg: 'Imagen subida con exito',
-               imageFile: null,
-               path,
-            });
-
-            toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
-         });
-      } else {
-         this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
-      }
-   };
 
    fetchItem = async () => {
       const data = await EventsApi.getProducts(this.props.eventId);
@@ -83,30 +31,30 @@ class Product extends Component {
       this.props.history.push(`/event/${this.props.eventId}/product/addproduct/${cert._id}`);
    };
 
-   removeProduct = (id) => {
-      sweetAlert.twoButton(`Está seguro de borrar este espacio`, 'warning', true, 'Borrar', async (result) => {
-         try {
-            if (result.value) {
-               sweetAlert.showLoading('Espera (:', 'Borrando...');
-               //  await EventsApi.deleteGallery(this.props.eventId)
-               await NewsFeed.deleteOne(id, this.props.eventId);
-               this.setState(() => ({
-                  id: '',
-                  title: '',
-                  description_complete: '',
-                  description_short: '',
-                  linkYoutube: '',
-                  picture: '',
-                  time: '',
-               }));
-               this.fetchItem();
-               sweetAlert.hideLoading();
-            }
-         } catch (e) {
-            sweetAlert.showError(handleRequestError(e));
-         }
+   removeProduct = (data) => {
+      let self = this
+      confirm({
+         title: 'Hola',
+         icon: <ExclamationCircleOutlined />,
+         content: 'Está seguro de borrar este producto?',
+         onOk() {
+            return new Promise((resolve, reject) => {
+               EventsApi.deleteProduct(data.event_id, data._id).then((res) => {
+                  self.fetchItem();
+                  if (res === 1) {
+                     message.success('Producto eliminado correctamente');
+                     resolve(true);
+                  } else {
+                     message.error('Lo sentimos el producto no pudo ser eliminado intente nuevamente');
+                     reject(false);
+                  }
+               });
+            }).catch(() => message.error('Lo sentimos no hay respuesta del servidor'));
+         },
+         onCancel() {},
       });
    };
+
    newProduct = () => {
       this.props.history.push(`/event/${this.props.eventId}/product/addproduct`);
    };
@@ -114,78 +62,83 @@ class Product extends Component {
    goBack = () => this.props.history.goBack();
 
    render() {
-      console.log('10. DATOSS FRESCOS ', this.state.list);
-
       return (
-         <React.Fragment>
-            <div className='column is-12 is-desktop'>
-               <EventContent
-                  title='Producto'
-                  closeAction={this.goBack}
-                  description_complete={'Agregue o edite los productos que se muestran en la aplicación'}
-                  addAction={this.newProduct}
-                  addTitle={'Nuevo producto'}>
-                  {this.state.loading ? (
-                     <Loading />
-                  ) : (
-                     <Table
-                        size='small'
-                        bordered
-                        dataSource={this.state.list}
-                        pagination={{ pageSize: 10, position: ['bottomCenter'] }}
-                        scroll={{ x: 1300 }}>
-                        <Column key='id' title='name' dataIndex='name' align='center' />
-                        <Column key='id' title='description' dataIndex='description' align='center' />
-                        <Column key='id' title='price' dataIndex='price' align='center' />
+         <div>
+            <Title level={4}>{'Producto'}</Title>
 
-                        <Column
-                           key='id'
-                           title='Imagenes del producto'
-                           align='center'
-                           render={(data, index) => (
-                              <Space key={index} size='small'>
-                                 <Tooltip key={index} placement='topLeft' title='Vista previa'>
-                                    {data.image.map((images, index) => {
-                                       // console.log("10. imgages, index", images, index)
-                                       return <Image key={index} width={100} src={images} />;
-                                    })}
-                                    {/* <Image key={index} width={100} src={data.image} /> */}
-                                 </Tooltip>
-                              </Space>
-                           )}
-                        />
+            <Row justify='end' style={{ marginBottom: '10px' }}>
+               <Button onClick={this.newProduct} type='primary' icon={<PlusCircleOutlined />}>
+                  {'Crear producto'}
+               </Button>
+            </Row>
 
-                        <Column
-                           title='Herramientas'
-                           key='action'
-                           align='center'
-                           fixed='right'
-                           render={(data, index) => (
-                              <Space key={index} size='large'>
-                                 <Tooltip key={index} placement='topLeft' title='Editar'>
-                                    <Button
-                                       key={index}
-                                       onClick={() => this.editProduct(data)}
-                                       type='primary'
-                                       icon={<EditOutlined style={{ fontSize: 25 }} />}
-                                    />
-                                 </Tooltip>
-                                 <Tooltip key={index} placement='topLeft' title='Eliminar'>
-                                    <Button
-                                       key={index}
-                                       onClick={() => this.removeProduct(data)}
-                                       type='danger'
-                                       icon={<DeleteOutlined style={{ fontSize: 25 }} />}
-                                    />
-                                 </Tooltip>
-                              </Space>
-                           )}
-                        />
-                     </Table>
-                  )}
-               </EventContent>
-            </div>
-         </React.Fragment>
+            {this.state.loading ? (
+               <Loading />
+            ) : (
+               <Table
+                  size='small'
+                  rowKey='index'
+                  dataSource={this.state.list}
+                  pagination={{ pageSize: 6, position: ['bottomCenter'] }}
+                  scroll={{ x: 1300 }}>
+                  <Column
+                     key='_id'
+                     title='Nombre'
+                     align='center'
+                     render={(data, index) => (
+                        <Paragraph
+                           ellipsis={{
+                              rows: 3,
+                              expandable: true,
+                              symbol: <span style={{ color: '#2D7FD6', fontSize: '14px' }}>Ver mas</span>,
+                           }}>
+                           {data.name}
+                        </Paragraph>
+                     )}
+                  />
+                  <Column key='_id' title='Por' align='center' dataIndex='by' />
+                  <Column key='_id' title='Valor' dataIndex='price' align='center' />
+                  <Column
+                     key='_id'
+                     title='Imagenes del producto'
+                     align='center'
+                     render={(data, index) => (
+                        <Space key={index} size='small'>
+                           {data.image && data.image.map((images, index) => {
+                              return <Image key={index} width={70} src={images} />;
+                           })}
+                        </Space>
+                     )}
+                  />
+                  <Column
+                     title='Herramientas'
+                     key='_id'
+                     align='center'
+                     fixed='right'
+                     render={(data, index) => (
+                        <Space key={index} size='small'>
+                           <Tooltip key={index} placement='topLeft' title='Editar'>
+                              <Button
+                                 key={index}
+                                 onClick={() => this.editProduct(data)}
+                                 type='primary'
+                                 icon={<EditOutlined style={{ fontSize: 25 }} />}
+                              />
+                           </Tooltip>
+                           <Tooltip key={index} placement='topLeft' title='Eliminar'>
+                              <Button
+                                 key={index}
+                                 onClick={() => this.removeProduct(data)}
+                                 type='danger'
+                                 icon={<DeleteOutlined style={{ fontSize: 25 }} />}
+                              />
+                           </Tooltip>
+                        </Space>
+                     )}
+                  />
+               </Table>
+            )}
+         </div>
       );
    }
 }

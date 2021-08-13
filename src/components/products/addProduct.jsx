@@ -28,6 +28,7 @@ export const toolbarEditor = {
 function AddProduct(props) {
    const [product, setProduct] = useState();
    const [name, setName] = useState('');
+   const [creator, setCreator] = useState('');
    const [description, setDescription] = useState('');
    const [price, setPrice] = useState('');
    const [picture, setPicture] = useState(null);
@@ -41,9 +42,9 @@ function AddProduct(props) {
       if (props.match.params.id) {
          setIdNew(props.match.params.id);
          EventsApi.getOneProduct(props.eventId, props.match.params.id).then((product) => {
-            console.log('10. product ', product);
             setProduct(product);
             setName(product.name);
+            setCreator(product.by);
             setDescription(product.description);
             setPicture(product.image && product.image[0] ? product.image[0] : null);
             setOptionalPicture(product.image && product.image[1] ? product.image[1] : null);
@@ -57,13 +58,14 @@ function AddProduct(props) {
    const changeInput = (e, key) => {
       if (key === 'name') {
          setName(e.target.value);
-      } else {
+      } else if (key === 'price') {
          setPrice(e.target.value);
+      } else if (key === 'creator') {
+         setCreator(e.target.value);
       }
    };
 
    const changeDescription = (e) => {
-      console.log('10. description ', e);
       if (description.length < 10000) {
          setDescription(e);
       } else {
@@ -76,7 +78,6 @@ function AddProduct(props) {
       const url = '/api/files/upload',
          path = [],
          self = this;
-      console.log('10. files ', files, option);
       if (file) {
          option === 'Imagen' ? setImgFile(file) : setImgFileOptional(file);
          //envia el archivo de imagen como POST al API
@@ -90,7 +91,7 @@ function AddProduct(props) {
 
          //cuando todaslas promesas de envio de imagenes al servidor se completan
          Axios.all(uploaders).then(() => {
-            option === 'Imagen' ? setPicture(path[0]) : setImgFileOptional(path[0]);
+            option === 'Imagen' ? setPicture(path[0]) : setOptionalPicture(path[0]);
             option === 'Imagen' ? setImgFile(null) : setImgFileOptional(null);
 
             message.success('Imagen cargada correctamente');
@@ -107,13 +108,16 @@ function AddProduct(props) {
          validators.name = true;
       } else {
          validators.name = false;
-
+      }
+      if (name === '') {
+         validators.creator = true;
+      } else {
+         validators.creator = false;
       }
       if (description === '') {
          validators.description = true;
       } else {
          validators.description = false;
-
       }
       if (picture === null) {
          validators.picture = true;
@@ -126,41 +130,48 @@ function AddProduct(props) {
          validators.price = false;
       }
       setError(validators);
-      if (validators && validators.picture == false && validators.description == false && validators.price == false) {
+      if (
+         validators &&
+         validators.name == false &&
+         validators.creator == false &&
+         validators.description == false &&
+         validators.picture == false &&
+         validators.price == false
+      ) {
          try {
             if (idNew !== undefined) {
-               console.log('10. a editar');
-               let resp = await NewsFeed.editOne(
+               let resp = await EventsApi.editProduct(
                   {
-                     name: product.name,
+                     name,
+                     by: creator,
                      description,
                      price,
-                     image: [picture !== null ? [picture] : null, optionalPicture !== null ? [optionalPicture] : null],
+                     image: [picture, optionalPicture],
                   },
-                  product._id,
-                  props.eventId
+                  props.eventId,
+                  product._id
                );
                if (resp) {
-                  props.history.push(`/event/${props.eventId}/news`);
+                  props.history.push(`/event/${props.eventId}/product`);
                }
             } else {
                const newProduct = await EventsApi.createProducts(
                   {
-                     name: name,
+                     name,
+                     by: creator,
                      description,
                      price,
                      image: [picture, optionalPicture],
                   },
                   props.eventId
                );
-               console.log('10. newProduct ', newProduct);
                if (newProduct) {
                   props.history.push(`/event/${props.eventId}/product`);
                }
             }
          } catch (e) {
             e;
-            console.log("10. error ", e)
+            console.log('10. error ', e);
          }
       }
    };
@@ -175,13 +186,11 @@ function AddProduct(props) {
             <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} onFinish={saveProduct}>
                <Form.Item
                   label={
-                     <Col span={4}>
-                        <label style={{ marginTop: '2%' }} className='label'>
-                           Nombre: *
-                        </label>
-                     </Col>
+                     <label style={{ marginTop: '2%' }} className='label'>
+                        Nombre del producto <label style={{ color: 'red' }}>*</label>
+                     </label>
                   }
-                  rules={[{ required: true, message: 'Ingrese el nombre de la product' }]}>
+                  rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]}>
                   <Input
                      value={name}
                      placeholder='Nombre del producto'
@@ -189,22 +198,42 @@ function AddProduct(props) {
                      onChange={(e) => changeInput(e, 'name')}
                   />
                   {error != null && error.name && (
-                     <small style={{ color: 'red' }}>La valor del producto es requerido</small>
-                  )}
-               </Form.Item>
-               <Form.Item label={'Descripción *'}>
-                  <ReactQuill value={description} modules={toolbarEditor} onChange={changeDescription} />
-                  {error != null && error.description && (
-                     <small style={{ color: 'red' }}>La product es requerido</small>
+                     <small style={{ color: 'red' }}>El nombre del producto es requerido</small>
                   )}
                </Form.Item>
                <Form.Item
                   label={
-                     <Col span={4}>
-                        <label style={{ marginTop: '2%' }} className='label'>
-                           Valor: *
-                        </label>
-                     </Col>
+                     <label style={{ marginTop: '2%' }} className='label'>
+                        Autor <label style={{ color: 'red' }}>*</label>
+                     </label>
+                  }
+                  rules={[{ required: true, message: 'Ingrese el nombre del autor o creador la producto' }]}>
+                  <Input
+                     value={creator}
+                     placeholder='Nombre del autor o creador'
+                     name={'creator'}
+                     onChange={(e) => changeInput(e, 'creator')}
+                  />
+                  {error != null && error.creator && (
+                     <small style={{ color: 'red' }}>El nombre del autor o creador del producto es requerido</small>
+                  )}
+               </Form.Item>
+               <Form.Item
+                  label={
+                     <label style={{ marginTop: '2%' }} className='label'>
+                        Descripción <label style={{ color: 'red' }}>*</label>
+                     </label>
+                  }>
+                  <ReactQuill value={description} modules={toolbarEditor} onChange={changeDescription} />
+                  {error != null && error.description && (
+                     <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
+                  )}
+               </Form.Item>
+               <Form.Item
+                  label={
+                     <label style={{ marginTop: '2%' }} className='label'>
+                        Valor <label style={{ color: 'red' }}>*</label>
+                     </label>
                   }
                   rules={[{ required: true, message: 'Ingrese el valor del producto' }]}>
                   <Input
@@ -214,10 +243,15 @@ function AddProduct(props) {
                      onChange={(e) => changeInput(e, 'price')}
                   />{' '}
                   {error != null && error.price && (
-                     <small style={{ color: 'red' }}>La valor del producto es requerido</small>
+                     <small style={{ color: 'red' }}>El valor del producto es requerido</small>
                   )}
                </Form.Item>
-               <Form.Item label={'Imagen: *'}>
+               <Form.Item
+                  label={
+                     <label style={{ marginTop: '2%' }} className='label'>
+                        Imagen <label style={{ color: 'red' }}>*</label>
+                     </label>
+                  }>
                   <ImageInput
                      picture={picture}
                      imageFile={imageFile}
@@ -258,7 +292,12 @@ function AddProduct(props) {
                   />
                   {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
                </Form.Item>
-               <Form.Item label={'Imagen opcional:'}>
+               <Form.Item
+                  label={
+                     <label style={{ marginTop: '2%' }} className='label'>
+                        Imagen opcional
+                     </label>
+                  }>
                   <ImageInput
                      picture={optionalPicture}
                      imageFile={imageFileOptional}
