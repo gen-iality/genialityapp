@@ -77,7 +77,7 @@ class Product extends Component {
                <EventContent
                   title='Producto'
                   closeAction={this.goBack}
-                  description_complete={'Agregue o edite los productos que se muestran en la aplicación'}
+                  description={'Agregue o edite los productos que se muestran en la aplicación'}
                   addAction={this.newProduct}
                   addTitle={'Nuevo producto'}>
                   {this.state.loading ? (
@@ -87,7 +87,7 @@ class Product extends Component {
                         size='small'
                         bordered
                         dataSource={this.state.list}
-                        pagination={{ pageSize: 10, position: ['bottomCenter'] }}
+                        pagination={{ pageSize: 6, position: ['bottomCenter'] }}
                         scroll={{ x: 1300 }}>
                         <Column key='id' title='Nombre' dataIndex='name' align='center' />
                         <Column
