@@ -108,6 +108,10 @@ const Landing = (props) => {
   useEffect(() => {
     cEventContext.status === 'LOADED' && seteventId(cEventContext.value._id);
 
+    console.log('====================================');
+    console.log('styles even', cEventContext.value?.styles);
+    console.log('====================================');
+
     cEventContext.status === 'LOADED' &&
       firestore
         .collection('events')
@@ -182,11 +186,18 @@ const Landing = (props) => {
 
   return (
     <>
-      <Layout className='site-layout'>
+      <Layout>
         <EventSectionsInnerMenu />
         <MenuTablets />
         <Layout className='site-layout'>
-          <Content className='site-layout-background' style={{ paddingBottom: '15vh' }}>
+          <Content
+            className='site-layout-background'
+            style={{
+              paddingBottom: '15vh',
+              backgroundSize: 'cover',
+              backgroundImage: `url(${cEventContext.value?.styles.BackgroundImage &&
+                cEventContext.value?.styles.BackgroundImage})`,
+            }}>
             {props.view && <TopBanner currentActivity={currentActivity} />}
             <EventSectionRoutes
               generaltabs={generaltabs}
