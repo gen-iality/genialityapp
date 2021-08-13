@@ -41,7 +41,6 @@ function AddProduct(props) {
       if (props.match.params.id) {
          setIdNew(props.match.params.id);
          EventsApi.getOneProduct(props.eventId, props.match.params.id).then((product) => {
-            console.log('10. product ', product);
             setProduct(product);
             setName(product.name);
             setDescription(product.description);
@@ -63,7 +62,6 @@ function AddProduct(props) {
    };
 
    const changeDescription = (e) => {
-      console.log('10. description ', e);
       if (description.length < 10000) {
          setDescription(e);
       } else {
@@ -76,7 +74,6 @@ function AddProduct(props) {
       const url = '/api/files/upload',
          path = [],
          self = this;
-      console.log('10. files ', files, option);
       if (file) {
          option === 'Imagen' ? setImgFile(file) : setImgFileOptional(file);
          //envia el archivo de imagen como POST al API
@@ -90,7 +87,7 @@ function AddProduct(props) {
 
          //cuando todaslas promesas de envio de imagenes al servidor se completan
          Axios.all(uploaders).then(() => {
-            option === 'Imagen' ? setPicture(path[0]) : setImgFileOptional(path[0]);
+            option === 'Imagen' ? setPicture(path[0]) : setOptionalPicture(path[0]);
             option === 'Imagen' ? setImgFile(null) : setImgFileOptional(null);
 
             message.success('Imagen cargada correctamente');
@@ -107,13 +104,11 @@ function AddProduct(props) {
          validators.name = true;
       } else {
          validators.name = false;
-
       }
       if (description === '') {
          validators.description = true;
       } else {
          validators.description = false;
-
       }
       if (picture === null) {
          validators.picture = true;
@@ -129,16 +124,15 @@ function AddProduct(props) {
       if (validators && validators.picture == false && validators.description == false && validators.price == false) {
          try {
             if (idNew !== undefined) {
-               console.log('10. a editar');
-               let resp = await NewsFeed.editOne(
+               let resp = await EventsApi.editProduct(
                   {
-                     name: product.name,
+                     name,
                      description,
                      price,
-                     image: [picture !== null ? [picture] : null, optionalPicture !== null ? [optionalPicture] : null],
+                     image: [picture, optionalPicture],
                   },
-                  product._id,
-                  props.eventId
+                  props.eventId,
+                  product._id
                );
                if (resp) {
                   props.history.push(`/event/${props.eventId}/news`);
@@ -146,21 +140,20 @@ function AddProduct(props) {
             } else {
                const newProduct = await EventsApi.createProducts(
                   {
-                     name: name,
+                     name,
                      description,
                      price,
                      image: [picture, optionalPicture],
                   },
                   props.eventId
                );
-               console.log('10. newProduct ', newProduct);
                if (newProduct) {
                   props.history.push(`/event/${props.eventId}/product`);
                }
             }
          } catch (e) {
             e;
-            console.log("10. error ", e)
+            console.log('10. error ', e);
          }
       }
    };

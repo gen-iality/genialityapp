@@ -236,8 +236,14 @@ export const EventsApi = {
   createProducts: async (data, id) => {
     return await Actions.create(`api/events/${id}/products`, data);
   },
+  editProduct: async (data, eventId, productId ) => {
+    return await Actions.edit(`api/events/${eventId}/products`, data, productId);
+  },
   getOneProduct: async (eventId,idnew) => {
     return await Actions.get(`api/events/${eventId}/products/${idnew}`);
+  },
+  deleteProduct: async (eventId, product) => {
+    return await Actions.delete(`/api/events/${eventId}/products`, product);
   },
   storeProducts:async(eventId,galleryId,data)=>{
     return await Actions.post(`/api/events/${eventId}/products/${galleryId}/silentauctionmail`,data)
