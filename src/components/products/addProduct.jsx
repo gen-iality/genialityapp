@@ -152,7 +152,7 @@ function AddProduct(props) {
                   product._id
                );
                if (resp) {
-                  props.history.push(`/event/${props.eventId}/news`);
+                  props.history.push(`/event/${props.eventId}/product`);
                }
             } else {
                const newProduct = await EventsApi.createProducts(
