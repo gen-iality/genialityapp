@@ -5,7 +5,7 @@ import { CertsApi, RolAttApi } from '../../helpers/request';
 import { Button, Card, Col, Alert, Modal, Spin } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router';
-import withContext from '../../Context/withContext'
+import withContext from '../../Context/withContext';
 
 // Estructura de boton para descargar certificados
 
@@ -43,7 +43,7 @@ class CertificadoLanding extends Component {
 
   componentDidMount() {
     const { user_properties } = this.props.cEvent.value;
-    
+
     let fields = user_properties.filter((item) => item.name !== 'names' && item.name !== 'email');
     const list = [...this.state.tags];
     fields.map((field) =>
@@ -77,7 +77,6 @@ class CertificadoLanding extends Component {
         content: <Spin>Espera</Spin>,
       });
 
-      
       //Busca por cedula primero
       let record = await this.usersRef.where('properties.cedula', '==', valueToSearch.trim()).get();
       //Si no encuentra busca por email
@@ -88,7 +87,9 @@ class CertificadoLanding extends Component {
       if (record.docs.length > 0) {
         const dataUser = record.docs.map((doc) => {
           const data = doc.data();
-          data.ticket = data.ticket_id ? this.props.cEvent.value.tickets.find((ticket) => ticket._id === data.ticket_id).title : 'Sin Tiquete';
+          data.ticket = data.ticket_id
+            ? this.props.cEvent.value.tickets.find((ticket) => ticket._id === data.ticket_id).title
+            : 'Sin Tiquete';
           return data;
         });
         //Para generar el certificado el usuario tiene que estar checkqueado !!checked_in
@@ -109,7 +110,6 @@ class CertificadoLanding extends Component {
       content: <Spin>Espera</Spin>,
     });
 
-  
     const certs = await CertsApi.byEvent(this.props.cEvent.value._id);
     const roles = await RolAttApi.byEvent(this.props.cEvent.value._id);
     this.props.cEvent.value.datetime_from = Moment(this.props.cEvent.value.datetime_from).format('DD/MM/YYYY');
@@ -154,7 +154,6 @@ class CertificadoLanding extends Component {
   }
 
   render() {
- 
     let checkedInUsers = this.props.cEventUser.value ? [this.props.cEventUser.value] : [];
 
     return (
@@ -182,21 +181,24 @@ class CertificadoLanding extends Component {
           </Col>
         )}
 
-        {!this.props.cUser.value || (!this.props.cUser.value._id && <p>Debes ingresar con tu usuario para descargar el certificado</p>)}
+        {!this.props.cUser.value ||
+          (!this.props.cUser.value._id && <p>Debes ingresar con tu usuario para descargar el certificado</p>)}
 
         {this.props.cUser.value && this.props.cUser.value._id && checkedInUsers && checkedInUsers.length <= 0 && (
-          <p>Debes estar registrado en el evento para poder descargar tu certificado </p>
+          <h1 style={{ justifyContent: 'center', fontSize: '27px', alignItems: 'center', display: 'flex', fontWeight:"bold" }}>
+            Debes estar registrado en el evento para poder descargar tu certificado{' '}
+          </h1>
         )}
 
         {this.props.cUser.value && this.props.cUser.value._id && checkedInUsers && checkedInUsers.length <= 0 && (
-          <p>Debes Haber asistido para descargar el certificado </p>
+          <h1 style={{ justifyContent: 'center', fontSize: '27px', alignItems: 'center', display: 'flex' }}>
+            Debes Haber asistido para descargar el certificado
+          </h1>
         )}
-
-      
       </>
     );
   }
 }
 
-let CertificadoLandingwithContext = withContext(CertificadoLanding)
+let CertificadoLandingwithContext = withContext(CertificadoLanding);
 export default withRouter(CertificadoLandingwithContext);
