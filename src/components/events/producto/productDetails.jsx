@@ -36,14 +36,9 @@ function DetailsProduct (props) {
          <Col xm={24} sm={24} md={12} lg={8} xl={12} xxl={12}>
              <div  style={{width:'100%', height:'450px', display:'grid', justifyContent:'center'}}>
                 <Carousel>                   
-                   {product && product.image && product.image.filter((img)=>img!=null).map((image,index)=>     
-          
-                    <img key={'image'+index} style={{width:'56vh', objectFit:'contain'}} src={product.image[0]} alt="arte"  />
-                  
-                                   
-                  )
-                     }
-                   
+                   {product && product.image && product.image.filter((img)=>img!=null).map((image,index)=>          
+                    <img key={'image'+index} style={{width:'56vh', objectFit:'contain'}} src={product.image[0]} alt="arte"  />                                   
+                  )}                   
               </Carousel> 
              </div>
          </Col>
@@ -52,7 +47,7 @@ function DetailsProduct (props) {
                  <Space direction='vertical' style={{width:'100%'}}>  
                      <Title level={3}>{product && product.name?product.name :"Nombre de la obra"}</Title> 
                       <Title style={{marginBottom:'0px'}} level={5}>Artista</Title>
-                      <Text>{product && product.author ? product.author :"Sin Artista"} </Text>        
+                      <Text>{product && product.by ? product.by :"Sin Artista"} </Text>        
                      <Title level={5}>Descripcion</Title>
                      <Text><div
                        dangerouslySetInnerHTML={{ __html: product && product.description ? product.description:"Sin descripción" }}></div></Text>           
