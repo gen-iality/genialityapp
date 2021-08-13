@@ -5,7 +5,7 @@ import { Card } from 'antd';
 import ReactQuill from 'react-quill';
 import ReactPlayer from 'react-player';
 import { Row, Col } from 'antd';
-import {  AgendaApi } from '../../helpers/request';
+import { AgendaApi } from '../../helpers/request';
 import { parseUrl } from '../../helpers/constants';
 import AgendaActividadDetalle from '../../components/events/agendaActividadDetalle';
 import withContext from '../../Context/withContext';
@@ -64,7 +64,9 @@ class eventLanding extends Component {
           {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' ? (
             ''
           ) : (
-            <h1 className='is-size-4-desktop has-text-weight-semibold'>{this.props.cEvent.value.name}</h1>
+            <Row justify='center'>
+              <h1 className='is-size-4-desktop has-text-weight-semibold'>{this.props.cEvent.value.name}</h1>
+            </Row>
           )}
           {/* Si event video existe */}
           {this.props.cEvent.value.video && (
