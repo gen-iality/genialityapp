@@ -142,29 +142,30 @@ function CrearEditarEmpresa({ event, match, history }) {
   const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(event._id);
   const [socialNetworksOptions, loadingSocialNetworks] = useGetEventCompaniesSocialNetworksOptions(event._id);
   const [initialValues, loadingInitialValues] = useGetCompanyInitialValues(event._id, companyId);
-  const [tamanio,setTamanio]=useState(0)
+  const [tamanio, setTamanio] = useState(0);
 
-  useEffect(()=>{
+  useEffect(() => {
     firestore
-    .collection('event_companies')
-    .doc(event._id)
-    .collection('companies').get().then((resp)=>{
-      setTamanio(resp.docs.length)
-      console.log("TAMAÑO",resp.docs.length)}
-    )
-   
-  },[])
+      .collection('event_companies')
+      .doc(event._id)
+      .collection('companies')
+      .get()
+      .then((resp) => {
+        setTamanio(resp.docs.length);
+        console.log('TAMAÑO', resp.docs);
+      });
+  }, []);
 
   const onSubmit = useCallback(
     (values, { setSubmitting }) => {
       const isNewRecord = !companyId;
       const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany;
-      const paramsArray = isNewRecord ? [event._id, values,tamanio] : [event._id, companyId, values];
+      const paramsArray = isNewRecord ? [event._id, values, tamanio] : [event._id, companyId, values];
       const errorObject = {
         message: 'Error',
         description: isNewRecord ? 'Ocurrió un error creando la empresa' : 'Ocurrió un error actualizando la empresa',
       };
-      console.log(paramsArray);
+      console.log('toda la info empresarial', paramsArray);
       setSubmitting(true);
       apply(createOrEdit, paramsArray)
         .then(() => history.push(`/event/${event._id}/empresas`))
@@ -175,7 +176,7 @@ function CrearEditarEmpresa({ event, match, history }) {
           setSubmitting(false);
         });
     },
-    [history, event._id, companyId,tamanio]
+    [history, event._id, companyId, tamanio]
   );
 
   if (loadingStandTypes || loadingSocialNetworks || loadingInitialValues) {
@@ -189,7 +190,7 @@ function CrearEditarEmpresa({ event, match, history }) {
         <Formik
           enableReinitialize
           initialValues={initialValues}
-          validationSchema={validationSchema}
+          // validationSchema={validationSchema}
           onSubmit={onSubmit}>
           {({ isSubmitting, errors, values, handleSubmit, handleReset }) => {
             console.error(errors);
@@ -324,7 +325,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                                       type='primary'
                                       icon={<PlusCircleOutlined />}
                                       onClick={() => {
-                                        arrayHelpers.push({ description: '', image: '', web_url:'' });
+                                        arrayHelpers.push({ description: '', image: '', web_url: '' });
                                       }}>
                                       {'Agregar servicio'}
                                     </Button>
@@ -339,7 +340,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                               type='primary'
                               icon={<PlusCircleOutlined />}
                               onClick={() => {
-                                arrayHelpers.push({ description: '', image: '',web_url:'' });
+                                arrayHelpers.push({ description: '', image: '', web_url: '' });
                               }}>
                               {'Agregar servicio'}
                             </Button>
