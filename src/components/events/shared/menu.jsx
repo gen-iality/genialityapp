@@ -343,7 +343,7 @@ class MenuConfig extends Component {
                   Pedidos
                 </NavLink>
               </Menu.Item>
-            </SubMenu> */}
+            </SubMenu> 
 
           {/* Sección estadisticas */}
 

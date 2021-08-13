@@ -5,6 +5,8 @@ import * as Cookie from 'js-cookie';
 import { toast } from 'react-toastify';
 import UserRegistration from '../events/userRegistration';
 import withContext from '../../Context/withContext';
+import TicketsEvent from './ticketComponent';
+import { Col, Row } from 'antd';
 
 class TicketsForm extends Component {
   constructor(props) {
@@ -38,7 +40,9 @@ class TicketsForm extends Component {
     //Arreglo de tiquetes
     const tickets = this.props.cEvent.value.tickets.map((ticket) => {
       //Encuentro el stage relacionado
-      const stage = !this.props.cEvent.value.stages ? null : this.props.cEvent.value.stages.find((stage) => stage.stage_id === ticket.stage_id);
+      const stage = !this.props.cEvent.value.stages
+        ? null
+        : this.props.cEvent.value.stages.find((stage) => stage.stage_id === ticket.stage_id);
       //Lista de opciones para el select
       ticket.options =
         stage && (stage.status === 'ended' || stage.status === 'notstarted')
@@ -48,12 +52,17 @@ class TicketsForm extends Component {
     });
 
     //Se encunetra el primer stage que esté activo para mostrarlo
-    let stage = !this.props.cEvent.value.stages ? null : this.props.cEvent.value.stages.find((stage) => stage.status === 'active');
+    let stage = !this.props.cEvent.value.stages
+      ? null
+      : this.props.cEvent.value.stages.find((stage) => stage.status === 'active');
     //por si ninguna etapa se encuetra activa
-    stage = !stage && this.props.cEvent.value.stages && this.props.cEvent.value.stages[0] ? this.props.cEvent.value.stages[0] : null;
+    stage =
+      !stage && this.props.cEvent.value.stages && this.props.cEvent.value.stages[0]
+        ? this.props.cEvent.value.stages[0]
+        : null;
 
     const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
-    const ticketstoshow = tickets.filter((ticket) => ticket.stage_id == id); //Filtrar los tiquetes del stage activo
+    const ticketstoshow = tickets//tickets.filter((ticket) => ticket.stage_id == id); //Filtrar los tiquetes del stage activo
 
     //"5e835d9fd74d5c6cfd379992"
     //Persistencia de tiquetes seleccionados después de login
@@ -130,7 +139,8 @@ class TicketsForm extends Component {
     Object.keys(this.state.ticketsadded).map((key) => {
       const info = tickets.find((ticket) => ticket._id === key);
       const amount = this.state.ticketsadded[key];
-      const price = info.price === 'Gratis' ? 0 : parseInt(info.price.replace(/[^0-9]/g, ''), 10) * amount;
+      console.log("PRECIO==>",price)
+      const price = info.price? info.price === 'Gratis' ? 0 : parseInt(info.price.replace(/[^0-9]/g, ''), 10) * amount:0;
       total += price;
       const cost =
         price <= 0
@@ -148,8 +158,10 @@ class TicketsForm extends Component {
   };
 
   //Función botón RESERVAR
-  onClick = () => {
+  onClick = (codeDiscount) => {
     if (this.state.summaryList.length <= 0) return; //Si no hay tiquetes no hace nada, prevenir click raro
+    console.log("SUMMARYLIST==>",this.state.summaryList)
+    console.log("AUTH==>",this.state.auth)
     if (!this.state.auth) return this.props.handleModal(); //Si no está logueado muestro popup
 
     //@TODO si no tiene sillas debe pasar derecho al checkout y si el tickete tiene silla debe ir en el tickete eso es del API y usado aca
@@ -174,15 +186,17 @@ class TicketsForm extends Component {
 
   //Función COMPRAR, recibe sillas si tiene o no
   submit = (seats) => {
+  
     const data = { tickets: [] };
     //Construyo body de acuerdo a peticiones de api
     this.state.summaryList.map((item) => {
       data[`ticket_${item.id}`] = item.quantity;
       return data.tickets.push(item.id);
     });
-    if (seats) {
+    if (seats) {     
       //Si tiene sillas hago validaciones de cantidad de tiquetes y sillas seleccionadas
       const quantity = this.state.summaryList.map((i) => parseInt(i.quantity, 10)).reduce((a, b) => a + b, 0);
+     
       this.chart.listSelectedObjects((list) => {
         //Si las sillas son iguales a los tiquetes lo deja pasar, sino muestra toast
         if (quantity === list.length) {
@@ -197,6 +211,7 @@ class TicketsForm extends Component {
 
   //Función que hace la petición, carga loading y muestra reusltado en log si hay error muestra en log y en un toast
   async request(data) {
+    console.log("DATA",data)
     this.setState({ loading: true });
     try {
       data.code_discount = this.state.code_discount;
@@ -226,9 +241,56 @@ class TicketsForm extends Component {
   };
 
   render() {
+    const {
+      state: {
+        active,
+        ticketstoshow,
+        summaryList,
+        loading,
+        selectValues,
+        total,
+        step,
+        disabled,
+        listSeats,
+        disabledSelect,
+      },
+      props: { stages, seatsConfig, experience, fees },
+      selectStage,
+      handleQuantity,
+      onClick,
+      changeStep,
+    } = this;
     return (
       <>
-       <UserRegistration extraFields={[]}  />   
+        <Row>
+          <Col span={16}>
+            <UserRegistration extraFields={[]} />
+          </Col>
+          <Col span={8}>
+            <TicketsEvent
+              changeStep={changeStep}
+              onClick={onClick}
+              handleQuantity={handleQuantity}
+              selectStage={selectStage}
+              ticketstoshow={ticketstoshow}
+              active={active}
+              summaryList={summaryList}
+              step={step}
+              total={total}
+              seatsConfig={seatsConfig}
+              stages={stages}
+              experience={experience}
+              fees={fees}
+              disabled={disabled}
+              listSeats={listSeats}
+              disabledSelect={disabledSelect}
+              loading={loading}
+              selectValues={selectValues}
+              currencyFormatConfig={this.state.currencyFormatConfig}
+              removeTicket={this.removeTicket}
+            />
+          </Col>
+        </Row>
       </>
     );
   }

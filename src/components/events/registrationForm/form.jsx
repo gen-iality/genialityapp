@@ -34,10 +34,12 @@ const { TextArea, Password } = Input;
 
 const textLeft = {
   textAlign: 'left',
+  width:'100%'
 };
 
 const center = {
   margin: '0 auto',
+  //width:'100%'
 };
 
 /**
@@ -601,7 +603,7 @@ export default ({
     <>
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
-          <Card
+          <Card 
             title={
               eventUser !== undefined
                 ? intl.formatMessage({ id: 'registration.title.update' })

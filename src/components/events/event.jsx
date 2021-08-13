@@ -238,7 +238,7 @@ class Event extends Component {
                 path={`${match.url}/tipo-asistentes`}
                 render={() => <TipoAsistentes eventID={this.state.event._id} />}
               />
-              {permissions.data.ids.includes(rolPermissions.admin_ticket._id) && (
+              {true && (
                 <Route path={`${match.url}/ticket`} render={() => <TicketInfo eventId={this.state.event._id} />} />
               )}
 
