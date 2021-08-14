@@ -11,8 +11,6 @@ function RankingTrivia(props) {
 
   const { currentSurvey, currentUser } = props;
   useEffect(() => {
-    console.log('RANKING');
-    console.log(currentSurvey);
     if (!currentSurvey) return;
     if (!(Object.keys(currentUser).length === 0)) {
       const initialValues = {

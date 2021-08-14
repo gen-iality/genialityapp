@@ -13,9 +13,6 @@ export default function RankingList({ data }) {
     setList(data);
   }, [data]);
 
-  console.log("DATOS RANKING")
-  console.log(data)
-
   return (
     <div style={{ marginTop: 16 }}>
       <h3 style={{ fontSize: '14px', fontWeight: '700',color:"red !important" }}>Ranking de jugadores</h3>

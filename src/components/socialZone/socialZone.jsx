@@ -374,16 +374,14 @@ let SocialZone = function(props) {
               </Button>
             </Col> */}
           </Row>
-          {props.currentSurvey === null && cUser.value !== null ? (
+          {cUser.value !== null ? (
             <SurveyList
               eventSurveys={props.eventSurveys}
               publishedSurveys={props.publishedSurveys}
               listOfEventSurveys={props.listOfEventSurveys}
               loadingSurveys={props.loadingSurveys}
             />
-          ) : props.currentSurvey !== null && cUser.value !== null ? (
-            <SurveyDetail />
-          ) : (
+          ) :  (
             <div style={{ paddingTop: 30 }}>
               <Alert
                 showIcon

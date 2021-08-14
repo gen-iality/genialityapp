@@ -17,8 +17,8 @@ function SurveyDetailPage(props) {
     return <h1>No hay nada publicado</h1>;
   }
 
+  /** Validacion que permite saber cuando un usuario ya contesto la encuesta para que no se le permita realizarla mas */
   const isCompleted = (id) => {
-     console.log("Este nene se esta ejecutado",id)
     if (
       currentSurveyStatus &&
       currentSurveyStatus[id] &&
@@ -42,7 +42,7 @@ function SurveyDetailPage(props) {
           operation='participationPercentage' //onlyCount, participationPercentage
         />
       )}
-      {!isCompleted(currentSurvey._id) && (
+      {surveyResult === 'view' && !isCompleted(currentSurvey._id) && (
         <Card className='survyCard'>
           <SurveyComponent
             idSurvey={currentSurvey._id}
