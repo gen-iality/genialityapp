@@ -58,7 +58,6 @@ export const totalsMetricasActivityDetails = async (eventId) => {
 export const metricasRegisterByDate = async (eventId) => {
   let listmetric=[]
   let metrics = await EventsApi.metricsRegisterBydate(eventId, 'created_at');
-  console.log(metrics)
   metrics.map((metric)=>{
     metric={...metric,date:moment(metric.date).format("YYYY/MM/DD")}
     listmetric.push(metric)
@@ -69,7 +68,6 @@ export const metricasRegisterByDate = async (eventId) => {
 
 export const metricasCheckedByDate = async (eventId) => {
   const metrics = await EventsApi.metricsRegisterBydate(eventId, 'checkedin_at');
-  console.log(metrics);
   return metrics;
 };
 
@@ -98,7 +96,6 @@ export const queryReportGnal = async (eventID) => {
     })
     let respjson= await resp.json()
     const dataEvents = respjson.rows;
-    console.log(dataEvents)
     const totalMetrics = respjson.totalsForAllResults;      
     let metrics = [];
     if(dataEvents!=null){
@@ -137,7 +134,6 @@ export const queryReportGnalByMoth = async (eventID) => {
     })
     let respjson= await resp.json()
     let datos = respjson.rows;  
-    console.log(datos)      
         let totalMetrics = [];
         datos.map((dat) => {
           let metric = {
@@ -170,7 +166,6 @@ export const queryReportGnalByMoth = async (eventID) => {
     //Función que permite obtener metricas por vistas de actividad
    export const obtenerMetricasByView = (view,metricsGnal) => {
       let metrics = metricsGnal.filter((m) => m.view == view)[0];
-      console.log(metricsGnal)
       return metrics;
     };
    

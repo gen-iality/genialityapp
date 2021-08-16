@@ -27,11 +27,9 @@ const NoticiasList = ({ setVirtualConference, match,size }) => {
     setVirtualConference(false);
     NewsFeed.byEvent(match.params.event_id).then((resp) => {
       if (resp && resp.length > 0) {
-        console.log(resp);
         let noticeList = resp.sort((a, b) => moment(b.created_at) - moment(a.created_at));
         setNoticiasAll(noticeList)
         if(size){
-          console.log(size)
           noticeList= noticeList.slice(0,size)
         }
         setNoticias(noticeList);

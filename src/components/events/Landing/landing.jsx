@@ -5,7 +5,7 @@ import { UseCurrentUser } from '../../../Context/userContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { HelperContext } from '../../../Context/HelperContext';
 /** ant design */
-import { Layout, Spin, notification, Button } from 'antd';
+import { Layout, Spin, notification, Button, Drawer } from 'antd';
 
 /** Components */
 import TopBanner from './TopBanner';
@@ -108,10 +108,6 @@ const Landing = (props) => {
   useEffect(() => {
     cEventContext.status === 'LOADED' && seteventId(cEventContext.value._id);
 
-    console.log('====================================');
-    console.log('styles even', cEventContext.value?.styles);
-    console.log('====================================');
-
     cEventContext.status === 'LOADED' &&
       firestore
         .collection('events')
@@ -139,8 +135,6 @@ const Landing = (props) => {
             }
           });
         });
-
-    // console.log('totalNewMessages', totalNewMessages);
   }, [cEventContext.status]);
 
   //METODO PARA SETEAR NEW MESSAGE
@@ -150,7 +144,6 @@ const Landing = (props) => {
 
   /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
   function visualizarEncuesta(survey) {
-    console.log('cambios encuestas vis', survey);
     if (!survey) {
       setCurrentSurvey(null);
     }
@@ -199,6 +192,7 @@ const Landing = (props) => {
                 cEventContext.value?.styles.BackgroundImage})`,
             }}>
             {props.view && <TopBanner currentActivity={currentActivity} />}
+
             <EventSectionRoutes
               generaltabs={generaltabs}
               currentActivity={currentActivity}

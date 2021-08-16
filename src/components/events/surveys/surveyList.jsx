@@ -25,8 +25,7 @@ function SurveyList(props) {
    const currentUser = UseCurrentUser();
 
    const handleClick = (currentSurvey, status) => {
-      console.log('currentSurvey')
-      console.log(currentSurvey)
+    
       if (activity !== null && currentSurvey.isOpened === 'true') {
          setSurveyResult('view');
       } else if (activity !== null && currentSurvey.isOpened === 'false') {

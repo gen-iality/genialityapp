@@ -37,8 +37,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
 
       getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
-          console.log("PENDING AGENDAS")
-          console.log(agendas)
+        
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             const pendingAgendas = map((agenda) => {
               const ownerEventUser = find(propEq('_id', agenda.owner_id), eventUsers);
@@ -97,7 +96,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
     <>
       <div>
         <Divider>{'Solicitudes de citas recibidas pendientes'}</Divider>
-        {console.log(pendingAgendas)}
+     
         {!loading &&
           (pendingAgendas.length > 0 ? (
             pendingAgendas.map((pendingAgenda) => (
@@ -171,8 +170,6 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             state: '1'
           };
           addNotification(notificationr,eventContext.value,userCurrentContext.value)
-          console.log("LLEGO ACA")
-         // notification(notificationr, props.userCurrentContext._id);
         })
         .catch((error) => {
           if (!error) {

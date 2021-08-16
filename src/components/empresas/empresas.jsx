@@ -30,7 +30,6 @@ function Empresas({ event, match }) {
         newCompanies= newCompanies.sort(function(a, b) {
          return a.index-b.index;
         });
-       //console.log("EJECUTADO EFECCCCT")
         setCompanyList(newCompanies)
     }  
   },[companies])
@@ -42,7 +41,6 @@ function Empresas({ event, match }) {
 
   const orderCompany=async(updateList)=>{
     message.loading("Por favor espere..")
-    console.log(companyList)
     let companies=updateList?updateList:companyList
     for(let i=0;i<companies.length;i++){
       companies[i].index=i+1;     
@@ -59,7 +57,6 @@ function Empresas({ event, match }) {
   }
 
   function deleteCompany(id){
-    console.log(event._id)
     firestore
       .collection('event_companies')
       .doc(event._id)
@@ -68,7 +65,6 @@ function Empresas({ event, match }) {
         let updateList= companyList.filter(company=>company.id!==id);     
       setCompanyList(updateList);
          orderCompany(updateList).then((r)=>{
-           console.log("TERMINO DE ACTUALIZAR INDEX=>")
          })
       });
   
@@ -131,7 +127,6 @@ function Empresas({ event, match }) {
     
     if (oldIndex !== newIndex) {
       const newData = arrayMove([].concat(companyList), oldIndex, newIndex).filter(el => !!el);
-      console.log('Sorted items: ', newData);
       for(let i=0;i<newData .length;i++){
         newData [i].index=i;  
       }

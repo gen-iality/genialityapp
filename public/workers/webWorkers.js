@@ -13,9 +13,7 @@ const config = {
 firebase.initializeApp(config);
 var realTime = firebase.database();
 
-console.log("10. Worker ",realTime)
 addEventListener('message', e => {
-console.log("10. Worker", e.data)
 let data = e.data
 const realTimeRef = realTime.ref(`surveys/${data.surveyId}/answer_count/${data.questionId}`);
 

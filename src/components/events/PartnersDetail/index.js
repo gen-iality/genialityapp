@@ -6,7 +6,6 @@ import ReactPlayer from 'react-player';
 
 export default function PartnerDetail({ company, handleClosePartnerDetail }) {
 
-  console.log("selected",company)
   return (
     <div>
       <Row justify='start' style={{ marginBottom: '15px' }}>

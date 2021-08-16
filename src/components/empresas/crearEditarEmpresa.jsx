@@ -152,7 +152,6 @@ function CrearEditarEmpresa({ event, match, history }) {
       .get()
       .then((resp) => {
         setTamanio(resp.docs.length);
-        console.log('TAMAÑO', resp.docs);
       });
   }, []);
 
@@ -165,13 +164,10 @@ function CrearEditarEmpresa({ event, match, history }) {
         message: 'Error',
         description: isNewRecord ? 'Ocurrió un error creando la empresa' : 'Ocurrió un error actualizando la empresa',
       };
-      console.log('toda la info empresarial', paramsArray);
       setSubmitting(true);
       apply(createOrEdit, paramsArray)
         .then(() => history.push(`/event/${event._id}/empresas`))
         .catch((error) => {
-          console.log('ERROR');
-          console.error(error);
           notification.error(errorObject);
           setSubmitting(false);
         });

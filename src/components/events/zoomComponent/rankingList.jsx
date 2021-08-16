@@ -13,8 +13,7 @@ export default function RankingList({ data }) {
     setList(data);
   }, [data]);
 
-  console.log("DATOS RANKING")
-  console.log(data)
+ 
 
   return (
     <div style={{ marginTop: 16 }}>

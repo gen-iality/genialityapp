@@ -4,281 +4,168 @@ import { firestore } from '../../../../helpers/firebase';
 import moment from 'moment';
 
 function QueryTesting() {
-   /** Ruta para escritura y lectura de respuestas en firebase */
-   /** /surveys/survey_id/answersbyquestion/question_id/responses/attendee_id */
-   /** /surveys/survey_id/answersbyattendee/attendee_id/responses/question_id */
-   /** /surveys/s1u2r3v4e5y6_7i8d/answersbyquestion/q1u2e3s4t5i6o7n8_9i0d/responses */
-   const [data, setData] = useState(null);
-   const [totalAveragedata, setTotalAverageData] = useState(null);
-   const [totalTime, setTotalTime] = useState(null);
-   const [validationStartTime, setValidationStartTime] = useState();
+  /** Ruta para escritura y lectura de respuestas en firebase */
+  /** /surveys/survey_id/answersbyquestion/question_id/responses/attendee_id */
+  /** /surveys/survey_id/answersbyattendee/attendee_id/responses/question_id */
+  /** /surveys/s1u2r3v4e5y6_7i8d/answersbyquestion/q1u2e3s4t5i6o7n8_9i0d/responses */
+  const [data, setData] = useState(null);
+  const [totalAveragedata, setTotalAverageData] = useState(null);
+  const [totalTime, setTotalTime] = useState(null);
+  const [validationStartTime, setValidationStartTime] = useState();
 
-   /** Ingreso de datos a la DB */
-   function insertionInTheDatabase(insertions) {
-      const firebaseRef = firestore
-         .collection('surveys')
-         .doc('s1u2r3v4e5y6_7i8d')
-         .collection('answersbyquestion')
-         .doc('q1u2e3s4t5i6o7n8_9i0d')
-         .collection('responses');
+  /** Ingreso de datos a la DB */
+  function insertionInTheDatabase(insertions) {
+    const firebaseRef = firestore
+      .collection('surveys')
+      .doc('s1u2r3v4e5y6_7i8d')
+      .collection('answersbyquestion')
+      .doc('q1u2e3s4t5i6o7n8_9i0d')
+      .collection('responses');
 
-      firebaseRef.add({
-         answer: insertions,
+    firebaseRef.add({
+      answer: insertions,
+    });
+  }
+
+  /** Listener que permite recuperar toda la data y guardarla en un array */
+  async function dataBaseListener() {
+    const firebaseRef = firestore
+      .collection('surveys')
+      .doc('s1u2r3v4e5y6_7i8d')
+      .collection('answersbyquestion')
+      .doc('q1u2e3s4t5i6o7n8_9i0d')
+      .collection('responses');
+
+    const unSuscribe = firebaseRef.onSnapshot((snapShot) => {
+      let dataTest = [];
+      snapShot.forEach((data) => {
+        if (data.data()) {
+          dataTest.push(data.data());
+        }
       });
-   }
+      setData(dataTest);
 
-   /** Listener que permite recuperar toda la data y guardarla en un array */
-   async function dataBaseListener() {
-      //    console.log("10. se ejecuta el listener")
-      const firebaseRef = firestore
-         .collection('surveys')
-         .doc('s1u2r3v4e5y6_7i8d')
-         .collection('answersbyquestion')
-         .doc('q1u2e3s4t5i6o7n8_9i0d')
-         .collection('responses');
+      snapShot.docChanges().length > 0 &&
+      (snapShot.docChanges()[0].type === 'modified' || snapShot.docChanges()[0].type === 'removed')
+        ? startTimer()
+        : null;
+    });
 
-      const unSuscribe = firebaseRef.onSnapshot((snapShot) => {
-         let dataTest = [];
-         snapShot.forEach((data) => {
-            if (data.data()) {
-               dataTest.push(data.data());
-            }
-         });
-         setData(dataTest);
+    return unSuscribe;
+  }
 
-         snapShot.docChanges().length > 0 &&
-         (snapShot.docChanges()[0].type === 'modified' || snapShot.docChanges()[0].type === 'removed')
-            ? startTimer()
-            : null;
-      });
+  /** inicia el cronometro */
+  function startTimer() {
+    setTotalTime(null);
+    const startTimer = moment(new Date());
+    setValidationStartTime(startTimer);
+  }
 
-      return unSuscribe;
-   }
+  /** detiene el cronometro */
+  function endTimer() {
+    const endTime = moment(new Date());
+    const seconds = endTime.diff(validationStartTime);
+    setTotalTime(seconds);
+  }
 
-   /** inicia el cronometro */
-   function startTimer() {
-      setTotalTime(null);
-      const startTimer = moment(new Date());
-      // console.log("10. startTimer ", startTimer)
-      setValidationStartTime(startTimer);
-   }
+  /** accion del formulario de antd que se ejecuta al hacer clic en el boton Realizar prueba */
+  const onFinish = (values) => {
+    const { insertionNumber } = values;
+    startTimer();
+    for (let insertions = 0; insertions < insertionNumber; insertions++) {
+      insertionInTheDatabase(insertions + 1);
+    }
+  };
 
-   /** detiene el cronometro */
-   function endTimer() {
-      const endTime = moment(new Date());
-      // console.log("10. endTime ", endTime)
-      const seconds = endTime.diff(validationStartTime);
-      // console.log('10. seconds   ', seconds);
-      setTotalTime(seconds);
-   }
+  /** promedio por respuestas, como las respuestas se guardan con un campo answer de tipo number aqui se promedia esa data */
+  function averagePerResponses() {
+    if (data && data.length > 0) {
+      let average = data.reduce((sumTotal, rest) => {
+        return sumTotal + rest.answer;
+      }, 0);
 
-   /** accion del formulario de antd que se ejecuta al hacer clic en el boton Realizar prueba */
-   const onFinish = (values) => {
-      const { insertionNumber } = values;
-      startTimer();
-      for (let insertions = 0; insertions < insertionNumber; insertions++) {
-         insertionInTheDatabase(insertions + 1);
-      }
-   };
+      let totalAverage = average / data.length;
+      let totalAverageTwoDecimals = Math.round(totalAverage * 100) / 100;
+      setTotalAverageData(totalAverageTwoDecimals);
+    } else {
+      setTotalAverageData(null);
+    }
+  }
 
-   /** promedio por respuestas, como las respuestas se guardan con un campo answer de tipo number aqui se promedia esa data */
-   function averagePerResponses() {
-      if (data && data.length > 0) {
-         let average = data.reduce((sumTotal, rest) => {
-            return sumTotal + rest.answer;
-         }, 0);
+  /** se inicializa el listener y el cronometro, ademas se cierra el listener al salir del componente */
+  useEffect(() => {
+    const unSuscribe = dataBaseListener();
+    startTimer();
+    return () => unSuscribe;
+  }, []);
 
-         let totalAverage = average / data.length;
-         let totalAverageTwoDecimals = Math.round(totalAverage * 100) / 100;
-         setTotalAverageData(totalAverageTwoDecimals);
-      } else {
-         setTotalAverageData(null);
-      }
-   }
+  /** Se ejecuta el promedio cada que el listener cambia, ademas cuando ya no se ejecuta el efecto se detiene el contador */
+  useEffect(() => {
+    averagePerResponses();
+    return endTimer();
+  }, [data]);
 
-   /** se inicializa el listener y el cronometro, ademas se cierra el listener al salir del componente */
-   useEffect(() => {
-      const unSuscribe = dataBaseListener();
-      startTimer();
-      return () => unSuscribe;
-   }, []);
+  return (
+    <Row justify='center' align='middle' style={{ minHeight: '100vh', textAlign: 'center' }}>
+      <Col>
+        <Card>
+          <Form name='queryTesting' initialValues={{ remember: true }} onFinish={onFinish}>
+            <Form.Item
+              label='# inserciones en la Bd'
+              name='insertionNumber'
+              rules={[{ required: true, message: 'Ingrese un número de inserciones!' }]}>
+              <InputNumber min={0} max={9999} />
+            </Form.Item>
 
-   /** Se ejecuta el promedio cada que el listener cambia, ademas cuando ya no se ejecuta el efecto se detiene el contador */
-   useEffect(() => {
-      averagePerResponses();
-      return endTimer();
-   }, [data]);
-
-   /** Prueba tansacciones desde RealTimeDatabase con worker*/
-   // let variables = {
-   //     surveyId, questionId, optionIndex, vote
-   // }
-
-   // const worker = new Worker('/workers/webWorkers.js');
-   // worker.addEventListener('message', e => {
-   //     console.log('10.', e.data);
-   // });
-   // worker.postMessage(variables);
-
-   // /** inicia el cronometro para las pruebas*/
-   // function startTimer() {
-   //    props.setTotalTime(null);
-   //    chronometerStartTime = new Date();
-   //    // console.log('10. startTimer ', startTime);
-   // }
-
-   // /** detiene el cronometro para las pruebas*/
-   // function endTimer() {
-   //    chronometerEndTime = new Date();
-   //    var timeDiff = chronometerEndTime - chronometerStartTime; //in ms
-   //    // console.log('10. seconds   ', seconds);
-   //    props.setTotalTime(timeDiff);
-   // }
-
-   /**para consultar en firebase firestore */
-   // const shard_ref = firestore
-   //    .collection('surveys')
-   //    .doc(surveyData._id)
-   //    .collection('answer_count')
-   //    .doc(question.id);
-
-   // shard_ref.onSnapshot((doc) => {
-   //    if (doc.data()) {
-   //       props.setCountRegisters(doc.data()[0]);
-   //       endTimer();
-   //    }
-   // });
-
-   // setInterval(()=>{
-   //    props.setCountRegisters((count)=>{
-   //       console.log("10. count " ,count)
-   //       return ++count
-   //    });
-   // }, 1000)
-
-   /** para consultas en firebase RealTime */
-   // const realTimeRef = fireRealtime.ref(`surveys/${surveyData._id}/answer_count/${question.id}`);
-   // console.log("render realTimeRef")
-   // realTimeRef.on('value',(snapshot) => {
-   //    if (snapshot) {
-   //       const data = snapshot.val()
-   //       if(data[0] > 100){
-   //          props.setCountRegisters(data[0]);
-
-   //       }
-   //       endTimer();
-   //       // console.log('10. data', data[0]);
-   //    }
-   // });
-
-   // startTimer();
-   /** for para pruebas de rendimiento envio de respuestas masivas en las encuestas*/
-   // for (let insertions = 0; insertions < 1000; insertions++) {
-   //    let currentUsers = { ...currentUser.value, _id: 'EdwinVilla1990#' + insertions };
-   //    let userData = { ...currentUser, value: currentUsers };
-   //    RegisterVote(surveyData, question, userData, eventUsers, voteWeight);
-   // }
-
-   /** CODIGO PRUEBAS PARA LAS GRAFICAS para usar este codigo se comenta el actual de la funcion countAnswers*/
-   /** index aleatorio para pruebas en las graficas */
-   // const randomValue = Math.random() * (2 - 0) + 0;
-   // const randomIdex = parseInt(randomValue.toFixed());
-   // setTimeout(() => {
-   //    realTimeRef.transaction((questionAnswerCount) => {
-   //       if (questionAnswerCount) {
-   //          if (optionIndex && optionIndex.length && optionIndex.length > 0) {
-   //             optionIndex.forEach((element) => {
-   //                if (element >= 0) {
-   //                   questionAnswerCount[element] += vote;
-   //                }
-   //             });
-   //          } else {
-   //             if (optionIndex >= 0) {
-   //                questionAnswerCount[randomIdex] += vote;
-   //             }
-   //          }
-   //       } else {
-   //          // Se crea un objeto que se asociara a las opciones de las preguntas
-   //          // Y se inicializan con valores en 0, para luego realizar el conteo
-   //          let firstData = {};
-   //          for (var i = 0; i < optionQuantity; i++) {
-   //             let idResponse = i.toString();
-
-   //             // Se valida si se escogio mas de una opcion en la pregunta o no
-   //             if (optionIndex && optionIndex.length && optionIndex.length > 0) {
-   //                firstData[idResponse] = optionIndex.includes(i) ? vote : 0;
-   //             } else {
-   //                firstData[idResponse] = optionIndex == idResponse ? vote : 0;
-   //             }
-   //          }
-
-   //          // Valida si la colleccion existe, si no, se asigna el arreglo con valores iniciales
-   //          questionAnswerCount = firstData;
-   //       }
-   //       return questionAnswerCount;
-   //    });
-
-   return (
-      <Row justify='center' align='middle' style={{ minHeight: '100vh', textAlign: 'center' }}>
-         <Col>
-            <Card>
-               <Form name='queryTesting' initialValues={{ remember: true }} onFinish={onFinish}>
-                  <Form.Item
-                     label='# inserciones en la Bd'
-                     name='insertionNumber'
-                     rules={[{ required: true, message: 'Ingrese un número de inserciones!' }]}>
-                     <InputNumber min={0} max={9999} />
-                  </Form.Item>
-
-                  <Form.Item>
-                     <Button type='primary' htmlType='submit'>
-                        Realizar prueba
-                     </Button>
-                  </Form.Item>
-               </Form>
-               <Card>
-                  <div style={{ marginBottom: '25px' }}>
-                     <h1>Total Respuestas</h1>
-                     {data !== null ? (
-                        <Tag color='success'>
-                           <h1>{data.length}</h1>
-                        </Tag>
-                     ) : (
-                        <h1>sin registros</h1>
-                     )}
-                  </div>
-                  <div style={{ marginBottom: '25px' }}>
-                     <h1>Promedio</h1>
-                     {totalAveragedata !== null ? (
-                        <Tag color='success'>
-                           <h1>{totalAveragedata}</h1>
-                        </Tag>
-                     ) : (
-                        <h1>sin registros</h1>
-                     )}
-                  </div>
-                  <div>
-                     <h1>Tiempo</h1>
-                     {totalTime !== null ? (
-                        <Tag color='success'>
-                           <h1>{totalTime} M.Segundos</h1>
-                        </Tag>
-                     ) : (
-                        <h1>Aun no hay tiempos</h1>
-                     )}
-                  </div>
-               </Card>
-               {/* Prueba botones para probar funciones para medir tiempo */}
-               {/* <Button type='primary' onClick={startTimer}>
+            <Form.Item>
+              <Button type='primary' htmlType='submit'>
+                Realizar prueba
+              </Button>
+            </Form.Item>
+          </Form>
+          <Card>
+            <div style={{ marginBottom: '25px' }}>
+              <h1>Total Respuestas</h1>
+              {data !== null ? (
+                <Tag color='success'>
+                  <h1>{data.length}</h1>
+                </Tag>
+              ) : (
+                <h1>sin registros</h1>
+              )}
+            </div>
+            <div style={{ marginBottom: '25px' }}>
+              <h1>Promedio</h1>
+              {totalAveragedata !== null ? (
+                <Tag color='success'>
+                  <h1>{totalAveragedata}</h1>
+                </Tag>
+              ) : (
+                <h1>sin registros</h1>
+              )}
+            </div>
+            <div>
+              <h1>Tiempo</h1>
+              {totalTime !== null ? (
+                <Tag color='success'>
+                  <h1>{totalTime} M.Segundos</h1>
+                </Tag>
+              ) : (
+                <h1>Aun no hay tiempos</h1>
+              )}
+            </div>
+          </Card>
+          {/* Prueba botones para probar funciones para medir tiempo */}
+          {/* <Button type='primary' onClick={startTimer}>
                   iniciar
                </Button>
                <Button type='primary' onClick={endTimer}>
                   detener
                </Button> */}
-            </Card>
-         </Col>
-      </Row>
-   );
+        </Card>
+      </Col>
+    </Row>
+  );
 }
 
 export default QueryTesting;

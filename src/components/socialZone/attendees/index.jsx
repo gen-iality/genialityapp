@@ -54,7 +54,6 @@ const AttendeList = function(props) {
       myattendelist && setfilteredlist(myattendelist.slice(0, pag));
     } else {
       setfilteredlist(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
-      console.log(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
     }
   }, [props.busqueda]);
 
@@ -118,10 +117,7 @@ const AttendeList = function(props) {
                     );
                     props.settabselected('1');
                     props.setCurrentChat(item.iduser, item.name ? item.name : item.names);
-                    console.log('ITEM ACA');
-                    console.log(item.name ? item.name : item.names);
                     props.setchattab('chat2');
-                    console.log(item);
                   }}>
                   <Tooltip title={'Chatear'}>
                     <MessageTwoTone style={{ fontSize: '27px' }} />

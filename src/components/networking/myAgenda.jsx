@@ -13,15 +13,13 @@ const { Meta } = Card;
 const { confirm } = Modal;
 
 function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
-
   const [loading, setLoading] = useState(true);
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [acceptedAgendas, setAcceptedAgendas] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
 
   const eventDatesRange = useMemo(() => {
-    console.log("events")
-    console.log(event)
+  
     return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
   }, [event.date_start, event.date_end]);
 
@@ -33,7 +31,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       .collection('events')
       .doc(event._id)
       .onSnapshot(function(doc) {
-        console.log(doc)
         setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
       });
   }, [event]);
@@ -43,8 +40,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       setLoading(true);
       getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
         .then((agendas) => {
-          console.log("agendas")
-          console.log(agendas)
+        
           if (isNonEmptyArray(agendas)) {
             const newAcceptedAgendas = map((agenda) => {
               const agendaAttendees = path(['attendees'], agenda);
@@ -66,7 +62,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Obteniendo las citas del usuario'
+            description: 'Obteniendo las citas del usuario',
           });
         })
         .finally(() => setLoading(false));
@@ -185,7 +181,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                     </>
                   ))
                 ) : (
-                  <Card style={{textAlign:'center'}}>{'No tienes citas agendadas para esta fecha'}</Card>
+                  <Card style={{ textAlign: 'center' }}>{'No tienes citas agendadas para esta fecha'}</Card>
                 )}
               </TabPane>
             );
@@ -201,14 +197,11 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom }) {
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
-  console.log("DATA")
-  console.log(data)
 
   //const userName = pathOr('', ['names','name'], data);
   const userName = data.name || data.names;
-  console.log("USERNAME",userName)
   //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
-  const userEmail =data.otherEventUser && data.otherEventUser.properties.email || data.email
+  const userEmail = (data.otherEventUser && data.otherEventUser.properties.email) || data.email;
 
   /** Entramos a la sala 1 a 1 de la reunión
    *
@@ -232,7 +225,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
           console.error(error);
           notification.error({
             message: 'Error',
-            description: 'Error eliminando la cita'
+            description: 'Error eliminando la cita',
           });
         })
         .finally(() => setLoading(false));
@@ -292,7 +285,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                           content: '¿Desea cancelar/eliminar esta cita?',
                           okText: 'Si',
                           cancelText: 'No',
-                          onOk: deleteThisAgenda
+                          onOk: deleteThisAgenda,
                         });
                       }}>
                       {'Cancelar'}

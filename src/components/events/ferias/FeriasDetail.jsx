@@ -37,7 +37,6 @@ const FeriasDetail = (props) => {
 
     obtenerEmpresa(eventId, idCompany).then((resp) => { 
       setCompanyDetail(resp);
-      console.log(resp)
     });
   }, []);
 

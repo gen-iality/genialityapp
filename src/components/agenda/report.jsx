@@ -81,7 +81,6 @@ class ReportList extends Component {
   }
 
 handleChange(date){
-  console.log( Moment(date, ['YYYY-MM-DD']).format('YYYY-MM-DD'))
   this.selectDay(date)
   }
 
