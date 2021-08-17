@@ -675,12 +675,7 @@ export default ({
                   </Form.Item>
                 </Col>
               </Row>
-            </Form>
-
-            <div
-              id='afrus-container-form'
-              style={{ height: '500px' }}
-              data-form='Zm9ybS0yMTU2LW9yZ2FuaXphdGlvbi0xNDYx'></div>
+            </Form>     
           </Card>
         ) : typeRegister == 'free' ? (
           <Card>
