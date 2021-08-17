@@ -31,6 +31,8 @@ import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';
 import { setSpaceNetworking } from '../../redux/networking/actions';
 import withContext from '../../Context/withContext';
+import {UseSurveysContext} from '../../Context/surveysContext';
+
 import { useHistory } from 'react-router-dom';
 
 const { TabPane } = Tabs;
@@ -47,38 +49,40 @@ const tailLayout = {
 };
 
 let AgendaActividadDetalle = (props) => {
-  let { activity_id } = useParams();
-  let [idSpeaker, setIdSpeaker] = useState(false);
-  let [orderedHost, setOrderedHost] = useState([]);
-  const [meetingState, setMeetingState] = useState(null);
-  const [meeting_id, setMeeting_id] = useState(null);
-  const [platform, setPlatform] = useState(null);
-  const totalAttendees = useState(0);
-  const totalAttendeesCheckedin = useState(0);
-  const [names, setNames] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [currentActivity, setcurrentActivity] = useState(null);
-  let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
-  let history = useHistory();
+   let { activity_id } = useParams();
+   let [idSpeaker, setIdSpeaker] = useState(false);
+   let [orderedHost, setOrderedHost] = useState([]);
+   const [meetingState, setMeetingState] = useState(null);
+   const [meeting_id, setMeeting_id] = useState(null);
+   const [platform, setPlatform] = useState(null);
+   const totalAttendees = useState(0);
+   const totalAttendeesCheckedin = useState(0);
+   const [names, setNames] = useState(null);
+   const [email, setEmail] = useState(null);
+   const [currentActivity, setcurrentActivity] = useState(null);
+   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
+   let history = useHistory();
 
-  const configfast = useState({});
+   const configfast = useState({});
+   let cSurveys  = UseSurveysContext();
 
-  const { Title } = Typography;
+   const { Title } = Typography;
 
-  const intl = useIntl();
+   const intl = useIntl();
 
-  //obtener la actividad por id
-  useEffect(() => {
-    async function getActividad() {
-      return await AgendaApi.getOne(activity_id, props.cEvent.value._id);
-    }
+   //obtener la actividad por id
+   useEffect(() => {
+      console.log('mis props', props);
+      async function getActividad() {
+         return await AgendaApi.getOne(activity_id, props.cEvent.value._id);
+      }
 
-    function orderHost(hosts) {
-      hosts.sort(function(a, b) {
-        return a.order - b.order;
-      });
-      setOrderedHost(hosts);
-    }
+      function orderHost(hosts) {
+         hosts.sort(function(a, b) {
+            return a.order - b.order;
+         });
+         setOrderedHost(hosts);
+      }
 
     getActividad().then((result) => {
       setcurrentActivity(result);
@@ -113,56 +117,48 @@ let AgendaActividadDetalle = (props) => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
-    mediaQueryMatches();
-    window.addEventListener('resize', mediaQueryMatches);
+   // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
+   mediaQueryMatches();
+   window.addEventListener('resize', mediaQueryMatches);
 
-    if (props.collapsed) {
-      props.toggleCollapsed(1);
-    }
+   if (props.collapsed) {
+     props.toggleCollapsed(1);
+   }
 
-    // Al cargar el componente se realiza el checkin del usuario en la actividad
-    try {
-      if (props.cEventUser) {
-        TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
-        Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.value._id);
-      }
+   // Al cargar el componente se realiza el checkin del usuario en la actividad
+   try {
+     if (props.cEventUser) {
+       TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
+       Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.value._id);
+     }
+   } catch (e) {
+     console.error('fallo el checkin:', e);
+   }
 
-      // Al cargar el componente se realiza el checkin del usuario en la actividad
-      try {
-         if (props.cEventUser) {
-            console.log('propsagenda', props);
-            TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
-            Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.value._id);
-         }
-      } catch (e) {
-         console.error('fallo el checkin:', e);
-      }
+   if (props.cUser && props.cUser?.displayName && props.cUser?.email) {
+     let innerName =
+       props.cUser && props.cUser.properties && props.cUser.properties.casa
+         ? '(' + props.cUser.properties.casa + ')' + props.cUser.displayName
+         : props.cUser.displayName;
+     setNames(innerName);
+     setEmail(props.cUser.email);
+   }
 
-      if (props.cUser && props.cUser?.displayName && props.cUser?.email) {
-         let innerName =
-            props.cUser && props.cUser.properties && props.cUser.properties.casa
-               ? '(' + props.cUser.properties.casa + ')' + props.cUser.displayName
-               : props.cUser.displayName;
-         setNames(innerName);
-         setEmail(props.cUser.email);
-      }
+   //Escuchando el estado de la actividad
 
-      //Escuchando el estado de la actividad
+   (async function() {
+     await listeningStateMeetingRoom(props.cEvent.value._id, activity_id);
+   })();
 
-      (async function() {
-         await listeningStateMeetingRoom(props.cEvent.value._id, activity_id);
-      })();
-
-      // Desmontado del componente
-      return () => {
-         props.gotoActivity(null);
-         props.setMainStage(null);
-         props.setCurrentSurvey(null);
-         props.setSurveyVisible(false);
-         window.removeEventListener('resize', mediaQueryMatches);
-      };
-   }, []);
+   // Desmontado del componente
+   return () => {
+     props.gotoActivity(null);
+     props.setMainStage(null);
+     props.setCurrentSurvey(null);
+     props.setSurveyVisible(false);
+     window.removeEventListener('resize', mediaQueryMatches);
+   };
+ }, []);
 
    useEffect(() => {
       (async function() {
@@ -507,14 +503,15 @@ let AgendaActividadDetalle = (props) => {
    const hasRanking = true;
 
    const isCompleted = () => {
-      if (
-         (props.currentSurvey !== null && props.currentSurvey.activity_id) ===
-            (props.currentActivity !== null && props.currentActivity._id) ||
-         (props.currentSurvey !== null && props.currentSurvey.isGlobal === 'true')
-      ) {
-         return true;
-      }
-      return false;
+      return cSurveys.currentSurvey !== null;
+      // if (
+      //    (cSurveys.currentSurvey !== null && cSurveys.currentSurvey.activity_id) ===
+      //       (props.currentActivity !== null && props.currentActivity._id) ||
+      //    (cSurveys.currentSurvey !== null && cSurveys.currentSurvey.isGlobal === 'true')
+      // ) {
+      //    return true;
+      // }
+      // return false;
    };
 
    return (
@@ -1068,9 +1065,9 @@ let AgendaActividadDetalle = (props) => {
          {isCompleted() && (
             <Drawer
                title={
-                  props.currentSurvey && props.currentSurvey?.allow_gradable_survey ? (
+                  cSurveys.currentSurvey && cSurveys.currentSurvey?.allow_gradable_survey ? (
                      <Space>
-                        {props.currentSurvey.allow_gradable_survey === 'false' ? (
+                        {cSurveys.currentSurvey.allow_gradable_survey === 'false' ? (
                            <PieChartOutlined
                               style={{
                                  display: 'flex',
@@ -1100,8 +1097,8 @@ let AgendaActividadDetalle = (props) => {
                            />
                         )}
                         <Space direction='vertical' size={-3}>
-                           {props.currentSurvey?.name}
-                           {props.currentSurvey.allow_gradable_survey === 'true' && (
+                           {cSurveys.currentSurvey?.name}
+                           {cSurveys.currentSurvey.allow_gradable_survey === 'true' && (
                               <span style={{ fontSize: '12px', color: '#52c41a' }}>Calificable</span>
                            )}
                         </Space>
@@ -1121,7 +1118,7 @@ let AgendaActividadDetalle = (props) => {
                               backgroundColor: `${colorFondo}`,
                            }}
                         />
-                        {props.currentSurvey?.name}
+                        {cSurveys.currentSurvey?.name}
                      </Space>
                   )
                }
@@ -1129,13 +1126,13 @@ let AgendaActividadDetalle = (props) => {
                closeIcon={<CloseOutlined style={{ fontSize: '24px' }} />}
                placement='right'
                // closable={true}
-               visible={props.currentSurvey && props.cUser.value !== null}
+               visible={cSurveys.currentSurvey && props.cUser.value !== null}
                onClose={onClose}
                width={window.screen.width >= 768 ? (rankingVisible == false ? '100%' : '70%') : '100%'}>
                <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
-                  {props.currentSurvey &&
-                     props.currentSurvey.rankingVisible &&
-                     props.currentSurvey.rankingVisible == 'true' && (
+                  {cSurveys.currentSurvey &&
+                     cSurveys.currentSurvey.rankingVisible &&
+                     cSurveys.currentSurvey.rankingVisible == 'true' && (
                         <Button type='primary' onClick={showRanking}>
                            {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
                         </Button>

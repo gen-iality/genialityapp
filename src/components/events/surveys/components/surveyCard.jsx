@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons';
 
 function SurveyCard(props) {
-   const { publishedSurveys, loadingSurveys, handleClick, currentSurveyStatus } = props;
+   const { publishedSurveys, status, handleClick, currentSurveyStatus } = props;
    const {Title} = Typography
 
    const headStyle = {
@@ -27,14 +27,14 @@ function SurveyCard(props) {
          bodyStyle={bodyStyle}
          title='Listado de Encuestas'
          headStyle={headStyle}>
-         {publishedSurveys && publishedSurveys.length === 0 && !loadingSurveys ? (
+         {publishedSurveys && publishedSurveys.length === 0 && !status == 'LOADED' ? (
             <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
          ) : (
             <List
                style={{ overflowY: 'auto', height: 'auto', overflowX: 'hidden' }}
                className='asistente-list'
                dataSource={publishedSurveys}
-               loading={loadingSurveys}
+               loading={status != 'LOADED'}
                renderItem={(survey) => (
                   <>
                      {publishedSurveys && publishedSurveys.length > 0 && (
