@@ -5,6 +5,7 @@ const initialState = {
   loading: false,
   error: null,
   section: null,
+  ticketview:false,
 };
 
 export default function viewSectionPermissions(state = initialState, action) {
@@ -14,6 +15,7 @@ export default function viewSectionPermissions(state = initialState, action) {
         ...state,
         view: action.payload.view,
         section: action.payload.section,
+        ticketview:action.payload.ticketview,
       };
 
     case GET_SECTION_PERMISSIONS:
@@ -22,6 +24,7 @@ export default function viewSectionPermissions(state = initialState, action) {
         loading: true,
         error: null,
         section: state.section,
+        ticketview:state.ticketview,
       };
     default:
       return state;
