@@ -40,7 +40,7 @@ export const HelperContextProvider = ({ children }) => {
 
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
-    setpropertiesOtherprofile(eventUser.properties)
+    setpropertiesOtherprofile({_id:id,properties:eventUser.properties,eventUserId:eventUser._id})
   };
 
   const ChangeActiveNotification = (notify, message, type, activity) => {

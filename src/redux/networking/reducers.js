@@ -1,9 +1,10 @@
-import { SET_SPACE_NETWORKING, GET_SPACE_NETWORKING } from './actions';
+import { SET_SPACE_NETWORKING, GET_SPACE_NETWORKING,SET_USER_AGENDA} from './actions';
 
 const initialState = {
   view: true,
   loading: false,
   error: null,
+  userAgenda:null
 };
 
 export default function spaceNetworkingReducer(state = initialState, action) {
@@ -17,6 +18,13 @@ export default function spaceNetworkingReducer(state = initialState, action) {
     case GET_SPACE_NETWORKING:
       return {
         view: state.view,
+        loading: true,
+        error: null,
+      };
+      case SET_USER_AGENDA:
+      return {
+        ...state,
+        userAgenda: action.userAgenda,
         loading: true,
         error: null,
       };
