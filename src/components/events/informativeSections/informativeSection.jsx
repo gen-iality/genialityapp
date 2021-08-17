@@ -39,6 +39,13 @@ class InformativeSection extends Component {
     //     });
     //   }
     // });
+    /*EventsApi.getGallery(this.props.cEvent.value._id).then((resp) => {
+      if (resp && resp.data) {
+        this.setState({
+          galeries: resp.data,
+        });
+      }
+    });*/
   }
 
   componentWillUnmount() {

@@ -7,21 +7,20 @@ import Lobby from '../fair/lobby/Lobby';
 const EventHome = () => {
   /*Contextos*/
   let cEvent = UseEventContext();
-  if (!cEvent.value){
-    return <>Cargando...</>
+  if (!cEvent.value) {
+    return <>Cargando...</>;
   }
 
   return (
     <>
-      {cEvent && cEvent.value && cEvent.value._id && cEvent.value._id !== '610e72451c2ae8638d5395c6' &&(
+      {cEvent && cEvent.value && cEvent.value._id && cEvent.value._id !== '610e72451c2ae8638d5395c6' && (
         <Row justify='center'>
           <Col sm={24} md={16} lg={18} xl={18}>
             <EventLanding />
-            hola
           </Col>
         </Row>
       )}
-      {cEvent && cEvent.value && cEvent.value._id && cEvent.value._id === '610e72451c2ae8638d5395c6' && (<Lobby />)}
+      {cEvent && cEvent.value && cEvent.value._id && cEvent.value._id === '610e72451c2ae8638d5395c6' && <Lobby />}
     </>
   );
 };
