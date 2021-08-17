@@ -3,26 +3,34 @@ import { Row } from 'antd';
 import TicketsForm from '../../tickets/formTicket';
 import { connect } from 'react-redux';
 import { UseUserEvent } from '../../../Context/eventUserContext';
+import { UseEventContext } from '../../../Context/eventContext';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { Redirect } from 'react-router-dom';
 
 const PageNotPermissions = (props) => {
   let EventUser = UseUserEvent();
+  let EventContext = UseEventContext();
   let redirect;
+  let urlsection = `/landing/${EventContext.value._id}/`;
 
   useEffect(() => {
-    EventUser.value == null && props.setSectionPermissions({ view: true, section: props.sectionPermissions.section });
-    if (EventUser.value !== null && props.sectionPermissions.section) {
-      redirect = props.sectionPermissions.section && props.sectionPermissions.section.toLowerCase();
+    if (EventUser.value == null) {
+      props.setSectionPermissions({ view: true, section: props.sectionPermissions.section });
+    }
+
+    if (EventUser.value !== null) {
+      redirect = 'evento';
     } else {
       redirect = null;
     }
+
+    console.log('redirect', redirect);
   }, []);
 
   return (
     <>
       {' '}
-      {redirect != null && <Redirect to={redirect} />}
+      {redirect !== null || redirect !== undefined && <Redirect to={`${urlsection}${redirect}`} />}
       <Row justify='center' style={{ margin: 10, background: 'white' }}>
         {props.sectionPermissions.view && (
           <h1 style={{ fontSize: '22px', fontWeight: 'bold' }}>
@@ -51,3 +59,4 @@ const mapDispatchToProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageNotPermissions);
+
