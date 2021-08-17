@@ -17,13 +17,7 @@ export function listenSurveysData(
     .onSnapshot((querySnapshot) => {
       let eventSurveys = [];
       querySnapshot.forEach((doc) => {
-        console.log("DATA ENCUESTA")
-        console.log(doc.data())
         eventSurveys.push({ ...doc.data(), _id: doc.id });
-      });
-
-      querySnapshot.docChanges().forEach((doc) => {
-        console.log('cambios encuestas', doc.type, doc.doc.data());
       });
 
       //Si una encuesta esta publicada y esta abierta la seleccionamos automáticamente cómo activa
@@ -31,27 +25,19 @@ export function listenSurveysData(
       if (querySnapshot.docChanges().length) {
         let lastChange = querySnapshot.docChanges()[querySnapshot.docChanges().length - 1];
         let currentSurvey = null;
-        console.log('cambios encuestas', lastChange.type);
         switch (lastChange.type) {
           case 'removed':
-              visualizarEncuesta(null);
+            visualizarEncuesta(null);
             break;
           case 'added':
           case 'modified':
           default:
             currentSurvey = { ...lastChange.doc.data(), _id: lastChange.doc.id };
-            //if (currentSurvey.isPublished === 'true' && currentSurvey.isOpened === 'true') {
-              visualizarEncuesta(currentSurvey);
-            //}
-         break;
+            visualizarEncuesta(currentSurvey);
+            break;
         }
       }
 
-      if (querySnapshot.docChanges().length > 0) {
-        const surveyData = querySnapshot.docChanges()[0].doc.data();
-
-        // console.log("10. ",querySnapshot.docChanges()[0].doc.data());
-      }
       const publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser);
 
       setListOfEventSurveys(() => {
@@ -73,7 +59,6 @@ export function publishedSurveysByActivity(currentActivity, eventSurveys, curren
         (survey.isPublished === 'true' || survey.isPublished === true) &&
         ((currentActivity && survey.activity_id === currentActivity._id) || survey.isGlobal === 'true')
     );
-    // console.log('holispublishjed', publishedSurveys);
     if (!currentUser || Object.keys(currentUser).length === 0) {
       publishedSurveys = publishedSurveys.filter((item) => {
         return item.allow_anonymous_answers !== 'false';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Switch, useRouteMatch} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 
 /** --------------------
@@ -8,21 +8,18 @@ import { withRouter } from 'react-router-dom';
 import News from './news';
 import AddNews from './addNews';
 
-const NewsSectionRoutes = (props) => 
-{
-    let { path } = useRouteMatch();  
-  console.log(path)
-  console.log(props)
-  return (    
-    <Switch> 
-    <Route exact path={`${path}/`}>         
-         <News {...props}/>
-     </Route>       
+const NewsSectionRoutes = (props) => {
+  let { path } = useRouteMatch();
+
+  return (
+    <Switch>
+      <Route exact path={`${path}/`}>
+        <News {...props} />
+      </Route>
       <Route path={`${path}/addnoticia/:id?`}>
-       <AddNews {...props} />
-      </Route>        
+        <AddNews {...props} />
+      </Route>
     </Switch>
-    
   );
 };
 export default withRouter(NewsSectionRoutes);

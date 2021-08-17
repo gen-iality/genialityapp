@@ -31,7 +31,6 @@ class Datos extends Component {
 
   async componentDidMount() {
     await this.fetchFields();
-    console.log(this.state.fields)
   }
 
   orderFieldsByWeight = (extraFields) => {
@@ -71,7 +70,6 @@ class Datos extends Component {
            resp.docs.map((doc)=>{
             
             var datos=doc.data();            
-              console.log(datos)
               var objectP=datos.properties;              
                var properties=objectP
                objectP={...objectP,pesovoto:properties&&properties.pesovoto?properties.pesovoto:1}         

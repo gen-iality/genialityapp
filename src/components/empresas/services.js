@@ -140,7 +140,6 @@ export const getEventCompany = (eventId, companyId) => {
 
 export const createEventCompany = (eventId, data,tamanio) => {
   let payload = pick(companyFormKeys, data);
-     console.log("TAMAÑO CREATE EVENT=>"+tamanio)
 
           return new Promise((resolve, reject) => {
             (async () => {

@@ -73,8 +73,7 @@ const DrawerProfile = (props) => {
                     shape='circle'
                     onClick={async () => {
                       var us = await this.loadDataUser(props.profileuser);
-                      console.log('USER PERFIL=>', us);
-                      console.log(props.profileuser);
+
                       if (us) {
                         this.collapsePerfil();
                         this.AgendarCita(us._id, us);

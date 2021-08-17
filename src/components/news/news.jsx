@@ -214,7 +214,6 @@ class News extends Component {
   };
 
   editItem = (cert) =>{
-    console.log(cert)
     this.props.history.push(`/event/${this.props.eventId}/news/addnoticia/${cert._id}`)
   }
     

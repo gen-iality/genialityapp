@@ -45,19 +45,16 @@ export const getCurrentEventUser = (eventId, userId) => {
 export const userRequest = {
   //   Obtiene la lista de los asistentes al evento -------------------------------------------
   getEventUserList: async (eventId, token, currentUser) => {
-    console.log(currentUser)
     let docs = null;
     try {
       const users = await UsersApi.getAll(eventId, '?pageSize=10000');
-      console.log(users)
-      console.log(users)
+
       if (users) {
         docs = users.data.filter((user) => user.account_id !== currentUser._id);
       }
     } catch (error) {
       console.error(error);
     }
-    console.log(docs)
     return docs;
   },
 };
@@ -94,7 +91,7 @@ export const createAgendaToEventUser = ({
   targetEventUser,
   timetableItem,
   message,
-}) => { 
+}) => {
   return new Promise((resolve, reject) => {
     (async () => {
       try {

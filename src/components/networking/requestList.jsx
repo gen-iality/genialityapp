@@ -1,4 +1,4 @@
-import React, { useState, useEffect,} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag, message } from 'antd';
 import { ScheduleOutlined, CloseCircleOutlined } from '@ant-design/icons';
@@ -8,7 +8,6 @@ import * as Cookie from 'js-cookie';
 import { Networking, UsersApi } from '../../helpers/request';
 import { getCurrentUser, getCurrentEventUser } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
-
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
@@ -108,55 +107,51 @@ const InvitacionListSent = ({ list }) => {
   );
 };
 
-export default function RequestList({ eventId, currentUser, tabActive,event, currentUserAc }) {
+export default function RequestList({ eventId, currentUser, tabActive, event, currentUserAc }) {
   const [requestListReceived, setRequestListReceived] = useState([]);
   const [requestListSent, setRequestListSent] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [loading, setLoading] = useState(false);
-  
-  
-  console.log( eventId, currentUser, tabActive )
+
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
     // Se consulta el id del usuario por el token
     setLoading(true);
-    if(Cookie.get('evius_token')){
-    getCurrentUser(Cookie.get('evius_token')).then(async (user) => {
-      // Servicio que obtiene el eventUserId del usuario actual
-      let eventUser = currentUser;
+    if (Cookie.get('evius_token')) {
+      getCurrentUser(Cookie.get('evius_token')).then(async (user) => {
+        // Servicio que obtiene el eventUserId del usuario actual
+        let eventUser = currentUser;
 
-      // Servicio que trae las invitaciones / solicitudes recibidas
-      Networking.getInvitationsReceived(eventId, eventUser._id).then(async ({ data }) => {
-        console.log("DATA RECEIVED")
-        console.log(data)
-        setCurrentUserId(eventUser._id);
+        // Servicio que trae las invitaciones / solicitudes recibidas
+        Networking.getInvitationsReceived(eventId, eventUser._id).then(async ({ data }) => {
+        
+          setCurrentUserId(eventUser._id);
 
-        // Solo se obtendran las invitaciones que no tengan respuesta
-        if (data.length > 0) {
-          let response = data.filter((item) => item.response == undefined);
+          // Solo se obtendran las invitaciones que no tengan respuesta
+          if (data.length > 0) {
+            let response = data.filter((item) => item.response == undefined);
 
-          setRequestListReceived(response);
-          await insertNameRequested(response);
-        } else {
-          setRequestListReceived([]);
-        }
-        setLoading(false);
+            setRequestListReceived(response);
+            await insertNameRequested(response);
+          } else {
+            setRequestListReceived([]);
+          }
+          setLoading(false);
+        });
+
+        // Servicio que trae las invitaciones / solicitudes enviadas
+        Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
+          if (data.length > 0)
+            setRequestListSent(data.filter((item) => !item.response || item.response === 'rejected'));
+        });
       });
-
-      // Servicio que trae las invitaciones / solicitudes enviadas
-      Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
-        if (data.length > 0) setRequestListSent(data.filter((item) => !item.response || item.response === 'rejected'));
-      });
-    });
-    }else{
+    } else {
       setLoading(false);
     }
   };
 
   //Funcion para insertar dentro de requestListReceivedNew el nombre de quien envia la solicitud de contacto
   const insertNameRequested = async (requestListReceived) => {
-    console.log("ITENNAME INSERT");
-    console.log(requestListReceived)
     //Se crea un nuevo array
     let requestListReceivedNew = [];
     //Se itera el array que llega para obtener los datos
@@ -197,8 +192,8 @@ export default function RequestList({ eventId, currentUser, tabActive,event, cur
           idEmited: requestId && requestId._id,
           state: '1',
         };
-       // notification(notificationr, currentUser._id);
-       addNotification(notificationr,event,currentUserAc)       
+        // notification(notificationr, currentUser._id);
+        addNotification(notificationr, event, currentUserAc);
         setRequestListReceived(requestListReceived.filter((item) => item._id != requestId._id));
       })
       .catch((err) => {
@@ -232,5 +227,4 @@ export default function RequestList({ eventId, currentUser, tabActive,event, cur
       </div>
     );
   if (loading) return <Spin></Spin>;
-
 }

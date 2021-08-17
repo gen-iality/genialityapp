@@ -141,7 +141,6 @@ class DashboardEvent extends Component {
     }
   };
   fetchDataMails() {
-    console.log('DATA MAILS');
     return new Promise((resolve, reject) => {
       API.get(`/api/events/${this.props.eventId}/messages`)
         .then(({ data }) => {
@@ -202,8 +201,7 @@ class DashboardEvent extends Component {
         totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {
           totalsMetricasActivityDetails(this.props.eventId).then((dataMetricsActivity) => {
             if (dataMetricsActivity.length > 0) {
-              console.log('ENTRO ACA');
-              console.log(dataMetricsActivity);
+            
               this.setState({
                 totalmails: datametricsMail,
                 metricsActivity: dataMetricsActivity,
@@ -218,8 +216,7 @@ class DashboardEvent extends Component {
                     loadingMetrics :false
                   },
                   () => {
-                    console.log('MAILS DETAILS');
-                    console.log(resp);
+                   
                     this.totalsMails(datametricsMail);
                     this.graficRegistros();
                     this.graficAttendees();
@@ -373,7 +370,6 @@ class DashboardEvent extends Component {
   };
 
   render() {
-    console.log(this.props);
     const columnsEmail = [
       {
         title: 'Campaña',

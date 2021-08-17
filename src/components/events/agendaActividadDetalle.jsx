@@ -69,7 +69,6 @@ let AgendaActividadDetalle = (props) => {
 
   //obtener la actividad por id
   useEffect(() => {
-    console.log('mis props', props);
     async function getActividad() {
       return await AgendaApi.getOne(activity_id, props.cEvent.value._id);
     }
@@ -125,7 +124,6 @@ let AgendaActividadDetalle = (props) => {
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
       if (props.cEventUser) {
-        console.log('propsagenda', props);
         TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
         Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.value._id);
       }
@@ -247,8 +245,6 @@ let AgendaActividadDetalle = (props) => {
   }
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
-    // console.log("que esta llegando",event_id,activity_id);
-    //
     firestore
       .collection('events')
       .doc(event_id)
@@ -889,7 +885,6 @@ let AgendaActividadDetalle = (props) => {
       </div>
       {/* Drawer encuestas */}
      
-      {console.log('CURRENT_SURVEY',props.currentSurvey)}
       <Drawer
         title={
           props.currentSurvey && props.currentSurvey?.allow_gradable_survey ?

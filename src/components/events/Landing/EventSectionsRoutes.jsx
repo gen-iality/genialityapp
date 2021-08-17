@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Card, Spin } from 'antd';
+import { Spin, Drawer } from 'antd';
 /** --------------------
  *  secciones del evento
  * ---------------------*/
@@ -26,8 +26,7 @@ import InformativeSection2 from '../informativeSections/informativeSection2';
 import InformativeSection from '../informativeSections/informativeSection';
 import Noticias from '../noticias';
 import withContext from '../../../Context/withContext';
-import { IssuesCloseOutlined } from '@ant-design/icons';
-import Productos from '../producto';
+import PageNotPermissions from './PageNotPermissions';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -125,6 +124,10 @@ const EventSectionRoutes = (props) => {
             setVirtualConference={props.setVirtualConference}
           />
         </Route>
+
+        <Route path={`${path}/permissions`}>
+          <PageNotPermissions />
+        </Route>
       </Switch>
     </>
   );
@@ -133,6 +136,7 @@ const EventSectionRoutes = (props) => {
 const mapStateToProps = (state) => ({
   viewVirtualconference: state.virtualConferenceReducer.view,
   viewSocialZoneNetworking: state.spaceNetworkingReducer.view,
+  sectionPermissions: state.viewSectionPermissions.view,
 });
 
 const mapDispatchToProps = {

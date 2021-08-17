@@ -42,7 +42,6 @@ class InfoAsistentes extends Component {
       const info = Object.assign({}, field);
       info.uuid = uniqueID();
       this.setState({ fields: [...this.state.fields, info], modal: false, edit: false, newField: false });
-      console.log(info)
     }
   };
   //Editar campo en el evento

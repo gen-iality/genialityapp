@@ -200,7 +200,7 @@ export const EventsApi = {
 
   sendInvitation: async (eventId, data) => {
     return await Actions.post(`/api/events/${eventId}/invitation`, data);
-  },  
+  },
   sendRsvp: async (data, id) => {
     return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data);
   },
@@ -226,13 +226,14 @@ export const EventsApi = {
   metricsByActivity: async (id) => {
     return await Actions.getOne(`/api/events/${id}/`, 'totalmetricsbyactivity');
   },
-  metricsRegisterBydate: async (id,type) => {
+  metricsRegisterBydate: async (id, type) => {
     return await Actions.get(`/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}`);
   },
   //obtener products subasta silenciosa
   getProducts: async (eventId) => {
     return await Actions.get(`/api/events/${eventId}/products`);
   },
+<<<<<<< HEAD
   createProducts: async (data, id) => {
     return await Actions.create(`api/events/${id}/products`, data);
   },
@@ -248,6 +249,11 @@ export const EventsApi = {
   storeProducts:async(eventId,galleryId,data)=>{
     return await Actions.post(`/api/events/${eventId}/products/${galleryId}/silentauctionmail`,data)
   }
+=======
+  storeGalley: async (eventId, galleryId, data) => {
+    return await Actions.post(`/api/events/${eventId}/galleries/${galleryId}/silentauctionmail`, data);
+  },
+>>>>>>> 1b0329dab22401251bbbfd2bec9f8c061159d30a
 };
 export const InvitationsApi = {
   getAll: async (id) => {
@@ -536,7 +542,7 @@ export const NewsFeed = {
   byEvent: async (id) => {
     return await Actions.getAll(`api/events/${id}/newsfeed`).then(({ data }) => data);
   },
-  getOne: async (eventId,idnew) => {
+  getOne: async (eventId, idnew) => {
     return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}`);
   },
   editOne: async (data, id) => {
@@ -575,10 +581,10 @@ export const FaqsApi = {
   getOne: async (id) => {
     return await Actions.get(`api/events/${id}/faqs/`, id);
   },
-  editOne: async (data, id,eventId) => {
+  editOne: async (data, id, eventId) => {
     return await Actions.edit(`api/events/${eventId}/faqs`, data, id);
   },
-  deleteOne: async (id,eventId) => {
+  deleteOne: async (id, eventId) => {
     return await Actions.delete(`api/events/${eventId}/faqs`, id);
   },
   create: async (data, id) => {
@@ -708,7 +714,6 @@ export const ExternalSurvey = async (meeting_id) => {
 export const Activity = {
   Register: async (event, user_id, activity_id) => {
     var info = { event_id: event, user_id, activity_id };
-    console.log(info)
     return await Actions.create(`api/events/${event}/activities_attendees`, info);
   },
   GetUserActivity: async (event, user_id) => {

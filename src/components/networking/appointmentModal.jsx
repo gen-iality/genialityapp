@@ -4,7 +4,7 @@ import { find, filter, keys, pathOr, propEq, whereEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import React, { useEffect, useState } from 'react';
 import { SmileOutlined } from '@ant-design/icons';
-import withContext from "../../Context/withContext"
+import withContext from '../../Context/withContext';
 
 import { getDatesRange } from '../../helpers/utils';
 import { createAgendaToEventUser, getAgendasFromEventUser, getUsersId } from './services';
@@ -17,72 +17,59 @@ const fakeEventTimetable = {
   '2020-09-24': [
     {
       timestamp_start: '2020-09-24T21:00:00Z',
-      timestamp_end: '2020-09-24T21:15:00Z'
+      timestamp_end: '2020-09-24T21:15:00Z',
     },
     {
       timestamp_start: '2020-09-24T21:15:00Z',
-      timestamp_end: '2020-09-24T21:30:00Z'
+      timestamp_end: '2020-09-24T21:30:00Z',
     },
     {
       timestamp_start: '2020-09-24T21:30:00Z',
-      timestamp_end: '2020-09-24T21:45:00Z'
+      timestamp_end: '2020-09-24T21:45:00Z',
     },
     {
       timestamp_start: '2020-09-24T21:45:00Z',
-      timestamp_end: '2020-09-24T22:00:00Z'
+      timestamp_end: '2020-09-24T22:00:00Z',
     },
     {
       timestamp_start: '2020-09-24T22:00:00Z',
-      timestamp_end: '2020-09-24T22:15:00Z'
+      timestamp_end: '2020-09-24T22:15:00Z',
     },
     {
       timestamp_start: '2020-09-24T22:15:00Z',
-      timestamp_end: '2020-09-24T22:30:00Z'
+      timestamp_end: '2020-09-24T22:30:00Z',
     },
     {
       timestamp_start: '2020-09-24T22:30:00Z',
-      timestamp_end: '2020-09-24T22:45:00Z'
+      timestamp_end: '2020-09-24T22:45:00Z',
     },
     {
       timestamp_start: '2020-09-24T22:45:00Z',
-      timestamp_end: '2020-09-24T23:00:00Z'
-    }
-  ]
+      timestamp_end: '2020-09-24T23:00:00Z',
+    },
+  ],
 };
 
 const { TextArea } = Input;
 const buttonStatusText = {
   free: 'Reservar',
   pending: 'Pendiente',
-  rejected: 'Rechazada'
+  rejected: 'Rechazada',
 };
 const MESSAGE_MAX_LENGTH = 200;
 
-function AppointmentModal({   
-  cEventUser,
-  targetEventUserId,
-  targetEventUser,
-  closeModal,
-  cEvent
-}) {
-  
+function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, closeModal, cEvent }) {
   const [openAgenda, setOpenAgenda] = useState('');
   const [agendaMessage, setAgendaMessage] = useState('');
   const [timetable, setTimetable] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [reloadFlag, setReloadFlag] = useState(false);
-  const [eventDatesRange,setEventDatesRange]=useState(false)
+  const [eventDatesRange, setEventDatesRange] = useState(false);
 
- 
+  useEffect(() => {
+    if (targetEventUserId === null || cEvent.value === null || cEventUser.value === null) return;
 
-
-  useEffect(()=>{
-    if(targetEventUserId===null || cEvent.value===null || cEventUser.value===null) return;
-    console.log(cEventUser)
-    console.log(cEvent)
-    console.log(targetEventUserId)
-    console.log(targetEventUser)
     const loadData = async () => {
       setLoading(true);
       setTimetable({});
@@ -91,7 +78,6 @@ function AppointmentModal({
 
       try {
         const agendas = await getAgendasFromEventUser(cEvent.value._id, targetEventUserId);
-        console.log(agendas)
         const newTimetable = {};
         const eventTimetable = pathOr(fakeEventTimetable, ['timetable'], cEvent.value); // TODO: -> cambiar fakeEventTimetable por {}
         const dates = keys(eventTimetable);
@@ -102,7 +88,7 @@ function AppointmentModal({
               const occupiedAgendas = filter(
                 whereEq({
                   timestamp_start: timetableItem.timestamp_start,
-                  timestamp_end: timetableItem.timestamp_end
+                  timestamp_end: timetableItem.timestamp_end,
                 }),
                 agendas
               );
@@ -118,7 +104,7 @@ function AppointmentModal({
                   !!occupiedAgenda &&
                   (occupiedAgenda.request_status === 'accepted' || occupiedAgenda.owner_id === cEventUser.value._id)
                     ? occupiedAgenda.request_status
-                    : 'free'
+                    : 'free',
               };
 
               if (isNonEmptyArray(newTimetable[date])) {
@@ -131,15 +117,17 @@ function AppointmentModal({
         });
 
         setTimetable(newTimetable);
-        console.log(cEvent.value)
-        console.log(cEvent.value.datetime_from, cEvent.value.datetime_to)
+       
         const eventDatesRange = cEvent.value && getDatesRange(cEvent.value.datetime_from, cEvent.value.datetime_to);
-    if (eventDatesRange){ console.log(eventDatesRange);setEventDatesRange(eventDatesRange); setSelectedDate(eventDatesRange[0])}
+        if (eventDatesRange) {
+          setEventDatesRange(eventDatesRange);
+          setSelectedDate(eventDatesRange[0]);
+        }
       } catch (error) {
         console.error(error);
         notification.error({
           message: 'Error',
-          description: 'Obteniendo las citas del usuario'
+          description: 'Obteniendo las citas del usuario',
         });
       } finally {
         setLoading(false);
@@ -147,23 +135,19 @@ function AppointmentModal({
     };
 
     loadData();
-    
-    
-    
-  },[cEvent.status,targetEventUserId,reloadFlag])
+  }, [cEvent.status, targetEventUserId, reloadFlag]);
 
-  async function reloadData (resp){
-   setReloadFlag(!reloadFlag);
+  async function reloadData(resp) {
+    setReloadFlag(!reloadFlag);
 
     notification.open({
       message: 'Solicitud enviada',
       description:
         'Le llegará un correo a la persona notificandole la solicitud, quien la aceptara o recharaza  y le llegará un correo de vuelta confirmando la respuesta',
       icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-      duration: 30
+      duration: 30,
     });
     var usId = await getUsersId(targetEventUserId, cEvent.value._id);
-    console.log(usId)
 
     let notificationA = {
       idReceive: usId.account_id,
@@ -172,10 +156,10 @@ function AppointmentModal({
       message: 'te ha enviado cita',
       name: 'notification.name',
       type: 'agenda',
-      state: '0'
+      state: '0',
     };
 
-    await addNotification(notificationA,cEvent.value, cEventUser.value);
+    await addNotification(notificationA, cEvent.value, cEventUser.value);
   }
   const resetModal = () => {
     closeModal();
@@ -208,11 +192,12 @@ function AppointmentModal({
                 setAgendaMessage('');
                 setOpenAgenda('');
               }}>
-              {eventDatesRange && eventDatesRange.map((eventDate) => (
-                <Option value={eventDate} key={eventDate}>
-                  {moment(eventDate).format('D MMMM')}
-                </Option>
-              ))}
+              {eventDatesRange &&
+                eventDatesRange.map((eventDate) => (
+                  <Option value={eventDate} key={eventDate}>
+                    {moment(eventDate).format('D MMMM')}
+                  </Option>
+                ))}
             </Select>
           </Row>
           <div>
@@ -289,29 +274,27 @@ function AppointmentModal({
                                 setLoading(true);
                                 createAgendaToEventUser({
                                   eventId: cEvent.value._id,
-                                  eventUser:cEventUser.value,  
-                                  currentEventUserId:cEventUser.value._id,                                
-                                  targetEventUserId,                                  
+                                  eventUser: cEventUser.value,
+                                  currentEventUserId: cEventUser.value._id,
+                                  targetEventUserId,
                                   targetEventUser,
                                   timetableItem,
-                                  message: agendaMessage
+                                  message: agendaMessage,
                                 })
                                   .then((resp) => {
-                                    console.log(resp)
                                     reloadData(resp, targetEventUserId);
-
                                   })
                                   .catch((error) => {
                                     console.error(error);
                                     if (!error) {
                                       notification.warning({
                                         message: 'Espacio reservado',
-                                        description: 'Este espacio de tiempo ya fué reservado'
+                                        description: 'Este espacio de tiempo ya fué reservado',
                                       });
                                     } else {
                                       notification.error({
                                         message: 'Error',
-                                        description: 'Error creando la reserva'
+                                        description: 'Error creando la reserva',
                                       });
                                     }
                                     resetModal();

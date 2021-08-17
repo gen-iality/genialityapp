@@ -18,7 +18,6 @@ function SurveyDetailPage(props) {
   }
 
   const isCompleted = (id) => {
-     console.log("Este nene se esta ejecutado",id)
     if (
       currentSurveyStatus &&
       currentSurveyStatus[id] &&
@@ -32,15 +31,8 @@ function SurveyDetailPage(props) {
 
   return (
     <div>
-     
       {(surveyResult === 'results' || isCompleted(currentSurvey._id)) && (
-        <Graphics
-          idSurvey={currentSurvey._id}
-          // showListSurvey={toggleSurvey}
-          eventId={currentSurvey.eventId}
-          // surveyLabel={surveyLabel}
-          operation='participationPercentage' //onlyCount, participationPercentage
-        />
+        <Graphics idSurvey={currentSurvey._id} eventId={currentSurvey.eventId} operation='participationPercentage' />
       )}
       {!isCompleted(currentSurvey._id) && (
         <Card className='survyCard'>

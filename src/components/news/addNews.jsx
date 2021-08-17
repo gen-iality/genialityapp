@@ -42,7 +42,6 @@ function AddNews(props) {
   if(props.match.params.id){
    setIdNew(props.match.params.id)
    NewsFeed.getOne(props.eventId,props.match.params.id).then((notice)=>{
-    console.log(notice)
     setPicture(notice.image)
     setDescriptionShort(notice.description_short)
     setDescription(notice.description_complete)
@@ -174,7 +173,6 @@ function AddNews(props) {
                 },
                 props.eventId
               ); 
-              console.log(newRole) 
               if(newRole){
                   props.history.push(`/event/${props.eventId}/news`)
               }          

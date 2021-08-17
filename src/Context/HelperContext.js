@@ -40,10 +40,6 @@ export const HelperContextProvider = ({ children }) => {
 
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
-    const dataproperties = await EventFieldsApi.getOne(cEvent.value._id,eventUser._id);
-    console.log('====================================');
-    console.log("properties: " , eventUser.properties);
-    console.log('====================================');
     setpropertiesOtherprofile(eventUser.properties)
   };
 
@@ -57,7 +53,6 @@ export const HelperContextProvider = ({ children }) => {
   };
 
   const HandleChangeDrawerProfile = () => {
-    console.log('llamando drawer perfil');
     setisOpenDrawerProfile(!isOpenDrawerProfile);
   };
 

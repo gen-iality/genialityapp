@@ -5,7 +5,7 @@ import { UseCurrentUser } from '../../../Context/userContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { HelperContext } from '../../../Context/HelperContext';
 /** ant design */
-import { Layout, Spin, notification, Button } from 'antd';
+import { Layout, Spin, notification, Button, Drawer } from 'antd';
 
 /** Components */
 import TopBanner from './TopBanner';
@@ -135,8 +135,6 @@ const Landing = (props) => {
             }
           });
         });
-
-    // console.log('totalNewMessages', totalNewMessages);
   }, [cEventContext.status]);
 
   //METODO PARA SETEAR NEW MESSAGE
@@ -146,7 +144,6 @@ const Landing = (props) => {
 
   /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
   function visualizarEncuesta(survey) {
-    console.log('cambios encuestas vis', survey);
     if (!survey) {
       setCurrentSurvey(null);
     }
@@ -182,12 +179,20 @@ const Landing = (props) => {
 
   return (
     <>
-      <Layout className='site-layout'>
+      <Layout>
         <EventSectionsInnerMenu />
         <MenuTablets />
         <Layout className='site-layout'>
-          <Content className='site-layout-background' style={{ paddingBottom: '15vh' }}>
+          <Content
+            className='site-layout-background'
+            style={{
+              paddingBottom: '15vh',
+              backgroundSize: 'cover',
+              backgroundImage: `url(${cEventContext.value?.styles.BackgroundImage &&
+                cEventContext.value?.styles.BackgroundImage})`,
+            }}>
             {props.view && <TopBanner currentActivity={currentActivity} />}
+
             <EventSectionRoutes
               generaltabs={generaltabs}
               currentActivity={currentActivity}

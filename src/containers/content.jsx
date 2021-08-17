@@ -35,7 +35,7 @@ const QueryTesting = asyncComponent(() => import('../components/events/surveys/c
 
 const ContentContainer = () => {
   return (
-    <main className='main'>
+    <main className='main' >
       <Switch>
         <Route path='/landing/:event_id'>
           <CurrentEventProvider>
@@ -77,6 +77,7 @@ const ContentContainer = () => {
         <Route path='/queryTesting' component={QueryTesting} />
         <Route path='/api/generatorQr/:id' component={QRedirect} />
         <Route exact path='/transition/:event' component={Transition} />
+        <Route exact path='/' component={RedirectPortal} />
 
         <Route
           path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
@@ -84,7 +85,7 @@ const ContentContainer = () => {
         />
         <Route
           exact
-          path='/'
+          path='/events'
           render={() => (
             <WithFooter>
               <Home />
@@ -101,6 +102,12 @@ function QRedirect({ match }) {
   window.location.replace(`${ApiUrl}/api/generatorQr/${match.params.id}`);
   return <p>Redirecting...</p>;
 }
+
+//Función que permite redirigir a portal evius se debe optimizar para mejor rendimiento
+function RedirectPortal(){  
+  return <div>{window.location.assign("http://portal.evius.co/")}</div>
+}
+
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route

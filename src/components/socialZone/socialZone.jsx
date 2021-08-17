@@ -50,11 +50,6 @@ let SocialZone = function(props) {
   let userName = cUser.value ? cUser.value?.names : cUser.value?.name ? cUser.value?.name : '---';
 
   let setCurrentChat = (id, chatname) => {
-    console.log('chat name');
-    console.log('====================================');
-    console.log('chatname', chatname);
-    console.log('====================================');
-    console.log(chatname);
     setCurrentChatInner(id);
     setCurrentChatNameInner(chatname);
   };
@@ -64,11 +59,8 @@ let SocialZone = function(props) {
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
-    console.log('que le mando', idcurrentUser, currentName, idOtherUser, otherUserName);
     let newId = generateUniqueIdFromOtherIds(cUser.value._id, idOtherUser);
     let data = {};
-
-    console.log('newid', newId);
 
     if (!cUser.value._id) return;
     //agregamos una referencia al chat para el usuario actual
@@ -95,8 +87,6 @@ let SocialZone = function(props) {
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
       .set({ ...data }, { merge: true });
 
-    console.log('como se crea el chgat', data);
-    console.log(otherUserName);
     setCurrentChat(newId, otherUserName);
   };
 
@@ -106,7 +96,6 @@ let SocialZone = function(props) {
   };
 
   const searhAttende = () => {
-    console.log('busqueda');
     if (!isFiltered && (busqueda != undefined || busqueda != '')) {
       setstrAttende(busqueda);
       setIsFiltered(true);
@@ -120,9 +109,7 @@ let SocialZone = function(props) {
   };
 
   useEffect(() => {
-    // props.optionselected(tab == 1 ? 'attendees' : tab == 3 ? 'survey' : tab == 2 ? 'chat' : 'game');
     setTotalNewMessages(props.totalMessages);
-    // console.log('props.totalMessages', props);
   }, []);
 
   //Cargar la lista de chats de una persona
@@ -160,7 +147,6 @@ let SocialZone = function(props) {
         let newmsj = 0;
         querySnapshot.forEach((doc) => {
           data = doc.data();
-          // console.log('Dataavai', data);
           if (data.newMessages) {
             newmsj += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
           }

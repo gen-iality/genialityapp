@@ -31,7 +31,7 @@ class UserModal extends Component {
   }
 
   async componentDidMount() {
-    const self = this;    
+    const self = this;
     const { rolesList } = this.props;
 
     self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : '' });
@@ -41,39 +41,37 @@ class UserModal extends Component {
     let user = {};
     if (this.props.edit) {
       const { value } = this.props;
-      if(value.properties){
+      if (value.properties) {
         Object.keys(value.properties).map((obj) => {
           return (user[obj] = value.properties[obj]);
         });
-        let checked_in = value.checkedin_at?true : false;
+        let checked_in = value.checkedin_at ? true : false;
         this.setState({
           user,
           ticket_id: value.ticket_id,
           edit: true,
           rol: value.rol_id,
-          confirmCheck:checked_in,
+          confirmCheck: checked_in,
           userId: value._id,
           prevState: value.state_id,
-          valid:false
+          valid: false,
         });
-      }else{
-    
+      } else {
         Object.keys(value).map((obj) => {
           return (user[obj] = value[obj]);
         });
-        let checked_in = value.checkedin_at?true : false;
+        let checked_in = value.checkedin_at ? true : false;
         this.setState({
           user,
           ticket_id: value.ticket_id,
           edit: true,
           rol: value.rol,
-          confirmCheck:checked_in,
+          confirmCheck: checked_in,
           userId: value._id,
           prevState: value.state_id,
-          valid:false
-        },()=>console.log(this.state.userId));
+          valid: false,
+        });
       }
-     
     } else {
       this.props.extraFields.map((obj) => {
         user[obj.name] = obj.type === 'boolean' ? false : obj.type === 'number' ? 0 : '';
@@ -87,12 +85,11 @@ class UserModal extends Component {
     this.setState({ user: {}, edit: false });
   }
 
-  handleSubmit = async (e) => {    
-
+  handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const snap = { properties: this.state.user, rol_id: this.state.rol };
-    
+
     let message = {};
     this.setState({ create: true });
     snap.ticket_id = this.state.ticket_id;
@@ -105,42 +102,46 @@ class UserModal extends Component {
             .add(5, 'hours')
             .format('YYYY-MM-D H:mm:ss');
           snap.checkedin_at = checkedin_at;
-          snap.checked_in=true;
-        }else{
-          snap.checkedin_at="";
-          snap.checked_in=false;
+          snap.checked_in = true;
+        } else {
+          snap.checkedin_at = '';
+          snap.checked_in = false;
         }
-      
-        let respAddEvento= await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
-       // console.log(respAddEvento.data)
-       if(this.props.byActivity && respAddEvento.data.user){
-          let respActivity=await Activity.Register(this.props.eventId,respAddEvento.data.user._id, this.props.activityId)
-          //console.log(respActivity)
-          await this.props.checkinActivity(respAddEvento.data._id,snap.checked_in,snap,false)
-          
-          await this.props.updateView()   
-          this.closeModal();         
-        }  
+
+        let respAddEvento = await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
+        if (this.props.byActivity && respAddEvento.data.user) {
+          let respActivity = await Activity.Register(
+            this.props.eventId,
+            respAddEvento.data.user._id,
+            this.props.activityId
+          );
+          await this.props.checkinActivity(respAddEvento.data._id, snap.checked_in, snap, false);
+
+          await this.props.updateView();
+          this.closeModal();
+        }
         toast.success(<FormattedMessage id='toast.user_saved' defaultMessage='Ok!' />);
-      } else {        
-        if(this.state.confirmCheck){
+      } else {
+        if (this.state.confirmCheck) {
           let checkedin_at = new Date();
           checkedin_at = Moment(checkedin_at)
             .add(5, 'hours')
             .format('YYYY-MM-D H:mm:ss');
           snap.checkedin_at = checkedin_at;
-          snap.checked_in=true;
-        }else{
-          snap.checkedin_at="";
-          snap.checked_in=false;
+          snap.checked_in = true;
+        } else {
+          snap.checkedin_at = '';
+          snap.checked_in = false;
         }
-        
-        let respAddEvento= await Actions.put(`/api/events/${this.props.eventId}/eventusers/${this.state.userId}`, snap);  
-        console.log(respAddEvento.user)
-        if(this.props.byActivity && respAddEvento.user){ 
-          await this.props.checkinActivity(this.state.userId,snap.checked_in,snap)         
-           this.closeModal();         
-         }       
+
+        let respAddEvento = await Actions.put(
+          `/api/events/${this.props.eventId}/eventusers/${this.state.userId}`,
+          snap
+        );
+        if (this.props.byActivity && respAddEvento.user) {
+          await this.props.checkinActivity(this.state.userId, snap.checked_in, snap);
+          this.closeModal();
+        }
         toast.info(<FormattedMessage id='toast.user_edited' defaultMessage='Ok!' />);
         this.closeModal();
       }
@@ -150,7 +151,7 @@ class UserModal extends Component {
       message.content = 'User can`t be updated';
     }
 
-    this.setState({ message, create: false });  
+    this.setState({ message, create: false });
   };
 
   handleSubmitFireStore() {
@@ -572,7 +573,7 @@ class UserModal extends Component {
                         </select>
                       </div>
                     </div>
-                    {(
+                    {
                       <div className='control control-container'>
                         <input
                           className='is-checkradio is-primary is-small'
@@ -588,7 +589,7 @@ class UserModal extends Component {
                         />
                         <label htmlFor={'confirmCheckIn'}>Chequear Usuario?</label>
                       </div>
-                    )}
+                    }
                   </div>
                 </React.Fragment>
               )}

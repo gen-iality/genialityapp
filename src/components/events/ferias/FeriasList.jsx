@@ -1,23 +1,18 @@
-import { Empty, Spin, Col, Row, Tag, Badge } from "antd";
-import React from "react";
-import Companylist from "./companyList";
-import { useEffect } from "react";
-import useGetEventCompanies from "../../empresas/customHooks/useGetEventCompanies";
-import MiniBanner from "./MiniBanner";
-import { useState } from "react";
-import { connect } from "react-redux";
-import { setVirtualConference } from "../../../redux/virtualconference/actions";
-import FeriaStand from "./FeriasStand";
-import { setTopBanner } from "../../../redux/topBanner/actions";
-import { firestore } from "../../../helpers/firebase";
-import withContext from "../../../Context/withContext";
+import { Empty, Spin, Col, Row, Tag, Badge } from 'antd';
+import React from 'react';
+import Companylist from './companyList';
+import { useEffect } from 'react';
+import useGetEventCompanies from '../../empresas/customHooks/useGetEventCompanies';
+import MiniBanner from './MiniBanner';
+import { useState } from 'react';
+import { connect } from 'react-redux';
+import { setVirtualConference } from '../../../redux/virtualconference/actions';
+import FeriaStand from './FeriasStand';
+import { setTopBanner } from '../../../redux/topBanner/actions';
+import { firestore } from '../../../helpers/firebase';
+import withContext from '../../../Context/withContext';
 
-const FeriasList = ({
-  event_id,
-  setVirtualConference,
-  setTopBanner,
-  cEvent,
-}) => {
+const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) => {
   const [companies, loadingCompanies] = useGetEventCompanies(event_id);
   const [companiesEvent, setCompaniesEvent] = useState([]);
   const [config, setConfig] = useState(null);
@@ -29,7 +24,6 @@ const FeriasList = ({
     setVirtualConference(false);
     setTopBanner(false);
     setBannerImage(cEvent.value.styles.banner_image);
-    {console.log('imagen baner--->', cEvent.value)}
     return () => {
       setVirtualConference(true);
       setTopBanner(true);
@@ -38,20 +32,15 @@ const FeriasList = ({
   useEffect(() => {
     if (!loadingCompanies) {
       firestore
-        .collection("event_companies")
+        .collection('event_companies')
         .doc(event_id)
         .onSnapshot((resp) => {
           let standTypesOptions = resp.data().stand_types;
           setTypeStand(standTypesOptions);
           setStandsColor(standTypesOptions);
           setConfig(resp.data().config);
-          let companiesSort = companies.sort(
-            (a, b) => a.index && b.index && a.index - b.index
-          );
+          let companiesSort = companies.sort((a, b) => a.index && b.index && a.index - b.index);
           setCompaniesEvent(companiesSort);
-         // console.log(companies);
-         // console.log(resp.data());
-         // console.log(resp.data().config.visualization);
         });
     }
   }, [loadingCompanies]);
@@ -63,31 +52,30 @@ const FeriasList = ({
       }
     }
 
-    return "#2C2A29";
+    return '#2C2A29';
   };
   const obtenertLabel = (stand) => {
     if (typeStand) {
       let labelList = typeStand.filter((colors) => colors.label === stand);
-      console.log("label----2", labelList);
       if (labelList.length > 0) {
         return labelList[0].label;
       }
     }
 
-    return "Stand";
+    return 'Stand';
   };
 
-  const isListVisualization=()=>{
-   if(!config){
-     return true;
-   }else if(config.visualization === "list" || !config.visualization){
-     return true
-   }else{
-     return false
-   }
-  }
+  const isListVisualization = () => {
+    if (!config) {
+      return true;
+    } else if (config.visualization === 'list' || !config.visualization) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   return (
-    <div style={{paddingBottom:'30px'}}>
+    <div style={{ paddingBottom: '30px' }}>
       <MiniBanner banner={imageBanner} />
       {companiesEvent.length > 0 &&
         isListVisualization() &&
@@ -95,10 +83,10 @@ const FeriasList = ({
           (company, index) =>
             company.visible && (
               <Companylist
-                key={"companyList" + index}
+                key={'companyList' + index}
                 img={
-                  company.list_image === ""
-                    ? "https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo" // imagen por defecto si no encuentra una imagen guardada
+                  company.list_image === ''
+                    ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo' // imagen por defecto si no encuentra una imagen guardada
                     : company.list_image
                 }
                 eventId={event_id}
@@ -125,8 +113,8 @@ const FeriasList = ({
                 <Col key={index} sm={24} xs={24} md={12} lg={12} xl={8} xxl={8}>
                   <FeriaStand
                     image={
-                      company.list_image === ""
-                        ? "https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo" // imagen por defecto si no encuentra una imagen guardada
+                      company.list_image === ''
+                        ? 'https://via.placeholder.com/200/50D3C9/FFFFFF?text=Logo' // imagen por defecto si no encuentra una imagen guardada
                         : company.list_image
                     }
                     eventId={event_id}

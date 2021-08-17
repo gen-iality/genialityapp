@@ -67,9 +67,7 @@ class Graphics extends Component {
         totalUsersRegistered = totalUsersRegistered + 1;
       }
     }
-    console.log('usuarios registrados');
-    console.log(totalUsersRegistered);
-    console.log(usersRegistered.data);
+
     this.setState(
       { dataSurvey: response, usersRegistered: totalUsersRegistered, totalUser: totalUsersRegistered },
       this.mountChart
@@ -139,12 +137,9 @@ class Graphics extends Component {
         answer: options.choices[a],
         option: options.choices[a] == 'SI' || options.choices[a] == 'si' ? options.choices[a] : alphabet[a],
         color: colorB,
-        // option:options.choices[a].length == 1 ? options.choices[a] :
-        // options.choices[a].length == 2 ? options.choices[a] : 'text',
       });
       totalVotosUsuarios = totalVotosUsuarios + answer_count[a][0];
     }
-    //console.log("LIST",list)
     this.setState({
       dataVotos: list,
     });
@@ -178,61 +173,7 @@ class Graphics extends Component {
       graphy.data.datasets[0].data = Object.values(totalPercentResponse || []);
       graphy.options.title.text = formatterTitle;
 
-      //Si es un examen Marcamos la respuesta correcta en verde
-      // if (options.correctAnswerIndex) {
-      //   graphy.data.datasets[0].backgroundColor = [];
-      //   graphy.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
-      // }
-
-      /* El siguiente codigo actuamlente no se esta usando pero se deja como referencia
-        para implementar el servicio para acceder a los métodos de la API de chart
-      */
-
-      //Formatear etiqueta de datos sobre la barra horizontal
-
-      // const customPlugin = {
-
-      //   beforeInit: function (a, b, c) {
-      //     console.log('antes de pintar el grafico')
-      //     console.log({ a, b, c })
-      //   },
-      //   afterDatasetsDraw: function (context, easing) {
-
-      //     console.log('--- start format data label hbar ---')
-      //     console.log('hbar', graphy)
-      //     //context.clearRect(0, 0, canvas.width, canvas.height);
-
-      //     var ctx = context.chart.ctx;
-
-      //     context.data.datasets.forEach(function (dataset) {
-      //       for (var i = 0; i < dataset.data.length; i++) {
-      //         if (dataset.data[i] != 0) {
-      //           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
-      //           var textY = model.y + (dataset.type == "line" ? -3 : 15);
-
-      //           console.log('soy ctx', ctx)
-      //           ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
-      //           ctx.textAlign = 'start';
-      //           ctx.textBaseline = 'middle';
-      //           ctx.fillStyle = dataset.type == "line" ? "black" : "black";
-      //           ctx.save();
-      //           //ctx.translate(model.x, textY - 15);
-      //           //ctx.translate(21, textY - 50);
-      //           ctx.translate(21, textY - 15);
-
-      //           ctx.rotate(0);
-
-      //           const formatDataLabel = generatedlabels[i]
-
-      //           console.log({ dataset })
-      //           //ctx.clear()
-      //           ctx.fillText(formatDataLabel, 0, 0);
-      //           ctx.restore();
-      //         }
-      //       }
-      //     });
-      //   }
-      // }
+     
 
       //Chart.pluginService.register(customPlugin);
 
