@@ -14,19 +14,15 @@ import { UseSurveysContext } from '../../../Context/surveysContext';
 const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
-   let cSurveys  = UseSurveysContext();
-   const {
-      activity,
-      setCurrentSurvey,
-      setSurveyResult,
-   } = props;
-console.log("10. cSurveys ", cSurveys)
+   let cSurveys = UseSurveysContext();
+   const { activity, setCurrentSurvey, setSurveyResult } = props;
+
    const currentUser = UseCurrentUser();
 
    const handleClick = (currentSurvey, status) => {
-      cSurveys.select_survey(currentSurvey._id)
-      console.log('currentSurvey')
-      console.log(currentSurvey)
+      cSurveys.select_survey(currentSurvey._id);
+      console.log('currentSurvey');
+      console.log(currentSurvey);
       if (activity !== null && currentSurvey.isOpened === 'true') {
          setSurveyResult('view');
       } else if (activity !== null && currentSurvey.isOpened === 'false') {
@@ -44,6 +40,7 @@ console.log("10. cSurveys ", cSurveys)
          status={cSurveys.status}
          currentUser={currentUser}
          handleClick={handleClick}
+         currentSurveyStatus={cSurveys.currentSurveyStatus}
       />
    );
 }

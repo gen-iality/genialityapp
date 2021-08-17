@@ -8,64 +8,66 @@ import { UseCurrentUser } from './userContext';
 export const SurveysContext = React.createContext();
 
 //status: 'LOADING' | 'LOADED' | 'error'
-let initialContextState = { status: 'LOADING', surveys: [], currentSurvey: null };
-
-
+let initialContextState = { status: 'LOADING', surveys: [], currentSurvey: null, currentSurveyStatus: null };
 
 const reducer = (state, action) => {
-  let newState = state;
-  switch (action.type) {
-    case 'data_loaded':
-      console.log('data_loaded', action.payload);
-      newState = { ...state, surveys: action.payload, status: 'LOADED' }
-      
-      //Actualizamos el estado de la encuesta actual
-      if (state.currentSurvey) {
-        let updatedcurrentSurvey = action.payload.find((item)=>state.currentSurvey._id == item._id)
-        newState['currentSurvey'] = updatedcurrentSurvey;
-      }
-      return newState;
+   let newState = state;
+   switch (action.type) {
+      case 'data_loaded':
+         console.log('data_loaded', action.payload);
+         newState = { ...state, surveys: action.payload, status: 'LOADED' };
 
-    case 'survey_selected':
-      return { ...state, currentSurvey: action.payload};
+         //Actualizamos el estado de la encuesta actual
+         if (state.currentSurvey) {
+            let updatedcurrentSurvey = action.payload.find((item) => state.currentSurvey._id == item._id);
+            newState['currentSurvey'] = updatedcurrentSurvey;
+         }
+         return newState;
 
-    default:
-      return newState;
-  }
+      case 'current_Survey_Status':
+         return { ...state, currentSurveyStatus: action.payload };
+
+      case 'survey_selected':
+         return { ...state, currentSurvey: action.payload };
+
+      default:
+         return newState;
+   }
 };
 
 export function SurveysProvider({ children }) {
-  console.group('surveyContext');
-  let cEventContext = UseEventContext();
-  let cUser = UseCurrentUser();
-  const [state, dispatch] = useReducer(reducer, initialContextState);
+   console.group('surveyContext');
+   let cEventContext = UseEventContext();
+   let cUser = UseCurrentUser();
+   const [state, dispatch] = useReducer(reducer, initialContextState);
 
-  /** ACTION DISPACHERS **/
-  function select_survey(survey_id){
-    dispatch({ type: 'survey_selected', payload: survey_id });
-  }
+   /** ACTION DISPACHERS **/
+   function select_survey(survey_id) {
+      dispatch({ type: 'survey_selected', payload: survey_id });
+   }
 
-  useEffect(() => {
-    if (!cEventContext || !cEventContext.value) return;
-    if (!cUser || !cUser.value) return;
+   useEffect(() => {
+      if (!cEventContext || !cEventContext.value) return;
+      if (!cUser || !cUser.value) return;
 
-    async function fetchSurveys() {
-      console.log('surveyContext', 'inicialize');
-      listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
-    }
-    fetchSurveys();
-  }, [cEventContext, cUser]);
-  console.groupEnd('surveyContext');
-  return <SurveysContext.Provider value={{...state,select_survey}}>{children}</SurveysContext.Provider>;
+      async function fetchSurveys() {
+         console.log('surveyContext', 'inicialize');
+         listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
+         InitSurveysCompletedListener(cUser, dispatch);
+      }
+      fetchSurveys();
+   }, [cEventContext, cUser]);
+   console.groupEnd('surveyContext');
+   return <SurveysContext.Provider value={{ ...state, select_survey }}>{children}</SurveysContext.Provider>;
 }
 
 export function UseSurveysContext() {
-  const contextsurveys = React.useContext(SurveysContext);
-  if (!contextsurveys) {
-    throw new Error('eventContext debe estar dentro del proveedor');
-  }
+   const contextsurveys = React.useContext(SurveysContext);
+   if (!contextsurveys) {
+      throw new Error('eventContext debe estar dentro del proveedor');
+   }
 
-  return contextsurveys;
+   return contextsurveys;
 }
 
 //Si una encuesta esta publicada y esta abierta la seleccionamos automáticamente cómo activa
