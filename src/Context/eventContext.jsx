@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { EventsApi } from '../helpers/request';
+import { EventsApi, eventTicketsApi } from '../helpers/request';
 
 export const CurrentEventContext = React.createContext();
 
@@ -15,7 +15,10 @@ export function CurrentEventProvider({ children }) {
   useEffect(() => {
     if (!event_id) return;
     async function fetchEvent() {
-      const eventGlobal = await EventsApi.getOne(event_id);
+      let eventGlobal = await EventsApi.getOne(event_id);
+      //const ticketsEvent=await eventTicketsApi.getAll(event_id);
+     // eventGlobal={...eventGlobal,tickets:ticketsEvent}
+
       setEventContext({ status: 'LOADED', value: eventGlobal });
     }
     fetchEvent();

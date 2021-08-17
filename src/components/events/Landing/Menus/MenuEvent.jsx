@@ -9,13 +9,22 @@ import { UseUserEvent } from '../../../../Context/eventUserContext';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 import { useEffect } from 'react';
+import { UseCurrentUser } from '../../../../Context/userContext';
 
 const MenuEvent = ({ isMobile, sectionPermissions, setSectionPermissions }) => {
   let { url } = useRouteMatch();
   let cEvent = UseEventContext();
+  let cUser=UseCurrentUser();
   let { totalsolicitudes } = useContext(HelperContext);
   let event = cEvent.value;
   let cEventUser = UseUserEvent();
+
+  const isVisibleSection=(section)=>{
+    if((section.permissions && section.permissions=='public') || (section.permissions && section.permissions=='assistants')&& cUser.value!=null) {
+      return true;
+    }
+    return false;
+  }
 
   return (
     <>

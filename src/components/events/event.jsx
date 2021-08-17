@@ -29,6 +29,7 @@ import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
 import ReportNetworking from '../networking/report';
 import NewsSectionRoutes from '../news/newsRoute' ;
+import ProductSectionRoutes from '../products/productsRoute' ;
 
 //import Test from "../events/testButton"
 import { Layout } from 'antd';
@@ -237,7 +238,7 @@ class Event extends Component {
                 path={`${match.url}/tipo-asistentes`}
                 render={() => <TipoAsistentes eventID={this.state.event._id} />}
               />
-              {permissions.data.ids.includes(rolPermissions.admin_ticket._id) && (
+              {true && (
                 <Route path={`${match.url}/ticket`} render={() => <TicketInfo eventId={this.state.event._id} />} />
               )}
 
@@ -292,6 +293,9 @@ class Event extends Component {
               />
               <Route  path={`${match.url}/news`}>
               <NewsSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
+              </Route>
+              <Route  path={`${match.url}/product`}>
+              <ProductSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
               </Route>
               <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} />} />              
               <Route

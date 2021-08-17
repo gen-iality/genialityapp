@@ -77,6 +77,7 @@ class News extends Component {
   fetchItem = async () => {
     const data = await NewsFeed.byEvent(this.props.eventId);    
     this.setState({ list: data, loading: false });
+    console.log("FETCHHHHH")
   };
 
   onChange = () => {
@@ -219,11 +220,15 @@ class News extends Component {
   
 
   removeItem = (id) => {
+    alert(id)
+    
     sweetAlert.twoButton(`Está seguro de borrar este espacio`, 'warning', true, 'Borrar', async (result) => {
+      console.log("RESULT==>",result)
       try {
-        if (result.value) {
-          sweetAlert.showLoading('Espera (:', 'Borrando...');
-          await NewsFeed.deleteOne(id, this.props.eventId);
+        if (result) {
+          sweetAlert.showLoading('Espera (:', 'Borrando...');          
+         let resp= await NewsFeed.deleteOne(this.props.eventId,id);
+         console.log("RESPUESTA DELETE==>",resp)
           this.setState(() => ({
             id: '',
             title: '',

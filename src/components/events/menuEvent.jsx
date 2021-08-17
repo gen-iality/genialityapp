@@ -147,6 +147,13 @@ class MenuEvent extends Component {
       checked: false,
       permissions: 'public',
     },
+    producto: {
+      name: 'Producto',
+      section: 'producto',
+      icon: 'ShopOutlined ',
+      checked: false,
+      permissions: 'public',
+    },
     };
   }
 

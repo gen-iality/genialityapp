@@ -146,7 +146,7 @@ export const sweetAlert = {
     Modal.confirm({
       title: title,
       content: <Spin>{confirmButtonText}</Spin>,
-      onOk: () => cb(),
+      onOk: () => cb(true),
       okText: confirmButtonText
       //showCancelButton
     }),

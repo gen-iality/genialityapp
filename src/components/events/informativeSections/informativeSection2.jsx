@@ -9,11 +9,13 @@ class InformativeSection2 extends Component {
     super(props);
     this.state = {
       markup: '',
-      informativeSection1: []
+      informativeSection1: null
     };
   }
 
   componentDidMount() {
+    console.log("INFORMATIVE SECTION")
+    console.log(this.props.cEvent.value.itemsMenu.informativeSection1)
     this.setState({
       markup: this.props.cEvent.value.itemsMenu.informativeSection1.markup,
       informativeSection1: this.props.cEvent.value.itemsMenu.informativeSection1
@@ -22,13 +24,14 @@ class InformativeSection2 extends Component {
   render() {
 
     const { markup, informativeSection1 } = this.state;
+   
     return (
       <Row justify="center">
-        {informativeSection1 && (
+        {informativeSection1!=null && (
           <div className='site-card-border-less-wrapper'>
             {this.props.cEvent.value._id != '609180c6013150612044b547' && this.props.cEvent.value._id != '60797bfb2a9cc06ce973a1f4' && (
-              <Card title={informativeSection1.name} bordered={false} style={{ width: 1000 }}>
-                {Parser(markup)}
+              <Card title={informativeSection1 && informativeSection1.name?informativeSection1.name:"Sección informativa"} bordered={false} style={{ width: 1000 }}>
+                {markup!=null && Parser(markup)}
               </Card>
             )}
 

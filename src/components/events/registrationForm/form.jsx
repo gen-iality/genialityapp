@@ -19,13 +19,14 @@ import {
   Space,
   InputNumber,
 } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
 import ImgCrop from 'antd-img-crop';
 import { saveImageStorage } from '../../../helpers/helperSaveImage';
 import { areaCode } from '../../../helpers/constants';
+import TypeRegister from '../../tickets/typeRegister';
 
 // import InputFile from "./inputFile"
 const { Option } = Select;
@@ -34,10 +35,12 @@ const { TextArea, Password } = Input;
 
 const textLeft = {
   textAlign: 'left',
+  width: '100%',
 };
 
 const center = {
   margin: '0 auto',
+  //width:'100%'
 };
 
 /**
@@ -117,6 +120,8 @@ export default ({
   const [loggedurl, setLogguedurl] = useState(null);
   const [imageAvatar, setImageAvatar] = useState(null);
   let [ImgUrl, setImgUrl] = useState('');
+  const [typeRegister, setTypeRegister] = useState('free');
+  const [payMessage,setPayMessage]=useState(false)
 
   const [form] = Form.useForm();
 
@@ -147,6 +152,7 @@ export default ({
   };
 
   const onFinish = async (values) => {
+    console.log('VALUES===>', values);
     values.password = password;
     let ruta = '';
     if (imageAvatar) {
@@ -166,7 +172,7 @@ export default ({
     // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
     message.loading({ content: intl.formatMessage({ id: 'registration.message.loading' }), key }, 10);
 
-    const snap = { properties: values };
+    const snap = { properties: { ...values, typeRegister: typeRegister } };
 
     let textMessage = {};
     textMessage.key = key;
@@ -230,7 +236,7 @@ export default ({
           //   values.email +
           //   ', se ha enviado un nuevo correo con enlace de ingreso.';
           // textMessage.content = msg;
-
+         if(typeRegister=="free"){
           let msg =
             intl.formatMessage({ id: 'registration.already.registered' }) +
             ' ' +
@@ -242,7 +248,11 @@ export default ({
           // Retorna un mensaje en caso de que ya se encuentre registrado el correo
           setNotLoggedAndRegister(true);
           message.success(msg);
+        }else{
+          alert("A PAGAR")
+         setPayMessage(true)
         }
+      }
       } catch (err) {
         // textMessage.content = "Error... Intentalo mas tarde";
         textMessage.content = formMessage.errorMessage;
@@ -593,8 +603,9 @@ export default ({
 
   return (
     <>
+      {console.log('PROPS==>', eventId)}
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
-        {!submittedForm ? (
+        {!submittedForm ?  (
           <Card
             title={
               eventUser !== undefined
@@ -603,7 +614,7 @@ export default ({
             }
             bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
-
+            {eventId && eventId=='60cb7c70a9e4de51ac7945a2' &&  !eventUser && <TypeRegister typeRegister={typeRegister} setTypeRegister={setTypeRegister} /> }
             <Form
               form={form}
               layout='vertical'
@@ -618,6 +629,13 @@ export default ({
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
               onValuesChange={valuesChange}>
+              {/*eventId && eventId == '60cb7c70a9e4de51ac7945a2' && (
+                <Row justify={'center'} style={{ marginBottom: 30 }}>
+                  <Card style={{ width: 700, margin: 'auto', background: '#F7C2C6' }}>
+                    <InfoCircleOutlined /> Una vez registrado para acceder a la puja de obras debes realizar la donación
+                  </Card>
+                </Row>
+              )*/}
               {renderForm()}
 
               <Row gutter={[24, 24]}>
@@ -640,6 +658,7 @@ export default ({
                     />
                   )}
                 </Col>
+
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <Form.Item>
                     <Button type='primary' htmlType='submit'>
@@ -648,7 +667,7 @@ export default ({
                         : eventId === '5f9824fc1f8ccc414e33bec2'
                         ? 'Votar y Enviar'
                         : intl.formatMessage({ id: 'registration.button.create' })}
-                    </Button>
+                    </Button>                  
                   </Form.Item>
                 </Col>
               </Row>
@@ -659,7 +678,7 @@ export default ({
               style={{ height: '500px' }}
               data-form='Zm9ybS0yMTU2LW9yZ2FuaXphdGlvbi0xNDYx'></div>
           </Card>
-        ) : (
+        ) : typeRegister=='free'? (
           <Card>
             <Result
               status='success'
@@ -682,9 +701,61 @@ export default ({
                     __html: successMessage ? successMessage.replace(/\[.*\]/gi, '') : '',
                   }}></div>
               </OutsideAlerter>
+              
             </Result>
           </Card>
-        )}
+         
+        ): <Card>
+           <OutsideAlerter showSection={showSection}>
+                Su registro ha sido exitoso, click al siguiente enlace para realizar la donación
+              </OutsideAlerter>
+
+          {eventId && eventId == '60cb7c70a9e4de51ac7945a2' && (
+                     <Col><form
+                        method='post'
+                        action='https://gateway.payulatam.com/ppp-web-gateway/pb.zul'
+                        acceptCharset='UTF-8'>
+                         {' '}
+                        <input
+                          type='image'
+                          border='0'
+                          alt=''
+                          src='http://www.payulatam.com/img-secure-2015/boton_pagar_mediano.png'
+                          onClick='this.form.urlOrigen.value = window.location.href;'
+                        />
+                         {' '}
+                        <input
+                          name='buttonId'
+                          type='hidden'
+                          value='EoWD0oG4B5RBZsfk85w2xpcGXj4HaXMobwad57IAKn8gvwD6jUhHuw=='
+                        />
+                          <input name='merchantId' type='hidden' value='519160' />
+                          <input name='accountId' type='hidden' value='520706' />
+                          <input name='description' type='hidden' value='entrada puja' />
+                          <input name='referenceCode' type='hidden' value='entrada puja' />
+                          <input name='amount' type='hidden' value='50000.00' />
+                          <input name='tax' type='hidden' value='0.00' />
+                          <input name='taxReturnBase' type='hidden' value='0.00' />
+                          <input name='shipmentValue' value='0.00' type='hidden' />
+                          <input name='currency' type='hidden' value='COP' />
+                          <input name='lng' type='hidden' value='es' />
+                          <input name='approvedResponseUrl' type='hidden' value='https://evius.co' />
+                          <input name='declinedResponseUrl' type='hidden' value='https://evius.co' />
+                          <input name='pendingResponseUrl' type='hidden' value='https://evius.co' />
+                          <input name='sourceUrl' id='urlOrigen' value='' type='hidden' />
+                          <input name='buttonType' value='SIMPLE' type='hidden' />
+                         {' '}
+                        <input
+                          name='signature'
+                          value='369539171cf3b776a309aca17fc609287bd94401cafd00337db6d208c1b5da0f'
+                          type='hidden'
+                        />
+                      </form>
+                      </Col> 
+                    )}
+        </Card>}
+
+          
       </Col>
     </>
   );
