@@ -238,23 +238,6 @@ let AgendaActividadDetalle = (props) => {
     history.push(`/landing/${props.cEvent.value._id}/tickets`);
   }
 
-  async function listeningStateMeetingRoom(event_id, activity_id) {
-    firestore
-      .collection('events')
-      .doc(event_id)
-      .collection('activities')
-      .doc(activity_id)
-      .onSnapshot((infoActivity) => {
-        if (!infoActivity.exists) return;
-        const data = infoActivity.data();
-        const { habilitar_ingreso, meeting_id, platform, tabs } = data;
-        setMeeting_id(meeting_id);
-        setPlatform(platform);
-        setMeetingState(habilitar_ingreso);
-        props.setTabs(tabs);
-      });
-  }
-
   async function getSpeakers(idSpeaker) {
     setIdSpeaker(idSpeaker);
   }
@@ -278,18 +261,7 @@ let AgendaActividadDetalle = (props) => {
     }
   };
 
-  const handleSignInForm = (values) => {
-    setNames(values.names);
-    setEmail(values.email);
-  };
-
-  const mediaQueryMatches = () => {
-    let screenWidth = window.innerWidth;
-    screenWidth <= 768 ? setIsMobile(true) : setIsMobile(false);
-  };
-
   const { image_event } = props;
-
   const colorTexto = props.cEvent.value.styles.textMenu;
   const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
 
@@ -316,31 +288,6 @@ let AgendaActividadDetalle = (props) => {
     const { zoomExternoHandleOpen, eventUser, currentActivity } = props;
     zoomExternoHandleOpen(currentActivity, eventUser);
   };
-
-  // aquie esta los estados del drawer y el modal
-  const [rankingVisible, setRankingVisible] = useState(true);
-  const [width, setWidth] = useState('70%');
-
-  const showRanking = () => {
-   if (window.screen.width >= 768) {
-     setWidth('70%');
-     if (rankingVisible == false) {
-       setWidth('100%');
-     }
-     {
-       setWidth('70%');
-     }
-   } else {
-     setWidth('100%');
-     if (rankingVisible == false) {
-       setWidth('100%');
-     }
-     {
-       setWidth('70%');
-     }
-   }
-   setRankingVisible(!rankingVisible);
- };
 
    useEffect(() => {
       if (/*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === 'game') {
@@ -375,18 +322,6 @@ let AgendaActividadDetalle = (props) => {
       }
    }, [mainStageContent, isMobile]);
 
-   function handleChangeLowerTabs(tab) {
-      setActiveTab(tab);
-
-      if (tab === 'games') {
-         props.setMainStage('game');
-      }
-   }
-
-   function redirectRegister() {
-      history.push(`/landing/${props.cEvent.value._id}/tickets`);
-   }
-
    async function listeningStateMeetingRoom(event_id, activity_id) {
       // console.log("que esta llegando",event_id,activity_id);
       //
@@ -406,29 +341,6 @@ let AgendaActividadDetalle = (props) => {
          });
    }
 
-   async function getSpeakers(idSpeaker) {
-      setIdSpeaker(idSpeaker);
-   }
-
-   const getMeetingPath = (platform) => {
-      if (platform === 'zoom') {
-         const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
-
-         return (
-            url_conference +
-            meeting_id +
-            `&userName=${props.cUser.displayName ? props.cUser.displayName : 'Guest'}` +
-            `&email=${props.cUser.email ? props.cUser.email : 'emaxxxxxxil@gmail.com'}` +
-            `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
-            `&host=${eventUserUtils.isHost(props.cUser, props.cEvent.value)}`
-         );
-      } else if (platform === 'vimeo') {
-         return `https://player.vimeo.com/video/${meeting_id}`;
-      } else if (platform === 'dolby') {
-         return `https://eviusmeets.netlify.app/?username=${names}&email=${email}`;
-      }
-   };
-
    const handleSignInForm = (values) => {
       setNames(values.names);
       setEmail(values.email);
@@ -438,18 +350,6 @@ let AgendaActividadDetalle = (props) => {
       let screenWidth = window.innerWidth;
       screenWidth <= 768 ? setIsMobile(true) : setIsMobile(false);
    };
-
-   const { image_event } = props;
-
-   const colorTexto = props.cEvent.value.styles.textMenu;
-   const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
-
-   const imagePlaceHolder =
-      'https://via.placeholder.com/1500x540/' +
-      colorFondo.replace('#', '') +
-      '/' +
-      colorTexto.replace('#', '') +
-      '?text=EVIUS.co';
 
    useEffect(() => {
       if (currentActivity) {
@@ -462,11 +362,6 @@ let AgendaActividadDetalle = (props) => {
    {
       Moment.locale(window.navigator.language);
    }
-
-   const openZoomExterno = () => {
-      const { zoomExternoHandleOpen, eventUser, currentActivity } = props;
-      zoomExternoHandleOpen(currentActivity, eventUser);
-   };
 
    // aquie esta los estados del drawer y el modal
    const [rankingVisible, setRankingVisible] = useState(true);
