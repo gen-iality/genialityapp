@@ -390,8 +390,7 @@ let AgendaActividadDetalle = (props) => {
 
    function onClose() {
       // esta funcion desactiva rl drawer
-      props.unsetCurrentSurvey();
-      props.setMainStage(null);
+      cSurveys.unset_select_survey(null)
    }
 
    // constante de ranking

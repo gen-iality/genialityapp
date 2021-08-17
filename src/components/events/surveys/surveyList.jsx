@@ -20,9 +20,7 @@ function SurveyList(props) {
    const currentUser = UseCurrentUser();
 
    const handleClick = (currentSurvey, status) => {
-      cSurveys.select_survey(currentSurvey._id);
-      console.log('currentSurvey');
-      console.log(currentSurvey);
+      cSurveys.select_survey(currentSurvey);
       if (activity !== null && currentSurvey.isOpened === 'true') {
          setSurveyResult('view');
       } else if (activity !== null && currentSurvey.isOpened === 'false') {
@@ -46,8 +44,7 @@ function SurveyList(props) {
 }
 
 const mapStateToProps = (state) => ({
-   activity: state.stage.data.currentActivity,
-   currentActivity: state.survey.currentActivity,
+   activity: state.stage.data.currentActivity
 });
 
 const mapDispatchToProps = {

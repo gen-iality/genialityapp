@@ -7,54 +7,57 @@ import ClosedSurvey from './components/closedSurvey';
 
 /** Context´s */
 import { UseCurrentUser } from '../../../Context/userContext';
+import { UseSurveysContext } from '../../../Context/surveysContext';
 
 function SurveyDetailPage(props) {
-  // const [hasVote, setHasVote] = useState(false);
-  const { currentSurvey, surveyResult, currentSurveyStatus } = props;
-  const currentUser = UseCurrentUser();
+   let cSurveys = UseSurveysContext();
+   const { surveyResult } = props;
+   const currentUser = UseCurrentUser();
 
-  if (!currentSurvey) {
-    return <h1>No hay nada publicado</h1>;
-  }
+   if (!cSurveys.currentSurvey) {
+      return <h1>No hay nada publicado</h1>;
+   }
 
-  /** Validacion que permite saber cuando un usuario ya contesto la encuesta para que no se le permita realizarla mas */
-  const isCompleted = (id) => {
-    if (
-      currentSurveyStatus &&
-      currentSurveyStatus[id] &&
-      currentSurveyStatus[id].surveyCompleted === 'completed' &&
-      surveyResult !== 'closedSurvey'
-    ) {
-      return true;
-    }
-    return false;
-  };
+   /** Validacion que permite saber cuando un usuario ya contesto la encuesta para que no se le permita realizarla mas */
+   const isCompleted = (id) => {
+      if (
+         cSurveys.currentSurveyStatus &&
+         cSurveys.currentSurveyStatus[id] &&
+         cSurveys.currentSurveyStatus[id].surveyCompleted === 'completed' &&
+         surveyResult !== 'closedSurvey'
+      ) {
+         return true;
+      }
+      return false;
+   };
 
-  return (
-    <div>
-      {(surveyResult === 'results' || isCompleted(currentSurvey._id)) && (
-        <Graphics idSurvey={currentSurvey._id} eventId={currentSurvey.eventId} operation='participationPercentage' />
-      )}
-      {surveyResult === 'view' && !isCompleted(currentSurvey._id) && (
-        <Card className='survyCard'>
-          <SurveyComponent
-            idSurvey={currentSurvey._id}
-            eventId={currentSurvey.eventId}
-            currentUser={currentUser}
-            operation='participationPercentage'
-          />
-        </Card>
-      )}
-      {surveyResult === 'closedSurvey' && <ClosedSurvey />}
-    </div>
-  );
+   return (
+      <div>
+         {(surveyResult === 'results' || isCompleted(cSurveys.currentSurvey._id)) && (
+            <Graphics
+               idSurvey={cSurveys.currentSurvey._id}
+               eventId={cSurveys.currentSurvey.eventId}
+               operation='participationPercentage'
+            />
+         )}
+         {surveyResult === 'view' && !isCompleted(cSurveys.currentSurvey._id) && (
+            <Card className='survyCard'>
+               <SurveyComponent
+                  idSurvey={cSurveys.currentSurvey._id}
+                  eventId={cSurveys.currentSurvey.eventId}
+                  currentUser={currentUser}
+                  operation='participationPercentage'
+               />
+            </Card>
+         )}
+         {surveyResult === 'closedSurvey' && <ClosedSurvey />}
+      </div>
+   );
 }
 
 const mapStateToProps = (state) => ({
-  currentSurvey: state.survey.data.currentSurvey,
-  isVisible: state.survey.data.surveyVisible,
-  surveyResult: state.survey.data.result,
-  currentSurveyStatus: state.survey.data.currentSurveyStatus,
+   isVisible: state.survey.data.surveyVisible,
+   surveyResult: state.survey.data.result,
 });
 
 export default connect(mapStateToProps)(SurveyDetailPage);

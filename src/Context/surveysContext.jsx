@@ -14,7 +14,7 @@ const reducer = (state, action) => {
    let newState = state;
    switch (action.type) {
       case 'data_loaded':
-         console.log('data_loaded', action.payload);
+        //  console.log('data_loaded', action.payload);
          newState = { ...state, surveys: action.payload, status: 'LOADED' };
 
          //Actualizamos el estado de la encuesta actual
@@ -36,29 +36,32 @@ const reducer = (state, action) => {
 };
 
 export function SurveysProvider({ children }) {
-   console.group('surveyContext');
+  //  console.group('surveyContext');
    let cEventContext = UseEventContext();
    let cUser = UseCurrentUser();
    const [state, dispatch] = useReducer(reducer, initialContextState);
 
    /** ACTION DISPACHERS **/
-   function select_survey(survey_id) {
-      dispatch({ type: 'survey_selected', payload: survey_id });
+   function select_survey(survey) {
+      dispatch({ type: 'survey_selected', payload: survey });
    }
+   function unset_select_survey(survey) {
+    dispatch({ type: 'survey_selected', payload: survey });
+ }
 
    useEffect(() => {
       if (!cEventContext || !cEventContext.value) return;
       if (!cUser || !cUser.value) return;
 
       async function fetchSurveys() {
-         console.log('surveyContext', 'inicialize');
+        //  console.log('surveyContext', 'inicialize');
          listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
          InitSurveysCompletedListener(cUser, dispatch);
       }
       fetchSurveys();
    }, [cEventContext, cUser]);
-   console.groupEnd('surveyContext');
-   return <SurveysContext.Provider value={{ ...state, select_survey }}>{children}</SurveysContext.Provider>;
+  //  console.groupEnd('surveyContext');
+   return <SurveysContext.Provider value={{ ...state, select_survey, unset_select_survey }}>{children}</SurveysContext.Provider>;
 }
 
 export function UseSurveysContext() {
