@@ -22,6 +22,7 @@ function DetailsProduct (props) {
     }  
     async function obtenerDetalleProduct(){
       let detalleProduct=await  EventsApi.getOneProduct(eventId,idProduct);
+      console.log(detalleProduct)
       if(Object.keys(detalleProduct).length>0){       
         setProduct(detalleProduct)        
       }

@@ -236,6 +236,9 @@ export const EventsApi = {
   storeGalley: async (eventId, galleryId, data) => {
     return await Actions.post(`/api/events/${eventId}/galleries/${galleryId}/silentauctionmail`, data);
   },
+  getOneProduct: async (eventId,idproduct) => {
+    return await Actions.get(`/api/events/${eventId}/products/${idproduct}`);
+  },
 };
 export const InvitationsApi = {
   getAll: async (id) => {
