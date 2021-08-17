@@ -34,7 +34,6 @@ class Product extends Component {
    removeProduct = (data) => {
       let self = this;
       confirm({
-         title: 'Hola',
          icon: <ExclamationCircleOutlined />,
          content: 'Está seguro de borrar este producto?',
          onOk() {

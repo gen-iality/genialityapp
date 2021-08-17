@@ -27,8 +27,9 @@ import ImgCrop from 'antd-img-crop';
 import { saveImageStorage } from '../../../helpers/helperSaveImage';
 import { areaCode } from '../../../helpers/constants';
 import TypeRegister from '../../tickets/typeRegister';
-import  {ButtonPayment, PayForm}  from './payRegister';
- 
+import { ButtonPayment, PayForm } from './payRegister';
+import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
+import { connect } from 'react-redux';
 // import InputFile from "./inputFile"
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -97,7 +98,7 @@ let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) =
   });
 };
 
-export default ({
+const FormRegister = ({
   initialValues,
   eventId,
   extraFieldsOriginal,
@@ -106,6 +107,7 @@ export default ({
   closeModal,
   conditionals,
   showSection,
+  setSectionPermissions,
 }) => {
   const intl = useIntl();
   const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
@@ -154,6 +156,7 @@ export default ({
 
   const onFinish = async (values) => {
     console.log('VALUES===>', values);
+    setSectionPermissions({ view: false, ticketview: false });
     values.password = password;
     let ruta = '';
     if (imageAvatar) {
@@ -604,12 +607,11 @@ export default ({
 
   return (
     <>
-     
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
           <Card
             title={
-              eventUser !== undefined
+              eventUser !== undefined && eventUser !== null
                 ? intl.formatMessage({ id: 'registration.title.update' })
                 : intl.formatMessage({ id: 'registration.title.create' })
             }
@@ -618,7 +620,11 @@ export default ({
             {eventId && eventId == '60cb7c70a9e4de51ac7945a2' && !eventUser && (
               <TypeRegister typeRegister={typeRegister} setTypeRegister={setTypeRegister} />
             )}
-            {eventUser !== undefined && eventUser.rol_id=='60e8a7e74f9fb74ccd00dc22' && eventId && eventId == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
+            {eventUser !== undefined &&
+              eventUser !== null &&
+              eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
+              eventId &&
+              eventId == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
             <Form
               form={form}
               layout='vertical'
@@ -675,7 +681,7 @@ export default ({
                   </Form.Item>
                 </Col>
               </Row>
-            </Form>     
+            </Form>
           </Card>
         ) : typeRegister == 'free' ? (
           <Card>
@@ -703,9 +709,15 @@ export default ({
             </Result>
           </Card>
         ) : (
-         <PayForm eventId={eventId} />
+          <PayForm eventId={eventId} />
         )}
       </Col>
     </>
   );
 };
+
+const mapDispatchToProps = {
+  setSectionPermissions,
+};
+
+export default connect(null, mapDispatchToProps)(FormRegister);
