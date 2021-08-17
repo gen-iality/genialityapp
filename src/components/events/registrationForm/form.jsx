@@ -604,7 +604,7 @@ export default ({
 
   return (
     <>
-       {console.log("EVENTUSER==>",eventUser)}
+     
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
           <Card
@@ -618,7 +618,7 @@ export default ({
             {eventId && eventId == '60cb7c70a9e4de51ac7945a2' && !eventUser && (
               <TypeRegister typeRegister={typeRegister} setTypeRegister={setTypeRegister} />
             )}
-            {eventUser !== undefined && eventUser.rol_id=='60e8a7e74f9fb74ccd00dc22' && <ButtonPayment />}
+            {eventUser !== undefined && eventUser.rol_id=='60e8a7e74f9fb74ccd00dc22' && eventId && eventId == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
             <Form
               form={form}
               layout='vertical'
