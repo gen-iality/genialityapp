@@ -117,14 +117,15 @@ const VirtualConference = () => {
             <>
               <Link to={item.habilitar_ingreso == 'open_meeting_room' && `${urlactivity}${item._id}`}>
                 <Card
+                  actions={["Ver mas"]}
                   key={key}
                   hoverable
                   style={{
                     height: 'auto',
                     maxHeight: '300px',
                     minHeight: '204px',
-                    marginTop: '10px',
-                    marginBottom: '10px',
+                    marginTop: '8px',
+                    marginBottom: '8px',
                   }}
                   className='animate__animated animate__slideInRight'>
                   <Row justify='center' align='middle' gutter={[8, 8]}>
