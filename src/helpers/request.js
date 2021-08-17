@@ -233,27 +233,9 @@ export const EventsApi = {
   getProducts: async (eventId) => {
     return await Actions.get(`/api/events/${eventId}/products`);
   },
-<<<<<<< HEAD
-  createProducts: async (data, id) => {
-    return await Actions.create(`api/events/${id}/products`, data);
-  },
-  editProduct: async (data, eventId, productId ) => {
-    return await Actions.edit(`api/events/${eventId}/products`, data, productId);
-  },
-  getOneProduct: async (eventId,idnew) => {
-    return await Actions.get(`api/events/${eventId}/products/${idnew}`);
-  },
-  deleteProduct: async (eventId, product) => {
-    return await Actions.delete(`/api/events/${eventId}/products`, product);
-  },
-  storeProducts:async(eventId,galleryId,data)=>{
-    return await Actions.post(`/api/events/${eventId}/products/${galleryId}/silentauctionmail`,data)
-  }
-=======
   storeGalley: async (eventId, galleryId, data) => {
     return await Actions.post(`/api/events/${eventId}/galleries/${galleryId}/silentauctionmail`, data);
   },
->>>>>>> 1b0329dab22401251bbbfd2bec9f8c061159d30a
 };
 export const InvitationsApi = {
   getAll: async (id) => {

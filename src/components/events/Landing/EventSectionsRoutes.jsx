@@ -27,6 +27,7 @@ import InformativeSection from '../informativeSections/informativeSection';
 import Noticias from '../noticias';
 import withContext from '../../../Context/withContext';
 import PageNotPermissions from './PageNotPermissions';
+import Productos  from '../producto/index'
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();

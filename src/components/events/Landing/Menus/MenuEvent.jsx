@@ -9,6 +9,7 @@ import { UseUserEvent } from '../../../../Context/eventUserContext';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 import { useEffect } from 'react';
+import { UseCurrentUser } from '../../../../Context/userContext';
 
 const MenuEvent = ({ isMobile, sectionPermissions, setSectionPermissions }) => {
   let { url } = useRouteMatch();

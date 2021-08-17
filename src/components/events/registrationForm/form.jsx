@@ -706,7 +706,9 @@ export default ({
           </Card>
          
         ): <Card>
-          A   pagar
+           <OutsideAlerter showSection={showSection}>
+                Su registro ha sido exitoso, click al siguiente enlace para realizar la donación
+              </OutsideAlerter>
 
           {eventId && eventId == '60cb7c70a9e4de51ac7945a2' && (
                      <Col><form
