@@ -11,12 +11,12 @@ const ProductCard=({galery,eventId,history})=>{
   <Card   
   bordered={false}
   //  bodyStyle={{padding:'15px'}} 
-  bodyStyle={{padding:'14px 0px'}}       
+  bodyStyle={{padding:'10px 10px'}}       
   key={"Cardgallery"+galery.id}
    style={{ margin:'30px', width:'300px'
   }}
   onClick={()=>history.push(`/landing/${eventId}/producto/${galery._id}/detailsproducts`)}
-   cover={<img alt='example'  style={{width:'300px', objectFit:'contain'}} src={galery && galery.image && galery.image[0]} />}
+   cover={<img alt='example'  style={{width:'300px', objectFit:'cover'}} src={galery && galery.image && galery.image[0]} />}
   //  extra={<div onClick={null}key={'act-'+galery.id}>$ {galery.price}</div>}
   //  title={galery.name}
   //  actions={[              
