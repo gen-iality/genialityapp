@@ -27,7 +27,7 @@ import InformativeSection from '../informativeSections/informativeSection';
 import Noticias from '../noticias';
 import withContext from '../../../Context/withContext';
 import PageNotPermissions from './PageNotPermissions';
-import Productos  from '../producto/index'
+import Productos from '../producto/index';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -116,7 +116,7 @@ const EventSectionRoutes = (props) => {
           </>
         </Route>
         <Route path={`${path}/producto`}>
-           <Productos/>
+          <Productos />
         </Route>
         <Route path={`${path}/agenda`}>
           <Agenda

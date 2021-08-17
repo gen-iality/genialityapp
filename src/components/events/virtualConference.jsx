@@ -3,7 +3,7 @@ import { Card, Button, Avatar, Row, Col, Tooltip, Typography, Spin } from 'antd'
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment-timezone';
-import { FieldTimeOutlined } from '@ant-design/icons';
+import { FieldTimeOutlined, SettingOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import ENVIVO from '../../EnVivo.svg';
 import { UseEventContext } from '../../Context/eventContext';
@@ -56,6 +56,7 @@ const VirtualConference = () => {
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
   let urlactivity = `/landing/${cEvent.value._id}/activity/`;
+  let urlAgenda = `/landing/${cEvent.value._id}/agenda/`;
 
   const [infoAgendaArr, setinfoAgenda] = useState([]);
   const [agendageneral, setagendageneral] = useState(null);
@@ -66,6 +67,7 @@ const VirtualConference = () => {
       const response = await AgendaApi.byEvent(cEvent.value._id);
       // let withMetting = response.data.filter((activity) => activity.meeting_id != null || '' || undefined);
       setagendageneral(response.data);
+
       setbandera(!bandera);
     }
     fetchData();
@@ -97,7 +99,13 @@ const VirtualConference = () => {
               }
             });
           });
-          setinfoAgenda(arratem);
+
+          //ordenar
+          let activitiesorder = arratem.sort((a, b) => a.updated_at - b.updated_at);
+          let orderactivities = [];
+          orderactivities.push(activitiesorder[0]);
+
+          setinfoAgenda(orderactivities);
         });
   }, [agendageneral, firestore]);
 
@@ -107,27 +115,35 @@ const VirtualConference = () => {
         infoAgendaArr
           .filter((item) => {
             return (
-              item.habilitar_ingreso &&
-              (item.habilitar_ingreso == 'open_meeting_room' || item.habilitar_ingreso == 'closed_meeting_room') &&
-              (item.isPublished === true || item.isPublished === 'true')
+              item?.habilitar_ingreso &&
+              (item?.habilitar_ingreso == 'open_meeting_room' || item?.habilitar_ingreso == 'closed_meeting_room') &&
+              (item?.isPublished === true || item?.isPublished === 'true')
             );
           })
 
           .map((item, key) => (
             <>
-              <Link to={item.habilitar_ingreso == 'open_meeting_room' && `${urlactivity}${item._id}`}>
-                <Card
-                  actions={["Ver mas"]}
-                  key={key}
-                  hoverable
-                  style={{
-                    height: 'auto',
-                    maxHeight: '300px',
-                    minHeight: '204px',
-                    marginTop: '8px',
-                    marginBottom: '8px',
-                  }}
-                  className='animate__animated animate__slideInRight'>
+              <Card
+                actions={[
+                  <Link key='setting' to={`${urlAgenda}`}>
+                    <Button type='primary' key='setting'>
+                      {' '}
+                      Ver mas actividades
+                    </Button>
+                    ,
+                  </Link>,
+                ]}
+                key={key}
+                hoverable
+                style={{
+                  height: 'auto',
+                  maxHeight: '300px',
+                  minHeight: '204px',
+                  marginTop: '8px',
+                  marginBottom: '8px',
+                }}
+                className='animate__animated animate__slideInRight'>
+                <Link to={item.habilitar_ingreso == 'open_meeting_room' && `${urlactivity}${item._id}`}>
                   <Row justify='center' align='middle' gutter={[8, 8]}>
                     <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
                       <div
@@ -160,7 +176,7 @@ const VirtualConference = () => {
                             expandable: true,
                             symbol: (
                               <span style={{ color: '#2D7FD6', fontSize: '14px' }}>
-                                {Moment.locale() == 'en' ? 'More' : 'Ver más'}{' '}
+                                {Moment.locale() == 'en' ? 'More activities' : 'Ver más actividades'}{' '}
                                 {/* Se valido de esta forma porque el componente FormattedMessage no hacia
                              efecto en la prop del componente de Ant design */}
                               </span>
@@ -235,8 +251,8 @@ const VirtualConference = () => {
                       </div>
                     </Col>
                   </Row>
-                </Card>
-              </Link>
+                </Link>
+              </Card>
             </>
           ))}
     </Fragment>
