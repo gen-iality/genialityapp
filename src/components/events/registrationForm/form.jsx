@@ -118,8 +118,6 @@ export default ({
   const [imageAvatar, setImageAvatar] = useState(null);
   let [ImgUrl, setImgUrl] = useState('');
 
-  // const [ fileSave, setFileSave ] = useState( [] )
-
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -130,7 +128,6 @@ export default ({
 
     getEventData(eventId);
     form.resetFields();
-    console.log('EJECUTADO EFFECT');
     if (window.fbq) {
       window.fbq('track', 'CompleteRegistration');
     }
@@ -156,7 +153,6 @@ export default ({
       if (imageAvatar.fileList.length > 0) {
         ruta = await saveImageStorage(imageAvatar.fileList[0].thumbUrl);
       }
-      console.log('RUTA==>', ruta);
       values.picture = ruta;
     }
 
@@ -513,8 +509,7 @@ export default ({
 
       if (name === 'picture') {
         ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
-        console.log(value);
-        console.log(ImgUrl);
+
         input = (
           <div style={{ textAlign: 'center' }}>
             <ImgCrop rotate>
@@ -522,7 +517,6 @@ export default ({
                 accept='image/png,image/jpeg'
                 onChange={(file) => {
                   setImageAvatar(file);
-                  console.log(file);
                   setImgUrl(file.fileList);
                 }}
                 multiple={false}

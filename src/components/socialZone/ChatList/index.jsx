@@ -31,23 +31,18 @@ const layout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 18 },
 };
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
+
 
 const ChatList = (props) => {
   const history = useHistory();
   //contextos
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
-  const [bandera, setbandera] = useState();
   const [userNameChat, SetUserNameChat] = useState('');
 
   const onFinish = (values) => {
     cUser.value = values;
-    setbandera('');
   };
-  console.log(props);
 
   let userName = props.currentChatName;
 

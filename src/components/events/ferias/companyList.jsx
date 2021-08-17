@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 function Companylist(props) {
   const { Text, Paragraph } = Typography;
   const history = useHistory();
-  console.log(props);
 
   function stripHtml(html) {
     // Crea un nuevo elemento div

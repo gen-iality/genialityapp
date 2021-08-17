@@ -15,8 +15,7 @@ class CommentsList extends Component {
       eventId: this.props.eventId,
       commentsCount: this.props.commentsCount || 0
     };
-    console.log("props")
-    console.log(props);
+   
   }
  
 

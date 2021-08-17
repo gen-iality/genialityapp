@@ -70,7 +70,7 @@ const Stands=(props)=>{
     ];
 
     function handleChange(value) {
-      console.log(`selected ${value}`);
+    
       setVisualization(value)
     }
 
@@ -78,7 +78,6 @@ const Stands=(props)=>{
      let config= await firestore
           .collection('event_companies')
           .doc(props.event._id).get();
-          console.log(config.data())
           setconfig(config.data())
         if(config.data().config){
           setVisualization(config.data().config.visualization)
@@ -102,7 +101,6 @@ const Stands=(props)=>{
          selectedStand!=null? list[selectedStand.id]=selectedStandEdit:list.push(selectedStandEdit);             
         let modifyObject={...documentEmpresa,stand_types:list}
         await actualizarData(modifyObject)
-        console.log(list)
          
          handleCancel()  
         }else{
@@ -125,13 +123,11 @@ const Stands=(props)=>{
     async function deleteStand(id){
       let list=standsList
       list=list.filter((stand)=>stand.id!==id);
-      console.log(list)
       let modifyObject={...documentEmpresa,stand_types:list}
       await actualizarData(modifyObject)     
     }
 
       function obtenerStand(record){
-         // console.log(record)
         if(record!=null){
           if(record.color){
             setColorStand(record.color)
@@ -241,7 +237,6 @@ const Stands=(props)=>{
                       <SketchPicker
                         color={colorStand}
                         onChangeComplete={(color) => {
-                          console.log(color)
                          setColorStand(color.hex)
                         }}
                       />

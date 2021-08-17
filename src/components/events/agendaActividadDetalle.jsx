@@ -47,79 +47,85 @@ const tailLayout = {
 };
 
 let AgendaActividadDetalle = (props) => {
-   let { activity_id } = useParams();
-   let [idSpeaker, setIdSpeaker] = useState(false);
-   let [orderedHost, setOrderedHost] = useState([]);
-   const [meetingState, setMeetingState] = useState(null);
-   const [meeting_id, setMeeting_id] = useState(null);
-   const [platform, setPlatform] = useState(null);
-   const totalAttendees = useState(0);
-   const totalAttendeesCheckedin = useState(0);
-   const [names, setNames] = useState(null);
-   const [email, setEmail] = useState(null);
-   const [currentActivity, setcurrentActivity] = useState(null);
-   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
-   let history = useHistory();
+  let { activity_id } = useParams();
+  let [idSpeaker, setIdSpeaker] = useState(false);
+  let [orderedHost, setOrderedHost] = useState([]);
+  const [meetingState, setMeetingState] = useState(null);
+  const [meeting_id, setMeeting_id] = useState(null);
+  const [platform, setPlatform] = useState(null);
+  const totalAttendees = useState(0);
+  const totalAttendeesCheckedin = useState(0);
+  const [names, setNames] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [currentActivity, setcurrentActivity] = useState(null);
+  let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
+  let history = useHistory();
 
-   const configfast = useState({});
+  const configfast = useState({});
 
-   const { Title } = Typography;
+  const { Title } = Typography;
 
-   const intl = useIntl();
+  const intl = useIntl();
 
-   //obtener la actividad por id
-   useEffect(() => {
-      console.log('mis props', props);
-      async function getActividad() {
-         return await AgendaApi.getOne(activity_id, props.cEvent.value._id);
-      }
+  //obtener la actividad por id
+  useEffect(() => {
+    async function getActividad() {
+      return await AgendaApi.getOne(activity_id, props.cEvent.value._id);
+    }
 
-      function orderHost(hosts) {
-         hosts.sort(function(a, b) {
-            return a.order - b.order;
-         });
-         setOrderedHost(hosts);
-      }
-
-      getActividad().then((result) => {
-         setcurrentActivity(result);
-         orderHost(result.hosts);
-         props.gotoActivity(result);
+    function orderHost(hosts) {
+      hosts.sort(function(a, b) {
+        return a.order - b.order;
       });
+      setOrderedHost(hosts);
+    }
 
-      props.setTopBanner(false);
-      props.setVirtualConference(false);
-      props.setSpaceNetworking(false);
-      return () => {
-         props.setTopBanner(true);
-         props.setVirtualConference(true);
-         props.setSpaceNetworking(true);
-      };
-   }, []);
+    getActividad().then((result) => {
+      setcurrentActivity(result);
+      orderHost(result.hosts);
+      props.gotoActivity(result);
+    });
 
-   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
-   const [videoStyles, setVideoStyles] = useState(null);
-   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
+    props.setTopBanner(false);
+    props.setVirtualConference(false);
+    props.setSpaceNetworking(false);
+    return () => {
+      props.setTopBanner(true);
+      props.setVirtualConference(true);
+      props.setSpaceNetworking(true);
+    };
+  }, []);
 
-   // Array que contiene las actividades del espacio (que comparten el mismo meeting_id y platform)
-   const [activitiesSpace, setActivitiesSpace] = useState([]);
+  // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
+  const [videoStyles, setVideoStyles] = useState(null);
+  const [videoButtonStyles, setVideoButtonStyles] = useState(null);
 
-   // Estado del espacio virtual
-   const [stateSpace, setStateSpace] = useState(true);
+  // Array que contiene las actividades del espacio (que comparten el mismo meeting_id y platform)
+  const [activitiesSpace, setActivitiesSpace] = useState([]);
 
-   const [activeTab, setActiveTab] = useState('description');
-   let mainStageContent = props.mainStageContent;
+  // Estado del espacio virtual
+  const [stateSpace, setStateSpace] = useState(true);
 
-   //Estado para detección si la vista es para mobile
-   const [isMobile, setIsMobile] = useState(false);
+  const [activeTab, setActiveTab] = useState('description');
+  let mainStageContent = props.mainStageContent;
 
-   useEffect(() => {
-      // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
-      mediaQueryMatches();
-      window.addEventListener('resize', mediaQueryMatches);
+  //Estado para detección si la vista es para mobile
+  const [isMobile, setIsMobile] = useState(false);
 
-      if (props.collapsed) {
-         props.toggleCollapsed(1);
+  useEffect(() => {
+    // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
+    mediaQueryMatches();
+    window.addEventListener('resize', mediaQueryMatches);
+
+    if (props.collapsed) {
+      props.toggleCollapsed(1);
+    }
+
+    // Al cargar el componente se realiza el checkin del usuario en la actividad
+    try {
+      if (props.cEventUser) {
+        TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
+        Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.value._id);
       }
 
       // Al cargar el componente se realiza el checkin del usuario en la actividad
@@ -192,14 +198,153 @@ let AgendaActividadDetalle = (props) => {
    }, [meeting_id, platform, props.cEvent.value]);
 
    useEffect(() => {
-      const openActivities = activitiesSpace.filter((activity) => activity.habilitar_ingreso === 'open_meeting_room');
-
-      if (openActivities.length > 0) {
-         setStateSpace(true);
+      if (/*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === 'game') {
+        const sharedProperties = {
+          position: 'fixed',
+          right: '0',
+          width: '170px',
+        };
+  
+        const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
+  
+        setVideoStyles({
+          ...sharedProperties,
+          ...verticalVideo,
+          zIndex: '100',
+          transition: '300ms',
+        });
+  
+        const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
+  
+        setVideoButtonStyles({
+          ...sharedProperties,
+          ...verticalVideoButton,
+          zIndex: '101',
+          cursor: 'pointer',
+          display: 'block',
+          height: '96px',
+        });
       } else {
-         setStateSpace(false);
+        setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
+        setVideoButtonStyles({ display: 'none' });
       }
-   }, [activitiesSpace]);
+    }, [mainStageContent, isMobile]);
+
+  function handleChangeLowerTabs(tab) {
+    setActiveTab(tab);
+
+    if (tab === 'games') {
+      props.setMainStage('game');
+    }
+  }
+
+  function redirectRegister() {
+    history.push(`/landing/${props.cEvent.value._id}/tickets`);
+  }
+
+  async function listeningStateMeetingRoom(event_id, activity_id) {
+    firestore
+      .collection('events')
+      .doc(event_id)
+      .collection('activities')
+      .doc(activity_id)
+      .onSnapshot((infoActivity) => {
+        if (!infoActivity.exists) return;
+        const data = infoActivity.data();
+        const { habilitar_ingreso, meeting_id, platform, tabs } = data;
+        setMeeting_id(meeting_id);
+        setPlatform(platform);
+        setMeetingState(habilitar_ingreso);
+        props.setTabs(tabs);
+      });
+  }
+
+  async function getSpeakers(idSpeaker) {
+    setIdSpeaker(idSpeaker);
+  }
+
+  const getMeetingPath = (platform) => {
+    if (platform === 'zoom') {
+      const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
+
+      return (
+        url_conference +
+        meeting_id +
+        `&userName=${props.cUser.displayName ? props.cUser.displayName : 'Guest'}` +
+        `&email=${props.cUser.email ? props.cUser.email : 'emaxxxxxxil@gmail.com'}` +
+        `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
+        `&host=${eventUserUtils.isHost(props.cUser, props.cEvent.value)}`
+      );
+    } else if (platform === 'vimeo') {
+      return `https://player.vimeo.com/video/${meeting_id}`;
+    } else if (platform === 'dolby') {
+      return `https://eviusmeets.netlify.app/?username=${names}&email=${email}`;
+    }
+  };
+
+  const handleSignInForm = (values) => {
+    setNames(values.names);
+    setEmail(values.email);
+  };
+
+  const mediaQueryMatches = () => {
+    let screenWidth = window.innerWidth;
+    screenWidth <= 768 ? setIsMobile(true) : setIsMobile(false);
+  };
+
+  const { image_event } = props;
+
+  const colorTexto = props.cEvent.value.styles.textMenu;
+  const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
+
+  const imagePlaceHolder =
+    'https://via.placeholder.com/1500x540/' +
+    colorFondo.replace('#', '') +
+    '/' +
+    colorTexto.replace('#', '') +
+    '?text=EVIUS.co';
+
+  useEffect(() => {
+    if (currentActivity) {
+      listenSurveysData(props.cEvent.value, currentActivity, props.cUser, (data) => {
+        props.setHasOpenSurveys(data.hasOpenSurveys);
+      });
+    }
+  }, [props.cEvent.value, currentActivity]);
+
+  {
+    Moment.locale(window.navigator.language);
+  }
+
+  const openZoomExterno = () => {
+    const { zoomExternoHandleOpen, eventUser, currentActivity } = props;
+    zoomExternoHandleOpen(currentActivity, eventUser);
+  };
+
+  // aquie esta los estados del drawer y el modal
+  const [rankingVisible, setRankingVisible] = useState(true);
+  const [width, setWidth] = useState('70%');
+
+  const showRanking = () => {
+   if (window.screen.width >= 768) {
+     setWidth('70%');
+     if (rankingVisible == false) {
+       setWidth('100%');
+     }
+     {
+       setWidth('70%');
+     }
+   } else {
+     setWidth('100%');
+     if (rankingVisible == false) {
+       setWidth('100%');
+     }
+     {
+       setWidth('70%');
+     }
+   }
+   setRankingVisible(!rankingVisible);
+ };
 
    useEffect(() => {
       if (/*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === 'game') {

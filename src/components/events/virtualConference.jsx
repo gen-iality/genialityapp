@@ -85,7 +85,6 @@ const VirtualConference = () => {
               if (item._id == doc.id) {
                 let activity;
                 let { habilitar_ingreso, isPublished, meeting_id, platform, vimeo_id } = doc.data();
-                console.log('existe meeting', meeting_id, item.name, habilitar_ingreso);
                 if (
                   habilitar_ingreso != 'ended_meeting_room' &&
                   isPublished &&
@@ -98,7 +97,6 @@ const VirtualConference = () => {
               }
             });
           });
-          console.log('cual queda', arratem);
           setinfoAgenda(arratem);
         });
   }, [agendageneral, firestore]);

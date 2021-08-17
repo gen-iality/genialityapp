@@ -12,7 +12,8 @@ import notificationsNetReducer from './notifyNetworking/reducers';
 import topBannerReducer from './topBanner/reducers';
 import virtualConferenceReducer from './virtualconference/reducers';
 import viewPerfilReducer from './viewPerfil/reducers';
-import spaceNetworkingReducer from './networking/reducers'
+import spaceNetworkingReducer from './networking/reducers';
+import viewSectionPermissions from './sectionPermissions/reducers';
 
 export default {
   categories,
@@ -29,5 +30,6 @@ export default {
   topBannerReducer,
   virtualConferenceReducer,
   viewPerfilReducer,
-  spaceNetworkingReducer
+  spaceNetworkingReducer,
+  viewSectionPermissions,
 };

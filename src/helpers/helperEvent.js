@@ -59,7 +59,6 @@ export function publishedSurveysByActivity(currentActivity, eventSurveys, curren
             (survey.isPublished === 'true' || survey.isPublished === true) &&
             ((currentActivity && survey.activity_id === currentActivity._id) || survey.isGlobal === 'true')
       );
-      // console.log('holispublishjed', publishedSurveys);
       if (!currentUser || Object.keys(currentUser).length === 0) {
          publishedSurveys = publishedSurveys.filter((item) => {
             return item.allow_anonymous_answers !== 'false';

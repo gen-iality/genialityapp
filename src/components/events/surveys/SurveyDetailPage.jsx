@@ -32,15 +32,8 @@ function SurveyDetailPage(props) {
 
   return (
     <div>
-     
       {(surveyResult === 'results' || isCompleted(currentSurvey._id)) && (
-        <Graphics
-          idSurvey={currentSurvey._id}
-          // showListSurvey={toggleSurvey}
-          eventId={currentSurvey.eventId}
-          // surveyLabel={surveyLabel}
-          operation='participationPercentage' //onlyCount, participationPercentage
-        />
+        <Graphics idSurvey={currentSurvey._id} eventId={currentSurvey.eventId} operation='participationPercentage' />
       )}
       {surveyResult === 'view' && !isCompleted(currentSurvey._id) && (
         <Card className='survyCard'>

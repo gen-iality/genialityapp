@@ -18,7 +18,6 @@ class Events extends Component {
   }
 
   async componentDidMount() {
-    console.log('componentDidMount');
     try {
       const resp = await EventsApi.mine();
       this.setState({ events: resp.data, loading: false });

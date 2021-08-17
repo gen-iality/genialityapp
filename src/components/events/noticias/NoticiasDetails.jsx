@@ -21,10 +21,9 @@ const NoticiasDetails = ({ setVirtualConference, match,setTopBanner  }) => {
     setVirtualConference(false);
     setTopBanner(false);
     window.scrollTo(0, 0)
-    console.log(match.params.event_id, match.params.id);
+  
     NewsFeed.getOne(match.params.event_id, match.params.id).then((resp) => {
       if (resp) {
-        console.log(resp);
         setNoticia(resp);
         setLoading(false);
         setEventId(match.params.event_id);

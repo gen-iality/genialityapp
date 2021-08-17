@@ -11,13 +11,12 @@ import { UseCurrentUser } from '../../Context/userContext';
 
 const { Meta } = Card;
 
-const ContactList = ({ tabActive,agendarCita }) => {
+const ContactList = ({ tabActive, agendarCita }) => {
   const [contactsList, setContactsList] = useState([]);
   const [messageService, setMessageService] = useState('');
   const [userProperties, setUserProperties] = useState([]);
   const [loading, setLoading] = useState(false);
- //console.log("TAB ACTIVE==>"+tabActive)
-  //contextos
+
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
   let userCurrentContext = UseCurrentUser();
@@ -32,12 +31,12 @@ const ContactList = ({ tabActive,agendarCita }) => {
           setContactsList(result);
         }
         if (typeof result == 'string') setMessageService(result);
-             
+
         setLoading(false);
       });
     };
     const getProperties = async () => {
-      let properties = await EventFieldsApi.getAll(eventContext.value._id);     
+      let properties = await EventFieldsApi.getAll(eventContext.value._id);
       setUserProperties(properties);
     };
 
@@ -45,13 +44,13 @@ const ContactList = ({ tabActive,agendarCita }) => {
       getProperties();
       // getuserContactList();
       getContactList();
-    }else{
+    } else {
       setLoading(false);
     }
   }, [eventContext.value._id, tabActive]);
 
   if (!loading)
-    return userCurrentContext.value===null ? (
+    return userCurrentContext.value === null ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
         <Alert
           message='Iniciar Sesión'
@@ -115,7 +114,7 @@ const ContactList = ({ tabActive,agendarCita }) => {
                             </div>
                           )
                       )}
-                    </div>
+                    </div>,
                   ]}
                 />
                 <Col xs={24}>
@@ -136,11 +135,11 @@ const ContactList = ({ tabActive,agendarCita }) => {
       contactsList.length == 0 &&
       !loading && (
         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-          <Card style={{textAlign:'center'}} >{messageService}</Card>
+          <Card style={{ textAlign: 'center' }}>{messageService}</Card>
         </Col>
       )
     );
   if (userCurrentContext.value || loading) return <Spin></Spin>;
-  if (!userCurrentContext.value ) return <Spin></Spin>;
+  if (!userCurrentContext.value) return <Spin></Spin>;
 };
 export default ContactList;
