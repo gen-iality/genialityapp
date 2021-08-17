@@ -8,7 +8,7 @@ import Modal from 'antd/lib/modal/Modal';
 import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { withRouter } from 'react-router';
-
+import  Parser  from 'html-react-parser';
 class InformativeSection extends Component {
   constructor(props) {
     super(props);
@@ -32,6 +32,13 @@ class InformativeSection extends Component {
       markup: this.props.cEvent.value.itemsMenu.informativeSection.markup,
     });
     //OBTENER GALERIA
+    // EventsApi.getGallery(this.props.cEvent.value._id).then((resp) => {
+    //   if (resp && resp.data) {
+    //     this.setState({
+    //       galeries: resp.data,
+    //     });
+    //   }
+    // });
     /*EventsApi.getGallery(this.props.cEvent.value._id).then((resp) => {
       if (resp && resp.data) {
         this.setState({
@@ -144,8 +151,9 @@ class InformativeSection extends Component {
                   </a>
                 </>
               )}
-              {/*markup && Parser(markup)*/}
-            </Card>         
+              {this.props.cEvent.value._id !== '60797bfb2a9cc06ce973a1f4' && markup && Parser(markup)}
+            </Card>
+
           </div>
         )}
       </Fragment>
