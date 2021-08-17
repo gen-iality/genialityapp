@@ -31,6 +31,8 @@ import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';
 import { setSpaceNetworking } from '../../redux/networking/actions';
 import withContext from '../../Context/withContext';
+import {UseSurveysContext} from '../../Context/surveysContext';
+
 import { useHistory } from 'react-router-dom';
 
 const { TabPane } = Tabs;
@@ -62,6 +64,7 @@ let AgendaActividadDetalle = (props) => {
    let history = useHistory();
 
    const configfast = useState({});
+   let cSurveys  = UseSurveysContext();
 
    const { Title } = Typography;
 
@@ -362,14 +365,15 @@ let AgendaActividadDetalle = (props) => {
    const hasRanking = true;
 
    const isCompleted = () => {
-      if (
-         (props.currentSurvey !== null && props.currentSurvey.activity_id) ===
-            (props.currentActivity !== null && props.currentActivity._id) ||
-         (props.currentSurvey !== null && props.currentSurvey.isGlobal === 'true')
-      ) {
-         return true;
-      }
-      return false;
+      return cSurveys.currentSurvey !== null;
+      // if (
+      //    (cSurveys.currentSurvey !== null && cSurveys.currentSurvey.activity_id) ===
+      //       (props.currentActivity !== null && props.currentActivity._id) ||
+      //    (cSurveys.currentSurvey !== null && cSurveys.currentSurvey.isGlobal === 'true')
+      // ) {
+      //    return true;
+      // }
+      // return false;
    };
 
    return (
@@ -923,9 +927,9 @@ let AgendaActividadDetalle = (props) => {
          {isCompleted() && (
             <Drawer
                title={
-                  props.currentSurvey && props.currentSurvey?.allow_gradable_survey ? (
+                  cSurveys.currentSurvey && cSurveys.currentSurvey?.allow_gradable_survey ? (
                      <Space>
-                        {props.currentSurvey.allow_gradable_survey === 'false' ? (
+                        {cSurveys.currentSurvey.allow_gradable_survey === 'false' ? (
                            <PieChartOutlined
                               style={{
                                  display: 'flex',
@@ -955,8 +959,8 @@ let AgendaActividadDetalle = (props) => {
                            />
                         )}
                         <Space direction='vertical' size={-3}>
-                           {props.currentSurvey?.name}
-                           {props.currentSurvey.allow_gradable_survey === 'true' && (
+                           {cSurveys.currentSurvey?.name}
+                           {cSurveys.currentSurvey.allow_gradable_survey === 'true' && (
                               <span style={{ fontSize: '12px', color: '#52c41a' }}>Calificable</span>
                            )}
                         </Space>
@@ -976,7 +980,7 @@ let AgendaActividadDetalle = (props) => {
                               backgroundColor: `${colorFondo}`,
                            }}
                         />
-                        {props.currentSurvey?.name}
+                        {cSurveys.currentSurvey?.name}
                      </Space>
                   )
                }
@@ -984,13 +988,13 @@ let AgendaActividadDetalle = (props) => {
                closeIcon={<CloseOutlined style={{ fontSize: '24px' }} />}
                placement='right'
                // closable={true}
-               visible={props.currentSurvey && props.cUser.value !== null}
+               visible={cSurveys.currentSurvey && props.cUser.value !== null}
                onClose={onClose}
                width={window.screen.width >= 768 ? (rankingVisible == false ? '100%' : '70%') : '100%'}>
                <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
-                  {props.currentSurvey &&
-                     props.currentSurvey.rankingVisible &&
-                     props.currentSurvey.rankingVisible == 'true' && (
+                  {cSurveys.currentSurvey &&
+                     cSurveys.currentSurvey.rankingVisible &&
+                     cSurveys.currentSurvey.rankingVisible == 'true' && (
                         <Button type='primary' onClick={showRanking}>
                            {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
                         </Button>

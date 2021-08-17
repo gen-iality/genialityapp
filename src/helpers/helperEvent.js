@@ -4,11 +4,10 @@ import { EventFieldsApi } from './request';
 // //METODO PARA OBTENER ENCUESTAS New
 export function listenSurveysData(
    event_id,
-   setListOfEventSurveys,
-   setLoadingSurveys,
-   activity,
+   dispatch,
    cUser,
-   visualizarEncuesta
+   activity,
+   //visualizarEncuesta
 ) {
    firestore
       .collection('surveys')
@@ -20,33 +19,11 @@ export function listenSurveysData(
             eventSurveys.push({ ...doc.data(), _id: doc.id });
          });
 
-         //Si una encuesta esta publicada y esta abierta la seleccionamos automáticamente cómo activa
-         //Esto debería quedar en un mejor lugar
-         if (querySnapshot.docChanges().length) {
-            let lastChange = querySnapshot.docChanges()[querySnapshot.docChanges().length - 1];
-            let currentSurvey = null;
-            switch (lastChange.type) {
-               case 'removed':
-               case 'added':
-                  visualizarEncuesta(null);
-                  break;
-               case 'modified':
-               default:
-                  currentSurvey = { ...lastChange.doc.data(), _id: lastChange.doc.id };
-                  visualizarEncuesta(currentSurvey);
-                  break;
-            }
-         }
 
-         const publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser);
-
-         setListOfEventSurveys(() => {
-            if (publishedSurveys) {
-               return publishedSurveys;
-            }
-         });
-
-         setLoadingSurveys(false);
+         let publishedSurveys = eventSurveys;
+         dispatch({ type: 'data_loaded', payload: publishedSurveys });
+         //if (activity)
+         //publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser);
       });
 }
 

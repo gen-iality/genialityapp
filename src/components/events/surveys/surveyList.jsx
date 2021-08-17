@@ -10,21 +10,22 @@ import SurveyCard from './components/surveyCard';
 
 /** Context´s */
 import { UseCurrentUser } from '../../../Context/userContext';
+import { UseSurveysContext } from '../../../Context/surveysContext';
 
 const { setCurrentSurvey, setSurveyResult } = surveysActions;
 
 function SurveyList(props) {
+   let cSurveys  = UseSurveysContext();
    const {
       activity,
       setCurrentSurvey,
       setSurveyResult,
-      listOfEventSurveys,
-      loadingSurveys,
    } = props;
 
    const currentUser = UseCurrentUser();
 
    const handleClick = (currentSurvey, status) => {
+      cSurveys.select_survey(currentSurvey._id)
       console.log('currentSurvey')
       console.log(currentSurvey)
       if (activity !== null && currentSurvey.isOpened === 'true') {
@@ -40,8 +41,8 @@ function SurveyList(props) {
 
    return (
       <SurveyCard
-         publishedSurveys={listOfEventSurveys}
-         loadingSurveys={loadingSurveys}
+         publishedSurveys={cSurveys.surveys}
+         status={cSurveys.status}
          currentUser={currentUser}
          handleClick={handleClick}
       />
