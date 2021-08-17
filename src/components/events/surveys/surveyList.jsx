@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 /** Redux */
 import { connect } from 'react-redux';
 import * as surveysActions from '../../../redux/survey/actions';
-import { setMainStage } from '../../../redux/stage/actions';
 
 /** Componentes */
 import SurveyCard from './components/surveyCard';
@@ -21,7 +20,7 @@ function SurveyList(props) {
       setCurrentSurvey,
       setSurveyResult,
    } = props;
-
+console.log("10. cSurveys ", cSurveys)
    const currentUser = UseCurrentUser();
 
    const handleClick = (currentSurvey, status) => {
@@ -56,7 +55,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
    setCurrentSurvey,
-   setMainStage,
    setSurveyResult,
 };
 

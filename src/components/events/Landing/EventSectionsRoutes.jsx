@@ -70,8 +70,6 @@ const EventSectionRoutes = (props) => {
         <Route path={`${path}/activity/:activity_id`}>
           <AgendaActividadDetalle
             setVirtualConference={props.setVirtualConference}
-            listOfEventSurveys={props.listOfEventSurveys}
-            loadingSurveys={props.loadingSurveys}
           />
         </Route>
 

@@ -19,8 +19,7 @@ import MenuTabletsSocialZone from './Menus/MenuTabletsSocialZone';
 /** Firebase */
 import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
-/** redux surveys */
-import { setCurrentSurvey, setSurveyResult, setCurrentSurveyStatus } from '../../../redux/survey/actions';
+
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
 import EviusFooter from './EviusFooter';
@@ -93,13 +92,8 @@ const Landing = (props) => {
 
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
   let [totalNewMessages, settotalnewmessages] = useState(0);
-  let { currentActivity, tabs, setCurrentSurvey, setSurveyResult } = props;
+  let { currentActivity, tabs } = props;
   const [tabselected, settabselected] = useState('1');
-  /** listado de encuestas por actividad */
-  const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
-  /** loader para el listado de encuestas */
-  const [loadingSurveys, setLoadingSurveys] = useState(true);
-  /** estado de las encuestas, "abierto, cerrado, en progreso  */
   const [eventId, seteventId] = useState(null);
 
   useEffect(() => {
@@ -160,8 +154,6 @@ const Landing = (props) => {
             <EventSectionRoutes
               generaltabs={generaltabs}
               currentActivity={currentActivity}
-              listOfEventSurveys={listOfEventSurveys}
-              loadingSurveys={loadingSurveys}
             />
           </Content>
           <EviusFooter />
@@ -174,8 +166,6 @@ const Landing = (props) => {
           tabs={tabs}
           tabselected={tabselected}
           settabselected={settabselected}
-          listOfEventSurveys={listOfEventSurveys}
-          loadingSurveys={loadingSurveys}
           setchattab={setchattab}
           chattab={chattab}
         />
@@ -186,8 +176,6 @@ const Landing = (props) => {
           notNewMessage={notNewMessage}
           tabselected={tabselected}
           settabselected={settabselected}
-          listOfEventSurveys={listOfEventSurveys}
-          loadingSurveys={loadingSurveys}
           setchattab={setchattab}
           chattab={chattab}
         />
@@ -202,9 +190,4 @@ const mapStateToProps = (state) => ({
   view: state.topBannerReducer.view,
 });
 
-const mapDispatchToProps = {
-  setCurrentSurvey,
-  setSurveyResult,
-  setCurrentSurveyStatus,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Landing);
+export default connect(mapStateToProps)(Landing);

@@ -907,8 +907,6 @@ let AgendaActividadDetalle = (props) => {
                            {props.cUser.value !== null ? (
                               <SurveyList
                                  eventSurveys={props.eventSurveys}
-                                 listOfEventSurveys={props.listOfEventSurveys}
-                                 loadingSurveys={props.loadingSurveys}
                               />
                            ) : (
                               <div style={{ paddingTop: 30 }}>
