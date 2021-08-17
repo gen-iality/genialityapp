@@ -29,7 +29,7 @@ const ProductCard = ({ galery, eventId, history }) => {
         
         description={
           <Space direction='vertical'>
-            <Title level={5} ellipsis={{ rows: 3}}>
+            <Title level={5} ellipsis={{ rows: 2}}>
             {galery.name}
           </Title>
             <div>
