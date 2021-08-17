@@ -249,7 +249,7 @@ export default ({
           setNotLoggedAndRegister(true);
           message.success(msg);
         }else{
-          alert("A PAGAR")
+         // alert("A PAGAR")
          setPayMessage(true)
         }
       }
