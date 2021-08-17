@@ -8,12 +8,13 @@ const ProductCard=({galery,eventId,history})=>{
   console.log("PRODUCT==>",galery)
   const {Title, Text} = Typography
  return (
-  <Card   
+  <Card  
+   
   bordered={false}
   //  bodyStyle={{padding:'15px'}} 
   bodyStyle={{padding:'10px 10px'}}       
   key={"Cardgallery"+galery.id}
-   style={{ margin:'30px', width:'300px'
+   style={{ margin:'30px', width:'300px', cursor:'pointer'
   }}
   onClick={()=>history.push(`/landing/${eventId}/producto/${galery._id}/detailsproducts`)}
    cover={<img alt='example'  style={{width:'300px', objectFit:'cover'}} src={galery && galery.image && galery.image[0]} />}
