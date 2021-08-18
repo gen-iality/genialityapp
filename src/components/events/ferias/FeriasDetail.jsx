@@ -126,7 +126,7 @@ const FeriasDetail = (props) => {
           <TabPane tab='Productos y Servicios' key='2'>
             {/* componente  de Productos */}
             <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
-              {console.log('Marlon', companyDetail)}
+              
               {companyDetail && companyDetail.services.length > 0 ? (
                 <div>
                   <Row gutter={[16, 16]}>
