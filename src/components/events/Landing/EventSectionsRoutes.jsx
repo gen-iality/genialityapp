@@ -28,6 +28,7 @@ import Noticias from '../noticias';
 import withContext from '../../../Context/withContext';
 import PageNotPermissions from './PageNotPermissions';
 import Productos from '../producto/index';
+import MessageRegister from '../registrationForm/messageRegister';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -125,9 +126,11 @@ const EventSectionRoutes = (props) => {
             setVirtualConference={props.setVirtualConference}
           />
         </Route>
-
         <Route path={`${path}/permissions`}>
           <PageNotPermissions />
+        </Route>
+        <Route path={`${path}/success/:type?`}>
+          <MessageRegister/>
         </Route>
       </Switch>
     </>

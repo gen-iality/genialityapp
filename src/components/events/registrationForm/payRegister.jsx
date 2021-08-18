@@ -4,6 +4,7 @@ import { Card, Result } from 'antd';
 import React from 'react';
 
 export const PayForm=({eventId})=>{
+  console.log("EVENT PAYMENTE==>",eventId)
     return  <Card>
     {eventId && eventId == '60cb7c70a9e4de51ac7945a2' && (
       <Result
