@@ -87,17 +87,12 @@ class documentsList extends Component {
               //se mapean los datos del array data
               renderItem={(item) => (
                 <>
-                  {' '}
+                  {console.log('item', item)}
                   <List.Item
                     key={item._id}
                     //boton de descarga
                     actions={[
-                      <a
-                        key={'itemDoc' + item._id}
-                        target='_blank'
-                        href={item.file.file}
-                        download
-                        rel='noopener noreferrer'>
+                      <a key={'itemDoc' + item._id} target='_blank' href={item.file} download rel='noopener noreferrer'>
                         {item.type == 'folder' ? '' : <IconText text='Descargar' icon={DownloadOutlined} />}
                       </a>,
                       // <a

@@ -32,6 +32,10 @@ class documents extends Component {
   }
 
   deletefile = async (file) => {
+
+    console.log('====================================');
+    console.log("file",file);
+    console.log('====================================');
     this.setState({ loading: true, textaction: `Eliminando el documento ${file.name}` });
     const ref = firebase.storage().ref();
     var desertRef = ref.child(`/documents/${this.props.event._id}/${file.name}`);
@@ -52,7 +56,7 @@ class documents extends Component {
     const { data } = await DocumentsApi.getAll(this.props.event._id);
     this.setState({ list: data });
     console.log('====================================');
-    console.log("data",data);
+    console.log('data', data);
     console.log('====================================');
   }
 
@@ -114,7 +118,7 @@ class documents extends Component {
     const data = {
       name: this.state.nameediting,
       title: this.state.nameediting,
-      file: this.state.fileediting,
+      // file: this.state.fileediting.file,
       type: 'file',
     };
     await DocumentsApi.editOne(this.props.event._id, data, this.state.fileediting._id);
