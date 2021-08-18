@@ -14,10 +14,11 @@ const PopoverInfoUser = (props) => {
   let { containtNetworking, getPropertiesUserWithId, propertiesProfile, propertiesOtherprofile } = useContext(
     HelperContext
   );
-
+  
   useEffect(() => {
     let iduser = props.item.iduser;
     getPropertiesUserWithId(iduser);
+    
   }, []);
 
   return (

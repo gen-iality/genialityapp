@@ -24,9 +24,11 @@ import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
 /** redux surveys */
 import { setCurrentSurvey, setSurveyResult, setCurrentSurveyStatus } from '../../../redux/survey/actions';
+import {setUserAgenda} from '../../../redux/networking/actions'
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
 import EviusFooter from './EviusFooter';
+import appointmentModal from '../../networking/appointmentModal';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -177,9 +179,15 @@ const Landing = (props) => {
 
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
 
+  console.log("props",props)
   return (
     <>
       <Layout>
+      <appointmentModal
+          targetEventUserId={props.userAgenda?.eventUserId}
+          targetEventUser={props.userAgenda}
+          closeModal={()=>{ }}
+      />
         <EventSectionsInnerMenu />
         <MenuTablets />
         <Layout className='site-layout'>
@@ -236,11 +244,13 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
   view: state.topBannerReducer.view,
+  userAgenda:state. spaceNetworkingReducer.userAgenda
 });
 
 const mapDispatchToProps = {
   setCurrentSurvey,
   setSurveyResult,
   setCurrentSurveyStatus,
+  setUserAgenda
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);

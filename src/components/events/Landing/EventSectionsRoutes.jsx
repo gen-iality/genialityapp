@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch,useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spin, Drawer } from 'antd';
 /** --------------------
@@ -28,7 +28,7 @@ import Noticias from '../noticias';
 import withContext from '../../../Context/withContext';
 import PageNotPermissions from './PageNotPermissions';
 import Productos from '../producto/index';
-import { useParams } from 'react-router-dom';
+import MessageRegister from '../registrationForm/messageRegister';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -47,7 +47,7 @@ const EventSectionRoutes = (props) => {
   }
 
   console.log('====================================');
-  console.log('siempre carga eventsectionroutes', redirect);
+  console.log('siempre carga eventsectionroutes',about);
   console.log('====================================');
 
   
@@ -57,7 +57,7 @@ const EventSectionRoutes = (props) => {
 
       <Switch>
         <Route exact path={`${path}/`}>
-          <Redirect to={`/landing/${props.cEvent.value._id}/${redirect}/${redirect}`} />
+          <Redirect to={`/landing/${props.cEvent.value._id}/${redirect}`} />
         </Route>
 
         <Route path={`${path}/documents`}>
@@ -138,9 +138,11 @@ const EventSectionRoutes = (props) => {
             setVirtualConference={props.setVirtualConference}
           />
         </Route>
-
         <Route path={`${path}/permissions`}>
           <PageNotPermissions />
+        </Route>
+        <Route path={`${path}/success/:type?`}>
+          <MessageRegister/>
         </Route>
       </Switch>
     </>

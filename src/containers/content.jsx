@@ -37,7 +37,7 @@ const ContentContainer = () => {
   return (
     <main className='main' >
       <Switch>
-        <Route path='/landing/:event_id/:about'>
+        <Route path='/landing/:event_id'>
           <CurrentEventProvider>
             <CurrentUserEventProvider>
               <CurrentUserProvider>
