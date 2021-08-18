@@ -28,23 +28,36 @@ import Noticias from '../noticias';
 import withContext from '../../../Context/withContext';
 import PageNotPermissions from './PageNotPermissions';
 import Productos from '../producto/index';
+import { useParams } from 'react-router-dom';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let redirect;
+  const { about } = useParams();
   if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
     redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
   } else {
     redirect = 'evento';
   }
 
+  function validatePermissions() {
+    console.log('====================================');
+    console.log('siempre carga eventsectionroutes', redirect);
+    console.log('====================================');
+  }
+
+  console.log('====================================');
+  console.log('siempre carga eventsectionroutes', redirect);
+  console.log('====================================');
+
+  
   return (
     <>
       {props.viewVirtualconference && <VirtualConference />}
 
       <Switch>
         <Route exact path={`${path}/`}>
-          <Redirect to={`/landing/${props.cEvent.value._id}/${redirect}`} />
+          <Redirect to={`/landing/${props.cEvent.value._id}/${redirect}/${redirect}`} />
         </Route>
 
         <Route path={`${path}/documents`}>
