@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch,useParams } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spin, Drawer } from 'antd';
 /** --------------------
@@ -36,21 +36,13 @@ const EventSectionRoutes = (props) => {
   const { about } = useParams();
   if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
     redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
+    console.log();
   } else {
     redirect = 'evento';
   }
 
-  function validatePermissions() {
-    console.log('====================================');
-    console.log('siempre carga eventsectionroutes', redirect);
-    console.log('====================================');
-  }
 
-  console.log('====================================');
-  console.log('siempre carga eventsectionroutes',about);
-  console.log('====================================');
 
-  
   return (
     <>
       {props.viewVirtualconference && <VirtualConference />}
@@ -142,7 +134,7 @@ const EventSectionRoutes = (props) => {
           <PageNotPermissions />
         </Route>
         <Route path={`${path}/success/:type?`}>
-          <MessageRegister/>
+          <MessageRegister />
         </Route>
       </Switch>
     </>
