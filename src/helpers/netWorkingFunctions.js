@@ -25,6 +25,7 @@ export const SendFriendship = async ({ eventUserIdReceiver, userName }, userActu
       // Se ejecuta el servicio del api de evius
       try {
         var respInvitation = await EventsApi.sendInvitation(event._id, data);
+        console.log("RESP INVITATION==>",respInvitation )
         return respInvitation;
       } catch (err) {
         let { data } = err.response;
