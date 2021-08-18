@@ -507,7 +507,6 @@ const FormRegister = ({
         input = (
           <Password
             name='password'
-            style={{ margin: '15px' }}
             placeholder='Ingrese su password'
             onChange={(e) => setPassword(e.target.value)}
             key={key}
