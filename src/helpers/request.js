@@ -239,6 +239,9 @@ export const EventsApi = {
   getOneProduct: async (eventId,idproduct) => {
     return await Actions.get(`/api/events/${eventId}/products/${idproduct}`);
   },
+  editProduct:async (data,eventId,idproduct) => {
+    return await Actions.put(`/api/events/${eventId}/products/${idproduct}`,data);
+  },
 };
 export const InvitationsApi = {
   getAll: async (id) => {

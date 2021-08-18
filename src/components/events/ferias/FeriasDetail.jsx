@@ -12,11 +12,11 @@ import { getEventCompany } from '../../empresas/services.js';
 import { compose } from 'redux';
 import { useState } from 'react';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
-import ReactPlayer from 'react-player';
-import { GlobalOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+
 
 const FeriasDetail = (props) => {
   const [companyDetail, setCompanyDetail] = useState();
+  const [visibleTab, setVisibleTab]=useState(true)
 
   const { Title } = Typography;
 
@@ -34,6 +34,10 @@ const FeriasDetail = (props) => {
     const { match } = props;
     let eventId = match.params.event_id;
     let idCompany = match.params.id;
+    //tabs quemados por visibilidad de cliente ya que no se tenia información
+    if(eventId==='60cb7c70a9e4de51ac7945a2'){
+      setVisibleTab(false)
+    }
 
     obtenerEmpresa(eventId, idCompany).then((resp) => { 
       setCompanyDetail(resp);
@@ -108,7 +112,7 @@ const FeriasDetail = (props) => {
             </Row>
           
           </TabPane>
-          <TabPane tab='Productos y Servicios' key='2'>
+        {visibleTab && <TabPane tab='Productos y Servicios' key='2'>
             {/* componente  de Productos */}
             <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
               {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
@@ -130,8 +134,8 @@ const FeriasDetail = (props) => {
                 </Row>
               </div>
             </div>
-          </TabPane>
-          <TabPane tab='Contactos' key='3'>
+          </TabPane>}
+          {visibleTab && <TabPane tab='Contactos' key='3'>
             {/* componente  de contactos */}
             <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1vw' }}>
               {/* <span className='title'>using Lorem Ipsum is that it has a more-or-less normal distribution of letters</span> */}
@@ -149,8 +153,8 @@ const FeriasDetail = (props) => {
                   />
                 ))}
             </div>
-          </TabPane>
-          <TabPane tab='Galería' key='4'>
+          </TabPane>}
+          {visibleTab && <TabPane tab='Galería' key='4'>
             <Row gutter={[16, 16]}>
               {companyDetail &&
                 companyDetail.gallery.length > 0 &&
@@ -169,7 +173,7 @@ const FeriasDetail = (props) => {
                   </Col>
                 ))}
             </Row>
-          </TabPane>
+          </TabPane>}
         </Tabs>
 
         {/* componente  de Productos */}
