@@ -8,7 +8,7 @@ const columns = [
   {
     title: 'Documento',
     dataIndex: 'document',
-    key: 'document'
+    key: 'document',
   },
   {
     render: function(item) {
@@ -18,8 +18,8 @@ const columns = [
         </a>
       );
       return element;
-    }
-  }
+    },
+  },
 ];
 
 // Estructura de boton para descargar documentos
@@ -36,7 +36,7 @@ class documentsList extends Component {
     this.state = {
       data: this.props.data || [],
       documentDates: [],
-      loading: true
+      loading: true,
     };
   }
 
@@ -58,7 +58,7 @@ class documentsList extends Component {
         documentDates.push({
           //activity: agenda.name,
           document: data[i].title ? data[i].title : data[i].name,
-          file: data[i].file
+          file: data[i].file,
         });
       } catch (e) {
         console.error(e);
@@ -92,9 +92,14 @@ class documentsList extends Component {
                     key={item._id}
                     //boton de descarga
                     actions={[
-                      <a key={'itemDoc' + item._id} target='_blank' href={item.file} download rel='noopener noreferrer'>
+                      <a
+                        key={'itemDoc' + item._id}
+                        target='_blank'
+                        href={item.file.file}
+                        download
+                        rel='noopener noreferrer'>
                         {item.type == 'folder' ? '' : <IconText text='Descargar' icon={DownloadOutlined} />}
-                      </a>
+                      </a>,
                       // <a
                       //     href={ApiGoogleDocuments + encodeURIComponent(item.file)}
                       //     target="_blank"
@@ -135,7 +140,7 @@ class documentsList extends Component {
                             ) : (
                               <IconText text='Descargar' icon={DownloadOutlined} />
                             )}
-                          </a>
+                          </a>,
                         ]}>
                         <List.Item.Meta
                           style={{ marginRight: '10%' }}

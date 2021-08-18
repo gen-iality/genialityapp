@@ -3,9 +3,9 @@ import EventContent from '../events/shared/content';
 import EvenTable from '../events/shared/table';
 import { DocumentsApi } from '../../helpers/request';
 import { Link, Redirect } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import firebase from 'firebase';
-import { Modal } from 'antd';
+import { Modal, Space, Button, Tooltip, Spin, Row, message } from 'antd';
+import { DownCircleOutlined, EditOutlined } from '@ant-design/icons';
 
 class documents extends Component {
   constructor(props) {
@@ -19,6 +19,10 @@ class documents extends Component {
       folder: '',
       id: '',
       fileKey: new Date(),
+      textaction: '',
+      editfile: false,
+      fileediting: null,
+      nameediting: null,
     };
     this.getDocuments();
   }
@@ -26,13 +30,35 @@ class documents extends Component {
   async componentDidMount() {
     this.getDocuments();
   }
+
+  deletefile = async (file) => {
+    this.setState({ loading: true, textaction: `Eliminando el documento ${file.name}` });
+    const ref = firebase.storage().ref();
+    var desertRef = ref.child(`/documents/${this.props.event._id}/${file.name}`);
+    // Delete the file
+    desertRef
+      .delete()
+      .then(async () => {
+        await DocumentsApi.deleteOne(this.props.event._id, file._id);
+        this.setState({ loading: false });
+        this.getDocuments();
+      })
+      .catch(function(error) {
+        message.error('no se pudo eliminar este documento');
+      });
+  };
+
   async getDocuments() {
     const { data } = await DocumentsApi.getAll(this.props.event._id);
     this.setState({ list: data });
+    console.log('====================================');
+    console.log("data",data);
+    console.log('====================================');
   }
 
   saveDocument = async () => {
     //Se abre la conexion y se trae el documento
+    this.setState({ loading: true, textaction: 'Creando el documento' });
     let { uploadTask } = this.state;
     const ref = firebase.storage().ref();
     const files = document.getElementById('file').files[0];
@@ -78,9 +104,23 @@ class documents extends Component {
 
     await DocumentsApi.create(this.props.event._id, data);
 
-    toast.success('Documento Guardado');
+    message.success('Documento Guardado');
     this.setState({ file: '', fileKey: new Date() });
+    this.setState({ loading: false });
     this.getDocuments();
+  };
+
+  UpdateFile = async () => {
+    const data = {
+      name: this.state.nameediting,
+      title: this.state.nameediting,
+      file: this.state.fileediting,
+      type: 'file',
+    };
+    await DocumentsApi.editOne(this.props.event._id, data, this.state.fileediting._id);
+    message.success('documento editado');
+    this.getDocuments();
+    this.setState({ editfile: false });
   };
 
   stateUploadFile = (snapshot) => {
@@ -108,23 +148,6 @@ class documents extends Component {
     }
   };
 
-  destroy = async (name, id, event) => {
-    const ref = firebase.storage().ref(`documents/${event}/`);
-    var desertRef = ref.child(`${name}`);
-    // // //Delete the file
-    desertRef
-      .delete()
-      .then(function() {
-        //     //El dato se elimina aqui
-      })
-      .catch(function() {
-        //     //Si no muestra el error
-      });
-
-    toast.success('Information Deleted');
-    this.getDocuments();
-  };
-
   destroyFolder = async (event, id_folder) => {
     const files = await DocumentsApi.getFiles(this.props.event._id, id_folder);
 
@@ -145,7 +168,7 @@ class documents extends Component {
 
     await DocumentsApi.deleteOne(this.props.event._id, id_folder);
 
-    toast.success('Information Deleted');
+    message.success('Information Deleted');
     this.getDocuments();
   };
 
@@ -246,54 +269,71 @@ class documents extends Component {
                 </Modal>
               </div>
             </div>
-            <EvenTable head={['Nombre', '']}>
-              {list.map((documents, key) => (
-                <tr key={key}>
-                  <td>
-                    {documents.type === 'file' ? (
-                      <Link to={{ pathname: `${this.props.matchUrl}/permission`, state: { edit: documents._id } }}>
-                        <i style={{ marginRight: '1%' }} className='far fa-file'></i>
-                        {documents.title}
-                      </Link>
-                    ) : (
-                      <Link to={{ pathname: `${this.props.matchUrl}/upload`, state: { edit: documents._id } }}>
-                        <i style={{ marginRight: '1%' }} className='far fa-folder'></i>
-                        {documents.title}
-                      </Link>
-                    )}
-                  </td>
-                  <td>
-                    {documents.type === 'folder' ? (
-                      <div>
-                        <button
-                          style={{ marginLeft: '19%' }}
-                          onClick={this.destroyFolder.bind(documents.type, this.props.event._id, documents._id)}>
-                          <span className='icon'>
-                            <i className='fas fa-trash-alt' />
-                          </span>
-                        </button>
-                      </div>
-                    ) : (
-                      <div>
-                        <a href={documents.file}>Descargar</a>
-                        <button
-                          onClick={this.destroy.bind(
-                            documents.type,
-                            documents.name,
-                            documents._id,
-                            this.props.event._id
-                          )}>
-                          <span className='icon'>
-                            <i className='fas fa-trash-alt' />
-                          </span>
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </EvenTable>
+            {list.length > 0 ? (
+              <EvenTable head={['Nombre', 'Acciones']}>
+                {list.map((documents, key) => (
+                  <tr key={key}>
+                    <td>{documents.type === 'file' ? <p>{documents.title}</p> : <p>{documents.title}</p>}</td>
+                    <td>
+                      {documents.type === 'folder' ? (
+                        <div>
+                          <button
+                            style={{ marginLeft: '19%' }}
+                            onClick={this.destroyFolder.bind(documents.type, this.props.event._id, documents._id)}>
+                            <span className='icon'>
+                              <i className='fas fa-trash-alt' />
+                            </span>
+                          </button>
+                        </div>
+                      ) : (
+                        <Space>
+                          <Button icon={<DownCircleOutlined />} type='primary'>
+                            <a rel='noreferrer' target='_blank' style={{ color: 'white' }} href={documents.file}>
+                              Descargar
+                            </a>
+                          </Button>
+
+                          <Tooltip title='Eliminar documento'>
+                            <Button type='danger' onClick={() => this.deletefile(documents)}>
+                              <span className='icon'>
+                                <i className='fas fa-trash-alt' />
+                              </span>
+                            </Button>
+                          </Tooltip>
+
+                          <Button
+                            onClick={() =>
+                              this.setState({ fileediting: documents, editfile: true, nameediting: documents.name })
+                            }
+                            icon={<EditOutlined />}
+                            type='primary'>
+                            Editar
+                          </Button>
+                        </Space>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </EvenTable>
+            ) : (
+              <h1>Aun no se agregan archivos a este evento</h1>
+            )}
           </EventContent>
+          <Row style={{ margin: 20 }} justify='center'>
+            {this.state.loading && <Spin tip={this.state.textaction} />}
+          </Row>
+          <Modal
+            title='Editar archivo'
+            visible={this.state.editfile}
+            onOk={this.UpdateFile}
+            onCancel={() => this.setState({ editfile: false })}>
+            <input
+              style={{ width: '100%' }}
+              onChange={(e) => this.setState({ nameediting: e.target.value })}
+              className='form-control'
+              value={this.state.nameediting}
+            />
+          </Modal>
         </div>
       </Fragment>
     );
