@@ -752,4 +752,18 @@ export const ActivityBySpeaker = {
   },
 };
 
+export const OrganizationFuction={
+  // OBTENER EVENTOS PROXIMOS POR ORGANIZACION
+ getEventsNextByOrg: async (orgId) => {
+  const events=await Actions.getAll(`api/organizations/${orgId}/events`);
+  return events.data;
+},
+
+// OBTENER DATOS DE LA ORGANIZACION
+ obtenerDatosOrganizacion:async (orgId) => {
+  const organization= await OrganizationApi.getOne(orgId)
+  return organization;
+},
+};
+
 export default privateInstance;

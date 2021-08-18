@@ -10,6 +10,7 @@ import { CurrentUserEventProvider } from '../Context/eventUserContext';
 import { CurrentEventProvider, CurrentEventContext } from '../Context/eventContext';
 import { CurrentUserProvider } from '../Context/userContext';
 import { HelperContextProvider } from '../Context/HelperContext';
+import EventOrganization from '../components/eventOrganization';
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -64,7 +65,8 @@ const ContentContainer = () => {
         <PrivateRoute path='/event/:event' component={Event} />
         <PrivateRoute path='/create-event' component={NewEvent} />
         <PrivateRoute path='/profile/:id' component={MyProfile} />
-        <PrivateRoute path='/organization/:id' component={Organization} />
+        <Route exact path='/organization/:id/events' component={EventOrganization} />
+        <PrivateRoute path='/admin/organization/:id' component={Organization} />       
         <PrivateRoute path='/purchase/:id' component={Purchase} />
         <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
         <PrivateRoute path='/tickets/:id' component={Tickets} />
