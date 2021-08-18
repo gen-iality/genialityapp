@@ -11,7 +11,7 @@ import { UseSurveysContext } from '../../../Context/surveysContext';
 
 function SurveyDetailPage(props) {
    let cSurveys = UseSurveysContext();
-   const { surveyResult } = props;
+   // const { surveyResult } = props;
    const currentUser = UseCurrentUser();
 
    if (!cSurveys.currentSurvey) {
@@ -24,7 +24,7 @@ function SurveyDetailPage(props) {
          cSurveys.currentSurveyStatus &&
          cSurveys.currentSurveyStatus[id] &&
          cSurveys.currentSurveyStatus[id].surveyCompleted === 'completed' &&
-         surveyResult !== 'closedSurvey'
+         cSurveys.surveyResult !== 'closedSurvey'
       ) {
          return true;
       }
@@ -33,14 +33,14 @@ function SurveyDetailPage(props) {
 
    return (
       <div>
-         {(surveyResult === 'results' || isCompleted(cSurveys.currentSurvey._id)) && (
+         {(cSurveys.surveyResult === 'results' || isCompleted(cSurveys.currentSurvey._id)) && (
             <Graphics
                idSurvey={cSurveys.currentSurvey._id}
                eventId={cSurveys.currentSurvey.eventId}
                operation='participationPercentage'
             />
          )}
-         {surveyResult === 'view' && !isCompleted(cSurveys.currentSurvey._id) && (
+         {cSurveys.surveyResult === 'view' && !isCompleted(cSurveys.currentSurvey._id) && (
             <Card className='survyCard'>
                <SurveyComponent
                   idSurvey={cSurveys.currentSurvey._id}
@@ -50,14 +50,14 @@ function SurveyDetailPage(props) {
                />
             </Card>
          )}
-         {surveyResult === 'closedSurvey' && <ClosedSurvey />}
+         {cSurveys.surveyResult === 'closedSurvey' && <ClosedSurvey />}
       </div>
    );
 }
 
 const mapStateToProps = (state) => ({
    isVisible: state.survey.data.surveyVisible,
-   surveyResult: state.survey.data.result,
+   // surveyResult: state.survey.data.result,
 });
 
 export default connect(mapStateToProps)(SurveyDetailPage);

@@ -6,7 +6,7 @@ export function listenSurveysData(
    event_id,
    dispatch,
    cUser,
-   activity,
+   activity
    //visualizarEncuesta
 ) {
    firestore
@@ -15,13 +15,28 @@ export function listenSurveysData(
       .where('isPublished', '==', 'true')
       .onSnapshot((querySnapshot) => {
          let eventSurveys = [];
+         let changeInSurvey;
          querySnapshot.forEach((doc) => {
             eventSurveys.push({ ...doc.data(), _id: doc.id });
          });
-
+         if (querySnapshot.docChanges().length) {
+            let lastChange = querySnapshot.docChanges()[querySnapshot.docChanges().length - 1];
+            let currentSurvey = null;
+            switch (lastChange.type) {
+               case 'removed':
+               case 'added':
+                  changeInSurvey = null;
+                  break;
+               case 'modified':
+               default:
+                  currentSurvey = { ...lastChange.doc.data(), _id: lastChange.doc.id };
+                  changeInSurvey = currentSurvey;
+                  break;
+            }
+         }
 
          let publishedSurveys = eventSurveys;
-         dispatch({ type: 'data_loaded', payload: publishedSurveys });
+         dispatch({ type: 'data_loaded', payload: { publishedSurveys, changeInSurvey } });
          //if (activity)
          //publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser);
       });

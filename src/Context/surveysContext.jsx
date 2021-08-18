@@ -8,19 +8,39 @@ import { UseCurrentUser } from './userContext';
 export const SurveysContext = React.createContext();
 
 //status: 'LOADING' | 'LOADED' | 'error'
-let initialContextState = { status: 'LOADING', surveys: [], currentSurvey: null, currentSurveyStatus: null };
+let initialContextState = {
+   status: 'LOADING',
+   surveys: [],
+   currentSurvey: null,
+   currentSurveyStatus: null,
+   surveyResult: 'view',
+};
 
 const reducer = (state, action) => {
    let newState = state;
    switch (action.type) {
       case 'data_loaded':
-        //  console.log('data_loaded', action.payload);
-         newState = { ...state, surveys: action.payload, status: 'LOADED' };
+         newState = { ...state, surveys: action.payload.publishedSurveys, status: 'LOADED' };
 
          //Actualizamos el estado de la encuesta actual
          if (state.currentSurvey) {
-            let updatedcurrentSurvey = action.payload.find((item) => state.currentSurvey._id == item._id);
+            let updatedcurrentSurvey = action.payload.publishedSurveys.find(
+               (item) => state.currentSurvey._id == item._id
+            );
             newState['currentSurvey'] = updatedcurrentSurvey;
+         }
+         //validamos que encuesta cambio desde el cms para abrir el drawer
+         if (action.payload.changeInSurvey) {
+            if (
+               action.payload.changeInSurvey.isOpened === 'true' &&
+               action.payload.changeInSurvey.isPublished === 'true'
+            ) {
+               let changeInSurvey = newState.surveys.find((item) => item._id === action.payload.changeInSurvey._id);
+               newState['currentSurvey'] = changeInSurvey;
+               newState['surveyResult'] = 'view';
+            } else {
+               newState['surveyResult'] = 'results';
+            }
          }
          return newState;
 
@@ -28,6 +48,15 @@ const reducer = (state, action) => {
          return { ...state, currentSurveyStatus: action.payload };
 
       case 'survey_selected':
+         if (action.payload.isOpened === 'true') {
+            return { ...state, currentSurvey: action.payload, surveyResult: 'view' };
+         } else if (action.payload.isOpened === 'false') {
+            return { ...state, currentSurvey: action.payload, surveyResult: 'results' };
+         }
+
+         return { ...state, currentSurvey: action.payload };
+
+      case 'survey_un_selected':
          return { ...state, currentSurvey: action.payload };
 
       default:
@@ -36,7 +65,7 @@ const reducer = (state, action) => {
 };
 
 export function SurveysProvider({ children }) {
-  //  console.group('surveyContext');
+   //  console.group('surveyContext');
    let cEventContext = UseEventContext();
    let cUser = UseCurrentUser();
    const [state, dispatch] = useReducer(reducer, initialContextState);
@@ -46,22 +75,26 @@ export function SurveysProvider({ children }) {
       dispatch({ type: 'survey_selected', payload: survey });
    }
    function unset_select_survey(survey) {
-    dispatch({ type: 'survey_selected', payload: survey });
- }
+      dispatch({ type: 'survey_un_selected', payload: survey });
+   }
 
    useEffect(() => {
       if (!cEventContext || !cEventContext.value) return;
       if (!cUser || !cUser.value) return;
 
       async function fetchSurveys() {
-        //  console.log('surveyContext', 'inicialize');
+         //  console.log('surveyContext', 'inicialize');
          listenSurveysData(cEventContext.value._id, dispatch, cUser, null);
          InitSurveysCompletedListener(cUser, dispatch);
       }
       fetchSurveys();
    }, [cEventContext, cUser]);
-  //  console.groupEnd('surveyContext');
-   return <SurveysContext.Provider value={{ ...state, select_survey, unset_select_survey }}>{children}</SurveysContext.Provider>;
+   //  console.groupEnd('surveyContext');
+   return (
+      <SurveysContext.Provider value={{ ...state, select_survey, unset_select_survey }}>
+         {children}
+      </SurveysContext.Provider>
+   );
 }
 
 export function UseSurveysContext() {

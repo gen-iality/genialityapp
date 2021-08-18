@@ -21,15 +21,15 @@ function SurveyList(props) {
 
    const handleClick = (currentSurvey, status) => {
       cSurveys.select_survey(currentSurvey);
-      if (activity !== null && currentSurvey.isOpened === 'true') {
-         setSurveyResult('view');
-      } else if (activity !== null && currentSurvey.isOpened === 'false') {
-         setSurveyResult('results');
-      }
-      if (status === 'results') {
-         setSurveyResult('results');
-      }
-      setCurrentSurvey(currentSurvey);
+      // if (activity !== null && currentSurvey.isOpened === 'true') {
+      //    setSurveyResult('view');
+      // } else if (activity !== null && currentSurvey.isOpened === 'false') {
+      //    setSurveyResult('results');
+      // }
+      // if (status === 'results') {
+      //    setSurveyResult('results');
+      // }
+      // setCurrentSurvey(currentSurvey);
    };
 
    return (
