@@ -24,7 +24,7 @@ export default function spaceNetworkingReducer(state = initialState, action) {
       case SET_USER_AGENDA:
       return {
         ...state,
-        userAgenda: action.userAgenda,
+        userAgenda: action.payload,
         loading: true,
         error: null,
       };

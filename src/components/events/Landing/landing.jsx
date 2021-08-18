@@ -28,7 +28,7 @@ import {setUserAgenda} from '../../../redux/networking/actions'
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
 import EviusFooter from './EviusFooter';
-import appointmentModal from '../../networking/appointmentModal';
+import AppointmentModal from '../../networking/appointmentModal';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -183,10 +183,10 @@ const Landing = (props) => {
   return (
     <>
       <Layout>
-      <appointmentModal
+      <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}
           targetEventUser={props.userAgenda}
-          closeModal={()=>{ }}
+          closeModal={()=>{props.setUserAgenda(null) }}
       />
         <EventSectionsInnerMenu />
         <MenuTablets />

@@ -37,7 +37,7 @@ const DrawerProfile = (props) => {
             src='https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png'
           />
           <Text style={{ fontSize: '20px' }}>
-            {props.profileuser && props.profileuser.properties && props.profileuser.properties.names
+            {props.profileuser!=null && props.profileuser.properties && props.profileuser.properties.names
               ? props.profileuser.properties.names
               : props.profileuser.properties && props.profileuser.properties.name
               ? props.profileuser.properties.name
@@ -92,7 +92,7 @@ const DrawerProfile = (props) => {
                     shape='circle'
                     onClick={async () => {
                       props.setUserAgenda({...props.profileuser,userId:props.profileuser._id,_id:props.profileuser.eventUserId})
-                     // props.setViewPerfil({ view: !props.viewPerfil, perfil: null })
+                      props.setViewPerfil({ view: !props.viewPerfil, perfil: null })
                       // alert("AGENDAR CITA")
                     }}
                     icon={<VideoCameraAddOutlined />}
