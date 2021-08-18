@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spin, Drawer } from 'antd';
 /** --------------------
@@ -33,11 +33,15 @@ import MessageRegister from '../registrationForm/messageRegister';
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let redirect;
+  const { about } = useParams();
   if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
     redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
+    console.log();
   } else {
     redirect = 'evento';
   }
+
+
 
   return (
     <>
@@ -130,7 +134,7 @@ const EventSectionRoutes = (props) => {
           <PageNotPermissions />
         </Route>
         <Route path={`${path}/success/:type?`}>
-          <MessageRegister/>
+          <MessageRegister />
         </Route>
       </Switch>
     </>
