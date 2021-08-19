@@ -58,6 +58,10 @@ class Product extends Component {
       this.props.history.push(`/event/${this.props.eventId}/product/addproduct`);
    };
 
+   configuration= () => {
+      this.props.history.push(`/event/${this.props.eventId}/product/configuration`);
+   };
+
    goBack = () => this.props.history.goBack();
 
    render() {
@@ -66,8 +70,11 @@ class Product extends Component {
             <Title level={4}>{'Producto'}</Title>
 
             <Row justify='end' style={{ marginBottom: '10px' }}>
-               <Button onClick={this.newProduct} type='primary' icon={<PlusCircleOutlined />}>
+               <Button onClick={this.newProduct} type='primary' style={{marginRight:'20px'}} icon={<PlusCircleOutlined />}>
                   {'Crear producto'}
+               </Button>
+               <Button onClick={this.configuration} type='primary' icon={<PlusCircleOutlined />}>
+                  {'Configuración'}
                </Button>
             </Row>
 
