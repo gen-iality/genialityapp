@@ -92,14 +92,14 @@ class eventLanding extends Component {
               <h3 style={{ fontWeight: 700, color: '#2cd237' }}> #JuntosSaldremosAdelante</h3>
             </>
           ) : (
-            <>
+            <Row justify='center'>
               <ReactQuill
                 value={this.props.cEvent.value.description}
                 modules={{ toolbar: false }}
                 readOnly={true}
                 theme='bubble'
               />
-            </>
+            </Row>
           )}
 
           {/*Contenedor personalizado FENALCO*/}
