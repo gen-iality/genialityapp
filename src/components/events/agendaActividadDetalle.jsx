@@ -666,7 +666,7 @@ let AgendaActividadDetalle = (props) => {
               ) : (
                 <>
                   {meetingState === 'ended_meeting_room' &&
-                    ((currentActivity !== null && currentActivity.image)) &&
+                    (currentActivity !== null ) &&
                     stateSpace === false &&
                     mainStageContent !== 'surveyDetalle' &&
                     mainStageContent !== 'game' && (
