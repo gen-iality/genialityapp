@@ -8,12 +8,16 @@ import { Col } from 'antd';
 let bannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
   return (
     <div className='headerContainer'>
-      <Col xs={0} sm={24}>
-        <img src={bgImage} alt={title} />
-      </Col>
-      <Col xs={24} sm={0}>
-        <img src={mobileBanner == null ? bgImage : mobileBanner} alt={title} />
-      </Col>
+      {bgImage && (
+        <Col xs={0} sm={24}>
+          <img src={bgImage} alt={title} />
+        </Col>
+      )}
+      {(bgImage || mobileBanner) && (
+        <Col xs={24} sm={0}>
+          <img src={mobileBanner == null ? bgImage : mobileBanner} alt={title} />
+        </Col>
+      )}
       {styles && styles.show_card_banner && styles.show_card_banner === 'true' && (
         <HeaderEventInfo title={title} {...props} />
       )}

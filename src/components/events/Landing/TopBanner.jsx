@@ -10,7 +10,7 @@ const TopBanner = ({ currentActivity }) => {
   if (!event) return null;
   let styles = event && event.styles ? event.styles : {};
   let bgImage = 'https://bulma.io/images/placeholders/1280x960.png';
-  bgImage = styles.banner_image ? styles.banner_image : bgImage;
+  bgImage = styles.banner_image ? styles.banner_image : null;
 
   return (
     <>
