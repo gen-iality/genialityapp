@@ -13,7 +13,6 @@ let initialContextState = {
    surveys: [],
    currentSurvey: null,
    currentSurveyStatus: null,
-   surveyResult: 'view',
 };
 
 const reducer = (state, action) => {
@@ -41,12 +40,6 @@ const reducer = (state, action) => {
          return { ...state, currentSurveyStatus: action.payload };
 
       case 'survey_selected':
-         if (action.payload.isOpened === 'true') {
-            return { ...state, currentSurvey: action.payload, surveyResult: 'view' };
-         } else if (action.payload.isOpened === 'false') {
-            return { ...state, currentSurvey: action.payload, surveyResult: 'results' };
-         }
-
          return { ...state, currentSurvey: action.payload };
 
       case 'survey_un_selected':
@@ -82,7 +75,28 @@ export function SurveysProvider({ children }) {
    }
 
    function shouldDisplayGraphics() {
-      return !shouldDisplaySurvey() && state.currentSurvey.allow_gradable_survey === 'false';
+      if (!state.currentSurvey) {
+         return false;
+      }
+
+      return (
+         !shouldDisplaySurvey() &&
+         (state.currentSurvey.allow_gradable_survey === 'false' || state.currentSurvey.allow_gradable_survey === false)
+      );
+   }
+
+   function shouldDisplaySurveyClosedMenssage() {
+      if (!state.currentSurvey) {
+         return false;
+      }
+      return state.currentSurvey.isOpened === 'false' && state.currentSurvey.allow_gradable_survey === 'true';
+   }
+   function shouldDisplaySurveyAttendeeAnswered() {
+      return (
+         !attendeeAllReadyAnswered() &&
+         !shouldDisplaySurveyClosedMenssage() &&
+         !shouldDisplayGraphics()
+      );
    }
 
    function attendeeAllReadyAnswered() {
@@ -113,6 +127,8 @@ export function SurveysProvider({ children }) {
             unset_select_survey,
             shouldDisplaySurvey,
             shouldDisplayGraphics,
+            shouldDisplaySurveyAttendeeAnswered,
+            shouldDisplaySurveyClosedMenssage,
             attendeeAllReadyAnswered,
          }}>
          {children}
