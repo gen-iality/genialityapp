@@ -1,26 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Button, Card, Col, Divider, Input, Row, Space, Spin, Typography } from 'antd';
+import { Alert, Button, Card, Col, Divider, Input, message, Row, Space, Spin, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { EventsApi } from '../../../helpers/request';
 import { IssuesCloseOutlined } from '@ant-design/icons';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
+import { firestore } from '../../../helpers/firebase';
+import OfertaProduct from './OfertaProducto';
 
 function DetailsProduct(props) {
   const { Title, Text } = Typography;
   const [product, setProduct] = useState();
   const [loading, setLoading] = useState(true);
+  const [habilty, setHability] = useState();
+  const [messageF, setMessage] = useState('');
+  const [eventId, setEventId] = useState('');
 
   useEffect(() => {
     let idProduct = props.match.params.id;
     let eventId = props.match.params.event_id;
+    firestore.collection('config').doc(eventId).onSnapshot((onSnapshot)=>{
+       if (onSnapshot.exists){        
+          let doc=onSnapshot.data()
+          console.log("SNAPSHOT==>",doc)
+          setHability(doc.data.habilitar_subasta)
+          setMessage(doc.data.message)
+          console.log(doc.data.message)
+       }else{
+         setHability(false)
+       }
+    })
 
     if (idProduct && eventId) {
+      setEventId(eventId)
       obtenerDetalleProduct();
     }
     async function obtenerDetalleProduct() {
-      let detalleProduct = await EventsApi.getOneProduct(eventId, idProduct);
-      console.log(detalleProduct);
+      let detalleProduct = await EventsApi.getOneProduct(eventId, idProduct);    
       if (Object.keys(detalleProduct).length > 0) {
         setProduct(detalleProduct);
       }
@@ -30,7 +46,7 @@ function DetailsProduct(props) {
 
   return (
     <>
-      {console.log('producto----------->', product)}
+      
       {product && !loading && (
         <Row style={{ padding: '24px' }} gutter={[8, 8]}>
           <Col xm={24} sm={24} md={12} lg={8} xl={12} xxl={12}>
@@ -58,7 +74,15 @@ function DetailsProduct(props) {
             <Card style={{ marginLeft: '12px' }}>
               <Space direction='vertical' style={{ width: '100%' }}>
                 <Title level={3}>{product && product.name ? product.name : 'Nombre de la obra'}</Title>
-
+                {habilty?<OfertaProduct product={product} eventId={eventId} />:<div>                  
+                  <Card>
+                  {messageF && messageF!='<p><br></p>'&&<div
+                    dangerouslySetInnerHTML={{
+                      __html: messageF?messageF:"Sin mensaje",
+                    }}></div>}
+                    <strong>Precio: </strong>{product.price}
+                    </Card>
+                  </div>}
                 <Divider orientation='left'>
                   <Title style={{ marginBottom: '0px' }} level={5}>
                     Artista
