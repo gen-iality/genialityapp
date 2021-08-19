@@ -24,7 +24,7 @@ import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
 /** redux surveys */
 import { setCurrentSurvey, setSurveyResult, setCurrentSurveyStatus } from '../../../redux/survey/actions';
-import {setUserAgenda} from '../../../redux/networking/actions'
+import { setUserAgenda } from '../../../redux/networking/actions';
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
 import EviusFooter from './EviusFooter';
@@ -179,15 +179,17 @@ const Landing = (props) => {
 
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
 
-  console.log("cEventContext==>",cEventContext.value?.styles)
+  console.log('cEventContext==>', cEventContext.value?.styles);
   return (
     <>
       <Layout>
-      <AppointmentModal
+        <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}
           targetEventUser={props.userAgenda}
-          closeModal={()=>{props.setUserAgenda(null) }}
-      />
+          closeModal={() => {
+            props.setUserAgenda(null);
+          }}
+        />
         <EventSectionsInnerMenu />
         <MenuTablets />
         <Layout className='site-layout'>
@@ -196,9 +198,8 @@ const Landing = (props) => {
             style={{
               paddingBottom: '15vh',
               backgroundSize: 'cover',
-              background:`${cEventContext.value?.styles.BackgroundImage?'':cEventContext.value?.styles.containerBgColor}`,
-              backgroundImage: `url(${cEventContext.value?.styles.BackgroundImage &&
-                cEventContext.value?.styles.BackgroundImage})`,
+              background: `${cEventContext.value && cEventContext.value?.styles?.containerBgColor}`,
+              backgroundImage: `url(${cEventContext.value && cEventContext.value?.styles?.BackgroundImage})`,
             }}>
             {props.view && <TopBanner currentActivity={currentActivity} />}
 
@@ -245,13 +246,13 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
   view: state.topBannerReducer.view,
-  userAgenda:state. spaceNetworkingReducer.userAgenda
+  userAgenda: state.spaceNetworkingReducer.userAgenda,
 });
 
 const mapDispatchToProps = {
   setCurrentSurvey,
   setSurveyResult,
   setCurrentSurveyStatus,
-  setUserAgenda
+  setUserAgenda,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);

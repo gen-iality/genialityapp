@@ -47,7 +47,8 @@ const EventSectionRoutes = (props) => {
   }
 
   function ValidateViewPermissions(route, nombresection) {
-    let routePermissions = Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section === route);
+    let routePermissions =
+      props.cEvent.value && Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section === route);
     if (
       routePermissions.length > 0 &&
       routePermissions[0].permissions === 'assistants' &&
@@ -115,7 +116,7 @@ const EventSectionRoutes = (props) => {
           <Partners />
         </Route>
         <Route path={`${path}/faqs`}>
-          {ValidateViewPermissions('evento', 'faqs') ? (
+          {ValidateViewPermissions('faqs', 'faqs') ? (
             <>
               <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
             </>

@@ -221,8 +221,8 @@ class Speakers extends Component {
                                     actions={[this.btnViewMore(speaker)]}>
                                     <Meta
                                       title={[
-                                        <div key={'speaker-name' + key}>
-                                          <span>{speaker.name}</span>
+                                        <div style={{textAlign:'center'}} key={'speaker-name' + key}>
+                                          <span >{speaker.name}</span>
                                         </div>
                                       ]}
                                       description={[
@@ -282,8 +282,8 @@ class Speakers extends Component {
                     actions={[this.btnViewMore(speaker)]}>
                     <Meta
                       title={[
-                        <div key={'speaker-name  ' + key}>
-                          <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{speaker.name}</span>
+                        <div style={{textAlign:'center'}} key={'speaker-name  ' + key}>
+                          <span style={{ fontSize: '18px', fontWeight: 'bold',  }}>{speaker.name}</span>
                         </div>
                       ]}
                       description={[
@@ -301,7 +301,7 @@ class Speakers extends Component {
         {/* Modal de Speakers para mostrar la información del conferencista junto con sus actividades */}
 
         <Modal
-          title={infoSpeaker.category ? infoSpeaker.category : 'Conferencista'}
+          title={infoSpeaker.category ? infoSpeaker.category : this.props.cEvent.value._id!=='60cb7c70a9e4de51ac7945a2'? 'Conferencista':'Artista'}
           centered
           width={1000}
           visible={this.state.modalVisible}
