@@ -410,6 +410,15 @@ section.landing {
 .ql-editor blockquote,
 .ql-editor {
   font-size: 1rem !important;
+  .ql-size-small {
+    font-size: 0.75em !important;
+  }
+  .ql-size-large {
+    font-size: 1.5em !important;
+  }
+  .ql-size-huge {
+    font-size: 2.5em !important;
+}
   .ql-video {
     display: block;
     max-width: 100%;
