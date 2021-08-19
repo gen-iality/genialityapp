@@ -137,15 +137,17 @@ const Landing = (props) => {
 
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
 
-  console.log("props",props)
+  console.log('cEventContext==>', cEventContext.value?.styles);
   return (
     <>
       <Layout>
-      <AppointmentModal
+        <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}
           targetEventUser={props.userAgenda}
-          closeModal={()=>{props.setUserAgenda(null) }}
-      />
+          closeModal={() => {
+            props.setUserAgenda(null);
+          }}
+        />
         <EventSectionsInnerMenu />
         <MenuTablets />
         <Layout className='site-layout'>
@@ -154,8 +156,8 @@ const Landing = (props) => {
             style={{
               paddingBottom: '15vh',
               backgroundSize: 'cover',
-              backgroundImage: `url(${cEventContext.value?.styles.BackgroundImage &&
-                cEventContext.value?.styles.BackgroundImage})`,
+              background: `${cEventContext.value && cEventContext.value?.styles?.containerBgColor}`,
+              backgroundImage: `url(${cEventContext.value && cEventContext.value?.styles?.BackgroundImage})`,
             }}>
             {props.view && <TopBanner currentActivity={currentActivity} />}
 
@@ -196,7 +198,7 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
   view: state.topBannerReducer.view,
-  userAgenda:state. spaceNetworkingReducer.userAgenda
+  userAgenda: state.spaceNetworkingReducer.userAgenda,
 });
 
 const mapDispatchToProps = {
