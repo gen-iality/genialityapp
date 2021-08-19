@@ -174,30 +174,8 @@ const FeriasDetail = (props) => {
                 )}
               </div>
             </TabPane>
-          )}
-          {visibleTab && (
-            <TabPane tab='Galería' key='4'>
-              <Row gutter={[16, 16]}>
-                {companyDetail &&
-                  companyDetail.gallery.length > 0 &&
-                  companyDetail.gallery.map((imagen, index) => (
-                    <Col xs={24} sm={12} md={8} lg={8} xl={6} xxl={6} key={'gallery-' + index}>
-                      <Card
-                        bodyStyle={{ padding: '0px', margin: '0px' }}
-                        bordered={false}
-                        cover={
-                          <Image
-                            alt={'Imagen' + index + '-Galeria-' + companyDetail.name.replace(/\s+/g, '-')}
-                            src={imagen.image}
-                          />
-                        }
-                        style={{ width: '100%', height: '100%' }}></Card>
-                    </Col>
-                  ))}
-              </Row>
-            </TabPane>
-          )}
-          <TabPane tab='Galería' key='4'>
+          )}         
+          {visibleTab && <TabPane tab='Galería' key='4'>
             <div style={{ paddingLeft: '3vw', paddingRight: '3vw', marginTop: '1.5vw' }}>
               <Row gutter={[16, 16]}>
                 {companyDetail && companyDetail.gallery.length > 0 ? (
@@ -220,7 +198,7 @@ const FeriasDetail = (props) => {
                 )}
               </Row>
             </div>
-          </TabPane>
+          </TabPane>}
         </Tabs>
 
         {/* componente  de Productos */}
