@@ -19,7 +19,7 @@ import {
   Space,
   InputNumber,
 } from 'antd';
-import { InfoCircleOutlined, ShopOutlined, UploadOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, LoadingOutlined, ShopOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
@@ -42,7 +42,7 @@ const textLeft = {
 
 const center = {
   margin: '0 auto',
-  //width:'100%'
+  textAlign:'center'
 };
 
 /**
@@ -230,8 +230,8 @@ const FormRegister = ({
           if (event.validateEmail && resp.data.user.initial_token) {
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
-              window.location.replace(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
-            }, 3000);
+              window.location.replace(`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`);
+            }, 100);
           }
         } else {
           //Usuario ACTUALIZADO
@@ -507,7 +507,6 @@ const FormRegister = ({
         input = (
           <Password
             name='password'
-            style={{ margin: '15px' }}
             placeholder='Ingrese su password'
             onChange={(e) => setPassword(e.target.value)}
             key={key}
@@ -683,34 +682,11 @@ const FormRegister = ({
               </Row>
             </Form>
           </Card>
-        ) : typeRegister == 'free' ? (
-          <Card>
-            <Result
-              status='success'
-              title={intl.formatMessage({ id: 'registration.message.success' })}
-              subTitle={
-                <h2 style={{ fontSize: '20px' }}>
-                  {intl.formatMessage({ id: 'registration.message.success.subtitle' })}
-                </h2>
-              }>
-              {loggedurl && (
-                <a className='ant-btn  ant-btn-primary ant-btn-lg' href={loggedurl}>
-                  {eventId == '5fca68b7e2f869277cfa31b0' || eventId == '5f99a20378f48e50a571e3b6'
-                    ? 'VER CAPÍTULO'
-                    : intl.formatMessage({ id: 'button.go.event' })}
-                </a>
-              )}
-              <OutsideAlerter showSection={showSection}>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: successMessage ? successMessage.replace(/\[.*\]/gi, '') : '',
-                  }}></div>
-              </OutsideAlerter>
-            </Result>
-          </Card>
-        ) : (
-          <PayForm eventId={eventId} />
-        )}
+        ):(
+          <LoadingOutlined style={{fontSize:'40px'}} />
+        ) }
+          
+         
       </Col>
     </>
   );

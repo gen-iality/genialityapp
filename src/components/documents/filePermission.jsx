@@ -71,17 +71,23 @@ class filePermission extends Component {
   };
 
   //Funcion para tomar todos los datos de los inputs y enviarlos al estado
-  changeInput = (e) => {
+  changeInput = async (e) => {
     const { name } = e.target;
     const { value } = e.target;
     this.setState({ [name]: value });
+    
   };
 
   //Funcion para retroceder
   goBack = () => this.setState({ redirect: true });
 
   submit = async () => {
-    window.location.href = this.props.matchUrl;
+
+    console.log('====================================');
+    console.log("idarchivo",this.state.file);
+    console.log('====================================');
+    // const data = await DocumentsApi.editOne(this.props.event._id,name,);
+    // window.location.href = this.props.matchUrl;
   };
 
   selectRol = (permissionRol) => {

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch, useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spin, Drawer } from 'antd';
 /** --------------------
@@ -28,14 +28,32 @@ import Noticias from '../noticias';
 import withContext from '../../../Context/withContext';
 import PageNotPermissions from './PageNotPermissions';
 import Productos from '../producto/index';
+import MessageRegister from '../registrationForm/messageRegister';
+import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let redirect;
+  const { about } = useParams();
   if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
     redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
+    console.log();
   } else {
     redirect = 'evento';
+  }
+
+  function ValidateViewPermissions(route, nombresection) {
+    let routePermissions = Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section === route);
+    if (
+      routePermissions.length > 0 &&
+      routePermissions[0].permissions === 'assistants' &&
+      props.cEventUser.value == null
+    ) {
+      props.setSectionPermissions({ view: true, section: nombresection });
+      return true;
+    } else {
+      return false;
+    }
   }
 
   return (
@@ -48,7 +66,13 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/documents`}>
-          <DocumentsForm />
+          {ValidateViewPermissions('documents') ? (
+            <>
+              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+            </>
+          ) : (
+            <DocumentsForm />
+          )}
         </Route>
 
         <Route path={`${path}/interviews`}>
@@ -83,49 +107,99 @@ const EventSectionRoutes = (props) => {
           <Partners />
         </Route>
         <Route path={`${path}/faqs`}>
-          <FaqsForm />
+          {ValidateViewPermissions('evento', 'faqs') ? (
+            <>
+              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+            </>
+          ) : (
+            <FaqsForm />
+          )}
         </Route>
 
         <Route path={`${path}/evento`}>
-          <EventHome />
+          {ValidateViewPermissions('evento', 'Evento') ? (
+            <>
+              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+            </>
+          ) : (
+            <EventHome />
+          )}
         </Route>
 
         <Route path={`${path}/wall`}>
-          <WallForm />
+          {ValidateViewPermissions('wall', 'Muro') ? (
+            <>
+              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+            </>
+          ) : (
+            <WallForm />
+          )}
         </Route>
 
         <Route path={`${path}/ferias`}>
-          <Ferias />
+          {ValidateViewPermissions('ferias', 'Ferias') ? (
+            <>
+              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+            </>
+          ) : (
+            <Ferias />
+          )}
         </Route>
         <Route path={`${path}/noticias`}>
-          <Noticias />
+          {ValidateViewPermissions('noticias', 'Noticias') ? (
+            <>
+              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+            </>
+          ) : (
+            <Noticias />
+          )}
         </Route>
         <Route path={`${path}/tickets`}>
-          <>
+          {ValidateViewPermissions('tickets', 'Registro') ? (
+            <>
+              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+            </>
+          ) : (
             <div className='columns is-centered'>
               <TicketsForm />
             </div>
-          </>
+          )}
         </Route>
 
         <Route path={`${path}/certs`}>
-          <>
+          {ValidateViewPermissions('certs', 'certs') ? (
+            <>
+              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+            </>
+          ) : (
             <CertificadoLanding />
-          </>
+          )}
         </Route>
         <Route path={`${path}/producto`}>
-          <Productos />
+          {ValidateViewPermissions('producto', 'Galería') ? (
+            <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+          ) : (
+            <Productos />
+          )}
         </Route>
         <Route path={`${path}/agenda`}>
-          <Agenda
-            activity={props.currentActivity}
-            generalTabs={props.generalTabs}
-            setVirtualConference={props.setVirtualConference}
-          />
+          {ValidateViewPermissions('agenda', 'Agenda') ? (
+            <>
+              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+            </>
+          ) : (
+            <Agenda
+              activity={props.currentActivity}
+              generalTabs={props.generalTabs}
+              setVirtualConference={props.setVirtualConference}
+            />
+          )}
         </Route>
-
         <Route path={`${path}/permissions`}>
           <PageNotPermissions />
+        </Route>
+        <Route path={`${path}/success/:type?`}>
+          <MessageRegister />
         </Route>
       </Switch>
     </>
@@ -141,7 +215,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   setVirtualConference,
   setSpaceNetworking,
+  setSectionPermissions,
 };
 
-let eventSectionsContext = withContext(EventSectionRoutes);
+let eventSectionsContext = withRouter(withContext(EventSectionRoutes));
 export default connect(mapStateToProps, mapDispatchToProps)(eventSectionsContext);

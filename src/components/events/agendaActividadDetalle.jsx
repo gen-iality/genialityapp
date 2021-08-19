@@ -1,39 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { ArrowLeftOutlined, FileDoneOutlined, PieChartOutlined } from '@ant-design/icons';
+import {
+   ArrowLeftOutlined,
+   CaretRightOutlined,
+   CheckCircleOutlined,
+   LoadingOutlined,
+   UserOutlined,
+} from '@ant-design/icons';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { useIntl } from 'react-intl';
 import { TicketsApi, Activity, AgendaApi } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, Input, Alert, Drawer, Space } from 'antd';
+import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, Input, Alert } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
-import SurveyDetailPage from './surveys/SurveyDetailPage';
 import * as StageActions from '../../redux/stage/actions';
 import * as SurveyActions from '../../redux/survey/actions';
 import Game from './game';
 import EnVivo from '../../EnVivo.svg';
-import {
-   CaretRightOutlined,
-   CheckCircleOutlined,
-   LoadingOutlined,
-   UserOutlined,
-   CloseOutlined,
-} from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
-import SurveyDetail from '../events/surveys/surveyDetail';
-import RankingTrivia from './surveys/rankingTrivia';
 import listenSurveysData from '../events/surveys/services/listenSurveysDataToAgendaActividadDetalle';
 import { eventUserUtils } from '../../helpers/helperEventUser';
 import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';
 import { setSpaceNetworking } from '../../redux/networking/actions';
 import withContext from '../../Context/withContext';
-import {UseSurveysContext} from '../../Context/surveysContext';
 
 import { useHistory } from 'react-router-dom';
+import SurveyDrawer from './surveys/components/surveyDrawer';
 
 const { TabPane } = Tabs;
 const { gotoActivity, setMainStage, setTabs } = StageActions;
@@ -64,7 +60,6 @@ let AgendaActividadDetalle = (props) => {
    let history = useHistory();
 
    const configfast = useState({});
-   let cSurveys  = UseSurveysContext();
 
    const { Title } = Typography;
 
@@ -84,81 +79,81 @@ let AgendaActividadDetalle = (props) => {
          setOrderedHost(hosts);
       }
 
-    getActividad().then((result) => {
-      setcurrentActivity(result);
-      orderHost(result.hosts);
-      props.gotoActivity(result);
-    });
+      getActividad().then((result) => {
+         setcurrentActivity(result);
+         orderHost(result.hosts);
+         props.gotoActivity(result);
+      });
 
-    props.setTopBanner(false);
-    props.setVirtualConference(false);
-    props.setSpaceNetworking(false);
-    return () => {
-      props.setTopBanner(true);
-      props.setVirtualConference(true);
-      props.setSpaceNetworking(true);
-    };
-  }, []);
+      props.setTopBanner(false);
+      props.setVirtualConference(false);
+      props.setSpaceNetworking(false);
+      return () => {
+         props.setTopBanner(true);
+         props.setVirtualConference(true);
+         props.setSpaceNetworking(true);
+      };
+   }, []);
 
-  // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
-  const [videoStyles, setVideoStyles] = useState(null);
-  const [videoButtonStyles, setVideoButtonStyles] = useState(null);
+   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
+   const [videoStyles, setVideoStyles] = useState(null);
+   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
 
-  // Array que contiene las actividades del espacio (que comparten el mismo meeting_id y platform)
-  const [activitiesSpace, setActivitiesSpace] = useState([]);
+   // Array que contiene las actividades del espacio (que comparten el mismo meeting_id y platform)
+   const [activitiesSpace, setActivitiesSpace] = useState([]);
 
-  // Estado del espacio virtual
-  const [stateSpace, setStateSpace] = useState(true);
+   // Estado del espacio virtual
+   const [stateSpace, setStateSpace] = useState(true);
 
-  const [activeTab, setActiveTab] = useState('description');
-  let mainStageContent = props.mainStageContent;
+   const [activeTab, setActiveTab] = useState('description');
+   let mainStageContent = props.mainStageContent;
 
-  //Estado para detección si la vista es para mobile
-  const [isMobile, setIsMobile] = useState(false);
+   //Estado para detección si la vista es para mobile
+   const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-   // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
-   mediaQueryMatches();
-   window.addEventListener('resize', mediaQueryMatches);
+   useEffect(() => {
+      // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
+      mediaQueryMatches();
+      window.addEventListener('resize', mediaQueryMatches);
 
-   if (props.collapsed) {
-     props.toggleCollapsed(1);
-   }
+      if (props.collapsed) {
+         props.toggleCollapsed(1);
+      }
 
-   // Al cargar el componente se realiza el checkin del usuario en la actividad
-   try {
-     if (props.cEventUser) {
-       TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
-       Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.value._id);
-     }
-   } catch (e) {
-     console.error('fallo el checkin:', e);
-   }
+      // Al cargar el componente se realiza el checkin del usuario en la actividad
+      try {
+         if (props.cEventUser) {
+            TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
+            Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.value._id);
+         }
+      } catch (e) {
+         console.error('fallo el checkin:', e);
+      }
 
-   if (props.cUser && props.cUser?.displayName && props.cUser?.email) {
-     let innerName =
-       props.cUser && props.cUser.properties && props.cUser.properties.casa
-         ? '(' + props.cUser.properties.casa + ')' + props.cUser.displayName
-         : props.cUser.displayName;
-     setNames(innerName);
-     setEmail(props.cUser.email);
-   }
+      if (props.cUser && props.cUser?.displayName && props.cUser?.email) {
+         let innerName =
+            props.cUser && props.cUser.properties && props.cUser.properties.casa
+               ? '(' + props.cUser.properties.casa + ')' + props.cUser.displayName
+               : props.cUser.displayName;
+         setNames(innerName);
+         setEmail(props.cUser.email);
+      }
 
-   //Escuchando el estado de la actividad
+      //Escuchando el estado de la actividad
 
-   (async function() {
-     await listeningStateMeetingRoom(props.cEvent.value._id, activity_id);
-   })();
+      (async function() {
+         await listeningStateMeetingRoom(props.cEvent.value._id, activity_id);
+      })();
 
-   // Desmontado del componente
-   return () => {
-     props.gotoActivity(null);
-     props.setMainStage(null);
-     props.setCurrentSurvey(null);
-     props.setSurveyVisible(false);
-     window.removeEventListener('resize', mediaQueryMatches);
-   };
- }, []);
+      // Desmontado del componente
+      return () => {
+         props.gotoActivity(null);
+         props.setMainStage(null);
+         props.setCurrentSurvey(null);
+         props.setSurveyVisible(false);
+         window.removeEventListener('resize', mediaQueryMatches);
+      };
+   }, []);
 
    useEffect(() => {
       (async function() {
@@ -195,99 +190,99 @@ let AgendaActividadDetalle = (props) => {
 
    useEffect(() => {
       if (/*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === 'game') {
-        const sharedProperties = {
-          position: 'fixed',
-          right: '0',
-          width: '170px',
-        };
-  
-        const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
-  
-        setVideoStyles({
-          ...sharedProperties,
-          ...verticalVideo,
-          zIndex: '100',
-          transition: '300ms',
-        });
-  
-        const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
-  
-        setVideoButtonStyles({
-          ...sharedProperties,
-          ...verticalVideoButton,
-          zIndex: '101',
-          cursor: 'pointer',
-          display: 'block',
-          height: '96px',
-        });
+         const sharedProperties = {
+            position: 'fixed',
+            right: '0',
+            width: '170px',
+         };
+
+         const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
+
+         setVideoStyles({
+            ...sharedProperties,
+            ...verticalVideo,
+            zIndex: '100',
+            transition: '300ms',
+         });
+
+         const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
+
+         setVideoButtonStyles({
+            ...sharedProperties,
+            ...verticalVideoButton,
+            zIndex: '101',
+            cursor: 'pointer',
+            display: 'block',
+            height: '96px',
+         });
       } else {
-        setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
-        setVideoButtonStyles({ display: 'none' });
+         setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
+         setVideoButtonStyles({ display: 'none' });
       }
-    }, [mainStageContent, isMobile]);
+   }, [mainStageContent, isMobile]);
 
-  function handleChangeLowerTabs(tab) {
-    setActiveTab(tab);
+   function handleChangeLowerTabs(tab) {
+      setActiveTab(tab);
 
-    if (tab === 'games') {
-      props.setMainStage('game');
-    }
-  }
+      if (tab === 'games') {
+         props.setMainStage('game');
+      }
+   }
 
-  function redirectRegister() {
-    history.push(`/landing/${props.cEvent.value._id}/tickets`);
-  }
+   function redirectRegister() {
+      history.push(`/landing/${props.cEvent.value._id}/tickets`);
+   }
 
-  async function getSpeakers(idSpeaker) {
-    setIdSpeaker(idSpeaker);
-  }
+   async function getSpeakers(idSpeaker) {
+      setIdSpeaker(idSpeaker);
+   }
 
-  const getMeetingPath = (platform) => {
-    if (platform === 'zoom') {
-      const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
+   const getMeetingPath = (platform) => {
+      if (platform === 'zoom') {
+         const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
 
-      return (
-        url_conference +
-        meeting_id +
-        `&userName=${props.cUser.displayName ? props.cUser.displayName : 'Guest'}` +
-        `&email=${props.cUser.email ? props.cUser.email : 'emaxxxxxxil@gmail.com'}` +
-        `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
-        `&host=${eventUserUtils.isHost(props.cUser, props.cEvent.value)}`
-      );
-    } else if (platform === 'vimeo') {
-      return `https://player.vimeo.com/video/${meeting_id}`;
-    } else if (platform === 'dolby') {
-      return `https://eviusmeets.netlify.app/?username=${names}&email=${email}`;
-    }
-  };
+         return (
+            url_conference +
+            meeting_id +
+            `&userName=${props.cUser.displayName ? props.cUser.displayName : 'Guest'}` +
+            `&email=${props.cUser.email ? props.cUser.email : 'emaxxxxxxil@gmail.com'}` +
+            `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
+            `&host=${eventUserUtils.isHost(props.cUser, props.cEvent.value)}`
+         );
+      } else if (platform === 'vimeo') {
+         return `https://player.vimeo.com/video/${meeting_id}`;
+      } else if (platform === 'dolby') {
+         return `https://eviusmeets.netlify.app/?username=${names}&email=${email}`;
+      }
+   };
 
-  const { image_event } = props;
-  const colorTexto = props.cEvent.value.styles.textMenu;
-  const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
+   const { image_event } = props;
+   const colorTexto = props.cEvent.value.styles.textMenu;
+   const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
 
-  const imagePlaceHolder =
-    'https://via.placeholder.com/1500x540/' +
-    colorFondo.replace('#', '') +
-    '/' +
-    colorTexto.replace('#', '') +
-    '?text=EVIUS.co';
+   const imagePlaceHolder =
+      'https://via.placeholder.com/1500x540/' +
+      colorFondo.replace('#', '') +
+      '/' +
+      colorTexto.replace('#', '') +
+      '?text=EVIUS.co';
 
-  useEffect(() => {
-    if (currentActivity) {
-      listenSurveysData(props.cEvent.value, currentActivity, props.cUser, (data) => {
-        props.setHasOpenSurveys(data.hasOpenSurveys);
-      });
-    }
-  }, [props.cEvent.value, currentActivity]);
+   useEffect(() => {
+      if (currentActivity) {
+         listenSurveysData(props.cEvent.value, currentActivity, props.cUser, (data) => {
+            props.setHasOpenSurveys(data.hasOpenSurveys);
+         });
+      }
+   }, [props.cEvent.value, currentActivity]);
 
-  {
-    Moment.locale(window.navigator.language);
-  }
+   {
+      Moment.locale(window.navigator.language);
+   }
 
-  const openZoomExterno = () => {
-    const { zoomExternoHandleOpen, eventUser, currentActivity } = props;
-    zoomExternoHandleOpen(currentActivity, eventUser);
-  };
+   const openZoomExterno = () => {
+      const { zoomExternoHandleOpen, eventUser, currentActivity } = props;
+      zoomExternoHandleOpen(currentActivity, eventUser);
+   };
 
    useEffect(() => {
       if (/*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === 'game') {
@@ -362,51 +357,6 @@ let AgendaActividadDetalle = (props) => {
    {
       Moment.locale(window.navigator.language);
    }
-
-   // aquie esta los estados del drawer y el modal
-   const [rankingVisible, setRankingVisible] = useState(true);
-   const [width, setWidth] = useState('70%');
-
-   const showRanking = () => {
-      if (window.screen.width >= 768) {
-         setWidth('70%');
-         if (rankingVisible == false) {
-            setWidth('100%');
-         }
-         {
-            setWidth('70%');
-         }
-      } else {
-         setWidth('100%');
-         if (rankingVisible == false) {
-            setWidth('100%');
-         }
-         {
-            setWidth('70%');
-         }
-      }
-      setRankingVisible(!rankingVisible);
-   };
-
-   function onClose() {
-      // esta funcion desactiva rl drawer
-      cSurveys.unset_select_survey(null)
-   }
-
-   // constante de ranking
-   const hasRanking = true;
-
-   const isCompleted = () => {
-      return cSurveys.currentSurvey !== null;
-      // if (
-      //    (cSurveys.currentSurvey !== null && cSurveys.currentSurvey.activity_id) ===
-      //       (props.currentActivity !== null && props.currentActivity._id) ||
-      //    (cSurveys.currentSurvey !== null && cSurveys.currentSurvey.isGlobal === 'true')
-      // ) {
-      //    return true;
-      // }
-      // return false;
-   };
 
    return (
       <div className='is-centered'>
@@ -904,9 +854,7 @@ let AgendaActividadDetalle = (props) => {
                               </>
                            }>
                            {props.cUser.value !== null ? (
-                              <SurveyList
-                                 eventSurveys={props.eventSurveys}
-                              />
+                              <SurveyList eventSurveys={props.eventSurveys} />
                            ) : (
                               <div style={{ paddingTop: 30 }}>
                                  <Alert
@@ -953,98 +901,7 @@ let AgendaActividadDetalle = (props) => {
             </Card>
          </div>
          {/* Drawer encuestas */}
-
-         {isCompleted() && (
-            <Drawer
-               title={
-                  cSurveys.currentSurvey && cSurveys.currentSurvey?.allow_gradable_survey ? (
-                     <Space>
-                        {cSurveys.currentSurvey.allow_gradable_survey === 'false' ? (
-                           <PieChartOutlined
-                              style={{
-                                 display: 'flex',
-                                 alignItems: 'center',
-                                 justifyContent: 'center',
-                                 fontSize: '24px',
-                                 height: '40px',
-                                 width: '40px',
-                                 borderRadius: '8px',
-                                 color: `${colorTexto}`,
-                                 backgroundColor: `${colorFondo}`,
-                              }}
-                           />
-                        ) : (
-                           <FileDoneOutlined
-                              style={{
-                                 display: 'flex',
-                                 alignItems: 'center',
-                                 justifyContent: 'center',
-                                 fontSize: '24px',
-                                 height: '40px',
-                                 width: '40px',
-                                 borderRadius: '8px',
-                                 color: `${colorTexto}`,
-                                 backgroundColor: `${colorFondo}`,
-                              }}
-                           />
-                        )}
-                        <Space direction='vertical' size={-3}>
-                           {cSurveys.currentSurvey?.name}
-                           {cSurveys.currentSurvey.allow_gradable_survey === 'true' && (
-                              <span style={{ fontSize: '12px', color: '#52c41a' }}>Calificable</span>
-                           )}
-                        </Space>
-                     </Space>
-                  ) : (
-                     <Space>
-                        <PieChartOutlined
-                           style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '24px',
-                              height: '40px',
-                              width: '40px',
-                              borderRadius: '8px',
-                              color: `${colorTexto}`,
-                              backgroundColor: `${colorFondo}`,
-                           }}
-                        />
-                        {cSurveys.currentSurvey?.name}
-                     </Space>
-                  )
-               }
-               bodyStyle={{ padding: '10px' }}
-               closeIcon={<CloseOutlined style={{ fontSize: '24px' }} />}
-               placement='right'
-               // closable={true}
-               visible={cSurveys.currentSurvey && props.cUser.value !== null}
-               onClose={onClose}
-               width={window.screen.width >= 768 ? (rankingVisible == false ? '100%' : '70%') : '100%'}>
-               <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
-                  {cSurveys.currentSurvey &&
-                     cSurveys.currentSurvey.rankingVisible &&
-                     cSurveys.currentSurvey.rankingVisible == 'true' && (
-                        <Button type='primary' onClick={showRanking}>
-                           {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
-                        </Button>
-                     )}
-               </div>
-
-               <Row gutter={[8, 8]} justify='center'>
-                  <Col xl={rankingVisible == true ? 24 : 16} xxl={rankingVisible == true ? 24 : 16}>
-                     <SurveyDetailPage />
-                  </Col>
-                  <Col hidden={rankingVisible} xl={8} xxl={8}>
-                     <div style={{ width: '100%' }}>
-                        <div style={{ justifyContent: 'center', display: 'grid' }}>
-                           {hasRanking && <RankingTrivia />}
-                        </div>
-                     </div>
-                  </Col>
-               </Row>
-            </Drawer>
-         )}
+         <SurveyDrawer colorFondo={colorFondo} colorTexto={colorTexto} />
       </div>
    );
 };

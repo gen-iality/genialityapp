@@ -20,9 +20,11 @@ import MenuTabletsSocialZone from './Menus/MenuTabletsSocialZone';
 import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
 
+import {setUserAgenda} from '../../../redux/networking/actions'
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
 import EviusFooter from './EviusFooter';
+import AppointmentModal from '../../networking/appointmentModal';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -135,9 +137,15 @@ const Landing = (props) => {
 
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
 
+  console.log("props",props)
   return (
     <>
       <Layout>
+      <AppointmentModal
+          targetEventUserId={props.userAgenda?.eventUserId}
+          targetEventUser={props.userAgenda}
+          closeModal={()=>{props.setUserAgenda(null) }}
+      />
         <EventSectionsInnerMenu />
         <MenuTablets />
         <Layout className='site-layout'>
@@ -188,6 +196,10 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
   view: state.topBannerReducer.view,
+  userAgenda:state. spaceNetworkingReducer.userAgenda
 });
 
-export default connect(mapStateToProps)(Landing);
+const mapDispatchToProps = {
+  setUserAgenda
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Landing);

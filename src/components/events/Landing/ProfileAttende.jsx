@@ -4,14 +4,14 @@ import { List } from 'antd';
 import { formatDataToString } from '../../../helpers/utils';
 const ProfileAttende = () => {
   let { propertiesOtherprofile } = useContext(HelperContext);
-
+ console.log("propertiesOtherprofile=>",propertiesOtherprofile)
   return (
     <div className='ant-list ant-list-split ant-list-bordered'>
       <List.Item>
         <List.Item.Meta
           title={'Nombre'}
           description={formatDataToString(
-            propertiesOtherprofile.name ? propertiesOtherprofile.name : propertiesOtherprofile.names
+            propertiesOtherprofile.properties.name ? propertiesOtherprofile.properties.name : propertiesOtherprofile.properties.names
           )}
         />
       </List.Item>
@@ -20,7 +20,7 @@ const ProfileAttende = () => {
         <List.Item.Meta
           title={'Celular'}
           description={formatDataToString(
-            propertiesOtherprofile.celular ? propertiesOtherprofile.celular : 'No registra'
+            propertiesOtherprofile.properties.celular ? propertiesOtherprofile.properties.celular : 'No registra'
           )}
         />
       </List.Item>
@@ -32,7 +32,7 @@ const ProfileAttende = () => {
       <List.Item>
         <List.Item.Meta
           title={'Edad'}
-          description={formatDataToString(propertiesOtherprofile.age ? propertiesOtherprofile.age : 'No registra')}
+          description={formatDataToString(propertiesOtherprofile.properties.age ? propertiesOtherprofile.properties.age : 'No registra')}
         />
       </List.Item>
     </div>

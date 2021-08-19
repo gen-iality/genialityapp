@@ -15,31 +15,34 @@ export function listenSurveysData(
       .where('isPublished', '==', 'true')
       .onSnapshot((querySnapshot) => {
          let eventSurveys = [];
-         let changeInSurvey;
          querySnapshot.forEach((doc) => {
             eventSurveys.push({ ...doc.data(), _id: doc.id });
          });
-         if (querySnapshot.docChanges().length) {
-            let lastChange = querySnapshot.docChanges()[querySnapshot.docChanges().length - 1];
-            let currentSurvey = null;
-            switch (lastChange.type) {
-               case 'removed':
-               case 'added':
-                  changeInSurvey = null;
-                  break;
-               case 'modified':
-               default:
-                  currentSurvey = { ...lastChange.doc.data(), _id: lastChange.doc.id };
-                  changeInSurvey = currentSurvey;
-                  break;
-            }
-         }
 
+         const changeInSurvey = changeInSurveyDocChanges(querySnapshot.docChanges());
          let publishedSurveys = eventSurveys;
          dispatch({ type: 'data_loaded', payload: { publishedSurveys, changeInSurvey } });
          //if (activity)
          //publishedSurveys = publishedSurveysByActivity(activity, eventSurveys, cUser);
       });
+}
+
+function changeInSurveyDocChanges(docChanges) {
+   let changeInSurvey = null;
+   if (docChanges.length) {
+      let lastChange = docChanges[docChanges.length - 1];
+      switch (lastChange.type) {
+         case 'removed':
+            changeInSurvey = null;
+            break;
+         case 'added':
+         case 'modified':
+         default:
+            changeInSurvey = { ...lastChange.doc.data(), _id: lastChange.doc.id };
+            break;
+      }
+   }
+   return changeInSurvey;
 }
 
 export function publishedSurveysByActivity(currentActivity, eventSurveys, currentUser) {

@@ -239,6 +239,9 @@ export const EventsApi = {
   getOneProduct: async (eventId,idproduct) => {
     return await Actions.get(`/api/events/${eventId}/products/${idproduct}`);
   },
+  editProduct:async (data,eventId,idproduct) => {
+    return await Actions.put(`/api/events/${eventId}/products/${idproduct}`,data);
+  },
 };
 export const InvitationsApi = {
   getAll: async (id) => {
@@ -747,6 +750,20 @@ export const ActivityBySpeaker = {
   byEvent: async (event, idSpeaker) => {
     return await Actions.getOne(`api/events/${event}/activitiesbyhost/`, idSpeaker);
   },
+};
+
+export const OrganizationFuction={
+  // OBTENER EVENTOS PROXIMOS POR ORGANIZACION
+ getEventsNextByOrg: async (orgId) => {
+  const events=await Actions.getAll(`api/organizations/${orgId}/events`);
+  return events.data;
+},
+
+// OBTENER DATOS DE LA ORGANIZACION
+ obtenerDatosOrganizacion:async (orgId) => {
+  const organization= await OrganizationApi.getOne(orgId)
+  return organization;
+},
 };
 
 export default privateInstance;

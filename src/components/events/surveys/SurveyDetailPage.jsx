@@ -18,29 +18,16 @@ function SurveyDetailPage(props) {
       return <h1>No hay nada publicado</h1>;
    }
 
-   /** Validacion que permite saber cuando un usuario ya contesto la encuesta para que no se le permita realizarla mas */
-   const isCompleted = (id) => {
-      if (
-         cSurveys.currentSurveyStatus &&
-         cSurveys.currentSurveyStatus[id] &&
-         cSurveys.currentSurveyStatus[id].surveyCompleted === 'completed' &&
-         cSurveys.surveyResult !== 'closedSurvey'
-      ) {
-         return true;
-      }
-      return false;
-   };
-
    return (
       <div>
-         {(cSurveys.surveyResult === 'results' || isCompleted(cSurveys.currentSurvey._id)) && (
+         {cSurveys.shouldDisplayGraphics() && (
             <Graphics
                idSurvey={cSurveys.currentSurvey._id}
                eventId={cSurveys.currentSurvey.eventId}
                operation='participationPercentage'
             />
          )}
-         {cSurveys.surveyResult === 'view' && !isCompleted(cSurveys.currentSurvey._id) && (
+         {cSurveys.shouldDisplaySurvey() && (
             <Card className='survyCard'>
                <SurveyComponent
                   idSurvey={cSurveys.currentSurvey._id}
@@ -49,6 +36,9 @@ function SurveyDetailPage(props) {
                   operation='participationPercentage'
                />
             </Card>
+         )}
+         {!cSurveys.attendeeAllReadyAnswered() && !cSurveys.shouldDisplayGraphics() && (
+            <h1>Ya se contesto la encuesta</h1>
          )}
          {cSurveys.surveyResult === 'closedSurvey' && <ClosedSurvey />}
       </div>
