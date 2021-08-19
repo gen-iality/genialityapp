@@ -16,6 +16,7 @@ const TopBanner = ({ currentActivity }) => {
     <>
       {/* <h1>TOPBANNER{styles.show_banner ? 'yes' : 'false'}x</h1> */}
       {(styles.show_banner === undefined || styles.show_banner === 'true') && currentActivity === null && (
+       
         <BannerEvent
           bgImage={bgImage}
           mobileBanner={styles.mobile_banner}
@@ -37,11 +38,13 @@ const TopBanner = ({ currentActivity }) => {
               </span>
             )
           }
-          dateStart={event.date_start}
-          dateEnd={event.date_end}
+          dateStart={event.datetime_from}
+          dateEnd={event.datetime_to}
           dates={event.dates}
           type_event={event.type_event}
         />
+       
+        
       )}
     </>
   );

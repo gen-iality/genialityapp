@@ -34,7 +34,7 @@ import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
 import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
-
+import { Button } from 'antd';
 const { TabPane } = Tabs;
 
 class AgendaEdit extends Component {
@@ -885,9 +885,9 @@ class AgendaEdit extends Component {
                     <div className='field'>
                       <label className='label has-text-grey-light'>Imagen</label>
                       <p>Dimensiones: 1000px x 278px</p>
-                      <Dropzone onDrop={this.changeImg} accept='image/*' className='zone'>
-                        <button className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</button>
-                      </Dropzone>
+                        <Dropzone  onDrop={this.changeImg} accept='image/*' className='zone'>
+                          <button className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</button>
+                        </Dropzone>
                       {image && <img src={image} alt={`activity_${name}`} />}
                     </div>
                     <div className='field'>
@@ -996,29 +996,31 @@ class AgendaEdit extends Component {
           )}
         </TabPane>
         <TabPane tab='Espacio Virtual' key='3'>
-        {loading ? (
-              <Loading />
-            ) : (
-          <>
-          <RoomManager
-            event_id={this.props.event._id}
-            activity_id={this.state.activity_id}
-            activity_name={this.state.name}
-            firestore={firestore}
-            date_start_zoom={date_start_zoom}
-            date_end_zoom={date_end_zoom}
-            date_activity={this.state.date}
-            pendingChangesSave={this.state.pendingChangesSave}
-          />
-          <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
-          {this.state.isExternal && (
-            <SurveyExternal
-              isExternal={this.state.isExternal}
-              meeting_id={this.state.externalSurveyID}
-              event_id={this.props.event._id}
-              activity_id={this.state.activity_id}
-            />
-          )}</>)}
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <RoomManager
+                event_id={this.props.event._id}
+                activity_id={this.state.activity_id}
+                activity_name={this.state.name}
+                firestore={firestore}
+                date_start_zoom={date_start_zoom}
+                date_end_zoom={date_end_zoom}
+                date_activity={this.state.date}
+                pendingChangesSave={this.state.pendingChangesSave}
+              />
+              <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
+              {this.state.isExternal && (
+                <SurveyExternal
+                  isExternal={this.state.isExternal}
+                  meeting_id={this.state.externalSurveyID}
+                  event_id={this.props.event._id}
+                  activity_id={this.state.activity_id}
+                />
+              )}
+            </>
+          )}
         </TabPane>
         <TabPane tab='Avanzado' key='4'>
           <Row>

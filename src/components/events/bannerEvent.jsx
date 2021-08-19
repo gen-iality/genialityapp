@@ -19,13 +19,14 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, ...props }) => {
         </Col>
       )}
       {styles && styles.show_card_banner && styles.show_card_banner === 'true' && (
-        <HeaderEventInfo title={title} {...props} />
+        <HeaderEventInfo title={title} {...props} />       
       )}
     </div>
   );
 };
 
-function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, type_event }) {
+function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, type_event}) {
+  
   return (
     <div
       className='banner-user-text-container'
@@ -36,6 +37,7 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
       <TweenOne className='banner-user-text'>
         {/* Fecha del evento */}
         <div>
+        
           {dates && dates.length > 0 ? (
             <>
               {dates.map((item, key) => (
@@ -44,13 +46,17 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
             </>
           ) : (
             <>
-              {dateStart === dateEnd ? (
+           
+              {Moment(dateStart).format('YYYY-MM-DD')==Moment(dateEnd).format('YYYY-MM-DD') ? (
                 <span>
+                  {console.log(dates,dateStart,dateEnd)}
                   {Moment(dateStart).format('DD')}
                   {' de '} {Moment(dateEnd).format('MMMM YYYY')}
                 </span>
               ) : (
+                
                 <div>
+                     
                   {Moment(dateStart).format('MMMM') === Moment(dateEnd).format('MMMM') ? (
                     <>
                       <span>Del {Moment(dateStart).format('DD')}</span>
