@@ -398,7 +398,7 @@ let AgendaActividadDetalle = (props) => {
                   ) : meetingState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video ? (
                     <CaretRightOutlined style={{ fontSize: '30px' }} />
                   ) : meetingState === 'ended_meeting_room' &&
-                    ((currentActivity !== null && currentActivity.image) || image_event) ? (
+                    (currentActivity !== null ) ? (
                     <CheckCircleOutlined style={{ fontSize: '30px' }} />
                   ) : meetingState === '' || meetingState == null ? (
                     <></>
@@ -422,7 +422,7 @@ let AgendaActividadDetalle = (props) => {
                   : meetingState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video
                   ? 'Grabado'
                   : meetingState === 'ended_meeting_room' &&
-                    ((currentActivity !== null && currentActivity.image) || image_event)
+                    (currentActivity !== null)
                   ? 'Terminada'
                   : meetingState === 'closed_meeting_room'
                   ? 'Por iniciar'
@@ -652,6 +652,7 @@ let AgendaActividadDetalle = (props) => {
               mainStageContent !== 'game' ? (
                 <div className='column is-centered mediaplayer'>
                   <ReactPlayer
+                    light={true}
                     width={'100%'}
                     style={{
                       display: 'block',
@@ -665,7 +666,7 @@ let AgendaActividadDetalle = (props) => {
               ) : (
                 <>
                   {meetingState === 'ended_meeting_room' &&
-                    ((currentActivity !== null && currentActivity.image) || image_event) &&
+                    ((currentActivity !== null && currentActivity.image)) &&
                     stateSpace === false &&
                     mainStageContent !== 'surveyDetalle' &&
                     mainStageContent !== 'game' && (
