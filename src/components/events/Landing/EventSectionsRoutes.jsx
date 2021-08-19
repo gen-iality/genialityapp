@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch, useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Spin, Drawer } from 'antd';
+import { Spin, Drawer, Card, Space } from 'antd';
 /** --------------------
  *  secciones del evento
  * ---------------------*/
@@ -30,11 +30,15 @@ import PageNotPermissions from './PageNotPermissions';
 import Productos from '../producto/index';
 import MessageRegister from '../registrationForm/messageRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
+import ListVideoCard from '../../shared/listVideoCard';
+
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let redirect;
   const { about } = useParams();
+  
+
   if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
     redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
     console.log();
@@ -59,6 +63,8 @@ const EventSectionRoutes = (props) => {
   return (
     <>
       {props.viewVirtualconference && <VirtualConference />}
+
+      <ListVideoCard />
 
       <Switch>
         <Route exact path={`${path}/`}>
