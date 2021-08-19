@@ -4,8 +4,16 @@ import { useState } from 'react';
 
 const OfertaProduct = ({ product, eventId }) => {
   const [selectedValue, setSelectedValue] = useState(50000);
-  const [valuOferta,setValueOferta]=useState(product && product.price? product.price.split('COP $ ')[1].replace(`’`,'').replace('.',''):0)
-  console.log("VALOR OFERTA ",valuOferta)
+  const [valuOferta, setValueOferta] = useState(
+    product && product.price
+      ? product.price
+          .split('COP $ ')[1]
+          .replace(`’`, '')
+          .replace('.', '')
+      : 0
+  );
+  const [valorProduct, setValorProduct] = useState(valuOferta);
+  console.log('VALOR OFERTA ', valuOferta);
   const valuesPuja = [
     {
       name: '10.000',
@@ -24,6 +32,23 @@ const OfertaProduct = ({ product, eventId }) => {
       value: 500000,
     },
   ];
+
+  const changeValor = (e) => {
+    setValueOferta(e.target.value);
+  };
+
+  const upvalue = () => {     
+    if (+valuOferta + selectedValue <= 3 * valorProduct) {
+    
+      setValueOferta((+valuOferta + selectedValue));
+    }
+  };
+
+  const downvalue = () => {
+    if (+valuOferta - selectedValue >0) {
+      setValueOferta((+valuOferta - selectedValue));
+    }
+  };
   return (
     <Card>
       <Row>
@@ -44,16 +69,23 @@ const OfertaProduct = ({ product, eventId }) => {
       </Row>
       <Row style={{ marginTop: 20 }}>
         <Col xs={2} md={2} xl={2} lg={2}>
-          <Button>- </Button>
+          <Button onClick={()=>downvalue()}>- </Button>
         </Col>
         <Col xs={10} md={10} xl={11} lg={11}>
-          <Input type='number' style={{ width: '100%',margin:0 }} value={`${valuOferta}`} min='1000' max={99999999}  />
+          <Input
+            type='number'
+            style={{ width: '100%', margin: 0 }}
+            value={`${valuOferta}`}
+            onChange={changeValor}
+            min='1000'
+            max={9999999999}
+          />
         </Col>
         <Col xs={2} md={2} xl={2} lg={2}>
-          <Button>+</Button>
+          <Button onClick={()=>upvalue()}>+</Button>
         </Col>
         <Col>
-        <Button type={'primary'}>Ofrecer</Button>
+          <Button type={'primary'}>Ofrecer</Button>
         </Col>
       </Row>
     </Card>
