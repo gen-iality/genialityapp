@@ -89,13 +89,11 @@ export function SurveysProvider({ children }) {
       if (!state.currentSurvey) {
          return false;
       }
-      return state.currentSurvey.isOpened === 'false' && state.currentSurvey.allow_gradable_survey === 'true';
+      return state.currentSurvey.isOpened === 'false';
    }
    function shouldDisplaySurveyAttendeeAnswered() {
       return (
-         !attendeeAllReadyAnswered() &&
-         !shouldDisplaySurveyClosedMenssage() &&
-         !shouldDisplayGraphics()
+         !attendeeAllReadyAnswered()
       );
    }
 
