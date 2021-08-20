@@ -4,22 +4,24 @@ import VideoCard from './videoCard';
 import { HelperContext } from '../../Context/HelperContext';
 const ListVideoCard = () => {
   let { activitiesEvent } = useContext(HelperContext);
-  console.log('====================================');
-  console.log('helloactivite', activitiesEvent);
-  console.log('====================================');
+
   return (
-    <Fragment style={{ width: '100%' }}>
-      <Card headStyle={{ border: 'none' }} title='Videos grabados'>
-        <Space size='large' style={{ width: '100%', overflowX: 'auto', padding: '10px', margin: '10px' }}>
-          {activitiesEvent &&
-            activitiesEvent.map((activity, index) => {
-              if (activity.video) {
-                return <VideoCard key={index} activity={activity} />;
-              }
-            })}
-        </Space>
-      </Card>
-    </Fragment>
+    <>
+      {activitiesEvent.length > 0 && (
+        <Fragment style={{ width: '100%' }}>
+          <Card headStyle={{ border: 'none' }} title='Videos grabados'>
+            <Space size='large' style={{ width: '100%', overflowX: 'auto', padding: '10px', margin: '10px' }}>
+              {activitiesEvent &&
+                activitiesEvent.map((activity, index) => {
+                  if (activity.video) {
+                    return <VideoCard key={index} activity={activity} />;
+                  }
+                })}
+            </Space>
+          </Card>
+        </Fragment>
+      )}
+    </>
   );
 };
 
