@@ -62,7 +62,7 @@ const EventSectionRoutes = (props) => {
       {props.viewVirtualconference && (
         <>
           <VirtualConference />
-          <ListVideoCard idevent={props.cEvent.value} />
+          {/* <ListVideoCard idevent={props.cEvent.value} /> */}
         </>
       )}
 
