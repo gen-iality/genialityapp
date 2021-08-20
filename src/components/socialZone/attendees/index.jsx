@@ -4,7 +4,6 @@ import { MessageTwoTone } from '@ant-design/icons';
 import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
 import InfiniteScroll from 'react-infinite-scroller';
-
 import { UseCurrentUser } from '../../../Context/userContext';
 import { UseEventContext } from '../../../Context/eventContext';
 
@@ -24,7 +23,7 @@ const AttendeList = function(props) {
 
   useEffect(() => {
     let ordenadousers = [];
-    
+
     Object.keys(props.attendeeList).map((key) => {
       let mihijo = {
         idattendpresence: key,
@@ -110,10 +109,10 @@ const AttendeList = function(props) {
                   key='list-loadmore-edit'
                   onClick={() => {
                     props.createNewOneToOneChat(
-                      cUser.value.uid,
-                      cUser.value.names || cUser.value.name,
                       item.iduser,
-                      item.names || item.name
+                      item.names || item.name,
+                      cUser.value.uid,
+                      cUser.value.names || cUser.value.name
                     );
                     props.settabselected('1');
                     props.setCurrentChat(item.iduser, item.name ? item.name : item.names);

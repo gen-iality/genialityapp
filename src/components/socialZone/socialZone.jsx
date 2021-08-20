@@ -54,12 +54,18 @@ let SocialZone = function(props) {
     setCurrentChatNameInner(chatname);
   };
 
+  useEffect(() => {
+    if (cEvent.value) {
+      monitorEventPresence(cEvent.value._id, attendeeList, setAttendeeListPresence);
+    }
+  },[cEvent.value]);
+
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     return ida < idb ? ida + '_' + idb : idb + '_' + ida;
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
-    let newId = generateUniqueIdFromOtherIds(cUser.value._id, idOtherUser);
+    let newId = generateUniqueIdFromOtherIds(cUser.value._id, idcurrentUser);
     let data = {};
 
     if (!cUser.value._id) return;
@@ -147,9 +153,11 @@ let SocialZone = function(props) {
         let newmsj = 0;
         querySnapshot.forEach((doc) => {
           data = doc.data();
+
           if (data.newMessages) {
             newmsj += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
           }
+
           list.push(data);
         });
 
