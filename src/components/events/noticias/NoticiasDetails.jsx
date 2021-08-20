@@ -40,7 +40,7 @@ const NoticiasDetails = ({ setVirtualConference, match,setTopBanner  }) => {
     <>
       {loading && <Spin />}
       {noticia && (
-        <Col style={{ padding: '30px 100px' }}>
+        <Col style={{ padding: '30px' }}>
           {/* <Meta title={noticia && noticia.description_short} description={noticia && noticia.description_complete} /> */}
           <Space direction='vertical'>
           <div style={{textAlign:'center'}}>
