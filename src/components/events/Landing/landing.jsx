@@ -137,7 +137,6 @@ const Landing = (props) => {
 
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
 
-  console.log('cEventContext==>', cEventContext.value?.styles);
   return (
     <>
       <Layout>

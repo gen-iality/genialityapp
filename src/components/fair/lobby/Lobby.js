@@ -79,10 +79,11 @@ class Lobby extends Component {
         <div
           className={`the-intro ${this.state.showIntro ? 'active' : ''}`}
           style={{ backgroundImage: `url("${lobby_data.info.bgIntroImage}")` }}>
-          <div className='the-intro-access-btn' onClick={this.handleHideIntro}>
-            VIVE LA EXPERIENCIA
-          </div>
+
         </div>
+        <div className='the-intro-access-btn' onClick={this.handleHideIntro}>
+            VIVE LA EXPERIENCIA
+        </div>        
         <div className='the-lobby-header'>
           <div className='the-lobby-header-col-left'>
             <img src={lobby_data.info.logo} alt='' />

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { firestore } from '../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
-import {getUserEvent} from '../components/networking/services';
+import { getUserEvent } from '../components/networking/services';
 import { UseCurrentUser } from './userContext';
 
 export const HelperContext = createContext();
@@ -25,7 +25,8 @@ export const HelperContextProvider = ({ children }) => {
   const [totalsolicitudes, setTotalsolicitudes] = useState(0);
   const [isOpenDrawerProfile, setisOpenDrawerProfile] = useState(false);
   const [propertiesProfile, setpropertiesProfile] = useState();
-  const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null)
+  const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null);
+  const [activitiesEvent, setactivitiesEvent] = useState(null);
 
   const getProperties = async (eventId) => {
     let properties = await EventFieldsApi.getAll(eventId);
@@ -38,9 +39,17 @@ export const HelperContextProvider = ({ children }) => {
     return null;
   };
 
+  const GetActivitiesEvent = async (eventId) => {
+    let activities = await AgendaApi.byEvent(eventId);
+
+    if (activities.data.length > 0) {
+      setactivitiesEvent(activities.data);
+    }
+  };
+
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
-    setpropertiesOtherprofile({_id:id,properties:eventUser.properties,eventUserId:eventUser._id})
+    setpropertiesOtherprofile({ _id: id, properties: eventUser.properties, eventUserId: eventUser._id });
   };
 
   const ChangeActiveNotification = (notify, message, type, activity) => {
@@ -77,6 +86,7 @@ export const HelperContextProvider = ({ children }) => {
       containsNetWorking();
       GetInfoAgenda();
       getProperties(cEvent.value._id);
+      GetActivitiesEvent(cEvent.value._id);
     }
   }, [cEvent.value]);
 
@@ -141,6 +151,7 @@ export const HelperContextProvider = ({ children }) => {
             if (notification.state === '0') {
               contNotifications++;
             }
+            console.log('notification.state', notification.state);
             //Notificacion tipo agenda
             if (notification.type == 'agenda' && notification.state === '0') {
               notAg.push(doc.data());
@@ -155,7 +166,7 @@ export const HelperContextProvider = ({ children }) => {
           setTotalsolicitudes(notAm.length + notAg.length);
 
           if (change) {
-            if (change.doc.data() && change.newIndex > 0) {
+            if (change.doc.data() && change.newIndex > 0 && change.doc.data().state === '0') {
               // alert("NUEVA NOTIFICACION")
               ChangeActiveNotification(true, change.doc.data().message, 'networking');
             }
@@ -181,7 +192,8 @@ export const HelperContextProvider = ({ children }) => {
         HandleChangeDrawerProfile,
         propertiesProfile,
         getPropertiesUserWithId,
-        propertiesOtherprofile
+        propertiesOtherprofile,
+        activitiesEvent,
       }}>
       {children}
     </HelperContext.Provider>

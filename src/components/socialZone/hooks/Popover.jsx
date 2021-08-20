@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Tooltip, Skeleton, Card, Avatar } from 'antd';
+import { Tooltip, Skeleton, Card, Avatar, notification } from 'antd';
 import { UserOutlined, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { InitialsNameUser } from './index';
 import { HelperContext } from '../../../Context/HelperContext';
@@ -7,13 +7,22 @@ import { useContext } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
+import { addNotification, SendFriendship } from '../../../helpers/netWorkingFunctions';
+import { UseUserEvent } from '../../../Context/eventUserContext';
+import { UseEventContext } from '../../../Context/eventContext';
+import {setUserAgenda} from '../../../redux/networking/actions'
+
 
 const { Meta } = Card;
 
 const PopoverInfoUser = (props) => {
+  let eventUserContext= UseUserEvent();
+  let eventContext=UseEventContext()
   let { containtNetworking, getPropertiesUserWithId, propertiesProfile, propertiesOtherprofile } = useContext(
     HelperContext
   );
+  console.log("EVENT USER==>",eventUserContext.value)
+  console.log("PROPERTYS==>",propertiesOtherprofile)
   
   useEffect(() => {
     let iduser = props.item.iduser;
@@ -34,44 +43,60 @@ const PopoverInfoUser = (props) => {
             </Tooltip>
           ),
 
-          !containtNetworking && (
+          containtNetworking && (
             <Tooltip
-              // onClick={async () => {
-              //   var us = await loadDataUser(props.item);
+               onClick={async () => {                
+                let userReceive={
+                  eventUserIdReceiver:propertiesOtherprofile.eventUserId,
+                  userName:propertiesOtherprofile.properties.names || propertiesOtherprofile.properties.name || propertiesOtherprofile.properties.email
+                }
+                let sendResp= await SendFriendship(userReceive,eventUserContext.value,eventContext.value);
+                if (sendResp._id) {
+                  let notificationR = {
+                    idReceive: propertiesOtherprofile._id,
+                    idEmited: sendResp._id,
+                    emailEmited:
+                    eventUserContext.value.email ||
+                    eventUserContext.value.user.email,
+                    message:
+                      (eventUserContext.value.names ||
+                        eventUserContext.value.user.names|| eventUserContext.value.user.name) +
+                      'te ha enviado solicitud de amistad',
+                    name: 'notification.name',
+                    type: 'amistad',
+                    state: '0',
+                  };
 
-              //   var sendResp = await props.sendFriendship({
-              //     eventUserIdReceiver: us._id,
-              //     userName: props.item.names || props.item.email || props.item.name,
-              //   });
-              //   if (sendResp._id) {
-              //     let notification = {
-              //       idReceive: us.account_id,
-              //       idEmited: sendResp._id,
-              //       emailEmited: props.currentUser.email,
-              //       message: 'Te ha enviado solicitud de amistad',
-              //       name: 'notification.name',
-              //       type: 'amistad',
-              //       state: '0',
-              //     };
-
-              //     await props.notificacion(notification, props.currentUser._id);
-              //   }
-              // }}
+                  addNotification(
+                    notificationR,
+                    eventContext.value,
+                    eventUserContext.value
+                  );
+                  notification['success']({
+                    message: 'Correcto!',
+                    description:
+                      'Se ha enviado la solicitud de amistad correctamente',
+                  }); 
+                 }             
+               }}
               title='Enviar solicitud Contacto'>
               <UsergroupAddOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
             </Tooltip>
           ),
 
-          !containtNetworking && (
-            <Tooltip title='Agendar cita'>
+          containtNetworking && (
+            <Tooltip title='Agendar cita'> 
               <VideoCameraOutlined
-                // onClick={async () => {
-                //   var us = await props.loadDataUser(props.item);
-
-                //   if (us) {
-                //     props.agendarCita(us._id, us);
-                //   }
-                // }}
+                onClick={async () => {
+              //SE CREA EL OBJETO CON ID INVERTIDO PARA QUE EL COMPONENTE APPOINT MODAL FUNCIONE CORRECTAMENTE
+                let evetuser=propertiesOtherprofile._id
+                 let userReview={
+                   ...propertiesOtherprofile,
+                   _id:propertiesOtherprofile.eventUserId,
+                   evetuserId:evetuser
+                  }
+                  props.setUserAgenda(userReview)
+                }}
                 style={{ fontSize: '20px', color: '#1890FF' }}
               />
               ,
@@ -109,6 +134,7 @@ const PopoverInfoUser = (props) => {
 
 const mapDispatchToProps = {
   setViewPerfil,
+  setUserAgenda
 };
 
 export default connect(null, mapDispatchToProps)(withRouter(PopoverInfoUser));
