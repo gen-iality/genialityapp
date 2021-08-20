@@ -44,7 +44,8 @@ const PopoverInfoUser = (props) => {
 
           containtNetworking && (
             <Tooltip
-               onClick={async () => {                
+               onClick={async () => {
+                setViewPerfil({view: false, perfil: propertiesOtherprofile })                
                 let userReceive={
                   eventUserIdReceiver:propertiesOtherprofile.eventUserId,
                   userName:propertiesOtherprofile.properties.names || propertiesOtherprofile.properties.name || propertiesOtherprofile.properties.email
@@ -87,6 +88,7 @@ const PopoverInfoUser = (props) => {
             <Tooltip title='Agendar cita'> 
               <VideoCameraOutlined
                 onClick={async () => {
+                  setViewPerfil({view: false, perfil: propertiesOtherprofile })    
               //SE CREA EL OBJETO CON ID INVERTIDO PARA QUE EL COMPONENTE APPOINT MODAL FUNCIONE CORRECTAMENTE
                 let evetuser=propertiesOtherprofile._id
                  let userReview={
