@@ -21,8 +21,7 @@ const PopoverInfoUser = (props) => {
   let { containtNetworking, getPropertiesUserWithId, propertiesProfile, propertiesOtherprofile } = useContext(
     HelperContext
   );
-  console.log("EVENT USER==>",eventUserContext.value)
-  console.log("PROPERTYS==>",propertiesOtherprofile)
+  
   
   useEffect(() => {
     let iduser = props.item.iduser;

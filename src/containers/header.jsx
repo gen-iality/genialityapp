@@ -101,8 +101,7 @@ class Headers extends Component {
     //Si existe el token consultamos la información del usuario
     const data = await getCurrentUser();
 
-    if (data) {
-      console.log("DATA MENU ==>",data)
+    if (data) {      
       const name = data.name ? data.name : data.displayName ? data.displayName : data.email;
       const photo = data.photoUrl ? data.photoUrl : data.picture;
       const organizations = await OrganizationApi.mine();

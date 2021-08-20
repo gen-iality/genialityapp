@@ -224,6 +224,7 @@ const FormRegister = ({
 
           setSubmittedForm(true);
           message.success(intl.formatMessage({ id: 'registration.message.created' }));
+          window.location.replace(`/landing/${eventId}/success/${typeRegister}`);
 
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
           //todo el proceso de logueo depende del token en la url por eso se recarga la página
