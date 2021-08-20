@@ -148,12 +148,13 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       duration: 30,
     });
     var usId = await getUsersId(targetEventUserId, cEvent.value._id);
+    console.log("USID==>",usId)
 
     let notificationA = {
       idReceive: usId.account_id,
       idEmited: resp,
       emailEmited: 'email@gmail.com',
-      message: 'te ha enviado cita',
+      message: `${usId.names || usId.user.names || usId.user.name || usId.user.email } te ha enviado cita`,
       name: 'notification.name',
       type: 'agenda',
       state: '0',

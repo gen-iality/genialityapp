@@ -169,7 +169,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             idEmited: data && data.id,
             state: '1'
           };
-          addNotification(notificationr,eventContext.value,userCurrentContext.value)
+         addNotification(notificationr,eventContext.value,userCurrentContext.value)
         })
         .catch((error) => {
           if (!error) {
