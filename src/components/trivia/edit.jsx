@@ -426,8 +426,12 @@ class triviaEdit extends Component {
 
   // Funcion usada para determinar el tiempo limite en segundos de la emcuesta
   setTime_limit = (e) => {
+    var reg = new RegExp('^\\d+$')
     const { value } = e.target;
-    this.setState({ time_limit: value });
+    if(reg.test(value)){
+      this.setState({ time_limit: value });
+
+    }
     //
   };
 
@@ -553,7 +557,7 @@ class triviaEdit extends Component {
               <label style={{ marginTop: '3%' }} className='label'>
                 Tiempo límite en segundos por pregunta
               </label>
-              <input type='number' name='time' id='time' value={time_limit} onChange={this.setTime_limit} />
+              <input type='number' name='time' id='time' value={time_limit} onChange={this.setTime_limit} pattern="[0-9]+" mim='0'/>
             </div>
           )}
 
