@@ -10,12 +10,13 @@ const TopBanner = ({ currentActivity }) => {
   if (!event) return null;
   let styles = event && event.styles ? event.styles : {};
   let bgImage = 'https://bulma.io/images/placeholders/1280x960.png';
-  bgImage = styles.banner_image ? styles.banner_image : bgImage;
+  bgImage = styles.banner_image ? styles.banner_image : null;
 
   return (
     <>
       {/* <h1>TOPBANNER{styles.show_banner ? 'yes' : 'false'}x</h1> */}
       {(styles.show_banner === undefined || styles.show_banner === 'true') && currentActivity === null && (
+       
         <BannerEvent
           bgImage={bgImage}
           mobileBanner={styles.mobile_banner}
@@ -37,11 +38,13 @@ const TopBanner = ({ currentActivity }) => {
               </span>
             )
           }
-          dateStart={event.date_start}
-          dateEnd={event.date_end}
+          dateStart={event.datetime_from}
+          dateEnd={event.datetime_to}
           dates={event.dates}
           type_event={event.type_event}
         />
+       
+        
       )}
     </>
   );

@@ -10,6 +10,7 @@ import { imageBox } from '../../helpers/constants';
 import { CategoriesAgendaApi, SpeakersApi } from '../../helpers/request';
 import { FaWhmcs } from 'react-icons/fa';
 import Creatable from 'react-select';
+import { Button } from 'antd';
 
 class Speaker extends Component {
   constructor(props) {
@@ -27,7 +28,7 @@ class Speaker extends Component {
       order: '',
       selectedCategories: [],
       categories: [],
-      isloadingSelect: { types: true, categories: true }
+      isloadingSelect: { types: true, categories: true },
     };
     this.descriptionActivity = this.descriptionActivity.bind(this);
   }
@@ -35,7 +36,7 @@ class Speaker extends Component {
   async componentDidMount() {
     const {
       eventID,
-      location: { state }
+      location: { state },
     } = this.props;
     let categories = await CategoriesAgendaApi.byEvent(this.props.eventID);
 
@@ -78,7 +79,7 @@ class Speaker extends Component {
       sweetAlert.showLoading('Espera (:', 'Guardando...');
       const {
         eventID,
-        location: { state }
+        location: { state },
       } = this.props;
       this.setState({ isLoading: true });
       const { name, profession, description_activity, description, image, order } = this.state;
@@ -90,7 +91,7 @@ class Speaker extends Component {
         description,
         profession,
         //category_id: selectedCategories.length ? selectedCategories.value : null,
-        order: parseInt(order)
+        order: parseInt(order),
       };
 
       if (state.edit) await SpeakersApi.editOne(info, state.edit, eventID);
@@ -105,7 +106,7 @@ class Speaker extends Component {
   remove = () => {
     const {
       eventID,
-      location: { state }
+      location: { state },
     } = this.props;
     if (state.edit) {
       sweetAlert.twoButton(`Está seguro de borrar a ${this.state.name}`, 'warning', true, 'Borrar', async (result) => {
@@ -151,7 +152,7 @@ class Speaker extends Component {
       order,
       categories,
       selectedCategories,
-      isloadingSelect
+      isloadingSelect,
     } = this.state;
     if (!this.props.location.state || redirect) return <Redirect to={matchUrl} />;
     return (
@@ -241,8 +242,14 @@ class Speaker extends Component {
                   <div className='column is-9'>
                     <div className='has-text-left'>
                       <p>Dimensiones: 1080px x 1080px</p>
-                      <Dropzone onDrop={this.handleImage} accept='image/*' className='zone'>
-                        <button className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</button>
+                      <Dropzone
+                        style={{ fontSize: '21px', fontWeight: 'bold' }}
+                        onDrop={this.handleImage}
+                        accept='image/*'
+                        className='zone'>
+                        <Button type='dashed' danger>
+                          {image ? 'Cambiar imagen' : 'Subir imagen'}
+                        </Button>
                       </Dropzone>
                     </div>
                   </div>
@@ -286,13 +293,13 @@ const dot = (color = 'transparent') => ({
     display: 'block',
     margin: 8,
     height: 10,
-    width: 10
-  }
+    width: 10,
+  },
 });
 
 const catStyles = {
   menu: (styles) => ({ ...styles, maxHeight: 'inherit' }),
-  multiValue: (styles, { data }) => ({ ...styles, ...dot(data.item.color) })
+  multiValue: (styles, { data }) => ({ ...styles, ...dot(data.item.color) }),
 };
 
 export default withRouter(Speaker);

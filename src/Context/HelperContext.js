@@ -40,7 +40,7 @@ export const HelperContextProvider = ({ children }) => {
 
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
-    setpropertiesOtherprofile(eventUser.properties)
+    setpropertiesOtherprofile({_id:id,properties:eventUser.properties,eventUserId:eventUser._id})
   };
 
   const ChangeActiveNotification = (notify, message, type, activity) => {
@@ -141,6 +141,7 @@ export const HelperContextProvider = ({ children }) => {
             if (notification.state === '0') {
               contNotifications++;
             }
+            console.log("notification.state",notification.state)
             //Notificacion tipo agenda
             if (notification.type == 'agenda' && notification.state === '0') {
               notAg.push(doc.data());
@@ -155,7 +156,7 @@ export const HelperContextProvider = ({ children }) => {
           setTotalsolicitudes(notAm.length + notAg.length);
 
           if (change) {
-            if (change.doc.data() && change.newIndex > 0) {
+            if (change.doc.data() && change.newIndex > 0 && change.doc.data().state==='0' ) {
               // alert("NUEVA NOTIFICACION")
               ChangeActiveNotification(true, change.doc.data().message, 'networking');
             }
