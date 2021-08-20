@@ -44,7 +44,7 @@ const DrawerProfile = (props) => {
               : ''}
           </Text>
           <Text type='secondary' style={{ fontSize: '16px' }}>
-            {props.profileuser && props.profileuser.properties  && props.profileuser.properties.email}
+            {props.profileuser && props.profileuser.properties  && props.profileuser.properties?.email}
           </Text>
         </Space>
         <Col span={24}>
@@ -55,15 +55,15 @@ const DrawerProfile = (props) => {
                   <Button size='large' shape='circle'  icon={<UsergroupAddOutlined />} 
                     onClick={async ()=>{
                                     
-                     let sendResp= await  SendFriendship({eventUserIdReceiver:props.profileuser.eventUserId, userName:props.profileuser.properties.name || props.profileuser.properties.names || props.profileuser.properties.email   },cEventUser.value,cEvent.value)
+                     let sendResp= await  SendFriendship({eventUserIdReceiver:props.profileuser.eventUserId, userName:props.profileuser.properties.name || props.profileuser.properties.names || props.profileuser.properties?.email   },cEventUser.value,cEvent.value)
                                        
                       if (sendResp._id) {
                         let notificationR = {
                           idReceive: props.profileuser._id,
                           idEmited: sendResp._id,
                           emailEmited:
-                          cEventUser.value.email ||
-                          cEventUser.value.user.email,
+                          cEventUser.value?.email ||
+                          cEventUser.value.user?.email,
                           message:
                             ( cEventUser.value.names ||
                               cEventUser.value.user.names||  cEventUser.value.user.name) +

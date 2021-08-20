@@ -9,7 +9,6 @@ const ListVideoCard = () => {
   function ExistvideoInActivity() {
     activitiesEvent &&
       activitiesEvent.map((activity) => {
-        console.log('video', activity.video);
         if (activity.video != undefined || activity.video != null) {
           {
             setexistActivity(1);
@@ -19,7 +18,6 @@ const ListVideoCard = () => {
   }
   React.useEffect(() => {
     ExistvideoInActivity();
-    console.log('existactivity', existActivity);
   }, [activitiesEvent]);
 
   return (

@@ -27,6 +27,37 @@ export const HelperContextProvider = ({ children }) => {
   const [propertiesProfile, setpropertiesProfile] = useState();
   const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null);
   const [activitiesEvent, setactivitiesEvent] = useState(null);
+  const [chatActual, setchatActual] = useState({
+    chatid: null,
+    idactualuser: null,
+    idotheruser: null,
+    chatname: null,
+  });
+
+  let generateUniqueIdFromOtherIds = (ida, idb) => {
+    let chatid;
+    if (ida !== null && idb !== null) {
+      if (ida < idb) {
+        chatid = ida + '_' + idb;
+      } else {
+        chatid = idb;
+      }
+    } else {
+      chatid = null;
+    }
+
+    return chatid;
+  };
+
+  function HandleGoToChat(idactualuser, idotheruser, chatname, chatid) {
+    let data = {
+      chatid: chatid ? chatid : generateUniqueIdFromOtherIds(idactualuser, idotheruser),
+      idactualuser,
+      idotheruser,
+      chatname,
+    };
+    setchatActual(data);
+  }
 
   const getProperties = async (eventId) => {
     let properties = await EventFieldsApi.getAll(eventId);
@@ -194,6 +225,8 @@ export const HelperContextProvider = ({ children }) => {
         getPropertiesUserWithId,
         propertiesOtherprofile,
         activitiesEvent,
+        chatActual,
+        HandleGoToChat,
       }}>
       {children}
     </HelperContext.Provider>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { List, Typography, Badge, Tooltip, Tabs, Form, Input, Button, Row, Space, Avatar, Popover } from 'antd';
 import { ExclamationCircleOutlined, MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
@@ -9,6 +9,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
 import { useHistory } from 'react-router-dom';
+import { HelperContext } from '../../../Context/HelperContext';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 const { Text } = Typography;
@@ -32,57 +33,43 @@ const layout = {
   wrapperCol: { span: 18 },
 };
 
-
 const ChatList = (props) => {
   const history = useHistory();
-  //contextos
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
-  const [userNameChat, SetUserNameChat] = useState('');
-
+  let { chatActual, HandleGoToChat } = useContext(HelperContext);
   const onFinish = (values) => {
     cUser.value = values;
   };
 
-  let userName = props.currentChatName;
-
-  //para los eventos tipo asamblea que tienen una propiedad llamada casa que sirve para identificaar las personas
-  // userName = cUser.value && cUser.value.casa ? '(' + cUser.value.casa + ') ' + userName : userName;
-
+  let usernameR = chatActual && chatActual.chatname;
   useEffect(() => {
     props.datamsjlast &&
       props.datamsjlast.remitente !== undefined &&
       props.datamsjlast.remitente !== null &&
-      props.datamsjlast.remitente !== userName &&
+      props.datamsjlast.remitente !== usernameR &&
       props.totalNewMessages > 0;
   }, [props.datamsjlast, props.totalNewMessages]);
 
-  useEffect(() => {
-    if (userName != null) {
-      SetUserNameChat(userName);
-    }
-  }, [userName]);
-
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();
-  let [usuariofriend, setusuariofriend] = useState(userName);
+  let [usuariofriend, setusuariofriend] = useState(null);
   let [totalmsjpriv, settotalmsjpriv] = useState(0);
 
   function callback(key) {
     if (key === 'chat1') {
-      if (props.currentChat) {
-        props.setCurrentChat(null, null);
+      if (chatActual) {
+        HandleGoToChat(null, null, null, null);
       }
     }
     if (key === 'chat2') {
-      if (props.currentChat) {
-        props.setCurrentChat(null, null);
+      if (chatActual) {
+        HandleGoToChat(null, null, null, null);
       }
     }
 
     props.setchattab(key);
   }
-
 
   if (!cUser.value)
     return (
@@ -177,20 +164,24 @@ const ChatList = (props) => {
                   count={' '}>
                   <div style={{ color: cEvent.value.styles.textMenu }}>
                     <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />
-                    {props.currentChat ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )` : ''}
+                    {chatActual && chatActual.chatname
+                      ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )`
+                      : ''}
                   </div>
                 </Badge>
               )}
               {props.totalNewMessages !== undefined && props.totalNewMessages == 0 && (
                 <div style={{ color: cEvent.value.styles.textMenu }}>
                   <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />
-                  {props.currentChat ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )` : ''}
+                  {chatActual && chatActual.chatname
+                    ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )`
+                    : ''}
                 </div>
               )}
             </>
           }
           key='chat2'>
-          {!props.currentChat && (
+          {!chatActual.chatname && (
             <List
               className='asistente-list'
               style={styleList}
@@ -202,8 +193,11 @@ const ChatList = (props) => {
                     <a
                       key='list-loadmore-edit'
                       onClick={() => {
-                        props.setCurrentChat(item.id, item.name ? item.name : item.names);
-                        setusuariofriend(item?.names ? item.names : item.name);
+                        HandleGoToChat(
+                          cUser.value.uid,
+                          item.id,
+                          cUser.value.name ? cUser.value.name : cUser.value.names
+                        );
                         settotalmsjpriv(0);
                         props.setTotalNewMessages(0);
                         props.notNewMessages();
@@ -241,20 +235,20 @@ const ChatList = (props) => {
             />
           )}
 
-          {props.currentChat && (
+          {chatActual.chatname && (
             <>
               <iframe
                 title='chatevius'
                 className='ChatEviusLan'
                 src={
                   'https://chatevius.web.app?nombre=' +
-                  userName +
+                  chatActual.chatname +
                   '&chatid=' +
-                  props.currentChat +
+                  chatActual.chatid +
                   '&eventid=' +
                   cEvent.value._id +
                   '&userid=' +
-                  cUser.value.uid
+                  chatActual.idactualuser
                 }></iframe>
             </>
           )}
