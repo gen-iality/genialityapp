@@ -13,6 +13,7 @@ let initialContextState = {
    surveys: [],
    currentSurvey: null,
    currentSurveyStatus: null,
+   currentActivity: null,
 };
 
 const reducer = (state, action) => {
@@ -45,6 +46,9 @@ const reducer = (state, action) => {
       case 'survey_un_selected':
          return { ...state, currentSurvey: action.payload };
 
+      case 'set_current_activity':
+         return { ...state, currentActivity: action.payload };
+
       default:
          return newState;
    }
@@ -60,9 +64,14 @@ export function SurveysProvider({ children }) {
    function select_survey(survey) {
       dispatch({ type: 'survey_selected', payload: survey });
    }
+
    function unset_select_survey(survey) {
       dispatch({ type: 'survey_un_selected', payload: survey });
    }
+   function set_current_activity(currentActivity) {
+      dispatch({ type: 'set_current_activity', payload: currentActivity });
+   }
+
    function shouldDisplaySurvey() {
       if (!state.currentSurvey) {
          return false;
@@ -110,6 +119,31 @@ export function SurveysProvider({ children }) {
       return state.currentSurvey.rankingVisible === 'true' || state.currentSurvey.rankingVisible === true;
    }
 
+   function surveysToBeListedByActivity() {
+      let listOfSurveysFilteredByActivity;
+      if (state.currentActivity) {
+         listOfSurveysFilteredByActivity = state.surveys.filter(
+            (item) =>
+               item.activity_id === state.currentActivity._id || item.isGlobal === 'true' || item.isGlobal === true
+         );
+      }
+      return listOfSurveysFilteredByActivity;
+   }
+
+   function shouldDisplaysurveyAssignedToThisActivity() {
+      let recentlyOpenedSurvey;
+      if (!state.currentSurvey) {
+         return false;
+      }
+      recentlyOpenedSurvey = surveysToBeListedByActivity().filter((item) => item._id === state.currentSurvey._id);
+
+      if (recentlyOpenedSurvey && recentlyOpenedSurvey.length > 0) {
+         return true;
+      } else {
+         return false;
+      }
+   }
+
    useEffect(() => {
       if (!cEventContext || !cEventContext.value) return;
       if (!cUser || !cUser.value) return;
@@ -128,12 +162,15 @@ export function SurveysProvider({ children }) {
             ...state,
             select_survey,
             unset_select_survey,
+            set_current_activity,
             shouldDisplaySurvey,
             shouldDisplayGraphics,
             shouldDisplaySurveyAttendeeAnswered,
             shouldDisplaySurveyClosedMenssage,
             attendeeAllReadyAnswered,
             shouldDisplayRanking,
+            surveysToBeListedByActivity,
+            shouldDisplaysurveyAssignedToThisActivity,
          }}>
          {children}
       </SurveysContext.Provider>

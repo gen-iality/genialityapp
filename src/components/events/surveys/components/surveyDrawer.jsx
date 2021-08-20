@@ -28,14 +28,6 @@ function SurveyDrawer(props) {
 
    const validationsToOpenTheDrawer = () => {
       return cSurveys.currentSurvey !== null;
-      // if (
-      //    (cSurveys.currentSurvey !== null && cSurveys.currentSurvey.activity_id) ===
-      //       (props.currentActivity !== null && props.currentActivity._id) ||
-      //    (cSurveys.currentSurvey !== null && cSurveys.currentSurvey.isGlobal === 'true')
-      // ) {
-      //    return true;
-      // }
-      // return false;
    };
 
    return (
@@ -104,7 +96,7 @@ function SurveyDrawer(props) {
                closeIcon={<CloseOutlined style={{ fontSize: '24px' }} />}
                placement='right'
                // closable={true}
-               visible={cSurveys.currentSurvey && cUser.value !== null}
+               visible={cSurveys.shouldDisplaysurveyAssignedToThisActivity() && cUser.value !== null}
                onClose={closeDrawer}
                width={window.screen.width >= 768 ? (rankingVisible === false ? '100%' : '70%') : '100%'}>
                <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>

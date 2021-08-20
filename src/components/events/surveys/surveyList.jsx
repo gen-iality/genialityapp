@@ -19,22 +19,12 @@ function SurveyList(props) {
 
    const currentUser = UseCurrentUser();
 
-   const handleClick = (currentSurvey, status) => {
+   const handleClick = (currentSurvey) => {
       cSurveys.select_survey(currentSurvey);
-      // if (activity !== null && currentSurvey.isOpened === 'true') {
-      //    setSurveyResult('view');
-      // } else if (activity !== null && currentSurvey.isOpened === 'false') {
-      //    setSurveyResult('results');
-      // }
-      // if (status === 'results') {
-      //    setSurveyResult('results');
-      // }
-      // setCurrentSurvey(currentSurvey);
    };
-
    return (
       <SurveyCard
-         publishedSurveys={cSurveys.surveys}
+         publishedSurveys={cSurveys.surveysToBeListedByActivity()}
          status={cSurveys.status}
          currentUser={currentUser}
          handleClick={handleClick}
@@ -44,7 +34,7 @@ function SurveyList(props) {
 }
 
 const mapStateToProps = (state) => ({
-   activity: state.stage.data.currentActivity
+   activity: state.stage.data.currentActivity,
 });
 
 const mapDispatchToProps = {

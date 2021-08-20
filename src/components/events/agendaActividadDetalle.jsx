@@ -27,6 +27,7 @@ import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';
 import { setSpaceNetworking } from '../../redux/networking/actions';
 import withContext from '../../Context/withContext';
+import { UseSurveysContext } from '../../Context/surveysContext';
 
 import { useHistory } from 'react-router-dom';
 import SurveyDrawer from './surveys/components/surveyDrawer';
@@ -45,6 +46,7 @@ const tailLayout = {
 };
 
 let AgendaActividadDetalle = (props) => {
+   let cSurveys = UseSurveysContext();
    let { activity_id } = useParams();
    let [idSpeaker, setIdSpeaker] = useState(false);
    let [orderedHost, setOrderedHost] = useState([]);
@@ -83,6 +85,7 @@ let AgendaActividadDetalle = (props) => {
          setcurrentActivity(result);
          orderHost(result.hosts);
          props.gotoActivity(result);
+         cSurveys.set_current_activity(result)
       });
 
       props.setTopBanner(false);
@@ -269,6 +272,7 @@ let AgendaActividadDetalle = (props) => {
 
    useEffect(() => {
       if (currentActivity) {
+         cSurveys.set_current_activity(currentActivity)
          listenSurveysData(props.cEvent.value, currentActivity, props.cUser, (data) => {
             props.setHasOpenSurveys(data.hasOpenSurveys);
          });
