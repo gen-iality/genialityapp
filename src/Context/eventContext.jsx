@@ -17,7 +17,7 @@ export function CurrentEventProvider({ children }) {
     async function fetchEvent() {
       let eventGlobal = await EventsApi.getOne(event_id);
       //const ticketsEvent=await eventTicketsApi.getAll(event_id);
-     // eventGlobal={...eventGlobal,tickets:ticketsEvent}
+      // eventGlobal={...eventGlobal,tickets:ticketsEvent}
 
       setEventContext({ status: 'LOADED', value: eventGlobal });
     }
