@@ -138,10 +138,10 @@ const DrawerProfile = (props) => {
               bordered
               dataSource={propertiesProfile && propertiesProfile.propertiesUserPerfil}
               renderItem={(item) =>
-                (((!item.visibleByContacts || item.visibleByContacts == 'public') && !item.visibleByAdmin) ||
+                ((((!item.visibleByContacts || item.visibleByContacts == 'public') && !item.visibleByAdmin) ||
                   props.profileuser._id == cUser.value._id) &&
-                props.profileuser.properties[item.name] && (
-                  <List.Item>
+                props.profileuser.properties[item.name]) && (
+                  <List.Item>   
                     <List.Item.Meta
                       title={item.label}
                       description={formatDataToString(props.profileuser.properties[item.name], item)}
