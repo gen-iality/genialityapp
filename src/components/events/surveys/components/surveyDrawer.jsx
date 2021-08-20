@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Drawer, Space } from 'antd';
 import { FileDoneOutlined, PieChartOutlined, CloseOutlined } from '@ant-design/icons';
 import { UseSurveysContext } from '../../../../Context/surveysContext';
@@ -9,14 +9,18 @@ import RankingTrivia from '../rankingTrivia';
 function SurveyDrawer(props) {
    let cSurveys = UseSurveysContext();
    let cUser = UseCurrentUser();
-   // constante de ranking
-   const hasRanking = true;
+
    // Estado para hacer visible el ranking
    const [rankingVisible, setRankingVisible] = useState(true);
 
    const showRanking = () => {
       setRankingVisible(!rankingVisible);
    };
+   useEffect(() => {
+      if (!cSurveys.shouldDisplayRanking()) {
+         setRankingVisible(true);
+      }
+   }, [cSurveys.shouldDisplayRanking()]);
 
    function closeDrawer() {
       cSurveys.unset_select_survey(null);
@@ -102,25 +106,23 @@ function SurveyDrawer(props) {
                // closable={true}
                visible={cSurveys.currentSurvey && cUser.value !== null}
                onClose={closeDrawer}
-               width={window.screen.width >= 768 ? (rankingVisible == false ? '100%' : '70%') : '100%'}>
+               width={window.screen.width >= 768 ? (rankingVisible === false ? '100%' : '70%') : '100%'}>
                <div style={{ width: '100%', display: 'inline-block', paddingBottom: '10px' }}>
-                  {cSurveys.currentSurvey &&
-                     cSurveys.currentSurvey.rankingVisible &&
-                     cSurveys.currentSurvey.rankingVisible == 'true' && (
-                        <Button type='primary' onClick={showRanking}>
-                           {rankingVisible == false ? 'Cerrar ranking' : 'Abrir ranking'}
-                        </Button>
-                     )}
+                  {cSurveys.shouldDisplayRanking() && (
+                     <Button type='primary' onClick={showRanking}>
+                        {rankingVisible === false ? 'Cerrar ranking' : 'Abrir ranking'}
+                     </Button>
+                  )}
                </div>
 
                <Row gutter={[8, 8]} justify='center'>
-                  <Col xl={rankingVisible == true ? 24 : 16} xxl={rankingVisible == true ? 24 : 16}>
+                  <Col xl={rankingVisible === true ? 24 : 16} xxl={rankingVisible === true ? 24 : 16}>
                      <SurveyDetailPage />
                   </Col>
                   <Col hidden={rankingVisible} xl={8} xxl={8}>
                      <div style={{ width: '100%' }}>
                         <div style={{ justifyContent: 'center', display: 'grid' }}>
-                           {hasRanking && <RankingTrivia />}
+                           {cSurveys.shouldDisplayRanking() && <RankingTrivia />}
                         </div>
                      </div>
                   </Col>

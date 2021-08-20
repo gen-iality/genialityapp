@@ -92,9 +92,7 @@ export function SurveysProvider({ children }) {
       return state.currentSurvey.isOpened === 'false';
    }
    function shouldDisplaySurveyAttendeeAnswered() {
-      return (
-         !attendeeAllReadyAnswered()
-      );
+      return !attendeeAllReadyAnswered();
    }
 
    function attendeeAllReadyAnswered() {
@@ -103,6 +101,13 @@ export function SurveysProvider({ children }) {
       }
 
       return state.currentSurveyStatus[state.currentSurvey._id]?.surveyCompleted !== 'completed';
+   }
+
+   function shouldDisplayRanking() {
+      if (!state.currentSurvey) {
+         return false;
+      }
+      return state.currentSurvey.rankingVisible === 'true' || state.currentSurvey.rankingVisible === true;
    }
 
    useEffect(() => {
@@ -128,6 +133,7 @@ export function SurveysProvider({ children }) {
             shouldDisplaySurveyAttendeeAnswered,
             shouldDisplaySurveyClosedMenssage,
             attendeeAllReadyAnswered,
+            shouldDisplayRanking,
          }}>
          {children}
       </SurveysContext.Provider>
