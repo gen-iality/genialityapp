@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { List, Tooltip, Popover, Avatar, Spin } from 'antd';
+import React, { useEffect, useState, useContext } from 'react';
+import { List, Tooltip, Popover, Avatar } from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
 import InfiniteScroll from 'react-infinite-scroller';
 import { UseCurrentUser } from '../../../Context/userContext';
-import { UseEventContext } from '../../../Context/eventContext';
 
 const AttendeList = function(props) {
   //contextos
   let cUser = UseCurrentUser();
-  let cEvent = UseEventContext();
-
   let [myattendelist, setmyattendelist] = useState();
-
   let [loading, setLoading] = useState(false);
   let [page, setPage] = useState(0);
   let [filteredlist, setfilteredlist] = useState([]);
@@ -109,13 +105,12 @@ const AttendeList = function(props) {
                   key='list-loadmore-edit'
                   onClick={() => {
                     props.createNewOneToOneChat(
-                      item.iduser,
-                      item.names || item.name,
                       cUser.value.uid,
-                      cUser.value.names || cUser.value.name
+                      cUser.value.names || cUser.value.name,
+                      item.iduser,
+                      item.names || item.name
                     );
                     props.settabselected('1');
-                    props.setCurrentChat(item.iduser, item.name ? item.name : item.names);
                     props.setchattab('chat2');
                   }}>
                   <Tooltip title={'Chatear'}>

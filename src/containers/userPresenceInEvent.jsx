@@ -3,7 +3,6 @@ import { getCurrentUser } from '../helpers/request';
 
 let initUserPresence = async (event_id) => {
   const user = await getCurrentUser();
-  console.log('user', user);
   if (!user) return;
 
   initUserPresenceInner(user.uid, event_id);
