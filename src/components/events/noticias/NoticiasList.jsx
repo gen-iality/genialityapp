@@ -60,7 +60,7 @@ const NoticiasList = ({ setVirtualConference, match,size }) => {
   return (
     <>
       {loading && <Spin />}
-      <Row style={{ padding: '30px 25px' }} gutter={24}>
+      <Row style={{ padding: '30px 25px' }} gutter={[8,8]}>
         {noticias &&
           noticias.length > 0 &&
           noticias.map((news) => (

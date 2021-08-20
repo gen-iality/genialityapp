@@ -45,6 +45,7 @@ export const loadDataUser = async (user, event) => {
 };
 
 export const addNotification = (notification, event, user) => {
+ // console.log("EMAIL EMITED==>",notification.emailEmited)
   if (notification.emailEmited != null && notification.emailEmited) {
     firestore
       .collection('notificationUser')

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Avatar from 'antd/lib/avatar/avatar';
 import Text from 'antd/lib/typography/Text';
-import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List } from 'antd';
+import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification } from 'antd';
 import { UsergroupAddOutlined, CommentOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
 import { UseCurrentUser } from '../../../Context/userContext';
 import { formatDataToString } from '../../../helpers/utils';
@@ -9,7 +9,7 @@ import ProfileAttende from './ProfileAttende';
 import { HelperContext } from '../../../Context/HelperContext';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { connect } from 'react-redux';
-import { SendFriendship } from '../../../helpers/netWorkingFunctions';
+import { addNotification, SendFriendship } from '../../../helpers/netWorkingFunctions';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import {setUserAgenda} from '../../../redux/networking/actions'
@@ -55,13 +55,36 @@ const DrawerProfile = (props) => {
                   <Button size='large' shape='circle'  icon={<UsergroupAddOutlined />} 
                     onClick={async ()=>{
                                     
-                     let resp= await  SendFriendship({eventUserIdReceiver:props.profileuser.eventUserId, userName:props.profileuser.properties.name || props.profileuser.properties.names || props.profileuser.properties.email   },cEventUser.value,cEvent.value)
-                    console.log("RESP==>",resp)
-                     if(resp!==null){
-                       console.log(resp)
-                       alert("Solicitud enviada correctamente...")
+                     let sendResp= await  SendFriendship({eventUserIdReceiver:props.profileuser.eventUserId, userName:props.profileuser.properties.name || props.profileuser.properties.names || props.profileuser.properties.email   },cEventUser.value,cEvent.value)
+                                       
+                      if (sendResp._id) {
+                        let notificationR = {
+                          idReceive: props.profileuser._id,
+                          idEmited: sendResp._id,
+                          emailEmited:
+                          cEventUser.value.email ||
+                          cEventUser.value.user.email,
+                          message:
+                            ( cEventUser.value.names ||
+                              cEventUser.value.user.names||  cEventUser.value.user.name) +
+                            'te ha enviado solicitud de amistad',
+                          name: 'notification.name',
+                          type: 'amistad',
+                          state: '0',
+                        };      
+                        addNotification(
+                          notificationR,
+                          cEvent.value,
+                          cEventUser.value
+                        ); 
+                        props.setViewPerfil({ view: !props.viewPerfil, perfil: null })
+                        notification['success']({
+                          message: 'Correcto!',
+                          description:
+                            'Se ha enviado la solicitud de amistad correctamente',
+                        });                       
                      }else{
-                       alert("Error al guardar")
+                       console.log("Error al guardar")
                      }
                     }}
                   />
