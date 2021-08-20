@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -31,6 +31,7 @@ import Productos from '../producto/index';
 import MessageRegister from '../registrationForm/messageRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import ListVideoCard from '../../shared/listVideoCard';
+import initUserPresence from '../../../containers/userPresenceInEvent';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -56,6 +57,10 @@ const EventSectionRoutes = (props) => {
       return false;
     }
   }
+
+  useEffect(async () => {
+    props.cEvent.value && (await initUserPresence(props.cEvent.value._id));
+  }, [props.cEvent.value]);
 
   return (
     <>

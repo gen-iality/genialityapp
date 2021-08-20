@@ -30,6 +30,8 @@ import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutl
 import EviusFooter from './EviusFooter';
 import AppointmentModal from '../../networking/appointmentModal';
 
+
+
 const iniitalstatetabs = {
   attendees: false,
   privateChat: false,
@@ -64,6 +66,8 @@ const Landing = (props) => {
   let cEventUser = UseUserEvent();
   let { isNotification, ChangeActiveNotification } = useContext(HelperContext);
   const [chattab, setchattab] = useState('chat1');
+
+ 
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
