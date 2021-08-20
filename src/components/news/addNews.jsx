@@ -97,7 +97,7 @@ function AddNews(props) {
   };
   const isUrl = string => {
     try { return Boolean(new URL(string)); }
-    catch(e){ return false; }
+    catch(e){ return false; } 
 }
 
   const saveNew = async () => {
