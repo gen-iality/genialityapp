@@ -7,7 +7,7 @@ const ListVideoCard = () => {
 
   return (
     <>
-      {activitiesEvent.length > 0 && (
+      {activitiesEvent && (
         <Fragment style={{ width: '100%' }}>
           <Card headStyle={{ border: 'none' }} title='Videos grabados'>
             <Space size='large' style={{ width: '100%', overflowX: 'auto', padding: '10px', margin: '10px' }}>
