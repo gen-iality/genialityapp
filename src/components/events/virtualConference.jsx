@@ -143,7 +143,7 @@ const VirtualConference = () => {
                   marginBottom: '8px',
                 }}
                 className='animate__animated animate__slideInRight'>
-                <Link to={item.habilitar_ingreso == 'open_meeting_room' && `${urlactivity}${item._id}`}>
+                <Link to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}`:`${urlAgenda}`}>
                   <Row justify='center' align='middle' gutter={[8, 8]}>
                     <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
                       <div
