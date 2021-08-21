@@ -29,6 +29,7 @@ const AttendeList = function(props) {
         status: props.attendeeListPresence[key] ? props.attendeeListPresence[key].state : 'offline',
         email: props.attendeeList[key].properties.email,
         properties: props.attendeeList[key].properties,
+        _id:props.attendeeList[key]._id
       };
 
       if (mihijo.status === 'online') {

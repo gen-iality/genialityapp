@@ -124,19 +124,25 @@ class Datos extends Component {
     }
   };
   //Funcion para cambiar el valor de los checkboxes
-  async changeCheckBox(field,key) {    
+  async changeCheckBox(field,key,key2=null) { 
+    notification.open({
+      message: 'Espere..',
+      description: 'Por favor espere mientras se guarda la configuración',
+    });       
     try {
       this.setState({edit:true},()=>{
         field[key]=!field[key]
-        this.saveField(field);
-        notification.open({
-          message: 'Correcto!',
-          description: 'Se ha editado correctamente el campo..!',
+        if(key2!=null){         
+          field[key2]=field[key2]==true?false:field[key2]
+        }
+               
+        this.saveField(field).then((resp)=>{
+          notification.open({
+            message: 'Correcto!',
+            description: 'Se ha editado correctamente el campo..!',
+          });
         });
-
-      })
-      
-      
+       })    
     } catch (e) {
       notification.open({
         message: 'No se ha actualizado el campo',
@@ -172,7 +178,7 @@ class Datos extends Component {
         dataIndex: 'visibleByContacts',
         align: 'center',
         render: (record,key) => (
-          <Checkbox name='visibleByContacts' onChange={() => this.changeCheckBox(key,'visibleByContacts')} defaultChecked={record} />
+          <Checkbox name='visibleByContacts' onChange={() => this.changeCheckBox(key,'visibleByContacts','visibleByAdmin')} checked={record} />
         ),
       },
       {
@@ -181,7 +187,7 @@ class Datos extends Component {
         align: 'center',
         render: (record, key) =>
           key.name !== 'email' && key.name !== 'names' && key.name!=='picture' ? (
-            <Checkbox name='visibleByAdmin' onChange={() => this.changeCheckBox(key,'visibleByAdmin')} checked={record} />
+            <Checkbox name='visibleByAdmin' onChange={() => this.changeCheckBox(key,'visibleByAdmin','visibleByContacts')} checked={record} />
           ) : (
             <Checkbox checked />
           ),
