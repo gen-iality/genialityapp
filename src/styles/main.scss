@@ -28,6 +28,10 @@ body {
   font-family: $family-sans-serif !important;
 }
 
+body, .root, .ant-layout {
+  min-height: 100vh;
+}
+
 .box:not(:last-child) {
   margin-bottom: 0 !important;
 }
@@ -40,7 +44,7 @@ body {
   flex: auto;
   -ms-flex-direction: column;
   flex-direction: column;
-  min-height: 0;
+  
   background: rgba(255, 255, 254, 0) !important;
   // background: rgba(255, 255, 254, 0.441) !important;
 }
@@ -347,7 +351,6 @@ iframe {
 @import './certificados/points';
 @import './agenda/agenda';
 @import './landing/landing';
-@import './landing/lobby';
 @import './chatevius';
 @import './activity';
 @import './ferias';

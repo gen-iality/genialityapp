@@ -1,26 +1,27 @@
-import React, { Component } from 'react'
-import './Lobby.css'
-import { Link } from 'react-router-dom'
-import fachadaImg from './assets/PH_entrada_final_2021.jpeg'
-import logoImg from './assets/LOGO_PH.png'
-import logoFeriaImg from './assets/TITULO_MOBILE.png'
-import bgImage from './assets/FONDO_LOBBY_2021.png'
+import React, { Component } from 'react';
+import './Lobby.css';
+import { Link } from 'react-router-dom';
+import fachadaImg from './assets/PH_entrada_final_2021.jpeg';
+import logoImg from './assets/LOGO_PH.png';
+import logoFeriaImg from './assets/TITULO_MOBILE.png';
+import logoFeriaInnerImg from './assets/TITULO.png';
+import bgImage from './assets/FONDO_LOBBY_2021.png';
 class Lobby extends Component {
   constructor(props) {
-    super(props) 
-    this.handleHideIntro = this.handleHideIntro.bind(this)
+    super(props);
+    this.handleHideIntro = this.handleHideIntro.bind(this);
     this.state = {
       showIntro: false,
-      showStands: false,
-    }
+      showStands: false
+    };
   }
 
   handleHideIntro() {
-    this.setState({ showIntro: true })
+    this.setState({ showIntro: true });
   }
 
   handleShowStands() {
-    this.setState({ showStands: true })
+    this.setState({ showStands: true });
   }
 
   render() {
@@ -34,7 +35,8 @@ class Lobby extends Component {
         organizer: 'Prhopio',
         logo: logoImg,
         logoFeria: logoFeriaImg,
-        bgImage:bgImage,
+        logoFeriaInner:logoFeriaInnerImg,
+        bgImage: bgImage,
         bgIntroImage: fachadaImg
       },
       virtual_events: [
@@ -61,41 +63,48 @@ class Lobby extends Component {
           }
         }
       ]
-    }
+    };
 
     if (this.state.showStands) {
-    return (
-      <iframe style={{width:"100%",height:"90vh"}}
-      title="Congreso PH"
-      src='https://standy.club/#/stand-list'
-      frameBorder='0'
-      allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
-      allowFullScreen></iframe>
-    )
+      return (
+        <iframe
+          style={{ width: '100%', height: '90vh' }}
+          title='Congreso PH'
+          src='https://standy.club/#/stand-list'
+          frameBorder='0'
+          allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+          allowFullScreen></iframe>
+      );
     }
 
     return (
-      <div className='the-lobby' style={{ backgroundImage: `url("${lobby_data.info.bgImage}")` }}>
+      <div onClick={this.handleHideIntro}
+        className={`the-lobby ${this.state.showIntro ? '' : 'venue-exterior'}`}
+        style={{ backgroundImage: `url("${lobby_data.info.bgImage}")` }}>
         <div
           className={`the-intro ${this.state.showIntro ? 'active' : ''}`}
-          style={{ backgroundImage: `url("${lobby_data.info.bgIntroImage}")` }}>
+          style={{ backgroundImage: `url("${lobby_data.info.bgIntroImage}")` }}></div>
 
-        </div>
-        <div className='the-intro-access-btn' onClick={this.handleHideIntro}>
-            VIVE LA EXPERIENCIA
-        </div>        
+        {!this.state.showIntro && (
+          <div className='the-intro-access-btn-container'>
+            <p
+              className='the-intro-access-btn animate__animated animate__pulse animate__slower animate__infinite'
+              onClick={this.handleHideIntro}>
+              INGRESA AL CONGRESO
+            </p>
+          </div>
+        )}
         <div className='the-lobby-header'>
           <div className='the-lobby-header-col-left'>
             <img src={lobby_data.info.logo} alt='' />
           </div>
           <div className='the-lobby-header-col-center'>
-            <img src={lobby_data.info.logoFeria} alt='' />
+            <img src={this.state.showIntro?lobby_data.info.logoFeriaInner:lobby_data.info.logoFeria} alt='' />
           </div>
           <div className='the-lobby-header-col-right'>
             <div className='the-lobby-header-general-info'>
               <div className='the-lobby-header-general-info-wrap'>
                 <div className='the-lobby-header-general-info-group'>
-
                   <div className='the-lobby-header-general-info-group-item'>
                     <div className='the-lobby-header-general-info-group-item-icon'>
                       <img src='/lobby/ICONO_RELOJ.png' alt='' />
@@ -115,9 +124,9 @@ class Lobby extends Component {
                   </div>
                   <div className='the-lobby-header-general-info-group-item'>
                     <div>
-                    {/* <div>{lobby_data.info.date}</div> */}
-                    <div>{lobby_data.info.type}</div>
-                    <div>Organizador: {lobby_data.info.organizer}</div>
+                      {/* <div>{lobby_data.info.date}</div> */}
+                      <div>{lobby_data.info.type}</div>
+                      <div>Organizador: {lobby_data.info.organizer}</div>
                     </div>
                   </div>
                 </div>
@@ -137,7 +146,7 @@ class Lobby extends Component {
           <div className='the-lobby-video-wrap'>
             <div className='the-lobby-video-container'>
               <iframe
-                title="Congreso PH"
+                title='Congreso PH'
                 width='560'
                 height='315'
                 src='https://www.youtube.com/embed/bBu5D33dcBA'
@@ -168,11 +177,11 @@ class Lobby extends Component {
             ))}
           </div>
         </div> */}
-        <div onClick={()=>this.handleShowStands()}className='the-lobby-exhibitors-btn'>
+        <div onClick={() => this.handleShowStands()} className='the-lobby-exhibitors-btn'>
           <img src='/lobby/BOTON_STANDS.png' alt='' />
         </div>
       </div>
-    )
+    );
   }
 }
-export default Lobby
+export default Lobby;

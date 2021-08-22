@@ -16,7 +16,7 @@ body {
     max-width: 100%;
 }
 .the-lobby {
-    min-height: 100vh;
+    height: calc(100% - 65px);
     background-repeat: no-repeat;
     background-position: center bottom;
     -webkit-background-size: cover;
@@ -43,12 +43,21 @@ body {
     opacity: 0;
     pointer-events: none;
 }
-
-.the-intro-access-btn {
+.the-intro-access-btn-container{
     position: fixed;
     bottom: 3rem;
-    left: 50%;
-    transform: translate(-50%, 0);
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    margin: 0 auto;padding:0px;
+    overflow: hidden;
+    text-align: center;
+
+}
+.the-intro-access-btn {
+    display: inline-block;
+    margin: 0 auto;
+    width: fit-content;
     padding: 0.5rem 2rem;
     background-color: rgba(255,255,255,0.8);
     border-radius: 2px;
@@ -56,6 +65,7 @@ body {
     font-weight: bold;
     cursor: pointer;
     z-index:999999;
+    
 }
 
 .the-lobby * {
@@ -66,7 +76,16 @@ body {
     position: relative;
     z-index: 3;
     color: white;
+    width:100%;
 }
+
+.venue-exterior .the-lobby-header{ 
+position: absolute;
+top:1%;
+left: 0;
+}
+
+
 
 .the-lobby-header img {
     width: 100%;
@@ -285,12 +304,11 @@ body {
     .the-intro-access-btn {
         bottom: 17vh;
         padding: 0.8rem 2rem;
-        transition: opacity 0.3s ease-in;
-        font-size: 18px;
+        font-size: 150%;
     }
 
     .the-intro-access-btn:hover {
-        opacity: 0.8;
+        opacity: 1;
     }
 }
 
