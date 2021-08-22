@@ -28,8 +28,8 @@ body {
   font-family: $family-sans-serif !important;
 }
 
-body, .root, .ant-layout {
-  min-height: 100vh;
+body, #root, .ant-layout {
+  // min-height: calc(100vh-65px);
 }
 
 .box:not(:last-child) {
