@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Lobby.css';
+import StandsList from '../standsList'
 import { Link } from 'react-router-dom';
 import fachadaImg from './assets/PH_entrada_final_2021.jpeg';
 import logoImg from './assets/LOGO_PH.png';
@@ -87,6 +88,7 @@ class Lobby extends Component {
 
         {!this.state.showIntro && (
           <div className='the-intro-access-btn-container'>
+            <StandsList />
             <p
               className='the-intro-access-btn animate__animated animate__pulse animate__slower animate__infinite'
               onClick={this.handleHideIntro}>
@@ -94,6 +96,7 @@ class Lobby extends Component {
             </p>
           </div>
         )}
+        
         <div className='the-lobby-header'>
           <div className='the-lobby-header-col-left'>
             <img src={lobby_data.info.logo} alt='' />
@@ -177,9 +180,11 @@ class Lobby extends Component {
             ))}
           </div>
         </div> */}
-        <div onClick={() => this.handleShowStands()} className='the-lobby-exhibitors-btn'>
+        
+        {/* <div onClick={() => this.handleShowStands()} className='the-lobby-exhibitors-btn'>
           <img src='/lobby/BOTON_STANDS.png' alt='' />
-        </div>
+        </div> */}
+        {this.state.showIntro && (<div className='standlist-container'><StandsList /></div>)}
       </div>
     );
   }

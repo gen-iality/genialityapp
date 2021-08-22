@@ -24,16 +24,12 @@ const ListVideoCard = () => {
     <>
       {existActivity == 1 && (
         <Fragment style={{ width: '100%' }}>
-          <Card headStyle={{ border: 'none' }} title='Videos grabados'>
-            <Space size='large' style={{ width: '100%', overflowX: 'auto', padding: '10px', margin: '10px' }}>
               {activitiesEvent &&
                 activitiesEvent.map((activity, index) => {
                   if (activity.video) {
                     return <VideoCard key={index} activity={activity} />;
                   }
                 })}
-            </Space>
-          </Card>
         </Fragment>
       )}
     </>
