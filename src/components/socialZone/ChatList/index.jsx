@@ -29,8 +29,8 @@ const styleList = {
 };
 
 const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 18 },
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
 };
 
 const ChatList = (props) => {
@@ -73,7 +73,7 @@ const ChatList = (props) => {
 
   if (!cUser.value)
     return (
-      <Form {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
+      <Form className='asistente-list' {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
         <Row justify='center'>
           <h1>
             <strong>
@@ -107,16 +107,15 @@ const ChatList = (props) => {
         </Row>
 
         <Row justify='center'>
-          <Space size='large'>
-            <Form.Item>
-              <Button onClick={() => history.push(`/landing/${cEvent.value._id}/tickets`)} type='primary'>
-                <FormattedMessage id='form.button.register' defaultMessage='Registrarme' />
-              </Button>
-            </Form.Item>
-
+          <Space size='small' wrap>
             <Form.Item>
               <Button type='dashed' htmlType='submit'>
                 <FormattedMessage id='form.button.enter' defaultMessage='Entrar' />
+              </Button>
+            </Form.Item>
+            <Form.Item>
+              <Button onClick={() => history.push(`/landing/${cEvent.value._id}/tickets`)} type='primary'>
+                <FormattedMessage id='form.button.register' defaultMessage='Registrarme' />
               </Button>
             </Form.Item>
           </Space>

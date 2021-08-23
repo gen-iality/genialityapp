@@ -195,9 +195,10 @@ function CrearEditarEmpresa({ event, match, history }) {
                 <Row justify='start'>
                   <Col xs={20}>
                     <Field
+                    required
                       name='name'
                       component={InputField}
-                      label='Nombre empresa *'
+                      label='Nombre empresa'
                       placeholder='Ingrese el nombre de su empresa o stand'
                       maxLength={NAME_MAX_LENGTH}
                     />
@@ -264,6 +265,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                             {values.services.map((_service, serviceIndex) => (
                               <div key={`service-item-${serviceIndex}`}>
                                 <Field
+                                required
                                   name={`services[${serviceIndex}].nombre`}
                                   component={InputField}
                                   label={`Nombre servicio ${serviceIndex + 1}`}
@@ -272,6 +274,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                                 />
 
                                 <Field
+                                required
                                   name={`services[${serviceIndex}].category`}
                                   component={SelectField}
                                   label={`Categoría servicio ${serviceIndex + 1}`}
@@ -283,12 +286,14 @@ function CrearEditarEmpresa({ event, match, history }) {
                                 />
 
                                 <RichTextComponentField
+                                required
                                   name={`services[${serviceIndex}].description`}
                                   label={`Descripción servicio ${serviceIndex + 1}`}
                                   maxLength={SERVICE_DESCRIPTION_MAX_LENGTH}
                                 />
 
                                 <Field
+                                required
                                   name={`services[${serviceIndex}].web_url`}
                                   component={InputField}
                                   label={`Web url ${serviceIndex + 1}`}
@@ -296,6 +301,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                                 />
 
                                 <ImageField
+                                required
                                   name={`services[${serviceIndex}].image`}
                                   label={`Imagen servicio ${serviceIndex + 1}`}
                                   placeholder='Url imagen'
@@ -416,36 +422,42 @@ function CrearEditarEmpresa({ event, match, history }) {
                             {values.advisor.map((_sn, advisorIndex) => (
                               <div key={`advisor-item-${advisorIndex}`}>
                                 <Field
+                                required
                                   name={`advisor[${advisorIndex}].name`}
                                   component={InputField}
                                   label={`Nombre del contacto advisor ${advisorIndex + 1}`}
                                   placeholder='Nombre del contacto advisor'
                                 />
                                 <Field
+                                required
                                   name={`advisor[${advisorIndex}].cargo`}
                                   component={InputField}
                                   label={`Cargo del advisor ${advisorIndex + 1}`}
                                   placeholder='Cargo advisor'
                                 />
                                 <Field
+                                required
                                   name={`advisor[${advisorIndex}].codPais`}
                                   component={InputField}
                                   label={`Codigo del pais advisor ${advisorIndex + 1}`}
                                   placeholder='Ingrese el codigo internacional de su pais sin agregar (+)'
                                 />
                                 <Field
+                                required
                                   name={`advisor[${advisorIndex}].number`}
                                   component={InputField}
                                   label={`Número de contacto advisor ${advisorIndex + 1}`}
                                   placeholder='Número de contacto advisor'
                                 />
                                 <Field
+                                required
                                   name={`advisor[${advisorIndex}].email`}
                                   component={InputField}
                                   label={`Email de contacto advisor ${advisorIndex + 1}`}
                                   placeholder='Email de contacto advisor'
                                 />
                                 <ImageField
+                                required
                                   name={`advisor[${advisorIndex}].image`}
                                   label={`Imagen del contacto advisor ${advisorIndex + 1}`}
                                   placeholder='Url imagen'
