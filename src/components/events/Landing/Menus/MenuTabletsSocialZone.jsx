@@ -27,7 +27,7 @@ const MenuTabletsSocialZone = (props) => {
               setOptionselected('1');
               setisDrawerVisible(!isDrawerVisible);
             }}></Button>
-          {props.currentActivity && props.listOfEventSurveys && props.listOfEventSurveys.length > 0 && (
+          {props.currentActivity && (
             <Button
               style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
               shape='circle'
@@ -63,8 +63,6 @@ const MenuTabletsSocialZone = (props) => {
           notNewMessages={props.notNewMessage}
           tabselected={optionselected}
           settabselected={setOptionselected}
-          listOfEventSurveys={props.listOfEventSurveys}
-          loadingSurveys={props.loadingSurveys}
           setchattab={props.setchattab}
           chattab={props.chattab}
         />
