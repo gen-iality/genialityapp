@@ -132,10 +132,10 @@ export function SurveysProvider({ children }) {
 
    function shouldDisplaysurveyAssignedToThisActivity() {
       let recentlyOpenedSurvey;
-      if (!state.currentSurvey) {
+      if (!state.currentSurvey && !surveysToBeListedByActivity()) {
          return false;
       }
-      recentlyOpenedSurvey = surveysToBeListedByActivity().filter((item) => item._id === state.currentSurvey._id);
+      recentlyOpenedSurvey = surveysToBeListedByActivity().filter((item) => item?._id === state.currentSurvey?._id);
 
       if (recentlyOpenedSurvey && recentlyOpenedSurvey.length > 0) {
          return true;
