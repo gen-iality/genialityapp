@@ -6,7 +6,6 @@ import { DownOutlined, LogoutOutlined } from '@ant-design/icons';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
-import { UseUserEvent } from '../../Context/eventUserContext';
 import { EventsApi } from '../../helpers/request';
 import { useEffect } from 'react';
 
@@ -27,25 +26,17 @@ let UserStatusAndMenu = (props) => {
   let photo = props.photo;
   let name = props.name;
   let logout = props.logout;
-  let eventId = props.eventId;
-
-  useEffect(()=>{
-    if(props.eventId && props.userEvent){
-      eventuserData()
+  let eventId = props.eventId; 
+  useEffect(() => {
+    if (props.eventId && props.userEvent) {
+      eventuserData();
     }
-    console.log("PROPS MENUITEM==>",props)
-    
-  async function eventuserData(){
-    console.log("USER EVENT==>",props.userEvent)
-    console.log("EVENT ID==>",props.eventId)
-    let user= await EventsApi.getEventUser(props.userEvent._id,'5f7f21217828e17d80642856');
-    console.log("RESP=>",user)
-  }
 
-  },[props.eventId && props.userEvent])
+    async function eventuserData() {     
+      let user = await EventsApi.getEventUser(props.userEvent._id, props.eventId);
+    }
+  }, [props.eventId && props.userEvent]);
 
-  
-console.log("PROPS ESTALLA=>",props)
   let menu = (
     <Menu>
       <Menu.Item style={ItemStyle}>
@@ -53,7 +44,7 @@ console.log("PROPS ESTALLA=>",props)
           onClick={(e) => {
             e.preventDefault();
             props.location.pathname.includes('landing')
-              ? props.setViewPerfil({ view: true, perfil: {_id:props.userEvent._id,properties:props.userEvent} })
+              ? props.setViewPerfil({ view: true, perfil: { _id: props.userEvent._id, properties: props.userEvent } })
               : null;
           }}
           to={''}>
@@ -93,9 +84,17 @@ console.log("PROPS ESTALLA=>",props)
   let loggedInuser = (
     <Row style={MenuStyle}>
       <Col style={MenuStyle}>
-        <Dropdown arrow overlay={menu} >
-          <a onClick={(e) => e.preventDefault()} >
-            <Space className='shadowHover' style={{height:'40px', backgroundColor:'white', borderRadius:'50px', paddingLeft:'5px', paddingRight:'5px'}}>
+        <Dropdown arrow overlay={menu}>
+          <a onClick={(e) => e.preventDefault()}>
+            <Space
+              className='shadowHover'
+              style={{
+                height: '40px',
+                backgroundColor: 'white',
+                borderRadius: '50px',
+                paddingLeft: '5px',
+                paddingRight: '5px',
+              }}>
               {photo ? (
                 <Avatar src={photo} />
               ) : (
@@ -105,7 +104,7 @@ console.log("PROPS ESTALLA=>",props)
                 </Avatar>
               )}
               <span className='name_menu-user'>{name}</span>
-              <DownOutlined style={{fontSize:'12px'}} />
+              <DownOutlined style={{ fontSize: '12px' }} />
             </Space>
           </a>
         </Dropdown>

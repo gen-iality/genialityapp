@@ -30,6 +30,7 @@ const DrawerProfile = (props) => {
       let isContact=isMyContacts(props.profileuser,props.cHelper.contacts)
       setIsMyContact(isContact)      
       setUserSelected(props.profileuser)
+      console.log("USER SELECTED==>",userSelected);
     }
   },[props.profileuser])
   
@@ -48,7 +49,7 @@ const DrawerProfile = (props) => {
         <Space size={0} direction='vertical' style={{ textAlign: 'center' }}>
           <Avatar
             size={110}
-            src='https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png'
+            src= {userSelected && userSelected.properties && userSelected.properties['picture']?userSelected.properties['picture']:'https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png'}
           />
           <Text style={{ fontSize: '20px' }}>
             {userSelected!=null? userSelected && userSelected.properties && userSelected.properties.names
@@ -154,7 +155,7 @@ const DrawerProfile = (props) => {
               renderItem={(item) =>
                 (((item.visibleByContacts && isMycontact) || (!item.visibleByContacts && !item.visibleByAdmin) ) ||
                   userSelected?._id == cUser.value._id) &&
-                userSelected?.properties[item.name] && (
+                userSelected?.properties[item.name] && item.name!=='picture'  && (
                   <List.Item>   
                     <List.Item.Meta
                       title={item.label}

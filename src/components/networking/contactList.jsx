@@ -103,8 +103,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
                       {userProperties.map(
                         (property, key) =>
                           user[property.name] !== undefined &&
-                          !property.visibleByAdmin &&
-                          (property.visibleByContacts || property.visibleByContacts == 'only_for_my_contacts') && (
+                         ( !property.visibleByAdmin ||
+                          (property.visibleByContacts || property.visibleByContacts == 'only_for_my_contacts')) && (
                             <div key={'contact-property' + key}>
                               {
                                 <p>

@@ -57,7 +57,7 @@ class ListEventUser extends Component {
     this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
   };
   agendarCita = (iduser, user) => {
-    console.log("USERS==>",user)
+    console.log("USERS SELECTED==>",user)
     this.setState({ eventUserIdToMakeAppointment: iduser, eventUserToMakeAppointment: user });
   };
   loadData = async () => {
@@ -696,6 +696,7 @@ class ListEventUser extends Component {
                                               eventUserIdToMakeAppointment: users._id,
                                               eventUserToMakeAppointment: users,
                                             });
+                                            console.log("USERS SELECTED==>",users)
                                           }}>
                                           {'Agendar cita'}
                                         </Button>
