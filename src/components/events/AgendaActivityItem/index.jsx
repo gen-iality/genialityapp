@@ -10,6 +10,7 @@ import Icon, { LoadingOutlined, CaretRightOutlined, CheckCircleOutlined } from '
 import { useIntl } from 'react-intl';
 import * as StageActions from '../../../redux/stage/actions';
 import AccessPoint from '@2fd/ant-design-icons/lib/AccessPoint';
+import ReactPlayer from 'react-player';
 
 const { gotoActivity } = StageActions;
 
@@ -194,7 +195,7 @@ function AgendaActivityItem(props) {
           <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
             {/* card de la genda en desktop */}
             <Card
-              style={{ borderRadius: '15px', border: `solid 2px ${event.styles.toolbarDefaultBg}`, maxHeight: '300px' }}
+              style={{ borderRadius: '15px', border: `solid 2px ${event.styles.toolbarDefaultBg}`, maxHeight: '300px', minHeight:'210px' }}
               hoverable
               className='card-agenda-desktop agendaHover efect-scale'
               bodyStyle={{ padding: '10px' }}>
@@ -296,7 +297,7 @@ function AgendaActivityItem(props) {
                     )}
                   </div>
                 </Col>
-                <Col md={12} lg={15} xl={15} className='agenda-contenido'>
+                <Col md={14} lg={15} xl={15} className='agenda-contenido'>
                   <Space direction='vertical'>
                     <Row gutter={[10, 10]}>
                       <Col span={24} style={{ paddingLeft: '0px' }}>
@@ -373,17 +374,26 @@ function AgendaActivityItem(props) {
                     </Row>
                   </Space>
                 </Col>
-                <Col md={8} lg={5} xl={5} style={{ textAlign: 'right' }}>
-                  <img
-                    className='agenda-imagen'
-                    src={
-                      item.image
-                        ? item.image
-                        : event_image
-                        ? event_image
-                        : 'https://via.placeholder.com/300/FFFFFF/FFFFFF?Text=imagen'
-                    }
-                  />
+                <Col md={6} lg={5} xl={5} style={{ textAlign: 'right' }}>
+                  {meetingState == 'ended_meeting_room' && item.video ? (
+                    <ReactPlayer
+                      light={true}
+                      width={'100%'}
+                      height={'100%'}
+                      url={item !== null && item.video}
+                    />
+                  ) : (
+                    <img
+                      className='agenda-imagen'
+                      src={
+                        item.image
+                          ? item.image
+                          : event_image
+                          ? event_image
+                          : 'https://via.placeholder.com/300/FFFFFF/FFFFFF?Text=imagen'
+                      }
+                    />
+                  )}
                 </Col>
               </Row>
             </Card>

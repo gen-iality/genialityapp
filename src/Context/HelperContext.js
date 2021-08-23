@@ -1,10 +1,11 @@
 import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
 import { firestore } from '../helpers/firebase';
-import { AgendaApi, EventFieldsApi, EventsApi } from '../helpers/request';
+import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../helpers/request';
 import { UseEventContext } from './eventContext';
-import {getUserEvent} from '../components/networking/services';
+import { getUserEvent } from '../components/networking/services';
 import { UseCurrentUser } from './userContext';
+import { UseUserEvent } from './eventUserContext';
 
 export const HelperContext = createContext();
 
@@ -17,6 +18,7 @@ const initialStateNotification = {
 export const HelperContextProvider = ({ children }) => {
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
+  let cEventuser=UseUserEvent()
   const [containtNetworking, setcontaintNetworking] = useState(false);
   const [infoAgenda, setinfoAgenda] = useState(null);
   const [isNotification, setisNotification] = useState(initialStateNotification);
@@ -25,7 +27,40 @@ export const HelperContextProvider = ({ children }) => {
   const [totalsolicitudes, setTotalsolicitudes] = useState(0);
   const [isOpenDrawerProfile, setisOpenDrawerProfile] = useState(false);
   const [propertiesProfile, setpropertiesProfile] = useState();
-  const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null)
+  const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null);
+  const [activitiesEvent, setactivitiesEvent] = useState(null);
+  const [chatActual, setchatActual] = useState({
+    chatid: null,
+    idactualuser: null,
+    idotheruser: null,
+    chatname: null,
+  });
+  const [contacts,setContacts]=useState([])
+
+  let generateUniqueIdFromOtherIds = (ida, idb) => {
+    let chatid;
+    if (ida !== null && idb !== null) {
+      if (ida < idb) {
+        chatid = ida + '_' + idb;
+      } else {
+        chatid = idb;
+      }
+    } else {
+      chatid = null;
+    }
+
+    return chatid;
+  };
+
+  function HandleGoToChat(idactualuser, idotheruser, chatname, chatid) {
+    let data = {
+      chatid: chatid ? chatid : generateUniqueIdFromOtherIds(idactualuser, idotheruser),
+      idactualuser,
+      idotheruser,
+      chatname,
+    };
+    setchatActual(data);
+  }
 
   const getProperties = async (eventId) => {
     let properties = await EventFieldsApi.getAll(eventId);
@@ -38,9 +73,19 @@ export const HelperContextProvider = ({ children }) => {
     return null;
   };
 
+  const GetActivitiesEvent = async (eventId) => {
+    let activities = await AgendaApi.byEvent(eventId);
+
+    if (activities.data.length > 0) {
+      setactivitiesEvent(activities.data);
+    }
+  };
+
+  // ACA HAY UN BUG AL TRAER DATOS CON BASTANTES CAMPOS
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
-    setpropertiesOtherprofile({_id:id,properties:eventUser.properties,eventUserId:eventUser._id})
+    //console.log("RESPUESTA=>",eventUser)
+    setpropertiesOtherprofile({ _id: id, properties: eventUser.properties, eventUserId: eventUser._id });
   };
 
   const ChangeActiveNotification = (notify, message, type, activity) => {
@@ -67,6 +112,14 @@ export const HelperContextProvider = ({ children }) => {
     }
   };
 
+  const obtenerContactos=async()=>{   
+      // Servicio que trae los contactos
+   let contacts= await Networking.getContactList(cEvent.value._id, cEventuser.value._id)
+   if(contacts){
+    setContacts(contacts)    
+   }       
+  }
+
   const obtenerNombreActivity = (activityID) => {
     const act = infoAgenda && infoAgenda.filter((ac) => ac._id == activityID);
     return act && act.length > 0 ? act[0] : null;
@@ -77,6 +130,7 @@ export const HelperContextProvider = ({ children }) => {
       containsNetWorking();
       GetInfoAgenda();
       getProperties(cEvent.value._id);
+      GetActivitiesEvent(cEvent.value._id);
     }
   }, [cEvent.value]);
 
@@ -140,7 +194,7 @@ export const HelperContextProvider = ({ children }) => {
 
             if (notification.state === '0') {
               contNotifications++;
-            }
+            }    
             //Notificacion tipo agenda
             if (notification.type == 'agenda' && notification.state === '0') {
               notAg.push(doc.data());
@@ -155,7 +209,7 @@ export const HelperContextProvider = ({ children }) => {
           setTotalsolicitudes(notAm.length + notAg.length);
 
           if (change) {
-            if (change.doc.data() && change.newIndex > 0) {
+            if (change.doc.data() && change.newIndex > 0 && change.doc.data().state === '0') {
               // alert("NUEVA NOTIFICACION")
               ChangeActiveNotification(true, change.doc.data().message, 'networking');
             }
@@ -165,8 +219,14 @@ export const HelperContextProvider = ({ children }) => {
 
     if (cUser.value != null && cEvent.value != null) {
       fetchNetworkingChange();
-    }
+    }    
   }, [cUser.value, cEvent.value]);
+
+  useEffect(()=>{
+    if (cEventuser.value != null && cEvent.value != null) {
+      obtenerContactos();
+    }
+  },[cEventuser.value,cEvent.value])
 
   return (
     <HelperContext.Provider
@@ -181,7 +241,11 @@ export const HelperContextProvider = ({ children }) => {
         HandleChangeDrawerProfile,
         propertiesProfile,
         getPropertiesUserWithId,
-        propertiesOtherprofile
+        propertiesOtherprofile,
+        activitiesEvent,
+        chatActual,
+        HandleGoToChat,
+        contacts
       }}>
       {children}
     </HelperContext.Provider>

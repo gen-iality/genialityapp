@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Avatar from 'antd/lib/avatar/avatar';
 import Text from 'antd/lib/typography/Text';
-import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List } from 'antd';
+import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification } from 'antd';
 import { UsergroupAddOutlined, CommentOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
 import { UseCurrentUser } from '../../../Context/userContext';
 import { formatDataToString } from '../../../helpers/utils';
@@ -9,17 +9,31 @@ import ProfileAttende from './ProfileAttende';
 import { HelperContext } from '../../../Context/HelperContext';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { connect } from 'react-redux';
-import { SendFriendship } from '../../../helpers/netWorkingFunctions';
+import { addNotification, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
-import {setUserAgenda} from '../../../redux/networking/actions'
+import {setUserAgenda} from '../../../redux/networking/actions';
+import withContext from '../../../Context/withContext';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const DrawerProfile = (props) => {
   let cUser = UseCurrentUser();
   let cEvent=UseEventContext();
   let cEventUser=UseUserEvent();
   let { propertiesProfile } = useContext(HelperContext);
+  const [userSelected,setUserSelected]=useState()
+  const [isMycontact,setIsMyContact]=useState()
+ 
+  useEffect(()=>{    
+    if(props.profileuser!==null){
+      let isContact=isMyContacts(props.profileuser,props.cHelper.contacts)
+      setIsMyContact(isContact)      
+      setUserSelected(props.profileuser)
+    }
+  },[props.profileuser])
   
+     
   return (
     <>
    
@@ -37,38 +51,61 @@ const DrawerProfile = (props) => {
             src='https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png'
           />
           <Text style={{ fontSize: '20px' }}>
-            {props.profileuser!=null && props.profileuser.properties && props.profileuser.properties.names
-              ? props.profileuser.properties.names
-              : props.profileuser.properties && props.profileuser.properties.name
-              ? props.profileuser.properties.name
-              : ''}
+            {userSelected!=null? userSelected && userSelected.properties && userSelected.properties.names
+              ? userSelected.properties.names
+              : userSelected.properties && userSelected.properties.name
+              ? userSelected.properties.name
+              : '':''}
           </Text>
           <Text type='secondary' style={{ fontSize: '16px' }}>
-            {props.profileuser && props.profileuser.properties  && props.profileuser.properties.email}
+            {userSelected && userSelected.properties  && userSelected.properties?.email}
           </Text>
         </Space>
         <Col span={24}>
           <Row justify='center' style={{ marginTop: '20px' }}>
             <Space size='middle'>
               <Tooltip title='Solicitar contacto'>
-                {props.profileuser && props.profileuser._id !== cUser.value._id && (
+                {userSelected && userSelected._id !== cUser.value._id && (
                   <Button size='large' shape='circle'  icon={<UsergroupAddOutlined />} 
                     onClick={async ()=>{
                                     
-                     let resp= await  SendFriendship({eventUserIdReceiver:props.profileuser.eventUserId, userName:props.profileuser.properties.name || props.profileuser.properties.names || props.profileuser.properties.email   },cEventUser.value,cEvent.value)
-                    console.log("RESP==>",resp)
-                     if(resp!==null){
-                       console.log(resp)
-                       alert("Solicitud enviada correctamente...")
+                     let sendResp= await  SendFriendship({eventUserIdReceiver:userSelected.eventUserId, userName:userSelected.properties.name || userSelected.properties.names || userSelected.properties?.email   },cEventUser.value,cEvent.value)
+                                       
+                      if (sendResp._id) {
+                        let notificationR = {
+                          idReceive: userSelected._id,
+                          idEmited: sendResp._id,
+                          emailEmited:
+                          cEventUser.value?.email ||
+                          cEventUser.value.user?.email,
+                          message:
+                            ( cEventUser.value.names ||
+                              cEventUser.value.user.names||  cEventUser.value.user.name) +
+                            'te ha enviado solicitud de amistad',
+                          name: 'notification.name',
+                          type: 'amistad',
+                          state: '0',
+                        };      
+                        addNotification(
+                          notificationR,
+                          cEvent.value,
+                          cEventUser.value
+                        ); 
+                        props.setViewPerfil({ view: !props.viewPerfil, perfil: null })
+                        notification['success']({
+                          message: 'Correcto!',
+                          description:
+                            'Se ha enviado la solicitud de amistad correctamente',
+                        });                       
                      }else{
-                       alert("Error al guardar")
+                       console.log("Error al guardar")
                      }
                     }}
                   />
                 )}
               </Tooltip>
               <Tooltip title='Ir al chat privado'>
-                {props.profileuser && props.profileuser._id !== cUser.value._id && (
+                {userSelected && userSelected._id !== cUser.value._id && (
                   <Button
                     size='large'
                     shape='circle'
@@ -86,12 +123,12 @@ const DrawerProfile = (props) => {
                 )}
               </Tooltip>
               <Tooltip title='Solicitar cita'>
-                {props.profileuser._id !== cUser.value._id && (
+                {userSelected?._id !== cUser.value._id && (
                   <Button
                     size='large'
                     shape='circle'
                     onClick={async () => {
-                      props.setUserAgenda({...props.profileuser,userId:props.profileuser._id,_id:props.profileuser.eventUserId})
+                      props.setUserAgenda({...userSelected,userId:userSelected._id,_id:userSelected.eventUserId})
                       props.setViewPerfil({ view: !props.viewPerfil, perfil: null })
                       // alert("AGENDAR CITA")
                     }}
@@ -108,20 +145,20 @@ const DrawerProfile = (props) => {
           className='asistente-list' //agrega el estilo a la barra de scroll
           span={24}
           style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'scroll' }}>
-          {!props.profileuser && <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>}
-
-          {//props.profileuser._id == cUser.value._id ? (
+          {(!userSelected || !propertiesProfile ) && <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>}
+           
+          {//userSelected._id == cUser.value._id ? (            
             <List
               bordered
-              dataSource={propertiesProfile && propertiesProfile.propertiesUserPerfil}
+              dataSource={propertiesProfile && propertiesProfile.propertiesUserPerfil }
               renderItem={(item) =>
-                (((!item.visibleByContacts || item.visibleByContacts == 'public') && !item.visibleByAdmin) ||
-                  props.profileuser._id == cUser.value._id) &&
-                props.profileuser.properties[item.name] && (
-                  <List.Item>
+                (((item.visibleByContacts && isMycontact) || (!item.visibleByContacts && !item.visibleByAdmin) ) ||
+                  userSelected?._id == cUser.value._id) &&
+                userSelected?.properties[item.name] && (
+                  <List.Item>   
                     <List.Item.Meta
                       title={item.label}
-                      description={formatDataToString(props.profileuser.properties[item.name], item)}
+                      description={formatDataToString(userSelected.properties[item.name], item)}
                     />
                   </List.Item>
                 )
@@ -162,4 +199,4 @@ const mapDispatchToProps = {
   setUserAgenda,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DrawerProfile);
+export default connect(mapStateToProps, mapDispatchToProps)(withContext(DrawerProfile));

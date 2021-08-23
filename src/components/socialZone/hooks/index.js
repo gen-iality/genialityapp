@@ -4,11 +4,11 @@ export const monitorEventPresence = (event_id, attendeeListPresence, setAttendee
   var eventpresenceRef = fireRealtime.ref('status/' + event_id);
   eventpresenceRef.on('value', (snapshot) => {
     const data = snapshot.val();
-
     let datalist = [];
     let attendeeListClone = { ...attendeeListPresence };
 
     if (data === null) return;
+
     Object.keys(data).map((key) => {
       let attendee = attendeeListClone[key] || {};
       attendee['state'] = data[key]['state'];
@@ -16,6 +16,7 @@ export const monitorEventPresence = (event_id, attendeeListPresence, setAttendee
       attendeeListClone[key] = attendee;
       datalist.push(attendee);
     });
+
     setAttendeeListPresence(attendeeListClone);
   });
   return true;

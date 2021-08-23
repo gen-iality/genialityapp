@@ -1,9 +1,8 @@
-import { fireRealtime,app } from '../helpers/firebase';
+import { fireRealtime, app } from '../helpers/firebase';
 import { getCurrentUser } from '../helpers/request';
 
 let initUserPresence = async (event_id) => {
   const user = await getCurrentUser();
-
   if (!user) return;
 
   initUserPresenceInner(user.uid, event_id);
@@ -28,12 +27,12 @@ let initUserPresenceInner = (uid, event_id) => {
   // or online.
   var isOfflineForDatabase = {
     state: 'offline',
-    last_changed: app.database.ServerValue.TIMESTAMP
+    last_changed: app.database.ServerValue.TIMESTAMP,
   };
 
   var isOnlineForDatabase = {
     state: 'online',
-    last_changed: app.database.ServerValue.TIMESTAMP
+    last_changed: app.database.ServerValue.TIMESTAMP,
   };
 
   // Create a reference to the special '.info/connected' path in

@@ -1,0 +1,27 @@
+.ant-card.horizontal {
+display:flex;
+flex-basis: 0;
+}
+.ant-card.horizontal  .ant-typography {
+	margin-bottom:0;
+}
+
+.ant-card.horizontal  .ant-card-cover{
+	/* flex-grow: 1;
+    flex-basis: 0; */
+}
+
+.ant-card.horizontal  .ant-card-body{
+	padding: 4px 6px;
+	margin: 0 0 ;
+	/* flex-grow: 1;
+    flex-basis: 0; */
+
+}
+
+
+.ant-card.horizontal  .ant-card-body .ant-card-meta {
+	padding:0;
+	margin:0;
+}
+

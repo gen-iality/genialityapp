@@ -179,7 +179,6 @@ const Landing = (props) => {
 
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
 
-  console.log('cEventContext==>', cEventContext.value?.styles);
   return (
     <>
       <Layout>
@@ -196,7 +195,7 @@ const Landing = (props) => {
           <Content
             className='site-layout-background'
             style={{
-              paddingBottom: '15vh',
+              // paddingBottom: '15vh',
               backgroundSize: 'cover',
               background: `${cEventContext.value && cEventContext.value?.styles?.containerBgColor}`,
               backgroundImage: `url(${cEventContext.value && cEventContext.value?.styles?.BackgroundImage})`,

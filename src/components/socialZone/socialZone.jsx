@@ -1,6 +1,6 @@
 import { withRouter } from 'react-router-dom';
 import { firestore } from '../../helpers/firebase';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Tabs, Row, Badge, Col, notification, Button, Alert } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone, SearchOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
@@ -15,6 +15,7 @@ import GameRanking from '../events/game/gameRanking';
 import { useRef } from 'react';
 import { UseEventContext } from '../../Context/eventContext';
 import { UseCurrentUser } from '../../Context/userContext';
+import { HelperContext } from '../../Context/HelperContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { monitorEventPresence } from './hooks';
@@ -35,8 +36,6 @@ let SocialZone = function(props) {
 
   const [attendeeList, setAttendeeList] = useState({});
   const [attendeeListPresence, setAttendeeListPresence] = useState({});
-  const [currentChat, setCurrentChatInner] = useState(null);
-  const [currentChatName, setCurrentChatNameInner] = useState('');
   const [availableChats, setavailableChats] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
@@ -46,48 +45,35 @@ let SocialZone = function(props) {
   let [isFiltered, setIsFiltered] = useState(false);
   let busquedaRef = useRef();
   let history = useHistory();
-
+  let { HandleGoToChat } = useContext(HelperContext);
   let userName = cUser.value ? cUser.value?.names : cUser.value?.name ? cUser.value?.name : '---';
 
-  let setCurrentChat = (id, chatname) => {
-    setCurrentChatInner(id);
-    setCurrentChatNameInner(chatname);
-  };
+  useEffect(() => {
+    if (cEvent.value) {
+      monitorEventPresence(cEvent.value._id, attendeeList, setAttendeeListPresence);
+    }
+  }, [cEvent.value]);
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     return ida < idb ? ida + '_' + idb : idb + '_' + ida;
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
-    let newId = generateUniqueIdFromOtherIds(cUser.value._id, idOtherUser);
+    let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
-
-    if (!cUser.value._id) return;
     //agregamos una referencia al chat para el usuario actual
-    data = {
-      id: newId,
-      name: otherUserName || '--',
-      participants: [idcurrentUser, idOtherUser],
-      type: 'onetoone',
-      remitente: currentName,
-    };
+    data = { id: newId, name: otherUserName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
-      .set({ ...data }, { merge: true });
+      .set(data, { merge: true });
 
     //agregamos una referencia al chat para el otro usuario del chat
-    data = {
-      id: newId,
-      name: currentName || '--',
-      participants: [idcurrentUser, idOtherUser],
-      type: 'onetoone',
-      remitente: otherUserName,
-    };
+    data = { id: newId, name: currentName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
-      .set({ ...data }, { merge: true });
+      .set(data, { merge: true });
 
-    setCurrentChat(newId, otherUserName);
+    HandleGoToChat(idcurrentUser, idOtherUser, currentName,newId);
   };
 
   const handleChange = async (e) => {
@@ -147,9 +133,11 @@ let SocialZone = function(props) {
         let newmsj = 0;
         querySnapshot.forEach((doc) => {
           data = doc.data();
+
           if (data.newMessages) {
             newmsj += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
           }
+
           list.push(data);
         });
 
@@ -186,8 +174,7 @@ let SocialZone = function(props) {
               icon: <MessageTwoTone />,
               onClick: () => {
                 props.settabselected('chat2');
-
-                setCurrentChat(change.doc.data().id, change.doc.data().name);
+                // setCurrentChat(change.doc.data().id, change.doc.data().name);
                 notification.destroy();
               },
             });
@@ -237,9 +224,6 @@ let SocialZone = function(props) {
           <ChatList
             props={props}
             availableChats={availableChats}
-            setCurrentChat={setCurrentChat}
-            currentChatName={currentChatName}
-            currentChat={currentChat}
             totalNewMessages={totalNewMessages}
             setTotalNewMessages={setTotalNewMessages}
             settabselected={props.settabselected}
@@ -303,7 +287,6 @@ let SocialZone = function(props) {
                 </Row>
               ) : (
                 <AttendeList
-                  setCurrentChat={setCurrentChat}
                   agendarCita={props.agendarCita}
                   notificacion={props.notificacion}
                   sendFriendship={props.sendFriendship}
@@ -311,8 +294,6 @@ let SocialZone = function(props) {
                   section={props.section}
                   containNetWorking={props.containNetWorking}
                   busqueda={strAttende}
-                  currentChat={currentChat}
-                  currentChatName={currentChatName}
                   createNewOneToOneChat={createNewOneToOneChat}
                   attendeeList={attendeeList}
                   attendeeListPresence={attendeeListPresence}

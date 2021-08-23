@@ -10,10 +10,9 @@ import { UseEventContext } from '../../Context/eventContext';
 import { UseUserEvent } from '../../Context/eventUserContext';
 import { Link } from 'react-router-dom';
 import * as StageActions from '../../redux/stage/actions';
-import { truncate } from 'lodash-es';
 
 const { gotoActivity } = StageActions;
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 let MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setActivity, eventUser }) => {
   const [infoActivity, setInfoActivity] = useState({});
@@ -124,24 +123,42 @@ const VirtualConference = () => {
 
           .map((item, key) => (
             <>
-              <div key={key} hoverable className='animate__animated animate__slideInRight'>
-                <Link to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}` : `${urlAgenda}`}>
+              <Card
+                // actions={[
+                //   <Link key='setting' to={`${urlAgenda}`}>
+                //     <Button type='primary' key='setting'>
+                //       {' '}
+                //       Ver más actividades
+                //     </Button>
+                //     ,
+                //   </Link>,
+                // ]}
+                key={key}
+                hoverable
+                style={{
+                  height: 'auto',
+                  maxHeight: '300px',
+                  minHeight: '204px',
+                  marginTop: '8px',
+                  marginBottom: '8px',
+                }}
+                className='animate__animated animate__slideInRight'>
+                <Link to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}`:`${urlAgenda}`}>
                   <Row justify='center' align='middle' gutter={[8, 8]}>
-                    <Col xs={6} sm={6} md={6} lg={6} xl={6} xxl={6}>
+                    <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
                       <div
-                        className='animate__animated animate__pulse animate__infinite animate__slow'
-                        style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
+                        style={{ justifyContent: 'center', alignContent: 'center', display: 'grid', height: '140px' }}>
                         {item.habilitar_ingreso == 'open_meeting_room' ? (
                           <>
-                            <img src={ENVIVO} style={{ height: '30px' }} />
-                            <span className='ultrasmall-mobile' style={{ textAlign: 'center'}}>
+                            <img src={ENVIVO} style={{ height: '70px' }} />
+                            <span style={{ textAlign: 'center', fontSize: '18px' }}>
                               {<FormattedMessage id='live' defaultMessage='En vivo' />}
                             </span>
                           </>
                         ) : item.habilitar_ingreso == 'closed_meeting_room' ? (
                           <>
-                            <FieldTimeOutlined style={{ fontSize: '30px', color: '#FAAD14' }} />
-                            <span className='ultrasmall-mobile' style={{ textAlign: 'center' }}>
+                            <FieldTimeOutlined style={{ fontSize: '70px', color: '#FAAD14' }} />
+                            <span style={{ textAlign: 'center', fontSize: '18px' }}>
                               {<FormattedMessage id='live.closed' defaultMessage='Iniciará pronto' />}
                             </span>
                           </>
@@ -150,48 +167,61 @@ const VirtualConference = () => {
                         )}
                       </div>
                     </Col>
-
-                    <Col xs={18} sm={18} md={12} lg={12} xl={12} xxl={12}>
+                    <Col xs={16} sm={16} md={12} lg={12} xl={12} xxl={12}>
                       <div style={{ alignContent: 'center', display: 'grid', height: '100%', alignItems: 'center' }}>
-                        
-                        <Text strong={truncate} ellipsis={{ rows: 1, expandable: true }}>
-                          <a>{item.name}</a>
-                        </Text>
-                        <Text>
-                          {Moment(item.datetime_start).format('LL')}
-                          <span>&nbsp;&nbsp;&nbsp;</span>
-                          {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
-                            .tz(Moment.tz.guess())
-                            .format('h:mm A')}
-                          {' - '}
-                          {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
-                            .tz(Moment.tz.guess())
-                            .format('h:mm A')}
-                          <span className='ultrasmall-mobile'>
-                            {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                        <Title
+                          level={4}
+                          ellipsis={{
+                            rows: 3, // Determina la cantidad de filas que se muestran antes de cortar el texto.
+                            expandable: true,
+                            symbol: (
+                              <span style={{ color: '#2D7FD6', fontSize: '14px' }}>
+                                {Moment.locale() == 'en' ? 'More activities' : 'Ver más actividades'}{' '}
+                                {/* Se valido de esta forma porque el componente FormattedMessage no hacia
+                             efecto en la prop del componente de Ant design */}
+                              </span>
+                            ),
+                          }}>
+                          {item.name}
+                        </Title>
+                        {item.habilitar_ingreso == 'open_meeting_room' ? (
+                          ''
+                        ) : (
+                          <h2 style={{ color: '#7c909a', fontSize: '16px' }}>
+                            {Moment(item.datetime_start).format('LL')}
+                            <span>&nbsp;&nbsp;&nbsp;</span>
+                            {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
                               .tz(Moment.tz.guess())
-                              .format(' (Z)')}
-                          </span>
-                          <a>{item.habilitar_ingreso == 'open_meeting_room'?' Ingresar':' Ver' }</a>
-                        </Text>
-                        
+                              .format('h:mm A')}
+                            {' - '}
+                            {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                              .tz(Moment.tz.guess())
+                              .format('h:mm A')}
+                            <span className='ultrasmall-mobile'>
+                              {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
+                                .tz(Moment.tz.guess())
+                                .format(' (Z)')}
+                            </span>
+                          </h2>
+                        )}
                       </div>
-                      {/* <div>
+                      <div>
                         <MeetingConferenceButton
                           activity={item}
                           event={cEvent.value}
                           setActivity={gotoActivity}
                           eventUser={cEventUser.value}
                         />
-                      </div> */}
+                      </div>
                     </Col>
                     <Col xs={0} sm={0} md={6} lg={6} xl={6} xxl={6}>
-                      <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
+                      <div
+                        style={{ justifyContent: 'center', alignContent: 'center', display: 'grid', height: '153px' }}>
                         {item.hosts && (
                           <div className='Virtual-Conferences'>
                             <Avatar.Group
                               maxCount={2}
-                              size={{ xs: 18, sm: 18, md: 35, lg: 50, xl: 50, xxl: 50 }}
+                              size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 80, xxl: 80 }}
                               maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}>
                               {item.hosts.length < 3
                                 ? item.hosts.map((host, key) => {
@@ -199,7 +229,7 @@ const VirtualConference = () => {
                                       <Tooltip title={host.name} key={key}>
                                         <Avatar
                                           src={host.image}
-                                          size={{ xs: 40, sm: 40, md: 40, lg: 55, xl: 55, xxl: 55 }}
+                                          size={{ xs: 50, sm: 50, md: 50, lg: 85, xl: 85, xxl: 85 }}
                                         />
                                       </Tooltip>
                                     );
@@ -210,7 +240,7 @@ const VirtualConference = () => {
                                         <Avatar
                                           key={key}
                                           src={host.image}
-                                          size={{ xs: 18, sm: 18, md: 35, lg: 50, xl: 50, xxl: 50 }}
+                                          size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 80, xxl: 80 }}
                                         />
                                       </Tooltip>
                                     );
@@ -222,7 +252,7 @@ const VirtualConference = () => {
                     </Col>
                   </Row>
                 </Link>
-              </div>
+              </Card>
             </>
           ))}
     </Fragment>

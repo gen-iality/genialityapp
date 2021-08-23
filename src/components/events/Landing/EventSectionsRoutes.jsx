@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch, useParams, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Spin, Drawer } from 'antd';
+
 /** --------------------
  *  secciones del evento
  * ---------------------*/
@@ -30,14 +30,15 @@ import PageNotPermissions from './PageNotPermissions';
 import Productos from '../producto/index';
 import MessageRegister from '../registrationForm/messageRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
+import ListVideoCard from '../../shared/listVideoCard';
+import initUserPresence from '../../../containers/userPresenceInEvent';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let redirect;
-  const { about } = useParams();
+
   if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
     redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
-    console.log();
   } else {
     redirect = 'evento';
   }
@@ -57,9 +58,18 @@ const EventSectionRoutes = (props) => {
     }
   }
 
+  useEffect(async () => {
+    props.cEvent.value && (await initUserPresence(props.cEvent.value._id));
+  }, [props.cEvent.value]);
+
   return (
     <>
-      {props.viewVirtualconference && <VirtualConference />}
+      {props.viewVirtualconference && (
+        <>
+          <VirtualConference />
+          <ListVideoCard idevent={props.cEvent.value} />
+        </>
+      )}
 
       <Switch>
         <Route exact path={`${path}/`}>
