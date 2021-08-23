@@ -53,14 +53,14 @@ export const HelperContextProvider = ({ children }) => {
   };
 
   function HandleGoToChat(idactualuser, idotheruser, chatname, chatid) {
-    console.log('====================================');
+    console.log('=======idotheruser========',idotheruser);
     console.log('datachat', {
       idactualuser,
       idotheruser,
       chatname,
       chatid,
     });
-    console.log('====================================');
+    console.log('=========idactualuser====================',idactualuser);
     let data = {
       chatid: chatid ? chatid : generateUniqueIdFromOtherIds(idactualuser, idotheruser),
       idactualuser,

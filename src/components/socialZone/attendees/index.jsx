@@ -19,9 +19,12 @@ const AttendeList = function(props) {
 
   useEffect(() => {
     let ordenadousers = [];
-
+    console.log('====================================');
+    console.log('aja', props.attendeeList);
+    console.log('====================================');
     Object.keys(props.attendeeList).map((key) => {
       let mihijo = {
+        uid: props.attendeeList[key].user.uid,
         idattendpresence: key,
         iduser: props.attendeeList[key].account_id,
         name: props.attendeeList[key].properties.name,
@@ -29,7 +32,7 @@ const AttendeList = function(props) {
         status: props.attendeeListPresence[key] ? props.attendeeListPresence[key].state : 'offline',
         email: props.attendeeList[key].properties.email,
         properties: props.attendeeList[key].properties,
-        _id:props.attendeeList[key]._id
+        _id: props.attendeeList[key]._id,
       };
 
       if (mihijo.status === 'online') {
@@ -108,7 +111,7 @@ const AttendeList = function(props) {
                     props.createNewOneToOneChat(
                       cUser.value.uid,
                       cUser.value.names || cUser.value.name,
-                      item.iduser,
+                      item.uid,
                       item.names || item.name
                     );
                     props.settabselected('1');

@@ -47,7 +47,9 @@ let SocialZone = function(props) {
   let history = useHistory();
   let { HandleGoToChat } = useContext(HelperContext);
   let userName = cUser.value ? cUser.value?.names : cUser.value?.name ? cUser.value?.name : '---';
-
+console.log('====================================');
+console.log("mi usuario", cUser.value);
+console.log('====================================');
   useEffect(() => {
     if (cEvent.value) {
       monitorEventPresence(cEvent.value._id, attendeeList, setAttendeeListPresence);
