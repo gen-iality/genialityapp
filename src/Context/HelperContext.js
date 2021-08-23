@@ -53,14 +53,14 @@ export const HelperContextProvider = ({ children }) => {
   };
 
   function HandleGoToChat(idactualuser, idotheruser, chatname, chatid) {
-    console.log('=======idotheruser========',idotheruser);
-    console.log('datachat', {
-      idactualuser,
-      idotheruser,
-      chatname,
-      chatid,
-    });
-    console.log('=========idactualuser====================',idactualuser);
+    // console.log('=======idotheruser========',idotheruser);
+    // console.log('datachat', {
+    //   idactualuser,
+    //   idotheruser,
+    //   chatname,
+    //   chatid,
+    // });
+    // console.log('=========idactualuser====================',idactualuser);
     let data = {
       chatid: chatid ? chatid : generateUniqueIdFromOtherIds(idactualuser, idotheruser),
       idactualuser,
@@ -158,21 +158,21 @@ export const HelperContextProvider = ({ children }) => {
             obtenerNombreActivity(change.doc.id)?.name != null &&
             change.type === 'modified'
           ) {
-            let message = obtenerNombreActivity(change.doc.id)?.name + ' está en vivo..';
+            let message = obtenerNombreActivity(change.doc.id)?.name + ' ' + ' está en vivo..';
             ChangeActiveNotification(true, message, 'open', change.doc.id);
           } else if (
             change.doc.data().habilitar_ingreso == 'ended_meeting_room' &&
             obtenerNombreActivity(change.doc.id)?.name != null &&
             change.type === 'modified'
           ) {
-            let message = obtenerNombreActivity(change.doc.id)?.name + 'ha terminado..';
+            let message = obtenerNombreActivity(change.doc.id)?.name + ' ' +  'ha terminado..';
             ChangeActiveNotification(true, message, 'ended', change.doc.id);
           } else if (
             change.doc.data().habilitar_ingreso == 'closed_meeting_room' &&
             change.type === 'modified' &&
             obtenerNombreActivity(change.doc.id)?.name != null
           ) {
-            let message = obtenerNombreActivity(change.doc.id)?.name + 'está por iniciar';
+            let message = obtenerNombreActivity(change.doc.id)?.name + ' ' + 'está por iniciar';
             ChangeActiveNotification(true, message, 'close', change.doc.id);
           }
         });

@@ -19,9 +19,7 @@ const AttendeList = function(props) {
 
   useEffect(() => {
     let ordenadousers = [];
-    console.log('====================================');
-    console.log('aja', props.attendeeList);
-    console.log('====================================');
+
     Object.keys(props.attendeeList).map((key) => {
       let mihijo = {
         uid: props.attendeeList[key].user.uid,

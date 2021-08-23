@@ -47,9 +47,7 @@ let SocialZone = function(props) {
   let history = useHistory();
   let { HandleGoToChat } = useContext(HelperContext);
   let userName = cUser.value ? cUser.value?.names : cUser.value?.name ? cUser.value?.name : '---';
-console.log('====================================');
-console.log("mi usuario", cUser.value);
-console.log('====================================');
+
   useEffect(() => {
     if (cEvent.value) {
       monitorEventPresence(cEvent.value._id, attendeeList, setAttendeeListPresence);
@@ -61,9 +59,9 @@ console.log('====================================');
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
-    console.log('====================================');
-    console.log("veces ejecuta");
-    console.log('====================================');
+   console.log('====================================');
+   console.log("se ejecuta eso");
+   console.log('====================================');
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
     //agregamos una referencia al chat para el usuario actual
