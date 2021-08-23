@@ -154,7 +154,8 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       idReceive: usId.account_id,
       idEmited: resp,
       emailEmited: 'email@gmail.com',
-      message: `${usId.names || usId.user.names || usId.user.name || usId.user.email } te ha enviado cita`,
+      message: `${cEventUser.value.names ||
+        cEventUser.value.user.names||  cEventUser.value.user.name } te ha enviado cita`,
       name: 'notification.name',
       type: 'agenda',
       state: '0',

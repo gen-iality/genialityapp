@@ -362,6 +362,8 @@ let AgendaActividadDetalle = (props) => {
       Moment.locale(window.navigator.language);
    }
 
+   console.log('Estado',meetingState)
+
    return (
       <div className='is-centered'>
          <div className=' container_agenda-information container-calendar2 is-three-fifths'>
@@ -398,14 +400,14 @@ let AgendaActividadDetalle = (props) => {
                      style={{ padding: '4px' }}>
                      <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
                         <Col>
-                           {meetingState === 'open_meeting_room' || stateSpace ? (
+                           {meetingState === 'open_meeting_room' ? (
                               <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
                            ) : meetingState === 'ended_meeting_room' &&
                              currentActivity !== null &&
                              currentActivity.video ? (
                               <CaretRightOutlined style={{ fontSize: '30px' }} />
                            ) : meetingState === 'ended_meeting_room' &&
-                             ((currentActivity !== null && currentActivity.image) || image_event) ? (
+                             currentActivity !== null  ? (
                               <CheckCircleOutlined style={{ fontSize: '30px' }} />
                            ) : meetingState === '' || meetingState == null ? (
                               <></>
@@ -424,12 +426,12 @@ let AgendaActividadDetalle = (props) => {
                            alignItems: 'center',
                            justifyContent: 'center',
                         }}>
-                        {meetingState === 'open_meeting_room' || stateSpace
+                        {meetingState === 'open_meeting_room'
                            ? 'En vivo'
                            : meetingState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video
                            ? 'Grabado'
                            : meetingState === 'ended_meeting_room' &&
-                             ((currentActivity !== null && currentActivity.image) || image_event)
+                             currentActivity !== null
                            ? 'Terminada'
                            : meetingState === 'closed_meeting_room'
                            ? 'Por iniciar'
