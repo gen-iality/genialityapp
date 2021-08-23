@@ -28,13 +28,13 @@ let UserStatusAndMenu = (props) => {
   let logout = props.logout;
   let eventId = props.eventId; 
   useEffect(() => {
-    if (props.eventId && props.userEvent) {
+   /* if (props.eventId && props.userEvent) {
       eventuserData();
     }
 
     async function eventuserData() {     
       let user = await EventsApi.getEventUser(props.userEvent._id, props.eventId);
-    }
+    }*/
   }, [props.eventId && props.userEvent]);
 
   let menu = (

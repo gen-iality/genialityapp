@@ -653,8 +653,8 @@ class ListEventUser extends Component {
                             bordered={true}>
                             <Meta
                               avatar={
-                                <Avatar>
-                                  {users.properties.names
+                                <Avatar src={users.properties['picture']?users.properties['picture']:''}>
+                                  {!users.properties['picture'] &&users.properties.names
                                     ? users.properties.names.charAt(0).toUpperCase()
                                     : users.properties.names}
                                 </Avatar>
