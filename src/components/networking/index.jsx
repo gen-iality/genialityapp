@@ -206,6 +206,8 @@ class ListEventUser extends Component {
 
       let asistantData = await EventFieldsApi.getAll(this.props.cEvent.value._id);
 
+      console.log("USERS==>",eventUserList)
+
       this.setState((prevState) => {
         return {
           userReq: eventUserList, //request original
@@ -695,8 +697,7 @@ class ListEventUser extends Component {
                                             this.setState({
                                               eventUserIdToMakeAppointment: users._id,
                                               eventUserToMakeAppointment: users,
-                                            });
-                                            console.log("USERS SELECTED==>",users)
+                                            });                                           
                                           }}>
                                           {'Agendar cita'}
                                         </Button>
