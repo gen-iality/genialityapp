@@ -59,6 +59,9 @@ let SocialZone = function(props) {
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
+    console.log('====================================');
+    console.log("veces ejecuta");
+    console.log('====================================');
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
     //agregamos una referencia al chat para el usuario actual

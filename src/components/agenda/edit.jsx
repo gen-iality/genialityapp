@@ -8,10 +8,10 @@ import Creatable from 'react-select';
 import { FaWhmcs } from 'react-icons/fa';
 import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import { Tabs, message, Row, Col, Checkbox } from 'antd';
+import { Tabs, message, Row, Col, Checkbox, Space } from 'antd';
 import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
-
+import { DeleteOutlined } from '@ant-design/icons';
 // En revision vista previa
 //import ZoomComponent from '../events/zoomComponent';
 
@@ -236,7 +236,7 @@ class AgendaEdit extends Component {
       isLoading,
     });
 
-    this.name.current.focus();
+    this.name?.current?.focus();
     this.validateRoom();
   }
 
@@ -521,21 +521,13 @@ class AgendaEdit extends Component {
   };
 
   //FN para eliminar la actividad
-  remove = () => {
+  remove = async () => {
     if (this.state.activity_id) {
-      sweetAlert.twoButton(`Está seguro de borrar esta actividad`, 'warning', true, 'Borrar', async (result) => {
-        try {
-          if (result.value) {
-            sweetAlert.showLoading('Espera (:', 'Borrando...');
-            await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id);
-            this.setState({ redirect: true });
-            sweetAlert.hideLoading();
-          }
-        } catch (e) {
-          sweetAlert.showError(handleRequestError(e));
-        }
-      });
-    } else this.setState({ redirect: true });
+      if (await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id)) {
+        this.setState({ redirect: true });
+        sweetAlert.showSuccess('Correcto', 'Actividad eliminada');
+      }
+    }
   };
 
   //Validación de campos
@@ -869,12 +861,14 @@ class AgendaEdit extends Component {
 
                 <div className='column is-5 general'>
                   <div className='field is-grouped'>
-                    <button className='button is-text' onClick={this.remove}>
-                      x Eliminar actividad
-                    </button>
-                    <button onClick={this.submit} className='button is-primary'>
-                      Guardar
-                    </button>
+                    <Space>
+                      <Button icon={<DeleteOutlined />} type='danger' dashed onClick={this.remove}>
+                        Eliminar actividad
+                      </Button>
+                      <button onClick={this.submit} className='button is-primary'>
+                        Guardar
+                      </button>
+                    </Space>
                   </div>
                   <div className='field is-grouped'>
                     <button onClick={this.submit2} className='button is-primary'>
@@ -885,9 +879,9 @@ class AgendaEdit extends Component {
                     <div className='field'>
                       <label className='label has-text-grey-light'>Imagen</label>
                       <p>Dimensiones: 1000px x 278px</p>
-                        <Dropzone  onDrop={this.changeImg} accept='image/*' className='zone'>
-                          <button className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</button>
-                        </Dropzone>
+                      <Dropzone onDrop={this.changeImg} accept='image/*' className='zone'>
+                        <button className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</button>
+                      </Dropzone>
                       {image && <img src={image} alt={`activity_${name}`} />}
                     </div>
                     <div className='field'>
