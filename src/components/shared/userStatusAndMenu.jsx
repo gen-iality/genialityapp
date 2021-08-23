@@ -26,14 +26,13 @@ let UserStatusAndMenu = (props) => {
   let photo = props.photo;
   let name = props.name;
   let logout = props.logout;
-  let eventId = props.eventId;
-
+  let eventId = props.eventId; 
   useEffect(() => {
     if (props.eventId && props.userEvent) {
       eventuserData();
     }
 
-    async function eventuserData() {
+    async function eventuserData() {     
       let user = await EventsApi.getEventUser(props.userEvent._id, props.eventId);
     }
   }, [props.eventId && props.userEvent]);

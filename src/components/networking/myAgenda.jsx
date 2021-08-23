@@ -199,7 +199,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   const [deleted, setDeleted] = useState(false);
 
   //const userName = pathOr('', ['names','name'], data);
-  const userName = data.name || data.names;
+  const userName = data.name_requesting??'Sin nombre';
   //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
   const userEmail = (data.otherEventUser && data.otherEventUser.properties.email) || data.email;
 

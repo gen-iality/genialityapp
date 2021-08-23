@@ -80,11 +80,13 @@ export const addNotification = (notification, event, user) => {
 
 export const isMyContacts=(contact,listContacts)=>{
  let resp=false;  
+ if(Array.isArray(listContacts)){
  listContacts.map((contacts)=>{
     if(contacts._id==contact.eventUserId){        
       resp=true;    
       return;
     }
   })
+}
   return resp;
 }
