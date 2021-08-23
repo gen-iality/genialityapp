@@ -18,7 +18,7 @@ const initialStateNotification = {
 export const HelperContextProvider = ({ children }) => {
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  let cEventuser=UseUserEvent()
+  let cEventuser = UseUserEvent();
   const [containtNetworking, setcontaintNetworking] = useState(false);
   const [infoAgenda, setinfoAgenda] = useState(null);
   const [isNotification, setisNotification] = useState(initialStateNotification);
@@ -35,7 +35,7 @@ export const HelperContextProvider = ({ children }) => {
     idotheruser: null,
     chatname: null,
   });
-  const [contacts,setContacts]=useState([])
+  const [contacts, setContacts] = useState([]);
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     let chatid;
@@ -53,6 +53,14 @@ export const HelperContextProvider = ({ children }) => {
   };
 
   function HandleGoToChat(idactualuser, idotheruser, chatname, chatid) {
+    console.log('====================================');
+    console.log('datachat', {
+      idactualuser,
+      idotheruser,
+      chatname,
+      chatid,
+    });
+    console.log('====================================');
     let data = {
       chatid: chatid ? chatid : generateUniqueIdFromOtherIds(idactualuser, idotheruser),
       idactualuser,
@@ -112,13 +120,13 @@ export const HelperContextProvider = ({ children }) => {
     }
   };
 
-  const obtenerContactos=async()=>{   
-      // Servicio que trae los contactos
-   let contacts= await Networking.getContactList(cEvent.value._id, cEventuser.value._id)
-   if(contacts){
-    setContacts(contacts)    
-   }       
-  }
+  const obtenerContactos = async () => {
+    // Servicio que trae los contactos
+    let contacts = await Networking.getContactList(cEvent.value._id, cEventuser.value._id);
+    if (contacts) {
+      setContacts(contacts);
+    }
+  };
 
   const obtenerNombreActivity = (activityID) => {
     const act = infoAgenda && infoAgenda.filter((ac) => ac._id == activityID);
@@ -194,7 +202,7 @@ export const HelperContextProvider = ({ children }) => {
 
             if (notification.state === '0') {
               contNotifications++;
-            }    
+            }
             //Notificacion tipo agenda
             if (notification.type == 'agenda' && notification.state === '0') {
               notAg.push(doc.data());
@@ -219,14 +227,14 @@ export const HelperContextProvider = ({ children }) => {
 
     if (cUser.value != null && cEvent.value != null) {
       fetchNetworkingChange();
-    }    
+    }
   }, [cUser.value, cEvent.value]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (cEventuser.value != null && cEvent.value != null) {
       obtenerContactos();
     }
-  },[cEventuser.value,cEvent.value])
+  }, [cEventuser.value, cEvent.value]);
 
   return (
     <HelperContext.Provider
@@ -245,7 +253,7 @@ export const HelperContextProvider = ({ children }) => {
         activitiesEvent,
         chatActual,
         HandleGoToChat,
-        contacts
+        contacts,
       }}>
       {children}
     </HelperContext.Provider>
