@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { firestore } from '../../../helpers/firebase';
 import RankingList from './rankingList';
 import RankingMyScore from './rankingMyScore';
-import { connect } from 'react-redux';
 import { Divider } from 'antd';
+import { UseSurveysContext } from '../../../Context/surveysContext';
+import { UseCurrentUser } from '../../../Context/userContext';
 
 function RankingTrivia(props) {
+  let cSurveys = UseSurveysContext();
+  let currentSurvey = cSurveys.currentSurvey;
+  let cUser = UseCurrentUser();
+  let currentUser = cUser.value;
   const [ranking, setRanking] = useState([]);
   const [myScore, setMyScore] = useState({ name: '', score: 0 });
 
-  const { currentSurvey, currentUser } = props;
   useEffect(() => {
-   
     if (!currentSurvey) return;
     if (!(Object.keys(currentUser).length === 0)) {
       const initialValues = {
@@ -77,9 +80,4 @@ function RankingTrivia(props) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  currentUser: state.user.data,
-  currentSurvey: state.survey.data.currentSurvey,
-});
-
-export default connect(mapStateToProps)(RankingTrivia);
+export default RankingTrivia;

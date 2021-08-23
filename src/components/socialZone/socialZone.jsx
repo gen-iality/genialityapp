@@ -59,6 +59,9 @@ let SocialZone = function(props) {
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
+    console.log('====================================');
+    console.log("veces ejecuta");
+    console.log('====================================');
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
     //agregamos una referencia al chat para el usuario actual
@@ -341,16 +344,14 @@ let SocialZone = function(props) {
               </Button>
             </Col> */}
           </Row>
-          {props.currentSurvey === null && cUser.value !== null ? (
+          {cUser.value !== null ? (
             <SurveyList
               eventSurveys={props.eventSurveys}
               publishedSurveys={props.publishedSurveys}
               listOfEventSurveys={props.listOfEventSurveys}
               loadingSurveys={props.loadingSurveys}
             />
-          ) : props.currentSurvey !== null && cUser.value !== null ? (
-            <SurveyDetail />
-          ) : (
+          ) :  (
             <div style={{ paddingTop: 30 }}>
               <Alert
                 showIcon
