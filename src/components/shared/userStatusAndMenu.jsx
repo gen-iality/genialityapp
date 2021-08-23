@@ -34,7 +34,7 @@ let UserStatusAndMenu = (props) => {
     }
 
     async function eventuserData() {
-      let user = await EventsApi.getEventUser(props.userEvent._id, '5f7f21217828e17d80642856');
+      let user = await EventsApi.getEventUser(props.userEvent._id, props.eventId);
     }
   }, [props.eventId && props.userEvent]);
 

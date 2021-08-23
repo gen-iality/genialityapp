@@ -236,7 +236,7 @@ class AgendaEdit extends Component {
       isLoading,
     });
 
-    this.name.current.focus();
+    this.name?.current?.focus();
     this.validateRoom();
   }
 
