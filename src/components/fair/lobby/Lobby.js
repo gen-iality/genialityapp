@@ -88,7 +88,6 @@ class Lobby extends Component {
 
         {!this.state.showIntro && (
           <div className='the-intro-access-btn-container'>
-            <StandsList />
             <p
               className='the-intro-access-btn animate__animated animate__pulse animate__slower animate__infinite'
               onClick={this.handleHideIntro}>

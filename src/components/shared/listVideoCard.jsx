@@ -33,6 +33,7 @@ const ListVideoCard = () => {
           <Row>
               {activitiesEvent &&
                 activitiesEvent.map((activity, index) => {
+                  //Solo los últimos 3
                   if (index > 2)return;
                   if (activity.video) {
                     return <Col key={index} xs={0} sm={0} md={24} lg={8} xl={8}>
