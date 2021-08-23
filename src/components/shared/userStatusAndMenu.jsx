@@ -32,20 +32,12 @@ let UserStatusAndMenu = (props) => {
   useEffect(()=>{
     if(props.eventId && props.userEvent){
       eventuserData()
-    }
-    console.log("PROPS MENUITEM==>",props)
+    }   
     
   async function eventuserData(){
-    console.log("USER EVENT==>",props.userEvent)
-    console.log("EVENT ID==>",props.eventId)
-    let user= await EventsApi.getEventUser(props.userEvent._id,'5f7f21217828e17d80642856');
-    console.log("RESP=>",user)
+    let user= await EventsApi.getEventUser(props.userEvent._id,props.eventId);  
   }
-
-  },[props.eventId && props.userEvent])
-
-  
-console.log("PROPS ESTALLA=>",props)
+  },[props.eventId && props.userEvent]) 
   let menu = (
     <Menu>
       <Menu.Item style={ItemStyle}>
