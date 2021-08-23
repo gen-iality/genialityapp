@@ -19,6 +19,7 @@ const requestStatusText = {
 };
 
 function AppointmentRequests({ eventUsers, notificacion }) {
+  console.log("EVENT USERS==>",eventUsers)
   const [loading, setLoading] = useState(true);
   const [loading1, setLoading1] = useState(true);
   const [fetching, setFetching] = useState(false);
@@ -37,6 +38,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
 
       getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
+          console.log("AGENDAS==>",agendas)
         
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             const pendingAgendas = map((agenda) => {
@@ -63,7 +65,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
 
   useEffect(() => {
     if(eventContext && userEventContext){
-    if (eventContext.value._id && userEventContext.value._id) {
+    if (eventContext.value?._id && userEventContext.value?._id) {
       setLoading1(true);
       //setPendingAgendasSent([]);
 
@@ -106,6 +108,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
                 data={pendingAgenda}
                 fetching={fetching}
                 setFetching={setFetching}
+                meSended={true}
               />
             ))
           ) : (
@@ -131,7 +134,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
                 data={pendingAgenda}
                 fetching={fetching}
                 setFetching={setFetching}
-                meSended={true}
+              
               />
             ))
           ) : (
@@ -149,10 +152,9 @@ function AppointmentRequests({ eventUsers, notificacion }) {
 }
 
 function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
-  const [requestResponse, setRequestResponse] = useState('');
-  const { ownerEventUser } = data;
-  const userName = pathOr('', ['properties', 'names'], ownerEventUser);
-  const userEmail = pathOr('', ['properties', 'email'], ownerEventUser);
+  const [requestResponse, setRequestResponse] = useState(''); 
+  const userName = data.name ;
+  const userEmail = data.email;
   //contextos
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
@@ -227,7 +229,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
                 </Col>
               </Row>
               {!requestResponse ? (
-                !meSended && (
+                meSended && (
                   <Row>
                     <Button
                       style={{ marginRight: '10px' }}

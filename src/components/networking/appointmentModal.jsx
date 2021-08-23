@@ -273,7 +273,9 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                             onClick={() => {
                               if (timetableItem.status === 'free') {
                                 setLoading(true);
-                                createAgendaToEventUser({
+                                console.log("targetEventUserId==>",targetEventUserId)
+                                console.log("targetEventUser==>",targetEventUser)
+                               createAgendaToEventUser({
                                   eventId: cEvent.value._id,
                                   eventUser: cEventUser.value,
                                   currentEventUserId: cEventUser.value._id,
