@@ -110,10 +110,7 @@ function SurveyCard(props) {
                                                 className={`${survey.isOpened === 'true' &&
                                                    'animate__animated  animate__pulse animate__slower animate__infinite'}`}
                                                 onClick={() => {
-                                                   currentSurveyStatus &&
-                                                      currentSurveyStatus[survey._id] &&
-                                                      currentSurveyStatus[survey._id].surveyCompleted &&
-                                                      handleClick(survey);
+                                                   handleClick(survey);
                                                 }}>
                                                 {(currentSurveyStatus &&
                                                    currentSurveyStatus[survey._id] &&
