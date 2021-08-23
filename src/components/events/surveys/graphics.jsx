@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import 'chartjs-plugin-datalabels';
-import { Pagination, Spin, Card, Button, Row, Col, Typography } from 'antd';
-import { ArrowLeftOutlined, LeftCircleFilled } from '@ant-design/icons';
+import { Pagination, Card, Button, Row, Col, Typography } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import Loading from './loading';
 
 import Chart from 'chart.js/auto';
@@ -12,10 +12,12 @@ import { SurveysApi, UsersApi } from '../../../helpers/request';
 import { graphicsFrame } from './frame';
 
 import * as SurveyActions from '../../../redux/survey/actions';
+import { SurveysContext } from '../../../Context/surveysContext';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
 class Graphics extends Component {
+  static contextType = SurveysContext
   constructor(props) {
     super(props);
     this.state = {
@@ -293,12 +295,12 @@ class Graphics extends Component {
       paddingTop: '0px',
       paddingBottom: '0px',
     };
-
+    let cSurveys = this.context
     if (dataSurvey.questions)
       return (
         <>
           <Card bodyStyle={{ padding: '0' }} className='survyCard'>
-            <strong style={{ fontSize: '18px' }}>{this.props.currentSurvey.name}</strong>
+            <strong style={{ fontSize: '18px' }}>{cSurveys.currentSurvey.name}</strong>
             <div style={{ marginTop: 5 }}>
               {this.props.currentActivity === null && (
                 <Button
@@ -391,7 +393,7 @@ class Graphics extends Component {
               </>
             ))}
             <br />
-            {this.props.currentSurvey.showNoVotos && this.props.currentSurvey.showNoVotos === 'true' && (
+            {cSurveys.currentSurvey.showNoVotos && cSurveys.currentSurvey.showNoVotos === 'true' && (
               <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
                 <div
                   style={{
@@ -458,7 +460,6 @@ class Graphics extends Component {
 const mapDispatchToProps = { setCurrentSurvey, setSurveyVisible };
 
 const mapStateToProps = (state) => ({
-  currentSurvey: state.survey.data.currentSurvey,
   currentActivity: state.stage.data.currentActivity,
 });
 

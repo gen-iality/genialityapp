@@ -56,8 +56,6 @@ const EventSectionMenuRigth = (props) => {
                 notNewMessages={props.notNewMessage}
                 tabselected={props.tabselected}
                 settabselected={props.settabselected}
-                listOfEventSurveys={props.listOfEventSurveys}
-                loadingSurveys={props.loadingSurveys}
                 setchattab={props.setchattab}
                 chattab={props.chattab}
               />
