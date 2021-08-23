@@ -90,7 +90,10 @@ export function SurveysProvider({ children }) {
 
       return (
          !shouldDisplaySurvey() &&
-         (state.currentSurvey.allow_gradable_survey === 'false' || state.currentSurvey.allow_gradable_survey === false)
+         (state.currentSurvey.allow_gradable_survey === 'false' ||
+            state.currentSurvey.allow_gradable_survey === false ||
+            state.currentSurvey.displayGraphsInGradableSurveys === 'true' ||
+            state.currentSurvey.displayGraphsInGradableSurveys === true)
       );
    }
 
