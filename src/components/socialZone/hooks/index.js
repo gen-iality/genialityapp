@@ -1,24 +1,12 @@
 import { fireRealtime } from '../../../helpers/firebase';
 
 export const monitorEventPresence = (event_id, attendeeListPresence, setAttendeeListPresence) => {
-
-  console.log('====================================');
-  console.log("viene",event_id,attendeeListPresence,setAttendeeListPresence);
-  console.log('====================================');
-
   var eventpresenceRef = fireRealtime.ref('status/' + event_id);
   eventpresenceRef.on('value', (snapshot) => {
     const data = snapshot.val();
-
-    console.log('====================================');
-    console.log("datarealtime",data);
-    console.log('====================================');
     let datalist = [];
     let attendeeListClone = { ...attendeeListPresence };
 
-    console.log('====================================');
-    console.log("attendeeListClone",attendeeListClone);
-    console.log('====================================');
     if (data === null) return;
 
     Object.keys(data).map((key) => {
@@ -28,6 +16,7 @@ export const monitorEventPresence = (event_id, attendeeListPresence, setAttendee
       attendeeListClone[key] = attendee;
       datalist.push(attendee);
     });
+
     setAttendeeListPresence(attendeeListClone);
   });
   return true;

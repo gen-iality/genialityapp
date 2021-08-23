@@ -78,13 +78,13 @@ export const addNotification = (notification, event, user) => {
   }
 };
 
-/* SUCCESS
- notification.open({
-    message: 'Solicitud enviada',
-    description:
-      'Le llegará un correo a la persona notificandole la solicitud, quién la aceptara o recharaza. Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.',
-    icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-    duration: 30,
-  });
-
-   message.warning('Para enviar la solicitud es necesario iniciar sesión');*/
+export const isMyContacts=(contact,listContacts)=>{
+ let resp=false;  
+ listContacts.map((contacts)=>{
+    if(contacts._id==contact.eventUserId){        
+      resp=true;    
+      return;
+    }
+  })
+  return resp;
+}

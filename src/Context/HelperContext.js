@@ -1,10 +1,11 @@
 import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
 import { firestore } from '../helpers/firebase';
-import { AgendaApi, EventFieldsApi, EventsApi } from '../helpers/request';
+import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../helpers/request';
 import { UseEventContext } from './eventContext';
 import { getUserEvent } from '../components/networking/services';
 import { UseCurrentUser } from './userContext';
+import { UseUserEvent } from './eventUserContext';
 
 export const HelperContext = createContext();
 
@@ -17,6 +18,7 @@ const initialStateNotification = {
 export const HelperContextProvider = ({ children }) => {
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
+  let cEventuser=UseUserEvent()
   const [containtNetworking, setcontaintNetworking] = useState(false);
   const [infoAgenda, setinfoAgenda] = useState(null);
   const [isNotification, setisNotification] = useState(initialStateNotification);
@@ -27,6 +29,38 @@ export const HelperContextProvider = ({ children }) => {
   const [propertiesProfile, setpropertiesProfile] = useState();
   const [propertiesOtherprofile, setpropertiesOtherprofile] = useState(null);
   const [activitiesEvent, setactivitiesEvent] = useState(null);
+  const [chatActual, setchatActual] = useState({
+    chatid: null,
+    idactualuser: null,
+    idotheruser: null,
+    chatname: null,
+  });
+  const [contacts,setContacts]=useState([])
+
+  let generateUniqueIdFromOtherIds = (ida, idb) => {
+    let chatid;
+    if (ida !== null && idb !== null) {
+      if (ida < idb) {
+        chatid = ida + '_' + idb;
+      } else {
+        chatid = idb;
+      }
+    } else {
+      chatid = null;
+    }
+
+    return chatid;
+  };
+
+  function HandleGoToChat(idactualuser, idotheruser, chatname, chatid) {
+    let data = {
+      chatid: chatid ? chatid : generateUniqueIdFromOtherIds(idactualuser, idotheruser),
+      idactualuser,
+      idotheruser,
+      chatname,
+    };
+    setchatActual(data);
+  }
 
   const getProperties = async (eventId) => {
     let properties = await EventFieldsApi.getAll(eventId);
@@ -47,8 +81,10 @@ export const HelperContextProvider = ({ children }) => {
     }
   };
 
+  // ACA HAY UN BUG AL TRAER DATOS CON BASTANTES CAMPOS
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
+    //console.log("RESPUESTA=>",eventUser)
     setpropertiesOtherprofile({ _id: id, properties: eventUser.properties, eventUserId: eventUser._id });
   };
 
@@ -75,6 +111,14 @@ export const HelperContextProvider = ({ children }) => {
       cEvent.value.itemsMenu && cEvent.value.itemsMenu['networking'] !== undefined && setcontaintNetworking(true);
     }
   };
+
+  const obtenerContactos=async()=>{   
+      // Servicio que trae los contactos
+   let contacts= await Networking.getContactList(cEvent.value._id, cEventuser.value._id)
+   if(contacts){
+    setContacts(contacts)    
+   }       
+  }
 
   const obtenerNombreActivity = (activityID) => {
     const act = infoAgenda && infoAgenda.filter((ac) => ac._id == activityID);
@@ -150,8 +194,7 @@ export const HelperContextProvider = ({ children }) => {
 
             if (notification.state === '0') {
               contNotifications++;
-            }
-            console.log('notification.state', notification.state);
+            }    
             //Notificacion tipo agenda
             if (notification.type == 'agenda' && notification.state === '0') {
               notAg.push(doc.data());
@@ -176,8 +219,14 @@ export const HelperContextProvider = ({ children }) => {
 
     if (cUser.value != null && cEvent.value != null) {
       fetchNetworkingChange();
-    }
+    }    
   }, [cUser.value, cEvent.value]);
+
+  useEffect(()=>{
+    if (cEventuser.value != null && cEvent.value != null) {
+      obtenerContactos();
+    }
+  },[cEventuser.value,cEvent.value])
 
   return (
     <HelperContext.Provider
@@ -194,6 +243,9 @@ export const HelperContextProvider = ({ children }) => {
         getPropertiesUserWithId,
         propertiesOtherprofile,
         activitiesEvent,
+        chatActual,
+        HandleGoToChat,
+        contacts
       }}>
       {children}
     </HelperContext.Provider>

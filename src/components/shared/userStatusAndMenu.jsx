@@ -6,6 +6,9 @@ import { DownOutlined, LogoutOutlined } from '@ant-design/icons';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
+import { UseUserEvent } from '../../Context/eventUserContext';
+import { EventsApi } from '../../helpers/request';
+import { useEffect } from 'react';
 
 const MenuStyle = {
   flex: 1,
@@ -19,13 +22,30 @@ const ItemStyle = {
   margin: 5,
 };
 
-let userStatusAndMenu = (props) => {
+let UserStatusAndMenu = (props) => {
   let user = props.user;
   let photo = props.photo;
   let name = props.name;
   let logout = props.logout;
   let eventId = props.eventId;
 
+  useEffect(()=>{
+    if(props.eventId && props.userEvent){
+      eventuserData()
+    }
+    console.log("PROPS MENUITEM==>",props)
+    
+  async function eventuserData(){
+    console.log("USER EVENT==>",props.userEvent)
+    console.log("EVENT ID==>",props.eventId)
+    let user= await EventsApi.getEventUser(props.userEvent._id,'5f7f21217828e17d80642856');
+    console.log("RESP=>",user)
+  }
+
+  },[props.eventId && props.userEvent])
+
+  
+console.log("PROPS ESTALLA=>",props)
   let menu = (
     <Menu>
       <Menu.Item style={ItemStyle}>
@@ -33,7 +53,7 @@ let userStatusAndMenu = (props) => {
           onClick={(e) => {
             e.preventDefault();
             props.location.pathname.includes('landing')
-              ? props.setViewPerfil({ view: true, perfil: props.loginInfo })
+              ? props.setViewPerfil({ view: true, perfil: {_id:props.userEvent._id,properties:props.userEvent} })
               : null;
           }}
           to={''}>
@@ -100,4 +120,4 @@ const mapDispatchToProps = {
   setViewPerfil,
 };
 
-export default connect(null, mapDispatchToProps)(WithLoading(withRouter(userStatusAndMenu)));
+export default connect(null, mapDispatchToProps)(WithLoading(withRouter(UserStatusAndMenu)));

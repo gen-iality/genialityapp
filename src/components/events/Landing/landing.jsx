@@ -26,8 +26,6 @@ import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutl
 import EviusFooter from './EviusFooter';
 import AppointmentModal from '../../networking/appointmentModal';
 
-
-
 const iniitalstatetabs = {
   attendees: false,
   privateChat: false,
@@ -62,8 +60,6 @@ const Landing = (props) => {
   let cEventUser = UseUserEvent();
   let { isNotification, ChangeActiveNotification } = useContext(HelperContext);
   const [chattab, setchattab] = useState('chat1');
-
- 
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -157,7 +153,7 @@ const Landing = (props) => {
           <Content
             className='site-layout-background'
             style={{
-              paddingBottom: '15vh',
+              // paddingBottom: '15vh',
               backgroundSize: 'cover',
               background: `${cEventContext.value && cEventContext.value?.styles?.containerBgColor}`,
               backgroundImage: `url(${cEventContext.value && cEventContext.value?.styles?.BackgroundImage})`,

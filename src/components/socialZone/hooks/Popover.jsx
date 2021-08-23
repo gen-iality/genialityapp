@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Tooltip, Skeleton, Card, Avatar, notification } from 'antd';
+import { Tooltip, Skeleton, Card, Avatar, notification, Spin } from 'antd';
 import { UserOutlined, UsergroupAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { InitialsNameUser } from './index';
 import { HelperContext } from '../../../Context/HelperContext';
@@ -11,24 +11,25 @@ import { addNotification, SendFriendship } from '../../../helpers/netWorkingFunc
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { UseEventContext } from '../../../Context/eventContext';
 import {setUserAgenda} from '../../../redux/networking/actions'
+import { useState } from 'react';
+import { EventsApi } from '../../../helpers/request';
 
 
 const { Meta } = Card;
 
 const PopoverInfoUser = (props) => {
+  const [userSelected,setUserSelected]=useState()
   let eventUserContext= UseUserEvent();
   let eventContext=UseEventContext()
   let { containtNetworking, getPropertiesUserWithId, propertiesProfile, propertiesOtherprofile } = useContext(
     HelperContext
   );
-  console.log("EVENT USER==>",eventUserContext.value)
-  console.log("PROPERTYS==>",propertiesOtherprofile)
   
-  useEffect(() => {
-    let iduser = props.item.iduser;
-    getPropertiesUserWithId(iduser);
-    
-  }, []);
+
+  useEffect(() => {        
+    let user={ _id:  props.item.iduser, properties:  props.item.properties, eventUserId:  props.item._id }     
+     setUserSelected(user) 
+  }, [ props.item.iduser]);
 
   return (
     <Skeleton loading={false} avatar active>
@@ -36,24 +37,25 @@ const PopoverInfoUser = (props) => {
         style={{ width: 300, padding: '0', color: 'black' }}
         actions={[
           containtNetworking && (
-            <Tooltip
+            userSelected? <Tooltip
               title='Ver perfil'
-              onClick={() => props.setViewPerfil({ view: true, perfil: propertiesOtherprofile })}>
+              onClick={() =>props.setViewPerfil({ view: true, perfil: userSelected })}>
               <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
-            </Tooltip>
+            </Tooltip>:<Spin/>
           ),
 
           containtNetworking && (
-            <Tooltip
-               onClick={async () => {                
+            userSelected? <Tooltip
+               onClick={async () => {
+                setViewPerfil({view: false, perfil: userSelected })                
                 let userReceive={
-                  eventUserIdReceiver:propertiesOtherprofile.eventUserId,
-                  userName:propertiesOtherprofile.properties.names || propertiesOtherprofile.properties.name || propertiesOtherprofile.properties.email
+                  eventUserIdReceiver:userSelected.eventUserId,
+                  userName:userSelected.properties.names || userSelected.properties.name || userSelected.properties.email
                 }
                 let sendResp= await SendFriendship(userReceive,eventUserContext.value,eventContext.value);
                 if (sendResp._id) {
                   let notificationR = {
-                    idReceive: propertiesOtherprofile._id,
+                    idReceive: userSelected._id,
                     idEmited: sendResp._id,
                     emailEmited:
                     eventUserContext.value.email ||
@@ -81,18 +83,19 @@ const PopoverInfoUser = (props) => {
                }}
               title='Enviar solicitud Contacto'>
               <UsergroupAddOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
-            </Tooltip>
+            </Tooltip>:<Spin />
           ),
 
           containtNetworking && (
-            <Tooltip title='Agendar cita'> 
+            userSelected? <Tooltip title='Agendar cita'> 
               <VideoCameraOutlined
                 onClick={async () => {
+                  setViewPerfil({view: false, perfil: userSelected })    
               //SE CREA EL OBJETO CON ID INVERTIDO PARA QUE EL COMPONENTE APPOINT MODAL FUNCIONE CORRECTAMENTE
-                let evetuser=propertiesOtherprofile._id
+                let evetuser=userSelected._id
                  let userReview={
-                   ...propertiesOtherprofile,
-                   _id:propertiesOtherprofile.eventUserId,
+                   ...userSelected,
+                   _id:userSelected.eventUserId,
                    evetuserId:evetuser
                   }
                   props.setUserAgenda(userReview)
@@ -100,7 +103,7 @@ const PopoverInfoUser = (props) => {
                 style={{ fontSize: '20px', color: '#1890FF' }}
               />
               ,
-            </Tooltip>
+            </Tooltip>:<Spin/>
           ),
         ]}>
         <Meta

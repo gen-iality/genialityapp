@@ -224,6 +224,7 @@ const FormRegister = ({
 
           setSubmittedForm(true);
           message.success(intl.formatMessage({ id: 'registration.message.created' }));
+        
 
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
           //todo el proceso de logueo depende del token en la url por eso se recarga la página
@@ -233,6 +234,7 @@ const FormRegister = ({
               window.location.replace(`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`);
             }, 100);
           }
+          window.location.replace(`/landing/${eventId}/success/${typeRegister}`);
         } else {
           //Usuario ACTUALIZADO
           // let msg =

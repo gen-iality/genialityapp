@@ -48,8 +48,9 @@ class Headers extends Component {
       tabEvtType: true,
       tabEvtCat: true,
       eventId: null,
+      userEvent:null
     };
-
+    console.log("PROPS HEADER",props)
     this.setEventId = this.setEventId.bind(this);
     this.logout = this.logout.bind(this);
   }
@@ -78,6 +79,7 @@ class Headers extends Component {
 
     const eventId = this.setEventId();
     this.setState({ eventId });
+    console.log("COMPONENT DID MOUNT ==>",this.props)
 
     /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
     let evius_token = null;
@@ -99,13 +101,13 @@ class Headers extends Component {
     //Si existe el token consultamos la información del usuario
     const data = await getCurrentUser();
 
-    if (data) {
+    if (data) {      
       const name = data.name ? data.name : data.displayName ? data.displayName : data.email;
       const photo = data.photoUrl ? data.photoUrl : data.picture;
       const organizations = await OrganizationApi.mine();
 
       this.setState(
-        { name, photo, uid: data.uid, id: data._id, user: true, cookie: evius_token, loader: false, organizations },
+        { name, userEvent:data, photo, uid: data.uid, id: data._id, user: true, cookie: evius_token, loader: false, organizations },
         () => {
           this.props.addLoginInformation(data);
         }
@@ -220,6 +222,7 @@ class Headers extends Component {
                 loader={this.state.loader}
                 photo={photo}
                 name={name}
+                userEvent={this.state.userEvent}
                 eventId={this.state.id}
                 logout={this.logout}
                 openMenu={this.openMenu}

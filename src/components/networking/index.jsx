@@ -57,6 +57,7 @@ class ListEventUser extends Component {
     this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
   };
   agendarCita = (iduser, user) => {
+    console.log("USERS==>",user)
     this.setState({ eventUserIdToMakeAppointment: iduser, eventUserToMakeAppointment: user });
   };
   loadData = async () => {
@@ -689,6 +690,8 @@ class ListEventUser extends Component {
                                             color: 'white',
                                           }}
                                           onClick={() => {
+                                            //alert("ACAAA")
+                                           
                                             this.setState({
                                               eventUserIdToMakeAppointment: users._id,
                                               eventUserToMakeAppointment: users,
@@ -711,7 +714,7 @@ class ListEventUser extends Component {
                                               this.props.cEvent.value
                                             );
 
-                                            let us = this.props.cEventUser.value;
+                                            let us = users
 
                                             if (sendResp._id) {
                                               let notificationR = {
