@@ -8,7 +8,7 @@ import { UseUserEvent } from '../../Context/eventUserContext';
 import { UseEventContext } from '../../Context/eventContext';
 import { UseCurrentUser } from '../../Context/userContext';
 
-import { acceptOrRejectAgenda, getPendingAgendasSent } from './services';
+import { acceptOrRejectAgenda, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
 
 const { Meta } = Card;
@@ -36,8 +36,9 @@ function AppointmentRequests({ eventUsers, notificacion }) {
       setLoading(true);
       setPendingAgendas([]);
 
-      getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
+      getPendingAgendasFromEventUser(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
+          console.log("USER EVENT ID==>",userEventContext.value._id)
           console.log("AGENDAS==>",agendas)
         
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
@@ -71,10 +72,11 @@ function AppointmentRequests({ eventUsers, notificacion }) {
 
       getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
+          console.log("AGENDAS 2==>",agendas)
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             
             const pendingAgendas = map((agenda) => {
-              const ownerEventUser = find(propEq('_id', agenda.attendees[1]), eventUsers);
+              const ownerEventUser = find(propEq('_id', agenda.attendees[0]), eventUsers);
               return { ...agenda, ownerEventUser };
             }, agendas);
 
@@ -107,8 +109,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
                 key={`pending-${pendingAgenda.id}`}
                 data={pendingAgenda}
                 fetching={fetching}
-                setFetching={setFetching}
-                meSended={true}
+                setFetching={setFetching}                
               />
             ))
           ) : (
@@ -134,7 +135,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
                 data={pendingAgenda}
                 fetching={fetching}
                 setFetching={setFetching}
-              
+                meSended={true}              
               />
             ))
           ) : (
@@ -229,7 +230,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
                 </Col>
               </Row>
               {!requestResponse ? (
-                meSended && (
+                !meSended && (
                   <Row>
                     <Button
                       style={{ marginRight: '10px' }}
