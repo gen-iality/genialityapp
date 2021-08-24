@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { List, Typography, Badge, Tooltip, Tabs, Form, Input, Button, Row, Space, Avatar, Popover } from 'antd';
 import { ExclamationCircleOutlined, MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
