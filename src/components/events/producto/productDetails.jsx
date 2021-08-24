@@ -74,15 +74,7 @@ function DetailsProduct(props) {
             <Card >
               <Space direction='vertical' style={{ width: '100%' }}>
                 <Title level={3}>{product && product.name ? product.name : 'Nombre de la obra'}</Title>
-                {habilty?<OfertaProduct product={product} eventId={eventId} />:<div>                  
-                  <Card>
-                  {messageF && messageF!='<p><br></p>'&&<div
-                    dangerouslySetInnerHTML={{
-                      __html: messageF?messageF:"Sin mensaje",
-                    }}></div>}
-                    <strong>Precio: </strong>{product.price}
-                    </Card>
-                  </div>}
+                <OfertaProduct hability={habilty} message={messageF} product={product} eventId={eventId} />
                 <Divider orientation='left'>
                   <Title style={{ marginBottom: '0px' }} level={5}>
                     Artista

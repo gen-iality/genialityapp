@@ -7,7 +7,7 @@ import withContext from '../../../Context/withContext';
 
 const { Title, Text } = Typography;
 
-const OfertaProduct = ({ product, eventId,cEventUser,cUser }) => {
+const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,message }) => {
   const [selectedValue, setSelectedValue] = useState(50000);
   const [valuOferta, setValueOferta] = useState(
     product && product.price
@@ -17,7 +17,7 @@ const OfertaProduct = ({ product, eventId,cEventUser,cUser }) => {
           .replace('.', '')
       : 0
   );
-  console.log("DATACONTEXT==>",cEventUser,cUser)
+  console.log('DATACONTEXT==>', cEventUser, cUser);
   const [valorProduct, setValorProduct] = useState(valuOferta);
   //VALORES PARA SUBIR EN LA PUJA
   const valuesPuja = [
@@ -39,18 +39,18 @@ const OfertaProduct = ({ product, eventId,cEventUser,cUser }) => {
     },
   ];
   //VALIDAR SI TIENE PERMISOS DE PUJAR
-  const permission=()=>{
-    if(cEventUser.value.rol_id=='60e8a8b7f6817c280300dc23'){
+  const permission = () => {
+    if (cEventUser.value.rol_id == '60e8a8b7f6817c280300dc23') {
       return true;
     }
     return false;
-  }
+  };
   //ONCHANGE INPUT VALUE
   const changeValor = (e) => {
     setValueOferta(e.target.value);
   };
   //SAVE VALUE OFERTA
-  const saveValue = async () => {    
+  const saveValue = async () => {
     if (valuOferta > 0) {
       let data = {
         valueOffered: valuOferta,
@@ -85,53 +85,72 @@ const OfertaProduct = ({ product, eventId,cEventUser,cUser }) => {
           <Text type='secondary'>
             Precio: <Title level={4}>{product && product.price}</Title>
           </Text>
-          <Divider></Divider>
+          {hability && <Divider></Divider>}
         </Col>
-        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-          <Space wrap size={8} align='center'>
-            {valuesPuja.map((val, index) => (
-              <Tag
-                style={{ cursor: 'pointer', padding: '5px', fontSize: '14px' }}
-                color={selectedValue === val.value ? '#2db7f5' : ''}
-                onClick={() => setSelectedValue(val.value)}
-                key={'val' + index}>
-                {val.name}
-              </Tag>
-            ))}
-          </Space>
-        </Col>
+        {hability && (
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+            <Space wrap size={8} align='center'>
+              {valuesPuja.map((val, index) => (
+                <Tag
+                  style={{ cursor: 'pointer', padding: '5px', fontSize: '14px' }}
+                  color={selectedValue === val.value ? '#2db7f5' : ''}
+                  onClick={() => setSelectedValue(val.value)}
+                  key={'val' + index}>
+                  {val.name}
+                </Tag>
+              ))}
+            </Space>
+          </Col>
+        )}
       </Row>
-      <Row style={{ marginTop: '5px' }} gutter={[20, 30]} justify='center'>
-        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-          <Space size='small'>
-            <Button
-              type='dashed'
-              shape='circle'
-              icon={<MinusOutlined style={{ color: '#2db7f5' }} />}
-              onClick={() => downvalue()}></Button>
-            <Input
-              readOnly
-              type='number'
-              style={{ width: '100%', margin: 0 }}
-              value={`${valuOferta}`}
-              onChange={changeValor}
-              min='1000'
-              max={9999999999}
-            />
-            <Button
-              type='dashed'
-              shape='circle'
-              icon={<PlusOutlined style={{ color: '#2db7f5' }} />}
-              onClick={() => upvalue()}></Button>
-          </Space>
-        </Col>
-       {permission() && <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-          <Button block type={'primary'} onClick={saveValue}>
-            Ofrecer
-          </Button>
-        </Col>}
-        {!permission() && <Row><Alert type='warning' message="No tienes permisos para pujar sobre esta obra." /></Row>}
-      </Row>
+      {hability && (
+        <Row style={{ marginTop: '5px' }} gutter={[20, 30]} justify='center'>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+            <Space size='small'>
+              <Button
+                type='dashed'
+                shape='circle'
+                icon={<MinusOutlined style={{ color: '#2db7f5' }} />}
+                onClick={() => downvalue()}></Button>
+              <Input
+                readOnly
+                type='number'
+                style={{ width: '100%', margin: 0 }}
+                value={`${valuOferta}`}
+                onChange={changeValor}
+                min='1000'
+                max={9999999999}
+              />
+              <Button
+                type='dashed'
+                shape='circle'
+                icon={<PlusOutlined style={{ color: '#2db7f5' }} />}
+                onClick={() => upvalue()}></Button>
+            </Space>
+          </Col>
+          {permission() && (
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Button block type={'primary'} onClick={saveValue}>
+                Ofrecer
+              </Button>
+            </Col>
+          )}
+          {!permission() && (
+            <Row>
+              <Alert type='warning' message='No tienes permisos para pujar sobre esta obra.' />
+            </Row>
+          )}
+        </Row>
+      )}
+      {!hability && (  <div>       
+            {message && message != '<p><br></p>' && (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: message ? message : 'Sin mensaje',
+                }}></div>
+            )}        
+        </div>
+      )}
     </Card>
   );
 };
