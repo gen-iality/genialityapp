@@ -102,6 +102,7 @@ export const HelperContextProvider = ({ children }) => {
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
+    let dataotheruser = {};
 
     console.log('=====idcurrentUser===================', idcurrentUser);
     console.log('=========idOtherUser=================', idOtherUser);
@@ -112,11 +113,13 @@ export const HelperContextProvider = ({ children }) => {
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
 
+    dataotheruser = { id: newId, name: currentName };
+
     //agregamos una referencia al chat para el otro usuario del chat
     // data = { id: newId, name: currentName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
-      .set(data, { merge: true });
+      .set(dataotheruser, { merge: true });
 
     console.log('chatuser', newId);
     HandleGoToChat(idcurrentUser, idOtherUser, currentName, 'attendee');
