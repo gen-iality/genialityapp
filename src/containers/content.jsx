@@ -9,6 +9,8 @@ import WithFooter from '../components/withFooter';
 import { CurrentUserEventProvider } from '../Context/eventUserContext';
 import { CurrentEventProvider, CurrentEventContext } from '../Context/eventContext';
 import { CurrentUserProvider } from '../Context/userContext';
+import { SurveysProvider }     from '../Context/surveysContext';
+
 import { HelperContextProvider } from '../Context/HelperContext';
 import EventOrganization from '../components/eventOrganization';
 
@@ -43,7 +45,9 @@ const ContentContainer = () => {
             <CurrentUserEventProvider>
               <CurrentUserProvider>
                 <HelperContextProvider>
+                  <SurveysProvider>
                   <Landing />
+                  </SurveysProvider>
                 </HelperContextProvider>
               </CurrentUserProvider>
             </CurrentUserEventProvider>

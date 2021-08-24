@@ -94,7 +94,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
                 style={{ width: 500, marginTop: '2%', marginBottom: '2%', textAlign: 'left' }}
                 bordered={true}>
                 <Meta
-                  avatar={<Avatar>{user.names ? user.names.charAt(0).toUpperCase() : user.names}</Avatar>}
+                  avatar={<Avatar src={user['picture']?user['picture']:''}>{!user['picture'] && user.names ? user.names.charAt(0).toUpperCase() : user.names}</Avatar>}
                   title={user.names ? user.names : 'No registra Nombre'}
                   description={[
                     <div key={'contact' + key}>
@@ -103,8 +103,8 @@ const ContactList = ({ tabActive, agendarCita }) => {
                       {userProperties.map(
                         (property, key) =>
                           user[property.name] !== undefined &&
-                          !property.visibleByAdmin &&
-                          (property.visibleByContacts || property.visibleByContacts == 'only_for_my_contacts') && (
+                         ( !property.visibleByAdmin ||
+                          (property.visibleByContacts || property.visibleByContacts == 'only_for_my_contacts')) && property.name!='picture' && (
                             <div key={'contact-property' + key}>
                               {
                                 <p>

@@ -8,7 +8,7 @@ import { UseUserEvent } from '../../Context/eventUserContext';
 import { UseEventContext } from '../../Context/eventContext';
 import { UseCurrentUser } from '../../Context/userContext';
 
-import { acceptOrRejectAgenda, getPendingAgendasSent } from './services';
+import { acceptOrRejectAgenda, getPendingAgendasFromEventUser, getPendingAgendasSent } from './services';
 import { addNotification } from '../../helpers/netWorkingFunctions';
 
 const { Meta } = Card;
@@ -19,6 +19,7 @@ const requestStatusText = {
 };
 
 function AppointmentRequests({ eventUsers, notificacion }) {
+  console.log("EVENT USERS==>",eventUsers)
   const [loading, setLoading] = useState(true);
   const [loading1, setLoading1] = useState(true);
   const [fetching, setFetching] = useState(false);
@@ -35,8 +36,10 @@ function AppointmentRequests({ eventUsers, notificacion }) {
       setLoading(true);
       setPendingAgendas([]);
 
-      getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
+      getPendingAgendasFromEventUser(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
+          console.log("USER EVENT ID==>",userEventContext.value._id)
+          console.log("AGENDAS==>",agendas)
         
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             const pendingAgendas = map((agenda) => {
@@ -63,16 +66,17 @@ function AppointmentRequests({ eventUsers, notificacion }) {
 
   useEffect(() => {
     if(eventContext && userEventContext){
-    if (eventContext.value._id && userEventContext.value._id) {
+    if (eventContext.value?._id && userEventContext.value?._id) {
       setLoading1(true);
       //setPendingAgendasSent([]);
 
       getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
+          console.log("AGENDAS 2==>",agendas)
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             
             const pendingAgendas = map((agenda) => {
-              const ownerEventUser = find(propEq('_id', agenda.attendees[1]), eventUsers);
+              const ownerEventUser = find(propEq('_id', agenda.attendees[0]), eventUsers);
               return { ...agenda, ownerEventUser };
             }, agendas);
 
@@ -105,7 +109,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
                 key={`pending-${pendingAgenda.id}`}
                 data={pendingAgenda}
                 fetching={fetching}
-                setFetching={setFetching}
+                setFetching={setFetching}                
               />
             ))
           ) : (
@@ -131,7 +135,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
                 data={pendingAgenda}
                 fetching={fetching}
                 setFetching={setFetching}
-                meSended={true}
+                meSended={true}              
               />
             ))
           ) : (
@@ -149,10 +153,9 @@ function AppointmentRequests({ eventUsers, notificacion }) {
 }
 
 function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
-  const [requestResponse, setRequestResponse] = useState('');
-  const { ownerEventUser } = data;
-  const userName = pathOr('', ['properties', 'names'], ownerEventUser);
-  const userEmail = pathOr('', ['properties', 'email'], ownerEventUser);
+  const [requestResponse, setRequestResponse] = useState(''); 
+  const userName = data.name ;
+  const userEmail = data.email;
   //contextos
   let userEventContext = UseUserEvent();
   let eventContext = UseEventContext();
@@ -169,7 +172,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             idEmited: data && data.id,
             state: '1'
           };
-          addNotification(notificationr,eventContext.value,userCurrentContext.value)
+         addNotification(notificationr,eventContext.value,userCurrentContext.value)
         })
         .catch((error) => {
           if (!error) {

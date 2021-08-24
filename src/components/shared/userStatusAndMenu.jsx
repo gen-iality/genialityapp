@@ -6,6 +6,8 @@ import { DownOutlined, LogoutOutlined } from '@ant-design/icons';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
+import { EventsApi } from '../../helpers/request';
+import { useEffect } from 'react';
 
 const MenuStyle = {
   flex: 1,
@@ -19,12 +21,21 @@ const ItemStyle = {
   margin: 5,
 };
 
-let userStatusAndMenu = (props) => {
+let UserStatusAndMenu = (props) => {
   let user = props.user;
   let photo = props.photo;
   let name = props.name;
   let logout = props.logout;
-  let eventId = props.eventId;
+  let eventId = props.eventId; 
+  useEffect(() => {
+   /* if (props.eventId && props.userEvent) {
+      eventuserData();
+    }
+
+    async function eventuserData() {     
+      let user = await EventsApi.getEventUser(props.userEvent._id, props.eventId);
+    }*/
+  }, [props.eventId && props.userEvent]);
 
   let menu = (
     <Menu>
@@ -33,7 +44,7 @@ let userStatusAndMenu = (props) => {
           onClick={(e) => {
             e.preventDefault();
             props.location.pathname.includes('landing')
-              ? props.setViewPerfil({ view: true, perfil: props.loginInfo })
+              ? props.setViewPerfil({ view: true, perfil: { _id: props.userEvent._id, properties: props.userEvent } })
               : null;
           }}
           to={''}>
@@ -73,9 +84,17 @@ let userStatusAndMenu = (props) => {
   let loggedInuser = (
     <Row style={MenuStyle}>
       <Col style={MenuStyle}>
-        <Dropdown arrow overlay={menu} >
-          <a onClick={(e) => e.preventDefault()} >
-            <Space className='shadowHover' style={{height:'40px', backgroundColor:'white', borderRadius:'50px', paddingLeft:'5px', paddingRight:'5px'}}>
+        <Dropdown arrow overlay={menu}>
+          <a onClick={(e) => e.preventDefault()}>
+            <Space
+              className='shadowHover'
+              style={{
+                height: '40px',
+                backgroundColor: 'white',
+                borderRadius: '50px',
+                paddingLeft: '5px',
+                paddingRight: '5px',
+              }}>
               {photo ? (
                 <Avatar src={photo} />
               ) : (
@@ -85,7 +104,7 @@ let userStatusAndMenu = (props) => {
                 </Avatar>
               )}
               <span className='name_menu-user'>{name}</span>
-              <DownOutlined style={{fontSize:'12px'}} />
+              <DownOutlined style={{ fontSize: '12px' }} />
             </Space>
           </a>
         </Dropdown>
@@ -100,4 +119,4 @@ const mapDispatchToProps = {
   setViewPerfil,
 };
 
-export default connect(null, mapDispatchToProps)(WithLoading(withRouter(userStatusAndMenu)));
+export default connect(null, mapDispatchToProps)(WithLoading(withRouter(UserStatusAndMenu)));

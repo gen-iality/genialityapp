@@ -1,6 +1,6 @@
 import React, { Component, Fragment, useContext } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { Row, Button, Col, Card, Avatar, Alert, Tabs, Form, Badge } from 'antd';
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, Form, Badge, notification } from 'antd';
 import AppointmentModal from './appointmentModal';
 import MyAgenda from './myAgenda';
 import AppointmentRequests from './appointmentRequests';
@@ -57,6 +57,7 @@ class ListEventUser extends Component {
     this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
   };
   agendarCita = (iduser, user) => {
+    console.log("USERS SELECTED==>",user)
     this.setState({ eventUserIdToMakeAppointment: iduser, eventUserToMakeAppointment: user });
   };
   loadData = async () => {
@@ -204,6 +205,8 @@ class ListEventUser extends Component {
       }
 
       let asistantData = await EventFieldsApi.getAll(this.props.cEvent.value._id);
+
+      console.log("USERS==>",eventUserList)
 
       this.setState((prevState) => {
         return {
@@ -652,8 +655,8 @@ class ListEventUser extends Component {
                             bordered={true}>
                             <Meta
                               avatar={
-                                <Avatar>
-                                  {users.properties.names
+                                <Avatar src={users.properties['picture']?users.properties['picture']:''}>
+                                  {!users.properties['picture'] &&users.properties.names
                                     ? users.properties.names.charAt(0).toUpperCase()
                                     : users.properties.names}
                                 </Avatar>
@@ -689,10 +692,12 @@ class ListEventUser extends Component {
                                             color: 'white',
                                           }}
                                           onClick={() => {
+                                            //alert("ACAAA")
+                                           
                                             this.setState({
                                               eventUserIdToMakeAppointment: users._id,
                                               eventUserToMakeAppointment: users,
-                                            });
+                                            });                                           
                                           }}>
                                           {'Agendar cita'}
                                         </Button>
@@ -711,10 +716,10 @@ class ListEventUser extends Component {
                                               this.props.cEvent.value
                                             );
 
-                                            let us = this.props.cEventUser.value;
+                                            let us = users
 
                                             if (sendResp._id) {
-                                              let notification = {
+                                              let notificationR = {
                                                 idReceive: us.account_id,
                                                 idEmited: sendResp._id,
                                                 emailEmited:
@@ -723,17 +728,22 @@ class ListEventUser extends Component {
                                                 message:
                                                   (this.props.cEventUser.value.names ||
                                                     this.props.cEventUser.value.user.names) +
-                                                  'te ha enviado solicitud de amistad',
+                                                  ' te ha enviado solicitud de amistad',
                                                 name: 'notification.name',
                                                 type: 'amistad',
                                                 state: '0',
-                                              };
+                                              };                                              
 
                                               addNotification(
-                                                notification,
+                                                notificationR,
                                                 this.props.cEvent.value,
                                                 this.props.cEventUser.value
                                               );
+                                              notification['success']({
+                                                message: 'Correcto!',
+                                                description:
+                                                  'Se ha enviado la solicitud de amistad correctamente',
+                                              }); 
                                             }
                                           }}>
                                           {'Enviar solicitud de Contacto'}

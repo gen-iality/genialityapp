@@ -15,15 +15,11 @@ import EventSectionMenuRigth from './EventSectionMenuRigth';
 import MenuTablets from './Menus/MenuTablets';
 import MenuTabletsSocialZone from './Menus/MenuTabletsSocialZone';
 
-/** Functions */
-import { listenSurveysData } from '../../../helpers/helperEvent';
-import InitSurveysCompletedListener from '../surveys/functions/initSurveyCompletedListener';
 
 /** Firebase */
 import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
-/** redux surveys */
-import { setCurrentSurvey, setSurveyResult, setCurrentSurveyStatus } from '../../../redux/survey/actions';
+
 import {setUserAgenda} from '../../../redux/networking/actions'
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
@@ -98,13 +94,8 @@ const Landing = (props) => {
 
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
   let [totalNewMessages, settotalnewmessages] = useState(0);
-  let { currentActivity, tabs, setCurrentSurvey, setSurveyResult } = props;
+  let { currentActivity, tabs } = props;
   const [tabselected, settabselected] = useState('1');
-  /** listado de encuestas por actividad */
-  const [listOfEventSurveys, setListOfEventSurveys] = useState([]);
-  /** loader para el listado de encuestas */
-  const [loadingSurveys, setLoadingSurveys] = useState(true);
-  /** estado de las encuestas, "abierto, cerrado, en progreso  */
   const [eventId, seteventId] = useState(null);
 
   useEffect(() => {
@@ -144,69 +135,34 @@ const Landing = (props) => {
     settotalnewmessages(0);
   };
 
-  /** Permite abrir o cerrar la encuesta al cambiar el estado desde el cms */
-  function visualizarEncuesta(survey) {
-    if (!survey) {
-      setCurrentSurvey(null);
-    }
-    if (survey && survey.isOpened === 'true' && survey !== null) {
-      if (currentActivity !== null && survey.isOpened === 'true') {
-        setSurveyResult('view');
-      } else if (currentActivity !== null && survey.isOpened === 'false') {
-        setSurveyResult('results');
-      }
-      setCurrentSurvey(survey);
-    } else {
-      setCurrentSurvey(survey);
-      setSurveyResult('closedSurvey');
-    }
-  }
-
-  /** Listener que permite obtener la data del estado de las encuestas, "abierto, cerrado, en progreso" */
-  useEffect(() => {
-    if (cUser.value !== null) {
-      const unSuscribe = InitSurveysCompletedListener(cUser, props.setCurrentSurveyStatus);
-      return unSuscribe;
-    }
-  }, [cUser]);
-
-  /** Listener para obtener todas las encuestas por actividad */
-  useEffect(() => {
-    if (currentActivity) {
-      listenSurveysData(eventId, setListOfEventSurveys, setLoadingSurveys, currentActivity, cUser, visualizarEncuesta);
-    }
-  }, [currentActivity]);
-
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
 
-  console.log("cEventContext==>",cEventContext.value?.styles)
   return (
     <>
       <Layout>
-      <AppointmentModal
+        <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}
           targetEventUser={props.userAgenda}
-          closeModal={()=>{props.setUserAgenda(null) }}
-      />
+          closeModal={() => {
+            props.setUserAgenda(null);
+          }}
+        />
         <EventSectionsInnerMenu />
         <MenuTablets />
         <Layout className='site-layout'>
           <Content
             className='site-layout-background'
             style={{
-              paddingBottom: '15vh',
+              // paddingBottom: '15vh',
               backgroundSize: 'cover',
-              background:`${cEventContext.value?.styles.BackgroundImage?'':cEventContext.value?.styles.containerBgColor}`,
-              backgroundImage: `url(${cEventContext.value?.styles.BackgroundImage &&
-                cEventContext.value?.styles.BackgroundImage})`,
+              background: `${cEventContext.value && cEventContext.value?.styles?.containerBgColor}`,
+              backgroundImage: `url(${cEventContext.value && cEventContext.value?.styles?.BackgroundImage})`,
             }}>
             {props.view && <TopBanner currentActivity={currentActivity} />}
 
             <EventSectionRoutes
               generaltabs={generaltabs}
               currentActivity={currentActivity}
-              listOfEventSurveys={listOfEventSurveys}
-              loadingSurveys={loadingSurveys}
             />
           </Content>
           <EviusFooter />
@@ -219,8 +175,6 @@ const Landing = (props) => {
           tabs={tabs}
           tabselected={tabselected}
           settabselected={settabselected}
-          listOfEventSurveys={listOfEventSurveys}
-          loadingSurveys={loadingSurveys}
           setchattab={setchattab}
           chattab={chattab}
         />
@@ -231,8 +185,6 @@ const Landing = (props) => {
           notNewMessage={notNewMessage}
           tabselected={tabselected}
           settabselected={settabselected}
-          listOfEventSurveys={listOfEventSurveys}
-          loadingSurveys={loadingSurveys}
           setchattab={setchattab}
           chattab={chattab}
         />
@@ -245,13 +197,10 @@ const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
   tabs: state.stage.data.tabs,
   view: state.topBannerReducer.view,
-  userAgenda:state. spaceNetworkingReducer.userAgenda
+  userAgenda: state.spaceNetworkingReducer.userAgenda,
 });
 
 const mapDispatchToProps = {
-  setCurrentSurvey,
-  setSurveyResult,
-  setCurrentSurveyStatus,
   setUserAgenda
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);

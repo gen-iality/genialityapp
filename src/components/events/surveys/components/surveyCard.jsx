@@ -9,9 +9,10 @@ import {
    SyncOutlined,
 } from '@ant-design/icons';
 
+const { Title } = Typography;
+
 function SurveyCard(props) {
-   const { publishedSurveys, loadingSurveys, handleClick, currentSurveyStatus } = props;
-   const {Title} = Typography
+   const { publishedSurveys, status, handleClick, currentSurveyStatus } = props;
 
    const headStyle = {
       fontWeight: 300,
@@ -23,36 +24,35 @@ function SurveyCard(props) {
 
    return (
       <Card
-         style={{ borderRadius: '10px', marginTop: '6px'}}
+         style={{ borderRadius: '10px', marginTop: '6px' }}
          bodyStyle={bodyStyle}
          title='Listado de Encuestas'
          headStyle={headStyle}>
-         {publishedSurveys && publishedSurveys.length === 0 && !loadingSurveys ? (
+         {publishedSurveys && publishedSurveys.length === 0 ? (
             <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
          ) : (
             <List
                style={{ overflowY: 'auto', height: 'auto', overflowX: 'hidden' }}
                className='asistente-list'
                dataSource={publishedSurveys}
-               loading={loadingSurveys}
+               loading={status != 'LOADED'}
                renderItem={(survey) => (
                   <>
-                     {publishedSurveys && publishedSurveys.length > 0 && (
-                        <Card
-                           className='card-agenda-desktop agendaHover efect-scale'
-                           style={{
-                              borderRadius: '10px',
-                              marginBottom: '8px',
-                              border: '1px solid',
-                              borderColor: '#0000001c',
-                           }}>
-                           <List.Item key={survey._id}>
-                              <List.Item.Meta
-                                 title={<Title level={5}>{survey.name}</Title>}
-                                 style={{ textAlign: 'left' }}
-                                 description={
-                                    <Row>
-                                       <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12} >
+                     <Card
+                        className='card-agenda-desktop agendaHover efect-scale'
+                        style={{
+                           borderRadius: '10px',
+                           marginBottom: '8px',
+                           border: '1px solid',
+                           borderColor: '#0000001c',
+                        }}>
+                        <List.Item key={survey._id}>
+                           <List.Item.Meta
+                              title={<Title level={5}>{survey.name}</Title>}
+                              style={{ textAlign: 'left' }}
+                              description={
+                                 <Row>
+                                    <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                                        {!currentSurveyStatus ||
                                        !currentSurveyStatus[survey._id] ||
                                        !currentSurveyStatus[survey._id].surveyCompleted ? (
@@ -92,44 +92,42 @@ function SurveyCard(props) {
                                              )}
                                           </Col>
                                        )}
-                                       </Col>
-                                       <Col  xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                                    {
-                                       <>
-                                       <Button
-                                          type={
-                                             (currentSurveyStatus &&
-                                                currentSurveyStatus[survey._id] &&
-                                                currentSurveyStatus[survey._id].surveyCompleted === 'completed') ||
-                                             survey.isOpened === 'false' || survey.isOpened === false
-                                                ? ' ghost'
-                                                : 'primary'
-                                          }
-                                          className={`${survey.isOpened === 'true' &&
-                                             'animate__animated  animate__pulse animate__slower animate__infinite'}`}
-                                          onClick={() => {
-                                             currentSurveyStatus &&
-                                             currentSurveyStatus[survey._id] &&
-                                             currentSurveyStatus[survey._id].surveyCompleted === 'completed'
-                                                ? handleClick(survey, 'results')
-                                                : handleClick(survey);
-                                          }}>
-                                          {(currentSurveyStatus &&
-                                             currentSurveyStatus[survey._id] &&
-                                             currentSurveyStatus[survey._id].surveyCompleted === 'completed') ||
-                                          survey.isOpened === 'false' || survey.isOpened === false
-                                             ? 'Resultados'
-                                             : 'Ir a Encuesta'}
-                                       </Button>  
-                                    </>
-                                     }
-                                      </Col>
-                                    </Row>
-                                 }
-                              />
-                           </List.Item>
-                        </Card>
-                     )}
+                                    </Col>
+                                    <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+                                       {
+                                          <>
+                                             <Button
+                                                type={
+                                                   (currentSurveyStatus &&
+                                                      currentSurveyStatus[survey._id] &&
+                                                      currentSurveyStatus[survey._id].surveyCompleted ===
+                                                         'completed') ||
+                                                   survey.isOpened === 'false' ||
+                                                   survey.isOpened === false
+                                                      ? ' ghost'
+                                                      : 'primary'
+                                                }
+                                                className={`${survey.isOpened === 'true' &&
+                                                   'animate__animated  animate__pulse animate__slower animate__infinite'}`}
+                                                onClick={() => {
+                                                   handleClick(survey);
+                                                }}>
+                                                {(currentSurveyStatus &&
+                                                   currentSurveyStatus[survey._id] &&
+                                                   currentSurveyStatus[survey._id].surveyCompleted === 'completed') ||
+                                                survey.isOpened === 'false' ||
+                                                survey.isOpened === false
+                                                   ? 'Resultados'
+                                                   : 'Ir a Encuesta'}
+                                             </Button>
+                                          </>
+                                       }
+                                    </Col>
+                                 </Row>
+                              }
+                           />
+                        </List.Item>
+                     </Card>
                   </>
                )}
             />
@@ -138,10 +136,4 @@ function SurveyCard(props) {
    );
 }
 
-const mapDispatchToProps = {};
-
-const mapStateToProps = (state) => ({
-   currentSurveyStatus: state.survey.data.currentSurveyStatus,
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SurveyCard);
+export default SurveyCard;

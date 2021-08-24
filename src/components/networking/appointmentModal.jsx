@@ -148,12 +148,14 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       duration: 30,
     });
     var usId = await getUsersId(targetEventUserId, cEvent.value._id);
+    console.log("USID==>",usId)
 
     let notificationA = {
       idReceive: usId.account_id,
       idEmited: resp,
       emailEmited: 'email@gmail.com',
-      message: 'te ha enviado cita',
+      message: `${cEventUser.value.names ||
+        cEventUser.value.user.names||  cEventUser.value.user.name } te ha enviado cita`,
       name: 'notification.name',
       type: 'agenda',
       state: '0',
@@ -272,7 +274,9 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                             onClick={() => {
                               if (timetableItem.status === 'free') {
                                 setLoading(true);
-                                createAgendaToEventUser({
+                                console.log("targetEventUserId==>",targetEventUserId)
+                                console.log("targetEventUser==>",targetEventUser)
+                               createAgendaToEventUser({
                                   eventId: cEvent.value._id,
                                   eventUser: cEventUser.value,
                                   currentEventUserId: cEventUser.value._id,

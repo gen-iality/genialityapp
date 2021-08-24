@@ -540,23 +540,23 @@ class Styles extends Component {
                       />
                       <Space direction='vertical'>
                         <Text
-                        style={{fontSize:'20px'}}
+                          style={{ fontSize: '20px' }}
                           code
                           copyable={{
-                            text: `${(this.state.styles[item.fieldColorName]).toUpperCase()}`,
+                            text: `${this.state.styles[item.fieldColorName].toUpperCase()}`,
                             onCopy: () => message.success('Color hexadecimal copiado'),
-                          }}>{`HEX ${(this.state.styles[item.fieldColorName]).toUpperCase()}`}</Text>
+                          }}>{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
                         <Text
-                        style={{fontSize:'20px'}}
+                          style={{ fontSize: '20px' }}
                           code
                           copyable={{
-                            text: `${this.hexToRgb(this.state.styles[item.fieldColorName]).r},${
-                              this.hexToRgb(this.state.styles[item.fieldColorName]).g
-                            },${this.hexToRgb(this.state.styles[item.fieldColorName]).b}`,
+                            text: `${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
+                              this.hexToRgb(this.state.styles[item.fieldColorName])?.g
+                            },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b}`,
                             onCopy: () => message.success('Color rgb copiado'),
-                          }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName]).r},${
-                          this.hexToRgb(this.state.styles[item.fieldColorName]).g
-                        },${this.hexToRgb(this.state.styles[item.fieldColorName]).b})`}</Text>
+                          }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
+                          this.hexToRgb(this.state.styles[item.fieldColorName])?.g
+                        },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b})`}</Text>
                       </Space>
                     </Space>
                   </Modal>

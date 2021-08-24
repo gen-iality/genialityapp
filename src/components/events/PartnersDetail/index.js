@@ -18,18 +18,13 @@ export default function PartnerDetail({ company, handleClosePartnerDetail }) {
       <Row justify='start'>
         <Col span={20} offset={2}>
           <div className='name-parner'>
-            <h1 style={{ fontWeight: '700', fontSize: '50px', borderBottom: '2px solid' }}>{company.name}</h1>
+          {company.list_image && <img src={company.list_image} alt='img-logo-parner' style={{width:'100px'}} />}
+            <h1 style={{ display:"inline-block",fontWeight: '700', fontSize: '50px', borderBottom: '2px solid' }}>{company.name}</h1>
           </div>
 
-          {company.list_image && (
-            <Row justify='center'>
-              <img src={company.list_image} alt='img-logo-parner' style={{}} />
-            </Row>
-          )}
 
           {company.video_url && (
             <div style={{ marginTop: '5vh', fontSize: '120%', fontWeight: 'bold' }}>
-              Video promocional de la empresa
               <div className='column is-centered mediaplayer'>
                 <ReactPlayer
                   width={'100%'}

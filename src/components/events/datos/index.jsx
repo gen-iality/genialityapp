@@ -124,12 +124,25 @@ class Datos extends Component {
     }
   };
   //Funcion para cambiar el valor de los checkboxes
-  async changeCheckBox() {
+  async changeCheckBox(field,key,key2=null) { 
+    notification.open({
+      message: 'Espere..',
+      description: 'Por favor espere mientras se guarda la configuración',
+    });       
     try {
-      this.fetchFields();
-      notification.open({
-        message: 'Campo Actualizado',
-      });
+      this.setState({edit:true},()=>{
+        field[key]=!field[key]
+        if(key2!=null){         
+          field[key2]=field[key2]==true?false:field[key2]
+        }
+               
+        this.saveField(field).then((resp)=>{
+          notification.open({
+            message: 'Correcto!',
+            description: 'Se ha editado correctamente el campo..!',
+          });
+        });
+       })    
     } catch (e) {
       notification.open({
         message: 'No se ha actualizado el campo',
@@ -155,7 +168,7 @@ class Datos extends Component {
         align: 'center',
         render: (record, key) =>
           key.name !== 'email' && key.name !== 'names' && key.name!=='picture'? (
-            <Checkbox name='mandatory' onChange={() => this.changeCheckBox()} defaultChecked={record} />
+            <Checkbox name='mandatory' onChange={() => this.changeCheckBox(key,'mandatory')} defaultChecked={record} />
           ) : (
             <Checkbox checked />
           ),
@@ -164,8 +177,8 @@ class Datos extends Component {
         title: 'Visible solo contactos',
         dataIndex: 'visibleByContacts',
         align: 'center',
-        render: (record) => (
-          <Checkbox name='visibleByContacts' onChange={() => this.changeCheckBox()} defaultChecked={record} />
+        render: (record,key) => (
+          <Checkbox name='visibleByContacts' onChange={() => this.changeCheckBox(key,'visibleByContacts','visibleByAdmin')} checked={record} />
         ),
       },
       {
@@ -174,7 +187,7 @@ class Datos extends Component {
         align: 'center',
         render: (record, key) =>
           key.name !== 'email' && key.name !== 'names' && key.name!=='picture' ? (
-            <Checkbox name='visibleByAdmin' onChange={() => this.changeCheckBox()} defaultChecked={record} />
+            <Checkbox name='visibleByAdmin' onChange={() => this.changeCheckBox(key,'visibleByAdmin','visibleByContacts')} checked={record} />
           ) : (
             <Checkbox checked />
           ),

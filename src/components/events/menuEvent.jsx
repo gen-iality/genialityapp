@@ -129,7 +129,7 @@ class MenuEvent extends Component {
       partners: {
         name: 'Patrocinadores',
         section: 'partners',
-        icon: 'DollarCircleOutlined',
+        icon: 'DeploymentUnitOutlined',
         checked: false,
         permissions: 'public',
       },      

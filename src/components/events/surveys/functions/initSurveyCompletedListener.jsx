@@ -1,6 +1,6 @@
 import { firestore } from '../../../../helpers/firebase';
 
-async function InitSurveysCompletedListener(currentUser,setCurrentSurveyStatus) {
+async function InitSurveysCompletedListener(currentUser, dispatch) {
    const userId = currentUser.value._id;
 
    const firebaseRef = firestore
@@ -8,7 +8,6 @@ async function InitSurveysCompletedListener(currentUser,setCurrentSurveyStatus) 
       .doc(userId)
       .collection('surveyStatus');
 
-  
    const unSuscribe = firebaseRef.onSnapshot((snapShot) => {
       let surveysCompleted = {};
       snapShot.forEach((data) => {
@@ -16,10 +15,11 @@ async function InitSurveysCompletedListener(currentUser,setCurrentSurveyStatus) 
             surveysCompleted[data.id] = data.data();
          }
       });
-      setCurrentSurveyStatus(surveysCompleted);
+
+      dispatch({ type: 'current_Survey_Status', payload: surveysCompleted });
    });
 
-   return unSuscribe
+   return unSuscribe;
 }
 
 export default InitSurveysCompletedListener;
