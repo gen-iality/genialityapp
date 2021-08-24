@@ -49,7 +49,7 @@ function DetailsProduct(props) {
       
       {product && !loading && (
         <Row style={{ padding: '24px' }} gutter={[8, 8]}>
-          <Col xm={24} sm={24} md={12} lg={8} xl={12} xxl={12}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Card style={{ width: '100%', height: '450pxs', display: 'grid', justifyContent: 'center' }}>
               <Carousel showThumbs={product &&
                   product.image &&
@@ -70,8 +70,8 @@ function DetailsProduct(props) {
               </Carousel>
             </Card>
           </Col>
-          <Col xm={24} sm={24} md={12} lg={14} xl={12} xxl={12}>
-            <Card style={{ marginLeft: '12px' }}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+            <Card >
               <Space direction='vertical' style={{ width: '100%' }}>
                 <Title level={3}>{product && product.name ? product.name : 'Nombre de la obra'}</Title>
                 {habilty?<OfertaProduct product={product} eventId={eventId} />:<div>                  
