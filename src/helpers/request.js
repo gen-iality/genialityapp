@@ -242,6 +242,12 @@ export const EventsApi = {
   editProduct:async (data,eventId,idproduct) => {
     return await Actions.put(`/api/events/${eventId}/products/${idproduct}`,data);
   },
+  createProducts:async (data,eventId) => {
+    return await Actions.post(`/api/events/${eventId}/products`,data);
+  },
+  deleteProduct:async (eventId,galleryId) => {
+    return await Actions.delete(`/api/events/${eventId}/products/${galleryId}`);
+  },
 };
 export const InvitationsApi = {
   getAll: async (id) => {

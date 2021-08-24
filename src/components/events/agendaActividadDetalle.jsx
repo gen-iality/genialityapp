@@ -158,6 +158,7 @@ let AgendaActividadDetalle = (props) => {
    }, []);
 
    useEffect(() => {
+     
       (async function() {
          await listeningStateMeetingRoom(props.cEvent.value._id, activity_id);
       })();
@@ -180,7 +181,7 @@ let AgendaActividadDetalle = (props) => {
                      list.push(response);
                   }
                });
-
+               console.log("RESPUESTA LIST==>",list);
                setActivitiesSpace(list);
             });
       }
