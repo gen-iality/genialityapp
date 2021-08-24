@@ -42,9 +42,7 @@ const ChatList = (props) => {
     cUser.value = values;
   };
 
-  console.log('====================================');
-  console.log("props.availableChats",props.availableChats);
-  console.log('====================================');
+  
   let usernameR = chatActual && chatActual.chatname;
   useEffect(() => {
     props.datamsjlast &&
