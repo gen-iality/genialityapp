@@ -1,9 +1,8 @@
 import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
-import { firestore,fireRealtime } from '../helpers/firebase';
+import { firestore, fireRealtime } from '../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../helpers/request';
 import { UseEventContext } from './eventContext';
-import { getUserEvent } from '../components/networking/services';
 import { UseCurrentUser } from './userContext';
 import { UseUserEvent } from './eventUserContext';
 
@@ -46,7 +45,7 @@ export const HelperContextProvider = ({ children }) => {
       if (ida < idb) {
         chatid = ida + '_' + idb;
       } else {
-        chatid = idb;
+        chatid = idb + '_' + ida;
       }
     } else {
       chatid = null;
@@ -103,6 +102,10 @@ export const HelperContextProvider = ({ children }) => {
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
+
+    console.log('=====idcurrentUser===================', idcurrentUser);
+    console.log('=========idOtherUser=================', idOtherUser);
+
     //agregamos una referencia al chat para el usuario actual
     data = { id: newId, name: otherUserName };
     firestore
@@ -115,6 +118,7 @@ export const HelperContextProvider = ({ children }) => {
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
 
+    console.log('chatuser', newId);
     HandleGoToChat(idcurrentUser, idOtherUser, currentName, 'attendee');
   };
 
@@ -239,6 +243,28 @@ export const HelperContextProvider = ({ children }) => {
   }, [cEvent.value, cUser.value]);
 
   useEffect(() => {
+    if (cEvent.value == null || cEvent.value == null) return;
+    console.log(' cUser.value', cUser.value);
+    // async function fethcNewMessages() {
+    //   firestore
+    //     .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value._id + '/' + 'chats/')
+    //     .onSnapshot(function(querySnapshot) {
+    //       let data;
+    //       querySnapshot.forEach((doc) => {
+    //         data = doc.data();
+    //         console.log('====================================');
+    //         console.log('datamsj', data);
+    //         console.log('====================================');
+    //       });
+    //     });
+    // }
+
+    // if (cEvent.value != null) {
+    //   fethcNewMessages();
+    // }
+  }, [firestore, cEvent.value]);
+
+  useEffect(() => {
     /*NOTIFICACIONES POR ACTIVIDAD*/
 
     async function fetchActivityChange() {
@@ -353,7 +379,7 @@ export const HelperContextProvider = ({ children }) => {
         createNewOneToOneChat,
         privateChatsList,
         attendeeList,
-        attendeeListPresence
+        attendeeListPresence,
       }}>
       {children}
     </HelperContext.Provider>
