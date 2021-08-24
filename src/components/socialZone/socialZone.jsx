@@ -59,9 +59,6 @@ let SocialZone = function(props) {
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
-   console.log('====================================');
-   console.log("se ejecuta eso");
-   console.log('====================================');
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
     //agregamos una referencia al chat para el usuario actual
@@ -76,7 +73,7 @@ let SocialZone = function(props) {
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
 
-    HandleGoToChat(idcurrentUser, idOtherUser, currentName,newId);
+    HandleGoToChat(idcurrentUser, idOtherUser, currentName, 'attendee');
   };
 
   const handleChange = async (e) => {
@@ -126,6 +123,9 @@ let SocialZone = function(props) {
   }, [cEvent.value]);
 
   useEffect(() => {
+    console.log('====================================');
+    console.log('mensajes');
+    console.log('====================================');
     if (cEvent.value == null || cUser.value == null) return;
 
     firestore
@@ -188,7 +188,7 @@ let SocialZone = function(props) {
 
         setavailableChats(list);
       });
-  }, [cEvent.value, cUser.value, props.collapse, attendeeList]);
+  }, [cEvent.value, cUser.value, firestore]);
 
   function redirectRegister() {
     history.push(`/landing/${cEvent.value._id}/tickets`);
@@ -351,7 +351,7 @@ let SocialZone = function(props) {
               listOfEventSurveys={props.listOfEventSurveys}
               loadingSurveys={props.loadingSurveys}
             />
-          ) :  (
+          ) : (
             <div style={{ paddingTop: 30 }}>
               <Alert
                 showIcon
