@@ -189,8 +189,6 @@ const ChatList = (props) => {
                           'private'
                         );
                         settotalmsjpriv(0);
-                        props.setTotalNewMessages(0);
-                        props.notNewMessages();
                       }}>
                       <Tooltip title='Chatear'>
                         {item.newMessages && item.newMessages.length > 0 && (

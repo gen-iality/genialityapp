@@ -15,12 +15,11 @@ import EventSectionMenuRigth from './EventSectionMenuRigth';
 import MenuTablets from './Menus/MenuTablets';
 import MenuTabletsSocialZone from './Menus/MenuTabletsSocialZone';
 
-
 /** Firebase */
 import { firestore } from '../../../helpers/firebase';
 const { Content } = Layout;
 
-import {setUserAgenda} from '../../../redux/networking/actions'
+import { setUserAgenda } from '../../../redux/networking/actions';
 import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutlined } from '@ant-design/icons';
 
 import EviusFooter from './EviusFooter';
@@ -96,11 +95,8 @@ const Landing = (props) => {
   let [totalNewMessages, settotalnewmessages] = useState(0);
   let { currentActivity, tabs } = props;
   const [tabselected, settabselected] = useState('1');
-  const [eventId, seteventId] = useState(null);
 
   useEffect(() => {
-    cEventContext.status === 'LOADED' && seteventId(cEventContext.value._id);
-
     cEventContext.status === 'LOADED' &&
       firestore
         .collection('events')
@@ -130,11 +126,6 @@ const Landing = (props) => {
         });
   }, [cEventContext.status]);
 
-  //METODO PARA SETEAR NEW MESSAGE
-  const notNewMessage = () => {
-    settotalnewmessages(0);
-  };
-
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
 
   return (
@@ -160,17 +151,13 @@ const Landing = (props) => {
             }}>
             {props.view && <TopBanner currentActivity={currentActivity} />}
 
-            <EventSectionRoutes
-              generaltabs={generaltabs}
-              currentActivity={currentActivity}
-            />
+            <EventSectionRoutes generaltabs={generaltabs} currentActivity={currentActivity} />
           </Content>
           <EviusFooter />
         </Layout>
         <EventSectionMenuRigth
           generalTabs={generaltabs}
           currentActivity={currentActivity}
-          notNewMessage={notNewMessage}
           totalNewMessages={totalNewMessages}
           tabs={tabs}
           tabselected={tabselected}
@@ -182,7 +169,6 @@ const Landing = (props) => {
           totalNewMessages={totalNewMessages}
           currentActivity={currentActivity}
           generalTabs={generaltabs}
-          notNewMessage={notNewMessage}
           tabselected={tabselected}
           settabselected={settabselected}
           setchattab={setchattab}
@@ -201,6 +187,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setUserAgenda
+  setUserAgenda,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);
