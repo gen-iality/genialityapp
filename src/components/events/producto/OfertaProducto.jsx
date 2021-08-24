@@ -1,6 +1,9 @@
-import { Card, Col, Row, Tag, Input, Button } from 'antd';
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider } from 'antd';
 import React from 'react';
 import { useState } from 'react';
+
+const { Title, Text } = Typography;
 
 const OfertaProduct = ({ product, eventId }) => {
   const [selectedValue, setSelectedValue] = useState(50000);
@@ -37,55 +40,60 @@ const OfertaProduct = ({ product, eventId }) => {
     setValueOferta(e.target.value);
   };
 
-  const upvalue = () => {     
+  const upvalue = () => {
     if (+valuOferta + selectedValue <= 3 * valorProduct) {
-    
-      setValueOferta((+valuOferta + selectedValue));
+      setValueOferta(+valuOferta + selectedValue);
     }
   };
 
   const downvalue = () => {
-    if (+valuOferta - selectedValue >0) {
-      setValueOferta((+valuOferta - selectedValue));
+    if (+valuOferta - selectedValue > 0) {
+      setValueOferta(+valuOferta - selectedValue);
     }
   };
   return (
     <Card>
       <Row>
-        <Col xs={24} md={24} xl={10} lg={10}>
-          <strong>Precio: </strong>
-          {product && product.price}
+        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+          <Text type='secondary'>
+            Precio: <Title level={4}>{product && product.price}</Title>
+          </Text>
+          <Divider></Divider>
         </Col>
-        <Col xs={24} md={24} xl={14} lg={14}>
-          {valuesPuja.map((val, index) => (
-            <Tag
-              color={selectedValue === val.value ? '#2db7f5' : ''}
-              onClick={() => setSelectedValue(val.value)}
-              key={'val' + index}>
-              {val.name}
-            </Tag>
-          ))}
+        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+          <Space wrap size={8} align='center'>
+            {valuesPuja.map((val, index) => (
+              <Tag
+                style={{ cursor: 'pointer', padding:'5px', fontSize:'14px' }}
+                color={selectedValue === val.value ? '#2db7f5' : ''}
+                onClick={() => setSelectedValue(val.value)}
+                key={'val' + index}>
+                {val.name}
+              </Tag>
+            ))}
+          </Space>
         </Col>
       </Row>
-      <Row style={{ marginTop: 20 }}>
-        <Col xs={2} md={2} xl={2} lg={2}>
-          <Button onClick={()=>downvalue()}>- </Button>
+      <Row style={{ marginTop: '5px' }} gutter={[20, 30]} justify='center'>
+        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+          <Space size='small'>
+            <Button type='dashed' shape='circle' icon={<MinusOutlined style={{color:'#2db7f5'}} />} onClick={() => downvalue()}></Button>
+            <Input
+              readOnly
+              type='number'
+              style={{ width: '100%', margin: 0 }}
+              value={`${valuOferta}`}
+              onChange={changeValor}
+              min='1000'
+              max={9999999999}
+            />
+            <Button type='dashed' shape='circle' icon={<PlusOutlined style={{color:'#2db7f5'}} />} onClick={() => upvalue()}></Button>
+          </Space>
         </Col>
-        <Col xs={10} md={10} xl={11} lg={11}>
-          <Input
-            type='number'
-            style={{ width: '100%', margin: 0 }}
-            value={`${valuOferta}`}
-            onChange={changeValor}
-            min='1000'
-            max={9999999999}
-          />
-        </Col>
-        <Col xs={2} md={2} xl={2} lg={2}>
-          <Button onClick={()=>upvalue()}>+</Button>
-        </Col>
-        <Col>
-          <Button type={'primary'}>Ofrecer</Button>
+        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+          <Button block type={'primary'}>
+            Ofrecer
+          </Button>
         </Col>
       </Row>
     </Card>
