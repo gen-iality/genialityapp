@@ -67,6 +67,7 @@ const EventSectionRoutes = (props) => {
       {props.viewVirtualconference && (
         <>
           <VirtualConference />
+          <ListVideoCard idevent={props.cEvent.value} />
         </>
       )}
 
@@ -238,11 +239,7 @@ const EventSectionRoutes = (props) => {
           <MessageRegister />
         </Route>
       </Switch>
-      {props.viewVirtualconference && (
-        <>
-          <ListVideoCard idevent={props.cEvent.value} />
-        </>
-      )}
+     
     </>
   );
 };
