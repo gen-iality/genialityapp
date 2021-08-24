@@ -673,7 +673,7 @@ class ListEventUser extends Component {
                                           (property, propertyIndex) =>
                                             !property.visibleByAdmin &&
                                             (!property.visibleByContacts || property.visibleByContacts == 'public') &&
-                                            users.properties[property.name] && (
+                                            users.properties[property.name] && property.name!=='picture' && (
                                               <div key={`public-field-${userIndex}-${propertyIndex}`}>
                                                 <p>
                                                   <b>{`${property.label}: `}</b>
