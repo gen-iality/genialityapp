@@ -46,7 +46,6 @@ const InteractiveZone = () => {
           eventSurveys={this.state.eventSurveys}
           generalTabs={this.state.generalTabs}
           publishedSurveys={this.state.publishedSurveys}
-          notNewMessages={this.notNewMessage}
         />
       </Drawer>
       {/* aqui empieza el chat del evento desktop */}
@@ -91,7 +90,6 @@ const InteractiveZone = () => {
                   eventSurveys={this.state.eventSurveys}
                   generalTabs={this.state.generalTabs}
                   publishedSurveys={this.state.publishedSurveys}
-                  notNewMessages={this.notNewMessage}
                 />
               </>
             )}
