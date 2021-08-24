@@ -16,8 +16,10 @@ const ProductList = (props) => {
 
   const obtenerGaleria = () => {
     EventsApi.getProducts(props.cEvent.value._id).then((resp) => {
-      if (resp && resp.data) {
-        setProducts(resp.data);
+      
+      if (resp && resp.data) {       
+        let listporductOrder=resp.data.sort((a,b)=>a?.position-b?.position)
+        setProducts(listporductOrder);
       }
     });
   };
