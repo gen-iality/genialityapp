@@ -1,8 +1,7 @@
 import { withRouter } from 'react-router-dom';
-import { firestore } from '../../helpers/firebase';
-import React, { useEffect, useState, useContext } from 'react';
-import { Tabs, Row, Badge, Col, notification, Button, Alert } from 'antd';
-import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone, SearchOutlined } from '@ant-design/icons';
+import React, { useContext, useState } from 'react';
+import { Tabs, Row, Badge, Col, Button, Alert } from 'antd';
+import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
@@ -14,10 +13,9 @@ import GameRanking from '../events/game/gameRanking';
 import { useRef } from 'react';
 import { UseEventContext } from '../../Context/eventContext';
 import { UseCurrentUser } from '../../Context/userContext';
-import { HelperContext } from '../../Context/HelperContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
-import { monitorEventPresence } from './hooks';
+import { HelperContext } from '../../Context/HelperContext';
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
 const callback = () => {};
@@ -32,24 +30,14 @@ let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-
-  const [attendeeList, setAttendeeList] = useState({});
-  const [attendeeListPresence, setAttendeeListPresence] = useState({});
-  const [availableChats, setavailableChats] = useState([]);
+  let { attendeeList } = useContext(HelperContext);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
-  let [datamsjlast, setdatamsjlast] = useState();
   let [busqueda, setBusqueda] = useState(null);
   let [strAttende, setstrAttende] = useState();
   let [isFiltered, setIsFiltered] = useState(false);
   let busquedaRef = useRef();
   let history = useHistory();
-
-  useEffect(() => {
-    if (cEvent.value) {
-      monitorEventPresence(cEvent.value._id, attendeeList, setAttendeeListPresence);
-    }
-  }, [cEvent.value]);
 
   const handleChange = async (e) => {
     const { value } = e.target;
@@ -68,33 +56,6 @@ let SocialZone = function(props) {
       busquedaRef.current.value = '';
     }
   };
-
-  useEffect(() => {
-    setTotalNewMessages(props.totalMessages);
-  }, []);
-
-  //Cargar la lista de chats de una persona
-  useEffect(() => {
-    if (cEvent.value == null) return;
-    let colletion_name = cEvent.value._id + '_event_attendees';
-    let attendee;
-    firestore
-      .collection(colletion_name)
-      .orderBy('state_id', 'asc')
-      .onSnapshot(function(querySnapshot) {
-        let list = {};
-
-        querySnapshot.forEach((doc) => {
-          attendee = doc.data();
-          let localattendee = attendeeList[attendee.user?.uid] || {};
-          list[attendee.user?.uid] = { ...localattendee, ...attendee };
-        });
-
-        setAttendeeList(list);
-
-        //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
-      });
-  }, [cEvent.value]);
 
   function redirectRegister() {
     history.push(`/landing/${cEvent.value._id}/tickets`);
@@ -132,15 +93,11 @@ let SocialZone = function(props) {
           key='1'>
           <ChatList
             props={props}
-            availableChats={availableChats}
             totalNewMessages={totalNewMessages}
-            setTotalNewMessages={setTotalNewMessages}
             settabselected={props.settabselected}
             tabselected={props.tabselected}
             setCurrentUser={setCurrentUser}
-            datamsjlast={datamsjlast}
             generalTabs={props.generalTabs}
-            notNewMessages={props.notNewMessages}
             chattab={props.chattab}
             setchattab={props.setchattab}
           />
@@ -203,8 +160,6 @@ let SocialZone = function(props) {
                   section={props.section}
                   containNetWorking={props.containNetWorking}
                   busqueda={strAttende}
-                  attendeeList={attendeeList}
-                  attendeeListPresence={attendeeListPresence}
                   settabselected={props.settabselected}
                   setchattab={props.setchattab}
                 />
