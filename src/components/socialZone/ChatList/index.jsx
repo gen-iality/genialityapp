@@ -7,7 +7,6 @@ import { UseCurrentUser } from '../../../Context/userContext';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { InitialsNameUser } from '../hooks';
-import PopoverInfoUser from '../hooks/Popover';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../../Context/HelperContext';
 const { TabPane } = Tabs;
@@ -37,20 +36,10 @@ const ChatList = (props) => {
   const history = useHistory();
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
-  let { chatActual, HandleGoToChat } = useContext(HelperContext);
+  let { chatActual, HandleGoToChat, privateChatsList } = useContext(HelperContext);
   const onFinish = (values) => {
     cUser.value = values;
   };
-
-  
-  let usernameR = chatActual && chatActual.chatname;
-  useEffect(() => {
-    props.datamsjlast &&
-      props.datamsjlast.remitente !== undefined &&
-      props.datamsjlast.remitente !== null &&
-      props.datamsjlast.remitente !== usernameR &&
-      props.totalNewMessages > 0;
-  }, [props.datamsjlast, props.totalNewMessages]);
 
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();
@@ -185,7 +174,7 @@ const ChatList = (props) => {
             <List
               className='asistente-list'
               style={styleList}
-              dataSource={props.availableChats}
+              dataSource={privateChatsList}
               renderItem={(item) => (
                 <List.Item
                   style={styleItemCard}
@@ -197,7 +186,7 @@ const ChatList = (props) => {
                           cUser.value.uid,
                           item.id,
                           cUser.value.name ? cUser.value.name : cUser.value.names,
-                          "private"
+                          'private'
                         );
                         settotalmsjpriv(0);
                         props.setTotalNewMessages(0);
@@ -242,14 +231,16 @@ const ChatList = (props) => {
                 title='chatevius'
                 className='ChatEviusLan'
                 src={
-                  'https://chatevius.web.app?nombre=' +
-                  chatActual.chatname +
+                  'https://chatevius.web.app?iduser=' +
+                  chatActual.idotheruser +
                   '&chatid=' +
                   chatActual.chatid +
                   '&eventid=' +
                   cEvent.value._id +
                   '&userid=' +
-                  chatActual.idactualuser
+                  chatActual.idactualuser +
+                  '&nombre=' +
+                  chatActual.chatname
                 }></iframe>
             </>
           )}
