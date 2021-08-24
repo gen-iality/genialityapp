@@ -99,6 +99,24 @@ export const HelperContextProvider = ({ children }) => {
     }
   };
 
+  let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
+    let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
+    let data = {};
+    //agregamos una referencia al chat para el usuario actual
+    data = { id: newId, name: otherUserName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
+    firestore
+      .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
+      .set(data, { merge: true });
+
+    //agregamos una referencia al chat para el otro usuario del chat
+    data = { id: newId, name: currentName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
+    firestore
+      .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
+      .set(data, { merge: true });
+
+    HandleGoToChat(idcurrentUser, idOtherUser, currentName, 'attendee');
+  };
+
   // ACA HAY UN BUG AL TRAER DATOS CON BASTANTES CAMPOS
   const getPropertiesUserWithId = async (id) => {
     const eventUser = await EventsApi.getEventUser(id, cEvent.value._id);
@@ -264,6 +282,7 @@ export const HelperContextProvider = ({ children }) => {
         chatActual,
         HandleGoToChat,
         contacts,
+        createNewOneToOneChat,
       }}>
       {children}
     </HelperContext.Provider>
