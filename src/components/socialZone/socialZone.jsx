@@ -4,7 +4,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Tabs, Row, Badge, Col, notification, Button, Alert } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, MessageTwoTone, SearchOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
-import SurveyDetail from '../events/surveys/surveyDetail';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
 import { setCurrentSurvey } from '../../redux/survey/actions';
@@ -45,36 +44,12 @@ let SocialZone = function(props) {
   let [isFiltered, setIsFiltered] = useState(false);
   let busquedaRef = useRef();
   let history = useHistory();
-  let { HandleGoToChat } = useContext(HelperContext);
-  let userName = cUser.value ? cUser.value?.names : cUser.value?.name ? cUser.value?.name : '---';
 
   useEffect(() => {
     if (cEvent.value) {
       monitorEventPresence(cEvent.value._id, attendeeList, setAttendeeListPresence);
     }
   }, [cEvent.value]);
-
-  let generateUniqueIdFromOtherIds = (ida, idb) => {
-    return ida < idb ? ida + '_' + idb : idb + '_' + ida;
-  };
-
-  let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
-    let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
-    let data = {};
-    //agregamos una referencia al chat para el usuario actual
-    data = { id: newId, name: otherUserName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
-    firestore
-      .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
-      .set(data, { merge: true });
-
-    //agregamos una referencia al chat para el otro usuario del chat
-    data = { id: newId, name: currentName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
-    firestore
-      .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
-      .set(data, { merge: true });
-
-    HandleGoToChat(idcurrentUser, idOtherUser, currentName, 'attendee');
-  };
 
   const handleChange = async (e) => {
     const { value } = e.target;
@@ -99,7 +74,6 @@ let SocialZone = function(props) {
   }, []);
 
   //Cargar la lista de chats de una persona
-
   useEffect(() => {
     if (cEvent.value == null) return;
     let colletion_name = cEvent.value._id + '_event_attendees';
@@ -121,74 +95,6 @@ let SocialZone = function(props) {
         //setEnableMeetings(doc.data() && doc.data().enableMeetings ? true : false);
       });
   }, [cEvent.value]);
-
-  useEffect(() => {
-    console.log('====================================');
-    console.log('mensajes');
-    console.log('====================================');
-    if (cEvent.value == null || cUser.value == null) return;
-
-    firestore
-      .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
-      .onSnapshot(function(querySnapshot) {
-        let list = [];
-        let data;
-        let newmsj = 0;
-        querySnapshot.forEach((doc) => {
-          data = doc.data();
-
-          if (data.newMessages) {
-            newmsj += !isNaN(parseInt(data.newMessages.length)) ? parseInt(data.newMessages.length) : 0;
-          }
-
-          list.push(data);
-        });
-
-        let change = querySnapshot.docChanges()[0];
-        setdatamsjlast(change?.doc.data());
-        let userNameFirebase = null;
-        if (change) {
-          if (change.doc.data().remitente) {
-            if (
-              change.doc
-                .data()
-                .remitente.toLowerCase()
-                .indexOf('(admin)') > -1 ||
-              change.doc
-                .data()
-                .remitente.toLowerCase()
-                .indexOf('(casa)')
-            ) {
-              // QUITAR ALGUNOS PREFIJOS PARA HACER EL MATCH DE NOMBRE ******HAY QUE MEJORAR*******
-              userNameFirebase = change.doc.data().remitente.replace('(admin)', '');
-              userNameFirebase = change.doc.data().remitente.replace('(casa)', '');
-            }
-          }
-        }
-        if (change) {
-          if (
-            userName !== userNameFirebase &&
-            change.doc.data().remitente !== null &&
-            change.doc.data().remitente !== undefined &&
-            newmsj > 0
-          ) {
-            notification.open({
-              description: `Nuevo mensaje de ${change.doc.data().remitente}`,
-              icon: <MessageTwoTone />,
-              onClick: () => {
-                props.settabselected('chat2');
-                // setCurrentChat(change.doc.data().id, change.doc.data().name);
-                notification.destroy();
-              },
-            });
-
-            newmsj > 0 && setTotalNewMessages(newmsj);
-          }
-        }
-
-        setavailableChats(list);
-      });
-  }, [cEvent.value, cUser.value, firestore]);
 
   function redirectRegister() {
     history.push(`/landing/${cEvent.value._id}/tickets`);
@@ -297,7 +203,6 @@ let SocialZone = function(props) {
                   section={props.section}
                   containNetWorking={props.containNetWorking}
                   busqueda={strAttende}
-                  createNewOneToOneChat={createNewOneToOneChat}
                   attendeeList={attendeeList}
                   attendeeListPresence={attendeeListPresence}
                   settabselected={props.settabselected}
@@ -328,22 +233,7 @@ let SocialZone = function(props) {
             onClick={() => {
               props.setMainStage(null);
               props.settabselected('1');
-            }}>
-            {/* <Col span={24}>
-              <Button
-                style={{ backgroundColor: '#1cdcb7', color: '#ffffff' }}
-                size='large'
-                icon={<VideoCameraOutlined />}
-                block
-                onClick={() => {
-                  props.setMainStage(null);
-                  props.settabselected('1');
-                  // props.tcollapse();
-                }}>
-                Volver a la Conferencia
-              </Button>
-            </Col> */}
-          </Row>
+            }}></Row>
           {cUser.value !== null ? (
             <SurveyList
               eventSurveys={props.eventSurveys}

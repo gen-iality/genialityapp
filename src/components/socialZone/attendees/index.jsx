@@ -5,7 +5,7 @@ import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
 import InfiniteScroll from 'react-infinite-scroller';
 import { UseCurrentUser } from '../../../Context/userContext';
-
+import { HelperContext } from '../../../Context/HelperContext';
 const AttendeList = function(props) {
   //contextos
   let cUser = UseCurrentUser();
@@ -14,7 +14,7 @@ const AttendeList = function(props) {
   let [page, setPage] = useState(0);
   let [filteredlist, setfilteredlist] = useState([]);
   let [hasMore, setHasMore] = useState(true);
-
+  let { createNewOneToOneChat } = useContext(HelperContext);
   const pag = 15;
 
   useEffect(() => {
@@ -106,7 +106,7 @@ const AttendeList = function(props) {
                 <a
                   key='list-loadmore-edit'
                   onClick={() => {
-                    props.createNewOneToOneChat(
+                    createNewOneToOneChat(
                       cUser.value.uid,
                       cUser.value.names || cUser.value.name,
                       item.uid,
