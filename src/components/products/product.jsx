@@ -172,7 +172,7 @@ class Product extends Component {
                   title='Posición'
                   dataIndex='index'
                   width='100px'
-                  render={ (data,index) => <div>{data}</div>}
+                  render={ (data,index) => <div>{data+1}</div>}
                   />
                   <Column
                      key='_id'

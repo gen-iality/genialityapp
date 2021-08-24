@@ -42,6 +42,7 @@ const ChatList = (props) => {
     cUser.value = values;
   };
 
+  
   let usernameR = chatActual && chatActual.chatname;
   useEffect(() => {
     props.datamsjlast &&
@@ -195,7 +196,8 @@ const ChatList = (props) => {
                         HandleGoToChat(
                           cUser.value.uid,
                           item.id,
-                          cUser.value.name ? cUser.value.name : cUser.value.names
+                          cUser.value.name ? cUser.value.name : cUser.value.names,
+                          "private"
                         );
                         settotalmsjpriv(0);
                         props.setTotalNewMessages(0);

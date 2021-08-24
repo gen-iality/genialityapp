@@ -37,9 +37,6 @@ const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let redirect;
 
-  console.log('====================================');
-  console.log('section routes', props);
-  console.log('====================================');
   if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
     redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
   } else {
@@ -111,13 +108,15 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/activity/:activity_id`}>
-          {props.cEventUser.value != null ? (
-            <AgendaActividadDetalle setVirtualConference={props.setVirtualConference} />
-          ) : (
-            <>
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-            </>
-          )}
+          {() =>
+            ValidateViewPermissions('agenda', 'Agenda') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <AgendaActividadDetalle setVirtualConference={props.setVirtualConference} />
+            )
+          }
         </Route>
 
         <Route path={`${path}/speakers`}>

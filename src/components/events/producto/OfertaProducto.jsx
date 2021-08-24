@@ -1,11 +1,13 @@
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider } from 'antd';
+import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, message, Alert } from 'antd';
 import React from 'react';
 import { useState } from 'react';
+import { EventsApi } from '../../../helpers/request';
+import withContext from '../../../Context/withContext';
 
 const { Title, Text } = Typography;
 
-const OfertaProduct = ({ product, eventId }) => {
+const OfertaProduct = ({ product, eventId,cEventUser,cUser }) => {
   const [selectedValue, setSelectedValue] = useState(50000);
   const [valuOferta, setValueOferta] = useState(
     product && product.price
@@ -15,8 +17,9 @@ const OfertaProduct = ({ product, eventId }) => {
           .replace('.', '')
       : 0
   );
+  console.log("DATACONTEXT==>",cEventUser,cUser)
   const [valorProduct, setValorProduct] = useState(valuOferta);
-  console.log('VALOR OFERTA ', valuOferta);
+  //VALORES PARA SUBIR EN LA PUJA
   const valuesPuja = [
     {
       name: '10.000',
@@ -35,19 +38,43 @@ const OfertaProduct = ({ product, eventId }) => {
       value: 500000,
     },
   ];
-
+  //VALIDAR SI TIENE PERMISOS DE PUJAR
+  const permission=()=>{
+    if(cEventUser.value.rol_id=='60e8a8b7f6817c280300dc23'){
+      return true;
+    }
+    return false;
+  }
+  //ONCHANGE INPUT VALUE
   const changeValor = (e) => {
     setValueOferta(e.target.value);
   };
-
+  //SAVE VALUE OFERTA
+  const saveValue = async () => {    
+    if (valuOferta > 0) {
+      let data = {
+        valueOffered: valuOferta,
+      };
+      try {
+        let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
+        if (respuestaApi) {
+          //console.log('RESPUESTA_API==>', respuestaApi);
+          message.success('Oferta realizada correctamente..!');
+        }
+      } catch (error) {
+        message.error('No estás autorizado para realizar ofertas');
+      }
+    }
+  };
+  // BOTON MAS
   const upvalue = () => {
     if (+valuOferta + selectedValue <= 3 * valorProduct) {
       setValueOferta(+valuOferta + selectedValue);
     }
   };
-
+  //BOTON MENOS
   const downvalue = () => {
-    if (+valuOferta - selectedValue > 0) {
+    if (+valuOferta - selectedValue >= valorProduct) {
       setValueOferta(+valuOferta - selectedValue);
     }
   };
@@ -64,7 +91,7 @@ const OfertaProduct = ({ product, eventId }) => {
           <Space wrap size={8} align='center'>
             {valuesPuja.map((val, index) => (
               <Tag
-                style={{ cursor: 'pointer', padding:'5px', fontSize:'14px' }}
+                style={{ cursor: 'pointer', padding: '5px', fontSize: '14px' }}
                 color={selectedValue === val.value ? '#2db7f5' : ''}
                 onClick={() => setSelectedValue(val.value)}
                 key={'val' + index}>
@@ -77,7 +104,11 @@ const OfertaProduct = ({ product, eventId }) => {
       <Row style={{ marginTop: '5px' }} gutter={[20, 30]} justify='center'>
         <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
           <Space size='small'>
-            <Button type='dashed' shape='circle' icon={<MinusOutlined style={{color:'#2db7f5'}} />} onClick={() => downvalue()}></Button>
+            <Button
+              type='dashed'
+              shape='circle'
+              icon={<MinusOutlined style={{ color: '#2db7f5' }} />}
+              onClick={() => downvalue()}></Button>
             <Input
               readOnly
               type='number'
@@ -87,17 +118,22 @@ const OfertaProduct = ({ product, eventId }) => {
               min='1000'
               max={9999999999}
             />
-            <Button type='dashed' shape='circle' icon={<PlusOutlined style={{color:'#2db7f5'}} />} onClick={() => upvalue()}></Button>
+            <Button
+              type='dashed'
+              shape='circle'
+              icon={<PlusOutlined style={{ color: '#2db7f5' }} />}
+              onClick={() => upvalue()}></Button>
           </Space>
         </Col>
-        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-          <Button block type={'primary'}>
+       {permission() && <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+          <Button block type={'primary'} onClick={saveValue}>
             Ofrecer
           </Button>
-        </Col>
+        </Col>}
+        {!permission() && <Row><Alert type='warning' message="No tienes permisos para pujar sobre esta obra." /></Row>}
       </Row>
     </Card>
   );
 };
 
-export default OfertaProduct;
+export default withContext(OfertaProduct);

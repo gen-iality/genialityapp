@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { withRouter } from 'react-router';
 import  Parser  from 'html-react-parser';
+import ReactPlayer from 'react-player';
 class InformativeSection extends Component {
   constructor(props) {
     super(props);
@@ -151,11 +152,25 @@ class InformativeSection extends Component {
                   </a>
                 </>
               )}
-              {this.props.cEvent.value._id !== '60797bfb2a9cc06ce973a1f4' && markup && Parser(markup)}
+              {this.props.cEvent.value._id !== '60797bfb2a9cc06ce973a1f4' && this.props.cEvent.value._id !=='611c285104f5d97d1b0f5ed2' && markup && Parser(markup)}
+              {this.props.cEvent.value._id == '611c285104f5d97d1b0f5ed2' && (
+              <>
+                <h2 style={{ fontWeight: 700, fontSize: '20px', borderBottom: '1px solid #C0BAB9', marginTop: '15px',margin:'auto' }}>
+                Proyecto Casos Clínicos de Obesidad: Adiposopatia en el Siglo XXI, más allá del peso Ideal
+                </h2>
+                <br></br>
+                <ReactPlayer
+                  style={{ width: '560px', height: '445px', margin: 'auto' }}
+                  url='https://vimeo.com/589393733' 
+                  controls
+                />
+              </>
+            )}
             </Card>
-
+            
           </div>
         )}
+         
       </Fragment>
     );
   }

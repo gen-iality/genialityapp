@@ -52,21 +52,31 @@ export const HelperContextProvider = ({ children }) => {
     return chatid;
   };
 
-  function HandleGoToChat(idactualuser, idotheruser, chatname, chatid) {
-    // console.log('=======idotheruser========',idotheruser);
-    // console.log('datachat', {
-    //   idactualuser,
-    //   idotheruser,
-    //   chatname,
-    //   chatid,
-    // });
-    // console.log('=========idactualuser====================',idactualuser);
-    let data = {
-      chatid: chatid ? chatid : generateUniqueIdFromOtherIds(idactualuser, idotheruser),
-      idactualuser,
-      idotheruser,
-      chatname,
-    };
+  function HandleGoToChat(idactualuser, idotheruser, chatname, section) {
+    let data = {};
+
+    switch (section) {
+      case 'private':
+        data = {
+          chatid: idotheruser,
+          idactualuser,
+          idotheruser,
+          chatname,
+        };
+        break;
+
+      case 'attendee':
+        data = {
+          chatid: generateUniqueIdFromOtherIds(idactualuser, idotheruser),
+          idactualuser,
+          idotheruser,
+          chatname,
+        };
+        break;
+    }
+    console.log('chatid', generateUniqueIdFromOtherIds(idactualuser, idotheruser));
+    console.log('data', data);
+
     setchatActual(data);
   }
 
@@ -87,6 +97,24 @@ export const HelperContextProvider = ({ children }) => {
     if (activities.data.length > 0) {
       setactivitiesEvent(activities.data);
     }
+  };
+
+  let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
+    let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
+    let data = {};
+    //agregamos una referencia al chat para el usuario actual
+    data = { id: newId, name: otherUserName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
+    firestore
+      .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
+      .set(data, { merge: true });
+
+    //agregamos una referencia al chat para el otro usuario del chat
+    data = { id: newId, name: currentName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
+    firestore
+      .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
+      .set(data, { merge: true });
+
+    HandleGoToChat(idcurrentUser, idOtherUser, currentName, 'attendee');
   };
 
   // ACA HAY UN BUG AL TRAER DATOS CON BASTANTES CAMPOS
@@ -165,7 +193,7 @@ export const HelperContextProvider = ({ children }) => {
             obtenerNombreActivity(change.doc.id)?.name != null &&
             change.type === 'modified'
           ) {
-            let message = obtenerNombreActivity(change.doc.id)?.name + ' ' +  'ha terminado..';
+            let message = obtenerNombreActivity(change.doc.id)?.name + ' ' + 'ha terminado..';
             ChangeActiveNotification(true, message, 'ended', change.doc.id);
           } else if (
             change.doc.data().habilitar_ingreso == 'closed_meeting_room' &&
@@ -254,6 +282,7 @@ export const HelperContextProvider = ({ children }) => {
         chatActual,
         HandleGoToChat,
         contacts,
+        createNewOneToOneChat,
       }}>
       {children}
     </HelperContext.Provider>

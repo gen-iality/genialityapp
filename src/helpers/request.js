@@ -233,8 +233,8 @@ export const EventsApi = {
   getProducts: async (eventId) => {
     return await Actions.get(`/api/events/${eventId}/products`);
   },
-  storeGalley: async (eventId, galleryId, data) => {
-    return await Actions.post(`/api/events/${eventId}/galleries/${galleryId}/silentauctionmail`, data);
+  storeOfert: async (eventId, productId, data) => {
+    return await Actions.post(`/api/events/${eventId}/products/${productId}/silentauctionmail`, data);
   },
   getOneProduct: async (eventId,idproduct) => {
     return await Actions.get(`/api/events/${eventId}/products/${idproduct}`);
