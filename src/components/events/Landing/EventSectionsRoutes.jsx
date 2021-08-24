@@ -37,9 +37,6 @@ const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let redirect;
 
-  console.log('====================================');
-  console.log('section routes', props);
-  console.log('====================================');
   if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
     redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
   } else {
@@ -47,9 +44,7 @@ const EventSectionRoutes = (props) => {
   }
 
   function ValidateViewPermissions(route, nombresection) {
-    console.log('====================================');
-    console.log('nombresection', nombresection);
-    console.log('====================================');
+   
     let routePermissions =
       props.cEvent.value && Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section === route);
     if (
