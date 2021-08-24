@@ -66,6 +66,7 @@ class Product extends Component {
         listproduct= data.data.map((product,index)=>{
            return {...product,index:product.position?product.position:index}
          })
+         console.log("DATALIST==>",listproduct)
          listproduct=listproduct.sort((a,b)=>a.index-b.index)
          this.setState({ list: listproduct, loading: false });         
       }    
@@ -197,7 +198,7 @@ class Product extends Component {
                      align='center'
                      render={(data, index) => (
                         <Space key={index} size='small'>
-                           {data.image &&
+                           {data.image && Array.isArray(data.image) &&
                               data.image.map((images, index) => {
                                  return <Image key={index} width={70} src={images} />;
                               })}
