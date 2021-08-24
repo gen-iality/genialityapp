@@ -44,7 +44,9 @@ const EventSectionRoutes = (props) => {
   }
 
   function ValidateViewPermissions(route, nombresection) {
-   
+    console.log('====================================');
+    console.log('nombresection', nombresection);
+    console.log('====================================');
     let routePermissions =
       props.cEvent.value && Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section === route);
     if (
@@ -106,13 +108,15 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/activity/:activity_id`}>
-          {props.cEventUser.value != null ? (
-            <AgendaActividadDetalle setVirtualConference={props.setVirtualConference} />
-          ) : (
-            <>
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-            </>
-          )}
+          {() =>
+            ValidateViewPermissions('agenda', 'Agenda') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <AgendaActividadDetalle setVirtualConference={props.setVirtualConference} />
+            )
+          }
         </Route>
 
         <Route path={`${path}/speakers`}>
