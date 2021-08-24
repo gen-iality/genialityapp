@@ -197,9 +197,10 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom }) {
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  console.log("EVENT USER==>",data)
 
   //const userName = pathOr('', ['names','name'], data);
-  const userName = data.name_requesting??'Sin nombre';
+  const userName =data.owner_id==eventUser._id?data.name ??'Sin nombre':data.name_requesting??'Sin nombre';
   //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
   const userEmail = (data.otherEventUser && data.otherEventUser.properties.email) || data.email;
 
