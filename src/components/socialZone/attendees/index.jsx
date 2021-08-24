@@ -14,23 +14,23 @@ const AttendeList = function(props) {
   let [page, setPage] = useState(0);
   let [filteredlist, setfilteredlist] = useState([]);
   let [hasMore, setHasMore] = useState(true);
-  let { createNewOneToOneChat } = useContext(HelperContext);
+  let { createNewOneToOneChat, attendeeListPresence, attendeeList } = useContext(HelperContext);
   const pag = 15;
 
   useEffect(() => {
     let ordenadousers = [];
 
-    Object.keys(props.attendeeList).map((key) => {
+    Object.keys(attendeeList).map((key) => {
       let mihijo = {
-        uid: props.attendeeList[key].user.uid,
+        uid: attendeeList[key].user.uid,
         idattendpresence: key,
-        iduser: props.attendeeList[key].account_id,
-        name: props.attendeeList[key].properties.name,
-        names: props.attendeeList[key].properties.names,
-        status: props.attendeeListPresence[key] ? props.attendeeListPresence[key].state : 'offline',
-        email: props.attendeeList[key].properties.email,
-        properties: props.attendeeList[key].properties,
-        _id: props.attendeeList[key]._id,
+        iduser: attendeeList[key].account_id,
+        name: attendeeList[key].properties.name,
+        names: attendeeList[key].properties.names,
+        status: attendeeListPresence[key] ? attendeeListPresence[key].state : 'offline',
+        email: attendeeList[key].properties.email,
+        properties: attendeeList[key].properties,
+        _id: attendeeList[key]._id,
       };
 
       if (mihijo.status === 'online') {
@@ -44,7 +44,7 @@ const AttendeList = function(props) {
 
     setfilteredlist(ordenadousers.slice(0, pag));
     setPage(1);
-  }, [props.attendeeListPresence, props.attendeeList]);
+  }, [attendeeListPresence, attendeeList]);
 
   useEffect(() => {
     if (props.busqueda == undefined || props.busqueda == '') {
