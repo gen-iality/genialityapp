@@ -37,6 +37,9 @@ const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
   let redirect;
 
+  console.log('====================================');
+  console.log('section routes', props);
+  console.log('====================================');
   if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
     redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
   } else {
@@ -44,6 +47,9 @@ const EventSectionRoutes = (props) => {
   }
 
   function ValidateViewPermissions(route, nombresection) {
+    console.log('====================================');
+    console.log('nombresection', nombresection);
+    console.log('====================================');
     let routePermissions =
       props.cEvent.value && Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section === route);
     if (
@@ -77,13 +83,15 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/documents`}>
-          {ValidateViewPermissions('documents') ? (
-            <>
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-            </>
-          ) : (
-            <DocumentsForm />
-          )}
+          {() =>
+            ValidateViewPermissions('documents', 'Documentos') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <DocumentsForm />
+            )
+          }
         </Route>
 
         <Route path={`${path}/interviews`}>
@@ -103,9 +111,13 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/activity/:activity_id`}>
-          <AgendaActividadDetalle
-            setVirtualConference={props.setVirtualConference}
-          />
+          {props.cEventUser.value != null ? (
+            <AgendaActividadDetalle setVirtualConference={props.setVirtualConference} />
+          ) : (
+            <>
+              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+            </>
+          )}
         </Route>
 
         <Route path={`${path}/speakers`}>
@@ -118,93 +130,111 @@ const EventSectionRoutes = (props) => {
           <Partners />
         </Route>
         <Route path={`${path}/faqs`}>
-          {ValidateViewPermissions('faqs', 'faqs') ? (
-            <>
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-            </>
-          ) : (
-            <FaqsForm />
-          )}
+          {() =>
+            ValidateViewPermissions('faqs', 'faqs') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <FaqsForm />
+            )
+          }
         </Route>
 
         <Route path={`${path}/evento`}>
-          {ValidateViewPermissions('evento', 'Evento') ? (
-            <>
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-            </>
-          ) : (
-            <EventHome />
-          )}
+          {() =>
+            ValidateViewPermissions('evento', 'Evento') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <EventHome />
+            )
+          }
         </Route>
 
         <Route path={`${path}/wall`}>
-          {ValidateViewPermissions('wall', 'Muro') ? (
-            <>
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-            </>
-          ) : (
-            <WallForm />
-          )}
+          {() =>
+            ValidateViewPermissions('wall', 'Muro') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <WallForm />
+            )
+          }
         </Route>
 
         <Route path={`${path}/ferias`}>
-          {ValidateViewPermissions('ferias', 'Ferias') ? (
-            <>
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-            </>
-          ) : (
-            <Ferias />
-          )}
+          {() =>
+            ValidateViewPermissions('ferias', 'Ferias') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <Ferias />
+            )
+          }
         </Route>
         <Route path={`${path}/noticias`}>
-          {ValidateViewPermissions('noticias', 'Noticias') ? (
-            <>
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-            </>
-          ) : (
-            <Noticias />
-          )}
+          {() =>
+            ValidateViewPermissions('noticias', 'Noticias') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <Noticias />
+            )
+          }
         </Route>
         <Route path={`${path}/tickets`}>
-          {ValidateViewPermissions('tickets', 'Registro') ? (
-            <>
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-            </>
-          ) : (
-            <div className='columns is-centered'>
-              <TicketsForm />
-            </div>
-          )}
+          {() =>
+            ValidateViewPermissions('tickets', 'Registro') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <div className='columns is-centered'>
+                <TicketsForm />
+              </div>
+            )
+          }
         </Route>
 
         <Route path={`${path}/certs`}>
-          {ValidateViewPermissions('certs', 'certs') ? (
-            <>
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-            </>
-          ) : (
-            <CertificadoLanding />
-          )}
+          {() =>
+            ValidateViewPermissions('certs', 'certs') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <CertificadoLanding />
+            )
+          }
         </Route>
         <Route path={`${path}/producto`}>
-          {ValidateViewPermissions('producto', 'Galería') ? (
-            <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-          ) : (
-            <Productos />
-          )}
+          {() =>
+            ValidateViewPermissions('producto', 'Galería') ? (
+              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+            ) : (
+              <Productos />
+            )
+          }
         </Route>
         <Route path={`${path}/agenda`}>
-          {ValidateViewPermissions('agenda', 'Agenda') ? (
-            <>
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
-            </>
-          ) : (
-            <Agenda
-              activity={props.currentActivity}
-              generalTabs={props.generalTabs}
-              setVirtualConference={props.setVirtualConference}
-            />
-          )}
+          {() =>
+            ValidateViewPermissions('agenda', 'Agenda') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <Agenda
+                activity={props.currentActivity}
+                generalTabs={props.generalTabs}
+                setVirtualConference={props.setVirtualConference}
+              />
+            )
+          }
         </Route>
         <Route path={`${path}/permissions`}>
           <PageNotPermissions />

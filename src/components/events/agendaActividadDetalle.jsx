@@ -69,7 +69,6 @@ let AgendaActividadDetalle = (props) => {
 
    //obtener la actividad por id
    useEffect(() => {
-      console.log('mis props', props);
       async function getActividad() {
          return await AgendaApi.getOne(activity_id, props.cEvent.value._id);
       }
