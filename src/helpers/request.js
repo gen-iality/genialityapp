@@ -246,7 +246,7 @@ export const EventsApi = {
     return await Actions.post(`/api/events/${eventId}/products`,data);
   },
   deleteProduct:async (eventId,galleryId) => {
-    return await Actions.delete(`/api/events/${eventId}/products/${galleryId}`);
+    return await Actions.delete(`/api/events/${eventId}/products`,galleryId);
   },
 };
 export const InvitationsApi = {
