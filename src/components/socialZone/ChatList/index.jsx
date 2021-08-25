@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { List, Typography, Badge, Tooltip, Tabs, Form, Input, Button, Row, Space, Avatar, Popover } from 'antd';
 import { ExclamationCircleOutlined, MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
@@ -36,7 +36,11 @@ const ChatList = (props) => {
   const history = useHistory();
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
-  let { chatActual, HandleGoToChat, privateChatsList } = useContext(HelperContext);
+
+  let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useContext(
+    HelperContext
+  );
+
   const onFinish = (values) => {
     cUser.value = values;
   };
@@ -47,18 +51,18 @@ const ChatList = (props) => {
   let [totalmsjpriv, settotalmsjpriv] = useState(0);
 
   function callback(key) {
-    if (key === 'chat1') {
+    if (key === 'public') {
       if (chatActual) {
         HandleGoToChat(null, null, null, null);
       }
     }
-    if (key === 'chat2') {
+    if (key === 'private') {
       if (chatActual) {
         HandleGoToChat(null, null, null, null);
       }
     }
 
-    props.setchattab(key);
+    HandlePublicPrivate(key);
   }
 
   if (!cUser.value)
@@ -116,7 +120,7 @@ const ChatList = (props) => {
   let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
 
   return (
-    <Tabs activeKey={props.chattab} size='small' onChange={callback} centered>
+    <Tabs activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
         <TabPane
           tab={
@@ -124,7 +128,7 @@ const ChatList = (props) => {
               <FormattedMessage id='tabs.public.socialzone' defaultMessage='Público' />
             </div>
           }
-          key='chat1'>
+          key='public'>
           <iframe
             title='chatevius'
             className='ChatEviusLan'
@@ -146,30 +150,20 @@ const ChatList = (props) => {
         <TabPane
           tab={
             <>
-              {props.totalNewMessages !== undefined && props.totalNewMessages > 0 && (
-                <Badge
-                  size='small'
-                  style={{ minWidth: '10px', height: '10px', padding: '0px', color: cEvent.value.styles.textMenu }}
-                  count={' '}>
-                  <div style={{ color: cEvent.value.styles.textMenu }}>
-                    <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />
-                    {chatActual && chatActual.chatname
-                      ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )`
-                      : ''}
-                  </div>
-                </Badge>
-              )}
-              {props.totalNewMessages !== undefined && props.totalNewMessages == 0 && (
+              <Badge
+                size='small'
+                style={{ minWidth: '10px', height: '10px', padding: '0px', color: cEvent.value.styles.textMenu }}
+                count={0}>
                 <div style={{ color: cEvent.value.styles.textMenu }}>
                   <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />
                   {chatActual && chatActual.chatname
                     ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )`
                     : ''}
                 </div>
-              )}
+              </Badge>
             </>
           }
-          key='chat2'>
+          key='private'>
           {!chatActual.chatname && (
             <List
               className='asistente-list'
@@ -189,16 +183,15 @@ const ChatList = (props) => {
                           'private'
                         );
                         settotalmsjpriv(0);
-                        props.setTotalNewMessages(0);
-                        props.notNewMessages();
                       }}>
                       <Tooltip title='Chatear'>
-                        {item.newMessages && item.newMessages.length > 0 && (
+                        {item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0].countmessajes &&
+                        item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0].countmessajes >
+                          0 ? (
                           <Badge count={' '} style={{ minWidth: '10px', height: '10px', padding: '0px' }}>
                             <MessageTwoTone style={{ fontSize: '27px' }} />
                           </Badge>
-                        )}
-                        {item.newMessages && item.newMessages.length == 0 && (
+                        ) : (
                           <MessageTwoTone style={{ fontSize: '27px' }} />
                         )}
                       </Tooltip>

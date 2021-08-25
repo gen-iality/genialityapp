@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Layout, Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import SocialZone from '../../socialZone/socialZone';
@@ -8,15 +8,13 @@ import { connect } from 'react-redux';
 const { Sider } = Layout;
 import { UseEventContext } from '../../../Context/eventContext';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
+import { HelperContext } from '../../../Context/HelperContext';
 import DrawerProfile from './DrawerProfile';
 
 const EventSectionMenuRigth = (props) => {
   let [optionselected, setOptionselected] = useState(1);
   let cEvent = UseEventContext();
-
-  function handleCollapsed() {
-    props.setSpaceNetworking(!props.viewSocialZoneNetworking);
-  }
+  let { isCollapsedMenuRigth, HandleOpenCloseMenuRigth } = useContext(HelperContext);
 
   return (
     <Sider
@@ -24,20 +22,15 @@ const EventSectionMenuRigth = (props) => {
       style={{ backgroundColor: cEvent.value.styles?.toolbarDefaultBg }}
       trigger={null}
       width={400}
-      collapsed={props.viewSocialZoneNetworking}>
+      collapsed={isCollapsedMenuRigth}>
       {!props.viewPerfil ? (
-        <div className='Chat-Event' style={{height:'100%'}}>
-          {props.viewSocialZoneNetworking ? (
+        <div className='Chat-Event' style={{ height: '100%' }}>
+          {isCollapsedMenuRigth ? (
             <>
               <MenuRigth
-                handleCollapsed={handleCollapsed}
                 currentActivity={props.currentActivity}
                 tabs={props.tabs}
                 generalTabs={props.generalTabs}
-                tabselected={props.tabselected}
-                settabselected={props.settabselected}
-                setchattab={props.setchattab}
-                chattab={props.chattab}
               />
             </>
           ) : (
@@ -45,7 +38,7 @@ const EventSectionMenuRigth = (props) => {
               <Button
                 className='animate__animated animate__headShake animate__slower animate__infinite'
                 type='link'
-                onClick={() => handleCollapsed()}>
+                onClick={() => HandleOpenCloseMenuRigth()}>
                 <ArrowRightOutlined style={{ fontSize: '24px', color: cEvent.value.styles.textMenu }} />
               </Button>
               <SocialZone
@@ -53,11 +46,6 @@ const EventSectionMenuRigth = (props) => {
                 optionselected={optionselected}
                 tab={1}
                 generalTabs={props.generalTabs}
-                notNewMessages={props.notNewMessage}
-                tabselected={props.tabselected}
-                settabselected={props.settabselected}
-                setchattab={props.setchattab}
-                chattab={props.chattab}
               />
             </>
           )}
