@@ -15,7 +15,7 @@ import EventHome from '../eventHome';
 import TicketsForm from '../../tickets/formTicket';
 import WallForm from '../../wall/index';
 import Ferias from '../ferias/index';
-import VirtualConference from '../virtualConference';
+import VirtualConferenceBig from '../virtualConferenceBig';
 import CertificadoLanding from '../../certificados/cerLanding';
 import AgendaActividadDetalle from '../agendaActividadDetalle';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
@@ -32,6 +32,7 @@ import MessageRegister from '../registrationForm/messageRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import ListVideoCard from '../../shared/listVideoCard';
 import initUserPresence from '../../../containers/userPresenceInEvent';
+import Videos from '../videos';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -67,8 +68,8 @@ const EventSectionRoutes = (props) => {
     <>
       {props.viewVirtualconference && (
         <>
-          <VirtualConference />
-          <ListVideoCard idevent={props.cEvent.value} />
+          <VirtualConferenceBig />
+         
         </>
       )}
 
@@ -161,6 +162,17 @@ const EventSectionRoutes = (props) => {
             )
           }
         </Route>
+        <Route path={`${path}/videos`}>
+          {() =>
+            ValidateViewPermissions('videos', 'Videos') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <Videos />
+            )
+          }
+        </Route>
 
         <Route path={`${path}/ferias`}>
           {() =>
@@ -240,6 +252,12 @@ const EventSectionRoutes = (props) => {
           <MessageRegister />
         </Route>
       </Switch>
+      {props.viewVirtualconference && (
+        <>
+         
+          <ListVideoCard idevent={props.cEvent.value} />
+        </>
+      )}
     </>
   );
 };

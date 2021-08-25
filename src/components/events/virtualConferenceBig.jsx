@@ -110,7 +110,7 @@ const VirtualConference = () => {
   }, [agendageneral, firestore]);
 
   return (
-    <Fragment>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       {infoAgendaArr.length > 0 &&
         infoAgendaArr
           .filter((item) => {
@@ -135,30 +135,33 @@ const VirtualConference = () => {
                 // ]}
                 key={key}
                 hoverable
+                bodyStyle={{ margin: '0px', padding: '0px' }}
                 style={{
                   height: 'auto',
                   maxHeight: '300px',
-                  minHeight: '204px',
                   marginTop: '8px',
                   marginBottom: '8px',
+                  width: '86%',
+                  borderRadius: '10px',
+                  borderLeft: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
+                  borderRight: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                 }}
                 className='animate__animated animate__slideInRight'>
-                <Link to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}`:`${urlAgenda}`}>
-                  <Row justify='center' align='middle' gutter={[8, 8]}>
+                <Link to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}` : `${urlAgenda}`}>
+                  <Row justify='center' align='middle' gutter={[0, 0]}>
                     <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
-                      <div
-                        style={{ justifyContent: 'center', alignContent: 'center', display: 'grid', height: '140px' }}>
+                      <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
                         {item.habilitar_ingreso == 'open_meeting_room' ? (
                           <>
-                            <img src={ENVIVO} style={{ height: '70px' }} />
-                            <span style={{ textAlign: 'center', fontSize: '18px' }}>
+                            <img src={ENVIVO} style={{ height: '50px' }} />
+                            <span style={{ textAlign: 'center', fontSize: '15px' }}>
                               {<FormattedMessage id='live' defaultMessage='En vivo' />}
                             </span>
                           </>
                         ) : item.habilitar_ingreso == 'closed_meeting_room' ? (
                           <>
-                            <FieldTimeOutlined style={{ fontSize: '70px', color: '#FAAD14' }} />
-                            <span style={{ textAlign: 'center', fontSize: '18px' }}>
+                            <FieldTimeOutlined style={{ fontSize: '50px', color: '#FAAD14' }} />
+                            <span style={{ textAlign: 'center', fontSize: '15px' }}>
                               {<FormattedMessage id='live.closed' defaultMessage='Iniciará pronto' />}
                             </span>
                           </>
@@ -175,7 +178,7 @@ const VirtualConference = () => {
                             rows: 3, // Determina la cantidad de filas que se muestran antes de cortar el texto.
                             expandable: true,
                             symbol: (
-                              <span style={{ color: '#2D7FD6', fontSize: '14px' }}>
+                              <span style={{ color: '#2D7FD6', fontSize: '12px' }}>
                                 {Moment.locale() == 'en' ? 'More activities' : 'Ver más actividades'}{' '}
                                 {/* Se valido de esta forma porque el componente FormattedMessage no hacia
                              efecto en la prop del componente de Ant design */}
@@ -187,7 +190,7 @@ const VirtualConference = () => {
                         {item.habilitar_ingreso == 'open_meeting_room' ? (
                           ''
                         ) : (
-                          <h2 style={{ color: '#7c909a', fontSize: '16px' }}>
+                          <h2 style={{ color: '#7c909a', fontSize: '14px' }}>
                             {Moment(item.datetime_start).format('LL')}
                             <span>&nbsp;&nbsp;&nbsp;</span>
                             {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
@@ -221,7 +224,7 @@ const VirtualConference = () => {
                           <div className='Virtual-Conferences'>
                             <Avatar.Group
                               maxCount={2}
-                              size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 80, xxl: 80 }}
+                              size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 60, xxl: 60 }}
                               maxStyle={{ backgroundColor: '#50D3C9', fontSize: '3vw' }}>
                               {item.hosts.length < 3
                                 ? item.hosts.map((host, key) => {
@@ -229,7 +232,7 @@ const VirtualConference = () => {
                                       <Tooltip title={host.name} key={key}>
                                         <Avatar
                                           src={host.image}
-                                          size={{ xs: 50, sm: 50, md: 50, lg: 85, xl: 85, xxl: 85 }}
+                                          size={{ xs: 50, sm: 50, md: 50, lg: 60, xl: 60, xxl: 60 }}
                                         />
                                       </Tooltip>
                                     );
@@ -240,7 +243,7 @@ const VirtualConference = () => {
                                         <Avatar
                                           key={key}
                                           src={host.image}
-                                          size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 80, xxl: 80 }}
+                                          size={{ xs: 20, sm: 20, md: 40, lg: 50, xl: 60, xxl: 60 }}
                                         />
                                       </Tooltip>
                                     );
@@ -255,7 +258,7 @@ const VirtualConference = () => {
               </Card>
             </>
           ))}
-    </Fragment>
+    </div>
   );
 };
 

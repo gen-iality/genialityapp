@@ -132,28 +132,35 @@ class MenuEvent extends Component {
         icon: 'DeploymentUnitOutlined',
         checked: false,
         permissions: 'public',
-      },      
-    ferias: {
-      name: 'Ferias',
-      section: 'ferias',
-      icon: 'FundProjectionScreenOutlined',
-      checked: false,
-      permissions: 'public',
-    },
-    noticias: {
-      name: 'Noticias',
-      section: 'noticias',
-      icon: 'NotificationOutlined',
-      checked: false,
-      permissions: 'public',
-    },
-    producto: {
-      name: 'Producto',
-      section: 'producto',
-      icon: 'ShopOutlined ',
-      checked: false,
-      permissions: 'public',
-    },
+      },
+      ferias: {
+        name: 'Ferias',
+        section: 'ferias',
+        icon: 'FundProjectionScreenOutlined',
+        checked: false,
+        permissions: 'public',
+      },
+      noticias: {
+        name: 'Noticias',
+        section: 'noticias',
+        icon: 'NotificationOutlined',
+        checked: false,
+        permissions: 'public',
+      },
+      producto: {
+        name: 'Producto',
+        section: 'producto',
+        icon: 'ShopOutlined ',
+        checked: false,
+        permissions: 'public',
+      },
+      videos: {
+        name: 'Videos',
+        section: 'videos',
+        icon: 'PlaySquareOutlined',
+        checked: false,
+        permissions: 'public',
+      },
     };
   }
 

@@ -16,7 +16,7 @@ class menuLanding extends Component {
           section: 'evento',
           icon: 'CalendarOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         agenda: {
           name: 'Agenda',
@@ -24,7 +24,7 @@ class menuLanding extends Component {
           section: 'agenda',
           icon: 'ReadOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         speakers: {
           name: 'Conferencistas',
@@ -32,7 +32,7 @@ class menuLanding extends Component {
           section: 'speakers',
           icon: 'AudioOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         tickets: {
           name: 'Registro',
@@ -40,7 +40,7 @@ class menuLanding extends Component {
           section: 'tickets',
           icon: 'CreditCardOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         certs: {
           name: 'Certificados',
@@ -48,7 +48,7 @@ class menuLanding extends Component {
           section: 'certs',
           icon: 'FileDoneOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         documents: {
           name: 'Documentos',
@@ -56,7 +56,7 @@ class menuLanding extends Component {
           section: 'documents',
           icon: 'FolderOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         wall: {
           name: 'Muro',
@@ -64,7 +64,7 @@ class menuLanding extends Component {
           section: 'wall',
           icon: 'TeamOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         survey: {
           name: 'Encuestas',
@@ -72,7 +72,7 @@ class menuLanding extends Component {
           section: 'survey',
           icon: 'FileUnknownOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         faqs: {
           name: 'Preguntas Frecuentes',
@@ -80,7 +80,7 @@ class menuLanding extends Component {
           section: 'faqs',
           icon: 'QuestionOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         networking: {
           name: 'Networking',
@@ -88,7 +88,7 @@ class menuLanding extends Component {
           section: 'networking',
           icon: 'LaptopOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         my_section: {
           name: 'Seccion Personalizada',
@@ -96,7 +96,7 @@ class menuLanding extends Component {
           section: 'my_section',
           icon: 'EnterOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         companies: {
           name: 'Empresas',
@@ -104,7 +104,7 @@ class menuLanding extends Component {
           section: 'companies',
           icon: 'ApartmentOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         interviews: {
           name: 'Citas',
@@ -112,7 +112,7 @@ class menuLanding extends Component {
           section: 'interviews',
           icon: 'UserOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         trophies: {
           name: 'Trofeos',
@@ -120,7 +120,7 @@ class menuLanding extends Component {
           section: 'trophies',
           icon: 'TrophyOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         my_sesions: {
           name: 'Mis Actividades',
@@ -128,7 +128,7 @@ class menuLanding extends Component {
           section: 'my_sesions',
           icon: 'TeamOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
 
         informativeSection: {
@@ -138,7 +138,7 @@ class menuLanding extends Component {
           icon: 'FileDoneOutlined',
           markup: '',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         informativeSection1: {
           name: 'Seccion Informativa Segunda',
@@ -147,7 +147,7 @@ class menuLanding extends Component {
           icon: 'FileDoneOutlined',
           markup: '',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         login: {
           name: 'Inicio de sesion',
@@ -155,14 +155,14 @@ class menuLanding extends Component {
           section: 'login',
           icon: 'LoginOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         partners: {
           name: 'Patrocinadores',
           section: 'partners',
           icon: 'DeploymentUnitOutlined',
           checked: false,
-          permissions: 'public'
+          permissions: 'public',
         },
         ferias: {
           name: 'Ferias',
@@ -185,10 +185,17 @@ class menuLanding extends Component {
           checked: false,
           permissions: 'public',
         },
+        videos: {
+          name: 'Videos',
+          section: 'videos',
+          icon: 'PlaySquareOutlined',
+          checked: false,
+          permissions: 'public',
+        },
       },
       values: {},
       itemsMenu: {},
-      keySelect: Date.now()
+      keySelect: Date.now(),
     };
     this.submit = this.submit.bind(this);
   }
@@ -230,12 +237,11 @@ class menuLanding extends Component {
   }
 
   async submit() {
-    
-    const loadingSave=  message.open({
-        key:'loading',
-        type: 'loading',
-        content: <> Por favor espere..</>,        
-      });
+    const loadingSave = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere..</>,
+    });
     const { itemsMenu } = this.state;
     let menu = this.orderItemsMenu(itemsMenu);
     const newMenu = { itemsMenu: { ...menu } };
@@ -250,19 +256,18 @@ class menuLanding extends Component {
     toast.success('Información guardada');
     message.destroy(loadingSave.key);
     message.open({
-      type: 'success', 
+      type: 'success',
       content: <> Información guardada correctamente</>,
-      
     });
   }
 
   async mapActiveItemsToAvailable(key) {
     let menuBase = { ...this.state.menu };
     let itemsMenuDB = { ...this.state.itemsMenu };
-    console.log("items menù",itemsMenuDB)
-    console.log("primero=>",menuBase[key])
+    console.log('items menù', itemsMenuDB);
+    console.log('primero=>', menuBase[key]);
     menuBase[key].checked = !menuBase[key].checked;
-    console.log("segundo=>",menuBase[key])
+    console.log('segundo=>', menuBase[key]);
 
     if (menuBase[key].checked) {
       itemsMenuDB[key] = menuBase[key];
@@ -314,7 +319,7 @@ class menuLanding extends Component {
         <Title level={3}>Habilitar secciones del evento</Title>
         <h3>(Podrás guardar la configuración de tu menú en la parte inferior)</h3>
         <Row gutter={16}>
-          {console.log("MENU SECTIONS ",this.state.menu)}
+          {console.log('MENU SECTIONS ', this.state.menu)}
           {Object.keys(this.state.menu).map((key) => {
             return (
               <div key={key}>

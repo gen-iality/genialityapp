@@ -512,7 +512,7 @@ class Styles extends Component {
 
   render() {
     const { timeout } = this.state;
-    console.log('Marlon', this.state.styles);
+    
 
     return (
       <React.Fragment>
