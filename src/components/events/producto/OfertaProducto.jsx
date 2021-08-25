@@ -10,12 +10,16 @@ const { Title, Text } = Typography;
 const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,message }) => {
   const [selectedValue, setSelectedValue] = useState(50000);
   const [valuOferta, setValueOferta] = useState(
-    product && product.price
+    product && product.price && product.price.includes('COP')
       ? product.price
           .split('COP $ ')[1]
           .replace(`’`, '')
           .replace('.', '')
-      : 0
+      : product && product.price && product.price.includes('USD')?
+      product.price
+          .split('USD $ ')[1]
+          .replace(`’`, '')
+          .replace('.', ''):0
   );
   console.log('DATACONTEXT==>', cEventUser, cUser);
   const [valorProduct, setValorProduct] = useState(valuOferta);
