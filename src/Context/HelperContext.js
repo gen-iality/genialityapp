@@ -5,6 +5,9 @@ import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../helpers/req
 import { UseEventContext } from './eventContext';
 import { UseCurrentUser } from './userContext';
 import { UseUserEvent } from './eventUserContext';
+import { notification, Button, Row, Col } from 'antd';
+import { MessageOutlined, SendOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 export const HelperContext = createContext();
 
@@ -52,6 +55,39 @@ export const HelperContextProvider = ({ children }) => {
     }
 
     return chatid;
+  };
+
+
+
+  const openNotification = (data) => {
+    console.log('====================================');
+    console.log('datallega', data);
+    console.log('====================================');
+    const btn = (
+      <Button
+        style={{ backgroundColor: '#1CDCB7', borderColor: 'white', color: 'white', fontWeight: '700' }}
+        icon={<SendOutlined />}
+        type='primary'
+        size='small'
+        onClick={() => notification.close()}>
+        Responder
+      </Button>
+    );
+
+    const args = {
+      message: (
+        <Row justify='space-between'>
+          <Col style={{ fontWeight: 'bold' }}>{data.remitente}</Col>
+
+          <Col>{moment().format('h:mm A')}</Col>
+        </Row>
+      ),
+      description: <Row style={{ color: 'grey' }}>{data.ultimo_mensaje}</Row>,
+      duration: 8,
+      icon: <MessageOutlined style={{ color: '#1CDCB7' }} />,
+      btn,
+    };
+    notification.open(args);
   };
 
   function HandleGoToChat(idactualuser, idotheruser, chatname, section) {
@@ -105,7 +141,7 @@ export const HelperContextProvider = ({ children }) => {
     //agregamos una referencia al chat para el usuario actual
     data = {
       id: newId,
-      name: currentName,
+      name: otherUserName,
       participants: [
         { idparticipant: idcurrentUser, countmessajes: 0 },
         { idparticipant: idOtherUser, countmessajes: 0 },
@@ -117,7 +153,7 @@ export const HelperContextProvider = ({ children }) => {
 
     data = {
       id: newId,
-      name: otherUserName,
+      name: currentName,
       participants: [
         { idparticipant: idcurrentUser, countmessajes: 0 },
         { idparticipant: idOtherUser, countmessajes: 0 },
@@ -259,20 +295,17 @@ export const HelperContextProvider = ({ children }) => {
       firestore
         .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
         .onSnapshot(function(querySnapshot) {
-          let data;
-          querySnapshot.forEach((doc) => {
-            data = doc.data();
-            console.log('====================================');
-            console.log('datamsj', data);
-            console.log('====================================');
-          });
+          if (querySnapshot.docChanges()[0].type == 'modified') {
+            openNotification(querySnapshot.docChanges()[0].doc.data());
+            console.log('datamensaje', querySnapshot.docChanges()[0].doc.data());
+          }
         });
     }
 
     if (cEvent.value != null) {
       fethcNewMessages();
     }
-  }, [firestore, cEvent.value]);
+  }, [firestore, attendeeList]);
 
   useEffect(() => {
     /*NOTIFICACIONES POR ACTIVIDAD*/
