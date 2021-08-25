@@ -60,10 +60,6 @@ const MenuTabletsSocialZone = (props) => {
           optionselected={optionselected}
           tab={1}
           generalTabs={props.generalTabs}
-          tabselected={optionselected}
-          settabselected={setOptionselected}
-          setchattab={props.setchattab}
-          chattab={props.chattab}
         />
       </Drawer>
     </>

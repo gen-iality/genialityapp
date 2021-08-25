@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import {
   ArrowLeftOutlined,
@@ -28,6 +28,7 @@ import { setTopBanner } from '../../redux/topBanner/actions';
 import { setSpaceNetworking } from '../../redux/networking/actions';
 import withContext from '../../Context/withContext';
 import { UseSurveysContext } from '../../Context/surveysContext';
+import { HelperContext } from '../../Context/HelperContext';
 
 import { useHistory } from 'react-router-dom';
 import SurveyDrawer from './surveys/components/surveyDrawer';
@@ -60,7 +61,7 @@ let AgendaActividadDetalle = (props) => {
   const [currentActivity, setcurrentActivity] = useState(null);
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
   let history = useHistory();
-
+  let { HandleOpenCloseMenuRigth,isCollapsedMenuRigth } = useContext(HelperContext);
   const configfast = useState({});
 
   const { Title } = Typography;
@@ -89,11 +90,11 @@ let AgendaActividadDetalle = (props) => {
 
     props.setTopBanner(false);
     props.setVirtualConference(false);
-    props.setSpaceNetworking(false);
+    HandleOpenCloseMenuRigth(false);
     return () => {
       props.setTopBanner(true);
       props.setVirtualConference(true);
-      props.setSpaceNetworking(true);
+      HandleOpenCloseMenuRigth(!isCollapsedMenuRigth);
     };
   }, []);
 
@@ -103,9 +104,6 @@ let AgendaActividadDetalle = (props) => {
 
   // Array que contiene las actividades del espacio (que comparten el mismo meeting_id y platform)
   const [activitiesSpace, setActivitiesSpace] = useState([]);
-
-  // Estado del espacio virtual
-  const [stateSpace, setStateSpace] = useState(true);
 
   const [activeTab, setActiveTab] = useState('description');
   let mainStageContent = props.mainStageContent;
@@ -251,12 +249,10 @@ let AgendaActividadDetalle = (props) => {
         `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
         `&host=${eventUserUtils.isHost(props.cUser, props.cEvent.value)}`
       );
-    } else if (platform === 'vimeo' && currentActivity.vimeo_id != null) {
+    } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
     } else if (platform === 'dolby') {
       return `https://eviusmeets.netlify.app/?username=${names}&email=${email}`;
-    } else if (platform === 'vimeo' && currentActivity !== null && currentActivity.vimeo_id == null) {
-      return currentActivity && currentActivity.video;
     }
   };
 
@@ -363,7 +359,7 @@ let AgendaActividadDetalle = (props) => {
     Moment.locale(window.navigator.language);
   }
 
-  console.log('currentActivity', currentActivity);
+  console.log('meetingState', meetingState);
 
   return (
     <div className='is-centered'>
@@ -518,73 +514,79 @@ let AgendaActividadDetalle = (props) => {
 
               {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
 
-              {(meetingState === 'open_meeting_room' || stateSpace) &&
-                // mainStageContent !== 'surveyDetalle' &&
-                // mainStageContent !== 'games' &&
+              {meetingState === 'open_meeting_room' &&
+              // mainStageContent !== 'surveyDetalle' &&
+              // mainStageContent !== 'games' &&
 
-                platform !== '' &&
-                platform !== null && (
-                  <>
-                    {platform === 'dolby' && names === null && email === null ? (
-                      <Card title='Ingresa tus datos para entrar a la transmisión'>
-                        <Form style={{ padding: '16px 8px' }} onFinish={handleSignInForm} {...layout}>
-                          <Form.Item
-                            name='names'
-                            label='Nombre'
-                            rules={[
-                              {
-                                required: true,
-                              },
-                            ]}>
-                            <Input />
-                          </Form.Item>
-                          <Form.Item
-                            name='email'
-                            label='Email'
-                            rules={[
-                              {
-                                required: true,
-                                type: 'email',
-                                message: 'Ingrese un email valido',
-                              },
-                            ]}>
-                            <Input />
-                          </Form.Item>
-                          <Form.Item {...tailLayout}>
-                            <Button type='primary' htmlType='submit'>
-                              Entrar
-                            </Button>
-                          </Form.Item>
-                        </Form>
-                      </Card>
-                    ) : (
-                      <>
-                        {platform === 'zoomExterno' ? (
-                          openZoomExterno()
-                        ) : (props.currentUser && currentActivity !== null && currentActivity.requires_registration) ||
-                          (currentActivity !== null && !currentActivity.requires_registration) ? (
-                          <>
-                            <iframe
-                              src={getMeetingPath(platform)}
-                              frameBorder='0'
-                              allow='autoplay; fullscreen; camera *;microphone *'
-                              allowFullScreen
-                              allowusermedia
-                              className='video'></iframe>
-                            <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
-                          </>
-                        ) : (
-                          <Alert
-                            message='Advertencia'
-                            description='Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento'
-                            type='warning'
-                            showIcon
-                          />
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
+              platform !== '' &&
+              platform !== null ? (
+                <>
+                  {platform === 'dolby' && names === null && email === null ? (
+                    <Card title='Ingresa tus datos para entrar a la transmisión'>
+                      <Form style={{ padding: '16px 8px' }} onFinish={handleSignInForm} {...layout}>
+                        <Form.Item
+                          name='names'
+                          label='Nombre'
+                          rules={[
+                            {
+                              required: true,
+                            },
+                          ]}>
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          name='email'
+                          label='Email'
+                          rules={[
+                            {
+                              required: true,
+                              type: 'email',
+                              message: 'Ingrese un email valido',
+                            },
+                          ]}>
+                          <Input />
+                        </Form.Item>
+                        <Form.Item {...tailLayout}>
+                          <Button type='primary' htmlType='submit'>
+                            Entrar
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                    </Card>
+                  ) : (
+                    <>
+                      {platform === 'zoomExterno' ? (
+                        openZoomExterno()
+                      ) : (props.currentUser && currentActivity !== null && currentActivity.requires_registration) ||
+                        (currentActivity !== null && !currentActivity.requires_registration) ? (
+                        <>
+                          <iframe
+                            src={getMeetingPath(platform)}
+                            frameBorder='0'
+                            allow='autoplay; fullscreen; camera *;microphone *'
+                            allowFullScreen
+                            allowusermedia
+                            className='video'></iframe>
+                          <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
+                        </>
+                      ) : (
+                        <Alert
+                          message='Advertencia'
+                          description='Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento'
+                          type='warning'
+                          showIcon
+                        />
+                      )}
+                    </>
+                  )}
+                </>
+              ) : (
+                meetingState == 'open_meeting_room' && (
+                  <Row style={{ fontSize: '25px', margin: 10 }} justify='center'>
+                    FALTA ASIGNAR EL ESPACIO EN VIVO
+                  </Row>
+                )
+              )}
 
               {/* {mainStageContent == 'surveyDetalle' && (
                 <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
@@ -607,9 +609,8 @@ let AgendaActividadDetalle = (props) => {
               {mainStageContent == 'game' && <Game />}
 
               {(meetingState === '' || meetingState == null) &&
-                stateSpace === false &&
-                mainStageContent !== 'surveyDetalle' &&
-                mainStageContent !== 'game' && (
+                currentActivity != null &&
+                currentActivity.video == null && (
                   <div className='column is-centered mediaplayer'>
                     <img
                       className='activity_image'
@@ -630,8 +631,7 @@ let AgendaActividadDetalle = (props) => {
 
               {meetingState === 'closed_meeting_room' &&
                 mainStageContent !== 'surveyDetalle' &&
-                mainStageContent !== 'game' &&
-                stateSpace === false && (
+                mainStageContent !== 'game' && (
                   <div className='column is-centered mediaplayer'>
                     <img
                       className='activity_image'
@@ -650,10 +650,9 @@ let AgendaActividadDetalle = (props) => {
                   </div>
                 )}
 
-              {meetingState === 'ended_meeting_room' &&
+              {(meetingState === 'ended_meeting_room' || !meetingState) &&
               currentActivity !== null &&
               currentActivity.video &&
-              stateSpace === false &&
               mainStageContent !== 'surveyDetalle' &&
               mainStageContent !== 'game' ? (
                 <div className='column is-centered mediaplayer'>
@@ -672,7 +671,6 @@ let AgendaActividadDetalle = (props) => {
                 <>
                   {meetingState === 'ended_meeting_room' &&
                     ((currentActivity !== null && currentActivity.image) || image_event) &&
-                    stateSpace === false &&
                     mainStageContent !== 'surveyDetalle' &&
                     mainStageContent !== 'game' && (
                       <div>
@@ -694,6 +692,7 @@ let AgendaActividadDetalle = (props) => {
                     )}
                 </>
               )}
+
               {/*logo quemado de aval para el evento de magicland */}
               {(props.cEvent.value._id === '5f99a20378f48e50a571e3b6' ||
                 props.cEvent.value._id === '5fca68b7e2f869277cfa31b0') && (
