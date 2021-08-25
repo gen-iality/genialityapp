@@ -41,7 +41,9 @@ export const HelperContextProvider = ({ children }) => {
   const [privateChatsList, setPrivatechatlist] = useState();
   const [attendeeList, setAttendeeList] = useState({});
   const [attendeeListPresence, setAttendeeListPresence] = useState({});
-  console.log("CHAT PRIVATE==>",privateChatsList)
+  const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(true);
+  const [chatAttendeChats, setchatAttendeChats] = useState('1');
+  const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     let chatid;
@@ -58,17 +60,35 @@ export const HelperContextProvider = ({ children }) => {
     return chatid;
   };
 
+  /*CERRAR Y ABRIR MENU DERECHO*/
+
+  function HandleOpenCloseMenuRigth() {
+    setisCollapsedMenuRigth(!isCollapsedMenuRigth);
+  }
+
+  /*ENTRAR A CHAT O ATTENDE EN EL MENU*/
+  function HandleChatOrAttende(key) {
+    setchatAttendeChats(key);
+  }
+
+  /*ENTRAR A CHAT PUBLICO O PRIVADO*/
+  function HandlePublicPrivate(key) {
+    setchatPublicPrivate(key);
+  }
+
   const openNotification = (data) => {
-    console.log('====================================');
-    console.log('datallega', data);
-    console.log('====================================');
     const btn = (
       <Button
         style={{ backgroundColor: '#1CDCB7', borderColor: 'white', color: 'white', fontWeight: '700' }}
         icon={<SendOutlined />}
         type='primary'
         size='small'
-        onClick={() => notification.close()}>
+        onClick={() => {
+          HandleOpenCloseMenuRigth()
+          HandlePublicPrivate("private")
+          HandleGoToChat(cUser.value.uid, data.id, cUser.value.names ? cUser.value.names : cUser.value.name, 'private');
+          notification.destroy()
+        }}>
         Responder
       </Button>
     );
@@ -422,6 +442,12 @@ export const HelperContextProvider = ({ children }) => {
         privateChatsList,
         attendeeList,
         attendeeListPresence,
+        isCollapsedMenuRigth,
+        HandleOpenCloseMenuRigth,
+        HandleChatOrAttende,
+        chatAttendeChats,
+        HandlePublicPrivate,
+        chatPublicPrivate,
       }}>
       {children}
     </HelperContext.Provider>

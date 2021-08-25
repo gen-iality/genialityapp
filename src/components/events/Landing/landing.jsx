@@ -58,7 +58,6 @@ const Landing = (props) => {
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
   let { isNotification, ChangeActiveNotification } = useContext(HelperContext);
-  const [chattab, setchattab] = useState('chat1');
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -94,7 +93,6 @@ const Landing = (props) => {
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
   let [totalNewMessages, settotalnewmessages] = useState(0);
   let { currentActivity, tabs } = props;
-  const [tabselected, settabselected] = useState('1');
 
   useEffect(() => {
     cEventContext.status === 'LOADED' &&
@@ -160,19 +158,11 @@ const Landing = (props) => {
           currentActivity={currentActivity}
           totalNewMessages={totalNewMessages}
           tabs={tabs}
-          tabselected={tabselected}
-          settabselected={settabselected}
-          setchattab={setchattab}
-          chattab={chattab}
         />
         <MenuTabletsSocialZone
           totalNewMessages={totalNewMessages}
           currentActivity={currentActivity}
           generalTabs={generaltabs}
-          tabselected={tabselected}
-          settabselected={settabselected}
-          setchattab={setchattab}
-          chattab={chattab}
         />
       </Layout>
     </>
