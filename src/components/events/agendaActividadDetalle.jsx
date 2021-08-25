@@ -519,72 +519,80 @@ let AgendaActividadDetalle = (props) => {
               {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
 
               {(meetingState === 'open_meeting_room' || stateSpace) &&
-                // mainStageContent !== 'surveyDetalle' &&
-                // mainStageContent !== 'games' &&
+              // mainStageContent !== 'surveyDetalle' &&
+              // mainStageContent !== 'games' &&
 
-                platform !== '' &&
-                platform !== null && (
-                  <>
-                    {platform === 'dolby' && names === null && email === null ? (
-                      <Card title='Ingresa tus datos para entrar a la transmisión'>
-                        <Form style={{ padding: '16px 8px' }} onFinish={handleSignInForm} {...layout}>
-                          <Form.Item
-                            name='names'
-                            label='Nombre'
-                            rules={[
-                              {
-                                required: true,
-                              },
-                            ]}>
-                            <Input />
-                          </Form.Item>
-                          <Form.Item
-                            name='email'
-                            label='Email'
-                            rules={[
-                              {
-                                required: true,
-                                type: 'email',
-                                message: 'Ingrese un email valido',
-                              },
-                            ]}>
-                            <Input />
-                          </Form.Item>
-                          <Form.Item {...tailLayout}>
-                            <Button type='primary' htmlType='submit'>
-                              Entrar
-                            </Button>
-                          </Form.Item>
-                        </Form>
-                      </Card>
-                    ) : (
-                      <>
-                        {platform === 'zoomExterno' ? (
-                          openZoomExterno()
-                        ) : (props.currentUser && currentActivity !== null && currentActivity.requires_registration) ||
-                          (currentActivity !== null && !currentActivity.requires_registration) ? (
-                          <>
-                            <iframe
-                              src={getMeetingPath(platform)}
-                              frameBorder='0'
-                              allow='autoplay; fullscreen; camera *;microphone *'
-                              allowFullScreen
-                              allowusermedia
-                              className='video'></iframe>
-                            <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
-                          </>
-                        ) : (
-                          <Alert
-                            message='Advertencia'
-                            description='Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento'
-                            type='warning'
-                            showIcon
-                          />
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
+              platform !== '' &&
+              platform !== null ? (
+                <>
+                  {platform === 'dolby' && names === null && email === null ? (
+                    <Card title='Ingresa tus datos para entrar a la transmisión'>
+                      <Form style={{ padding: '16px 8px' }} onFinish={handleSignInForm} {...layout}>
+                        <Form.Item
+                          name='names'
+                          label='Nombre'
+                          rules={[
+                            {
+                              required: true,
+                            },
+                          ]}>
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          name='email'
+                          label='Email'
+                          rules={[
+                            {
+                              required: true,
+                              type: 'email',
+                              message: 'Ingrese un email valido',
+                            },
+                          ]}>
+                          <Input />
+                        </Form.Item>
+                        <Form.Item {...tailLayout}>
+                          <Button type='primary' htmlType='submit'>
+                            Entrar
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                    </Card>
+                  ) : (
+                    <>
+                      {platform === 'zoomExterno' ? (
+                        openZoomExterno()
+                      ) : (props.currentUser && currentActivity !== null && currentActivity.requires_registration) ||
+                        (currentActivity !== null && !currentActivity.requires_registration) ? (
+                        <>
+                          <iframe
+                            src={getMeetingPath(platform)}
+                            frameBorder='0'
+                            allow='autoplay; fullscreen; camera *;microphone *'
+                            allowFullScreen
+                            allowusermedia
+                            className='video'></iframe>
+                          <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
+                        </>
+                      ) : (
+                        <Alert
+                          message='Advertencia'
+                          description='Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento'
+                          type='warning'
+                          showIcon
+                        />
+                      )}
+                    </>
+                  )}
+                </>
+              ) : (
+                <iframe
+                  src={currentActivity && currentActivity.video}
+                  frameBorder='0'
+                  allow='autoplay; fullscreen; camera *;microphone *'
+                  allowFullScreen
+                  allowusermedia
+                  className='video'></iframe>
+              )}
 
               {/* {mainStageContent == 'surveyDetalle' && (
                 <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
