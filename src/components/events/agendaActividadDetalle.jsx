@@ -104,8 +104,6 @@ let AgendaActividadDetalle = (props) => {
   // Array que contiene las actividades del espacio (que comparten el mismo meeting_id y platform)
   const [activitiesSpace, setActivitiesSpace] = useState([]);
 
-  // Estado del espacio virtual
-  const [stateSpace, setStateSpace] = useState(true);
 
   const [activeTab, setActiveTab] = useState('description');
   let mainStageContent = props.mainStageContent;
@@ -518,12 +516,12 @@ let AgendaActividadDetalle = (props) => {
 
               {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
 
-              {(meetingState === 'open_meeting_room' || stateSpace) &&
+              {(meetingState === 'open_meeting_room' ) &&
               // mainStageContent !== 'surveyDetalle' &&
               // mainStageContent !== 'games' &&
 
               platform !== '' &&
-              platform !== null ? (
+              platform !== null && (
                 <>
                   {platform === 'dolby' && names === null && email === null ? (
                     <Card title='Ingresa tus datos para entrar a la transmisión'>
@@ -584,14 +582,6 @@ let AgendaActividadDetalle = (props) => {
                     </>
                   )}
                 </>
-              ) : (
-                <iframe
-                  src={currentActivity && currentActivity.video}
-                  frameBorder='0'
-                  allow='autoplay; fullscreen; camera *;microphone *'
-                  allowFullScreen
-                  allowusermedia
-                  className='video'></iframe>
               )}
 
               {/* {mainStageContent == 'surveyDetalle' && (
@@ -615,7 +605,7 @@ let AgendaActividadDetalle = (props) => {
               {mainStageContent == 'game' && <Game />}
 
               {(meetingState === '' || meetingState == null) &&
-                stateSpace === false &&
+                
                 mainStageContent !== 'surveyDetalle' &&
                 mainStageContent !== 'game' && (
                   <div className='column is-centered mediaplayer'>
@@ -639,7 +629,7 @@ let AgendaActividadDetalle = (props) => {
               {meetingState === 'closed_meeting_room' &&
                 mainStageContent !== 'surveyDetalle' &&
                 mainStageContent !== 'game' &&
-                stateSpace === false && (
+                 (
                   <div className='column is-centered mediaplayer'>
                     <img
                       className='activity_image'
@@ -658,10 +648,10 @@ let AgendaActividadDetalle = (props) => {
                   </div>
                 )}
 
-              {meetingState === 'ended_meeting_room' &&
+              {(meetingState === 'ended_meeting_room' || !meetingState) &&
               currentActivity !== null &&
               currentActivity.video &&
-              stateSpace === false &&
+              
               mainStageContent !== 'surveyDetalle' &&
               mainStageContent !== 'game' ? (
                 <div className='column is-centered mediaplayer'>
@@ -680,7 +670,7 @@ let AgendaActividadDetalle = (props) => {
                 <>
                   {meetingState === 'ended_meeting_room' &&
                     ((currentActivity !== null && currentActivity.image) || image_event) &&
-                    stateSpace === false &&
+                    
                     mainStageContent !== 'surveyDetalle' &&
                     mainStageContent !== 'game' && (
                       <div>
@@ -702,6 +692,7 @@ let AgendaActividadDetalle = (props) => {
                     )}
                 </>
               )}
+              
               {/*logo quemado de aval para el evento de magicland */}
               {(props.cEvent.value._id === '5f99a20378f48e50a571e3b6' ||
                 props.cEvent.value._id === '5fca68b7e2f869277cfa31b0') && (
