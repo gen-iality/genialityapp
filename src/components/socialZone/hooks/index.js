@@ -1,6 +1,3 @@
-import { fireRealtime } from '../../../helpers/firebase';
-
-
 export const InitialsNameUser = (name) => {
   let rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
   let initials = [...name.matchAll(rgx)] || [];
