@@ -42,7 +42,7 @@ const textLeft = {
 
 const center = {
   margin: '0 auto',
-  textAlign:'center'
+  textAlign: 'center',
 };
 
 /**
@@ -125,8 +125,9 @@ const FormRegister = ({
   let [ImgUrl, setImgUrl] = useState('');
   const [typeRegister, setTypeRegister] = useState('free');
   const [payMessage, setPayMessage] = useState(false);
-
   const [form] = Form.useForm();
+  let [areacodeselected, setareacodeselected] = useState(null);
+  let [numberareacode, setnumberareacode] = useState(null);
 
   useEffect(() => {
     let formType = !eventUserId ? 'register' : 'transfer';
@@ -141,6 +142,21 @@ const FormRegister = ({
     }
   }, [eventUser, eventUserId, initialValues, conditionals, eventId]);
 
+  useEffect(() => {
+   
+    if (!extraFields) return;
+    let codeareafield = extraFields.filter((field) => field.type == 'codearea');
+  if(codeareafield ){
+    let phonenumber =
+      eventUser && codeareafield[0] && eventUser['properties'] ? eventUser['properties'][codeareafield[0].name] : '';      
+    if (phonenumber && areacodeselected==null && numberareacode==null ) {
+      let splitphone = phonenumber.toString().split(' ');
+      setareacodeselected(splitphone[0]);
+      setnumberareacode(splitphone[2]);
+    }
+  }
+  }, [extraFields]);
+
   const showGeneralMessage = () => {
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
@@ -154,8 +170,10 @@ const FormRegister = ({
     setEvent(data);
   };
 
-  const onFinish = async (values) => {
-    console.log('VALUES===>', values);
+  const onFinish = async (values) => {   
+    if (numberareacode) {
+      values.telefono = `${areacodeselected}  ${numberareacode}`;
+    }
     setSectionPermissions({ view: false, ticketview: false });
     values.password = password;
     let ruta = '';
@@ -224,14 +242,15 @@ const FormRegister = ({
 
           setSubmittedForm(true);
           message.success(intl.formatMessage({ id: 'registration.message.created' }));
-        
 
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
           //todo el proceso de logueo depende del token en la url por eso se recarga la página
           if (event.validateEmail && resp.data.user.initial_token) {
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
-              window.location.replace(`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`);
+              window.location.replace(
+                `/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
+              );
             }, 100);
           }
           window.location.replace(`/landing/${eventId}/success/${typeRegister}`);
@@ -273,7 +292,7 @@ const FormRegister = ({
     updateFieldsVisibility(conditionals, allFields);
   };
 
-  const updateFieldsVisibility = (conditionals, allFields) => {
+  const updateFieldsVisibility = (conditionals, allFields) => {    
     let newExtraFields = [...extraFieldsOriginal];
     newExtraFields = newExtraFields.filter((field) => {
       let fieldShouldBeDisplayed = false;
@@ -372,15 +391,31 @@ const FormRegister = ({
 
       if (type === 'codearea') {
         input = (
-          <Select style={{ width: '100%' }} placeholder='Codigo de area del pais'>
-            {areaCode.map((code, key) => {
-              return (
-                <option key={key} value={code.value}>
-                  {code.label + ' (+' + code.value + ')'}
-                </option>
-              );
-            })}
-          </Select>
+          <Input.Group compact>
+            <Select
+              style={{ width: '30%' }}
+              value={areacodeselected}
+              name={name}
+              onChange={(val) => setareacodeselected(val)}
+              placeholder='Codigo de area del pais'>
+              {areaCode.map((code, key) => {
+                return (
+                  <Option key={key} value={code.value}>
+                    {code.label + ' (+' + code.value + ')'}
+                  </Option>
+                );
+              })}
+            </Select>
+            <Input
+              onChange={(e) => setnumberareacode(e.target.value)}
+              value={numberareacode}
+              name='telefono'
+              type='number'
+              key={key}
+              style={{ width: '70%' }}
+              placeholder='Numero de telefono'
+            />
+          </Input.Group>
         );
       }
 
@@ -684,11 +719,9 @@ const FormRegister = ({
               </Row>
             </Form>
           </Card>
-        ):(
-          <LoadingOutlined style={{fontSize:'40px'}} />
-        ) }
-          
-         
+        ) : (
+          <LoadingOutlined style={{ fontSize: '40px' }} />
+        )}
       </Col>
     </>
   );
