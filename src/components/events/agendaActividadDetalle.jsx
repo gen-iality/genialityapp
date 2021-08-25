@@ -363,7 +363,7 @@ let AgendaActividadDetalle = (props) => {
     Moment.locale(window.navigator.language);
   }
 
-  console.log('currentActivity', currentActivity);
+  console.log('meetingState', meetingState);
 
   return (
     <div className='is-centered'>
@@ -518,12 +518,13 @@ let AgendaActividadDetalle = (props) => {
 
               {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
 
+              
               {(meetingState === 'open_meeting_room' || stateSpace) &&
               // mainStageContent !== 'surveyDetalle' &&
               // mainStageContent !== 'games' &&
 
               platform !== '' &&
-              platform !== null ? (
+              platform !== null && (
                 <>
                   {platform === 'dolby' && names === null && email === null ? (
                     <Card title='Ingresa tus datos para entrar a la transmisión'>
@@ -584,15 +585,7 @@ let AgendaActividadDetalle = (props) => {
                     </>
                   )}
                 </>
-              ) : (
-                <iframe
-                  src={currentActivity && currentActivity.video}
-                  frameBorder='0'
-                  allow='autoplay; fullscreen; camera *;microphone *'
-                  allowFullScreen
-                  allowusermedia
-                  className='video'></iframe>
-              )}
+              ) }
 
               {/* {mainStageContent == 'surveyDetalle' && (
                 <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
