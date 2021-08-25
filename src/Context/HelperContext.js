@@ -102,11 +102,6 @@ export const HelperContextProvider = ({ children }) => {
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
-    let dataotheruser = {};
-
-    console.log('=====idcurrentUser===================', idcurrentUser);
-    console.log('=========idOtherUser=================', idOtherUser);
-
     //agregamos una referencia al chat para el usuario actual
     data = {
       id: newId,
@@ -261,23 +256,23 @@ export const HelperContextProvider = ({ children }) => {
   useEffect(() => {
     if (cEvent.value == null || cEvent.value == null) return;
     console.log(' cUser.value', cUser.value);
-    // async function fethcNewMessages() {
-    //   firestore
-    //     .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value._id + '/' + 'chats/')
-    //     .onSnapshot(function(querySnapshot) {
-    //       let data;
-    //       querySnapshot.forEach((doc) => {
-    //         data = doc.data();
-    //         console.log('====================================');
-    //         console.log('datamsj', data);
-    //         console.log('====================================');
-    //       });
-    //     });
-    // }
+    async function fethcNewMessages() {
+      firestore
+        .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
+        .onSnapshot(function(querySnapshot) {
+          let data;
+          querySnapshot.forEach((doc) => {
+            data = doc.data();
+            console.log('====================================');
+            console.log('datamsj', data);
+            console.log('====================================');
+          });
+        });
+    }
 
-    // if (cEvent.value != null) {
-    //   fethcNewMessages();
-    // }
+    if (cEvent.value != null) {
+      fethcNewMessages();
+    }
   }, [firestore, cEvent.value]);
 
   useEffect(() => {
