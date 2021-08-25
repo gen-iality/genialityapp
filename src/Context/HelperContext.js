@@ -254,8 +254,7 @@ export const HelperContextProvider = ({ children }) => {
   }, [cEvent.value, cUser.value]);
 
   useEffect(() => {
-    if (cEvent.value == null || cEvent.value == null) return;
-    console.log(' cUser.value', cUser.value);
+    if (cEvent.value == null || cUser.value == null) return;
     async function fethcNewMessages() {
       firestore
         .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
