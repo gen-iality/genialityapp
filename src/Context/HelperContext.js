@@ -57,8 +57,6 @@ export const HelperContextProvider = ({ children }) => {
     return chatid;
   };
 
-
-
   const openNotification = (data) => {
     console.log('====================================');
     console.log('datallega', data);
@@ -295,7 +293,7 @@ export const HelperContextProvider = ({ children }) => {
       firestore
         .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
         .onSnapshot(function(querySnapshot) {
-          if (querySnapshot.docChanges()[0].type == 'modified') {
+          if (querySnapshot.docChanges()[0] && querySnapshot.docChanges()[0].type == 'modified') {
             openNotification(querySnapshot.docChanges()[0].doc.data());
             console.log('datamensaje', querySnapshot.docChanges()[0].doc.data());
           }
