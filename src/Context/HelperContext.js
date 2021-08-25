@@ -1,11 +1,13 @@
 import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
-import { firestore,fireRealtime } from '../helpers/firebase';
+import { firestore, fireRealtime } from '../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../helpers/request';
 import { UseEventContext } from './eventContext';
-import { getUserEvent } from '../components/networking/services';
 import { UseCurrentUser } from './userContext';
 import { UseUserEvent } from './eventUserContext';
+import { notification, Button, Row, Col } from 'antd';
+import { MessageOutlined, SendOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 export const HelperContext = createContext();
 
@@ -39,6 +41,9 @@ export const HelperContextProvider = ({ children }) => {
   const [privateChatsList, setPrivatechatlist] = useState();
   const [attendeeList, setAttendeeList] = useState({});
   const [attendeeListPresence, setAttendeeListPresence] = useState({});
+  const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(true);
+  const [chatAttendeChats, setchatAttendeChats] = useState('1');
+  const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     let chatid;
@@ -46,13 +51,62 @@ export const HelperContextProvider = ({ children }) => {
       if (ida < idb) {
         chatid = ida + '_' + idb;
       } else {
-        chatid = idb;
+        chatid = idb + '_' + ida;
       }
     } else {
       chatid = null;
     }
 
     return chatid;
+  };
+
+  /*CERRAR Y ABRIR MENU DERECHO*/
+
+  function HandleOpenCloseMenuRigth() {
+    setisCollapsedMenuRigth(!isCollapsedMenuRigth);
+  }
+
+  /*ENTRAR A CHAT O ATTENDE EN EL MENU*/
+  function HandleChatOrAttende(key) {
+    setchatAttendeChats(key);
+  }
+
+  /*ENTRAR A CHAT PUBLICO O PRIVADO*/
+  function HandlePublicPrivate(key) {
+    setchatPublicPrivate(key);
+  }
+
+  const openNotification = (data) => {
+    const btn = (
+      <Button
+        style={{ backgroundColor: '#1CDCB7', borderColor: 'white', color: 'white', fontWeight: '700' }}
+        icon={<SendOutlined />}
+        type='primary'
+        size='small'
+        onClick={() => {
+          HandleOpenCloseMenuRigth()
+          HandlePublicPrivate("private")
+          HandleGoToChat(cUser.value.uid, data.id, cUser.value.names ? cUser.value.names : cUser.value.name, 'private');
+          notification.destroy()
+        }}>
+        Responder
+      </Button>
+    );
+
+    const args = {
+      message: (
+        <Row justify='space-between'>
+          <Col style={{ fontWeight: 'bold' }}>{data.remitente}</Col>
+
+          <Col>{moment().format('h:mm A')}</Col>
+        </Row>
+      ),
+      description: <Row style={{ color: 'grey' }}>{data.ultimo_mensaje}</Row>,
+      duration: 8,
+      icon: <MessageOutlined style={{ color: '#1CDCB7' }} />,
+      btn,
+    };
+    notification.open(args);
   };
 
   function HandleGoToChat(idactualuser, idotheruser, chatname, section) {
@@ -104,17 +158,33 @@ export const HelperContextProvider = ({ children }) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
     //agregamos una referencia al chat para el usuario actual
-    data = { id: newId, name: otherUserName };
+    data = {
+      id: newId,
+      name: otherUserName,
+      participants: [
+        { idparticipant: idcurrentUser, countmessajes: 0 },
+        { idparticipant: idOtherUser, countmessajes: 0 },
+      ],
+    };
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
 
+    data = {
+      id: newId,
+      name: currentName,
+      participants: [
+        { idparticipant: idcurrentUser, countmessajes: 0 },
+        { idparticipant: idOtherUser, countmessajes: 0 },
+      ],
+    };
     //agregamos una referencia al chat para el otro usuario del chat
     // data = { id: newId, name: currentName || '--', participants: [idcurrentUser, idOtherUser], type: 'onetoone' };
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
 
+    console.log('chatuser', newId);
     HandleGoToChat(idcurrentUser, idOtherUser, currentName, 'attendee');
   };
 
@@ -239,6 +309,24 @@ export const HelperContextProvider = ({ children }) => {
   }, [cEvent.value, cUser.value]);
 
   useEffect(() => {
+    if (cEvent.value == null || cUser.value == null) return;
+    async function fethcNewMessages() {
+      firestore
+        .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
+        .onSnapshot(function(querySnapshot) {
+          if (querySnapshot.docChanges()[0] && querySnapshot.docChanges()[0].type == 'modified') {
+            openNotification(querySnapshot.docChanges()[0].doc.data());
+            console.log('datamensaje', querySnapshot.docChanges()[0].doc.data());
+          }
+        });
+    }
+
+    if (cEvent.value != null) {
+      fethcNewMessages();
+    }
+  }, [firestore, attendeeList]);
+
+  useEffect(() => {
     /*NOTIFICACIONES POR ACTIVIDAD*/
 
     async function fetchActivityChange() {
@@ -353,7 +441,13 @@ export const HelperContextProvider = ({ children }) => {
         createNewOneToOneChat,
         privateChatsList,
         attendeeList,
-        attendeeListPresence
+        attendeeListPresence,
+        isCollapsedMenuRigth,
+        HandleOpenCloseMenuRigth,
+        HandleChatOrAttende,
+        chatAttendeChats,
+        HandlePublicPrivate,
+        chatPublicPrivate,
       }}>
       {children}
     </HelperContext.Provider>

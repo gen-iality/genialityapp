@@ -44,11 +44,18 @@ class Product extends Component {
 
     onSortEnd = ({ oldIndex, newIndex }) => {
       const { list } = this.state;
-      list[newIndex].index=oldIndex;
-      list[oldIndex].index=newIndex;
+      //list[newIndex].index=oldIndex;
+      //list[oldIndex].index=newIndex;
       if (oldIndex !== newIndex) {
-        const newData = arrayMove([].concat(list), oldIndex, newIndex).filter(el => !!el);
+       let newData = arrayMove([].concat(list), oldIndex, newIndex).filter(el => !!el);
         console.log('Sorted items: ', newData);
+        //asignar nueva posicion
+        if(newData){
+          newData= newData.map((product,key)=>{
+            return {...product,index:key};
+           })
+           console.log("AGREGADA LAS POSCIONES")
+        }
         this.setState({list: newData });
       }
     };
@@ -60,7 +67,7 @@ class Product extends Component {
 
    fetchItem = async () => {
       const data = await EventsApi.getProducts(this.props.eventId);
-      console.log("DATA==>",data.data)
+     
       let listproduct=[];
       if(data.data){
         listproduct= data.data.map((product,index)=>{

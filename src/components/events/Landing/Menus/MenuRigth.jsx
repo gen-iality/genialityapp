@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Menu, Badge } from 'antd';
 import { CommentOutlined, TeamOutlined, PieChartOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import withContext from '../../../../Context/withContext'
+import withContext from '../../../../Context/withContext';
+import { HelperContext } from '../../../../Context/HelperContext';
 
 const MenuRigth = (props) => {
+  let { HandleOpenCloseMenuRigth, HandleChatOrAttende } = useContext(HelperContext);
   const animateIcon = 'animate__animated animate__bounceIn';
-
 
   return (
     <Menu mode='none' theme='light' style={stylesMenuItems}>
@@ -27,7 +28,7 @@ const MenuRigth = (props) => {
           </>
         }
         style={{ marginTop: '12px', marginBottom: '22px' }}
-        onClick={() => props.handleCollapsed()}></Menu.Item>
+        onClick={() => HandleOpenCloseMenuRigth()}></Menu.Item>
 
       {(props.generalTabs?.publicChat || props.generalTabs?.privateChat) && (
         <Menu.Item
@@ -47,8 +48,8 @@ const MenuRigth = (props) => {
           }
           style={{ paddingTop: '20px' }}
           onClick={() => {
-            props.handleCollapsed();
-            props.settabselected('1');
+            HandleOpenCloseMenuRigth();
+            HandleChatOrAttende('1');
           }}></Menu.Item>
       )}
 
@@ -67,8 +68,8 @@ const MenuRigth = (props) => {
           }
           style={{ paddingTop: '20px' }}
           onClick={() => {
-            props.handleCollapsed();
-            props.settabselected('2');
+            HandleOpenCloseMenuRigth();
+            HandleChatOrAttende('2');
           }}></Menu.Item>
       )}
       {props.currentActivity !== null && props.tabs && (props.tabs.surveys === 'true' || props.tabs.surveys === true) && (
@@ -88,11 +89,10 @@ const MenuRigth = (props) => {
             </span>
           }
           style={{ paddingTop: '20px' }}
-           onClick={() =>  {
-            props.handleCollapsed();
-            props.settabselected('3');
-           }}
-        ></Menu.Item>
+          onClick={() => {
+            HandleOpenCloseMenuRigth();
+            HandleChatOrAttende('3');
+          }}></Menu.Item>
       )}
       {props.currentActivity !== null && props.tabs && (props.tabs.games === 'true' || props.tabs.games === true) && (
         <Menu.Item
@@ -108,20 +108,17 @@ const MenuRigth = (props) => {
           }
           style={{ paddingTop: '20px' }}
           onClick={() => {
-            props.handleCollapsed();
-            props.settabselected('4');
+            HandleOpenCloseMenuRigth();
+            HandleChatOrAttende('4');
           }}></Menu.Item>
       )}
     </Menu>
   );
 };
 
-
 const mapStateToProps = (state) => ({
   currentActivity: state.stage.data.currentActivity,
 });
 
-let MenuRigthWithContext = withContext(MenuRigth)
+let MenuRigthWithContext = withContext(MenuRigth);
 export default connect(mapStateToProps, null)(withRouter(MenuRigthWithContext));
-
-
