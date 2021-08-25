@@ -143,16 +143,18 @@ const FormRegister = ({
   }, [eventUser, eventUserId, initialValues, conditionals, eventId]);
 
   useEffect(() => {
+   
     if (!extraFields) return;
     let codeareafield = extraFields.filter((field) => field.type == 'codearea');
-
+  if(codeareafield ){
     let phonenumber =
-      eventUser && codeareafield[0] && eventUser['properties']
-        ? eventUser['properties'][codeareafield[0].name]
-        : '';
-    let splitphone = phonenumber.split(' ');
-    setareacodeselected(splitphone[0]);
-    setnumberareacode(splitphone[2]);
+      eventUser && codeareafield[0] && eventUser['properties'] ? eventUser['properties'][codeareafield[0].name] : '';      
+    if (phonenumber && areacodeselected==null && numberareacode==null ) {
+      let splitphone = phonenumber.toString().split(' ');
+      setareacodeselected(splitphone[0]);
+      setnumberareacode(splitphone[2]);
+    }
+  }
   }, [extraFields]);
 
   const showGeneralMessage = () => {
@@ -168,8 +170,7 @@ const FormRegister = ({
     setEvent(data);
   };
 
-  const onFinish = async (values) => {
-    console.log('VALUES===>', values);
+  const onFinish = async (values) => {   
     if (numberareacode) {
       values.telefono = `${areacodeselected}  ${numberareacode}`;
     }
@@ -291,7 +292,7 @@ const FormRegister = ({
     updateFieldsVisibility(conditionals, allFields);
   };
 
-  const updateFieldsVisibility = (conditionals, allFields) => {
+  const updateFieldsVisibility = (conditionals, allFields) => {    
     let newExtraFields = [...extraFieldsOriginal];
     newExtraFields = newExtraFields.filter((field) => {
       let fieldShouldBeDisplayed = false;
