@@ -36,7 +36,11 @@ const ChatList = (props) => {
   const history = useHistory();
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
+  
   let { chatActual, HandleGoToChat, privateChatsList } = useContext(HelperContext);
+  console.log("PRIVATE CHAT==>",privateChatsList)
+  console.log("CUSER==>", cUser )
+
   const onFinish = (values) => {
     cUser.value = values;
   };
@@ -190,15 +194,16 @@ const ChatList = (props) => {
                         );
                         settotalmsjpriv(0);
                       }}>
+                     
                       <Tooltip title='Chatear'>
-                        {item.newMessages && item.newMessages.length > 0 && (
+                        {(item.participants.filter((part)=>part.idparticipant!=cUser.value.uid )[0].countmessajes && item.participants.filter((part)=>part.idparticipant!=cUser.value.uid )[0].countmessajes>0)? (
                           <Badge count={' '} style={{ minWidth: '10px', height: '10px', padding: '0px' }}>
                             <MessageTwoTone style={{ fontSize: '27px' }} />
                           </Badge>
-                        )}
-                        {item.newMessages && item.newMessages.length == 0 && (
+                        ): (
                           <MessageTwoTone style={{ fontSize: '27px' }} />
                         )}
+                        
                       </Tooltip>
                     </a>,
                   ]}>

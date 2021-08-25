@@ -41,6 +41,7 @@ export const HelperContextProvider = ({ children }) => {
   const [privateChatsList, setPrivatechatlist] = useState();
   const [attendeeList, setAttendeeList] = useState({});
   const [attendeeListPresence, setAttendeeListPresence] = useState({});
+  console.log("CHAT PRIVATE==>",privateChatsList)
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     let chatid;
