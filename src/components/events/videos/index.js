@@ -39,7 +39,7 @@ const Videos = () => {
             activitiesEvent.map((activity, index) => {
               if (activity.video) {
                 return (
-                  <Col key={index} xs={24} sm={24} md={24} lg={6} xl={6} xxl={6}>
+                  <Col key={index} xs={24} sm={24} md={12} lg={8} xl={6} xxl={6}>
                     <VideoCard
                       bordered={false}
                       key={cEvent.value._id}
