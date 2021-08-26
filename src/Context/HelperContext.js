@@ -99,7 +99,8 @@ export const HelperContextProvider = ({ children }) => {
         type='primary'
         size='small'
         onClick={() => {
-          HandleOpenCloseMenuRigth();
+          setisCollapsedMenuRigth(false);
+          HandleChatOrAttende('1');
           HandlePublicPrivate('private');
           HandleGoToChat(cUser.value.uid, data.id, cUser.value.names ? cUser.value.names : cUser.value.name, 'private');
           notification.destroy();

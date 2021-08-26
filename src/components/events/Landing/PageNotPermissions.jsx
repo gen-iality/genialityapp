@@ -26,7 +26,6 @@ const PageNotPermissions = (props) => {
     margin: '30px auto',
     textAlign: 'center',
   };
-  console.log(props);
 
   const obtenerGaleria = () => {
     setLoading(true);
