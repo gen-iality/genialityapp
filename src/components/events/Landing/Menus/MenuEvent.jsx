@@ -9,10 +9,10 @@ import { UseUserEvent } from '../../../../Context/eventUserContext';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 
-const MenuEvent = ({ isMobile, setSectionPermissions,eventPrivate }) => {
+const MenuEvent = ({ isMobile, setSectionPermissions }) => {
   let { url } = useRouteMatch();
   let cEvent = UseEventContext();
-  let { totalsolicitudes } = useContext(HelperContext);
+  let { totalsolicitudes,eventPrivate } = useContext(HelperContext);
   let event = cEvent.value;
   let cEventUser = UseUserEvent();
 
