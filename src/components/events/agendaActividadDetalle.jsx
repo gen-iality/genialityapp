@@ -828,7 +828,9 @@ let AgendaActividadDetalle = (props) => {
                   </TabPane>
                 )}
 
-              {props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
+              {props.tabs 
+              // && (props.tabs.surveys === true || props.tabs.surveys === 'true') 
+              && (
                 <TabPane
                   tab={
                     <>

@@ -72,7 +72,9 @@ const MenuRigth = (props) => {
             HandleChatOrAttende('2');
           }}></Menu.Item>
       )}
-      {props.currentActivity !== null && props.tabs && (props.tabs.surveys === 'true' || props.tabs.surveys === true) && (
+      {props.currentActivity !== null && props.tabs
+      //  && (props.tabs.surveys === 'true' || props.tabs.surveys === true) 
+       && (
         <Menu.Item
           key='3'
           icon={

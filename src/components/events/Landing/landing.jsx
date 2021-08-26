@@ -154,7 +154,6 @@ const Landing = (props) => {
 
             <EventSectionRoutes generaltabs={generaltabs} currentActivity={currentActivity} />
           </Content>
-          <EnableGTMByEVENT/>
           <EviusFooter />
         </Layout>
         <EventSectionMenuRigth
