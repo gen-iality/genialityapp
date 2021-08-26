@@ -11,6 +11,7 @@ import ProductCard from '../producto/productCard';
 import { withRouter } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../../Context/HelperContext';
+import UserLoginContainer  from '../UserLoginContainer';
 
 const PageNotPermissions = (props) => {
   let EventUser = UseUserEvent();
@@ -67,6 +68,7 @@ const PageNotPermissions = (props) => {
             }
             // extra={<Button type='primary'>Back Home</Button>}
           />
+          <UserLoginContainer eventId={EventContext.value._id}/>
         </Card>
       ) : (
         <>
