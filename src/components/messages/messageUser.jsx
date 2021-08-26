@@ -18,8 +18,7 @@ class MessageUser extends Component {
           <thead>
             <tr>
               <th>Email</th>
-              <th>Status</th>
-              <th>Email Status</th>
+              <th>Status</th>            
             </tr>
           </thead>
           <tbody>
@@ -27,8 +26,7 @@ class MessageUser extends Component {
               return (
                 <tr key={key}>
                   <td>{item.email}</td>
-                  <td>{item.status}</td>
-                  <td>{item.status_message}</td>
+                  <td>{item.status}</td>                
                 </tr>
               );
             })}
