@@ -115,7 +115,7 @@ const VirtualConference = () => {
   }, [agendageneral, firestore]);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft:'20px', marginRight:'20px'}}>
       {infoAgendaArr.length > 0 &&
         infoAgendaArr
           .filter((item) => {
@@ -141,7 +141,7 @@ const VirtualConference = () => {
                       </span>
                     </Space>
                   ) : (
-                    ''
+                   ''
                   )
                 }>
                 <Card
@@ -153,7 +153,7 @@ const VirtualConference = () => {
                     maxHeight: '300px',
                     marginTop: '8px',
                     marginBottom: '8px',
-                    width: `${screens.xs === true ? '90vw': '75vw'}`,
+                    width: `${screens.xs === true ? '90vw': '62vw'}`,
                     borderRadius: '10px',
                     borderLeft: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                     borderRight: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
