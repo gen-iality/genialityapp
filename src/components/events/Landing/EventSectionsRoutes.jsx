@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -32,16 +32,11 @@ import MessageRegister from '../registrationForm/messageRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import ListVideoCard from '../../shared/listVideoCard';
 import initUserPresence from '../../../containers/userPresenceInEvent';
+import { HelperContext } from '../../../Context/HelperContext';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  let redirect;
-
-  if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
-    redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
-  } else {
-    redirect = 'evento';
-  }
+  let { eventPrivate } = useContext(HelperContext);
 
   function ValidateViewPermissions(route, nombresection) {
     let routePermissions =
@@ -53,7 +48,26 @@ const EventSectionRoutes = (props) => {
     ) {
       props.setSectionPermissions({ view: true, section: nombresection });
       return true;
-    } else {
+    } else if (
+      routePermissions.length > 0 &&
+      routePermissions[0].permissions === 'public' &&
+      props.cEventUser.value == null &&
+      eventPrivate.private
+    ) {
+      // console.log('====================================');
+      // console.log("la agenda es publica y el evento es privado");
+      // console.log('====================================');
+      props.setSectionPermissions({ view: true, section: nombresection });
+      return true;
+    } else if (
+      routePermissions.length > 0 &&
+      routePermissions[0].permissions === 'public' &&
+      props.cEventUser.value == null &&
+      !eventPrivate.private
+    ) {
+      // console.log('====================================');
+      // console.log("la agenda es publica y el evento NO es privado");
+      // console.log('====================================');
       return false;
     }
   }
@@ -73,7 +87,7 @@ const EventSectionRoutes = (props) => {
 
       <Switch>
         <Route exact path={`${path}/`}>
-          <Redirect to={`/landing/${props.cEvent.value._id}/${redirect}`} />
+          <Redirect to={`/landing/${props.cEvent.value._id}/${eventPrivate.section}`} />
         </Route>
 
         <Route path={`${path}/documents`}>
@@ -239,7 +253,6 @@ const EventSectionRoutes = (props) => {
           <MessageRegister />
         </Route>
       </Switch>
-     
     </>
   );
 };
