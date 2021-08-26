@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { List, Typography, Badge, Tooltip, Tabs, Form, Input, Button, Row, Space, Avatar, Popover } from 'antd';
+import { List, Typography, Badge, Tooltip, Tabs, Form, Input, Button, Row, Space, Avatar, Popover, Col } from 'antd';
 import { ExclamationCircleOutlined, MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { UseEventContext } from '../../../Context/eventContext';
@@ -68,36 +68,42 @@ const ChatList = (props) => {
   if (!cUser.value)
     return (
       <Form className='asistente-list' {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
-        <Row justify='center'>
-          <h1>
-            <strong>
-              <FormattedMessage
-                id='form.title.socialzone'
-                defaultMessage='Ingresa tus datos para participar en el chat'
-              />
-            </strong>
-          </h1>
-          <Space>
-            <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-            <Text type='secondary'>
-              <FormattedMessage
-                id='form.message.socialzone'
-                defaultMessage='Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.'
-              />
-            </Text>
-          </Space>
+        <Row justify='start'>
+          <Col>
+            <h1>
+              <strong>
+                <FormattedMessage
+                  id='form.title.socialzone'
+                  defaultMessage='Ingresa tus datos para participar en el chat'
+                />
+              </strong>
+            </h1>
+            
+              <Text type='secondary'>
+                <FormattedMessage
+                  id='form.message.socialzone'
+                  defaultMessage='Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.'
+                />
+              </Text>
+            
+          </Col>
         </Row>
-        <Row justify='center' style={{ paddingTop: '10px' }}>
-          <Form.Item
-            label={intl.formatMessage({ id: 'form.label.name' })}
-            name='name'
-            rules={[{ required: true, message: 'Digita tu nombre' }]}>
-            <Input />
-          </Form.Item>
+        <Row justify='start' style={{ paddingTop: '10px' }}>
+          <Col>
+            <Form.Item
+              label={intl.formatMessage({ id: 'form.label.name' })}
+              name='name'
+              rules={[{ required: true, message: 'Digita tu nombre' }]}>
+              <Input style={{ width: '100%' }} />
+            </Form.Item>
 
-          <Form.Item name='email' label='Email' rules={[{ required: true, type: 'email', message: 'Digita tu email' }]}>
-            <Input />
-          </Form.Item>
+            <Form.Item
+              name='email'
+              label='Email'
+              rules={[{ required: true, type: 'email', message: 'Digita tu email' }]}>
+              <Input style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
         </Row>
 
         <Row justify='center'>
