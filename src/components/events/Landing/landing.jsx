@@ -128,9 +128,9 @@ const Landing = (props) => {
         });
   }, [cEventContext.status]);
 
-  return cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING' ? (
-    <Ripple />
-  ) : (
+  if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin />;
+
+  return (
     <>
       <Layout>
         <AppointmentModal
