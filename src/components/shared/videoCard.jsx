@@ -34,9 +34,7 @@ const videoCard = ({ activity, event, bordered, right, loading }) => {
               style={{}}
               description={
                 <div>
-                  
                   <Paragraph strong={true} ellipsis={{rows:2}} >{activity.name}</Paragraph>
-                  {console.log('activityy',activity)}
                     <div size='small' style={{fontSize:'80%'}}>
                       <i className='fas fa-calendar-alt' />
                       <time dateTime={activity.datetime_start}>{Moment(activity.datetime_start).format('DD MMM YYYY')}</time>
