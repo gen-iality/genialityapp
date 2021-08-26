@@ -359,7 +359,6 @@ let AgendaActividadDetalle = (props) => {
     Moment.locale(window.navigator.language);
   }
 
-  console.log('meetingState', meetingState);
 
   return (
     <div className='is-centered'>
