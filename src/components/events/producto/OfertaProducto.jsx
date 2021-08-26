@@ -15,11 +15,12 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,message }
           .split('COP $ ')[1]
           .replace(`’`, '')
           .replace('.', '')
+          .replace(',', '')
       : product && product.price && product.price.includes('USD')?
       product.price
           .split('USD $ ')[1]
           .replace(`’`, '')
-          .replace('.', ''):0
+          .replace('.', '').replace(',', ''):0
   );
   console.log('DATACONTEXT==>', cEventUser, cUser);
   const [valorProduct, setValorProduct] = useState(valuOferta);
@@ -53,6 +54,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,message }
   const changeValor = (e) => {
     setValueOferta(e.target.value);
   };
+  console.log("VALOR OFERTA=>",valuOferta)
   //SAVE VALUE OFERTA
   const saveValue = async () => {
     if (valuOferta > 0) {
