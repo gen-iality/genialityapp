@@ -25,6 +25,9 @@ import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutl
 import EviusFooter from './EviusFooter';
 import AppointmentModal from '../../networking/appointmentModal';
 
+/** Google tag manager */
+import { EnableGTMByEVENT } from './helpers/tagManagerHelper'
+
 const iniitalstatetabs = {
   attendees: false,
   privateChat: false,
@@ -151,6 +154,7 @@ const Landing = (props) => {
 
             <EventSectionRoutes generaltabs={generaltabs} currentActivity={currentActivity} />
           </Content>
+          <EnableGTMByEVENT/>
           <EviusFooter />
         </Layout>
         <EventSectionMenuRigth
@@ -164,6 +168,7 @@ const Landing = (props) => {
           currentActivity={currentActivity}
           generalTabs={generaltabs}
         />
+        <EnableGTMByEVENT/>
       </Layout>
     </>
   );

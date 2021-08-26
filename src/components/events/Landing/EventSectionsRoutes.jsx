@@ -45,7 +45,6 @@ const EventSectionRoutes = (props) => {
   }
 
   function ValidateViewPermissions(route, nombresection) {
-  
     let routePermissions =
       props.cEvent.value && Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section === route);
     if (
@@ -69,6 +68,7 @@ const EventSectionRoutes = (props) => {
       {props.viewVirtualconference && (
         <>
           <VirtualConferenceBig />
+          <ListVideoCard idevent={props.cEvent.value} />
          
         </>
       )}
@@ -252,12 +252,7 @@ const EventSectionRoutes = (props) => {
           <MessageRegister />
         </Route>
       </Switch>
-      {props.viewVirtualconference && (
-        <>
-         
-          <ListVideoCard idevent={props.cEvent.value} />
-        </>
-      )}
+     
     </>
   );
 };
