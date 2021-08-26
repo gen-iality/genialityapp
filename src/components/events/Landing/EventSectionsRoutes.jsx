@@ -103,19 +103,51 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/interviews`}>
-          <MyAgendaIndepend />
+          {() =>
+            ValidateViewPermissions('interviews', 'interviews') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <MyAgendaIndepend />
+            )
+          }
         </Route>
 
         <Route path={`${path}/networking`}>
-          <NetworkingForm />
+          {() =>
+            ValidateViewPermissions('networking', 'Networking') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <NetworkingForm />
+            )
+          }
         </Route>
 
         <Route path={`${path}/informativeSection1`}>
-          <InformativeSection2 />
+          {() =>
+            ValidateViewPermissions('informativeSection1', 'informativeSection1') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <InformativeSection2 />
+            )
+          }
         </Route>
 
         <Route path={`${path}/informativeSection`}>
-          <InformativeSection />
+          {() =>
+            ValidateViewPermissions('informativeSection', 'informativeSection') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <InformativeSection />
+            )
+          }
         </Route>
 
         <Route path={`${path}/activity/:activity_id`}>
@@ -131,13 +163,39 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/speakers`}>
-          <SpeakersForm />
+          {() =>
+            ValidateViewPermissions('speakers', 'Conferencistas') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <SpeakersForm />
+            )
+          }
         </Route>
         <Route path={`${path}/surveys`}>
-          <SurveyForm />
+          {() =>
+            ValidateViewPermissions('surveys', 'Encuestas') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <SurveyForm />
+            )
+          }
         </Route>
         <Route path={`${path}/partners`}>
-          <Partners />
+        {() =>
+            ValidateViewPermissions('partners', 'partners') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <Partners />
+            )
+          }
+
+        
         </Route>
         <Route path={`${path}/faqs`}>
           {() =>
