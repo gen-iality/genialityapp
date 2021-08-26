@@ -191,8 +191,8 @@ const ChatList = (props) => {
                         settotalmsjpriv(0);
                       }}>
                       <Tooltip title='Chatear'>
-                        {item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0].countmessajes &&
-                        item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0].countmessajes >
+                        {item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes &&
+                        item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes >
                           0 ? (
                           <Badge count={' '} style={{ minWidth: '10px', height: '10px', padding: '0px' }}>
                             <MessageTwoTone style={{ fontSize: '27px' }} />
