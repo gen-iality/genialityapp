@@ -351,11 +351,7 @@ class menuLanding extends Component {
                       <label>Permisos para la sección</label>
                       <Select
                         key={this.state.keySelect}
-                        disabled={
-                          this.state.menu[key].checked === true && this.state.menu[key].section !== 'tickets'
-                            ? false
-                            : true
-                        }
+                        disabled={this.state.menu[key].checked === true ? false : true}
                         defaultValue={this.state.menu[key].permissions}
                         style={{ width: 200 }}
                         onChange={(e) => {

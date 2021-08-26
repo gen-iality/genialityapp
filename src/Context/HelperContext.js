@@ -44,6 +44,21 @@ export const HelperContextProvider = ({ children }) => {
   const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(true);
   const [chatAttendeChats, setchatAttendeChats] = useState('1');
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
+  const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
+
+  /*VALIDACION DE EVENTO TOTALMENTE PRIVADO*/
+  useEffect(() => {
+    if (!cEvent.value) return;
+    let routePermissions =
+      cEvent.value && Object.values(cEvent.value.itemsMenu).filter((item) => item.section === 'tickets');
+
+    if (routePermissions[0] && routePermissions[0].permissions == 'assistants' && cEventuser.value == null) {
+      seteventPrivate({
+        private: true,
+        section: 'event_private',
+      });
+    }
+  }, [cEvent.value]);
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     let chatid;
@@ -84,10 +99,11 @@ export const HelperContextProvider = ({ children }) => {
         type='primary'
         size='small'
         onClick={() => {
-          HandleOpenCloseMenuRigth()
-          HandlePublicPrivate("private")
+          setisCollapsedMenuRigth(false);
+          HandleChatOrAttende('1');
+          HandlePublicPrivate('private');
           HandleGoToChat(cUser.value.uid, data.id, cUser.value.names ? cUser.value.names : cUser.value.name, 'private');
-          notification.destroy()
+          notification.destroy();
         }}>
         Responder
       </Button>
@@ -448,6 +464,8 @@ export const HelperContextProvider = ({ children }) => {
         chatAttendeChats,
         HandlePublicPrivate,
         chatPublicPrivate,
+        eventPrivate,
+        seteventPrivate,
       }}>
       {children}
     </HelperContext.Provider>

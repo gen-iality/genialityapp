@@ -1,14 +1,15 @@
-import React from 'react';
-import { Layout, Spin, Avatar, Row, Image } from 'antd';
-import { imageCenter } from './helpers/csshelpers';
+import React, { useContext } from 'react';
+import { Layout, Spin, Row, Image } from 'antd';
 import MenuEvent from './Menus/MenuEvent';
 import { EyeOutlined } from '@ant-design/icons';
 import { UseEventContext } from '../../../Context/eventContext';
+import { HelperContext } from '../../../Context/HelperContext';
 const { Sider } = Layout;
 
 const EventSectionsInnerMenu = () => {
   let cEvent = UseEventContext();
   let event = cEvent.value;
+  let { eventPrivate } = useContext(HelperContext);
 
   if (!event) return <Spin size='small' />;
   return (
@@ -32,7 +33,7 @@ const EventSectionsInnerMenu = () => {
             )}
           </Row>
           <div className='items-menu_Landing'>
-            <MenuEvent />
+            <MenuEvent eventPrivate={eventPrivate} />
           </div>
         </Sider>
       </div>

@@ -8,32 +8,19 @@ import { HelperContext } from '../../../../Context/HelperContext';
 import { UseUserEvent } from '../../../../Context/eventUserContext';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
-import { useEffect } from 'react';
-import { UseCurrentUser } from '../../../../Context/userContext';
 
-const MenuEvent = ({ isMobile, sectionPermissions, setSectionPermissions }) => {
+const MenuEvent = ({ isMobile, setSectionPermissions,eventPrivate }) => {
   let { url } = useRouteMatch();
   let cEvent = UseEventContext();
-  let cUser = UseCurrentUser();
   let { totalsolicitudes } = useContext(HelperContext);
   let event = cEvent.value;
   let cEventUser = UseUserEvent();
-
-  const isVisibleSection = (section) => {
-    if (
-      (section.permissions && section.permissions == 'public') ||
-      (section.permissions && section.permissions == 'assistants' && cUser.value != null)
-    ) {
-      return true;
-    }
-    return false;
-  };
 
   return (
     <>
       {!isMobile ? (
         <Menu style={stylesMenuItems} mode='inline' defaultSelectedKeys={['1']}>
-          {event.itemsMenu &&
+          {event.itemsMenu && !eventPrivate.private &&
             Object.keys(event.itemsMenu).map((key) => {
               //icono personalizado
               let IconoComponente = iconComponents[event.itemsMenu[key].icon];
@@ -100,7 +87,7 @@ const MenuEvent = ({ isMobile, sectionPermissions, setSectionPermissions }) => {
             })}
         </Menu>
       ) : (
-        isMobile && (
+        isMobile && !eventPrivate.private && (
           <Menu style={stylesMenuItems} mode='vertical' defaultSelectedKeys={['1']}>
             {event.itemsMenu &&
               Object.keys(event.itemsMenu).map((key) => {
