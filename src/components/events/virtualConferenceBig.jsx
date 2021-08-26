@@ -135,7 +135,7 @@ const VirtualConference = () => {
                 text={
                   item.habilitar_ingreso == 'open_meeting_room' ? (
                     <Space>
-                      <AccessPointIcon style={{ fontSize: '24px' }} />
+                      <AccessPointIcon className='animate__animated animate__heartBeat animate__infinite animate__slower' style={{ fontSize: '24px' }} />
                       <span style={{ textAlign: 'center', fontSize: '15px' }}>
                         {<FormattedMessage id='live' defaultMessage='En vivo' />}
                       </span>
