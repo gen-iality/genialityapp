@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import {
   ArrowLeftOutlined,
@@ -28,6 +28,7 @@ import { setTopBanner } from '../../redux/topBanner/actions';
 import { setSpaceNetworking } from '../../redux/networking/actions';
 import withContext from '../../Context/withContext';
 import { UseSurveysContext } from '../../Context/surveysContext';
+import { HelperContext } from '../../Context/HelperContext';
 
 import { useHistory } from 'react-router-dom';
 import SurveyDrawer from './surveys/components/surveyDrawer';
@@ -60,7 +61,7 @@ let AgendaActividadDetalle = (props) => {
   const [currentActivity, setcurrentActivity] = useState(null);
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
   let history = useHistory();
-
+  let { HandleOpenCloseMenuRigth,isCollapsedMenuRigth } = useContext(HelperContext);
   const configfast = useState({});
 
   const { Title } = Typography;
@@ -89,11 +90,11 @@ let AgendaActividadDetalle = (props) => {
 
     props.setTopBanner(false);
     props.setVirtualConference(false);
-    props.setSpaceNetworking(false);
+    HandleOpenCloseMenuRigth(false);
     return () => {
       props.setTopBanner(true);
       props.setVirtualConference(true);
-      props.setSpaceNetworking(true);
+      HandleOpenCloseMenuRigth(!isCollapsedMenuRigth);
     };
   }, []);
 

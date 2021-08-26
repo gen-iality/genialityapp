@@ -67,7 +67,7 @@ class Product extends Component {
 
    fetchItem = async () => {
       const data = await EventsApi.getProducts(this.props.eventId);
-      console.log("DATA==>",data.data)
+     
       let listproduct=[];
       if(data.data){
         listproduct= data.data.map((product,index)=>{

@@ -1,6 +1,6 @@
 import StateMessages from './stateMessages';
 
-const MIN_ANSWER_FEEDBACK_TIME = 5;
+const MIN_ANSWER_FEEDBACK_TIME = 3;
 
 function TimerAndMessageForTheNextQuestion(
    survey,
@@ -13,8 +13,9 @@ function TimerAndMessageForTheNextQuestion(
    setShowOrHideSurvey,
    messageType
 ) {
-   secondsToGo = secondsToGo ? secondsToGo : 0;
-   secondsToGo += MIN_ANSWER_FEEDBACK_TIME;
+   // secondsToGo = secondsToGo ? secondsToGo : 0;
+   // secondsToGo += MIN_ANSWER_FEEDBACK_TIME;
+   secondsToGo = MIN_ANSWER_FEEDBACK_TIME;
 
    const timer = setInterval(() => {
       secondsToGo -= 1;

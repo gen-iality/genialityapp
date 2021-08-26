@@ -14,7 +14,13 @@ const AttendeList = function(props) {
   let [page, setPage] = useState(0);
   let [filteredlist, setfilteredlist] = useState([]);
   let [hasMore, setHasMore] = useState(true);
-  let { createNewOneToOneChat, attendeeListPresence, attendeeList } = useContext(HelperContext);
+  let {
+    createNewOneToOneChat,
+    attendeeListPresence,
+    attendeeList,
+    HandleChatOrAttende,
+    HandlePublicPrivate,
+  } = useContext(HelperContext);
   const pag = 15;
 
   useEffect(() => {
@@ -112,8 +118,8 @@ const AttendeList = function(props) {
                       item.uid,
                       item.names || item.name
                     );
-                    props.settabselected('1');
-                    props.setchattab('chat2');
+                    HandleChatOrAttende('1');
+                    HandlePublicPrivate('private');
                   }}>
                   <Tooltip title={'Chatear'}>
                     <MessageTwoTone style={{ fontSize: '27px' }} />

@@ -30,7 +30,7 @@ let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  let { attendeeList } = useContext(HelperContext);
+  let { attendeeList, HandleChatOrAttende, chatAttendeChats } = useContext(HelperContext);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [busqueda, setBusqueda] = useState(null);
@@ -60,14 +60,13 @@ let SocialZone = function(props) {
   function redirectRegister() {
     history.push(`/landing/${cEvent.value._id}/tickets`);
   }
-
   return (
     <Tabs
-      defaultActiveKey='2'
+      defaultActiveKey='1'
       onChange={callback}
-      activeKey={props.tabselected}
+      activeKey={chatAttendeChats}
       onTabClick={(key) => {
-        props.settabselected(key);
+        HandleChatOrAttende(key);
       }}>
       {(props.generalTabs.publicChat || props.generalTabs.privateChat) && (
         <TabPane
@@ -76,7 +75,7 @@ let SocialZone = function(props) {
             <>
               {props.totalMessages !== undefined && props.totalMessages > 0 && (
                 <Badge
-                  onClick={() => props.settabselected('1')}
+                  onClick={() => HandleChatOrAttende('1')}
                   size='small'
                   style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
                   count={' '}>
@@ -84,23 +83,14 @@ let SocialZone = function(props) {
                 </Badge>
               )}
               {props.totalMessages !== undefined && props.totalMessages == 0 && (
-                <div style={{ color: cEvent.value.styles.textMenu }} onClick={() => props.settabselected('1')}>
+                <div style={{ color: cEvent.value.styles.textMenu }} onClick={() => HandleChatOrAttende('1')}>
                   Chats
                 </div>
               )}
             </>
           }
           key='1'>
-          <ChatList
-            props={props}
-            totalNewMessages={totalNewMessages}
-            settabselected={props.settabselected}
-            tabselected={props.tabselected}
-            setCurrentUser={setCurrentUser}
-            generalTabs={props.generalTabs}
-            chattab={props.chattab}
-            setchattab={props.setchattab}
-          />
+          <ChatList props={props} setCurrentUser={setCurrentUser} generalTabs={props.generalTabs} />
         </TabPane>
       )}
       {props.generalTabs.attendees && (
@@ -160,8 +150,6 @@ let SocialZone = function(props) {
                   section={props.section}
                   containNetWorking={props.containNetWorking}
                   busqueda={strAttende}
-                  settabselected={props.settabselected}
-                  setchattab={props.setchattab}
                 />
               )}
             </div>
@@ -187,7 +175,7 @@ let SocialZone = function(props) {
             style={{ display: 'pointer' }}
             onClick={() => {
               props.setMainStage(null);
-              props.settabselected('1');
+              HandleChatOrAttende('1');
             }}></Row>
           {cUser.value !== null ? (
             <SurveyList
@@ -230,8 +218,7 @@ let SocialZone = function(props) {
                 style={{ color: cEvent.value.styles.textMenu }}
                 onClick={() => {
                   props.setMainStage(null);
-                  props.settabselected('');
-                  props.tcollapse();
+                  HandleChatOrAttende('');
                 }}
               />
             </Col>

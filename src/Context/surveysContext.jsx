@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useReducer } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {  useEffect, useReducer } from 'react';
 import { listenSurveysData } from '../helpers/helperEvent';
 import InitSurveysCompletedListener from '../components/events/surveys/functions/initSurveyCompletedListener';
-import { EventsApi } from '../helpers/request';
 import { UseEventContext } from './eventContext';
 import { UseCurrentUser } from './userContext';
 export const SurveysContext = React.createContext();
@@ -125,7 +123,7 @@ export function SurveysProvider({ children }) {
    function surveysToBeListedByActivity() {
       let listOfSurveysFilteredByActivity;
       if (state.currentActivity) {
-         listOfSurveysFilteredByActivity = state.surveys.filter(
+         listOfSurveysFilteredByActivity = state.surveys&& state.surveys.filter(
             (item) =>
                item.activity_id === state.currentActivity._id || item.isGlobal === 'true' || item.isGlobal === true
          );
@@ -138,7 +136,7 @@ export function SurveysProvider({ children }) {
       if (!state.currentSurvey && !surveysToBeListedByActivity()) {
          return false;
       }
-      recentlyOpenedSurvey = surveysToBeListedByActivity().filter((item) => item?._id === state.currentSurvey?._id);
+      recentlyOpenedSurvey =  surveysToBeListedByActivity()&& surveysToBeListedByActivity().filter((item) => item?._id === state.currentSurvey?._id);
 
       if (recentlyOpenedSurvey && recentlyOpenedSurvey.length > 0) {
          return true;
@@ -188,16 +186,7 @@ export function UseSurveysContext() {
 
    return contextsurveys;
 }
-function name() {
-   /** estados results o view*/
-   // para ver la encuesta esta debe:
-   //estar abierta
-   //estar publicada
-   //el estado para el usuario en la encuesta es diferente de completed
-   //si es calificable no se muestran resultados para evitar fraude
-   // contestada 'ya contestaste la encuesta'
-   //si no es calificable se pueden mostrar graficas al final
-}
+
 
 function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
    let shouldActivateSurvey = false;

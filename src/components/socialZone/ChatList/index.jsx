@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { List, Typography, Badge, Tooltip, Tabs, Form, Input, Button, Row, Space, Avatar, Popover } from 'antd';
+import { List, Typography, Badge, Tooltip, Tabs, Form, Input, Button, Row, Space, Avatar, Popover, Col } from 'antd';
 import { ExclamationCircleOutlined, MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { UseEventContext } from '../../../Context/eventContext';
@@ -36,7 +36,11 @@ const ChatList = (props) => {
   const history = useHistory();
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
-  let { chatActual, HandleGoToChat, privateChatsList } = useContext(HelperContext);
+
+  let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useContext(
+    HelperContext
+  );
+
   const onFinish = (values) => {
     cUser.value = values;
   };
@@ -47,53 +51,59 @@ const ChatList = (props) => {
   let [totalmsjpriv, settotalmsjpriv] = useState(0);
 
   function callback(key) {
-    if (key === 'chat1') {
+    if (key === 'public') {
       if (chatActual) {
         HandleGoToChat(null, null, null, null);
       }
     }
-    if (key === 'chat2') {
+    if (key === 'private') {
       if (chatActual) {
         HandleGoToChat(null, null, null, null);
       }
     }
 
-    props.setchattab(key);
+    HandlePublicPrivate(key);
   }
 
   if (!cUser.value)
     return (
       <Form className='asistente-list' {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
-        <Row justify='center'>
-          <h1>
-            <strong>
-              <FormattedMessage
-                id='form.title.socialzone'
-                defaultMessage='Ingresa tus datos para participar en el chat'
-              />
-            </strong>
-          </h1>
-          <Space>
-            <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-            <Text type='secondary'>
-              <FormattedMessage
-                id='form.message.socialzone'
-                defaultMessage='Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.'
-              />
-            </Text>
-          </Space>
+        <Row justify='start'>
+          <Col>
+            <h1>
+              <strong>
+                <FormattedMessage
+                  id='form.title.socialzone'
+                  defaultMessage='Ingresa tus datos para participar en el chat'
+                />
+              </strong>
+            </h1>
+            
+              <Text type='secondary'>
+                <FormattedMessage
+                  id='form.message.socialzone'
+                  defaultMessage='Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.'
+                />
+              </Text>
+            
+          </Col>
         </Row>
-        <Row justify='center' style={{ paddingTop: '10px' }}>
-          <Form.Item
-            label={intl.formatMessage({ id: 'form.label.name' })}
-            name='name'
-            rules={[{ required: true, message: 'Digita tu nombre' }]}>
-            <Input />
-          </Form.Item>
+        <Row justify='start' style={{ paddingTop: '10px' }}>
+          <Col>
+            <Form.Item
+              label={intl.formatMessage({ id: 'form.label.name' })}
+              name='name'
+              rules={[{ required: true, message: 'Digita tu nombre' }]}>
+              <Input style={{ width: '100%' }} />
+            </Form.Item>
 
-          <Form.Item name='email' label='Email' rules={[{ required: true, type: 'email', message: 'Digita tu email' }]}>
-            <Input />
-          </Form.Item>
+            <Form.Item
+              name='email'
+              label='Email'
+              rules={[{ required: true, type: 'email', message: 'Digita tu email' }]}>
+              <Input style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
         </Row>
 
         <Row justify='center'>
@@ -116,7 +126,7 @@ const ChatList = (props) => {
   let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
 
   return (
-    <Tabs activeKey={props.chattab} size='small' onChange={callback} centered>
+    <Tabs activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
         <TabPane
           tab={
@@ -124,7 +134,7 @@ const ChatList = (props) => {
               <FormattedMessage id='tabs.public.socialzone' defaultMessage='Público' />
             </div>
           }
-          key='chat1'>
+          key='public'>
           <iframe
             title='chatevius'
             className='ChatEviusLan'
@@ -146,30 +156,20 @@ const ChatList = (props) => {
         <TabPane
           tab={
             <>
-              {props.totalNewMessages !== undefined && props.totalNewMessages > 0 && (
-                <Badge
-                  size='small'
-                  style={{ minWidth: '10px', height: '10px', padding: '0px', color: cEvent.value.styles.textMenu }}
-                  count={' '}>
-                  <div style={{ color: cEvent.value.styles.textMenu }}>
-                    <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />
-                    {chatActual && chatActual.chatname
-                      ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )`
-                      : ''}
-                  </div>
-                </Badge>
-              )}
-              {props.totalNewMessages !== undefined && props.totalNewMessages == 0 && (
+              <Badge
+                size='small'
+                style={{ minWidth: '10px', height: '10px', padding: '0px', color: cEvent.value.styles.textMenu }}
+                count={0}>
                 <div style={{ color: cEvent.value.styles.textMenu }}>
                   <FormattedMessage id='tabs.private.socialzone' defaultMessage='Privados' />
                   {chatActual && chatActual.chatname
                     ? ` ( ${intl.formatMessage({ id: 'tabs.private.socialzone.message' })} )`
                     : ''}
                 </div>
-              )}
+              </Badge>
             </>
           }
-          key='chat2'>
+          key='private'>
           {!chatActual.chatname && (
             <List
               className='asistente-list'
@@ -191,12 +191,13 @@ const ChatList = (props) => {
                         settotalmsjpriv(0);
                       }}>
                       <Tooltip title='Chatear'>
-                        {item.newMessages && item.newMessages.length > 0 && (
+                        {item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0].countmessajes &&
+                        item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0].countmessajes >
+                          0 ? (
                           <Badge count={' '} style={{ minWidth: '10px', height: '10px', padding: '0px' }}>
                             <MessageTwoTone style={{ fontSize: '27px' }} />
                           </Badge>
-                        )}
-                        {item.newMessages && item.newMessages.length == 0 && (
+                        ) : (
                           <MessageTwoTone style={{ fontSize: '27px' }} />
                         )}
                       </Tooltip>
