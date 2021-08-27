@@ -107,15 +107,14 @@ const VirtualConference = () => {
 
           //ordenar
           let activitiesorder = arratem.sort((a, b) => a.updated_at - b.updated_at);
-          let orderactivities = [];
-          orderactivities.push(activitiesorder[0]);
-
-          setinfoAgenda(orderactivities);
+          //let orderactivities = [];
+          //orderactivities.push(activitiesorder);
+          setinfoAgenda(activitiesorder);
         });
   }, [agendageneral, firestore]);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft:'20px', marginRight:'20px'}}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft:'20px', marginRight:'20px',flexDirection:'column'}}>
       {infoAgendaArr.length > 0 &&
         infoAgendaArr
           .filter((item) => {

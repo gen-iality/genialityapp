@@ -11,7 +11,7 @@ import ProductCard from '../producto/productCard';
 import { withRouter } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../../Context/HelperContext';
-import UserLoginContainer  from '../UserLoginContainer';
+import UserLoginContainer from '../UserLoginContainer';
 
 const PageNotPermissions = (props) => {
   let EventUser = UseUserEvent();
@@ -57,18 +57,16 @@ const PageNotPermissions = (props) => {
       {eventPrivate.private ? (
         <Card hoverable>
           <Result
-            status='403'
+            // status='403'
             title='ESTE EVENTO ES PRIVADO'
             subTitle={
               <div>
-                <h1 style={{ fontSize: '20px' }}>
-                  Lo sentimos, no tienes permisos para ver este evento - Contacta un administrador{' '}
-                </h1>
+                <h1 style={{ fontSize: '20px' }}>Si estas incrito, ingresa tus datos</h1>
               </div>
             }
             // extra={<Button type='primary'>Back Home</Button>}
           />
-          <UserLoginContainer eventId={EventContext.value._id}/>
+          <UserLoginContainer eventId={EventContext.value._id} />
         </Card>
       ) : (
         <>
