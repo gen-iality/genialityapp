@@ -6,14 +6,37 @@ import './videoCard.css';
 
 import ReactPlayer from 'react-player';
 import EventImage from '../../eventimage.png';
+import { CalendarOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
-const videoCard = ({ activity, event, bordered, right, loading }) => {
+const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
   const { Meta } = Card;
-  const { Paragraph,Text, Title } = Typography;
+  const { Paragraph, Text, Title } = Typography;
+
+  const forma = shape || 'horizontal';
+
+  const [duration, setDuration] = useState(0);
+
+  const handleDuration = (duration) => {
+    console.log('onDuration', duration);
+    setDuration(duration);
+  };
+
+  function videoDuration(seconds) {
+    var hour = Math.floor(seconds / 3600);
+    var minute = Math.floor((seconds / 60) % 60);
+    var second = seconds % 60;
+    hour = hour < 10 ? '0' + hour : hour;
+    minute = minute < 10 ? '0' + minute : minute;
+    second = second < 10 ? '0' + second : second;
+    if (hour == 0) return minute + ':' + second;
+    return hour + ':' + minute + ':' + second;
+  }
 
   return (
     <Link to={`/landing/${activity.event_id}/activity/${activity._id}`}>
-      <div className='animate__animated animate__fadeIn'>
+      {forma === 'horizontal' ? (
+        <div className='animate__animated animate__fadeIn'>
           <Card
             className={'horizontal'}
             bordered={bordered}
@@ -21,12 +44,12 @@ const videoCard = ({ activity, event, bordered, right, loading }) => {
             style={{ width: '100%' }}
             cover={
               <ReactPlayer
-              style={{ paddingTop: '2px' }}
-              light={true}
-              width={'160px'}
-              height={'100px'}
-              url={activity.video}
-            />
+                style={{ paddingTop: '2px' }}
+                light={true}
+                width={'160px'}
+                height={'100px'}
+                url={activity.video}
+              />
             }
             actions={right}
             bodyStyle={{ paddingRight: '0px' }}>
@@ -34,60 +57,64 @@ const videoCard = ({ activity, event, bordered, right, loading }) => {
               style={{}}
               description={
                 <div>
-                  
                   <Paragraph strong={true} ellipsis={{rows:2}} >{activity.name}</Paragraph>
-                  {console.log('activityy',activity)}
                     <div size='small' style={{fontSize:'80%'}}>
                       <i className='fas fa-calendar-alt' />
                       <time dateTime={activity.datetime_start}>{Moment(activity.datetime_start).format('DD MMM YYYY')}</time>
                     </div>
                  
                   <Space size='small'>
-                  <p>
-                    {event.organizer.name
-                      ? event.organizer.name
-                      : event.author.displayName
-                      ? event.author.displayName
-                      : event.author.names}
-                  </p>
+                    <p>
+                      {event.organizer.name
+                        ? event.organizer.name
+                        : event.author.displayName
+                        ? event.author.displayName
+                        : event.author.names}
+                    </p>
                   </Space>
                 </div>
               }
             />
           </Card>
-    
-      </div>
-      {/* <Card
-        bordered={true}
-        hoverable={true}
-        style={{ width: '300px', height: '30vh', boxShadow: ' 1px 3px 2px 2px #cccccc', borderRadius: '10px' }}
-        cover={
-          <ReactPlayer
-            style={{ paddingTop: '2px' }}
-            light={true}
-            width={'100%'}
-            height={'150px'}
-            url={activity.video}
-          />
-        }>
-        <Meta
-          description={
-            <div>
-              <Space direction='vertical' size={-10}>
-                <Paragraph ellipsis={{ rows: 2 }}>{activity.name}</Paragraph>
-                <span style={{ fontSize: '10px' }}>
-                  <Space size='small'>
-                    <i className='fas fa-calendar-alt' />
-                    <time dateTime={activity.datetime_end}>{Moment(activity.datetime_end).format('DD MMM YYYY')}</time>
+        </div>
+      ) : (
+        <Badge.Ribbon text={videoDuration(duration)}>
+          <Card
+            bordered={true}
+            hoverable={true}
+            bodyStyle={{ padding: '10px 8px 10px 8px' }}
+            style={{ width: '100%', borderRadius: '8px' }}
+            cover={
+              <ReactPlayer
+                light={duration != 0 ? true : false}
+                width={'100%'}
+                height={'150px'}
+                url={activity.video}
+                onDuration={handleDuration}
+              />
+            }>
+            <Meta
+              description={
+                <div>
+                  <Space direction='vertical' size={-10}>
+                    <Paragraph ellipsis={{ rows: 2 }}>{activity.name}</Paragraph>
+                    <span style={{ fontSize: '10px' }}>
+                      <Space size='small'>
+                        <CalendarOutlined style={{ fontSize: '14px' }} />
+                        <time dateTime={activity.datetime_end}>
+                          {Moment(activity.datetime_end).format('DD MMM YYYY')}
+                        </time>
+                      </Space>
+                    </span>
                   </Space>
-                </span>
-              </Space>
-            </div>
-          }
-        />
-      </Card> */}
+                </div>
+              }
+            />
+          </Card>
+        </Badge.Ribbon>
+      )}
     </Link>
   );
 };
 
-export default videoCard;
+export default VideoCard;

@@ -70,7 +70,7 @@ class EventOrganization extends Component {
 
             <div style={{ padding: '5vw' }}>
               {this.state.organization && (
-                <div style={{ marginBottom: '50px' }}>
+                <div style={{ marginBottom: '50px',marginTop:'20px' }}>
                   <Space direction='vertical' size={5}>
                     <Text style={{ marginBottom: '-15px', fontSize: '20px' }}>Organizador</Text>
                     <Text style={{ fontSize: '40px', fontWeight: '600', lineHeight: '2.25rem' }} type='secondary'>

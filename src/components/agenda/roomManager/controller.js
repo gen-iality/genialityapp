@@ -28,14 +28,14 @@ export default function RoomController(props) {
             <Switch checked={chat} onChange={(checked) => handleTabsController(checked, 'chat')} />
           </Col>
         </Row> */}
-        <Row style={{ padding: '8px 0px' }}>
+        {/* <Row style={{ padding: '8px 0px' }}>
           <Col xs={12} lg={8}>
             Habilitar Encuestas
           </Col>
           <Col xs={4} lg={2}>
             <Switch checked={surveys} onChange={(checked) => handleTabsController(checked, 'surveys')} />
           </Col>
-        </Row>
+        </Row> */}
         <Row style={{ padding: '8px 0px' }}>
           <Col xs={12} lg={8}>
             Habilitar Juegos

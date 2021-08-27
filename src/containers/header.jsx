@@ -50,7 +50,6 @@ class Headers extends Component {
       eventId: null,
       userEvent:null
     };
-    console.log("PROPS HEADER",props)
     this.setEventId = this.setEventId.bind(this);
     this.logout = this.logout.bind(this);
   }
@@ -79,7 +78,6 @@ class Headers extends Component {
 
     const eventId = this.setEventId();
     this.setState({ eventId });
-    console.log("COMPONENT DID MOUNT ==>",this.props)
 
     /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
     let evius_token = null;
