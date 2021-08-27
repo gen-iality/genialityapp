@@ -47,7 +47,7 @@ export const HelperContextProvider = ({ children }) => {
   const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
 
   useEffect(() => {
-    if(!cEvent.value) return
+    if (!cEvent.value) return;
     let firstroute = Object.keys(cEvent.value.itemsMenu);
     if (firstroute[0] != undefined) {
       seteventPrivate({ private: false, section: firstroute[0] });
@@ -432,13 +432,15 @@ export const HelperContextProvider = ({ children }) => {
 
   /*VALIDACION DE EVENTO TOTALMENTE PRIVADO*/
   function GetPermissionsEvent() {
-    let routePermissions =
-      cEvent.value && Object.values(cEvent.value.itemsMenu).filter((item) => item.section === 'tickets');
-    if (routePermissions[0] && routePermissions[0].permissions == 'assistants' && cEventuser.value == null) {
-      seteventPrivate({
-        private: true,
-        section: 'permissions',
-      });
+    if (cEvent.value != null) {
+      let routePermissions =
+        cEvent.value && Object.values(cEvent.value.itemsMenu).filter((item) => item.section === 'tickets');
+      if (routePermissions[0] && routePermissions[0].permissions == 'assistants' && cEventuser.value == null) {
+        seteventPrivate({
+          private: true,
+          section: 'permissions',
+        });
+      }
     }
   }
 

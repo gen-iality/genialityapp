@@ -41,36 +41,38 @@ const EventSectionRoutes = (props) => {
   let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext);
 
   function ValidateViewPermissions(route, nombresection) {
-    let routePermissions =
-      props.cEvent.value && Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section === route);
-    if (
-      routePermissions.length > 0 &&
-      routePermissions[0].permissions === 'assistants' &&
-      props.cEventUser.value == null
-    ) {
-      props.setSectionPermissions({ view: true, section: nombresection });
-      return true;
-    } else if (
-      routePermissions.length > 0 &&
-      routePermissions[0].permissions === 'public' &&
-      props.cEventUser.value == null &&
-      eventPrivate.private
-    ) {
-      // console.log('====================================');
-      // console.log("la agenda es publica y el evento es privado");
-      // console.log('====================================');
-      props.setSectionPermissions({ view: true, section: nombresection });
-      return true;
-    } else if (
-      routePermissions.length > 0 &&
-      routePermissions[0].permissions === 'public' &&
-      props.cEventUser.value == null &&
-      !eventPrivate.private
-    ) {
-      // console.log('====================================');
-      // console.log("la agenda es publica y el evento NO es privado");
-      // console.log('====================================');
-      return false;
+    if (props.cEvent.value !== null) {
+      let routePermissions =
+        props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
+      if (
+        routePermissions.length > 0 &&
+        routePermissions[0].permissions === 'assistants' &&
+        props.cEventUser.value == null
+      ) {
+        props.setSectionPermissions({ view: true, section: nombresection });
+        return true;
+      } else if (
+        routePermissions.length > 0 &&
+        routePermissions[0].permissions === 'public' &&
+        props.cEventUser.value == null &&
+        eventPrivate.private
+      ) {
+        // console.log('====================================');
+        // console.log("la agenda es publica y el evento es privado");
+        // console.log('====================================');
+        props.setSectionPermissions({ view: true, section: nombresection });
+        return true;
+      } else if (
+        routePermissions.length > 0 &&
+        routePermissions[0].permissions === 'public' &&
+        props.cEventUser.value == null &&
+        !eventPrivate.private
+      ) {
+        // console.log('====================================');
+        // console.log("la agenda es publica y el evento NO es privado");
+        // console.log('====================================');
+        return false;
+      }
     }
   }
 

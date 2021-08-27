@@ -37,11 +37,11 @@ class UserLoginWithEmailPass extends Component {
                 name='password'
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: intl.formatMessage({ id: 'form.field.required' }),
                   },
                 ]}>
-                <Input type='password' style={{ width: '300px' }} />
+                <Input type='text' style={{ width: '300px' }} />
               </Form.Item>
             </Col>
           </Row>
