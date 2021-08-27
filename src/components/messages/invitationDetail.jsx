@@ -29,8 +29,23 @@ class InvitationDetail extends Component {
         return new Promise((resolve, reject) => {
           API.get(`/api/events/${eventId}/message/${idEnvio}/messageUser`)
             .then(({ data }) => { 
-              console.log("DATA==>",data)                    
-              resolve(data.data);
+              //PERMITE ORDENAR LOS MAILS
+              const ordersMails = [
+                "Delivery",
+                "Open" ,
+                "Click" ,
+                "Send" ,
+                "Complaint",
+                 "Bounce"              
+             ];
+             console.log("RESP==>",data.data)
+              let respOrder;
+              if(data && data.data){
+               respOrder= data.data.sort((a,b)=>ordersMails.indexOf(a.status)-ordersMails.indexOf(b.status))
+              } 
+
+              console.log("RESPORDER==>", respOrder)                  
+              resolve(respOrder);
             })
             .catch((e) => {
               reject(e);
