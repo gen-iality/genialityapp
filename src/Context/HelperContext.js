@@ -44,16 +44,7 @@ export const HelperContextProvider = ({ children }) => {
   const [isCollapsedMenuRigth, setisCollapsedMenuRigth] = useState(true);
   const [chatAttendeChats, setchatAttendeChats] = useState('1');
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
-  const [eventPrivate, seteventPrivate] = useState({});
-
-  useEffect(() => {
-    if (!cEvent.value) return;
-    let firstsection = Object.keys(cEvent.value.itemsMenu);
-    // console.log('====================================');
-    // console.log('firstsection[0]', firstsection[0]);
-    // console.log('====================================');
-    seteventPrivate({ private: false, section: firstsection[0] });
-  },[cEvent.value]);
+  const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
 
   /*VALIDACION DE EVENTO TOTALMENTE PRIVADO*/
   useEffect(() => {
@@ -63,15 +54,12 @@ export const HelperContextProvider = ({ children }) => {
       cEvent.value && Object.values(cEvent.value.itemsMenu).filter((item) => item.section === 'tickets');
 
     if (routePermissions[0] && routePermissions[0].permissions == 'assistants' && cEventuser.value == null) {
-      // console.log('====================================');
-      // console.log("entro a validar evento privado");
-      // console.log('====================================');
       seteventPrivate({
         private: true,
-        section: 'event_private',
+        section: 'permissions',
       });
     }
-  }, []);
+  }, [cEvent.value]);
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     let chatid;

@@ -34,6 +34,8 @@ import ListVideoCard from '../../shared/listVideoCard';
 import initUserPresence from '../../../containers/userPresenceInEvent';
 import { HelperContext } from '../../../Context/HelperContext';
 import Videos from '../videos';
+// import UserLoginContainer from '../UserLoginContainer';
+
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -83,7 +85,6 @@ const EventSectionRoutes = (props) => {
         <>
           <VirtualConferenceBig />
           <ListVideoCard idevent={props.cEvent.value} />
-         
         </>
       )}
 
@@ -140,6 +141,12 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
 
+{/* 
+        <Route path={`${path}/login`}>
+        <EventHome />
+        </Route> */}
+
+
         <Route path={`${path}/informativeSection`}>
           {() =>
             ValidateViewPermissions('informativeSection', 'informativeSection') ? (
@@ -187,7 +194,7 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
         <Route path={`${path}/partners`}>
-        {() =>
+          {() =>
             ValidateViewPermissions('partners', 'partners') ? (
               <>
                 <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
@@ -196,8 +203,6 @@ const EventSectionRoutes = (props) => {
               <Partners />
             )
           }
-
-        
         </Route>
         <Route path={`${path}/faqs`}>
           {() =>
