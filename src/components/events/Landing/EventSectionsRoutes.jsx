@@ -36,10 +36,9 @@ import { HelperContext } from '../../../Context/HelperContext';
 import Videos from '../videos';
 // import UserLoginContainer from '../UserLoginContainer';
 
-
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  let { eventPrivate } = useContext(HelperContext);
+  let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext);
 
   function ValidateViewPermissions(route, nombresection) {
     let routePermissions =
@@ -79,6 +78,9 @@ const EventSectionRoutes = (props) => {
     props.cEvent.value && (await initUserPresence(props.cEvent.value._id));
   }, [props.cEvent.value]);
 
+  useEffect(() => {
+    GetPermissionsEvent();
+  }, []);
   return (
     <>
       {props.viewVirtualconference && (
@@ -141,11 +143,10 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
 
-{/* 
+        {/* 
         <Route path={`${path}/login`}>
         <EventHome />
         </Route> */}
-
 
         <Route path={`${path}/informativeSection`}>
           {() =>

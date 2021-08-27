@@ -46,20 +46,13 @@ export const HelperContextProvider = ({ children }) => {
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
   const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
 
-  /*VALIDACION DE EVENTO TOTALMENTE PRIVADO*/
   useEffect(() => {
-    if (!cEvent.value) return;
-
-    let routePermissions =
-      cEvent.value && Object.values(cEvent.value.itemsMenu).filter((item) => item.section === 'tickets');
-
-    if (routePermissions[0] && routePermissions[0].permissions == 'assistants' && cEventuser.value == null) {
-      seteventPrivate({
-        private: true,
-        section: 'permissions',
-      });
+    if(!cEvent.value) return
+    let firstroute = Object.keys(cEvent.value.itemsMenu);
+    if (firstroute[0] != undefined) {
+      seteventPrivate({ private: false, section: firstroute[0] });
     }
-  }, [cEvent.value]);
+  }, []);
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
     let chatid;
@@ -437,6 +430,18 @@ export const HelperContextProvider = ({ children }) => {
     }
   }, [cEventuser.value, cEvent.value]);
 
+  /*VALIDACION DE EVENTO TOTALMENTE PRIVADO*/
+  function GetPermissionsEvent() {
+    let routePermissions =
+      cEvent.value && Object.values(cEvent.value.itemsMenu).filter((item) => item.section === 'tickets');
+    if (routePermissions[0] && routePermissions[0].permissions == 'assistants' && cEventuser.value == null) {
+      seteventPrivate({
+        private: true,
+        section: 'permissions',
+      });
+    }
+  }
+
   return (
     <HelperContext.Provider
       value={{
@@ -467,6 +472,7 @@ export const HelperContextProvider = ({ children }) => {
         chatPublicPrivate,
         eventPrivate,
         seteventPrivate,
+        GetPermissionsEvent,
       }}>
       {children}
     </HelperContext.Provider>

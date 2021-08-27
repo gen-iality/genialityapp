@@ -33,7 +33,7 @@ class UserLoginWithEmailPass extends Component {
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
               <Form.Item
-                label={intl.formatMessage({ id: 'form.label.password' })}
+                label='E-Mail'
                 name='password'
                 rules={[
                   {
@@ -70,7 +70,7 @@ class UserLoginWithEmailPass extends Component {
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
               <Button type='default' htmlType='button' onClick={handleOpenRecoveryPass}>
-                {intl.formatMessage({ id: 'button.forget.password' })}
+                {intl.formatMessage({ id: 'button.forget.email' })}
               </Button>
             </Col>
           </Row>
