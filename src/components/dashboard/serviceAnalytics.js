@@ -21,9 +21,10 @@ const lineBackground = 'rgba(80, 211, 201, 1)';
 
 export const totalsMetricasMail = async (eventId) => {
   return new Promise((resolve, reject) => {
-    fetch(`http://18.211.124.171/api/events/${eventId}/messages`)
+    fetch(`https://api.evius.co/api/events/${eventId}/messages`)
       .then((response) => response.json())
       .then(({ data }) => {
+        console.log("MAILS==>",data)
         resolve(data);
       })
       .catch((e) => {
@@ -34,7 +35,7 @@ export const totalsMetricasMail = async (eventId) => {
 
 export const totalsMetricasMailDetails = async (eventId, idBell) => {
   return new Promise((resolve, reject) => {
-    fetch(`http://18.211.124.171/api/events/${eventId}/message/${idBell}/messageUser`)
+    fetch(`https://api.evius.co/api/events/${eventId}/message/${idBell}/messageUser`)
       .then((response) => response.json())
       .then(({ data }) => {
         resolve(data);
@@ -58,6 +59,7 @@ export const totalsMetricasActivityDetails = async (eventId) => {
 export const metricasRegisterByDate = async (eventId) => {
   let listmetric=[]
   let metrics = await EventsApi.metricsRegisterBydate(eventId, 'created_at');
+  console.log("metrics==>",metrics)
   metrics.map((metric)=>{
     metric={...metric,date:moment(metric.date).format("YYYY/MM/DD")}
     listmetric.push(metric)

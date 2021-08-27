@@ -118,7 +118,7 @@ class DashboardEvent extends Component {
       totalOpened = 0,
       totalSent = 0,
       totalBounced = 0;
-    list.map((m, index) => {
+    list?.map((m, index) => {
       totalClicked += m.total_clicked ? m.total_clicked : 0;
       totalDeliverd += m.total_delivered ? m.total_delivered : 0;
       totalOpened += m.total_opened ? m.total_opened : 0;
@@ -273,6 +273,7 @@ class DashboardEvent extends Component {
     let labels = [],
       values = [];
     let metricsRegister = await metricasRegisterByDate(this.props.eventId);
+    console.log("metricsRegister",metricsRegister)
     if (metricsRegister) {
       metricsRegister.map((metric) => {
         labels.push(metric.date);
@@ -585,7 +586,7 @@ class DashboardEvent extends Component {
                       <Statistic
                         valueStyle={{ fontSize: '36px', textAlign: 'center' }}
                         title={<h3 style={{ textAlign: 'center' }}>CAMPAÑAS</h3>}
-                        value={this.state.totalmails.length}
+                        value={this.state.totalmails ?this.state.totalmails.length:0}
                       />
                     </Card>
                   </Row>
