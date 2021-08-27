@@ -34,42 +34,45 @@ import ListVideoCard from '../../shared/listVideoCard';
 import initUserPresence from '../../../containers/userPresenceInEvent';
 import { HelperContext } from '../../../Context/HelperContext';
 import Videos from '../videos';
+// import UserLoginContainer from '../UserLoginContainer';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  let { eventPrivate } = useContext(HelperContext);
+  let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext);
 
   function ValidateViewPermissions(route, nombresection) {
-    let routePermissions =
-      props.cEvent.value && Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section === route);
-    if (
-      routePermissions.length > 0 &&
-      routePermissions[0].permissions === 'assistants' &&
-      props.cEventUser.value == null
-    ) {
-      props.setSectionPermissions({ view: true, section: nombresection });
-      return true;
-    } else if (
-      routePermissions.length > 0 &&
-      routePermissions[0].permissions === 'public' &&
-      props.cEventUser.value == null &&
-      eventPrivate.private
-    ) {
-      // console.log('====================================');
-      // console.log("la agenda es publica y el evento es privado");
-      // console.log('====================================');
-      props.setSectionPermissions({ view: true, section: nombresection });
-      return true;
-    } else if (
-      routePermissions.length > 0 &&
-      routePermissions[0].permissions === 'public' &&
-      props.cEventUser.value == null &&
-      !eventPrivate.private
-    ) {
-      // console.log('====================================');
-      // console.log("la agenda es publica y el evento NO es privado");
-      // console.log('====================================');
-      return false;
+    if (props.cEvent.value !== null) {
+      let routePermissions =
+        props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
+      if (
+        routePermissions.length > 0 &&
+        routePermissions[0].permissions === 'assistants' &&
+        props.cEventUser.value == null
+      ) {
+        props.setSectionPermissions({ view: true, section: nombresection });
+        return true;
+      } else if (
+        routePermissions.length > 0 &&
+        routePermissions[0].permissions === 'public' &&
+        props.cEventUser.value == null &&
+        eventPrivate.private
+      ) {
+        // console.log('====================================');
+        // console.log("la agenda es publica y el evento es privado");
+        // console.log('====================================');
+        props.setSectionPermissions({ view: true, section: nombresection });
+        return true;
+      } else if (
+        routePermissions.length > 0 &&
+        routePermissions[0].permissions === 'public' &&
+        props.cEventUser.value == null &&
+        !eventPrivate.private
+      ) {
+        // console.log('====================================');
+        // console.log("la agenda es publica y el evento NO es privado");
+        // console.log('====================================');
+        return false;
+      }
     }
   }
 
@@ -77,13 +80,15 @@ const EventSectionRoutes = (props) => {
     props.cEvent.value && (await initUserPresence(props.cEvent.value._id));
   }, [props.cEvent.value]);
 
+  useEffect(() => {
+    GetPermissionsEvent();
+  }, []);
   return (
     <>
       {props.viewVirtualconference && (
         <>
           <VirtualConferenceBig />
           <ListVideoCard idevent={props.cEvent.value} />
-         
         </>
       )}
 
@@ -140,6 +145,11 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
 
+        {/* 
+        <Route path={`${path}/login`}>
+        <EventHome />
+        </Route> */}
+
         <Route path={`${path}/informativeSection`}>
           {() =>
             ValidateViewPermissions('informativeSection', 'informativeSection') ? (
@@ -187,7 +197,7 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
         <Route path={`${path}/partners`}>
-        {() =>
+          {() =>
             ValidateViewPermissions('partners', 'partners') ? (
               <>
                 <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
@@ -196,8 +206,6 @@ const EventSectionRoutes = (props) => {
               <Partners />
             )
           }
-
-        
         </Route>
         <Route path={`${path}/faqs`}>
           {() =>
