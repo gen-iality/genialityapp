@@ -1,5 +1,6 @@
 import { EventsApi } from '../../helpers/request';
 import moment from 'moment';
+import API from '../../helpers/request';
 //METRICAS QUE SE PUEDEN OBTENER
 /*let startDate = '7daysAgo'
     let endDate = 'today'
@@ -19,30 +20,20 @@ import moment from 'moment';
 const backgroud = 'rgba(80, 211, 201, 0.7)';
 const lineBackground = 'rgba(80, 211, 201, 1)';
 
-export const totalsMetricasMail = async (eventId) => {
-  return new Promise((resolve, reject) => {
-    fetch(`http://18.211.124.171/api/events/${eventId}/messages`)
-      .then((response) => response.json())
-      .then(({ data }) => {
-        resolve(data);
-      })
-      .catch((e) => {
-        reject(e);
-      });
-  });
+export const totalsMetricasMail = async (eventId) => {  
+    let datos= await API.get(`/api/events/${eventId}/messages`);
+    if(datos){
+      console.log("DATOS API==>",datos)
+      return datos.data;
+    }
 };
 
 export const totalsMetricasMailDetails = async (eventId, idBell) => {
-  return new Promise((resolve, reject) => {
-    fetch(`http://18.211.124.171/api/events/${eventId}/message/${idBell}/messageUser`)
-      .then((response) => response.json())
-      .then(({ data }) => {
-        resolve(data);
-      })
-      .catch((e) => {
-        reject(e);
-      });
-  });
+  let datos= await  API.get( `/api/events/${eventId}/message/${idBell}/messageUser`);
+  if(datos){
+      console.log("DATOS API==>",datos)
+      return datos.data;
+    } 
 };
 
 export const totalsMetricasEventsDetails = async (eventId) => {

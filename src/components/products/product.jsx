@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Tooltip, Space, Button, Image, Modal, message, Typography, Row, Spin } from 'antd';
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusCircleOutlined, DragOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusCircleOutlined, DragOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import { EventsApi } from '../../helpers/request';
@@ -233,6 +233,14 @@ class Product extends Component {
                                  onClick={() => this.removeProduct(data)}
                                  type='danger'
                                  icon={<DeleteOutlined style={{ fontSize: 25 }} />}
+                              />
+                           </Tooltip>
+                           <Tooltip key={index} placement='topLeft' title='Ofertas'>
+                              <Button
+                                 key={index}
+                                 onClick={() => this.props.history.push(`/event/${this.props.eventId}/product/${data._id}/oferts`) }
+                                 color={'#1890ff'}
+                                 icon={<ShoppingCartOutlined style={{ fontSize: 25 }} />}
                               />
                            </Tooltip>
                         </Space>
