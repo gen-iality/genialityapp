@@ -248,6 +248,9 @@ export const EventsApi = {
   deleteProduct:async (eventId,galleryId) => {
     return await Actions.delete(`/api/events/${eventId}/products`,galleryId);
   },
+  validPrice: async (eventId, productId) => {
+    return await Actions.get(`/api/events/${eventId}/products/${productId}/minimumauctionvalue`);
+  },
 };
 export const InvitationsApi = {
   getAll: async (id) => {

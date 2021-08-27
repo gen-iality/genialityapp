@@ -1,5 +1,5 @@
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, message, Alert } from 'antd';
+import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, message, Alert, Spin } from 'antd';
 import React from 'react';
 import { useState } from 'react';
 import { EventsApi } from '../../../helpers/request';
@@ -7,8 +7,10 @@ import withContext from '../../../Context/withContext';
 
 const { Title, Text } = Typography;
 
-const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,message }) => {
+const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF }) => {
   const [selectedValue, setSelectedValue] = useState(50000);
+  const [loadingSave, setLoadingSave] = useState(false);
+  const [priceProduct, setPriceProduct] = useState(product && product.price);
   const [valuOferta, setValueOferta] = useState(
     product && product.price && product.price.includes('COP')
       ? product.price
@@ -26,6 +28,18 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,message }
   const [valorProduct, setValorProduct] = useState(valuOferta);
   //VALORES PARA SUBIR EN LA PUJA
   const valuesPuja = [
+    {
+      name: '500',
+      value: 500,
+    },
+    {
+      name: '1.000',
+      value: 1000,
+    },
+    {
+      name: '5.000',
+      value: 5000,
+    },
     {
       name: '10.000',
       value: 10000,
@@ -54,23 +68,46 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,message }
   const changeValor = (e) => {
     setValueOferta(e.target.value);
   };
-  console.log("VALOR OFERTA=>",valuOferta)
+ // console.log("VALOR OFERTA=>",valuOferta)
   //SAVE VALUE OFERTA
   const saveValue = async () => {
+    setLoadingSave(true)
     if (valuOferta > 0) {
       let data = {
         valueOffered: valuOferta,
       };
       try {
-        let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
-        if (respuestaApi) {
-          //console.log('RESPUESTA_API==>', respuestaApi);
+        let valueResp=await EventsApi.validPrice(eventId, product._id, data)
+        if(valueResp){
+        let valueNumber=valueResp.includes('COP')?valueResp.split('COP $ ')[1]
+        .replace(`’`, '')
+        .replace('.', '')
+        .replace(',', '')
+    : valueResp.includes('USD')?
+    valueResp
+        .split('USD $ ')[1]
+        .replace(`’`, '')
+        .replace('.', '').replace(',', ''):0;
+        //
+        console.log("VALUE NUMBER==>",valueNumber)
+        if (valuOferta>=valueNumber) {
+          let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
+          if(respuestaApi){
+          console.log('RESPUESTA_API==>', respuestaApi);
           message.success('Oferta realizada correctamente..!');
+          }         
+        }else{
+          setValueOferta(valueNumber)
+          setPriceProduct(valueResp);
+          message.error('Actualmente se ha ofertado un valor mucho mayor para esta obra!');
+
         }
+      }
       } catch (error) {
         message.error('No estás autorizado para realizar ofertas');
-      }
+      }    
     }
+    setLoadingSave(false)
   };
   // BOTON MAS
   const upvalue = () => {
@@ -89,7 +126,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,message }
       <Row>
         <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
           <Text type='secondary'>
-            Precio: <Title level={4}>{product && product.price}</Title>
+            Precio: <Title level={4}>{priceProduct && priceProduct}</Title>
           </Text>
           {hability && <Divider></Divider>}
         </Col>
@@ -136,9 +173,9 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,message }
           </Col>
           {permission() && (
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-              <Button block type={'primary'} onClick={saveValue}>
+              {!loadingSave ? <Button block type={'primary'} onClick={saveValue}>
                 Ofrecer
-              </Button>
+              </Button>:<Spin />}
             </Col>
           )}
           {!permission() && (
@@ -149,10 +186,10 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,message }
         </Row>
       )}
       {!hability && (  <div>       
-            {message && message != '<p><br></p>' && (
+            {messageF && messageF != '<p><br></p>' && (
               <div
                 dangerouslySetInnerHTML={{
-                  __html: message ? message : 'Sin mensaje',
+                  __html: messageF ? messageF : 'Sin mensaje',
                 }}></div>
             )}        
         </div>

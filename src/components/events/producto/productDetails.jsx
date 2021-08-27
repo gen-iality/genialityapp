@@ -74,7 +74,7 @@ function DetailsProduct(props) {
             <Card >
               <Space direction='vertical' style={{ width: '100%' }}>
                 <Title level={3}>{product && product.name ? product.name : 'Nombre de la obra'}</Title>
-                <OfertaProduct hability={habilty} message={messageF} product={product} eventId={eventId} />
+                <OfertaProduct hability={habilty} messageF={messageF} product={product} eventId={eventId} />
                 <Divider orientation='left'>
                   <Title style={{ marginBottom: '0px' }} level={5}>
                     Artista
