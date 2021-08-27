@@ -15,23 +15,23 @@ function DetailsProduct(props) {
   const [habilty, setHability] = useState();
   const [messageF, setMessage] = useState('');
   const [eventId, setEventId] = useState('');
+  const [updateValue, setUpdateValue] = useState();
 
   useEffect(() => {
     let idProduct = props.match.params.id;
     let eventId = props.match.params.event_id;
     firestore.collection('config').doc(eventId).onSnapshot((onSnapshot)=>{
        if (onSnapshot.exists){        
-          let doc=onSnapshot.data()
-          console.log("SNAPSHOT==>",doc)
+          let doc=onSnapshot.data()          
           setHability(doc.data.habilitar_subasta)
           setMessage(doc.data.message)
-          console.log(doc.data.message)
+         
        }else{
          setHability(false)
        }
     })
 
-    if (idProduct && eventId) {
+    if (idProduct && eventId && (!updateValue || updateValue)) {
       setEventId(eventId)
       obtenerDetalleProduct();
     }
@@ -39,10 +39,11 @@ function DetailsProduct(props) {
       let detalleProduct = await EventsApi.getOneProduct(eventId, idProduct);    
       if (Object.keys(detalleProduct).length > 0) {
         setProduct(detalleProduct);
+        console.log("PRODUCT DETAILS==>",detalleProduct)
       }
       setLoading(false);
     }
-  }, []);
+  }, [updateValue]);
 
   return (
     <>
@@ -74,7 +75,7 @@ function DetailsProduct(props) {
             <Card >
               <Space direction='vertical' style={{ width: '100%' }}>
                 <Title level={3}>{product && product.name ? product.name : 'Nombre de la obra'}</Title>
-                <OfertaProduct hability={habilty} messageF={messageF} product={product} eventId={eventId} />
+                <OfertaProduct updateValues={setUpdateValue} hability={habilty} messageF={messageF} product={product} eventId={eventId} />
                 <Divider orientation='left'>
                   <Title style={{ marginBottom: '0px' }} level={5}>
                     Artista

@@ -251,6 +251,9 @@ export const EventsApi = {
   validPrice: async (eventId, productId) => {
     return await Actions.get(`/api/events/${eventId}/products/${productId}/minimumauctionvalue`);
   },
+  ofertsProduct: async (eventId, productId) => {
+    return await Actions.get(`api/events/${eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${productId}"}]`);
+  },
 };
 export const InvitationsApi = {
   getAll: async (id) => {

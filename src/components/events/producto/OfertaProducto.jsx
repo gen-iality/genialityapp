@@ -2,17 +2,41 @@ import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, message, Alert, Spin } from 'antd';
 import React from 'react';
 import { useState } from 'react';
-import { EventsApi } from '../../../helpers/request';
+import {  EventsApi } from '../../../helpers/request';
 import withContext from '../../../Context/withContext';
+import { useEffect } from 'react';
 
 const { Title, Text } = Typography;
 
-const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF }) => {
+const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,updateValues }) => {
   const [selectedValue, setSelectedValue] = useState(50000);
   const [loadingSave, setLoadingSave] = useState(false);
   const [priceProduct, setPriceProduct] = useState(product && product.price);
-  const [valuOferta, setValueOferta] = useState(
-    product && product.price && product.price.includes('COP')
+  const [valuOferta, setValueOferta] = useState(0);
+  const [valorProduct, setValorProduct] = useState(valuOferta);
+  const [totalOferts, setTotalOferts] = useState(0);
+  const [isUsd, setUsd] = useState(false);
+  useEffect(()=>{
+    if(product && eventId){
+      obtenerOfertas()
+      if(product.price.includes('USD')){
+        setUsd(true)
+        setSelectedValue(300)
+      }
+      setPriceProduct( product &&product.price)
+      setValorProduct(obtenerValor())
+      setValueOferta(obtenerValor())
+    }
+    async function obtenerOfertas(){
+     let oferts= await EventsApi.ofertsProduct(eventId,product._id);    
+     if(oferts && oferts.data){
+       setTotalOferts(oferts.data.length)
+     }
+    }
+  },[eventId,product])
+
+  const obtenerValor=()=>{
+  return  product && product.price && product.price.includes('COP')
       ? product.price
           .split('COP $ ')[1]
           .replace(`’`, '')
@@ -22,41 +46,72 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF 
       product.price
           .split('USD $ ')[1]
           .replace(`’`, '')
-          .replace('.', '').replace(',', ''):0
-  );
-  console.log('DATACONTEXT==>', cEventUser, cUser);
-  const [valorProduct, setValorProduct] = useState(valuOferta);
+          .replace('.', '').replace(',', ''):0;
+  }
+
+  /*const formatPrecioInitial=(value)=>{
+    let valueFormat;
+   if(value){    
+    let valor= value.split(' ');    
+    valueFormat=valor.slice(2)     
+      return valueFormat;        
+   }
+  }*/
   //VALORES PARA SUBIR EN LA PUJA
   const valuesPuja = [
     {
-      name: '500',
+      name: 'COP 500',
       value: 500,
     },
     {
-      name: '1.000',
+      name: 'COP 1.000',
       value: 1000,
     },
     {
-      name: '5.000',
+      name: 'COP 5.000',
       value: 5000,
     },
     {
-      name: '10.000',
+      name: 'COP 10.000',
       value: 10000,
     },
     {
-      name: '50.000',
+      name: 'COP 50.000',
       value: 50000,
     },
     {
-      name: '100.000',
+      name: 'COP 100.000',
       value: 100000,
     },
     {
-      name: '500.000',
+      name: 'COP 500.000',
       value: 500000,
     },
   ];
+
+    //VALORES PARA SUBIR EN LA PUJA USD
+    const valuesPujaDol = [
+      {
+        name: 'USD 50',
+        value: 50,
+      },
+      {
+        name: ' USD 100',
+        value: 100,
+      },
+      {
+        name: 'USD 300',
+        value: 300,
+      },
+      {
+        name: 'USD 500',
+        value: 500,
+      },
+      {
+        name: 'USD 1.000',
+        value: 1000,
+      }
+    ];
   //VALIDAR SI TIENE PERMISOS DE PUJAR
   const permission = () => {
     if (cEventUser.value.rol_id == '60e8a8b7f6817c280300dc23') {
@@ -95,10 +150,13 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF 
           if(respuestaApi){
           console.log('RESPUESTA_API==>', respuestaApi);
           message.success('Oferta realizada correctamente..!');
+          updateValues(true)
           }         
         }else{
-          setValueOferta(valueNumber)
+          setValueOferta(valueNumber);
           setPriceProduct(valueResp);
+          setValorProduct(valueNumber);
+          console.log("VALUE RESP==>",valueResp)
           message.error('Actualmente se ha ofertado un valor mucho mayor para esta obra!');
 
         }
@@ -117,6 +175,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF 
   };
   //BOTON MENOS
   const downvalue = () => {
+    console.log("VALUE OFERTA==>",valuOferta)
     if (+valuOferta - selectedValue >= valorProduct) {
       setValueOferta(+valuOferta - selectedValue);
     }
@@ -126,14 +185,29 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF 
       <Row>
         <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
           <Text type='secondary'>
-            Precio: <Title level={4}>{priceProduct && priceProduct}</Title>
+            Precio Inicial: <Title level={4}>{(product && product.start_price && product.start_price ) || (priceProduct && priceProduct) }</Title>
           </Text>
           {hability && <Divider></Divider>}
         </Col>
-        {hability && (
+        {hability && permission() && product && product.start_price && <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+          <Text type='secondary'>
+            Oferta actual: <Title level={4}>{priceProduct && priceProduct}</Title>
+          </Text>
+          {hability && permission() && <Divider></Divider>}
+        </Col>}
+        {hability && permission() && (
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Space wrap size={8} align='center'>
-              {valuesPuja.map((val, index) => (
+              {!isUsd&& valuesPuja.map((val, index) => (
+                <Tag
+                  style={{ cursor: 'pointer', padding: '5px', fontSize: '14px' }}
+                  color={selectedValue === val.value ? '#2db7f5' : ''}
+                  onClick={() => setSelectedValue(val.value)}
+                  key={'val' + index}>
+                  {val.name}
+                </Tag>
+              ))}
+                {isUsd&& valuesPujaDol.map((val, index) => (
                 <Tag
                   style={{ cursor: 'pointer', padding: '5px', fontSize: '14px' }}
                   color={selectedValue === val.value ? '#2db7f5' : ''}
@@ -146,9 +220,10 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF 
           </Col>
         )}
       </Row>
-      {hability && (
-        <Row style={{ marginTop: '5px' }} gutter={[20, 30]} justify='center'>
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+      {hability && (<>
+       
+        <Row style={{ marginTop: '5px' }} gutter={[20, 30]} >
+         {permission() && <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Space size='small'>
               <Button
                 type='dashed'
@@ -170,9 +245,15 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF 
                 icon={<PlusOutlined style={{ color: '#2db7f5' }} />}
                 onClick={() => upvalue()}></Button>
             </Space>
+          </Col>}
+          <Col>
+          
+          {permission() && totalOferts==0?<div><small>No hay ofertas por esta obra</small></div>:permission() && <div><small>Hay <strong>{totalOferts}</strong> oferta{totalOferts>1 && 's'}</small></div>}
           </Col>
+       
           {permission() && (
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              
               {!loadingSave ? <Button block type={'primary'} onClick={saveValue}>
                 Ofrecer
               </Button>:<Spin />}
@@ -184,6 +265,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF 
             </Row>
           )}
         </Row>
+        </>
       )}
       {!hability && (  <div>       
             {messageF && messageF != '<p><br></p>' && (

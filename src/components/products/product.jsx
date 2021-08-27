@@ -198,7 +198,7 @@ class Product extends Component {
                      )}
                   />
                   <Column key='_id' title='Por' align='center' dataIndex='by' />
-                  <Column key='_id' title='Valor' dataIndex='price' align='center' />
+                  <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{data?data:prod.price}</div>)} />
                   <Column
                      key='_id'
                      title='Imagenes del producto'
