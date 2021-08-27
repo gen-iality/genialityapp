@@ -114,7 +114,7 @@ const VirtualConference = () => {
   }, [agendageneral, firestore]);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft:'20px', marginRight:'20px'}}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft:'20px', marginRight:'20px',flexDirection:'column'}}>
       {infoAgendaArr.length > 0 &&
         infoAgendaArr
           .filter((item) => {
