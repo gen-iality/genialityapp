@@ -20,20 +20,30 @@ import API from '../../helpers/request';
 const backgroud = 'rgba(80, 211, 201, 0.7)';
 const lineBackground = 'rgba(80, 211, 201, 1)';
 
-export const totalsMetricasMail = async (eventId) => {  
-    let datos= await API.get(`/api/events/${eventId}/messages`);
-    if(datos){
-      console.log("DATOS API==>",datos)
-      return datos.data;
-    }
+export const totalsMetricasMail = async (eventId) => {
+  return new Promise((resolve, reject) => {
+    fetch(`https://api.evius.co/api/events/${eventId}/messages`)
+      .then((response) => response.json())
+      .then(({ data }) => {       
+        resolve(data);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
 };
 
 export const totalsMetricasMailDetails = async (eventId, idBell) => {
-  let datos= await  API.get( `/api/events/${eventId}/message/${idBell}/messageUser`);
-  if(datos){
-      console.log("DATOS API==>",datos)
-      return datos.data;
-    } 
+  return new Promise((resolve, reject) => {
+    fetch(`https://api.evius.co/api/events/${eventId}/message/${idBell}/messageUser`)
+      .then((response) => response.json())
+      .then(({ data }) => {        
+        resolve(data);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
 };
 
 export const totalsMetricasEventsDetails = async (eventId) => {
@@ -47,8 +57,8 @@ export const totalsMetricasActivityDetails = async (eventId) => {
 };
 
 export const metricasRegisterByDate = async (eventId) => {
-  let listmetric=[]
-  let metrics = await EventsApi.metricsRegisterBydate(eventId, 'created_at');
+  let listmetric=[]  
+  let metrics = await EventsApi.metricsRegisterBydate(eventId, 'created_at'); 
   metrics.map((metric)=>{
     metric={...metric,date:moment(metric.date).format("YYYY/MM/DD")}
     listmetric.push(metric)
@@ -64,7 +74,7 @@ export const metricasCheckedByDate = async (eventId) => {
 
 //Esta funcion realiza la consulta de los datos a la API de analytics
 export const queryReportGnal = async (eventID) => {
-    const devEvius='http://apiprueba.evius.co/api/googleanalytics';
+    const devEvius='https://api.evius.co/api/googleanalytics';
     let fechaActual=moment().format("YYYY-MM-DD")
     const data={
       startDate: "2021-06-01",
@@ -98,13 +108,14 @@ export const queryReportGnal = async (eventID) => {
       metrics.push(objeto);
     });
     let totalAvg=parseFloat(totalMetrics["ga:sessionDuration"]/totalMetrics["ga:users"]);   
+    console.log("REPORTE GNAL==>",queryReportGnal)
    return {metrics,totalAvg,totalMetrics}; 
   }      
 };
 
 //Esta funcion trae datos por fecha
 export const queryReportGnalByMoth = async (eventID) => {
-  const devEvius = 'http://apiprueba.evius.co/api/googleanalytics';
+  const devEvius = 'https://api.evius.co/api/googleanalytics';
   let fechaActual = moment().format('YYYY-MM-DD');
   const data = {
     startDate: '2019-01-01',
@@ -134,6 +145,7 @@ export const queryReportGnalByMoth = async (eventID) => {
           };
           totalMetrics.push(metric);
         });
+        console.log("TOTAL METRICS==>",totalMetrics)
     return totalMetrics;
   }
 
@@ -195,8 +207,8 @@ export const queryReportGnalByMoth = async (eventID) => {
   export const updateMetricasActivity = (data,eventId,metricsGActivity) => {
     if (data.length > 0) {     
       let metricsActivity = [];
-      data.map((activity) => {
-        let metricsView = obtenerMetricasByView('/landing/' + eventId + '/activity/' + activity.name,metricsGActivity);        
+      data.map((activity) => {        
+        let metricsView = obtenerMetricasByView('/landing/' + eventId + '/activity/' + activity._id,metricsGActivity);        
         let metricaActivity = {
           name: activity.name,
           view: metricsView ? metricsView.metrics[1] : 0,
