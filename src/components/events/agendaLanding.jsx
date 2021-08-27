@@ -742,7 +742,7 @@ class Agenda extends Component {
                       }}>
                       {days.map((day, index) => (
                         <TabPane
-                          //style={{ paddingLeft: '25px', paddingRight: '25px' }}
+                          style={{ paddingLeft: '20px', paddingRight: '20px' }}
                           tab={
                             <span
                               style={{

@@ -168,7 +168,7 @@ const VirtualConference = () => {
                             <>
                               {/* <img src={ENVIVO} style={{ height: '50px' }} /> */}
                               
-                              <CaretRightOutlined style={{ fontSize: '50px', color: 'red' }}/>
+                              <CaretRightOutlined style={{ fontSize: '50px', color: '#DD1616' }}/>
                               <span style={{ textAlign: 'center', fontSize: '15px' }}>
                                 {<FormattedMessage id='live' defaultMessage='En vivo' />}
                               </span>
