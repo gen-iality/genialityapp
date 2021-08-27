@@ -11,7 +11,7 @@ class UserLogin extends Component {
     super(props);
     // Estado provisional para el manejo de los sistemas de autenticación
     this.state = {
-      enabledWithEmailPass: false,
+      enabledWithEmailPass: true,
       enabledOneTimeLoginLink: false,
       UserLoginRecoveryPass: false,
     };
@@ -51,6 +51,7 @@ class UserLogin extends Component {
     } = this.props;
 
     const { enabledOneTimeLoginLink, enabledWithEmailPass } = this.state;
+   
     return (
       <>
         {loading && <Spin />}
