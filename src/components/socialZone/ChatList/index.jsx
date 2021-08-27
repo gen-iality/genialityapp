@@ -78,14 +78,13 @@ const ChatList = (props) => {
                 />
               </strong>
             </h1>
-            
-              <Text type='secondary'>
-                <FormattedMessage
-                  id='form.message.socialzone'
-                  defaultMessage='Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.'
-                />
-              </Text>
-            
+
+            <Text type='secondary'>
+              <FormattedMessage
+                id='form.message.socialzone'
+                defaultMessage='Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.'
+              />
+            </Text>
           </Col>
         </Row>
         <Row justify='start' style={{ paddingTop: '10px' }}>
@@ -191,7 +190,8 @@ const ChatList = (props) => {
                         settotalmsjpriv(0);
                       }}>
                       <Tooltip title='Chatear'>
-                        {item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes &&
+                        {item.participants &&
+                        item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes &&
                         item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes >
                           0 ? (
                           <Badge count={' '} style={{ minWidth: '10px', height: '10px', padding: '0px' }}>
