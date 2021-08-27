@@ -27,12 +27,12 @@ function InvitationsList(props) {
   const columns = [
     {
       title: '',
-      key: 'action',
+      key: '_id',
       render: (item) => (
         <Link
           to={{
-            pathname: `${match.url}/detail`,
-            state: { item: item, users: item.message_users },
+            pathname: `${match.url}/detail/${item._id}`,
+            state: { item: item},
           }}>
           <FaEye />
         </Link>
@@ -79,6 +79,7 @@ function InvitationsList(props) {
     return new Promise((resolve, reject) => {
       API.get(`/api/events/${eventId}/messages`)
         .then(({ data }) => {
+          console.log("DATA GNAL==>",data)
           resolve(data.data);
         })
         .catch((e) => {
