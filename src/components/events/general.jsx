@@ -1028,13 +1028,13 @@ class General extends Component {
                 required={true}
               />
               <div className='field'>
-                <label className='label has-text-grey-light'>ID Google Analytics</label>
+                <label className='label has-text-grey-light'>Id Google Tag Manager</label>
                 <div className='control'>
                   <input
                     className='input'
                     name={'googleanlyticsid'}
                     type='text'
-                    placeholder='¿El evento tiene Id tag-Manager?'
+                    placeholder='GTM-XXXXXX'
                     value={event.googleanlyticsid}
                     onChange={this.googleanlyticsid}
                   />

@@ -157,7 +157,9 @@ let SocialZone = function(props) {
         </>
       )}
 
-      {props.currentActivity !== null && props.tabs && (props.tabs.surveys === true || props.tabs.surveys === 'true') && (
+      {props.currentActivity !== null && props.tabs 
+      // && (props.tabs.surveys === true || props.tabs.surveys === 'true') 
+      && (
         <TabPane
           className='asistente-survey-list asistente-list'
           tab={

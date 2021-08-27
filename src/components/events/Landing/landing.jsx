@@ -25,6 +25,10 @@ import { DesktopOutlined, LoadingOutlined, IssuesCloseOutlined, NotificationOutl
 import EviusFooter from './EviusFooter';
 import AppointmentModal from '../../networking/appointmentModal';
 
+/** Google tag manager */
+import { EnableGTMByEVENT } from './helpers/tagManagerHelper';
+import { Ripple } from 'react-preloaders';
+
 const iniitalstatetabs = {
   attendees: false,
   privateChat: false,
@@ -57,7 +61,7 @@ const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
-  let { isNotification, ChangeActiveNotification } = useContext(HelperContext);
+  let { isNotification, ChangeActiveNotification, eventPrivate } = useContext(HelperContext);
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -124,7 +128,7 @@ const Landing = (props) => {
         });
   }, [cEventContext.status]);
 
-  if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin size='small' />;
+  if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin />;
 
   return (
     <>
@@ -136,8 +140,10 @@ const Landing = (props) => {
             props.setUserAgenda(null);
           }}
         />
+
         <EventSectionsInnerMenu />
         <MenuTablets />
+
         <Layout className='site-layout'>
           <Content
             className='site-layout-background'
@@ -151,6 +157,7 @@ const Landing = (props) => {
 
             <EventSectionRoutes generaltabs={generaltabs} currentActivity={currentActivity} />
           </Content>
+          <EnableGTMByEVENT />
           <EviusFooter />
         </Layout>
         <EventSectionMenuRigth
@@ -164,6 +171,7 @@ const Landing = (props) => {
           currentActivity={currentActivity}
           generalTabs={generaltabs}
         />
+        <EnableGTMByEVENT />
       </Layout>
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -15,7 +15,7 @@ import EventHome from '../eventHome';
 import TicketsForm from '../../tickets/formTicket';
 import WallForm from '../../wall/index';
 import Ferias from '../ferias/index';
-import VirtualConference from '../virtualConference';
+import VirtualConferenceBig from '../virtualConferenceBig';
 import CertificadoLanding from '../../certificados/cerLanding';
 import AgendaActividadDetalle from '../agendaActividadDetalle';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
@@ -32,19 +32,14 @@ import MessageRegister from '../registrationForm/messageRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import ListVideoCard from '../../shared/listVideoCard';
 import initUserPresence from '../../../containers/userPresenceInEvent';
+import { HelperContext } from '../../../Context/HelperContext';
+import Videos from '../videos';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  let redirect;
-
-  if (props.cEvent.value !== null && props.cEvent.value.itemsMenu) {
-    redirect = Object.keys(props.cEvent.value.itemsMenu)[0];
-  } else {
-    redirect = 'evento';
-  }
+  let { eventPrivate } = useContext(HelperContext);
 
   function ValidateViewPermissions(route, nombresection) {
-  
     let routePermissions =
       props.cEvent.value && Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section === route);
     if (
@@ -54,7 +49,26 @@ const EventSectionRoutes = (props) => {
     ) {
       props.setSectionPermissions({ view: true, section: nombresection });
       return true;
-    } else {
+    } else if (
+      routePermissions.length > 0 &&
+      routePermissions[0].permissions === 'public' &&
+      props.cEventUser.value == null &&
+      eventPrivate.private
+    ) {
+      // console.log('====================================');
+      // console.log("la agenda es publica y el evento es privado");
+      // console.log('====================================');
+      props.setSectionPermissions({ view: true, section: nombresection });
+      return true;
+    } else if (
+      routePermissions.length > 0 &&
+      routePermissions[0].permissions === 'public' &&
+      props.cEventUser.value == null &&
+      !eventPrivate.private
+    ) {
+      // console.log('====================================');
+      // console.log("la agenda es publica y el evento NO es privado");
+      // console.log('====================================');
       return false;
     }
   }
@@ -67,14 +81,15 @@ const EventSectionRoutes = (props) => {
     <>
       {props.viewVirtualconference && (
         <>
-          <VirtualConference />
+          <VirtualConferenceBig />
           <ListVideoCard idevent={props.cEvent.value} />
+         
         </>
       )}
 
       <Switch>
         <Route exact path={`${path}/`}>
-          <Redirect to={`/landing/${props.cEvent.value._id}/${redirect}`} />
+          <Redirect to={`/landing/${props.cEvent.value._id}/${eventPrivate.section}`} />
         </Route>
 
         <Route path={`${path}/documents`}>
@@ -90,19 +105,51 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/interviews`}>
-          <MyAgendaIndepend />
+          {() =>
+            ValidateViewPermissions('interviews', 'interviews') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <MyAgendaIndepend />
+            )
+          }
         </Route>
 
         <Route path={`${path}/networking`}>
-          <NetworkingForm />
+          {() =>
+            ValidateViewPermissions('networking', 'Networking') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <NetworkingForm />
+            )
+          }
         </Route>
 
         <Route path={`${path}/informativeSection1`}>
-          <InformativeSection2 />
+          {() =>
+            ValidateViewPermissions('informativeSection1', 'informativeSection1') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <InformativeSection2 />
+            )
+          }
         </Route>
 
         <Route path={`${path}/informativeSection`}>
-          <InformativeSection />
+          {() =>
+            ValidateViewPermissions('informativeSection', 'informativeSection') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <InformativeSection />
+            )
+          }
         </Route>
 
         <Route path={`${path}/activity/:activity_id`}>
@@ -118,13 +165,39 @@ const EventSectionRoutes = (props) => {
         </Route>
 
         <Route path={`${path}/speakers`}>
-          <SpeakersForm />
+          {() =>
+            ValidateViewPermissions('speakers', 'Conferencistas') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <SpeakersForm />
+            )
+          }
         </Route>
         <Route path={`${path}/surveys`}>
-          <SurveyForm />
+          {() =>
+            ValidateViewPermissions('surveys', 'Encuestas') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <SurveyForm />
+            )
+          }
         </Route>
         <Route path={`${path}/partners`}>
-          <Partners />
+        {() =>
+            ValidateViewPermissions('partners', 'partners') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <Partners />
+            )
+          }
+
+        
         </Route>
         <Route path={`${path}/faqs`}>
           {() =>
@@ -158,6 +231,17 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <WallForm />
+            )
+          }
+        </Route>
+        <Route path={`${path}/videos`}>
+          {() =>
+            ValidateViewPermissions('videos', 'Videos') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <Videos />
             )
           }
         </Route>
