@@ -41,9 +41,9 @@ const EventSectionRoutes = (props) => {
   let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext);
 
   function ValidateViewPermissions(route, nombresection) {
-    if (!props.cEvent.value !== null) {
+    if (props.cEvent.value !== null) {
       let routePermissions =
-        props.cEvent.value && Object.values(props.cEvent.value.itemsMenu).filter((item) => item.section === route);
+        props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
       if (
         routePermissions.length > 0 &&
         routePermissions[0].permissions === 'assistants' &&
