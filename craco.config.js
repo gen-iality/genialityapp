@@ -24,6 +24,13 @@ module.exports = {
           },
         },
       },
-    },
+
+    },{
+      plugin: CracoLessPlugin, 
+      eslint: {enable: false}
+    }
   ],
+  eslint: {
+    enable: false
+  },
 };

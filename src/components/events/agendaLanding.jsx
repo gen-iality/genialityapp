@@ -640,7 +640,7 @@ class Agenda extends Component {
               Canjear código
             </Button>,
           ]}>
-          {' '}
+  
           <div>
             {this.state.exchangeCodeMessage && (
               <Alert
