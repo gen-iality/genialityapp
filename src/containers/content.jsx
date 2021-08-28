@@ -35,6 +35,7 @@ const socialZone = asyncComponent(() => import('../components/socialZone/socialZ
 const AppointmentAccept = asyncComponent(() => import('../components/networking/appointmentAccept'));
 const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
 const QueryTesting = asyncComponent(() => import('../components/events/surveys/components/queryTesting'));
+const EventFinished = asyncComponent(() => import('../components/eventFinished/eventFinished'));
 
 const ContentContainer = () => {
   return (
@@ -83,6 +84,7 @@ const ContentContainer = () => {
         <Route path='/queryTesting' component={QueryTesting} />
         <Route path='/api/generatorQr/:id' component={QRedirect} />
         <Route exact path='/transition/:event' component={Transition} />
+        <Route exact path='/eventfinished' component={EventFinished} />
         <Route exact path='/' component={RedirectPortal} />
 
         <Route
