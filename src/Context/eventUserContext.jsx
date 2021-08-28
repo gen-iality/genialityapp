@@ -18,9 +18,13 @@ export function CurrentUserEventProvider({ children }) {
     async function fetchEvent() {      
       const eventUserGlobal = await EventsApi.getcurrentUserEventUser(event_id);
       setuserEvent({ status: 'LOADED', value: eventUserGlobal });
+      console.log('====================================');
+      console.log("cargo event user",eventUserGlobal);
+      console.log('====================================');
     }
+  
     fetchEvent();
-  }, [event_id]);
+  }, []);
 
   return <CurrentEventUserContext.Provider value={userEvent}>{children}</CurrentEventUserContext.Provider>;
 }
