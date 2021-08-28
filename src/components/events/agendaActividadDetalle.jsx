@@ -26,9 +26,12 @@ import { eventUserUtils } from '../../helpers/helperEventUser';
 import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';
 import { setSpaceNetworking } from '../../redux/networking/actions';
+
 import withContext from '../../Context/withContext';
+import { UseCurrentUser } from '../../Context/userContext';
 import { UseSurveysContext } from '../../Context/surveysContext';
 import { HelperContext } from '../../Context/HelperContext';
+
 
 import { useHistory } from 'react-router-dom';
 import SurveyDrawer from './surveys/components/surveyDrawer';
@@ -48,6 +51,9 @@ const tailLayout = {
 
 let AgendaActividadDetalle = (props) => {
   let cSurveys = UseSurveysContext();
+  let contextUser = UseCurrentUser();
+  let cUser = contextUser?contextUser.value:null;
+  
   let { activity_id } = useParams();
   let [idSpeaker, setIdSpeaker] = useState(false);
   let [orderedHost, setOrderedHost] = useState([]);
@@ -62,6 +68,7 @@ let AgendaActividadDetalle = (props) => {
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
   let history = useHistory();
   let { HandleOpenCloseMenuRigth,isCollapsedMenuRigth } = useContext(HelperContext);
+  
   const configfast = useState({});
 
   const { Title } = Typography;
@@ -124,19 +131,19 @@ let AgendaActividadDetalle = (props) => {
     try {
       if (props.cEventUser) {
         TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
-        Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, props.cUser.value._id);
+        Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, cUser.value._id);
       }
     } catch (e) {
       console.error('fallo el checkin:', e);
     }
 
-    if (props.cUser && props.cUser?.displayName && props.cUser?.email) {
+    if (cUser && cUser?.displayName && cUser?.email) {
       let innerName =
-        props.cUser && props.cUser.properties && props.cUser.properties.casa
-          ? '(' + props.cUser.properties.casa + ')' + props.cUser.displayName
-          : props.cUser.displayName;
+        cUser && cUser.properties && cUser.properties.casa
+          ? '(' + cUser.properties.casa + ')' + cUser.displayName
+          : cUser.displayName;
       setNames(innerName);
-      setEmail(props.cUser.email);
+      setEmail(cUser.email);
     }
 
     //Escuchando el estado de la actividad
@@ -240,14 +247,13 @@ let AgendaActividadDetalle = (props) => {
   const getMeetingPath = (platform) => {
     if (platform === 'zoom') {
       const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
-
       return (
         url_conference +
         meeting_id +
-        `&userName=${props.cUser.displayName ? props.cUser.displayName : 'Guest'}` +
-        `&email=${props.cUser.email ? props.cUser.email : 'emaxxxxxxil@gmail.com'}` +
+        `&userName=${cUser.displayName ? cUser.displayName : (cUser.names?cUser.names:'Guest'+Math.floor(Math.random() * 1000))}` +
+        `&email=${cUser.email ? cUser.email : 'emaxxxxxxil@gmail.com'}` +
         `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
-        `&host=${eventUserUtils.isHost(props.cUser, props.cEvent.value)}`
+        `&host=${eventUserUtils.isHost(cUser, props.cEvent.value)}`
       );
     } else if (platform === 'vimeo') {
       return `https://player.vimeo.com/video/${meeting_id}`;
@@ -270,7 +276,7 @@ let AgendaActividadDetalle = (props) => {
   useEffect(() => {
     if (currentActivity) {
       cSurveys.set_current_activity(currentActivity);
-      listenSurveysData(props.cEvent.value, currentActivity, props.cUser, (data) => {
+      listenSurveysData(props.cEvent.value, currentActivity, cUser, (data) => {
         props.setHasOpenSurveys(data.hasOpenSurveys);
       });
     }
@@ -349,7 +355,7 @@ let AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     if (currentActivity) {
-      listenSurveysData(props.cEvent.value, currentActivity, props.cUser, (data) => {
+      listenSurveysData(props.cEvent.value, currentActivity, cUser, (data) => {
         props.setHasOpenSurveys(data.hasOpenSurveys);
       });
     }
@@ -840,7 +846,7 @@ let AgendaActividadDetalle = (props) => {
                       </p>
                     </>
                   }>
-                  {props.cUser.value !== null ? (
+                  {cUser.value !== null ? (
                     <SurveyList eventSurveys={props.eventSurveys} />
                   ) : (
                     <div style={{ paddingTop: 30 }}>
