@@ -73,6 +73,7 @@ function AgendaActivityItem(props) {
     <>
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
+        className='agendaHover efect-scale'
           justify='start'
           align='middle'
           onClick={() => {
