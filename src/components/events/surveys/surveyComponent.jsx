@@ -53,14 +53,14 @@ function SurveyComponent(props) {
       /**
        * Timers para controlar el tiempo por pregunta, estos se deben detener o el quiz seguira avanzando errando la logica ya que cambia la pregunta que se esta respondiendo
        */
-      if (initialSurveyModel) {
-         initialSurveyModel.stopTimer();
-      }
+      // if (initialSurveyModel) {
+      //    initialSurveyModel.stopTimer();
+      // }
 
-      if (timerPausa) {
+      if (!timerPausa) {
          clearInterval(timerPausa);
       }
-   }, [initialSurveyModel, idSurvey]);
+   }, [initialSurveyModel, idSurvey, timerPausa]);
 
    async function startingSurveyComponent(surveyRealTime) {
       setFreezeGame(surveyRealTime.freezeGame);

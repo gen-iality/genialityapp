@@ -16,6 +16,8 @@ function TimerAndMessageForTheNextQuestion(
    // secondsToGo = secondsToGo ? secondsToGo : 0;
    // secondsToGo += MIN_ANSWER_FEEDBACK_TIME;
    secondsToGo = MIN_ANSWER_FEEDBACK_TIME;
+   survey.showTimerPanel = '';
+   survey.showTimerPanelMode = '';
 
    const timer = setInterval(() => {
       secondsToGo -= 1;
