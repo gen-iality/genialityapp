@@ -27,6 +27,8 @@ import AppointmentModal from '../../networking/appointmentModal';
 
 /** Google tag manager */
 import { EnableGTMByEVENT } from './helpers/tagManagerHelper';
+/** Google Analytics */
+import { EnableAnalyticsByEVENT } from './helpers/analyticsHelper';
 import { Ripple } from 'react-preloaders';
 
 const iniitalstatetabs = {
@@ -157,7 +159,6 @@ const Landing = (props) => {
 
             <EventSectionRoutes generaltabs={generaltabs} currentActivity={currentActivity} />
           </Content>
-          <EnableGTMByEVENT />
           <EviusFooter />
         </Layout>
         <EventSectionMenuRigth
@@ -172,6 +173,7 @@ const Landing = (props) => {
           generalTabs={generaltabs}
         />
         <EnableGTMByEVENT />
+        <EnableAnalyticsByEVENT />
       </Layout>
     </>
   );

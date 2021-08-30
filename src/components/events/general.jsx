@@ -155,6 +155,12 @@ class General extends Component {
     const { name, value } = e.target;
     this.setState({ event: { ...this.state.event, [name]: value } });
   };
+
+  googletagmanagerid = (e) => {
+    const { name, value } = e.target;
+    this.setState({ event: { ...this.state.event, [name]: value } });
+  };
+
   //Cambio en los input
   handleChange = (e) => {
     let { name, value } = e.target;
@@ -424,6 +430,7 @@ class General extends Component {
       has_payment: event.has_payment ? event.has_payment : false,
       language: event.language ? event.language : 'es',
       googleanlyticsid: event.googleanlyticsid || null,
+      googletagmanagerid: event.googletagmanagerid || null,
       itemsMenu:
         event.allow_register === 'true' || event.allow_register === true
           ? { ...this.state.itemsMenu, tickets: this.state.registerForm }
@@ -1028,15 +1035,28 @@ class General extends Component {
                 required={true}
               />
               <div className='field'>
-                <label className='label has-text-grey-light'>Id Google Tag Manager</label>
+                <label className='label has-text-grey-light'>Id Google Analytics</label>
                 <div className='control'>
                   <input
                     className='input'
                     name={'googleanlyticsid'}
                     type='text'
-                    placeholder='GTM-XXXXXX'
+                    placeholder='UA-XXXXXX-X | G-XXXXXX' 
                     value={event.googleanlyticsid}
                     onChange={this.googleanlyticsid}
+                  />
+                </div>
+              </div>
+              <div className='field'>
+                <label className='label has-text-grey-light'>Id Google Tag Manager</label>
+                <div className='control'>
+                  <input
+                    className='input'
+                    name={'googletagmanagerid'}
+                    type='text'
+                    placeholder='GTM-XXXXXX'
+                    value={event.googletagmanagerid}
+                    onChange={this.googletagmanagerid}
                   />
                 </div>
               </div>
