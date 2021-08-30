@@ -134,25 +134,9 @@ class InformativeSection extends Component {
               title={informativeSection.name || 'clasificación'}
               bordered={false}
               style={{ width: 1000, margin: 'auto' }}>
-              {this.props.cEvent.value._id === '60797bfb2a9cc06ce973a1f4' && (
-                <>
-                  <p>
-                    Llega el momento que tanto hemos esperado 😃 Inscribite al #IIITorneodeAjedrezdelCaribeALaRuedaRueda
-                    ♟️ del 15 de mayo al 30 de junio a través de www.fundacionalaruedarueda.org. Te invitamos a que te
-                    conectes a nuestras redes sociales 🤳🏽 para conocer más información 🤓. ¡No te lo pierdas!
-                    #AjedrezDesdeElCaribeParaColombia
-                  </p>
-                  <a
-                    href='https://www.chesskid.com/es/login'
-                    target='_blank'
-                    rel="noreferrer"
-                    className='ant-btn ant-btn-primary'
-                    style={{ width: 180 }}>
-                    Inscríbete
-                  </a>
-                </>
-              )}
-              {this.props.cEvent.value._id !== '60797bfb2a9cc06ce973a1f4' && this.props.cEvent.value._id !=='611c285104f5d97d1b0f5ed2' && markup && Parser(markup)}
+           
+              {this.props.cEvent.value._id !=='611c285104f5d97d1b0f5ed2' && markup && Parser(markup)}
+             
               {this.props.cEvent.value._id == '611c285104f5d97d1b0f5ed2' && (
               <>
                 <h2 style={{ fontWeight: 700, fontSize: '20px', borderBottom: '1px solid #C0BAB9', marginTop: '15px',margin:'auto' }}>
@@ -167,20 +151,7 @@ class InformativeSection extends Component {
               </>
             )}
             </Card>
-            {this.props.cEvent.value._id == '60797bfb2a9cc06ce973a1f4' && (
-              <div  style={{ width: 1000, margin: 'auto' }}>
-                <iframe
-                  src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/EventoAjedrez%2FCLASIFICADOS%20APARTADO%2014.08%20-%20III%20TORNEO%20DE%20AJEDREZ%20DEL%20CARIBE%202021.pdf?alt=media&token=0375998c-f7a6-4f76-aea8-911e2bce21f2'
-                  style={{ width: 1000, height: 1000, marginTop: '45px' }}></iframe>
-              </div>
-            )}
-            {this.props.cEvent.value._id == '60797bfb2a9cc06ce973a1f4' && (
-              <div  style={{ width: 1000, margin: 'auto' }}>
-                <iframe
-                  src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/EventoAjedrez%2FCLASIFICADOS%20%20SINCELEJO%2015.08%20-%20III%20TORNEO%20DE%20AJEDREZ%20DEL%20CARIBE%202021.pdf?alt=media&token=b2b72c1a-8c09-45e3-9bb4-17f6c5be9376'
-                  style={{ width: 1000, height: 1000, marginTop: '45px' }}></iframe>
-              </div>
-            )}          
+                     
           </div>
         )}
          

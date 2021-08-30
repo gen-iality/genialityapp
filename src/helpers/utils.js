@@ -73,7 +73,8 @@ export function handleRequestError(error) {
   return info;
 }
 
-export function parseData2Excel(data, fields) {
+export function parseData2Excel(data, fields,roles=null) {
+  console.log("ROLES==>",roles)
   let info = [];
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
@@ -127,8 +128,9 @@ export function parseData2Excel(data, fields) {
 
       return null;
     });
+    console.log("item==>",item)
     if (item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : '';
-    info[key]['Tipo asistente'] = item.rol_name ? item.rol_name : '';
+    info[key]['Tipo asistente'] = roles?.filter((role)=>role._id==item.rol_id)[0]?.name;
     info[key]['Actualizado'] = item.updated_at;
     info[key]['Creado'] = item.created_at;
     return info;

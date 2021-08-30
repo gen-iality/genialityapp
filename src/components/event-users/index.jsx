@@ -117,6 +117,18 @@ class ListEventUser extends Component {
     }
   };
 
+  rol_component = (text, item, index) => {
+    console.log("ROLES==>",this.state.rolesList)
+    if(this.state.rolesList){
+      for(let role of this.state.rolesList ){
+        if (item.rol_id==role._id) {
+          return <p>{role.name}</p>;    
+      
+    }
+  } 
+  }
+}
+
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
     if (item.updated_at !== null) {
@@ -204,6 +216,12 @@ class ListEventUser extends Component {
           return { title: item.label, dataIndex: item.name, key: item.name};
         });
       columns = [...columns, ...extraColumns];
+      let rol = {
+        title: 'Rol',
+        dataIndex: 'rol_id',
+        key: 'rol_id',
+        render: self.rol_component,
+      };
 
       let created_at = {
         title: 'Creado',
@@ -217,7 +235,7 @@ class ListEventUser extends Component {
         key: 'updated_at',
         render: self.updated_at_component,
       };
-
+      columns.push(rol);
       columns.push(created_at);
       columns.push(updated_at);
 
@@ -306,7 +324,7 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-         
+         console.log("updatedAttendees=>",updatedAttendees)
           this.setState({
             users: updatedAttendees,
             usersReq: updatedAttendees,
@@ -331,7 +349,7 @@ class ListEventUser extends Component {
     const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
     console.log("usersExport==>",attendees)
 
-    const data = await parseData2Excel(attendees, this.state.extraFields);
+    const data = await parseData2Excel(attendees, this.state.extraFields,this.state.rolesList);
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');

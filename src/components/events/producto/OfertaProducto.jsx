@@ -1,4 +1,4 @@
-import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusOutlined, PlayCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Tag, Input, Button, Typography, Space, Divider, message, Alert, Spin } from 'antd';
 import React from 'react';
 import { useState } from 'react';
@@ -16,12 +16,18 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
   const [valorProduct, setValorProduct] = useState(valuOferta);
   const [totalOferts, setTotalOferts] = useState(0);
   const [isUsd, setUsd] = useState(false);
+  const [bloquerPuja,setBloquearPuja]=useState(false)
   useEffect(()=>{
     if(product && eventId){
       obtenerOfertas()
       if(product.price.includes('USD')){
         setUsd(true)
         setSelectedValue(300)
+      }
+      //PUJA BLOQUEDA PARA UN PRODUCTO EN ESPECIFICO, SIRVE PARA NO CAMBIAR EL VALOR A OFRECER
+      if(product && product._id=='6116cae171f4b926d1363266'){
+        setBloquearPuja(true)
+        console.log("PUJA BLOQUEADA..")
       }
       setPriceProduct( product &&product.price)
       setValorProduct(obtenerValor())
@@ -229,7 +235,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
                 type='dashed'
                 shape='circle'
                 icon={<MinusOutlined style={{ color: '#2db7f5' }} />}
-                onClick={() => downvalue()}></Button>
+                onClick={() =>!bloquerPuja ?downvalue():null}></Button>
               <Input
                 readOnly
                 type='number'
@@ -243,7 +249,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
                 type='dashed'
                 shape='circle'
                 icon={<PlusOutlined style={{ color: '#2db7f5' }} />}
-                onClick={() => upvalue()}></Button>
+                onClick={() => !bloquerPuja ? upvalue():null}></Button>
             </Space>
           </Col>}
           <Col>
@@ -257,6 +263,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
               {!loadingSave ? <Button block type={'primary'} onClick={saveValue}>
                 Ofrecer
               </Button>:<Spin />}
+              <Alert showIcon type={'success'} style={{marginTop:20,marginBottom:30}} message={'Al hacer esta puja está aceptando nuestros términos y condiciones y se compromete al pago del valor ofertado en caso que ningún otro participante realice una puja por un monto superior'}/>
+             <a href={''}><PlayCircleOutlined /> Ver términos y condiciones</a>
             </Col>
           )}
           {!permission() && (
