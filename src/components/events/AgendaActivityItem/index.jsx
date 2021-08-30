@@ -73,7 +73,7 @@ function AgendaActivityItem(props) {
     <>
       {(item.isPublished == null || item.isPublished == undefined || item.isPublished) && (
         <Row
-        className='agendaHover efect-scale'
+          className='agendaHover efect-scale'
           justify='start'
           align='middle'
           onClick={() => {
@@ -243,7 +243,7 @@ function AgendaActivityItem(props) {
                   borderRadius: '15px',
                   border: `solid 2px ${event.styles.toolbarDefaultBg}`,
                   maxHeight: '280px',
-                  minHeight: '210px',
+                  minHeight: '187px',
                 }}
                 hoverable
                 className='card-agenda-desktop agendaHover efect-scale'
@@ -422,13 +422,13 @@ function AgendaActivityItem(props) {
                               </>
                             ))}
                         </Row>
-                        
                       </Row>
-                      {item.habilitar_ingreso === 'open_meeting_room' && <Button
+                      {item.habilitar_ingreso === 'open_meeting_room' && (
+                        <Button
                           size={screens.xs === true ? 'middle' : 'large'}
                           type='primary'
                           className='buttonVirtualConference'
-                          style={{marginTop:'10px'}}
+                          style={{ marginTop: '10px' }}
                           onClick={() => {
                             if (item.platform === 'zoomExterno' && item.habilitar_ingreso === 'open_meeting_room') {
                               const { eventUser, zoomExternoHandleOpen } = props;
@@ -440,10 +440,10 @@ function AgendaActivityItem(props) {
                           }}>
                           <FormattedMessage id='live.join' defaultMessage='Ingresa aquí' />
                         </Button>
-                        }
+                      )}
                     </Space>
                   </Col>
-                  <Col md={6} lg={5} xl={5} style={{ textAlign: 'right' }}>
+                  <Col md={6} lg={5} xl={5} style={{ textAlign: 'right', maxHeight:'220px' }}>
                     {meetingState == 'ended_meeting_room' && item.video ? (
                       <ReactPlayer light={true} width={'100%'} height={'100%'} url={item !== null && item.video} />
                     ) : (

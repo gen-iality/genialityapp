@@ -419,3 +419,14 @@
     object-position: center;
   }
 }
+
+.ant-ribbon-corner::after{
+      position: absolute;
+    top: -4px;
+    left: -4px;
+    width: inherit;
+    height: inherit;
+    color: rgba(0, 0, 0, 0) !important;
+    border: inherit;
+    content: '';
+}
