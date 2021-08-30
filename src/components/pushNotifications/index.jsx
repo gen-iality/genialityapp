@@ -126,7 +126,7 @@ class pushNotification extends Component {
           errorData = error.request;
         }
 
-        this.setState({ serverError: true, loader: false, errorData });
+        this.setState({ serverError: true, loader: false, errorData })
       }
     }
   }

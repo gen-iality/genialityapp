@@ -145,7 +145,7 @@ class InformativeSection extends Component {
                   <a
                     href='https://www.chesskid.com/es/login'
                     target='_blank'
-                    rel='noreferrer'
+                    rel="noreferrer"
                     className='ant-btn ant-btn-primary'
                     style={{ width: 180 }}>
                     Inscríbete

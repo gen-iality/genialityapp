@@ -157,7 +157,7 @@ class Index extends Component {
     user.birth_date = Moment(user.birth_date).format('YYYY-MM-DD HH:mm:ss');
 
     try {
-      const resp = await UsersApi.editProfile(user, user._id);
+      const resp = await UsersApi.editProfile(user, user._id)
 
       resp.birth_date = resp.birth_date ? Moment(resp.birth_date).toDate() : new Date();
       this.props.addLoginInformation(user);

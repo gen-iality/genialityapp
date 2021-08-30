@@ -240,7 +240,9 @@ const FormRegister = ({
 
         //FIN CAMPO LISTA  tipo justonebyattendee //
 
-        if (resp.status !== 'UPDATED') {
+        //if (resp.status !== 'UPDATED') {
+
+          if (resp.data && resp.data.user && resp.data.user.initial_token){
           setSuccessMessageInRegisterForm(resp.status);
           // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
           // textMessage.content = "Usuario " + statusMessage;
@@ -261,11 +263,13 @@ const FormRegister = ({
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
               window.location.replace(
-                `/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
+                //`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
+                `/landing/${eventId}?token=${resp.data.user.initial_token}`
               );
             }, 100);
+          }else{
+            window.location.replace(`/landing/${eventId}/success/${typeRegister}`);
           }
-          window.location.replace(`/landing/${eventId}/success/${typeRegister}`);
         } else {
           //Usuario ACTUALIZADO
           // let msg =

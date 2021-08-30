@@ -12,14 +12,14 @@ class Policies extends Component {
         {/* <h1 className=&quot;title&quot;>Términos y Condiciones</h1> */}
         <h1 className='title'> EVIUS - PRIVACY POLICY</h1>
         <p>
-          This is the privacy policy (“Privacy Policy”) that governs how we, Evius Inc. (“Evius,” “we,” “our&quot; or
-          “us”), use Personal Information (as defined below) that we collect, receive and store about individuals and/or
-          companies in connection with the use of: (i) the Evius event management service (“Evius Service”), (ii) the
+          This is the privacy policy (&quot;Privacy Policy&quot;) that governs how we, Evius Inc. (&quot;Evius,&quot; &quot;we,&quot; &quot;our&quot; or
+          &quot;us&quot;), use Personal Information (as defined below) that we collect, receive and store about individuals and/or
+          companies in connection with the use of: (i) the Evius event management service (&quot;Evius Service&quot;), (ii) the
           website http://www.Evius.co, and any other website that we operate (each, together with its sub-domains,
-          content and services, a “Site”); and (iii) the Evius web and mobile service application (&quot;App&quot;); and
-          any other services we provide (each individually, and collectively, the “Service”) – all, as we will provide,
+          content and services, a &quot;Site&quot;); and (iii) the Evius web and mobile service application (&quot;App&quot;); and
+          any other services we provide (each individually, and collectively, the &quot;Service&quot;) – all, as we will provide,
           develop and enhance from time to time. The Evius Service, Sites, App and any additional Services are
-          individually and collectively referred to herein as the “Services.” Please read this policy carefully. By
+          individually and collectively referred to herein as the &quot;Services.&quot; Please read this policy carefully. By
           clicking &quot;I Agree&quot; or &quot;Next&quot;, you confirm that you have read, understood and agree to this
           policy. The use of your personal information under this policy is an integral part of the Services. You are
           not required by law to provide us your personal information, and therefore providing your information is
@@ -32,24 +32,24 @@ class Policies extends Component {
           and we will also send it to you with an email message. Introduction. We have implemented this Privacy Policy
           because your privacy, and the privacy of other users, is important to us. This Privacy Policy explains our
           online information practices and the choices you can make about the way we collect and use your Personal
-          Information in connection with the Services. “Personal Information” means any information that will be used,
+          Information in connection with the Services. &quot;Personal Information&quot; means any information that will be used,
           either alone or in combination with other information, to personally identify an individual, including, but
           not limited to, a first and last name, a personal profile, an email address, a home or other physical address,
           or other contact information. Terms of Use. This Privacy Policy forms part of our Evius End User Terms of
           Service and Organizer Terms which can be viewed on the Site and which you accepted prior to using the Service
-          for the first time (collectively, “Terms”). Any capitalized but undefined term in this Privacy Policy will
+          for the first time (collectively, &quot;Terms&quot;). Any capitalized but undefined term in this Privacy Policy will
           have the meaning given to it in the Terms. What Personal Information We Collect and How We Collect It. We do
           not currently require you to provide Personal Information in order to have access to general information
           available on the Services. But, we do receive and/or collect Personal Information from you in the following
           ways: 3.1. Account.
           <br></br>
-          To use certain Services, you will be required to create an account (“Account”). We offer different options to
+          To use certain Services, you will be required to create an account (&quot;Account&quot;). We offer different options to
           create an Account, including: Online Registration Form: You may choose to complete and submit an online
           registration form. You will be asked to provide us with certain mandatory information such as your name and
           email address, that you will use for your Account. You may choose to provide optional information, as may be
           available in the online registration form. Third Party Accounts: You may choose to create an Account by
           clicking on a &quot;connect&quot; or &quot;sign-in&quot; button that we display on the Service for a
-          designated third party website or service (each a “Third Party Account”), including but not limited to,
+          designated third party website or service (each a &quot;Third Party Account&quot;), including but not limited to,
           LinkedIn, Facebook or Twitter. Doing so will enable you to link your Service Account and your Third Party
           Account. If you choose this option, then you will be required to approve the connection as well as the types
           of information (which may include Personal Information) that we will obtain from your Third Party Account and
@@ -70,7 +70,7 @@ class Policies extends Component {
           AND CRIMINAL RECORDS. Evius DISCLAIMS ALL LIABILITY TO ANY USE, MISUSE, UNLAWFUL USE OR UNAUTHORIZED USE OF
           SUCH DATA. Regardless of which method you choose to register your Account, we will send an email message to
           the email address that you have provided to instruct you how to confirm your registration. 3.2. &quot;Contact
-          Us&quot; Information If you send us a “Contact Us” request, whether by submitting an online form that we make
+          Us&quot; Information If you send us a &quot;Contact Us&quot; request, whether by submitting an online form that we make
           available or by sending an email to an email address that we display, you will be required to provide us with
           certain information, such as your name and email address in order to send the message to us. If you wish to
           contact Evius by regular mail, the updated Evius physical addresses are available
@@ -80,20 +80,20 @@ class Policies extends Component {
           the Services to send an invitation email to your friend’s external email address. If you send or post an
           invitation message, we will store Personal Information about the recipient such as their email address or
           their third party website account user name and ID. 3.4. Location Data We provide certain location-based
-          services (“Location Services”) in connection with the Services that are dependent on data related to the
-          geographic location of your mobile device used for the Service (“Location Data”). If you choose to participate
+          services (&quot;Location Services&quot;) in connection with the Services that are dependent on data related to the
+          geographic location of your mobile device used for the Service (&quot;Location Data&quot;). If you choose to participate
           in these Location Services, you agree that we will collect or obtain your Location Data. You may use the
           settings on your mobile device to turn off location-sharing features.
         </p>{' '}
         <br></br>
         <p>
           3.5. Profile Some parts of the Services enable you to build a public profile in connection with your Account
-          (“Public Profile”). Your Public Profile will include your name and other information that you choose to
+          (&quot;Public Profile&quot;). Your Public Profile will include your name and other information that you choose to
           include in your Public Profile, such as your gender and a profile picture, and you can control which such
           information will appear on your Public Profile. In some cases, even if you do not create a Public Profile, the
           applicable Event Organizer may create a public profile for you, based on the information you provided while
           registering for the Services or event, and publish such public profile amongst the profiles of other attendees
-          of such event (the “Event Community”). If you do not want the Event Organizer to create such a public profile
+          of such event (the &quot;Event Community&quot;). If you do not want the Event Organizer to create such a public profile
           for you and publish it automatically within the Event Community, opt out by visiting your Account settings.
           PLEASE USE CAUTION WHEN UPLOADING CONTENT TO YOUR PUBLIC PROFILE. THE DATA THAT YOU UPLOAD WILL BE AVAILABLE
           TO OTHERS. 3.6. Purchases. Our Services include the option to purchase certain products or services from us or
@@ -111,8 +111,8 @@ class Policies extends Component {
           stamp, referring/exit pages, clicked pages and any other information your browser may send to us. We use such
           information to analyze trends, administer the Services, track users&apos; movements in connection with their
           use of the Services, and gather demographic information. 3.8. Cookies and Other Tracking Technologies. Our
-          Services utilize “cookies” -- anonymous identifiers and other tracking technologies -- in order for us to
-          provide our Services and present you with information that is customized for you. A “cookie” is a small text
+          Services utilize &quot;cookies&quot; -- anonymous identifiers and other tracking technologies -- in order for us to
+          provide our Services and present you with information that is customized for you. A &quot;cookie&quot; is a small text
           file that may be used, for example, to collect information about activity on the Services. Certain cookies and
           other technologies serve to recall Personal Information, such as an IP address, previously indicated by a
           user. Most browsers allow you to control cookies, including whether or not to accept them and how to remove
@@ -122,7 +122,7 @@ class Policies extends Component {
           Service. Such information includes your mobile device type, mobile device ID, and date and time stamps of
           Services use. In addition, we deploy analytics technologies within the Service to help us gather aggregate
           statistics. Publicly Available Information. Publicly Available Information. Your Public Profile and any
-          publicly available content that you post on or via the Services (“User Submissions”) will be publicly
+          publicly available content that you post on or via the Services (&quot;User Submissions&quot;) will be publicly
           available to other users of the Services and will also be accessed and used by people off the Services. For
           instance, if you view another user’s profile or &quot;like&quot; a certain event within the Services, such
           information can be viewed by others. The notices and tools that we provide on the Services should help inform
@@ -133,7 +133,7 @@ class Policies extends Component {
           through the Services, then we will use such Personal Information in the following ways: 5.1. We will use your
           Personal Information to provide you with support and assistance in using the Services, and to identify and
           authenticate your access to the parts of the Services that you are authorized to access. 5.2. We will use your
-          designated email address to respond to a “Contact Us” or administrative request (for example, to change your
+          designated email address to respond to a &quot;Contact Us&quot; or administrative request (for example, to change your
           password). 5.3. If you choose to send your friend an invitation email or message we will use the contact
           information that you provide, or make available, to automatically send your friend an invitation email or
           message. Your name and email address may be included in the invitation email or message. 5.4. We will share
@@ -156,7 +156,7 @@ class Policies extends Component {
           interactions and details about other events, in addition to the event that you have registered to. Choice and
           Opting Out You may choose not to receive future promotional, advertising or other Services-related emails from
           us by selecting an unsubscribe link at the bottom of each email that we send. Please note that even if you opt
-          out of receiving the foregoing emails, we will still send you a response to any “Contact Us” request as well
+          out of receiving the foregoing emails, we will still send you a response to any &quot;Contact Us&quot; request as well
           as administrative emails (for example, in connection with a password reset request) that are necessary to
           facilitate your use of the Services. At all times, you may choose whether or not to provide or disclose
           Personal Information. If you choose not to provide mandatory Personal Information, you may still visit parts
@@ -199,7 +199,7 @@ class Policies extends Component {
           purposes. To make such a request, please send an email to support@Evius.co. You can also write to us. Our
           updated office addresses are published on our &quot;Contact Us&quot; page, at:https://www.Evius.co/contact.
           Please note that we are only required to respond to one request per customer each year. Our California Do Not
-          Track Notice. We do not currently respond or take any action with respect to web browser “do not track”
+          Track Notice. We do not currently respond or take any action with respect to web browser &quot;do not track&quot;
           signals or other mechanisms that provide consumers the ability to exercise choice regarding the collection of
           personally identifiable information about an individual consumer’s online activities over time and across
           third-party web sites or online services. We will allow third parties, such as companies that provide us with

@@ -195,7 +195,7 @@ function AgendaActivityItem(props) {
           <Col xs={0} sm={0} md={24} lg={24} xxl={24}>
             {/* card de la genda en desktop */}
             <Card
-              style={{ borderRadius: '15px', border: `solid 2px ${event.styles.toolbarDefaultBg}`, maxHeight: '300px', minHeight:'210px' }}
+              style={{ borderRadius: '15px', border: `solid 2px ${event.styles.toolbarDefaultBg}`, overflow:'hidden',maxHeight: '300px', minHeight:'210px' }}
               hoverable
               className='card-agenda-desktop agendaHover efect-scale'
               bodyStyle={{ padding: '10px' }}>
