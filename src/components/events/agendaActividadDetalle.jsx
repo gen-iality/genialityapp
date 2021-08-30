@@ -51,8 +51,8 @@ const tailLayout = {
 
 let AgendaActividadDetalle = (props) => {
   let cSurveys = UseSurveysContext();
-  let contextUser = UseCurrentUser();
-  let cUser = contextUser?contextUser.value:null;
+  let cUser = UseCurrentUser();
+ 
   
   let { activity_id } = useParams();
   let [idSpeaker, setIdSpeaker] = useState(false);
