@@ -19,7 +19,7 @@ import {
   Space,
   InputNumber,
 } from 'antd';
-import { InfoCircleOutlined, LoadingOutlined, ShopOutlined, UploadOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, LoadingOutlined, PlayCircleOutlined, ShopOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
@@ -460,7 +460,7 @@ const FormRegister = ({
       }
 
       if (type === 'boolean') {
-        input = (
+        input = (<>
           <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value)}>
             {mandatory ? (
               <span>
@@ -471,6 +471,8 @@ const FormRegister = ({
               label
             )}
           </Checkbox>
+           {eventId == '60cb7c70a9e4de51ac7945a2' &&  <Row style={{marginTop:20}}> <a target='_blank' rel="noreferrer" href={'https://tiempodejuego.org/tyclaventana/'}><PlayCircleOutlined /> Ver términos y condiciones</a></Row>}
+        </>
         );
       }
 
@@ -741,7 +743,7 @@ const FormRegister = ({
                     </Button>
                   </Form.Item>
                 </Col>
-              </Row>
+              </Row>             
             </Form>
           </Card>
         ) : (

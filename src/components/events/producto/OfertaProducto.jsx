@@ -264,7 +264,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
                 Ofrecer
               </Button>:<Spin />}
               <Alert showIcon type={'success'} style={{marginTop:20,marginBottom:30}} message={'Al hacer esta puja está aceptando nuestros términos y condiciones y se compromete al pago del valor ofertado en caso que ningún otro participante realice una puja por un monto superior'}/>
-             <a href={''}><PlayCircleOutlined /> Ver términos y condiciones</a>
+             <a target='_blank' rel="noreferrer" href={'https://tiempodejuego.org/tyclaventana/'}><PlayCircleOutlined /> Ver términos y condiciones</a>
             </Col>
           )}
           {!permission() && (
