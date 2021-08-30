@@ -251,7 +251,6 @@ class menuLanding extends Component {
     } else {
       newMenu.allow_register = false;
     }
-
     await Actions.put(`api/events/${this.props.event._id}`, newMenu);
     toast.success('Información guardada');
     message.destroy(loadingSave.key);

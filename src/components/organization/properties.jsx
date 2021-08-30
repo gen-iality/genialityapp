@@ -116,7 +116,6 @@ class Properties extends Component {
         break;
     }
   };
-  //*********** FIN CAMPOS EVENTO
 
   //Envío de datos
   async submit(e) {
@@ -151,7 +150,7 @@ class Properties extends Component {
   }
 
   render() {
-    const { fields, inputValue, newField, loading } = this.state;
+    const { fields, inputValue, newField, loading } = this.state
     return (
       <React.Fragment>
         <div className='level'>

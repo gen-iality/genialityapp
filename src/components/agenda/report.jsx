@@ -67,7 +67,7 @@ class ReportList extends Component {
   };
 
   filterByDay(day, agenda) {
-    let list;
+    let list
     if(day && day!=''){
      list = agenda.filter(
       (agenda) =>
