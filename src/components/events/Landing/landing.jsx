@@ -29,6 +29,8 @@ import AppointmentModal from '../../networking/appointmentModal';
 import { EnableGTMByEVENT } from './helpers/tagManagerHelper';
 /** Google Analytics */
 import { EnableAnalyticsByEVENT } from './helpers/analyticsHelper';
+/** Facebook Pixel */
+import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 import { Ripple } from 'react-preloaders';
 
 const iniitalstatetabs = {
@@ -174,6 +176,7 @@ const Landing = (props) => {
         />
         <EnableGTMByEVENT />
         <EnableAnalyticsByEVENT />
+        <EnableFacebookPixelByEVENT/>
       </Layout>
     </>
   );

@@ -160,6 +160,10 @@ class General extends Component {
     const { name, value } = e.target;
     this.setState({ event: { ...this.state.event, [name]: value } });
   };
+  facebookpixelid = (e) => {
+    const { name, value } = e.target;
+    this.setState({ event: { ...this.state.event, [name]: value } });
+  };
 
   //Cambio en los input
   handleChange = (e) => {
@@ -431,6 +435,7 @@ class General extends Component {
       language: event.language ? event.language : 'es',
       googleanlyticsid: event.googleanlyticsid || null,
       googletagmanagerid: event.googletagmanagerid || null,
+      facebookpixelid: event.facebookpixelid || null,
       itemsMenu:
         event.allow_register === 'true' || event.allow_register === true
           ? { ...this.state.itemsMenu, tickets: this.state.registerForm }
@@ -1057,6 +1062,19 @@ class General extends Component {
                     placeholder='GTM-XXXXXX'
                     value={event.googletagmanagerid}
                     onChange={this.googletagmanagerid}
+                  />
+                </div>
+              </div>
+              <div className='field'>
+                <label className='label has-text-grey-light'>Id Facebook Pixel</label>
+                <div className='control'>
+                  <input
+                    className='input'
+                    name={'facebookpixelid'}
+                    type='text'
+                    placeholder='014180041516129'
+                    value={event.facebookpixelid}
+                    onChange={this.facebookpixelid}
                   />
                 </div>
               </div>
