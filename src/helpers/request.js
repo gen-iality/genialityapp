@@ -226,8 +226,8 @@ export const EventsApi = {
   metricsByActivity: async (id) => {
     return await Actions.getOne(`/api/events/${id}/`, 'totalmetricsbyactivity');
   },
-  metricsRegisterBydate: async (id, type) => {
-    return await Actions.get(`/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}`);
+  metricsRegisterBydate: async (id, type,fechaInicial,fechaFinal) => {
+    return await Actions.get(`/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`);
   },
   //obtener products subasta silenciosa
   getProducts: async (eventId) => {

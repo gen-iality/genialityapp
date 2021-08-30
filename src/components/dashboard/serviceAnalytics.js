@@ -57,8 +57,9 @@ export const totalsMetricasActivityDetails = async (eventId) => {
 };
 
 export const metricasRegisterByDate = async (eventId) => {
-  let listmetric=[]  
-  let metrics = await EventsApi.metricsRegisterBydate(eventId, 'created_at'); 
+  let listmetric=[]
+  let fechaActual=moment().format("YYYY-MM-DD")  
+  let metrics = await EventsApi.metricsRegisterBydate(eventId, 'created_at','2016-01-01',fechaActual); 
   metrics.map((metric)=>{
     metric={...metric,date:moment(metric.date).format("YYYY/MM/DD")}
     listmetric.push(metric)
