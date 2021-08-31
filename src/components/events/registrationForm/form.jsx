@@ -465,7 +465,6 @@ const FormRegister = ({
         input = <ReactSelect options={m.options} isMulti name={name} />;
       }
 
-<<<<<<< HEAD
       if (type === 'boolean') {
         input = (
           <>
@@ -486,18 +485,6 @@ const FormRegister = ({
                   <PlayCircleOutlined /> Ver términos y condiciones
                 </a>
               </Row>
-=======
-      if (type === 'boolean') {       
-        input = (<>
-          <Checkbox onChange={(val)=>{eventUser['properties'][target]=val.target.checked}} required={mandatory} {...props} key={key} name={name}  defaultChecked={Boolean(value!==''?value:true)}>
-            {mandatory ? (
-              <span>
-                <span style={{ color: 'red' }}>* </span>
-                <strong>{label}</strong>
-              </span>
-            ) : (
-              label
->>>>>>> bbd6fa57ea163b8ed4b3c10261c40cf27f1cb887
             )}
           </>
         );
@@ -651,11 +638,11 @@ const FormRegister = ({
       //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
 
       if (type === 'boolean' && mandatory) {
-        console.log("MANDATORY==>",mandatory)
-        let textoError = intl.formatMessage({ id: 'form.field.required' });      
-       value=!value?false:value
-       console.log("VALUE BOOL==>",value)
-       rule={required:mandatory}
+        console.log('MANDATORY==>', mandatory);
+        let textoError = intl.formatMessage({ id: 'form.field.required' });
+        value = !value ? false : value;
+        console.log('VALUE BOOL==>', value);
+        rule = { required: mandatory };
         //rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
       }
 
