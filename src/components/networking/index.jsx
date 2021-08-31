@@ -677,7 +677,7 @@ class ListEventUser extends Component {
                                               <div key={`public-field-${userIndex}-${propertyIndex}`}>
                                                 <p>
                                                   <b>{`${property.label}: `}</b>
-                                                  {formatDataToString(users.properties[property.name], property)}
+                                                  {formatDataToString(property.type!=='codearea'?users.properties[property.name]:"(+"+users.properties['code']+")"+users.properties[property.name], property)}
                                                 </p>
                                               </div>
                                             )

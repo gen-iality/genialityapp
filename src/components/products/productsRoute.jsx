@@ -7,6 +7,8 @@ import { withRouter } from 'react-router-dom';
  * ---------------------*/
 import Product from './product';
 import AddProduct from './addProduct';
+import Configuration from './configuration';
+import OfertProduts from './oferts';
 
 const ProductSectionRoutes = (props) => 
 {
@@ -20,7 +22,13 @@ const ProductSectionRoutes = (props) =>
      </Route>       
       <Route path={`${path}/addproduct/:id?`}>
        <AddProduct {...props} />
-      </Route>        
+      </Route>
+      <Route exact path={`${path}/configuration`}>
+       <Configuration {...props} />
+      </Route>
+      <Route exact  path={`${path}/:id/oferts`}>
+       <OfertProduts {...props} />
+      </Route>         
     </Switch>
     
   );

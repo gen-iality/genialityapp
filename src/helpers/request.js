@@ -226,15 +226,15 @@ export const EventsApi = {
   metricsByActivity: async (id) => {
     return await Actions.getOne(`/api/events/${id}/`, 'totalmetricsbyactivity');
   },
-  metricsRegisterBydate: async (id, type) => {
-    return await Actions.get(`/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}`);
+  metricsRegisterBydate: async (id, type,fechaInicial,fechaFinal) => {
+    return await Actions.get(`/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`);
   },
   //obtener products subasta silenciosa
   getProducts: async (eventId) => {
     return await Actions.get(`/api/events/${eventId}/products`);
   },
-  storeGalley: async (eventId, galleryId, data) => {
-    return await Actions.post(`/api/events/${eventId}/galleries/${galleryId}/silentauctionmail`, data);
+  storeOfert: async (eventId, productId, data) => {
+    return await Actions.post(`/api/events/${eventId}/products/${productId}/silentauctionmail`, data);
   },
   getOneProduct: async (eventId,idproduct) => {
     return await Actions.get(`/api/events/${eventId}/products/${idproduct}`);
@@ -247,6 +247,12 @@ export const EventsApi = {
   },
   deleteProduct:async (eventId,galleryId) => {
     return await Actions.delete(`/api/events/${eventId}/products`,galleryId);
+  },
+  validPrice: async (eventId, productId) => {
+    return await Actions.get(`/api/events/${eventId}/products/${productId}/minimumauctionvalue`);
+  },
+  ofertsProduct: async (eventId, productId) => {
+    return await Actions.get(`api/events/${eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${productId}"}]`);
   },
 };
 export const InvitationsApi = {

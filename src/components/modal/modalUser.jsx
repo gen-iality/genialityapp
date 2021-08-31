@@ -138,6 +138,15 @@ class UserModal extends Component {
           `/api/events/${this.props.eventId}/eventusers/${this.state.userId}`,
           snap
         );
+        let updateRol=await Actions.put(
+          `/api/events/${this.props.eventId}/eventusers/${this.state.userId}/updaterol`,
+          {
+            rol_id:this.state.rol
+          }        
+        );
+        if(updateRol){
+            console.log("updateRol",updateRol)
+        }
         if (this.props.byActivity && respAddEvento.user) {
           await this.props.checkinActivity(this.state.userId, snap.checked_in, snap);
           this.closeModal();
