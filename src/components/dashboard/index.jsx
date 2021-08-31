@@ -479,7 +479,7 @@ class DashboardEvent extends Component {
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                         valueStyle={{ fontSize: '36px' }}
                         title='Duración promedio de un usuario'
-                        value={this.state.metricsGnal ? this.state.metricsGnal.avg_time : 0}
+                        value={this.state.metricsGnal ? !isNaN(this.state.metricsGnal.avg_time)?this.state.metricsGnal.avg_time: 0:0}
                         prefix={<FieldTimeOutlined />}
                         suffix='min'
                       />
