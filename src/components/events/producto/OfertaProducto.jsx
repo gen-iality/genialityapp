@@ -31,7 +31,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       }
       setPriceProduct( product &&product.price)
       setValorProduct(obtenerValor())
-      console.log("ISUSD==>",product.price.includes('USD'))
+      //console.log("ISUSD==>",product.price.includes('USD'))
       let minValueUp=product.price.includes('USD')?50:50000
       let valueOfertaMin=parseFloat(obtenerValor())+minValueUp
       setValueOferta(valueOfertaMin)
@@ -138,7 +138,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
         .replace('.', '').replace(',', ''):0;
         //
         console.log("VALUE NUMBER==>",valueNumber)
-        if (valuOferta>=valueNumber) {
+        if (valuOferta>valueNumber) {
           let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
           if(respuestaApi){
          // console.log('RESPUESTA_API==>', respuestaApi);
