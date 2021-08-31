@@ -19,7 +19,7 @@ import {
   Space,
   InputNumber,
 } from 'antd';
-import { InfoCircleOutlined, LoadingOutlined, ShopOutlined, UploadOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, LoadingOutlined, PlayCircleOutlined, ShopOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
@@ -126,8 +126,10 @@ const FormRegister = ({
   const [typeRegister, setTypeRegister] = useState('free');
   const [payMessage, setPayMessage] = useState(false);
   const [form] = Form.useForm();
-  let [areacodeselected, setareacodeselected] = useState(null);
+  let [areacodeselected, setareacodeselected] = useState(57);
   let [numberareacode, setnumberareacode] = useState(null);
+  let [fieldCode, setFieldCode] = useState(null);
+  initialValues.codearea=null;
 
   useEffect(() => {
     let formType = !eventUserId ? 'register' : 'transfer';
@@ -146,13 +148,20 @@ const FormRegister = ({
    
     if (!extraFields) return;
     let codeareafield = extraFields.filter((field) => field.type == 'codearea');
-  if(codeareafield ){
+  if(codeareafield[0] ){
+    
     let phonenumber =
-      eventUser && codeareafield[0] && eventUser['properties'] ? eventUser['properties'][codeareafield[0].name] : '';      
-    if (phonenumber && areacodeselected==null && numberareacode==null ) {
+      eventUser && codeareafield[0] && eventUser['properties'] ? eventUser['properties'][codeareafield[0].name] : '';
+      let codeValue =
+      eventUser&& eventUser['properties'] ? eventUser['properties']["code"] : '';
+      console.log( eventUser && eventUser['properties']&&eventUser['properties'])      
+      setFieldCode(codeareafield[0].name)      
+    if (phonenumber &&  numberareacode==null ) {
+      console.log("PHONE ACA==>",phonenumber.toString())
       let splitphone = phonenumber.toString().split(' ');
-      setareacodeselected(splitphone[0]);
-      setnumberareacode(splitphone[2]);
+      setareacodeselected(codeValue );
+      //setnumberareacode( );
+      console.log("SPLIT2==>",codeValue  )
     }
   }
   }, [extraFields]);
@@ -170,11 +179,14 @@ const FormRegister = ({
     setEvent(data);
   };
 
-  const onFinish = async (values) => {   
-    if (numberareacode) {
-      values.telefono = `${areacodeselected}  ${numberareacode}`;
+  const onFinish = async (values) => {    
+    if (areacodeselected) {
+      //values[fieldCode] = `${numberareacode}`;
+      values['code']=areacodeselected;
     }
-    setSectionPermissions({ view: false, ticketview: false });
+    console.log("VALUES;",values)
+   
+  setSectionPermissions({ view: false, ticketview: false });
     values.password = password;
     let ruta = '';
     if (imageAvatar) {
@@ -293,18 +305,22 @@ const FormRegister = ({
   };
 
   const valuesChange = (allFields) => {
-    updateFieldsVisibility(conditionals, allFields);
+      updateFieldsVisibility(conditionals, allFields);
   };
 
   const updateFieldsVisibility = (conditionals, allFields) => {    
     let newExtraFields = [...extraFieldsOriginal];
+    console.log("newExtraFields",newExtraFields)
+    console.log("CONDITIONALS=>",conditionals)   
     newExtraFields = newExtraFields.filter((field) => {
       let fieldShouldBeDisplayed = false;
       let fieldHasCondition = false;
 
       //para cada campo revisamos si se cumplen todas las condiciones para mostrarlo
+      
       conditionals.map((conditional) => {
         let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
+        console.log("fieldExistInThisCondition==>",fieldExistInThisCondition)
         if (!fieldExistInThisCondition) return;
 
         fieldHasCondition = true;
@@ -319,7 +335,7 @@ const FormRegister = ({
 
         if (fulfillConditional) {
           fieldShouldBeDisplayed = true;
-        }
+        }        
       });
       return (fieldHasCondition && fieldShouldBeDisplayed) || !fieldHasCondition;
     });
@@ -394,13 +410,12 @@ const FormRegister = ({
       );
 
       if (type === 'codearea') {
-        input = (
-          <Input.Group compact>
-            <Select
-              style={{ width: '30%' }}
-              value={areacodeselected}
-              name={name}
-              onChange={(val) => setareacodeselected(val)}
+        const prefixSelector =(
+          <Select
+              style={{ width: '100%' }}
+              value={areacodeselected}              
+              //required={mandatory}
+              onChange={(val) => {setareacodeselected(val);console.log(val)}}
               placeholder='Codigo de area del pais'>
               {areaCode.map((code, key) => {
                 return (
@@ -410,16 +425,19 @@ const FormRegister = ({
                 );
               })}
             </Select>
+        );
+        input = (        
             <Input
-              onChange={(e) => setnumberareacode(e.target.value)}
-              value={numberareacode}
-              name='telefono'
+            addonBefore={prefixSelector} 
+              //onChange={(e) => setnumberareacode(e.target.value)}
+              defaultvalue={value?.toString().split()[2]}
+              name={name}
+              //required={mandatory}
               type='number'
               key={key}
-              style={{ width: '70%' }}
+              style={{ width: '100%' }}
               placeholder='Numero de telefono'
-            />
-          </Input.Group>
+            />     
         );
       }
 
@@ -442,7 +460,7 @@ const FormRegister = ({
       }
 
       if (type === 'boolean') {
-        input = (
+        input = (<>
           <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value)}>
             {mandatory ? (
               <span>
@@ -453,6 +471,8 @@ const FormRegister = ({
               label
             )}
           </Checkbox>
+           {eventId == '60cb7c70a9e4de51ac7945a2' &&  <Row style={{marginTop:20}}> <a target='_blank' rel="noreferrer" href={'https://tiempodejuego.org/tyclaventana/'}><PlayCircleOutlined /> Ver términos y condiciones</a></Row>}
+        </>
         );
       }
 
@@ -608,12 +628,15 @@ const FormRegister = ({
         rule = { validator: (_, value) => (value ? Promise.resolve() : Promise.reject(textoError)) };
       }
 
+      console.log("RULES==>",rule,name)
+
       return (
         <div key={'g' + key} name='field'>
           {type === 'tituloseccion' && input}
           {type !== 'tituloseccion' && (
             <>
               <Form.Item
+              // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
                 // style={eventUserId && hideFields}
                 valuePropName={type === 'boolean' ? 'checked' : 'value'}
                 label={
@@ -720,7 +743,7 @@ const FormRegister = ({
                     </Button>
                   </Form.Item>
                 </Col>
-              </Row>
+              </Row>             
             </Form>
           </Card>
         ) : (

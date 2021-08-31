@@ -89,11 +89,11 @@ function AddNews(props) {
   }
 
   const changeDescriptionShort = (e) => {   
-      setDescriptionShort(e);    
+      setDescriptionShort(e);   
   };
 
-  const changeDescription = (e) => {    
-      setDescription(e);    
+  const changeDescription = (e) => {   
+      setDescription(e);   
   };
   const isUrl = string => {
     try { return Boolean(new URL(string)); }

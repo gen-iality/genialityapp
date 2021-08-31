@@ -18,7 +18,7 @@ class Messages extends Component {
         <Route exact path={`${match.url}/`} render={() => <InvitationsList eventId={this.props.event._id} />} />
         <Route
           exact
-          path={`${match.url}/detail`}
+          path={`${match.url}/detail/:id`}
           render={() => <InvitationDetail event={this.props.event} close={this.closeDetail} />}
         />
         {timeout && <LogOut />}

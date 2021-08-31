@@ -113,7 +113,7 @@ export const toolbarEditor = {
     [{ size: [] }],
     [{ align: [] }],
     [{ syntax: true }],
-    [('bold', 'italic', 'blockquote')],
+    ['bold', 'italic', 'blockquote'],
     [{ list: 'ordered' }, { list: 'bullet' }],
     ['link', 'image'],
   ],

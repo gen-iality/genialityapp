@@ -148,7 +148,8 @@ const DrawerProfile = (props) => {
           style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'scroll' }}>
           {(!userSelected || !propertiesProfile ) && <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>}
            
-          {//userSelected._id == cUser.value._id ? (            
+          {//userSelected._id == cUser.value._id ? ( 
+                 
             <List
               bordered
               dataSource={propertiesProfile && propertiesProfile.propertiesUserPerfil }
@@ -159,7 +160,7 @@ const DrawerProfile = (props) => {
                   <List.Item>   
                     <List.Item.Meta
                       title={item.label}
-                      description={formatDataToString(userSelected.properties[item.name], item)}
+                      description={formatDataToString(item.type!=='codearea'?userSelected.properties[item.name]:"(+"+userSelected.properties["code"]+")"+userSelected.properties[item.name], item)}
                     />
                   </List.Item>
                 )
