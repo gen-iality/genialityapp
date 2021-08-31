@@ -141,15 +141,17 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
         if (valuOferta>=valueNumber) {
           let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
           if(respuestaApi){
-          console.log('RESPUESTA_API==>', respuestaApi);
+         // console.log('RESPUESTA_API==>', respuestaApi);
           message.success('Oferta realizada correctamente..!');
           updateValues(true)
           }         
         }else{
-          setValueOferta(valueNumber);
+          let minValueUp=product.price.includes('USD')?50:50000
+          let valueOfertaMin=parseFloat(valueNumber)+minValueUp
+          setValueOferta(valueOfertaMin);
           setPriceProduct(valueResp);
           setValorProduct(valueNumber);
-          console.log("VALUE RESP==>",valueResp)
+         // console.log("VALUE RESP==>",valueResp)
           message.error('Actualmente se ha ofertado un valor mucho mayor para esta obra!');
 
         }
@@ -168,11 +170,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
   };
   //BOTON MENOS
   const downvalue = () => {
-    let minValueUp=product.price.includes('USD')?50:50000
-    console.log("VALUE OFERTA==>",valuOferta)
-    console.log("VALOR PRODUCT==>",+valuOferta - selectedValue,valorProduct+minValueUp)
-    if (+valuOferta - selectedValue >= +valorProduct+minValueUp) {
-      console.log("ENTRA ACA==>")
+    let minValueUp=product.price.includes('USD')?50:50000   
+    if (+valuOferta - selectedValue >= +valorProduct+minValueUp) {  
       setValueOferta(+valuOferta - selectedValue);
     }
   };
