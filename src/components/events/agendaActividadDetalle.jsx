@@ -32,7 +32,6 @@ import { UseCurrentUser } from '../../Context/userContext';
 import { UseSurveysContext } from '../../Context/surveysContext';
 import { HelperContext } from '../../Context/HelperContext';
 
-
 import { useHistory } from 'react-router-dom';
 import SurveyDrawer from './surveys/components/surveyDrawer';
 
@@ -52,8 +51,7 @@ const tailLayout = {
 let AgendaActividadDetalle = (props) => {
   let cSurveys = UseSurveysContext();
   let cUser = UseCurrentUser();
- 
-  
+
   let { activity_id } = useParams();
   let [idSpeaker, setIdSpeaker] = useState(false);
   let [orderedHost, setOrderedHost] = useState([]);
@@ -67,8 +65,8 @@ let AgendaActividadDetalle = (props) => {
   const [currentActivity, setcurrentActivity] = useState(null);
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
   let history = useHistory();
-  let { HandleOpenCloseMenuRigth,isCollapsedMenuRigth } = useContext(HelperContext);
-  
+  let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth } = useContext(HelperContext);
+
   const configfast = useState({});
 
   const { Title } = Typography;
@@ -129,7 +127,10 @@ let AgendaActividadDetalle = (props) => {
 
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
-      if (props.cEventUser) {
+      if (props.cEventUser && cUser.value) {
+        console.log('====================================');
+        console.log(' props.cEventUser.value', props.cEventUser.value);
+        console.log('====================================');
         TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
         Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, cUser.value._id);
       }
@@ -250,7 +251,9 @@ let AgendaActividadDetalle = (props) => {
       return (
         url_conference +
         meeting_id +
-        `&userName=${cUser.displayName ? cUser.displayName : (cUser.names?cUser.names:'Guest'+Math.floor(Math.random() * 1000))}` +
+        `&userName=${
+          cUser.displayName ? cUser.displayName : cUser.names ? cUser.names : 'Guest' + Math.floor(Math.random() * 1000)
+        }` +
         `&email=${cUser.email ? cUser.email : 'emaxxxxxxil@gmail.com'}` +
         `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
         `&host=${eventUserUtils.isHost(cUser, props.cEvent.value)}`
@@ -364,7 +367,6 @@ let AgendaActividadDetalle = (props) => {
   {
     Moment.locale(window.navigator.language);
   }
-
 
   return (
     <div className='is-centered'>
@@ -654,7 +656,7 @@ let AgendaActividadDetalle = (props) => {
                     />
                   </div>
                 )}
-
+                              
               {(meetingState === 'ended_meeting_room' || !meetingState) &&
               currentActivity !== null &&
               currentActivity.video &&
@@ -833,9 +835,8 @@ let AgendaActividadDetalle = (props) => {
                   </TabPane>
                 )}
 
-              {props.tabs 
-              // && (props.tabs.surveys === true || props.tabs.surveys === 'true') 
-              && (
+              {props.tabs && (
+                // && (props.tabs.surveys === true || props.tabs.surveys === 'true')
                 <TabPane
                   tab={
                     <>

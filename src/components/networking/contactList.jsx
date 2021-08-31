@@ -108,7 +108,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
                             <div key={'contact-property' + key}>
                               {
                                 <p>
-                                  <strong>{property.label}</strong>: {formatDataToString(user[property.name], property)}
+                                  <strong>{property.label}</strong>: {formatDataToString(property.type!='codearea'?user[property.name]:"("+user[`code`]+")"+user[property.name], property)}
                                 </p>
                               }
                             </div>
