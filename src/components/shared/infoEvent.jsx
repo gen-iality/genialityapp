@@ -1,25 +1,55 @@
 import React from 'react';
 import { UseEventContext } from '../../Context/eventContext';
-import { PageHeader, Space, Typography } from 'antd';
+import { Divider, PageHeader, Space, Typography } from 'antd';
 import Moment from 'moment';
-import { CalendarOutlined } from '@ant-design/icons';
+import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 
 const InfoEvent = () => {
   let cEvent = UseEventContext();
   const { Paragraph } = Typography;
+  console.log('Marlon', cEvent);
 
   return (
     <PageHeader
-    style={{paddingBottom:'10px'}}
+      style={{
+        paddingLeft: '30px',
+        paddingRight: '30px',
+        paddingTop: '10px',
+        paddingBottom: '20px',
+        marginLeft: '20px',
+        marginRight: '20px',
+        borderTop: `5px solid ${cEvent.value.styles.toolbarDefaultBg}`,
+        borderRadius: '20px',
+        backgroundColor: 'white',
+      }}
       footer={
         <Space>
-          <CalendarOutlined />
-          <time dateTime={cEvent.value.datetime_from}>{Moment(cEvent.value.datetime_from).format('llll')}</time>
-          {'-'}
-          <time dateTime={cEvent.value.datetime_from}>{Moment(cEvent.value.datetime_from).format('llll')}</time>
+          <Space wrap>
+            <Space>
+              <CalendarOutlined />
+              <time>{Moment(cEvent.value.datetime_from).format('ll')}</time>
+            </Space>
+            <Space>
+              <ClockCircleOutlined />
+              <time>{Moment(cEvent.value.datetime_from).format('LT')}</time>
+            </Space>
+          </Space>
+          <Divider type='vertical'></Divider>
+          <Space wrap>
+            <Space>
+              <CalendarOutlined />
+              <time>{Moment(cEvent.value.datetime_to).format('ll')}</time>
+            </Space>
+            <Space>
+              <ClockCircleOutlined />
+              <time>{Moment(cEvent.value.datetime_to).format('LT')}</time>
+            </Space>
+          </Space>
         </Space>
       }>
-      <Paragraph style={{fontSize:'21px', fontWeight:'bolder', marginBottom:"-10px"}}>{cEvent.value.name}</Paragraph>
+      <Paragraph style={{ fontSize: '21px', fontWeight: 'bolder', marginBottom: '-10px' }}>
+        {cEvent.value.name}
+      </Paragraph>
     </PageHeader>
   );
 };
