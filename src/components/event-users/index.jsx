@@ -117,6 +117,18 @@ class ListEventUser extends Component {
     }
   };
 
+  rol_component = (text, item, index) => {
+    console.log("ROLES==>",this.state.rolesList)
+    if(this.state.rolesList){
+      for(let role of this.state.rolesList ){
+        if (item.rol_id==role._id) {
+          return <p>{role.name}</p>;    
+      
+    }
+  } 
+  }
+}
+
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
     if (item.updated_at !== null) {
@@ -201,9 +213,15 @@ class ListEventUser extends Component {
           return item.type != 'tituloseccion';
         })
         .map((item) => {
-          return { title: item.label, dataIndex: item.name, key: item.name };
+          return { title: item.label, dataIndex: item.name, key: item.name};
         });
       columns = [...columns, ...extraColumns];
+      let rol = {
+        title: 'Rol',
+        dataIndex: 'rol_id',
+        key: 'rol_id',
+        render: self.rol_component,
+      };
 
       let created_at = {
         title: 'Creado',
@@ -217,7 +235,7 @@ class ListEventUser extends Component {
         key: 'updated_at',
         render: self.updated_at_component,
       };
-
+      columns.push(rol);
       columns.push(created_at);
       columns.push(updated_at);
 
@@ -242,7 +260,7 @@ class ListEventUser extends Component {
           let currentAttendees = [...this.state.usersReq];
           let updatedAttendees = updateAttendees(currentAttendees, snapshot);
           let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
-
+          
           let totalCheckedInWithWeight =
             Math.round(
               updatedAttendees.reduce(
@@ -260,11 +278,13 @@ class ListEventUser extends Component {
              ) / 100;
            this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight,totalWithWeight });
           
-
+          
+         
           for (let i = 0; i < updatedAttendees.length; i++) {
+            
             // Arreglo temporal para que se muestre el listado de usuarios sin romperse
             // algunos campos no son string y no se manejan bien
-            Object.keys(updatedAttendees[i].properties).forEach(function(key) {
+            Object.keys(updatedAttendees[i].properties).forEach(function(key) {            
               if (
                 !(
                   (updatedAttendees[i][key] && updatedAttendees[i][key].getMonth) ||
@@ -277,7 +297,17 @@ class ListEventUser extends Component {
               ) {
                 updatedAttendees[i]['properties'][key] = JSON.stringify(updatedAttendees[i][key]);
               }
+              if(extraFields){
+                let codearea=extraFields?.filter((field)=>field.type=='codearea')
+              if(codearea[0] && updatedAttendees[i] && Object.keys(updatedAttendees[i]).includes(codearea[0].name)){
+                
+                updatedAttendees[i][codearea[0].name]=updatedAttendees[i]['code']?"(+"+updatedAttendees[i]['code']+")"+updatedAttendees[i][key]:updatedAttendees[i][key]
+                //console.log("RESULT==>",updatedAttendees[i][key])
+              }else{
+              //console.log("ACA==>",updatedAttendees[i]['properties'][key])
               updatedAttendees[i][key] = updatedAttendees[i]['properties'][key];
+              }
+            }
             });
 
             if (updatedAttendees[i].payment) {
@@ -294,7 +324,7 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-
+         console.log("updatedAttendees=>",updatedAttendees)
           this.setState({
             users: updatedAttendees,
             usersReq: updatedAttendees,
@@ -317,8 +347,9 @@ class ListEventUser extends Component {
     e.stopPropagation();
 
     const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
+    console.log("usersExport==>",attendees)
 
-    const data = await parseData2Excel(attendees, this.state.extraFields);
+    const data = await parseData2Excel(attendees, this.state.extraFields,this.state.rolesList);
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');

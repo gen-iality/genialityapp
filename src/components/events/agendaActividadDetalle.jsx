@@ -656,7 +656,7 @@ let AgendaActividadDetalle = (props) => {
                     />
                   </div>
                 )}
-
+                              
               {(meetingState === 'ended_meeting_room' || !meetingState) &&
               currentActivity !== null &&
               currentActivity.video &&
