@@ -157,11 +157,11 @@ const FormRegister = ({
       console.log( eventUser && eventUser['properties']&&eventUser['properties'])      
       setFieldCode(codeareafield[0].name)      
     if (phonenumber &&  numberareacode==null ) {
-      console.log("PHONE ACA==>",phonenumber.toString())
+     // console.log("PHONE ACA==>",phonenumber.toString())
       let splitphone = phonenumber.toString().split(' ');
       setareacodeselected(codeValue );
       //setnumberareacode( );
-      console.log("SPLIT2==>",codeValue  )
+      //console.log("SPLIT2==>",codeValue  )
     }
   }
   }, [extraFields]);
@@ -184,7 +184,7 @@ const FormRegister = ({
       //values[fieldCode] = `${numberareacode}`;
       values['code']=areacodeselected;
     }
-    console.log("VALUES;",values)
+    //.log("VALUES;",values)
    
   setSectionPermissions({ view: false, ticketview: false });
     values.password = password;
@@ -309,9 +309,7 @@ const FormRegister = ({
   };
 
   const updateFieldsVisibility = (conditionals, allFields) => {    
-    let newExtraFields = [...extraFieldsOriginal];
-    console.log("newExtraFields",newExtraFields)
-    console.log("CONDITIONALS=>",conditionals)   
+    let newExtraFields = [...extraFieldsOriginal];      
     newExtraFields = newExtraFields.filter((field) => {
       let fieldShouldBeDisplayed = false;
       let fieldHasCondition = false;
@@ -319,8 +317,7 @@ const FormRegister = ({
       //para cada campo revisamos si se cumplen todas las condiciones para mostrarlo
       
       conditionals.map((conditional) => {
-        let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
-        console.log("fieldExistInThisCondition==>",fieldExistInThisCondition)
+        let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;       
         if (!fieldExistInThisCondition) return;
 
         fieldHasCondition = true;
@@ -623,16 +620,14 @@ const FormRegister = ({
       // let hideFields =
       //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
 
-      if (type === 'boolean' && mandatory) {
-        console.log("MANDATORY==>",mandatory)
+      if (type === 'boolean' && mandatory) {       
         let textoError = intl.formatMessage({ id: 'form.field.required' });      
-       value=!value?false:value
-       console.log("VALUE BOOL==>",value)
+       value=!value?false:value       
        rule={required:mandatory}
         //rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
       }
 
-      console.log("RULES==>",rule,name)
+      //console.log("RULES==>",rule,name)
 
       return (
         <div key={'g' + key} name='field'>
