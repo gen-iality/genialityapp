@@ -22,16 +22,19 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       obtenerOfertas()
       if(product.price.includes('USD')){
         setUsd(true)
-        setSelectedValue(300)
+        setSelectedValue(50)
       }
       //PUJA BLOQUEDA PARA UN PRODUCTO EN ESPECIFICO, SIRVE PARA NO CAMBIAR EL VALOR A OFRECER
       if(product && product._id=='6116cae171f4b926d1363266'){
         setBloquearPuja(true)
-        console.log("PUJA BLOQUEADA..")
+       
       }
       setPriceProduct( product &&product.price)
       setValorProduct(obtenerValor())
-      setValueOferta(obtenerValor())
+      console.log("ISUSD==>",product.price.includes('USD'))
+      let minValueUp=product.price.includes('USD')?50:50000
+      let valueOfertaMin=parseFloat(obtenerValor())+minValueUp
+      setValueOferta(valueOfertaMin)
     }
     async function obtenerOfertas(){
      let oferts= await EventsApi.ofertsProduct(eventId,product._id);    
@@ -66,22 +69,6 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
   //VALORES PARA SUBIR EN LA PUJA
   const valuesPuja = [
     {
-      name: 'COP 500',
-      value: 500,
-    },
-    {
-      name: 'COP 1.000',
-      value: 1000,
-    },
-    {
-      name: 'COP 5.000',
-      value: 5000,
-    },
-    {
-      name: 'COP 10.000',
-      value: 10000,
-    },
-    {
       name: 'COP 50.000',
       value: 50000,
     },
@@ -92,6 +79,10 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
     {
       name: 'COP 500.000',
       value: 500000,
+    },
+    {
+      name: 'COP 1.000.000',
+      value: 1000000,
     },
   ];
 
@@ -104,11 +95,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       {
         name: ' USD 100',
         value: 100,
-      },
-      {
-        name: 'USD 300',
-        value: 300,
-      },
+      },     
       {
         name: 'USD 500',
         value: 500,
@@ -181,8 +168,11 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
   };
   //BOTON MENOS
   const downvalue = () => {
+    let minValueUp=product.price.includes('USD')?50:50000
     console.log("VALUE OFERTA==>",valuOferta)
-    if (+valuOferta - selectedValue >= valorProduct) {
+    console.log("VALOR PRODUCT==>",+valuOferta - selectedValue,valorProduct+minValueUp)
+    if (+valuOferta - selectedValue >= +valorProduct+minValueUp) {
+      console.log("ENTRA ACA==>")
       setValueOferta(+valuOferta - selectedValue);
     }
   };

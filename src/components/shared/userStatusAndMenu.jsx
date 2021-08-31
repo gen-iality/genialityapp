@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
 import { EventsApi } from '../../helpers/request';
 import { useEffect } from 'react';
+import { useState } from 'react';
 
 const MenuStyle = {
   flex: 1,
@@ -17,6 +18,7 @@ const MenuStyle = {
 const ItemStyle = {
   backgroundColor: 'white',
   //border: '1px solid #cccccc',
+  minWidth:150,
   padding: 5,
   margin: 5,
 };
@@ -26,16 +28,21 @@ let UserStatusAndMenu = (props) => {
   let photo = props.photo;
   let name = props.name;
   let logout = props.logout;
-  let eventId = props.eventId; 
+  let eventId = props.eventId;
+  const [visibleOptions,setVisibleOptions]=useState(true) 
   useEffect(() => {
-   /* if (props.eventId && props.userEvent) {
-      eventuserData();
+    console.log("EVENTID==>",props.eventId)
+    if (props.eventId) {
+      if(props.eventId =='60cb7c70a9e4de51ac7945a2'){
+        setVisibleOptions(false)
+       //console.log("VISIBLE==>",props.eventId)
+      }
     }
 
-    async function eventuserData() {     
+   /* async function eventuserData() {     
       let user = await EventsApi.getEventUser(props.userEvent._id, props.eventId);
     }*/
-  }, [props.eventId && props.userEvent]);
+  }, [props.eventId]);
 
   let menu = (
     <Menu>
@@ -51,24 +58,24 @@ let UserStatusAndMenu = (props) => {
           <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
         </NavLink>
       </Menu.Item>
-      <Menu.Item style={ItemStyle}>
+      {visibleOptions&&<Menu.Item style={ItemStyle}>
         <Link to={`/tickets/${eventId}`}>
           <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
         </Link>
-      </Menu.Item>
-      <Menu.Item style={ItemStyle}>
+      </Menu.Item>}
+      {visibleOptions&& <Menu.Item style={ItemStyle}>
         <NavLink exact to={`/eventEdit/${eventId}#events`}>
           <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
         </NavLink>
-      </Menu.Item>
+      </Menu.Item>}
 
-      <Menu.Item style={ItemStyle}>
+      {visibleOptions&&  <Menu.Item style={ItemStyle}>
         <Link to={'/create-event'}>
           <Button type='primary' size='medium'>
             <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
           </Button>
         </Link>
-      </Menu.Item>
+      </Menu.Item>}
       <Menu.Divider />
       <Menu.Item style={ItemStyle}>
         <a onClick={logout}>

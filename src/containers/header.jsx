@@ -68,7 +68,7 @@ class Headers extends Component {
 
   setEventId = () => {
     const path = window.location.pathname.split('/');
-    const eventId = path[path.length - 1];
+    const eventId = path[2]; 
     return eventId;
   };
 
@@ -221,7 +221,7 @@ class Headers extends Component {
                 photo={photo}
                 name={name}
                 userEvent={this.state.userEvent}
-                eventId={this.state.id}
+                eventId={this.state.eventId}
                 logout={this.logout}
                 openMenu={this.openMenu}
                 loginInfo={this.props.loginInfo}

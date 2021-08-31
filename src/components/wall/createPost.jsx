@@ -8,19 +8,36 @@ import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert, Space, Spin
 import { CloudUploadOutlined, CameraOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 const { TextArea } = Input;
-import withContext  from '../../Context/withContext'
+import withContext from '../../Context/withContext';
 
-const Editor = ({ onChange, onSubmit, submitting, value,loadingsave }) => (
+const Editor = ({ onChange, onSubmit, submitting, value, loadingsave,errimage }) => (
   <div>
     <Form.Item>
       <TextArea placeholder='¿Qué está pasando?' rows={4} onChange={onChange} value={value} />
     </Form.Item>
+    {errimage && (
+      <div style={{marginBottom:30}}>
+        <Alert type='error' message='Formato de archivo incorrecto!' />
+      </div>
+    )}
 
     <Form.Item>
-     {!loadingsave && <Button id='submitPost' style={{background: loadingsave?'white':'#333F44'}} htmlType='submit' loading={submitting} onClick={onSubmit} type='primary'>
-       Enviar
-      </Button>}
-      {loadingsave&&<><Spin /> <span style={{color:'#333F44'}}>Por Favor espere...</span></>}
+      {!loadingsave && (
+        <Button
+          id='submitPost'
+          style={{ background: loadingsave ? 'white' : '#333F44' }}
+          htmlType='submit'
+          loading={submitting}
+          onClick={onSubmit}
+          type='primary'>
+          Enviar
+        </Button>
+      )}
+      {loadingsave && (
+        <>
+          <Spin /> <span style={{ color: '#333F44' }}>Por Favor espere...</span>
+        </>
+      )}
     </Form.Item>
   </div>
 );
@@ -44,7 +61,8 @@ class CreatePost extends Component {
       visible: false,
       user: null,
       image: '',
-      loadingsave:false
+      errimage: false,
+      loadingsave: false,
     };
     this.savePost = this.savePost.bind(this);
     this.previewImage = this.previewImage.bind(this);
@@ -52,12 +70,11 @@ class CreatePost extends Component {
     this.getImage = this.getImage.bind(this);
   }
 
-
   //Funcion para guardar el post y enviar el mensaje de publicacion
   async savePost() {
     this.setState({
-      loadingsave:true
-    })
+      loadingsave: true,
+    });
     let data = {
       urlImage: this.state.image,
       post: this.state.value,
@@ -69,28 +86,34 @@ class CreatePost extends Component {
         ? this.props.cUser.value.names
         : this.props.cUser.value.name
         ? this.props.cUser.value.name
-        : this.props.cUser.value.email
+        : this.props.cUser.value.email,
     };
-   
 
     //savepost se realiza para publicar el post
     var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
 
-   this.setState({ value: '', image: '', showInfo: true,loadingsave:false });
-   this.setState({ showInfo: false, visible: false, keyList: Date.now() });
-   message.success('Mensaje Publicado');
-   this.props.addPosts(newPost);
+    this.setState({ value: '', image: '', showInfo: true, loadingsave: false });
+    this.setState({ showInfo: false, visible: false, keyList: Date.now() });
+    message.success('Mensaje Publicado');
+    this.props.addPosts(newPost);
   }
 
   //Funcion para mostrar el archivo, se pasa a base64 para poder mostrarlo
   previewImage(event) {
+    const permitFile = ['png', 'jpg', 'jpeg', 'gif'];
     event.preventDefault();
     let file = event.target.files[0];
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      this.setState({ image: reader.result, inputKey: Date.now() });
-    };
+    console.log('ARCHIVO PREVIEW==>', file);
+    let extension = file.name.split('.').pop();
+    if (permitFile.indexOf(extension) > -1) {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        this.setState({ image: reader.result, inputKey: Date.now(), errimage: false });
+      };
+    } else {
+      this.setState({ errimage: true });
+    }
   }
 
   //Funcion para poder pasarla por props y obtener la selfie de cameraFeed en este componente
@@ -117,13 +140,13 @@ class CreatePost extends Component {
   //Funcion para enviar al estado el comentario del post
   handleChange = (e) => {
     this.setState({
-      value: e.target.value
+      value: e.target.value,
     });
   };
   //Funciones para mostrar o cerrar el modal que contiene el formulario para guardar post
   showModal = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
   };
 
@@ -137,17 +160,16 @@ class CreatePost extends Component {
 
   //Funcion para cerrar el modal de publicacion en caso de no realizar ninguna publicación
   handleCancel = () => {
-    this.setState({ visible: false });
+    this.setState({ visible: false, errimage: false });
   };
 
   render() {
     const { visible, hidden, image, submitting, value } = this.state;
     return (
       <div>
-
         <div>
           {this.props.cUser && (
-            <Button style={{ marginBottom: '3%',marginTop:'3%' }} type='primary' onClick={this.showModal}>
+            <Button style={{ marginBottom: '3%', marginTop: '3%' }} type='primary' onClick={this.showModal}>
               Crear Publicación
             </Button>
           )}
@@ -167,28 +189,35 @@ class CreatePost extends Component {
             />
           )}
 
-          <Modal visible={visible} title='Publicaciones' onOk={this.handleOk} onCancel={this.handleCancel} footer={[]}>           
+          <Modal visible={visible} title='Publicaciones' onOk={this.handleOk} onCancel={this.handleCancel} footer={[]}>
             <Row>
               <Col style={{ textAlign: 'center' }} xs={24} sm={24} md={24} lg={24} xl={24}>
                 <Space>
                   {/* Boton para subir foto desde la galeria del dispositivo */}
-                   <Space className='file-label ant-btn ant-btn-primary' >
-                    <input key={this.state.inputKey} style={{width:120}} className='file-input ' type='file' onChange={this.previewImage} />
-                    <span style={{paddingLeft:2}}>Subir Foto</span>
-                    <span><CloudUploadOutlined /></span>
-                   </Space>
-                   
-                  
-                  
+                  <Space className='file-label ant-btn ant-btn-primary'>
+                    <input
+                      key={this.state.inputKey}
+                      style={{ width: 120 }}
+                      className='file-input '
+                      accept='image/*'
+                      type='file'
+                      onChange={this.previewImage}
+                    />
+                    <span style={{ paddingLeft: 2 }}>Subir Foto</span>
+                    <span>
+                      <CloudUploadOutlined />
+                    </span>
+                  </Space>
+
                   {/* Boton para abrir la camara */}
                   <Space>
-                  <Button
-                    style={{ marginLeft: '3%' }}
-                    onClick={(e) => {
-                      this.setState({ hidden: true }, this.setModal2Visible(true));
-                    }}>
-                    <CameraOutlined />
-                  </Button>
+                    <Button
+                      style={{ marginLeft: '3%' }}
+                      onClick={(e) => {
+                        this.setState({ hidden: true }, this.setModal2Visible(true));
+                      }}>
+                      <CameraOutlined />
+                    </Button>
                   </Space>
                   {/* Modal para camara  */}
 
@@ -234,7 +263,14 @@ class CreatePost extends Component {
 
             <Comment
               content={
-                <Editor onChange={this.handleChange} onSubmit={this.savePost} submitting={submitting} value={value} loadingsave={this.state.loadingsave} />
+                <Editor
+                  onChange={this.handleChange}
+                  onSubmit={this.savePost}
+                  submitting={submitting}
+                  value={value}
+                  errimage={this.state.errimage}
+                  loadingsave={this.state.loadingsave}
+                />
               }
             />
           </Modal>
@@ -244,6 +280,5 @@ class CreatePost extends Component {
   }
 }
 
-
-let CreatePostWithContext = withContext(CreatePost)
+let CreatePostWithContext = withContext(CreatePost);
 export default CreatePostWithContext;

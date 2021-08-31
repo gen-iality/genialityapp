@@ -266,8 +266,8 @@ const FormRegister = ({
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
               window.location.replace(
-                //`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
-                `/landing/${eventId}?token=${resp.data.user.initial_token}`
+                eventId=='60cb7c70a9e4de51ac7945a2'?`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
+                :`/landing/${eventId}?token=${resp.data.user.initial_token}`
               );
             }, 100);
           } else {
