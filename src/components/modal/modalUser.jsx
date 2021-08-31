@@ -109,6 +109,16 @@ class UserModal extends Component {
         }
 
         let respAddEvento = await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
+        console.log("RESPUESTA ADD EVENTO==>",respAddEvento)
+        if(respAddEvento.data && respAddEvento.data.rol_id=='60e8a8b7f6817c280300dc23'){
+          let updateRol=await Actions.put(
+            `/api/events/${this.props.eventId}/eventusers/${respAddEvento.data._id}/updaterol`,
+            {
+              rol_id:this.state.rol
+            }        
+          );
+        }
+     
         if (this.props.byActivity && respAddEvento.data.user) {
           let respActivity = await Activity.Register(
             this.props.eventId,
