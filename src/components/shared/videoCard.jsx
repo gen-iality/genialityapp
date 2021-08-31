@@ -3,6 +3,7 @@ import { Card, Space, Typography, Badge } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import Moment from 'moment';
 import './videoCard.css';
+import { UseEventContext } from '../../Context/eventContext';
 
 import ReactPlayer from 'react-player';
 import EventImage from '../../eventimage.png';
@@ -10,6 +11,7 @@ import { CalendarOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
 const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
+  let cEvent = UseEventContext();
   const { Meta } = Card;
   const { Paragraph, Text, Title } = Typography;
 
@@ -36,7 +38,7 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
   return (
     <Link to={`/landing/${activity.event_id}/activity/${activity._id}`}>
       {forma === 'horizontal' ? (
-        <div className='animate__animated animate__fadeIn'>
+        <div className='animate__animated animate__fadeIn' style={{}}>
           <Card
             className={'horizontal'}
             bordered={bordered}
@@ -45,10 +47,11 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
             cover={
               <ReactPlayer
                 style={{ paddingTop: '2px' }}
-                light={true}
+                light={duration != 0 ? true : false}
                 width={'160px'}
                 height={'100px'}
                 url={activity.video}
+                onDuration={handleDuration}
               />
             }
             actions={right}
@@ -57,20 +60,26 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
               style={{}}
               description={
                 <div>
-                  <Paragraph strong={true} ellipsis={{rows:2}} >{activity.name}</Paragraph>
-                    <div size='small' style={{fontSize:'80%'}}>
-                      <i className='fas fa-calendar-alt' />
-                      <time dateTime={activity.datetime_start}>{Moment(activity.datetime_start).format('DD MMM YYYY')}</time>
-                    </div>
-                 
-                  <Space size='small'>
-                    <p>
-                      {event.organizer.name
-                        ? event.organizer.name
-                        : event.author.displayName
-                        ? event.author.displayName
-                        : event.author.names}
-                    </p>
+                  <Space direction='vertical' size={2}>
+                    <Paragraph strong ellipsis={{ rows: 2 }}>
+                      {activity.name}
+                    </Paragraph>
+                    <span style={{ fontSize: '10px' }}>
+                      <Space size='small'>
+                        <CalendarOutlined style={{ fontSize: '14px' }} />
+                        <time>{Moment(activity.datetime_end).format('DD MMM YYYY')}</time>
+                      </Space>
+                    </span>
+                    <span
+                      style={{
+                        padding: '2px 8px 2px 8px',
+                        backgroundColor: '#333F44',
+                        color: '#ffffff',
+                        borderRadius: '2px',
+                        fontSize: '12px',
+                      }}>
+                      {videoDuration(duration)}
+                    </span>
                   </Space>
                 </div>
               }
@@ -97,13 +106,13 @@ const VideoCard = ({ activity, event, bordered, right, loading, shape }) => {
               description={
                 <div>
                   <Space direction='vertical' size={-10}>
-                    <Paragraph ellipsis={{ rows: 2 }}>{activity.name}</Paragraph>
+                    <Paragraph strong ellipsis={{ rows: 2 }}>
+                      {activity.name}
+                    </Paragraph>
                     <span style={{ fontSize: '10px' }}>
                       <Space size='small'>
                         <CalendarOutlined style={{ fontSize: '14px' }} />
-                        <time dateTime={activity.datetime_end}>
-                          {Moment(activity.datetime_end).format('DD MMM YYYY')}
-                        </time>
+                        <time>{Moment(activity.datetime_end).format('DD MMM YYYY')}</time>
                       </Space>
                     </span>
                   </Space>

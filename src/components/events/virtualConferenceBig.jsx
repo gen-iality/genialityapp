@@ -3,7 +3,7 @@ import { Card, Button, Avatar, Row, Col, Tooltip, Typography, Spin, Badge, Space
 import { AgendaApi } from '../../helpers/request';
 import { firestore } from '../../helpers/firebase';
 import Moment from 'moment-timezone';
-import { FieldTimeOutlined, SettingOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, FieldTimeOutlined, PlayCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import ENVIVO from '../../EnVivo.svg';
 import { UseEventContext } from '../../Context/eventContext';
@@ -128,6 +128,7 @@ const VirtualConference = () => {
           .map((item, key) => (
             <>
               <Badge.Ribbon
+              className='animate__animated animate__bounceIn animate__delay-2s'
                 placement={screens.xs === true ? 'start' : 'end'}
                 style={{ height: 'auto' }}
                 color={item.habilitar_ingreso == 'open_meeting_room' ? 'red' : 'transparent'}
@@ -165,7 +166,9 @@ const VirtualConference = () => {
                         <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
                           {item.habilitar_ingreso == 'open_meeting_room' ? (
                             <>
-                              <img src={ENVIVO} style={{ height: '50px' }} />
+                              {/* <img src={ENVIVO} style={{ height: '50px' }} /> */}
+                              
+                              <CaretRightOutlined style={{ fontSize: '50px', color: '#DD1616' }}/>
                               <span style={{ textAlign: 'center', fontSize: '15px' }}>
                                 {<FormattedMessage id='live' defaultMessage='En vivo' />}
                               </span>
@@ -187,11 +190,11 @@ const VirtualConference = () => {
                           <Title
                             level={4}
                             ellipsis={{
-                              rows: 3, // Determina la cantidad de filas que se muestran antes de cortar el texto.
+                              rows: 2, // Determina la cantidad de filas que se muestran antes de cortar el texto.
                               expandable: true,
                               symbol: (
                                 <span style={{ color: '#2D7FD6', fontSize: '12px' }}>
-                                  {Moment.locale() == 'en' ? 'More activities' : 'Ver más actividades'}{' '}
+                                  {Moment.locale() == 'en' ? 'More activities' : 'Ver más'}
                                   {/* Se valido de esta forma porque el componente FormattedMessage no hacia
                              efecto en la prop del componente de Ant design */}
                                 </span>
@@ -201,7 +204,7 @@ const VirtualConference = () => {
                           </Title>
                          
                            
-                            <h2 style={{ color: '#7c909a', fontSize: '14px' }}>
+                            <h2 style={{ color: '#7c909a', fontSize: `${screens.xs === true ? '12px': '14px'}` }}>
                               {Moment(item.datetime_start).format('LL')}
                               <span>&nbsp;&nbsp;&nbsp;</span>
                               {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
