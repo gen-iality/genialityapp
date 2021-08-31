@@ -459,9 +459,9 @@ const FormRegister = ({
         input = <ReactSelect options={m.options} isMulti name={name} />;
       }
 
-      if (type === 'boolean') {
+      if (type === 'boolean') {       
         input = (<>
-          <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value)}>
+          <Checkbox onChange={(val)=>{eventUser['properties'][target]=val.target.checked}} required={mandatory} {...props} key={key} name={name}  defaultChecked={Boolean(value!==''?value:true)}>
             {mandatory ? (
               <span>
                 <span style={{ color: 'red' }}>* </span>
@@ -624,8 +624,12 @@ const FormRegister = ({
       //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
 
       if (type === 'boolean' && mandatory) {
-        let textoError = intl.formatMessage({ id: 'form.field.required' });
-        rule = { validator: (_, value) => (value ? Promise.resolve() : Promise.reject(textoError)) };
+        console.log("MANDATORY==>",mandatory)
+        let textoError = intl.formatMessage({ id: 'form.field.required' });      
+       value=!value?false:value
+       console.log("VALUE BOOL==>",value)
+       rule={required:mandatory}
+        //rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
       }
 
       console.log("RULES==>",rule,name)
