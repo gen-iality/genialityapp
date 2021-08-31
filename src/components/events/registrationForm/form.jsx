@@ -468,7 +468,7 @@ const FormRegister = ({
       if (type === 'boolean') {
         input = (
           <>
-            <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value)}>
+            <Checkbox onChange={(val)=>{eventUser?eventUser['properties'][target]=val.target.checked:value=val.target.checked}} required={mandatory} {...props} key={key} name={name} defaultChecked={Boolean(value?value:false)}>
               {mandatory ? (
                 <span>
                   <span style={{ color: 'red' }}>* </span>
@@ -637,15 +637,14 @@ const FormRegister = ({
       // let hideFields =
       //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
 
-      if (type === 'boolean' && mandatory) {
-        console.log('MANDATORY==>', mandatory);
-        let textoError = intl.formatMessage({ id: 'form.field.required' });
-        value = !value ? false : value;
-        console.log('VALUE BOOL==>', value);
-        rule = { required: mandatory };
+      if (type === 'boolean' && mandatory) {       
+        let textoError = intl.formatMessage({ id: 'form.field.required' });      
+       value=!value?false:value       
+       rule={required:mandatory}
         //rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
       }
 
+      //console.log("RULES==>",rule,name)
       console.log('RULES==>', rule, name);
 
       return (
