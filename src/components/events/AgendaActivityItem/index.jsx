@@ -454,7 +454,7 @@ function AgendaActivityItem(props) {
                             ? item.image
                             : event_image
                             ? event_image
-                            : 'https://via.placeholder.com/150x100/FFFFFF/FFFFFF?Text=imagen'
+                            : 'https://via.placeholder.com/150x100/FFFFFF/FFFFFF?text=imagen'
                         }
                       />
                     )}

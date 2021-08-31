@@ -7,7 +7,7 @@ import EvenTable from '../events/shared/table';
 import { handleRequestError, sweetAlert } from '../../helpers/utils';
 import Pagination from '../shared/pagination';
 import SearchComponent from '../shared/searchTable';
-import { Space, Button, Row, Col } from 'antd';
+import { Space, Button, Row, Col, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
 
@@ -84,30 +84,37 @@ class SpeakersList extends Component {
             searchResult={this.searchResult}
           />
         }>
-        <Row justify='left' gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+        <Row justify='left' gutter={[25, 25]}>
           {speakersList.map((speaker) => (
-            <Col key={speaker._id} className='gutter-row' span={6}>
+            <Col key={speaker._id} xs={12} sm={8} md={6} lg={6} xl={4} xxl={4}>
               <Card
                 hoverable
-                style={{ width: 200, margin: 5, height: '30vh', boxShadow: '1px 3px 6px 5px #cccccc' }}
-                cover={<img alt='example' src={speaker.image} />}>
-                <Meta
-                  title={speaker.name}
-                  description={
-                    <Space>
-                      <Link to={{ pathname: `${this.props.matchUrl}/speaker`, state: { edit: speaker._id } }}>
-                        <Button icon={<EditOutlined />} />
-                      </Link>
-                      <Button
-                        onClick={() => {
-                          this.remove(speaker);
-                        }}
-                        icon={<DeleteOutlined />}
-                        type='danger'
-                      />
-                    </Space>
-                  }
-                />
+                style={{ width: '100%' }}
+                bodyStyle={{padding:'10px', minHeight: '80px'}}
+                actions={[
+                  <Link key='edit' to={{ pathname: `${this.props.matchUrl}/speaker`, state: { edit: speaker._id } }}>
+                    <Button icon={<EditOutlined />} />
+                  </Link>,
+                  <Button
+                    key='delete'
+                    onClick={() => {
+                      this.remove(speaker);
+                    }}
+                    icon={<DeleteOutlined />}
+                    type='danger'
+                  />,
+                ]}
+                cover={
+                  <img
+                    style={{ height: '150px', objectFit: 'cover' }}
+                    alt='example'
+                    src={
+                      speaker.image ? speaker.image : 'https://via.placeholder.com/150x100/C6C6C6/A2A2A2?text=Sin%20Foto'
+                    }
+                  />
+                }>
+                  <Typography.Paragraph ellipsis={{rows:2}} strong>{speaker.name}</Typography.Paragraph>
+                
               </Card>
 
               {/* {' '}

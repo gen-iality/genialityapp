@@ -7,10 +7,9 @@ import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 const InfoEvent = () => {
   let cEvent = UseEventContext();
   const { Paragraph } = Typography;
-  console.log('Marlon', cEvent);
 
   return (
-    <Affix offsetTop={50}>
+    
       <PageHeader
         style={{
           paddingLeft: '30px',
@@ -51,7 +50,7 @@ const InfoEvent = () => {
           {cEvent.value.name}
         </Paragraph>
       </PageHeader>
-    </Affix>
+    
   );
 };
 
