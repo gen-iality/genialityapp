@@ -28,7 +28,7 @@ const ListVideoCard = () => {
   return (
     <>
       {existActivity == 1 && (
-        <Row>
+        <Row gutter={[20,20]} style={{margin:'25px'}}>
          
           {activitiesEvent &&
             activitiesEvent.map((activity, index) => {
