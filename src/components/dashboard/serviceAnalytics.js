@@ -169,7 +169,7 @@ export const queryReportGnalByMoth = async (eventID) => {
   }
     //Función que permite obtener metricas por vistas de actividad
    export const obtenerMetricasByView = (view,metricsGnal) => {
-      let metrics = metricsGnal.filter((m) => m.view == view)[0];
+      let metrics = metricsGnal?.filter((m) => m.view == view)[0];
       return metrics;
     };
    

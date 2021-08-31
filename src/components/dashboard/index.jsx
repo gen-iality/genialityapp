@@ -251,18 +251,18 @@ class DashboardEvent extends Component {
     const { eventId } = this.props;
     let metricsgnal = await queryReportGnal(eventId);
     console.log("METRICS GNAL==>",metricsgnal )
-    let metricsActivity = await updateMetricasActivity(data, eventId, metricsgnal.metrics);
+    let metricsActivity = await updateMetricasActivity(data, eventId, metricsgnal?.metrics);
     let metricsGraphics = await queryReportGnalByMoth(eventId);
     this.setState({
       metricsGraphics: metricsGraphics,
       metricsGnal: {
         ...this.state.metricsGnal,
-        total_checkIn: metricsgnal.totalMetrics['ga:sessions'],
-        avg_time: (metricsgnal.totalAvg / 60).toFixed(2),
-        total_printouts: metricsgnal.totalMetrics['ga:pageviews'],
+        total_checkIn: metricsgnal?.totalMetrics['ga:sessions'],
+        avg_time: (metricsgnal?.totalAvg / 60).toFixed(2),
+        total_printouts: metricsgnal?.totalMetrics['ga:pageviews'],
       },
-      metricsGaByActivity: metricsgnal.metrics,
-      metricsGaByActivityGnal: metricsgnal.metrics,
+      metricsGaByActivity: metricsgnal?.metrics,
+      metricsGaByActivityGnal: metricsgnal?.metrics,
       metricsActivity,
       loadingMetrics: false,
     });
@@ -692,7 +692,7 @@ class DashboardEvent extends Component {
                   style={{ color: '#F70D09' }}
                   shape='round'
                   icon={<FilePdfOutlined />}
-                  disabled={this.state.metricsGaByActivity.length == 0}>
+                  disabled={this.state.metricsGaByActivity?.length == 0 || !this.state.metricsGaByActivity}>
                   Exportar métricas
                 </Button>
               </Row>
