@@ -307,15 +307,16 @@ const FormRegister = ({
     }
   };
 
-  const valuesChange = (allFields) => {
-    updateFieldsVisibility(conditionals, allFields);
+  const valuesChange = (changedValues, allValues) => {
+    updateFieldsVisibility(conditionals, allValues);
   };
 
-  const updateFieldsVisibility = (conditionals, allFields) => {
+  const updateFieldsVisibility = (conditionals, allFields) => {  
+
     let newExtraFields = [...extraFieldsOriginal];
-    console.log('newExtraFields', newExtraFields);
-    console.log('CONDITIONALS=>', conditionals);
+ 
     newExtraFields = newExtraFields.filter((field) => {
+
       let fieldShouldBeDisplayed = false;
       let fieldHasCondition = false;
 
@@ -323,19 +324,15 @@ const FormRegister = ({
 
       conditionals.map((conditional) => {
         let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
-        console.log('fieldExistInThisCondition==>', fieldExistInThisCondition);
+        
         if (!fieldExistInThisCondition) return;
-
         fieldHasCondition = true;
-
         //Revisamos si las condiciones del campo tienen los valores adecuados para que se muestre
         let fulfillConditional = false;
-        Object.keys(allFields).map((changedkey) => {
-          if (changedkey === conditional.fieldToValidate) {
-            fulfillConditional = conditional.value === allFields[changedkey];
-          }
-        });
 
+        //valor actual del condicional en el formulario
+        let valueToValidate = allFields[conditional.fieldToValidate]
+        fulfillConditional = conditional.value === valueToValidate;
         if (fulfillConditional) {
           fieldShouldBeDisplayed = true;
         }

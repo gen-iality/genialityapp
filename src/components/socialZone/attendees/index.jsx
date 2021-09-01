@@ -28,7 +28,7 @@ const AttendeList = function(props) {
 
     Object.keys(attendeeList).map((key) => {
       let mihijo = {
-        uid: attendeeList[key].user.uid,
+        uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
         idattendpresence: key,
         iduser: attendeeList[key].account_id,
         name: attendeeList[key].properties.name,
