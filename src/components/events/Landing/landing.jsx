@@ -5,7 +5,7 @@ import { UseCurrentUser } from '../../../Context/userContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { HelperContext } from '../../../Context/HelperContext';
 /** ant design */
-import { Layout, Spin, notification, Button, Drawer } from 'antd';
+import { Layout, Spin, notification, Button, Drawer,Modal, Result, Typography } from 'antd';
 
 /** Components */
 import TopBanner from './TopBanner';
@@ -32,6 +32,7 @@ import { EnableAnalyticsByEVENT } from './helpers/analyticsHelper';
 /** Facebook Pixel */
 import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 import { Ripple } from 'react-preloaders';
+import ModalRegister from './modalRegister';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -66,6 +67,7 @@ const Landing = (props) => {
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
   let { isNotification, ChangeActiveNotification, eventPrivate } = useContext(HelperContext);
+  const [register,setRegister]=useState(null)
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -79,7 +81,18 @@ const Landing = (props) => {
       </Button>
     ) : null;
   };
+ 
+  useEffect(()=>{
+  const urlParams = new URLSearchParams(window.location.search);  
+  if(urlParams.get("register")!==null){
+    setRegister(urlParams.get("register"))
+  }
+  },[window.location.search])
+  
 
+
+
+  //PARA OBTENER PARAMETRO AL LOGUEARME
   const NotificationHelper = ({ message, type, activity }) => {
     notification.open({
       message: 'Nueva notificación',
@@ -135,8 +148,11 @@ const Landing = (props) => {
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin />;
 
   return (
-    <>
-      <Layout>
+   
+    <>    
+     {console.log("REGISTER==>",register)}
+    <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />
+      <Layout>     
         <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}
           targetEventUser={props.userAgenda}
