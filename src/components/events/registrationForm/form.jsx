@@ -543,7 +543,7 @@ const FormRegister = ({
         input = m.options.map((o, key) => {
           return (
             <Option key={key} value={o.value}>
-              {o.value}
+              {o.label}
             </Option>
           );
         });

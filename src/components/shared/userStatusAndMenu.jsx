@@ -53,7 +53,7 @@ let UserStatusAndMenu = (props) => {
           onClick={(e) => {
             e.preventDefault();
             props.location.pathname.includes('landing')
-              ? props.setViewPerfil({ view: true, perfil: { _id: props.userEvent._id, properties: props.userEvent } })
+              ? props.setViewPerfil({ view: true, perfil: { _id: props.userEvent?._id, properties: props.userEvent } })
               : null;
           }}
           to={''}>
@@ -61,12 +61,12 @@ let UserStatusAndMenu = (props) => {
         </NavLink>
       </Menu.Item>
       {visibleOptions&&<Menu.Item style={ItemStyle}>
-        <Link to={`/tickets/${props.userEvent._id}`}>
+        <Link to={`/tickets/${props.userEvent?._id}`}>
           <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
         </Link>
       </Menu.Item>}
       {visibleOptions&& <Menu.Item style={ItemStyle}>
-        <NavLink exact to={`/eventEdit/${props.userEvent._id}#events`}>
+        <NavLink exact to={`/eventEdit/${props.userEvent?._id}#events`}>
           <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
         </NavLink>
       </Menu.Item>}
