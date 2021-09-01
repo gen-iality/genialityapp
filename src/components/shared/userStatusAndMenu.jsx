@@ -24,6 +24,7 @@ const ItemStyle = {
 };
 
 let UserStatusAndMenu = (props) => {
+  console.log("PROPSUSER==>",props)
   let user = props.user;
   let photo = props.photo;
   let name = props.name;
@@ -31,18 +32,19 @@ let UserStatusAndMenu = (props) => {
   let eventId = props.eventId;
   const [visibleOptions,setVisibleOptions]=useState(true) 
   useEffect(() => {
-    console.log("EVENTID==>",props.eventId)
-    if (props.eventId) {
-      if(props.eventId =='60cb7c70a9e4de51ac7945a2'){
-        setVisibleOptions(false)
-       //console.log("VISIBLE==>",props.eventId)
+    const path = window.location.pathname.split('/');
+    let eventId = path[2] || path[1]
+   
+    if (eventId) {
+      if(eventId =='60cb7c70a9e4de51ac7945a2'){
+        setVisibleOptions(false)       
       }
     }
-
+  console.log("USER==>",props.user)
    /* async function eventuserData() {     
       let user = await EventsApi.getEventUser(props.userEvent._id, props.eventId);
     }*/
-  }, [props.eventId]);
+  }, [window.location.pathname]);
 
   let menu = (
     <Menu>
@@ -59,12 +61,12 @@ let UserStatusAndMenu = (props) => {
         </NavLink>
       </Menu.Item>
       {visibleOptions&&<Menu.Item style={ItemStyle}>
-        <Link to={`/tickets/${eventId}`}>
+        <Link to={`/tickets/${props.userEvent._id}`}>
           <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
         </Link>
       </Menu.Item>}
       {visibleOptions&& <Menu.Item style={ItemStyle}>
-        <NavLink exact to={`/eventEdit/${eventId}#events`}>
+        <NavLink exact to={`/eventEdit/${props.userEvent._id}#events`}>
           <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
         </NavLink>
       </Menu.Item>}

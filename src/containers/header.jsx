@@ -68,7 +68,7 @@ class Headers extends Component {
 
   setEventId = () => {
     const path = window.location.pathname.split('/');
-    const eventId = path[2]; 
+    let eventId = path[2] || path[1]
     return eventId;
   };
 
