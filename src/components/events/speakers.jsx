@@ -287,7 +287,7 @@ class Speakers extends Component {
                         </div>
                       ]}
                       description={[
-                        <div key={'speaker-description  ' + key} style={{ minHeight: '100px' }}>
+                        <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign:'center' }}>
                           <p>{speaker.profession}</p>
                         </div>
                       ]}

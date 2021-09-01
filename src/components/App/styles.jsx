@@ -166,6 +166,22 @@ class Styles extends Component {
         ],
       },
       {
+        label: 'Franja de titulo  y fecha',
+        defaultValue: false,
+        name: 'show_title',
+        options: [
+          {
+            label: 'Si',
+            value: true,
+          },
+          {
+            label: 'No',
+            value: false,
+          },
+          
+        ],
+      },
+      {
         label: 'Habilitar banner Superior',
         name: 'show_banner',
         defaultValue: 'true',
@@ -307,6 +323,7 @@ class Styles extends Component {
           mobile_banner: info.styles.mobile_banner || null,
           banner_footer_email: info.styles.banner_footer_email || null,
           show_banner: info.styles.show_banner || false,
+          show_title: info.styles?.show_title  || false,
           show_card_banner: info.styles.show_card_banner || true,
           show_inscription: info.show_inscription || false,
           hideDatesAgenda: info.styles.hideDatesAgenda || false,
