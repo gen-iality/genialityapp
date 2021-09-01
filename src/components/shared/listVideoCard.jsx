@@ -25,31 +25,36 @@ const ListVideoCard = () => {
   if (!cEvent.value) {
     return <>Cargando...</>;
   }
+
+  let countactivityToShow = 0;
+
   return (
     <>
       {existActivity == 1 && (
-        <Row>
-         
+        <Row gutter={[20, 20]} style={{ margin: '25px' }}>
           {activitiesEvent &&
             activitiesEvent.map((activity, index) => {
-              //Solo los últimos 3
-              if (index > 2) return;
-              if (activity.video) {
-                return (
-                  <Col key={index} xs={0} sm={0} md={24} lg={8} xl={8}>
-                    <VideoCard
-                      bordered={false}
-                      key={cEvent.value._id}
-                      event={cEvent.value}
-                      action={{ name: 'Ver', url: `landing/${cEvent.value._id}` }}
-                      activity={activity}
-                    />
-                  </Col>
-                );
+              if (countactivityToShow < 3) {
+                if (activity.video) {
+                  countactivityToShow++;
+                  return (
+                    <Col key={index} xs={0} sm={0} md={24} lg={8} xl={8}>
+                      <VideoCard
+                        bordered={false}
+                        key={cEvent.value._id}
+                        event={cEvent.value}
+                        action={{ name: 'Ver', url: `landing/${cEvent.value._id}` }}
+                        activity={activity}
+                      />
+                    </Col>
+                  );
+                }
+                //Solo los últimos 3
+                // if (index > 2) return;
+
                 //return <VideoCard key={index} activity={activity} />;
               }
             })}
-            
         </Row>
       )}
     </>

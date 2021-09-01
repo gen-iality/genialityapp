@@ -28,21 +28,24 @@ class DateEvent extends React.Component {
     async getDates() {
         const info = await EventsApi.getOne(this.props.eventId)
         let dates = info.dates
+        console.log("DATES==>",dates)
 
         let date = []
-        if (dates !== undefined) {
+        if (dates !== undefined ) {
             for (let i = 0; i < dates.length; i++) {
-                let dateUTC = Date.parse(dates[i])
+                if(dates[i]!==""){
+                let dateUTC =  Date.parse(dates[i])
                 var dateUtc = new Date(dateUTC)
                 var utc = new Date(dateUtc.getTime() + dateUtc.getTimezoneOffset() * 60000);
                 date.push(utc)
+                }
             }
 
             this.setState({
-                currentChannel: dates.length,
+                currentChannel: dates?.length || 0,
                 dates: date,
-                month: parseInt(moment(dates[dates.length - 1]).format("M") - 1),
-                year: parseInt(moment(dates[dates.length - 1]).format("YYYY"))
+                month: parseInt(moment(dates[dates?.length - 1]).format("M") - 1) || '',
+                year: parseInt(moment(dates[dates?.length - 1]).format("YYYY")) || ''
             })
         }
     }

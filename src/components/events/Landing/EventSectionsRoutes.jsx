@@ -34,6 +34,8 @@ import ListVideoCard from '../../shared/listVideoCard';
 import initUserPresence from '../../../containers/userPresenceInEvent';
 import { HelperContext } from '../../../Context/HelperContext';
 import Videos from '../videos';
+import UserLoginContainer from '../UserLoginContainer';
+import InfoEvent from '../../shared/infoEvent';
 // import UserLoginContainer from '../UserLoginContainer';
 
 const EventSectionRoutes = (props) => {
@@ -87,6 +89,7 @@ const EventSectionRoutes = (props) => {
     <>
       {props.viewVirtualconference && (
         <>
+          <InfoEvent />
           <VirtualConferenceBig />
           <ListVideoCard idevent={props.cEvent.value} />
         </>
@@ -145,10 +148,10 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
 
-        {/* 
+         
         <Route path={`${path}/login`}>
-        <EventHome />
-        </Route> */}
+        <UserLoginContainer eventId={props.cEvent.value._id}/>
+        </Route> 
 
         <Route path={`${path}/informativeSection`}>
           {() =>

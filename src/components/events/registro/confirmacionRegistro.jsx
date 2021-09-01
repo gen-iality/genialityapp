@@ -29,7 +29,7 @@ function ConfirmacionRegistro(props) {
       validateEmail: validateEmail,
     };
     await EventsApi.editOne(data, props.event._id);
-    message.success('Cotenido guardado');
+    message.success('Contenido guardado');
   };
 
   return (

@@ -210,7 +210,7 @@ class CheckAgenda extends Component {
     let attendessFilter=this.state.attendees;
     attendessFilter=attendessFilter.filter((attendes)=>attendes.user!==null)
     const attendees = [...attendessFilter].sort((a, b) => b.created_at - a.created_at);    
-    const data = await parseData2Excel(attendees, this.state.eventFields);
+    const data = await parseData2Excel(attendees, this.state.eventFields,this.state.rolesList);
     const ws = await XLSX.utils.json_to_sheet(data);
     const wb = await XLSX.utils.book_new();
     await XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');

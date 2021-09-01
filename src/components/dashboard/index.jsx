@@ -118,7 +118,7 @@ class DashboardEvent extends Component {
       totalOpened = 0,
       totalSent = 0,
       totalBounced = 0;
-    list.map((m, index) => {
+    list.length>0 && list.map((m, index) => {
       totalClicked += m.total_clicked ? m.total_clicked : 0;
       totalDeliverd += m.total_delivered ? m.total_delivered : 0;
       totalOpened += m.total_opened ? m.total_opened : 0;
@@ -198,15 +198,16 @@ class DashboardEvent extends Component {
       const iframeUrl = `${ApiUrl}/es/event/${eventId}/dashboard?evius_token=${evius_token}`;
       this.setState({ iframeUrl, loading: false });
       totalsMetricasMail(this.props.eventId).then((datametricsMail) => {
-        totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {
+        totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {          
           totalsMetricasActivityDetails(this.props.eventId).then((dataMetricsActivity) => {
+            console.log("METRICS ACTIVITY==>",dataMetricsActivity)
             if (dataMetricsActivity.length > 0) {
             
               this.setState({
                 totalmails: datametricsMail,
                 metricsActivity: dataMetricsActivity,
                 metricsGnal: dataMetricsGnal,
-              });
+              });             
               this.obtenerMetricas(dataMetricsActivity);
               this.totalsMails(datametricsMail);
               this.fetchDataMails().then((resp) => {
@@ -249,18 +250,19 @@ class DashboardEvent extends Component {
   obtenerMetricas = async (data) => {
     const { eventId } = this.props;
     let metricsgnal = await queryReportGnal(eventId);
-    let metricsActivity = await updateMetricasActivity(data, eventId, metricsgnal.metrics);
+    console.log("METRICS GNAL==>",metricsgnal )
+    let metricsActivity = await updateMetricasActivity(data, eventId, metricsgnal?.metrics);
     let metricsGraphics = await queryReportGnalByMoth(eventId);
     this.setState({
       metricsGraphics: metricsGraphics,
       metricsGnal: {
         ...this.state.metricsGnal,
-        total_checkIn: metricsgnal.totalMetrics['ga:sessions'],
-        avg_time: (metricsgnal.totalAvg / 60).toFixed(2),
-        total_printouts: metricsgnal.totalMetrics['ga:pageviews'],
+        total_checkIn: metricsgnal?.totalMetrics['ga:sessions'],
+        avg_time: (metricsgnal?.totalAvg / 60).toFixed(2),
+        total_printouts: metricsgnal?.totalMetrics['ga:pageviews'],
       },
-      metricsGaByActivity: metricsgnal.metrics,
-      metricsGaByActivityGnal: metricsgnal.metrics,
+      metricsGaByActivity: metricsgnal?.metrics,
+      metricsGaByActivityGnal: metricsgnal?.metrics,
       metricsActivity,
       loadingMetrics: false,
     });
@@ -273,6 +275,7 @@ class DashboardEvent extends Component {
     let labels = [],
       values = [];
     let metricsRegister = await metricasRegisterByDate(this.props.eventId);
+    console.log("metricsRegister",metricsRegister)
     if (metricsRegister) {
       metricsRegister.map((metric) => {
         labels.push(metric.date);
@@ -476,7 +479,7 @@ class DashboardEvent extends Component {
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                         valueStyle={{ fontSize: '36px' }}
                         title='Duración promedio de un usuario'
-                        value={this.state.metricsGnal ? this.state.metricsGnal.avg_time : 0}
+                        value={this.state.metricsGnal ? !isNaN(this.state.metricsGnal.avg_time)?this.state.metricsGnal.avg_time: 0:0}
                         prefix={<FieldTimeOutlined />}
                         suffix='min'
                       />
@@ -585,7 +588,7 @@ class DashboardEvent extends Component {
                       <Statistic
                         valueStyle={{ fontSize: '36px', textAlign: 'center' }}
                         title={<h3 style={{ textAlign: 'center' }}>CAMPAÑAS</h3>}
-                        value={this.state.totalmails.length}
+                        value={this.state.totalmails ?this.state.totalmails.length:0}
                       />
                     </Card>
                   </Row>
@@ -689,7 +692,7 @@ class DashboardEvent extends Component {
                   style={{ color: '#F70D09' }}
                   shape='round'
                   icon={<FilePdfOutlined />}
-                  disabled={this.state.metricsGaByActivity.length == 0}>
+                  disabled={this.state.metricsGaByActivity?.length == 0 || !this.state.metricsGaByActivity}>
                   Exportar métricas
                 </Button>
               </Row>

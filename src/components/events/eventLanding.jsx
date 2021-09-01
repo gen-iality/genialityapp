@@ -61,13 +61,13 @@ class eventLanding extends Component {
               ? { marginTop: '2%' }
               : { marginTop: '0px' }
           }>
-          {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' ? (
+          {/* {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' ? (
             ''
           ) : (
             <Row justify='center'>
               <h1 className='is-size-4-desktop has-text-weight-semibold'>{this.props.cEvent.value.name}</h1>
             </Row>
-          )}
+          )} */}
           {/* Si event video existe */}
           {this.props.cEvent.value.video && (
             <div className='column is-centered mediaplayer'>

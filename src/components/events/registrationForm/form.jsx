@@ -19,7 +19,13 @@ import {
   Space,
   InputNumber,
 } from 'antd';
-import { InfoCircleOutlined, LoadingOutlined, ShopOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+  InfoCircleOutlined,
+  LoadingOutlined,
+  PlayCircleOutlined,
+  ShopOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
@@ -126,8 +132,10 @@ const FormRegister = ({
   const [typeRegister, setTypeRegister] = useState('free');
   const [payMessage, setPayMessage] = useState(false);
   const [form] = Form.useForm();
-  let [areacodeselected, setareacodeselected] = useState(null);
+  let [areacodeselected, setareacodeselected] = useState(57);
   let [numberareacode, setnumberareacode] = useState(null);
+  let [fieldCode, setFieldCode] = useState(null);
+  initialValues.codearea = null;
 
   useEffect(() => {
     let formType = !eventUserId ? 'register' : 'transfer';
@@ -143,18 +151,22 @@ const FormRegister = ({
   }, [eventUser, eventUserId, initialValues, conditionals, eventId]);
 
   useEffect(() => {
-   
     if (!extraFields) return;
     let codeareafield = extraFields.filter((field) => field.type == 'codearea');
-  if(codeareafield ){
-    let phonenumber =
-      eventUser && codeareafield[0] && eventUser['properties'] ? eventUser['properties'][codeareafield[0].name] : '';      
-    if (phonenumber && areacodeselected==null && numberareacode==null ) {
-      let splitphone = phonenumber.toString().split(' ');
-      setareacodeselected(splitphone[0]);
-      setnumberareacode(splitphone[2]);
+    if (codeareafield[0]) {
+      let phonenumber =
+        eventUser && codeareafield[0] && eventUser['properties'] ? eventUser['properties'][codeareafield[0].name] : '';
+      let codeValue = eventUser && eventUser['properties'] ? eventUser['properties']['code'] : '';
+      console.log(eventUser && eventUser['properties'] && eventUser['properties']);
+      setFieldCode(codeareafield[0].name);
+      if (phonenumber && numberareacode == null) {
+        console.log('PHONE ACA==>', phonenumber.toString());
+        let splitphone = phonenumber.toString().split(' ');
+        setareacodeselected(codeValue);
+        //setnumberareacode( );
+        console.log('SPLIT2==>', codeValue);
+      }
     }
-  }
   }, [extraFields]);
 
   const showGeneralMessage = () => {
@@ -170,10 +182,13 @@ const FormRegister = ({
     setEvent(data);
   };
 
-  const onFinish = async (values) => {   
-    if (numberareacode) {
-      values.telefono = `${areacodeselected}  ${numberareacode}`;
+  const onFinish = async (values) => {
+    if (areacodeselected) {
+      //values[fieldCode] = `${numberareacode}`;
+      values['code'] = areacodeselected;
     }
+    console.log('VALUES;', values);
+
     setSectionPermissions({ view: false, ticketview: false });
     values.password = password;
     let ruta = '';
@@ -230,7 +245,7 @@ const FormRegister = ({
 
         //if (resp.status !== 'UPDATED') {
 
-          if (resp.data && resp.data.user && resp.data.user.initial_token){
+        if (resp.data && resp.data.user && resp.data.user.initial_token) {
           setSuccessMessageInRegisterForm(resp.status);
           // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
           // textMessage.content = "Usuario " + statusMessage;
@@ -251,11 +266,11 @@ const FormRegister = ({
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
               window.location.replace(
-                //`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
-                `/landing/${eventId}?token=${resp.data.user.initial_token}`
+                eventId=='60cb7c70a9e4de51ac7945a2'?`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
+                :`/landing/${eventId}?token=${resp.data.user.initial_token}`
               );
             }, 100);
-          }else{
+          } else {
             window.location.replace(`/landing/${eventId}/success/${typeRegister}`);
           }
         } else {
@@ -300,20 +315,18 @@ const FormRegister = ({
 
     let newExtraFields = [...extraFieldsOriginal];
  
-
-
     newExtraFields = newExtraFields.filter((field) => {
 
       let fieldShouldBeDisplayed = false;
       let fieldHasCondition = false;
 
       //para cada campo revisamos si se cumplen todas las condiciones para mostrarlo
+
       conditionals.map((conditional) => {
         let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
+        
         if (!fieldExistInThisCondition) return;
-
         fieldHasCondition = true;
-
         //Revisamos si las condiciones del campo tienen los valores adecuados para que se muestre
         let fulfillConditional = false;
 
@@ -397,32 +410,37 @@ const FormRegister = ({
       );
 
       if (type === 'codearea') {
+        const prefixSelector = (
+          <Select
+            style={{ width: '100%' }}
+            value={areacodeselected}
+            //required={mandatory}
+            onChange={(val) => {
+              setareacodeselected(val);
+              console.log(val);
+            }}
+            placeholder='Codigo de area del pais'>
+            {areaCode.map((code, key) => {
+              return (
+                <Option key={key} value={code.value}>
+                  {code.label + ' (+' + code.value + ')'}
+                </Option>
+              );
+            })}
+          </Select>
+        );
         input = (
-          <Input.Group compact>
-            <Select
-              style={{ width: '30%' }}
-              value={areacodeselected}
-              name={name}
-              onChange={(val) => setareacodeselected(val)}
-              placeholder='Codigo de area del pais'>
-              {areaCode.map((code, key) => {
-                return (
-                  <Option key={key} value={code.value}>
-                    {code.label + ' (+' + code.value + ')'}
-                  </Option>
-                );
-              })}
-            </Select>
-            <Input
-              onChange={(e) => setnumberareacode(e.target.value)}
-              value={numberareacode}
-              name='telefono'
-              type='number'
-              key={key}
-              style={{ width: '70%' }}
-              placeholder='Numero de telefono'
-            />
-          </Input.Group>
+          <Input
+            addonBefore={prefixSelector}
+            //onChange={(e) => setnumberareacode(e.target.value)}
+            defaultvalue={value?.toString().split()[2]}
+            name={name}
+            //required={mandatory}
+            type='number'
+            key={key}
+            style={{ width: '100%' }}
+            placeholder='Numero de telefono'
+          />
         );
       }
 
@@ -446,16 +464,26 @@ const FormRegister = ({
 
       if (type === 'boolean') {
         input = (
-          <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value)}>
-            {mandatory ? (
-              <span>
-                <span style={{ color: 'red' }}>* </span>
-                <strong>{label}</strong>
-              </span>
-            ) : (
-              label
+          <>
+            <Checkbox onChange={(val)=>{eventUser?eventUser['properties'][target]=val.target.checked:value=val.target.checked}} required={mandatory} {...props} key={key} name={name} defaultChecked={Boolean(value?value:false)}>
+              {mandatory ? (
+                <span>
+                  <span style={{ color: 'red' }}>* </span>
+                  <strong>{label}</strong>
+                </span>
+              ) : (
+                label
+              )}
+            </Checkbox>
+            {eventId == '60cb7c70a9e4de51ac7945a2' && (
+              <Row style={{ marginTop: 20 }}>
+                {' '}
+                <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
+                  <PlayCircleOutlined /> Ver términos y condiciones
+                </a>
+              </Row>
             )}
-          </Checkbox>
+          </>
         );
       }
 
@@ -512,7 +540,7 @@ const FormRegister = ({
         input = m.options.map((o, key) => {
           return (
             <Option key={key} value={o.value}>
-              {o.value}
+              {o.label}
             </Option>
           );
         });
@@ -606,10 +634,15 @@ const FormRegister = ({
       // let hideFields =
       //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
 
-      if (type === 'boolean' && mandatory) {
-        let textoError = intl.formatMessage({ id: 'form.field.required' });
-        rule = { validator: (_, value) => (value ? Promise.resolve() : Promise.reject(textoError)) };
+      if (type === 'boolean' && mandatory) {       
+        let textoError = intl.formatMessage({ id: 'form.field.required' });      
+       value=!value?false:value       
+       rule={required:mandatory}
+        //rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
       }
+
+      //console.log("RULES==>",rule,name)
+      console.log('RULES==>', rule, name);
 
       return (
         <div key={'g' + key} name='field'>
@@ -617,6 +650,7 @@ const FormRegister = ({
           {type !== 'tituloseccion' && (
             <>
               <Form.Item
+                // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
                 // style={eventUserId && hideFields}
                 valuePropName={type === 'boolean' ? 'checked' : 'value'}
                 label={

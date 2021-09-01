@@ -1,22 +1,22 @@
 import { UseEventContext } from '../../../../Context/eventContext';
 
-export function EnableGTMByEVENT() {
+export function EnableAnalyticsByEVENT() {
    let cEventContext = UseEventContext();
    let createElement = null;
-   let dataLayer = `dataLayerTagManager${cEventContext.value._id}`;
-   let htmlElementId = 'gtmScrip';
-   let tagManagerId = cEventContext.value.googletagmanagerid;
+   let dataLayer = `dataLayerAnalytics${cEventContext.value._id}`;
+   let htmlElementId = 'analyticsScrip';
+   let analyticsId = cEventContext.value.googleanlyticsid;
 
-   if (!tagManagerId) return null;
+   if (!analyticsId) return null;
 
    if (!window[dataLayer]) {
     //   console.log('10. Start TagManager');
       window[dataLayer] = window[dataLayer] || [];
-      window[dataLayer].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      window[dataLayer].push({ 'js': new Date().getTime()});
       var f = document.getElementsByClassName(htmlElementId)[0];
       createElement = document.createElement('script');
       createElement.async = true;
-      createElement.src = '//www.googletagmanager.com/gtm.js?id=' + tagManagerId + '&l=' + dataLayer;
+      createElement.src = '//www.googletagmanager.com/gtag/js?id=' + analyticsId  + '&l=' + dataLayer
       if (f) {
          f.parentNode.insertBefore(createElement, f);
       }

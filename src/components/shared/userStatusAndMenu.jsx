@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
 import { EventsApi } from '../../helpers/request';
 import { useEffect } from 'react';
+import { useState } from 'react';
 
 const MenuStyle = {
   flex: 1,
@@ -17,25 +18,33 @@ const MenuStyle = {
 const ItemStyle = {
   backgroundColor: 'white',
   //border: '1px solid #cccccc',
+  minWidth:150,
   padding: 5,
   margin: 5,
 };
 
 let UserStatusAndMenu = (props) => {
+  console.log("PROPSUSER==>",props)
   let user = props.user;
   let photo = props.photo;
   let name = props.name;
   let logout = props.logout;
-  let eventId = props.eventId; 
+  let eventId = props.eventId;
+  const [visibleOptions,setVisibleOptions]=useState(true) 
   useEffect(() => {
-   /* if (props.eventId && props.userEvent) {
-      eventuserData();
+    const path = window.location.pathname.split('/');
+    let eventId = path[2] || path[1]
+   
+    if (eventId) {
+      if(eventId =='60cb7c70a9e4de51ac7945a2'){
+        setVisibleOptions(false)       
+      }
     }
-
-    async function eventuserData() {     
+  console.log("USER==>",props.user)
+   /* async function eventuserData() {     
       let user = await EventsApi.getEventUser(props.userEvent._id, props.eventId);
     }*/
-  }, [props.eventId && props.userEvent]);
+  }, [window.location.pathname]);
 
   let menu = (
     <Menu>
@@ -44,31 +53,31 @@ let UserStatusAndMenu = (props) => {
           onClick={(e) => {
             e.preventDefault();
             props.location.pathname.includes('landing')
-              ? props.setViewPerfil({ view: true, perfil: { _id: props.userEvent._id, properties: props.userEvent } })
+              ? props.setViewPerfil({ view: true, perfil: { _id: props.userEvent?._id, properties: props.userEvent } })
               : null;
           }}
           to={''}>
           <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
         </NavLink>
       </Menu.Item>
-      <Menu.Item style={ItemStyle}>
-        <Link to={`/tickets/${eventId}`}>
+      {visibleOptions&&<Menu.Item style={ItemStyle}>
+        <Link to={`/tickets/${props.userEvent?._id}`}>
           <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
         </Link>
-      </Menu.Item>
-      <Menu.Item style={ItemStyle}>
-        <NavLink exact to={`/eventEdit/${eventId}#events`}>
+      </Menu.Item>}
+      {visibleOptions&& <Menu.Item style={ItemStyle}>
+        <NavLink exact to={`/eventEdit/${props.userEvent?._id}#events`}>
           <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
         </NavLink>
-      </Menu.Item>
+      </Menu.Item>}
 
-      <Menu.Item style={ItemStyle}>
+      {visibleOptions&&  <Menu.Item style={ItemStyle}>
         <Link to={'/create-event'}>
           <Button type='primary' size='medium'>
             <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
           </Button>
         </Link>
-      </Menu.Item>
+      </Menu.Item>}
       <Menu.Divider />
       <Menu.Item style={ItemStyle}>
         <a onClick={logout}>
