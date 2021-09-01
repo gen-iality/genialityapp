@@ -252,7 +252,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
               {!loadingSave ? <Button block type={'primary'} onClick={saveValue}>
                 Ofrecer
               </Button>:<Spin />}
-              <Alert showIcon type={'success'} style={{marginTop:20,marginBottom:30}} message={'Al hacer esta puja está aceptando nuestros términos y condiciones y se compromete al pago del valor ofertado en caso que ningún otro participante realice una puja por un monto superior'}/>
+              <Alert showIcon type={'success'} style={{marginTop:20,marginBottom:30}} message={'Al hacer esta puja estás aceptando nuestros términos y condiciones y adquieres el compromiso de pago por el valor ofertado, en caso que ningún otro participante realice una puja por un monto superior.'}/>
              <a target='_blank' rel="noreferrer" href={'https://tiempodejuego.org/tyclaventana/'}><PlayCircleOutlined /> Ver términos y condiciones</a>
             </Col>
           )}
