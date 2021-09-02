@@ -182,6 +182,22 @@ class Styles extends Component {
         ],
       },
       {
+        label: 'Mostrar widget de videos grabados',
+        defaultValue: false,
+        name: 'show_video_widget',
+        options: [
+          {
+            label: 'Si',
+            value: true,
+          },
+          {
+            label: 'No',
+            value: false,
+          },
+          
+        ],
+      },
+      {
         label: 'Habilitar banner Superior',
         name: 'show_banner',
         defaultValue: 'true',
@@ -324,6 +340,7 @@ class Styles extends Component {
           banner_footer_email: info.styles.banner_footer_email || null,
           show_banner: info.styles.show_banner || false,
           show_title: info.styles?.show_title  || false,
+          show_video_widget: info.styles?.show_video_widget  || false,
           show_card_banner: info.styles.show_card_banner || true,
           show_inscription: info.show_inscription || false,
           hideDatesAgenda: info.styles.hideDatesAgenda || false,
