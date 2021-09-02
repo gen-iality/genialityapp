@@ -48,17 +48,16 @@ const ChatList = (props) => {
   // constante para insertar texto dinamico con idioma
   const intl = useIntl();
   let [usuariofriend, setusuariofriend] = useState(null);
-  let [totalmsjpriv, settotalmsjpriv] = useState(0);
 
   function callback(key) {
     if (key === 'public') {
       if (chatActual) {
-        HandleGoToChat(null, null, null, null);
+        HandleGoToChat(null, null, null, null, null);
       }
     }
     if (key === 'private') {
       if (chatActual) {
-        HandleGoToChat(null, null, null, null);
+        HandleGoToChat(null, null, null, null, null);
       }
     }
 
@@ -185,16 +184,20 @@ const ChatList = (props) => {
                           cUser.value.uid,
                           item.id,
                           cUser.value.name ? cUser.value.name : cUser.value.names,
-                          'private'
+                          'private',
+                          item
                         );
-                        settotalmsjpriv(0);
                       }}>
                       <Tooltip title='Chatear'>
                         {item.participants &&
                         item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes &&
                         item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes >
                           0 ? (
-                          <Badge count={' '} style={{ minWidth: '10px', height: '10px', padding: '0px' }}>
+                          <Badge
+                            count={
+                              item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]
+                                ?.countmessajes
+                            }>
                             <MessageTwoTone style={{ fontSize: '27px' }} />
                           </Badge>
                         ) : (
