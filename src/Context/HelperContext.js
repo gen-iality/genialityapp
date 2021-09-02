@@ -45,7 +45,6 @@ export const HelperContextProvider = ({ children }) => {
   const [chatAttendeChats, setchatAttendeChats] = useState('1');
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
   const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
-
   useEffect(() => {
     if (!cEvent.value) return;
     let firstroute = Object.keys(cEvent.value.itemsMenu);
@@ -85,6 +84,19 @@ export const HelperContextProvider = ({ children }) => {
     setchatPublicPrivate(key);
   }
 
+  /*LECTURA DE MENSAJES*/
+  function ReadMessages(data) {
+    if (data == null) return;
+    let messages = data.participants.filter((participant) => participant.idparticipant != cUser.value.uid);
+    messages[0].countmessajes = 0;
+    //otro participante
+    let otherparticipant = data.participants.filter((participant) => participant.idparticipant == cUser.value.uid);
+    let participants = [messages[0], otherparticipant[0]];
+    firestore
+      .doc('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/' + data.id)
+      .set({ participants: participants, ultimo_mensaje: '' }, { merge: true });
+  }
+
   const openNotification = (data) => {
     const btn = (
       <Button
@@ -96,7 +108,14 @@ export const HelperContextProvider = ({ children }) => {
           setisCollapsedMenuRigth(false);
           HandleChatOrAttende('1');
           HandlePublicPrivate('private');
-          HandleGoToChat(cUser.value.uid, data.id, cUser.value.names ? cUser.value.names : cUser.value.name, 'private');
+          HandleGoToChat(
+            cUser.value.uid,
+            data.id,
+            cUser.value.names ? cUser.value.names : cUser.value.name,
+            'private',
+            data
+          );
+          // ReadMessages(data);
           notification.destroy();
         }}>
         Responder
@@ -116,10 +135,11 @@ export const HelperContextProvider = ({ children }) => {
       icon: <MessageOutlined style={{ color: '#1CDCB7' }} />,
       btn,
     };
+
     notification.open(args);
   };
 
-  function HandleGoToChat(idactualuser, idotheruser, chatname, section) {
+  function HandleGoToChat(idactualuser, idotheruser, chatname, section, callbackdata) {
     let data = {};
 
     switch (section) {
@@ -143,6 +163,7 @@ export const HelperContextProvider = ({ children }) => {
     }
 
     setchatActual(data);
+    ReadMessages(callbackdata);
   }
 
   const getProperties = async (eventId) => {
@@ -195,7 +216,7 @@ export const HelperContextProvider = ({ children }) => {
       .set(data, { merge: true });
 
     console.log('chatuser', newId);
-    HandleGoToChat(idcurrentUser, idOtherUser, currentName, 'attendee');
+    HandleGoToChat(idcurrentUser, idOtherUser, currentName, 'attendee', null);
   };
 
   // ACA HAY UN BUG AL TRAER DATOS CON BASTANTES CAMPOS
@@ -291,7 +312,6 @@ export const HelperContextProvider = ({ children }) => {
 
           list.push(data);
         });
-
         setPrivatechatlist(list);
       });
 
@@ -324,9 +344,12 @@ export const HelperContextProvider = ({ children }) => {
       firestore
         .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
         .onSnapshot(function(querySnapshot) {
-          if (querySnapshot.docChanges()[0] && querySnapshot.docChanges()[0].type == 'modified') {
+          if (
+            querySnapshot.docChanges()[0] &&
+            querySnapshot.docChanges()[0].type == 'modified' &&
+            querySnapshot.docChanges()[0].doc.data().ultimo_mensaje != ''
+          ) {
             openNotification(querySnapshot.docChanges()[0].doc.data());
-            console.log('datamensaje', querySnapshot.docChanges()[0].doc.data());
           }
         });
     }
@@ -334,7 +357,7 @@ export const HelperContextProvider = ({ children }) => {
     if (cEvent.value != null) {
       fethcNewMessages();
     }
-  }, [firestore, attendeeList]);
+  }, [attendeeList]);
 
   useEffect(() => {
     /*NOTIFICACIONES POR ACTIVIDAD*/
