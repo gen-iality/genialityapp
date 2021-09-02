@@ -85,7 +85,7 @@ class SpeakersList extends Component {
   redirect = () => this.setState({ redirect: true });
 
   remove = (info) => {
-    console.log('info eliminar', info._id, 'idevento', this.props.eventID);
+   
     sweetAlert.twoButton(`Está seguro de borrar a ${info.name}`, 'warning', true, 'Borrar', async (result) => {
       try {
         sweetAlert.showLoading('Espera (:', 'Borrando...');
