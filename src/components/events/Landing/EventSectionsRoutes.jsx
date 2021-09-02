@@ -36,7 +36,6 @@ import { HelperContext } from '../../../Context/HelperContext';
 import Videos from '../videos';
 import UserLoginContainer from '../UserLoginContainer';
 import InfoEvent from '../../shared/infoEvent';
-// import UserLoginContainer from '../UserLoginContainer';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -59,9 +58,6 @@ const EventSectionRoutes = (props) => {
         props.cEventUser.value == null &&
         eventPrivate.private
       ) {
-        // console.log('====================================');
-        // console.log("la agenda es publica y el evento es privado");
-        // console.log('====================================');
         props.setSectionPermissions({ view: true, section: nombresection });
         return true;
       } else if (
@@ -70,9 +66,6 @@ const EventSectionRoutes = (props) => {
         props.cEventUser.value == null &&
         !eventPrivate.private
       ) {
-        // console.log('====================================');
-        // console.log("la agenda es publica y el evento NO es privado");
-        // console.log('====================================');
         return false;
       }
     }
@@ -86,12 +79,14 @@ const EventSectionRoutes = (props) => {
     GetPermissionsEvent();
   }, []);
 
-  console.log("Marlon",props.cEvent.value.styles);
   return (
     <>
       {props.viewVirtualconference && (
         <>
-          {props.cEvent.value.styles.show_title && (props.cEvent.value.styles.show_title === true || props.cEvent.value.styles.show_title === 'true') && <InfoEvent />}
+          {props.cEvent.value.styles.show_title &&
+            (props.cEvent.value.styles.show_title === true || props.cEvent.value.styles.show_title === 'true') && (
+              <InfoEvent />
+            )}
           <VirtualConferenceBig />
           <ListVideoCard idevent={props.cEvent.value} />
         </>
@@ -150,10 +145,9 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
 
-         
         <Route path={`${path}/login`}>
-        <UserLoginContainer eventId={props.cEvent.value._id}/>
-        </Route> 
+          <UserLoginContainer eventId={props.cEvent.value._id} />
+        </Route>
 
         <Route path={`${path}/informativeSection`}>
           {() =>
