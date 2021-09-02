@@ -30,7 +30,7 @@ let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  let { attendeeList, HandleChatOrAttende, chatAttendeChats } = useContext(HelperContext);
+  let { attendeeList, HandleChatOrAttende, chatAttendeChats,totalPrivateMessages } = useContext(HelperContext);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [busqueda, setBusqueda] = useState(null);
@@ -73,20 +73,13 @@ let SocialZone = function(props) {
           className='asistente-chat-list'
           tab={
             <>
-              {props.totalMessages !== undefined && props.totalMessages > 0 && (
-                <Badge
-                  onClick={() => HandleChatOrAttende('1')}
-                  size='small'
-                  style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
-                  count={' '}>
-                  Chats
-                </Badge>
-              )}
-              {props.totalMessages !== undefined && props.totalMessages == 0 && (
-                <div style={{ color: cEvent.value.styles.textMenu }} onClick={() => HandleChatOrAttende('1')}>
-                  Chats
-                </div>
-              )}
+              <Badge
+                onClick={() => HandleChatOrAttende('1')}
+                size='small'
+                // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
+                count={totalPrivateMessages}>
+                Chats
+              </Badge>
             </>
           }
           key='1'>
