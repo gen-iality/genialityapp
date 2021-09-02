@@ -158,7 +158,7 @@ const VirtualConference = () => {
                     borderLeft: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                     borderRight: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                   }}
-                  className='animate__animated animate__slideInRight'>
+                  className='animate__animated animate__backInUp'>
                   <Link
                     to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}` : `${urlAgenda}`}>
                     <Row justify='center' align='middle' gutter={[0, 0]}>

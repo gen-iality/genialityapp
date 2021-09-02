@@ -85,11 +85,13 @@ const EventSectionRoutes = (props) => {
   useEffect(() => {
     GetPermissionsEvent();
   }, []);
+
+  console.log("Marlon",props.cEvent.value.styles);
   return (
     <>
       {props.viewVirtualconference && (
         <>
-          <InfoEvent />
+          {props.cEvent.value.styles.show_title && (props.cEvent.value.styles.show_title === true || props.cEvent.value.styles.show_title === 'true') && <InfoEvent />}
           <VirtualConferenceBig />
           <ListVideoCard idevent={props.cEvent.value} />
         </>
