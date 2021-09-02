@@ -7,12 +7,13 @@ let onChange = (setComment, e) => {
   setComment(e.target.value);
 };
 
-let innerOnSubmit = (onSubmit, comment, user, setVisibleNoUser) => {
+let innerOnSubmit = (onSubmit, comment, setComment, user, setVisibleNoUser) => {
   if (!user) {
     setVisibleNoUser(true);
     return;
   } else {
     onSubmit(comment);
+    setComment("")
   }
 };
 
@@ -24,11 +25,12 @@ const CommentEditor = ({ onSubmit, user }) => {
   return (
     <>
       {true && (
-        <Form.Item>
+        <Form.Item >
           <Row
             style={{
               display: 'flex',
               justifyContent: 'center',
+              marginTop:20
             }}>
             <Col span={21}>
               <TextArea
@@ -44,7 +46,7 @@ const CommentEditor = ({ onSubmit, user }) => {
               id='submitButton'
               htmlType='submit'
               type='link'
-              onClick={innerOnSubmit.bind(null, onSubmit, comment, user, setVisibleNoUser)}
+              onClick={innerOnSubmit.bind(null, onSubmit, comment, setComment, user, setVisibleNoUser)}
               style={{ color: 'gray' }}
               icon={<SendOutlined />}
             />

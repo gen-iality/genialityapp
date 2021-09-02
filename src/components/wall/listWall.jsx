@@ -36,18 +36,19 @@ class WallList extends Component {
       event: this.props.cEvent.value || {},
     };
   }
+ 
 
-  innerCreateComment = async (post, comment) => {
+  innerCreateComment = async (post, comment) => {   
     await this.setState({ commenting: post.id });
     await this.setState({ commenting: null });
-    message.success('Comentario creado.');
-    const dataPost = await saveFirebase.createComment(post.id, this.state.event._id, comment, this.state.user);
+    message.success('Comentario creado.');    
+    const dataPost = await saveFirebase.createComment(post.id, this.state.event._id, comment, this.props.cUser.value);
     this.setState({ dataPost });
 
     this.innershowComments(post.id, post.comments + 1);
   };
 
-  innershowComments = async (postId, commentsCount) => {
+  innershowComments = async (postId, commentsCount) => {    
     let newdisplayedComments = { ...this.state.displayedComments };
 
     //Mostramos los comentarios
@@ -90,7 +91,7 @@ class WallList extends Component {
 
   render() {
     const { dataPost, event } = this.state;
-
+   
     return (
       <Fragment>
         <div>

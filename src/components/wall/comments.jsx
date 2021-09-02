@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { firestore } from '../../helpers/firebase';
-import { Avatar, List, Card, Spin } from 'antd';
-import TimeStamp from 'react-timestamp';
+import { Avatar, List, Card, Spin, Row } from 'antd';
+import Moment from 'moment';
 
 class CommentsList extends Component {
   constructor(props) {
@@ -13,11 +13,9 @@ class CommentsList extends Component {
       dataComment: undefined,
       postId: this.props.postId,
       eventId: this.props.eventId,
-      commentsCount: this.props.commentsCount || 0
+      commentsCount: this.props.commentsCount || 0,
     };
-   
   }
- 
 
   // se obtienen los comentarios, Se realiza la muestra del modal y se envian los datos a dataComment del state
   async getComments(postId, eventId) {
@@ -33,6 +31,7 @@ class CommentsList extends Component {
         .orderBy('date', 'desc');
 
       let snapshot = await admincommentsRef.get();
+
       dataComment = snapshot.docs.map((doc) => {
         return { id: doc.id, ...doc.data() };
       });
@@ -71,23 +70,29 @@ class CommentsList extends Component {
             dataSource={dataComment}
             // Aqui se mapea al array del state
             renderItem={(item) => (
-              <List.Item key={item.id}>
-                <List.Item.Meta
-                  avatar={
-                    item.authorName ? (
-                      <Avatar>
-                        {item.authorName &&
-                          item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
-                      </Avatar>
-                    ) : (
-                      <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
-                    )
-                  }
-                  title={<span>{item.authorName}</span>}
-                  description={<TimeStamp date={item.date.seconds} />}
-                />
-                <div>{item.comment}</div>
-              </List.Item>
+           
+                <List.Item style={{marginBottom:20,marginTop:10, border:'1px solid #f6f6f6', borderRadius:"5px"}} key={item.id}>
+                  <List.Item.Meta
+                    avatar={
+                      item.authorName ? (
+                        <Avatar>
+                          {item.authorName &&
+                            item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
+                        </Avatar>
+                      ) : (
+                        <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
+                      )
+                    }
+                    title={
+                      <Row justify='space-between'>
+                        <span>{item.authorName}</span>{' '}
+                        <small>{Moment(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')} </small>{' '}
+                      </Row>
+                    }
+                    description={item.comment}
+                  />
+                </List.Item>
+              
             )}
           />
         )}

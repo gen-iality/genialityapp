@@ -89,7 +89,7 @@ class CreatePost extends Component {
         : this.props.cUser.value.email,
     };
 
-    //savepost se realiza para publicar el post
+    //savepost se realiza para publicar el post  
     var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
 
     this.setState({ value: '', image: '', showInfo: true, loadingsave: false });
@@ -102,8 +102,7 @@ class CreatePost extends Component {
   previewImage(event) {
     const permitFile = ['png', 'jpg', 'jpeg', 'gif'];
     event.preventDefault();
-    let file = event.target.files[0];
-    console.log('ARCHIVO PREVIEW==>', file);
+    let file = event.target.files[0];    
     let extension = file.name.split('.').pop();
     if (permitFile.indexOf(extension) > -1) {
       let reader = new FileReader();

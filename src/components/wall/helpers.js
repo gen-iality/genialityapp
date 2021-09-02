@@ -2,7 +2,6 @@ import { firestore, fireStorage } from '../../helpers/firebase';
 import { toast } from 'react-toastify';
 
 export const saveFirebase = {
-
   async savePost(data, eventId) {
     try {
       if (data.urlImage) {
@@ -66,7 +65,7 @@ export const saveFirebase = {
     return doc;
   },
 
-  async createComment(postId, eventId) {
+  async createComment(postId, eventId,comment, user) {
     const dataPost = [];
     var docRef = await firestore
       .collection('adminPost')
@@ -84,6 +83,20 @@ export const saveFirebase = {
       .doc(eventId)
       .collection('posts')
       .orderBy('datePost', 'desc');
+    //GUARDAR COMENTARIO
+    let admincommentsRef = firestore
+      .collection('adminPost')
+      .doc(eventId)
+      .collection('comment')
+      .doc(postId)
+      .collection('comments')
+      .add({
+        author:user._id,
+        authorName: user.names || user.emai,
+        comment: comment,
+        date: new Date(),
+        idPost: postId,
+      });
 
     let snapshot = await posts.get();
     snapshot.forEach((doc) => {
@@ -130,5 +143,5 @@ export const saveFirebase = {
     }
 
     return true;
-  }
+  },
 };
