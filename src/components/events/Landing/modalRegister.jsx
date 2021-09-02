@@ -24,7 +24,7 @@ const ModalRegister = ({ register, setRegister, event }) => {
       <Result
         icon={<CheckCircleTwoTone twoToneColor='#52c41a' />}
         status='success'
-        title={<Typography.Text type='success'>Registro Exitoso!</Typography.Text>}
+        title={<Typography.Text type='success'>¡Registro Exitoso!</Typography.Text>}
         subTitle={<span style={{ fontSize: '18px' }}>{message}</span>}
         extra={[
           <Button
