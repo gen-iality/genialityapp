@@ -10,16 +10,17 @@ import { message } from 'antd';
 const { TextArea } = Input;
 import withContext from '../../Context/withContext';
 
-const Editor = ({ onChange, onSubmit, submitting, value, loadingsave,errimage }) => (
+const Editor = ({ onChange, onSubmit, submitting, value, loadingsave,errimage,errNote }) => (
   <div>
-    <Form.Item>
-      <TextArea placeholder='¿Qué está pasando?' rows={4} onChange={onChange} value={value} />
+    <Form.Item name="note" rules={[{ required: true, message: 'Por favor ingrese una nota' }]}>
+      <TextArea  placeholder='¿Qué está pasando?' rows={4} onChange={onChange} value={value} />
     </Form.Item>
     {errimage && (
       <div style={{marginBottom:30}}>
         <Alert type='error' message='Formato de archivo incorrecto!' />
       </div>
     )}
+    {errNote &&   <div  style={{marginBottom:30}} ><Alert type='error' message="Ingrese una texto válido!" /></div>}
 
     <Form.Item>
       {!loadingsave && (
@@ -33,6 +34,7 @@ const Editor = ({ onChange, onSubmit, submitting, value, loadingsave,errimage })
           Enviar
         </Button>
       )}
+      
       {loadingsave && (
         <>
           <Spin /> <span style={{ color: '#333F44' }}>Por Favor espere...</span>
@@ -63,6 +65,7 @@ class CreatePost extends Component {
       image: '',
       errimage: false,
       loadingsave: false,
+      errNote:false
     };
     this.savePost = this.savePost.bind(this);
     this.previewImage = this.previewImage.bind(this);
@@ -72,6 +75,7 @@ class CreatePost extends Component {
 
   //Funcion para guardar el post y enviar el mensaje de publicacion
   async savePost() {
+    if(this.state.value!=="" && this.state.value!==null && this.state.value!=undefined){
     this.setState({
       loadingsave: true,
     });
@@ -92,10 +96,13 @@ class CreatePost extends Component {
     //savepost se realiza para publicar el post  
     var newPost = await saveFirebase.savePost(data, this.props.cEvent.value._id);
 
-    this.setState({ value: '', image: '', showInfo: true, loadingsave: false });
+    this.setState({ value: '', image: '', showInfo: true, loadingsave: false,errNote:false });
     this.setState({ showInfo: false, visible: false, keyList: Date.now() });
     message.success('Mensaje Publicado');
     this.props.addPosts(newPost);
+  }else{
+    this.setState({errNote:true})
+  }
   }
 
   //Funcion para mostrar el archivo, se pasa a base64 para poder mostrarlo
@@ -267,6 +274,7 @@ class CreatePost extends Component {
                   onSubmit={this.savePost}
                   submitting={submitting}
                   value={value}
+                  errNote={this.state.errNote}
                   errimage={this.state.errimage}
                   loadingsave={this.state.loadingsave}
                 />
