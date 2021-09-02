@@ -9,7 +9,7 @@ import withContext from '../../../../Context/withContext';
 import { HelperContext } from '../../../../Context/HelperContext';
 
 const MenuRigth = (props) => {
-  let { HandleOpenCloseMenuRigth, HandleChatOrAttende, eventPrivate } = useContext(HelperContext);
+  let { HandleOpenCloseMenuRigth, HandleChatOrAttende, eventPrivate,totalPrivateMessages } = useContext(HelperContext);
   const animateIcon = 'animate__animated animate__bounceIn';
   return (
     <Menu mode='none' theme='light' style={stylesMenuItems}>
@@ -36,7 +36,7 @@ const MenuRigth = (props) => {
               key='1'
               icon={
                 <span>
-                  <Badge count={props.totalNewMessages}>
+                  <Badge count={totalPrivateMessages}>
                     <CommentOutlined
                       className={animateIcon}
                       style={{

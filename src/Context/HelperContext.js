@@ -45,6 +45,7 @@ export const HelperContextProvider = ({ children }) => {
   const [chatAttendeChats, setchatAttendeChats] = useState('1');
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
   const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
+  const [totalPrivateMessages, settotalPrivateMessages] = useState(0);
   useEffect(() => {
     if (!cEvent.value) return;
     let firstroute = Object.keys(cEvent.value.itemsMenu);
@@ -87,7 +88,9 @@ export const HelperContextProvider = ({ children }) => {
   /*LECTURA DE MENSAJES*/
   function ReadMessages(data) {
     if (data == null) return;
+
     let messages = data.participants.filter((participant) => participant.idparticipant != cUser.value.uid);
+    settotalPrivateMessages(parseInt(totalPrivateMessages - messages[0].countmessajes));
     messages[0].countmessajes = 0;
     //otro participante
     let otherparticipant = data.participants.filter((participant) => participant.idparticipant == cUser.value.uid);
@@ -312,6 +315,17 @@ export const HelperContextProvider = ({ children }) => {
 
           list.push(data);
         });
+
+        let totalNewMessages = 0;
+        list.map((privateuser) => {
+          let countsmsj =
+            privateuser?.participants &&
+            privateuser.participants.filter((participant) => participant.idparticipant !== cUser.value.uid);
+          if (countsmsj && countsmsj[0]?.countmessajes != undefined) {
+            totalNewMessages = totalNewMessages + countsmsj[0].countmessajes;
+          }
+        });
+        settotalPrivateMessages(totalNewMessages);
         setPrivatechatlist(list);
       });
 
@@ -498,6 +512,7 @@ export const HelperContextProvider = ({ children }) => {
         eventPrivate,
         seteventPrivate,
         GetPermissionsEvent,
+        totalPrivateMessages,
       }}>
       {children}
     </HelperContext.Provider>
