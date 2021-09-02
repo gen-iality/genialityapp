@@ -318,9 +318,9 @@ export const HelperContextProvider = ({ children }) => {
 
         let totalNewMessages = 0;
         list.map((privateuser) => {
-          let countsmsj = privateuser.participants.filter(
-            (participant) => participant.idparticipant !== cUser.value.uid
-          );
+          let countsmsj =
+            privateuser?.participants &&
+            privateuser.participants.filter((participant) => participant.idparticipant !== cUser.value.uid);
           if (countsmsj && countsmsj[0]?.countmessajes != undefined) {
             totalNewMessages = totalNewMessages + countsmsj[0].countmessajes;
           }
