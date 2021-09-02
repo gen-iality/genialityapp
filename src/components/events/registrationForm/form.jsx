@@ -276,10 +276,10 @@ const FormRegister = ({
               );
             }, 100);
           } else {
-            window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=1`);
+            window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${typeRegister=='free'?1:3}`);
           }
         } else {
-          window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
+         // window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
           //Usuario ACTUALIZADO
           // let msg =
           //   'Ya se ha realizado previamente el registro con el correo: ' +
