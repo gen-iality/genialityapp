@@ -98,6 +98,7 @@ class Speaker extends Component {
       else await SpeakersApi.create(eventID, info);
       sweetAlert.hideLoading();
       sweetAlert.showSuccess('Información guardada');
+      this.props.history.push(`/event/${eventID}/speakers`)
     } catch (e) {
       sweetAlert.showError(handleRequestError(e));
     }

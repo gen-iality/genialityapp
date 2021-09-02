@@ -3,19 +3,18 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import { SpeakersApi } from '../../helpers/request';
 import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import EvenTable from '../events/shared/table';
 import { handleRequestError, sweetAlert } from '../../helpers/utils';
 import Pagination from '../shared/pagination';
 import SearchComponent from '../shared/searchTable';
-import { Space, Button, Row, Col, Typography } from 'antd';
+import { Space, Button, Row, Table, Image} from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Card } from 'antd';
 
-const { Meta } = Card;
+//const { Meta } = Card;
 
 class SpeakersList extends Component {
   constructor(props) {
     super(props);
+    let self = this;
     this.state = {
       loading: true,
       list: [],
@@ -23,6 +22,54 @@ class SpeakersList extends Component {
       pageOfItems: [],
       changeItem: false,
       redirect: false,
+      viewModal: false,
+      columns: [
+        {
+          title: 'Nombre',
+          dataIndex: 'name',
+          key: 'name',
+        },
+        {
+          title: 'Profesión',
+          dataIndex: 'profession',
+          key: 'profession',
+        },
+        {
+          title: 'Imagen',
+          dataIndex: 'image',
+          key: 'image',
+          render(val, item) {
+            return (
+              <Space key={item._id} size='small'>
+                <Image key={'img' + item._id} width={70} height={70} src={item.image} />
+              </Space>
+            );
+          },
+        },
+        {
+          title: 'Opciones',
+          dataIndex: 'options',
+          key: 'options',
+          render(val, item) {
+            return (
+              <>
+                <Link key='edit' to={{ pathname: `${props.matchUrl}/speaker`, state: { edit: item._id } }}>
+                  <Button icon={<EditOutlined />} />
+                </Link>
+                <Button
+                  style={{ marginLeft: 15 }}
+                  key='delete'
+                  onClick={() => {
+                    self.remove(item);
+                  }}
+                  icon={<DeleteOutlined />}
+                  type='danger'
+                />             
+              </>
+            );
+          },
+        },
+      ],
     };
   }
 
@@ -85,9 +132,9 @@ class SpeakersList extends Component {
           />
         }>
         <Row justify='left' gutter={[25, 25]}>
-          {speakersList.map((speaker) => (
-            <Col key={speaker._id} xs={12} sm={8} md={6} lg={6} xl={4} xxl={4}>
-              <Card
+          {/*speakersList.map((speaker) => (*/}
+          {/*<Col key={speaker._id} xs={12} sm={8} md={6} lg={6} xl={4} xxl={4}>*/}
+          {/*  <Card
                 hoverable
                 style={{ width: '100%' }}
                 bodyStyle={{padding:'10px', minHeight: '80px'}}
@@ -115,9 +162,9 @@ class SpeakersList extends Component {
                 }>
                   <Typography.Paragraph ellipsis={{rows:2}} strong>{speaker.name}</Typography.Paragraph>
                 
-              </Card>
+              </Card>*/}
 
-              {/* {' '}
+          {/* {' '}
                 <tr key={speaker._id} style={{ background: '#cccccc' }}>
                   <td>
                     <div style={{ display: 'flex' }}>
@@ -143,8 +190,9 @@ class SpeakersList extends Component {
                     </Space>
                   </td>
                 </tr> */}
-            </Col>
-          ))}
+          {/* </Col>*/}
+          {/* ))*/}        
+          <Table style={{ width: '100%' }} columns={this.state.columns} dataSource={speakersList} />
         </Row>
 
         <Pagination items={list} change={this.state.changeItem} onChangePage={this.onChangePage} />
