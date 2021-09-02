@@ -38,6 +38,7 @@ import { setSectionPermissions } from '../../../redux/sectionPermissions/actions
 import { connect } from 'react-redux';
 import { useContext } from 'react';
 import HelperContext from '../../../Context/HelperContext';
+import { CurrentEventUserContext } from '../../../Context/eventUserContext';
 // import InputFile from "./inputFile"
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -139,7 +140,7 @@ const FormRegister = ({
   let [fieldCode, setFieldCode] = useState(null);
   initialValues.codearea = null;
   let { eventPrivate}=useContext(HelperContext)
-  console.log("EVENTSECTION==>",eventPrivate.section)
+  let cEventUser=useContext(CurrentEventUserContext)
   useEffect(() => {
     let formType = !eventUserId ? 'register' : 'transfer';
     setFormMessage(FormTags(formType));
@@ -190,7 +191,7 @@ const FormRegister = ({
       //values[fieldCode] = `${numberareacode}`;
       values['code'] = areacodeselected;
     }
-    console.log('VALUES;', values);
+    
 
     setSectionPermissions({ view: false, ticketview: false });
     values.password = password;
@@ -216,6 +217,7 @@ const FormRegister = ({
 
     let textMessage = {};
     textMessage.key = key;
+ 
     if (eventUserId) {
       try {
         await TicketsApi.transferToUser(eventId, eventUserId, snap);
@@ -270,13 +272,14 @@ const FormRegister = ({
             setTimeout(function() {
               window.location.replace(
                 eventId=='60cb7c70a9e4de51ac7945a2'?`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
-                :`/landing/${eventId}/${eventPrivate.section}?register=${typeRegister=='free'?2:3}&token=${resp.data.user.initial_token}`
+                :`/landing/${eventId}/${eventPrivate.section}?register=${ eventUser==null?typeRegister=='free' ?2:3:4}&token=${resp.data.user.initial_token}`
               );
             }, 100);
           } else {
             window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=1`);
           }
         } else {
+          window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
           //Usuario ACTUALIZADO
           // let msg =
           //   'Ya se ha realizado previamente el registro con el correo: ' +
