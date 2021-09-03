@@ -16,6 +16,7 @@ import { UseCurrentUser } from '../../Context/userContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../Context/HelperContext';
+import { useEffect } from 'react';
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
 const callback = () => {};
@@ -56,6 +57,13 @@ let SocialZone = function(props) {
       busquedaRef.current.value = '';
     }
   };
+  useEffect(()=>{
+  if(chatAttendeChats){
+    if(chatAttendeChats==4){
+      props.setMainStage("game");
+    }
+  }
+  },[chatAttendeChats])
 
   function redirectRegister() {
     history.push(`/landing/${cEvent.value._id}/tickets`);
@@ -210,9 +218,9 @@ let SocialZone = function(props) {
             <Col span={4}>
               <ArrowLeftOutlined
                 style={{ color: cEvent.value.styles.textMenu }}
-                onClick={() => {
+                onClick={() => {                 
                   props.setMainStage(null);
-                  HandleChatOrAttende('');
+                  HandleChatOrAttende('1');
                 }}
               />
             </Col>

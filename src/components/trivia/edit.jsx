@@ -526,7 +526,7 @@ class triviaEdit extends Component {
         key: 'choices',
         align: 'center',
         render: (e) => {
-          return <div>{e.choices.length}</div>;
+          return <div>{e.choices?.length}</div>;
         },
       },
       {
