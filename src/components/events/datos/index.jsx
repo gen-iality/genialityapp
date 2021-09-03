@@ -53,7 +53,7 @@ class Datos extends Component {
     try {
       let fields = await EventFieldsApi.getAll(this.eventID);
       fields = this.orderFieldsByWeight(fields);
-
+      fields = this.updateIndex(fields);
       this.setState({ fields, loading: false });
     } catch (e) {
       this.showError(e);
