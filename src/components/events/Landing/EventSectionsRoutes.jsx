@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext} from 'react';
 import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -39,7 +39,7 @@ import InfoEvent from '../../shared/infoEvent';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext);
+  let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext); 
 
   function ValidateViewPermissions(route, nombresection) {
     if (props.cEvent.value !== null) {
@@ -70,7 +70,27 @@ const EventSectionRoutes = (props) => {
       }
     }
   }
-
+  const obtenerFirstSection = () => {
+    if (props.cEvent.value == null) return;
+    let firstroute = Object.keys(props.cEvent.value.itemsMenu);
+    let firstrouteValues = Object.values(props.cEvent.value.itemsMenu);
+    let index = -1;
+    if (firstroute && firstrouteValues) {
+      if (firstroute.length > 0 && firstrouteValues.length > 0) {
+        for (let i = 0; i < firstrouteValues.length; i++) {
+          if (firstrouteValues[i]?.position == '1') {
+            index = i;
+            break;
+          }
+        }
+        if (index > -1) {
+          return firstroute[index];
+        } else {
+          return firstroute[0];
+        }
+      }
+    }
+  };
   useEffect(async () => {
     props.cEvent.value && (await initUserPresence(props.cEvent.value._id));
   }, [props.cEvent.value]);
@@ -96,7 +116,9 @@ const EventSectionRoutes = (props) => {
 
       <Switch>
         <Route exact path={`${path}/`}>
-          <Redirect to={`/landing/${props.cEvent.value._id}/${eventPrivate.section}`} />
+          {props.cEvent.value?.itemsMenu && (
+            <Redirect to={`/landing/${props.cEvent.value._id}/${obtenerFirstSection()}`} />
+          )}
         </Route>
 
         <Route path={`${path}/documents`}>
