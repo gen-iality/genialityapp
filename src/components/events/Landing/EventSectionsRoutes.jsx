@@ -88,7 +88,9 @@ const EventSectionRoutes = (props) => {
               <InfoEvent />
             )}
           <VirtualConferenceBig />
-          <ListVideoCard idevent={props.cEvent.value} />
+          {props.cEvent.value.styles.show_video_widget &&
+            (props.cEvent.value.styles.show_video_widget === true ||
+              props.cEvent.value.styles.show_video_widget === 'true') && <ListVideoCard idevent={props.cEvent.value} />}
         </>
       )}
 

@@ -6,9 +6,6 @@ import { DownOutlined, LogoutOutlined } from '@ant-design/icons';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
-import { EventsApi } from '../../helpers/request';
-import { useEffect } from 'react';
-import { useState } from 'react';
 
 const MenuStyle = {
   flex: 1,
@@ -23,28 +20,15 @@ const ItemStyle = {
   margin: 5,
 };
 
-let UserStatusAndMenu = (props) => {
-  console.log("PROPSUSER==>",props)
+const UserStatusAndMenu = (props) => {
   let user = props.user;
   let photo = props.photo;
-  let name = props.name;
+  let name = props.loginInfo.displayName;
   let logout = props.logout;
-  let eventId = props.eventId;
-  const [visibleOptions,setVisibleOptions]=useState(true) 
-  useEffect(() => {
-    const path = window.location.pathname.split('/');
-    let eventId = path[2] || path[1]
-   
-    if (eventId) {
-      if(eventId =='60cb7c70a9e4de51ac7945a2'){
-        setVisibleOptions(false)       
-      }
-    }
-  console.log("USER==>",props.user)
-   /* async function eventuserData() {     
-      let user = await EventsApi.getEventUser(props.userEvent._id, props.eventId);
-    }*/
-  }, [window.location.pathname]);
+
+  function linkToTheMenuRouteS(menuRoute) {
+    window.location.href = `${window.location.origin}${menuRoute}`
+  }
 
   let menu = (
     <Menu>
@@ -60,24 +44,18 @@ let UserStatusAndMenu = (props) => {
           <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
         </NavLink>
       </Menu.Item>
-      {visibleOptions&&<Menu.Item style={ItemStyle}>
-        <Link to={`/tickets/${props.userEvent?._id}`}>
+      <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/tickets/${props.userEvent._id}`)}>
           <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
-        </Link>
-      </Menu.Item>}
-      {visibleOptions&& <Menu.Item style={ItemStyle}>
-        <NavLink exact to={`/eventEdit/${props.userEvent?._id}#events`}>
+      </Menu.Item>
+      <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/eventEdit/${props.userEvent._id}#events`)}>
           <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
-        </NavLink>
-      </Menu.Item>}
+      </Menu.Item>
 
-      {visibleOptions&&  <Menu.Item style={ItemStyle}>
-        <Link to={'/create-event'}>
+      <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/create-event`)}>
           <Button type='primary' size='medium'>
             <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
           </Button>
-        </Link>
-      </Menu.Item>}
+      </Menu.Item>
       <Menu.Divider />
       <Menu.Item style={ItemStyle}>
         <a onClick={logout}>
@@ -121,7 +99,7 @@ let UserStatusAndMenu = (props) => {
     </Row>
   );
 
-  return <React.Fragment>{user ? loggedInuser : loggedOutUser}</React.Fragment>;
+  return <>{user ? loggedInuser : loggedOutUser}</>;
 };
 
 const mapDispatchToProps = {
