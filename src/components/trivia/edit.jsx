@@ -340,7 +340,7 @@ class triviaEdit extends Component {
 
       this.setState({ question: newListQuestion });
       message.success({ content: response, key: 'updating' });
-    });
+    }); 
   };
 
   // Editar pregunta
