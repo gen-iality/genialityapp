@@ -17,7 +17,7 @@ function WithUserEventRegistered(Component) {
           e;
         }
       })();
-    }, [props.usuarioRegistrado]);
+    }, [props.usuarioRegistrado]); 
 
     return (
       <div>
