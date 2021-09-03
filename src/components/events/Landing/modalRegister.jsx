@@ -11,7 +11,7 @@ const ModalRegister = ({ register, setRegister, event }) => {
       ? `Bienvenido al evento ${event?.name}`
       : register == 3 && `Su registro ha sido exitoso, click al siguiente enlace para realizar la donación`;
 
-  let infoButton = register == 1 ? 'Cerrar' : register == 2 ? `Disfrutar del evento` : register == 3 && `REGISTRO PAGO`;
+  let infoButton = register == 1 ? 'Cerrar' : register == 2 ? `Disfrutar del evento` : register == 3 ?`REGISTRO PAGO`: `Disfrutar del evento`;
 
   console.log('Registro', register);
   console.log('Mensaje', message);
