@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Avatar, Button, message, List, Card, Spin, Alert, Popconfirm } from 'antd';
+import { Avatar, Button, message, List, Card, Spin, Alert, Popconfirm, Space, Typography, Image } from 'antd';
 import TimeStamp from 'react-timestamp';
 import { MessageOutlined, LikeOutlined, DeleteOutlined } from '@ant-design/icons';
 import CommentEditor from './commentEditor';
@@ -36,19 +36,18 @@ class WallList extends Component {
       event: this.props.cEvent.value || {},
     };
   }
- 
 
-  innerCreateComment = async (post, comment) => {   
+  innerCreateComment = async (post, comment) => {
     await this.setState({ commenting: post.id });
     await this.setState({ commenting: null });
-    message.success('Comentario creado.');    
+    message.success('Comentario creado.');
     const dataPost = await saveFirebase.createComment(post.id, this.state.event._id, comment, this.props.cUser.value);
     this.setState({ dataPost });
 
     this.innershowComments(post.id, post.comments + 1);
   };
 
-  innershowComments = async (postId, commentsCount) => {    
+  innershowComments = async (postId, commentsCount) => {
     let newdisplayedComments = { ...this.state.displayedComments };
 
     //Mostramos los comentarios
@@ -91,7 +90,7 @@ class WallList extends Component {
 
   render() {
     const { dataPost, event } = this.state;
-   
+
     return (
       <Fragment>
         <div>
@@ -116,7 +115,17 @@ class WallList extends Component {
                 dataSource={dataPost}
                 // Aqui se mapea al array del state
                 renderItem={(item) => (
-                  <Card style={{ marginBottom: '20px' }}>
+                  <Card
+                    style={{ marginBottom: '20px' }}
+                    actions={[
+                      <CommentEditor
+                        key='text'
+                        onSubmit={(comment) => {
+                          this.innerCreateComment(item, comment);
+                        }}
+                        user={this.props.cUser}
+                      />,
+                    ]}>
                     <List.Item
                       key={item.id}
                       style={{ padding: '0px' }}
@@ -169,12 +178,10 @@ class WallList extends Component {
                         }
                       />
 
-                      <br />
-                      {item.post}
-                      <br />
-                      <br />
+                      <Typography.Paragraph>{item.post}</Typography.Paragraph>
+
                       {item.urlImage && (
-                        <img
+                        <Image
                           width={'100%'}
                           style={{
                             display: 'block',
@@ -184,15 +191,14 @@ class WallList extends Component {
                           src={item.urlImage}
                         />
                       )}
-                      <br />
                     </List.Item>
                     {this.state.displayedComments[item.id]}
-                    <CommentEditor
+                    {/* <CommentEditor
                       onSubmit={(comment) => {
                         this.innerCreateComment(item, comment);
                       }}
                       user={this.props.cUser}
-                    />
+                    /> */}
                   </Card>
                 )}
               />
