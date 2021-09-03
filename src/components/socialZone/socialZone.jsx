@@ -60,7 +60,7 @@ let SocialZone = function(props) {
   useEffect(()=>{
   if(chatAttendeChats){
     if(chatAttendeChats==4){
-      props.setMainStage("game");
+      props.setMainStage("game"); 
     }
   }
   },[chatAttendeChats])
