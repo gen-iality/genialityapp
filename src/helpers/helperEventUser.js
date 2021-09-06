@@ -3,12 +3,9 @@ function isEventAuthor(evenUser, event) {
   return isAuthor;
 }
 
-export function isHost(evenUser, event) {
+export const isHost = (evenUser, event) =>{
   let rolhost = '5afb0efc500a7104f77189cf';
   let host = evenUser.rol_id === rolhost ? 1 : 0 || isEventAuthor(evenUser, event);
   return host;
 }
 
-export const eventUserUtils = {
-  isHost,
-};

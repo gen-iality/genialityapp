@@ -10,6 +10,7 @@ import { HelperContext } from '../../../../Context/HelperContext';
 
 const MenuRigth = (props) => {
   let { HandleOpenCloseMenuRigth, HandleChatOrAttende, eventPrivate,totalPrivateMessages } = useContext(HelperContext);
+  
   const animateIcon = 'animate__animated animate__bounceIn';
   return (
     <Menu mode='none' theme='light' style={stylesMenuItems}>

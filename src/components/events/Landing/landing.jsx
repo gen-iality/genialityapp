@@ -5,7 +5,7 @@ import { UseCurrentUser } from '../../../Context/userContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { HelperContext } from '../../../Context/HelperContext';
 /** ant design */
-import { Layout, Spin, notification, Button, Drawer,Modal, Result, Typography } from 'antd';
+import { Layout, Spin, notification, Button, Drawer, Modal, Result, Typography } from 'antd';
 
 /** Components */
 import TopBanner from './TopBanner';
@@ -67,7 +67,7 @@ const Landing = (props) => {
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
   let { isNotification, ChangeActiveNotification, eventPrivate } = useContext(HelperContext);
-  const [register,setRegister]=useState(null)
+  const [register, setRegister] = useState(null);
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -81,13 +81,13 @@ const Landing = (props) => {
       </Button>
     ) : null;
   };
- 
-  useEffect(()=>{
-  const urlParams = new URLSearchParams(window.location.search);  
-  if(urlParams.get("register")!==null){
-    setRegister(urlParams.get("register"))
-  }
-  },[])
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('register') !== null) {
+      setRegister(urlParams.get('register'));
+    }
+  }, []);
   //PARA OBTENER PARAMETRO AL LOGUEARME
   const NotificationHelper = ({ message, type, activity }) => {
     notification.open({
@@ -144,11 +144,9 @@ const Landing = (props) => {
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin />;
 
   return (
-   
-    <>    
-    
-    {register!=null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
-      <Layout>     
+    <>
+      {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
+      <Layout>
         <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}
           targetEventUser={props.userAgenda}
@@ -188,7 +186,7 @@ const Landing = (props) => {
         />
         <EnableGTMByEVENT />
         <EnableAnalyticsByEVENT />
-        <EnableFacebookPixelByEVENT/>
+        <EnableFacebookPixelByEVENT />
       </Layout>
     </>
   );
