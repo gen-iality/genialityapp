@@ -1,4 +1,4 @@
-import React, { useEffect, useContext} from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Redirect, Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -39,7 +39,7 @@ import InfoEvent from '../../shared/infoEvent';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext); 
+  let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext);
 
   function ValidateViewPermissions(route, nombresection) {
     if (props.cEvent.value !== null) {
@@ -192,7 +192,9 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
               </>
             ) : (
-              <AgendaActividadDetalle setVirtualConference={props.setVirtualConference} />
+              <>
+                <AgendaActividadDetalle setVirtualConference={props.setVirtualConference} />
+              </>
             )
           }
         </Route>

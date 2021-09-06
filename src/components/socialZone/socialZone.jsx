@@ -31,7 +31,7 @@ let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  let { attendeeList, HandleChatOrAttende, chatAttendeChats,totalPrivateMessages } = useContext(HelperContext);
+  let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages } = useContext(HelperContext);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [busqueda, setBusqueda] = useState(null);
@@ -57,13 +57,13 @@ let SocialZone = function(props) {
       busquedaRef.current.value = '';
     }
   };
-  useEffect(()=>{
-  if(chatAttendeChats){
-    if(chatAttendeChats==4){
-      props.setMainStage("game"); 
+  useEffect(() => {
+    if (chatAttendeChats) {
+      if (chatAttendeChats == 4) {
+        props.setMainStage('game');
+      }
     }
-  }
-  },[chatAttendeChats])
+  }, [chatAttendeChats]);
 
   function redirectRegister() {
     history.push(`/landing/${cEvent.value._id}/tickets`);
@@ -218,7 +218,7 @@ let SocialZone = function(props) {
             <Col span={4}>
               <ArrowLeftOutlined
                 style={{ color: cEvent.value.styles.textMenu }}
-                onClick={() => {                 
+                onClick={() => {
                   props.setMainStage(null);
                   HandleChatOrAttende('1');
                 }}

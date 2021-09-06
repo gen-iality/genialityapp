@@ -677,29 +677,6 @@ class Agenda extends Component {
           </div>
         </Modal>
 
-        {/* {currentActivity && (
-          <AgendaActividadDetalle
-            visible={this.state.visible}
-            onClose={this.onClose}
-            showDrawer={this.showDrawer}
-            matchUrl={this.props.matchUrl}
-            survey={survey}
-            activity={this.props.activity}
-            cUser={this.props.cUser}
-            currentActivity={currentActivity}
-            image_event={this.props.cEvent.value.styles.event_image}
-            gotoActivityList={this.gotoActivityList}
-            toggleConference={toggleConference}
-            currentUser={this.props.cUser}
-            collapsed={this.props.collapsed}
-            toggleCollapsed={this.props.toggleCollapsed}
-            cEventUser={this.props.cEventUser.value}
-            cEvent={this.props.cEvent.value}
-            showSection={this.props.showSection}
-            zoomExternoHandleOpen={this.props.zoomExternoHandleOpen}
-            eventSurveys={this.props.cEvent.valueSurveys}
-          />
-        )} */}
 
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && loading && (
