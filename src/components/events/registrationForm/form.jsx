@@ -135,7 +135,7 @@ const FormRegister = ({
   const [typeRegister, setTypeRegister] = useState('free');
   const [payMessage, setPayMessage] = useState(false);
   const [form] = Form.useForm();
-  let [areacodeselected, setareacodeselected] = useState(57);
+  let [areacodeselected, setareacodeselected] = useState();
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   initialValues.codearea = null;
@@ -418,9 +418,10 @@ const FormRegister = ({
       if (type === 'codearea') {
         const prefixSelector = (
           <Select
-            style={{ width: '100%' }}
+            showSearch
+            optionFilterProp="children"
+            style={{ fontSize: '12px', width: 150 }}
             value={areacodeselected}
-            //required={mandatory}
             onChange={(val) => {
               setareacodeselected(val);
               console.log(val);
@@ -428,8 +429,8 @@ const FormRegister = ({
             placeholder='Codigo de area del pais'>
             {areaCode.map((code, key) => {
               return (
-                <Option key={key} value={code.value}>
-                  {code.label + ' (+' + code.value + ')'}
+                <Option key={key} value={code.value} >
+                  {`${code.label} (+${code.value})`}
                 </Option>
               );
             })}
