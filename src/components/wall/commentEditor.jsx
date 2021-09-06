@@ -40,14 +40,16 @@ const CommentEditor = ({ onSubmit, user }) => {
                 autoSize
                 id='comment'
                 allowClear
+                showCount
+                maxLength={500}
               />
             </Col>
             <Button
               id='submitButton'
               htmlType='submit'
-              type='link'
+              type='primary'
               onClick={innerOnSubmit.bind(null, onSubmit, comment, setComment, user, setVisibleNoUser)}
-              style={{ color: 'gray' }}
+              style={{ color: 'white' }}
               icon={<SendOutlined />}
             />
           </Row>
