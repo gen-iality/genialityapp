@@ -9,7 +9,7 @@ import WithFooter from '../components/withFooter';
 import { CurrentUserEventProvider } from '../Context/eventUserContext';
 import { CurrentEventProvider, CurrentEventContext } from '../Context/eventContext';
 import { CurrentUserProvider } from '../Context/userContext';
-import { SurveysProvider }     from '../Context/surveysContext';
+import { SurveysProvider } from '../Context/surveysContext';
 
 import { HelperContextProvider } from '../Context/HelperContext';
 import EventOrganization from '../components/eventOrganization';
@@ -39,7 +39,7 @@ const EventFinished = asyncComponent(() => import('../components/eventFinished/e
 
 const ContentContainer = () => {
   return (
-    <main className='main' >
+    <main className='main'>
       <Switch>
         <Route path='/landing/:event_id'>
           <CurrentEventProvider>
@@ -47,7 +47,7 @@ const ContentContainer = () => {
               <CurrentUserProvider>
                 <HelperContextProvider>
                   <SurveysProvider>
-                  <Landing />
+                    <Landing />
                   </SurveysProvider>
                 </HelperContextProvider>
               </CurrentUserProvider>
@@ -71,7 +71,7 @@ const ContentContainer = () => {
         <PrivateRoute path='/create-event' component={NewEvent} />
         <PrivateRoute path='/profile/:id' component={MyProfile} />
         <Route exact path='/organization/:id/events' component={EventOrganization} />
-        <PrivateRoute path='/admin/organization/:id' component={Organization} />       
+        <PrivateRoute path='/admin/organization/:id' component={Organization} />
         <PrivateRoute path='/purchase/:id' component={Purchase} />
         <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
         <PrivateRoute path='/tickets/:id' component={Tickets} />
@@ -112,10 +112,9 @@ function QRedirect({ match }) {
 }
 
 //Función que permite redirigir a portal evius se debe optimizar para mejor rendimiento
-function RedirectPortal(){  
-  return <div>{window.location.assign("http://portal.evius.co/")}</div>
+function RedirectPortal() {
+  return <div>{window.location.assign('http://portal.evius.co/')}</div>;
 }
-
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
