@@ -118,7 +118,7 @@ class documentsList extends Component {
                       }
                     />
                   </List.Item>
-                  {files
+                  {files && files
                     .filter((file) => file.father_id == item._id)
                     .map((files, key) => (
                       <List.Item

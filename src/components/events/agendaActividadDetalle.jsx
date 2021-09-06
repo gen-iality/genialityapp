@@ -798,7 +798,7 @@ let AgendaActividadDetalle = (props) => {
                                   )}
                                 />
                                 {idSpeaker ? (
-                                  <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} />
+                                  <ModalSpeaker showModal={true} eventId={props.cEvent.value._id} speakerId={idSpeaker} />
                                 ) : (
                                   <></>
                                 )}

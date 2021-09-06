@@ -48,7 +48,7 @@ export const HelperContextProvider = ({ children }) => {
   const [totalPrivateMessages, settotalPrivateMessages] = useState(0);
   useEffect(() => {
     if (!cEvent.value) return;
-    let firstroute = Object.keys(cEvent.value.itemsMenu);
+    let firstroute = Object.keys(cEvent.value.itemsMenu);  
     if (firstroute[0] != undefined) {
       seteventPrivate({ private: false, section: firstroute[0] });
     }

@@ -1,17 +1,22 @@
 import React, { Component, Fragment } from 'react';
-import { EventFieldsApi } from '../../../helpers/request';
+import { Actions, EventFieldsApi } from '../../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import EventContent from '../shared/content';
 import EventModal from '../shared/eventModal';
 import DatosModal from './modal';
 import Dialog from '../../modal/twoAction';
-import { Tabs, Table, Checkbox, notification } from 'antd';
+import { Tabs, Table, Checkbox, notification, Button } from 'antd';
 import RelationField from './relationshipFields';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import DragDrop from './dragDrop';
+import { EditOutlined, DeleteOutlined, DragOutlined } from '@ant-design/icons';
+import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
+import arrayMove from 'array-move';
+
 import { firestore } from '../../../helpers/firebase';
 
+const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
+const SortableItem = sortableElement((props) => <tr {...props} />);
+const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 const { TabPane } = Tabs;
 
 class Datos extends Component {
@@ -24,9 +29,11 @@ class Datos extends Component {
       deleteModal: false,
       edit: false,
       fields: [],
+      properties: null,
     };
     this.eventID = this.props.eventID;
     this.html = document.querySelector('html');
+    this.submitOrder = this.submitOrder.bind(this);
   }
 
   async componentDidMount() {
@@ -46,11 +53,20 @@ class Datos extends Component {
     try {
       let fields = await EventFieldsApi.getAll(this.eventID);
       fields = this.orderFieldsByWeight(fields);
-
+      fields = this.updateIndex(fields);
       this.setState({ fields, loading: false });
     } catch (e) {
       this.showError(e);
     }
+  };
+  //Permite asignarle un index a los elementos
+  updateIndex = (fields) => {
+    console.log('Update index');
+    for (var i = 0; i < fields.length; i++) {
+      fields[i].index = i;
+      fields[i].order_weight = i + 1;
+    }
+    return fields;
   };
 
   //Agregar nuevo campo
@@ -85,6 +101,22 @@ class Datos extends Component {
       this.showError(e);
     }
   };
+
+  
+  //Funcion para guardar el orden de los datos
+  async submitOrder() {
+    console.log(this.state.properties);
+    await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
+
+    notification.open({
+      message: 'Información salvada',
+      description: 'El orden de la recopilacion de datos se ha guardado',
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
+    this.fetchFields();
+  }
 
   //Abrir modal para editar dato
   editField = (info) => {
@@ -150,10 +182,56 @@ class Datos extends Component {
       });
     }
   }
+    //Contenedor draggable
+    DraggableContainer = (props) => (
+      <SortableContainer
+        useDragHandle
+        disableAutoscroll
+        helperClass='row-dragging'
+        onSortEnd={this.onSortEnd}
+        {...props}
+      />
+    );
+   //Función para hacer que el row sea draggable
+   DraggableBodyRow = ({ className, style, ...restProps }) => {
+    const { fields } = this.state;
+    // function findIndex base on Table rowKey props and should always be a right array index
+    const index = fields.findIndex((x) => x.index === restProps['data-row-key']);
+    return <SortableItem index={index} {...restProps} />;
+  };
+
+  //Función que se ejecuta cuando se termina de hacer drag
+  onSortEnd = ({ oldIndex, newIndex }) => {
+    console.log('OLD INDEX=>' + oldIndex);
+    console.log('NEW INDEX=>' + newIndex);
+    let user_properties = this.state.user_properties;
+    const { fields } = this.state;
+    if (oldIndex !== newIndex) {
+      let newData = arrayMove([].concat(fields), oldIndex, newIndex).filter((el) => !!el);
+      newData = this.updateIndex(newData);
+      console.log(newData);
+      user_properties = newData;
+      console.log(user_properties);
+      this.setState({
+        fields: newData,
+        user_properties,
+        available: false,
+        properties: { user_properties: user_properties },
+      });
+    }
+  };
+
 
   render() {
     const { fields, modal, edit, info } = this.state;
     const columns = [
+      {
+        title: '',
+        dataIndex: 'sort',
+        width: 30,
+        className: 'drag-visible',
+        render: () => <DragHandle />,
+      },
       {
         title: 'Dato',
         dataIndex: 'label',
@@ -218,12 +296,18 @@ class Datos extends Component {
                 <Table
                   columns={columns}
                   dataSource={fields}
-                  pagination={{
-                    total: fields.length,
-                    pageSize: fields.length,
-                    hideOnSinglePage: true,
+                  pagination={false}
+                  rowKey='index'
+                  components={{
+                    body: {
+                      wrapper: this.DraggableContainer,
+                      row: this.DraggableBodyRow,
+                    },
                   }}
                 />
+                 <Button style={{ marginTop: '3%' }} disabled={this.state.available} onClick={this.submitOrder}>
+                  Guardar orden de Datos
+                </Button>
               </EventContent>
               {modal && (
                 <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
@@ -246,7 +330,7 @@ class Datos extends Component {
             <RelationField eventId={this.props.eventID} fields={fields} />
           </TabPane>
         </Tabs>
-        <DragDrop eventId={this.props.eventID} list={fields} />
+        {/*<DragDrop eventId={this.props.eventID} list={fields} />*/}
       </div>
     );
   }

@@ -554,6 +554,28 @@ class Agenda extends Component {
     });
     return renderList;
   };
+  //FUNCION QUE PERMITE VERIFICAR SI EXISTEN ACTIVIDADES PUBLICADAS POR DIA
+  //SIRVE PARA MOSTRAR U OCULTAR FECHAS
+  getActivitiesByDayVisibility = (date) => {
+    const { toggleConference } = this.props;
+    const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
+
+    //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
+    const list =
+      date != null
+        ? data
+            .filter(
+              (a) => date && date.format && a.datetime_start && a.datetime_start.includes(date.format('YYYY-MM-DD')) && (a.isPublished || a.isPublished==undefined)
+            )
+            .sort(
+              (a, b) =>
+                Moment(a.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY') -
+                Moment(b.datetime_start, 'h:mm:ss a').format('dddd, MMMM DD YYYY')
+            )
+        : data;        
+        return list;
+
+  };
 
   //End modal methods
 
@@ -741,7 +763,8 @@ class Agenda extends Component {
                         paddingLeft: '25px',
                       }}>
                       {days.map((day, index) => (
-                        <TabPane
+                       
+                       this.getActivitiesByDayVisibility(day) && this.getActivitiesByDayVisibility(day).length>0 &&  <TabPane
                           style={{ paddingLeft: '20px', paddingRight: '20px' }}
                           tab={
                             <span
@@ -756,7 +779,7 @@ class Agenda extends Component {
                             </span>
                           }
                           key={index}>
-                          {this.getActivitiesByDay(day)}
+                          {this.getActivitiesByDay(day)}                         
                         </TabPane>
                       ))}
                     </Tabs>

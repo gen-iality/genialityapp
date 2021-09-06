@@ -36,7 +36,9 @@ class Graphics extends Component {
       resultVotos: {},
     };
   }
-
+  dismiss() {
+    this.chart.destroy()
+  } 
   // Funcion que permite dividir una cadena
   divideString = (string) => {
     let separatedByWhiteSpace = string.split(/\s/);
@@ -80,7 +82,7 @@ class Graphics extends Component {
     this.setState({ currentPage: page }, this.mountChart);
   };
 
-  updateData = ({ options, answer_count }) => {
+  updateData = ({ options, answer_count, optionsIndex }) => {
     let { graphicsFrame, chartCreated, chart } = this.state;
     let { horizontalBar, ChartPie, verticalBar } = graphicsFrame;
     const { operation } = this.props;
@@ -260,9 +262,9 @@ class Graphics extends Component {
       //   graphy.data.datasets[0].backgroundColor = [];
       //   graphy.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
       // }
-      chart.update();
 
-      this.setState({ chart });
+      chart.update();
+      this.setState({chart, currentPage: optionsIndex + 1});
     }
   };
 
@@ -286,15 +288,10 @@ class Graphics extends Component {
 
   render() {
     let { dataSurvey, currentPage, titleQuestion, dataVotos } = this.state;
-    let { ChartPie } = graphicsFrame;
-    const { Paragraph, Text } = Typography;
+
+    const { Paragraph } = Typography;
     const { surveyLabel } = this.props;
-    const Stylepie = {
-      paddingLeft: '300px',
-      paddingRight: '300px',
-      paddingTop: '0px',
-      paddingBottom: '0px',
-    };
+
     let cSurveys = this.context
     if (dataSurvey.questions)
       return (
@@ -331,7 +328,7 @@ class Graphics extends Component {
 
             <br />
             <Pagination
-              defaultCurrent={currentPage}
+              current={currentPage}
               total={dataSurvey.questions.length * 10}
               onChange={this.setCurrentPage}
             />
