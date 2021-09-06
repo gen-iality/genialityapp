@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { List, Tooltip, Popover, Avatar } from 'antd';
+import { List, Tooltip, Popover, Avatar, Typography, Space } from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
 import InfiniteScroll from 'react-infinite-scroller';
 import { UseCurrentUser } from '../../../Context/userContext';
 import { HelperContext } from '../../../Context/HelperContext';
+import Record from '@2fd/ant-design-icons/lib/Record';
 const AttendeList = function(props) {
   //contextos
   let cUser = UseCurrentUser();
@@ -139,25 +140,29 @@ const AttendeList = function(props) {
               }
               title={
                 <Popover
-                  trigger='click'
+                  trigger='hover'
                   style={{ padding: '0px !important', zIndex: 900 }}
                   placement='leftTop'
                   content={<PopoverInfoUser item={item} props={props} />}>
-                  <a style={{ color: 'black' }} key='list-loadmore-edit'>
+                  <Typography.Paragraph
+                    ellipsis={{ rows: 2 }}
+                    style={{ color: 'black', cursor: 'pointer', width: '90%', fontSize:'15px' }}
+                    key='list-loadmore-edit'>
                     {item.names}
-                  </a>
+                  </Typography.Paragraph>
                 </Popover>
               }
               description={
                 item.status === 'online' ? (
-                  <h1 style={{ color: '#0CD5A1' }}>
-                    <Avatar size={9} style={{ backgroundColor: '#0CD5A1' }}></Avatar> Online
-                  </h1>
+                  <Space size={5} style={{ color: '#52c41a' }}>
+                    <Record />
+                    <Typography.Text type='success'>Online</Typography.Text>
+                  </Space>
                 ) : (
-                  <h1 style={{ color: '#b5b5b5' }}>
-                    {' '}
-                    <Avatar size={9} style={{ backgroundColor: '#b5b5b5' }}></Avatar> Offline
-                  </h1>
+                  <Space size={5} style={{ color: '#b5b5b5' }}>
+                    <Record />
+                    <Typography.Text type='secondary'>Offline</Typography.Text>
+                  </Space>
                 )
               }
             />
