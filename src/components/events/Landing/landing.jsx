@@ -87,11 +87,7 @@ const Landing = (props) => {
   if(urlParams.get("register")!==null){
     setRegister(urlParams.get("register"))
   }
-  },[window.location.search])
-  
-
-
-
+  },[])
   //PARA OBTENER PARAMETRO AL LOGUEARME
   const NotificationHelper = ({ message, type, activity }) => {
     notification.open({
@@ -150,8 +146,8 @@ const Landing = (props) => {
   return (
    
     <>    
-     {console.log("REGISTER==>",register)}
-    <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />
+    
+    {register!=null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
       <Layout>     
         <AppointmentModal
           targetEventUserId={props.userAgenda?.eventUserId}
