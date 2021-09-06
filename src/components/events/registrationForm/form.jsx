@@ -599,7 +599,7 @@ const FormRegister = ({
         );
       }
 
-      if (name === 'picture') {
+      if (type === 'avatar') {
         ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
 
         input = (
@@ -612,11 +612,11 @@ const FormRegister = ({
                   setImgUrl(file.fileList);
                 }}
                 multiple={false}
-                listType='picture-card'
+                listType='picture'
                 maxCount={1}
                 fileList={ImgUrl}
                 beforeUpload={beforeUpload}>
-                <Button icon={<UploadOutlined />}>Avatar</Button>
+                <Button type='primary' icon={<UploadOutlined />} >Subir imagen de perfil</Button>
               </Upload>
             </ImgCrop>
           </div>
