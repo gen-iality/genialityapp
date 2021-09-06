@@ -154,7 +154,7 @@ class WallList extends Component {
                               <Popconfirm
                                 title='Seguro deseas eliminar este mensaje?'
                                 onConfirm={() => this.innerDeletePost(item.id)}>
-                                <Button key='list-vertical-message' type='text' icon={<DeleteOutlined />}>
+                                <Button key='list-vertical-message' type='text' danger icon={<DeleteOutlined />}>
                                   Eliminar
                                 </Button>
                               </Popconfirm>
