@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col } from 'antd';
 import CreatePost from './createPost';
 import ListWall from './listWall';
-import { firestore } from '../../helpers/firebase';
+
 import { saveFirebase } from './helpers';
 import withContext from '../../Context/withContext';
 import { setVirtualConference } from '../../redux/virtualconference/actions';
@@ -17,8 +17,7 @@ class Wall extends Component {
     };
   }
 
-  componentDidMount() {
-    this.getPost();
+  componentDidMount() { 
     this.props.setVirtualConference(false);
     if (this.props.cEventUser.value) {
       this.setState({ user: this.props.cEventUser.value });
@@ -28,12 +27,7 @@ class Wall extends Component {
   componentWillUnmount(){
     this.props.setVirtualConference(true);
   }
-
-  getPost = async () => {
-    // Se obtiene los post del muero
-    let posts = await this.getPosts();
-    this.setState({ dataPost: posts });
-  };
+ 
 
   addPosts = (post) => {
     this.setState({ dataPost: [post, ...this.state.dataPost] });
@@ -48,18 +42,18 @@ class Wall extends Component {
     var updatedPost = this.state.dataPost.filter(function(value) {
       return value.id !== postId;
     });
-    this.setState({ dataPost: updatedPost });
+    //this.setState({ dataPost: updatedPost });
     return true;
   };
 
   increaseLikes = async (postId,  userId) => {
     var updatedPost = await saveFirebase.increaseLikes(postId, this.props.cEvent.value._id, userId);
     //se actualiza local
-    updatedPost = this.state.dataPost.map(function(value) {
+   /* updatedPost = this.state.dataPost.map(function(value) {
       return value.id !== postId ? value : updatedPost;
     });
-    this.setState({ dataPost: updatedPost });
-    return true;
+   // this.setState({ dataPost: updatedPost });
+    return true;*/
   };
   createComment = async (postId, message) => {
     var updatedPost = await saveFirebase.createComment(
@@ -73,7 +67,7 @@ class Wall extends Component {
     updatedPost = this.state.dataPost.map(function(value) {
       return value.id !== postId ? value : updatedPost;
     });
-    this.setState({ dataPost: updatedPost });
+    //this.setState({ dataPost: updatedPost });
     return true;
   };
 
@@ -95,7 +89,7 @@ class Wall extends Component {
                 <ListWall
                   createComment={this.createComment}
                   key={this.state.keyList}
-                  dataPost={this.state.dataPost}
+                
                   deletePost={this.deletePost}
                   increaseLikes={this.increaseLikes}
                 />
@@ -107,34 +101,7 @@ class Wall extends Component {
     );
   }
 
-  //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
-  async getPosts() {
-    const dataPost = [];
-
-    try {
-      let adminPostRef = firestore
-        .collection('adminPost')
-        .doc(this.props.cEvent.value._id)
-        .collection('posts')
-        .orderBy('datePost', 'desc');
-      let snapshot = await adminPostRef.get();
-
-      if (snapshot.empty) {
-        return dataPost;
-      }
-
-      snapshot.forEach((doc) => {
-        var data = doc.data();
-        data.id = doc.id;
-
-        dataPost.push(data);
-      });
-
-      return dataPost;
-    } catch (e) {
-      return undefined;
-    }
-  }
+  
 }
 
 const mapDispatchToProps = {

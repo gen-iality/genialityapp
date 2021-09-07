@@ -31,6 +31,7 @@ export const saveFirebase = {
   },
 
   async increaseLikes(postId, eventId, userId) {
+    console.log("DATAA===>",postId, eventId, userId)
     var docRef = await firestore
       .collection('adminPost')
       .doc(eventId)
