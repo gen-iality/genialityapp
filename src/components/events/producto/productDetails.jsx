@@ -64,7 +64,7 @@ function DetailsProduct(props) {
                       <img
                         key={'image' + index}
                         style={{ width: '56vh', objectFit: 'contain' }}
-                        src={product.image[0]}
+                        src={product.image[index]}
                         alt='arte'
                       />
                     ))}
