@@ -34,8 +34,14 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
 const ZoomIframe = ({ platform, meeting_id, generalTabs }) => {
   let cEventuser = UseUserEvent();
   let cEvent = UseEventContext();
-  let { displayName, email } = cEventuser.value.properties;
-  let isHostuser = isHost(cEventuser.value, cEvent.value);
+  let displayName;
+  let email;
+  let isHostuser = 0;
+
+  if (cEventuser.value) {
+    let { displayName, email } = cEventuser.value.properties;
+    (displayName = displayName), (email = email), (isHostuser = isHost(cEventuser.value, cEvent.value));
+  }
 
   return (
     <IframeZoomComponent
