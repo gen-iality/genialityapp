@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { UseUserEvent } from '../../Context/eventUserContext';
 import { isHost } from '../../helpers/helperEventUser';
 import { UseEventContext } from '../../Context/eventContext';
@@ -11,7 +11,7 @@ const getMeetingPath = (platform, name, email, meeting_id, generalTabs, isHost) 
       meeting_id +
       `&userName=${name}` +
       `&email=${email}` +
-      `&disabledChat=${generalTabs.publicChat || generalTabs.privateChat}` +
+      `&disabledChat=${generalTabs.chat}` +
       `&host=${isHost}`
     );
   } else if (platform === 'vimeo') {
@@ -34,23 +34,21 @@ const IframeZoomComponent = ({ platform, name, email, meeting_id, generalTabs, i
 const ZoomIframe = ({ platform, meeting_id, generalTabs }) => {
   let cEventuser = UseUserEvent();
   let cEvent = UseEventContext();
-  let displayName;
-  let email;
-  let isHostuser = 0;
-
-  if (cEventuser.value) {
+  const [userEvent, setuserEvent] = useState({});
+  useEffect(() => {
+    if (!cEventuser.value || !cEvent.value) return;
     let { displayName, email } = cEventuser.value.properties;
-    (displayName = displayName), (email = email), (isHostuser = isHost(cEventuser.value, cEvent.value));
-  }
+    setuserEvent({ displayName: displayName, email: email, isHostuser: isHost(cEventuser.value, cEvent.value) });
+  }, [cEventuser.value, cEvent.value]);
 
   return (
     <IframeZoomComponent
       platform={platform}
-      name={displayName}
-      email={email}
+      name={userEvent.displayName}
+      email={userEvent.email}
       meeting_id={meeting_id}
       generalTabs={generalTabs}
-      isHost={isHostuser}
+      isHost={userEvent.isHostuser}
     />
   );
 };

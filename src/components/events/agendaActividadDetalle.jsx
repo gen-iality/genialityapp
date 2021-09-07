@@ -542,7 +542,7 @@ let AgendaActividadDetalle = (props) => {
                       ) : (props.currentUser && currentActivity !== null && currentActivity.requires_registration) ||
                         (currentActivity !== null && !currentActivity.requires_registration) ? (
                         <>
-                          <ZoomIframe platform={platform} meeting_id={meeting_id} generalTabs={props.generalTabs} />
+                          <ZoomIframe platform={platform} meeting_id={meeting_id} generalTabs={props.tabs} />
                           <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
                         </>
                       ) : (
