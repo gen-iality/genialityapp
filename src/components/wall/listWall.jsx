@@ -112,7 +112,7 @@ getPosts() {
        });
       
     } catch (e) {
-      
+      console.log(e)
     }
   }
   componentDidUpdate(prevProps) {
@@ -172,7 +172,7 @@ getPosts() {
                         <Space key='opciones' wrap>
                         <IconText
                           icon={LikeOutlined}
-                          text={item.usersLikes?.find((itm)=>itm==this.props.cUser.value._id)!=undefined ? 'Te gusta esto':(item.likes || 0) + ' Me gusta'}
+                          text={(item.likes || 0) + ' Me gusta'}
                           key='list-vertical-like-o'
                           color={item.usersLikes?.find((itm)=>itm==this.props.cUser.value._id)!=undefined?'blue':'gray'}
                           megusta='1'

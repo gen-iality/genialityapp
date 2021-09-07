@@ -74,11 +74,11 @@ export function handleRequestError(error) {
 }
 
 export function parseData2Excel(data, fields,roles=null) {
-  console.log("ROLES==>",roles)
+ 
   let info = [];
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
-  console.log("DATA QUE LLEGA==>",data)
+  
   data.map((item, key) => {
     console.log("ITEM==>",item)
     info[key] = {};
@@ -99,7 +99,7 @@ export function parseData2Excel(data, fields,roles=null) {
           str = item.properties[name] ? item.properties[name].toString() : '';
           break;
         case 'boolean':
-          str = item.properties[name] ? 'TRUE' : 'FALSE';
+          str = item[name] ?  item[name]:'';
           break;
         case 'complex':
           str = item.properties[name] ? item.properties[name].response : '';

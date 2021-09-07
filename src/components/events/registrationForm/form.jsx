@@ -191,6 +191,7 @@ const FormRegister = ({
       //values[fieldCode] = `${numberareacode}`;
       values['code'] = areacodeselected;
     }
+    //console.log("VALUES FORM==>",values)
     
 
     setSectionPermissions({ view: false, ticketview: false });
@@ -643,8 +644,9 @@ const FormRegister = ({
 
       if (type === 'boolean' && mandatory) {       
         let textoError = intl.formatMessage({ id: 'form.field.required' });      
-       value=!value?false:value       
+       //value=!value?false:value       
        rule={required:mandatory}
+       console.log("VALUE==>",value)
         //rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
       }
 
