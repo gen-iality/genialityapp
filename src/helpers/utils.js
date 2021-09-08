@@ -172,12 +172,13 @@ export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-M
     let nextDay = startDate.add(1, 'day');
 
     while (nextDay.isBefore(endDate)) {
-      datesRange.push(nextDay.format(dateFormat));
-      nextDay = nextDay.add(1, 'day');
+      if(!datesRange.includes(nextDay.format(dateFormat))){
+        datesRange.push(nextDay.format(dateFormat));
+        nextDay = nextDay.add(1, 'day');
+      }     
     }
-
-    datesRange.push(endDate.format(dateFormat));
-
+    //datesRange.push(endDate.format(dateFormat));  
+    console.log("datesRange==>",datesRange)
     return datesRange;
   } else if (startDate.isValid() && endDate.isValid() && startDate.isSame(endDate)) {
     return [startDate.format(dateFormat)];

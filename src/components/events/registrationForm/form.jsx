@@ -274,11 +274,11 @@ const FormRegister = ({
             setTimeout(function() {
               window.location.replace(
                 eventId=='60cb7c70a9e4de51ac7945a2'?`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
-                :`/landing/${eventId}/${eventPrivate.section}?register=${ eventUser==null?typeRegister=='free' ?2:3:4}&token=${resp.data.user.initial_token}`
+                :`/landing/${eventId}/${eventPrivate.section}?register=${ eventUser==null?2:4}&token=${resp.data.user.initial_token}`
               );
             }, 100);
           } else {
-            window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${typeRegister=='free'?1:3}`);
+            window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${1}`);
           }
         } else {
          // window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
@@ -474,11 +474,11 @@ const FormRegister = ({
 
       if (type === 'boolean') {
         if (mandatory) {       
-          let textoError = intl.formatMessage({ id: 'form.field.required' });      
+          let textoError = intl.formatMessage({ id: 'form.field.required' });
                    
           rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
         }else{
-          rule=null
+          rule = { validator: (_, value) => (value==true|| value==false || value=="" ? Promise.resolve() : Promise.reject(textoError)) };
         }
       return( <div key={'g' + key} name='field'>         
           {(
