@@ -473,9 +473,8 @@ const FormRegister = ({
       if (type === 'boolean') {
         if (mandatory) {       
           let textoError = intl.formatMessage({ id: 'form.field.required' });      
-         //value=!value?false:value       
-         rule={required:mandatory}
-         console.log("VALUE==>",value)
+           
+         rule={required:mandatory}         
           //rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
         }
       return( <div key={'g' + key} name='field'>         
@@ -509,30 +508,8 @@ const FormRegister = ({
 
              </>
               )}
-            </div>)
-         
-        /*input = (
-          <>
-            <Checkbox onChange={(val)=>{eventUser?eventUser['properties'][target]=val.target.checked:value=val.target.checked}} required={mandatory} {...props} key={key} name={name} defaultChecked={Boolean(value?value:false)}>
-              {mandatory ? (
-                <span>
-                  <span style={{ color: 'red' }}>* </span>
-                  <strong>{label}</strong>
-                </span>
-              ) : (
-                label
-              )}
-            </Checkbox>
-            {eventId == '60cb7c70a9e4de51ac7945a2' && (
-              <Row style={{ marginTop: 20 }}>
-                {' '}
-                <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
-                  <PlayCircleOutlined /> Ver términos y condiciones
-                </a>
-              </Row>
-            )}
-          </>
-        );*/
+            </div>)       
+        
       }
 
       if (type === 'longtext') {
