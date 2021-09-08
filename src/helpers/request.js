@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { ApiUrl, ApiEviusZoomSurvey } from './constants';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import * as Cookie from 'js-cookie';
 import { handleSelect } from './utils';
@@ -124,6 +126,7 @@ export const getCurrentUser = () => {
     } else {
       try {
         const resp = await privateInstance.get(`/auth/currentUser?evius_token=${token}`);
+        console.log('Respuesta', resp);
         if (resp.status === 200) {
           currentUser = resp.data;
           resolve(resp.data);
@@ -133,6 +136,18 @@ export const getCurrentUser = () => {
           // eslint-disable-next-line no-unused-vars
           const { status, data } = error.response;
           if (status === 401) {
+            toast.error('🔑 Tu token a caducado, redirigiendo al login!', {
+              position: 'top-right',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+            setTimeout(() => {
+              window.location.href = 'https://eviusauth.netlify.app/logout';
+            }, 5000);
             //this.setState({ timeout: true, loader: false })
           } else {
             //this.setState({ serverError: true, loader: false, errorData: data })
@@ -226,8 +241,10 @@ export const EventsApi = {
   metricsByActivity: async (id) => {
     return await Actions.getOne(`/api/events/${id}/`, 'totalmetricsbyactivity');
   },
-  metricsRegisterBydate: async (id, type,fechaInicial,fechaFinal) => {
-    return await Actions.get(`/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`);
+  metricsRegisterBydate: async (id, type, fechaInicial, fechaFinal) => {
+    return await Actions.get(
+      `/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`
+    );
   },
   //obtener products subasta silenciosa
   getProducts: async (eventId) => {
@@ -236,23 +253,25 @@ export const EventsApi = {
   storeOfert: async (eventId, productId, data) => {
     return await Actions.post(`/api/events/${eventId}/products/${productId}/silentauctionmail`, data);
   },
-  getOneProduct: async (eventId,idproduct) => {
+  getOneProduct: async (eventId, idproduct) => {
     return await Actions.get(`/api/events/${eventId}/products/${idproduct}`);
   },
-  editProduct:async (data,eventId,idproduct) => {
-    return await Actions.put(`/api/events/${eventId}/products/${idproduct}`,data);
+  editProduct: async (data, eventId, idproduct) => {
+    return await Actions.put(`/api/events/${eventId}/products/${idproduct}`, data);
   },
-  createProducts:async (data,eventId) => {
-    return await Actions.post(`/api/events/${eventId}/products`,data);
+  createProducts: async (data, eventId) => {
+    return await Actions.post(`/api/events/${eventId}/products`, data);
   },
-  deleteProduct:async (eventId,galleryId) => {
-    return await Actions.delete(`/api/events/${eventId}/products`,galleryId);
+  deleteProduct: async (eventId, galleryId) => {
+    return await Actions.delete(`/api/events/${eventId}/products`, galleryId);
   },
   validPrice: async (eventId, productId) => {
     return await Actions.get(`/api/events/${eventId}/products/${productId}/minimumauctionvalue`);
   },
   ofertsProduct: async (eventId, productId) => {
-    return await Actions.get(`api/events/${eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${productId}"}]`);
+    return await Actions.get(
+      `api/events/${eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${productId}"}]`
+    );
   },
 };
 export const InvitationsApi = {
@@ -548,8 +567,8 @@ export const NewsFeed = {
   editOne: async (data, id) => {
     return await Actions.edit(`api/events/${id}/newsfeed`, data, id);
   },
-  deleteOne: async (id,idNew) => {
-    return await Actions.delete(`api/events/${id}/newsfeed`,idNew);
+  deleteOne: async (id, idNew) => {
+    return await Actions.delete(`api/events/${id}/newsfeed`, idNew);
   },
   create: async (data, id) => {
     return await Actions.create(`api/events/${id}/newsfeed`, data);
@@ -764,18 +783,18 @@ export const ActivityBySpeaker = {
   },
 };
 
-export const OrganizationFuction={
+export const OrganizationFuction = {
   // OBTENER EVENTOS PROXIMOS POR ORGANIZACION
- getEventsNextByOrg: async (orgId) => {
-  const events=await Actions.getAll(`api/organizations/${orgId}/events`);
-  return events.data;
-},
+  getEventsNextByOrg: async (orgId) => {
+    const events = await Actions.getAll(`api/organizations/${orgId}/events`);
+    return events.data;
+  },
 
-// OBTENER DATOS DE LA ORGANIZACION
- obtenerDatosOrganizacion:async (orgId) => {
-  const organization= await OrganizationApi.getOne(orgId)
-  return organization;
-},
+  // OBTENER DATOS DE LA ORGANIZACION
+  obtenerDatosOrganizacion: async (orgId) => {
+    const organization = await OrganizationApi.getOne(orgId);
+    return organization;
+  },
 };
 
 export default privateInstance;
