@@ -9,7 +9,6 @@ import MainRouter from '../containers/router';
 import 'bulma-spacing/css/bulma-spacing.min.css';
 import withContext from '../Context/withContext';
 
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -19,15 +18,17 @@ class App extends Component {
   }
 
   componentDidMount() {
+    var url = new URL(document.URL);
+    var TokenUser = url.searchParams.get('token');
+    var refresh_token = url.searchParams.get('refresh_token');
     let dataUrl = parseUrl(document.URL);
-    if (dataUrl && dataUrl.token) {
-      if (dataUrl.token) {
-        Cookie.set('evius_token', dataUrl.token);
-        privateInstance.defaults.params = {};
-        privateInstance.defaults.params['evius_token'] = dataUrl.token;
-      }
-      if (dataUrl.refresh_token) {
-        Actions.put('/api/me/storeRefreshToken', { refresh_token: dataUrl.refresh_token });
+    if (dataUrl && TokenUser) {
+      Cookie.set('evius_token', TokenUser);
+      privateInstance.defaults.params = {};
+      privateInstance.defaults.params['evius_token'] = TokenUser;
+
+      if (refresh_token) {
+        Actions.put('/api/me/storeRefreshToken', { refresh_token: refresh_token });
       }
     }
   }
