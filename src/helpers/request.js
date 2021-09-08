@@ -136,7 +136,7 @@ export const getCurrentUser = () => {
           // eslint-disable-next-line no-unused-vars
           const { status, data } = error.response;
           if (status === 401) {
-            toast.warn('🔑 Tu token a caducado, redirigiendo al login!', {
+            toast.error('🔑 Tu token a caducado, redirigiendo al login!', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -146,7 +146,7 @@ export const getCurrentUser = () => {
               progress: undefined,
             });
             setTimeout(() => {
-              window.location.href = 'https://eviusauth.netlify.app/logout';
+              window.location.href = '/';
             }, 5000);
             //this.setState({ timeout: true, loader: false })
           } else {
