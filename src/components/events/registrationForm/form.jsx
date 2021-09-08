@@ -471,9 +471,30 @@ const FormRegister = ({
       }
 
       if (type === 'boolean') {
-        input = (
-          <>
-            <Checkbox onChange={(val)=>{eventUser?eventUser['properties'][target]=val.target.checked:value=val.target.checked}} required={mandatory} {...props} key={key} name={name} defaultChecked={Boolean(value?value:false)}>
+        if (mandatory) {       
+          let textoError = intl.formatMessage({ id: 'form.field.required' });      
+           
+         rule={required:mandatory}         
+          //rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
+        }
+      return( <div key={'g' + key} name='field'>         
+          {(
+            <>
+              <Form.Item
+                // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
+                // style={eventUserId && hideFields}
+                valuePropName={'checked'}
+                label={
+                  (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
+                    ? label
+                    : '' && (labelPosition !== 'arriba' || !labelPosition)
+                }
+                name={name}
+                rules={[rule]}
+                key={'l' + key}
+                htmlFor={key}
+                initialValue={value}>
+                 <Checkbox  {...props} key={key} name={name} defaultChecked={Boolean(value?value:false)}>
               {mandatory ? (
                 <span>
                   <span style={{ color: 'red' }}>* </span>
@@ -483,16 +504,12 @@ const FormRegister = ({
                 label
               )}
             </Checkbox>
-            {eventId == '60cb7c70a9e4de51ac7945a2' && (
-              <Row style={{ marginTop: 20 }}>
-                {' '}
-                <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
-                  <PlayCircleOutlined /> Ver términos y condiciones
-                </a>
-              </Row>
-            )}
-          </>
-        );
+              </Form.Item>
+
+             </>
+              )}
+            </div>)       
+        
       }
 
       if (type === 'longtext') {
@@ -642,19 +659,12 @@ const FormRegister = ({
       // let hideFields =
       //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
 
-      if (type === 'boolean' && mandatory) {       
-        let textoError = intl.formatMessage({ id: 'form.field.required' });      
-       //value=!value?false:value       
-       rule={required:mandatory}
-       console.log("VALUE==>",value)
-        //rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
-      }
+     
 
-      //console.log("RULES==>",rule,name)
-      console.log('RULES==>', rule, name);
+    
 
       return (
-        <div key={'g' + key} name='field'>
+        type!=='boolean' &&<div key={'g' + key} name='field'>
           {type === 'tituloseccion' && input}
           {type !== 'tituloseccion' && (
             <>
