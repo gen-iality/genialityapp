@@ -11,12 +11,12 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
    let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
    /** Posición del botón next*/
-   dataSurvey.showNavigationButtons = 'top';
+   dataSurvey.showNavigationButtons = 'bottom';
    /** Texto del botón next */
    dataSurvey.pageNextText = 'Responder';
    /** Texto del botón complete */
    dataSurvey.completeText = 'Finalizar';
-
+   
    /** logo - posicion y medidas */
    // dataSurvey.logo = 'https://portal.evius.co/wp-content/uploads/2021/03/logo_3.png';
    // dataSurvey.logoPosition = 'top';
@@ -33,7 +33,7 @@ async function LoadSelectedSurvey(eventId, idSurvey, surveyData) {
    // Se igual title al valor de survey
    dataSurvey.title = dataSurvey.survey;
    // Se muestra una barra de progreso en la parte inferior
-   dataSurvey.showProgressBar = 'bottom';
+   dataSurvey.showProgressBar = 'top';
    // Esto permite que se envie los datos al pasar cada pagina con el evento onPartialSend
    dataSurvey.sendResultOnPageNext = true;
    // Esto permite ocultar el boton de devolver en la encuesta

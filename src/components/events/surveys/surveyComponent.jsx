@@ -189,21 +189,6 @@ function SurveyComponent(props) {
    if (!surveyData) return 'Cargando...';
    return (
       <div>
-         {initialSurveyModel && initialSurveyModel.state === 'completed' && (
-            <>
-               {surveyData &&
-                  (surveyData.allow_gradable_survey === 'false' || surveyData.allow_gradable_survey === false) && (
-                     <Graphics
-                        idSurvey={idSurvey}
-                        eventId={eventId}
-                        surveyLabel={surveyLabel}
-                        showListSurvey={showListSurvey}
-                        operation={operation}
-                     />
-                  )}
-            </>
-         )}
-
          {!showOrHideSurvey && surveyData.allow_gradable_survey === 'true' && (
             <Result className='animate__animated animate__fadeIn' {...feedbackMessage} extra={null} />
          )}

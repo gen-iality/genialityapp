@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { firestore } from '../../helpers/firebase';
-import { Avatar, List, Card, Spin, Row } from 'antd';
+import { Avatar, List, Card, Spin, Row, Comment, Tooltip, Typography, Divider } from 'antd';
 import Moment from 'moment';
 
 class CommentsList extends Component {
@@ -70,29 +70,50 @@ class CommentsList extends Component {
             dataSource={dataComment}
             // Aqui se mapea al array del state
             renderItem={(item) => (
-           
-                <List.Item style={{marginBottom:20,marginTop:10, border:'1px solid #f6f6f6', borderRadius:"5px"}} key={item.id}>
-                  <List.Item.Meta
-                    avatar={
-                      item.authorName ? (
-                        <Avatar>
-                          {item.authorName &&
-                            item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
-                        </Avatar>
-                      ) : (
-                        <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
-                      )
-                    }
-                    title={
-                      <Row justify='space-between'>
-                        <span>{item.authorName}</span>{' '}
-                        <small>{Moment(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')} </small>{' '}
-                      </Row>
-                    }
-                    description={item.comment}
-                  />
-                </List.Item>
-              
+              <List.Item key={item.id}>
+                <Comment
+                  avatar={
+                    item.authorName ? (
+                      <Avatar>
+                        {item.authorName &&
+                          item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
+                      </Avatar>
+                    ) : (
+                      <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
+                    )
+                  }
+                  author={<Typography.Paragraph style={{fontSize:'14px'}}>{item.authorName}</Typography.Paragraph>}
+                  datetime={
+                    <Tooltip title={Moment(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
+                      {/* <span>{Moment(new Date(item.date.toMillis())).format('YYYY-MM-DD')}</span> */}
+                      <span>{Moment(Moment(new Date(item.date.toMillis()))).from(Moment(new Date()))}</span>
+                    </Tooltip>
+                  }
+                  content={item.comment}
+                />
+              </List.Item>
+
+              // <List.Item style={{marginBottom:20,marginTop:10, border:'1px solid #f6f6f6', borderRadius:"5px"}} key={item.id}>
+              //   <List.Item.Meta
+              //     avatar={
+              //       item.authorName ? (
+              //         <Avatar>
+              //           {item.authorName &&
+              //             item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
+              //         </Avatar>
+              //       ) : (
+              //         <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
+              //       )
+              //     }
+              //     title={
+              //       <Row justify='space-between'>
+              //         <span>{item.authorName}</span>{' '}
+              //         <small>{Moment(new Date(item.date.toMillis())).format('YYYY-MM-DD HH:mm:ss')} </small>{' '}
+              //       </Row>
+              //     }
+              //     description={item.comment}
+              //   />
+              // </List.Item>
             )}
           />
         )}

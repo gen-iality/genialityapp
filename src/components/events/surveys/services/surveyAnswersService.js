@@ -77,7 +77,7 @@ const surveyAnswers = {
     // eslint-disable-next-line no-unused-vars
     let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
     let options = dataSurvey.questions.find((question) => question.id === questionId);
-
+    let optionsIndex = dataSurvey.questions.findIndex((index)=>  index.id === questionId)
     const realTimeRef = fireRealtime.ref(`surveys/${surveyId}/answer_count/${questionId}`);
 
     realTimeRef.on('value', (listResponse) => {
@@ -119,7 +119,7 @@ const surveyAnswers = {
             //result = result;
             break;
         }
-        updateData({ answer_count: result, options });
+        updateData({ answer_count: result, options, optionsIndex });
       }
     });
   },

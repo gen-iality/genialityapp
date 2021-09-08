@@ -135,7 +135,7 @@ const FormRegister = ({
   const [typeRegister, setTypeRegister] = useState('free');
   const [payMessage, setPayMessage] = useState(false);
   const [form] = Form.useForm();
-  let [areacodeselected, setareacodeselected] = useState(57);
+  let [areacodeselected, setareacodeselected] = useState();
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   initialValues.codearea = null;
@@ -191,6 +191,7 @@ const FormRegister = ({
       //values[fieldCode] = `${numberareacode}`;
       values['code'] = areacodeselected;
     }
+    //console.log("VALUES FORM==>",values)
     
 
     setSectionPermissions({ view: false, ticketview: false });
@@ -418,9 +419,10 @@ const FormRegister = ({
       if (type === 'codearea') {
         const prefixSelector = (
           <Select
-            style={{ width: '100%' }}
+            showSearch
+            optionFilterProp="children"
+            style={{ fontSize: '12px', width: 150 }}
             value={areacodeselected}
-            //required={mandatory}
             onChange={(val) => {
               setareacodeselected(val);
               console.log(val);
@@ -428,8 +430,8 @@ const FormRegister = ({
             placeholder='Codigo de area del pais'>
             {areaCode.map((code, key) => {
               return (
-                <Option key={key} value={code.value}>
-                  {code.label + ' (+' + code.value + ')'}
+                <Option key={key} value={code.value} >
+                  {`${code.label} (+${code.value})`}
                 </Option>
               );
             })}
@@ -598,7 +600,7 @@ const FormRegister = ({
         );
       }
 
-      if (name === 'picture') {
+      if (type === 'avatar') {
         ImgUrl = ImgUrl !== '' ? ImgUrl : value !== '' && value !== null ? [{ url: value }] : undefined;
 
         input = (
@@ -611,11 +613,11 @@ const FormRegister = ({
                   setImgUrl(file.fileList);
                 }}
                 multiple={false}
-                listType='picture-card'
+                listType='picture'
                 maxCount={1}
                 fileList={ImgUrl}
                 beforeUpload={beforeUpload}>
-                <Button icon={<UploadOutlined />}>Avatar</Button>
+                <Button type='primary' icon={<UploadOutlined />} >Subir imagen de perfil</Button>
               </Upload>
             </ImgCrop>
           </div>
@@ -642,8 +644,9 @@ const FormRegister = ({
 
       if (type === 'boolean' && mandatory) {       
         let textoError = intl.formatMessage({ id: 'form.field.required' });      
-       value=!value?false:value       
+       //value=!value?false:value       
        rule={required:mandatory}
+       console.log("VALUE==>",value)
         //rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
       }
 

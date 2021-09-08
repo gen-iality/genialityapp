@@ -22,18 +22,17 @@ import Game from './game';
 import EnVivo from '../../EnVivo.svg';
 import SurveyList from '../events/surveys/surveyList';
 import listenSurveysData from '../events/surveys/services/listenSurveysDataToAgendaActividadDetalle';
-import { eventUserUtils } from '../../helpers/helperEventUser';
 import { useParams } from 'react-router-dom';
 import { setTopBanner } from '../../redux/topBanner/actions';
 import { setSpaceNetworking } from '../../redux/networking/actions';
-
 import withContext from '../../Context/withContext';
 import { UseCurrentUser } from '../../Context/userContext';
+import { UseUserEvent } from '../../Context/eventUserContext';
 import { UseSurveysContext } from '../../Context/surveysContext';
 import { HelperContext } from '../../Context/HelperContext';
-
 import { useHistory } from 'react-router-dom';
 import SurveyDrawer from './surveys/components/surveyDrawer';
+import ZoomIframe from './ZoomIframe';
 
 const { TabPane } = Tabs;
 const { gotoActivity, setMainStage, setTabs } = StageActions;
@@ -147,12 +146,6 @@ let AgendaActividadDetalle = (props) => {
       setEmail(cUser.email);
     }
 
-    //Escuchando el estado de la actividad
-
-    (async function() {
-      await listeningStateMeetingRoom(props.cEvent.value._id, activity_id);
-    })();
-
     // Desmontado del componente
     return () => {
       props.gotoActivity(null);
@@ -164,9 +157,11 @@ let AgendaActividadDetalle = (props) => {
   }, []);
 
   useEffect(() => {
-    (async function() {
+    async function GetStateMeetingRoom() {
       await listeningStateMeetingRoom(props.cEvent.value._id, activity_id);
-    })();
+    }
+
+    GetStateMeetingRoom();
   }, [activity_id]);
 
   useEffect(() => {
@@ -244,26 +239,6 @@ let AgendaActividadDetalle = (props) => {
   async function getSpeakers(idSpeaker) {
     setIdSpeaker(idSpeaker);
   }
-
-  const getMeetingPath = (platform) => {
-    if (platform === 'zoom') {
-      const url_conference = `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`;
-      return (
-        url_conference +
-        meeting_id +
-        `&userName=${
-          cUser.displayName ? cUser.displayName : cUser.names ? cUser.names : 'Guest' + Math.floor(Math.random() * 1000)
-        }` +
-        `&email=${cUser.email ? cUser.email : 'emaxxxxxxil@gmail.com'}` +
-        `&disabledChat=${props.generalTabs.publicChat || props.generalTabs.privateChat}` +
-        `&host=${eventUserUtils.isHost(cUser, props.cEvent.value)}`
-      );
-    } else if (platform === 'vimeo') {
-      return `https://player.vimeo.com/video/${meeting_id}`;
-    } else if (platform === 'dolby') {
-      return `https://eviusmeets.netlify.app/?username=${names}&email=${email}`;
-    }
-  };
 
   const { image_event } = props;
   const colorTexto = props.cEvent.value.styles.textMenu;
@@ -567,13 +542,7 @@ let AgendaActividadDetalle = (props) => {
                       ) : (props.currentUser && currentActivity !== null && currentActivity.requires_registration) ||
                         (currentActivity !== null && !currentActivity.requires_registration) ? (
                         <>
-                          <iframe
-                            src={getMeetingPath(platform)}
-                            frameBorder='0'
-                            allow='autoplay; fullscreen; camera *;microphone *'
-                            allowFullScreen
-                            allowusermedia
-                            className='video'></iframe>
+                          <ZoomIframe platform={platform} meeting_id={meeting_id} generalTabs={props.tabs} />
                           <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
                         </>
                       ) : (
@@ -595,19 +564,6 @@ let AgendaActividadDetalle = (props) => {
                 )
               )}
 
-              {/* {mainStageContent == 'surveyDetalle' && (
-                <div style={{ width: props.collapsed ? '98%' : '98%-389px' }}>
-                  <SurveyDetailPage
-                  // event={event}
-                  // currentUser={props.userEntered}
-                  // activity={props.activity}
-                  // availableSurveysBar={true}
-                  // style={{ zIndex: 9999, width: props.collapsed ? '95vw' : '50vw-389px', height: '100%' }}
-                  // mountCurrentSurvey={mountCurrentSurvey}
-                  // unMountCurrentSurvey={unMountCurrentSurvey}
-                  />
-                </div>
-              )} */}
               {mainStageContent == 'surveyDetalle' && (
                 <>
                   <h1>Encuestas MainStage</h1>
@@ -656,7 +612,7 @@ let AgendaActividadDetalle = (props) => {
                     />
                   </div>
                 )}
-                              
+
               {(meetingState === 'ended_meeting_room' || !meetingState) &&
               currentActivity !== null &&
               currentActivity.video &&
@@ -798,7 +754,11 @@ let AgendaActividadDetalle = (props) => {
                                   )}
                                 />
                                 {idSpeaker ? (
-                                  <ModalSpeaker showModal={true} eventId={props.cEvent.value._id} speakerId={idSpeaker} />
+                                  <ModalSpeaker
+                                    showModal={true}
+                                    eventId={props.cEvent.value._id}
+                                    speakerId={idSpeaker}
+                                  />
                                 ) : (
                                   <></>
                                 )}
@@ -884,14 +844,6 @@ let AgendaActividadDetalle = (props) => {
                 alignItems: 'flex-end',
               }}></div>
           </div>
-
-          {/* <Link to={`${urlBack}`}>
-            <Row style={{ paddingLeft: '10px' }}>
-              <ArrowLeftOutlined>
-                <span>AJA</span>
-              </ArrowLeftOutlined>
-            </Row>
-          </Link> */}
         </Card>
       </div>
       {/* Drawer encuestas */}

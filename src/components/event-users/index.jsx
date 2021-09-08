@@ -118,7 +118,7 @@ class ListEventUser extends Component {
   };
 
   rol_component = (text, item, index) => {
-    console.log("ROLES==>",this.state.rolesList)
+   // console.log("ROLES==>",this.state.rolesList)
     if(this.state.rolesList){
       for(let role of this.state.rolesList ){
         if (item.rol_id==role._id) {
@@ -305,8 +305,11 @@ class ListEventUser extends Component {
                 //console.log("RESULT==>",updatedAttendees[i][key])
               }else{
               //console.log("ACA==>",updatedAttendees[i]['properties'][key])
-              updatedAttendees[i][key] = updatedAttendees[i]['properties'][key];
-              }
+              updatedAttendees[i][key] = updatedAttendees[i]['properties'][key]==true ?"SI":updatedAttendees[i]['properties'][key]==false?"NO":updatedAttendees[i]['properties'][key];
+              updatedAttendees[i]["textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio"]= self.props.event._id=="60c8affc0b4f4b417d252b29" ? "SI" :""
+              
+              
+            }
             }
             });
 
@@ -324,11 +327,11 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-         console.log("updatedAttendees=>",updatedAttendees)
+         
           this.setState({
             users: updatedAttendees,
             usersReq: updatedAttendees,
-            auxArr: updatedAttendees,
+            auxArr: updatedAttendees,           
             loading: false,
           });
         },
@@ -347,7 +350,7 @@ class ListEventUser extends Component {
     e.stopPropagation();
 
     const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
-    console.log("usersExport==>",attendees)
+    
 
     const data = await parseData2Excel(attendees, this.state.extraFields,this.state.rolesList);
     const ws = XLSX.utils.json_to_sheet(data);
@@ -491,6 +494,7 @@ class ListEventUser extends Component {
           acompanates += parseInt(user.properties.acompanates, 10);
       });
       const users = value === '' ? [...this.state.auxArr].slice(0, 50) : list;
+     
       this.setState({ users, ticket: value, checkIn: check, total: list.length + acompanates });
     });
   };
@@ -538,6 +542,8 @@ class ListEventUser extends Component {
     const {
       event: { event_stages },
     } = this.props;
+
+   
 
     const inscritos =
     this.state.configfast && this.state.configfast.totalAttendees
@@ -718,7 +724,7 @@ class ListEventUser extends Component {
               </Fragment>
             ) : (
               <div className='table-wrapper'>
-                <div className='table-container' style={{ height: '60vh' }}>
+                <div className='table-container' style={{ height: '60vh' }}>                  
                   {this.state.columns && (
                     <Table
                       className='table-striped-rows'
