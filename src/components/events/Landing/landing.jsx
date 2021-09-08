@@ -6,7 +6,7 @@ import { UseUserEvent } from '../../../Context/eventUserContext';
 import { HelperContext } from '../../../Context/HelperContext';
 /** ant design */
 import { Layout, Spin, notification, Button, Drawer, Modal, Result, Typography } from 'antd';
-
+import 'react-toastify/dist/ReactToastify.css';
 /** Components */
 import TopBanner from './TopBanner';
 import EventSectionRoutes from './EventSectionsRoutes';
@@ -33,6 +33,7 @@ import { EnableAnalyticsByEVENT } from './helpers/analyticsHelper';
 import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 import { Ripple } from 'react-preloaders';
 import ModalRegister from './modalRegister';
+import { toast } from 'react-toastify';
 
 const iniitalstatetabs = {
   attendees: false,
