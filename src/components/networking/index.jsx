@@ -301,7 +301,7 @@ class ListEventUser extends Component {
     } = this.state;
 
     return (
-      <div style={{ padding: '12px' }}>
+      <Card style={{ padding: '12px' }}>
         <EventContent>
           {/* Componente de busqueda */}
           <Tabs activeKey={activeTab} onChange={this.changeActiveTab}>
@@ -860,7 +860,7 @@ class ListEventUser extends Component {
             </TabPane>
           </Tabs>
         </EventContent>
-      </div>
+      </Card>
     );
   }
 }
