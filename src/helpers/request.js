@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { ApiUrl, ApiEviusZoomSurvey } from './constants';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import * as Cookie from 'js-cookie';
 import { handleSelect } from './utils';
 import { firestore } from './firebase';
@@ -17,6 +19,18 @@ const privateInstance = axios.create({
   baseURL: ApiUrl,
   withCredentials: true,
 });
+
+var currentUser = null;
+
+// const privateInstancePush = axios.create({
+//   // pushURL: 'https://104.248.125.133:6477/pushNotification',
+//   withCredentials: false,
+// });
+
+/* SI EL USUARIO ESTA LOGUEADO POR DEFECTO AGREGAMOS EL TOKEN A LAS PETICIONES 
+PRIMERO MIRAMOS  si viene en la URL
+luego miramos si viene en las cookies
+*/
 
 let evius_token = null;
 let dataUrl = parseUrl(document.URL);
@@ -109,10 +123,10 @@ export const getCurrentUser = () => {
 
     if (!token) {
       resolve(null);
-      
     } else {
       try {
         const resp = await privateInstance.get(`/auth/currentUser?evius_token=${token}`);
+        console.log('Respuesta', resp);
         if (resp.status === 200) {
           currentUser = resp.data;
           resolve(resp.data);
@@ -122,9 +136,7 @@ export const getCurrentUser = () => {
           // eslint-disable-next-line no-unused-vars
           const { status, data } = error.response;
           if (status === 401) {
-            privateInstance.defaults.params = {};
-            Cookie.remove('evius_token');
-            toast.error('🔑 Tu sesión ha expirado!', {
+            toast.error('🔑 Tu token a caducado, redirigiendo al login!', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -134,8 +146,7 @@ export const getCurrentUser = () => {
               progress: undefined,
             });
             setTimeout(() => {
-              window.location.href = `${window.location.origin}${window.location.pathname}`;
-              console.log('REDIRIGI', window.location);
+              window.location.href = '/';
             }, 5000);
             //this.setState({ timeout: true, loader: false })
           } else {
