@@ -39,7 +39,7 @@ class UserLoginContainer extends Component {
     await app.auth().onAuthStateChanged((user) => {
       if (user) {
         user.getIdToken().then(async function(idToken) {
-          if (idToken) {
+          if (idToken && !Cookie.get('evius_token')){
             Cookie.set('evius_token', idToken);
             setTimeout(function() {
               window.location.replace(`/landing/${eventId}?token=${idToken}`);
