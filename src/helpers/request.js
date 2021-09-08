@@ -136,7 +136,7 @@ export const getCurrentUser = () => {
           // eslint-disable-next-line no-unused-vars
           const { status, data } = error.response;
           if (status === 401) {
-            toast.warn('🔑 Tu token a caducado, redirigiendo al login!', {
+            toast.error('🔑 Tu token a caducado, redirigiendo al login!', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
