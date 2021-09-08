@@ -146,7 +146,7 @@ export const getCurrentUser = () => {
               progress: undefined,
             });
             setTimeout(() => {
-              window.location.href = 'https://eviusauth.netlify.app/logout';
+              window.location.href = '/';
             }, 5000);
             //this.setState({ timeout: true, loader: false })
           } else {
