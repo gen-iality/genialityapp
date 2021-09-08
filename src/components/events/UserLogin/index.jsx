@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Spin } from 'antd';
+import { Result, Spin } from 'antd';
 import UserLoginWithEmailPass from '../UserLoginWithEmailPass';
 
 import UserLoginRecoveryPass from '../UserLoginRecoveryPass';
 import UserOneTimeLoginLink from '../UserOneTimeLoginLink';
+import withContext from '../../../Context/withContext';
+import { SmileOutlined } from '@ant-design/icons';
 
 //import UserLoginRecoveryPass from "../UserLoginRecoveryPass"
 class UserLogin extends Component {
@@ -31,6 +33,7 @@ class UserLogin extends Component {
         (this.props.eventId === '5fb69178cb4e49174574ed12' && true),
       enabledOneTimeLoginLink: this.props.eventId === '5f99a20378f48e50a571e3b6' && true,
     });
+    console.log("PROPS==>",this.props)
   }
 
   render() {
@@ -57,7 +60,7 @@ class UserLogin extends Component {
         {loading && <Spin />}
         {enabledWithEmailPass && (
           <>
-            {enabledFormLoginWithEmailPass && (
+            {enabledFormLoginWithEmailPass && this.props.cEventUser.value==null ? (
               <UserLoginWithEmailPass
                 eventId={eventId}
                 FormTags={FormTags}
@@ -67,7 +70,9 @@ class UserLogin extends Component {
                 errorLogin={errorLogin}
                 handleOpenRecoveryPass={handleOpenRecoveryPass}
               />
-            )}
+            ):<Result icon={<SmileOutlined />} title="Bienvenido..!" subTitle="Desde ahora puedes disfrutar de nuestro evento">
+              
+              </Result>}
 
             {enabledFormRecoveryPass && (
               <UserLoginRecoveryPass
@@ -94,4 +99,4 @@ class UserLogin extends Component {
   }
 }
 
-export default UserLogin;
+export default withContext(UserLogin);

@@ -124,7 +124,7 @@ class UserLogin extends Component {
     const respuesta = app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
-      .then((response) => 
+      
       .catch(() => {
         console.error('Error: Email or password invalid');
         this.setState({ errorLogin: true });

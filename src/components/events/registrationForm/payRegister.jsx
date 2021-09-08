@@ -9,7 +9,8 @@ export const PayForm=({eventId})=>{
     {eventId && eventId == '60cb7c70a9e4de51ac7945a2' && (
       <Result
       icon={<ShopOutlined />}
-        title='Su registro ha sido exitoso, click al siguiente enlace para realizar la donación'
+        title='Para completar el registro y poder hacer pujas por las obras, realiza el pago de la entrada en el siguiente botón de pago.'
+        subTitle='En las próximas horas recibirás la confirmación del pago.'
         extra={
           <div style={{ width: '100%', textAlign:'center' }}>
             {' '}

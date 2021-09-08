@@ -14,7 +14,7 @@ class UserLoginWithEmailPass extends Component {
     const { handleLoginEmailPassword, onFinishFailed, errorLogin, loading, handleOpenRecoveryPass, intl } = this.props;
     return (
       <Card title={intl.formatMessage({ id: 'login.title' })}>
-        <Form onFinish={handleLoginEmailPassword} onFinishFailed={onFinishFailed}>
+        <Form onFinish={handleLoginEmailPassword} onFinishFailed={onFinishFailed} layout="vertical">
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
               <Form.Item
@@ -33,11 +33,11 @@ class UserLoginWithEmailPass extends Component {
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
               <Form.Item
-                label='E-Mail'
+                label='Contraseña'
                 name='password'
                 rules={[
                   {
-                    required: false,
+                    required:true,
                     message: intl.formatMessage({ id: 'form.field.required' }),
                   },
                 ]}>
@@ -70,7 +70,7 @@ class UserLoginWithEmailPass extends Component {
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
               <Button type='default' htmlType='button' onClick={handleOpenRecoveryPass}>
-                {intl.formatMessage({ id: 'button.forget.email' })}
+                {intl.formatMessage({ id: 'button.forget.password' })}
               </Button>
             </Col>
           </Row>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import WithLoading from './withLoading';
 import { Menu, Dropdown, Avatar, Button, Col, Row, Space } from 'antd';
@@ -25,10 +25,15 @@ const UserStatusAndMenu = (props) => {
   let photo = props.photo;
   let name = props.loginInfo.displayName;
   let logout = props.logout;
+  const [visible,setVisible]=useState(true)
 
   function linkToTheMenuRouteS(menuRoute) {
     window.location.href = `${window.location.origin}${menuRoute}`
   }
+  useEffect(()=>{
+    if(props.eventId && props.eventId=='60cb7c70a9e4de51ac7945a2')
+    setVisible(false)
+  },[props.eventId])
 
   let menu = (
     <Menu>
@@ -44,18 +49,18 @@ const UserStatusAndMenu = (props) => {
           <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
         </NavLink>
       </Menu.Item>
-      <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/tickets/${props.userEvent._id}`)}>
+      {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/tickets/${props.userEvent._id}`)}>
           <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
-      </Menu.Item>
-      <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/eventEdit/${props.userEvent._id}#events`)}>
+      </Menu.Item>}
+      {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/eventEdit/${props.userEvent._id}#events`)}>
           <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
-      </Menu.Item>
+      </Menu.Item>}
 
-      <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/create-event`)}>
+     {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/create-event`)}>
           <Button type='primary' size='medium'>
             <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
           </Button>
-      </Menu.Item>
+      </Menu.Item>}
       <Menu.Divider />
       <Menu.Item style={ItemStyle}>
         <a onClick={logout}>
