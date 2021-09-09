@@ -163,7 +163,7 @@
     "registration.message.updated": "Usuario Actualizado",
     "registration.already.registered": "Ya se encuentra registrado.",
 
-    "button.return": "Regresar",
+    "button.return": "Regresar a iniciar sesión",
     "button.go.event": "Ir al evento",
     "button.login": "Ingresar",
     "button.forget.password": "Olvidé mi contraseña",
@@ -177,7 +177,7 @@
     "title.panelists": "Panelistas",
 
     "form.field.required": "Este campo es obligatorio",
-    "form.validate.message.password": "El password debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número",
+    "form.validate.message.password": "El password debe tener mínimo 8 caracteres, sólo letras, números y sin espacios",
     "form.validate.message.email": "E-mail inválido",
     "form.missing.required.fields": "Faltan por completar algunos campos",
     "form.label.password": "Contraseña",

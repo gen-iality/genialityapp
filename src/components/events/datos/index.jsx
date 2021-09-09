@@ -245,7 +245,7 @@ class Datos extends Component {
         dataIndex: 'mandatory',
         align: 'center',
         render: (record, key) =>
-          key.name !== 'email' && key.name !== 'names' && key.name!=='picture'? (
+          key.name !== 'email' && key.name !== 'names' ? (
             <Checkbox name='mandatory' onChange={() => this.changeCheckBox(key,'mandatory')} defaultChecked={record} />
           ) : (
             <Checkbox checked />
@@ -264,7 +264,7 @@ class Datos extends Component {
         dataIndex: 'visibleByAdmin',
         align: 'center',
         render: (record, key) =>
-          key.name !== 'email' && key.name !== 'names' && key.name!=='picture' ? (
+          key.name !== 'email' && key.name !== 'names'  ? (
             <Checkbox name='visibleByAdmin' onChange={() => this.changeCheckBox(key,'visibleByAdmin','visibleByContacts')} checked={record} />
           ) : (
             <Checkbox checked />
@@ -276,7 +276,7 @@ class Datos extends Component {
         render: (key) => (
           <>
             <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
-            {key.name !== 'email' && key.name !== 'names' && key.name!=='picture' && (
+            {key.name !== 'email' && key.name !== 'names'  && (
               <DeleteOutlined style={{ float: 'right' }} onClick={() => this.setState({ deleteModal: key._id })} />
             )}
           </>
