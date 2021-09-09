@@ -38,6 +38,7 @@ const AttendeList = function(props) {
         email: attendeeList[key].properties.email,
         properties: attendeeList[key].properties,
         _id: attendeeList[key]._id,
+        imageProfile : attendeeList[key].user?.picture
       };
 
       if (mihijo.status === 'online') {
@@ -130,8 +131,8 @@ const AttendeList = function(props) {
             ]}>
             <List.Item.Meta
               avatar={
-                item.currentUser?.image ? (
-                  <Avatar src={item.currentUser?.image} />
+                item.imageProfile ? (
+                  <Avatar src={item.imageProfile} />
                 ) : (
                   <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={40}>
                     {InitialsNameUser(item.names)}
