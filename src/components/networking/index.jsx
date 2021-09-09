@@ -20,6 +20,8 @@ import { addNotification, isMyContacts, SendFriendship } from '../../helpers/net
 import { HelperContext } from '../../Context/HelperContext';
 const { Meta } = Card;
 const { TabPane } = Tabs;
+import { setVirtualConference } from '../../redux/virtualconference/actions';
+import { connect } from 'react-redux';
 
 class ListEventUser extends Component {
   constructor(props) {
@@ -50,6 +52,7 @@ class ListEventUser extends Component {
     await this.getInfoCurrentUser();
     this.loadData();
     this.getRequestSend();
+    this.props.setVirtualConference(false)
   
   }
 
@@ -294,11 +297,13 @@ class ListEventUser extends Component {
 
   //obtener solicitudes de contactos enviadas 
   getRequestSend(){
+    if(this.props.cEventUser.value!=null){
     Networking.getInvitationsSent(this.props.cEvent.value._id, this.props.cEventUser.value._id).then(({ data }) => {
       if (data.length > 0){
         this.setState({requestListSent:data.filter((request)=>!request.response)})       
       }      
     });
+  }
   }
 
   haveRequest(user){
@@ -320,6 +325,9 @@ class ListEventUser extends Component {
     let formatUSer={...user,eventUserId:user._id}   
     let isContact=isMyContacts(formatUSer,this.props.cHelper.contacts);
     return isContact;
+  }
+  componentWillUnmount(){
+    this.props.setVirtualConference(true)
   }
 
   render() {
@@ -357,7 +365,7 @@ class ListEventUser extends Component {
            <div>
           <Tabs style={{background:'#FFFFFF'}} activeKey={activeTab} onChange={this.changeActiveTab}>
 
-            <TabPane tab='Todos los Asistentes' key='asistentes'>
+            <TabPane tab='Participantes' key='asistentes'>
               {
                 <AppointmentModal
                   targetEventUserId={this.state.eventUserIdToMakeAppointment}
@@ -665,7 +673,7 @@ class ListEventUser extends Component {
                                                 });
                                               }
                                             }:null}>
-                                            {this.isMyContact(users)?'Ya es tu contacto':'Enviar solicitud de Contacto'+users._id}
+                                            {this.isMyContact(users)?'Ya es tu contacto':'Enviar solicitud de Contacto'}
                                           </Button>
                                         </Space>
                                       )}
@@ -811,6 +819,9 @@ class ListEventUser extends Component {
     );
   }
 }
+const mapDispatchToProps = {
+  setVirtualConference,
+};
 
-let ListEventUserWithContext = withContext(ListEventUser);
+let ListEventUserWithContext =connect(null, mapDispatchToProps)( withContext(ListEventUser));
 export default ListEventUserWithContext;
