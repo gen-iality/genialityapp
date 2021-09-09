@@ -126,7 +126,7 @@ let AgendaActividadDetalle = (props) => {
 
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
-      if (props.cEventUser && cUser.value) {
+      if (props.cEventUser && cUser.value && props.cEvent.value) {
         console.log('====================================');
         console.log(' props.cEventUser.value', props.cEventUser.value);
         console.log('====================================');
