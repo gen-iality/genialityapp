@@ -102,7 +102,7 @@ class ListEventUser extends Component {
         let meproperties = this.state.eventUser.properties;
 
         //
-        if (event._id === '60413a3cf215e97bb908bec9') {
+        if (this.props.cEvent.value._id === '60413a3cf215e97bb908bec9') {
           let prospectos = eventUserList.filter((asistente) => asistente.properties.interes === 'Vender');
           prospectos.forEach((prospecto) => {
             matches.push(prospecto);
@@ -110,7 +110,7 @@ class ListEventUser extends Component {
         }
 
         //Finanzas del clima
-        else if (event._id === '5f9708a2e4c9eb75713f8cc6') {
+        else if (this.props.cEvent.value._id === '5f9708a2e4c9eb75713f8cc6') {
           let prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
           prospectos.map((prospecto) => {
             if (prospecto.properties.participacomo == 'Financiador') {
@@ -119,7 +119,7 @@ class ListEventUser extends Component {
           });
         }
         // Rueda de negocio naranja videojuegos
-        else if (event._id === '5f92d0cee5e2552f1b7c8ea2') {
+        else if (this.props.cEvent.value._id === '5f92d0cee5e2552f1b7c8ea2') {
           if (meproperties.tipodeparticipante === 'Oferente') {
             matches = eventUserList.filter((asistente) => asistente.properties.tipodeparticipante === 'Comprador');
           } else if (meproperties.tipodeparticipante === 'Comprador') {
@@ -128,7 +128,7 @@ class ListEventUser extends Component {
         }
 
         // Rueda de negocio naranja
-        else if (event._id === '5f7f21217828e17d80642856') {
+        else if (this.props.cEvent.value._id === '5f7f21217828e17d80642856') {
           let prospectos = eventUserList.filter((asistente) => asistente.properties.participacomo);
           prospectos.map((prospecto) => {
             if (
@@ -147,7 +147,7 @@ class ListEventUser extends Component {
         }
 
         // Fenalco Meetups
-        else if (event._id === '5f0622f01ce76d5550058c32') {
+        else if (this.props.cEvent.value._id === '5f0622f01ce76d5550058c32') {
           let prospectos = eventUserList.filter(
             (asistente) =>
               (asistente.properties.ingresasameetupspara === 'Hacer negocios' ||
