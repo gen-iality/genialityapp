@@ -61,16 +61,20 @@ class SearchComponent extends Component {
       });
     } else {
       if (this.props.kind === 'user') {
+       
         arrAux = this.props.data.filter((item) => {
+          
           if (!item.properties) {
             return false;
           }
+          
           let found = false;
           //buscamos coindicencia por cada una de las propiedades
           for (let key in item.properties) {
             let propertyValue = item.properties[key];
             if (!propertyValue) continue;
             propertyValue = String(propertyValue);
+            //if(item.properties['names']=='Brayan Triana')console.log('busqueda',item.properties)
             found = found || propertyValue.search(new RegExp(value, 'i')) >= 0;
           }
           return found;
