@@ -50,8 +50,8 @@ export const userRequest = {
     try {
       const users = await UsersApi.getAll(eventId, '?pageSize=10000');
 
-      if (users & currentUser) {
-        docs = users.data.filter((user) => (user && (user.account_id !== currentUser._id)));
+      if (users && currentUser) {
+        docs = users.data.filter((user) => user && user.account_id !== currentUser._id);
       }
     } catch (error) {
       console.error(error);
@@ -280,14 +280,14 @@ export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newSta
             .collection('agendas')
             .doc(agendaId)
             .update({ request_status: newStatus });
-            //ENVIO DE CORREOS
-            let status=newStatus=="accepted"?"accept":"reject"
-            EventsApi.acceptOrRejectRequest(eventId,agendaId,status);
-            //console.log("RESPUESTA_MAIL==>", respuesta);            
+          //ENVIO DE CORREOS
+          let status = newStatus == 'accepted' ? 'accept' : 'reject';
+          EventsApi.acceptOrRejectRequest(eventId, agendaId, status);
+          //console.log("RESPUESTA_MAIL==>", respuesta);
           resolve();
         }
       } catch (error) {
-        reject(error); 
+        reject(error);
       }
     })();
   });
