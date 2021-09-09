@@ -243,7 +243,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
           description={
             <div>
               <Row className='mi_agenda' justify='space-around'>
-                <Col xs={24} sm={24} md={12} xl={12}>
+                <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
                   <p>{userEmail || 'No registra correo'}</p>
                   {!!data.message && (
                     <p style={{ paddingRight: '20px' }}>
@@ -252,10 +252,11 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                     </p>
                   )}
                 </Col>
-                <Col xs={24} sm={24} md={12} xl={12}>
+                <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
                   <Row justify='center'>
                     <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div>
                     <div>{moment(data.timestamp_start).format('hh:mm a')}</div>
+                    {' - '}
                     <div>{moment(data.timestamp_end).format('hh:mm a')}</div>
                   </Row>
                 </Col>
