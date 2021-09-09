@@ -301,13 +301,13 @@ class ListEventUser extends Component {
     } = this.state;
 
     return (
-      <Card style={{ padding: '12px' }}>
+      <Card style={{ padding: '5px' }}>
         <EventContent>
           {/* Componente de busqueda */}
            <div>
           <Tabs style={{background:'#FFFFFF'}} activeKey={activeTab} onChange={this.changeActiveTab}>
 
-            <TabPane tab='Todos los Asistentes' key='asistentes'>
+            <TabPane tab='Participantes' key='asistentes'>
               {
                 <AppointmentModal
                   targetEventUserId={this.state.eventUserIdToMakeAppointment}
@@ -484,15 +484,15 @@ class ListEventUser extends Component {
                   </Fragment>
                 ) : (
                   <div className='container card-Sugeridos'>
-                    <Row justify='space-between'>
+                    <Row justify='space-between' gutter={[10,10]}>
                       {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                       {pageOfItems.map((users, userIndex) => (
-                        <Col key={`user-item-${userIndex}`} xs={20} sm={20} md={20} lg={10} xl={10} xxl={10} offset={2}>
+                        <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={8} xxl={8}>
                           <Card
                             extra={
                               <a
                               /* style={{ color: "white" }}
-                                  onClick={() => {
+                                  onClick={() => 4
                                     this.SendFriendship({
                                       eventUserIdReceiver: users._id,
                                       userName: users.properties.names || users.properties.email,
@@ -517,7 +517,7 @@ class ListEventUser extends Component {
                             bordered={true}>
                             <Meta
                               avatar={
-                                <Avatar src={users.properties['picture']?users.properties['picture']:''}>
+                                <Avatar size={65} src={users.properties['picture']?users.properties['picture']:''}>
                                   {!users.properties['picture'] &&users.properties.names
                                     ? users.properties.names.charAt(0).toUpperCase()
                                     : users.properties.names}
@@ -535,7 +535,7 @@ class ListEventUser extends Component {
                                           (property, propertyIndex) =>
                                             !property.visibleByAdmin &&
                                             (!property.visibleByContacts || property.visibleByContacts == 'public') &&
-                                            users.properties[property.name] && property.name!=='picture' && (
+                                            users.properties[property.name] && property.name!=='picture' && property.name!=='imagendeperfil' && (
                                               <div key={`public-field-${userIndex}-${propertyIndex}`}>
                                                 <p>
                                                   <b>{`${property.label}: `}</b>
