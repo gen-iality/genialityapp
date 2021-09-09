@@ -266,12 +266,12 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
                   <Col xs={24} sm={24} md={12} xl={12}>
                     <Button
                       type='primary'
-                      disabled={loading || !enableMeetings}
+                      disabled={loading || enableMeetings}
                       loading={loading}
                       onClick={() => {
                         accessMeetRoom(data, eventUser);
                       }}>
-                      {enableMeetings ? 'Ingresar a reunión' : 'Reunión Cerrada'}
+                      {!enableMeetings ? 'Ingresar a reunión' : 'Reunión Cerrada'}
                     </Button>
                     <br />
                   </Col>
