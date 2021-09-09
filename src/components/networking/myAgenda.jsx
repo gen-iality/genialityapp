@@ -1,13 +1,13 @@
 import { Avatar, Button, Card, Col, Modal, notification, Row, Spin, Tabs } from 'antd';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
-import { find, map, mergeRight, path, pathOr, propEq } from 'ramda';
+import { find, map, mergeRight, path, propEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
 import { getDatesRange } from '../../helpers/utils';
 import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
-import { HelperContext } from '../../Context/HelperContext';
+import {createChatRoom} from './agendaHook'
 
 const { TabPane } = Tabs;
 const { Meta } = Card;
@@ -18,7 +18,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [acceptedAgendas, setAcceptedAgendas] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
-  let { createChatRoom } = useContext(HelperContext);
 
   const eventDatesRange = useMemo(() => {
     return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
