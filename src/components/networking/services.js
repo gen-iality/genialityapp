@@ -286,7 +286,7 @@ export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newSta
           resolve();
         }
       } catch (error) {
-        reject(error);
+        reject(error); 
       }
     })();
   });
