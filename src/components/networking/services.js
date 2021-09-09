@@ -46,11 +46,12 @@ export const userRequest = {
   //   Obtiene la lista de los asistentes al evento -------------------------------------------
   getEventUserList: async (eventId, token, currentUser) => {
     let docs = null;
+    if (!currentUser) return null;
     try {
       const users = await UsersApi.getAll(eventId, '?pageSize=10000');
 
-      if (users) {
-        docs = users.data.filter((user) => user.account_id !== currentUser._id);
+      if (users & currentUser) {
+        docs = users.data.filter((user) => (user && (user.account_id !== currentUser._id)));
       }
     } catch (error) {
       console.error(error);
