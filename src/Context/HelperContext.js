@@ -48,7 +48,7 @@ export const HelperContextProvider = ({ children }) => {
   const [totalPrivateMessages, settotalPrivateMessages] = useState(0);
   useEffect(() => {
     if (!cEvent.value) return;
-    let firstroute = Object.keys(cEvent.value.itemsMenu);  
+    let firstroute = Object.keys(cEvent.value.itemsMenu);
     if (firstroute[0] != undefined) {
       seteventPrivate({ private: false, section: firstroute[0] });
     }
@@ -187,6 +187,8 @@ export const HelperContextProvider = ({ children }) => {
       setactivitiesEvent(activities.data);
     }
   };
+
+  
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
@@ -353,26 +355,22 @@ export const HelperContextProvider = ({ children }) => {
   }, [cEvent.value, cUser.value]);
 
   useEffect(() => {
-   
-   
     if (cEvent.value == null || cUser.value == null) return;
     async function fethcNewMessages() {
-      
-      let ultimomsj= null;  
-            firestore
+      let ultimomsj = null;
+      firestore
         .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
         .onSnapshot(function(querySnapshot) {
-          console.log("querySnapshot==>",querySnapshot.docChanges()) 
-               
+          console.log('querySnapshot==>', querySnapshot.docChanges());
+
           if (
             querySnapshot.docChanges()[0] &&
             querySnapshot.docChanges()[0].type == 'modified' &&
-            querySnapshot.docChanges()[0].doc.data().ultimo_mensaje != ''
-            && ultimomsj!= querySnapshot.docChanges()[0].doc.data().ultimo_mensaje
+            querySnapshot.docChanges()[0].doc.data().ultimo_mensaje != '' &&
+            ultimomsj != querySnapshot.docChanges()[0].doc.data().ultimo_mensaje
           ) {
-           
             openNotification(querySnapshot.docChanges()[0].doc.data());
-            ultimomsj= querySnapshot.docChanges()[0].doc.data().ultimo_mensaje;
+            ultimomsj = querySnapshot.docChanges()[0].doc.data().ultimo_mensaje;
           }
         });
     }

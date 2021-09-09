@@ -1,12 +1,13 @@
 import { Avatar, Button, Card, Col, Modal, notification, Row, Spin, Tabs } from 'antd';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
-import { find, map, mergeRight, path, pathOr, propEq } from 'ramda';
+import { find, map, mergeRight, path, propEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import React, { useEffect, useMemo, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
 import { getDatesRange } from '../../helpers/utils';
 import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
+import {createChatRoom} from './agendaHook'
 
 const { TabPane } = Tabs;
 const { Meta } = Card;
@@ -19,11 +20,9 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [currentRoom, setCurrentRoom] = useState(null);
 
   const eventDatesRange = useMemo(() => {
-  
     return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
   }, [event.date_start, event.date_end]);
 
-  useEffect(() => {}, []);
   useEffect(() => {
     if (!event || !event._id) return;
 
@@ -40,7 +39,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       setLoading(true);
       getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
         .then((agendas) => {
-        
           if (isNonEmptyArray(agendas)) {
             const newAcceptedAgendas = map((agenda) => {
               const agendaAttendees = path(['attendees'], agenda);
@@ -68,6 +66,12 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
         .finally(() => setLoading(false));
     }
   }, [event._id, currentEventUserId, eventUsers]);
+
+  useEffect(() => {
+    if (currentRoom) {
+      createChatRoom(currentRoom);
+    }
+  }, [currentRoom]);
 
   if (loading) {
     return (
@@ -121,10 +125,28 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
               {userName && (
                 <iframe
                   title='chatevius'
-                  className='ChatEvius'
-                  style={{ width: 400, height: 373 }}
-                  src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
-              )}
+                  className='ChatEviusLan'
+                  src={
+                    'https://chatevius.web.app?nombre=' +
+                    userName +
+                    '&chatid=' +
+                    currentRoom +
+                    '&eventid=' +
+                    event._id +
+                    '&userid=' +
+                    currentEventUserId +
+                    '&version=0.0.2'
+                  }></iframe>
+              )
+
+              // https://chatevius.web.app?nombre=Pruebas Mocionsoft&chatid=6XNNGi7NCpQXHwOmU6xy
+
+              // <iframe
+              //   title='chatevius'
+              //   className='ChatEvius'
+              //   style={{ width: 400, height: 373 }}
+              //   src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
+              }
             </Col>
           </Row>
         </Col>
@@ -197,10 +219,10 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom }) {
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
-  console.log("EVENT USER==>",data)
+  console.log('EVENT USER==>', data);
 
   //const userName = pathOr('', ['names','name'], data);
-  const userName =data.owner_id==eventUser._id?data.name ??'Sin nombre':data.name_requesting??'Sin nombre';
+  const userName = data.owner_id == eventUser._id ? data.name ?? 'Sin nombre' : data.name_requesting ?? 'Sin nombre';
   //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
   const userEmail = (data.otherEventUser && data.otherEventUser.properties.email) || data.email;
 
