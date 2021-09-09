@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 const { Title, Text } = Typography;
 
 const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,updateValues }) => {
-  const [selectedValue, setSelectedValue] = useState(50000);
+  const [selectedValue, setSelectedValue] = useState(100000);
   const [loadingSave, setLoadingSave] = useState(false);
   const [priceProduct, setPriceProduct] = useState(product && product.price);
   const [valuOferta, setValueOferta] = useState(0);
@@ -32,7 +32,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       setPriceProduct( product &&product.price)
       setValorProduct(obtenerValor())
       //console.log("ISUSD==>",product.price.includes('USD'))
-      let minValueUp=product.price.includes('USD')?50:50000
+      let minValueUp=product.price.includes('USD')?50:100000
       let valueOfertaMin=parseFloat(obtenerValor())+minValueUp
       setValueOferta(valueOfertaMin)
     }
@@ -67,11 +67,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
    }
   }*/
   //VALORES PARA SUBIR EN LA PUJA
-  const valuesPuja = [
-    {
-      name: 'COP 50.000',
-      value: 50000,
-    },
+  const valuesPuja = [ 
     {
       name: 'COP 100.000',
       value: 100000,
@@ -146,7 +142,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
           updateValues(true)
           }         
         }else{
-          let minValueUp=product.price.includes('USD')?50:50000
+          let minValueUp=product.price.includes('USD')?50:100000
           let valueOfertaMin=parseFloat(valueNumber)+minValueUp
           setValueOferta(valueOfertaMin);
           setPriceProduct(valueResp);
@@ -170,7 +166,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
   };
   //BOTON MENOS
   const downvalue = () => {
-    let minValueUp=product.price.includes('USD')?50:50000   
+    let minValueUp=product.price.includes('USD')?50:100000   
     if (+valuOferta - selectedValue >= +valorProduct+minValueUp) {  
       setValueOferta(+valuOferta - selectedValue);
     }

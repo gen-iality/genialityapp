@@ -132,7 +132,7 @@ const FormRegister = ({
   const [loggedurl, setLogguedurl] = useState(null);
   const [imageAvatar, setImageAvatar] = useState(null);
   let [ImgUrl, setImgUrl] = useState('');
-  const [typeRegister, setTypeRegister] = useState('free');
+  const [typeRegister, setTypeRegister] = useState('pay');
   const [payMessage, setPayMessage] = useState(false);
   const [form] = Form.useForm();
   let [areacodeselected, setareacodeselected] = useState();
@@ -173,7 +173,8 @@ const FormRegister = ({
     }
   }, [extraFields]);
 
-  const showGeneralMessage = () => {
+  const showGeneralMessage = (values,error,date) => {
+    console.log("VALUES FINISHED==>",values)
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
       setGeneralFormErrorMessageVisible(false);
@@ -273,11 +274,11 @@ const FormRegister = ({
             setTimeout(function() {
               window.location.replace(
                 eventId=='60cb7c70a9e4de51ac7945a2'?`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
-                :`/landing/${eventId}/${eventPrivate.section}?register=${ eventUser==null?typeRegister=='free' ?2:3:4}&token=${resp.data.user.initial_token}`
+                :`/landing/${eventId}/${eventPrivate.section}?register=${ eventUser==null?2:4}&token=${resp.data.user.initial_token}`
               );
             }, 100);
           } else {
-            window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${typeRegister=='free'?1:3}`);
+            window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${1}`);
           }
         } else {
          // window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
@@ -315,6 +316,7 @@ const FormRegister = ({
   };
 
   const valuesChange = (changedValues, allValues) => {
+   console.log("VALUES==>",allValues)
     updateFieldsVisibility(conditionals, allValues);
   };
 
@@ -472,10 +474,11 @@ const FormRegister = ({
 
       if (type === 'boolean') {
         if (mandatory) {       
-          let textoError = intl.formatMessage({ id: 'form.field.required' });      
-           
-         rule={required:mandatory}         
-          //rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
+          let textoError = intl.formatMessage({ id: 'form.field.required' });
+                   
+          rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
+        }else{
+          rule = { validator: (_, value) => (value==true|| value==false || value=="" ? Promise.resolve() : Promise.reject(textoError)) };
         }
       return( <div key={'g' + key} name='field'>         
           {(
@@ -504,8 +507,23 @@ const FormRegister = ({
                 label
               )}
             </Checkbox>
-              </Form.Item>
 
+              </Form.Item>
+           {eventId == '60cb7c70a9e4de51ac7945a2' && (
+              <Row style={{ marginTop: 20 }}>
+                {' '}
+                <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
+                  <PlayCircleOutlined /> Ver términos y condiciones
+                </a>
+              </Row>              
+            )}
+             {description && description.length < 500 && <p>{description}</p>}
+              {description && description.length > 500 && (
+                <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
+                  <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
+                    <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
+                  </Panel>
+                </Collapse>)}
              </>
               )}
             </div>)       
@@ -609,9 +627,9 @@ const FormRegister = ({
             key={key}
             defaultValue={value}
             value={password}
-            pattern='(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$'
+            //pattern='^(?=\w*\d)(?=\w*[a-z])\S{8,16}$'
             title={intl.formatMessage({ id: 'form.validate.message.password' })}
-            required={true}
+            //required={true}
             message={intl.formatMessage({ id: 'form.field.required' })}
           />
         );
@@ -649,19 +667,13 @@ const FormRegister = ({
       rule =
         type == 'password'
           ? {
-              required: true,
-              type: 'regexp',
-              pattern: new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{10,}$/),
-              message: 'El formato del password no es valido',
+              required: true,             
+              pattern: new RegExp(/^[A-Za-z0-9_-]{8,}$/),
+              message: 'El formato del password no es valido',              
             }
           : rule;
-
-      // let hideFields =
-      //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
-
-     
-
-    
+               // let hideFields =
+      //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };    
 
       return (
         type!=='boolean' &&<div key={'g' + key} name='field'>
@@ -729,7 +741,7 @@ const FormRegister = ({
                 required: intl.formatMessage({ id: 'form.field.required' }),
                 types: {
                   email: intl.formatMessage({ id: 'form.validate.message.email' }),
-                  regexp: 'malo',
+                 // regexp: 'malo',
                 },
               }}
               initialValues={initialValues}

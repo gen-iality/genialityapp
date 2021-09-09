@@ -182,7 +182,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
   // Funcion para aceptar o rechazar una invitacion o solicitud
   const sendResponseToInvitation = async (requestId, state) => {
     let data = { response: state ? 'accepted' : 'rejected' };
-
+  console.log("requestId==>",requestId)
     Networking.acceptOrDeclineInvitation(eventId, requestId._id, data)
       .then(async () => {
         message.success('Respuesta enviada');
@@ -197,7 +197,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
         setRequestListReceived(requestListReceived.filter((item) => item._id != requestId._id));
       })
       .catch((err) => {
-        console.error(err);
+        console.error("ERROR API==>",err);
         message.error('Hubo un problema', err);
       });
   };
