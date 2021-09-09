@@ -8,6 +8,7 @@ import { handleSelect } from './utils';
 import { firestore } from './firebase';
 import { parseUrl } from '../helpers/constants';
 import Moment from 'moment';
+import { async } from 'ramda-adjunct';
 const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
@@ -272,6 +273,11 @@ export const EventsApi = {
       `api/events/${eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${productId}"}]`
     );
   },
+  acceptOrRejectRequest:async(eventId,requestId,status)=>{
+    return await Actions.get(
+      `api/event/${eventId}/meeting/${requestId}/${status}`
+    );
+  }
 };
 export const InvitationsApi = {
   getAll: async (id) => {
