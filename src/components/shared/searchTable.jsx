@@ -74,7 +74,7 @@ class SearchComponent extends Component {
             let propertyValue = item.properties[key];
             if (!propertyValue) continue;
             propertyValue = String(propertyValue);
-            //if(item.properties['names']=='Brayan Triana')console.log('busqueda',item.properties)
+            if(item.properties['names']=='Brayan Triana')console.log('busqueda',item.properties)
             found = found || propertyValue.search(new RegExp(value, 'i')) >= 0;
           }
           return found;
@@ -153,12 +153,13 @@ class SearchComponent extends Component {
               </Tooltip>
             }
           />
-        </Form.Item>
+         Total: {(this.props.users && this.props.users.length)?this.props.users.length:(this.props.data && this.props.data.length)?this.props.data.length:"-"}
         {this.state.showMessage && (
           <p className='help is-danger'>
             <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage='Help' />
           </p>
         )}
+        </Form.Item>
       </div>
     );
   }

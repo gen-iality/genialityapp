@@ -329,6 +329,7 @@ class ListEventUser extends Component {
                         kind={'user'}
                         event={this.props.cEvent.value._id}
                         searchResult={this.searchResult}
+                        users={this.state.users}
                         clear={this.state.clearSearch}
                         styles={{ width: '300px' }}
                       />
