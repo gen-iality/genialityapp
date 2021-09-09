@@ -1,6 +1,6 @@
 import React, { Component, Fragment, useContext } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { Row, Button, Col, Card, Avatar, Alert, Tabs, Form, Badge, notification } from 'antd';
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, Form, Badge, notification, Modal, Result, Space } from 'antd';
 import AppointmentModal from './appointmentModal';
 import MyAgenda from './myAgenda';
 import AppointmentRequests from './appointmentRequests';
@@ -41,7 +41,8 @@ class ListEventUser extends Component {
       matches: [],
       filterSector: null,
       typeAssistant: null,
-      requestListSent:[]
+      requestListSent:[],
+      modalView: false,
     };
   }
 
@@ -59,12 +60,13 @@ class ListEventUser extends Component {
     this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
   };
   agendarCita = (iduser, user) => {
-    console.log("USERS SELECTED==>",user)
+    console.log('USERS SELECTED==>', user);
     this.setState({ eventUserIdToMakeAppointment: iduser, eventUserToMakeAppointment: user });
   };
   loadData = async () => {
     let { changeItem } = this.state;
-
+    let showModal = window.sessionStorage.getItem('message') === null ? true : false
+    this.setState({modalView:showModal})
     // NO BORRAR ES UN AVANCE  PARA OPTIMIZAR LAS PETICIONES A LA API DE LA SECCION NETWORKING
     let eventUserList = [];
     // const response = await UsersApi.getAll(event._id);
@@ -78,7 +80,6 @@ class ListEventUser extends Component {
       Cookie.get('evius_token'),
       this.state.eventUser
     );
-  
 
     /** Inicia destacados
      * Búscamos usuarios destacados para colocarlos de primeros en la lista(destacados), tiene varios usos cómo publicitarios
@@ -208,7 +209,7 @@ class ListEventUser extends Component {
 
       let asistantData = await EventFieldsApi.getAll(this.props.cEvent.value._id);
 
-      console.log("USERS==>",eventUserList)
+      console.log('USERS==>', eventUserList);
 
       this.setState((prevState) => {
         return {
@@ -242,6 +243,11 @@ class ListEventUser extends Component {
       }
     }
   };
+
+  closeModal = () =>{
+    window.sessionStorage.setItem('message',true)
+    this.setState({modalView:false})
+  }
 
   onChangePage = (pageOfItems) => {
     this.setState({ pageOfItems: pageOfItems });
@@ -295,6 +301,21 @@ class ListEventUser extends Component {
     });
   }
 
+  haveRequest(user){
+    console.log("LIST SENTREQUEST==>",this.state.requestListSent,user)
+    if(this.state.requestListSent.length>0){
+      console.log("LIST SENT==>",this.state.requestListSent)
+      let request=this.state.requestListSent.filter((userRequest)=>userRequest._id_user_requesting==user._id);
+      console.log("LISTA==>",request,user._id)
+      if(request.length>0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+
   isMyContact(user){ 
     let formatUSer={...user,eventUserId:user._id}   
     let isContact=isMyContacts(formatUSer,this.props.cHelper.contacts);
@@ -318,7 +339,19 @@ class ListEventUser extends Component {
     } = this.state;
 
     return (
-      <div style={{ padding: '12px' }}>
+      <Card style={{ padding: '5px' }}>
+        <Modal visible={this.state.modalView} footer={null} closable={false}>
+          <Result
+           extra={<Button type='primary' onClick={this.closeModal}>
+             Cerrar
+           </Button>}
+            title='Información Adicicional'
+            subTitle='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
+                  se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
+            
+          />
+        </Modal>
+
         <EventContent>
           {/* Componente de busqueda */}
            <div>
@@ -369,407 +402,412 @@ class ListEventUser extends Component {
                         showIcon
                         closable
                       /> */}
-                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
-                          <FilterNetworking
-                            id='filterSector'
-                            properties={this.props.cEvent.value.user_properties || []}
-                            filterProperty={'participacomo'}
-                            handleSelect={this.handleSelectFilter}
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
-                          <FilterNetworking
-                            id='filterSector'
-                            properties={this.props.cEvent.value.user_properties || []}
-                            filterProperty={'sector'}
-                            handleSelect={this.handleSelectFilter}
-                          />
-                        </Form.Item>
-                      </Col>
-                    </>
-                  )}
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                            <FilterNetworking
+                              id='filterSector'
+                              properties={this.props.cEvent.value.user_properties || []}
+                              filterProperty={'participacomo'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                            <FilterNetworking
+                              id='filterSector'
+                              properties={this.props.cEvent.value.user_properties || []}
+                              filterProperty={'sector'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                      </>
+                    )}
 
-                  {/*Ruedas de negocio naranja videojuegos*/}
-                  {this.props.cEvent.value._id === '5f92d0cee5e2552f1b7c8ea2' && (
-                    <>
-                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
-                          <FilterNetworking
-                            id='filterSector'
-                            properties={this.props.cEvent.value.user_properties || []}
-                            filterProperty={'participascomo'}
-                            handleSelect={this.handleSelectFilter}
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de participante' name='filterSector' labelCol={{ span: 24 }}>
-                          <FilterNetworking
-                            id='filterSector'
-                            properties={this.props.cEvent.value.user_properties || []}
-                            filterProperty={'tipodeparticipante'}
-                            handleSelect={this.handleSelectFilter}
-                          />
-                        </Form.Item>
-                      </Col>
-                    </>
-                  )}
+                    {/*Ruedas de negocio naranja videojuegos*/}
+                    {this.props.cEvent.value._id === '5f92d0cee5e2552f1b7c8ea2' && (
+                      <>
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                            <FilterNetworking
+                              id='filterSector'
+                              properties={this.props.cEvent.value.user_properties || []}
+                              filterProperty={'participascomo'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item label='Tipo de participante' name='filterSector' labelCol={{ span: 24 }}>
+                            <FilterNetworking
+                              id='filterSector'
+                              properties={this.props.cEvent.value.user_properties || []}
+                              filterProperty={'tipodeparticipante'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                      </>
+                    )}
 
-                  {/*Ruedas de negocio naranja*/}
-                  {this.props.cEvent.value._id === '5f7f21217828e17d80642856' && (
-                    <>
-                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
-                          <FilterNetworking
-                            id='filterSector'
-                            properties={this.props.cEvent.value.user_properties || []}
-                            filterProperty={'participacomo'}
-                            handleSelect={this.handleSelectFilter}
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
-                          <FilterNetworking
-                            id='filterSector'
-                            properties={this.props.cEvent.value.user_properties || []}
-                            filterProperty={'queproductooservicioofreces'}
-                            handleSelect={this.handleSelectFilter}
-                          />
-                        </Form.Item>
-                      </Col>
-                    </>
-                  )}
+                    {/*Ruedas de negocio naranja*/}
+                    {this.props.cEvent.value._id === '5f7f21217828e17d80642856' && (
+                      <>
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                            <FilterNetworking
+                              id='filterSector'
+                              properties={this.props.cEvent.value.user_properties || []}
+                              filterProperty={'participacomo'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                            <FilterNetworking
+                              id='filterSector'
+                              properties={this.props.cEvent.value.user_properties || []}
+                              filterProperty={'queproductooservicioofreces'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                      </>
+                    )}
 
-                  {/*Fenalco Meetups*/}
-                  {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' && (
-                    <>
-                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
-                          <FilterNetworking
-                            id='filterSector'
-                            properties={this.props.cEvent.value.user_properties || []}
-                            filterProperty={'asistecomo'}
-                            handleSelect={this.handleSelectFilter}
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                        <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
-                          <FilterNetworking
-                            id='filterSector'
-                            properties={this.props.cEvent.value.user_properties || []}
-                            filterProperty={'sector'}
-                            handleSelect={this.handleSelectFilter}
-                          />
-                        </Form.Item>
-                      </Col>
-                    </>
-                  )}
-                </Row>
-              </Form>
-              <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
-                {/* <Alert
-                  message='Información Adicicional'
-                  description='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
+                    {/*Fenalco Meetups*/}
+                    {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' && (
+                      <>
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
+                            <FilterNetworking
+                              id='filterSector'
+                              properties={this.props.cEvent.value.user_properties || []}
+                              filterProperty={'asistecomo'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                          <Form.Item label='Sector' name='filterSector' labelCol={{ span: 24 }}>
+                            <FilterNetworking
+                              id='filterSector'
+                              properties={this.props.cEvent.value.user_properties || []}
+                              filterProperty={'sector'}
+                              handleSelect={this.handleSelectFilter}
+                            />
+                          </Form.Item>
+                        </Col>
+                      </>
+                    )}
+                  </Row>
+                </Form>
+                <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
+                  {/* <Alert
+                    message='Información Adicicional'
+                    description='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
                   se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
-                  type='info'
-                  closable
-                /> */}
-              </Col>
-              {!this.state.loading && !eventUserId && (
-                <div>
-                  <br />
-                  <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
-                    <Alert
-                      message='Solicitudes'
-                      description='Para enviar solicitudes debes estar suscrito al evento'
-                      type='info'
-                      closable
-                    />
-                  </Col>
-                </div>
-              )}
+                    type='info'
+                    closable
+                  /> */}
+                </Col>
+                {!this.state.loading && !eventUserId && (
+                  <div>
+                    <br />
+                    <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
+                      <Alert
+                        message='Solicitudes'
+                        description='Para enviar solicitudes debes estar suscrito al evento'
+                        type='info'
+                        closable
+                      />
+                    </Col>
+                  </div>
+                )}
 
-              <div style={{ marginTop: 10 }}>
-                {this.state.loading ? (
-                  <Fragment>
-                    <Loading />
-                    <h2 className='has-text-centered'>Cargando...</h2>
-                  </Fragment>
-                ) : (
-                  <div className='container card-Sugeridos'>
-                    <Row justify='space-between'>
-                      {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                      {pageOfItems.map((users, userIndex) => (
-                        <Col key={`user-item-${userIndex}`} xs={20} sm={20} md={20} lg={10} xl={10} xxl={10} offset={2}>
-                          <Card
-                            extra={
-                              <a
-                              /* style={{ color: "white" }}
-                                  onClick={() => {
+                <div style={{ marginTop: 10 }}>
+                  {this.state.loading ? (
+                    <Fragment>
+                      <Loading />
+                      <h2 className='has-text-centered'>Cargando...</h2>
+                    </Fragment>
+                  ) : (
+                    <div className='container card-Sugeridos'>
+                      <Row justify='space-between' gutter={[10, 10]}>
+                        {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
+                        {pageOfItems.map((users, userIndex) => (
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={8} xxl={8}>
+                            <Card
+                              extra={
+                                <a
+                                /* style={{ color: "white" }}
+                                  onClick={() => 4
                                     this.SendFriendship({
                                       eventUserIdReceiver: users._id,
                                       userName: users.properties.names || users.properties.email,
                                     });
                                   }}*/
-                              ></a>
-                            }
-                            hoverable={8}
-                            headStyle={
-                              users.destacado && users.destacado == true
-                                ? { backgroundColor: '#6ddab5' }
-                                : {
-                                    backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
-                                  }
-                            }
-                            style={{
-                              width: '100%',
-                              marginTop: '2%',
-                              marginBottom: '2%',
-                              textAlign: 'left',
-                            }}
-                            bordered={true}>
-                            <Meta
-                              avatar={
-                                <Avatar src={users.properties['picture']?users.properties['picture']:''}>
-                                  {!users.properties['picture'] &&users.properties.names
-                                    ? users.properties.names.charAt(0).toUpperCase()
-                                    : users.properties.names}
-                                </Avatar>
+                                ></a>
                               }
-                              title={users.properties.names ? users.properties.names : 'No registra Nombre'}
-                              description={[
-                                <div key={`ug-${userIndex}`}>
-                                  <br />
-                                  <Row>
-                                    <Col xs={24}>
-                                      <div>
-                                        {/* {!data.visible || !data.visibleByContacts && */
-                                        <>
-                                       {<div>id: {users._id}</div>}
-                                       {asistantData.map(
-                                          (property, propertyIndex) =>
-                                            !property.visibleByAdmin &&
-                                            (!property.visibleByContacts || property.visibleByContacts == 'public') &&
-                                            users.properties[property.name] && property.name!=='picture' && (
-                                              <div key={`public-field-${userIndex}-${propertyIndex}`}>
-                                                <p>                                                  
-                                                  <b>{`${property.label}: `}</b>
-                                                  {formatDataToString(property.type!=='codearea'?users.properties[property.name]:"(+"+users.properties['code']+")"+users.properties[property.name], property)}
-                                                </p>
-                                              </div>
-                                            )
-                                        )}</>}
-                                      </div>
-                                    </Col>
-                                    {eventUserId !== null && (
+                              hoverable={8}
+                              headStyle={
+                                users.destacado && users.destacado == true
+                                  ? { backgroundColor: '#6ddab5' }
+                                  : {
+                                      backgroundColor: this.props.cEvent.value.styles.toolbarDefaultBg,
+                                    }
+                              }
+                              style={{
+                                width: '100%',
+                                marginTop: '2%',
+                                marginBottom: '2%',
+                                textAlign: 'left',
+                              }}
+                              bordered={true}>
+                              <Meta
+                                avatar={
+                                  <Avatar
+                                    size={65}
+                                    src={users.properties['picture'] ? users.properties['picture'] : ''}>
+                                    {!users.properties['picture'] && users.properties.names
+                                      ? users.properties.names.charAt(0).toUpperCase()
+                                      : users.properties.names}
+                                  </Avatar>
+                                }
+                                title={users.properties.names ? users.properties.names : 'No registra Nombre'}
+                                description={[
+                                  <div key={`ug-${userIndex}`}>
+                                    <br />
+                                    <Row>
                                       <Col xs={24}>
-                                        <Button
-                                          style={{
-                                            backgroundColor: '#363636',
-                                            color: 'white',
-                                          }}
-                                          onClick={() => {
-                                            //alert("ACAAA")
-                                           
-                                            this.setState({
-                                              eventUserIdToMakeAppointment: users._id,
-                                              eventUserToMakeAppointment: users,
-                                            });                                           
-                                          }}>
-                                          {'Agendar cita'}
-                                        </Button>
-                                        <Button
-                                          style={{
-                                            backgroundColor: !this.isMyContact(users)? '#363636':'gray',
-                                            color: !this.isMyContact(users)?'white':'#363636',
-                                          }}
-                                          onClick={!this.isMyContact(users)? async () => {
-                                            let sendResp = await SendFriendship(
-                                              {
-                                                eventUserIdReceiver: users._id,
-                                                userName: users.properties.names || users.properties.email,
-                                              },
-                                              this.props.cEventUser.value,
-                                              this.props.cEvent.value
-                                            );
-
-                                            let us = users
-
-                                            if (sendResp._id) {
-                                              let notificationR = {
-                                                idReceive: us.account_id,
-                                                idEmited: sendResp._id,
-                                                emailEmited:
-                                                  this.props.cEventUser.value.email ||
-                                                  this.props.cEventUser.value.user.email,
-                                                message:
-                                                  (this.props.cEventUser.value.names ||
-                                                    this.props.cEventUser.value.user.names) +
-                                                  ' te ha enviado solicitud de amistad',
-                                                name: 'notification.name',
-                                                type: 'amistad',
-                                                state: '0',
-                                              };                                              
-
-                                              addNotification(
-                                                notificationR,
-                                                this.props.cEvent.value,
-                                                this.props.cEventUser.value
-                                              );
-                                              notification['success']({
-                                                message: 'Correcto!',
-                                                description:
-                                                  'Se ha enviado la solicitud de amistad correctamente',
-                                              }); 
-                                            }
-                                          }:null}>
-                                          {this.isMyContact(users)?'Este usuario ya es tu contacto':'Enviar solicitud de Contacto'}
-                                        </Button>
+                                        <div>
+                                          {/* {!data.visible || !data.visibleByContacts && */
+                                          asistantData.map(
+                                            (property, propertyIndex) =>
+                                              !property.visibleByAdmin &&
+                                              (!property.visibleByContacts || property.visibleByContacts == 'public') &&
+                                              users.properties[property.name] &&
+                                              property.name !== 'picture' &&
+                                              property.name !== 'imagendeperfil' && (
+                                                <div key={`public-field-${userIndex}-${propertyIndex}`}>
+                                                  <p>
+                                                    <b>{`${property.label}: `}</b>
+                                                    {formatDataToString(
+                                                      property.type !== 'codearea'
+                                                        ? users.properties[property.name]
+                                                        : '(+' +
+                                                            users.properties['code'] +
+                                                            ')' +
+                                                            users.properties[property.name],
+                                                      property
+                                                    )}
+                                                  </p>
+                                                </div>
+                                              )
+                                          )}
+                                        </div>
                                       </Col>
-                                    )}
-                                  </Row>
-                                  <br />
-                                </div>,
-                              ]}
-                            />
-                          </Card>
+                                      {eventUserId !== null && (
+                                        <Space wrap>
+                                          <Button
+                                          type="primary"
+                                            onClick={() => {
+                                              //alert("ACAAA")
+
+                                              this.setState({
+                                                eventUserIdToMakeAppointment: users._id,
+                                                eventUserToMakeAppointment: users,
+                                              });
+                                            }}>
+                                            {'Agendar cita'}
+                                          </Button>
+                                          <Button
+                                          type="primary" 
+                                          disabled={this.isMyContact(users)}                                          
+                                            onClick={!this.isMyContact(users)?async () => {
+                                              let sendResp = await SendFriendship(
+                                                {
+                                                  eventUserIdReceiver: users._id,
+                                                  userName: users.properties.names || users.properties.email,
+                                                },
+                                                this.props.cEventUser.value,
+                                                this.props.cEvent.value
+                                              );
+
+                                              let us = users;
+
+                                              if (sendResp._id) {
+                                                let notificationR = {
+                                                  idReceive: us.account_id,
+                                                  idEmited: sendResp._id,
+                                                  emailEmited:
+                                                    this.props.cEventUser.value.email ||
+                                                    this.props.cEventUser.value.user.email,
+                                                  message:
+                                                    (this.props.cEventUser.value.names ||
+                                                      this.props.cEventUser.value.user.names) +
+                                                    ' te ha enviado solicitud de amistad',
+                                                  name: 'notification.name',
+                                                  type: 'amistad',
+                                                  state: '0',
+                                                };
+
+                                                addNotification(
+                                                  notificationR,
+                                                  this.props.cEvent.value,
+                                                  this.props.cEventUser.value
+                                                );
+                                                notification['success']({
+                                                  message: 'Correcto!',
+                                                  description: 'Se ha enviado la solicitud de amistad correctamente',
+                                                });
+                                              }
+                                            }:null}>
+                                            {this.isMyContact(users)?'Ya es tu contacto':'Enviar solicitud de Contacto'+users._id}
+                                          </Button>
+                                        </Space>
+                                      )}
+                                    </Row>
+                                    <br />
+                                  </div>,
+                                ]}
+                              />
+                            </Card>
+                          </Col>
+                        ))}
+                      </Row>
+
+                      {/* Paginacion para mostrar datos de una manera mas ordenada */}
+                      {!this.state.loading && users.length > 0 && this.props.cEventUser.value && (
+                        <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
+                      )}
+                      {!this.state.loading && users.length == 0 && this.props.cEventUser.value && (
+                        <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
+                          <Card style={{ textAlign: 'center' }}>{'No existen usuarios'}</Card>
                         </Col>
-                      ))}
-                    </Row>
+                      )}
 
-                    {/* Paginacion para mostrar datos de una manera mas ordenada */}
-                    {!this.state.loading && users.length > 0 && this.props.cEventUser.value && (
-                      <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
-                    )}
-                    {!this.state.loading && users.length == 0 && this.props.cEventUser.value && (
-                      <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-                        <Card style={{ textAlign: 'center' }}>{'No existen usuarios'}</Card>
-                      </Col>
-                    )}
+                      {!this.state.loading && !this.props.cEventUser.value && (
+                        <Alert
+                          message='Iniciar Sesión'
+                          description='Para poder ver los asistentes es necesario iniciar sesión.'
+                          type='info'
+                          showIcon
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              </TabPane>
 
-                    {!this.state.loading && !this.props.cEventUser.value && (
-                      <Alert
-                        message='Iniciar Sesión'
-                        description='Para poder ver los asistentes es necesario iniciar sesión.'
-                        type='info'
-                        showIcon
-                      />
+              <TabPane
+                tab={
+                  <div style={{ position: 'relative' }}>
+                    Mi Agenda
+                    {this.props.cHelper.totalsolicitudAgenda > 0 && (
+                      <Badge
+                        style={{
+                          position: 'absolute',
+                          top: '-21px',
+                          right: '-13px',
+                        }}
+                        count={
+                          this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
+                        }></Badge>
                     )}
                   </div>
+                }
+                key='mi-agenda'>
+                {activeTab === 'mi-agenda' && (
+                  <>
+                    <AppointmentRequests
+                      eventId={this.props.cEvent.value._id}
+                      currentEventUserId={eventUserId}
+                      currentUser={this.props.currentUser}
+                      notificacion={this.props.notification}
+                      eventUsers={users}
+                      showpendingsend={false}
+                    />
+                    <MyAgenda
+                      event={this.props.cEvent.value}
+                      eventUser={this.props.cEventUser.value}
+                      currentEventUserId={this.props.cEventUser.value._id}
+                      eventUsers={users}
+                    />
+                  </>
                 )}
-              </div>
-            </TabPane>
+              </TabPane>
 
-            <TabPane tab={
-                <div style={{ position: 'relative' }}>
-                  Mi Agenda
-                  {this.props.cHelper.totalsolicitudAgenda > 0 && (
-                    <Badge
-                      style={{
-                        position: 'absolute',
-                        top: '-21px',
-                        right: '-13px',
-                      }}
-                      count={
-                        this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
-                      }></Badge>
-                  )}
-                </div>
-              } key='mi-agenda'>
-              {activeTab === 'mi-agenda' && (
-
-                <>
-                <AppointmentRequests
+              <TabPane tab='Mis Contactos' key='mis-contactos'>
+                <ContactList
+                  agendarCita={this.agendarCita}
                   eventId={this.props.cEvent.value._id}
-                  currentEventUserId={eventUserId}
-                  currentUser={this.props.currentUser}
-                  notificacion={this.props.notification}
-                  eventUsers={users}
-                  showpendingsend={false}
-                />                
-                <MyAgenda
+                  tabActive={this.state.activeTab}
+                />
+              </TabPane>
+
+              <TabPane
+                tab={
+                  <div style={{ position: 'relative' }}>
+                    Solicitudes de contacto{' '}
+                    {this.props.cHelper.totalSolicitudAmistad !== '0' && (
+                      <Badge
+                        style={{
+                          position: 'absolute',
+                          top: '-21px',
+                          right: '-13px',
+                        }}
+                        count={
+                          this.props.cHelper.totalSolicitudAmistad > 0 ? this.props.cHelper.totalSolicitudAmistad : ''
+                        }></Badge>
+                    )}
+                  </div>
+                }
+                key='solicitudes'>
+                <RequestList
+                  currentUser={this.props.cEventUser.value}
+                  currentUserAc={this.props.cUser.value}
                   event={this.props.cEvent.value}
-                  eventUser={this.props.cEventUser.value}
-                  currentEventUserId={this.props.cEventUser.value._id}
-                  eventUsers={users}
-                />
-                </>
-              )}
-            </TabPane>
-
-            <TabPane tab='Mis Contactos' key='mis-contactos'>
-              <ContactList
-                agendarCita={this.agendarCita}
-                eventId={this.props.cEvent.value._id}
-                tabActive={this.state.activeTab}
-              />
-            </TabPane>
-
-            <TabPane
-              tab={
-                <div style={{ position: 'relative' }}>
-                  Solicitudes de contacto{' '}
-                  {this.props.cHelper.totalSolicitudAmistad !== '0' && (
-                    <Badge
-                      style={{
-                        position: 'absolute',
-                        top: '-21px',
-                        right: '-13px',
-                      }}
-                      count={
-                        this.props.cHelper.totalSolicitudAmistad > 0 ? this.props.cHelper.totalSolicitudAmistad : ''
-                      }></Badge>
-                  )}
-                </div>
-              }
-              key='solicitudes'>
-              <RequestList
-                currentUser={this.props.cEventUser.value}
-                currentUserAc={this.props.cUser.value}
-                event={this.props.cEvent.value}
-                //notification={this.props.notification}
-                eventId={this.props.cEvent.value._id}
-                tabActive={this.state.activeTab}
-              />
-            </TabPane>
-
-            <TabPane
-              tab={
-                <div style={{ position: 'relative' }}>
-                  Solicitudes de citas
-                  {this.props.cHelper.totalsolicitudAgenda > 0 && (
-                    <Badge
-                      style={{
-                        position: 'absolute',
-                        top: '-21px',
-                        right: '-13px',
-                      }}
-                      count={
-                        this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
-                      }></Badge>
-                  )}
-                </div>
-              }
-              key='solicitudes-de-citas'>
-              {activeTab === 'solicitudes-de-citas' && (
-                <AppointmentRequests
+                  //notification={this.props.notification}
                   eventId={this.props.cEvent.value._id}
-                  currentEventUserId={eventUserId}
-                  currentUser={this.props.currentUser}
-                  notificacion={this.props.notification}
-                  eventUsers={users}
+                  tabActive={this.state.activeTab}
                 />
-              )}
-            </TabPane>
-          </Tabs>
+              </TabPane>
+
+              <TabPane
+                tab={
+                  <div style={{ position: 'relative' }}>
+                    Solicitudes de citas
+                    {this.props.cHelper.totalsolicitudAgenda > 0 && (
+                      <Badge
+                        style={{
+                          position: 'absolute',
+                          top: '-21px',
+                          right: '-13px',
+                        }}
+                        count={
+                          this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
+                        }></Badge>
+                    )}
+                  </div>
+                }
+                key='solicitudes-de-citas'>
+                {activeTab === 'solicitudes-de-citas' && (
+                  <AppointmentRequests
+                    eventId={this.props.cEvent.value._id}
+                    currentEventUserId={eventUserId}
+                    currentUser={this.props.currentUser}
+                    notificacion={this.props.notification}
+                    eventUsers={users}
+                  />
+                )}
+              </TabPane>
+            </Tabs>
           </div>
         </EventContent>
-      </div>
+      </Card>
     );
   }
 }
