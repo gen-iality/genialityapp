@@ -26,6 +26,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
 
     const getContactList = async () => {
       // Servicio que trae los contactos
+      if (!userEventContext.value) {return {}}
       Networking.getContactList(eventContext.value._id, userEventContext.value._id).then((result) => {
         if (typeof result == 'object') {
           setContactsList(result);

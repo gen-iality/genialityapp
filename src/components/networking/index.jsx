@@ -730,20 +730,20 @@ class ListEventUser extends Component {
                 key='mi-agenda'>
                 {activeTab === 'mi-agenda' && (
                   <>
-                    <AppointmentRequests
+                    {this.props.cEventUser && this.props.cEventUser.value && <AppointmentRequests
                       eventId={this.props.cEvent.value._id}
                       currentEventUserId={eventUserId}
                       currentUser={this.props.currentUser}
                       notificacion={this.props.notification}
                       eventUsers={users}
                       showpendingsend={false}
-                    />
-                    <MyAgenda
+                    />}
+                    {this.props.cEventUser && this.props.cEventUser.value && <MyAgenda
                       event={this.props.cEvent.value}
                       eventUser={this.props.cEventUser.value}
                       currentEventUserId={this.props.cEventUser.value._id}
                       eventUsers={users}
-                    />
+                    />}
                   </>
                 )}
               </TabPane>
