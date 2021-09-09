@@ -4,6 +4,7 @@ import { ExclamationCircleOutlined, MessageTwoTone } from '@ant-design/icons';
 import * as notificationsActions from '../../../redux/notifications/actions';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseCurrentUser } from '../../../Context/userContext';
+import { UseUserEvent } from '../../../Context/eventUserContext';
 import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { InitialsNameUser } from '../hooks';
@@ -36,6 +37,7 @@ const ChatList = (props) => {
   const history = useHistory();
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
+  let cEventUser  = UseUserEvent();
 
   let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useContext(
     HelperContext
@@ -123,6 +125,8 @@ const ChatList = (props) => {
 
   let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
 
+  console.log('userid', cUser.value);
+
   return (
     <Tabs activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
       {props.generalTabs.publicChat && (
@@ -144,7 +148,7 @@ const ChatList = (props) => {
               '&eventid=' +
               cEvent.value._id +
               '&userid=' +
-              cUser.value.uid +
+              cEventUser.value._id +
               '&version=0.0.2'
             }></iframe>
         </TabPane>
