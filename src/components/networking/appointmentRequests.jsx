@@ -18,7 +18,7 @@ const requestStatusText = {
   accepted: 'aceptada'
 };
 
-function AppointmentRequests({ eventUsers, notificacion }) {
+function AppointmentRequests({ eventUsers, notificacion,showpendingsend }) {
   console.log("EVENT USERS==>",eventUsers)
   const [loading, setLoading] = useState(true);
   const [loading1, setLoading1] = useState(true);
@@ -98,9 +98,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
 
   return (
     <>
-      <div>
-        <Divider>{'Solicitudes de citas recibidas pendientes'}</Divider>
-     
+      <div>     
         {!loading &&
           (pendingAgendas.length > 0 ? (
             pendingAgendas.map((pendingAgenda) => (
@@ -113,7 +111,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
               />
             ))
           ) : (
-            <Card style={{textAlign:'center'}}>{'No tienes solicitudes actualmente'}</Card>
+            <Card style={{textAlign:'center'}}>{'No tienes solicitudes recibidas pendientes'}</Card>
           ))}
 
         {loading && (
@@ -122,10 +120,10 @@ function AppointmentRequests({ eventUsers, notificacion }) {
           </Row>
         )}
       </div>
+     
 
-      <div>
-        <Divider>{'Solicitudes de citas pendientes enviadas'}</Divider>
-
+     { showpendingsend!==false && (
+      <div >
         {!loading1 &&
           (pendingAgendasSent.length > 0 ? (
             pendingAgendasSent.map((pendingAgenda) => (
@@ -139,7 +137,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
               />
             ))
           ) : (
-            <Card style={{textAlign:'center'}}>{'No tienes solicitudes actualmente'}</Card>
+            <Card style={{textAlign:'center'}}>{'No tienes solicitudes pendientes enviadas'}</Card>
           ))}
 
         {loading1 && (
@@ -148,6 +146,7 @@ function AppointmentRequests({ eventUsers, notificacion }) {
           </Row>
         )}
       </div>
+      )}
     </>
   );
 }

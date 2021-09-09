@@ -60,7 +60,7 @@ class UserLogin extends Component {
         {loading && <Spin />}
         {enabledWithEmailPass && (
           <>
-            {enabledFormLoginWithEmailPass && this.props.cEventUser.value==null ? (
+            {enabledFormLoginWithEmailPass && this.props.cEventUser.value==null && (
               <UserLoginWithEmailPass
                 eventId={eventId}
                 FormTags={FormTags}
@@ -70,8 +70,8 @@ class UserLogin extends Component {
                 errorLogin={errorLogin}
                 handleOpenRecoveryPass={handleOpenRecoveryPass}
               />
-            ):<Result icon={<SmileOutlined />} title="Bienvenido..!" subTitle="Desde ahora puedes disfrutar de nuestro evento">
-              
+            )}
+            {!enabledFormRecoveryPass &&  this.props.cEventUser.value!==null  && <Result icon={<SmileOutlined />} title="Bienvenido..!" subTitle="Desde ahora puedes disfrutar de nuestro evento">
               </Result>}
 
             {enabledFormRecoveryPass && (
