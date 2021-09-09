@@ -304,146 +304,8 @@ class ListEventUser extends Component {
       <div style={{ padding: '12px' }}>
         <EventContent>
           {/* Componente de busqueda */}
-          <Tabs activeKey={activeTab} onChange={this.changeActiveTab}>
-            <TabPane tab='Sugeridos' key='sugeridos'>
-              <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto', marginBottom: 20 }}>
-                <h1> Encuentra aquí tus contactos sugeridos, basados en la información de registro al evento.</h1>
-              </Col>
-              <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
-                <Alert
-                  message='Información Adicicional'
-                  description='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
-                  se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
-                  type='info'
-                  closable
-                />
-              </Col>
-              {!this.state.loading && !eventUserId && (
-                <div>
-                  <br />
-                  <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
-                    <Alert
-                      message='Solicitudes'
-                      description='Para enviar solicitudes debes estar suscrito al evento'
-                      type='info'
-                      closable
-                    />
-                  </Col>
-                </div>
-              )}
-
-              <div style={{ marginTop: 10 }}>
-                {this.state.loading ? (
-                  <Fragment>
-                    <Loading />
-                    <h2 className='has-text-centered'>Cargando...</h2>
-                  </Fragment>
-                ) : !this.state.loading && users.length > 0 && matches.length > 0 ? (
-                  <div className='card-Networking'>
-                    <div className='container' justify='center'>
-                      <Row justify='space-between'>
-                        {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                        {matches.length > 0 &&
-                          matches.map((user, userIndex) => (
-                            <Col
-                              key={`user-item-${userIndex}`}
-                              xs={20}
-                              sm={20}
-                              md={20}
-                              lg={10}
-                              xl={10}
-                              xxl={10}
-                              offset={2}>
-                              <Card
-                                extra={
-                                  <a
-                                    onClick={() => {
-                                      SendFriendship(
-                                        {
-                                          eventUserIdRaeceiver: user._id,
-                                          userName: user.properties.names || user.properties.email,
-                                        },
-                                        this.props.cEventUser.value,
-                                        this.props.cEvent.value
-                                      );
-                                    }}></a>
-                                }
-                                hoverable={8}
-                                headStyle={
-                                  user.destacado && user.destacado == true
-                                    ? { backgroundColor: '#33FFEC' }
-                                    : {
-                                        backgroundColor: event.styles.toolbarDefaultBg,
-                                      }
-                                }
-                                style={{
-                                  width: 500,
-                                  marginTop: '2%',
-                                  marginBottom: '2%',
-                                  textAlign: 'left',
-                                }}
-                                bordered={true}>
-                                <Meta
-                                  avatar={
-                                    <Avatar>
-                                      {user.properties && user.properties.names
-                                        ? user.properties.names.charAt(0).toUpperCase()
-                                        : user.properties.names}
-                                    </Avatar>
-                                  }
-                                  title={user.properties.names ? user.properties.names : 'No registra Nombre'}
-                                  description={[
-                                    <div key={`ui-${userIndex}`}>
-                                      <br />
-                                      <Row>
-                                        <Col xs={24}>
-                                          <div>
-                                            {asistantData.map(
-                                              (data, dataIndex) =>
-                                                /*Condicion !data.visible para poder tener en cuenta el campo visible en los datos que llegan, 
-                                                  esto ya que visibleByContacst es variable nueva, ambas realizan la misma funcionalidad
-                                                */
-                                                !data.visibleByAdmin &&
-                                                user.properties[data.name] && (
-                                                  <div key={`public-field-${userIndex}-${dataIndex}`}>
-                                                    <p>
-                                                      <b>{data.label}:</b>{' '}
-                                                      {formatDataToString(user.properties[data.name], data)}
-                                                    </p>
-                                                  </div>
-                                                )
-                                            )}
-                                          </div>
-                                        </Col>
-                                        {eventUserId !== null && (
-                                          <Col xs={24}>
-                                            <Button
-                                              type='primary'
-                                              onClick={() => {
-                                                this.agendarCita(user._id, user);
-                                              }}>
-                                              {'Agendar cita'}
-                                            </Button>
-                                          </Col>
-                                        )}
-                                      </Row>
-                                      <br />
-                                    </div>,
-                                  ]}
-                                />
-                              </Card>
-                            </Col>
-                          ))}
-                      </Row>
-                    </div>
-                  </div>
-                ) : (
-                  <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
-                    <Card style={{ textAlign: 'center' }}>{'No existen sugeridos'}</Card>
-                  </Col>
-                )}
-              </div>
-            </TabPane>
+           <div>
+          <Tabs style={{background:'#FFFFFF'}} activeKey={activeTab} onChange={this.changeActiveTab}>
 
             <TabPane tab='Todos los Asistentes' key='asistentes'>
               {
@@ -478,7 +340,7 @@ class ListEventUser extends Component {
                   {/*Alerta quemado para el eventop de finanzas de clima*/}
                   {this.props.cEvent.value._id === '5f9708a2e4c9eb75713f8cc6' && (
                     <>
-                      <Alert
+                      {/* <Alert
                         message='Sugerencias de Busqueda'
                         description='Te recomendamos buscar de acuerdo a las 
                           siguientes palabras claves: Adaptación, Mitigación, 
@@ -488,7 +350,7 @@ class ListEventUser extends Component {
                         type='info'
                         showIcon
                         closable
-                      />
+                      /> */}
                       <Col xs={24} sm={24} md={10} lg={10} xl={10}>
                         <Form.Item label='Tipo de asistente' name='filterTypeUser' labelCol={{ span: 24 }}>
                           <FilterNetworking
@@ -592,13 +454,13 @@ class ListEventUser extends Component {
                 </Row>
               </Form>
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: '0 auto' }}>
-                <Alert
+                {/* <Alert
                   message='Información Adicicional'
                   description='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
                   se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
                   type='info'
                   closable
-                />
+                /> */}
               </Col>
               {!this.state.loading && !eventUserId && (
                 <div>
@@ -783,6 +645,43 @@ class ListEventUser extends Component {
               </div>
             </TabPane>
 
+            <TabPane tab={
+                <div style={{ position: 'relative' }}>
+                  Mi Agenda
+                  {this.props.cHelper.totalsolicitudAgenda > 0 && (
+                    <Badge
+                      style={{
+                        position: 'absolute',
+                        top: '-21px',
+                        right: '-13px',
+                      }}
+                      count={
+                        this.props.cHelper.totalsolicitudAgenda > 0 && this.props.cHelper.totalsolicitudAgenda
+                      }></Badge>
+                  )}
+                </div>
+              } key='mi-agenda'>
+              {activeTab === 'mi-agenda' && (
+
+                <>
+                <AppointmentRequests
+                  eventId={this.props.cEvent.value._id}
+                  currentEventUserId={eventUserId}
+                  currentUser={this.props.currentUser}
+                  notificacion={this.props.notification}
+                  eventUsers={users}
+                  showpendingsend={false}
+                />                
+                <MyAgenda
+                  event={this.props.cEvent.value}
+                  eventUser={this.props.cEventUser.value}
+                  currentEventUserId={this.props.cEventUser.value._id}
+                  eventUsers={users}
+                />
+                </>
+              )}
+            </TabPane>
+
             <TabPane tab='Mis Contactos' key='mis-contactos'>
               <ContactList
                 agendarCita={this.agendarCita}
@@ -847,18 +746,8 @@ class ListEventUser extends Component {
                 />
               )}
             </TabPane>
-
-            <TabPane tab='Mi agenda' key='mi-agenda'>
-              {activeTab === 'mi-agenda' && (
-                <MyAgenda
-                  event={this.props.cEvent.value}
-                  eventUser={this.props.cEventUser.value}
-                  currentEventUserId={this.props.cEventUser.value._id}
-                  eventUsers={users}
-                />
-              )}
-            </TabPane>
           </Tabs>
+          </div>
         </EventContent>
       </div>
     );
