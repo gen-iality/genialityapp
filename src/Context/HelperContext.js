@@ -1,6 +1,6 @@
 import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
-import { firestore, fireRealtime, auth } from '../helpers/firebase';
+import { firestore, fireRealtime } from '../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../helpers/request';
 import { UseEventContext } from './eventContext';
 import { UseCurrentUser } from './userContext';
@@ -188,25 +188,7 @@ export const HelperContextProvider = ({ children }) => {
     }
   };
 
-  let createChatRoom = (idroom) => {
-    console.log('creando este chat para ver de one');
-    firestore
-      .collection('messages' + idroom)
-      .add({
-        name: 'Evius.co',
-        profile: '',
-        text: 'Bienvenidos al chat de Evius.co',
-        timestamp: Date.now(),
-      })
-      .then(function(messageRef) {
-        console.log('messageRef', messageRef);
-      })
-      .catch(function(error) {
-        console.error('There was an error uploading a file to Cloud Storage:', error);
-      });
-
-    // firestore.doc(`messages`+idroom).add(data, { merge: true });
-  };
+  
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
@@ -538,7 +520,6 @@ export const HelperContextProvider = ({ children }) => {
         seteventPrivate,
         GetPermissionsEvent,
         totalPrivateMessages,
-        createChatRoom,
       }}>
       {children}
     </HelperContext.Provider>
