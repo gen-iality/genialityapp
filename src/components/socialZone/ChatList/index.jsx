@@ -37,7 +37,7 @@ const ChatList = (props) => {
   const history = useHistory();
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
-  let cEventUser  = UseUserEvent();
+  let cEventUser = UseUserEvent();
 
   let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useContext(
     HelperContext
@@ -71,24 +71,32 @@ const ChatList = (props) => {
       <Form className='asistente-list' {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
         <Row justify='start'>
           <Col>
-            <h1>
+            <Text type='secondary'>
+              <FormattedMessage
+                id='form.message.socialzone'
+                defaultMessage='Registrate para participar en el chat de este evento'
+              />
+            </Text>
+
+            {/* <h1>
               <strong>
                 <FormattedMessage
                   id='form.title.socialzone'
                   defaultMessage='Ingresa tus datos para participar en el chat'
                 />
               </strong>
-            </h1>
+            </h1> */}
 
+            {/* 
             <Text type='secondary'>
               <FormattedMessage
                 id='form.message.socialzone'
                 defaultMessage='Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.'
               />
-            </Text>
+            </Text> */}
           </Col>
         </Row>
-        <Row justify='start' style={{ paddingTop: '10px' }}>
+        {/* <Row justify='start' style={{ paddingTop: '10px' }}>
           <Col>
             <Form.Item
               label={intl.formatMessage({ id: 'form.label.name' })}
@@ -104,15 +112,15 @@ const ChatList = (props) => {
               <Input style={{ width: '100%' }} />
             </Form.Item>
           </Col>
-        </Row>
+        </Row> */}
 
         <Row justify='center'>
           <Space size='small' wrap>
-            <Form.Item>
+            {/* <Form.Item>
               <Button type='dashed' htmlType='submit'>
                 <FormattedMessage id='form.button.enter' defaultMessage='Entrar' />
               </Button>
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item>
               <Button onClick={() => history.push(`/landing/${cEvent.value._id}/tickets`)} type='primary'>
                 <FormattedMessage id='form.button.register' defaultMessage='Registrarme' />
@@ -129,7 +137,30 @@ const ChatList = (props) => {
 
   return (
     <Tabs activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
-      {props.generalTabs.publicChat && (
+      {props.generalTabs.publicChat && cEvent.value && !cEventUser.value ? (
+        <TabPane
+          tab={
+            <div style={{ color: cEvent.value.styles.textMenu }}>
+              <FormattedMessage id='tabs.public.socialzone' defaultMessage='Público' />
+            </div>
+          }
+          key='public'>
+          <iframe
+            title='chatevius'
+            className='ChatEviusLan'
+            src={
+              'https://chatevius.web.app?nombre=' +
+              userNameActive +
+              '&chatid=event_' +
+              cEvent.value._id +
+              '&eventid=' +
+              cEvent.value._id +
+              '&userid=' +
+              cUser.value.uid +
+              '&version=0.0.2'
+            }></iframe>
+        </TabPane>
+      ) : (
         <TabPane
           tab={
             <div style={{ color: cEvent.value.styles.textMenu }}>

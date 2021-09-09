@@ -186,7 +186,7 @@
     "form.label.name": "Nombre",
     "form.button.enter": "Entrar en el chat",
     "form.button.register": "Registrarme al evento",
-    "form.message.socialzone": "Este formulario sólo es válido para participar en el chat, si desea disfrutar del evento en su totalidad debe registrase.",
+    "form.message.socialzone": "Registrate para participar en el chat de este evento",
 
     "tabs.attendees.socialzone": "Asistentes",
     "tabs.surveys.socialzone": "Encuestas",
