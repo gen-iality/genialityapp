@@ -10,13 +10,13 @@ import Loading from '../loaders/loading';
 import EventContent from '../events/shared/content';
 import FilterNetworking from './FilterNetworking';
 import * as Cookie from 'js-cookie';
-import { EventsApi, EventFieldsApi } from '../../helpers/request';
+import { EventsApi, EventFieldsApi, Networking } from '../../helpers/request';
 import { formatDataToString } from '../../helpers/utils';
 import { userRequest } from './services';
 import ContactList from './contactList';
 import RequestList from './requestList';
 import withContext from '../../Context/withContext';
-import { addNotification, SendFriendship } from '../../helpers/netWorkingFunctions';
+import { addNotification, isMyContacts, SendFriendship } from '../../helpers/netWorkingFunctions';
 import { HelperContext } from '../../Context/HelperContext';
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -41,12 +41,14 @@ class ListEventUser extends Component {
       matches: [],
       filterSector: null,
       typeAssistant: null,
+      requestListSent:[]
     };
   }
 
   async componentDidMount() {
     await this.getInfoCurrentUser();
     this.loadData();
+    this.getRequestSend();
   
   }
 
@@ -283,6 +285,21 @@ class ListEventUser extends Component {
     // let ev2 = new Event('select', { bubbles: true});
     // filterSector.dispatchEvent(ev2);
   };
+
+  //obtener solicitudes de contactos enviadas 
+  getRequestSend(){
+    Networking.getInvitationsSent(this.props.cEvent.value._id, this.props.cEventUser.value._id).then(({ data }) => {
+      if (data.length > 0){
+        this.setState({requestListSent:data.filter((request)=>!request.response)})       
+      }      
+    });
+  }
+
+  isMyContact(user){ 
+    let formatUSer={...user,eventUserId:user._id}   
+    let isContact=isMyContacts(formatUSer,this.props.cHelper.contacts);
+    return isContact;
+  }
 
   render() {
     const { event } = this.props;
@@ -532,19 +549,21 @@ class ListEventUser extends Component {
                                     <Col xs={24}>
                                       <div>
                                         {/* {!data.visible || !data.visibleByContacts && */
-                                        asistantData.map(
+                                        <>
+                                       {<div>id: {users._id}</div>}
+                                       {asistantData.map(
                                           (property, propertyIndex) =>
                                             !property.visibleByAdmin &&
                                             (!property.visibleByContacts || property.visibleByContacts == 'public') &&
                                             users.properties[property.name] && property.name!=='picture' && (
                                               <div key={`public-field-${userIndex}-${propertyIndex}`}>
-                                                <p>
+                                                <p>                                                  
                                                   <b>{`${property.label}: `}</b>
                                                   {formatDataToString(property.type!=='codearea'?users.properties[property.name]:"(+"+users.properties['code']+")"+users.properties[property.name], property)}
                                                 </p>
                                               </div>
                                             )
-                                        )}
+                                        )}</>}
                                       </div>
                                     </Col>
                                     {eventUserId !== null && (
@@ -566,10 +585,10 @@ class ListEventUser extends Component {
                                         </Button>
                                         <Button
                                           style={{
-                                            backgroundColor: '#363636',
-                                            color: 'white',
+                                            backgroundColor: !this.isMyContact(users)? '#363636':'gray',
+                                            color: !this.isMyContact(users)?'white':'#363636',
                                           }}
-                                          onClick={async () => {
+                                          onClick={!this.isMyContact(users)? async () => {
                                             let sendResp = await SendFriendship(
                                               {
                                                 eventUserIdReceiver: users._id,
@@ -608,8 +627,8 @@ class ListEventUser extends Component {
                                                   'Se ha enviado la solicitud de amistad correctamente',
                                               }); 
                                             }
-                                          }}>
-                                          {'Enviar solicitud de Contacto'}
+                                          }:null}>
+                                          {this.isMyContact(users)?'Este usuario ya es tu contacto':'Enviar solicitud de Contacto'}
                                         </Button>
                                       </Col>
                                     )}

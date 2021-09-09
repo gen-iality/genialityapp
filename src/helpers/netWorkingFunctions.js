@@ -83,7 +83,8 @@ export const isMyContacts=(contact,listContacts)=>{
  if(Array.isArray(listContacts)){
  listContacts.map((contacts)=>{
     if(contacts._id==contact.eventUserId){        
-      resp=true;    
+      resp=true; 
+      console.log("===IS CONTACTS==")   
       return;
     }
   })
