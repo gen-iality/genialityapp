@@ -11,7 +11,7 @@ export const createChatRoom = (idroom) => {
           .doc('initial')
           .set({
             name: 'Evius.co',
-            profilePicUrl: 'https://portal.evius.co/wp-content/uploads/2021/03/logo_1.png',
+            profilePicUrl: 'https://storage.googleapis.com/eviusauth.appspot.com/evius/events/Re391nNxdz7DhzJLuRekOW67j9ejpDYLsJ6xOE8U.jpg',
             text: 'Bienvenidos al chat de Evius.co',
             timestamp: app.firestore.FieldValue.serverTimestamp(),
           })
