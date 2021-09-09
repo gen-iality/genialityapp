@@ -1,6 +1,6 @@
 import React, { createContext, useEffect } from 'react';
 import { useState } from 'react';
-import { firestore, fireRealtime } from '../helpers/firebase';
+import { firestore, fireRealtime, auth } from '../helpers/firebase';
 import { AgendaApi, EventFieldsApi, EventsApi, Networking } from '../helpers/request';
 import { UseEventContext } from './eventContext';
 import { UseCurrentUser } from './userContext';
@@ -48,7 +48,7 @@ export const HelperContextProvider = ({ children }) => {
   const [totalPrivateMessages, settotalPrivateMessages] = useState(0);
   useEffect(() => {
     if (!cEvent.value) return;
-    let firstroute = Object.keys(cEvent.value.itemsMenu);  
+    let firstroute = Object.keys(cEvent.value.itemsMenu);
     if (firstroute[0] != undefined) {
       seteventPrivate({ private: false, section: firstroute[0] });
     }
@@ -186,6 +186,26 @@ export const HelperContextProvider = ({ children }) => {
     if (activities.data.length > 0) {
       setactivitiesEvent(activities.data);
     }
+  };
+
+  let createChatRoom = (idroom) => {
+    console.log('creando este chat para ver de one');
+    firestore
+      .collection('messages' + idroom)
+      .add({
+        name: 'Evius.co',
+        profile: '',
+        text: 'Bienvenidos al chat de Evius.co',
+        timestamp: Date.now(),
+      })
+      .then(function(messageRef) {
+        console.log('messageRef', messageRef);
+      })
+      .catch(function(error) {
+        console.error('There was an error uploading a file to Cloud Storage:', error);
+      });
+
+    // firestore.doc(`messages`+idroom).add(data, { merge: true });
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
@@ -353,26 +373,22 @@ export const HelperContextProvider = ({ children }) => {
   }, [cEvent.value, cUser.value]);
 
   useEffect(() => {
-   
-   
     if (cEvent.value == null || cUser.value == null) return;
     async function fethcNewMessages() {
-      
-      let ultimomsj= null;  
-            firestore
+      let ultimomsj = null;
+      firestore
         .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
         .onSnapshot(function(querySnapshot) {
-          console.log("querySnapshot==>",querySnapshot.docChanges()) 
-               
+          console.log('querySnapshot==>', querySnapshot.docChanges());
+
           if (
             querySnapshot.docChanges()[0] &&
             querySnapshot.docChanges()[0].type == 'modified' &&
-            querySnapshot.docChanges()[0].doc.data().ultimo_mensaje != ''
-            && ultimomsj!= querySnapshot.docChanges()[0].doc.data().ultimo_mensaje
+            querySnapshot.docChanges()[0].doc.data().ultimo_mensaje != '' &&
+            ultimomsj != querySnapshot.docChanges()[0].doc.data().ultimo_mensaje
           ) {
-           
             openNotification(querySnapshot.docChanges()[0].doc.data());
-            ultimomsj= querySnapshot.docChanges()[0].doc.data().ultimo_mensaje;
+            ultimomsj = querySnapshot.docChanges()[0].doc.data().ultimo_mensaje;
           }
         });
     }
@@ -522,6 +538,7 @@ export const HelperContextProvider = ({ children }) => {
         seteventPrivate,
         GetPermissionsEvent,
         totalPrivateMessages,
+        createChatRoom,
       }}>
       {children}
     </HelperContext.Provider>

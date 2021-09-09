@@ -3,10 +3,11 @@ import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 import { find, map, mergeRight, path, pathOr, propEq } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
 import { getDatesRange } from '../../helpers/utils';
 import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
+import { HelperContext } from '../../Context/HelperContext';
 
 const { TabPane } = Tabs;
 const { Meta } = Card;
@@ -17,12 +18,12 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [enableMeetings, setEnableMeetings] = useState(false);
   const [acceptedAgendas, setAcceptedAgendas] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
+  let { createChatRoom } = useContext(HelperContext);
 
   const eventDatesRange = useMemo(() => {
     return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
   }, [event.date_start, event.date_end]);
 
-  useEffect(() => {}, []);
   useEffect(() => {
     if (!event || !event._id) return;
 
@@ -66,6 +67,12 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
         .finally(() => setLoading(false));
     }
   }, [event._id, currentEventUserId, eventUsers]);
+
+  useEffect(() => {
+    if (currentRoom) {
+      createChatRoom(currentRoom);
+    }
+  }, [currentRoom]);
 
   if (loading) {
     return (
@@ -123,7 +130,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                   src={
                     'https://chatevius.web.app?nombre=' +
                     userName +
-                    '&chatid='+
+                    '&chatid=' +
                     currentRoom +
                     '&eventid=' +
                     event._id +
