@@ -19,7 +19,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [currentRoom, setCurrentRoom] = useState(null);
 
   const eventDatesRange = useMemo(() => {
-  
     return getDatesRange(event.date_start || event.datetime_from, event.date_end || event.datetime_to);
   }, [event.date_start, event.date_end]);
 
@@ -40,7 +39,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
       setLoading(true);
       getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
         .then((agendas) => {
-        
           if (isNonEmptyArray(agendas)) {
             const newAcceptedAgendas = map((agenda) => {
               const agendaAttendees = path(['attendees'], agenda);
@@ -121,10 +119,28 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
               {userName && (
                 <iframe
                   title='chatevius'
-                  className='ChatEvius'
-                  style={{ width: 400, height: 373 }}
-                  src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
-              )}
+                  className='ChatEviusLan'
+                  src={
+                    'https://chatevius.web.app?nombre=' +
+                    userName +
+                    '&chatid='+
+                    currentRoom +
+                    '&eventid=' +
+                    event._id +
+                    '&userid=' +
+                    currentEventUserId +
+                    '&version=0.0.2'
+                  }></iframe>
+              )
+
+              // https://chatevius.web.app?nombre=Pruebas Mocionsoft&chatid=6XNNGi7NCpQXHwOmU6xy
+
+              // <iframe
+              //   title='chatevius'
+              //   className='ChatEvius'
+              //   style={{ width: 400, height: 373 }}
+              //   src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
+              }
             </Col>
           </Row>
         </Col>
@@ -197,10 +213,10 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom }) {
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
-  console.log("EVENT USER==>",data)
+  console.log('EVENT USER==>', data);
 
   //const userName = pathOr('', ['names','name'], data);
-  const userName =data.owner_id==eventUser._id?data.name ??'Sin nombre':data.name_requesting??'Sin nombre';
+  const userName = data.owner_id == eventUser._id ? data.name ?? 'Sin nombre' : data.name_requesting ?? 'Sin nombre';
   //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
   const userEmail = (data.otherEventUser && data.otherEventUser.properties.email) || data.email;
 
