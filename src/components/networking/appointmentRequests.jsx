@@ -25,6 +25,7 @@ function AppointmentRequests({ eventUsers, notificacion,showpendingsend }) {
   const [fetching, setFetching] = useState(false);
   const [pendingAgendas, setPendingAgendas] = useState([]);
   const [pendingAgendasSent, setPendingAgendasSent] = useState([]);
+  const [sendRespuesta, setSendRespuesta]=useState(false)
 
   //contextos
   let userEventContext = UseUserEvent();
@@ -62,7 +63,7 @@ function AppointmentRequests({ eventUsers, notificacion,showpendingsend }) {
     }
   }
    
-  }, [eventContext.value, userEventContext.value, eventUsers]);
+  }, [eventContext.value, userEventContext.value, eventUsers,sendRespuesta]);
 
   useEffect(() => {
     if(eventContext && userEventContext){
@@ -94,7 +95,7 @@ function AppointmentRequests({ eventUsers, notificacion,showpendingsend }) {
         .finally(() => setLoading1(false));
     }
   }
-  }, [eventContext.value, userEventContext.value, eventUsers]);
+  }, [eventContext.value, userEventContext.value, eventUsers,sendRespuesta]);
 
   return (
     <>
@@ -172,6 +173,8 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             state: '1'
           };
          addNotification(notificationr,eventContext.value,userCurrentContext.value)
+         setSendRespuesta(true)
+         setFetching(false)
         })
         .catch((error) => {
           if (!error) {

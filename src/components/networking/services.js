@@ -281,9 +281,8 @@ export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newSta
             .update({ request_status: newStatus });
             //ENVIO DE CORREOS
             let status=newStatus=="accepted"?"accept":"reject"
-              let respuesta=await EventsApi.acceptOrRejectRequest(eventId,agendaId,status);
-              console.log("RESPUESTA_MAIL==>", respuesta)
-            
+            EventsApi.acceptOrRejectRequest(eventId,agendaId,status);
+            //console.log("RESPUESTA_MAIL==>", respuesta);            
           resolve();
         }
       } catch (error) {
