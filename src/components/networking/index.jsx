@@ -310,42 +310,44 @@ class ListEventUser extends Component {
 
         <EventContent>
           {/* Componente de busqueda */}
-          <div>
-            <Tabs style={{ background: '#FFFFFF' }} activeKey={activeTab} onChange={this.changeActiveTab}>
-              <TabPane tab='Participantes' key='asistentes'>
-                {
-                  <AppointmentModal
-                    targetEventUserId={this.state.eventUserIdToMakeAppointment}
-                    targetEventUser={this.state.eventUserToMakeAppointment}
-                    closeModal={this.closeAppointmentModal}
-                  />
-                }
-                <Form>
-                  <Row justify='space-around' gutter={[16, 16]}>
-                    <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ margin: '0 auto' }}>
-                      <Form.Item
-                        labelCol={{ span: 24 }}
-                        label='Busca aquí las personas que deseas contactar'
-                        name='searchInput'>
-                        <SearchComponent
-                          id='searchInput'
-                          placeholder={''}
-                          data={usersFiltered}
-                          kind={'user'}
-                          event={this.props.cEvent.value._id}
-                          searchResult={this.searchResult}
-                          clear={this.state.clearSearch}
-                          styles={{ width: '300px' }}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
+           <div>
+          <Tabs style={{background:'#FFFFFF'}} activeKey={activeTab} onChange={this.changeActiveTab}>
 
-                  <Row justify='space-around' gutter={[16, 16]}>
-                    {/*Alerta quemado para el eventop de finanzas de clima*/}
-                    {this.props.cEvent.value._id === '5f9708a2e4c9eb75713f8cc6' && (
-                      <>
-                        {/* <Alert
+            <TabPane tab='Todos los Asistentes' key='asistentes'>
+              {
+                <AppointmentModal
+                  targetEventUserId={this.state.eventUserIdToMakeAppointment}
+                  targetEventUser={this.state.eventUserToMakeAppointment}
+                  closeModal={this.closeAppointmentModal}
+                />
+              }
+              <Form>
+                <Row justify='space-around' gutter={[16, 16]}>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ margin: '0 auto' }}>
+                    <Form.Item
+                      labelCol={{ span: 24 }}
+                      label='Busca aquí las personas que deseas contactar'
+                      name='searchInput'>
+                      <SearchComponent
+                        id='searchInput'
+                        placeholder={''}
+                        data={usersFiltered}
+                        kind={'user'}
+                        event={this.props.cEvent.value._id}
+                        searchResult={this.searchResult}
+                        users={this.state.users}
+                        clear={this.state.clearSearch}
+                        styles={{ width: '300px' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                <Row justify='space-around' gutter={[16, 16]}>
+                  {/*Alerta quemado para el eventop de finanzas de clima*/}
+                  {this.props.cEvent.value._id === '5f9708a2e4c9eb75713f8cc6' && (
+                    <>
+                      {/* <Alert
                         message='Sugerencias de Busqueda'
                         description='Te recomendamos buscar de acuerdo a las 
                           siguientes palabras claves: Adaptación, Mitigación, 
