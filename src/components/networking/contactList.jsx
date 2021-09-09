@@ -51,7 +51,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
 
   if (!loading)
     return userCurrentContext.value === null ? (
-      <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: '0 auto' }}>
+      <Col xs={22} sm={22} md={15} lg={15} xl={15} xxl={15} style={{ margin: '0 auto' }}>
         <Alert
           message='Iniciar Sesión'
           description='Para poder ver contactos es necesario iniciar sesión.'
@@ -61,75 +61,90 @@ const ContactList = ({ tabActive, agendarCita }) => {
       </Col>
     ) : contactsList.length > 0 && !loading ? (
       <div>
-        {contactsList.map((contact, key) => {
-          const user = contact.properties ? contact.properties : contact.user;
-          return (
-            <Row key={'contactlist' + key} justify='center'>
-              <Card
-                extra={
-                  ((user.telefono && user.telefono !== null && user.telefono.length === 10) ||
-                    (user.nodewhatsapp && user.nodewhatsapp !== null && user.nodewhatsapp.length === 10) ||
-                    (user.nodecelular && user.nodecelular !== null && user.nodecelular.length === 10) ||
-                    (user.numerodecelular && user.numerodecelular !== null && user.numerodecelular.length === 10)) && (
-                    <a
-                      href={
-                        'https://api.whatsapp.com/send?phone=57' +
-                        (user.nodewhatsapp
-                          ? user.nodewhatsapp
-                          : user.nodecelular
-                          ? user.nodecelular
-                          : user.numerodecelular
-                          ? user.numerodecelular
-                          : user.telefono)
-                      }
-                      target='_blank'
-                      rel='noreferrer'>
-                      <span>
-                        Hola soy {user.names}, <br />
-                        Escribeme por WhatsApp
-                      </span>
-                    </a>
-                  )
-                }
-                style={{ width: 500, marginTop: '2%', marginBottom: '2%', textAlign: 'left' }}
-                bordered={true}>
-                <Meta
-                  avatar={<Avatar src={user['picture']?user['picture']:''}>{!user['picture'] && user.names ? user.names.charAt(0).toUpperCase() : user.names}</Avatar>}
-                  title={user.names ? user.names : 'No registra Nombre'}
-                  description={[
-                    <div key={'contact' + key}>
-                      <br />
+        <Row gutter={[10,10]}>
+          {contactsList.map((contact, key) => {
+            const user = contact.properties ? contact.properties : contact.user;
+            return (
+              <Col key={'contactlist' + key} xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
+                <Card
+                  extra={
+                    ((user.telefono && user.telefono !== null && user.telefono.length === 10) ||
+                      (user.nodewhatsapp && user.nodewhatsapp !== null && user.nodewhatsapp.length === 10) ||
+                      (user.nodecelular && user.nodecelular !== null && user.nodecelular.length === 10) ||
+                      (user.numerodecelular &&
+                        user.numerodecelular !== null &&
+                        user.numerodecelular.length === 10)) && (
+                      <a
+                        href={
+                          'https://api.whatsapp.com/send?phone=57' +
+                          (user.nodewhatsapp
+                            ? user.nodewhatsapp
+                            : user.nodecelular
+                            ? user.nodecelular
+                            : user.numerodecelular
+                            ? user.numerodecelular
+                            : user.telefono)
+                        }
+                        target='_blank'
+                        rel='noreferrer'>
+                        <span>
+                          Hola soy {user.names}, <br />
+                          Escribeme por WhatsApp
+                        </span>
+                      </a>
+                    )
+                  }
+                  style={{ width: "100%", textAlign: 'left' }}
+                  bordered={true}>
+                  <Meta
+                    avatar={
+                      <Avatar src={user['picture'] ? user['picture'] : ''}>
+                        {!user['picture'] && user.names ? user.names.charAt(0).toUpperCase() : user.names}
+                      </Avatar>
+                    }
+                    title={user.names ? user.names : 'No registra Nombre'}
+                    description={[
+                      <div key={'contact' + key}>
+                        <br />
 
-                      {userProperties.map(
-                        (property, key) =>
-                          user[property.name] !== undefined &&
-                         ( !property.visibleByAdmin ||
-                          (property.visibleByContacts || property.visibleByContacts == 'only_for_my_contacts')) && property.name!='picture' && (
-                            <div key={'contact-property' + key}>
-                              {
-                                <p>
-                                  <strong>{property.label}</strong>: {formatDataToString(property.type!='codearea'?user[property.name]:"("+user[`code`]+")"+user[property.name], property)}
-                                </p>
-                              }
-                            </div>
-                          )
-                      )}
-                    </div>,
-                  ]}
-                />
-                <Col xs={24}>
-                  <Button
-                    block
-                    size='large'
-                    style={{ backgroundColor: '#363636', color: 'white' }}
-                    onClick={() => agendarCita(contact._id, contact)}>
-                    {'Agendar cita'}
-                  </Button>
-                </Col>
-              </Card>
-            </Row>
-          );
-        })}
+                        {userProperties.map(
+                          (property, key) =>
+                            user[property.name] !== undefined &&
+                            (!property.visibleByAdmin ||
+                              property.visibleByContacts || property.visibleByContacts == 'only_for_my_contacts') &&
+                            property.name != 'picture' && (
+                              <div key={'contact-property' + key}>
+                                {
+                                  <p>
+                                    <strong>{property.label}</strong>:{' '}
+                                    {formatDataToString(
+                                      property.type != 'codearea'
+                                        ? user[property.name]
+                                        : '(' + user[`code`] + ')' + user[property.name],
+                                      property
+                                    )}
+                                  </p>
+                                }
+                              </div>
+                            )
+                        )}
+                      </div>,
+                    ]}
+                  />
+                  <Col xs={24}>
+                    <Button
+                      block
+                      size='large'
+                      style={{ backgroundColor: '#363636', color: 'white' }}
+                      onClick={() => agendarCita(contact._id, contact)}>
+                      {'Agendar cita'}
+                    </Button>
+                  </Col>
+                </Card>
+              </Col>
+            );
+          })}
+        </Row>
       </div>
     ) : (
       contactsList.length == 0 &&

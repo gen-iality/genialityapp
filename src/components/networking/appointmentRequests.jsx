@@ -25,6 +25,7 @@ function AppointmentRequests({ eventUsers, notificacion,showpendingsend }) {
   const [fetching, setFetching] = useState(false);
   const [pendingAgendas, setPendingAgendas] = useState([]);
   const [pendingAgendasSent, setPendingAgendasSent] = useState([]);
+  const [sendRespuesta, setSendRespuesta]=useState(false)
 
   //contextos
   let userEventContext = UseUserEvent();
@@ -62,7 +63,7 @@ function AppointmentRequests({ eventUsers, notificacion,showpendingsend }) {
     }
   }
    
-  }, [eventContext.value, userEventContext.value, eventUsers]);
+  }, [eventContext.value, userEventContext.value, eventUsers,sendRespuesta]);
 
   useEffect(() => {
     if(eventContext && userEventContext){
@@ -94,7 +95,7 @@ function AppointmentRequests({ eventUsers, notificacion,showpendingsend }) {
         .finally(() => setLoading1(false));
     }
   }
-  }, [eventContext.value, userEventContext.value, eventUsers]);
+  }, [eventContext.value, userEventContext.value, eventUsers,sendRespuesta]);
 
   return (
     <>
@@ -172,6 +173,8 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
             state: '1'
           };
          addNotification(notificationr,eventContext.value,userCurrentContext.value)
+         setSendRespuesta(true)
+         setFetching(false)
         })
         .catch((error) => {
           if (!error) {
@@ -213,7 +216,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
           description={
             <div>
               <Row>
-                <Col xs={18}>
+                <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
                   <p>{meSended ? data.email || userEmail || 'No registra correo' : data.email_requesting || '-'}</p>
                   {!!data.message && (
                     <p style={{ paddingRight: '20px' }}>
@@ -222,7 +225,7 @@ function RequestCard({ data, fetching, setFetching, meSended, notificacion }) {
                     </p>
                   )}
                 </Col>
-                <Col xs={6}>
+                <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
                   <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div>
                   <div>{moment(data.timestamp_start).format('hh:mm a')}</div>
                   <div>{moment(data.timestamp_end).format('hh:mm a')}</div>
