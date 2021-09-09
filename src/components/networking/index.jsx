@@ -353,7 +353,7 @@ class ListEventUser extends Component {
            extra={<Button type='primary' onClick={this.closeModal}>
              Cerrar
            </Button>}
-            title='Información Adicicional'
+            title='Información Adicional'
             subTitle='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
                   se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
             
@@ -546,7 +546,7 @@ class ListEventUser extends Component {
                       <Row justify='space-between' gutter={[10, 10]}>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={8} xxl={8}>
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={12} xxl={8}>
                             <Card
                               extra={
                                 <a
