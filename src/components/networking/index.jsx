@@ -41,6 +41,7 @@ class ListEventUser extends Component {
       matches: [],
       filterSector: null,
       typeAssistant: null,
+      modalView: false,
     };
   }
 
@@ -61,7 +62,8 @@ class ListEventUser extends Component {
   };
   loadData = async () => {
     let { changeItem } = this.state;
-
+    let showModal = window.sessionStorage.getItem('message') === null ? true : false
+    this.setState({modalView:showModal})
     // NO BORRAR ES UN AVANCE  PARA OPTIMIZAR LAS PETICIONES A LA API DE LA SECCION NETWORKING
     let eventUserList = [];
     // const response = await UsersApi.getAll(event._id);
@@ -239,6 +241,11 @@ class ListEventUser extends Component {
     }
   };
 
+  closeModal = () =>{
+    window.sessionStorage.setItem('message',true)
+    this.setState({modalView:false})
+  }
+
   onChangePage = (pageOfItems) => {
     this.setState({ pageOfItems: pageOfItems });
   };
@@ -300,13 +307,17 @@ class ListEventUser extends Component {
 
     return (
       <Card style={{ padding: '5px' }}>
-        {/* <Modal visible={false} footer={null}>
+        <Modal visible={this.state.modalView} footer={null} closable={false}>
           <Result
+           extra={<Button type='primary' onClick={this.closeModal}>
+             Cerrar
+           </Button>}
             title='Información Adicicional'
             subTitle='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
                   se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
+            
           />
-        </Modal> */}
+        </Modal>
 
         <EventContent>
           {/* Componente de busqueda */}
