@@ -102,9 +102,12 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
     ];
   //VALIDAR SI TIENE PERMISOS DE PUJAR
   const permission = () => {
-    if (cEventUser.value.rol_id == '60e8a8b7f6817c280300dc23') {
-      return true;
+    if(cEventUser.value!=null){
+      if (cEventUser.value.rol_id == '60e8a8b7f6817c280300dc23') {
+        return true;
+      }
     }
+    
     return false;
   };
   //ONCHANGE INPUT VALUE
@@ -251,9 +254,14 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
              <a target='_blank' rel="noreferrer" href={'https://tiempodejuego.org/tyclaventana/'}><PlayCircleOutlined /> Ver términos y condiciones</a>
             </Col>
           )}
-          {!permission() && (
+          {!permission() && cEventUser.value!==null &&(
             <Row>
               <Alert type='warning' message='No tienes permisos para pujar sobre esta obra.' />
+            </Row>
+          )}
+           {!permission() && cEventUser.value===null &&(
+            <Row>
+              <Alert type='warning' message='Aún no te has registrado en el evento.' />
             </Row>
           )}
         </Row>
