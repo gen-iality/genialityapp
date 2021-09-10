@@ -8,10 +8,10 @@ import Creatable from 'react-select';
 import { FaWhmcs } from 'react-icons/fa';
 import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import { Tabs, message, Row, Col, Checkbox, Space } from 'antd';
+import { Tabs, message, Row, Col, Checkbox, Space, Typography } from 'antd';
 import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 // En revision vista previa
 //import ZoomComponent from '../events/zoomComponent';
 
@@ -365,7 +365,7 @@ class AgendaEdit extends Component {
 
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
-        this.props.history.push(`/event/${event._id}/agenda`)
+        this.props.history.push(`/event/${event._id}/agenda`);
       } catch (e) {
         sweetAlert.showError(handleRequestError(e));
       }
@@ -387,7 +387,7 @@ class AgendaEdit extends Component {
         else {
           const agenda = await AgendaApi.create(event._id, info);
           this.setState({ activity_id: agenda._id });
-          this.props.history.push(`/event/${event._id}/agenda`)
+          this.props.history.push(`/event/${event._id}/agenda`);
         }
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
@@ -851,6 +851,12 @@ class AgendaEdit extends Component {
 
                   <div className='field'>
                     <label className='label'>Descripción</label>
+                    <Space>
+                      <ExclamationCircleOutlined style={{ color: '#faad14' }} />
+                      <Typography.Text type='secondary'>
+                        Esta información no es visible en la Agenda/Actividad en versión Mobile.
+                      </Typography.Text>
+                    </Space>
                     <div className='control'>
                       <EviusReactQuill
                         name='description'
