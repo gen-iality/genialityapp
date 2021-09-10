@@ -40,7 +40,7 @@ const PopoverInfoUser = (props) => {
             userSelected? <Tooltip
               title='Ver perfil'
               onClick={() =>props.setViewPerfil({ view: true, perfil: userSelected })}>
-              <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
+              <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />
             </Tooltip>:<Spin/>
           ),
 
@@ -82,7 +82,7 @@ const PopoverInfoUser = (props) => {
                  }             
                }}
               title='Enviar solicitud Contacto'>
-              <UsergroupAddOutlined style={{ fontSize: '20px', color: '#1890FF' }} />,
+              <UsergroupAddOutlined style={{ fontSize: '20px', color: '#1890FF' }} />
             </Tooltip>:<Spin />
           ),
 
@@ -102,16 +102,16 @@ const PopoverInfoUser = (props) => {
                 }}
                 style={{ fontSize: '20px', color: '#1890FF' }}
               />
-              ,
+              
             </Tooltip>:<Spin/>
           ),
         ]}>
         <Meta
           avatar={
-            props.item.user?.image ? (
-              <Avatar src={props.item.user?.image} />
+            props.item.user?.image || props.item.imageProfile ? (
+              <Avatar src={props.item.user?.image || props.item.imageProfile} size={40} />
             ) : (
-              <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={30}>
+              <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={40}>
                 {InitialsNameUser(props.item.name ? props.item.name : 'User')}
               </Avatar>
             )

@@ -26,7 +26,9 @@ const ContactList = ({ tabActive, agendarCita }) => {
 
     const getContactList = async () => {
       // Servicio que trae los contactos
-      if (!userEventContext.value) {return {}}
+      if (!userEventContext.value) {
+        return {};
+      }
       Networking.getContactList(eventContext.value._id, userEventContext.value._id).then((result) => {
         if (typeof result == 'object') {
           setContactsList(result);
@@ -62,7 +64,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
       </Col>
     ) : contactsList.length > 0 && !loading ? (
       <div>
-        <Row gutter={[10,10]}>
+        <Row gutter={[10, 10]}>
           {contactsList.map((contact, key) => {
             const user = contact.properties ? contact.properties : contact.user;
             return (
@@ -95,11 +97,11 @@ const ContactList = ({ tabActive, agendarCita }) => {
                       </a>
                     )
                   }
-                  style={{ width: "100%", textAlign: 'left' }}
+                  style={{ width: '100%', textAlign: 'left' }}
                   bordered={true}>
                   <Meta
                     avatar={
-                      <Avatar src={user['picture'] ? user['picture'] : ''}>
+                      <Avatar size={65} src={user['picture'] ? user['picture'] : ''}>
                         {!user['picture'] && user.names ? user.names.charAt(0).toUpperCase() : user.names}
                       </Avatar>
                     }
@@ -112,8 +114,10 @@ const ContactList = ({ tabActive, agendarCita }) => {
                           (property, key) =>
                             user[property.name] !== undefined &&
                             (!property.visibleByAdmin ||
-                              property.visibleByContacts || property.visibleByContacts == 'only_for_my_contacts') &&
-                            property.name != 'picture' && (
+                              property.visibleByContacts ||
+                              property.visibleByContacts == 'only_for_my_contacts') &&
+                            property.name != 'picture' &&
+                            property.name !== 'imagendeperfil' && (
                               <div key={'contact-property' + key}>
                                 {
                                   <p>
