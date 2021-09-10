@@ -118,7 +118,6 @@ class ListEventUser extends Component {
   };
 
   rol_component = (text, item, index) => {
-   // console.log("ROLES==>",this.state.rolesList)
     if(this.state.rolesList){
       for(let role of this.state.rolesList ){
         if (item.rol_id==role._id) {
@@ -302,9 +301,7 @@ class ListEventUser extends Component {
               if(codearea[0] && updatedAttendees[i] && Object.keys(updatedAttendees[i]).includes(codearea[0].name)){
                 
                 updatedAttendees[i][codearea[0].name]=updatedAttendees[i]['code']?"(+"+updatedAttendees[i]['code']+")"+updatedAttendees[i][key]:updatedAttendees[i][key]
-                //console.log("RESULT==>",updatedAttendees[i][key])
               }else{
-              //console.log("ACA==>",updatedAttendees[i]['properties'][key])
               updatedAttendees[i][key] = updatedAttendees[i]['properties'][key]==true ?"SI":updatedAttendees[i]['properties'][key]==false?"NO":updatedAttendees[i]['properties'][key];
               updatedAttendees[i]["textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio"]= self.props.event._id=="60c8affc0b4f4b417d252b29" ? "SI" :""
               

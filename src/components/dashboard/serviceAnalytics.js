@@ -109,7 +109,6 @@ export const queryReportGnal = async (eventID) => {
       metrics.push(objeto);
     });
     let totalAvg=parseFloat(totalMetrics["ga:sessionDuration"]/totalMetrics["ga:users"]);   
-    console.log("REPORTE GNAL==>",queryReportGnal)
    return {metrics,totalAvg,totalMetrics}; 
   }      
 };
@@ -146,7 +145,6 @@ export const queryReportGnalByMoth = async (eventID) => {
           };
           totalMetrics.push(metric);
         });
-        console.log("TOTAL METRICS==>",totalMetrics)
     return totalMetrics;
   }
 

@@ -7,9 +7,6 @@ import { useIntl } from 'react-intl';
 
 const MessageRegister = (props) => {
   const intl = useIntl();
-  console.log('TYPE==>', props.match.params.type);
-  console.log(props);
-
   return (
     <>
       {props.match.params.type == 'pay' && <PayForm eventId={props.match.params.event_id} />}

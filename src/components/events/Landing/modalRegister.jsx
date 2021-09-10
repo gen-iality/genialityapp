@@ -13,8 +13,6 @@ const ModalRegister = ({ register, setRegister, event }) => {
 
   let infoButton = register == 1 ? 'Cerrar' : register == 2 ? `Disfrutar del evento` : register == 3 ?`REGISTRO PAGO`: `Disfrutar del evento`;
 
-  console.log('Registro', register);
-  console.log('Mensaje', message);
   return (
     <Modal
       bodyStyle={{ textAlign: 'center', borderTop: '10px solid #52C41A' }}

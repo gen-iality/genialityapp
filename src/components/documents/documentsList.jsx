@@ -87,7 +87,6 @@ class documentsList extends Component {
               //se mapean los datos del array data
               renderItem={(item) => (
                 <>
-                  {console.log('item', item)}
                   <List.Item
                     key={item._id}
                     //boton de descarga
