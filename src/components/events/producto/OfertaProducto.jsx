@@ -262,7 +262,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
            {!permission() && cEventUser.value===null &&(
             <Row>
               <Alert type='warning' message='Aún no te has registrado al evento.' />
-            </Row>
+            </Row> 
           )}
         </Row>
         </>
