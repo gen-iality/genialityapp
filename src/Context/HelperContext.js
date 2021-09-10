@@ -144,12 +144,13 @@ export const HelperContextProvider = ({ children }) => {
 
   function HandleGoToChat(idactualuser, idotheruser, chatname, section, callbackdata) {
     let data = {};
+    let idactualuserEvent = cEventuser.value._id;
 
     switch (section) {
       case 'private':
         data = {
           chatid: idotheruser,
-          idactualuser,
+          idactualuser: idactualuserEvent,
           idotheruser,
           chatname,
         };
@@ -158,7 +159,7 @@ export const HelperContextProvider = ({ children }) => {
       case 'attendee':
         data = {
           chatid: generateUniqueIdFromOtherIds(idactualuser, idotheruser),
-          idactualuser,
+          idactualuser: idactualuserEvent,
           idotheruser,
           chatname,
         };
@@ -187,8 +188,6 @@ export const HelperContextProvider = ({ children }) => {
       setactivitiesEvent(activities.data);
     }
   };
-
-  
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
