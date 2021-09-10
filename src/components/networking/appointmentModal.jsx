@@ -117,14 +117,14 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
         });
 
         setTimetable(newTimetable);
-       
+
         const eventDatesRange = cEvent.value && getDatesRange(cEvent.value.datetime_from, cEvent.value.datetime_to);
         if (eventDatesRange) {
           setEventDatesRange(eventDatesRange);
           setSelectedDate(eventDatesRange[0]);
         }
       } catch (error) {
-       /* console.error(error);
+        /* console.error(error);
         notification.error({
           message: 'Error',
           description: 'Obteniendo las citas del usuario',
@@ -148,14 +148,15 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
       duration: 30,
     });
     var usId = await getUsersId(targetEventUserId, cEvent.value._id);
-    console.log("USID==>",usId)
+    console.log('USID==>', usId);
 
     let notificationA = {
       idReceive: usId.account_id,
       idEmited: resp,
       emailEmited: 'email@gmail.com',
       message: `${cEventUser.value.names ||
-        cEventUser.value.user.names||  cEventUser.value.user.name } te ha enviado cita`,
+        cEventUser.value.user.names ||
+        cEventUser.value.user.name} te ha enviado cita`,
       name: 'notification.name',
       type: 'agenda',
       state: '0',
@@ -274,9 +275,7 @@ function AppointmentModal({ cEventUser, targetEventUserId, targetEventUser, clos
                             onClick={() => {
                               if (timetableItem.status === 'free') {
                                 setLoading(true);
-                                console.log("targetEventUserId==>",targetEventUserId)
-                                console.log("targetEventUser==>",targetEventUser)
-                               createAgendaToEventUser({
+                                createAgendaToEventUser({
                                   eventId: cEvent.value._id,
                                   eventUser: cEventUser.value,
                                   currentEventUserId: cEventUser.value._id,

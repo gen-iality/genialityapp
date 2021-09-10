@@ -10,7 +10,6 @@ export function EnableAnalyticsByEVENT() {
    if (!analyticsId) return null;
 
    if (!window[dataLayer]) {
-    //   console.log('10. Start TagManager');
       window[dataLayer] = window[dataLayer] || [];
       window[dataLayer].push({ 'js': new Date().getTime()});
       var f = document.getElementsByClassName(htmlElementId)[0];

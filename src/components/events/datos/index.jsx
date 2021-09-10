@@ -61,7 +61,6 @@ class Datos extends Component {
   };
   //Permite asignarle un index a los elementos
   updateIndex = (fields) => {
-    console.log('Update index');
     for (var i = 0; i < fields.length; i++) {
       fields[i].index = i;
       fields[i].order_weight = i + 1;
@@ -78,22 +77,27 @@ class Datos extends Component {
     try {
       if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
       else await EventFieldsApi.createOne(field, this.eventID);
-      let totaluser= await firestore.collection(`${this.eventID}_event_attendees`).get();
-     
-    if(totaluser.docs.length>0 && field.name=='pesovoto' ){
-     firestore.collection(`${this.eventID}_event_attendees`).get().then((resp)=>{
-         if(resp.docs.length>0){
-           resp.docs.map((doc)=>{
-            
-            var datos=doc.data();            
-              var objectP=datos.properties;              
-               var properties=objectP
-               objectP={...objectP,pesovoto:properties&&properties.pesovoto?properties.pesovoto:1}         
-               datos.properties=objectP;              
-              firestore.collection(`${this.eventID}_event_attendees`).doc(doc.id).set(datos)            
-          })
-         }
-        });
+      let totaluser = await firestore.collection(`${this.eventID}_event_attendees`).get();
+
+      if (totaluser.docs.length > 0 && field.name == 'pesovoto') {
+        firestore
+          .collection(`${this.eventID}_event_attendees`)
+          .get()
+          .then((resp) => {
+            if (resp.docs.length > 0) {
+              resp.docs.map((doc) => {
+                var datos = doc.data();
+                var objectP = datos.properties;
+                var properties = objectP;
+                objectP = { ...objectP, pesovoto: properties && properties.pesovoto ? properties.pesovoto : 1 };
+                datos.properties = objectP;
+                firestore
+                  .collection(`${this.eventID}_event_attendees`)
+                  .doc(doc.id)
+                  .set(datos);
+              });
+            }
+          });
       }
       await this.fetchFields();
       this.setState({ modal: false, edit: false, newField: false });
@@ -102,18 +106,14 @@ class Datos extends Component {
     }
   };
 
-  
   //Funcion para guardar el orden de los datos
   async submitOrder() {
-    console.log(this.state.properties);
     await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
 
     notification.open({
       message: 'Información salvada',
       description: 'El orden de la recopilacion de datos se ha guardado',
-      onClick: () => {
-        console.log('Notification Clicked!');
-      },
+      onClick: () => {},
     });
     this.fetchFields();
   }
@@ -156,25 +156,25 @@ class Datos extends Component {
     }
   };
   //Funcion para cambiar el valor de los checkboxes
-  async changeCheckBox(field,key,key2=null) { 
+  async changeCheckBox(field, key, key2 = null) {
     notification.open({
       message: 'Espere..',
       description: 'Por favor espere mientras se guarda la configuración',
-    });       
+    });
     try {
-      this.setState({edit:true},()=>{
-        field[key]=!field[key]
-        if(key2!=null){         
-          field[key2]=field[key2]==true?false:field[key2]
+      this.setState({ edit: true }, () => {
+        field[key] = !field[key];
+        if (key2 != null) {
+          field[key2] = field[key2] == true ? false : field[key2];
         }
-               
-        this.saveField(field).then((resp)=>{
+
+        this.saveField(field).then((resp) => {
           notification.open({
             message: 'Correcto!',
             description: 'Se ha editado correctamente el campo..!',
           });
         });
-       })    
+      });
     } catch (e) {
       notification.open({
         message: 'No se ha actualizado el campo',
@@ -182,18 +182,18 @@ class Datos extends Component {
       });
     }
   }
-    //Contenedor draggable
-    DraggableContainer = (props) => (
-      <SortableContainer
-        useDragHandle
-        disableAutoscroll
-        helperClass='row-dragging'
-        onSortEnd={this.onSortEnd}
-        {...props}
-      />
-    );
-   //Función para hacer que el row sea draggable
-   DraggableBodyRow = ({ className, style, ...restProps }) => {
+  //Contenedor draggable
+  DraggableContainer = (props) => (
+    <SortableContainer
+      useDragHandle
+      disableAutoscroll
+      helperClass='row-dragging'
+      onSortEnd={this.onSortEnd}
+      {...props}
+    />
+  );
+  //Función para hacer que el row sea draggable
+  DraggableBodyRow = ({ className, style, ...restProps }) => {
     const { fields } = this.state;
     // function findIndex base on Table rowKey props and should always be a right array index
     const index = fields.findIndex((x) => x.index === restProps['data-row-key']);
@@ -202,16 +202,12 @@ class Datos extends Component {
 
   //Función que se ejecuta cuando se termina de hacer drag
   onSortEnd = ({ oldIndex, newIndex }) => {
-    console.log('OLD INDEX=>' + oldIndex);
-    console.log('NEW INDEX=>' + newIndex);
     let user_properties = this.state.user_properties;
     const { fields } = this.state;
     if (oldIndex !== newIndex) {
       let newData = arrayMove([].concat(fields), oldIndex, newIndex).filter((el) => !!el);
       newData = this.updateIndex(newData);
-      console.log(newData);
       user_properties = newData;
-      console.log(user_properties);
       this.setState({
         fields: newData,
         user_properties,
@@ -220,7 +216,6 @@ class Datos extends Component {
       });
     }
   };
-
 
   render() {
     const { fields, modal, edit, info } = this.state;
@@ -246,7 +241,7 @@ class Datos extends Component {
         align: 'center',
         render: (record, key) =>
           key.name !== 'email' && key.name !== 'names' ? (
-            <Checkbox name='mandatory' onChange={() => this.changeCheckBox(key,'mandatory')} defaultChecked={record} />
+            <Checkbox name='mandatory' onChange={() => this.changeCheckBox(key, 'mandatory')} defaultChecked={record} />
           ) : (
             <Checkbox checked />
           ),
@@ -255,8 +250,12 @@ class Datos extends Component {
         title: 'Visible solo contactos',
         dataIndex: 'visibleByContacts',
         align: 'center',
-        render: (record,key) => (
-          <Checkbox name='visibleByContacts' onChange={() => this.changeCheckBox(key,'visibleByContacts','visibleByAdmin')} checked={record} />
+        render: (record, key) => (
+          <Checkbox
+            name='visibleByContacts'
+            onChange={() => this.changeCheckBox(key, 'visibleByContacts', 'visibleByAdmin')}
+            checked={record}
+          />
         ),
       },
       {
@@ -264,8 +263,12 @@ class Datos extends Component {
         dataIndex: 'visibleByAdmin',
         align: 'center',
         render: (record, key) =>
-          key.name !== 'email' && key.name !== 'names'  ? (
-            <Checkbox name='visibleByAdmin' onChange={() => this.changeCheckBox(key,'visibleByAdmin','visibleByContacts')} checked={record} />
+          key.name !== 'email' && key.name !== 'names' ? (
+            <Checkbox
+              name='visibleByAdmin'
+              onChange={() => this.changeCheckBox(key, 'visibleByAdmin', 'visibleByContacts')}
+              checked={record}
+            />
           ) : (
             <Checkbox checked />
           ),
@@ -276,7 +279,7 @@ class Datos extends Component {
         render: (key) => (
           <>
             <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
-            {key.name !== 'email' && key.name !== 'names'  && (
+            {key.name !== 'email' && key.name !== 'names' && (
               <DeleteOutlined style={{ float: 'right' }} onClick={() => this.setState({ deleteModal: key._id })} />
             )}
           </>
@@ -305,7 +308,7 @@ class Datos extends Component {
                     },
                   }}
                 />
-                 <Button style={{ marginTop: '3%' }} disabled={this.state.available} onClick={this.submitOrder}>
+                <Button style={{ marginTop: '3%' }} disabled={this.state.available} onClick={this.submitOrder}>
                   Guardar orden de Datos
                 </Button>
               </EventContent>

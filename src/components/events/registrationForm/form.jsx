@@ -161,20 +161,15 @@ const FormRegister = ({
       let phonenumber =
         eventUser && codeareafield[0] && eventUser['properties'] ? eventUser['properties'][codeareafield[0].name] : '';
       let codeValue = eventUser && eventUser['properties'] ? eventUser['properties']['code'] : '';
-      console.log(eventUser && eventUser['properties'] && eventUser['properties']);
       setFieldCode(codeareafield[0].name);
       if (phonenumber && numberareacode == null) {
-        console.log('PHONE ACA==>', phonenumber.toString());
         let splitphone = phonenumber.toString().split(' ');
         setareacodeselected(codeValue);
-        //setnumberareacode( );
-        console.log('SPLIT2==>', codeValue);
       }
     }
   }, [extraFields]);
 
   const showGeneralMessage = (values,error,date) => {
-    console.log("VALUES FINISHED==>",values)
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
       setGeneralFormErrorMessageVisible(false);

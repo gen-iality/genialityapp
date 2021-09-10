@@ -200,7 +200,6 @@ class DashboardEvent extends Component {
       totalsMetricasMail(this.props.eventId).then((datametricsMail) => {
         totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {          
           totalsMetricasActivityDetails(this.props.eventId).then((dataMetricsActivity) => {
-            console.log("METRICS ACTIVITY==>",dataMetricsActivity)
             if (dataMetricsActivity.length > 0) {
             
               this.setState({
@@ -250,7 +249,6 @@ class DashboardEvent extends Component {
   obtenerMetricas = async (data) => {
     const { eventId } = this.props;
     let metricsgnal = await queryReportGnal(eventId);
-    console.log("METRICS GNAL==>",metricsgnal )
     let metricsActivity = await updateMetricasActivity(data, eventId, metricsgnal?.metrics);
     let metricsGraphics = await queryReportGnalByMoth(eventId);
     this.setState({
@@ -275,7 +273,6 @@ class DashboardEvent extends Component {
     let labels = [],
       values = [];
     let metricsRegister = await metricasRegisterByDate(this.props.eventId);
-    console.log("metricsRegister",metricsRegister)
     if (metricsRegister) {
       metricsRegister.map((metric) => {
         labels.push(metric.date);

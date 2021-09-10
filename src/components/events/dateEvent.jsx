@@ -28,7 +28,6 @@ class DateEvent extends React.Component {
     async getDates() {
         const info = await EventsApi.getOne(this.props.eventId)
         let dates = info.dates
-        console.log("DATES==>",dates)
 
         let date = []
         if (dates !== undefined ) {

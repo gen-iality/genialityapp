@@ -118,7 +118,8 @@ const AttendeList = function(props) {
                       cUser.value.uid,
                       cUser.value.names || cUser.value.name,
                       item.uid,
-                      item.names || item.name
+                      item.names || item.name,
+                      item.imageProfile,
                     );
                     HandleChatOrAttende('1');
                     HandlePublicPrivate('private');

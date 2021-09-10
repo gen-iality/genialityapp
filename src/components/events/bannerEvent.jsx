@@ -49,7 +49,6 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
            
               {Moment(dateStart).format('YYYY-MM-DD')==Moment(dateEnd).format('YYYY-MM-DD') ? (
                 <span>
-                  {console.log(dates,dateStart,dateEnd)}
                   {Moment(dateStart).format('DD')}
                   {' de '} {Moment(dateEnd).format('MMMM YYYY')}
                 </span>

@@ -30,7 +30,6 @@ const DrawerProfile = (props) => {
       let isContact=isMyContacts(props.profileuser,props.cHelper.contacts)
       setIsMyContact(isContact)      
       setUserSelected(props.profileuser)
-      console.log("USER SELECTED==>",userSelected);
     }
   },[props.profileuser])
   
