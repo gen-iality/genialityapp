@@ -591,6 +591,7 @@ class ListEventUser extends Component {
                                     <Row>
                                       <Col xs={24}>
                                         <div>
+                                          {console.log('Marlon',asistantData)}
                                           {/* {!data.visible || !data.visibleByContacts && */
                                           asistantData.map(
                                             (property, propertyIndex) =>

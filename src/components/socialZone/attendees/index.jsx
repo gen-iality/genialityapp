@@ -103,6 +103,7 @@ const AttendeList = function(props) {
       loadMore={handleInfiniteOnLoad}
       hasMore={!loading && hasMore}
       useWindow={false}>
+        {console.log('Marlon2',filteredlist && filteredlist)}
       <List
         itemLayout='horizontal'
         dataSource={filteredlist && filteredlist}
@@ -132,7 +133,7 @@ const AttendeList = function(props) {
             <List.Item.Meta
               avatar={
                 item.imageProfile ? (
-                  <Avatar src={item.imageProfile} />
+                  <Avatar src={item.imageProfile} size={40} />
                 ) : (
                   <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={40}>
                     {InitialsNameUser(item.names)}
@@ -142,7 +143,7 @@ const AttendeList = function(props) {
               title={
                 <Popover
                   trigger='hover'
-                  style={{ padding: '0px !important', zIndex: 900 }}
+                  style={{ padding: '0px !important', zIndex: 1000 }}
                   placement='leftTop'
                   content={<PopoverInfoUser item={item} props={props} />}>
                   <Typography.Paragraph
