@@ -278,7 +278,7 @@ class ListEventUser extends Component {
   //Search records at third column
   searchResult = (data,search=0) => {
     console.log("USERS==>",this.state.listTotalUser,search)
-    !data ? this.setState({ users: [] }) : this.setState({ users: search==1?this.state.listTotalUser:data });
+    !data ? this.setState({ users: [] }) : this.setState({ users: data,pageOfItems:data });
   };
 
   //Método que se ejecuta cuando se selecciona el tipo de usuario

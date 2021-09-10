@@ -125,7 +125,7 @@ class SearchComponent extends Component {
       if (value.length === 0 || value=='') {
         this.setState({ showMessage: false, message: '' });
        
-        this.props.searchResult(this.props.data,1);
+        this.props.searchResult(this.props.data.slice(0, this.props.data.length));
       } else {
         this.setState(
           {
