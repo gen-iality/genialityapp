@@ -32,7 +32,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       setPriceProduct( product &&product.price)
       setValorProduct(obtenerValor())
       let minValueUp=product.price.includes('USD')?50:100000
-      let valueOfertaMin=parseFloat(obtenerValor())+minValueUp
+      let valueOfertaMin=product._id=='6116cae171f4b926d1363266'?parseFloat(obtenerValor()):parseFloat(obtenerValor())+minValueUp
       setValueOferta(valueOfertaMin)
     }
     async function obtenerOfertas(){
@@ -136,7 +136,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
         .replace('.', '').replace(',', ''):0;
         //
         console.log("VALUE NUMBER==>",valueNumber)
-        if (valuOferta>valueNumber) {
+        if (valuOferta>valueNumber || (product && product._id=='6116cae171f4b926d1363266' && valuOferta>=valueNumber)) {
           let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
           if(respuestaApi){
          // console.log('RESPUESTA_API==>', respuestaApi);
