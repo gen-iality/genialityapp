@@ -45,7 +45,8 @@ class ListEventUser extends Component {
       typeAssistant: null,
       requestListSent:[],
       modalView: false,
-      listTotalUser:[]
+      listTotalUser:[],
+      updatetable:false
     };
   }
 
@@ -278,7 +279,7 @@ class ListEventUser extends Component {
   //Search records at third column
   searchResult = (data,search=0) => {
     console.log("USERS==>",this.state.listTotalUser,search)
-    !data ? this.setState({ users: [] }) : this.setState({ users: data,pageOfItems:data });
+    !data ? this.setState({ users: [] }) : this.setState({ pageOfItems:data, users:data });
   };
 
   //Método que se ejecuta cuando se selecciona el tipo de usuario
@@ -647,53 +648,57 @@ class ListEventUser extends Component {
                                           type="primary" 
                                           disabled={this.isMyContact(users) || this.haveRequest(users) || (users.send && users.send==1 || users.loading)}                                          
                                             onClick={!this.isMyContact(users)?async () => {
-                                              this.state.users[userIndex]={...this.state.users[userIndex],loading:true}
-                                              this.setState({users: this.state.users,pageOfItems:this.state.users})
-                                              let sendResp = await SendFriendship(
-                                                {
-                                                  eventUserIdReceiver: users._id,
-                                                  userName: users.properties.names || users.properties.email,
-                                                },
-                                                this.props.cEventUser.value,
-                                                this.props.cEvent.value
-                                              );
-
-                                              let us = users;
-
-                                              if (sendResp._id) {
-                                                let notificationR = {
-                                                  idReceive: us.account_id,
-                                                  idEmited: sendResp._id,
-                                                  emailEmited:
-                                                    this.props.cEventUser.value.email ||
-                                                    this.props.cEventUser.value.user.email,
-                                                  message:
-                                                    (this.props.cEventUser.value.names ||
-                                                      this.props.cEventUser.value.user.names) +
-                                                    ' te ha enviado solicitud de amistad',
-                                                  name: 'notification.name',
-                                                  type: 'amistad',
-                                                  state: '0',
-                                                };
-
-                                                addNotification(
-                                                  notificationR,
-                                                  this.props.cEvent.value,
-                                                  this.props.cEventUser.value
+                                              this.state.users[userIndex]={...this.state.users[userIndex],loading:true,}
+                                              this.setState({users: this.state.users});
+                                                let sendResp = await SendFriendship(
+                                                  {
+                                                    eventUserIdReceiver: users._id,
+                                                    userName: users.properties.names || users.properties.email,
+                                                  },
+                                                  this.props.cEventUser.value,
+                                                  this.props.cEvent.value
                                                 );
-                                                notification['success']({
-                                                  message: 'Correcto!',
-                                                  description: 'Se ha enviado la solicitud de amistad correctamente',
-                                                });
-                                               
-                                                 if(this.state.users[userIndex]._id==users._id){
-                                                   //console.log("STATE USER==>",this.state.users[i])
-                                                  this.state.users[userIndex]={...this.state.users[userIndex],send:1,loading:false}
-                                                  //console.log("USER_CHANGE==>",this.state.users[i])
-                                                  this.setState({users: this.state.users,pageOfItems:this.state.users})
-                                                 }
-                                                
-                                              }
+  
+                                                let us = users;
+  
+                                                if (sendResp._id) {
+                                                  let notificationR = {
+                                                    idReceive: us.account_id,
+                                                    idEmited: sendResp._id,
+                                                    emailEmited:
+                                                      this.props.cEventUser.value.email ||
+                                                      this.props.cEventUser.value.user.email,
+                                                    message:
+                                                      (this.props.cEventUser.value.names ||
+                                                        this.props.cEventUser.value.user.names) +
+                                                      ' te ha enviado solicitud de amistad',
+                                                    name: 'notification.name',
+                                                    type: 'amistad',
+                                                    state: '0',
+                                                  };
+  
+                                                  addNotification(
+                                                    notificationR,
+                                                    this.props.cEvent.value,
+                                                    this.props.cEventUser.value
+                                                  );
+                                                  notification['success']({
+                                                    message: 'Correcto!',
+                                                    description: 'Se ha enviado la solicitud de amistad correctamente',
+                                                  });
+                                                 
+                                                  for(let i=0;i<this.state.users.length;i++){
+                                                    if(this.state.users[i]._id==users._id){
+                                                      console.log("STATE USER==>",this.state.users[i])
+                                                     this.state.users[i]={...this.state.users[i],send:1,loading:false}
+                                                     console.log("USER_CHANGE==>",this.state.users[i])                                                    
+                                                    }else{
+                                                      this.state.users[i]={...this.state.users[i],loading:false}
+                                                    }
+                                                  }
+                                                  this.setState({users: this.state.users},()=>{this.setState({updatetable:!this.state.updatetable})})                                                  
+                                                  }                                        
+                                             
                                             }:null}>
                                             {!users.loading?this.isMyContact(users)?'Ya es tu contacto':this.haveRequest(users) || (users.send && users.send==1)?'Solicitud pendiente':'Enviar solicitud de Contacto':<Spin />}
                                           </Button>
@@ -710,8 +715,8 @@ class ListEventUser extends Component {
                       </Row>
 
                       {/* Paginacion para mostrar datos de una manera mas ordenada */}
-                      {!this.state.loading && users.length > 0 && this.props.cEventUser.value && (
-                        <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
+                      {!this.state.loading && users.length > 0 && pageOfItems.length>0 && this.props.cEventUser.value && (
+                        <Pagination updatetable ={this.state.updatetable} items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
                       )}
                       {!this.state.loading && users.length == 0 && this.props.cEventUser.value && (
                         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: '0 auto' }}>
