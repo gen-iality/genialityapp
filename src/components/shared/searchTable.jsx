@@ -123,9 +123,9 @@ class SearchComponent extends Component {
     if (value.length <= 2) {
       console.log("VALUE ACA==>",value.length)
       if (value.length === 0 || value=='') {
-        this.setState({ showMessage: false, message: '',filtered:this.props.data });
-        console.log("DATA A MOSTRAR==>",this.props.data)
-        this.props.searchResult(this.props.data);
+        this.setState({ showMessage: false, message: '' });
+       
+        this.props.searchResult(this.props.data,1);
       } else {
         this.setState(
           {

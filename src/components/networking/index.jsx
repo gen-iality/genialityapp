@@ -45,6 +45,7 @@ class ListEventUser extends Component {
       typeAssistant: null,
       requestListSent:[],
       modalView: false,
+      listTotalUser:[]
     };
   }
 
@@ -223,6 +224,7 @@ class ListEventUser extends Component {
 
       this.setState((prevState) => {
         return {
+          listTotalUser:eventUserList,
           userReq: eventUserList, //request original
           usersFiltered: eventUserList,
           users: eventUserList,
@@ -274,8 +276,9 @@ class ListEventUser extends Component {
   };
 
   //Search records at third column
-  searchResult = (data) => {
-    !data ? this.setState({ users: [] }) : this.setState({ users: data,pageOfItems:data });
+  searchResult = (data,search=0) => {
+    console.log("USERS==>",this.state.listTotalUser,search)
+    !data ? this.setState({ users: [] }) : this.setState({ users: search==1?this.state.listTotalUser:data });
   };
 
   //Método que se ejecuta cuando se selecciona el tipo de usuario
