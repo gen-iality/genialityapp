@@ -371,9 +371,9 @@ function AgendaActivityItem(props) {
                                         style={{
                                           overflow: 'hidden',
                                           display: '-webkit-box',
-                                          WebkitLineClamp: '2',
+                                          WebkitLineClamp: '3',
                                           WebkitBoxOrient: 'vertical',
-                                          width: '90%',
+                                          width: '100%',
                                         }}
                                         dangerouslySetInnerHTML={{ __html: item.description }}
                                       />

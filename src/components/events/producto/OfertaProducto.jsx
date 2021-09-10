@@ -32,7 +32,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       setPriceProduct( product &&product.price)
       setValorProduct(obtenerValor())
       let minValueUp=product.price.includes('USD')?50:100000
-      let valueOfertaMin=parseFloat(obtenerValor())+minValueUp
+      let valueOfertaMin=product._id=='6116cae171f4b926d1363266'?parseFloat(obtenerValor()):parseFloat(obtenerValor())+minValueUp
       setValueOferta(valueOfertaMin)
     }
     async function obtenerOfertas(){
@@ -102,9 +102,12 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
     ];
   //VALIDAR SI TIENE PERMISOS DE PUJAR
   const permission = () => {
-    if (cEventUser.value.rol_id == '60e8a8b7f6817c280300dc23') {
-      return true;
+    if(cEventUser.value!=null){
+      if (cEventUser.value.rol_id == '60e8a8b7f6817c280300dc23') {
+        return true;
+      }
     }
+    
     return false;
   };
   //ONCHANGE INPUT VALUE
@@ -133,7 +136,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
         .replace('.', '').replace(',', ''):0;
         //
         console.log("VALUE NUMBER==>",valueNumber)
-        if (valuOferta>valueNumber) {
+        if (valuOferta>valueNumber || (product && product._id=='6116cae171f4b926d1363266' && valuOferta>=valueNumber)) {
           let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
           if(respuestaApi){
          // console.log('RESPUESTA_API==>', respuestaApi);
@@ -251,10 +254,15 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
              <a target='_blank' rel="noreferrer" href={'https://tiempodejuego.org/tyclaventana/'}><PlayCircleOutlined /> Ver términos y condiciones</a>
             </Col>
           )}
-          {!permission() && (
+          {!permission() && cEventUser.value!==null &&(
             <Row>
               <Alert type='warning' message='No tienes permisos para pujar sobre esta obra.' />
             </Row>
+          )}
+           {!permission() && cEventUser.value===null &&(
+            <Row>
+              <Alert type='warning' message='Aún no te has registrado al evento.' />
+            </Row> 
           )}
         </Row>
         </>
