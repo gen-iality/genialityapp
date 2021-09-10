@@ -1,6 +1,6 @@
 import React, { Component, Fragment, useContext } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { Row, Button, Col, Card, Avatar, Alert, Tabs, Form, Badge, notification, Modal, Result, Space } from 'antd';
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, Form, Badge, notification, Modal, Result, Space, Spin } from 'antd';
 import AppointmentModal from './appointmentModal';
 import MyAgenda from './myAgenda';
 import AppointmentRequests from './appointmentRequests';
@@ -56,8 +56,14 @@ class ListEventUser extends Component {
   
   }
 
-  changeActiveTab = (activeTab) => {
-    this.setState({ activeTab });
+  changeActiveTab = async (activeTab) => {    
+    this.setState({ activeTab }); 
+    //console.log("TAB ACTIVA==>",activeTab)
+    if (activeTab=='asistentes'){
+      this.setState({loading:true})
+      await this.loadData();
+    await this.getRequestSend();
+    }  
   };
   closeAppointmentModal = () => {
     this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
@@ -67,6 +73,7 @@ class ListEventUser extends Component {
     this.setState({ eventUserIdToMakeAppointment: iduser, eventUserToMakeAppointment: user });
   };
   loadData = async () => {
+    
     let { changeItem } = this.state;
     let showModal = window.sessionStorage.getItem('message') === null ? true : false
     this.setState({modalView:showModal})
@@ -219,6 +226,7 @@ class ListEventUser extends Component {
           userReq: eventUserList, //request original
           usersFiltered: eventUserList,
           users: eventUserList,
+          pageOfItems:eventUserList,
           changeItem,
           loading: false,
           clearSearch: !prevState.clearSearch,
@@ -267,7 +275,7 @@ class ListEventUser extends Component {
 
   //Search records at third column
   searchResult = (data) => {
-    !data ? this.setState({ users: [] }) : this.setState({ users: data });
+    !data ? this.setState({ users: [] }) : this.setState({ users: data,pageOfItems:data });
   };
 
   //Método que se ejecuta cuando se selecciona el tipo de usuario
@@ -307,10 +315,10 @@ class ListEventUser extends Component {
   }
 
   haveRequest(user){
-    console.log("LIST SENTREQUEST==>",this.state.requestListSent,user)
+    console.log("LIST SENTREQUEST==>",this.state.requestListSent,user._id,user)
     if(this.state.requestListSent.length>0){
       console.log("LIST SENT==>",this.state.requestListSent)
-      let request=this.state.requestListSent.filter((userRequest)=>userRequest._id_user_requesting==user._id);
+      let request=this.state.requestListSent.filter((userRequest)=>userRequest.id_user_requesting==user._id);
       console.log("LISTA==>",request,user._id)
       if(request.length>0){
         return true;
@@ -365,7 +373,7 @@ class ListEventUser extends Component {
            <div>
           <Tabs style={{background:'#FFFFFF'}} activeKey={activeTab} onChange={this.changeActiveTab}>
 
-            <TabPane tab='Participantes' key='asistentes'>
+            <TabPane tab='Participantes' key='asistentes'>  
               {
                 <AppointmentModal
                   targetEventUserId={this.state.eventUserIdToMakeAppointment}
@@ -373,6 +381,7 @@ class ListEventUser extends Component {
                   closeModal={this.closeAppointmentModal}
                 />
               }
+              
               <Form>
                 <Row justify='space-around' gutter={[16, 16]}>
                   <Col xs={24} sm={24} md={24} lg={24} xl={24} style={{ margin: '0 auto' }}>
@@ -633,8 +642,10 @@ class ListEventUser extends Component {
                                           </Button>
                                           <Button
                                           type="primary" 
-                                          disabled={this.isMyContact(users)}                                          
+                                          disabled={this.isMyContact(users) || this.haveRequest(users) || (users.send && users.send==1 || users.loading)}                                          
                                             onClick={!this.isMyContact(users)?async () => {
+                                              this.state.users[userIndex]={...this.state.users[userIndex],loading:true}
+                                              this.setState({users: this.state.users,pageOfItems:this.state.users})
                                               let sendResp = await SendFriendship(
                                                 {
                                                   eventUserIdReceiver: users._id,
@@ -671,9 +682,17 @@ class ListEventUser extends Component {
                                                   message: 'Correcto!',
                                                   description: 'Se ha enviado la solicitud de amistad correctamente',
                                                 });
+                                               
+                                                 if(this.state.users[userIndex]._id==users._id){
+                                                   //console.log("STATE USER==>",this.state.users[i])
+                                                  this.state.users[userIndex]={...this.state.users[userIndex],send:1,loading:false}
+                                                  //console.log("USER_CHANGE==>",this.state.users[i])
+                                                  this.setState({users: this.state.users,pageOfItems:this.state.users})
+                                                 }
+                                                
                                               }
                                             }:null}>
-                                            {this.isMyContact(users)?'Ya es tu contacto':'Enviar solicitud de Contacto'}
+                                            {!users.loading?this.isMyContact(users)?'Ya es tu contacto':this.haveRequest(users) || (users.send && users.send==1)?'Solicitud pendiente':'Enviar solicitud de Contacto':<Spin />}
                                           </Button>
                                         </Space>
                                       )}
