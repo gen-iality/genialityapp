@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { List, Tooltip, Popover, Avatar, Typography, Space } from 'antd';
+import { List, Tooltip, Popover, Avatar, Typography, Space, Tag } from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
@@ -21,6 +21,7 @@ const AttendeList = function(props) {
     attendeeList,
     HandleChatOrAttende,
     HandlePublicPrivate,
+    imageforDefaultProfile,
   } = useContext(HelperContext);
   const pag = 15;
 
@@ -38,7 +39,7 @@ const AttendeList = function(props) {
         email: attendeeList[key].properties.email,
         properties: attendeeList[key].properties,
         _id: attendeeList[key]._id,
-        imageProfile : attendeeList[key].user?.picture
+        imageProfile: attendeeList[key].user?.picture ? attendeeList[key].user?.picture : imageforDefaultProfile,
       };
 
       if (mihijo.status === 'online') {
@@ -89,12 +90,14 @@ const AttendeList = function(props) {
 
   const styleListAttende = {
     background: 'white',
-    color: 'black',
+    color: '#333F44',
     padding: 5,
-    margin: 10,
+    margin: 4,
     display: 'flex',
-    border: '1px solid #cccccc',
-    borderRadius: '8px',
+    borderRadius: '5px',
+    fontWeight: '500',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
   };
   return (
     <InfiniteScroll
@@ -119,7 +122,7 @@ const AttendeList = function(props) {
                       cUser.value.names || cUser.value.name,
                       item.uid,
                       item.names || item.name,
-                      item.imageProfile,
+                      item.imageProfile
                     );
                     HandleChatOrAttende('1');
                     HandlePublicPrivate('private');
@@ -131,15 +134,7 @@ const AttendeList = function(props) {
               ) : null,
             ]}>
             <List.Item.Meta
-              avatar={
-                item.imageProfile ? (
-                  <Avatar src={item.imageProfile} size={40} />
-                ) : (
-                  <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={40}>
-                    {InitialsNameUser(item.names)}
-                  </Avatar>
-                )
-              }
+              avatar={<Avatar src={item.imageProfile} size={40} />}
               title={
                 <Popover
                   trigger='hover'
@@ -148,22 +143,16 @@ const AttendeList = function(props) {
                   content={<PopoverInfoUser item={item} props={props} />}>
                   <Typography.Paragraph
                     ellipsis={{ rows: 2 }}
-                    style={{ color: 'black', cursor: 'pointer', width: '90%', fontSize:'15px' }}
+                    style={{ color: 'black', cursor: 'pointer', width: '90%', fontSize: '15px' }}
                     key='list-loadmore-edit'>
                     {item.names}
                   </Typography.Paragraph>
                 </Popover>
               }
               description={
-                item.status === 'online' ? (
+                item.status === 'online' && (
                   <Space size={5} style={{ color: '#52c41a' }}>
-                    <Record />
-                    <Typography.Text type='success'>Online</Typography.Text>
-                  </Space>
-                ) : (
-                  <Space size={5} style={{ color: '#b5b5b5' }}>
-                    <Record />
-                    <Typography.Text type='secondary'>Offline</Typography.Text>
+                    <Tag color='#52C41A'>Online</Tag>
                   </Space>
                 )
               }

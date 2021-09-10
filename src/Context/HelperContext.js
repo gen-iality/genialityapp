@@ -206,7 +206,7 @@ export const HelperContextProvider = ({ children }) => {
         { idparticipant: idOtherUser, countmessajes: 0, profilePicUrl: imageOtherprofile },
       ],
     };
-    
+
     console.log('datachat', data);
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
@@ -523,7 +523,7 @@ export const HelperContextProvider = ({ children }) => {
         seteventPrivate,
         GetPermissionsEvent,
         totalPrivateMessages,
-        imageforDefaultProfile
+        imageforDefaultProfile,
       }}>
       {children}
     </HelperContext.Provider>
