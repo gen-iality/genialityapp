@@ -103,7 +103,6 @@ const AttendeList = function(props) {
       loadMore={handleInfiniteOnLoad}
       hasMore={!loading && hasMore}
       useWindow={false}>
-        {console.log('Marlon2',filteredlist && filteredlist)}
       <List
         itemLayout='horizontal'
         dataSource={filteredlist && filteredlist}
