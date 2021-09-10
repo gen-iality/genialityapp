@@ -39,9 +39,14 @@ const ChatList = (props) => {
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
 
-  let { chatActual, HandleGoToChat, privateChatsList, chatPublicPrivate, HandlePublicPrivate } = useContext(
-    HelperContext
-  );
+  let {
+    chatActual,
+    HandleGoToChat,
+    privateChatsList,
+    chatPublicPrivate,
+    HandlePublicPrivate,
+    imageforDefaultProfile,
+  } = useContext(HelperContext);
 
   const onFinish = (values) => {
     cUser.value = values;
@@ -66,6 +71,7 @@ const ChatList = (props) => {
     HandlePublicPrivate(key);
   }
 
+  console.log('privateChatsList', privateChatsList);
   if (!cUser.value)
     return (
       <Form className='asistente-list' {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
@@ -132,8 +138,6 @@ const ChatList = (props) => {
     );
 
   let userNameActive = cUser.value.name ? cUser.value.name : cUser.value.names;
-
-  console.log('userid', cUser.value);
 
   return (
     <Tabs activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
@@ -220,7 +224,8 @@ const ChatList = (props) => {
                           item.id,
                           cUser.value.name ? cUser.value.name : cUser.value.names,
                           'private',
-                          item
+                          item,
+                          null
                         );
                       }}>
                       <Tooltip title='Chatear'>
@@ -243,12 +248,14 @@ const ChatList = (props) => {
                   ]}>
                   <List.Item.Meta
                     avatar={
-                      item.currentUser?.image ? (
-                        <Avatar src={item.currentUser?.image} />
+                      item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl ? (
+                        <Avatar
+                          src={
+                            item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl
+                          }
+                        />
                       ) : (
-                        <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={30}>
-                          {InitialsNameUser(item.name ? item.name : 'User')}
-                        </Avatar>
+                        <Avatar src={imageforDefaultProfile} />
                       )
                     }
                     title={

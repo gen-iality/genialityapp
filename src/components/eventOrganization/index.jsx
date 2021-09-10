@@ -46,7 +46,6 @@ class EventOrganization extends Component {
     })
 
     const organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
-    console.log(organization);
     if (events) {
       this.setState({ events:proximos,eventsOld:pasados,organization, loading: false });
     }

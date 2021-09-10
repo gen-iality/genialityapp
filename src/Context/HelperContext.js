@@ -46,6 +46,8 @@ export const HelperContextProvider = ({ children }) => {
   const [chatPublicPrivate, setchatPublicPrivate] = useState('public');
   const [eventPrivate, seteventPrivate] = useState({ private: false, section: 'evento' });
   const [totalPrivateMessages, settotalPrivateMessages] = useState(0);
+  const imageforDefaultProfile = 'https://cdn-icons-png.flaticon.com/512/3237/3237447.png';
+
   useEffect(() => {
     if (!cEvent.value) return;
     let firstroute = Object.keys(cEvent.value.itemsMenu);
@@ -144,12 +146,13 @@ export const HelperContextProvider = ({ children }) => {
 
   function HandleGoToChat(idactualuser, idotheruser, chatname, section, callbackdata) {
     let data = {};
+    let idactualuserEvent = cEventuser.value._id;
 
     switch (section) {
       case 'private':
         data = {
           chatid: idotheruser,
-          idactualuser,
+          idactualuser: idactualuserEvent,
           idotheruser,
           chatname,
         };
@@ -158,7 +161,7 @@ export const HelperContextProvider = ({ children }) => {
       case 'attendee':
         data = {
           chatid: generateUniqueIdFromOtherIds(idactualuser, idotheruser),
-          idactualuser,
+          idactualuser: idactualuserEvent,
           idotheruser,
           chatname,
         };
@@ -188,20 +191,23 @@ export const HelperContextProvider = ({ children }) => {
     }
   };
 
-  
-
-  let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName) => {
+  let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName, imageOtherprofile) => {
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
+    let imageProfileUseractual = cEventuser.value?.user?.picture
+      ? cEventuser.value?.user?.picture
+      : imageforDefaultProfile;
     //agregamos una referencia al chat para el usuario actual
     data = {
       id: newId,
       name: otherUserName,
       participants: [
-        { idparticipant: idcurrentUser, countmessajes: 0 },
-        { idparticipant: idOtherUser, countmessajes: 0 },
+        { idparticipant: idcurrentUser, countmessajes: 0, profilePicUrl: imageProfileUseractual },
+        { idparticipant: idOtherUser, countmessajes: 0, profilePicUrl: imageOtherprofile },
       ],
     };
+    
+    console.log('datachat', data);
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
@@ -210,8 +216,8 @@ export const HelperContextProvider = ({ children }) => {
       id: newId,
       name: currentName,
       participants: [
-        { idparticipant: idcurrentUser, countmessajes: 0 },
-        { idparticipant: idOtherUser, countmessajes: 0 },
+        { idparticipant: idcurrentUser, countmessajes: 0, profilePicUrl: imageProfileUseractual },
+        { idparticipant: idOtherUser, countmessajes: 0, profilePicUrl: imageOtherprofile },
       ],
     };
     //agregamos una referencia al chat para el otro usuario del chat
@@ -220,7 +226,6 @@ export const HelperContextProvider = ({ children }) => {
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idOtherUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
 
-    console.log('chatuser', newId);
     HandleGoToChat(idcurrentUser, idOtherUser, currentName, 'attendee', null);
   };
 
@@ -361,8 +366,6 @@ export const HelperContextProvider = ({ children }) => {
       firestore
         .collection('eventchats/' + cEvent.value._id + '/userchats/' + cUser.value.uid + '/' + 'chats/')
         .onSnapshot(function(querySnapshot) {
-          console.log('querySnapshot==>', querySnapshot.docChanges());
-
           if (
             querySnapshot.docChanges()[0] &&
             querySnapshot.docChanges()[0].type == 'modified' &&
@@ -520,6 +523,7 @@ export const HelperContextProvider = ({ children }) => {
         seteventPrivate,
         GetPermissionsEvent,
         totalPrivateMessages,
+        imageforDefaultProfile
       }}>
       {children}
     </HelperContext.Provider>

@@ -14,8 +14,6 @@ class InformativeSection2 extends Component {
   }
 
   componentDidMount() {
-    console.log("INFORMATIVE SECTION")
-    console.log(this.props.cEvent.value.itemsMenu.informativeSection1)
     this.setState({
       markup: this.props.cEvent.value.itemsMenu.informativeSection1.markup,
       informativeSection1: this.props.cEvent.value.itemsMenu.informativeSection1

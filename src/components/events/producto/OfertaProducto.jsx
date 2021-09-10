@@ -31,7 +31,6 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       }
       setPriceProduct( product &&product.price)
       setValorProduct(obtenerValor())
-      //console.log("ISUSD==>",product.price.includes('USD'))
       let minValueUp=product.price.includes('USD')?50:100000
       let valueOfertaMin=parseFloat(obtenerValor())+minValueUp
       setValueOferta(valueOfertaMin)

@@ -25,7 +25,6 @@ export const SendFriendship = async ({ eventUserIdReceiver, userName }, userActu
       // Se ejecuta el servicio del api de evius
       try {
         var respInvitation = await EventsApi.sendInvitation(event._id, data);
-        console.log("RESP INVITATION==>",respInvitation )
         return respInvitation;
       } catch (err) {
         let { data } = err.response;
@@ -45,7 +44,6 @@ export const loadDataUser = async (user, event) => {
 };
 
 export const addNotification = (notification, event, user) => {
- // console.log("EMAIL EMITED==>",notification.emailEmited)
   if (notification.emailEmited != null && notification.emailEmited) {
     firestore
       .collection('notificationUser')
@@ -84,7 +82,6 @@ export const isMyContacts=(contact,listContacts)=>{
  listContacts.map((contacts)=>{
     if(contacts._id==contact.eventUserId){        
       resp=true; 
-      console.log("===IS CONTACTS==")   
       return;
     }
   })

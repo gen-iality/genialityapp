@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Avatar from 'antd/lib/avatar/avatar';
 import Text from 'antd/lib/typography/Text';
-import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification } from 'antd';
+import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification, Typography } from 'antd';
 import { UsergroupAddOutlined, CommentOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
 import { UseCurrentUser } from '../../../Context/userContext';
 import { formatDataToString } from '../../../helpers/utils';
@@ -30,7 +30,6 @@ const DrawerProfile = (props) => {
       let isContact=isMyContacts(props.profileuser,props.cHelper.contacts)
       setIsMyContact(isContact)      
       setUserSelected(props.profileuser)
-      console.log("USER SELECTED==>",userSelected);
     }
   },[props.profileuser])
   
@@ -51,16 +50,16 @@ const DrawerProfile = (props) => {
             size={110}
             src= {userSelected && userSelected.properties && userSelected.properties['picture']?userSelected.properties['picture']:'https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png'}
           />
-          <Text style={{ fontSize: '20px' }}>
+          <Typography.Paragraph style={{ fontSize: '20px',width:'250px' }}>
             {userSelected!=null? userSelected && userSelected.properties && userSelected.properties.names
               ? userSelected.properties.names
               : userSelected.properties && userSelected.properties.name
               ? userSelected.properties.name
               : '':''}
-          </Text>
-          <Text type='secondary' style={{ fontSize: '16px' }}>
+          </Typography.Paragraph>
+          <Typography.Paragraph type='secondary' style={{ fontSize: '16px',width:'250px' }}>
             {userSelected && userSelected.properties  && userSelected.properties?.email}
-          </Text>
+          </Typography.Paragraph>
         </Space>
         <Col span={24}>
           <Row justify='center' style={{ marginTop: '20px' }}>
@@ -145,7 +144,7 @@ const DrawerProfile = (props) => {
         <Col
           className='asistente-list' //agrega el estilo a la barra de scroll
           span={24}
-          style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'scroll' }}>
+          style={{ marginTop: '20px', height: '50vh', maxHeight: '50vh', overflowY: 'auto' }}>
           {(!userSelected || !propertiesProfile ) && <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>}
            
           {//userSelected._id == cUser.value._id ? ( 
@@ -156,7 +155,7 @@ const DrawerProfile = (props) => {
               renderItem={(item) =>
                 (((item.visibleByContacts && isMycontact) || (!item.visibleByContacts && !item.visibleByAdmin) ) ||
                   userSelected?._id == cUser.value._id) &&
-                userSelected?.properties[item.name] && item.name!=='picture'  && (
+                userSelected?.properties[item.name] && item.name!=='picture'  && item.name !== 'imagendeperfil' && (
                   <List.Item>   
                     <List.Item.Meta
                       title={item.label}

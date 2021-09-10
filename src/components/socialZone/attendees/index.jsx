@@ -118,7 +118,8 @@ const AttendeList = function(props) {
                       cUser.value.uid,
                       cUser.value.names || cUser.value.name,
                       item.uid,
-                      item.names || item.name
+                      item.names || item.name,
+                      item.imageProfile,
                     );
                     HandleChatOrAttende('1');
                     HandlePublicPrivate('private');
@@ -132,7 +133,7 @@ const AttendeList = function(props) {
             <List.Item.Meta
               avatar={
                 item.imageProfile ? (
-                  <Avatar src={item.imageProfile} />
+                  <Avatar src={item.imageProfile} size={40} />
                 ) : (
                   <Avatar style={{ backgroundColor: '#4A90E2', color: 'white' }} size={40}>
                     {InitialsNameUser(item.names)}
@@ -142,7 +143,7 @@ const AttendeList = function(props) {
               title={
                 <Popover
                   trigger='hover'
-                  style={{ padding: '0px !important', zIndex: 900 }}
+                  style={{ padding: '0px !important', zIndex: 1000 }}
                   placement='leftTop'
                   content={<PopoverInfoUser item={item} props={props} />}>
                   <Typography.Paragraph

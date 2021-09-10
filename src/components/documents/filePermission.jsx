@@ -82,12 +82,6 @@ class filePermission extends Component {
   goBack = () => this.setState({ redirect: true });
 
   submit = async () => {
-
-    console.log('====================================');
-    console.log("idarchivo",this.state.file);
-    console.log('====================================');
-    // const data = await DocumentsApi.editOne(this.props.event._id,name,);
-    // window.location.href = this.props.matchUrl;
   };
 
   selectRol = (permissionRol) => {

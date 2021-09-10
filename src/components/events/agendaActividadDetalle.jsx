@@ -127,9 +127,6 @@ let AgendaActividadDetalle = (props) => {
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
       if (props.cEventUser && cUser.value && props.cEvent.value) {
-        console.log('====================================');
-        console.log(' props.cEventUser.value', props.cEventUser.value);
-        console.log('====================================');
         TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
         Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, cUser.value._id);
       }
@@ -303,8 +300,6 @@ let AgendaActividadDetalle = (props) => {
   }, [mainStageContent, isMobile]);
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
-    // console.log("que esta llegando",event_id,activity_id);
-    //
     firestore
       .collection('events')
       .doc(event_id)

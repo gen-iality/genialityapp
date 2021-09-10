@@ -80,7 +80,6 @@ export function parseData2Excel(data, fields,roles=null) {
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
   
   data.map((item, key) => {
-    console.log("ITEM==>",item)
     info[key] = {};
     info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
     info[key]['checked'] = item.checkedin_at !== 'null' ? 'TRUE' : 'FALSE';
@@ -128,14 +127,12 @@ export function parseData2Excel(data, fields,roles=null) {
 
       return null;
     });
-    console.log("item==>",item)
     if (item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : '';
     info[key]['Tipo asistente'] = roles?.filter((role)=>role._id==item.rol_id)[0]?.name;
     info[key]['Actualizado'] = item.updated_at;
     info[key]['Creado'] = item.created_at;
     return info;
   });
-  console.log("INFO QUE SALE==>",info)
   return info;
 }
 
@@ -177,8 +174,6 @@ export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-M
         nextDay = nextDay.add(1, 'day');
       }     
     }
-    //datesRange.push(endDate.format(dateFormat));  
-    console.log("datesRange==>",datesRange)
     return datesRange;
   } else if (startDate.isValid() && endDate.isValid() && startDate.isSame(endDate)) {
     return [startDate.format(dateFormat)];
