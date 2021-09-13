@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Avatar, Button, message, List, Card, Spin, Alert, Popconfirm, Space, Typography, Image, Tooltip } from 'antd';
 import TimeStamp from 'react-timestamp';
-import { MessageOutlined, LikeOutlined, DeleteOutlined,DislikeOutlined } from '@ant-design/icons';
+import { MessageOutlined, LikeOutlined, DeleteOutlined, LikeFilled } from '@ant-design/icons';
 import CommentEditor from './commentEditor';
 import Comments from './comments';
 import '../../styles/landing/_wall.scss';
@@ -10,8 +10,8 @@ import withContext from '../../Context/withContext';
 import Moment from 'moment';
 import { firestore } from '../../helpers/firebase';
 
-const IconText = ({ icon, text, onSubmit,color,megusta }) => (
-  <Button htmlType='submit' type='text' onClick={onSubmit} style={{ color: megusta==1 ? color:'gray' }}>
+const IconText = ({ icon, text, onSubmit, color, megusta }) => (
+  <Button htmlType='submit' type='text' onClick={onSubmit} style={{ color: megusta == 1 ? color : 'gray' }}>
     {React.createElement(icon, { style: { marginRight: '2px', fontSize: '20px' } })}
     {text}
   </Button>
@@ -79,40 +79,38 @@ class WallList extends Component {
     const dataPost = dataPostOld.filter((item) => item.id !== postId); //crea un nuevo array de objetos sin el post eliminado
     this.setState({ dataPost }); // asigan el nuevo array al estado para que se actualice el componente
   };
-  
-  componentDidMount(){
-   this.getPosts();
+
+  componentDidMount() {
+    this.getPosts();
   }
 
   //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
-getPosts() {
-  console.log("GETPOST",this.props.cEvent.value._id)
- 
+  getPosts() {
+    console.log('GETPOST', this.props.cEvent.value._id);
+
     try {
       let adminPostRef = firestore
         .collection('adminPost')
         .doc(this.props.cEvent.value._id)
         .collection('posts')
-        .orderBy('datePost', 'desc');        
-        adminPostRef.onSnapshot((snapshot)=>{
-          const dataPost = [];       
+        .orderBy('datePost', 'desc');
+      adminPostRef.onSnapshot((snapshot) => {
+        const dataPost = [];
 
         if (snapshot.empty) {
-          this.setState({ dataPost: dataPost }); 
+          this.setState({ dataPost: dataPost });
         }
-     
-        snapshot.docs.forEach((doc) => {
 
+        snapshot.docs.forEach((doc) => {
           var data = doc.data();
           data.id = doc.id;
-  
+
           dataPost.push(data);
-        });  
+        });
         this.setState({ dataPost: dataPost });
-       });
-      
+      });
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
   }
   componentDidUpdate(prevProps) {
@@ -127,9 +125,6 @@ getPosts() {
 
   render() {
     const { dataPost } = this.state;
-    console.log("DATA POST===>",dataPost)
-
-
     return (
       <Fragment>
         <div>
@@ -170,57 +165,75 @@ getPosts() {
                       style={{ padding: '5px' }}
                       actions={[
                         <Space key='opciones' wrap>
-                        <IconText
-                          icon={LikeOutlined}
-                          text={(item.likes || 0) + ' Me gusta'}
-                          key='list-vertical-like-o'
-                          color={item.usersLikes?.find((itm)=>itm==this.props.cUser.value._id)!=undefined?'blue':'gray'}
-                          megusta='1'
-                          onSubmit={() => {                                                                        
-                            this.props.increaseLikes(item.id, this.props.cUser.value._id);
-                          }}
-                        />
-                        <IconText
-                          icon={MessageOutlined}
-                          text={(item.comments || 0) + (item.comments === 1 ? ' Comentario' : ' Comentarios')}
-                          key='list-vertical-message'
-                          onSubmit={() => {
-                            this.innershowComments(item.id, item.comments);
-                          }}
-                        />
-                        <>
-                          {this.props.cUser.value && this.props.cUser.value._id.trim() === item.author.trim() && (
-                            <>
-                              <Popconfirm
-                                title='Seguro deseas eliminar este mensaje?'
-                                onConfirm={() => this.innerDeletePost(item.id)}>
-                                <Button key='list-vertical-message' type='text' danger icon={<DeleteOutlined />}>
-                                  Eliminar
-                                </Button>
-                              </Popconfirm>
-                              {this.state.deleting === item.id && <Spin />}
-                            </>
-                          )}
-                        </>
-                        </Space>
+                          <IconText
+                            icon={
+                              item.usersLikes?.find((itm) => itm == this.props.cUser.value._id) != undefined
+                                ? LikeFilled
+                                : LikeOutlined
+                            }
+                            text={(item.likes || 0) + ' Me gusta'}
+                            key='list-vertical-like-o'
+                            color={
+                              item.usersLikes?.find((itm) => itm == this.props.cUser.value._id) != undefined
+                                ? '#518BFB'
+                                : 'gray'
+                            }
+                            megusta='1'
+                            onSubmit={() => {
+                              this.props.increaseLikes(item.id, this.props.cUser.value._id);
+                            }}
+                          />
+                          <IconText
+                            icon={MessageOutlined}
+                            text={(item.comments || 0) + (item.comments === 1 ? ' Comentario' : ' Comentarios')}
+                            key='list-vertical-message'
+                            onSubmit={() => {
+                              this.innershowComments(item.id, item.comments);
+                            }}
+                          />
+                          <>
+                            {this.props.cUser.value && this.props.cUser.value._id.trim() === item.author.trim() && (
+                              <>
+                                <Popconfirm
+                                  title='Seguro deseas eliminar esta publicacion?'
+                                  onConfirm={() => this.innerDeletePost(item.id)}
+                                  okText='Eliminar'
+                                  okType='danger'
+                                  cancelText='Cancelar'>
+                                  <Button
+                                    key='list-vertical-message'
+                                    type='text'
+                                    danger
+                                    icon={<DeleteOutlined style={{ marginRight: '2px', fontSize: '20px' }} />}>
+                                    Eliminar mi publicación
+                                  </Button>
+                                </Popconfirm>
+                                {this.state.deleting === item.id && <Spin />}
+                              </>
+                            )}
+                          </>
+                        </Space>,
                       ]}>
                       <List.Item.Meta
                         avatar={
-                          item.avatar ? (
-                            <Avatar src={item.avatar} />
+                          item.authorImage ? (
+                            <Avatar src={item.authorImage} size={50} />
                           ) : (
-                            <Avatar>
+                            <Avatar size={50}>
                               {item.authorName &&
                                 item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
                             </Avatar>
                           )
                         }
-                        title={<span>{item.authorName}</span>}
+                        title={<span >{item.authorName}</span>}
                         description={
-                          <Tooltip title={Moment(new Date(item.datePost.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
+                          <div style={{marginTop:'-10px'}}>
+                          <Tooltip
+                            title={Moment(new Date(item.datePost.toMillis())).format('YYYY-MM-DD HH:mm:ss')}>
                             {/* <TimeStamp date={item.datePost.seconds} /> */}
                             <span>{Moment(Moment(new Date(item.datePost.toMillis()))).from(Moment(new Date()))}</span>
                           </Tooltip>
+                          </div>
                         }
                       />
 
@@ -233,7 +246,7 @@ getPosts() {
                           style={{
                             display: 'block',
                             margin: '0 auto',
-                            objectFit:'cover'
+                            objectFit: 'cover',
                           }}
                           alt='logo'
                           src={item.urlImage}

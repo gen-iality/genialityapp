@@ -29,9 +29,9 @@ class Wall extends Component {
   }
  
 
-  addPosts = (post) => {
-    this.setState({ dataPost: [post, ...this.state.dataPost] });
-  };
+  // addPosts = (post) => {
+  //   this.setState({ dataPost: [post, ...this.state.dataPost] });
+  // };
 
   deletePost = async (postId) => {
     //window.confirm("Seguro deseas borrar esta publicación");
