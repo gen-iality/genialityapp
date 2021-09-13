@@ -731,6 +731,7 @@ const FormRegister = ({
             <Form
               form={form}
               layout='vertical'
+              
               onFinish={onFinish}
               validateMessages={{
                 required: intl.formatMessage({ id: 'form.field.required' }),
