@@ -71,7 +71,7 @@ class ListEventUser extends Component {
     this.setState({ eventUserIdToMakeAppointment: null, eventUserToMakeAppointment: null });
   };
   agendarCita = (iduser, user) => {
-    console.log('USERS SELECTED==>', user);
+    //console.log('USERS SELECTED==>', user);
     this.setState({ eventUserIdToMakeAppointment: iduser, eventUserToMakeAppointment: user });
   };
   loadData = async () => {
@@ -221,7 +221,7 @@ class ListEventUser extends Component {
 
       let asistantData = await EventFieldsApi.getAll(this.props.cEvent.value._id);
 
-      console.log('USERS==>', eventUserList);
+      
 
       this.setState((prevState) => {
         return {
@@ -278,7 +278,7 @@ class ListEventUser extends Component {
 
   //Search records at third column
   searchResult = (data,search=0) => {
-    console.log("USERS==>",this.state.listTotalUser,search)
+   // console.log("USERS==>",this.state.listTotalUser,search)
     !data ? this.setState({ users: [] }) : this.setState({ pageOfItems:data, users:data });
   };
 
