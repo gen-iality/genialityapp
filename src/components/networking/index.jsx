@@ -679,7 +679,7 @@ class ListEventUser extends Component {
                                                   }                                        
                                              
                                             }:null}>
-                                            {!users.loading?this.isMyContact(users)?'Ya es tu contacto':this.haveRequestUser(users) || (users.send && users.send==1)?'Solicitud pendiente':'Enviar solicitud de Contacto':<Spin />}
+                                            {!users.loading?this.isMyContact(users)?'Ya es tu contacto':this.haveRequestUser(users) || (users.send && users.send==1)?'Confrimación pendiente':'Enviar solicitud de Contacto':<Spin />}
                                           </Button>
                                         </Space>
                                       )}

@@ -91,7 +91,7 @@ const PopoverInfoUser = (props) => {
                   }); 
                  }             
                }}
-              title={!userSelected.loading ? isMyContacts(userSelected,contacts)?'Ya es tu contacto':haveRequest(userSelected,requestSend,1) || (userSelected.send && userSelected.send==1)?'Solicitud pendiente' :'Enviar solicitud Contacto':''}>
+              title={!userSelected.loading ? isMyContacts(userSelected,contacts)?'Ya es tu contacto':haveRequest(userSelected,requestSend,1) || (userSelected.send && userSelected.send==1)?'Confirmación pendiente' :'Enviar solicitud Contacto':''}>
               {!userSelected.loading ?<UsergroupAddOutlined style={{ fontSize: '20px', color:haveRequest(userSelected,requestSend,1) || (userSelected.send && userSelected.send==1) || isMyContacts(userSelected,contacts) ?'gray': '#1890FF' }} />:<Spin />}
             </Tooltip>:<Spin />
           ),
