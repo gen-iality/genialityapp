@@ -255,17 +255,17 @@ const ChatList = (props) => {
                 className='ChatEviusLan'
                 src={
                   'https://chatevius.web.app?iduser=' +
-                  chatActual.idotheruser +
+                  chatActual?.idotheruser +
                   '&chatid=' +
-                  chatActual.chatid +
+                  chatActual?.chatid +
                   '&eventid=' +
-                  cEvent.value._id +
+                  cEvent.value?._id +
                   '&usereventid=' +
-                  cEventUser.value._id +
+                  cEventUser.value?._id +
                   '&userid=' +
-                  cUser.value.uid +
+                  cUser.value?.uid +
                   '&nombre=' +
-                  chatActual.chatname
+                  chatActual?.chatname
                 }></iframe>
             </>
           )}
