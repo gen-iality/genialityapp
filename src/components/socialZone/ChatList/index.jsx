@@ -141,7 +141,7 @@ const ChatList = (props) => {
 
   return (
     <Tabs activeKey={chatPublicPrivate} size='small' onChange={callback} centered>
-      {props.generalTabs.publicChat && cEvent.value && !cEventUser.value ? (
+      {props.generalTabs.publicChat && (
         <TabPane
           tab={
             <div style={{ color: cEvent.value.styles.textMenu }}>
@@ -156,34 +156,13 @@ const ChatList = (props) => {
               'https://chatevius.web.app?nombre=' +
               userNameActive +
               '&chatid=event_' +
-              cEvent.value._id +
+              cEvent.value?._id +
+              '&usereventid=' +
+              cEventUser.value?._id +
               '&eventid=' +
-              cEvent.value._id +
+              cEvent.value?._id +
               '&userid=' +
-              cUser.value.uid +
-              '&version=0.0.2'
-            }></iframe>
-        </TabPane>
-      ) : (
-        <TabPane
-          tab={
-            <div style={{ color: cEvent.value.styles.textMenu }}>
-              <FormattedMessage id='tabs.public.socialzone' defaultMessage='Público' />
-            </div>
-          }
-          key='public'>
-          <iframe
-            title='chatevius'
-            className='ChatEviusLan'
-            src={
-              'https://chatevius.web.app?nombre=' +
-              userNameActive +
-              '&chatid=event_' +
-              cEvent.value._id +
-              '&eventid=' +
-              cEvent.value._id +
-              '&userid=' +
-              cEventUser.value._id +
+              cUser.value?.uid +
               '&version=0.0.2'
             }></iframe>
         </TabPane>
@@ -276,15 +255,17 @@ const ChatList = (props) => {
                 className='ChatEviusLan'
                 src={
                   'https://chatevius.web.app?iduser=' +
-                  chatActual.idotheruser +
+                  chatActual?.idotheruser +
                   '&chatid=' +
-                  chatActual.chatid +
+                  chatActual?.chatid +
                   '&eventid=' +
-                  cEvent.value._id +
+                  cEvent.value?._id +
+                  '&usereventid=' +
+                  cEventUser.value?._id +
                   '&userid=' +
-                  chatActual.idactualuser +
+                  cUser.value?.uid +
                   '&nombre=' +
-                  chatActual.chatname
+                  chatActual?.chatname
                 }></iframe>
             </>
           )}

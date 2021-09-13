@@ -118,6 +118,7 @@ const PopoverInfoUser = (props) => {
           }
           title={
             <a
+            style={{color:"#3273dc"}}
               onClick={
                 props.containNetWorking
                   ? () => {
