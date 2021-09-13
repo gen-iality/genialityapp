@@ -7,6 +7,16 @@ describe('Evius Initial', () => {
   });
 
   it('User can register', () => {
-  
+    let fakeuser = {
+      email: 'fakeuser@gmail.com',
+      name: 'fakeuser',
+      phone: '57 4567849',
+      address: 'my crazy direction',
+      interested: 'Vender',
+      economy_activity: 'whatever economy',
+      description: 'whatever description',
+      termsService: true,
+    };
+    cy.registerUser(fakeuser);
   });
 });
