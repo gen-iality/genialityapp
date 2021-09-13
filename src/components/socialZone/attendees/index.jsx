@@ -21,7 +21,7 @@ const AttendeList = function(props) {
     attendeeList,
     HandleChatOrAttende,
     HandlePublicPrivate,
-    imageforDefaultProfile,
+    imageforDefaultProfile, 
   } = useContext(HelperContext);
   const pag = 15;
 

@@ -7,7 +7,7 @@ import { useContext } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
-import { addNotification, SendFriendship } from '../../../helpers/netWorkingFunctions';
+import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { UseEventContext } from '../../../Context/eventContext';
 import {setUserAgenda} from '../../../redux/networking/actions'
@@ -21,15 +21,21 @@ const PopoverInfoUser = (props) => {
   const [userSelected,setUserSelected]=useState()
   let eventUserContext= UseUserEvent();
   let eventContext=UseEventContext()
-  let { containtNetworking, getPropertiesUserWithId, propertiesProfile, propertiesOtherprofile } = useContext(
+  let { containtNetworking, getPropertiesUserWithId, propertiesProfile, propertiesOtherprofile,requestSend,obtenerContactos,contacts } = useContext(
     HelperContext
   );
   
 
   useEffect(() => {        
-    let user={ _id:  props.item.iduser, properties:  props.item.properties, eventUserId:  props.item._id }     
+    let user={ _id:  props.item.iduser, properties:  props.item.properties, eventUserId:  props.item._id ,send:0}     
      setUserSelected(user) 
+     console.log("USER SELECTED==>",user)     
+     obtainContacts()
+     async function obtainContacts(){
+      await obtenerContactos()
+     }
   }, [ props.item.iduser]);
+  
 
   return (
     <Skeleton loading={false} avatar active>
@@ -46,8 +52,10 @@ const PopoverInfoUser = (props) => {
 
           containtNetworking && (
             userSelected? <Tooltip
-               onClick={async () => {
-                setViewPerfil({view: false, perfil: userSelected })                
+               onClick={haveRequest(userSelected,requestSend,1) || (userSelected.send && userSelected.send==1)|| isMyContacts(userSelected,contacts)?null: async () => {
+                setViewPerfil({view: false, perfil: userSelected }) 
+                let userSelectedTwo={...userSelected,loading:true} 
+                setUserSelected(userSelectedTwo)             
                 let userReceive={
                   eventUserIdReceiver:userSelected.eventUserId,
                   userName:userSelected.properties.names || userSelected.properties.name || userSelected.properties.email
@@ -68,6 +76,8 @@ const PopoverInfoUser = (props) => {
                     type: 'amistad',
                     state: '0',
                   };
+                  let userSelectedTwo={...userSelected,loading:false,send:1} 
+                  setUserSelected(userSelectedTwo)
 
                   addNotification(
                     notificationR,
@@ -81,8 +91,8 @@ const PopoverInfoUser = (props) => {
                   }); 
                  }             
                }}
-              title='Enviar solicitud Contacto'>
-              <UsergroupAddOutlined style={{ fontSize: '20px', color: '#1890FF' }} />
+              title={!userSelected.loading ? isMyContacts(userSelected,contacts)?'Ya es tu contacto':haveRequest(userSelected,requestSend,1) || (userSelected.send && userSelected.send==1)?'Solicitud pendiente' :'Enviar solicitud Contacto':''}>
+              {!userSelected.loading ?<UsergroupAddOutlined style={{ fontSize: '20px', color:haveRequest(userSelected,requestSend,1) || (userSelected.send && userSelected.send==1) || isMyContacts(userSelected,contacts) ?'gray': '#1890FF' }} />:<Spin />}
             </Tooltip>:<Spin />
           ),
 

@@ -16,7 +16,7 @@ import { userRequest } from './services';
 import ContactList from './contactList';
 import RequestList from './requestList';
 import withContext from '../../Context/withContext';
-import { addNotification, isMyContacts, SendFriendship } from '../../helpers/netWorkingFunctions';
+import { addNotification, getRequestSend, haveRequest, isMyContacts, SendFriendship } from '../../helpers/netWorkingFunctions';
 import { HelperContext } from '../../Context/HelperContext';
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -53,7 +53,7 @@ class ListEventUser extends Component {
   async componentDidMount() {
     await this.getInfoCurrentUser();
     this.loadData();
-    this.getRequestSend();
+    await this.props.cHelper.obtenerContactos();
     this.props.setVirtualConference(false)
   
   }
@@ -64,7 +64,7 @@ class ListEventUser extends Component {
     if (activeTab=='asistentes'){
       this.setState({loading:true})
       await this.loadData();
-    await this.getRequestSend();
+    await  this.props.cHelper.obtenerContactos();
     }  
   };
   closeAppointmentModal = () => {
@@ -307,30 +307,9 @@ class ListEventUser extends Component {
     // filterSector.dispatchEvent(ev2);
   };
 
-  //obtener solicitudes de contactos enviadas 
-  getRequestSend(){
-    if(this.props.cEventUser.value!=null){
-    Networking.getInvitationsSent(this.props.cEvent.value._id, this.props.cEventUser.value._id).then(({ data }) => {
-      if (data.length > 0){
-        this.setState({requestListSent:data.filter((request)=>!request.response)})       
-      }      
-    });
-  }
-  }
-
-  haveRequest(user){
-    console.log("LIST SENTREQUEST==>",this.state.requestListSent,user._id,user)
-    if(this.state.requestListSent.length>0){
-      console.log("LIST SENT==>",this.state.requestListSent)
-      let request=this.state.requestListSent.filter((userRequest)=>userRequest.id_user_requesting==user._id);
-      console.log("LISTA==>",request,user._id)
-      if(request.length>0){
-        return true;
-      }
-      else{
-        return false;
-      }
-    }
+  haveRequestUser(user){
+    console.log("HEPERVALUE==>",this.props.cHelper.requestSend)
+   return haveRequest(user,this.props.cHelper.requestSend);
   }
 
   isMyContact(user){ 
@@ -646,7 +625,7 @@ class ListEventUser extends Component {
                                           </Button>
                                           <Button
                                           type="primary" 
-                                          disabled={this.isMyContact(users) || this.haveRequest(users) || (users.send && users.send==1 || users.loading)}                                          
+                                          disabled={this.isMyContact(users) || this.haveRequestUser(users) || (users.send && users.send==1 || users.loading)}                                          
                                             onClick={!this.isMyContact(users)?async () => {
                                               this.state.users[userIndex]={...this.state.users[userIndex],loading:true,}
                                               this.setState({users: this.state.users});
@@ -700,7 +679,7 @@ class ListEventUser extends Component {
                                                   }                                        
                                              
                                             }:null}>
-                                            {!users.loading?this.isMyContact(users)?'Ya es tu contacto':this.haveRequest(users) || (users.send && users.send==1)?'Solicitud pendiente':'Enviar solicitud de Contacto':<Spin />}
+                                            {!users.loading?this.isMyContact(users)?'Ya es tu contacto':this.haveRequestUser(users) || (users.send && users.send==1)?'Solicitud pendiente':'Enviar solicitud de Contacto':<Spin />}
                                           </Button>
                                         </Space>
                                       )}
