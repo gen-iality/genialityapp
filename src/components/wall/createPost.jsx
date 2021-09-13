@@ -73,6 +73,10 @@ class CreatePost extends Component {
     this.getImage = this.getImage.bind(this);
   }
 
+  componentDidMount(){
+    console.log('Marlon 2',this.props.cUser.value)
+  }
+
   //Funcion para guardar el post y enviar el mensaje de publicacion
   async savePost() {
     if(this.state.value!=="" && this.state.value!==null && this.state.value!=undefined){
@@ -91,6 +95,7 @@ class CreatePost extends Component {
         : this.props.cUser.value.name
         ? this.props.cUser.value.name
         : this.props.cUser.value.email,
+      authorImage:this.props.cUser.value.picture
     };
 
     //savepost se realiza para publicar el post  
@@ -99,7 +104,7 @@ class CreatePost extends Component {
     this.setState({ value: '', image: '', showInfo: true, loadingsave: false,errNote:false });
     this.setState({ showInfo: false, visible: false, keyList: Date.now() });
     message.success('Mensaje Publicado');
-    this.props.addPosts(newPost);
+    //this.props.addPosts(newPost);
   }else{
     this.setState({errNote:true})
   }
