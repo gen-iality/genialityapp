@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Col, Modal, notification, Row, Spin, Tabs, Space, Typography, Popconfirm } from 'antd';
+import { Avatar, Button, Card, Col, Modal, notification, Row, Spin, Tabs, Space, Typography, Popconfirm, Divider } from 'antd';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 import { find, map, mergeRight, path, propEq } from 'ramda';
@@ -260,7 +260,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
     <Row justify='center' style={{ marginBottom: '20px' }}>
       <Card
         headStyle={{ border: 'none' }}
-        style={{ width: 600, textAlign: 'left' }}
+        style={{ width: 600, textAlign: 'left', borderRadius:'10px' }}
         bodyStyle={{ paddingTop: '0px' }}
         bordered={true}
         extra={
@@ -269,12 +269,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
             onConfirm={deleteThisAgenda}
             okText='Si'
             cancelText='No'>
-            <Button
-              type='text'
-              danger
-              disabled={loading}
-              loading={loading}
-              >
+            <Button type='text' danger disabled={loading} loading={loading}>
               {'Cancelar Cita'}
             </Button>
           </Popconfirm>
@@ -282,10 +277,10 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
         title={
           <Space wrap>
             {/* <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div> */}
-            <Typography.Text style={{ fontSize: '14px' }} type='secondary'>
+            <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
               {moment(data.timestamp_start).format('hh:mm a')}
             </Typography.Text>
-            <Typography.Text style={{ fontSize: '14px' }} type='secondary'>
+            <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
               {moment(data.timestamp_end).format('hh:mm a')}
             </Typography.Text>
           </Space>
@@ -299,22 +294,17 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
               <Avatar size={50}>{userName ? userName.charAt(0).toUpperCase() : userName}</Avatar>
             )
           }
-          title={userName || 'No registra nombre'}
+          title={<Typography.Title level={5}>{userName || 'No registra nombre'}</Typography.Title>}
           description={
-            <div>
-              <Row className='mi_agenda' justify='space-around'>
-                <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
-                  <p>{userEmail || 'No registra correo'}</p>
-                  {!!data.message && (
-                    <p style={{ paddingRight: '20px' }}>
-                      {'Mensaje: '}
-                      {data.message}
-                    </p>
-                  )}
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}></Col>
-              </Row>
-            </div>
+            <Typography.Paragraph style={{marginTop:'-15px'}}>
+              <Typography.Text type='secondary' style={{ paddingRight: '20px' }}>{userEmail || 'No registra correo'}</Typography.Text>
+              {!!data.message && (
+                <p style={{ paddingRight: '20px' }}>
+                  <Divider orientation="left" plain style={{marginBottom:'0px'}}>Mensaje</Divider>
+                  <Typography.Paragraph type='secondary' ellipsis={{rows:2}}>{data.message}</Typography.Paragraph>
+                </p>
+              )}
+            </Typography.Paragraph>
           }
         />
         {!deleted ? (
