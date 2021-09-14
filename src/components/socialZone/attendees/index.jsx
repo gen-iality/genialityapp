@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { List, Tooltip, Popover, Avatar, Typography, Space, Tag } from 'antd';
+import { List, Tooltip, Popover, Avatar, Typography, Space, Tag, Image } from 'antd';
 import { MessageTwoTone } from '@ant-design/icons';
 import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
@@ -21,7 +21,7 @@ const AttendeList = function(props) {
     attendeeList,
     HandleChatOrAttende,
     HandlePublicPrivate,
-    imageforDefaultProfile, 
+    imageforDefaultProfile,
   } = useContext(HelperContext);
   const pag = 15;
 
@@ -134,18 +134,27 @@ const AttendeList = function(props) {
               ) : null,
             ]}>
             <List.Item.Meta
-              avatar={<Avatar src={item.imageProfile} size={40} >
-                 {!item.imageProfile && item.names ? item.names.charAt(0).toUpperCase() : item.names}
-              </Avatar>}
+              
+              avatar={
+                <Avatar src={<Image src={item.imageProfile}/>} size={45}>
+                  {!item.imageProfile && item.names ? item.names.charAt(0).toUpperCase() : item.names}
+                </Avatar>
+              }
               title={
                 <Popover
                   trigger='hover'
-                  style={{ padding: '0px !important', zIndex: 1000 }}
+                  
                   placement='leftTop'
                   content={<PopoverInfoUser item={item} props={props} />}>
                   <Typography.Paragraph
                     ellipsis={{ rows: 2 }}
-                    style={{ color: 'black', cursor: 'pointer', width: '90%', fontSize: '15px' }}
+                    style={{
+                      color: 'black',
+                      cursor: 'pointer',
+                      width: '85%',
+                      fontSize: '15px',
+                      whiteSpace:'break-spaces'
+                    }}
                     key='list-loadmore-edit'>
                     {item.names}
                   </Typography.Paragraph>
@@ -153,12 +162,14 @@ const AttendeList = function(props) {
               }
               description={
                 item.status === 'online' ? (
-                  <div style={{ color: '#52c41a', marginTop:'-10px' }}>
-                    <Tag color='#52C41A'>Online</Tag>
+                  <div style={{ color: '#52c41a', marginTop: '-10px' }}>
+                    <Tag color='#52C41A'>En linea</Tag>
                   </div>
-                ) : (<div style={{ color: '#52c41a', marginTop:'-10px' }}>
-                <Tag color='#CCCCCC'>Offline</Tag>
-              </div>)
+                ) : (
+                  <div style={{ color: '#52c41a', marginTop: '-10px' }}>
+                    <Tag color='#CCCCCC'>Offline</Tag>
+                  </div>
+                )
               }
             />
           </List.Item>
