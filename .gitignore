@@ -25,3 +25,5 @@ yarn-error.log*
 /src/styles/main.css
 
 debug.log
+
+/cypress/videos

@@ -41,7 +41,7 @@ class UserLoginWithEmailPass extends Component {
                     message: intl.formatMessage({ id: 'form.field.required' }),
                   },
                 ]}>
-                <Input type='text' style={{ width: '300px' }} />
+                <Input.Password style={{ width: '300px' }} />
               </Form.Item>
             </Col>
           </Row>

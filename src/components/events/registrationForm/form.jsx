@@ -139,8 +139,8 @@ const FormRegister = ({
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   initialValues.codearea = null;
-  let { eventPrivate}=useContext(HelperContext)
-  let cEventUser=useContext(CurrentEventUserContext)
+  let { eventPrivate } = useContext(HelperContext);
+  let cEventUser = useContext(CurrentEventUserContext);
   useEffect(() => {
     let formType = !eventUserId ? 'register' : 'transfer';
     setFormMessage(FormTags(formType));
@@ -169,7 +169,7 @@ const FormRegister = ({
     }
   }, [extraFields]);
 
-  const showGeneralMessage = (values,error,date) => {
+  const showGeneralMessage = (values, error, date) => {
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
       setGeneralFormErrorMessageVisible(false);
@@ -184,11 +184,8 @@ const FormRegister = ({
 
   const onFinish = async (values) => {
     if (areacodeselected) {
-      //values[fieldCode] = `${numberareacode}`;
       values['code'] = areacodeselected;
     }
-    //console.log("VALUES FORM==>",values)
-    
 
     setSectionPermissions({ view: false, ticketview: false });
     values.password = password;
@@ -214,7 +211,7 @@ const FormRegister = ({
 
     let textMessage = {};
     textMessage.key = key;
- 
+
     if (eventUserId) {
       try {
         await TicketsApi.transferToUser(eventId, eventUserId, snap);
@@ -268,15 +265,18 @@ const FormRegister = ({
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
               window.location.replace(
-                eventId=='60cb7c70a9e4de51ac7945a2'?`/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
-                :`/landing/${eventId}/${eventPrivate.section}?register=${ eventUser==null?2:4}&token=${resp.data.user.initial_token}`
+                eventId == '60cb7c70a9e4de51ac7945a2'
+                  ? `/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
+                  : `/landing/${eventId}/${eventPrivate.section}?register=${eventUser == null ? 2 : 4}&token=${
+                      resp.data.user.initial_token
+                    }`
               );
             }, 100);
           } else {
             window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${1}`);
           }
         } else {
-         // window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
+          // window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
           //Usuario ACTUALIZADO
           // let msg =
           //   'Ya se ha realizado previamente el registro con el correo: ' +
@@ -311,16 +311,14 @@ const FormRegister = ({
   };
 
   const valuesChange = (changedValues, allValues) => {
-   console.log("VALUES==>",allValues)
+    console.log('VALUES==>', allValues);
     updateFieldsVisibility(conditionals, allValues);
   };
 
-  const updateFieldsVisibility = (conditionals, allFields) => {  
-
+  const updateFieldsVisibility = (conditionals, allFields) => {
     let newExtraFields = [...extraFieldsOriginal];
- 
-    newExtraFields = newExtraFields.filter((field) => {
 
+    newExtraFields = newExtraFields.filter((field) => {
       let fieldShouldBeDisplayed = false;
       let fieldHasCondition = false;
 
@@ -328,14 +326,14 @@ const FormRegister = ({
 
       conditionals.map((conditional) => {
         let fieldExistInThisCondition = conditional.fields.indexOf(field.name) !== -1;
-        
+
         if (!fieldExistInThisCondition) return;
         fieldHasCondition = true;
         //Revisamos si las condiciones del campo tienen los valores adecuados para que se muestre
         let fulfillConditional = false;
 
         //valor actual del condicional en el formulario
-        let valueToValidate = allFields[conditional.fieldToValidate]
+        let valueToValidate = allFields[conditional.fieldToValidate];
         fulfillConditional = conditional.value === valueToValidate;
         if (fulfillConditional) {
           fieldShouldBeDisplayed = true;
@@ -417,7 +415,7 @@ const FormRegister = ({
         const prefixSelector = (
           <Select
             showSearch
-            optionFilterProp="children"
+            optionFilterProp='children'
             style={{ fontSize: '12px', width: 150 }}
             value={areacodeselected}
             onChange={(val) => {
@@ -427,7 +425,7 @@ const FormRegister = ({
             placeholder='Codigo de area del pais'>
             {areaCode.map((code, key) => {
               return (
-                <Option key={key} value={code.value} >
+                <Option key={key} value={code.value}>
                   {`${code.label} (+${code.value})`}
                 </Option>
               );
@@ -468,61 +466,65 @@ const FormRegister = ({
       }
 
       if (type === 'boolean') {
-        if (mandatory) {       
+        if (mandatory) {
           let textoError = intl.formatMessage({ id: 'form.field.required' });
-                   
-          rule = { validator: (_, value) => (value==true ? Promise.resolve() : Promise.reject(textoError)) };
-        }else{
-          rule = { validator: (_, value) => (value==true|| value==false || value=="" ? Promise.resolve() : Promise.reject(textoError)) };
-        }
-      return( <div key={'g' + key} name='field'>         
-          {(
-            <>
-              <Form.Item
-                // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
-                // style={eventUserId && hideFields}
-                valuePropName={'checked'}
-                label={
-                  (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
-                    ? label
-                    : '' && (labelPosition !== 'arriba' || !labelPosition)
-                }
-                name={name}
-                rules={[rule]}
-                key={'l' + key}
-                htmlFor={key}
-                initialValue={value}>
-                 <Checkbox  {...props} key={key} name={name} defaultChecked={Boolean(value?value:false)}>
-              {mandatory ? (
-                <span>
-                  <span style={{ color: 'red' }}>* </span>
-                  <strong>{label}</strong>
-                </span>
-              ) : (
-                label
-              )}
-            </Checkbox>
 
-              </Form.Item>
-           {eventId == '60cb7c70a9e4de51ac7945a2' && (
-              <Row style={{ marginTop: 20 }}>
-                {' '}
-                <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
-                  <PlayCircleOutlined /> Ver términos y condiciones
-                </a>
-              </Row>              
-            )}
-             {description && description.length < 500 && <p>{description}</p>}
-              {description && description.length > 500 && (
-                <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
-                  <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
-                    <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
-                  </Panel>
-                </Collapse>)}
-             </>
-              )}
-            </div>)       
-        
+          rule = { validator: (_, value) => (value == true ? Promise.resolve() : Promise.reject(textoError)) };
+        } else {
+          rule = {
+            validator: (_, value) =>
+              value == true || value == false || value == '' ? Promise.resolve() : Promise.reject(textoError),
+          };
+        }
+        return (
+          <div key={'g' + key} name='field'>
+            {
+              <>
+                <Form.Item
+                  // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
+                  // style={eventUserId && hideFields}
+                  valuePropName={'checked'}
+                  label={
+                    (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
+                      ? label
+                      : '' && (labelPosition !== 'arriba' || !labelPosition)
+                  }
+                  name={name}
+                  rules={[rule]}
+                  key={'l' + key}
+                  htmlFor={key}
+                  initialValue={value}>
+                  <Checkbox {...props} key={key} name={name} defaultChecked={Boolean(value ? value : false)}>
+                    {mandatory ? (
+                      <span>
+                        <span style={{ color: 'red' }}>* </span>
+                        <strong>{label}</strong>
+                      </span>
+                    ) : (
+                      label
+                    )}
+                  </Checkbox>
+                </Form.Item>
+                {eventId == '60cb7c70a9e4de51ac7945a2' && (
+                  <Row style={{ marginTop: 20 }}>
+                    {' '}
+                    <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
+                      <PlayCircleOutlined /> Ver términos y condiciones
+                    </a>
+                  </Row>
+                )}
+                {description && description.length < 500 && <p>{description}</p>}
+                {description && description.length > 500 && (
+                  <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
+                    <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
+                      <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
+                    </Panel>
+                  </Collapse>
+                )}
+              </>
+            }
+          </div>
+        );
       }
 
       if (type === 'longtext') {
@@ -647,7 +649,9 @@ const FormRegister = ({
                 maxCount={1}
                 fileList={ImgUrl}
                 beforeUpload={beforeUpload}>
-                <Button type='primary' icon={<UploadOutlined />} >Subir imagen de perfil</Button>
+                <Button type='primary' icon={<UploadOutlined />}>
+                  Subir imagen de perfil
+                </Button>
               </Upload>
             </ImgCrop>
           </div>
@@ -662,47 +666,49 @@ const FormRegister = ({
       rule =
         type == 'password'
           ? {
-              required: true,             
+              required: true,
               pattern: new RegExp(/^[A-Za-z0-9_-]{8,}$/),
-              message: 'El formato del password no es valido',              
+              message: 'El formato del password no es valido',
             }
           : rule;
-               // let hideFields =
-      //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };    
+      // let hideFields =
+      //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
 
       return (
-        type!=='boolean' &&<div key={'g' + key} name='field'>
-          {type === 'tituloseccion' && input}
-          {type !== 'tituloseccion' && (
-            <>
-              <Form.Item
-                // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
-                // style={eventUserId && hideFields}
-                valuePropName={type === 'boolean' ? 'checked' : 'value'}
-                label={
-                  (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
-                    ? label
-                    : '' && (labelPosition !== 'arriba' || !labelPosition)
-                }
-                name={name}
-                rules={[rule]}
-                key={'l' + key}
-                htmlFor={key}
-                initialValue={value}>
-                {input}
-              </Form.Item>
+        type !== 'boolean' && (
+          <div key={'g' + key} name='field'>
+            {type === 'tituloseccion' && input}
+            {type !== 'tituloseccion' && (
+              <>
+                <Form.Item
+                  // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
+                  // style={eventUserId && hideFields}
+                  valuePropName={type === 'boolean' ? 'checked' : 'value'}
+                  label={
+                    (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
+                      ? label
+                      : '' && (labelPosition !== 'arriba' || !labelPosition)
+                  }
+                  name={name}
+                  rules={[rule]}
+                  key={'l' + key}
+                  htmlFor={key}
+                  initialValue={value}>
+                  {input}
+                </Form.Item>
 
-              {description && description.length < 500 && <p>{description}</p>}
-              {description && description.length > 500 && (
-                <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
-                  <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
-                    <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
-                  </Panel>
-                </Collapse>
-              )}
-            </>
-          )}
-        </div>
+                {description && description.length < 500 && <p>{description}</p>}
+                {description && description.length > 500 && (
+                  <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
+                    <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
+                      <pre style={{ whiteSpace: 'normal' }}>{description}</pre>
+                    </Panel>
+                  </Collapse>
+                )}
+              </>
+            )}
+          </div>
+        )
       );
     });
     return formUI;
@@ -736,7 +742,7 @@ const FormRegister = ({
                 required: intl.formatMessage({ id: 'form.field.required' }),
                 types: {
                   email: intl.formatMessage({ id: 'form.validate.message.email' }),
-                 // regexp: 'malo',
+                  // regexp: 'malo',
                 },
               }}
               initialValues={initialValues}
