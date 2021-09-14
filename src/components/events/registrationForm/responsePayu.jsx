@@ -10,6 +10,8 @@ const ResponsePayu=(props)=>{
       const urlParams = new URLSearchParams(parameters);
       //Accedemos a los valores
       var reference= urlParams.get('referenceCode');
+      //lapResponseCode,polTransactionState,polResponseCode,lapTransactionState=DECLINED&message=DECLINED
+
       if(reference) setReferenceCode(reference)
       console.log("parameteres==>",referenceCode,urlParams,props.cEvent.value._id)
 

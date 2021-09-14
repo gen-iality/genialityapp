@@ -20,7 +20,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
   useEffect(()=>{
     if(product && eventId){
       obtenerOfertas()
-      if(product.price.includes('USD')){
+      if(product.currency=='USD'){
         setUsd(true)
         setSelectedValue(50)
       }
@@ -30,8 +30,9 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
        
       }
       setPriceProduct( product &&product.price)
+      console.log("PRODUCT PRICE==>",product.price)
       setValorProduct(obtenerValor())
-      let minValueUp=product.price.includes('USD')?50:100000
+      let minValueUp=product.currency=='USD'?50:100000
       let valueOfertaMin=product._id=='6116cae171f4b926d1363266'?parseFloat(obtenerValor()):parseFloat(obtenerValor())+minValueUp
       setValueOferta(valueOfertaMin)
     }
@@ -44,7 +45,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
   },[eventId,product])
 
   const obtenerValor=()=>{
-  return  product && product.price && product.price.includes('COP')
+  return  product && product.price/* && product.price.includes('COP')
       ? product.price
           .split('COP $ ')[1]
           .replace(`’`, '')
@@ -54,7 +55,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       product.price
           .split('USD $ ')[1]
           .replace(`’`, '')
-          .replace('.', '').replace(',', ''):0;
+          .replace('.', '').replace(',', ''):0;*/
   }
 
   /*const formatPrecioInitial=(value)=>{
@@ -117,6 +118,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
  // console.log("VALOR OFERTA=>",valuOferta)
   //SAVE VALUE OFERTA
   const saveValue = async () => {
+    alert(valuOferta)
     setLoadingSave(true)
     if (valuOferta > 0) {
       let data = {
@@ -125,16 +127,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       try {
         let valueResp=await EventsApi.validPrice(eventId, product._id, data)
         if(valueResp){
-        let valueNumber=valueResp.includes('COP')?valueResp.split('COP $ ')[1]
-        .replace(`’`, '')
-        .replace('.', '')
-        .replace(',', '')
-    : valueResp.includes('USD')?
-    valueResp
-        .split('USD $ ')[1]
-        .replace(`’`, '')
-        .replace('.', '').replace(',', ''):0;
-        //
+        let valueNumber=valueResp;       
+        
         console.log("VALUE NUMBER==>",valueNumber)
         if (valuOferta>valueNumber || (product && product._id=='6116cae171f4b926d1363266' && valuOferta>=valueNumber)) {
           let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
@@ -144,7 +138,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
           updateValues(true)
           }         
         }else{
-          let minValueUp=product.price.includes('USD')?50:100000
+          let minValueUp=product.currency=='USD'?50:100000
           let valueOfertaMin=parseFloat(valueNumber)+minValueUp
           setValueOferta(valueOfertaMin);
           setPriceProduct(valueResp);
@@ -168,7 +162,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
   };
   //BOTON MENOS
   const downvalue = () => {
-    let minValueUp=product.price.includes('USD')?50:100000   
+    let minValueUp=product.currency=='USD'?50:100000   
     if (+valuOferta - selectedValue >= +valorProduct+minValueUp) {  
       setValueOferta(+valuOferta - selectedValue);
     }
@@ -178,7 +172,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       <Row>
         <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
           <Text type='secondary'>
-            Precio Inicial: <Title level={4}>{(product && product.start_price && product.start_price ) || (priceProduct && priceProduct) }</Title>
+            Precio Inicial: <Title level={4}>{(product && product.start_price &&  (product?.currency +" $ "+ product.start_price) ) || (priceProduct  && (product?.currency +" $ " +priceProduct)) }</Title>
           </Text>
           {hability && <Divider></Divider>}
         </Col>
