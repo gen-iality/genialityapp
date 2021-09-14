@@ -29,7 +29,7 @@ export default withContext(PayForm);
 
  export const ButtonPayment=({eventId,user})=>{
    const amount="50000";
-   const referenceCode=""+user?.user._id+"2";
+   const referenceCode=""+user?.user._id+"4";
    const ApiKey = "omF0uvbN3365dC2X4dtcjywbS7";
    const merchantId ="585044";
    const [signature,setSignature]=useState(null);
@@ -66,7 +66,7 @@ export default withContext(PayForm);
   }
     return (
         <>
-          <form
+        {/*  <form
             method='post'
             target={'_blank'}
             action='https://gateway.payulatam.com/ppp-web-gateway/pb.zul'
@@ -106,8 +106,8 @@ export default withContext(PayForm);
               value='369539171cf3b776a309aca17fc609287bd94401cafd00337db6d208c1b5da0f'
               type='hidden'
             />
-          </form>
-        {/*<form method="post" action="https://checkout.payulatam.com/ppp-web-gateway-payu/" accept-charset="UTF-8">
+          </form>*/}
+        {<form method="post" action="https://checkout.payulatam.com/ppp-web-gateway-payu/" accept-charset="UTF-8">
             <input type="image" border="0" alt="" src="http://www.payulatam.com/img-secure-2015/boton_pagar_mediano.png" onClick="this.form.urlOrigen.value = window.location.href;"/>       
             <input name="merchantId" type="hidden" value="585044"/>
             <input name="accountId" type="hidden" value="588020"/>
@@ -127,9 +127,9 @@ export default withContext(PayForm);
             <input name="test" value="1" type="hidden"/>            
             <input name="buyerEmail"    type="hidden"  value={user?.user.email} />
             <input name="algorithmSignature" value="SHA256" type="hidden"/>
-          </form>*/}     
+          </form>}     
       
-        <form
+      {/*  <form
         method='post'
         target={'_blank'}
         action='https://gateway.payulatam.com/ppp-web-gateway/pb.zul'
@@ -169,7 +169,7 @@ export default withContext(PayForm);
           value='369539171cf3b776a309aca17fc609287bd94401cafd00337db6d208c1b5da0f'
           type='hidden' 
         />
-      </form>
+      </form>*/}
       </>
     );
 }
