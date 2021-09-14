@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { List, Tooltip, Popover, Avatar, Typography, Space, Tag, Image } from 'antd';
-import { MessageTwoTone } from '@ant-design/icons';
+import { EyeOutlined, MessageTwoTone } from '@ant-design/icons';
 import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -136,7 +136,7 @@ const AttendeList = function(props) {
             <List.Item.Meta
               
               avatar={
-                <Avatar src={<Image src={item.imageProfile}/>} size={45}>
+                <Avatar src={<Image src={item.imageProfile} preview={{ mask: <EyeOutlined /> }} />} size={45}>
                   {!item.imageProfile && item.names ? item.names.charAt(0).toUpperCase() : item.names}
                 </Avatar>
               }
