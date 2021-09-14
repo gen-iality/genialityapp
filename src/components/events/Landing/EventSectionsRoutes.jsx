@@ -36,6 +36,7 @@ import { HelperContext } from '../../../Context/HelperContext';
 import Videos from '../videos';
 import UserLoginContainer from '../UserLoginContainer';
 import InfoEvent from '../../shared/infoEvent';
+import ResponsePayu from '../registrationForm/responsePayu';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -355,6 +356,9 @@ const EventSectionRoutes = (props) => {
         </Route>
         <Route path={`${path}/success/:type?`}>
           <MessageRegister />
+        </Route>
+        <Route path={`${path}/responsePayu`}>
+         <ResponsePayu />
         </Route>
       </Switch>
     </>
