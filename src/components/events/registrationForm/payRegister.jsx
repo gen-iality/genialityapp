@@ -66,7 +66,7 @@ export default PayForm;
         <input
           name='signature'
           value='369539171cf3b776a309aca17fc609287bd94401cafd00337db6d208c1b5da0f'
-          type='hidden'
+          type='hidden' 
         />
       </form>
     );
