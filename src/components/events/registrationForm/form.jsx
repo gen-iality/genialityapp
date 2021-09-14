@@ -184,10 +184,8 @@ const FormRegister = ({
 
   const onFinish = async (values) => {
     if (areacodeselected) {
-      //values[fieldCode] = `${numberareacode}`;
       values['code'] = areacodeselected;
     }
-    //console.log("VALUES FORM==>",values)
 
     setSectionPermissions({ view: false, ticketview: false });
     values.password = password;
