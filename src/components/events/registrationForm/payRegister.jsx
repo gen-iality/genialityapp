@@ -28,8 +28,9 @@ export default withContext(PayForm);
 
 
  export const ButtonPayment=({eventId,user})=>{
+    console.log("USERID====>",user)
    const amount="50000";
-   const referenceCode=""+user?.user._id+"4";
+   const referenceCode=""+user?._id;
    const ApiKey = "omF0uvbN3365dC2X4dtcjywbS7";
    const merchantId ="585044";
    const [signature,setSignature]=useState(null);

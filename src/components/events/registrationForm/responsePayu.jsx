@@ -2,6 +2,7 @@ import { CheckCircleFilled, CloseCircleFilled, InfoCircleFilled } from '@ant-des
 import { Button, Card, Modal, Result, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import withContext from '../../../Context/withContext';
+import { Actions } from '../../../helpers/request';
 
 const ResponsePayu = (props) => {
   const [referenceCode, setReferenceCode] = useState();
@@ -25,11 +26,19 @@ const ResponsePayu = (props) => {
       lapTransactionState,
       message,
     });
-
-    //lapResponseCode,polTransactionState,polResponseCode,lapTransactionState=DECLINED&message=DECLINED
-
-    if (reference) setReferenceCode(reference);
-    console.log('parameteres==>', referenceCode, urlParams, props.cEvent.value._id);
+    if(lapTransactionState=="APPROVED" && polTransactionState==4 && polResponseCode ==1){
+      updateRolUser()
+    }
+     async function updateRolUser(){      
+        let updateRol=await Actions.put(
+          `/api/events/${props.cEvent.value?._id}/eventusers/${reference}/updaterol`,
+          {
+            rol_id:"60e8a8b7f6817c280300dc23"
+          }        
+        );        
+      }
+      //lapResponseCode,polTransactionState,polResponseCode,lapTransactionState=DECLINED&message=DECLINED
+    if (reference) setReferenceCode(reference);    
   }, []);
   return (
     <Modal
