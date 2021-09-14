@@ -117,8 +117,7 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
   };
  // console.log("VALOR OFERTA=>",valuOferta)
   //SAVE VALUE OFERTA
-  const saveValue = async () => {
-    alert(valuOferta)
+  const saveValue = async () => {   
     setLoadingSave(true)
     if (valuOferta > 0) {
       let data = {
@@ -127,9 +126,8 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       try {
         let valueResp=await EventsApi.validPrice(eventId, product._id, data)
         if(valueResp){
-        let valueNumber=valueResp;       
-        
-        console.log("VALUE NUMBER==>",valueNumber)
+        let valueNumber=valueResp;             
+       
         if (valuOferta>valueNumber || (product && product._id=='6116cae171f4b926d1363266' && valuOferta>=valueNumber)) {
           let respuestaApi = await EventsApi.storeOfert(eventId, product._id, data);
           if(respuestaApi){
@@ -172,13 +170,13 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       <Row>
         <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
           <Text type='secondary'>
-            Precio Inicial: <Title level={4}>{(product && product.start_price &&  (product?.currency +" $ "+ product.start_price) ) || (priceProduct  && (product?.currency +" $ " +priceProduct)) }</Title>
+            Precio Inicial: <Title level={4}>{(product && product.start_price &&  (product?.currency +" $ "+ product.start_price.toLocaleString('es-CO')) ) || (priceProduct  && (product?.currency +" $ " +priceProduct.toLocaleString('es-CO'))) }</Title>
           </Text>
           {hability && <Divider></Divider>}
         </Col>
         {hability && permission() && product && product.start_price && <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
           <Text type='secondary'>
-            Oferta actual: <Title level={4}>{priceProduct && priceProduct}</Title>
+            Oferta actual: <Title level={4}>{priceProduct && (product?.currency +" $ "+priceProduct.toLocaleString('es-CO'))}</Title>
           </Text>
           {hability && permission() && <Divider></Divider>}
         </Col>}

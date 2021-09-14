@@ -129,7 +129,7 @@ export default withContext(PayForm);
             <input name="algorithmSignature" value="SHA256" type="hidden"/>
           </form>}     
       
-      {/*  <form
+       {/* <form
         method='post'
         target={'_blank'}
         action='https://gateway.payulatam.com/ppp-web-gateway/pb.zul'
