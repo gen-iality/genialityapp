@@ -134,7 +134,9 @@ const AttendeList = function(props) {
               ) : null,
             ]}>
             <List.Item.Meta
-              avatar={<Avatar src={item.imageProfile} size={40} />}
+              avatar={<Avatar src={item.imageProfile} size={40} >
+                 {!item.imageProfile && item.names ? item.names.charAt(0).toUpperCase() : item.names}
+              </Avatar>}
               title={
                 <Popover
                   trigger='hover'
@@ -150,11 +152,13 @@ const AttendeList = function(props) {
                 </Popover>
               }
               description={
-                item.status === 'online' && (
-                  <Space size={5} style={{ color: '#52c41a' }}>
+                item.status === 'online' ? (
+                  <div style={{ color: '#52c41a', marginTop:'-10px' }}>
                     <Tag color='#52C41A'>Online</Tag>
-                  </Space>
-                )
+                  </div>
+                ) : (<div style={{ color: '#52c41a', marginTop:'-10px' }}>
+                <Tag color='#CCCCCC'>Offline</Tag>
+              </div>)
               }
             />
           </List.Item>
