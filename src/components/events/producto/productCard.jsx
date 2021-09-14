@@ -8,7 +8,7 @@ const ProductCard = ({ galery, eventId, history }) => {
     <Card
       actions={[
         <div style={{ fontWeight: 'bold', fontSize: '18px' }} onClick={null} key={'act-' + galery.id}>
-          {(galery?.currency && galery?.currency) +" $ "+( galery.start_price || galery.price) }
+          {(galery?.currency && galery?.currency) +" $ "+( galery.start_price?.toLocaleString('es-CO') || galery.price?.toLocaleString('es-CO')) }
         </div>,
       ]}
       bordered={false}
