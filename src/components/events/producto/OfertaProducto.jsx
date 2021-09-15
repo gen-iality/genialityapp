@@ -165,8 +165,9 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
       setValueOferta(+valuOferta - selectedValue);
     }
   };
-  return (
-    <Card>
+  return( 
+    <>
+    {product &&  product._id!='6116cae171f4b926d1363266' &&<Card>
       <Row>
         <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
           <Text type='secondary'>
@@ -268,8 +269,14 @@ const OfertaProduct = ({ product, eventId, cEventUser, cUser, hability,messageF,
             )}        
         </div>
       )}
-    </Card>
-  );
+    </Card> }
+    
+    {product &&  product._id=='6116cae171f4b926d1363266' && <Card>
+     <Row justify="center" style={{color:"red"}}> La obra está agotada.</Row>
+    </Card>}
+    </>
+  )
+  
 };
 
 export default withContext(OfertaProduct);

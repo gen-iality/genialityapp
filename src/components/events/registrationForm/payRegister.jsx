@@ -124,8 +124,7 @@ export default withContext(PayForm);
             <input name="confirmationUrl" type="hidden" value="https://devapi.evius.co/test.php"/>
             <input name="sourceUrl" id="urlOrigen" value="" type="hidden"/>
             <input name="buttonType" value="SIMPLE" type="hidden"/>
-            <input name="signature" value={signature} type="hidden"/>
-            <input name="test" value="1" type="hidden"/>            
+            <input name="signature" value={signature} type="hidden"/>                      
             <input name="buyerEmail"    type="hidden"  value={user?.user.email} />
             <input name="algorithmSignature" value="SHA256" type="hidden"/>
           </form></Row>}     
