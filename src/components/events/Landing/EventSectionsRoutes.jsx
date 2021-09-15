@@ -310,7 +310,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <div className='columns is-centered'>
-                <TicketsForm />
+                <TicketsForm setVirtualConference={props.setVirtualConference} />
               </div>
             )
           }
