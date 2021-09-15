@@ -78,6 +78,7 @@ let SocialZone = function(props) {
       }}>
       {(props.generalTabs.publicChat || props.generalTabs.privateChat) && (
         <TabPane
+          id='open_menu_rigth'
           className='asistente-chat-list'
           tab={
             <>

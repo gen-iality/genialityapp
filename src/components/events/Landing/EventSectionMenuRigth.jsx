@@ -27,15 +27,12 @@ const EventSectionMenuRigth = (props) => {
         <div className='Chat-Event' style={{ height: '100%' }}>
           {isCollapsedMenuRigth ? (
             <>
-              <MenuRigth
-                currentActivity={props.currentActivity}
-                tabs={props.tabs}
-                generalTabs={props.generalTabs}
-              />
+              <MenuRigth currentActivity={props.currentActivity} tabs={props.tabs} generalTabs={props.generalTabs} />
             </>
           ) : (
             <>
               <Button
+                id='button_open_menu'
                 className='animate__animated animate__headShake animate__slower animate__infinite'
                 type='link'
                 onClick={() => HandleOpenCloseMenuRigth()}>
