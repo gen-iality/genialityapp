@@ -352,7 +352,7 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
         <Route path={`${path}/permissions`}>
-          <PageNotPermissions />
+          <PageNotPermissions   setVirtualConference={props.setVirtualConference} />
         </Route>
         <Route path={`${path}/success/:type?`}>
           <MessageRegister />
