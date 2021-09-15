@@ -113,7 +113,8 @@
     "styleguide": "styleguidist server",
     "styleguide:build": "styleguidist build",
     "cy:open":"cypress open",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "open:cypres":"cypres open"
   },
   "devDependencies": {
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
