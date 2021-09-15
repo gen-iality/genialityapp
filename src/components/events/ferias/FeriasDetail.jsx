@@ -30,7 +30,7 @@ const FeriasDetail = (props) => {
     colorFondo.replace('#', '') +
     '/' +
     colorTexto.replace('#', '') +
-    '?text=Geniality.com.co';
+    '?text='+cEvent.value.name;
 
   const logoPlaceHolder =
     'https://via.placeholder.com/200/' + colorFondo.replace('#', '') + '/' + colorTexto.replace('#', '') + '?text=Logo';
