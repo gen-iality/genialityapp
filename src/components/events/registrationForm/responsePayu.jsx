@@ -40,6 +40,11 @@ const ResponsePayu = (props) => {
       //lapResponseCode,polTransactionState,polResponseCode,lapTransactionState=DECLINED&message=DECLINED
     if (reference) setReferenceCode(reference);    
   }, []);
+  const isDeclined=()=>{
+   return response?.lapTransactionState == 'DECLINED' ||
+            response?.lapTransactionState == 'ERROR' ||
+            response?.lapTransactionState == 'EXPIRED'?true:false
+  }
   return (
     <Modal
       bodyStyle={{ textAlign: 'center', borderTop: `10px solid ${response &&
@@ -86,6 +91,20 @@ const ResponsePayu = (props) => {
             <div></div>
           )
         }
+        subTitle={
+          response &&
+          (response?.lapTransactionState == 'DECLINED' ||
+            response?.lapTransactionState == 'ERROR' ||
+            response?.lapTransactionState == 'EXPIRED') ? (
+            <div>Lo sentimos, su transacción ha sido rechazada, intente realizar su transacción mas tarde.</div>
+          ) : response?.lapTransactionState == 'APPROVED' ? (
+            <div>Su transacción ha sido realizada correctamente, ahora podrás realizar pujas por las obras</div>
+          ) : response?.lapTransactionState == 'PENDING' ? (
+            <div>Su transacción está pendiente por confirmar</div>
+          ) : (
+            <div></div>
+          )
+        }
         extra={[
           <Button
             key='action'
@@ -94,7 +113,8 @@ const ResponsePayu = (props) => {
             size='large'
             onClick={() => {
               setVisible(false);
-              window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/evento`;
+              !isDeclined()?
+              window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/evento`: window.location.href = `${window.location.origin}/landing/${props.cEvent.value._id}/tickets`;
             }}>
             Aceptar
           </Button>,
