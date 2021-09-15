@@ -64,7 +64,7 @@ class Headers extends Component {
     let evius_token = Cookie.get('evius_token');
     let dataUrl = parseUrl(document.URL);
     if (dataUrl && dataUrl.token) {
-      Cookie.set('evius_token', dataUrl.token);
+      Cookie.set('evius_token', dataUrl.token,{ expires: 180 });
       evius_token = dataUrl.token;
     }
     if (!evius_token) {
