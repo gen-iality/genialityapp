@@ -1,5 +1,5 @@
 import { ShopOutlined } from '@ant-design/icons';
-import { Card, Result } from 'antd';
+import { Card, Result,Row } from 'antd';
 import withContext from '../../../Context/withContext';
 
 import React, { useEffect, useState } from 'react';
@@ -28,13 +28,14 @@ export default withContext(PayForm);
 
 
  export const ButtonPayment=({eventId,user})=>{
+   
    const amount="50000";
-   const referenceCode=""+user?.user._id+"2";
+   const referenceCode=""+user?._id;
    const ApiKey = "omF0uvbN3365dC2X4dtcjywbS7";
    const merchantId ="585044";
    const [signature,setSignature]=useState(null);
    const currency='COP';
-   const responseUrl=" http://localhost:3000/landing/"+eventId+"/responsePayu";
+   const responseUrl="https://evius.co/landing/"+eventId+"/responsePayu";
 
    useEffect(()=>{
      if(user){
@@ -66,7 +67,7 @@ export default withContext(PayForm);
   }
     return (
         <>
-          <form
+        {/*  <form
             method='post'
             target={'_blank'}
             action='https://gateway.payulatam.com/ppp-web-gateway/pb.zul'
@@ -106,9 +107,9 @@ export default withContext(PayForm);
               value='369539171cf3b776a309aca17fc609287bd94401cafd00337db6d208c1b5da0f'
               type='hidden'
             />
-          </form>
-        {/*<form method="post" action="https://checkout.payulatam.com/ppp-web-gateway-payu/" accept-charset="UTF-8">
-            <input type="image" border="0" alt="" src="http://www.payulatam.com/img-secure-2015/boton_pagar_mediano.png" onClick="this.form.urlOrigen.value = window.location.href;"/>       
+          </form>*/}
+        {<Row style={{width:'100%'}} justify={'center'}><form style={{width:'170px'}}  method="post" action="https://checkout.payulatam.com/ppp-web-gateway-payu/" accept-charset="UTF-8">
+            <input style={{width:'100%'}} type="image" border="0" alt="" src="http://www.payulatam.com/img-secure-2015/boton_pagar_mediano.png" onClick="this.form.urlOrigen.value = window.location.href;"/>       
             <input name="merchantId" type="hidden" value="585044"/>
             <input name="accountId" type="hidden" value="588020"/>
             <input name="description" type="hidden" value="test"/>
@@ -123,11 +124,10 @@ export default withContext(PayForm);
             <input name="confirmationUrl" type="hidden" value="https://devapi.evius.co/test.php"/>
             <input name="sourceUrl" id="urlOrigen" value="" type="hidden"/>
             <input name="buttonType" value="SIMPLE" type="hidden"/>
-            <input name="signature" value={signature} type="hidden"/>
-            <input name="test" value="1" type="hidden"/>            
+            <input name="signature" value={signature} type="hidden"/>                      
             <input name="buyerEmail"    type="hidden"  value={user?.user.email} />
             <input name="algorithmSignature" value="SHA256" type="hidden"/>
-          </form>*/}     
+          </form></Row>}     
       
        {/* <form
         method='post'

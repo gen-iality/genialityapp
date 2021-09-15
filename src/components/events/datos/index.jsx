@@ -279,7 +279,7 @@ class Datos extends Component {
         render: (key) => (
           <>
             <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
-            {key.name !== 'email' && key.name !== 'names' && (
+            {key.name !== 'email' && key.name !== 'names' &&  (
               <DeleteOutlined style={{ float: 'right' }} onClick={() => this.setState({ deleteModal: key._id })} />
             )}
           </>

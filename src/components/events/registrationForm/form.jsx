@@ -261,12 +261,12 @@ const FormRegister = ({
 
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
           //todo el proceso de logueo depende del token en la url por eso se recarga la página
-          if (event.validateEmail && resp.data.user.initial_token) {
+          if (!event.validateEmail && resp.data.user.initial_token) {
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
               window.location.replace(
                 eventId == '60cb7c70a9e4de51ac7945a2'
-                  ? `/landing/${eventId}/success/${typeRegister}?token=${resp.data.user.initial_token}`
+                  ? `/landing/${eventId}/success/${cEventUser.value==null?typeRegister:"free"}?token=${resp.data.user.initial_token}`
                   : `/landing/${eventId}/${eventPrivate.section}?register=${eventUser == null ? 2 : 4}&token=${
                       resp.data.user.initial_token
                     }`
@@ -733,7 +733,18 @@ const FormRegister = ({
               eventUser !== null &&
               eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
               eventId &&
-              eventId == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
+              eventId == '60cb7c70a9e4de51ac7945a2' && <Row style={{textAlign:'center'}} justify={'center'} align={'center'}><strong>Te invitamos a realizar el pago para poder participar en las pujas.</strong></Row>}
+               {eventUser !== undefined &&
+              eventUser !== null &&
+              eventUser.rol_id == '60e8a8b7f6817c280300dc23' &&
+              eventId &&
+              eventId == '60cb7c70a9e4de51ac7945a2' && <Row style={{textAlign:'center'}} justify={'center'} align={'center'}><strong>Ya eres un asistente pago</strong></Row>}
+            {eventUser !== undefined &&
+              eventUser !== null &&
+              eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
+              eventId &&
+              eventId == '60cb7c70a9e4de51ac7945a2' &&  <ButtonPayment />}
+           
             <Form
               form={form}
               layout='vertical'
