@@ -261,7 +261,7 @@ const FormRegister = ({
 
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
           //todo el proceso de logueo depende del token en la url por eso se recarga la página
-          if (event.validateEmail && resp.data.user.initial_token) {
+          if (!event.validateEmail && resp.data.user.initial_token) {
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
               window.location.replace(
