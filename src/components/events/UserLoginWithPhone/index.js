@@ -43,7 +43,7 @@ class UserLogin extends Component {
       if (user) {
         user.getIdToken().then(async function(idToken) {
           if (idToken) {
-            Cookie.set('evius_token', idToken);
+            Cookie.set('evius_token', idToken,{ expires: 180 });
             setTimeout(function() {
               window.location.replace(`/landing/${eventId}?token=${idToken}`);
             }, 1000);
