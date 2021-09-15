@@ -16,9 +16,9 @@ class DatosModal extends Component {
         description: '',
         type: '',
         options: [],
-        justonebyattendee: false
+        justonebyattendee: false,
       },
-      valid: true
+      valid: true,
     };
   }
 
@@ -127,7 +127,7 @@ class DatosModal extends Component {
       description: '',
       type: '',
       options: [],
-      justonebyattendee: false
+      justonebyattendee: false,
     };
     this.setState({ info: initModal });
   };
@@ -205,7 +205,11 @@ class DatosModal extends Component {
               <label className='label required'>Tipo de dato</label>
               <div className='control'>
                 <div className='select'>
-                  <select onChange={this.handleChange} name={'type'} value={info.type}>
+                  <select
+                    disabled={!info.name === 'picture' || !info.name == 'email' || !info.name == 'names' ? false : true}
+                    onChange={this.handleChange}
+                    name={'type'}
+                    value={info.type}>
                     <option value={''}>Seleccione...</option>
                     {typeInputs.map((type, key) => {
                       return (
