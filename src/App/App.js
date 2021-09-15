@@ -23,7 +23,7 @@ class App extends Component {
     var refresh_token = url.searchParams.get('refresh_token');
     let dataUrl = parseUrl(document.URL);
     if (dataUrl && TokenUser) {
-      Cookie.set('evius_token', TokenUser);
+      Cookie.set('evius_token', TokenUser, { expires: 180 });
       privateInstance.defaults.params = {};
       privateInstance.defaults.params['evius_token'] = TokenUser;
 

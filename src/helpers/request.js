@@ -36,7 +36,7 @@ luego miramos si viene en las cookies
 let evius_token = null;
 let dataUrl = parseUrl(document.URL);
 if (dataUrl && dataUrl.token) {
-  Cookie.set('evius_token', dataUrl.token);
+  Cookie.set('evius_token', dataUrl.token,{ expires: 180 });
   evius_token = dataUrl.token;
 }
 
@@ -53,7 +53,7 @@ if (evius_token) {
 privateInstance.interceptors.response.use((response) => {
   const { headers } = response;
   if (headers.new_token) {
-    Cookie.set('evius_token', headers.new_token);
+    Cookie.set('evius_token', headers.new_token,{ expires: 180 });
     privateInstance.defaults.params = {};
     privateInstance.defaults.params['evius_token'] = headers.new_token;
   }
