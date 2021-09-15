@@ -35,7 +35,7 @@ export default withContext(PayForm);
    const merchantId ="585044";
    const [signature,setSignature]=useState(null);
    const currency='COP';
-   const responseUrl=" http://localhost:3000/landing/"+eventId+"/responsePayu";
+   const responseUrl="https://evius.co/landing/"+eventId+"/responsePayu";
 
    useEffect(()=>{
      if(user){
