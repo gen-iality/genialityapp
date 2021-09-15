@@ -30,7 +30,7 @@ const FeriasDetail = (props) => {
     colorFondo.replace('#', '') +
     '/' +
     colorTexto.replace('#', '') +
-    '?text=EVIUS.co';
+    '?text=Geniality.com.co';
 
   const logoPlaceHolder =
     'https://via.placeholder.com/200/' + colorFondo.replace('#', '') + '/' + colorTexto.replace('#', '') + '?text=Logo';
