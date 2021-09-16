@@ -110,6 +110,15 @@ class Home extends Component {
       });
   }
 
+  FriendLyUrl(url) {
+    var encodedUrl = url.toString().toLowerCase();
+    encodedUrl = encodedUrl.split(/\&+/).join('-and-');
+    encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-');
+    encodedUrl = encodedUrl.split(/-+/).join('-');
+    encodedUrl = encodedUrl.trim('-');
+    return encodedUrl;
+  }
+
   render() {
     const { timeout, typeEvent, serverError, errorData, events, loading, hasMore } = this.state;
     return (
@@ -139,13 +148,14 @@ class Home extends Component {
                   <p className='sin-evento'>No hay eventos próximos</p>
                 ) : (
                   events.map((event, key) => {
+                    <>{console.log('event', event)}</>;
                     return (
                       <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <EventCard
                           bordered={false}
                           key={event._id}
                           event={event}
-                          action={{ name: 'Ver', url: `landing/${event._id}` }}
+                          action={{ name: 'Ver', url: `landing/${this.FriendLyUrl(event.name)}` }}
                         />
                       </Col>
                     );

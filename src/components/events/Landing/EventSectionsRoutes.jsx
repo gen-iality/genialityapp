@@ -40,6 +40,8 @@ import ResponsePayu from '../registrationForm/responsePayu';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
+
+  console.log("path",path)
   let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext);
 
   function ValidateViewPermissions(route, nombresection) {
@@ -118,7 +120,7 @@ const EventSectionRoutes = (props) => {
       <Switch>
         <Route exact path={`${path}/`}>
           {props.cEvent.value?.itemsMenu && (
-            <Redirect to={`/landing/${props.cEvent.value._id}/${obtenerFirstSection()}`} />
+            <Redirect to={`/landing/${props.cEvent.nameEvent}/${obtenerFirstSection()}`} />
           )}
         </Route>
 
@@ -352,13 +354,13 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
         <Route path={`${path}/permissions`}>
-          <PageNotPermissions   setVirtualConference={props.setVirtualConference} />
+          <PageNotPermissions setVirtualConference={props.setVirtualConference} />
         </Route>
         <Route path={`${path}/success/:type?`}>
           <MessageRegister />
         </Route>
         <Route path={`${path}/responsePayu`}>
-         <ResponsePayu />
+          <ResponsePayu />
         </Route>
       </Switch>
     </>
