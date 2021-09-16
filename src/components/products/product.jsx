@@ -71,7 +71,7 @@ class Product extends Component {
       let listproduct=[];
       if(data.data){
         listproduct= data.data.map((product,index)=>{
-           return {...product,index:product.position?product.position:index}
+           return {...product,index:product.position==index?product.position:index}
          })
          console.log("DATALIST==>",listproduct)
          listproduct=listproduct.sort((a,b)=>a.index-b.index)
@@ -198,7 +198,7 @@ class Product extends Component {
                      )}
                   />
                   <Column key='_id' title='Por' align='center' dataIndex='by' />
-                  <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency +" $ "+(prod?.start_price|| prod?.price)}</div>)} />
+                  <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" +" $ "+(prod?.start_price|| prod?.price)}</div>)} />
                   <Column
                      key='_id'
                      title='Imagenes del producto'
