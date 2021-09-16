@@ -801,5 +801,10 @@ export const OrganizationFuction = {
     return organization;
   },
 };
-
+//ENDPOINT PARA CREAR ORDENES
+export const OrderFunctions={
+  createOrder: async (data) => {
+    return await Actions.post(`/api/orders`, data);
+  },
+}
 export default privateInstance;
