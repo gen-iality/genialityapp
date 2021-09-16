@@ -36,7 +36,7 @@ luego miramos si viene en las cookies
 let evius_token = null;
 let dataUrl = parseUrl(document.URL);
 if (dataUrl && dataUrl.token) {
-  Cookie.set('evius_token', dataUrl.token);
+  Cookie.set('evius_token', dataUrl.token, { expires: 180 });
   evius_token = dataUrl.token;
 }
 
@@ -53,7 +53,7 @@ if (evius_token) {
 privateInstance.interceptors.response.use((response) => {
   const { headers } = response;
   if (headers.new_token) {
-    Cookie.set('evius_token', headers.new_token);
+    Cookie.set('evius_token', headers.new_token, { expires: 180 });
     privateInstance.defaults.params = {};
     privateInstance.defaults.params['evius_token'] = headers.new_token;
   }
@@ -226,6 +226,9 @@ export const EventsApi = {
   getOne: async (id) => {
     return await Actions.getOne('/api/events/', id);
   },
+  getOneByNameEvent: async (eventName) => {
+    return await Actions.get(`/api/events/?filtered=[{"field":"name","value":[%22${eventName}%22]}]`);
+  },
   editOne: async (data, id) => {
     return await Actions.edit('/api/events', data, id);
   },
@@ -273,11 +276,9 @@ export const EventsApi = {
       `api/events/${eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${productId}"}]`
     );
   },
-  acceptOrRejectRequest:async(eventId,requestId,status)=>{
-    return await Actions.get(
-      `api/event/${eventId}/meeting/${requestId}/${status}`
-    );
-  }
+  acceptOrRejectRequest: async (eventId, requestId, status) => {
+    return await Actions.get(`api/event/${eventId}/meeting/${requestId}/${status}`);
+  },
 };
 export const InvitationsApi = {
   getAll: async (id) => {

@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import UserRegistration from '../events/userRegistration';
 import withContext from '../../Context/withContext';
 
-
 class TicketsForm extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +32,9 @@ class TicketsForm extends Component {
   }
 
   componentDidMount() {
+    //Deshabilitar virual conference
+    this.props.setVirtualConference(false);
+
     const haspayments = !!this.props.cEvent.value.tickets.find((item) => item.price !== '0');
     const evius_token = Cookie.get('evius_token');
 
@@ -61,7 +63,7 @@ class TicketsForm extends Component {
         : null;
 
     const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
-    const ticketstoshow = tickets//tickets.filter((ticket) => ticket.stage_id == id); //Filtrar los tiquetes del stage activo
+    const ticketstoshow = tickets; //tickets.filter((ticket) => ticket.stage_id == id); //Filtrar los tiquetes del stage activo
 
     //"5e835d9fd74d5c6cfd379992"
     //Persistencia de tiquetes seleccionados después de login
@@ -78,6 +80,7 @@ class TicketsForm extends Component {
   //Al salir del landing se limpia la informacion de los tiquetes seleccionados.
   componentWillUnmount() {
     localStorage.removeItem('info');
+    this.props.setVirtualConference(true);
   }
 
   changeStep = (step) => {
@@ -138,8 +141,12 @@ class TicketsForm extends Component {
     Object.keys(this.state.ticketsadded).map((key) => {
       const info = tickets.find((ticket) => ticket._id === key);
       const amount = this.state.ticketsadded[key];
-      console.log("PRECIO==>",price)
-      const price = info.price? info.price === 'Gratis' ? 0 : parseInt(info.price.replace(/[^0-9]/g, ''), 10) * amount:0;
+      console.log('PRECIO==>', price);
+      const price = info.price
+        ? info.price === 'Gratis'
+          ? 0
+          : parseInt(info.price.replace(/[^0-9]/g, ''), 10) * amount
+        : 0;
       total += price;
       const cost =
         price <= 0
@@ -159,8 +166,8 @@ class TicketsForm extends Component {
   //Función botón RESERVAR
   onClick = (codeDiscount) => {
     if (this.state.summaryList.length <= 0) return; //Si no hay tiquetes no hace nada, prevenir click raro
-    console.log("SUMMARYLIST==>",this.state.summaryList)
-    console.log("AUTH==>",this.state.auth)
+    console.log('SUMMARYLIST==>', this.state.summaryList);
+    console.log('AUTH==>', this.state.auth);
     if (!this.state.auth) return this.props.handleModal(); //Si no está logueado muestro popup
 
     //@TODO si no tiene sillas debe pasar derecho al checkout y si el tickete tiene silla debe ir en el tickete eso es del API y usado aca
@@ -185,17 +192,16 @@ class TicketsForm extends Component {
 
   //Función COMPRAR, recibe sillas si tiene o no
   submit = (seats) => {
-  
     const data = { tickets: [] };
     //Construyo body de acuerdo a peticiones de api
     this.state.summaryList.map((item) => {
       data[`ticket_${item.id}`] = item.quantity;
       return data.tickets.push(item.id);
     });
-    if (seats) {     
+    if (seats) {
       //Si tiene sillas hago validaciones de cantidad de tiquetes y sillas seleccionadas
       const quantity = this.state.summaryList.map((i) => parseInt(i.quantity, 10)).reduce((a, b) => a + b, 0);
-     
+
       this.chart.listSelectedObjects((list) => {
         //Si las sillas son iguales a los tiquetes lo deja pasar, sino muestra toast
         if (quantity === list.length) {
@@ -210,7 +216,7 @@ class TicketsForm extends Component {
 
   //Función que hace la petición, carga loading y muestra reusltado en log si hay error muestra en log y en un toast
   async request(data) {
-    console.log("DATA",data)
+    console.log('DATA', data);
     this.setState({ loading: true });
     try {
       data.code_discount = this.state.code_discount;
@@ -261,11 +267,9 @@ class TicketsForm extends Component {
     } = this;
     return (
       <>
-          
-          
-            <UserRegistration extraFields={[]} />
-          
-         {/* <Col span={8}>
+        <UserRegistration extraFields={[]} />
+
+        {/* <Col span={8}>
           <TicketsEvent
               changeStep={changeStep}
               onClick={onClick}
@@ -289,7 +293,6 @@ class TicketsForm extends Component {
               removeTicket={this.removeTicket}
             />
            </Col>*/}
-        
       </>
     );
   }

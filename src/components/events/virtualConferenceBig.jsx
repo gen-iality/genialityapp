@@ -16,10 +16,10 @@ const { gotoActivity } = StageActions;
 const { Title } = Typography;
 const { useBreakpoint } = Grid;
 
-
 let MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setActivity, eventUser }) => {
   const [infoActivity, setInfoActivity] = useState({});
   const screens = useBreakpoint();
+  console.log(screens);
 
   useEffect(() => {
     setInfoActivity(activity);
@@ -30,8 +30,9 @@ let MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setActi
       return (
         <>
           <Button
-            size={screens.xs === true ? 'middle' : 'large'}
+            size={(screens.xxl === true || screens.xl === true || screens.lg === true) ? 'large' : (screens.xs === true || screens.sm === true) && 'small'}
             type='primary'
+            danger
             className='buttonVirtualConference'
             onClick={() => {
               if (activity.platform === 'zoomExterno') {
@@ -114,7 +115,15 @@ const VirtualConference = () => {
   }, [agendageneral, firestore]);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft:'20px', marginRight:'20px',flexDirection:'column'}}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: '20px',
+        marginRight: '20px',
+        flexDirection: 'column',
+      }}>
       {infoAgendaArr.length > 0 &&
         infoAgendaArr
           .filter((item) => {
@@ -128,20 +137,23 @@ const VirtualConference = () => {
           .map((item, key) => (
             <>
               <Badge.Ribbon
-              className='animate__animated animate__bounceIn animate__delay-2s'
+                className='animate__animated animate__bounceIn animate__delay-2s'
                 placement={screens.xs === true ? 'start' : 'end'}
                 style={{ height: 'auto' }}
-                color={item.habilitar_ingreso == 'open_meeting_room' ? 'red' : 'transparent'}
+                color={item.habilitar_ingreso == 'open_meeting_room' ? '#FF4E50' : 'transparent'}
                 text={
                   item.habilitar_ingreso == 'open_meeting_room' ? (
                     <Space>
-                      <AccessPointIcon className='animate__animated animate__heartBeat animate__infinite animate__slower' style={{ fontSize: '24px' }} />
+                      <AccessPointIcon
+                        className='animate__animated animate__heartBeat animate__infinite animate__slower'
+                        style={{ fontSize: '24px' }}
+                      />
                       <span style={{ textAlign: 'center', fontSize: '15px' }}>
                         {<FormattedMessage id='live' defaultMessage='En vivo' />}
                       </span>
                     </Space>
                   ) : (
-                   ''
+                    ''
                   )
                 }>
                 <Card
@@ -153,7 +165,7 @@ const VirtualConference = () => {
                     maxHeight: '300px',
                     marginTop: '8px',
                     marginBottom: '8px',
-                    width: `${screens.xs === true ? '90vw': '62vw'}`,
+                    width: `${screens.xs === true ? '90vw' : '58vw'}`,
                     borderRadius: '10px',
                     borderLeft: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
                     borderRight: `10px solid ${cEvent.value.styles.toolbarDefaultBg}`,
@@ -161,16 +173,21 @@ const VirtualConference = () => {
                   className='animate__animated animate__backInUp'>
                   <Link
                     to={item.habilitar_ingreso == 'open_meeting_room' ? `${urlactivity}${item._id}` : `${urlAgenda}`}>
-                    <Row justify='center' align='middle' gutter={[0, 0]}>
+                    <Row justify='center' align='middle' gutter={[4, 4]}>
                       <Col xs={8} sm={8} md={6} lg={6} xl={6} xxl={6}>
                         <div style={{ justifyContent: 'center', alignContent: 'center', display: 'grid' }}>
                           {item.habilitar_ingreso == 'open_meeting_room' ? (
                             <>
                               {/* <img src={ENVIVO} style={{ height: '50px' }} /> */}
-                              
-                              <CaretRightOutlined style={{ fontSize: '50px', color: '#DD1616' }}/>
+
+                              { screens.xs === false && <CaretRightOutlined style={{ fontSize: '50px', color: '#FF4E50' }} />}
                               <span style={{ textAlign: 'center', fontSize: '15px' }}>
-                                {<FormattedMessage id='live' defaultMessage='En vivo' />}
+                                <MeetingConferenceButton
+                                  activity={item}
+                                  event={cEvent.value}
+                                  setActivity={gotoActivity}
+                                  eventUser={cEventUser.value}
+                                />
                               </span>
                             </>
                           ) : item.habilitar_ingreso == 'closed_meeting_room' ? (
@@ -188,7 +205,7 @@ const VirtualConference = () => {
                       <Col xs={16} sm={16} md={12} lg={12} xl={12} xxl={12}>
                         <div style={{ alignContent: 'center', display: 'grid', height: '100%', alignItems: 'center' }}>
                           <Title
-                            level={4}
+                            level={screens.xs === true ? 5 : 4}
                             ellipsis={{
                               rows: 2, // Determina la cantidad de filas que se muestran antes de cortar el texto.
                               expandable: true,
@@ -202,34 +219,32 @@ const VirtualConference = () => {
                             }}>
                             {item.name}
                           </Title>
-                         
-                           
-                            <h2 style={{ color: '#7c909a', fontSize: `${screens.xs === true ? '12px': '14px'}` }}>
-                              {Moment(item.datetime_start).format('LL')}
-                              <span>&nbsp;&nbsp;&nbsp;</span>
-                              {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+
+                          <h2 style={{ color: '#7c909a', fontSize: `${screens.xs === true ? '12px' : '14px'}` }}>
+                            {Moment(item.datetime_start).format('LL')}
+                            <span>&nbsp;&nbsp;&nbsp;</span>
+                            {Moment.tz(item.datetime_start, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                              .tz(Moment.tz.guess())
+                              .format('h:mm A')}
+                            {' - '}
+                            {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
+                              .tz(Moment.tz.guess())
+                              .format('h:mm A')}
+                            <span className='ultrasmall-mobile'>
+                              {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
                                 .tz(Moment.tz.guess())
-                                .format('h:mm A')}
-                              {' - '}
-                              {Moment.tz(item.datetime_end, 'YYYY-MM-DD h:mm', 'America/Bogota')
-                                .tz(Moment.tz.guess())
-                                .format('h:mm A')}
-                              <span className='ultrasmall-mobile'>
-                                {Moment.tz(item.datetime_end, 'YYYY-MM-DD HH:mm', 'America/Bogota')
-                                  .tz(Moment.tz.guess())
-                                  .format(' (Z)')}
-                              </span>
-                            </h2>
-                          
+                                .format(' (Z)')}
+                            </span>
+                          </h2>
                         </div>
-                        <div>
+                        {/* <div>
                           <MeetingConferenceButton
                             activity={item}
                             event={cEvent.value}
                             setActivity={gotoActivity}
                             eventUser={cEventUser.value}
                           />
-                        </div>
+                        </div> */}
                       </Col>
                       <Col xs={0} sm={0} md={6} lg={6} xl={6} xxl={6}>
                         <div

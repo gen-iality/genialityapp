@@ -5,24 +5,27 @@ import { EventsApi, eventTicketsApi } from '../helpers/request';
 
 export const CurrentEventContext = React.createContext();
 
-//status: 'LOADING' | 'LOADED' | 'error'
-let initialContextState = { status: 'LOADING', value: null };
-
 export function CurrentEventProvider({ children }) {
-  const [eventContext, setEventContext] = useState(initialContextState);
   let { event_id } = useParams();
+  let eventNameFormated;
+  let initialContextState = { status: 'LOADING', value: null, nameEvent: '' };
+
+  if (event_id) {
+    eventNameFormated = event_id.replaceAll('-', '%20');
+    initialContextState = { status: 'LOADING', value: null, nameEvent: event_id };
+  }
+
+  const [eventContext, setEventContext] = useState(initialContextState);
 
   useEffect(() => {
     if (!event_id) return;
     async function fetchEvent() {
-      let eventGlobal = await EventsApi.getOne(event_id);
-      //const ticketsEvent=await eventTicketsApi.getAll(event_id);
-      // eventGlobal={...eventGlobal,tickets:ticketsEvent}
-
-      setEventContext({ status: 'LOADED', value: eventGlobal });
+      let eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated);
+      console.log('eventGlobal', eventGlobal);
+      setEventContext({ status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_id });
     }
     fetchEvent();
-  }, [event_id]);
+  }, []);
 
   return <CurrentEventContext.Provider value={eventContext}>{children}</CurrentEventContext.Provider>;
 }

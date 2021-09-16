@@ -109,7 +109,7 @@ const PageNotPermissions = (props) => {
               )}
             </Col>
           )}
-          {!props.sectionPermissions.ticketview && !loading && <TicketsForm />}
+          {!props.sectionPermissions.ticketview && !loading && <TicketsForm setVirtualConference={props.setVirtualConference} />}
         </>
       )}
     </>

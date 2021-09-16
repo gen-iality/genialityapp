@@ -246,7 +246,7 @@ let AgendaActividadDetalle = (props) => {
     colorFondo.replace('#', '') +
     '/' +
     colorTexto.replace('#', '') +
-    '?text=EVIUS.co';
+    '?text='+props.cEvent.value.name;
 
   useEffect(() => {
     if (currentActivity) {
