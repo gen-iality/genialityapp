@@ -1,4 +1,4 @@
-const urltoVisit = '/landing/fake_event_name';
+const urltoVisit = '/landing/Reunión-Nacional-de-Ventas-2021';
 
 describe('Show Data event with Name', () => {
   beforeEach(() => {
