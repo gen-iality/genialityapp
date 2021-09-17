@@ -8,9 +8,18 @@ import Loading from '../loaders/loading';
 import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
 import { imageBox } from '../../helpers/constants';
 import { CategoriesAgendaApi, SpeakersApi } from '../../helpers/request';
-import { FaWhmcs } from 'react-icons/fa';
 import Creatable from 'react-select';
-import { Button } from 'antd';
+import { Button, Typography, Row, Col, Form, Input, Upload, Image, Empty, Card, Switch, Modal, notification, Tooltip } from 'antd';
+import { LeftOutlined, UserOutlined , SettingOutlined, DeleteOutlined, SaveOutlined, ExclamationCircleOutlined, PlusCircleOutlined, UpOutlined, EditOutlined } from '@ant-design/icons';
+/* import ImgCrop from 'antd-img-crop'; */
+
+const { Title } = Typography;
+const { confirm } = Modal;
+
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
+};
 
 class Speaker extends Component {
   constructor(props) {
@@ -21,16 +30,18 @@ class Speaker extends Component {
       name: '',
       profession: '',
       description: '',
-      description_activity: 'false',
+      description_activity: false,
+      published: true,
       image: '',
       imageData: '',
       networks: [],
-      order: '',
+      order: 0,
       selectedCategories: [],
+      category_id: '',
       categories: [],
+      index: 0,
       isloadingSelect: { types: true, categories: true },
     };
-    this.descriptionActivity = this.descriptionActivity.bind(this);
   }
 
   async componentDidMount() {
@@ -39,13 +50,20 @@ class Speaker extends Component {
       location: { state },
     } = this.props;
     let categories = await CategoriesAgendaApi.byEvent(this.props.eventID);
-
+    
     categories = handleSelect(categories);
+
     if (state.edit) {
       const info = await SpeakersApi.getOne(state.edit, eventID);
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
-
-      this.setState({ selectedCategories: fieldsSelect(info.category_id, categories) });
+      const field = fieldsSelect(info.category_id, categories);
+      this.setState({ 
+        selectedCategories: fieldsSelect(info.category_id, categories)
+      });
+      if(info.description === '<p><br></p>')
+      {
+        this.setState({description: ''});
+      }
     }
     const isloadingSelect = { types: false, categories: false };
     this.setState({ loading: false, isloadingSelect, categories });
@@ -56,6 +74,7 @@ class Speaker extends Component {
     const { value } = e.target;
     this.setState({ [name]: value });
   };
+
   handleImage = async (files) => {
     try {
       const file = files[0];
@@ -71,67 +90,90 @@ class Speaker extends Component {
   };
 
   chgTxt = (content) => {
-    this.setState({ description: content });
+    let description = content;
+    if(description === '<p><br></p>'){
+      description = '';
+    } 
+    this.setState({ description });
   };
 
-  submit = async () => {
+  submit = async (values) => {
     try {
-      sweetAlert.showLoading('Espera (:', 'Guardando...');
       const {
         eventID,
         location: { state },
       } = this.props;
       this.setState({ isLoading: true });
-      const { name, profession, description_activity, description, image, order } = this.state;
-
+      const { name, profession, description_activity, description, image, order, published, selectedCategories } = values;
+      
       const info = {
         name,
         image,
         description_activity,
         description,
         profession,
-        //category_id: selectedCategories.length ? selectedCategories.value : null,
+        published,
+        category_id: selectedCategories.value,
         order: parseInt(order),
+        index: parseInt(order)
       };
-
       if (state.edit) await SpeakersApi.editOne(info, state.edit, eventID);
       else await SpeakersApi.create(eventID, info);
-      sweetAlert.hideLoading();
-      sweetAlert.showSuccess('Información guardada');
+      notification.success({
+        message: 'Operación Exitosa',
+        description: 'Información guardada',
+        placement:'bottomRight'
+      })
       this.props.history.push(`/event/${eventID}/speakers`)
     } catch (e) {
-      sweetAlert.showError(handleRequestError(e));
+      notification.error({
+        message: handleRequestError(e).message,
+        description: 'Hubo un error guardando',
+        placement:'bottomRight'
+      })
     }
   };
 
   remove = () => {
+    let self = this;
     const {
       eventID,
       location: { state },
-    } = this.props;
+    } = self.props;
     if (state.edit) {
-      sweetAlert.twoButton(`Está seguro de borrar a ${this.state.name}`, 'warning', true, 'Borrar', async (result) => {
-        try {
-          if (result.value) {
-            sweetAlert.showLoading('Espera (:', 'Borrando...');
-            await SpeakersApi.deleteOne(state.edit, eventID);
-            this.setState({ redirect: true });
-            sweetAlert.hideLoading();
+      confirm({
+        title: `¿Está seguro de eliminar al conferencista?`,
+        icon: <ExclamationCircleOutlined />,
+        content: 'Una vez eliminado, no lo podrá recuperar',
+        okText: 'Borrar',
+        okType: 'danger',
+        cancelText: 'Cancelar',
+        onOk() {
+          const onHandlerRemoveSpeaker = async () => {
+            try {
+              await SpeakersApi.deleteOne(state.edit, eventID);
+              self.setState({ redirect: true });
+              notification.success({
+                message: 'Operación Exitosa',
+                description: 'Se eliminó al conferencista ',
+                placement:'bottomRight'
+              })
+            } catch (e) {
+              notification.error({
+                message: handleRequestError(e).message,
+                description: 'Hubo un error eliminando al conferencista',
+                placement:'bottomRight'
+              })
+            }
           }
-        } catch (e) {
-          sweetAlert.showError(handleRequestError(e));
+          onHandlerRemoveSpeaker();
         }
       });
     } else this.setState({ redirect: true });
   };
 
-  descriptionActivity(e) {
-    this.setState({ description_activity: e.target.value });
-  }
-
   //FN para guardar en el estado la opcion seleccionada
   selectCategory = (selectedCategories) => {
-    //
     this.setState({ selectedCategories });
   };
 
@@ -148,138 +190,166 @@ class Speaker extends Component {
       loading,
       name,
       profession,
+      description_activity,
       description,
       image,
       order,
       categories,
+      published,
       selectedCategories,
       isloadingSelect,
     } = this.state;
+
     if (!this.props.location.state || redirect) return <Redirect to={matchUrl} />;
     return (
-      <EventContent
-        title={
-          <span>
-            <Link to={matchUrl}>
-              <FaChevronLeft />
-            </Link>
-            Conferencista
-          </span>
-        }>
-        {loading ? (
-          <Loading />
-        ) : (
-          <div className='columns'>
-            <div className='column is-8'>
-              <div className='field'>
-                <label className='label'>Nombre</label>
-                <div className='control'>
-                  <input
-                    className='input'
-                    type='text'
-                    name={'name'}
-                    value={name}
-                    onChange={this.handleChange}
-                    placeholder='Nombre conferencista'
-                  />
-                </div>
-              </div>
-              <div className='field'>
-                <label className='label'>Profesión</label>
-                <div className='control'>
-                  <input
-                    className='input'
-                    type='text'
-                    name={'profession'}
-                    value={profession}
-                    onChange={this.handleChange}
-                    placeholder='Profesión'
-                  />
-                </div>
-              </div>
-              <div className='field'>
-                <label className='label'>Descripción de conferencias</label>
-                <div className='select'>
-                  <select
-                    defaultValue={this.state.description_activity}
-                    onChange={(e) => {
-                      this.descriptionActivity(e);
-                    }}>
-                    <option value='true'>Si</option>
-                    <option value='false'>No</option>
-                  </select>
-                </div>
-              </div>
-              <div className='field'>
-                <label className='label'>Orden de conferencistas</label>
-                <input className='input' type='number' name={'order'} value={order} onChange={this.handleChange} />
-              </div>
-              <div className='field'>
-                <label className='label'>Descripción (opcional)</label>
-                <div className='control'>
-                  <EviusReactQuill name='description' data={description} handleChange={this.chgTxt} />
-                </div>
-              </div>
-            </div>
-            <div className='column is-4 general'>
-              <div className='field is-grouped'>
-                <button className='button is-text' onClick={this.remove}>
-                  x Eliminar conferencista
-                </button>
-                <button onClick={this.submit} className={`button is-primary`}>
-                  Guardar
-                </button>
-              </div>
-              <div className='section-gray'>
-                <label className='label has-text-grey-light'>Imagen</label>
-                <div className='columns'>
-                  <div className='column'>
-                    {image ? (
-                      <img src={image} alt={`speaker_${name}`} className='author-image' />
-                    ) : (
-                      <div dangerouslySetInnerHTML={{ __html: imageBox }} />
+      <Form
+        onFinish={() => this.submit(this.state)}
+        {...formLayout}
+      >
+        <Title level={4} >
+          <Link to={matchUrl}><LeftOutlined /></Link> 
+          {'Conferencistas'}
+        </Title>
+
+        <Row justify='end' gutter={8}>
+          <Col>
+            <Form.Item label={'Visible'} labelCol={{span: 13}}>
+              <Switch 
+                checkedChildren="Sí"
+                unCheckedChildren="No" 
+                name={'published'}
+                defaultChecked={published}
+              />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item >
+              <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
+                {'Guardar'}
+              </Button>
+            </Form.Item>
+          </Col>
+          <Col>
+            {
+              this.props.location.state.edit && (
+                <Form.Item>
+                  <Button onClick={this.remove} type="link" danger icon={<DeleteOutlined />}>
+                    {'Eliminar'}
+                  </Button>
+                </Form.Item>
+              ) 
+            }
+          </Col>
+        </Row>
+
+        <Row justify='center' wrap gutter={12}>
+          <Col span={12}>
+            <Form.Item label={'Nombre'} >
+              <Input
+                value={name}
+                placeholder='Nombre del conferencista'
+                name={'name'}
+                onChange={(e) => this.handleChange(e)}
+              />
+            </Form.Item>
+            
+            <Form.Item label={'Ocupación'} >
+              <Input
+                value={profession}
+                placeholder='Ocupación del conferencista'
+                name={'profession'}
+                onChange={(e) => this.handleChange(e)}
+              />
+            </Form.Item>
+            <Form.Item label={'Carga de imagen'}>
+              <Card style={{'textAlign': 'center'}}>
+                <Form.Item noStyle>
+                  <p>Dimensiones: 1080px x 1080px</p>
+                  <Dropzone
+                    style={{ fontSize: '21px', fontWeight: 'bold' }}
+                    onDrop={this.handleImage}
+                    accept='image/*'
+                    className='zone'>
+                    <Button type='dashed' danger>
+                      {image ? 'Cambiar imagen' : 'Subir imagen'}
+                    </Button>
+                  </Dropzone>
+                  <div style={{'marginTop': '10px'}}>
+                    {
+                      image ? (
+                      <Image src={this.state.image} height={250} width={300} />
+                      ) : (
+                        <Empty 
+                          image={<UserOutlined style={{'fontSize': '100px'}} />}
+                          description="No hay Imagen"
+                        />
                     )}
                   </div>
-                  <div className='column is-9'>
-                    <div className='has-text-left'>
-                      <p>Dimensiones: 1080px x 1080px</p>
-                      <Dropzone
-                        style={{ fontSize: '21px', fontWeight: 'bold' }}
-                        onDrop={this.handleImage}
-                        accept='image/*'
-                        className='zone'>
-                        <Button type='dashed' danger>
-                          {image ? 'Cambiar imagen' : 'Subir imagen'}
-                        </Button>
-                      </Dropzone>
+                </Form.Item>
+              </Card>
+            </Form.Item>
+            
+            <Form.Item label={'Descripción'} >
+              <p 
+                onClick={() => this.setState({ description_activity: !description_activity})} 
+                style={{'color': 'blue', 'cursor': 'pointer'}}
+              >
+                {
+                  !description_activity ? (
+                    <div>
+                      { description ? (
+                        <EditOutlined style={{'marginRight': '5px'}} />
+                      ) : (
+                        <PlusCircleOutlined style={{'marginRight': '5px'}} />
+                      )}
+                      {!description ? 'Agregar' : 'Editar'} {'descripción'}
                     </div>
-                  </div>
-                </div>
-                <label className='label has-text-grey-light'>Categoria</label>
-                <div className='columns'>
-                  <div className='column is-10'>
-                    <Creatable
-                      isClearable
-                      styles={catStyles}
-                      onChange={this.selectCategory}
-                      isDisabled={isloadingSelect.categories}
-                      isLoading={isloadingSelect.categories}
-                      options={categories}
-                      placeholder={'Sin categoría....'}
-                      value={selectedCategories}
-                    />
-                  </div>
-                  <div className='column is-2'>
-                    <button onClick={() => this.goSection(`${newCategoryUrl}/agenda/categorias`)} className='button'>
-                      <FaWhmcs />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </EventContent>
+                  ) : (
+                    <Tooltip text={'Si oculta la infomación da a entender que no desea mostrar el contenido de la misma'}>
+                      <UpOutlined style={{'marginRight': '5px'}}/>
+                      {'Ocultar descripción'}
+                    </Tooltip>
+                  )
+                }
+              </p>
+              {
+                description_activity && (
+                  <EviusReactQuill 
+                    name={'description'} 
+                    data={description} 
+                    handleChange={this.chgTxt}
+                    style={{'marginTop': '5px'}}
+                  />
+                )
+              }
+            </Form.Item>
+            
+            <Form.Item label='Categoría'>
+              <Row wrap gutter={16}>
+                <Col span={22}>
+                  <Creatable
+                    isClearable
+                    styles={catStyles}
+                    onChange={this.selectCategory}
+                    isDisabled={isloadingSelect.categories}
+                    isLoading={isloadingSelect.categories}
+                    options={categories}
+                    placeholder={'Sin categoría....'}
+                    value={selectedCategories}
+                  />
+                </Col>
+                <Col span={2}>
+                  <Form.Item>
+                    <Button onClick={() => this.goSection(`${newCategoryUrl}/agenda/categorias`)} icon={<SettingOutlined />}>
+                    </Button> 
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form.Item>
+            
+          </Col>
+        </Row>
+      </Form>
     );
   }
 }
