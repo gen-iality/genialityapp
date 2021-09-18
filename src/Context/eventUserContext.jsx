@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { EventsApi } from '../helpers/request';
-import { useParams } from 'react-router-dom';
+import { UseEventContext } from './eventContext';
 export const CurrentEventUserContext = React.createContext();
 let initialContextState = { status: 'LOADING', value: null };
 
 export function CurrentUserEventProvider({ children }) {
+  let cEvent = UseEventContext();
   const [userEvent, setuserEvent] = useState(initialContextState);
-  let { event_id } = useParams();
   useEffect(() => {
+    let event_id = cEvent.value?._id;
+
     if (!event_id) return;
+
     async function fetchEvent() {
       const eventUserGlobal = await EventsApi.getcurrentUserEventUser(event_id);
       setuserEvent({ status: 'LOADED', value: eventUserGlobal });
     }
 
     fetchEvent();
-  }, []);
+  }, [cEvent.value]);
 
   return <CurrentEventUserContext.Provider value={userEvent}>{children}</CurrentEventUserContext.Provider>;
 }

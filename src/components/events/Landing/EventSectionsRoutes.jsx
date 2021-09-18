@@ -37,13 +37,13 @@ import Videos from '../videos';
 import UserLoginContainer from '../UserLoginContainer';
 import InfoEvent from '../../shared/infoEvent';
 import ResponsePayu from '../registrationForm/responsePayu';
+import { useParams } from 'react-router-dom';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-
-  console.log("path",path)
+  console.log('props.cEvent.value ', props.cEvent.value);
   let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext);
-
+  let { event_id, event_name } = useParams();
   function ValidateViewPermissions(route, nombresection) {
     if (props.cEvent.value !== null) {
       let routePermissions =
@@ -73,6 +73,7 @@ const EventSectionRoutes = (props) => {
       }
     }
   }
+
   const obtenerFirstSection = () => {
     if (props.cEvent.value == null) return;
     let firstroute = Object.keys(props.cEvent.value.itemsMenu);
@@ -102,6 +103,17 @@ const EventSectionRoutes = (props) => {
     GetPermissionsEvent();
   }, []);
 
+  const validateTypeUrl = () => {
+    let url = '';
+    if (event_name) {
+      url = `/event/${event_name}/${obtenerFirstSection()}`;
+    } else if (event_id) {
+      url = `/landing/${props.cEvent.value._id}/${obtenerFirstSection()}`;
+    }
+
+    return url;
+  };
+
   return (
     <>
       {props.viewVirtualconference && (
@@ -119,9 +131,7 @@ const EventSectionRoutes = (props) => {
 
       <Switch>
         <Route exact path={`${path}/`}>
-          {props.cEvent.value?.itemsMenu && (
-            <Redirect to={`/landing/${props.cEvent.nameEvent}/${obtenerFirstSection()}`} />
-          )}
+          {props.cEvent.value?.itemsMenu && <Redirect to={validateTypeUrl()} />}
         </Route>
 
         <Route path={`${path}/documents`}>

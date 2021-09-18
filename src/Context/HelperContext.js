@@ -146,8 +146,8 @@ export const HelperContextProvider = ({ children }) => {
 
   function HandleGoToChat(idactualuser, idotheruser, chatname, section, callbackdata) {
     let data = {};
-    let idactualuserEvent = cEventuser.value._id;
-
+    let idactualuserEvent = cEventuser.value?._id;
+    if(!idactualuserEvent)return;
     switch (section) {
       case 'private':
         data = {
