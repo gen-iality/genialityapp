@@ -9,6 +9,10 @@ import SelectInput from '../../shared/selectInput';
 import { Actions, CategoriesApi, OrganizationApi, TypesApi } from '../../../helpers/request';
 import Loading from '../../loaders/loading';
 import EviusReactQuill from '../../shared/eviusReactQuill';
+import API from '../../../helpers/request';
+import * as Cookie from 'js-cookie';
+import { Button, Input, Modal,Form } from 'antd';
+
 
 class InfoGeneral extends Component {
   constructor(props) {
@@ -22,24 +26,62 @@ class InfoGeneral extends Component {
       selectedCategories: [],
       selectedOrganizer: {},
       selectedType: {},
+      currentUserr:null,
+      newOrganization:false
     };
+  }
+  async getCurrentUser(){
+  let evius_token = Cookie.get('evius_token');  
+  if (!evius_token) {
+    this.setState({ currentUser: 'guest', loading: false });
+  } else {
+    try {
+      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
+      if(resp?.data){
+        console.log("USER==>",resp.data)
+        this.setState({ currentUser: resp.data});
+      }
+    }catch(e){
+      console.log("EXCEPTION==>",e)
+    }
+  }
+}
+  async onFinish(){
+
+  }
+
+  async onFinishFailed(){
+
   }
 
   async componentDidMount() {
     try {
+      await this.getCurrentUser()
       const event = this.props.data;
       const categories = await CategoriesApi.getAll();
       const types = await TypesApi.getAll();
       let organizers = await OrganizationApi.mine();
-      organizers = organizers.map((item) => {
+      organizers = organizers.map((item) => {        
         return { value: item.id, label: item.name };
-      });
+      });    
+      //CREAR ORGANIZACION
+      let newOrganization={        
+        name: "OrganizacionEvius",
+        author:this.state.currentUserr?._id       
+      }
+      //console.log("DATAORGANIZATION==>",newOrganization)
+      //CREAR ORGANIZACION------------------------------
+      {/*let create=await OrganizationApi.createOrganization(newOrganization);
+      if(create){
+        console.log("ORGANIZATION CREATE==>",create)
+      }*/}
       const { selectedCategories, selectedOrganizer, selectedType } = handleFields(
         organizers,
         types,
         categories,
         event
       );
+
       this.setState(
         {
           newEvent: true,
@@ -402,15 +444,18 @@ class InfoGeneral extends Component {
                   </select>
                 </div>
               </div>
-            </div>
-            <SelectInput
-              name={'Organizado por:'}
-              isMulti={false}
-              selectedOptions={selectedOrganizer}
-              selectOption={this.selectOrganizer}
-              options={organizers}
-              required={true}
-            />
+            </div>          
+                    <SelectInput 
+                      name={ "Organizado por:" }                   
+                      isMulti={false}
+                      selectedOptions={selectedOrganizer}
+                      selectOption={this.selectOrganizer}
+                      options={organizers}
+                      required={true}
+                    />              
+                <Button onClick={()=>this.setState({newOrganization:true})}>
+              Agregar organización
+            </Button>           
             <SelectInput
               name={'Tipo'}
               isMulti={false}
@@ -435,6 +480,30 @@ class InfoGeneral extends Component {
             Siguiente
           </button>
         </div>
+        <Modal footer={false} title="Agregar organización" onCancel={()=>this.setState({newOrganization:false})} visible={this.state.newOrganization}>
+        <Form
+            name="basic"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            initialValues={{ remember: false }}
+            onFinish={this.onFinish}
+            onFinishFailed={this.onFinishFailed}
+            autoComplete="off"
+          >
+            <Form.Item
+              label="Nombre"
+              name="nombre"
+              rules={[{ required: true, message: 'Ingrese un nombre válido' }]}
+            >
+              <Input></Input>
+              </Form.Item>
+              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                Agregar
+              </Button>
+            </Form.Item>
+         </Form>
+        </Modal>
       </React.Fragment>
     );
   }
