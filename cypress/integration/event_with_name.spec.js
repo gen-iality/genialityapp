@@ -1,4 +1,4 @@
-const urltoVisit = '/landing/Reunión-Nacional-de-Ventas-2021';
+const urltoVisit = '/events';
 
 describe('Show Data event with Name', () => {
   beforeEach(() => {
@@ -6,8 +6,11 @@ describe('Show Data event with Name', () => {
   });
 
   it('Visit event with parameter name', () => {
-    cy.get('[class=Chat-Event]').then(() => {
-      cy.get('[id=button_open_menu]').click({ force: true });
+    cy.contains('Eventos').then(() => {
+      cy.get('[id=go_to_activity]').click({ multiple: true });
     });
+    // cy.get('[class=Chat-Event]').then(() => {
+    //   cy.get('[id=button_open_menu]').click({ force: true });
+    // });
   });
 });

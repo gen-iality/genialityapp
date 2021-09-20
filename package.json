@@ -112,13 +112,13 @@
     "eject": "react-scripts eject",
     "styleguide": "styleguidist server",
     "styleguide:build": "styleguidist build",
-    "cy:open":"cypress open",
+    "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "open:cypres":"cypres open"
+    "open:cypres": "cypres open"
   },
   "devDependencies": {
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
-    "cypress": "^8.4.0",
+    "cypress": "8.4.1",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.8",
     "react-styleguidist": "^7.3.0"

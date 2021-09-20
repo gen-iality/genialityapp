@@ -364,10 +364,7 @@ class eventLanding extends Component {
             </div>
           )}
         </Card>
-        {/*Contenedor personalizado COMPENSAR - Detalle de la actividad del evento*/}
-        {/* {this.props.cEvent.value._id === '5f4e41d5eae9886d464c6bf4' && this.state.activityId && (
-          <AgendaActividadDetalle currentActivity={this.state.activityDetail} />
-        )} */}
+       
       </div>
     );
   }
