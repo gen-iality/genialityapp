@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { ChromePicker } from 'react-color';
 import { CategoriesAgendaApi, TypesAgendaApi } from '../../helpers/request';
 import EventContent from '../events/shared/content';
@@ -7,9 +7,6 @@ import Loading from '../loaders/loading';
 import EvenTable from '../events/shared/table';
 import TableAction from '../events/shared/tableAction';
 import { handleRequestError, sweetAlert } from '../../helpers/utils';
-import { Table, Tag, Row, Col, Tooltip, Button, message } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import Header from '../../antdComponents/Header';
 
 class AgendaTypeCat extends Component {
   constructor(props) {
@@ -22,57 +19,7 @@ class AgendaTypeCat extends Component {
       color: '',
       name: '',
       list: [],
-      headers: [],
-      columns: [
-        {
-          title: 'Nombre',
-          dataIndex: 'name',
-        },
-        {
-          title: 'Color',
-          dataIndex: 'color',
-          render(val, item) {
-            return (
-              <Tag color={val} style={{'width': '70px'}}>
-                {val}
-              </Tag>
-            )
-          }
-        },
-        {
-          title: 'Opciones',
-          dataIndex: 'options',
-          render(val, item) {
-            return (
-              <Row wrap gutter={[8, 8]}>
-                <Col >
-                  <Tooltip placement='topLeft' title='Editar Categoría' >
-                    <Link 
-                      key='edit' 
-                      to={{ pathname: `${props.matchUrl}/categorias/categoria`, state: { edit: item._id } }}
-                    >
-                      <Button icon={<EditOutlined />} type='primary' size="small" />
-                    </Link>
-                  </Tooltip>
-                </Col>
-                <Col >
-                  <Tooltip placement='topLeft' title='Eliminar Categoría' >
-                    <Button
-                      key='delete'
-                      onClick={() => {
-                        self.remove(item);
-                      }}
-                      icon={<DeleteOutlined />}
-                      type='danger'
-                      size="small"
-                    />
-                  </Tooltip>
-                </Col>    
-              </Row>
-            );
-          },
-        },
-      ]
+      headers: []
     };
     this.eventID = '';
     this.apiURL = '';
@@ -166,29 +113,92 @@ class AgendaTypeCat extends Component {
     });
   };
 
+  goBack = () => this.props.history.goBack();
+
   render() {
-    const { loading, subject, list, id, name, color, headers, columns } = this.state;const { matchUrl } = this.props;
-    const categoryUrl = '/event/' + this.props.eventID;
-    console.log(list);
+    const { loading, subject, list, id, name, color, headers } = this.state;
     return (
-      <div>
-        <Header 
-          title={`${subject === 'categorias' ? 'Categorías' : 'Tipos'} de Actividad`}
-          back
-          addUrl={{ 
-            pathname: `${this.props.matchUrl}/categorias/categoria`, 
-            state: { new: true } 
-          }}
-        />
-        
-        <Table 
-          columns={columns}
-          loading={loading}
-          dataSource={list}
-          hasData={list.length>0}
-          pagination={false}
-        />
-      </div>
+      <EventContent
+        addAction={this.newItem}
+        addTitle={'Nuevo tipo'}
+        closeAction={this.goBack}
+        title={`${subject === 'categorias' ? 'Categorías' : 'Tipos'} de Actividad`}>
+        {loading ? (
+          <Loading />
+        ) : (
+          <EvenTable head={headers}>
+            {list.map((object) => {
+              return (
+                <tr key={object._id}>
+                  <td>
+                    {id === object._id ? (
+                      <input type='text' value={name} autoFocus onChange={this.onChange} />
+                    ) : (
+                      <p>{object.name}</p>
+                    )}
+                  </td>
+                  {subject === 'categorias' && (
+                    <td>
+                      {id === object._id ? (
+                        <div>
+                          <div
+                            style={{
+                              padding: '5px',
+                              background: '#fff',
+                              borderRadius: '1px',
+                              boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
+                              display: 'inline-block',
+                              cursor: 'pointer'
+                            }}
+                            onClick={this.handleClick}>
+                            <div
+                              style={{
+                                width: '36px',
+                                height: '14px',
+                                borderRadius: '2px',
+                                background: `${this.state.color}`
+                              }}
+                            />
+                          </div>
+                          {this.state.displayColorPicker && (
+                            <div style={{ position: 'absolute', zIndex: '2' }}>
+                              <div
+                                style={{ position: 'fixed', top: '0px', right: '0px', bottom: '0px', left: '0px' }}
+                                onClick={this.handleClick}
+                              />
+                              <ChromePicker color={color} onChange={this.handleChangeComplete} />
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div
+                          style={{
+                            padding: '5px',
+                            width: '36px',
+                            height: '14px',
+                            background: object.color,
+                            borderRadius: '1px',
+                            boxShadow: '0 0 0 1px rgba(0,0,0,.1)'
+                          }}
+                        />
+                      )}
+                    </td>
+                  )}
+                  <TableAction
+                    id={id}
+                    object={object}
+                    saveItem={this.saveItem}
+                    editItem={this.editItem}
+                    removeNew={this.removeNewItem}
+                    removeItem={this.removeItem}
+                    discardChanges={this.discardChanges}
+                  />
+                </tr>
+              );
+            })}
+          </EvenTable>
+        )}
+      </EventContent>
     );
   }
 }
