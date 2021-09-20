@@ -54,7 +54,7 @@ const ModalAuth = () => {
             <Typography.Paragraph type='secondary'>Mira otras formas de entrar al evento</Typography.Paragraph>
             <Space direction='vertical' style={{ width: '100%' }}>
               <Button block style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }} size='large'>
-                invitado anónimo
+                Invitado anónimo
               </Button>
               <Button block style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }} size='large'>
                 Enviar acceso a mi correo
