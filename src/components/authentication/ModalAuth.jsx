@@ -1,20 +1,26 @@
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, MailOutlined } from '@ant-design/icons';
-import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space } from 'antd';
+import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid } from 'antd';
 import FormComponent from '../events/registrationForm/form';
 
 import React from 'react';
 
 const { TabPane } = Tabs;
+const { useBreakpoint } = Grid;
 
-const stylepadding = {
+const stylePaddingDesktop = {
   paddingLeft: '25px',
   paddingRight: '25px',
 };
+const stylePaddingMobile = {
+  paddingLeft: '0px',
+  paddingRight: '0px',
+};
 
 const ModalAuth = () => {
+  const screens = useBreakpoint();
   return (
     <Modal
-      bodyStyle={{ textAlign: 'center', minHeight: '80vh' }}
+      bodyStyle={{ textAlign: 'center', }}
       centered
       footer={null}
       zIndex={999999999}
@@ -22,7 +28,7 @@ const ModalAuth = () => {
       visible={true}>
       <Tabs centered size='large'>
         <TabPane tab='Iniciar sesión' key='1'>
-          <Form layout='vertical' style={stylepadding}>
+          <Form layout='vertical' style={(screens.xs || screens.sm) ? stylePaddingMobile : stylePaddingDesktop}>
             <Form.Item label='Email' style={{ marginBottom: '10px' }}>
               <Input
                 size='large'
@@ -50,7 +56,7 @@ const ModalAuth = () => {
             </Form.Item>
           </Form>
           <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
-          <div style={stylepadding}>
+          <div style={(screens.xs || screens.sm) ? stylePaddingMobile : stylePaddingDesktop}>
             <Typography.Paragraph type='secondary'>Mira otras formas de entrar al evento</Typography.Paragraph>
             <Space direction='vertical' style={{ width: '100%' }}>
               <Button block style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }} size='large'>
@@ -64,7 +70,7 @@ const ModalAuth = () => {
         </TabPane>
         <TabPane tab='Registrarme' key='2'>
           <div
-          className='asistente-list'
+            className='asistente-list'
             style={{
               height: '70vh',
               overflowY: 'auto',
@@ -73,7 +79,7 @@ const ModalAuth = () => {
               paddingTop: '10px',
               paddingBottom: '10px',
             }}>
-                Aqui va el formulario
+            Aqui va el formulario
           </div>
         </TabPane>
       </Tabs>
