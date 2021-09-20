@@ -27,7 +27,7 @@ const UserStatusAndMenu = (props) => {
   let name = props.cUser?.value?.names;
   let logout = props.logout;
   const [visible,setVisible]=useState(true)
-console.log("10. props ", props)
+
   function linkToTheMenuRouteS(menuRoute) {
     window.location.href = `${window.location.origin}${menuRoute}`
   }
