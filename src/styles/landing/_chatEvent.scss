@@ -100,7 +100,7 @@
     width: 100%;
   }
   .asistente-list {
-    overflow-y: scroll;
+    overflow-y: auto;
     height: 45vh;
   }
   .asistente-chat-list {
@@ -108,7 +108,7 @@
     .ant-list-bordered {
       border: 1px solid #fafafa;
       border-radius: 2px;
-      overflow-y: scroll;
+      overflow-y: auto;
       height: 35vh;
     }
   }
