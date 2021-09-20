@@ -7,6 +7,7 @@ import { PlusCircleOutlined, DeleteOutlined, EditOutlined, UserOutlined, Exclama
 import Highlighter from 'react-highlight-words';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
+import Header from '../../antdComponents/Header';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement(props => <tr {...props} />);
@@ -49,9 +50,8 @@ class SpeakersList extends Component {
           }
         },
         {
-          title: 'Nombre',
-          dataIndex: 'name',
-          ...this.getColumnSearchProps('name'),
+          title: 'Imagen',
+          dataIndex: 'image',
           render(val, item) {
             /*
             * Dentro de la imagen se realizó al momento de mostrar en la tabla un Avatar, para darle mejor apariencia. 
@@ -85,12 +85,17 @@ class SpeakersList extends Component {
                     }
                   </Popover>
                 </Col>
-                <Col>
+                {/* <Col>
                   <p>{item.name}</p>
-                </Col>
+                </Col> */}
               </Row>
             );
           },
+        },
+        {
+          title: 'Nombre',
+          dataIndex: 'name',
+          ...this.getColumnSearchProps('name'),
         },
         {
           title: 'Profesión',
@@ -349,49 +354,16 @@ class SpeakersList extends Component {
 
     return (
       <div>
-        {/* Este Row representaria la cabecera de la vista, contiene su título y acciones. Este a su vez si se requiere se puede colocar como "title" y se tomaría en cuenta dentro de la tabla */}
-        <Tooltip placement='bottomLeft' title="Agregue o edite las personas que son conferencistas" >
-          <Title level={4} >{'Conferencistas'}</Title>
-        </Tooltip>
-
-        <Row wrap justify='end' gutter={[8, 8]}>
-          <Col>
-            {/* <Tooltip placement='topLeft' title='Crear Conferencista' > */}
-              <Link 
-                to={{ 
-                  pathname: `${this.props.matchUrl}/speaker`, 
-                  state: { new: true } 
-                }}
-              >
-                <Button type="primary" icon={<PlusCircleOutlined />} size="middle" >
-                  {'Agregar'}
-                </Button>
-              </Link>
-            {/* </Tooltip> */}
-          </Col>
-          <Col>
-            <Button 
-              onClick={this.saveOrder} 
-              type='primary' 
-              icon={<SaveOutlined />}
-              size="middle"
-            >
-              {'Guardar'}
-            </Button>
-          </Col>
-        </Row>
-        {/* 
-        Esto que esta comentado aca, es para cuando funcione con dos columnas de nuevo
-        <Row wrap justify="space-between">
-          <Col xs={18} sm={20} md={21} lg={18} xl={18} xxl={18}>
-            
-          </Col>
-          <Col xs={6} sm={4} md={3} lg={6} xl={6} xxl={6} >
-            
-          </Col>
-        </Row> 
-        */}
-
+        <Header 
+          title={'Conferencistas'}
+          titleTooltip={'Agregue o edite las personas que son conferencistas'}
+          addUrl={{ 
+            pathname: `${this.props.matchUrl}/speaker`, 
+            state: { new: true } 
+          }}
+          save={this.saveOrder}
+        />
+        
         {/* En esta tabla en particular viene por defecto el paginamiento, por lo que no necesita llamar a algún otro método para su funcionamiento (se tuvo que colocar false para no venir la paginación) */}
         <Table 
           columns={this.state.columns} 
