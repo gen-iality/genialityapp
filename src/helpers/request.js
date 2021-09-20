@@ -469,7 +469,7 @@ export const OrganizationApi = {
     return await Actions.getOne('/api/organizations/', id);
   },
   createOrganization: async (data) => {
-    return await Actions.post('/api/organizations/',data);
+    return await Actions.post('/api/organizations',data);
   },
   editOne: async (data, id) => {
     return await Actions.edit('/api/organizations', data, id);

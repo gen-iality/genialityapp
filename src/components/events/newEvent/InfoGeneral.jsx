@@ -29,7 +29,8 @@ class InfoGeneral extends Component {
       currentUserr:null,
       newOrganization:false
     };
-  }
+    this.onFinish = this.onFinish.bind(this);
+  } 
   async getCurrentUser(){
   let evius_token = Cookie.get('evius_token');  
   if (!evius_token) {
@@ -37,8 +38,7 @@ class InfoGeneral extends Component {
   } else {
     try {
       const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
-      if(resp?.data){
-        console.log("USER==>",resp.data)
+      if(resp?.data){       
         this.setState({ currentUser: resp.data});
       }
     }catch(e){
@@ -46,12 +46,33 @@ class InfoGeneral extends Component {
     }
   }
 }
-  async onFinish(){
 
+  async onFinish(values){
+    console.log(values)
+    await this.updateOrganization(values.name)
   }
 
   async onFinishFailed(){
 
+  }
+  async createOrganization(user=0,name){  
+    let newOrganization={        
+      name: user==0?this.state.currentUser?.name ||  this.state.currentUser?.names:name            
+    }     
+    //CREAR ORGANIZACION------------------------------
+    let create=await OrganizationApi.createOrganization(newOrganization);
+    if(create){        
+    return create;
+    }
+    return null;
+  }
+  async updateOrganization(name){    
+  let organizationNew=await this.createOrganization(1,name);
+  let organizers=await OrganizationApi.mine();
+  organizers = organizers.map((item) => {        
+    return { value: item.id, label: item.name };
+  }); 
+  this.setState({organizers, newOrganization:false}) 
   }
 
   async componentDidMount() {
@@ -60,21 +81,15 @@ class InfoGeneral extends Component {
       const event = this.props.data;
       const categories = await CategoriesApi.getAll();
       const types = await TypesApi.getAll();
-      let organizers = await OrganizationApi.mine();
+      let organizers = await OrganizationApi.mine();     
+      if(organizers && organizers.length==0){               
+        let organization=await  this.createOrganization();
+        organizers.push(organization)
+      }
       organizers = organizers.map((item) => {        
         return { value: item.id, label: item.name };
       });    
-      //CREAR ORGANIZACION
-      let newOrganization={        
-        name: "OrganizacionEvius",
-        author:this.state.currentUserr?._id       
-      }
-      //console.log("DATAORGANIZATION==>",newOrganization)
-      //CREAR ORGANIZACION------------------------------
-      {/*let create=await OrganizationApi.createOrganization(newOrganization);
-      if(create){
-        console.log("ORGANIZATION CREATE==>",create)
-      }*/}
+   
       const { selectedCategories, selectedOrganizer, selectedType } = handleFields(
         organizers,
         types,
@@ -492,7 +507,7 @@ class InfoGeneral extends Component {
           >
             <Form.Item
               label="Nombre"
-              name="nombre"
+              name="name"
               rules={[{ required: true, message: 'Ingrese un nombre válido' }]}
             >
               <Input></Input>
