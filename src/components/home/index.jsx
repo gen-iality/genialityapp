@@ -155,7 +155,7 @@ class Home extends Component {
                           bordered={false}
                           key={event._id}
                           event={event}
-                          action={{ name: 'Ver', url: `landing/${this.FriendLyUrl(event.name)}` }}
+                          action={{ name: 'Ver', url: `landing/${event._id}` }}
                         />
                       </Col>
                     );
