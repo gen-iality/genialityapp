@@ -28,7 +28,7 @@ const ModalAuth = () => {
       visible={true}>
       <Tabs centered size='large'>
         <TabPane tab='Iniciar sesión' key='1'>
-          <Form layout='vertical' style={(screens.xs || screens.sm) ? stylePaddingMobile : stylePaddingDesktop}>
+          <Form layout='vertical' style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
             <Form.Item label='Email' style={{ marginBottom: '10px' }}>
               <Input
                 size='large'
@@ -56,7 +56,7 @@ const ModalAuth = () => {
             </Form.Item>
           </Form>
           <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
-          <div style={(screens.xs || screens.sm) ? stylePaddingMobile : stylePaddingDesktop}>
+          <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
             <Typography.Paragraph type='secondary'>Mira otras formas de entrar al evento</Typography.Paragraph>
             <Space direction='vertical' style={{ width: '100%' }}>
               <Button block style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }} size='large'>
