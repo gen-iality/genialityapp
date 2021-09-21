@@ -1,6 +1,6 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
-import { PlusCircleOutlined, SaveOutlined, LeftOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, SaveOutlined, LeftOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
@@ -48,6 +48,20 @@ const Header = ( props ) => {
                   {'Guardar'}
                 </Button>
             )
+          }
+        </Col>
+        <Col>
+          {
+            edit && (
+              <Button 
+                onClick={remove} 
+                type="link" 
+                danger 
+                icon={<DeleteOutlined />}
+              >
+                {'Eliminar'}
+              </Button>
+            ) 
           }
         </Col>
       </Row>

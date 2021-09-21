@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { SpeakersApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
-import { Table, Modal, notification, message } from 'antd';
+import { Table, Modal, message } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
@@ -40,6 +40,11 @@ function SpeakersList(props) {
    }
 
    function remove(info) {
+      const loading = message.open({
+         key: 'loading',
+         type: 'loading',
+         content: <> Por favor espere miestras borra la información..</>,
+       });
       //Se coloco la constante "eventId" porque se perdia al momento de hacer la llamada al momento de eliminar
       const eventId = props.eventID;
       confirm({
@@ -54,16 +59,16 @@ function SpeakersList(props) {
                try {
                   await SpeakersApi.deleteOne(info._id, eventId);
                   fetchSpeakers();
-                  notification.success({
-                     message: 'Operación Exitosa',
-                     description: `Se eliminó a ${info.name}`,
-                     placement: 'bottomRight',
+                  message.destroy(loading.key);
+                  message.open({
+                     type: 'success',
+                     content: <> Se eliminó al conferencista correctamente!</>,
                   });
                } catch (e) {
-                  notification.error({
-                     message: handleRequestError(e).message,
-                     description: `Hubo un error intentando borrar a ${info.name}`,
-                     placement: 'bottomRight',
+                  message.destroy(loading.key);
+                  message.open({
+                    type: 'error',
+                    content: handleRequestError(e).message,
                   });
                }
             };

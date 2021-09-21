@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { CategoriesAgendaApi, TypesAgendaApi } from '../../helpers/request';
-import { handleRequestError, sweetAlert } from '../../helpers/utils';
-import { Table, Tag, Row, Col, Tooltip, Button, message } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { handleRequestError } from '../../helpers/utils';
+import { Table, Tag, Row, Col, Tooltip, Button, message, Modal } from 'antd';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
-import { async } from 'ramda-adjunct';
+
+const { confirm } = Modal;
 
 class AgendaTypeCat extends Component {
   constructor(props) {
@@ -38,8 +39,9 @@ class AgendaTypeCat extends Component {
         {
           title: 'Opciones',
           dataIndex: 'options',
-          render(val, item) {
-            let self = this;
+          render(val, item) { 
+            /* let self = this; */
+            const remove = this.remove(item._id);           
             return (
               <Row wrap gutter={[8, 8]}>
                 <Col >
@@ -56,9 +58,7 @@ class AgendaTypeCat extends Component {
                   <Tooltip placement='topLeft' title='Eliminar Categoría' >
                     <Button
                       key='delete'
-                      onClick={() => {
-                        self.removeItem(item._id);
-                      }}
+                      onClick={remove}
                       icon={<DeleteOutlined />}
                       type='danger'
                       size="small"
@@ -90,26 +90,45 @@ class AgendaTypeCat extends Component {
     this.setState({ list, loading: false, subject, headers });
   }
 
-  removeItem = (deleteID) => {
-    console.log(deleteID);
-    sweetAlert.twoButton(`Está seguro de borrar este elemento`, 'warning', true, 'Borrar', async (result) => {
-      try {
-        if (result.value) {
-          sweetAlert.showLoading('Espera (:', 'Borrando...');
-          await this.apiURL.deleteOne(deleteID);
-          this.getCat();
-          /* this.setState((state) => ({ list: state.list.filter(({ _id }) => _id !== deleteID), id: '', name: '' })); */
-          sweetAlert.hideLoading();
+  remove = async (id) => {
+    console.log(id, this.eventID);
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    confirm({
+      title: `¿Está seguro de eliminar la categoría?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            await this.apiURL.deleteOne(id, this.eventID);
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: <> Se eliminó categoría correctamente!</>,
+            });
+            this.getCat();
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: handleRequestError(e).message,
+            });
+          }
         }
-      } catch (e) {
-        sweetAlert.showError(handleRequestError(e));
+        onHandlerRemove();
       }
     });
   };
 
   render() {
     const { loading, subject, list, columns } = this.state;
-    console.log(list);
     return (
       <div>
         <Header 
@@ -127,6 +146,7 @@ class AgendaTypeCat extends Component {
           dataSource={list}
           hasData={list.length}
           pagination={false}
+          rowKey='_id'
         />
       </div>
     );
