@@ -21,47 +21,50 @@ const AgendaTypeCatCE = ( props ) => {
   const subject = matchUrl.split('/').slice(-1)[0];
   const apiURL = subject === 'categoria' ? CategoriesAgendaApi : TypesAgendaApi;
   const history = useHistory();
-  const [ categoryValues, setCategoryValues ] = useState({});
+  let [ categoryValues, setCategoryValues ] = useState({});
   const [ name, setName ] = useState('');
   const [ color, setColor ] = useState('');
   
   useEffect(() => {
     if(locationState.edit) {
-      const getOne = async () => {
-        const response = await apiURL.getOne(locationState.edit, eventID);
-
-        setCategoryValues(response);
-        setName(response.name);
-        setColor(response.color);
-      }
       getOne();
     }
   }, []);
 
-  const onFinish = async () => {
+  const getOne = async () => {
+    const response = await apiURL.getOne(locationState.edit, eventID);
+    setCategoryValues(response);
+    setName(response.name);
+    setColor(response.color);
+  }
+
+  const onSubmit = async () => {
     const loading = message.open({
       key: 'loading',
       type: 'loading',
       content: <> Por favor espere miestras se guarda la configuración..</>,
     });
-    try {
-      if(subject === 'categoria') {
-        setCategoryValues({name, color});
-      } else {
-        setCategoryValues({name});
-      }
 
-      if(locationState.edit) {
-        await apiURL.editOne(categoryValues, locationState.edit, eventID);
-      } else {
-        await apiURL.create(eventID, categoryValues);
+    if(subject === 'categoria') {
+      setCategoryValues({name:name, color:color ? color : '#000000'});
+    } else {
+      setCategoryValues({name:name});
+    }
+    try {
+      if(Object.keys(categoryValues).length) {
+        if(locationState.edit) {
+          await apiURL.editOne(categoryValues, locationState.edit, eventID);
+        } else {
+          await apiURL.create(eventID, categoryValues);
+        }     
+      
+        message.destroy(loading.key);
+        message.open({
+          type: 'success',
+          content: <> Configuración guardada correctamente!</>,
+        });
+        history.push(`${props.matchUrl}/categorias`);
       }
-      message.destroy(loading.key);
-      message.open({
-        type: 'success',
-        content: <> Configuración guardada correctamente!</>,
-      });
-      history.push(`${props.matchUrl}/categorias`);
     } catch (e) {
       message.destroy(loading.key);
       message.open({
@@ -119,15 +122,15 @@ const AgendaTypeCatCE = ( props ) => {
 
   return (
     <Form
-      onFinish={onFinish}
+      onFinish={onSubmit}
       {...formLayout}
     >
       <Header 
         title={'Categoría'}
         back
-        save={onFinish}
+        save={onSubmit}
         remove={onRemoveId}
-        edit={categoryValues._id}
+        edit={locationState.edit}
       />
       
       <Row justify='center' wrap gutter={12}>
