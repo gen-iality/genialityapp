@@ -75,11 +75,11 @@ class EventCard extends Component {
                     </span>
                     <h3 style={{ fontWeight: 'bold' }}>{event.name}</h3>
                     <span>
-                      {event.organizer.name
-                        ? event.organizer.name
-                        : event.author.displayName
-                        ? event.author.displayName
-                        : event.author.names}
+                      {event.organizer?.name
+                        ? event.organizer?.name
+                        : event.author?.displayName
+                        ? event.author?.displayName
+                        : event.author?.names}
                     </span>
                   </div>
                 }
