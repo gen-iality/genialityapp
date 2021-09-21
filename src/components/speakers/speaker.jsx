@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import EviusReactQuill from '../shared/eviusReactQuill';
@@ -17,110 +17,128 @@ const formLayout = {
   wrapperCol: { span: 24 }
 };
 
-class Speaker extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      isLoading: false,
-      name: '',
-      profession: '',
-      description: '',
-      description_activity: false,
-      published: true,
-      image: '',
-      imageData: '',
-      networks: [],
-      order: 0,
-      selectedCategories: [],
-      category_id: '',
-      categories: [],
-      index: 0,
-      isloadingSelect: { types: true, categories: true },
-    };
+function Speaker (props) {
+  const {
+    eventID,
+    location: { state },
+    history,
+    matchUrl
+  } = props;
+  const newCategoryUrl = '/event/' + eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
+
+const [data, setData] = useState(
+  {
+    name :'',
+    description:'',
+    description_activity :false,
+    profession:'',
+    published :true,
+    image:'',
+    order: 0,
+    category_id:'',
+    index:0,
+    newItem: true
   }
+)
+const [showDescription_activity, setShowDescription_activity] = useState(false)
+const [redirect, setRedirect] = useState(false)
+const [errorImage, setErrorImage] = useState('')
+const [categories, setCategories] = useState([])
+const [selectedCategories, setSelectedCategories] = useState([])
+const [isloadingSelect, setIsloadingSelect] = useState({ types: true, categories: true })
 
-  async componentDidMount() {
-    const {
-      eventID,
-      location: { state },
-    } = this.props;
-    let categories = await CategoriesAgendaApi.byEvent(this.props.eventID);
-    
-    categories = handleSelect(categories);
+useEffect(() => {
+  dataTheLoaded()
+  
+}, [])
 
-    if (state.edit) {
-      const info = await SpeakersApi.getOne(state.edit, eventID);
-      Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
-      const field = fieldsSelect(info.category_id, categories);
-      this.setState({ 
-        selectedCategories: fieldsSelect(info.category_id, categories)
-      });
-      if(info.description === '<p><br></p>')
-      {
-        this.setState({description: ''});
-      }
+async function dataTheLoaded() {
+  let categoriesData = await CategoriesAgendaApi.byEvent(eventID);
+
+  //Filtrado de categorias
+  categoriesData = handleSelect(categoriesData);
+
+  if (state.edit) {
+    const info = await SpeakersApi.getOne(state.edit, eventID);
+
+    info ? setData({...info, newItem: false}) : ''
+
+    setShowDescription_activity(info?.description_activity)
+    const field = fieldsSelect(info.category_id, categoriesData);
+
+    setSelectedCategories(field)
+
+    if(info.description === '<p><br></p>')
+    {
+      setDescription('')
     }
-    const isloadingSelect = { types: false, categories: false };
-    this.setState({ loading: false, isloadingSelect, categories });
   }
+  const isloadingSelectChanged = { types: '', categories: '' };
 
-  handleChange = (e) => {
-    const { name } = e.target;
-    const { value } = e.target;
-    this.setState({ [name]: value });
+  setCategories(categoriesData)
+  setIsloadingSelect(isloadingSelectChanged)
+}
+
+ function handleChange (e) {
+   const { name } = e.target;
+   const { value } = e.target;
+   setData({
+    ...data,
+    [name] : value
+  })
   };
 
-  handleImage = async (files) => {
+  async function handleImage(files) {
     try {
       const file = files[0];
       if (file) {
-        const image = await uploadImage(file);
-        this.setState({ image });
+        const imageData = await uploadImage(file);
+        setData({
+          ...data,
+          image: imageData
+        })
       } else {
-        this.setState({ errImg: 'Only images files allowed. Please try again :)' });
+        setErrorImage('Solo se permiten archivos de imágenes. Inténtalo de nuevo :)')
       }
     } catch (e) {
       sweetAlert.showError(handleRequestError(e));
     }
   };
 
-  chgTxt = (content) => {
+  function chgTxt (content) {
     let description = content;
     if(description === '<p><br></p>'){
       description = '';
-    } 
-    this.setState({ description });
+    }
+    setData({
+      ...data,
+      description
+    })
   };
 
-  submit = async (values) => {
+  async function submit (values){
+    const { name, profession, description, image, order, published } = values;
+
+    const body = {
+      name,
+      image,
+      description_activity: showDescription_activity,
+      description,
+      profession,
+      published,
+      category_id: selectedCategories?.value,
+      order: parseInt(order),
+      index: parseInt(order)
+    };
     try {
-      const {
-        eventID,
-        location: { state },
-      } = this.props;
-      this.setState({ isLoading: true });
-      const { name, profession, description_activity, description, image, order, published, selectedCategories } = values;
-      
-      const info = {
-        name,
-        image,
-        description_activity,
-        description,
-        profession,
-        published,
-        category_id: selectedCategories.value,
-        order: parseInt(order),
-        index: parseInt(order)
-      };
-      if (state.edit) await SpeakersApi.editOne(info, state.edit, eventID);
-      else await SpeakersApi.create(eventID, info);
+      if (state.edit) await SpeakersApi.editOne(body, state.edit, eventID);
+      else await SpeakersApi.create(eventID, body);
       notification.success({
         message: 'Operación Exitosa',
         description: 'Información guardada',
         placement:'bottomRight'
       })
-      this.props.history.push(`/event/${eventID}/speakers`)
+      history.push(`/event/${eventID}/speakers`)
     } catch (e) {
       notification.error({
         message: handleRequestError(e).message,
@@ -130,12 +148,8 @@ class Speaker extends Component {
     }
   };
 
-  remove = () => {
-    let self = this;
-    const {
-      eventID,
-      location: { state },
-    } = self.props;
+  function remove() {
+
     if (state.edit) {
       confirm({
         title: `¿Está seguro de eliminar al conferencista?`,
@@ -148,7 +162,7 @@ class Speaker extends Component {
           const onHandlerRemoveSpeaker = async () => {
             try {
               await SpeakersApi.deleteOne(state.edit, eventID);
-              self.setState({ redirect: true });
+              setRedirect(true)
               notification.success({
                 message: 'Operación Exitosa',
                 description: 'Se eliminó al conferencista ',
@@ -165,41 +179,23 @@ class Speaker extends Component {
           onHandlerRemoveSpeaker();
         }
       });
-    } else this.setState({ redirect: true });
+    } else setRedirect(true);
   };
 
   //FN para guardar en el estado la opcion seleccionada
-  selectCategory = (selectedCategories) => {
-    this.setState({ selectedCategories });
+  function selectCategory(selectedCategories) {
+    setSelectedCategories(selectedCategories)
   };
 
   //FN para ir a una ruta específica (ruedas en los select)
-  goSection = (path, state) => {
-    this.props.history.push(path, state);
+  function goSection (path, state) {
+    history.push(path, state);
   };
 
-  render() {
-    const { matchUrl } = this.props;
-    const newCategoryUrl = '/event/' + this.props.eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
-    const {
-      redirect,
-      loading,
-      name,
-      profession,
-      description_activity,
-      description,
-      image,
-      order,
-      categories,
-      published,
-      selectedCategories,
-      isloadingSelect,
-    } = this.state;
-
-    if (!this.props.location.state || redirect) return <Redirect to={matchUrl} />;
+    if (!props.location.state || redirect) return <Redirect to={matchUrl} />;
     return (
       <Form
-        onFinish={() => this.submit(this.state)}
+        onFinish={() => submit(data)}
         {...formLayout}
       >
         <Title level={4} >
@@ -214,7 +210,13 @@ class Speaker extends Component {
                 checkedChildren="Sí"
                 unCheckedChildren="No" 
                 name={'published'}
-                defaultChecked={published}
+                checked={data.published}
+                onChange={(checked) =>
+                  setData({
+                    ...data,
+                    published: checked
+                  })
+                }
               />
             </Form.Item>
           </Col>
@@ -227,9 +229,9 @@ class Speaker extends Component {
           </Col>
           <Col>
             {
-              this.props.location.state.edit && (
+              state.edit && (
                 <Form.Item>
-                  <Button onClick={this.remove} type="link" danger icon={<DeleteOutlined />}>
+                  <Button onClick={remove} type="link" danger icon={<DeleteOutlined />}>
                     {'Eliminar'}
                   </Button>
                 </Form.Item>
@@ -242,19 +244,19 @@ class Speaker extends Component {
           <Col span={12}>
             <Form.Item label={'Nombre'} >
               <Input
-                value={name}
+                value={data.name}
                 placeholder='Nombre del conferencista'
                 name={'name'}
-                onChange={(e) => this.handleChange(e)}
+                onChange={(e) => handleChange(e)}
               />
             </Form.Item>
             
             <Form.Item label={'Ocupación'} >
               <Input
-                value={profession}
+                value={data.profession}
                 placeholder='Ocupación del conferencista'
                 name={'profession'}
-                onChange={(e) => this.handleChange(e)}
+                onChange={(e) => handleChange(e)}
               />
             </Form.Item>
             <Form.Item label={'Carga de imagen'}>
@@ -263,17 +265,17 @@ class Speaker extends Component {
                   <p>Dimensiones: 1080px x 1080px</p>
                   <Dropzone
                     style={{ fontSize: '21px', fontWeight: 'bold' }}
-                    onDrop={this.handleImage}
+                    onDrop={handleImage}
                     accept='image/*'
                     className='zone'>
                     <Button type='dashed' danger>
-                      {image ? 'Cambiar imagen' : 'Subir imagen'}
+                      {data.image ? 'Cambiar imagen' : 'Subir imagen'}
                     </Button>
                   </Dropzone>
                   <div style={{'marginTop': '10px'}}>
                     {
-                      image ? (
-                      <Image src={this.state.image} height={250} width={300} />
+                      data.image ? (
+                      <Image src={data.image} height={250} width={300} />
                       ) : (
                         <Empty 
                           image={<UserOutlined style={{'fontSize': '100px'}} />}
@@ -286,34 +288,32 @@ class Speaker extends Component {
             </Form.Item>
             
             <Form.Item label={'Descripción'} >
-              <p 
-                onClick={() => this.setState({ description_activity: !description_activity})} 
-                style={{'color': 'blue', 'cursor': 'pointer'}}
-              >
+              <>
                 {
-                  !description_activity ? (
-                    <div>
-                      { description ? (
-                        <EditOutlined style={{'marginRight': '5px'}} />
+                  !showDescription_activity ? (
+                    <Button type="link" onClick={()=>setShowDescription_activity(true)} style={{'color': 'blue'}}>
+                      { !showDescription_activity && !data.newItem ? (
+                        <div> <EditOutlined style={{'marginRight': '5px'}} /> Editar/mostrar descripción </div>
                       ) : (
-                        <PlusCircleOutlined style={{'marginRight': '5px'}} />
+                        <div> <PlusCircleOutlined style={{'marginRight': '5px'}} /> Agregar/mostrar descripción </div>
+                        
                       )}
-                      {!description ? 'Agregar' : 'Editar'} {'descripción'}
-                    </div>
-                  ) : (
-                    <Tooltip text={'Si oculta la infomación da a entender que no desea mostrar el contenido de la misma'}>
-                      <UpOutlined style={{'marginRight': '5px'}}/>
-                      {'Ocultar descripción'}
+                    </Button>
+                  ) : (<Tooltip placement="top" text={'Si oculta la infomación da a entender que no desea mostrar el contenido de la misma'}>
+                    <Button type="link" onClick={()=>setShowDescription_activity(false)} style={{'color': 'blue'}}>
+                    <div><UpOutlined style={{'marginRight': '5px'}}/>
+                      Ocultar descripción </div>
+                    </Button>
                     </Tooltip>
                   )
                 }
-              </p>
+              </>
               {
-                description_activity && (
+                showDescription_activity && (
                   <EviusReactQuill 
                     name={'description'} 
-                    data={description} 
-                    handleChange={this.chgTxt}
+                    data={data.description} 
+                    handleChange={chgTxt}
                     style={{'marginTop': '5px'}}
                   />
                 )
@@ -326,7 +326,7 @@ class Speaker extends Component {
                   <Creatable
                     isClearable
                     styles={catStyles}
-                    onChange={this.selectCategory}
+                    onChange={selectCategory}
                     isDisabled={isloadingSelect.categories}
                     isLoading={isloadingSelect.categories}
                     options={categories}
@@ -336,7 +336,7 @@ class Speaker extends Component {
                 </Col>
                 <Col span={2}>
                   <Form.Item>
-                    <Button onClick={() => this.goSection(`${newCategoryUrl}/agenda/categorias`)} icon={<SettingOutlined />}>
+                    <Button onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)} icon={<SettingOutlined />}>
                     </Button> 
                   </Form.Item>
                 </Col>
@@ -347,7 +347,7 @@ class Speaker extends Component {
         </Row>
       </Form>
     );
-  }
+  
 }
 
 //Estilos para el tipo
