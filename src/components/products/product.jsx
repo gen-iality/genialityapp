@@ -48,13 +48,13 @@ class Product extends Component {
       //list[oldIndex].index=newIndex;
       if (oldIndex !== newIndex) {
        let newData = arrayMove([].concat(list), oldIndex, newIndex).filter(el => !!el);
-        console.log('Sorted items: ', newData);
+        //console.log('Sorted items: ', newData);
         //asignar nueva posicion
         if(newData){
           newData= newData.map((product,key)=>{
             return {...product,index:key};
            })
-           console.log("AGREGADA LAS POSCIONES")
+           //console.log("AGREGADA LAS POSCIONES")
         }
         this.setState({list: newData });
       }
@@ -69,11 +69,11 @@ class Product extends Component {
       const data = await EventsApi.getProducts(this.props.eventId);
      
       let listproduct=[];
-      if(data.data){
-        listproduct= data.data.map((product,index)=>{
-           return {...product,index:product.position?product.position:index}
-         })
-         console.log("DATALIST==>",listproduct)
+      if(data.data){         
+        listproduct=data.data.sort((a,b)=>a.position && b.position ?a.position-b.position:true)        
+        listproduct= listproduct.map((product,index)=>{
+           return {...product,index:product.position==index?product.position:index}
+         })       
          listproduct=listproduct.sort((a,b)=>a.index-b.index)
          this.setState({ list: listproduct, loading: false });         
       }    
@@ -89,9 +89,8 @@ class Product extends Component {
     //console.log("NEW LIST==>",this.state.list)
     if(this.state.list){
       await Promise.all(this.state.list.map(async(product,index)=>{
-          let productChange={...product,position:product.index}
-          await EventsApi.editProduct(productChange,this.props.eventId,product._id)
-         console.log("ACTUALIZADO..",index)
+          let productChange={...product,position:product.index+1}         
+          await EventsApi.editProduct(productChange,this.props.eventId,product._id)         
        }))
     }
     message.destroy(loadingSave.key);
@@ -198,7 +197,7 @@ class Product extends Component {
                      )}
                   />
                   <Column key='_id' title='Por' align='center' dataIndex='by' />
-                  <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency +" $ "+(prod?.start_price|| prod?.price)}</div>)} />
+                  <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" +" $ "+(prod?.start_price|| prod?.price)}</div>)} />
                   <Column
                      key='_id'
                      title='Imagenes del producto'
