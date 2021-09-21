@@ -34,6 +34,7 @@ import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 import { Ripple } from 'react-preloaders';
 import ModalRegister from './modalRegister';
 import { toast } from 'react-toastify';
+import ModalAuth from '../../authentication/ModalAuth';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -147,6 +148,7 @@ const Landing = (props) => {
 
   return (
     <>
+      <ModalAuth/>
       {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
       <Layout>
         <AppointmentModal

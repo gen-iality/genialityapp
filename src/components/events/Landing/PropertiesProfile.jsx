@@ -7,7 +7,7 @@ const PropertiesProfile = (props) => {
     <Col
       className='asistente-list' //agrega el estilo a la barra de scroll
       span={24}
-      style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'scroll' }}>
+      style={{ marginTop: '20px', height: '45vh', maxHeight: '45vh', overflowY: 'auto' }}>
       {!props.propertiesUserPerfil && <Spin style={{ padding: '50px' }} size='large' tip='Cargando...'></Spin>}
       <List
         bordered
