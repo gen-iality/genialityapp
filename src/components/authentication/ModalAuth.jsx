@@ -1,6 +1,7 @@
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid } from 'antd';
 import FormComponent from '../events/registrationForm/form';
+import withContext from '../../Context/withContext';
 
 import React from 'react';
 
@@ -16,9 +17,9 @@ const stylePaddingMobile = {
   paddingRight: '0px',
 };
 
-const ModalAuth = () => {
+const ModalAuth = (props) => { 
   const screens = useBreakpoint();
-  return (
+  return ( props.cUser?.value==null && props.typeModal==null &&
     <Modal
       bodyStyle={{ textAlign: 'center', }}
       centered
@@ -44,8 +45,8 @@ const ModalAuth = () => {
                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
               />
             </Form.Item>
-            <Form.Item style={{ marginBottom: '10px' }}>
-              <Typography.Text underline type='secondary' style={{ float: 'right', cursor: 'pointer' }}>
+            <Form.Item  style={{ marginBottom: '10px' }}>
+              <Typography.Text onClick={()=>props.setTypeModal('recover')} underline type='secondary' style={{ float: 'right', cursor: 'pointer' }}>
                 Olvide mi contraseña
               </Typography.Text>
             </Form.Item>
@@ -62,13 +63,13 @@ const ModalAuth = () => {
               <Button block style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }} size='large'>
                 Invitado anónimo
               </Button>
-              <Button block style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }} size='large'>
+              <Button onClick={()=>props.setTypeModal("mail")} block style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }} size='large'>
                 Enviar acceso a mi correo
               </Button>
             </Space>
           </div>
         </TabPane>
-        <TabPane tab='Registrarme' key='2'>
+        {props.cEventUser?.value==null && <TabPane tab='Registrarme' key='2'>
           <div
             className='asistente-list'
             style={{
@@ -79,12 +80,14 @@ const ModalAuth = () => {
               paddingTop: '10px',
               paddingBottom: '10px',
             }}>
-            Aqui va el formulario
+              <FormComponent  extraFieldsOriginal={props.cEvent.value?.user_properties} eventId={props.cEvent.value?._id} conditionals={props.cEvent.value?.fields_conditions || []} initialValues={props.cEventUser?.value || {}} eventUser={props.cEventUser?.value} /> 
+          
           </div>
-        </TabPane>
+        </TabPane>}
       </Tabs>
     </Modal>
+    
   );
 };
 
-export default ModalAuth;
+export default withContext(ModalAuth);

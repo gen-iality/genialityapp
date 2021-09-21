@@ -27,11 +27,11 @@ const ModalLoginHelpers = (props) => {
       footer={null}
       zIndex={999999999}
       closable={false}
-      visible={false}>
-      <PageHeader
+      visible={props.typeModal !==null}>
+      <PageHeader 
       style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={
-          <Space>
+          <Space onClick={()=>props.setTypeModal(null)}>
             <LeftCircleOutlined style={{ color: '#6B7283', fontSize: '20px' }} />
             <span style={{ fontSize: '14px', color: '#6B7283' }}>Volver al inicio de sesión</span>
           </Space>
