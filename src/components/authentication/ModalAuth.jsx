@@ -21,7 +21,7 @@ const ModalAuth = (props) => {
   const screens = useBreakpoint();
   return ( props.cUser?.value==null && props.typeModal==null &&
     <Modal
-      bodyStyle={{ textAlign: 'center', }}
+      bodyStyle={{ textAlign: 'center', paddingRight:'10px', paddingLeft:'10px' }}
       centered
       footer={null}
       zIndex={999999999}
@@ -71,14 +71,14 @@ const ModalAuth = (props) => {
         </TabPane>
         {props.cEventUser?.value==null && <TabPane tab='Registrarme' key='2'>
           <div
-            className='asistente-list'
+            // className='asistente-list'
             style={{
               height: '70vh',
-              overflowY: 'auto',
+              overflowY: 'hidden',
               paddingLeft: '5px',
               paddingRight: '5px',
-              paddingTop: '10px',
-              paddingBottom: '10px',
+              paddingTop: '8px',
+              paddingBottom: '8px',
             }}>
               <FormComponent  extraFieldsOriginal={props.cEvent.value?.user_properties} eventId={props.cEvent.value?._id} conditionals={props.cEvent.value?.fields_conditions || []} initialValues={props.cEventUser?.value || {}} eventUser={props.cEventUser?.value} /> 
           

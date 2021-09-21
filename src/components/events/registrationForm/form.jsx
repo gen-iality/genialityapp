@@ -17,7 +17,7 @@ import {
   Upload,
   Select,
   Space,
-  InputNumber,
+  InputNumber,Affix
 } from 'antd';
 import {
   InfoCircleOutlined,
@@ -47,6 +47,7 @@ const { TextArea, Password } = Input;
 const textLeft = {
   textAlign: 'left',
   width: '100%',
+  padding: '10px'
 };
 
 const center = {
@@ -719,11 +720,12 @@ const FormRegister = ({
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
           <Card
-            title={
-              eventUser !== undefined && eventUser !== null
-                ? intl.formatMessage({ id: 'registration.title.update' })
-                : intl.formatMessage({ id: 'registration.title.create' })
-            }
+          bordered={false}
+            // title={
+            //   eventUser !== undefined && eventUser !== null
+            //     ? intl.formatMessage({ id: 'registration.title.update' })
+            //     : intl.formatMessage({ id: 'registration.title.create' })
+            // }
             bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
             {eventId && eventId == '60cb7c70a9e4de51ac7945a2' && !eventUser && (
@@ -766,7 +768,8 @@ const FormRegister = ({
                   </Card>
                 </Row>
               )*/}
-              {renderForm()}
+              <div style={{height:'55vh', overflowY:'auto', paddingRight:'10px'}}>{renderForm()}</div>
+              
 
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
@@ -788,9 +791,9 @@ const FormRegister = ({
                     />
                   )}
                 </Col>
-
+                
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-                  <Form.Item>
+                  <Form.Item>            
                     <Button type='primary' htmlType='submit'>
                       {eventUser
                         ? intl.formatMessage({ id: 'registration.button.update' })
@@ -799,7 +802,7 @@ const FormRegister = ({
                         : intl.formatMessage({ id: 'registration.button.create' })}
                     </Button>
                   </Form.Item>
-                </Col>
+                </Col>       
               </Row>
             </Form>
           </Card>
