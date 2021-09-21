@@ -1,58 +1,106 @@
 import { useEffect, useState } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
+import { ChromePicker } from 'react-color';
 import { CategoriesAgendaApi, TypesAgendaApi } from '../../helpers/request';
-import { Table, Tag, Row, Col, Tooltip, Button, Form, Input } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { handleRequestError } from '../../helpers/utils';
+import { Row, Col, Form, Input, message } from 'antd';
 import Header from '../../antdComponents/Header';
-import { async } from 'ramda-adjunct';
 
 const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
 };
 
-const initialValues = {
-  name: '',
-  color: ''
-}
-
 const AgendaTypeCatCE = ( props ) => {
-  const { onSubmit } = props;
-  const categoryValues = useState(initialValues);
+  const matchUrl = props.match.url;
+  const eventID = props.event._id;
+  const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
+  const subject = matchUrl.split('/').slice(-1)[0];
+  const apiURL = subject === 'categoria' ? CategoriesAgendaApi : TypesAgendaApi;
+  const history = useHistory();
+  const [ categoryValues, setCategoryValues ] = useState({});
+  const [ name, setName ] = useState('');
+  const [ color, setColor ] = useState('');
+  
+  useEffect(() => {
+    if(locationState.edit) {
+      const getOne = async () => {
+        const response = await apiURL.getOne(locationState.edit, eventID);
+        setName(response.name);
+        setColor(response.color);
+      }
+      getOne();
+    }
+  }, []);
 
-  const onFinish = async ( values ) => {
+  const onFinish = async () => {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras se guarda la configuración..</>,
+    });
+    try {
+      if(subject === 'categoria') {
+        setCategoryValues({name, color});
+      } else {
+        setCategoryValues({name});
+      }
 
+      if(locationState.edit) {
+        await apiURL.editOne(categoryValues, locationState.edit, eventID);
+      } else {
+        await apiURL.create(eventID, categoryValues);
+      }
+      message.destroy(loading.key);
+      message.open({
+        type: 'success',
+        content: <> Configuración guardada correctamente!</>,
+      });
+      history.push(`${props.matchUrl}/categorias`);
+    } catch (e) {
+      message.destroy(loading.key);
+      message.open({
+        type: 'error',
+        content: handleRequestError(e).message,
+      });
+    }
   }
 
+  const handleChangeComplete = (color) => {
+    setColor(color.hex);
+  };
+
+  const handleChange = (e) => {
+    setName(e.target.value);
+  };
+
   return (
-    <div>
+    <Form
+      onFinish={onFinish}
+      {...formLayout}
+    >
       <Header 
         title={'Categoría'}
         back
-        save
+        save={onFinish}
       />
-
-      <Form
-        onFinish={onFinish}
-        initialValues={categoryValues}
-        {...formLayout}
-      >
-        <Row justify='center' wrap gutter={12}>
-          <Col span={12}>
-            <Form.Item label={'Nombre'} name={'name'} >
-              <Input 
-                placeholder={'Nombre de la categoría'}
-              />
-            </Form.Item>
-            <Form.Item label={'Color'} name={'color'} >
-              <Input 
-                placeholder={'Color de la categoría'}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form>
-    </div>
+      
+      <Row justify='center' wrap gutter={12}>
+        <Col span={12}>
+          <Form.Item label={'Nombre'} >
+            <Input 
+              name={'name'}
+              placeholder={'Nombre de la categoría'}
+              value={name}
+              onChange={(e) => handleChange(e)}
+            />
+          </Form.Item>
+          <Form.Item label={'Color'} >
+            <ChromePicker color={color} onChange={handleChangeComplete} />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form>
   )
 }
 

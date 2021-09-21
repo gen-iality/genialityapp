@@ -43,6 +43,7 @@ const Header = ( props ) => {
                   type='primary' 
                   icon={<SaveOutlined />}
                   size="middle"
+                  htmlType={save ? 'submit' : 'button'}
                 >
                   {'Guardar'}
                 </Button>

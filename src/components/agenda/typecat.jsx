@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { ChromePicker } from 'react-color';
 import { CategoriesAgendaApi, TypesAgendaApi } from '../../helpers/request';
-import EventContent from '../events/shared/content';
-import Loading from '../loaders/loading';
-import EvenTable from '../events/shared/table';
-import TableAction from '../events/shared/tableAction';
 import { handleRequestError, sweetAlert } from '../../helpers/utils';
 import { Table, Tag, Row, Col, Tooltip, Button, message } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
+import { async } from 'ramda-adjunct';
 
 class AgendaTypeCat extends Component {
   constructor(props) {
@@ -43,6 +39,7 @@ class AgendaTypeCat extends Component {
           title: 'Opciones',
           dataIndex: 'options',
           render(val, item) {
+            let self = this;
             return (
               <Row wrap gutter={[8, 8]}>
                 <Col >
@@ -60,7 +57,7 @@ class AgendaTypeCat extends Component {
                     <Button
                       key='delete'
                       onClick={() => {
-                        self.remove(item);
+                        self.removeItem(item._id);
                       }}
                       icon={<DeleteOutlined />}
                       type='danger'
@@ -72,13 +69,17 @@ class AgendaTypeCat extends Component {
             );
           },
         },
-      ]
+      ],
     };
     this.eventID = '';
     this.apiURL = '';
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.getCat();
+  }
+
+  getCat = async () => {
     this.eventID = this.props.event._id;
     const subject = this.props.match.url.split('/').slice(-1)[0];
     //Se setea la ruta api de acuerdo a la ruta
@@ -89,75 +90,15 @@ class AgendaTypeCat extends Component {
     this.setState({ list, loading: false, subject, headers });
   }
 
-  //FN para editar fila
-  editItem = (type) => this.setState({ id: type._id, name: type.name, color: type.color ? type.color : '' });
-
-  onChange = (e) => {
-    this.setState({ name: e.target.value });
-  };
-  //FNs para el cambio de color
-  handleClick = () => {
-    this.setState({ displayColorPicker: !this.state.displayColorPicker });
-  };
-  handleChangeComplete = (color) => {
-    this.setState({ color: color.hex });
-  };
-
-  //FN para agregar un nuevo item a la lista, si ya hay uno no hace nada
-  newItem = () => {
-    if (!this.state.list.find(({ value }) => value === 'new'))
-      this.setState((state) => ({ list: state.list.concat({ name: '', _id: 'new' }), id: 'new' }));
-  };
-
-  removeNewItem = () =>
-    this.setState((state) => ({ list: state.list.filter(({ _id }) => _id !== 'new'), id: '', name: '' }));
-
-  saveItem = async () => {
-    try {
-      const info =
-        this.state.subject === 'categorias'
-          ? { name: this.state.name, color: this.state.color }
-          : { name: this.state.name };
-      if (this.state.id !== 'new') {
-        await this.apiURL.editOne(info, this.state.id, this.eventID);
-        this.setState((state) => {
-          const data = state.list.map((object) => {
-            if (object._id === state.id) {
-              object.name = state.name;
-              object.color = state.color;
-              return object;
-            } else return object;
-          });
-          return { list: data, id: '', name: '', color: '' };
-        });
-      } else {
-        const newRole = await this.apiURL.create(this.eventID, info);
-        this.setState((state) => {
-          const types = state.list.map((item) => {
-            if (item._id === state.id) {
-              item = Object.assign(item, newRole);
-              return item;
-            } else return item;
-          });
-          return { list: types, id: '', name: '' };
-        });
-      }
-    } catch (e) {
-      e;
-    }
-  };
-
-  discardChanges = () => {
-    this.setState({ id: '', name: '', color: '' });
-  };
-
   removeItem = (deleteID) => {
+    console.log(deleteID);
     sweetAlert.twoButton(`Está seguro de borrar este elemento`, 'warning', true, 'Borrar', async (result) => {
       try {
         if (result.value) {
           sweetAlert.showLoading('Espera (:', 'Borrando...');
           await this.apiURL.deleteOne(deleteID);
-          this.setState((state) => ({ list: state.list.filter(({ _id }) => _id !== deleteID), id: '', name: '' }));
+          this.getCat();
+          /* this.setState((state) => ({ list: state.list.filter(({ _id }) => _id !== deleteID), id: '', name: '' })); */
           sweetAlert.hideLoading();
         }
       } catch (e) {
@@ -167,8 +108,7 @@ class AgendaTypeCat extends Component {
   };
 
   render() {
-    const { loading, subject, list, id, name, color, headers, columns } = this.state;const { matchUrl } = this.props;
-    const categoryUrl = '/event/' + this.props.eventID;
+    const { loading, subject, list, columns } = this.state;
     console.log(list);
     return (
       <div>
@@ -177,7 +117,7 @@ class AgendaTypeCat extends Component {
           back
           addUrl={{ 
             pathname: `${this.props.matchUrl}/categorias/categoria`, 
-            state: { new: true } 
+            state: { new: true }
           }}
         />
         
@@ -185,7 +125,7 @@ class AgendaTypeCat extends Component {
           columns={columns}
           loading={loading}
           dataSource={list}
-          hasData={list.length>0}
+          hasData={list.length}
           pagination={false}
         />
       </div>
