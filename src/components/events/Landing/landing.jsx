@@ -101,6 +101,7 @@ const Landing = (props) => {
         ChangeActiveNotification(false, 'none', 'none');
       },
       btn: ButtonRender(type, activity),
+      duration:type=='ended' || type=='open'?7:3
     });
   };
 

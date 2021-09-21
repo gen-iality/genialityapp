@@ -70,33 +70,33 @@ const ContactList = ({ tabActive, agendarCita }) => {
             return (
               <Col key={'contactlist' + key} xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
                 <Card
-                  extra={
-                    ((user.telefono && user.telefono !== null && user.telefono.length === 10) ||
-                      (user.nodewhatsapp && user.nodewhatsapp !== null && user.nodewhatsapp.length === 10) ||
-                      (user.nodecelular && user.nodecelular !== null && user.nodecelular.length === 10) ||
-                      (user.numerodecelular &&
-                        user.numerodecelular !== null &&
-                        user.numerodecelular.length === 10)) && (
-                      <a
-                        href={
-                          'https://api.whatsapp.com/send?phone=57' +
-                          (user.nodewhatsapp
-                            ? user.nodewhatsapp
-                            : user.nodecelular
-                            ? user.nodecelular
-                            : user.numerodecelular
-                            ? user.numerodecelular
-                            : user.telefono)
-                        }
-                        target='_blank'
-                        rel='noreferrer'>
-                        <span>
-                          Hola soy {user.names}, <br />
-                          Escribeme por WhatsApp
-                        </span>
-                      </a>
-                    )
-                  }
+                  // extra={
+                  //   ((user.telefono && user.telefono !== null && user.telefono.length === 10) ||
+                  //     (user.nodewhatsapp && user.nodewhatsapp !== null && user.nodewhatsapp.length === 10) ||
+                  //     (user.nodecelular && user.nodecelular !== null && user.nodecelular.length === 10) ||
+                  //     (user.numerodecelular &&
+                  //       user.numerodecelular !== null &&
+                  //       user.numerodecelular.length === 10)) && (
+                  //     <a
+                  //       href={
+                  //         'https://api.whatsapp.com/send?phone=57' +
+                  //         (user.nodewhatsapp
+                  //           ? user.nodewhatsapp
+                  //           : user.nodecelular
+                  //           ? user.nodecelular
+                  //           : user.numerodecelular
+                  //           ? user.numerodecelular
+                  //           : user.telefono)
+                  //       }
+                  //       target='_blank'
+                  //       rel='noreferrer'>
+                  //       <span>
+                  //         Hola soy {user.names}, <br />
+                  //         Escribeme por WhatsApp
+                  //       </span>
+                  //     </a>
+                  //   )
+                  // }
                   style={{ width: '100%', textAlign: 'left' }}
                   bordered={true}>
                   <Meta

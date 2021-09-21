@@ -42,7 +42,7 @@ function AddProduct(props) {
             setProduct(product);
             setName(product.name);
             setCreator(product.by);
-            setDescription(product.description);
+            setDescription(product.description ||"");
             setPicture(product.image && product.image[0] ? product.image[0] : null);
             setOptionalPicture(product.image && product.image[1] ? product.image[1] : null);
             setPrice(product.price);

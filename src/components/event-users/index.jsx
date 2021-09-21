@@ -277,39 +277,39 @@ class ListEventUser extends Component {
              ) / 100;
            this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight,totalWithWeight });
           
-           console.log("ATTENDESS==>",updatedAttendees)
+           //console.log("ATTENDESS==>",updatedAttendees)
+           //console.log("ATTENDESSFIND==>",updatedAttendees.filter((at)=>at.email=='nieblesrafael@yahoo.com'))
          
           for (let i = 0; i < updatedAttendees.length; i++) {
             
-            // Arreglo temporal para que se muestre el listado de usuarios sin romperse
+              // Arreglo temporal para que se muestre el listado de usuarios sin romperse
             // algunos campos no son string y no se manejan bien
-            Object.keys(updatedAttendees[i].properties).forEach(function(key) {            
-              if (
-                !(
-                  (updatedAttendees[i][key] && updatedAttendees[i][key].getMonth) ||
-                  typeof updatedAttendees[i][key] == 'string' ||
-                  typeof updatedAttendees[i][key] == 'boolean' ||
-                  typeof updatedAttendees[i][key] == 'number' ||
-                  Number(updatedAttendees[i][key]) ||
-                  updatedAttendees[i][key] === null
-                )
-              ) {
-                updatedAttendees[i]['properties'][key] = JSON.stringify(updatedAttendees[i][key]);
-              }
-              if(extraFields){
-                let codearea=extraFields?.filter((field)=>field.type=='codearea')
-                console.log("CODIGO DE AREA==>", codearea[0])
-              if(codearea[0] && updatedAttendees[i] && Object.keys(updatedAttendees[i]).includes(codearea[0].name) && key==codearea[0].name){
-                console.log("INGRESO=>",key)
-                updatedAttendees[i][codearea[0].name]=updatedAttendees[i]['code']?"(+"+updatedAttendees[i]['code']+")"+updatedAttendees[i][codearea[0].name]:"(+0)"+updatedAttendees[i][codearea[0].name]
-              }else{
-              updatedAttendees[i][key] = updatedAttendees[i]['properties'][key]==true ?"SI":updatedAttendees[i]['properties'][key]==false?"NO":updatedAttendees[i]['properties'][key];
-              updatedAttendees[i]["textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio"]= self.props.event._id=="60c8affc0b4f4b417d252b29" ? "SI" :""
-              
-              
+           //console.log("FIELDS==>",extraFields)
+           extraFields.forEach(function(key) {            
+            if (
+              !(
+                (updatedAttendees[i][key.name] && updatedAttendees[i][key.name].getMonth) ||
+                typeof updatedAttendees[i][key.name] == 'string' ||
+                typeof updatedAttendees[i][key.name] == 'boolean' ||
+                typeof updatedAttendees[i][key.name] == 'number' ||
+                Number(updatedAttendees[i][key.name]) ||
+                updatedAttendees[i][key.name] === null || updatedAttendees[i][key.name] === undefined
+              )
+            ) {                
+              updatedAttendees[i]['properties'][key.name] = updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
             }
-            }
-            });
+            if(extraFields){
+              let codearea=extraFields?.filter((field)=>field.type=='codearea')                
+            if(codearea[0] && updatedAttendees[i] && Object.keys(updatedAttendees[i]).includes(codearea[0].name) && key.name==codearea[0].name){
+             
+              updatedAttendees[i][codearea[0].name]=updatedAttendees[i]['code']?"(+"+updatedAttendees[i]['code']+")"+updatedAttendees[i].user[codearea[0].name]:"(+0)"+updatedAttendees[i].user[codearea[0].name]
+            }else{
+              console.log("KEY==>",updatedAttendees[i]['properties'][key])
+            updatedAttendees[i][key.name] =  updatedAttendees[i]['properties'][key.name]==true ?"SI":updatedAttendees[i]['properties'][key.name]==false?"NO":updatedAttendees[i]?.user[key.name];
+            updatedAttendees[i]["textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio"]= self.props.event._id=="60c8affc0b4f4b417d252b29" ? "SI" :""          
+          }
+          }
+          });
 
             if (updatedAttendees[i].payment) {
               updatedAttendees[i].payment =
