@@ -18,7 +18,7 @@ const AgendaTypeCatCE = ( props ) => {
   const matchUrl = props.match.url;
   const eventID = props.event._id;
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
-  const subject = matchUrl.split('/').slice(-1)[0];
+  const subject = matchUrl.split('/').slice(-1)[0]; 
   const apiURL = subject === 'categoria' ? CategoriesAgendaApi : TypesAgendaApi;
   const history = useHistory();
   let [ categoryValues, setCategoryValues ] = useState({});
@@ -35,14 +35,15 @@ const AgendaTypeCatCE = ( props ) => {
     const response = await apiURL.getOne(locationState.edit, eventID);
     setCategoryValues(response);
     setName(response.name);
-    setColor(response.color);
+    if(subject === 'categoria')
+      setColor(response.color);
   }
 
   const onSubmit = async () => {
     const loading = message.open({
       key: 'loading',
       type: 'loading',
-      content: <> Por favor espere miestras se guarda la configuración..</>,
+      content: <> Por favor espere miestras se guarda la información..</>,
     });
 
     if(subject === 'categoria') {
@@ -52,6 +53,7 @@ const AgendaTypeCatCE = ( props ) => {
     }
     try {
       if(Object.keys(categoryValues).length) {
+        console.log(categoryValues);
         if(locationState.edit) {
           await apiURL.editOne(categoryValues, locationState.edit, eventID);
         } else {
@@ -61,7 +63,7 @@ const AgendaTypeCatCE = ( props ) => {
         message.destroy(loading.key);
         message.open({
           type: 'success',
-          content: <> Configuración guardada correctamente!</>,
+          content: <> Información guardada correctamente!</>,
         });
         history.push(`${props.matchUrl}/categorias`);
       }
@@ -103,7 +105,7 @@ const AgendaTypeCatCE = ( props ) => {
               message.destroy(loading.key);
               message.open({
                 type: 'success',
-                content: <> Se eliminó la categoría correctamente!</>,
+                content: <> Se eliminó la información correctamente!</>,
               });
               history.push(`${props.matchUrl}/categorias`);
             } catch (e) {
@@ -126,7 +128,7 @@ const AgendaTypeCatCE = ( props ) => {
       {...formLayout}
     >
       <Header 
-        title={'Categoría'}
+        title={`${subject === 'categoria' ? 'Categoría' : 'Tipo'}`}
         back
         save={onSubmit}
         remove={onRemoveId}
@@ -134,21 +136,25 @@ const AgendaTypeCatCE = ( props ) => {
       />
       
       <Row justify='center' wrap gutter={12}>
-        <Col span={10}>
+        <Col >
           <Form.Item label={'Nombre'} >
             <Input 
               name={'name'}
-              placeholder={'Nombre de la categoría'}
+              placeholder={`Nombre ${subject === 'categoria' ? 'de la categoría' : 'del tipo'}`}
               value={name}
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>
-          <Form.Item label={'Color'} >
-            <ChromePicker 
-              color={color} 
-              onChange={handleChangeComplete}
-            />
-          </Form.Item>
+          {
+            subject === 'categoria' && (
+              <Form.Item label={'Color'}>
+                <ChromePicker 
+                  color={color} 
+                  onChange={handleChangeComplete}
+                />
+              </Form.Item>
+            )
+          }
         </Col>
       </Row>
     </Form>

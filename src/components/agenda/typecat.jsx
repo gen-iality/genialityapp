@@ -11,22 +11,10 @@ const { confirm } = Modal;
 const AgendaTypeCat = (props) => {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [columns, setColumns] = useState(
-  [
+  const columnsOriginal = [
     {
       title: 'Nombre',
       dataIndex: 'name',
-    },
-    {
-      title: 'Color',
-      dataIndex: 'color',
-      render(val, item) {
-        return (
-          <Tag color={val} style={{'width': '70px'}}>
-            {val}
-          </Tag>
-        )
-      }
     },
     {
       title: 'Opciones',
@@ -35,7 +23,7 @@ const AgendaTypeCat = (props) => {
         return (
           <Row wrap gutter={[8, 8]}>
             <Col >
-              <Tooltip placement='topLeft' title='Editar Categoría' >
+              <Tooltip placement='topLeft' title='Editar' >
                 <Link 
                   key='edit' 
                   to={{ pathname: `${props.matchUrl}/categorias/categoria`, state: { edit: item._id } }}
@@ -45,7 +33,7 @@ const AgendaTypeCat = (props) => {
               </Tooltip>
             </Col>
             <Col >
-              <Tooltip placement='topLeft' title='Eliminar Categoría' >
+              <Tooltip placement='topLeft' title='Eliminar' >
                 <Button
                   key='delete'
                   onClick={() => remove(item._id)}
@@ -59,14 +47,28 @@ const AgendaTypeCat = (props) => {
         );
       },
     }
-  ]);
+  ];
+  const [columns, setColumns ] = useState([]);
   const eventID = props.event._id;
   const subject = props.match.url.split('/').slice(-1)[0];
   const apiURL = subject === 'categorias' ? CategoriesAgendaApi : TypesAgendaApi;
-  /* const headers = subject === 'categorias' ? ['Nombre', 'Color', ''] : ['Nombre', '']; */
 
   useEffect(() => {
     getList();
+    if(subject === 'categorias'){
+      columnsOriginal.splice(1,0, {
+        title: 'Color',
+        dataIndex: 'color',
+        render(val, item) {
+          return (
+            <Tag color={val} style={{'width': '70px'}}>
+              {val}
+            </Tag>
+          )
+        }
+      });
+    } 
+    setColumns(columnsOriginal);
   }, [])
 
   const getList = async () => {
@@ -82,7 +84,7 @@ const AgendaTypeCat = (props) => {
       content: <> Por favor espere miestras borra la información..</>,
     });
     confirm({
-      title: `¿Está seguro de eliminar la categoría?`,
+      title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
       content: 'Una vez eliminado, no lo podrá recuperar',
       okText: 'Borrar',
@@ -95,7 +97,7 @@ const AgendaTypeCat = (props) => {
             message.destroy(loading.key);
             message.open({
               type: 'success',
-              content: <> Se eliminó categoría correctamente!</>,
+              content: <> Se eliminó la información correctamente!</>,
             });
             getList();
           } catch (e) {
