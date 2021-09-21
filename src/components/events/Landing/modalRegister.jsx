@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Drawer, Modal, Result, Typography } from 'antd';
 import { CheckCircleTwoTone } from '@ant-design/icons';
-import  { ButtonPayment } from '../registrationForm/payRegister';
+import { ButtonPayment } from '../registrationForm/payRegister';
 
 const ModalRegister = ({ register, setRegister, event }) => {
   let message =
@@ -11,7 +11,14 @@ const ModalRegister = ({ register, setRegister, event }) => {
       ? `Bienvenido al evento ${event?.name}`
       : register == 3 && `Su registro ha sido exitoso, click al siguiente enlace para realizar la donación`;
 
-  let infoButton = register == 1 ? 'Cerrar' : register == 2 ? `Disfrutar del evento` : register == 3 ?`REGISTRO PAGO`: `Disfrutar del evento`;
+  let infoButton =
+    register == 1
+      ? 'Cerrar'
+      : register == 2
+      ? `Disfrutar del evento`
+      : register == 3
+      ? `REGISTRO PAGO`
+      : `Disfrutar del evento`;
 
   return (
     <Modal
@@ -26,14 +33,17 @@ const ModalRegister = ({ register, setRegister, event }) => {
         title={<Typography.Text type='success'>¡Registro Exitoso!</Typography.Text>}
         subTitle={<span style={{ fontSize: '18px' }}>{message}</span>}
         extra={[
-          register!=3 ?<Button
-            onClick={() => setRegister(null)}
-            style={{ backgroundColor: '#52C41A', color: '#FFFFFF', marginTop: '10px' }}
-            size='large'
-            key='console'>
-            {infoButton}
-          </Button>:
-          <ButtonPayment  />
+          register != 3 ? (
+            <Button
+              onClick={() => setRegister(null)}
+              style={{ backgroundColor: '#52C41A', color: '#FFFFFF', marginTop: '10px' }}
+              size='large'
+              key='console'>
+              {infoButton}
+            </Button>
+          ) : (
+            <ButtonPayment />
+          ),
         ]}></Result>
     </Modal>
   );

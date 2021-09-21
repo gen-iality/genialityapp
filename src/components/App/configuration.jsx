@@ -224,7 +224,7 @@ class Configuration extends Component {
     let dataUrl = parseUrl(document.URL);
     if (dataUrl && dataUrl.token) {
       if (dataUrl.token) {
-        Cookie.set('evius_token', dataUrl.token);
+        Cookie.set('evius_token', dataUrl.token,{ expires: 180 });
         privateInstance.defaults.params = {};
         privateInstance.defaults.params['evius_token'] = dataUrl.token;
       }

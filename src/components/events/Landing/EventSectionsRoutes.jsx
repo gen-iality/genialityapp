@@ -36,6 +36,7 @@ import { HelperContext } from '../../../Context/HelperContext';
 import Videos from '../videos';
 import UserLoginContainer from '../UserLoginContainer';
 import InfoEvent from '../../shared/infoEvent';
+import ResponsePayu from '../registrationForm/responsePayu';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -309,7 +310,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <div className='columns is-centered'>
-                <TicketsForm />
+                <TicketsForm setVirtualConference={props.setVirtualConference} />
               </div>
             )
           }
@@ -351,10 +352,13 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
         <Route path={`${path}/permissions`}>
-          <PageNotPermissions />
+          <PageNotPermissions   setVirtualConference={props.setVirtualConference} />
         </Route>
         <Route path={`${path}/success/:type?`}>
           <MessageRegister />
+        </Route>
+        <Route path={`${path}/responsePayu`}>
+         <ResponsePayu />
         </Route>
       </Switch>
     </>

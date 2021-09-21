@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Col, Modal, notification, Row, Spin, Tabs } from 'antd';
+import { Avatar, Button, Card, Col, Modal, notification, Row, Spin, Tabs, Space, Typography, Popconfirm, Divider } from 'antd';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 import { find, map, mergeRight, path, propEq } from 'ramda';
@@ -7,7 +7,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { firestore } from '../../helpers/firebase';
 import { getDatesRange } from '../../helpers/utils';
 import { deleteAgenda, getAcceptedAgendasFromEventUser } from './services';
-import {createChatRoom} from './agendaHook'
+import { createChatRoom } from './agendaHook';
 
 const { TabPane } = Tabs;
 const { Meta } = Card;
@@ -225,6 +225,7 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   const userName = data.owner_id == eventUser._id ? data.name ?? 'Sin nombre' : data.name_requesting ?? 'Sin nombre';
   //const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data);
   const userEmail = (data.otherEventUser && data.otherEventUser.properties.email) || data.email;
+  const userImage = (data.otherEventUser && data.otherEventUser.properties.picture) || undefined;
 
   /** Entramos a la sala 1 a 1 de la reunión
    *
@@ -257,71 +258,73 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
 
   return (
     <Row justify='center' style={{ marginBottom: '20px' }}>
-      <Card style={{ width: 600, textAlign: 'left' }} bordered={true}>
-        <div style={{ marginBottom: '10px' }}>{'Cita con: '}</div>
+      <Card
+        headStyle={{ border: 'none' }}
+        style={{ width: 600, textAlign: 'left', borderRadius:'10px' }}
+        bodyStyle={{ paddingTop: '0px' }}
+        bordered={true}
+        extra={
+          <Popconfirm
+            title='¿Desea cancelar/eliminar esta cita?'
+            onConfirm={deleteThisAgenda}
+            okText='Si'
+            cancelText='No'>
+            <Button type='text' danger disabled={loading} loading={loading}>
+              {'Cancelar Cita'}
+            </Button>
+          </Popconfirm>
+        }
+        title={
+          <Space wrap>
+            {/* <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div> */}
+            <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
+              {moment(data.timestamp_start).format('hh:mm a')}
+            </Typography.Text>
+            <Typography.Text style={{ fontSize: '12px' }} type='secondary'>
+              {moment(data.timestamp_end).format('hh:mm a')}
+            </Typography.Text>
+          </Space>
+        }>
+        {/* <div style={{ marginBottom: '10px' }}>{'Cita con: '}</div> */}
         <Meta
-          avatar={<Avatar>{userName ? userName.charAt(0).toUpperCase() : userName}</Avatar>}
-          title={userName || 'No registra nombre'}
+          avatar={
+            userImage ? (
+              <Avatar size={50} src={userImage}></Avatar>
+            ) : (
+              <Avatar size={50}>{userName ? userName.charAt(0).toUpperCase() : userName}</Avatar>
+            )
+          }
+          title={<Typography.Title level={5}>{userName || 'No registra nombre'}</Typography.Title>}
           description={
-            <div>
-              <Row className='mi_agenda' justify='space-around'>
-                <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
-                  <p>{userEmail || 'No registra correo'}</p>
-                  {!!data.message && (
-                    <p style={{ paddingRight: '20px' }}>
-                      {'Mensaje: '}
-                      {data.message}
-                    </p>
-                  )}
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-                  <Row justify='center'>
-                    <div style={{ textTransform: 'capitalize' }}>{moment(data.timestamp_start).format('MMMM DD')}</div>
-                    <div>{moment(data.timestamp_start).format('hh:mm a')}</div>
-                    {' - '}
-                    <div>{moment(data.timestamp_end).format('hh:mm a')}</div>
-                  </Row>
-                </Col>
-              </Row>
-              <br />
-              {!deleted ? (
-                <Row justify='center'>
-                  <Col xs={24} sm={24} md={12} xl={12}>
-                    <Button
-                      type='primary'
-                      disabled={loading || enableMeetings}
-                      loading={loading}
-                      onClick={() => {
-                        accessMeetRoom(data, eventUser);
-                      }}>
-                      {!enableMeetings ? 'Ingresar a reunión' : 'Reunión Cerrada'}
-                    </Button>
-                    <br />
-                  </Col>
-                  <Col xs={24} sm={24} md={12} xl={12}>
-                    <Button
-                      type='danger'
-                      disabled={loading}
-                      loading={loading}
-                      onClick={() => {
-                        confirm({
-                          title: 'Confirmar cancelación',
-                          content: '¿Desea cancelar/eliminar esta cita?',
-                          okText: 'Si',
-                          cancelText: 'No',
-                          onOk: deleteThisAgenda,
-                        });
-                      }}>
-                      {'Cancelar'}
-                    </Button>
-                  </Col>
-                </Row>
-              ) : (
-                <Row>{`Cita cancelada.`}</Row>
+            <Typography.Paragraph style={{marginTop:'-15px'}}>
+              <Typography.Text type='secondary' style={{ paddingRight: '20px' }}>{userEmail || 'No registra correo'}</Typography.Text>
+              {!!data.message && (
+                <p style={{ paddingRight: '20px' }}>
+                  <Divider orientation="left" plain style={{marginBottom:'0px'}}>Mensaje</Divider>
+                  <Typography.Paragraph type='secondary' ellipsis={{rows:2}}>{data.message}</Typography.Paragraph>
+                </p>
               )}
-            </div>
+            </Typography.Paragraph>
           }
         />
+        {!deleted ? (
+          <Row justify='center'>
+            <Col xs={24} sm={24} md={12} xl={12}>
+              <Button
+                block
+                type='primary'
+                disabled={loading || enableMeetings}
+                loading={loading}
+                onClick={() => {
+                  accessMeetRoom(data, eventUser);
+                }}>
+                {!enableMeetings ? 'Ingresar a reunión' : 'Reunión Cerrada'}
+              </Button>
+            </Col>
+          </Row>
+        ) : (
+          <Row>{`Cita cancelada.`}</Row>
+        )}
       </Card>
     </Row>
   );

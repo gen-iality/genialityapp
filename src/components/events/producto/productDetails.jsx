@@ -16,7 +16,7 @@ function DetailsProduct(props) {
   const [messageF, setMessage] = useState('');
   const [eventId, setEventId] = useState('');
   const [updateValue, setUpdateValue] = useState();
-
+  //currency
   useEffect(() => {
     let idProduct = props.match.params.id;
     let eventId = props.match.params.event_id;

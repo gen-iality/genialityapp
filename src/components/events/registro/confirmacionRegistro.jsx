@@ -4,6 +4,7 @@ import EviusReactQuill from '../../shared/eviusReactQuill';
 import { EventsApi } from '../../../helpers/request';
 
 function ConfirmacionRegistro(props) {
+  console.log('props.event.validateEmail', props.event.validateEmail);
   //Se definen las variables de useState para enviar y obtener datos
   let [validateEmail, setValidateEmail] = useState(() => {
     if (props.event && props.event.validateEmail) {
@@ -35,7 +36,7 @@ function ConfirmacionRegistro(props) {
   return (
     <>
       <h1>Mensaje Confirmacion Registro </h1>
-      <p>El siguiene mensaje le llegara a las personas luego de haberse registrado al evento</p>
+      <p>El siguiente mensaje le llegara a las personas luego de haberse registrado al evento</p>
       <Row gutter={[0, 24]}>
         <Col span={12}>
           <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />
@@ -48,7 +49,7 @@ function ConfirmacionRegistro(props) {
           style={{ marginRight: '2%' }}
           onChange={(e) => setValidateEmail(e.target.checked)}
         />
-        <label>Autologuearse despues de registrarse</label>
+        <label>Requerir la validación del correo antes de completar el registro</label>
       </Row>
       <Row>
         <Col span={12}>
