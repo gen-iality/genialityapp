@@ -35,6 +35,7 @@ import { Ripple } from 'react-preloaders';
 import ModalRegister from './modalRegister';
 import { toast } from 'react-toastify';
 import ModalAuth from '../../authentication/ModalAuth';
+import ModalLoginHelpers from '../../authentication/ModalLoginHelpers';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -147,7 +148,8 @@ const Landing = (props) => {
 
   return (
     <>
-      <ModalAuth/>
+      {/* <ModalAuth/>
+      <ModalLoginHelpers/> */}
       {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
       <Layout>
         <AppointmentModal
