@@ -152,20 +152,20 @@ class WallList extends Component {
                   <Card
                     style={{ marginBottom: '20px' }}
                     actions={[
-                      <CommentEditor
+                     this.props.cEventUser.value!==null && <CommentEditor
                         key='text'
                         onSubmit={(comment) => {
                           this.innerCreateComment(item, comment);
                         }}
                         user={this.props.cUser}
-                      />,
+                      />
                     ]}>
                     <List.Item
                       key={item.id}
                       style={{ padding: '5px' }}
                       actions={[
                         <Space key='opciones' wrap>
-                          <IconText
+                         { this.props.cUser.value!==null && <IconText
                             icon={
                               item.usersLikes?.find((itm) => itm == this.props.cUser.value._id) != undefined
                                 ? LikeFilled
@@ -182,7 +182,7 @@ class WallList extends Component {
                             onSubmit={() => {
                               this.props.increaseLikes(item.id, this.props.cUser.value._id);
                             }}
-                          />
+                          />}
                           <IconText
                             icon={MessageOutlined}
                             text={(item.comments || 0) + (item.comments === 1 ? ' Comentario' : ' Comentarios')}

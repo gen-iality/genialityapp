@@ -121,8 +121,10 @@ class SearchComponent extends Component {
     }
 
     if (value.length <= 2) {
-      if (value.length === 0) {
+      console.log("VALUE ACA==>",value.length)
+      if (value.length === 0 || value=='') {
         this.setState({ showMessage: false, message: '' });
+       
         this.props.searchResult(this.props.data.slice(0, this.props.data.length));
       } else {
         this.setState(
@@ -144,7 +146,8 @@ class SearchComponent extends Component {
             id='inputSearch'
             type='text'
             size='large'
-            onChange={this.handleFilter}
+           // onChange={this.handleFilter}
+            onInput={this.handleFilter}
             placeholder={`Buscar ${this.props.placeholder || ''}`}
             value={this.state.value}
             suffix={

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { firestore } from '../../helpers/firebase';
 import { Avatar, List, Card, Spin, Row, Comment, Tooltip, Typography, Divider } from 'antd';
 import Moment from 'moment';
+import withContext from '../../Context/withContext';
 
 class CommentsList extends Component {
   constructor(props) {
@@ -16,7 +17,16 @@ class CommentsList extends Component {
       commentsCount: this.props.commentsCount || 0,
     };
   }
-
+  async getDataUser(iduser){     
+    let user=await firestore.collection(`${this.props.eventId}_event_attendees`).where("account_id","==",iduser).get();  
+    if(user.docs.length>0 && this.props.cEvent.value.user_properties){
+      let fieldAvatar=this.props.cEvent.value.user_properties.filter((field)=>field.type=="avatar")
+      if(fieldAvatar.length>0){        
+        return user.docs[0].data().user?.picture;
+      }     
+    }
+    return undefined;
+  }
   // se obtienen los comentarios, Se realiza la muestra del modal y se envian los datos a dataComment del state
   async getComments(postId, eventId) {
     try {
@@ -28,13 +38,14 @@ class CommentsList extends Component {
         .collection('comment')
         .doc(postId)
         .collection('comments')
-        .orderBy('date', 'desc');
+        .orderBy('date', 'desc'); 
 
-      let snapshot = await admincommentsRef.get();
+      let snapshot = await admincommentsRef.get();      
 
-      dataComment = snapshot.docs.map((doc) => {
-        return { id: doc.id, ...doc.data() };
-      });
+      dataComment = await  Promise.all(snapshot.docs.map(async(doc) => {       
+        let picture= await this.getDataUser(doc.data().author)
+        return { id: doc.id, ...doc.data(),picture:picture };
+      }));   
       this.setState({ dataComment });
     } catch (err) {
       this.setState({ dataComment: [] });
@@ -53,6 +64,7 @@ class CommentsList extends Component {
 
   render() {
     const { dataComment } = this.state;
+   
     return (
       <div style={{ textAlign: 'left' }}>
         {!dataComment && <Spin tip='Loading...' />}
@@ -69,13 +81,14 @@ class CommentsList extends Component {
             // Aqui se llama al array del state
             dataSource={dataComment}
             // Aqui se mapea al array del state
-            renderItem={(item) => (
-              <List.Item key={item.id}>
+            renderItem={(item) =>            
+              (
+              <List.Item key={item.id}>                
                 <Comment
-                  avatar={
-                    item.authorName ? (
-                      <Avatar>
-                        {item.authorName &&
+                  avatar={                   
+                    item.authorName ? (                      
+                      <Avatar src={ item.picture?item.picture:null}>
+                        {!item.picture && item.authorName &&
                           item.authorName.charAt(0).toUpperCase() + item.authorName.charAt(1).toLowerCase()}
                       </Avatar>
                     ) : (
@@ -121,4 +134,4 @@ class CommentsList extends Component {
     );
   }
 }
-export default CommentsList;
+export default withContext(CommentsList);

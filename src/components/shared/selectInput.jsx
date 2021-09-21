@@ -11,6 +11,11 @@ class SelectInput extends Component {
             selectedOptions: this.props.selectedOptions
         }
     }
+    componentDidUpdate(prevProps){        
+        if(this.props.options!==prevProps.options){
+            this.setState({options:this.props.options})
+        }
+    }
 
     onChange = (selectedOptions, { action }) => {
         // bail if user is trying to add an option once max reached
@@ -36,7 +41,7 @@ class SelectInput extends Component {
     };
     render() {
         const { maxReached, selectedOptions, options } = this.state;
-        const { name, isMulti, required } = this.props;
+        const { name, isMulti, required } = this.props;       
         return (
             <div className="field">
                 <label className={`label ${required?'required':''}`}>{name}</label>

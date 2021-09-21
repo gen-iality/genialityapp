@@ -3,6 +3,7 @@ import { Card, Result,Row } from 'antd';
 import withContext from '../../../Context/withContext';
 
 import React, { useEffect, useState } from 'react';
+import { OrderFunctions } from '../../../helpers/request';
 
 export const PayForm=({eventId,...props})=>{
     return  <Card>
@@ -28,25 +29,47 @@ export default withContext(PayForm);
 
 
  export const ButtonPayment=({eventId,user})=>{
-   
-   const amount="50000";
-   const referenceCode=""+user?._id;
-   const ApiKey = "omF0uvbN3365dC2X4dtcjywbS7";
-   const merchantId ="585044";
-   const [signature,setSignature]=useState(null);
-   const currency='COP';
-   const responseUrl="https://evius.co/landing/"+eventId+"/responsePayu";
+  const amount="50000";
+  const [referenceCode,setReferenceCode]=useState(null);
+  const ApiKey = "omF0uvbN3365dC2X4dtcjywbS7";
+  const merchantId ="585044";
+  const [signature,setSignature]=useState(null);
+  const currency='COP';
+  const responseUrl="https://api.evius.co/api/payment_webhook_response";
+  
+  //Función que permite crear la orden
+  const createOrder= async (amount,user)=>{    
+    console.log("USER==>",user)
+    let order={
+      items:[eventId],
+      account_id:user?.account_id,
+      amount: amount,
+      item_type:"event",
+     discount_codes:[],
+     event_id: eventId    
+    }
+    let respOrder=await OrderFunctions.createOrder(order);
+    if(respOrder){
+      console.log("RESPUESTAORDER==>",respOrder)
+      return respOrder?._id;
+    }
+    
+ 
+  }
 
    useEffect(()=>{
-     if(user){
+     if(user){          
       obtenerSignature();
      }
-    async function obtenerSignature(){     
-     const stringforsignature = `${ApiKey}~${merchantId}~${referenceCode}~${amount}~${currency}`
+    async function obtenerSignature(){
+     const referenceCodeResp=await createOrder(amount,user);      
+     setReferenceCode(referenceCodeResp);     
+     const stringforsignature = `${ApiKey}~${merchantId}~${referenceCodeResp}~${amount}~${currency}`;    
      const signatureNew= await digestMessage(stringforsignature);
-     setSignature(signatureNew)    }
+     setSignature(signatureNew)      
+    }
   
-   },[user])
+   },[user,window.location])
 
    async function digestMessage(message) {
     //var input = new TextEncoder('utf-8').encode(message);
@@ -108,7 +131,7 @@ export default withContext(PayForm);
               type='hidden'
             />
           </form>*/}
-        {<Row style={{width:'100%'}} justify={'center'}><form style={{width:'170px'}}  method="post" action="https://checkout.payulatam.com/ppp-web-gateway-payu/" accept-charset="UTF-8">
+        {<Row style={{width:'100%'}} justify={'center'}><form style={{width:'170px'}}  method="post" action="https://checkout.payulatam.com/ppp-web-gateway-payu/" acceptCharset="UTF-8">
             <input style={{width:'100%'}} type="image" border="0" alt="" src="http://www.payulatam.com/img-secure-2015/boton_pagar_mediano.png" onClick="this.form.urlOrigen.value = window.location.href;"/>       
             <input name="merchantId" type="hidden" value="585044"/>
             <input name="accountId" type="hidden" value="588020"/>
@@ -127,6 +150,7 @@ export default withContext(PayForm);
             <input name="signature" value={signature} type="hidden"/>                      
             <input name="buyerEmail"    type="hidden"  value={user?.user.email} />
             <input name="algorithmSignature" value="SHA256" type="hidden"/>
+            <input name="tes1" value="1" type="hidden"/>
           </form></Row>}     
       
        {/* <form
