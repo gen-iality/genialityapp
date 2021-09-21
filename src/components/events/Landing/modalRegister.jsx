@@ -4,6 +4,8 @@ import { CheckCircleTwoTone } from '@ant-design/icons';
 import { ButtonPayment } from '../registrationForm/payRegister';
 
 const ModalRegister = ({ register, setRegister, event }) => {
+  let titleModal = register == 4 ? `¡Información Actualizada!` : `¡Registro Exitoso!`;
+
   let message =
     register == 1
       ? `Se ha mandado un correo de confirmación que te permitirá acceder al evento`
@@ -30,7 +32,7 @@ const ModalRegister = ({ register, setRegister, event }) => {
       <Result
         icon={<CheckCircleTwoTone twoToneColor='#52c41a' />}
         status='success'
-        title={<Typography.Text type='success'>¡Registro Exitoso!</Typography.Text>}
+        title={<Typography.Text type='success'> {titleModal} </Typography.Text>}
         subTitle={<span style={{ fontSize: '18px' }}>{message}</span>}
         extra={[
           register != 3 ? (
