@@ -17,7 +17,8 @@ import {
   Upload,
   Select,
   Space,
-  InputNumber,Affix
+  InputNumber,
+  Affix,
 } from 'antd';
 import {
   InfoCircleOutlined,
@@ -47,7 +48,7 @@ const { TextArea, Password } = Input;
 const textLeft = {
   textAlign: 'left',
   width: '100%',
-  padding: '10px'
+  padding: '10px',
 };
 
 const center = {
@@ -188,126 +189,135 @@ const FormRegister = ({
       values['code'] = areacodeselected;
     }
 
-    setSectionPermissions({ view: false, ticketview: false });
-    values.password = password;
-    let ruta = '';
-    if (imageAvatar) {
-      if (imageAvatar.fileList.length > 0) {
-        ruta = await saveImageStorage(imageAvatar.fileList[0].thumbUrl);
+    const { data } = await EventsApi.getStatusRegister(eventId, values.email);
+
+    if (data.length == 0) {
+      setSectionPermissions({ view: false, ticketview: false });
+      values.password = password;
+      let ruta = '';
+      if (imageAvatar) {
+        if (imageAvatar.fileList.length > 0) {
+          ruta = await saveImageStorage(imageAvatar.fileList[0].thumbUrl);
+        }
+        values.picture = ruta;
       }
-      values.picture = ruta;
-    }
 
-    // values.files = fileSave
+      // values.files = fileSave
 
-    setGeneralFormErrorMessageVisible(false);
-    setNotLoggedAndRegister(false);
+      setGeneralFormErrorMessageVisible(false);
+      setNotLoggedAndRegister(false);
 
-    const key = 'registerUserService';
+      const key = 'registerUserService';
 
-    // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
-    message.loading({ content: intl.formatMessage({ id: 'registration.message.loading' }), key }, 10);
+      // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
+      message.loading({ content: intl.formatMessage({ id: 'registration.message.loading' }), key }, 10);
 
-    const snap = { properties: { ...values, typeRegister: typeRegister } };
+      const snap = { properties: { ...values, typeRegister: typeRegister } };
 
-    let textMessage = {};
-    textMessage.key = key;
+      let textMessage = {};
+      textMessage.key = key;
 
-    if (eventUserId) {
-      try {
-        await TicketsApi.transferToUser(eventId, eventUserId, snap);
-        // textMessage.content = "Transferencia Realizada";
-        textMessage.content = formMessage.successMessage;
-        setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
-
-        setSubmittedForm(true);
-        message.success(textMessage);
-        setTimeout(() => {
-          closeModal({ status: 'sent_transfer', message: 'Transferencia Hecha' });
-        }, 4000);
-      } catch (err) {
-        console.error('Se presento un problema', err);
-        // textMessage.content = "Error... Intentalo mas tarde";
-        textMessage.content = formMessage.errorMessage;
-        message.error(textMessage);
-      }
-    } else {
-      try {
-        let resp = await UsersApi.createOne(snap, eventId);
-
-        // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
-        // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
-        //
-        let camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
-        updateTakenOptionInTakeableList(camposConOpcionTomada, values, eventId);
-
-        //FIN CAMPO LISTA  tipo justonebyattendee //
-
-        //if (resp.status !== 'UPDATED') {
-
-        if (resp.data && resp.data.user && resp.data.user.initial_token) {
-          setSuccessMessageInRegisterForm(resp.status);
-          // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
-          // textMessage.content = "Usuario " + statusMessage;
-          textMessage.content = 'Usuario ' + formMessage.successMessage;
-
-          let $msg =
-            event.registration_message ||
-            `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`;
-
-          setSuccessMessage($msg);
+      if (eventUserId) {
+        try {
+          await TicketsApi.transferToUser(eventId, eventUserId, snap);
+          // textMessage.content = "Transferencia Realizada";
+          textMessage.content = formMessage.successMessage;
+          setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
 
           setSubmittedForm(true);
-          message.success(intl.formatMessage({ id: 'registration.message.created' }));
-
-          //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
-          //todo el proceso de logueo depende del token en la url por eso se recarga la página
-          if (!event.validateEmail && resp.data.user.initial_token) {
-            setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
-            setTimeout(function() {
-              window.location.replace(
-                eventId == '60cb7c70a9e4de51ac7945a2'
-                  ? `/landing/${eventId}/success/${cEventUser.value==null?typeRegister:"free"}?token=${resp.data.user.initial_token}`
-                  : `/landing/${eventId}/${eventPrivate.section}?register=${eventUser == null ? 2 : 4}&token=${
-                      resp.data.user.initial_token
-                    }`
-              );
-            }, 100);
-          } else {
-            window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${1}`);
-          }
-        } else {
-          // window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
-          //Usuario ACTUALIZADO
-          // let msg =
-          //   'Ya se ha realizado previamente el registro con el correo: ' +
-          //   values.email +
-          //   ', se ha enviado un nuevo correo con enlace de ingreso.';
-          // textMessage.content = msg;
-          if (typeRegister == 'free') {
-            let msg =
-              intl.formatMessage({ id: 'registration.already.registered' }) +
-              ' ' +
-              intl.formatMessage({ id: 'registration.message.success.subtitle' });
-
-            textMessage.content = msg;
-
-            setSuccessMessage(msg);
-            // Retorna un mensaje en caso de que ya se encuentre registrado el correo
-            setNotLoggedAndRegister(true);
-            message.success(msg);
-          } else {
-            //alert('A PAGAR');
-            setPayMessage(true);
-          }
+          message.success(textMessage);
+          setTimeout(() => {
+            closeModal({ status: 'sent_transfer', message: 'Transferencia Hecha' });
+          }, 4000);
+        } catch (err) {
+          console.error('Se presento un problema', err);
+          // textMessage.content = "Error... Intentalo mas tarde";
+          textMessage.content = formMessage.errorMessage;
+          message.error(textMessage);
         }
-      } catch (err) {
-        // textMessage.content = "Error... Intentalo mas tarde";
-        textMessage.content = formMessage.errorMessage;
+      } else {
+        try {
+          let resp = await UsersApi.createOne(snap, eventId);
 
-        textMessage.key = key;
-        message.error(textMessage);
+          // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
+          // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
+          //
+          let camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
+          updateTakenOptionInTakeableList(camposConOpcionTomada, values, eventId);
+
+          //FIN CAMPO LISTA  tipo justonebyattendee //
+
+          //if (resp.status !== 'UPDATED') {
+
+          if (resp.data && resp.data.user && resp.data.user.initial_token) {
+            setSuccessMessageInRegisterForm(resp.status);
+            // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
+            // textMessage.content = "Usuario " + statusMessage;
+            textMessage.content = 'Usuario ' + formMessage.successMessage;
+
+            let $msg =
+              event.registration_message ||
+              `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`;
+
+            setSuccessMessage($msg);
+
+            setSubmittedForm(true);
+            message.success(intl.formatMessage({ id: 'registration.message.created' }));
+
+            //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
+            //todo el proceso de logueo depende del token en la url por eso se recarga la página
+            if (!event.validateEmail && resp.data.user.initial_token) {
+              setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
+              setTimeout(function() {
+                window.location.replace(
+                  eventId == '60cb7c70a9e4de51ac7945a2'
+                    ? `/landing/${eventId}/success/${cEventUser.value == null ? typeRegister : 'free'}?token=${
+                        resp.data.user.initial_token
+                      }`
+                    : `/landing/${eventId}/${eventPrivate.section}?register=${eventUser == null ? 2 : 4}&token=${
+                        resp.data.user.initial_token
+                      }`
+                );
+              }, 100);
+            } else {
+              window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${1}`);
+            }
+          } else {
+            // window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
+            //Usuario ACTUALIZADO
+            // let msg =
+            //   'Ya se ha realizado previamente el registro con el correo: ' +
+            //   values.email +
+            //   ', se ha enviado un nuevo correo con enlace de ingreso.';
+            // textMessage.content = msg;
+            if (typeRegister == 'free') {
+              let msg =
+                intl.formatMessage({ id: 'registration.already.registered' }) +
+                ' ' +
+                intl.formatMessage({ id: 'registration.message.success.subtitle' });
+
+              textMessage.content = msg;
+
+              setSuccessMessage(msg);
+              // Retorna un mensaje en caso de que ya se encuentre registrado el correo
+              setNotLoggedAndRegister(true);
+              message.success(msg);
+            } else {
+              //alert('A PAGAR');
+              setPayMessage(true);
+            }
+          }
+        } catch (err) {
+          // textMessage.content = "Error... Intentalo mas tarde";
+          textMessage.content = formMessage.errorMessage;
+
+          textMessage.key = key;
+          message.error(textMessage);
+        }
       }
+    } else {
+      // alert("YA ESTAS REGISTRADO..")
+      setNotLoggedAndRegister(true);
     }
   };
 
@@ -720,7 +730,7 @@ const FormRegister = ({
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
           <Card
-          bordered={false}
+            bordered={false}
             // title={
             //   eventUser !== undefined && eventUser !== null
             //     ? intl.formatMessage({ id: 'registration.title.update' })
@@ -735,18 +745,26 @@ const FormRegister = ({
               eventUser !== null &&
               eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
               eventId &&
-              eventId == '60cb7c70a9e4de51ac7945a2' && <Row style={{textAlign:'center'}} justify={'center'} align={'center'}><strong>Te invitamos a realizar el pago para poder participar en las pujas.</strong></Row>}
-               {eventUser !== undefined &&
+              eventId == '60cb7c70a9e4de51ac7945a2' && (
+                <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
+                  <strong>Te invitamos a realizar el pago para poder participar en las pujas.</strong>
+                </Row>
+              )}
+            {eventUser !== undefined &&
               eventUser !== null &&
               eventUser.rol_id == '60e8a8b7f6817c280300dc23' &&
               eventId &&
-              eventId == '60cb7c70a9e4de51ac7945a2' && <Row style={{textAlign:'center'}} justify={'center'} align={'center'}><strong>Ya eres un asistente pago</strong></Row>}
+              eventId == '60cb7c70a9e4de51ac7945a2' && (
+                <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
+                  <strong>Ya eres un asistente pago</strong>
+                </Row>
+              )}
             {eventUser !== undefined &&
               eventUser !== null &&
               eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
               eventId &&
-              eventId == '60cb7c70a9e4de51ac7945a2' &&  <ButtonPayment />}
-           
+              eventId == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
+
             <Form
               form={form}
               layout='vertical'
@@ -768,8 +786,7 @@ const FormRegister = ({
                   </Card>
                 </Row>
               )*/}
-              <div style={{height:'55vh', overflowY:'auto', paddingRight:'10px'}}>{renderForm()}</div>
-              
+              <div style={{ height: '49vh', overflowY: 'auto', paddingRight: '10px' }}>{renderForm()}</div>
 
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
@@ -780,21 +797,27 @@ const FormRegister = ({
               </Row>
 
               <Row gutter={[24, 24]}>
-                <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                <Col span={24} style={{ padding: 0, display: 'inline-flex', justifyContent: 'center' }}>
                   {notLoggedAndRegister && (
                     <Alert
+                      style={{ width: '94%' }}
                       message={intl.formatMessage({ id: 'registration.already.registered' })}
-                      description={intl.formatMessage({ id: 'registration.message.success.subtitle' })}
+                      //description={intl.formatMessage({ id: 'registration.message.success.subtitle' })}
+                      description={' '}
                       type='warning'
                       showIcon
                       closable
                     />
                   )}
                 </Col>
-                
+
                 <Col span={24}>
-                  <Form.Item>            
-                    <Button size='large' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} htmlType='submit'>
+                  <Form.Item>
+                    <Button
+                      size='large'
+                      block
+                      style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                      htmlType='submit'>
                       {eventUser
                         ? intl.formatMessage({ id: 'registration.button.update' })
                         : eventId === '5f9824fc1f8ccc414e33bec2'
@@ -802,7 +825,7 @@ const FormRegister = ({
                         : intl.formatMessage({ id: 'registration.button.create' })}
                     </Button>
                   </Form.Item>
-                </Col>       
+                </Col>
               </Row>
             </Form>
           </Card>

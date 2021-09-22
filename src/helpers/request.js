@@ -277,6 +277,11 @@ export const EventsApi = {
     return await Actions.get(
       `api/event/${eventId}/meeting/${requestId}/${status}`
     );
+  },
+  getStatusRegister:async(eventId,email)=>{
+    return await Actions.get(
+      `api/events/${eventId}/eventusers?filtered=[{"field":"properties.email","value":"${email}"}]`
+    );
   }
 };
 export const InvitationsApi = {
