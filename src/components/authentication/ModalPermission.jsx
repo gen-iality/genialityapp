@@ -1,9 +1,9 @@
 import { LeftCircleOutlined } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Grid, Typography } from 'antd';
-import React from 'react';
+import React, { useContext } from 'react';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
-
+import { HelperContext } from '../../Context/HelperContext';
 const { useBreakpoint } = Grid;
 
 const stylePaddingDesktop = {
@@ -15,10 +15,11 @@ const stylePaddingMobile = {
   paddingRight: '10px',
 };
 
-const ModalPermission = (props) => {
+const ModalPermission = () => {
+  let { handleChangeTypeModal, typeModal } = useContext(HelperContext);
   const screens = useBreakpoint();
   const textoTitle =
-    props.typeModal == 'register' ? 'Registrarme al evento' : props.typeModal == 'update' ? 'Actualizar mis datos' : '';
+    typeModal == 'register' ? 'Registrarme al evento' : typeModal == 'update' ? 'Actualizar mis datos' : '';
   return (
     <Modal
       bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
@@ -26,11 +27,11 @@ const ModalPermission = (props) => {
       footer={null}
       zIndex={999999999}
       closable={false}
-      visible={props.typeModal=="update"}>
+      visible={typeModal == 'update'}>
       <PageHeader
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={
-          <Space onClick={()=>props.setTypeModal(null)}>
+          <Space onClick={() => handleChangeTypeModal(null)}>
             <LeftCircleOutlined style={{ color: '#6B7283', fontSize: '20px' }} />
             <span style={{ fontSize: '14px', color: '#6B7283' }}>Volver al inicio de sesión</span>
           </Space>
@@ -53,13 +54,7 @@ const ModalPermission = (props) => {
           paddingTop: '8px',
           paddingBottom: '8px',
         }}>
-        <FormComponent
-          extraFieldsOriginal={props.cEvent.value?.user_properties}
-          eventId={props.cEvent.value?._id}
-          conditionals={props.cEvent.value?.fields_conditions || []}
-          initialValues={props.cEventUser?.value || {}}
-          eventUser={props.cEventUser?.value}
-        />
+        <FormComponent />
       </div>
     </Modal>
   );

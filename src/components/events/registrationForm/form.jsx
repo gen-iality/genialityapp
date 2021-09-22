@@ -1,32 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
-import {
-  Collapse,
-  Form,
-  Input,
-  Col,
-  Row,
-  message,
-  Checkbox,
-  Alert,
-  Card,
-  Button,
-  Result,
-  Divider,
-  Upload,
-  Select,
-  Space,
-  InputNumber,
-  Affix,
-} from 'antd';
-import {
-  InfoCircleOutlined,
-  LoadingOutlined,
-  PlayCircleOutlined,
-  ShopOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
+import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Divider, Upload, Select } from 'antd';
+import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
 import { useIntl } from 'react-intl';
@@ -34,13 +10,13 @@ import ImgCrop from 'antd-img-crop';
 import { saveImageStorage } from '../../../helpers/helperSaveImage';
 import { areaCode } from '../../../helpers/constants';
 import TypeRegister from '../../tickets/typeRegister';
-import { ButtonPayment, PayForm } from './payRegister';
+import { ButtonPayment } from './payRegister';
 import { setSectionPermissions } from '../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 import { useContext } from 'react';
 import HelperContext from '../../../Context/HelperContext';
-import { CurrentEventUserContext } from '../../../Context/eventUserContext';
-// import InputFile from "./inputFile"
+import { UseUserEvent } from '../../../Context/eventUserContext';
+import { UseEventContext } from '../../../Context/eventContext';
 const { Option } = Select;
 const { Panel } = Collapse;
 const { TextArea, Password } = Input;
@@ -105,23 +81,17 @@ let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) =
     // delete updatedField['_id'];
     // delete updatedField['updated_at'];
     // delete updatedField['created_at'];
-    EventFieldsApi.registerListFieldOptionTaken(taken, fieldId, eventId);
+    EventFieldsApi.registerListFieldOptionTaken(taken, fieldId, cEvent.value?._id);
   });
 };
 
-const FormRegister = ({
-  initialValues,
-  eventId,
-  extraFieldsOriginal,
-  eventUser,
-  eventUserId,
-  closeModal,
-  conditionals,
-  showSection,
-  setSectionPermissions,
-}) => {
+const FormRegister = ({ closeModal, setSectionPermissions }) => {
+  let { eventPrivate } = useContext(HelperContext);
+  let cEventUser = UseUserEvent();
+  let cEvent = UseEventContext();
+
   const intl = useIntl();
-  const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
+  const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || {});
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
@@ -140,21 +110,24 @@ const FormRegister = ({
   let [areacodeselected, setareacodeselected] = useState();
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
+  const [initialValues, setinitialValues] = useState(cEventUser?.value || {});
+  const [conditionals, setconditionals] = useState(cEvent.value?.fields_conditions || []);
+  const [eventUser, seteventUser] = useState(cEventUser?.value || {});
+  const [extraFieldsOriginal, setextraFieldsOriginal] = useState(cEvent.value?.user_properties || {});
   initialValues.codearea = null;
-  let { eventPrivate } = useContext(HelperContext);
-  let cEventUser = useContext(CurrentEventUserContext);
+
   useEffect(() => {
-    let formType = !eventUserId ? 'register' : 'transfer';
+    let formType = !cEventUser.value?._id ? 'register' : 'transfer';
     setFormMessage(FormTags(formType));
     setSubmittedForm(false);
-    hideConditionalFieldsToDefault(conditionals, eventUser);
+    hideConditionalFieldsToDefault(conditionals, cEventUser);
 
-    getEventData(eventId);
+    getEventData(cEvent.value?._id);
     form.resetFields();
     if (window.fbq) {
       window.fbq('track', 'CompleteRegistration');
     }
-  }, [eventUser, eventUserId, initialValues, conditionals, eventId]);
+  }, [cEventUser.value, initialValues, conditionals, cEvent.value?._id]);
 
   useEffect(() => {
     if (!extraFields) return;
@@ -180,7 +153,7 @@ const FormRegister = ({
 
   //Funcion para traer los datos del event para obtener la variable validateEmail y enviarla al estado
   const getEventData = async (eventId) => {
-    const data = await EventsApi.getOne(eventId);
+    const data = await EventsApi.getOne(cEvent.value?._id);
     setEvent(data);
   };
 
@@ -189,7 +162,7 @@ const FormRegister = ({
       values['code'] = areacodeselected;
     }
 
-    const { data } = await EventsApi.getStatusRegister(eventId, values.email);
+    const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
 
     if (data.length == 0) {
       setSectionPermissions({ view: false, ticketview: false });
@@ -219,7 +192,7 @@ const FormRegister = ({
 
       if (eventUserId) {
         try {
-          await TicketsApi.transferToUser(eventId, eventUserId, snap);
+          await TicketsApi.transferToUser(cEvent.value?._id, eventUserId, snap);
           // textMessage.content = "Transferencia Realizada";
           textMessage.content = formMessage.successMessage;
           setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
@@ -237,13 +210,13 @@ const FormRegister = ({
         }
       } else {
         try {
-          let resp = await UsersApi.createOne(snap, eventId);
+          let resp = await UsersApi.createOne(snap, cEvent.value?._id);
 
           // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
           // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
           //
           let camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
-          updateTakenOptionInTakeableList(camposConOpcionTomada, values, eventId);
+          updateTakenOptionInTakeableList(camposConOpcionTomada, values, cEvent.value?._id);
 
           //FIN CAMPO LISTA  tipo justonebyattendee //
 
@@ -267,23 +240,23 @@ const FormRegister = ({
             //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
             //todo el proceso de logueo depende del token en la url por eso se recarga la página
             if (!event.validateEmail && resp.data.user.initial_token) {
-              setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
+              setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
               setTimeout(function() {
                 window.location.replace(
-                  eventId == '60cb7c70a9e4de51ac7945a2'
-                    ? `/landing/${eventId}/success/${cEventUser.value == null ? typeRegister : 'free'}?token=${
-                        resp.data.user.initial_token
-                      }`
-                    : `/landing/${eventId}/${eventPrivate.section}?register=${eventUser == null ? 2 : 4}&token=${
-                        resp.data.user.initial_token
-                      }`
+                  cEvent.value?._id == '60cb7c70a9e4de51ac7945a2'
+                    ? `/landing/${cEvent.value?._id}/success/${
+                        cEventUser.value == null ? typeRegister : 'free'
+                      }?token=${resp.data.user.initial_token}`
+                    : `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${
+                        eventUser == null ? 2 : 4
+                      }&token=${resp.data.user.initial_token}`
                 );
               }, 100);
             } else {
-              window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${1}`);
+              window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${1}`);
             }
           } else {
-            // window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
+            // window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=800`);
             //Usuario ACTUALIZADO
             // let msg =
             //   'Ya se ha realizado previamente el registro con el correo: ' +
@@ -516,7 +489,7 @@ const FormRegister = ({
                     )}
                   </Checkbox>
                 </Form.Item>
-                {eventId == '60cb7c70a9e4de51ac7945a2' && (
+                {cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
                   <Row style={{ marginTop: 20 }}>
                     {' '}
                     <a target='_blank' rel='noreferrer' href={'https://tiempodejuego.org/tyclaventana/'}>
@@ -528,9 +501,11 @@ const FormRegister = ({
                 {description && description.length > 500 && (
                   <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
                     <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
-                    <pre dangerouslySetInnerHTML= {{
-                      __html: description
-                    }} style={{ whiteSpace: 'normal',textAlign:'justify' }}></pre>
+                      <pre
+                        dangerouslySetInnerHTML={{
+                          __html: description,
+                        }}
+                        style={{ whiteSpace: 'normal', textAlign: 'justify' }}></pre>
                     </Panel>
                   </Collapse>
                 )}
@@ -740,14 +715,14 @@ const FormRegister = ({
             // }
             bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
-            {eventId && eventId == '60cb7c70a9e4de51ac7945a2' && !eventUser && (
+            {cEvent.value?._id && cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && !eventUser && (
               <TypeRegister typeRegister={typeRegister} setTypeRegister={setTypeRegister} />
             )}
             {eventUser !== undefined &&
               eventUser !== null &&
               eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
-              eventId &&
-              eventId == '60cb7c70a9e4de51ac7945a2' && (
+              cEvent.value?._id &&
+              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
                 <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
                   <strong>Te invitamos a realizar el pago para poder participar en las pujas.</strong>
                 </Row>
@@ -755,8 +730,8 @@ const FormRegister = ({
             {eventUser !== undefined &&
               eventUser !== null &&
               eventUser.rol_id == '60e8a8b7f6817c280300dc23' &&
-              eventId &&
-              eventId == '60cb7c70a9e4de51ac7945a2' && (
+              cEvent.value?._id &&
+              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
                 <Row style={{ textAlign: 'center' }} justify={'center'} align={'center'}>
                   <strong>Ya eres un asistente pago</strong>
                 </Row>
@@ -764,8 +739,8 @@ const FormRegister = ({
             {eventUser !== undefined &&
               eventUser !== null &&
               eventUser.rol_id == '60e8a7e74f9fb74ccd00dc22' &&
-              eventId &&
-              eventId == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
+              cEvent.value?._id &&
+              cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && <ButtonPayment />}
 
             <Form
               form={form}
@@ -781,7 +756,7 @@ const FormRegister = ({
               initialValues={initialValues}
               onFinishFailed={showGeneralMessage}
               onValuesChange={valuesChange}>
-              {/*eventId && eventId == '60cb7c70a9e4de51ac7945a2' && (
+              {/*cEvent.value?._id && cEvent.value?._id == '60cb7c70a9e4de51ac7945a2' && (
                 <Row justify={'center'} style={{ marginBottom: 30 }}>
                   <Card style={{ width: 700, margin: 'auto', background: '#F7C2C6' }}>
                     <InfoCircleOutlined /> Una vez registrado para acceder a la puja de obras debes realizar la donación
@@ -799,7 +774,7 @@ const FormRegister = ({
               </Row>
 
               <Row gutter={[24, 24]}>
-                <Col span={24} >
+                <Col span={24}>
                   {notLoggedAndRegister && (
                     <Alert
                       style={{ width: '94%' }}
@@ -822,7 +797,7 @@ const FormRegister = ({
                       htmlType='submit'>
                       {eventUser
                         ? intl.formatMessage({ id: 'registration.button.update' })
-                        : eventId === '5f9824fc1f8ccc414e33bec2'
+                        : cEvent.value?._id === '5f9824fc1f8ccc414e33bec2'
                         ? 'Votar y Enviar'
                         : intl.formatMessage({ id: 'registration.button.create' })}
                     </Button>
