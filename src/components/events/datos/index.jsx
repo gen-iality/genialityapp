@@ -278,7 +278,7 @@ class Datos extends Component {
         dataIndex: '',
         render: (key) => (
           <>
-           {key.name !== 'email' && key.name !== 'names' &&  (
+           {key.name !== 'email' &&  (
             <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
            )}
             {key.name !== 'email' && key.name !== 'names' &&  (
