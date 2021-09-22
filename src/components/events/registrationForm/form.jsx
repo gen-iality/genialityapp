@@ -792,9 +792,9 @@ const FormRegister = ({
                   )}
                 </Col>
                 
-                <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                <Col span={24}>
                   <Form.Item>            
-                    <Button type='primary' htmlType='submit'>
+                    <Button size='large' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} htmlType='submit'>
                       {eventUser
                         ? intl.formatMessage({ id: 'registration.button.update' })
                         : eventId === '5f9824fc1f8ccc414e33bec2'

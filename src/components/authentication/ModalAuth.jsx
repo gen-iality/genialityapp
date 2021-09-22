@@ -13,8 +13,8 @@ const stylePaddingDesktop = {
   paddingRight: '25px',
 };
 const stylePaddingMobile = {
-  paddingLeft: '0px',
-  paddingRight: '0px',
+  paddingLeft: '10px',
+  paddingRight: '10px',
 };
 
 const ModalAuth = (props) => { 
