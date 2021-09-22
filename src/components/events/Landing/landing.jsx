@@ -35,6 +35,8 @@ import { Ripple } from 'react-preloaders';
 import ModalRegister from './modalRegister';
 import { toast } from 'react-toastify';
 import ModalAuth from '../../authentication/ModalAuth';
+import ModalLoginHelpers from '../../authentication/ModalLoginHelpers';
+import ModalPermission from '../../authentication/ModalPermission';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -70,6 +72,7 @@ const Landing = (props) => {
   let cEventUser = UseUserEvent();
   let { isNotification, ChangeActiveNotification, eventPrivate } = useContext(HelperContext);
   const [register, setRegister] = useState(null);
+  const [typeModal, setTypeModal] = useState(null);
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -148,7 +151,9 @@ const Landing = (props) => {
 
   return (
     <>
-      <ModalAuth/>
+      <ModalAuth typeModal={typeModal} setTypeModal={setTypeModal}/>
+      <ModalLoginHelpers typeModal={typeModal} setTypeModal={setTypeModal}/>
+      {<ModalPermission typeModal={typeModal} setTypeModal={setTypeModal} /> }{/*update: modal de actualizar || register: modal de registro */}
       {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
       <Layout>
         <AppointmentModal
