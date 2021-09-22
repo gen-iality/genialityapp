@@ -282,6 +282,9 @@ export const EventsApi = {
     return await Actions.get(
       `api/events/${eventId}/eventusers?filtered=[{"field":"properties.email","value":"${email}"}]`
     );
+  },
+  recoveryPassword:async(eventId,url,email)=>{
+    return await  Actions.put(`/api/events/${eventId}/changeUserPassword?destination=${url}`,email );
   }
 };
 export const InvitationsApi = {
