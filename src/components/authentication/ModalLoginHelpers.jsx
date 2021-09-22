@@ -1,8 +1,9 @@
 import { LeftCircleOutlined, MailOutlined } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert } from 'antd';
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { EventsApi } from '../../helpers/request';
 import withContext from '../../Context/withContext';
+import { HelperContext } from '../../Context/HelperContext';
 
 const { useBreakpoint } = Grid;
 
@@ -15,7 +16,8 @@ const stylePaddingMobile = {
   paddingRight: '0px',
 };
 
-const ModalLoginHelpers = (props) => {  
+const ModalLoginHelpers = (props) => { 
+  let { handleChangeTypeModal, typeModal } = useContext(HelperContext); 
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
   const [sendRecovery, setSendRecovery] = useState(null);
@@ -32,11 +34,11 @@ const ModalLoginHelpers = (props) => {
     }
   };
   //FUNCIÓN QUE SE EJECUTA AL PRESIONAR EL BOTON
-  const onFinish = async (values) => {
+  const onFinish = async (values) => {    
     setRegisterUser(false);
     setSendRecovery(null);
     // SI EL EVENTO ES PARA RECUPERAR CONTRASEÑA
-    if (props.typeModal == 'recover') {
+    if (typeModal == 'recover') {
       const { data } = await EventsApi.getStatusRegister(props.cEvent.value?._id, values.email);
       //console.log("RESPUESTA REGISTER USER==>",data)
       if (data.length == 0) {
@@ -60,11 +62,11 @@ const ModalLoginHelpers = (props) => {
       footer={null}
       zIndex={999999999}
       closable={false}
-      visible={props.typeModal !== null}>
+      visible={typeModal !== null}>
       <PageHeader
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={
-          <Space onClick={() => props.setTypeModal(null)}>
+          <Space onClick={() => handleChangeTypeModal(null)}>
             <LeftCircleOutlined style={{ color: '#6B7283', fontSize: '20px' }} />
             <span style={{ fontSize: '14px', color: '#6B7283' }}>Volver al inicio de sesión</span>
           </Space>
@@ -81,14 +83,9 @@ const ModalLoginHelpers = (props) => {
         <Typography.Title level={4} type='secondary'>
           {textoTitle}
         </Typography.Title>
-        <Form.Item
-          label='Email'
-          name='email'
-          style={{ marginBottom: '10px' }}
-          rules={[
-            { required: true, message: 'Ingrese un email' },
-            { type: 'email', message: 'Ingrese un email válido' },
-          ]}>
+        <Form.Item label='Email' name='email' style={{ marginBottom: '10px' }}
+        rules={[{required:true, message:"El email es requerido"},{type:'email',message:"Ingrese un email válido"}]}
+        >
           <Input
             type='email'
             size='large'

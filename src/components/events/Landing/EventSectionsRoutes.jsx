@@ -170,9 +170,10 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
 
-        <Route path={`${path}/login`}>
+        {/* DESHABILITADO POR NUEVO FLUJO DE REGISTRO Y LOGIN */}
+        {/* <Route path={`${path}/login`}>
           <UserLoginContainer eventId={props.cEvent.value._id} />
-        </Route>
+        </Route> */}
 
         <Route path={`${path}/informativeSection`}>
           {() =>
@@ -302,7 +303,9 @@ const EventSectionRoutes = (props) => {
             )
           }
         </Route>
-        <Route path={`${path}/tickets`}>
+
+        {/* DESHABILITADO POR NUEVO FLUJO DE REGISTRO Y LOGIN */}
+        {/* <Route path={`${path}/tickets`}>
           {() =>
             ValidateViewPermissions('tickets', 'Registro') ? (
               <>
@@ -314,7 +317,7 @@ const EventSectionRoutes = (props) => {
               </div>
             )
           }
-        </Route>
+        </Route> */}
 
         <Route path={`${path}/certs`}>
           {() =>
@@ -351,14 +354,17 @@ const EventSectionRoutes = (props) => {
             )
           }
         </Route>
-        <Route path={`${path}/permissions`}>
-          <PageNotPermissions   setVirtualConference={props.setVirtualConference} />
-        </Route>
+
+        {/* DESHABILITADO POR NUEVO FLUJO DE REGISTRO Y LOGIN */}
+        {/* <Route path={`${path}/permissions`}>
+          <PageNotPermissions setVirtualConference={props.setVirtualConference} />
+        </Route> */}
+
         <Route path={`${path}/success/:type?`}>
           <MessageRegister />
         </Route>
         <Route path={`${path}/responsePayu`}>
-         <ResponsePayu />
+          <ResponsePayu />
         </Route>
       </Switch>
     </>

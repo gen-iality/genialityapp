@@ -70,9 +70,8 @@ const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
-  let { isNotification, ChangeActiveNotification, eventPrivate } = useContext(HelperContext);
+  let { isNotification, ChangeActiveNotification, typeModal } = useContext(HelperContext);
   const [register, setRegister] = useState(null);
-  const [typeModal, setTypeModal] = useState(null);
 
   const ButtonRender = (status, activity) => {
     return status == 'open' ? (
@@ -103,7 +102,7 @@ const Landing = (props) => {
         ChangeActiveNotification(false, 'none', 'none');
       },
       btn: ButtonRender(type, activity),
-      duration:type=='ended' || type=='open'?7:3
+      duration: type == 'ended' || type == 'open' ? 7 : 3,
     });
   };
 
@@ -151,9 +150,10 @@ const Landing = (props) => {
 
   return (
     <>
-      <ModalAuth typeModal={typeModal} setTypeModal={setTypeModal}/>
-      <ModalLoginHelpers typeModal={typeModal} setTypeModal={setTypeModal}/>
-      {<ModalPermission typeModal={typeModal} setTypeModal={setTypeModal} /> }{/*update: modal de actualizar || register: modal de registro */}
+      <ModalAuth />
+      <ModalLoginHelpers />
+      <ModalPermission />
+      {/*update: modal de actualizar || register: modal de registro */}
       {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
       <Layout>
         <AppointmentModal

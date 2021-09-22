@@ -2,10 +2,11 @@ import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, MailOutlined } from '@a
 import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin } from 'antd';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
+import { HelperContext } from '../../Context/HelperContext';
 import { app } from '../../helpers/firebase';
 import * as Cookie from 'js-cookie';
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -23,11 +24,11 @@ const ModalAuth = (props) => {
   const screens = useBreakpoint();
   const [loading, setLoading] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
+  let { handleChangeTypeModal, typeModal } = useContext(HelperContext);
 
   useEffect(() => {
-    userAuth();
     async function userAuth() {
-      await app.auth().onAuthStateChanged((user) => {
+      app.auth().onAuthStateChanged((user) => {
         if (user) {
           user.getIdToken().then(async function(idToken) {
             if (idToken && !Cookie.get('evius_token')) {
@@ -40,13 +41,15 @@ const ModalAuth = (props) => {
         }
       });
     }
+
+    userAuth();
   }, []);
 
   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
   const handleLoginEmailPassword = async (values) => {
     setLoading(true);
     console.log('VALUES==>', values);
-    await loginEmailPassword(values);
+    loginEmailPassword(values);
     setTimeout(() => {
       setLoading(false);
     }, 3000);
@@ -73,7 +76,7 @@ const ModalAuth = (props) => {
   };
   return (
     props.cUser?.value == null &&
-    props.typeModal == null && (
+    typeModal == null && (
       <Modal
         bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
         centered
@@ -114,7 +117,7 @@ const ModalAuth = (props) => {
               </Form.Item>
               <Form.Item style={{ marginBottom: '10px' }}>
                 <Typography.Text
-                  onClick={() => props.setTypeModal('recover')}
+                  onClick={() => handleChangeTypeModal('recover')}
                   underline
                   type='secondary'
                   style={{ float: 'right', cursor: 'pointer' }}>
@@ -147,7 +150,7 @@ const ModalAuth = (props) => {
                   Invitado anónimo
                 </Button>
                 <Button
-                  onClick={() => props.setTypeModal('mail')}
+                  onClick={() => handleChangeTypeModal('mail')}
                   block
                   style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
                   size='large'>
@@ -168,13 +171,7 @@ const ModalAuth = (props) => {
                   paddingTop: '8px',
                   paddingBottom: '8px',
                 }}>
-                <FormComponent
-                  extraFieldsOriginal={props.cEvent.value?.user_properties}
-                  eventId={props.cEvent.value?._id}
-                  conditionals={props.cEvent.value?.fields_conditions || []}
-                  initialValues={props.cEventUser?.value || {}}
-                  eventUser={props.cEventUser?.value}
-                />
+                <FormComponent />
               </div>
             </TabPane>
           )}
