@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { List, Tooltip, Popover, Avatar, Typography, Space, Tag } from 'antd';
-import { MessageTwoTone } from '@ant-design/icons';
+import { List, Tooltip, Popover, Avatar, Typography, Space, Tag, Image } from 'antd';
+import { EyeOutlined, MessageTwoTone } from '@ant-design/icons';
 import { InitialsNameUser } from '../hooks';
 import PopoverInfoUser from '../hooks/Popover';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -134,26 +134,41 @@ const AttendeList = function(props) {
               ) : null,
             ]}>
             <List.Item.Meta
-              avatar={<Avatar src={item.imageProfile} size={40} />}
+              
+              avatar={
+                <Avatar src={<Image src={item.imageProfile} preview={{ mask: <EyeOutlined /> }} />} size={45}>
+                  {!item.imageProfile && item.names ? item.names.charAt(0).toUpperCase() : item.names}
+                </Avatar>
+              }
               title={
                 <Popover
                   trigger='hover'
-                  style={{ padding: '0px !important', zIndex: 1000 }}
+                  
                   placement='leftTop'
                   content={<PopoverInfoUser item={item} props={props} />}>
                   <Typography.Paragraph
                     ellipsis={{ rows: 2 }}
-                    style={{ color: 'black', cursor: 'pointer', width: '90%', fontSize: '15px' }}
+                    style={{
+                      color: 'black',
+                      cursor: 'pointer',
+                      width: '85%',
+                      fontSize: '15px',
+                      whiteSpace:'break-spaces'
+                    }}
                     key='list-loadmore-edit'>
                     {item.names}
                   </Typography.Paragraph>
                 </Popover>
               }
               description={
-                item.status === 'online' && (
-                  <Space size={5} style={{ color: '#52c41a' }}>
-                    <Tag color='#52C41A'>Online</Tag>
-                  </Space>
+                item.status === 'online' ? (
+                  <div style={{ color: '#52c41a', marginTop: '-10px' }}>
+                    <Tag color='#52C41A'>En linea</Tag>
+                  </div>
+                ) : (
+                  <div style={{ color: '#52c41a', marginTop: '-10px' }}>
+                    <Tag color='#CCCCCC'>Offline</Tag>
+                  </div>
                 )
               }
             />

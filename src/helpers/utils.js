@@ -95,13 +95,13 @@ export function parseData2Excel(data, fields,roles=null) {
       let str;
       switch (type) {
         case 'number':
-          str = item.properties[name] ? item.properties[name].toString() : '';
+          str = item.properties[name] ? item.properties[name].toString() : item?.user[name];
           break;
         case 'boolean':
           str = item[name] ?  item[name]:'';
           break;
         case 'complex':
-          str = item.properties[name] ? item.properties[name].response : '';
+          str = item.properties[name] ? item.properties[name].response : item?.user[name];
           break;
         case 'multiplelist':
           str = Array.isArray(item.properties[name]) ? item.properties[name].join() : item.properties[name];
@@ -116,7 +116,7 @@ export function parseData2Excel(data, fields,roles=null) {
               : item.properties[name];
           break;
         default:
-          str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : '';
+          str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : item?.user[name];
       }
 
       if (type === 'complex' && str) {

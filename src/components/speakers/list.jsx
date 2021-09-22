@@ -8,7 +8,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import Header from '../../antdComponents/Header';
-import { columns } from './colums';
+import { columns } from './columns';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
@@ -22,7 +22,6 @@ function SpeakersList(props) {
    const queryClient = useQueryClient();
    const { isLoading, data } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
 
-   // console.log("10. datainicio ", data)
    function sortAndIndexSpeakers() {
       let list = [];
       if (data) {
@@ -37,6 +36,7 @@ function SpeakersList(props) {
    }
 
    function remove(info) {
+      //Se coloco la constante "eventId" porque se perdia al momento de hacer la llamada al momento de eliminar
       const eventId = props.eventID;
       confirm({
          title: `¿Está seguro de eliminar a ${info.name}?`,
@@ -151,7 +151,7 @@ function SpeakersList(props) {
       return <SortableItem index={index} {...restProps} />;
    };
 
-   const columsData = {
+   const columnsData = {
       data: props,
       searchedColumn: searchedColumn,
       handleSearch,
@@ -172,9 +172,8 @@ function SpeakersList(props) {
             // save={saveOrder}
          />
 
-         {/* En esta tabla en particular viene por defecto el paginamiento, por lo que no necesita llamar a algún otro método para su funcionamiento (se tuvo que colocar false para no venir la paginación) */}
          <Table
-            columns={columns(columsData)}
+            columns={columns(columnsData)}
             dataSource={sortAndIndexSpeakers()}
             size='small'
             rowKey='index'

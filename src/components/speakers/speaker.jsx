@@ -5,9 +5,8 @@ import EviusReactQuill from '../shared/eviusReactQuill';
 import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
 import { CategoriesAgendaApi, SpeakersApi } from '../../helpers/request';
 import Creatable from 'react-select';
-import { Button, Typography, Row, Col, Form, Input, Upload, Image, Empty, Card, Switch, Modal, notification, Tooltip } from 'antd';
+import { Button, Typography, Row, Col, Form, Input, Image, Empty, Card, Switch, Modal, message, Tooltip } from 'antd';
 import { LeftOutlined, UserOutlined , SettingOutlined, DeleteOutlined, SaveOutlined, ExclamationCircleOutlined, PlusCircleOutlined, UpOutlined, EditOutlined } from '@ant-design/icons';
-/* import ImgCrop from 'antd-img-crop'; */
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -117,6 +116,11 @@ async function dataTheLoaded() {
   };
 
   async function submit (values){
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras guarda la información..</>,
+    });
     const { name, profession, description, image, order, published } = values;
 
     const body = {
@@ -133,23 +137,27 @@ async function dataTheLoaded() {
     try {
       if (state.edit) await SpeakersApi.editOne(body, state.edit, eventID);
       else await SpeakersApi.create(eventID, body);
-      notification.success({
-        message: 'Operación Exitosa',
-        description: 'Información guardada',
-        placement:'bottomRight'
-      })
+      message.destroy(loading.key);
+      message.open({
+        type: 'success',
+        content: <> Conferencista guardado correctamente!</>,
+      });
       history.push(`/event/${eventID}/speakers`)
     } catch (e) {
-      notification.error({
-        message: handleRequestError(e).message,
-        description: 'Hubo un error guardando',
-        placement:'bottomRight'
-      })
+      message.destroy(loading.key);
+      message.open({
+        type: 'error',
+        content: handleRequestError(e).message,
+      });
     }
   };
 
   function remove() {
-
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
     if (state.edit) {
       confirm({
         title: `¿Está seguro de eliminar al conferencista?`,
@@ -163,17 +171,17 @@ async function dataTheLoaded() {
             try {
               await SpeakersApi.deleteOne(state.edit, eventID);
               setRedirect(true)
-              notification.success({
-                message: 'Operación Exitosa',
-                description: 'Se eliminó al conferencista ',
-                placement:'bottomRight'
-              })
+              message.destroy(loading.key);
+              message.open({
+                type: 'success',
+                content: <> Se eliminó al conferencista correctamente!</>,
+              });
             } catch (e) {
-              notification.error({
-                message: handleRequestError(e).message,
-                description: 'Hubo un error eliminando al conferencista',
-                placement:'bottomRight'
-              })
+              message.destroy(loading.key);
+              message.open({
+                type: 'error',
+                content: handleRequestError(e).message,
+              });
             }
           }
           onHandlerRemoveSpeaker();

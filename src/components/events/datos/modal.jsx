@@ -206,7 +206,7 @@ class DatosModal extends Component {
               <div className='control'>
                 <div className='select'>
                   <select
-                    disabled={!info.name === 'picture' || !info.name == 'email' || !info.name == 'names' ? false : true}
+                    disabled={info.name === 'picture' || info.name == 'email' || info.name == 'names' ? true : false}
                     onChange={this.handleChange}
                     name={'type'}
                     value={info.type}>
