@@ -1,6 +1,6 @@
 import { LeftCircleOutlined, MailOutlined } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert } from 'antd';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { EventsApi } from '../../helpers/request';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
@@ -21,9 +21,10 @@ const ModalLoginHelpers = (props) => {
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
   const [sendRecovery, setSendRecovery] = useState(null);
+  const [form] = Form.useForm();
   const screens = useBreakpoint();
-  const textoTitle = props.typeModal == 'recover' ? 'Recuperar contraseña' : 'Enviar link de acceso al correo ';
-  const textoButton = props.typeModal == 'recover' ? 'Recuperar contraseña' : 'Enviar al correo ';
+  const textoTitle = typeModal == 'recover' ? 'Recuperar contraseña' : 'Enviar link de acceso al correo ';
+  const textoButton = typeModal == 'recover' ? 'Recuperar contraseña' : 'Enviar al correo ';
   //FUNCIÓN QUE PERMITE ENVIAR LA CONTRASEÑA AL EMAIL DIGITADO
   const handleRecoveryPass = async ({ email }) => {
     try {
@@ -51,6 +52,11 @@ const ModalLoginHelpers = (props) => {
       //ENVIAR ACCESO AL CORREO
     }
   };
+
+  useEffect(() => {
+    setSendRecovery(null);
+  }, [typeModal]);
+
   //FAILDE DE VALIDACIONES DEL FORMULARIO
   const onFinishFailed = () => {
     console.log('FALIED FORM');
@@ -60,13 +66,13 @@ const ModalLoginHelpers = (props) => {
       bodyStyle={{ textAlign: 'center' }}
       centered
       footer={null}
-      zIndex={500}
+      zIndex={1000}
       closable={false}
       visible={typeModal !== null}>
       <PageHeader
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={
-          <Space onClick={() => handleChangeTypeModal(null)}>
+          <Space onClick={() => {handleChangeTypeModal(null); setSendRecovery(null); setRegisterUser(false); form.resetFields();}}>
             <LeftCircleOutlined style={{ color: '#6B7283', fontSize: '20px' }} />
             <span style={{ fontSize: '14px', color: '#6B7283' }}>Volver al inicio de sesión</span>
           </Space>
@@ -76,6 +82,7 @@ const ModalLoginHelpers = (props) => {
       />
 
       <Form
+        form={form}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         layout='vertical'
@@ -98,7 +105,7 @@ const ModalLoginHelpers = (props) => {
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
-        {sendRecovery != null && <Alert type='info' message={sendRecovery} />}
+        {sendRecovery != null && <Alert type='success' message={sendRecovery} />}
         {registerUser && <Alert showIcon type='error' message='Este email no se encuentra registrado en este evento' />}
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>

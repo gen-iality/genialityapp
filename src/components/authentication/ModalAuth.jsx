@@ -80,8 +80,8 @@ const ModalAuth = (props) => {
       <Modal
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
-        footer={null}
-        zIndex={500}
+       
+        zIndex={1000}
         closable={false}
         visible={true}>
         <Tabs centered size='large'>

@@ -25,7 +25,7 @@ const ModalPermission = () => {
       bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
       centered
       footer={null}
-      zIndex={500}
+      zIndex={1000}
       closable={false}
       visible={typeModal == 'update'}>
       <PageHeader
