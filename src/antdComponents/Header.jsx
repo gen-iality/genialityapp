@@ -1,12 +1,23 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
-import { PlusCircleOutlined, SaveOutlined, LeftOutlined, DeleteOutlined, ExclamationOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, SaveOutlined, LeftOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
 const Header = ( props ) => {
   const history = useHistory();
-  const { title, titleTooltip, addUrl, edit, remove, save, saveMethod, back, pendingChanges, form, extra } = props;
+  const { 
+    title, //titulo del encabezado
+    titleTooltip, //tooltip para el encabezado
+    addUrl, //link para ir a la vista de agregar
+    edit, //id del elemento a editar
+    remove, //método para eliminar
+    save, //boolean, para que aparezca el botón de guardar
+    saveMethod, //viene el método para guardar
+    back, //boolean, permite aparecer el icono para volver atrás
+    form, 
+    extra 
+  } = props;
 
   return (
     <>
@@ -49,11 +60,10 @@ const Header = ( props ) => {
             save && (
               <Button 
                 onClick={saveMethod} 
-                type={!pendingChanges ? 'primary' : 'ghost'} 
-                icon={!pendingChanges ? <SaveOutlined /> : <ExclamationOutlined />}
+                type={'primary'} 
+                icon={<SaveOutlined /> }
                 size="middle"
                 htmlType={form ? 'submit' : 'button'}
-                className={pendingChanges ? 'animate__animated animate__pulse animate__infinite' : ''}
               >
                 {'Guardar'}
               </Button>
