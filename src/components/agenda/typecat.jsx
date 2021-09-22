@@ -56,6 +56,7 @@ const AgendaTypeCat = (props) => {
   useEffect(() => {
     getList();
     if(subject === 'categorias'){
+      /*Validación que me permite anexar en las columnas el campo de color en caso de que 'subjet' sea 'categoria'*/
       columnsOriginal.splice(1,0, {
         title: 'Color',
         dataIndex: 'color',

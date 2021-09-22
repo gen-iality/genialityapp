@@ -38,6 +38,7 @@ function SpeakersList(props) {
          list = list.sort((a, b) => a.index - b.index);
          setLoading(false);
          setSpeakersList(list);
+         /* este setList es para poder hacer la comparación en el arreglo al momento de que se mueva un elemento. Este sería el arreglo original */
          setLists(data);
       }
    }
@@ -136,10 +137,12 @@ function SpeakersList(props) {
          type: 'success',
          content: <> Configuración guardada correctamente!</>,
       });
+      /*Esto funciona para que al momento de guardar se setee el campo de chage que es el que me avisa cuando hay un cambio en la tabla*/
       setChange(false);
       fetchSpeakers();
    }
 
+   //Función que permite realizar la comparación del arreglo inicial con el que se movió
    function onMove () {
       setChange(JSON.stringify(lists) !== JSON.stringify(speakersList));
    }
