@@ -130,7 +130,9 @@ const AgendaTypeCatCE = ( props ) => {
       <Header 
         title={`${subject === 'categoria' ? 'Categoría' : 'Tipo'}`}
         back
-        save={onSubmit}
+        save
+        saveMethod={onSubmit}
+        form
         remove={onRemoveId}
         edit={locationState.edit}
       />

@@ -175,7 +175,7 @@ function SpeakersList(props) {
             size='small'
             rowKey='index'
             loading={isLoading}
-            hasData={sortAndIndexSpeakers().length}
+            hasData={sortAndIndexSpeakers()}
             components={{
                body: {
                   wrapper: DraggableContainer,

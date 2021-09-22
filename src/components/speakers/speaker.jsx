@@ -7,6 +7,7 @@ import { CategoriesAgendaApi, SpeakersApi } from '../../helpers/request';
 import Creatable from 'react-select';
 import { Button, Typography, Row, Col, Form, Input, Image, Empty, Card, Switch, Modal, message, Tooltip } from 'antd';
 import { LeftOutlined, UserOutlined , SettingOutlined, DeleteOutlined, SaveOutlined, ExclamationCircleOutlined, PlusCircleOutlined, UpOutlined, EditOutlined } from '@ant-design/icons';
+import Header from '../../antdComponents/Header';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -206,13 +207,14 @@ async function dataTheLoaded() {
         onFinish={() => submit(data)}
         {...formLayout}
       >
-        <Title level={4} >
-          <Link to={matchUrl}><LeftOutlined /></Link> 
-          {'Conferencistas'}
-        </Title>
-
-        <Row justify='end' gutter={8}>
-          <Col>
+        <Header 
+          title={'Conferencistas'}
+          back
+          save
+          form
+          edit={state.edit}
+          remove={remove}
+          extra={(
             <Form.Item label={'Visible'} labelCol={{span: 13}}>
               <Switch 
                 checkedChildren="Sí"
@@ -227,26 +229,8 @@ async function dataTheLoaded() {
                 }
               />
             </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item >
-              <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
-                {'Guardar'}
-              </Button>
-            </Form.Item>
-          </Col>
-          <Col>
-            {
-              state.edit && (
-                <Form.Item>
-                  <Button onClick={remove} type="link" danger icon={<DeleteOutlined />}>
-                    {'Eliminar'}
-                  </Button>
-                </Form.Item>
-              ) 
-            }
-          </Col>
-        </Row>
+          )}
+        />
 
         <Row justify='center' wrap gutter={12}>
           <Col span={12}>

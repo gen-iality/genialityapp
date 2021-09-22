@@ -6,7 +6,7 @@ const { Title } = Typography;
 
 const Header = ( props ) => {
   const history = useHistory();
-  const { title, titleTooltip, add, addUrl, edit, remove, save, back, pendingChanges } = props;
+  const { title, titleTooltip, addUrl, edit, remove, save, saveMethod, back, pendingChanges, form, extra } = props;
 
   return (
     <>
@@ -26,6 +26,15 @@ const Header = ( props ) => {
       <Row wrap justify='end' gutter={[8, 8]}>
         <Col>
           {
+            extra && (
+              <div>
+                {extra}
+              </div>
+            )
+          }
+        </Col>
+        <Col>
+          {
             addUrl && (
               <Link to={addUrl} >
                 <Button type="primary" icon={<PlusCircleOutlined />} size="middle" >
@@ -39,11 +48,11 @@ const Header = ( props ) => {
           {
             save && (
               <Button 
-                onClick={save} 
+                onClick={saveMethod} 
                 type={!pendingChanges ? 'primary' : 'ghost'} 
                 icon={!pendingChanges ? <SaveOutlined /> : <ExclamationOutlined />}
                 size="middle"
-                htmlType={save ? 'submit' : 'button'}
+                htmlType={form ? 'submit' : 'button'}
                 className={pendingChanges ? 'animate__animated animate__pulse animate__infinite' : ''}
               >
                 {'Guardar'}
