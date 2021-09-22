@@ -519,7 +519,7 @@ const FormRegister = ({
                     <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
                     <pre dangerouslySetInnerHTML= {{
                       __html: description
-                    }} style={{ whiteSpace: 'normal' }}></pre>
+                    }} style={{ whiteSpace: 'normal',textAlign:'justify' }}></pre>
                     </Panel>
                   </Collapse>
                 )}
