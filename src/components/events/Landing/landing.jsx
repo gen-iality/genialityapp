@@ -36,6 +36,7 @@ import ModalRegister from './modalRegister';
 import { toast } from 'react-toastify';
 import ModalAuth from '../../authentication/ModalAuth';
 import ModalLoginHelpers from '../../authentication/ModalLoginHelpers';
+import ModalPermission from '../../authentication/ModalPermission';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -151,7 +152,8 @@ const Landing = (props) => {
   return (
     <>
       <ModalAuth typeModal={typeModal} setTypeModal={setTypeModal}/>
-      <ModalLoginHelpers typeModal={typeModal} setTypeModal={setTypeModal}/> 
+      <ModalLoginHelpers typeModal={typeModal} setTypeModal={setTypeModal}/>
+      {<ModalPermission typeModal={typeModal} setTypeModal={setTypeModal} /> }{/*update: modal de actualizar || register: modal de registro */}
       {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
       <Layout>
         <AppointmentModal

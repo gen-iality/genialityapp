@@ -15,7 +15,7 @@ const stylePaddingMobile = {
 
 const ModalLoginHelpers = (props) => {
 
-  // typeModal recover || send  
+  // typeModal --> recover || send  
   const screens = useBreakpoint();
   const textoTitle = props.typeModal == 'recover' ? 'Recuperar contraseña' : 'Enviar link de acceso al correo '
   const textoButton = props.typeModal == 'recover' ? 'Recuperar contraseña' : 'Enviar al correo '
@@ -37,7 +37,7 @@ const ModalLoginHelpers = (props) => {
           </Space>
         }
         onBack={() => null}
-        title=' '
+        title=' ' // NO eliminar el espacio en blanco
       />
 
       <Form layout='vertical' style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>

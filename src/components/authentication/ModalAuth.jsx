@@ -19,33 +19,33 @@ const stylePaddingMobile = {
   paddingRight: '10px',
 };
 
-const ModalAuth = (props) => { 
+const ModalAuth = (props) => {
   const screens = useBreakpoint();
-  const [loading,setLoading]=useState(false)
-  const [errorLogin,setErrorLogin]=useState(false)
+  const [loading, setLoading] = useState(false);
+  const [errorLogin, setErrorLogin] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     userAuth();
-   async function userAuth(){
-    await app.auth().onAuthStateChanged((user) => {
-      if (user) {
-        user.getIdToken().then(async function(idToken) {
-          if (idToken && !Cookie.get('evius_token')){
-            Cookie.set('evius_token', idToken,{ expires: 180 });
-            setTimeout(function() {
-              window.location.replace(`/landing/${props.cEvent.value?._id}?token=${idToken}`);
-            }, 1000);
-          }
-        });
-      }
-    });
-   }
-  },[])
+    async function userAuth() {
+      await app.auth().onAuthStateChanged((user) => {
+        if (user) {
+          user.getIdToken().then(async function(idToken) {
+            if (idToken && !Cookie.get('evius_token')) {
+              Cookie.set('evius_token', idToken, { expires: 180 });
+              setTimeout(function() {
+                window.location.replace(`/landing/${props.cEvent.value?._id}?token=${idToken}`);
+              }, 1000);
+            }
+          });
+        }
+      });
+    }
+  }, []);
 
-   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
-   const handleLoginEmailPassword = async (values) => {    
+  //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
+  const handleLoginEmailPassword = async (values) => {
     setLoading(true);
-    console.log("VALUES==>",values)
+    console.log('VALUES==>', values);
     await loginEmailPassword(values);
     setTimeout(() => {
       setLoading(false);
@@ -54,16 +54,16 @@ const ModalAuth = (props) => {
 
   //Realiza la validación del email y password con firebase
   const loginEmailPassword = (data) => {
-    setErrorLogin(false)
-    console.log("DATA==>",data.email.trim(), data.password.trim())
+    setErrorLogin(false);
+    console.log('DATA==>', data.email.trim(), data.password.trim());
     app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
       // .then(response =>
       .catch(() => {
         console.error('Error: Email or password invalid');
-        setErrorLogin(true)
-        setLoading(false)
+        setErrorLogin(true);
+        setLoading(false);
       });
   };
 
@@ -71,79 +71,116 @@ const ModalAuth = (props) => {
   const onFinishFailed = (errorInfo) => {
     console.error('Failed:', errorInfo);
   };
-  return ( props.cUser?.value==null && props.typeModal==null &&
-    <Modal
-      bodyStyle={{ textAlign: 'center', paddingRight:'10px', paddingLeft:'10px' }}
-      centered
-      footer={null}
-      zIndex={999999999}
-      closable={false}
-      visible={true}>
-      <Tabs centered size='large'>
-        <TabPane tab='Iniciar sesión' key='1'>
-          <Form onFinish={handleLoginEmailPassword} onFinishFailed={onFinishFailed} layout='vertical' style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-            <Form.Item label='Email' name="email" style={{ marginBottom: '10px' }}
-             rules={[{ required: true, message: 'Ingrese un email' }]}>
-              <Input
-                type="email"
-                size='large'
-                placeholder='Email'
-                prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-              />
-            </Form.Item>
-            <Form.Item label='Contraseña' name="password" style={{ marginBottom: '10px' }}
-             rules={[{ required: true, message: 'Ingrese una contraseña' }]}>
-              <Input.Password
-                size='large'
-                placeholder='Contraseña'
-                prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
-                iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-              />
-            </Form.Item>
-            <Form.Item  style={{ marginBottom: '10px' }}>
-              <Typography.Text onClick={()=>props.setTypeModal('recover')} underline type='secondary' style={{ float: 'right', cursor: 'pointer' }}>
-                Olvide mi contraseña
-              </Typography.Text>
-            </Form.Item>
-            {errorLogin && <Alert showIcon  closable style={{marginBottom:10}} type="error" message={"Email o contraseña incorrecta"} />}
-            {!loading && <Form.Item style={{ marginBottom: '10px' }}>
-              <Button  htmlType="submit" block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
-                Iniciar sesión
-              </Button>
-            </Form.Item>}
-            {loading && <Spin />}
-          </Form>
-          <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
-          <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-            <Typography.Paragraph type='secondary'>Mira otras formas de entrar al evento</Typography.Paragraph>
-            <Space direction='vertical' style={{ width: '100%' }}>
-              <Button block style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }} size='large'>
-                Invitado anónimo
-              </Button>
-              <Button onClick={()=>props.setTypeModal("mail")} block style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }} size='large'>
-                Enviar acceso a mi correo
-              </Button>
-            </Space>
-          </div>
-        </TabPane>
-        {props.cEventUser?.value==null && <TabPane tab='Registrarme' key='2'>
-          <div
-            // className='asistente-list'
-            style={{
-              height: '70vh',
-              overflowY: 'hidden',
-              paddingLeft: '5px',
-              paddingRight: '5px',
-              paddingTop: '8px',
-              paddingBottom: '8px',
-            }}>
-              <FormComponent  extraFieldsOriginal={props.cEvent.value?.user_properties} eventId={props.cEvent.value?._id} conditionals={props.cEvent.value?.fields_conditions || []} initialValues={props.cEventUser?.value || {}} eventUser={props.cEventUser?.value} /> 
-          
-          </div>
-        </TabPane>}
-      </Tabs>
-    </Modal>
-    
+  return (
+    props.cUser?.value == null &&
+    props.typeModal == null && (
+      <Modal
+        bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
+        centered
+        footer={null}
+        zIndex={999999999}
+        closable={false}
+        visible={true}>
+        <Tabs centered size='large'>
+          <TabPane tab='Iniciar sesión' key='1'>
+            <Form
+              onFinish={handleLoginEmailPassword}
+              onFinishFailed={onFinishFailed}
+              layout='vertical'
+              style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+              <Form.Item
+                label='Email'
+                name='email'
+                style={{ marginBottom: '10px' }}
+                rules={[{ required: true, message: 'Ingrese un email' }]}>
+                <Input
+                  type='email'
+                  size='large'
+                  placeholder='Email'
+                  prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                />
+              </Form.Item>
+              <Form.Item
+                label='Contraseña'
+                name='password'
+                style={{ marginBottom: '10px' }}
+                rules={[{ required: true, message: 'Ingrese una contraseña' }]}>
+                <Input.Password
+                  size='large'
+                  placeholder='Contraseña'
+                  prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                />
+              </Form.Item>
+              <Form.Item style={{ marginBottom: '10px' }}>
+                <Typography.Text
+                  onClick={() => props.setTypeModal('recover')}
+                  underline
+                  type='secondary'
+                  style={{ float: 'right', cursor: 'pointer' }}>
+                  Olvide mi contraseña
+                </Typography.Text>
+              </Form.Item>
+              {errorLogin && (
+                <Alert
+                  showIcon
+                  closable
+                  style={{ marginBottom: 10 }}
+                  type='error'
+                  message={'Email o contraseña incorrecta'}
+                />
+              )}
+              {!loading && (
+                <Form.Item style={{ marginBottom: '10px' }}>
+                  <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+                    Iniciar sesión
+                  </Button>
+                </Form.Item>
+              )}
+              {loading && <Spin />}
+            </Form>
+            <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
+            <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+              <Typography.Paragraph type='secondary'>Mira otras formas de entrar al evento</Typography.Paragraph>
+              <Space direction='vertical' style={{ width: '100%' }}>
+                <Button block style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }} size='large'>
+                  Invitado anónimo
+                </Button>
+                <Button
+                  onClick={() => props.setTypeModal('mail')}
+                  block
+                  style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
+                  size='large'>
+                  Enviar acceso a mi correo
+                </Button>
+              </Space>
+            </div>
+          </TabPane>
+          {props.cEventUser?.value == null && (
+            <TabPane tab='Registrarme' key='2'>
+              <div
+                // className='asistente-list'
+                style={{
+                  height: '70vh',
+                  overflowY: 'hidden',
+                  paddingLeft: '5px',
+                  paddingRight: '5px',
+                  paddingTop: '8px',
+                  paddingBottom: '8px',
+                }}>
+                <FormComponent
+                  extraFieldsOriginal={props.cEvent.value?.user_properties}
+                  eventId={props.cEvent.value?._id}
+                  conditionals={props.cEvent.value?.fields_conditions || []}
+                  initialValues={props.cEventUser?.value || {}}
+                  eventUser={props.cEventUser?.value}
+                />
+              </div>
+            </TabPane>
+          )}
+        </Tabs>
+      </Modal>
+    )
   );
 };
 
