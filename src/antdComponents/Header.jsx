@@ -1,12 +1,12 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
-import { PlusCircleOutlined, SaveOutlined, LeftOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, SaveOutlined, LeftOutlined, DeleteOutlined, ExclamationOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
 const Header = ( props ) => {
   const history = useHistory();
-  const { title, titleTooltip, add, addUrl, edit, remove, save, back } = props;
+  const { title, titleTooltip, add, addUrl, edit, remove, save, back, pendingChanges } = props;
 
   return (
     <>
@@ -39,14 +39,15 @@ const Header = ( props ) => {
           {
             save && (
               <Button 
-                  onClick={save} 
-                  type='primary' 
-                  icon={<SaveOutlined />}
-                  size="middle"
-                  htmlType={save ? 'submit' : 'button'}
-                >
-                  {'Guardar'}
-                </Button>
+                onClick={save} 
+                type={!pendingChanges ? 'primary' : 'ghost'} 
+                icon={!pendingChanges ? <SaveOutlined /> : <ExclamationOutlined />}
+                size="middle"
+                htmlType={save ? 'submit' : 'button'}
+                className={pendingChanges ? 'animate__animated animate__pulse animate__infinite' : ''}
+              >
+                {'Guardar'}
+              </Button>
             )
           }
         </Col>

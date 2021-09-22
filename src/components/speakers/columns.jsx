@@ -8,12 +8,13 @@ import { sortableHandle } from 'react-sortable-hoc';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 
-export const columns = (columsData) => [
+export const columns = (columnsData) => [
    {
       title: '',
       dataIndex: 'move',
       width: '50px',
       render(val, item) {
+         columnsData.move();
          return <DragHandle />;
       },
    },
@@ -60,12 +61,12 @@ export const columns = (columsData) => [
    {
       title: 'Nombre',
       dataIndex: 'name',
-      ...getColumnSearchProps('name', columsData),
+      ...getColumnSearchProps('name', columnsData),
    },
    {
       title: 'Profesión',
       dataIndex: 'profession',
-      ...getColumnSearchProps('profession', columsData),
+      ...getColumnSearchProps('profession', columnsData),
    },
    {
       title: 'Visible',
@@ -75,7 +76,6 @@ export const columns = (columsData) => [
          const update = async (checked) => {
             item.published = checked;
             const res = await SpeakersApi.editOne(item, item._id, item.event_id);
-            /* '5fa9a9431cd0d1074b1e9242' */
             if (res) setPublish(res.published);
          };
          return <Switch checkedChildren='Sí' unCheckedChildren='No' onChange={update} checked={publish} />;
@@ -94,7 +94,7 @@ export const columns = (columsData) => [
                   <Tooltip placement='topLeft' title='Editar Conferencista'>
                      <Link
                         key='edit'
-                        to={{ pathname: `${columsData.data.matchUrl}/speaker`, state: { edit: item._id } }}>
+                        to={{ pathname: `${columnsData.data.matchUrl}/speaker`, state: { edit: item._id } }}>
                         <Button icon={<EditOutlined />} type='primary' size='small' />
                      </Link>
                   </Tooltip>
@@ -104,7 +104,7 @@ export const columns = (columsData) => [
                      <Button
                         key='delete'
                         onClick={() => {
-                            columsData.remove(item);
+                            columnsData.remove(item);
                         }}
                         icon={<DeleteOutlined />}
                         type='danger'

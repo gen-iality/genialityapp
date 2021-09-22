@@ -7,7 +7,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import Header from '../../antdComponents/Header';
-import { columns } from './colums';
+import { columns } from './columns';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
@@ -19,6 +19,8 @@ function SpeakersList(props) {
    const [speakersList, setSpeakersList] = useState([]);
    const [searchText, setSearchText] = useState('');
    const [searchedColumn, setSearchedColumn] = useState('');
+   const [change, setChange] = useState(false);
+   const [lists, setLists] = useState([]);
 
    useEffect(() => {
       fetchSpeakers();
@@ -36,6 +38,7 @@ function SpeakersList(props) {
          list = list.sort((a, b) => a.index - b.index);
          setLoading(false);
          setSpeakersList(list);
+         setLists(data);
       }
    }
 
@@ -118,7 +121,7 @@ function SpeakersList(props) {
       const loadingSave = message.open({
          key: 'loading',
          type: 'loading',
-         content: <> Por favor espere miestras se guarda la configuración..</>,
+         content: <> Por favor espere mientras se guarda la configuración..</>,
       });
       if (speakersList) {
          await Promise.all(
@@ -133,6 +136,12 @@ function SpeakersList(props) {
          type: 'success',
          content: <> Configuración guardada correctamente!</>,
       });
+      setChange(false);
+      fetchSpeakers();
+   }
+
+   function onMove () {
+      setChange(JSON.stringify(lists) !== JSON.stringify(speakersList));
    }
 
    const columsData = {
@@ -142,6 +151,7 @@ function SpeakersList(props) {
       handleReset,
       remove,
       searchText: searchText,
+      move: onMove
    };
 
    return (
@@ -154,6 +164,7 @@ function SpeakersList(props) {
                state: { new: true },
             }}
             save={saveOrder}
+            pendingChanges={change}
          />
 
          {/* En esta tabla en particular viene por defecto el paginamiento, por lo que no necesita llamar a algún otro método para su funcionamiento (se tuvo que colocar false para no venir la paginación) */}
