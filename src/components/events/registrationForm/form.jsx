@@ -623,7 +623,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
 
         input = (
           <div style={{ textAlign: 'center' }}>
-            <ImgCrop rotate>
+            <ImgCrop rotate shape='round'>
               <Upload
                 accept='image/png,image/jpeg'
                 onChange={(file) => {
@@ -654,7 +654,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
           ? {
               required: true,
               pattern: new RegExp(/^[A-Za-z0-9_-]{8,}$/),
-              message: 'El formato del password no es valido',
+              message: 'Mínimo 8 caracteres con letras y números, no se permiten caracteres especiales',
             }
           : rule;
       // let hideFields =
@@ -761,19 +761,19 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                   </Card>
                 </Row>
               )*/}
-              <div style={{ height: '49vh', overflowY: 'auto', paddingRight: '15px' }}>{renderForm()}</div>
+              <div style={{ height: '50vh', overflowY: 'auto', paddingRight: '10px' }}>{renderForm()}</div>
 
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   {generalFormErrorMessageVisible && (
-                    <Alert message={intl.formatMessage({ id: 'form.missing.required.fields' })} type='warning' />
+                  <Alert message={intl.formatMessage({ id: 'form.missing.required.fields' })} type='warning' />
                   )}
                 </Col>
               </Row>
 
-              <Row gutter={[24, 24]}>
-                <Col span={24}>
-                  {notLoggedAndRegister && (
+              <Row gutter={[24, 24]} align='middle'>
+              {notLoggedAndRegister && <Col span={24} >
+                   (
                     <Alert
                       style={{ width: '94%' }}
                       message={intl.formatMessage({ id: 'registration.already.registered' })}
@@ -783,8 +783,8 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                       showIcon
                       closable
                     />
-                  )}
-                </Col>
+                  )
+                </Col>}
 
                 <Col span={24}>
                   <Form.Item>
@@ -805,7 +805,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
             </Form>
           </Card>
         ) : (
-          <LoadingOutlined style={{ fontSize: '40px' }} />
+          <LoadingOutlined style={{ fontSize: '50px' }} />
         )}
       </Col>
     </>
