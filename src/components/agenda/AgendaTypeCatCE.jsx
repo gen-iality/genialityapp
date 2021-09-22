@@ -23,7 +23,7 @@ const AgendaTypeCatCE = ( props ) => {
   const history = useHistory();
   let [ categoryValues, setCategoryValues ] = useState({});
   const [ name, setName ] = useState('');
-  const [ color, setColor ] = useState('');
+  const [ color, setColor ] = useState('#000000');
   
   useEffect(() => {
     if(locationState.edit) {
@@ -35,8 +35,9 @@ const AgendaTypeCatCE = ( props ) => {
     const response = await apiURL.getOne(locationState.edit, eventID);
     setCategoryValues(response);
     setName(response.name);
-    if(subject === 'categoria')
+    if(subject === 'categoria' && response.color) {
       setColor(response.color);
+    }
   }
 
   const onSubmit = async () => {
@@ -53,7 +54,6 @@ const AgendaTypeCatCE = ( props ) => {
     }
     try {
       if(Object.keys(categoryValues).length) {
-        console.log(categoryValues);
         if(locationState.edit) {
           await apiURL.editOne(categoryValues, locationState.edit, eventID);
         } else {

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { withRouter } from 'react-router-dom';
 import { SpeakersApi } from '../../helpers/request';
-import { Table, Modal, notification, message } from 'antd';
+import { Table, Modal, message } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
@@ -111,10 +111,9 @@ function SpeakersList(props) {
                   content: <> Hubo un error al guardar la posición del speaker!</>,
                });
             } else {
-               notification.error({
-                  message: err,
-                  description: `Hubo un error intentando borrar a ${queryData.speakerData.name}`,
-                  placement: 'bottomRight',
+               message.open({
+                  type: 'error',
+                  content: `Hubo un error intentando borrar a ${queryData.speakerData.name}`,
                });
             }
          },
@@ -130,10 +129,9 @@ function SpeakersList(props) {
                queryClient.fetchQuery('getSpeakersByEvent', SpeakersApi.byEvent(queryData.eventId), {
                   staleTime: 500,
                });
-               notification.success({
-                  message: 'Operación Exitosa',
-                  description: `Se eliminó a ${queryData.speakerData.name}`,
-                  placement: 'bottomRight',
+               message.open({
+                  type: 'success',
+                  content: `Se eliminó a ${queryData.speakerData.name}`
                });
             }
          },
@@ -169,7 +167,6 @@ function SpeakersList(props) {
                pathname: `${props.matchUrl}/speaker`,
                state: { new: true },
             }}
-            // save={saveOrder}
          />
 
          <Table
@@ -178,6 +175,7 @@ function SpeakersList(props) {
             size='small'
             rowKey='index'
             loading={isLoading}
+            hasData={sortAndIndexSpeakers().length}
             components={{
                body: {
                   wrapper: DraggableContainer,

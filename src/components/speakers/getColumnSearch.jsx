@@ -26,7 +26,7 @@ export const getColumnSearchProps = (dataIndex, columnsData) => ({
             <Button onClick={() => columnsData.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
                Borrar
             </Button>
-            <Button
+            {/* <Button
                type='link'
                size='small'
                onClick={() => {
@@ -35,7 +35,7 @@ export const getColumnSearchProps = (dataIndex, columnsData) => ({
                   setSearchedColumn(dataIndex);
                }}>
                Filtrar
-            </Button>
+            </Button> */}
          </Space>
       </div>
    ),
