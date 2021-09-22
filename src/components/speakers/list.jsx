@@ -24,6 +24,8 @@ function SpeakersList(props) {
 
    useEffect(() => {
       fetchSpeakers();
+      //Esto se ejecutaría la primera vez, en caso de que no venga un index.
+      saveOrder();
    }, []);
 
    async function fetchSpeakers() {
