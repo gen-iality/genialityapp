@@ -717,7 +717,7 @@ const FormRegister = ({
 
   return (
     <>
-      <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
+      <Col xs={24} sm={22} md={24} lg={24} xl={24} style={center}>
         {!submittedForm ? (
           <Card
           bordered={false}
@@ -768,7 +768,7 @@ const FormRegister = ({
                   </Card>
                 </Row>
               )*/}
-              <div style={{height:'55vh', overflowY:'auto', paddingRight:'10px'}}>{renderForm()}</div>
+              <div style={{height:'55vh', overflowY:'auto', paddingRight:'15px'}}>{renderForm()}</div>
               
 
               <Row gutter={[24, 24]}>
@@ -780,7 +780,7 @@ const FormRegister = ({
               </Row>
 
               <Row gutter={[24, 24]}>
-                <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                <Col span={24} >
                   {notLoggedAndRegister && (
                     <Alert
                       message={intl.formatMessage({ id: 'registration.already.registered' })}
