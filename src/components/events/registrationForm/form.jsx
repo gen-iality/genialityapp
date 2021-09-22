@@ -85,7 +85,7 @@ let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) =
   });
 };
 
-const FormRegister = ({ closeModal, setSectionPermissions }) => {
+const FormRegister = ({ closeModal, setSectionPermissions,tab }) => {
   let { eventPrivate } = useContext(HelperContext);
   let cEventUser = UseUserEvent();
   let cEvent = UseEventContext();
@@ -143,13 +143,16 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
       }
     }
   }, [extraFields]);
-
+  useEffect(()=>{
+   form.resetFields();
+   setGeneralFormErrorMessageVisible(false)
+  },[tab])
   const showGeneralMessage = (values, error, date) => {
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
       setGeneralFormErrorMessageVisible(false);
     }, 3000);
-  };
+  }; 
 
   //Funcion para traer los datos del event para obtener la variable validateEmail y enviarla al estado
   const getEventData = async (eventId) => {
