@@ -75,10 +75,10 @@ const ModalAuth = (props) => {
     props.cUser?.value == null &&
     props.typeModal == null && (
       <Modal
-        bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
+        bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
         footer={null}
-        zIndex={999999999}
+        zIndex={500}
         closable={false}
         visible={true}>
         <Tabs centered size='large'>
@@ -161,12 +161,12 @@ const ModalAuth = (props) => {
               <div
                 // className='asistente-list'
                 style={{
-                  height: '70vh',
+                  height: 'auto',
                   overflowY: 'hidden',
                   paddingLeft: '5px',
                   paddingRight: '5px',
-                  paddingTop: '8px',
-                  paddingBottom: '8px',
+                  paddingTop: '0px',
+                  paddingBottom: '0px',
                 }}>
                 <FormComponent
                   extraFieldsOriginal={props.cEvent.value?.user_properties}

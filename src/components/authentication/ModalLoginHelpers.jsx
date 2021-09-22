@@ -25,7 +25,7 @@ const ModalLoginHelpers = (props) => {
       bodyStyle={{ textAlign: 'center' }}
       centered
       footer={null}
-      zIndex={999999999}
+      zIndex={500}
       closable={false}
       visible={props.typeModal !==null}>
       <PageHeader 

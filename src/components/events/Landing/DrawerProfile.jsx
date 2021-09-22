@@ -24,19 +24,22 @@ const DrawerProfile = (props) => {
   let { propertiesProfile } = useContext(HelperContext);
   const [userSelected,setUserSelected]=useState()
   const [isMycontact,setIsMyContact]=useState()
+  const [isMe,setIsMe]=useState(false)
  
   useEffect(()=>{    
     if(props.profileuser!==null){
       let isContact=isMyContacts(props.profileuser,props.cHelper.contacts)
+      setIsMe(cUser.value._id == props.profileuser._id)
       setIsMyContact(isContact)      
       setUserSelected(props.profileuser)
     }
   },[props.profileuser])
+
+
   
      
   return (
     <>
-   
     <Drawer
       zIndex={5000}
       visible={props.viewPerfil}
@@ -60,6 +63,7 @@ const DrawerProfile = (props) => {
           <Typography.Paragraph type='secondary' style={{ fontSize: '16px',width:'250px' }}>
             {userSelected && userSelected.properties  && userSelected.properties?.email}
           </Typography.Paragraph>
+          {isMe && (<Button type='text' size='middle' style={{backgroundColor:'#F4F4F4', color:'#FAAD14'}}>Actualizar mis datos</Button>)}
         </Space>
         <Col span={24}>
           <Row justify='center' style={{ marginTop: '20px' }}>
@@ -155,7 +159,7 @@ const DrawerProfile = (props) => {
               renderItem={(item) =>
                 (((item.visibleByContacts && isMycontact) || (!item.visibleByContacts && !item.visibleByAdmin) ) ||
                   userSelected?._id == cUser.value._id) &&
-                userSelected?.properties[item.name] && item.name!=='picture'  && item.name !== 'imagendeperfil' && (
+                userSelected?.properties[item.name] && item.name!=='picture'  && item.name !== 'imagendeperfil' && item.type !== 'password' &&  (
                   <List.Item>   
                     <List.Item.Meta
                       title={item.label}
