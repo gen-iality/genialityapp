@@ -85,8 +85,8 @@ let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) =
   });
 };
 
-const FormRegister = ({ closeModal, setSectionPermissions,tab }) => {
-  let { eventPrivate } = useContext(HelperContext);
+const FormRegister = ({ closeModal, setSectionPermissions }) => {
+  let { eventPrivate,tabLogin } = useContext(HelperContext);
   let cEventUser = UseUserEvent();
   let cEvent = UseEventContext();
 
@@ -146,7 +146,7 @@ const FormRegister = ({ closeModal, setSectionPermissions,tab }) => {
   useEffect(()=>{
    form.resetFields();
    setGeneralFormErrorMessageVisible(false)
-  },[tab])
+  },[tabLogin])
   const showGeneralMessage = (values, error, date) => {
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {

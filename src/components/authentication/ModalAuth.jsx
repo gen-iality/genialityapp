@@ -24,9 +24,9 @@ const ModalAuth = (props) => {
   const screens = useBreakpoint();
   const [loading, setLoading] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
-  const [form1] = Form.useForm();
-  const [tab,setTab]=useState('1')  
-  let { handleChangeTypeModal, typeModal } = useContext(HelperContext);
+  const [form1] = Form.useForm();  
+  let { handleChangeTypeModal, typeModal,handleChangeTabModal } = useContext(HelperContext);
+  
 
   useEffect(() => {
     async function userAuth() {
@@ -49,7 +49,7 @@ const ModalAuth = (props) => {
  
   const callback=(key)=> {
     form1.resetFields();
-    setTab(key)
+    handleChangeTabModal(key)
   }
 
   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
@@ -178,7 +178,7 @@ const ModalAuth = (props) => {
                   paddingTop: '0px',
                   paddingBottom: '0px',
                 }}>
-                <FormComponent tab={tab} />
+                <FormComponent  />
               </div>
             </TabPane>
           )}

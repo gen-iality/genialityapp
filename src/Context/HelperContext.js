@@ -49,9 +49,13 @@ export const HelperContextProvider = ({ children }) => {
   const imageforDefaultProfile = 'https://cdn-icons-png.flaticon.com/512/3237/3237447.png';
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
+  const [tabLogin,setTabLogin]=useState('1')
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
+  }
+  function handleChangeTabModal(tab) {
+    setTabLogin(tab);
   }
 
   useEffect(() => {
@@ -540,7 +544,9 @@ export const HelperContextProvider = ({ children }) => {
         requestSend,
         obtenerContactos,
         typeModal,
-        handleChangeTypeModal
+        handleChangeTypeModal,
+        handleChangeTabModal,
+        tabLogin
       }}>
       {children}
     </HelperContext.Provider>
