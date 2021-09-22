@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { withRouter } from 'react-router-dom';
 import { SpeakersApi } from '../../helpers/request';
 import { Table, Modal, notification, message } from 'antd';
@@ -14,8 +16,6 @@ const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 const { confirm } = Modal;
 
 function SpeakersList(props) {
-   const [loading, setLoading] = useState(true);
-   const [speakersList, setSpeakersList] = useState([]);
    const [searchText, setSearchText] = useState('');
    const [searchedColumn, setSearchedColumn] = useState('');
 
@@ -70,15 +70,75 @@ function SpeakersList(props) {
    //FN para el draggable 1/3
    function onSortEnd({ oldIndex, newIndex }) {
       if (oldIndex !== newIndex) {
-         let newData = arrayMove([].concat(speakersList), oldIndex, newIndex).filter((el) => !!el);
+         let newData = arrayMove([].concat(sortAndIndexSpeakers()), oldIndex, newIndex).filter((el) => !!el);
          if (newData) {
             newData = newData.map((speaker, key) => {
                return { ...speaker, index: key };
             });
          }
-         setSpeakersList(newData);
+         updateOrDeleteSpeakers.mutateAsync({ newData, state: 'update' });
       }
    }
+
+   const updateOrDeleteSpeakers = useMutation(
+      'getSpeakersByEvent',
+      (queryData) => {
+         if (queryData.state === 'update') {
+            queryData.newData.map((speaker, index) => {
+               let speakerChange = { ...speaker, order: index + 1 };
+               SpeakersApi.editOne(speakerChange, speaker._id, props.eventId);
+            });
+         } else {
+            SpeakersApi.deleteOne(queryData.speakerData._id, queryData.eventId);
+         }
+      },
+      {
+         // Optimistically update the cache value on mutate, but store
+         // the old value and return it so that it's accessible in case of
+         // an error
+         onMutate: async () => {
+            //
+            await queryClient.cancelQueries('getSpeakersByEvent');
+            const previousValue = queryClient.getQueryData('getSpeakersByEvent');
+            return previousValue;
+         },
+         // On failure, roll back to the previous value
+         onError: (err, queryData, previousValue) => {
+            if (queryData.state === 'update') {
+               queryClient.setQueryData('getSpeakersByEvent', () => previousValue);
+               message.open({
+                  type: 'error',
+                  content: <> Hubo un error al guardar la posición del speaker!</>,
+               });
+            } else {
+               notification.error({
+                  message: err,
+                  description: `Hubo un error intentando borrar a ${queryData.speakerData.name}`,
+                  placement: 'bottomRight',
+               });
+            }
+         },
+         // After success , refetch the query
+         onSuccess: (data, queryData, previousValue) => {
+            if (queryData.state === 'update') {
+               queryClient.setQueryData('getSpeakersByEvent', queryData.newData);
+               message.open({
+                  type: 'success',
+                  content: <> Posición del speaker guardada correctamente!</>,
+               });
+            } else {
+               queryClient.fetchQuery('getSpeakersByEvent', SpeakersApi.byEvent(queryData.eventId), {
+                  staleTime: 500,
+               });
+               notification.success({
+                  message: 'Operación Exitosa',
+                  description: `Se eliminó a ${queryData.speakerData.name}`,
+                  placement: 'bottomRight',
+               });
+            }
+         },
+      }
+   );
 
    //FN para el draggable 2/3
    const DraggableContainer = (props) => (
@@ -87,7 +147,7 @@ function SpeakersList(props) {
 
    //FN para el draggable 3/3
    const DraggableBodyRow = ({ className, style, ...restProps }) => {
-      const index = speakersList.findIndex((x) => x.index === restProps['data-row-key']);
+      const index = sortAndIndexSpeakers()?.findIndex((x) => x.index === restProps['data-row-key']);
       return <SortableItem index={index} {...restProps} />;
    };
 
@@ -117,8 +177,7 @@ function SpeakersList(props) {
             dataSource={sortAndIndexSpeakers()}
             size='small'
             rowKey='index'
-            loading={loading}
-            hasData={speakersList.length > 0}
+            loading={isLoading}
             components={{
                body: {
                   wrapper: DraggableContainer,
@@ -127,6 +186,7 @@ function SpeakersList(props) {
             }}
             pagination={false}
          />
+         <ReactQueryDevtools initialIsOpen />
       </div>
    );
 }
