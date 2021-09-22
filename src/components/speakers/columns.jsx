@@ -15,7 +15,6 @@ export const columns = (columnsData) => [
       width: '50px',
       render(val, item) {
          //Este método se usa para saber cuando se realiza un movimiento
-         columnsData.move();
          return <DragHandle />;
       },
    },

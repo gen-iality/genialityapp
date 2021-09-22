@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { SpeakersApi } from '../../helpers/request';
-import { handleRequestError } from '../../helpers/utils';
-import { Table, Modal, message } from 'antd';
+import { Table, Modal, notification, message } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
@@ -19,18 +18,11 @@ function SpeakersList(props) {
    const [speakersList, setSpeakersList] = useState([]);
    const [searchText, setSearchText] = useState('');
    const [searchedColumn, setSearchedColumn] = useState('');
-   const [change, setChange] = useState(false);
-   const [lists, setLists] = useState([]);
 
-   useEffect(() => {
-      fetchSpeakers();
-      //Esto se ejecutaría la primera vez, en caso de que no venga un index.
-      saveOrder();
-   }, []);
+   const queryClient = useQueryClient();
+   const { isLoading, data } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
 
-   async function fetchSpeakers() {
-      const data = await SpeakersApi.byEvent(props.eventID);
-
+   function sortAndIndexSpeakers() {
       let list = [];
       if (data) {
          list = data.sort((a, b) => (a.sort && b.sort ? a.sort - b.sort : true));
@@ -38,19 +30,12 @@ function SpeakersList(props) {
             return { ...speaker, index: speaker.sort == index ? speaker.sort : index };
          });
          list = list.sort((a, b) => a.index - b.index);
-         setLoading(false);
-         setSpeakersList(list);
-         /* este setList es para poder hacer la comparación en el arreglo al momento de que se mueva un elemento. Este sería el arreglo original */
-         setLists(data);
+
+         return list;
       }
    }
 
    function remove(info) {
-      const loading = message.open({
-         key: 'loading',
-         type: 'loading',
-         content: <> Por favor espere miestras borra la información..</>,
-       });
       //Se coloco la constante "eventId" porque se perdia al momento de hacer la llamada al momento de eliminar
       const eventId = props.eventID;
       confirm({
@@ -61,22 +46,8 @@ function SpeakersList(props) {
          okType: 'danger',
          cancelText: 'Cancelar',
          onOk() {
-            const onHandlerRemoveSpeaker = async () => {
-               try {
-                  await SpeakersApi.deleteOne(info._id, eventId);
-                  fetchSpeakers();
-                  message.destroy(loading.key);
-                  message.open({
-                     type: 'success',
-                     content: <> Se eliminó al conferencista correctamente!</>,
-                  });
-               } catch (e) {
-                  message.destroy(loading.key);
-                  message.open({
-                    type: 'error',
-                    content: handleRequestError(e).message,
-                  });
-               }
+            const onHandlerRemoveSpeaker = () => {
+               updateOrDeleteSpeakers.mutateAsync({ speakerData: info, eventId });
             };
             onHandlerRemoveSpeaker();
          },
@@ -120,35 +91,6 @@ function SpeakersList(props) {
       return <SortableItem index={index} {...restProps} />;
    };
 
-   async function saveOrder() {
-      const loadingSave = message.open({
-         key: 'loading',
-         type: 'loading',
-         content: <> Por favor espere mientras se guarda la configuración..</>,
-      });
-      if (speakersList) {
-         await Promise.all(
-            speakersList.map(async (speaker, index) => {
-               let speakerChange = { ...speaker, order: index + 1 };
-               await SpeakersApi.editOne(speakerChange, speaker._id, props.eventId);
-            })
-         );
-      }
-      message.destroy(loadingSave.key);
-      message.open({
-         type: 'success',
-         content: <> Configuración guardada correctamente!</>,
-      });
-      /*Esto funciona para que al momento de guardar se setee el campo de chage que es el que me avisa cuando hay un cambio en la tabla*/
-      setChange(false);
-      fetchSpeakers();
-   }
-
-   //Función que permite realizar la comparación del arreglo inicial con el que se movió
-   function onMove () {
-      setChange(JSON.stringify(lists) !== JSON.stringify(speakersList));
-   }
-
    const columnsData = {
       data: props,
       searchedColumn: searchedColumn,
@@ -156,7 +98,6 @@ function SpeakersList(props) {
       handleReset,
       remove,
       searchText: searchText,
-      move: onMove
    };
 
    return (
@@ -168,13 +109,12 @@ function SpeakersList(props) {
                pathname: `${props.matchUrl}/speaker`,
                state: { new: true },
             }}
-            save={saveOrder}
-            pendingChanges={change}
+            // save={saveOrder}
          />
 
          <Table
             columns={columns(columnsData)}
-            dataSource={speakersList}
+            dataSource={sortAndIndexSpeakers()}
             size='small'
             rowKey='index'
             loading={loading}

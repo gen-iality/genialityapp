@@ -277,7 +277,8 @@ class ListEventUser extends Component {
              ) / 100;
            this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight,totalWithWeight });
           
-           console.log("ATTENDESS==>",updatedAttendees)
+           //console.log("ATTENDESS==>",updatedAttendees)
+           //console.log("ATTENDESSFIND==>",updatedAttendees.filter((at)=>at.email=='nieblesrafael@yahoo.com'))
          
           for (let i = 0; i < updatedAttendees.length; i++) {
             
