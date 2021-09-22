@@ -147,7 +147,7 @@ function SpeakersList(props) {
       setChange(JSON.stringify(lists) !== JSON.stringify(speakersList));
    }
 
-   const columsData = {
+   const columnsData = {
       data: props,
       searchedColumn: searchedColumn,
       handleSearch,
@@ -170,9 +170,8 @@ function SpeakersList(props) {
             pendingChanges={change}
          />
 
-         {/* En esta tabla en particular viene por defecto el paginamiento, por lo que no necesita llamar a algún otro método para su funcionamiento (se tuvo que colocar false para no venir la paginación) */}
          <Table
-            columns={columns(columsData)}
+            columns={columns(columnsData)}
             dataSource={speakersList}
             size='small'
             rowKey='index'
