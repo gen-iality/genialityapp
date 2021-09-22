@@ -112,7 +112,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
   let [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState(cEventUser?.value || {});
   const [conditionals, setconditionals] = useState(cEvent.value?.fields_conditions || []);
-  const [eventUser, seteventUser] = useState(cEventUser?.value || {});
+  const [eventUser, seteventUser] = useState(cEventUser.value || {});
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(cEvent.value?.user_properties || {});
   initialValues.codearea = null;
 
@@ -501,9 +501,11 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                 {description && description.length > 500 && (
                   <Collapse defaultActiveKey={['0']} style={{ margingBotton: '15px' }}>
                     <Panel header={intl.formatMessage({ id: 'registration.message.policy' })} key='1'>
-                      <pre dangerouslySetInnerHTML= {{
-                      __html: description
-                    }} style={{ whiteSpace: 'normal' }}></pre>
+                      <pre
+                        dangerouslySetInnerHTML={{
+                          __html: description,
+                        }}
+                        style={{ whiteSpace: 'normal' }}></pre>
                     </Panel>
                   </Collapse>
                 )}
@@ -766,14 +768,14 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
               <Row gutter={[24, 24]}>
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   {generalFormErrorMessageVisible && (
-                  <Alert message={intl.formatMessage({ id: 'form.missing.required.fields' })} type='warning' />
+                    <Alert message={intl.formatMessage({ id: 'form.missing.required.fields' })} type='warning' />
                   )}
                 </Col>
               </Row>
 
               <Row gutter={[24, 24]} align='middle'>
-              {notLoggedAndRegister && <Col span={24} >
-                   (
+                {notLoggedAndRegister && (
+                  <Col span={24}>
                     <Alert
                       style={{ width: '94%' }}
                       message={intl.formatMessage({ id: 'registration.already.registered' })}
@@ -783,8 +785,8 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                       showIcon
                       closable
                     />
-                  )
-                </Col>}
+                  </Col>
+                )}
 
                 <Col span={24}>
                   <Form.Item>
@@ -793,7 +795,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                       block
                       style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
                       htmlType='submit'>
-                      {eventUser
+                      {cEventUser.value
                         ? intl.formatMessage({ id: 'registration.button.update' })
                         : cEvent.value?._id === '5f9824fc1f8ccc414e33bec2'
                         ? 'Votar y Enviar'

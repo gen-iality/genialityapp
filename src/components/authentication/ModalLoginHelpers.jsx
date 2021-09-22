@@ -1,6 +1,6 @@
 import { LeftCircleOutlined, MailOutlined } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert } from 'antd';
-import React, { useState,useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { EventsApi } from '../../helpers/request';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
@@ -16,8 +16,8 @@ const stylePaddingMobile = {
   paddingRight: '0px',
 };
 
-const ModalLoginHelpers = (props) => { 
-  let { handleChangeTypeModal, typeModal } = useContext(HelperContext); 
+const ModalLoginHelpers = (props) => {
+  let { handleChangeTypeModal, typeModal } = useContext(HelperContext);
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
   const [sendRecovery, setSendRecovery] = useState(null);
@@ -27,14 +27,14 @@ const ModalLoginHelpers = (props) => {
   //FUNCIÓN QUE PERMITE ENVIAR LA CONTRASEÑA AL EMAIL DIGITADO
   const handleRecoveryPass = async ({ email }) => {
     try {
-      const resp = await EventsApi.recoveryPassword(props.cEvent.value?._id, window.location.origin, { email });  
-      setSendRecovery('Se ha enviado una nueva contraseña al correo digitado');
+      const resp = await EventsApi.recoveryPassword(props.cEvent.value?._id, window.location.origin, { email });
+      setSendRecovery(`Se ha enviado una nueva contraseña a: ${email} `);
     } catch (error) {
       setSendRecovery('Error al solicitar una nueva contraseña');
     }
   };
   //FUNCIÓN QUE SE EJECUTA AL PRESIONAR EL BOTON
-  const onFinish = async (values) => {    
+  const onFinish = async (values) => {
     setRegisterUser(false);
     setSendRecovery(null);
     // SI EL EVENTO ES PARA RECUPERAR CONTRASEÑA
@@ -83,9 +83,14 @@ const ModalLoginHelpers = (props) => {
         <Typography.Title level={4} type='secondary'>
           {textoTitle}
         </Typography.Title>
-        <Form.Item label='Email' name='email' style={{ marginBottom: '10px' }}
-        rules={[{required:true, message:"El email es requerido"},{type:'email',message:"Ingrese un email válido"}]}
-        >
+        <Form.Item
+          label='Email'
+          name='email'
+          style={{ marginBottom: '10px' }}
+          rules={[
+            { required: true, message: 'El email es requerido' },
+            { type: 'email', message: 'Ingrese un email válido' },
+          ]}>
           <Input
             type='email'
             size='large'
