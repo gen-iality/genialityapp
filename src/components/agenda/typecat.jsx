@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { CategoriesAgendaApi, TypesAgendaApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
-import { Table, Tag, Row, Col, Tooltip, Button, message, Modal } from 'antd';
+import { Tag, Row, Col, Tooltip, Button, message, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
+import Table from '../../antdComponents/Table';
 
 const { confirm } = Modal;
 
@@ -126,12 +127,11 @@ const AgendaTypeCat = (props) => {
       />
       
       <Table 
-        columns={columns}
+        header={columns}
         loading={loading}
-        dataSource={list}
-        hasData={list.length}
+        list={list}
+        key='_id'
         pagination={false}
-        rowKey='_id'
       />
     </div>
   );
