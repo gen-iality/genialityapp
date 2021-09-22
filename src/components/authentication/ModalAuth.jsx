@@ -1,9 +1,11 @@
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, MailOutlined } from '@ant-design/icons';
-import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid } from 'antd';
+import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin } from 'antd';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
+import { app } from '../../helpers/firebase';
+import * as Cookie from 'js-cookie';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -19,6 +21,56 @@ const stylePaddingMobile = {
 
 const ModalAuth = (props) => { 
   const screens = useBreakpoint();
+  const [loading,setLoading]=useState(false)
+  const [errorLogin,setErrorLogin]=useState(false)
+
+  useEffect(()=>{
+    userAuth();
+   async function userAuth(){
+    await app.auth().onAuthStateChanged((user) => {
+      if (user) {
+        user.getIdToken().then(async function(idToken) {
+          if (idToken && !Cookie.get('evius_token')){
+            Cookie.set('evius_token', idToken,{ expires: 180 });
+            setTimeout(function() {
+              window.location.replace(`/landing/${props.cEvent.value?._id}?token=${idToken}`);
+            }, 1000);
+          }
+        });
+      }
+    });
+   }
+  },[])
+
+   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
+   const handleLoginEmailPassword = async (values) => {    
+    setLoading(true);
+    console.log("VALUES==>",values)
+    await loginEmailPassword(values);
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  };
+
+  //Realiza la validación del email y password con firebase
+  const loginEmailPassword = (data) => {
+    setErrorLogin(false)
+    console.log("DATA==>",data.email.trim(), data.password.trim())
+    app
+      .auth()
+      .signInWithEmailAndPassword(data.email, data.password)
+      // .then(response =>
+      .catch(() => {
+        console.error('Error: Email or password invalid');
+        setErrorLogin(true)
+        setLoading(false)
+      });
+  };
+
+  //Se ejecuta en caso que haya un error en el formulario de login en el evento onSubmit
+  const onFinishFailed = (errorInfo) => {
+    console.error('Failed:', errorInfo);
+  };
   return ( props.cUser?.value==null && props.typeModal==null &&
     <Modal
       bodyStyle={{ textAlign: 'center', paddingRight:'10px', paddingLeft:'10px' }}
@@ -29,15 +81,18 @@ const ModalAuth = (props) => {
       visible={true}>
       <Tabs centered size='large'>
         <TabPane tab='Iniciar sesión' key='1'>
-          <Form layout='vertical' style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-            <Form.Item label='Email' style={{ marginBottom: '10px' }}>
+          <Form onFinish={handleLoginEmailPassword} onFinishFailed={onFinishFailed} layout='vertical' style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+            <Form.Item label='Email' name="email" style={{ marginBottom: '10px' }}
+             rules={[{ required: true, message: 'Ingrese un email' }]}>
               <Input
+                type="email"
                 size='large'
                 placeholder='Email'
                 prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
               />
             </Form.Item>
-            <Form.Item label='Contraseña' style={{ marginBottom: '10px' }}>
+            <Form.Item label='Contraseña' name="password" style={{ marginBottom: '10px' }}
+             rules={[{ required: true, message: 'Ingrese una contraseña' }]}>
               <Input.Password
                 size='large'
                 placeholder='Contraseña'
@@ -50,11 +105,13 @@ const ModalAuth = (props) => {
                 Olvide mi contraseña
               </Typography.Text>
             </Form.Item>
-            <Form.Item style={{ marginBottom: '10px' }}>
-              <Button block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+            {errorLogin && <Alert showIcon  closable style={{marginBottom:10}} type="error" message={"Email o contraseña incorrecta"} />}
+            {!loading && <Form.Item style={{ marginBottom: '10px' }}>
+              <Button  htmlType="submit" block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
                 Iniciar sesión
               </Button>
-            </Form.Item>
+            </Form.Item>}
+            {loading && <Spin />}
           </Form>
           <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
           <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
