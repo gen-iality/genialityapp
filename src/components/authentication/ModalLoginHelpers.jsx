@@ -1,7 +1,7 @@
 import { LeftCircleOutlined, MailOutlined } from '@ant-design/icons';
-import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert } from 'antd';
+import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert,Row, Spin } from 'antd';
 import React, { useState, useContext, useEffect } from 'react';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi, UsersApi } from '../../helpers/request';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
 
@@ -21,6 +21,7 @@ const ModalLoginHelpers = (props) => {
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
   const [sendRecovery, setSendRecovery] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const screens = useBreakpoint();
   const textoTitle = typeModal == 'recover' ? 'Recuperar contraseña' : 'Enviar link de acceso al correo ';
@@ -36,6 +37,7 @@ const ModalLoginHelpers = (props) => {
   };
   //FUNCIÓN QUE SE EJECUTA AL PRESIONAR EL BOTON
   const onFinish = async (values) => {
+    setLoading(true)
     setRegisterUser(false);
     setSendRecovery(null);
     // SI EL EVENTO ES PARA RECUPERAR CONTRASEÑA
@@ -50,7 +52,22 @@ const ModalLoginHelpers = (props) => {
       }
     } else {
       //ENVIAR ACCESO AL CORREO
+      try {
+        //const resp = await EventsApi.requestUrlEmail(props.cEvent.value?._id, window.location.origin, { email:values.email });
+        const {data}=await EventsApi.getStatusRegister(props.cEvent.value?._id, values.email);
+        if(data?.length>0){          
+           let resp=await UsersApi.createOne( data[0]?.properties,props.cEvent.value?._id)
+           if(resp && resp.message=="OK"){            
+            setSendRecovery(`Se ha enviado a su email ${values.email} el link de acceso.`);
+           }          
+        }else{
+          setSendRecovery(`El ${values.email} no se encuentra registrado en este evento`);
+        }   
+      } catch (error) {
+        setSendRecovery(`Error al solicitar acceso al evento `);
+      }
     }
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -107,11 +124,12 @@ const ModalLoginHelpers = (props) => {
         </Form.Item>
         {sendRecovery != null && <Alert type='success' message={sendRecovery} />}
         {registerUser && <Alert showIcon type='error' message='Este email no se encuentra registrado en este evento' />}
-        <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
+        {!loading && <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
             {textoButton}
           </Button>
-        </Form.Item>
+        </Form.Item>}
+        {loading && <Row justify='center'><Spin /></Row>}
       </Form>
     </Modal>
   );
