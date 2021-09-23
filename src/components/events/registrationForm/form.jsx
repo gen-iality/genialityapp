@@ -113,8 +113,9 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState(
-    cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
-  );
+    cEventUser?.value!=null ? cEventUser?.value : cUser.value!=null ? cUser.value : {}
+  );  
+  initialValues.contrasena=cUser.value!=null ? cUser.value?.contrasena :'' 
   const [conditionals, setconditionals] = useState(cEvent.value?.fields_conditions || []);
   const [eventUser, seteventUser] = useState(cEventUser.value || {});
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(cEvent.value?.user_properties || {});
