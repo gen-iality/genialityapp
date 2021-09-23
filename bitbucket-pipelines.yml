@@ -54,9 +54,6 @@ pipelines:
           - cypress
           - node
         script:
-          - yarn types
-          - yarn lint
-          - yarn test:unit:ci
           - yarn build:ci
         artifacts:
           - build/**
