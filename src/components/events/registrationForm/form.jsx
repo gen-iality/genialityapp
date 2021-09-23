@@ -113,9 +113,9 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState(
-    cEventUser?.value!=null ? cEventUser?.value : cUser.value!=null ? cUser.value : {}
+    cEventUser?.value? cEventUser?.value : cUser.value? cUser.value : {}
   );  
-  initialValues.contrasena=cUser.value!=null ? cUser.value?.contrasena :'' 
+  initialValues.contrasena=cUser.value ? cUser.value?.contrasena :'' 
   const [conditionals, setconditionals] = useState(cEvent.value?.fields_conditions || []);
   const [eventUser, seteventUser] = useState(cEventUser.value || {});
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(cEvent.value?.user_properties || {});
@@ -172,7 +172,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
 
     const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
 
-    if (data.length == 0) {
+    if (data.length == 0 || cEventUser.value) {
       setSectionPermissions({ view: false, ticketview: false });
       values.password = password;
       let ruta = '';
@@ -197,6 +197,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
 
       let textMessage = {};
       textMessage.key = key;
+      let eventUserId;
 
       if (eventUserId) {
         try {
