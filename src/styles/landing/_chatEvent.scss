@@ -67,10 +67,9 @@
   @media screen and (max-width: $breakpoint-mobile) {
     display: block;
     position: fixed;
-    z-index: 2000;
+    z-index: 1000;
     top: 2%;
-    right: 40%;
-
+    right: 41vw;
     .ant-btn-icon-only.ant-btn-lg {
       width: 45px;
       height: 45px;
