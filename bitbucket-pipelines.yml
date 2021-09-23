@@ -54,7 +54,7 @@ pipelines:
           - cypress
           - node
         script:
-          - yarn build:ci
+          - yarn cy:run
         artifacts:
           - build/**
     - parallel:
