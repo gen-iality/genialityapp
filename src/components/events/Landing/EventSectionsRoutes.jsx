@@ -43,8 +43,7 @@ const EventSectionRoutes = (props) => {
   let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal } = useContext(HelperContext);
 
   function ValidateViewPermissions(route, nombresection) {
-
-    console.log(route,nombresection);
+    console.log(route, nombresection);
     if (props.cEvent.value !== null) {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
@@ -71,7 +70,7 @@ const EventSectionRoutes = (props) => {
         props.cEventUser.value == null &&
         !eventPrivate.private
       ) {
-        handleChangeTypeModal(null);
+        // handleChangeTypeModal(null);
         return false;
       }
     }
