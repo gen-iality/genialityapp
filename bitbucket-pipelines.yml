@@ -2,7 +2,6 @@ image: atlassian/default-image:2
 
 pipelines:
   default:
-    - parallel:
       - step:
           name: 'Instalar dependencias'
           script:
@@ -10,7 +9,4 @@ pipelines:
       - step:
           name: 'Run Cypress Testing'
           script:
-            - yarn run cypress run --record --key a321bdc6-24e5-4032-b465-05cbe221aa9e
-  
-
-   
+            - npx cypress run --record --key a321bdc6-24e5-4032-b465-05cbe221aa9e
