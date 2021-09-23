@@ -1,48 +1,35 @@
 image: cypress/browsers:node14.17.0-chrome88-ff89
 
-api-tests: &api-tests
-  name: "API Tests"
-  caches:
-    - cypress
-    - node
-  script:
-    - yarn start:ci & npx wait-on https://evius.co
-    - npx cypress run --record --parallel --browser chrome --group "API" --spec "cypress/tests/api/*" --ci-build-id a321bdc6-24e5-4032-b465-05cbe221aa9e
-
 ui-chrome-tests: &ui-chrome-tests
-  name: "UI Tests - Chrome"
+  name: 'UI Tests - Chrome'
   caches:
     - cypress
     - node
   script:
-    - yarn start:ci & npx wait-on https://evius.co
     - npx cypress run --record --parallel --browser chrome --group "UI - Chrome" --spec "cypress/tests/ui/*" --ci-build-id a321bdc6-24e5-4032-b465-05cbe221aa9e
 
 ui-chrome-tests-mobile: &ui-chrome-tests-mobile
-  name: "UI Tests - Chrome - Mobile"
+  name: 'UI Tests - Chrome - Mobile'
   caches:
     - cypress
     - node
   script:
-    - yarn start:ci & npx wait-on https://evius.co
     - npx cypress run --record --parallel --browser chrome --group "UI - Chrome - Mobile" --spec "cypress/tests/ui/*" --ci-build-id a321bdc6-24e5-4032-b465-05cbe221aa9e --config "viewportWidth=375,viewportHeight=667"
 
 ui-firefox-tests: &ui-firefox-tests
-  name: "UI Tests - Firefox"
+  name: 'UI Tests - Firefox'
   caches:
     - cypress
     - node
   script:
-    - yarn start:ci & npx wait-on https://evius.co
     - npx cypress run --record --parallel --browser firefox --group "UI - Firefox" --spec "cypress/tests/ui/*" --ci-build-id a321bdc6-24e5-4032-b465-05cbe221aa9e
 
 ui-firefox-tests-mobile: &ui-firefox-tests-mobile
-  name: "UI Tests - Firefox - Mobile"
+  name: 'UI Tests - Firefox - Mobile'
   caches:
     - cypress
     - node
   script:
-    - yarn start:ci & npx wait-on https://evius.co
     - npx cypress run --record --parallel --browser firefox --group "UI - Firefox - Mobile" --spec "cypress/tests/ui/*" --ci-build-id a321bdc6-24e5-4032-b465-05cbe221aa9e --config "viewportWidth=375,viewportHeight=667"
 
 pipelines:
@@ -54,12 +41,11 @@ pipelines:
           - cypress
           - node
         script:
-          - yarn add cypress
+          - yarn
+            - yarn add cypress
         artifacts:
           - build/**
     - parallel:
-        - step:
-            <<: *api-tests
         - step:
             <<: *ui-chrome-tests
         - step:
