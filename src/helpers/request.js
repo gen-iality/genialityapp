@@ -36,7 +36,7 @@ luego miramos si viene en las cookies
 let evius_token = null;
 let dataUrl = parseUrl(document.URL);
 if (dataUrl && dataUrl.token) {
-  Cookie.set('evius_token', dataUrl.token,{ expires: 180 });
+  Cookie.set('evius_token', dataUrl.token, { expires: 180 });
   evius_token = dataUrl.token;
 }
 
@@ -53,7 +53,7 @@ if (evius_token) {
 privateInstance.interceptors.response.use((response) => {
   const { headers } = response;
   if (headers.new_token) {
-    Cookie.set('evius_token', headers.new_token,{ expires: 180 });
+    Cookie.set('evius_token', headers.new_token, { expires: 180 });
     privateInstance.defaults.params = {};
     privateInstance.defaults.params['evius_token'] = headers.new_token;
   }
@@ -273,22 +273,23 @@ export const EventsApi = {
       `api/events/${eventId}/orders/ordersevent?filtered=[{"field":"items","value":"${productId}"}]`
     );
   },
-  acceptOrRejectRequest:async(eventId,requestId,status)=>{
+  acceptOrRejectRequest: async (eventId, requestId, status) => {
+    return await Actions.get(`api/event/${eventId}/meeting/${requestId}/${status}`);
+  },
+  getStatusRegister: async (eventId, email) => {
     return await Actions.get(
-      `api/event/${eventId}/meeting/${requestId}/${status}`
+      `api/events/${eventId}/eventusers?filtered=[{"field":"properties.email","value":"${email}", "comparator":"="}]`
     );
   },
-  getStatusRegister:async(eventId,email)=>{
-    return await Actions.get(
-      `api/events/${eventId}/eventusers?filtered=[{"field":"properties.email","value":"${email}"}]`
+  recoveryPassword: async (eventId, url, email) => {
+    return await Actions.put(`/api/events/${eventId}/changeUserPassword?destination=${url}`, email);
+  },
+  requestUrlEmail: async (eventId, url, email) => {
+    return await Actions.put(
+      `/api/events/${eventId}/changeUserPassword?destination=${url}&firebase_password_change=true`,
+      email
     );
   },
-  recoveryPassword:async(eventId,url,email)=>{
-    return await  Actions.put(`/api/events/${eventId}/changeUserPassword?destination=${url}`,email );
-  },
-  requestUrlEmail:async(eventId,url,email)=>{
-    return await  Actions.put(`/api/events/${eventId}/changeUserPassword?destination=${url}&firebase_password_change=true`,email );
-  }, 
 };
 export const InvitationsApi = {
   getAll: async (id) => {
@@ -480,7 +481,7 @@ export const OrganizationApi = {
     return await Actions.getOne('/api/organizations/', id);
   },
   createOrganization: async (data) => {
-    return await Actions.post('/api/organizations',data);
+    return await Actions.post('/api/organizations', data);
   },
   editOne: async (data, id) => {
     return await Actions.edit('/api/organizations', data, id);
@@ -816,9 +817,9 @@ export const OrganizationFuction = {
   },
 };
 //ENDPOINT PARA CREAR ORDENES
-export const OrderFunctions={
+export const OrderFunctions = {
   createOrder: async (data) => {
     return await Actions.post(`/api/orders`, data);
   },
-}
+};
 export default privateInstance;

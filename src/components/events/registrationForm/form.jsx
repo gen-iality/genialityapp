@@ -87,7 +87,7 @@ let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) =
 };
 
 const FormRegister = ({ closeModal, setSectionPermissions }) => {
-  let { eventPrivate, tabLogin } = useContext(HelperContext);
+  let { eventPrivate, tabLogin,typeModal } = useContext(HelperContext);
   let cEventUser = UseUserEvent();
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
@@ -115,7 +115,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
   const [initialValues, setinitialValues] = useState(
     cEventUser?.value? cEventUser?.value : cUser.value? cUser.value : {}
   );  
-  initialValues.contrasena=cUser.value ? cUser.value?.contrasena :'' 
+  initialValues.contrasena= cUser.value ? cUser.value?.password:''
   const [conditionals, setconditionals] = useState(cEvent.value?.fields_conditions || []);
   const [eventUser, seteventUser] = useState(cEventUser.value || {});
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(cEvent.value?.user_properties || {});
@@ -151,7 +151,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
   useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
-  }, [tabLogin]);
+  }, [tabLogin,typeModal]);
   const showGeneralMessage = (values, error, date) => {
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
