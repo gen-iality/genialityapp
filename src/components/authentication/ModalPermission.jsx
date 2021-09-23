@@ -1,9 +1,10 @@
-import { LeftCircleOutlined } from '@ant-design/icons';
+import { CloseCircleFilled } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Grid, Typography } from 'antd';
 import React, { useContext } from 'react';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
+import { Link } from 'react-router-dom';
 const { useBreakpoint } = Grid;
 
 const stylePaddingDesktop = {
@@ -15,7 +16,7 @@ const stylePaddingMobile = {
   paddingRight: '10px',
 };
 
-const ModalPermission = () => {
+const ModalPermission = (props) => {
   let { handleChangeTypeModal, typeModal } = useContext(HelperContext);
   const screens = useBreakpoint();
   const textoTitle =
@@ -27,14 +28,16 @@ const ModalPermission = () => {
       footer={null}
       zIndex={1000}
       closable={false}
-      visible={typeModal == 'update'}>
+      visible={typeModal == 'register' || typeModal == 'update'}>
       <PageHeader
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={
-          <Space onClick={() => handleChangeTypeModal(null)}>
-            <LeftCircleOutlined style={{ color: '#6B7283', fontSize: '20px' }} />
-            <span style={{ fontSize: '14px', color: '#6B7283' }}>Volver al inicio de sesión</span>
-          </Space>
+          <Link onClick={()=>handleChangeTypeModal(null)} to={`/landing/${props.cEvent.value?._id}/`}>
+            <Space>
+              <CloseCircleFilled style={{ color: '#6B7283', fontSize: '20px' }} />
+              <span style={{ fontSize: '14px', color: '#6B7283' }}>Cerrar</span>
+            </Space>
+          </Link>
         }
         onBack={() => null}
         title=' ' // NO eliminar el espacio en blanco

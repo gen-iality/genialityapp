@@ -17,6 +17,7 @@ import { useContext } from 'react';
 import HelperContext from '../../../Context/HelperContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { UseEventContext } from '../../../Context/eventContext';
+import { UseCurrentUser } from '../../../Context/userContext';
 const { Option } = Select;
 const { Panel } = Collapse;
 const { TextArea, Password } = Input;
@@ -89,6 +90,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
   let { eventPrivate, tabLogin } = useContext(HelperContext);
   let cEventUser = UseUserEvent();
   let cEvent = UseEventContext();
+  let cUser = UseCurrentUser();
 
   const intl = useIntl();
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || {});
@@ -110,7 +112,9 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
   let [areacodeselected, setareacodeselected] = useState();
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
-  const [initialValues, setinitialValues] = useState(cEventUser?.value || {});
+  const [initialValues, setinitialValues] = useState(
+    cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
+  );
   const [conditionals, setconditionals] = useState(cEvent.value?.fields_conditions || []);
   const [eventUser, seteventUser] = useState(cEventUser.value || {});
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(cEvent.value?.user_properties || {});
@@ -292,7 +296,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
         }
       }
     } else {
-      // alert("YA ESTAS REGISTRADO..")
+     // alert("YA ESTAS REGISTRADO..")
       setNotLoggedAndRegister(true);
     }
   };
@@ -768,7 +772,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
               )*/}
               <div style={{ height: '50vh', overflowY: 'auto', paddingRight: '0px' }}>{renderForm()}</div>
 
-              <Row gutter={[24, 24]} style={{marginTop:'5px'}}>
+              <Row gutter={[24, 24]} style={{ marginTop: '5px' }}>
                 {generalFormErrorMessageVisible && (
                   <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                     <Alert
@@ -798,6 +802,8 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                         borderLeft: '5px solid #FAAD14',
                         fontSize: '16px',
                       }}
+                      
+                      afterClose={()=>setNotLoggedAndRegister(false)}
                       message={intl.formatMessage({ id: 'registration.already.registered' })}
                       //description={intl.formatMessage({ id: 'registration.message.success.subtitle' })}
                       type='warning'

@@ -40,9 +40,10 @@ import ResponsePayu from '../registrationForm/responsePayu';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext);
+  let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal } = useContext(HelperContext);
 
   function ValidateViewPermissions(route, nombresection) {
+    console.log(route, nombresection);
     if (props.cEvent.value !== null) {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
@@ -51,22 +52,25 @@ const EventSectionRoutes = (props) => {
         routePermissions[0].permissions === 'assistants' &&
         props.cEventUser.value == null
       ) {
-        props.setSectionPermissions({ view: true, section: nombresection });
-        return true;
+        handleChangeTypeModal('register');
+        // props.setSectionPermissions({ view: true, section: nombresection });
+        // return true;
       } else if (
         routePermissions.length > 0 &&
         routePermissions[0].permissions === 'public' &&
         props.cEventUser.value == null &&
         eventPrivate.private
       ) {
-        props.setSectionPermissions({ view: true, section: nombresection });
-        return true;
+        handleChangeTypeModal('register');
+        // props.setSectionPermissions({ view: true, section: nombresection });
+        // return true;
       } else if (
         routePermissions.length > 0 &&
         routePermissions[0].permissions === 'public' &&
         props.cEventUser.value == null &&
         !eventPrivate.private
       ) {
+        // handleChangeTypeModal(null);
         return false;
       }
     }
@@ -343,7 +347,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('agenda', 'Agenda') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={`/landing/${props.cEvent.value._id}/agenda`} />
               </>
             ) : (
               <Agenda
