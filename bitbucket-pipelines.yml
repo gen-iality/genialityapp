@@ -4,6 +4,10 @@ pipelines:
   default:
       - step:
           name: 'Instalar dependencias'
+          caches:
+          - yarn
+          - cypress
+          - node
           script:
             - yarn add cypress
       - step:
