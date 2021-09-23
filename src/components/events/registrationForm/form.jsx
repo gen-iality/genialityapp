@@ -296,7 +296,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
         }
       }
     } else {
-      // alert("YA ESTAS REGISTRADO..")
+      alert("YA ESTAS REGISTRADO..")
       setNotLoggedAndRegister(true);
     }
   };
@@ -802,6 +802,8 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                         borderLeft: '5px solid #FAAD14',
                         fontSize: '16px',
                       }}
+                      
+                      afterClose={setNotLoggedAndRegister(false)}
                       message={intl.formatMessage({ id: 'registration.already.registered' })}
                       //description={intl.formatMessage({ id: 'registration.message.success.subtitle' })}
                       type='warning'
