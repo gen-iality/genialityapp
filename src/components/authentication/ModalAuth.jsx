@@ -168,10 +168,15 @@ const ModalAuth = (props) => {
             <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
               <Typography.Paragraph type='secondary'>Mira otras formas de entrar al evento</Typography.Paragraph>
               <Space direction='vertical' style={{ width: '100%' }}>
-                <Button block style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }} size='large'>
+                <Button
+                  disabled={loading}
+                  block
+                  style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
+                  size='large'>
                   Invitado anónimo
                 </Button>
                 <Button
+                  disabled={loading}
                   onClick={() => handleChangeTypeModal('mail')}
                   block
                   style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
