@@ -45,6 +45,9 @@ const ModalAuth = (props) => {
     }
 
     userAuth();
+    return()=>{
+      form1.resetFields();
+    }
   }, []);
  
   const callback=(key)=> {
