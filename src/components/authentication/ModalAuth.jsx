@@ -24,7 +24,9 @@ const ModalAuth = (props) => {
   const screens = useBreakpoint();
   const [loading, setLoading] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
-  let { handleChangeTypeModal, typeModal } = useContext(HelperContext);
+  const [form1] = Form.useForm();  
+  let { handleChangeTypeModal, typeModal,handleChangeTabModal } = useContext(HelperContext);
+  
 
   useEffect(() => {
     async function userAuth() {
@@ -44,11 +46,15 @@ const ModalAuth = (props) => {
 
     userAuth();
   }, []);
+ 
+  const callback=(key)=> {
+    form1.resetFields();
+    handleChangeTabModal(key)
+  }
 
   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
   const handleLoginEmailPassword = async (values) => {
-    setLoading(true);
-    console.log('VALUES==>', values);
+    setLoading(true);    
     loginEmailPassword(values);
     setTimeout(() => {
       setLoading(false);
@@ -84,9 +90,10 @@ const ModalAuth = (props) => {
         zIndex={1000}
         closable={false}
         visible={true}>
-        <Tabs centered size='large'>
+        <Tabs onChange={callback} centered size='large'>
           <TabPane tab='Iniciar sesión' key='1'>
             <Form
+              form={form1}
               onFinish={handleLoginEmailPassword}
               onFinishFailed={onFinishFailed}
               layout='vertical'
@@ -171,7 +178,7 @@ const ModalAuth = (props) => {
                   paddingTop: '0px',
                   paddingBottom: '0px',
                 }}>
-                <FormComponent />
+                <FormComponent  />
               </div>
             </TabPane>
           )}

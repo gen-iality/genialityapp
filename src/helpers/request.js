@@ -285,7 +285,10 @@ export const EventsApi = {
   },
   recoveryPassword:async(eventId,url,email)=>{
     return await  Actions.put(`/api/events/${eventId}/changeUserPassword?destination=${url}`,email );
-  }
+  },
+  requestUrlEmail:async(eventId,url,email)=>{
+    return await  Actions.put(`/api/events/${eventId}/changeUserPassword?destination=${url}&firebase_password_change=true`,email );
+  }, 
 };
 export const InvitationsApi = {
   getAll: async (id) => {
