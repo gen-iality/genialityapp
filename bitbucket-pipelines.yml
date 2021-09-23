@@ -5,7 +5,7 @@ pipelines:
       - step:
           name: 'Instalar dependencias'
           script:
-            - yarn install cypress
+            - yarn add cypress
       - step:
           name: 'Run Cypress Testing'
           script:
