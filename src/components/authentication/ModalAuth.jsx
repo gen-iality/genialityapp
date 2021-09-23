@@ -86,7 +86,7 @@ const ModalAuth = (props) => {
       <Modal
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
-       
+        footer={null}
         zIndex={1000}
         closable={false}
         visible={true}>
@@ -101,7 +101,7 @@ const ModalAuth = (props) => {
               <Form.Item
                 label='Email'
                 name='email'
-                style={{ marginBottom: '10px' }}
+                style={{ marginBottom: '15px' }}
                 rules={[{ required: true, message: 'Ingrese un email' }]}>
                 <Input
                   type='email'
@@ -113,7 +113,7 @@ const ModalAuth = (props) => {
               <Form.Item
                 label='Contraseña'
                 name='password'
-                style={{ marginBottom: '10px' }}
+                style={{ marginBottom: '15px' }}
                 rules={[{ required: true, message: 'Ingrese una contraseña' }]}>
                 <Input.Password
                   size='large'
@@ -122,7 +122,7 @@ const ModalAuth = (props) => {
                   iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                 />
               </Form.Item>
-              <Form.Item style={{ marginBottom: '10px' }}>
+              <Form.Item style={{ marginBottom: '15px' }}>
                 <Typography.Text
                   onClick={() => handleChangeTypeModal('recover')}
                   underline
@@ -135,13 +135,13 @@ const ModalAuth = (props) => {
                 <Alert
                   showIcon
                   closable
-                  style={{ marginBottom: 10 }}
+                  style={{ marginBottom: '15px' }}
                   type='error'
                   message={'Email o contraseña incorrecta'}
                 />
               )}
               {!loading && (
-                <Form.Item style={{ marginBottom: '10px' }}>
+                <Form.Item style={{ marginBottom: '15px' }}>
                   <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
                     Iniciar sesión
                   </Button>

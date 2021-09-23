@@ -86,7 +86,7 @@ let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) =
 };
 
 const FormRegister = ({ closeModal, setSectionPermissions }) => {
-  let { eventPrivate,tabLogin } = useContext(HelperContext);
+  let { eventPrivate, tabLogin } = useContext(HelperContext);
   let cEventUser = UseUserEvent();
   let cEvent = UseEventContext();
 
@@ -143,16 +143,16 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
       }
     }
   }, [extraFields]);
-  useEffect(()=>{
-   form.resetFields();
-   setGeneralFormErrorMessageVisible(false)
-  },[tabLogin])
+  useEffect(() => {
+    form.resetFields();
+    setGeneralFormErrorMessageVisible(false);
+  }, [tabLogin]);
   const showGeneralMessage = (values, error, date) => {
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
       setGeneralFormErrorMessageVisible(false);
-    }, 3000);
-  }; 
+    }, 4000);
+  };
 
   //Funcion para traer los datos del event para obtener la variable validateEmail y enviarla al estado
   const getEventData = async (eventId) => {
@@ -766,24 +766,40 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                   </Card>
                 </Row>
               )*/}
-              <div style={{ height: '50vh', overflowY: 'auto', paddingRight: '10px' }}>{renderForm()}</div>
+              <div style={{ height: '50vh', overflowY: 'auto', paddingRight: '0px' }}>{renderForm()}</div>
 
-              <Row gutter={[24, 24]}>
-                <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-                  {generalFormErrorMessageVisible && (
-                    <Alert message={intl.formatMessage({ id: 'form.missing.required.fields' })} type='warning' />
-                  )}
-                </Col>
-              </Row>
-
-              <Row gutter={[24, 24]} align='middle'>
-                {notLoggedAndRegister && (
-                  <Col span={24}>
+              <Row gutter={[24, 24]} style={{marginTop:'5px'}}>
+                {generalFormErrorMessageVisible && (
+                  <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                     <Alert
-                      style={{ width: '94%' }}
+                      className='animate__animated animate__bounceIn'
+                      style={{
+                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                        backgroundColor: '#FFFFFF',
+                        color: '#000000',
+                        borderLeft: '5px solid #FAAD14',
+                        fontSize: '16px',
+                      }}
+                      message={intl.formatMessage({ id: 'form.missing.required.fields' })}
+                      type='warning'
+                      showIcon
+                      closable
+                    />
+                  </Col>
+                )}
+                {notLoggedAndRegister && (
+                  <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                    <Alert
+                      className='animate__animated animate__bounceIn'
+                      style={{
+                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                        backgroundColor: '#FFFFFF',
+                        color: '#000000',
+                        borderLeft: '5px solid #FAAD14',
+                        fontSize: '16px',
+                      }}
                       message={intl.formatMessage({ id: 'registration.already.registered' })}
                       //description={intl.formatMessage({ id: 'registration.message.success.subtitle' })}
-                      description={' '}
                       type='warning'
                       showIcon
                       closable
