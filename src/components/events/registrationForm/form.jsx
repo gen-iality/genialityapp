@@ -782,7 +782,8 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                         backgroundColor: '#FFFFFF',
                         color: '#000000',
                         borderLeft: '5px solid #FAAD14',
-                        fontSize: '16px',
+                        fontSize: '14px',
+                        borderRadius:'5px'
                       }}
                       message={intl.formatMessage({ id: 'form.missing.required.fields' })}
                       type='warning'
@@ -800,7 +801,8 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                         backgroundColor: '#FFFFFF',
                         color: '#000000',
                         borderLeft: '5px solid #FAAD14',
-                        fontSize: '16px',
+                        fontSize: '14px',
+                        borderRadius:'5px'
                       }}
                       
                       afterClose={()=>setNotLoggedAndRegister(false)}

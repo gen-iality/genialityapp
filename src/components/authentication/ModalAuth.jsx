@@ -135,7 +135,17 @@ const ModalAuth = (props) => {
                 <Alert
                   showIcon
                   closable
-                  style={{ marginBottom: '15px' }}
+                  className='animate__animated animate__bounceIn'
+                  style={{
+                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                    backgroundColor: '#FFFFFF',
+                    color: '#000000',
+                    borderLeft: '5px solid #FF4E50',
+                    fontSize: '14px',
+                    textAlign: 'start',
+                    borderRadius:'5px',
+                    marginBottom:'15px'
+                  }}
                   type='error'
                   message={'Email o contraseña incorrecta'}
                 />

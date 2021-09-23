@@ -1,5 +1,5 @@
 import { LeftCircleOutlined, MailOutlined } from '@ant-design/icons';
-import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert,Row, Spin } from 'antd';
+import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert, Row, Spin } from 'antd';
 import React, { useState, useContext, useEffect } from 'react';
 import { EventsApi, UsersApi } from '../../helpers/request';
 import withContext from '../../Context/withContext';
@@ -37,7 +37,7 @@ const ModalLoginHelpers = (props) => {
   };
   //FUNCIÓN QUE SE EJECUTA AL PRESIONAR EL BOTON
   const onFinish = async (values) => {
-    setLoading(true)
+    setLoading(true);
     setRegisterUser(false);
     setSendRecovery(null);
     // SI EL EVENTO ES PARA RECUPERAR CONTRASEÑA
@@ -54,20 +54,20 @@ const ModalLoginHelpers = (props) => {
       //ENVIAR ACCESO AL CORREO
       try {
         //const resp = await EventsApi.requestUrlEmail(props.cEvent.value?._id, window.location.origin, { email:values.email });
-        const {data}=await EventsApi.getStatusRegister(props.cEvent.value?._id, values.email);
-        if(data?.length>0){          
-           let resp=await UsersApi.createOne( data[0]?.properties,props.cEvent.value?._id)
-           if(resp && resp.message=="OK"){            
+        const { data } = await EventsApi.getStatusRegister(props.cEvent.value?._id, values.email);
+        if (data?.length > 0) {
+          let resp = await UsersApi.createOne(data[0]?.properties, props.cEvent.value?._id);
+          if (resp && resp.message == 'OK') {
             setSendRecovery(`Se ha enviado a su email ${values.email} el link de acceso.`);
-           }          
-        }else{
-          setSendRecovery(`El ${values.email} no se encuentra registrado en este evento`);
-        }   
+          }
+        } else {
+          setSendRecovery(`El email ${values.email} no se encuentra registrado en este evento`);
+        }
       } catch (error) {
         setSendRecovery(`Error al solicitar acceso al evento `);
       }
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -89,7 +89,13 @@ const ModalLoginHelpers = (props) => {
       <PageHeader
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={
-          <Space onClick={() => {handleChangeTypeModal(null); setSendRecovery(null); setRegisterUser(false); form.resetFields();}}>
+          <Space
+            onClick={() => {
+              handleChangeTypeModal(null);
+              setSendRecovery(null);
+              setRegisterUser(false);
+              form.resetFields();
+            }}>
             <LeftCircleOutlined style={{ color: '#6B7283', fontSize: '20px' }} />
             <span style={{ fontSize: '14px', color: '#6B7283' }}>Volver al inicio de sesión</span>
           </Space>
@@ -122,14 +128,54 @@ const ModalLoginHelpers = (props) => {
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
-        {sendRecovery != null && <Alert type='success' message={sendRecovery} />}
-        {registerUser && <Alert showIcon type='error' message='Este email no se encuentra registrado en este evento' />}
-        {!loading && <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
-          <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
-            {textoButton}
-          </Button>
-        </Form.Item>}
-        {loading && <Row justify='center'><Spin /></Row>}
+        {sendRecovery != null && (
+          <Alert
+            type='warning'
+            message={sendRecovery}
+            showIcon
+            closable
+            className='animate__animated animate__bounceIn'
+            style={{
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              backgroundColor: '#FFFFFF',
+              color: '#000000',
+              borderLeft: '5px solid #FAAD14',
+              fontSize: '14px',
+              textAlign: 'start',
+              borderRadius:'5px'
+            }}
+          />
+        )}
+        {registerUser && (
+          <Alert
+            showIcon
+            type='error'
+            message='Este email no se encuentra registrado en este evento'
+            closable
+            className='animate__animated animate__bounceIn'
+            style={{
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              backgroundColor: '#FFFFFF',
+              color: '#000000',
+              borderLeft: '5px solid #FF4E50',
+              fontSize: '14px',
+              textAlign: 'start',
+              borderRadius:'5px'
+            }}
+          />
+        )}
+        {!loading && (
+          <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
+            <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+              {textoButton}
+            </Button>
+          </Form.Item>
+        )}
+        {loading && (
+          <Row justify='center'>
+            <Spin />
+          </Row>
+        )}
       </Form>
     </Modal>
   );
