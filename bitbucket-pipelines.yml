@@ -1,23 +1,16 @@
-image: cypress/browsers:node14.17.0-chrome88-ff89
+image: atlassian/default-image:2
+
 pipelines:
   default:
-    - step:
-        name: Instalar dependencias
-        caches:
-          - yarn
-          - cypress
-          - node
-        script:
-          - yarn install cypress
-        artifacts:
-          - build/**
+    - parallel:
+      - step:
+          name: 'Instalar dependencias'
+          script:
+            - yarn install cypress
+      - step:
+          name: 'Run Cypress Testing'
+          script:
+            - yarn run cypress run --record --key a321bdc6-24e5-4032-b465-05cbe221aa9e
+  
 
-     - step:
-        name: Run Cypress Testing
-        script:
-          - yarn run cypress run --record --key a321bdc6-24e5-4032-b465-05cbe221aa9e
-
-definitions:
-  caches:
-    yarn: $HOME/.cache
-    cypress: $HOME/.cache/Cypress
+   
