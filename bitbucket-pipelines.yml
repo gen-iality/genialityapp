@@ -41,8 +41,7 @@ pipelines:
           - cypress
           - node
         script:
-          - yarn
-            - yarn add cypress
+          - yarn add cypress
         artifacts:
           - build/**
     - parallel:
