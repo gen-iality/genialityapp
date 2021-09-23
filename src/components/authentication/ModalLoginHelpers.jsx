@@ -69,10 +69,7 @@ const ModalLoginHelpers = (props) => {
     }
     setLoading(false);
   };
-
-  useEffect(() => {
-    setSendRecovery(null);
-  }, [typeModal]);
+ 
 
   //FAILDE DE VALIDACIONES DEL FORMULARIO
   const onFinishFailed = () => {

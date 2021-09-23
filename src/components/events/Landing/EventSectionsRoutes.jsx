@@ -47,14 +47,16 @@ const EventSectionRoutes = (props) => {
     if (props.cEvent.value !== null) {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
-      if (
+       if (
         routePermissions.length > 0 &&
         routePermissions[0].permissions === 'assistants' &&
-        props.cEventUser.value == null
+        props.cUser.value !== null &&
+        props.cEventUser.value==null
       ) {
-        handleChangeTypeModal('register');
+        handleChangeTypeModal("register");
+       // handleChangeTypeModal(null);
         // props.setSectionPermissions({ view: true, section: nombresection });
-        // return true;
+         return false;
       } else if (
         routePermissions.length > 0 &&
         routePermissions[0].permissions === 'public' &&
@@ -63,7 +65,7 @@ const EventSectionRoutes = (props) => {
       ) {
         handleChangeTypeModal('register');
         // props.setSectionPermissions({ view: true, section: nombresection });
-        // return true;
+        return false;
       } else if (
         routePermissions.length > 0 &&
         routePermissions[0].permissions === 'public' &&
