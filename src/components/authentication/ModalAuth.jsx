@@ -1,4 +1,4 @@
-import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, MailOutlined } from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin } from 'antd';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
@@ -14,19 +14,20 @@ const { useBreakpoint } = Grid;
 const stylePaddingDesktop = {
   paddingLeft: '25px',
   paddingRight: '25px',
+  textAlign: 'center',
 };
 const stylePaddingMobile = {
   paddingLeft: '10px',
   paddingRight: '10px',
+  textAlign: 'center',
 };
 
 const ModalAuth = (props) => {
   const screens = useBreakpoint();
   const [loading, setLoading] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
-  const [form1] = Form.useForm();  
-  let { handleChangeTypeModal, typeModal,handleChangeTabModal } = useContext(HelperContext);
-  
+  const [form1] = Form.useForm();
+  let { handleChangeTypeModal, typeModal, handleChangeTabModal } = useContext(HelperContext);
 
   useEffect(() => {
     async function userAuth() {
@@ -46,15 +47,15 @@ const ModalAuth = (props) => {
 
     userAuth();
   }, []);
- 
-  const callback=(key)=> {
+
+  const callback = (key) => {
     form1.resetFields();
-    handleChangeTabModal(key)
-  }
+    handleChangeTabModal(key);
+  };
 
   //Método ejecutado en el evento onSubmit (onFinish) del formulario de login
   const handleLoginEmailPassword = async (values) => {
-    setLoading(true);    
+    setLoading(true);
     loginEmailPassword(values);
     setTimeout(() => {
       setLoading(false);
@@ -104,6 +105,7 @@ const ModalAuth = (props) => {
                 style={{ marginBottom: '15px' }}
                 rules={[{ required: true, message: 'Ingrese un email' }]}>
                 <Input
+                  disabled={loading}
                   type='email'
                   size='large'
                   placeholder='Email'
@@ -116,21 +118,24 @@ const ModalAuth = (props) => {
                 style={{ marginBottom: '15px' }}
                 rules={[{ required: true, message: 'Ingrese una contraseña' }]}>
                 <Input.Password
+                  disabled={loading}
                   size='large'
                   placeholder='Contraseña'
                   prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
                   iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                 />
               </Form.Item>
-              <Form.Item style={{ marginBottom: '15px' }}>
-                <Typography.Text
-                  onClick={() => handleChangeTypeModal('recover')}
-                  underline
-                  type='secondary'
-                  style={{ float: 'right', cursor: 'pointer' }}>
-                  Olvide mi contraseña
-                </Typography.Text>
-              </Form.Item>
+              {!loading && (
+                <Form.Item style={{ marginBottom: '15px' }}>
+                  <Typography.Text
+                    onClick={() => handleChangeTypeModal('recover')}
+                    underline
+                    type='secondary'
+                    style={{ float: 'right', cursor: 'pointer' }}>
+                    Olvide mi contraseña
+                  </Typography.Text>
+                </Form.Item>
+              )}
               {errorLogin && (
                 <Alert
                   showIcon
@@ -143,8 +148,8 @@ const ModalAuth = (props) => {
                     borderLeft: '5px solid #FF4E50',
                     fontSize: '14px',
                     textAlign: 'start',
-                    borderRadius:'5px',
-                    marginBottom:'15px'
+                    borderRadius: '5px',
+                    marginBottom: '15px',
                   }}
                   type='error'
                   message={'Email o contraseña incorrecta'}
@@ -157,7 +162,7 @@ const ModalAuth = (props) => {
                   </Button>
                 </Form.Item>
               )}
-              {loading && <Spin />}
+              {loading && <LoadingOutlined style={{ fontSize: '50px' }} />}
             </Form>
             <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
             <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
@@ -188,7 +193,7 @@ const ModalAuth = (props) => {
                   paddingTop: '0px',
                   paddingBottom: '0px',
                 }}>
-                <FormComponent  />
+                <FormComponent />
               </div>
             </TabPane>
           )}
