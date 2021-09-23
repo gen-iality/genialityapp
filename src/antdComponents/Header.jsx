@@ -15,8 +15,8 @@ const Header = ( props ) => {
     save, //boolean, para que aparezca el botón de guardar
     saveMethod, //viene el método para guardar
     back, //boolean, permite aparecer el icono para volver atrás
-    form, 
-    extra 
+    form, //si viene, es para poder saber sí el botón de guardar colocarlo como "submit"
+    extra //código adicional de alguna acción fuera de la estructura en el header
   } = props;
 
   return (
