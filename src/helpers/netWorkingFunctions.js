@@ -1,6 +1,6 @@
 import { getUserByEmail } from '../components/networking/services';
 import * as Cookie from 'js-cookie';
-import { EventsApi } from './request';
+import { EventsApi, Networking } from './request';
 import { firestore } from './firebase';
 
 export const SendFriendship = async ({ eventUserIdReceiver, userName }, userActual, event) => {
@@ -88,3 +88,23 @@ export const isMyContacts=(contact,listContacts)=>{
 }
   return resp;
 }
+
+  export const haveRequest=(user,listRequest,socialZone=0)=>{    
+    if(listRequest.length>0){
+      console.log("LIST SENT==>",listRequest,user)
+      for(let i=0;i<listRequest.length;i++){
+        if(listRequest[i].id_user_requesting=="5f11bd670da32b2aac459042"){
+          console.log("ACAESTOY==>",i)
+        }
+      }
+      let request=listRequest.filter((userRequest)=>socialZone==0?userRequest.id_user_requesting==user._id :userRequest.id_user_requesting== user.eventUserId);
+      console.log("LISTA==>",request,user._id)
+      if(request.length>0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    return false;
+  }

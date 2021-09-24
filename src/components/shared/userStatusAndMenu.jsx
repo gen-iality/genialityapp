@@ -6,6 +6,7 @@ import { DownOutlined, LogoutOutlined } from '@ant-design/icons';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setViewPerfil } from '../../redux/viewPerfil/actions';
+import withContext from '../../Context/withContext';
 
 const MenuStyle = {
   flex: 1,
@@ -21,9 +22,9 @@ const ItemStyle = {
 };
 
 const UserStatusAndMenu = (props) => {
-  let user = props.user;
-  let photo = props.photo;
-  let name = props.loginInfo.displayName;
+  let user = props.cUser?.value;
+  let photo = props.cUser?.value?.picture;
+  let name = props.cUser?.value?.names;
   let logout = props.logout;
   const [visible,setVisible]=useState(true)
 
@@ -34,39 +35,43 @@ const UserStatusAndMenu = (props) => {
     if(props.eventId && props.eventId=='60cb7c70a9e4de51ac7945a2')
     setVisible(false)
   },[props.eventId])
-
   let menu = (
-    <Menu>
+      !props.cUser?.value?.isAnonymous ?  
+      <Menu>
+        <Menu.Item style={ItemStyle}>
+          <NavLink
+            onClick={(e) => {
+              e.preventDefault();
+              props.location.pathname.includes('landing')
+                ? props.setViewPerfil({ view: true, perfil: { _id: props.userEvent?._id, properties: props.userEvent } })
+                : null;
+            }}
+            to={''}>
+            <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
+          </NavLink>
+        </Menu.Item>
+        {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/tickets/${props.userEvent._id}`)}>
+            <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
+        </Menu.Item>}
+        {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/eventEdit/${props.userEvent._id}#events`)}>
+            <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
+        </Menu.Item>}
+  
+       {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/create-event`)}>
+            <Button type='primary' size='medium'>
+              <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
+            </Button>
+        </Menu.Item>}
+        <Menu.Divider />
+        <Menu.Item style={ItemStyle}>
+          <a onClick={logout}>
+            <LogoutOutlined />
+            <FormattedMessage id='header.logout' defaultMessage='Log Out' />
+          </a>
+        </Menu.Item>
+      </Menu> :  <Menu>
       <Menu.Item style={ItemStyle}>
-        <NavLink
-          onClick={(e) => {
-            e.preventDefault();
-            props.location.pathname.includes('landing')
-              ? props.setViewPerfil({ view: true, perfil: { _id: props.userEvent?._id, properties: props.userEvent } })
-              : null;
-          }}
-          to={''}>
-          <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
-        </NavLink>
-      </Menu.Item>
-      {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/tickets/${props.userEvent._id}`)}>
-          <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
-      </Menu.Item>}
-      {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/eventEdit/${props.userEvent._id}#events`)}>
-          <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
-      </Menu.Item>}
-
-     {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/create-event`)}>
-          <Button type='primary' size='medium'>
-            <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
-          </Button>
-      </Menu.Item>}
-      <Menu.Divider />
-      <Menu.Item style={ItemStyle}>
-        <a onClick={logout}>
-          <LogoutOutlined />
-          <FormattedMessage id='header.logout' defaultMessage='Log Out' />
-        </a>
+      {`Bienvenido ${props.cUser?.value?.names}`}
       </Menu.Item>
     </Menu>
   );
@@ -110,5 +115,5 @@ const UserStatusAndMenu = (props) => {
 const mapDispatchToProps = {
   setViewPerfil,
 };
-
-export default connect(null, mapDispatchToProps)(WithLoading(withRouter(UserStatusAndMenu)));
+let UserStatusAndMenuWithContext = withContext(UserStatusAndMenu);
+export default connect(null, mapDispatchToProps)(WithLoading(withRouter(UserStatusAndMenuWithContext)));
