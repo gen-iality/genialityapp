@@ -84,7 +84,7 @@ const ModalLoginHelpers = (props) => {
       closable={false}
       visible={typeModal !== null}>
       <PageHeader
-      className={sendRecovery != null && 'animate__animated animate__headShake animate__delay-2s animate__slower animate__infinite'}
+      className={sendRecovery != null || registerUser && 'animate__animated animate__headShake animate__delay-2s animate__slower animate__infinite'}
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={
           <Space

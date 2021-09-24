@@ -5,6 +5,7 @@ import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
 import { app } from '../../helpers/firebase';
 import * as Cookie from 'js-cookie';
+import { useIntl } from 'react-intl';
 
 import React, { useContext, useEffect, useState } from 'react';
 
@@ -28,6 +29,7 @@ const ModalAuth = (props) => {
   const [errorLogin, setErrorLogin] = useState(false);
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, handleChangeTabModal } = useContext(HelperContext);
+  const intl = useIntl();
 
   useEffect(() => {
     async function userAuth() {
@@ -97,7 +99,7 @@ const ModalAuth = (props) => {
         closable={false}
         visible={true}>
         <Tabs onChange={callback} centered size='large'>
-          <TabPane tab='Iniciar sesión' key='1'>
+          <TabPane tab={intl.formatMessage({ id: 'modal.title.login' })} key='1'>
             <Form
               form={form1}
               onFinish={handleLoginEmailPassword}
@@ -163,7 +165,7 @@ const ModalAuth = (props) => {
               {!loading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
                   <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
-                    Iniciar sesión
+                  {intl.formatMessage({ id: 'modal.title.login' })}
                   </Button>
                 </Form.Item>
               )}
