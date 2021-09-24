@@ -115,7 +115,8 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
   const [initialValues, setinitialValues] = useState(
     cEventUser?.value? cEventUser?.value : cUser.value? cUser.value : {}
   );  
-  initialValues.contrasena= cUser.value ? cUser.value?.password:''
+  initialValues.contrasena=''
+  initialValues.password=''
   const [conditionals, setconditionals] = useState(cEvent.value?.fields_conditions || []);
   const [eventUser, seteventUser] = useState(cEventUser.value || {});
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(cEvent.value?.user_properties || {});
@@ -257,7 +258,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                         cEventUser.value == null ? typeRegister : 'free'
                       }?token=${resp.data.user.initial_token}`
                     : `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${
-                        eventUser == null ? 2 : 4
+                        !eventUser?._id ? 2 : 4
                       }&token=${resp.data.user.initial_token}`
                 );
               }, 100);
