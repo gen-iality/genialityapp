@@ -6,7 +6,7 @@ describe('Evius Speaker', () => {
     cy.visit(`${urlToTest}`);
   });
 
-  /* it('Speaker Create', () => {
+  it('Speaker Create', () => {
     cy.contains('Agregar').click()
     cy.get('[name=published]').click()
     cy.get('[name=name]').type('Margarita Gonzalez')
@@ -27,62 +27,35 @@ describe('Evius Speaker', () => {
 
   it('Speaker Edit Published', () => {
     cy.get('[id=editSwitch0]').click()
-  }); */
+  });
 
-  /* it('Speaker remove in table', () => {
+  it('Speaker remove in table', () => {
     cy.get('[id=remove0]').click()
     cy.contains('Borrar').click()
-    cy.contains('Cancelar').click()
-  }); */
+    //cy.contains('Cancelar').click()
+  });
   
-  /* it('Speaker remove in edit', () => {
+  it('Speaker remove in edit', () => {
     cy.get('[id=editarTest0]').click()
     cy.get('[id=removeHeader]').click()
     cy.contains('Borrar').click()
-    cy.contains('Cancelar').click()
-  }); */
+    //cy.contains('Cancelar').click()
+  });
 
-  /* it('Speaker back in create', () => {
-    cy.contains('Agregar').click()
-    cy.get('[id=goBack]').click()
-  }); */
-
-  /* it('Speaker back in edit', () => {
-    cy.get('[id=editarTest0]').click()
-    cy.get('[id=goBack]').click()
-  }); */
-
-  /* it('Speaker go to category', () => {
-    cy.contains('Agregar').click()
-    cy.get('[id=goToCategory]').click()
-    //cy.get('[id=goBack]').click()
-    //cy.get('[id=goBack]').click()
-  }) */
-  
-  /* //No funciona
-  it('Speaker draggable', () => {
-    cy.get('[id=drag0]').trigger("dragstart").trigger("dragleave")
-
-    cy.get('[id=drag1]')
-     .trigger("dragenter")
-     .trigger("dragover")
-     .trigger("drop")
-     .trigger("dragend");
-  }) */
-
-  /* it('Speaker Search Name', () => {
+  it('Speaker Search Name', () => {
     cy.get('[id=searchIconname]').click()
     cy.get('[id=searchname]').type('Prueba')
     cy.contains('Buscar').click()
     cy.get('[id=searchIconname]').click()
     cy.contains('Borrar').click()
-  }) */
+  })
 
-  /* it('Speaker Search Profession', () => {
+  it('Speaker Search Profession', () => {
     cy.get('[id=searchIconprofession]').click()
     cy.get('[id=searchprofession]').type('Prueba')
     cy.contains('Buscar').click()
-    cy.get('[id=searchIconprofession]').click()
-    cy.contains('Borrar').click()
-  }) */
+    cy.get('[id=searchIconprofession]').click().then(() =>
+      cy.contains('Borrar').click()
+    )
+  })
 });
