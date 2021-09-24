@@ -25,7 +25,7 @@ const Header = ( props ) => {
         {
           back && (
             <Tooltip placement='bottomLeft' title={'Atrás'}>
-              <LeftOutlined onClick={() => history.goBack()}/>
+              <LeftOutlined id='goBack' onClick={() => history.goBack()}/>
             </Tooltip>
           )
         }
@@ -74,6 +74,7 @@ const Header = ( props ) => {
           {
             edit && (
               <Button 
+                id='removeHeader'
                 onClick={remove} 
                 type="link" 
                 danger 

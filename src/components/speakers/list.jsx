@@ -184,7 +184,6 @@ function SpeakersList(props) {
             }}
             pagination={false}
          />
-         <ReactQueryDevtools initialIsOpen />
       </div>
    );
 }

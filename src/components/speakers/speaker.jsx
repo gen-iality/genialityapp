@@ -260,7 +260,7 @@ async function dataTheLoaded() {
                     onDrop={handleImage}
                     accept='image/*'
                     className='zone'>
-                    <Button type='dashed' danger>
+                    <Button type='dashed' danger id='btnImg'>
                       {data.image ? 'Cambiar imagen' : 'Subir imagen'}
                     </Button>
                   </Dropzone>
@@ -283,7 +283,7 @@ async function dataTheLoaded() {
               <>
                 {
                   !showDescription_activity ? (
-                    <Button type="link" onClick={()=>setShowDescription_activity(true)} style={{'color': 'blue'}}>
+                    <Button id='btnDescription' type="link" onClick={()=>setShowDescription_activity(true)} style={{'color': 'blue'}}>
                       { !showDescription_activity && !data.newItem ? (
                         <div> <EditOutlined style={{'marginRight': '5px'}} /> Editar/mostrar descripción </div>
                       ) : (
@@ -303,6 +303,7 @@ async function dataTheLoaded() {
               {
                 showDescription_activity && (
                   <EviusReactQuill 
+                    id='description'
                     name={'description'} 
                     data={data.description} 
                     handleChange={chgTxt}
@@ -328,7 +329,7 @@ async function dataTheLoaded() {
                 </Col>
                 <Col span={2}>
                   <Form.Item>
-                    <Button onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)} icon={<SettingOutlined />}>
+                    <Button id='goToCategory' onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)} icon={<SettingOutlined />}>
                     </Button> 
                   </Form.Item>
                 </Col>

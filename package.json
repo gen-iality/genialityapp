@@ -112,10 +112,12 @@
     "test": "craco  --max_old_space_size=6096 test --env=jsdom",
     "eject": "react-scripts eject",
     "styleguide": "styleguidist server",
-    "styleguide:build": "styleguidist build"
+    "styleguide:build": "styleguidist build",
+    "cypress:open": "cypress open"
   },
   "devDependencies": {
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
+    "cypress": "^8.4.1",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.8",
     "react-styleguidist": "^7.3.0"

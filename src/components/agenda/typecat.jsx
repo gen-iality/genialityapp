@@ -29,7 +29,7 @@ const AgendaTypeCat = (props) => {
                   key='edit' 
                   to={{ pathname: `${props.matchUrl}/categorias/categoria`, state: { edit: item._id } }}
                 >
-                  <Button icon={<EditOutlined />} type='primary' size="small" />
+                  <Button icon={<EditOutlined />} type='primary' size="small" id={`editar${item._id}`} />
                 </Link>
               </Tooltip>
             </Col>
@@ -37,6 +37,7 @@ const AgendaTypeCat = (props) => {
               <Tooltip placement='topLeft' title='Eliminar' >
                 <Button
                   key='delete'
+                  id={`remove${item._id}`}
                   onClick={() => remove(item._id)}
                   icon={<DeleteOutlined />}
                   type='danger'
@@ -76,6 +77,7 @@ const AgendaTypeCat = (props) => {
   const getList = async () => {
     const response = await apiURL.byEvent(eventID);
     setList(response);
+    console.log(response);
     setLoading(false);
   }
 

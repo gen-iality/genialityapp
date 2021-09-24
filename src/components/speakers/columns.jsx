@@ -14,7 +14,7 @@ export const columns = (columnsData) => [
       dataIndex: 'move',
       width: '50px',
       render(val, item) {
-         return <DragHandle />;
+         return <DragHandle id={`drag${item.index}`}/>;
       },
    },
    {
@@ -77,7 +77,7 @@ export const columns = (columnsData) => [
             const res = await SpeakersApi.editOne(item, item._id, item.event_id);
             if (res) setPublish(res.published);
          };
-         return <Switch checkedChildren='Sí' unCheckedChildren='No' onChange={update} checked={publish} />;
+         return <Switch checkedChildren='Sí' unCheckedChildren='No' onChange={update} checked={publish} id={`editSwitch${item.index}`} />;
       },
    },
    {
@@ -90,18 +90,19 @@ export const columns = (columnsData) => [
              */
             <Row wrap gutter={[8, 8]}>
                <Col >
-                  <Tooltip placement='topLeft' title='Editar Conferencista'>
+                  <Tooltip placement='topLeft' title='Editar'>
                      <Link
                         key='edit'
                         to={{ pathname: `${columnsData.data.matchUrl}/speaker`, state: { edit: item._id } }}>
-                        <Button icon={<EditOutlined />} type='primary' size='small' />
+                        <Button icon={<EditOutlined />} type='primary' size='small' id={`editarTest${item.index}`} />
                      </Link>
                   </Tooltip>
                </Col>
                <Col >
-                  <Tooltip placement='topLeft' title='Eliminar Conferencista'>
+                  <Tooltip placement='topLeft' title='Eliminar'>
                      <Button
                         key='delete'
+                        id={`remove${item.index}`}
                         onClick={() => {
                             columnsData.remove(item);
                         }}
