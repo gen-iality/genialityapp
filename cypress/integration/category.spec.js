@@ -1,4 +1,4 @@
-const urlToTest = '/event/5ea23acbd74d5c4b360ddde2/agenda/categorias';
+const urlToTest = '/orgadmin/5ea23acbd74d5c4b360ddde2/agenda/categorias';
 
 describe('Evius Category', () => {
   beforeEach(() => {
