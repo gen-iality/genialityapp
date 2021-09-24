@@ -290,6 +290,12 @@ export const EventsApi = {
       email
     );
   },
+  signInWithEmailAndPassword:async(data)=>{
+    return await Actions.post(
+      `/api/users/signInWithEmailAndPassword`,
+      data
+    );
+  }
 };
 export const InvitationsApi = {
   getAll: async (id) => {

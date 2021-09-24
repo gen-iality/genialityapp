@@ -8,6 +8,7 @@ import * as Cookie from 'js-cookie';
 import { useIntl } from 'react-intl';
 
 import React, { useContext, useEffect, useState } from 'react';
+import { EventsApi } from '../../helpers/request';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -53,7 +54,7 @@ const ModalAuth = (props) => {
     };
   }, []);
   useEffect(() => {
-    form1.resetFields();    
+    form1.resetFields();
   }, [typeModal]);
   const callback = (key) => {
     form1.resetFields();
@@ -70,18 +71,44 @@ const ModalAuth = (props) => {
   };
 
   //Realiza la validación del email y password con firebase
-  const loginEmailPassword = (data) => {
-    setErrorLogin(false);
-    console.log('DATA==>', data.email.trim(), data.password.trim());
+  const loginFirebase = (data) => {
     app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
-      // .then(response =>
+      .then((response) => {
+        return true;
+      })
       .catch(() => {
-        console.error('Error: Email or password invalid');
-        setErrorLogin(true);
-        setLoading(false);
+        return false;
       });
+  };
+
+  const loginEmailPassword = async (data) => {
+    let loginNormal = false;
+    let loginFirst = false;
+    setErrorLogin(false);
+    console.log('DATA==>', data.email.trim(), data.password.trim());
+    //HACK PARA ENTRAR CON LA CONTRASEÑA YA ASIGNADA LA PRIMERA VEZ
+    let respuesta = loginFirebase(data);
+    if (!respuesta) {
+      let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
+      if (user.data.length > 0) {
+         if (user.data[0].properties?.password == data.password || user.data[0].contrasena == data.password) {
+          window.location.href=window.origin+"/landing/"+props.cEvent.value?._id+"?token="+user.data[0]?.user?.initial_token         
+          loginFirst = true;
+          //loginFirebase(data)
+          //leafranciscobar@gmail.com
+          //Mariaguadalupe2014
+        }
+      }
+     // console.log('USUARIO OBTENIDO==>', user, props.cEvent.value?._id);
+    } else {
+      loginNormal = true;
+    }
+    if (loginNormal == false && loginFirst == false) {
+      setErrorLogin(true);
+      setLoading(false);
+    }
   };
 
   //Se ejecuta en caso que haya un error en el formulario de login en el evento onSubmit
