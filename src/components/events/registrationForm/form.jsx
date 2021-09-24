@@ -115,7 +115,8 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
   const [initialValues, setinitialValues] = useState(
     cEventUser?.value? cEventUser?.value : cUser.value? cUser.value : {}
   );  
-  //initialValues.contrasena= cUser.value ? cUser.value?.password:''
+  initialValues.contrasena=''
+  initialValues.password=''
   const [conditionals, setconditionals] = useState(cEvent.value?.fields_conditions || []);
   const [eventUser, seteventUser] = useState(cEventUser.value || {});
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(cEvent.value?.user_properties || {});

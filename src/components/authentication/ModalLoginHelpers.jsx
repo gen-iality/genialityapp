@@ -84,6 +84,7 @@ const ModalLoginHelpers = (props) => {
       closable={false}
       visible={typeModal !== null}>
       <PageHeader
+      className={sendRecovery != null && 'animate__animated animate__headShake animate__delay-2s animate__slower animate__infinite'}
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={
           <Space
@@ -94,7 +95,7 @@ const ModalLoginHelpers = (props) => {
               form.resetFields();
             }}>
             <LeftCircleOutlined style={{ color: '#6B7283', fontSize: '20px' }} />
-            <span style={{ fontSize: '14px', color: '#6B7283' }}>Volver al inicio de sesión</span>
+            <span style={{ fontSize: '16px', color: '#6B7283' }}>Volver al inicio de sesión</span>
           </Space>
         }
         onBack={() => null}

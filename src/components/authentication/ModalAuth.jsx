@@ -164,7 +164,7 @@ const ModalAuth = (props) => {
                     underline
                     type='secondary'
                     style={{ float: 'right', cursor: 'pointer' }}>
-                    Olvide mi contraseña
+                    Olvidé mi contraseña
                   </Typography.Text>
                 </Form.Item>
               )}

@@ -35,7 +35,7 @@ const ModalPermission = (props) => {
           <Link onClick={()=>handleChangeTypeModal(null)} to={`/landing/${props.cEvent.value?._id}/`}>
             <Space>
               <CloseCircleFilled style={{ color: '#6B7283', fontSize: '20px' }} />
-              <span style={{ fontSize: '14px', color: '#6B7283' }}>Cerrar</span>
+              <span style={{ fontSize: '16px', color: '#6B7283' }}>Cerrar</span>
             </Space>
           </Link>
         }
