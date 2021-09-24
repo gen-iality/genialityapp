@@ -14,6 +14,6 @@ Cypress.Commands.add(
     cy.get('[id=actividadeconomica]').type(economy_activity);
     cy.get('[id=descripcionemprendimiento]').type(description);
     termsService && cy.get('[name=aceptaciondeterminosycondiciones]').check();
-    cy.contains('Registrar').click();
+    cy.contains('Registrar' || 'Register').click();
   }
 );
