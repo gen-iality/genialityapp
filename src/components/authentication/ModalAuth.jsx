@@ -46,11 +46,13 @@ const ModalAuth = (props) => {
     }
 
     userAuth();
-    return()=>{
+    return () => {
       form1.resetFields();
-    }
+    };
   }, []);
-
+  useEffect(() => {
+    form1.resetFields();    
+  }, [typeModal]);
   const callback = (key) => {
     form1.resetFields();
     handleChangeTabModal(key);
