@@ -257,7 +257,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                         cEventUser.value == null ? typeRegister : 'free'
                       }?token=${resp.data.user.initial_token}`
                     : `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${
-                        eventUser == null ? 2 : 4
+                        !eventUser?._id ? 2 : 4
                       }&token=${resp.data.user.initial_token}`
                 );
               }, 100);
