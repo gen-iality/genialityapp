@@ -188,7 +188,7 @@ const DrawerProfile = (props) => {
                   userSelected?.properties[item.name] &&
                   item.name !== 'picture' &&
                   item.name !== 'imagendeperfil' &&
-                  item.type !== 'password' && (
+                  item.type !== 'password' && item.type !== 'avatar'  && (
                     <List.Item>
                       <List.Item.Meta
                         title={item.label}
