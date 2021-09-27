@@ -69,17 +69,7 @@ const ModalAuth = (props) => {
   };
 
   //Realiza la validación del email y password con firebase
-  const loginFirebase = (data) => {
-    app
-      .auth()
-      .signInWithEmailAndPassword(data.email, data.password)
-      .then((response) => {
-        return true;
-      })
-      .catch(() => {
-        return false;
-      });
-  };
+  const loginFirebase = async (data) => {};
 
   const loginEmailPassword = async (data) => {
     let loginNormal = false;
@@ -87,26 +77,33 @@ const ModalAuth = (props) => {
     setErrorLogin(false);
     console.log('DATA==>', data.email.trim(), data.password.trim());
     //HACK PARA ENTRAR CON LA CONTRASEÑA YA ASIGNADA LA PRIMERA VEZ
-    let respuesta = loginFirebase(data);
-    if (!respuesta) {
-      let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
-      if (user.data.length > 0) {
-         if (user.data[0].properties?.password == data.password || user.data[0].contrasena == data.password) {
-          window.location.href=window.origin+"/landing/"+props.cEvent.value?._id+"?token="+user.data[0]?.user?.initial_token         
-          loginFirst = true;
-          //loginFirebase(data)
-          //leafranciscobar@gmail.com
-          //Mariaguadalupe2014
+    app
+      .auth()
+      .signInWithEmailAndPassword(data.email, data.password)
+      .then((response) => {
+        loginNormal = true;        
+        setErrorLogin(false);
+        setLoading(false);
+      })
+      .catch(async () => {       
+        let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
+        if (user.data.length > 0) {
+         
+          setErrorLogin(false);
+          setLoading(false);
+          if (user.data[0].properties?.password == data.password || user.data[0].contrasena == data.password) {
+            window.location.href =
+              window.origin + '/landing/' + props.cEvent.value?._id + '?token=' + user.data[0]?.user?.initial_token;
+            loginFirst = true;
+            //loginFirebase(data)
+            //leafranciscobar@gmail.com
+            //Mariaguadalupe2014
+          }else{            
+            setErrorLogin(true);
+            setLoading(false);
+          }
         }
-      }
-     // console.log('USUARIO OBTENIDO==>', user, props.cEvent.value?._id);
-    } else {
-      loginNormal = true;
-    }
-    if (loginNormal == false && loginFirst == false) {
-      setErrorLogin(true);
-      setLoading(false);
-    }
+      });
   };
 
   //Se ejecuta en caso que haya un error en el formulario de login en el evento onSubmit
