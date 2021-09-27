@@ -3,7 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { app } from '../helpers/firebase';
 import * as Cookie from 'js-cookie';
 import { ApiUrl } from '../helpers/constants';
-import { OrganizationApi, getCurrentUser } from '../helpers/request';
+import { OrganizationApi, getCurrentUser, EventsApi } from '../helpers/request';
 import LogOut from '../components/shared/logOut';
 import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
@@ -48,7 +48,7 @@ class Headers extends Component {
       tabEvtType: true,
       tabEvtCat: true,
       eventId: null,
-      userEvent:null
+      userEvent: null,
     };
     this.setEventId = this.setEventId.bind(this);
     this.logout = this.logout.bind(this);
@@ -68,14 +68,11 @@ class Headers extends Component {
 
   setEventId = () => {
     const path = window.location.pathname.split('/');
-    let eventId = path[2] || path[1]
+    let eventId = path[2] || path[1];
     return eventId;
   };
 
   async componentDidMount() {
-  
-  
-
     const eventId = this.setEventId();
     this.setState({ eventId });
 
@@ -83,7 +80,7 @@ class Headers extends Component {
     let evius_token = null;
     let dataUrl = parseUrl(document.URL);
     if (dataUrl && dataUrl.token) {
-      Cookie.set('evius_token', dataUrl.token,{ expires: 180 });
+      Cookie.set('evius_token', dataUrl.token, { expires: 180 });
       evius_token = dataUrl.token;
     }
     if (!evius_token) {
@@ -98,14 +95,29 @@ class Headers extends Component {
 
     //Si existe el token consultamos la información del usuario
     const data = await getCurrentUser();
+    console.log('USERDATA==>', data);
+  
+    if (data) {
+      console.log("DATA==>",data)
+      const user = await EventsApi.getEventUser(data._id, eventId);
+      console.log('USERDATA2==>', user);
+      const photo = user!=null ? user.user?.picture:data.picture
+      const name = user!=null?user?.properties?.name || user?.properties?.names: data.name || data.names;
 
-    if (data) {      
-      const name = data.name ? data.name : data.displayName ? data.displayName : data.email;
-      const photo = data.photoUrl ? data.photoUrl : data.picture;
       const organizations = await OrganizationApi.mine();
 
       this.setState(
-        { name, userEvent:data, photo, uid: data.uid, id: data._id, user: true, cookie: evius_token, loader: false, organizations },
+        {
+          name,
+          userEvent: {...user?.properties,_id:user?.account_id},
+          photo,
+          uid: data.uid,
+          id: data._id,
+          user: true,
+          cookie: evius_token,
+          loader: false,
+          organizations,
+        },
         () => {
           this.props.addLoginInformation(data);
         }
@@ -127,14 +139,18 @@ class Headers extends Component {
     }
   };
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     if (
       this.props.loginInfo.name !== prevProps.loginInfo.name ||
       this.props.loginInfo.picture !== prevProps.loginInfo.picture
     ) {
-      const name = this.props.loginInfo.name;
-      const photo = this.props.loginInfo.picture;
-      this.setState({ name, photo, user: true });
+      console.log('LOGIN INFO==>', this.props.loginInfo);
+      const user = await EventsApi.getEventUser(this.props?.loginInfo?._id, this.state.eventId);
+      console.log('USERDATA2==>', user);
+      const photo = user?.user? user.user?.picture:this.props.loginInfo.picture;
+      const name = user?.user ?user?.properties?.name || user?.properties?.names: this.props.loginInfo.name || this.props.loginInfo.names;
+
+      this.setState({ name, photo, user: true,userEvent: {...user?.properties,_id:user?.account_id || this.props?.loginInfo?._id}, });
     }
 
     if (prevProps && prevProps.location !== this.props.location) {
