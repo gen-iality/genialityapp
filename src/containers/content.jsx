@@ -55,6 +55,23 @@ const ContentContainer = () => {
           </CurrentEventProvider>
         </Route>
 
+
+        <Route path='/event/:event_name'>
+          <CurrentEventProvider>
+            <CurrentUserEventProvider>
+              <CurrentUserProvider>
+                <HelperContextProvider>
+                  <SurveysProvider>
+                    <Landing />
+                  </SurveysProvider>
+                </HelperContextProvider>
+              </CurrentUserProvider>
+            </CurrentUserEventProvider>
+          </CurrentEventProvider>
+        </Route>
+
+
+
         <Route path='/social/:event_id' component={socialZone} />
         {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
         <Route path='/mentoriamastercard' render={() => <Redirect to='/landing/5ef49fd9c6c89039a14c6412' />} />
@@ -67,7 +84,8 @@ const ContentContainer = () => {
         {/* <WithFooter> */}
         <Route path='/page/:id' component={HomeProfile} />
         <PrivateRoute path='/my_events' component={Events} />
-        <PrivateRoute path='/event/:event' component={Event} />
+        <PrivateRoute path='/orgadmin/:event' component={Event} />
+        <PrivateRoute path='/eventadmin/:event' component={Event} />
         <PrivateRoute path='/create-event' component={NewEvent} />
         <PrivateRoute path='/profile/:id' component={MyProfile} />
         <Route exact path='/organization/:id/events' component={EventOrganization} />

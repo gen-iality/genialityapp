@@ -4,6 +4,13 @@ import { Link, withRouter } from 'react-router-dom';
 import EventImage from '../../eventimage.png';
 import { Badge, Card, Space } from 'antd';
 
+const FriendLyUrl = (url) => {
+  let slug = url.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ').toLowerCase();
+  slug = url.replace(/^\s+|\s+$/gm, '');
+  slug = url.replace(/\s+/g, '-');
+  return slug;
+};
+
 class EventCard extends Component {
   render() {
     const { event, bordered, right, loading } = this.props;
@@ -29,7 +36,13 @@ class EventCard extends Component {
               </div>
             </span>
           }>
-          <Link to={{ pathname: `/landing/${event._id}`, state: { event: event } }}>
+          <Link
+            // onClick={() => Cookies.set('idevent', event._id)}
+            to={
+              event._id == '6123f3b76eac227949514a82'
+                ? { pathname: `/event/${FriendLyUrl(event.name)}`, state: { event: event } }
+                : { pathname: `/landing/${event._id}`, state: { event: event } }
+            }>
             <Card
               bordered={bordered}
               loading={loading}
