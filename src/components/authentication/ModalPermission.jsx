@@ -5,6 +5,7 @@ import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
 import { Link } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 const { useBreakpoint } = Grid;
 
 const stylePaddingDesktop = {
@@ -19,8 +20,13 @@ const stylePaddingMobile = {
 const ModalPermission = (props) => {
   let { handleChangeTypeModal, typeModal } = useContext(HelperContext);
   const screens = useBreakpoint();
+  const intl = useIntl();
   const textoTitle =
-    typeModal == 'register' ? 'Registrarme al evento' : typeModal == 'update' ? 'Actualizar mis datos' : '';
+    typeModal == 'register'
+      ? intl.formatMessage({ id: 'modal.title.registerevent', defaultMessage: 'Registrarme al evento' })
+      : typeModal == 'update'
+      ? intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })
+      : '';
   return (
     <Modal
       bodyStyle={{ textAlign: 'center', paddingRight: '10px', paddingLeft: '10px' }}
@@ -32,10 +38,12 @@ const ModalPermission = (props) => {
       <PageHeader
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={
-          <Link onClick={()=>handleChangeTypeModal(null)} to={`/landing/${props.cEvent.value?._id}/`}>
+          <Link onClick={() => handleChangeTypeModal(null)} to={`/landing/${props.cEvent.value?._id}/`}>
             <Space>
               <CloseCircleFilled style={{ color: '#6B7283', fontSize: '20px' }} />
-              <span style={{ fontSize: '16px', color: '#6B7283' }}>Cerrar</span>
+              <span style={{ fontSize: '16px', color: '#6B7283' }}>
+                {intl.formatMessage({ id: 'modal.permissio.close', defaultMessage: 'Cerrar' })}
+              </span>
             </Space>
           </Link>
         }
