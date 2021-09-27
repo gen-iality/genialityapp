@@ -285,8 +285,8 @@ export const HelperContextProvider = ({ children }) => {
 
   const obtenerContactos = async () => {
     // Servicio que trae los contactos
-    let contacts = await Networking.getContactList(cEvent.value._id, cEventuser.value._id);
-    let {data}=await Networking.getInvitationsSent(cEvent.value._id, cEventuser.value._id)
+    let contacts = await Networking.getContactList(cEvent.value._id, cEventuser.value?._id);
+    let {data}=await Networking.getInvitationsSent(cEvent.value._id, cEventuser.value?._id)
     if (contacts) {
       setContacts(contacts);
     }
