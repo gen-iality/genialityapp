@@ -85,18 +85,19 @@ const ModalAuth = (props) => {
       .then((response) => {
         loginNormal = true;        
         setErrorLogin(false);
-        setLoading(false);
+        //setLoading(false);
       })
       .catch(async () => {       
         let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
         if (user.data.length > 0) {
          
-          setErrorLogin(false);
-          setLoading(false);
+         
           if (user.data[0].properties?.password == data.password || user.data[0].contrasena == data.password) {
             window.location.href =
               window.origin + '/landing/' + props.cEvent.value?._id + '?token=' + user.data[0]?.user?.initial_token;
             loginFirst = true;
+            setErrorLogin(false);
+            //setLoading(false);
             //loginFirebase(data)
             //leafranciscobar@gmail.com
             //Mariaguadalupe2014
