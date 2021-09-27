@@ -304,6 +304,7 @@
     "form.button.enter": "Entrem no chat",
     "form.button.register": "Inscreva-se no evento",
     "form.message.socialzone": "Este formulário só é válido para participar do chat, se quiser curtir o evento na íntegra é necessário se cadastrar.s",
+    "form.button.avatar": "Carregar foto de perfil",
 
     "tabs.attendees.socialzone": "Participantes",
     "tabs.surveys.socialzone": "Pesquisas",
