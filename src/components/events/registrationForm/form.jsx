@@ -648,7 +648,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                 fileList={ImgUrl}
                 beforeUpload={beforeUpload}>
                 <Button type='primary' icon={<UploadOutlined />}>
-                  Subir imagen de perfil
+                {intl.formatMessage({ id: 'form.button.avatar', defaultMessage: 'Subir imagen de perfil' })}
                 </Button>
               </Upload>
             </ImgCrop>

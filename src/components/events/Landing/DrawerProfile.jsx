@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import Avatar from 'antd/lib/avatar/avatar';
-import Text from 'antd/lib/typography/Text';
+
 import { Button, Drawer, Row, Space, Tooltip, Col, Spin, List, notification, Typography } from 'antd';
 import { UsergroupAddOutlined, CommentOutlined, VideoCameraAddOutlined } from '@ant-design/icons';
 import { UseCurrentUser } from '../../../Context/userContext';
 import { formatDataToString } from '../../../helpers/utils';
-import ProfileAttende from './ProfileAttende';
+
 import { HelperContext } from '../../../Context/HelperContext';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { connect } from 'react-redux';
@@ -16,6 +16,7 @@ import { setUserAgenda } from '../../../redux/networking/actions';
 import withContext from '../../../Context/withContext';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useIntl } from 'react-intl';
 
 const DrawerProfile = (props) => {
   let cUser = UseCurrentUser();
@@ -25,6 +26,7 @@ const DrawerProfile = (props) => {
   const [userSelected, setUserSelected] = useState();
   const [isMycontact, setIsMyContact] = useState();
   const [isMe, setIsMe] = useState(false);
+  const intl = useIntl();
 
   useEffect(() => {
     if (props.profileuser !== null) {
@@ -75,7 +77,7 @@ const DrawerProfile = (props) => {
                 type='text'
                 size='middle'
                 style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}>
-                Actualizar mis datos
+                {intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })} 
               </Button>
             )}
           </Space>

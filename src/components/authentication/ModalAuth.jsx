@@ -93,15 +93,16 @@ const ModalAuth = (props) => {
     if (!respuesta) {
       let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
       if (user.data.length > 0) {
-         if (user.data[0].properties?.password == data.password || user.data[0].contrasena == data.password) {
-          window.location.href=window.origin+"/landing/"+props.cEvent.value?._id+"?token="+user.data[0]?.user?.initial_token         
+        if (user.data[0].properties?.password == data.password || user.data[0].contrasena == data.password) {
+          window.location.href =
+            window.origin + '/landing/' + props.cEvent.value?._id + '?token=' + user.data[0]?.user?.initial_token;
           loginFirst = true;
           //loginFirebase(data)
           //leafranciscobar@gmail.com
           //Mariaguadalupe2014
         }
       }
-     // console.log('USUARIO OBTENIDO==>', user, props.cEvent.value?._id);
+      // console.log('USUARIO OBTENIDO==>', user, props.cEvent.value?._id);
     } else {
       loginNormal = true;
     }
@@ -126,7 +127,7 @@ const ModalAuth = (props) => {
         closable={false}
         visible={true}>
         <Tabs onChange={callback} centered size='large'>
-          <TabPane tab={intl.formatMessage({ id: 'modal.title.login' })} key='1'>
+          <TabPane tab={intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })} key='1'>
             <Form
               form={form1}
               onFinish={handleLoginEmailPassword}
@@ -134,27 +135,38 @@ const ModalAuth = (props) => {
               layout='vertical'
               style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
               <Form.Item
-                label='Email'
+                label={intl.formatMessage({ id: 'modal.label.email', defaultMessage: 'Correo electrónico' })}
                 name='email'
                 style={{ marginBottom: '15px' }}
-                rules={[{ required: true, message: 'Ingrese un email' }]}>
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({
+                      id: 'modal.rule.required.email',
+                      defaultMessage: 'Ingrese un correo',
+                    }),
+                  },
+                ]}>
                 <Input
                   disabled={loading}
                   type='email'
                   size='large'
-                  placeholder='Email'
+                  placeholder={intl.formatMessage({ id: 'modal.label.email', defaultMessage: 'Correo electrónico' })}
                   prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
                 />
               </Form.Item>
               <Form.Item
-                label='Contraseña'
+                label={intl.formatMessage({ id: 'modal.label.password', defaultMessage: 'Contraseña' })}
                 name='password'
                 style={{ marginBottom: '15px' }}
-                rules={[{ required: true, message: 'Ingrese una contraseña' }]}>
+                rules={[{ required: true, message: intl.formatMessage({
+                  id: 'modal.rule.required.password',
+                  defaultMessage: 'Ingrese una contraseña',
+                }), }]}>
                 <Input.Password
                   disabled={loading}
                   size='large'
-                  placeholder='Contraseña'
+                  placeholder={intl.formatMessage({ id: 'modal.label.password', defaultMessage: 'Contraseña' })}
                   prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
                   iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                 />
@@ -166,7 +178,7 @@ const ModalAuth = (props) => {
                     underline
                     type='secondary'
                     style={{ float: 'right', cursor: 'pointer' }}>
-                    Olvidé mi contraseña
+                    {intl.formatMessage({ id: 'modal.option.restore', defaultMessage: 'Olvidé mi contraseña' })}
                   </Typography.Text>
                 </Form.Item>
               )}
@@ -186,13 +198,16 @@ const ModalAuth = (props) => {
                     marginBottom: '15px',
                   }}
                   type='error'
-                  message={'Email o contraseña incorrecta'}
+                  message={intl.formatMessage({
+                    id: 'modal.login.message',
+                    defaultMessage: 'Correo o contraseña equivocada',
+                  })}
                 />
               )}
               {!loading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
                   <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
-                  {intl.formatMessage({ id: 'modal.title.login' })}
+                    {intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })}
                   </Button>
                 </Form.Item>
               )}
@@ -200,7 +215,12 @@ const ModalAuth = (props) => {
             </Form>
             <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
             <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-              <Typography.Paragraph type='secondary'>Mira otras formas de entrar al evento</Typography.Paragraph>
+              <Typography.Paragraph type='secondary'>
+                {intl.formatMessage({
+                  id: 'modal.info.options',
+                  defaultMessage: 'Mira otras formas de entrar al evento',
+                })}
+              </Typography.Paragraph>
               <Space direction='vertical' style={{ width: '100%' }}>
                 <Button
                   disabled={loading}
@@ -215,13 +235,13 @@ const ModalAuth = (props) => {
                   block
                   style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
                   size='large'>
-                  Enviar acceso a mi correo
+                  {intl.formatMessage({ id: 'modal.option.send', defaultMessage: 'Enviar acceso a mi correo' })}
                 </Button>
               </Space>
             </div>
           </TabPane>
           {props.cEventUser?.value == null && (
-            <TabPane tab='Registrarme' key='2'>
+            <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
               <div
                 // className='asistente-list'
                 style={{

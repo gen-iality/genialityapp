@@ -1,9 +1,10 @@
-import { LeftCircleOutlined, MailOutlined } from '@ant-design/icons';
+import { LeftCircleOutlined, LoadingOutlined, MailOutlined } from '@ant-design/icons';
 import { Modal, PageHeader, Space, Typography, Form, Input, Grid, Button, Alert, Row, Spin } from 'antd';
 import React, { useState, useContext, useEffect } from 'react';
 import { EventsApi, UsersApi } from '../../helpers/request';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
+import { useIntl } from 'react-intl';
 
 const { useBreakpoint } = Grid;
 
@@ -23,16 +24,33 @@ const ModalLoginHelpers = (props) => {
   const [sendRecovery, setSendRecovery] = useState(null);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const intl = useIntl();
   const screens = useBreakpoint();
-  const textoTitle = typeModal == 'recover' ? 'Recuperar contraseña' : 'Enviar link de acceso al correo ';
-  const textoButton = typeModal == 'recover' ? 'Recuperar contraseña' : 'Enviar al correo ';
+  const textoTitle =
+    typeModal == 'recover'
+      ? intl.formatMessage({ id: 'modal.restore.message', defaultMessage: 'Restablecer contraseña' })
+      : intl.formatMessage({ id: 'modal.send.message', defaultMessage: 'Enviar link de acceso al correo' });
+  const textoButton =
+    typeModal == 'recover'
+      ? intl.formatMessage({ id: 'modal.restore.button', defaultMessage: 'Restablecer contraseña' })
+      : intl.formatMessage({ id: 'modal.send.button', defaultMessage: 'Enviar link de acceso al correo' });
   //FUNCIÓN QUE PERMITE ENVIAR LA CONTRASEÑA AL EMAIL DIGITADO
   const handleRecoveryPass = async ({ email }) => {
     try {
       const resp = await EventsApi.recoveryPassword(props.cEvent.value?._id, window.location.origin, { email });
-      setSendRecovery(`Se ha enviado una nueva contraseña a: ${email} `);
+      setSendRecovery(
+        `${intl.formatMessage({
+          id: 'modal.restore.alert.success',
+          defaultMessage: 'Se ha enviado una nueva contraseña a:',
+        })} ${email} `
+      );
     } catch (error) {
-      setSendRecovery('Error al solicitar una nueva contraseña');
+      setSendRecovery(
+        `${intl.formatMessage({
+          id: 'modal.restore.alert.error',
+          defaultMessage: 'Error al solicitar una nueva contraseña',
+        })}`
+      );
     }
   };
   //FUNCIÓN QUE SE EJECUTA AL PRESIONAR EL BOTON
@@ -58,18 +76,32 @@ const ModalLoginHelpers = (props) => {
         if (data?.length > 0) {
           let resp = await UsersApi.createOne(data[0]?.properties, props.cEvent.value?._id);
           if (resp && resp.message == 'OK') {
-            setSendRecovery(`Se ha enviado a su email ${values.email} el link de acceso.`);
+            setSendRecovery(
+              `${intl.formatMessage({
+                id: 'modal.send.alert.success',
+                defaultMessage: 'Se ha enviado un link de acceso a su correo electrónico',
+              })} ${values.email}`
+            );
           }
         } else {
-          setSendRecovery(`El email ${values.email} no se encuentra registrado en este evento`);
+          setSendRecovery(
+            `${values.email} ${intl.formatMessage({
+              id: 'modal.send.notregistered',
+              defaultMessage: 'no se encuentra registrado en este evento',
+            })}`
+          );
         }
       } catch (error) {
-        setSendRecovery(`Error al solicitar acceso al evento `);
+        setSendRecovery(
+          `${intl.formatMessage({
+            id: 'modal.restore.alert.error',
+            defaultMessage: 'Error al solicitar acceso al evento',
+          })}`
+        );
       }
     }
     setLoading(false);
   };
- 
 
   //FAILDE DE VALIDACIONES DEL FORMULARIO
   const onFinishFailed = () => {
@@ -84,7 +116,10 @@ const ModalLoginHelpers = (props) => {
       closable={false}
       visible={typeModal !== null}>
       <PageHeader
-      className={sendRecovery != null || registerUser && 'animate__animated animate__headShake animate__delay-2s animate__slower animate__infinite'}
+        className={
+          (sendRecovery != null || registerUser) &&
+          'animate__animated animate__headShake animate__delay-2s animate__slower animate__infinite'
+        }
         style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
         backIcon={
           <Space
@@ -95,7 +130,9 @@ const ModalLoginHelpers = (props) => {
               form.resetFields();
             }}>
             <LeftCircleOutlined style={{ color: '#6B7283', fontSize: '20px' }} />
-            <span style={{ fontSize: '16px', color: '#6B7283' }}>Volver al inicio de sesión</span>
+            <span style={{ fontSize: '16px', color: '#6B7283' }}>
+              {intl.formatMessage({ id: 'modal.restore.back', defaultMessage: 'Volver al inicio de sesión' })}
+            </span>
           </Space>
         }
         onBack={() => null}
@@ -112,17 +149,23 @@ const ModalLoginHelpers = (props) => {
           {textoTitle}
         </Typography.Title>
         <Form.Item
-          label='Email'
+          label={intl.formatMessage({ id: 'modal.label.email', defaultMessage: 'Correo electrónico' })}
           name='email'
           style={{ marginBottom: '10px' }}
           rules={[
-            { required: true, message: 'El email es requerido' },
-            { type: 'email', message: 'Ingrese un email válido' },
+            {
+              required: true,
+              message: intl.formatMessage({ id: 'modal.rule.required', defaultMessage: 'El email es requerido' }),
+            },
+            {
+              type: 'email',
+              message: intl.formatMessage({ id: 'modal.rule.type', defaultMessage: 'Ingrese un email válido' }),
+            },
           ]}>
           <Input
             type='email'
             size='large'
-            placeholder='Email'
+            placeholder={intl.formatMessage({ id: 'modal.label.email', defaultMessage: 'Correo electrónico' })}
             prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
           />
         </Form.Item>
@@ -140,7 +183,7 @@ const ModalLoginHelpers = (props) => {
               borderLeft: '5px solid #FAAD14',
               fontSize: '14px',
               textAlign: 'start',
-              borderRadius:'5px'
+              borderRadius: '5px',
             }}
           />
         )}
@@ -148,9 +191,12 @@ const ModalLoginHelpers = (props) => {
           <Alert
             showIcon
             type='error'
-            message='Este email no se encuentra registrado en este evento'
+            message={intl.formatMessage({
+              id: 'modal.message.notregistered',
+              defaultMessage: 'Este email no se encuentra registrado en este evento',
+            })}
             closable
-            className='animate__animated animate__bounceIn'
+            className='animate__animated animate__bounceIn animate__faster'
             style={{
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
               backgroundColor: '#FFFFFF',
@@ -158,7 +204,7 @@ const ModalLoginHelpers = (props) => {
               borderLeft: '5px solid #FF4E50',
               fontSize: '14px',
               textAlign: 'start',
-              borderRadius:'5px'
+              borderRadius: '5px',
             }}
           />
         )}
@@ -171,7 +217,7 @@ const ModalLoginHelpers = (props) => {
         )}
         {loading && (
           <Row justify='center'>
-            <Spin />
+            <LoadingOutlined style={{ fontSize: '50px' }} />
           </Row>
         )}
       </Form>
