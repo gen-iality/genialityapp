@@ -41,7 +41,6 @@ import { useParams } from 'react-router-dom';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  console.log('props.cEvent.value ', props.cEvent.value);
   let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext);
   let { event_id, event_name } = useParams();
   function ValidateViewPermissions(route, nombresection) {

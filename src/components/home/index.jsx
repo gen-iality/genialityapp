@@ -148,7 +148,6 @@ class Home extends Component {
                   <p className='sin-evento'>No hay eventos próximos</p>
                 ) : (
                   events.map((event, key) => {
-                    <>{console.log('event', event)}</>;
                     return (
                       <Col key={key} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <EventCard
