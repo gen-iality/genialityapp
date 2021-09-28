@@ -35,12 +35,9 @@ class UserModal extends Component {
   async componentDidMount() {
     const self = this;
     const { rolesList } = this.props;
-   
-
     self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : '' });
     const tickets = await eventTicketsApi.getAll(this.props.eventId);
     if (tickets.length > 0) this.setState({ tickets });
-
     let user = {};
     if (this.props.edit) {
       const { value } = this.props;
@@ -112,7 +109,7 @@ class UserModal extends Component {
         }
 
         let respAddEvento = await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
-        
+
         if (respAddEvento.data && respAddEvento.data.rol_id == '60e8a8b7f6817c280300dc23') {
           let updateRol = await Actions.put(
             `/api/events/${this.props.eventId}/eventusers/${respAddEvento.data._id}/updaterol`,
@@ -551,16 +548,28 @@ class UserModal extends Component {
     const { modal } = this.props;
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
-      <Modal  footer={false} onCancel={() => this.props.handleModal()} visible={true}>
-        <FormComponent
-          handleModal={this.props.handleModal}
-          noredirect={true}
-          conditionals={this.props.event.fields_conditions || []}
-          initialValues={this.props.value}
-          eventUser={user}
-          extraFieldsOriginal={this.props.extraFields}
-          eventId={this.props.eventId}
-        />
+      <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible={true}>
+        <div
+          // className='asistente-list'
+          style={{
+            height: '500px',
+            overflowY: 'scroll',
+            paddingLeft: '0px',
+            paddingRight: '0px',
+            paddingTop: '0px',
+            paddingBottom: '0px',
+            marginTop:'30px'
+          }}>
+          <FormComponent
+            handleModal={this.props.handleModal}
+            noredirect={true}
+            conditionals={this.props.event.fields_conditions || []}
+            initialValues={this.props.value}
+            eventUser={user}
+            extraFieldsOriginal={this.props.extraFields}
+            eventId={this.props.eventId}
+          />
+        </div>
       </Modal>
     );
   }
