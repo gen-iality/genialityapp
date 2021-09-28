@@ -64,7 +64,7 @@ const NoticiasDetails = ({ setVirtualConference, match,setTopBanner  }) => {
                 <img
                   style={{ height: `${screens.xs === true ? '25vh' : '55vh'}`, objectFit: 'cover' }}
                   alt='imagen noticia'
-                  src={noticia && noticia.image && noticia.image[0] !== null ? noticia.image[0] : imgNotFound}
+                  src={noticia && noticia.image ?  noticia.image : imgNotFound}
                 />
               )
             }>
