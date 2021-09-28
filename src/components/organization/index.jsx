@@ -81,7 +81,7 @@ function Organization(props) {
                   </div>
                </aside>
                <div className='column is-10'>
-                  {props.loading ? (
+                  {loading ? (
                      <p>Cargando</p>
                   ) : (
                      <section className='section'>
@@ -94,7 +94,7 @@ function Organization(props) {
                            <Route
                               exact
                               path={`${props.match.url}/information`}
-                              render={() => <OrganizationProfile org={organization} />}
+                              render={() => <OrganizationProfile org={organization} setOrganization={setOrganization}/>}
                            />
                            <Route
                               exact

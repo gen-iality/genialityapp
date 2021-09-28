@@ -14,7 +14,7 @@ const layout = {
 };
 
 function OrganizationInformation(props) {
-   const { name, description, _id: organizationId } = props.org;
+   let { name, description, _id: organizationId } = props.org;
 
    async function updateOrganization(values) {
       const { name, description } = values.organization;
@@ -23,7 +23,9 @@ function OrganizationInformation(props) {
          description,
       };
       try {
-         await OrganizationApi.editOne(body, organizationId);
+         const organizationEdit = await OrganizationApi.editOne(body, organizationId);
+         props.setOrganization(organizationEdit)
+         console.log("10. organizationEdit ", organizationEdit)
          message.success('Información actualizada correctamente');
       } catch (error) {
          message.error('No se pudo actualizar la información');
