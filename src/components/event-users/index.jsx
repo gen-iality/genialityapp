@@ -212,7 +212,7 @@ class ListEventUser extends Component {
           return item.type != 'tituloseccion';
         })
         .map((item) => {
-          return { title: item.label, dataIndex: item.name, key: item.name};
+          return { title: item.label, dataIndex: item.name, key: item.name ,render:(record, key)=>item.type=="file"?<a target="__blank" download={item?.name} href={key[item?.name]?.file?.response}>{key[item?.name]?.file?.name}</a>:key[item.name]};
         });
       columns = [...columns, ...extraColumns];
       let rol = {
@@ -298,14 +298,19 @@ class ListEventUser extends Component {
             ) {                
               updatedAttendees[i]['properties'][key.name] = updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
             }
+           
+            if(key.type == 'file'){ 
+              console.log(updatedAttendees[i][key.name])                             
+              updatedAttendees[i][key.name] = updatedAttendees[i][key.name];  
+                    
+            }
             if(extraFields){
               let codearea=extraFields?.filter((field)=>field.type=='codearea')                
             if(codearea[0] && updatedAttendees[i] && Object.keys(updatedAttendees[i]).includes(codearea[0].name) && key.name==codearea[0].name){
              
               updatedAttendees[i][codearea[0].name]=updatedAttendees[i]['code']?"(+"+updatedAttendees[i]['code']+")"+updatedAttendees[i].user[codearea[0].name]:"(+0)"+updatedAttendees[i].user[codearea[0].name]
-            }else{
-              console.log("KEY==>",updatedAttendees[i]['properties'][key])
-            updatedAttendees[i][key.name] =  updatedAttendees[i]['properties'][key.name]==true ?"SI":updatedAttendees[i]['properties'][key.name]==false?"NO":updatedAttendees[i]?.user[key.name];
+            }else{             
+            //updatedAttendees[i][key.name] =  updatedAttendees[i]['properties'][key.name]==true ?"SI":updatedAttendees[i]['properties'][key.name]==false?"NO":updatedAttendees[i]?.user[key.name];
             updatedAttendees[i]["textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio"]= self.props.event._id=="60c8affc0b4f4b417d252b29" ? "SI" :""          
           }
           }
@@ -445,6 +450,7 @@ class ListEventUser extends Component {
 
   openEditModalUser = (item) => {
     html.classList.add('is-clipped');
+    console.log("SELECTED ITEM==>",item)
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
 
@@ -744,6 +750,7 @@ class ListEventUser extends Component {
           modal={editUser}
           eventId={this.props.eventId}
           ticket={ticket}
+          event={this.props.event}
           tickets={this.state.listTickets}
           rolesList={this.state.rolesList}
           value={this.state.selectedUser}

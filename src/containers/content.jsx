@@ -67,7 +67,18 @@ const ContentContainer = () => {
         {/* <WithFooter> */}
         <Route path='/page/:id' component={HomeProfile} />
         <PrivateRoute path='/my_events' component={Events} />
-        <PrivateRoute path='/event/:event' component={Event} />
+        <CurrentEventProvider>
+          <CurrentUserEventProvider>
+            <CurrentUserProvider>
+              <HelperContextProvider>
+                <SurveysProvider>
+                  <PrivateRoute path='/event/:event' component={Event} />
+                </SurveysProvider>
+              </HelperContextProvider>
+            </CurrentUserProvider>
+          </CurrentUserEventProvider>
+        </CurrentEventProvider>
+
         <PrivateRoute path='/create-event' component={NewEvent} />
         <PrivateRoute path='/profile/:id' component={MyProfile} />
         <Route exact path='/organization/:id/events' component={EventOrganization} />

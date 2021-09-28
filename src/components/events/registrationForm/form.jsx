@@ -115,6 +115,8 @@ const FormRegister = ({
   eventUserId,
   closeModal,
   conditionals,
+  noredirect,
+  handleModal,
   showSection,
   setSectionPermissions,
 }) => {
@@ -261,6 +263,10 @@ const FormRegister = ({
 
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
           //todo el proceso de logueo depende del token en la url por eso se recarga la página
+          if(noredirect){
+              // CERRAMOS MODAL            
+              handleModal()
+          }else{
           if (!event.validateEmail && resp.data.user.initial_token) {
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
@@ -275,6 +281,7 @@ const FormRegister = ({
           } else {
             window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${1}`);
           }
+        }
         } else {
           // window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
           //Usuario ACTUALIZADO
@@ -380,7 +387,8 @@ const FormRegister = ({
       let description = m.description;
       let labelPosition = m.labelPosition;
       let target = name;
-      let value = eventUser && eventUser['properties'] ? eventUser['properties'][target] : '';
+      console.log(initialValues)
+      let value = !noredirect?  eventUser && eventUser['properties'] ? eventUser['properties'][target] : '': initialValues ? initialValues[target]:'';
 
       //no entiendo b esto para que funciona
       if (conditionals.state === 'enabled') {
@@ -546,6 +554,7 @@ const FormRegister = ({
       }
 
       if (type === 'file') {
+        console.log("FILE VALUE==>",value)
         input = (
           <Upload
             accept='application/pdf'
@@ -554,9 +563,9 @@ const FormRegister = ({
             listType='text'
             beforeUpload={beforeUpload}
             defaultFileList={
-              value && value.fileList
-                ? value.fileList.map((file) => {
-                    file.url = file.response || null;
+              value && value?.fileList
+                ? value?.fileList?.map((file) => {
+                    file.url = file?.response || null;
                     return file;
                   })
                 : []
