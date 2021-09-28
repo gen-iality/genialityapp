@@ -48,7 +48,7 @@ class Headers extends Component {
       tabEvtType: true,
       tabEvtCat: true,
       eventId: null,
-      userEvent:null
+      userEvent: null,
     };
     this.setEventId = this.setEventId.bind(this);
     this.logout = this.logout.bind(this);
@@ -68,14 +68,11 @@ class Headers extends Component {
 
   setEventId = () => {
     const path = window.location.pathname.split('/');
-    let eventId = path[2] || path[1]
+    let eventId = path[2] || path[1];
     return eventId;
   };
 
   async componentDidMount() {
-  
-  
-
     const eventId = this.setEventId();
     this.setState({ eventId });
 
@@ -83,7 +80,7 @@ class Headers extends Component {
     let evius_token = null;
     let dataUrl = parseUrl(document.URL);
     if (dataUrl && dataUrl.token) {
-      Cookie.set('evius_token', dataUrl.token,{ expires: 180 });
+      Cookie.set('evius_token', dataUrl.token, { expires: 180 });
       evius_token = dataUrl.token;
     }
     if (!evius_token) {
@@ -99,13 +96,23 @@ class Headers extends Component {
     //Si existe el token consultamos la información del usuario
     const data = await getCurrentUser();
 
-    if (data) {      
+    if (data) {
       const name = data.name ? data.name : data.displayName ? data.displayName : data.email;
       const photo = data.photoUrl ? data.photoUrl : data.picture;
       const organizations = await OrganizationApi.mine();
 
       this.setState(
-        { name, userEvent:data, photo, uid: data.uid, id: data._id, user: true, cookie: evius_token, loader: false, organizations },
+        {
+          name,
+          userEvent: data,
+          photo,
+          uid: data.uid,
+          id: data._id,
+          user: true,
+          cookie: evius_token,
+          loader: false,
+          organizations,
+        },
         () => {
           this.props.addLoginInformation(data);
         }
@@ -121,7 +128,7 @@ class Headers extends Component {
     const splited = location.pathname.split('/');
     if (splited[1] === '') {
       this.setState({ showAdmin: false, menuOpen: false });
-    } else if (splited[1] === 'event') {
+    } else if (splited[1] === 'eventadmin' || splited[1] === 'orgadmin') {
       this.setState({ showAdmin: true, showEventMenu: false, menuOpen: false });
       window.scrollTo(0, 0);
     }

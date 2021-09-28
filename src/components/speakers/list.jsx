@@ -1,204 +1,192 @@
-import React, { Component } from 'react';
-import { Link, Redirect, withRouter } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { withRouter } from 'react-router-dom';
 import { SpeakersApi } from '../../helpers/request';
-import EventContent from '../events/shared/content';
-import Loading from '../loaders/loading';
-import { handleRequestError, sweetAlert } from '../../helpers/utils';
-import Pagination from '../shared/pagination';
-import SearchComponent from '../shared/searchTable';
-import { Space, Button, Row, Table, Image} from 'antd';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Table, Modal, message } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { sortableContainer, sortableElement } from 'react-sortable-hoc';
+import arrayMove from 'array-move';
+import Header from '../../antdComponents/Header';
+import { columns } from './columns';
 
-//const { Meta } = Card;
+const SortableItem = sortableElement((props) => <tr {...props} />);
+const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
-class SpeakersList extends Component {
-  constructor(props) {
-    super(props);
-    let self = this;
-    this.state = {
-      loading: true,
-      list: [],
-      speakersList: [],
-      pageOfItems: [],
-      changeItem: false,
-      redirect: false,
-      viewModal: false,
-      columns: [
-        {
-          title: 'Nombre',
-          dataIndex: 'name',
-          key: 'name',
-        },
-        {
-          title: 'Profesión',
-          dataIndex: 'profession',
-          key: 'profession',
-        },
-        {
-          title: 'Imagen',
-          dataIndex: 'image',
-          key: 'image',
-          render(val, item) {
-            return (
-              <Space key={item._id} size='small'>
-                <Image key={'img' + item._id} width={70} height={70} src={item.image} />
-              </Space>
-            );
-          },
-        },
-        {
-          title: 'Opciones',
-          dataIndex: 'options',
-          key: 'options',
-          render(val, item) {
-            return (
-              <>
-                <Link key='edit' to={{ pathname: `${props.matchUrl}/speaker`, state: { edit: item._id } }}>
-                  <Button icon={<EditOutlined />} />
-                </Link>
-                <Button
-                  style={{ marginLeft: 15 }}
-                  key='delete'
-                  onClick={() => {
-                    self.remove(item);
-                  }}
-                  icon={<DeleteOutlined />}
-                  type='danger'
-                />             
-              </>
-            );
-          },
-        },
-      ],
-    };
-  }
+const { confirm } = Modal;
 
-  componentDidMount() {
-    this.fetchSpeakers();
-  }
+function SpeakersList(props) {
+   const [searchText, setSearchText] = useState('');
+   const [searchedColumn, setSearchedColumn] = useState('');
 
-  fetchSpeakers = async () => {
-    const data = await SpeakersApi.byEvent(this.props.eventID);
-    this.setState({ list: data, speakersList: data, loading: false });
-  };
+   const queryClient = useQueryClient();
+   const { isLoading, data } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
 
-  redirect = () => this.setState({ redirect: true });
+   function sortAndIndexSpeakers() {
+      let list = [];
+      if (data) {
+         list = data.sort((a, b) => (a.sort && b.sort ? a.sort - b.sort : true));
+         list = list.map((speaker, index) => {
+            return { ...speaker, index: speaker.sort == index ? speaker.sort : index };
+         });
+         list = list.sort((a, b) => a.index - b.index);
 
-  remove = (info) => {
-   
-    sweetAlert.twoButton(`Está seguro de borrar a ${info.name}`, 'warning', true, 'Borrar', async (result) => {
-      try {
-        sweetAlert.showLoading('Espera (:', 'Borrando...');
-        await SpeakersApi.deleteOne(info._id, this.props.eventID);
-        this.fetchSpeakers();
-        sweetAlert.hideLoading();
-        sweetAlert.showSuccess('Conferencista borrado');
-      } catch (e) {
-        sweetAlert.showError(handleRequestError(e));
+         return list;
       }
-    });
-  };
+   }
 
-  goBack = () => this.props.history.goBack();
+   function remove(info) {
+      //Se coloco la constante "eventId" porque se perdia al momento de hacer la llamada al momento de eliminar
+      const eventId = props.eventID;
+      confirm({
+         title: `¿Está seguro de eliminar a ${info.name}?`,
+         icon: <ExclamationCircleOutlined />,
+         content: 'Una vez eliminado, no lo podrá recuperar',
+         okText: 'Borrar',
+         okType: 'danger',
+         cancelText: 'Cancelar',
+         onOk() {
+            const onHandlerRemoveSpeaker = () => {
+               updateOrDeleteSpeakers.mutateAsync({ speakerData: info, eventId });
+            };
+            onHandlerRemoveSpeaker();
+         },
+      });
+   }
 
-  searchResult = (data) => {
-    !data ? this.setState({ list: [] }) : this.setState({ list: data });
-  };
+   //FN para búsqueda en la tabla 2/3
+   function handleSearch(selectedKeys, confirm, dataIndex) {
+      confirm();
+      setSearchText(selectedKeys[0]);
+      setSearchedColumn(dataIndex);
+   }
 
-  onChangePage = (pageOfItems) => {
-    this.setState({ pageOfItems: pageOfItems });
-  };
+   //FN para búsqueda en la tabla 3/3
+   function handleReset(clearFilters) {
+      clearFilters();
+      setSearchText('');
+   }
 
-  render() {
-    if (this.state.redirect)
-      return <Redirect to={{ pathname: `${this.props.matchUrl}/speaker`, state: { new: true } }} />;
-    const { list, speakersList, pageOfItems, loading } = this.state;
+   //FN para el draggable 1/3
+   function onSortEnd({ oldIndex, newIndex }) {
+      if (oldIndex !== newIndex) {
+         let newData = arrayMove([].concat(sortAndIndexSpeakers()), oldIndex, newIndex).filter((el) => !!el);
+         if (newData) {
+            newData = newData.map((speaker, key) => {
+               return { ...speaker, index: key };
+            });
+         }
+         updateOrDeleteSpeakers.mutateAsync({ newData, state: 'update' });
+      }
+   }
 
-    if (loading) return <Loading />;
-    return (
-      <EventContent
-        title='Conferencistas'
-        closeAction={this.props.location.state && this.goBack}
-        description={'Agregue o edite las personas que son conferencistas'}
-        addAction={this.redirect}
-        addTitle={'Nuevo conferencista'}
-        actionLeft={
-          <SearchComponent
-            data={speakersList}
-            placeholder={'por Nombre'}
-            kind={'speakers'}
-            classes={'field'}
-            searchResult={this.searchResult}
-          />
-        }>
-        <Row justify='left' gutter={[25, 25]}>
-          {/*speakersList.map((speaker) => (*/}
-          {/*<Col key={speaker._id} xs={12} sm={8} md={6} lg={6} xl={4} xxl={4}>*/}
-          {/*  <Card
-                hoverable
-                style={{ width: '100%' }}
-                bodyStyle={{padding:'10px', minHeight: '80px'}}
-                actions={[
-                  <Link key='edit' to={{ pathname: `${this.props.matchUrl}/speaker`, state: { edit: speaker._id } }}>
-                    <Button icon={<EditOutlined />} />
-                  </Link>,
-                  <Button
-                    key='delete'
-                    onClick={() => {
-                      this.remove(speaker);
-                    }}
-                    icon={<DeleteOutlined />}
-                    type='danger'
-                  />,
-                ]}
-                cover={
-                  <img
-                    style={{ height: '150px', objectFit: 'cover' }}
-                    alt='example'
-                    src={
-                      speaker.image ? speaker.image : 'https://via.placeholder.com/150x100/C6C6C6/A2A2A2?text=Sin%20Foto'
-                    }
-                  />
-                }>
-                  <Typography.Paragraph ellipsis={{rows:2}} strong>{speaker.name}</Typography.Paragraph>
-                
-              </Card>*/}
+   const updateOrDeleteSpeakers = useMutation(
+      'getSpeakersByEvent',
+      (queryData) => {
+         if (queryData.state === 'update') {
+            queryData.newData.map((speaker, index) => {
+               let speakerChange = { ...speaker, order: index + 1 };
+               SpeakersApi.editOne(speakerChange, speaker._id, props.eventId);
+            });
+         } else {
+            SpeakersApi.deleteOne(queryData.speakerData._id, queryData.eventId);
+         }
+      },
+      {
+         // Optimistically update the cache value on mutate, but store
+         // the old value and return it so that it's accessible in case of
+         // an error
+         onMutate: async () => {
+            //
+            await queryClient.cancelQueries('getSpeakersByEvent');
+            const previousValue = queryClient.getQueryData('getSpeakersByEvent');
+            return previousValue;
+         },
+         // On failure, roll back to the previous value
+         onError: (err, queryData, previousValue) => {
+            if (queryData.state === 'update') {
+               queryClient.setQueryData('getSpeakersByEvent', () => previousValue);
+               message.open({
+                  type: 'error',
+                  content: <> Hubo un error al guardar la posición del speaker!</>,
+               });
+            } else {
+               message.open({
+                  type: 'error',
+                  content: `Hubo un error intentando borrar a ${queryData.speakerData.name}`,
+               });
+            }
+         },
+         // After success , refetch the query
+         onSuccess: (data, queryData, previousValue) => {
+            if (queryData.state === 'update') {
+               queryClient.setQueryData('getSpeakersByEvent', queryData.newData);
+               message.open({
+                  type: 'success',
+                  content: <> Posición del speaker guardada correctamente!</>,
+               });
+            } else {
+               queryClient.fetchQuery('getSpeakersByEvent', SpeakersApi.byEvent(queryData.eventId), {
+                  staleTime: 500,
+               });
+               message.open({
+                  type: 'success',
+                  content: `Se eliminó a ${queryData.speakerData.name}`
+               });
+            }
+         },
+      }
+   );
 
-          {/* {' '}
-                <tr key={speaker._id} style={{ background: '#cccccc' }}>
-                  <td>
-                    <div style={{ display: 'flex' }}>
-                      {speaker.image && (
-                        <img src={speaker.image} alt={`speaker_${speaker.name}`} className='author-image' />
-                      )}
-                      <p style={{ margin: 'auto 0', paddingLeft: '10px', fontSize: '1.25em' }}>{speaker.name}</p>
-                    </div>
-                  </td>
-                  <td>
-                    <Space>
-                      <Link to={{ pathname: `${this.props.matchUrl}/speaker`, state: { edit: speaker._id } }}>
-                        <Button icon={<EditOutlined />}>Editar</Button>
-                      </Link>
-                      <Button
-                        onClick={() => {
-                          this.remove(speaker);
-                        }}
-                        icon={<DeleteOutlined />}
-                        type='danger'>
-                        Eliminar
-                      </Button>
-                    </Space>
-                  </td>
-                </tr> */}
-          {/* </Col>*/}
-          {/* ))*/}        
-          <Table style={{ width: '100%' }} columns={this.state.columns} dataSource={speakersList} />
-        </Row>
+   //FN para el draggable 2/3
+   const DraggableContainer = (props) => (
+      <SortableContainer useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props} />
+   );
 
-        <Pagination items={list} change={this.state.changeItem} onChangePage={this.onChangePage} />
-      </EventContent>
-    );
-  }
+   //FN para el draggable 3/3
+   const DraggableBodyRow = ({ className, style, ...restProps }) => {
+      const index = sortAndIndexSpeakers()?.findIndex((x) => x.index === restProps['data-row-key']);
+      return <SortableItem index={index} {...restProps} />;
+   };
+
+   const columnsData = {
+      data: props,
+      searchedColumn: searchedColumn,
+      handleSearch,
+      handleReset,
+      remove,
+      searchText: searchText,
+   };
+
+   return (
+      <div>
+         <Header
+            title={'Conferencistas'}
+            titleTooltip={'Agregue o edite las personas que son conferencistas'}
+            addUrl={{
+               pathname: `${props.matchUrl}/speaker`,
+               state: { new: true },
+            }}
+         />
+
+         <Table
+            columns={columns(columnsData)}
+            dataSource={sortAndIndexSpeakers()}
+            size='small'
+            rowKey='index'
+            loading={isLoading}
+            hasData={sortAndIndexSpeakers()}
+            components={{
+               body: {
+                  wrapper: DraggableContainer,
+                  row: DraggableBodyRow,
+               },
+            }}
+            pagination={false}
+         />
+         {/* <ReactQueryDevtools initialIsOpen /> */}
+      </div>
+   );
 }
 
 export default withRouter(SpeakersList);

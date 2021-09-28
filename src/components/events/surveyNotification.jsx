@@ -43,6 +43,7 @@ let surveyNotification = () => {
       </Button>
 
       <Drawer
+        zIndex={1000}
         title='Basic Drawer'
         placement='right'
         closable={true}

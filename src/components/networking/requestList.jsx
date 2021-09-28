@@ -220,9 +220,9 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       </Col>
     ) : (
       <div>
-        <Divider>Solicitudes Recibidas</Divider>
+        <Divider>Solicitudes recibidas</Divider>
         <InvitacionListReceived list={requestListReceived} sendResponseToInvitation={sendResponseToInvitation} />
-        <Divider>Solicitudes Enviadas</Divider>
+        <Divider>Solicitudes enviadas</Divider>
         <InvitacionListSent list={requestListSent} />
       </div>
     );

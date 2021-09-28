@@ -5,22 +5,21 @@ import * as iconComponents from '@ant-design/icons';
 import { stylesMenuItems } from '../helpers/csshelpers';
 import { UseEventContext } from '../../../../Context/eventContext';
 import { HelperContext } from '../../../../Context/HelperContext';
-import { UseUserEvent } from '../../../../Context/eventUserContext';
 import { setSectionPermissions } from '../../../../redux/sectionPermissions/actions';
 import { connect } from 'react-redux';
 
-const MenuEvent = ({ isMobile, setSectionPermissions }) => {
+const MenuEvent = ({ isMobile }) => {
   let { url } = useRouteMatch();
   let cEvent = UseEventContext();
-  let { totalsolicitudes,eventPrivate } = useContext(HelperContext);
+  let { totalsolicitudes, eventPrivate } = useContext(HelperContext);
   let event = cEvent.value;
-  let cEventUser = UseUserEvent();
 
   return (
     <>
       {!isMobile ? (
         <Menu style={stylesMenuItems} mode='inline' defaultSelectedKeys={['1']}>
-          {event.itemsMenu && !eventPrivate.private &&
+          {event.itemsMenu &&
+            !eventPrivate.private &&
             Object.keys(event.itemsMenu).map((key) => {
               //icono personalizado
               let IconoComponente = iconComponents[event.itemsMenu[key].icon];
@@ -36,23 +35,12 @@ const MenuEvent = ({ isMobile, setSectionPermissions }) => {
                         <IconoComponente style={{ margin: '0 auto', fontSize: '22px', color: event.styles.textMenu }} />{' '}
                       </Row>
                       <Row key={event.itemsMenu[key].section}>
-                        {event.itemsMenu[key].permissions == 'assistants' && cEventUser.value == null ? (
-                          <Link
-                            onClick={() => setSectionPermissions({ view: true, section: event.itemsMenu[key].name })}
-                            className='menuEvent_section-text'
-                            style={{ color: event.styles.textMenu }}
-                            to={`${url}/permissions`}>
-                            {` ${event.itemsMenu[key].name}`}
-                          </Link>
-                        ) : (
-                          <Link
-                            onClick={() => setSectionPermissions({ view: true, section: event.itemsMenu[key].name })}
-                            className='menuEvent_section-text'
-                            style={{ color: event.styles.textMenu }}
-                            to={`${url}/${event.itemsMenu[key].section}`}>
-                            {` ${event.itemsMenu[key].name}`}
-                          </Link>
-                        )}
+                        <Link
+                          className='menuEvent_section-text'
+                          style={{ color: event.styles.textMenu }}
+                          to={`${url}/${event.itemsMenu[key].section}`}>
+                          {` ${event.itemsMenu[key].name}`}
+                        </Link>
                       </Row>
                     </Col>
                   </Badge>
@@ -64,30 +52,20 @@ const MenuEvent = ({ isMobile, setSectionPermissions }) => {
                     key={event.itemsMenu[key].section}
                     className='MenuItem_event'>
                     <IconoComponente style={{ margin: '0 auto', fontSize: '22px', color: event.styles.textMenu }} />
-                    {event.itemsMenu[key].permissions == 'assistants' && cEventUser.value == null ? (
-                      <Link
-                        onClick={() => setSectionPermissions({ view: true, section: event.itemsMenu[key].name })}
-                        className='menuEvent_section-text'
-                        style={{ color: event.styles.textMenu }}
-                        to={`${url}/permissions`}>
-                        {` ${event.itemsMenu[key].name}`}
-                      </Link>
-                    ) : (
-                      <Link
-                        onClick={() => setSectionPermissions({ view: true, section: event.itemsMenu[key].name })}
-                        className='menuEvent_section-text'
-                        style={{ color: event.styles.textMenu }}
-                        to={`${url}/${event.itemsMenu[key].section}`}>
-                        {` ${event.itemsMenu[key].name}`}
-                      </Link>
-                    )}
+                    <Link
+                      className='menuEvent_section-text'
+                      style={{ color: event.styles.textMenu }}
+                      to={`${url}/${event.itemsMenu[key].section}`}>
+                      {` ${event.itemsMenu[key].name}`}
+                    </Link>
                   </Menu.Item>
                 )
               );
             })}
         </Menu>
       ) : (
-        isMobile && !eventPrivate.private && (
+        isMobile &&
+        !eventPrivate.private && (
           <Menu style={stylesMenuItems} mode='vertical' defaultSelectedKeys={['1']}>
             {event.itemsMenu &&
               Object.keys(event.itemsMenu).map((key) => {
@@ -101,22 +79,12 @@ const MenuEvent = ({ isMobile, setSectionPermissions }) => {
                     className='MenuItem_event'>
                     <IconoComponente style={{ margin: '0 auto', fontSize: '22px', color: event.styles.textMenu }} />
 
-                    {event.itemsMenu[key].permissions == 'assistants' && cEventUser.value == null ? (
-                      <Link
-                        onClick={() => setSectionPermissions({ view: true, section: event.itemsMenu[key].name })}
-                        className='menuEvent_section-text'
-                        style={{ color: event.styles.textMenu }}
-                        to={`${url}/permissions`}>
-                        {` ${event.itemsMenu[key].name}`}
-                      </Link>
-                    ) : (
-                      <Link
-                        className='menuEvent_section-text'
-                        style={{ color: event.styles.textMenu }}
-                        to={`${url}/${event.itemsMenu[key].section}`}>
-                        {` ${event.itemsMenu[key].name}`}
-                      </Link>
-                    )}
+                    <Link
+                      className='menuEvent_section-text'
+                      style={{ color: event.styles.textMenu }}
+                      to={`${url}/${event.itemsMenu[key].section}`}>
+                      {` ${event.itemsMenu[key].name}`}
+                    </Link>
                   </Menu.Item>
                 );
               })}
