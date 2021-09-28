@@ -71,7 +71,7 @@ const ContentContainer = () => {
         <PrivateRoute path='/create-event' component={NewEvent} />
         <PrivateRoute path='/profile/:id' component={MyProfile} />
         <Route exact path='/organization/:id/events' component={EventOrganization} />
-        <PrivateRoute path='/admin/organization/:id' component={Organization} />
+        <Route path='/admin/organization/:id' component={Organization} />
         <PrivateRoute path='/purchase/:id' component={Purchase} />
         <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
         <PrivateRoute path='/tickets/:id' component={Tickets} />
