@@ -92,7 +92,7 @@ const ModalAuth = (props) => {
         if (user.data.length > 0) {
          
          
-          if (user.data[0].properties?.password == data.password || user.data[0].contrasena == data.password) {
+          if (user.data[0].properties?.password == data.password || user.data[0].contrasena == data.password || user.data[0]?.user?.contrasena == data.password) {
             window.location.href =
               window.origin + '/landing/' + props.cEvent.value?._id + '?token=' + user.data[0]?.user?.initial_token;
             loginFirst = true;
