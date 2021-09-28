@@ -48,6 +48,15 @@ export const HelperContextProvider = ({ children }) => {
   const [totalPrivateMessages, settotalPrivateMessages] = useState(0);
   const imageforDefaultProfile = 'https://cdn-icons-png.flaticon.com/512/3237/3237447.png';
   const [requestSend, setRequestSend] = useState([]);
+  const [typeModal, setTypeModal] = useState(null);
+  const [tabLogin, setTabLogin] = useState('1');
+
+  function handleChangeTypeModal(type) {
+    setTypeModal(type);
+  }
+  function handleChangeTabModal(tab) {
+    setTabLogin(tab);
+  }
 
   useEffect(() => {
     if (!cEvent.value) return;
@@ -286,15 +295,15 @@ export const HelperContextProvider = ({ children }) => {
   const obtenerContactos = async () => {
     // Servicio que trae los contactos
     let contacts = await Networking.getContactList(cEvent.value._id, cEventuser.value?._id);
-    let {data}=await Networking.getInvitationsSent(cEvent.value._id, cEventuser.value?._id)
+    let { data } = await Networking.getInvitationsSent(cEvent.value._id, cEventuser.value?._id);
     if (contacts) {
       setContacts(contacts);
     }
-    
-    if(data){
-      data=data.filter((request)=> !request.response || request.response=='accepted')
-      console.log("DATA REQUEST==>",data)
-      setRequestSend(data)
+
+    if (data) {
+      data = data.filter((request) => !request.response || request.response == 'accepted');
+      console.log('DATA REQUEST==>', data);
+      setRequestSend(data);
     }
   };
 
@@ -533,7 +542,11 @@ export const HelperContextProvider = ({ children }) => {
         totalPrivateMessages,
         imageforDefaultProfile,
         requestSend,
-        obtenerContactos
+        obtenerContactos,
+        typeModal,
+        handleChangeTypeModal,
+        handleChangeTabModal,
+        tabLogin,
       }}>
       {children}
     </HelperContext.Provider>

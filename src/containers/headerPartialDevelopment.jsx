@@ -215,6 +215,7 @@ class Headers extends Component {
         {showAdmin && showEventMenu && (
           <div id='navbarBasicExample' className={`${eventMenu ? 'is-active' : ''}`}>
             <Drawer
+              zIndex={1000}
               className='hiddenMenuMobile_Landing'
               title='Administrar evento'
               maskClosable={true}

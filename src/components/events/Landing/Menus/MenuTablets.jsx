@@ -18,6 +18,7 @@ const MenuTablets = () => {
       </div>
 
       <Drawer
+        zIndex={1000}
         title={cEvent.value.name}
         placement='left'
         closable={false}
