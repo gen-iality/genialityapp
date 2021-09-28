@@ -3,7 +3,7 @@ import { Button, Card, Col, Row } from 'antd';
 import React, { Component } from 'react';
 import { useState } from 'react';
 import { withRouter } from 'react-router';
-import { Input, Form,DatePicker } from 'antd';
+import { Input, Form, DatePicker } from 'antd';
 import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
@@ -38,18 +38,18 @@ function AddNews(props) {
   const [idNew, setIdNew] = useState();
   const [fecha, setFecha] = useState(moment());
 
-  useEffect(()=>{
-  if(props.match.params.id){
-   setIdNew(props.match.params.id)
-   NewsFeed.getOne(props.eventId,props.match.params.id).then((notice)=>{
-    setPicture(notice.image)
-    setDescriptionShort(notice.description_short)
-    setDescription(notice.description_complete)
-    setFecha(moment(notice.created_at))
-    setNoticia(notice)
-   })
-  }
-  },[])
+  useEffect(() => {
+    if (props.match.params.id) {
+      setIdNew(props.match.params.id);
+      NewsFeed.getOne(props.eventId, props.match.params.id).then((notice) => {
+        setPicture(notice.image);
+        setDescriptionShort(notice.description_short);
+        setDescription(notice.description_complete);
+        setFecha(moment(notice.created_at));
+        setNoticia(notice);
+      });
+    }
+  }, []);
 
   const changeInput = (e, key) => {
     setNoticia({ ...noticia, [key]: e.target.value });
@@ -85,24 +85,27 @@ function AddNews(props) {
   };
 
   function onChangeDate(date, dateString) {
-        setFecha(date)
+    setFecha(date);
   }
 
-  const changeDescriptionShort = (e) => {   
-      setDescriptionShort(e);   
+  const changeDescriptionShort = (e) => {
+    setDescriptionShort(e);
   };
 
-  const changeDescription = (e) => {   
-      setDescription(e);   
+  const changeDescription = (e) => {
+    setDescription(e);
   };
-  const isUrl = string => {
-    try { return Boolean(new URL(string)); }
-    catch(e){ return false; } 
-}
+  const isUrl = (string) => {
+    try {
+      return Boolean(new URL(string));
+    } catch (e) {
+      return false;
+    }
+  };
 
   const saveNew = async () => {
     let validators = {};
-   
+
     if (description === '') {
       validators.description = true;
     } else {
@@ -118,60 +121,63 @@ function AddNews(props) {
     } else {
       validators.picture = false;
     }
-   
-    if (fecha === null && fecha!=="" && !fecha) {
-        validators.fecha = true;
-      } else {
-        validators.fecha = false;
-        
-      }
- if(noticia){
-    if(noticia.video!='' && noticia.video!==null && !isUrl(noticia.video)){
-        validators.video = false;
+
+    if (fecha === null && fecha !== '' && !fecha) {
+      validators.fecha = true;
+    } else {
+      validators.fecha = false;
     }
- }
-    
+    if (noticia) {
+      if (noticia.video != '' && noticia.video !== null && !isUrl(noticia.video)) {
+        validators.video = false;
+      }
+    }
+
     setError(validators);
-    if(validators && validators.video==false &&   validators.picture == false && validators.descriptionShort == false && validators.description == false ){
-        try {
-            if (idNew!==undefined) {
-             
-            let resp= await NewsFeed.editOne(
-                {
-                  title: noticia.title,
-                  description_complete: description,
-                  description_short: descriptionShort,
-                  linkYoutube: noticia.linkYoutube || null,
-                  image: picture!==null?[picture]:null,
-                  time: fecha.format("YYYY-DD-MM"),
-                },
-                noticia._id,
-                props.eventId
-              );
-              if(resp){                
-                  props.history.push(`/event/${props.eventId}/news`)                   
-              }
-              
-            } else {
-               // alert("A GUARDAR")
-              const newRole = await NewsFeed.create(
-                {
-                  title: noticia.title,
-                  description_complete: description,
-                  description_short: descriptionShort,
-                  linkYoutube: noticia.linkYoutube || null,
-                  image: picture!==null?[picture]:null,
-                  time: fecha.format("YYYY-DD-MM"),
-                },
-                props.eventId
-              ); 
-              if(newRole){
-                  props.history.push(`/event/${props.eventId}/news`)
-              }          
-            }
-          } catch (e) {
-            e;
+    if (
+      validators &&
+      validators.video == false &&
+      validators.picture == false &&
+      validators.descriptionShort == false &&
+      validators.description == false
+    ) {
+      try {
+        if (idNew !== undefined) {
+          let resp = await NewsFeed.editOne(
+            {
+              title: noticia.title,
+              description_complete: description,
+              description_short: descriptionShort,
+              linkYoutube: noticia.linkYoutube || null,
+              image: picture !== null ? picture : null,
+              time: fecha.format('YYYY-DD-MM'),
+            },
+            noticia._id,
+            props.eventId
+          );
+          if (resp) {
+            props.history.push(`/event/${props.eventId}/news`);
           }
+        } else {
+          // alert("A GUARDAR")
+          const newRole = await NewsFeed.create(
+            {
+              title: noticia.title,
+              description_complete: description,
+              description_short: descriptionShort,
+              linkYoutube: noticia.linkYoutube || null,
+              image: picture !== null ? picture : null,
+              time: fecha.format('YYYY-DD-MM'),
+            },
+            props.eventId
+          );
+          if (newRole) {
+            props.history.push(`/event/${props.eventId}/news`);
+          }
+        }
+      } catch (e) {
+        e;
+      }
     }
   };
   return (
@@ -198,62 +204,59 @@ function AddNews(props) {
               onChange={(e) => changeInput(e, 'title')}
             />
           </Form.Item>
-          <Form.Item 
-                      
-            label={'Subtítulo *'}>
+          <Form.Item label={'Subtítulo *'}>
             <ReactQuill value={descriptionShort} modules={toolbarEditor} onChange={changeDescriptionShort} />
-            {error!=null && error.descriptionShort && <small style={{color:'red'}}>El subtítulo es requerido</small>}
+            {error != null && error.descriptionShort && (
+              <small style={{ color: 'red' }}>El subtítulo es requerido</small>
+            )}
           </Form.Item>
-          <Form.Item label={'Noticia: *'} 
-           >        
-              <ReactQuill value={description} modules={toolbarEditor} onChange={changeDescription} /> 
-              {error!=null && error.description && <small style={{color:'red'}}>La noticia es requerido</small>}           
-            </Form.Item>
-            <Form.Item label={'Imagen: *'} >           
-              <ImageInput
-                picture={picture}
-                imageFile={imageFile}
-                divClass={'drop-img'}
-                content={<img src={picture} alt={'Imagen Perfil'} />}
-                classDrop={'dropzone'}
-                contentDrop={
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                    }}
-                    className={`button is-primary is-inverted is-outlined ${imageFile ? 'is-loading' : ''}`}>
-                    Cambiar foto
-                  </button>
-                }
-                contentZone={
-                  <div className='has-text-grey has-text-weight-bold has-text-centered'>
-                    <span>Subir foto</span>
-                    <br />
-                    <small>(Tamaño recomendado: 1280px x 960px)</small>
-                  </div>
-                }
-                changeImg={changeImg}
-                errImg={errImg}
-                style={{
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'relative',
-                  height: '200px',
-                  width: '100%',
-                  borderWidth: 2,
-                  borderColor: '#b5b5b5',
-                  borderStyle: 'dashed',
-                  borderRadius: 10,
-                }}
-              />
-               {error!=null && error.picture && <small style={{color:'red'}}>La imagen es requerida</small>}
-              {fileMsg && <p className='help is-success'>{fileMsg}</p>}
-           
-            </Form.Item>
-          <Form.Item label='Link del video:'
-            >        
+          <Form.Item label={'Noticia: *'}>
+            <ReactQuill value={description} modules={toolbarEditor} onChange={changeDescription} />
+            {error != null && error.description && <small style={{ color: 'red' }}>La noticia es requerido</small>}
+          </Form.Item>
+          <Form.Item label={'Imagen: *'}>
+            <ImageInput
+              picture={picture}
+              imageFile={imageFile}
+              divClass={'drop-img'}
+              content={<img src={picture} alt={'Imagen Perfil'} />}
+              classDrop={'dropzone'}
+              contentDrop={
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                  }}
+                  className={`button is-primary is-inverted is-outlined ${imageFile ? 'is-loading' : ''}`}>
+                  Cambiar foto
+                </button>
+              }
+              contentZone={
+                <div className='has-text-grey has-text-weight-bold has-text-centered'>
+                  <span>Subir foto</span>
+                  <br />
+                  <small>(Tamaño recomendado: 1280px x 960px)</small>
+                </div>
+              }
+              changeImg={changeImg}
+              errImg={errImg}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+                height: '200px',
+                width: '100%',
+                borderWidth: 2,
+                borderColor: '#b5b5b5',
+                borderStyle: 'dashed',
+                borderRadius: 10,
+              }}
+            />
+            {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
+            {fileMsg && <p className='help is-success'>{fileMsg}</p>}
+          </Form.Item>
+          <Form.Item label='Link del video:'>
             <Input
               value={noticia && noticia.linkYoutube}
               type='url'
@@ -261,14 +264,12 @@ function AddNews(props) {
               name={'noticia'}
               onChange={(e) => changeInput(e, 'linkYoutube')}
             />
-            {error!=null && error.video && <small style={{color:'red'}}>Link de video no válido</small>}
+            {error != null && error.video && <small style={{ color: 'red' }}>Link de video no válido</small>}
           </Form.Item>
-          <Form.Item label='Fecha:'
-            name={'fechaNoticia'}>        
-            <DatePicker  value={fecha} onChange={onChangeDate} />
-            {error!=null && error.fecha && <small style={{color:'red'}}>Fecha no válida</small>}
+          <Form.Item label='Fecha:' name={'fechaNoticia'}>
+            <DatePicker value={fecha} onChange={onChangeDate} />
+            {error != null && error.fecha && <small style={{ color: 'red' }}>Fecha no válida</small>}
           </Form.Item>
-         
 
           <Form.Item wrapperCol={{ offset: 5, span: 18 }}>
             <Button type='primary' htmlType='submit'>

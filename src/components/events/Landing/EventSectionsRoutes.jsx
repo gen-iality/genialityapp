@@ -41,34 +41,40 @@ import { useParams } from 'react-router-dom';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
-  const redirectToPermissions = `/event/${props.cEvent.value._id}/permissions`;
-  let { eventPrivate, GetPermissionsEvent } = useContext(HelperContext);
   let { event_id, event_name } = useParams();
+  let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal } = useContext(HelperContext);
+
   function ValidateViewPermissions(route, nombresection) {
+    console.log(route, nombresection);
     if (props.cEvent.value !== null) {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
-      if (
+       if (
         routePermissions.length > 0 &&
         routePermissions[0].permissions === 'assistants' &&
-        props.cEventUser.value == null
+        props.cUser.value !== null &&
+        props.cEventUser.value==null
       ) {
-        props.setSectionPermissions({ view: true, section: nombresection });
-        return true;
+        handleChangeTypeModal("register");
+       // handleChangeTypeModal(null);
+        // props.setSectionPermissions({ view: true, section: nombresection });
+         return false;
       } else if (
         routePermissions.length > 0 &&
         routePermissions[0].permissions === 'public' &&
         props.cEventUser.value == null &&
         eventPrivate.private
       ) {
-        props.setSectionPermissions({ view: true, section: nombresection });
-        return true;
+        handleChangeTypeModal('register');
+        // props.setSectionPermissions({ view: true, section: nombresection });
+        return false;
       } else if (
         routePermissions.length > 0 &&
         routePermissions[0].permissions === 'public' &&
         props.cEventUser.value == null &&
         !eventPrivate.private
       ) {
+        // handleChangeTypeModal(null);
         return false;
       }
     }
@@ -176,9 +182,10 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
 
-        <Route path={`${path}/login`}>
+        {/* DESHABILITADO POR NUEVO FLUJO DE REGISTRO Y LOGIN */}
+        {/* <Route path={`${path}/login`}>
           <UserLoginContainer eventId={props.cEvent.value._id} />
-        </Route>
+        </Route> */}
 
         <Route path={`${path}/informativeSection`}>
           {() =>
@@ -308,7 +315,9 @@ const EventSectionRoutes = (props) => {
             )
           }
         </Route>
-        <Route path={`${path}/tickets`}>
+
+        {/* DESHABILITADO POR NUEVO FLUJO DE REGISTRO Y LOGIN */}
+        {/* <Route path={`${path}/tickets`}>
           {() =>
             ValidateViewPermissions('tickets', 'Registro') ? (
               <>
@@ -320,7 +329,7 @@ const EventSectionRoutes = (props) => {
               </div>
             )
           }
-        </Route>
+        </Route> */}
 
         <Route path={`${path}/certs`}>
           {() =>
@@ -346,7 +355,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('agenda', 'Agenda') ? (
               <>
-                <Redirect to={redirectToPermissions} />
+                <Redirect to={`/landing/${props.cEvent.value._id}/agenda`} />
               </>
             ) : (
               <Agenda
@@ -357,9 +366,12 @@ const EventSectionRoutes = (props) => {
             )
           }
         </Route>
-        <Route path={`${path}/permissions`}>
+
+        {/* DESHABILITADO POR NUEVO FLUJO DE REGISTRO Y LOGIN */}
+        {/* <Route path={`${path}/permissions`}>
           <PageNotPermissions setVirtualConference={props.setVirtualConference} />
-        </Route>
+        </Route> */}
+
         <Route path={`${path}/success/:type?`}>
           <MessageRegister />
         </Route>

@@ -11,7 +11,10 @@ export function CurrentEventProvider({ children }) {
   let initialContextState = { status: 'LOADING', value: null, nameEvent: '' };
 
   if (event_name) {
-    eventNameFormated = event_name.replaceAll('-', '%20');
+    eventNameFormated = event_name.replaceAll('---', 'more');
+    eventNameFormated = eventNameFormated.replaceAll('-', '%20');
+    eventNameFormated = eventNameFormated.replaceAll('more', '"-"');
+    console.log('formateado', eventNameFormated);
     initialContextState = { status: 'LOADING', value: null, nameEvent: event_name };
   }
 

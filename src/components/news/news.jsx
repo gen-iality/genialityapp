@@ -77,8 +77,8 @@ class News extends Component {
   fetchItem = async () => {
     const data = await NewsFeed.byEvent(this.props.eventId);    
     this.setState({ list: data, loading: false });
-    console.log("FETCHHHHH")
   };
+
 
   onChange = () => {
     const titles = document.getElementById('title').value;
@@ -250,6 +250,7 @@ class News extends Component {
   goBack = () => this.props.history.goBack();
 
   render() {
+    console.log(this.state.list)
     return (
       <React.Fragment>
         <div className='column is-12 is-desktop'>
