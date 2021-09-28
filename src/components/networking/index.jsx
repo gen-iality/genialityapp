@@ -679,7 +679,7 @@ class ListEventUser extends Component {
                                                   }                                        
                                              
                                             }:null}>
-                                            {!users.loading?this.isMyContact(users)?'Ya es tu contacto':this.haveRequestUser(users) || (users.send && users.send==1)?'Confrimación pendiente':'Enviar solicitud de Contacto':<Spin />}
+                                            {!users.loading?this.isMyContact(users)?'Ya es tu contacto':this.haveRequestUser(users) || (users.send && users.send==1)?'Confrimación pendiente':'Enviar solicitud de contacto':<Spin />}
                                           </Button>
                                         </Space>
                                       )}
@@ -719,7 +719,7 @@ class ListEventUser extends Component {
               <TabPane
                 tab={
                   <div style={{ position: 'relative' }}>
-                    Mi Agenda
+                    Mi agenda
                     {this.props.cHelper.totalsolicitudAgenda > 0 && (
                       <Badge
                         style={{
@@ -754,7 +754,7 @@ class ListEventUser extends Component {
                 )}
               </TabPane>
 
-              <TabPane tab='Mis Contactos' key='mis-contactos'>
+              <TabPane tab='Mis contactos' key='mis-contactos'>
                 <ContactList
                   agendarCita={this.agendarCita}
                   eventId={this.props.cEvent.value._id}
@@ -765,7 +765,7 @@ class ListEventUser extends Component {
               <TabPane
                 tab={
                   <div style={{ position: 'relative' }}>
-                    Solicitudes de contacto{' '}
+                    Solicitudes de contacto
                     {this.props.cHelper.totalSolicitudAmistad !== '0' && (
                       <Badge
                         style={{

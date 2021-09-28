@@ -98,7 +98,7 @@ const PageNotPermissions = (props) => {
                   <h1 style={{ fontSize: '22px', fontWeight: 'bold' }}>
                     {props.sectionPermissions.section ? (
                       <>
-                        Para poder ver la sección <a style={{ color: '#FF3830' }}>{props.sectionPermissions.section}</a>{' '}
+                        Para poder ver la sección <a style={{ fontWeight:'bold' }}>{props.sectionPermissions.section}</a>{' '}
                         tienes que estar registrado en este evento
                       </>
                     ) : (
