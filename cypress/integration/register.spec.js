@@ -1,4 +1,4 @@
-const urlToTest = 'localhost:3000/landing/5ea23acbd74d5c4b360ddde2/evento';
+const urlToTest = '/landing/5ea23acbd74d5c4b360ddde2/evento';
 
 describe('Evius Initial', () => {
   beforeEach(() => {
