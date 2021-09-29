@@ -460,7 +460,8 @@ class InfoGeneral extends Component {
                 </div>
               </div>
             </div>          
-                    <SelectInput 
+                    <SelectInput
+                    id={'selectOrganization'} 
                       name={ "Organizado por:" }                   
                       isMulti={false}
                       selectedOptions={selectedOrganizer}
@@ -468,7 +469,7 @@ class InfoGeneral extends Component {
                       options={organizers}
                       required={true}
                     />              
-                <Button onClick={()=>this.setState({newOrganization:true})}>
+                <Button id={"addOrganization"} onClick={()=>this.setState({newOrganization:true})}>
               Agregar organización
             </Button>           
             <SelectInput
