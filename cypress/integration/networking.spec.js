@@ -77,7 +77,7 @@ describe.only('send friendShip in socialzone', () => {
   });
   it('send friendShip contact socialZone', () => {
     const item = '#popover5f11bd670da32b2aac459042';
-    cy.get('#openMenu')
+    cy.get('#button_open_menu')
       .scrollIntoView()
       .click({ force: true });
     //Esperamos que se realice la petición
