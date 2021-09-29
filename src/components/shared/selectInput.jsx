@@ -47,6 +47,7 @@ class SelectInput extends Component {
                 <label className={`label ${required?'required':''}`}>{name}</label>
                 <div className="control">
                     <Select
+                        id={'selectOrganization'}
                         onChange={this.onChange}
                         options={maxReached ? selectedOptions : options}
                         isMulti={isMulti}

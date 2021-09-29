@@ -110,7 +110,13 @@ const EventSectionRoutes = (props) => {
   }, []);
 
   const validateTypeUrl = () => {
-    let url = `/event/${event_name}/${obtenerFirstSection()}`;
+    let url;
+    if(event_name){
+      url= `/event/${event_name}/${obtenerFirstSection()}`;
+    }else{
+      url= `/landing/${event_id}/${obtenerFirstSection()}`;
+    }
+    
     return url;
   };
 

@@ -84,7 +84,7 @@ const ModalAuth = (props) => {
       .signInWithEmailAndPassword(data.email, data.password)
       .then((response) => {
         loginNormal = true;        
-        setErrorLogin(false);
+        setErrorLogin(false);        
         //setLoading(false);
       })
       .catch(async () => {       
@@ -93,8 +93,9 @@ const ModalAuth = (props) => {
          
          
           if (user.data[0].properties?.password == data.password || user.data[0].contrasena == data.password || user.data[0]?.user?.contrasena == data.password) {
-            window.location.href =
-              window.origin + '/landing/' + props.cEvent.value?._id + '?token=' + user.data[0]?.user?.initial_token;
+            console.log("USER REVIEW==>",user.data[0])
+          window.location.href =
+            window.origin + '/landing/' + props.cEvent.value?._id + '?token=' + user.data[0]?.user?.initial_token;
             loginFirst = true;
             setErrorLogin(false);
             //setLoading(false);
@@ -203,7 +204,7 @@ const ModalAuth = (props) => {
               )}
               {!loading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
-                  <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+                  <Button id={"login"} htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
                     {intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })}
                   </Button>
                 </Form.Item>
