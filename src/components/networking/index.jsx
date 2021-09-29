@@ -583,14 +583,14 @@ class ListEventUser extends Component {
                                     <Row>
                                       <Col xs={24}>
                                         <div>
+                                          {console.log("ASSISTANTDATA==>",asistantData )}
                                           {/* {!data.visible || !data.visibleByContacts && */
                                           asistantData.map(
                                             (property, propertyIndex) =>
-                                              !property.visibleByAdmin &&
-                                              (!property.visibleByContacts || property.visibleByContacts == 'public') &&
+                                             (property.visibleByContacts==false || property?.visibleByContacts==undefined || property.visibleByContacts== "public" ) &&  (property?.sensibility==false || property?.sensibility==undefined) &&
                                               users.properties[property.name] &&
                                               property.name !== 'picture' &&
-                                              property.name !== 'imagendeperfil' && (
+                                              property.name !== 'imagendeperfil' && property.type!=="avatar" && (
                                                 <div key={`public-field-${userIndex}-${propertyIndex}`}>
                                                   <p>
                                                     <b>{`${property.label}: `}</b>
