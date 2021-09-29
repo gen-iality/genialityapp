@@ -48,6 +48,7 @@ describe('search users networking', () => {
   //Búsqueda sin parámetros networking
   it('search users networking', () => {
     const nameOrganizationNew = 'Jhon Smith';
+    cy.wait(4000)
     //CAMBIA LA CANTIDAD DE USUARIOS PARA PASAR EL TEST
     cy.contains('Total: 233');
   });
