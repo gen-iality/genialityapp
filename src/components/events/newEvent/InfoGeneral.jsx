@@ -511,7 +511,7 @@ class InfoGeneral extends Component {
               name="name"
               rules={[{ required: true, message: 'Ingrese un nombre válido' }]}
             >
-              <Input></Input>
+              <Input  id="nameOrganizer"></Input>
               </Form.Item>
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">
