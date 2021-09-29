@@ -344,7 +344,7 @@ class ListEventUser extends Component {
            extra={<Button type='primary' onClick={this.closeModal}>
              Cerrar
            </Button>}
-            title='Información Adicional'
+            title='Información adicional'
             subTitle='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
                   se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
             
@@ -583,14 +583,14 @@ class ListEventUser extends Component {
                                     <Row>
                                       <Col xs={24}>
                                         <div>
+                                          {console.log("ASSISTANTDATA==>",asistantData )}
                                           {/* {!data.visible || !data.visibleByContacts && */
                                           asistantData.map(
                                             (property, propertyIndex) =>
-                                              !property.visibleByAdmin &&
-                                              (!property.visibleByContacts || property.visibleByContacts == 'public') &&
+                                             (property.visibleByContacts==false || property?.visibleByContacts==undefined || property.visibleByContacts== "public" ) &&  (property?.sensibility==false || property?.sensibility==undefined) &&
                                               users.properties[property.name] &&
                                               property.name !== 'picture' &&
-                                              property.name !== 'imagendeperfil' && (
+                                              property.name !== 'imagendeperfil' && property.type!=="avatar" && (
                                                 <div key={`public-field-${userIndex}-${propertyIndex}`}>
                                                   <p>
                                                     <b>{`${property.label}: `}</b>

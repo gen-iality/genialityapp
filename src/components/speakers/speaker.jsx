@@ -24,7 +24,7 @@ function Speaker (props) {
     history,
     matchUrl
   } = props;
-  const newCategoryUrl = '/event/' + eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
+  const newCategoryUrl = '/eventadmin/' + eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
 
 const [data, setData] = useState(
   {
@@ -143,7 +143,7 @@ async function dataTheLoaded() {
         type: 'success',
         content: <> Conferencista guardado correctamente!</>,
       });
-      history.push(`/event/${eventID}/speakers`)
+      history.push(`/eventadmin/${eventID}/speakers`)
     } catch (e) {
       message.destroy(loading.key);
       message.open({

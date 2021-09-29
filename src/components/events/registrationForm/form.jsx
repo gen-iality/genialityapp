@@ -823,7 +823,8 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                     <Button
                       size='large'
                       block
-                      id={'register'}
+                      id="register_testing"
+                      name="register"
                       style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
                       htmlType='submit'>
                       {cEventUser.value

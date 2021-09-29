@@ -1,4 +1,4 @@
-const urlToTest = '/orgadmin/5ea23acbd74d5c4b360ddde2/speakers';
+const urlToTest = '/eventadmin/5ea23acbd74d5c4b360ddde2/speakers';
 
 describe('Evius Speaker', () => {
   beforeEach(() => {
@@ -9,9 +9,26 @@ describe('Evius Speaker', () => {
   it('Speaker Create', () => {
     cy.contains('Agregar').click()
     cy.get('[name=published]').click()
-    cy.get('[name=name]').type('Margarita Gonzalez')
+    cy.get('[name=name]').type('Margarita Gonzalez 2')
     cy.get('[name=profession]').type('Analista de Testeo')
     cy.get('[name=published]').click()
+    cy.fixture('BOTON_STANDS.png').as('logo')
+    cy.get('input[type=file]').then(function (el) {
+      const blob = Cypress.Blob.base64StringToBlob(this.logo, 'image/png')
+    
+      const file = new File([blob], this.logo, { type: 'image/png' })
+      const list = new DataTransfer()
+    
+      list.items.add(file)
+      const myFileList = list.files
+    
+      el[0].files = myFileList
+      el[0].dispatchEvent(new Event('change', { bubbles: true }))
+    })
+    cy.wait(500)
+    cy.get('[id=btnDescription]').click()
+    cy.get('[id=reactQuill]').type('Esta es Margarita Gonzalez, Analista de Testeo, todo esto es para una prueba de testeo')
+    cy.wait(100)
     cy.contains('Guardar').click()
   });
 
@@ -26,20 +43,7 @@ describe('Evius Speaker', () => {
   });
 
   it('Speaker Edit Published', () => {
-    cy.get('[id=editSwitch0]').click()
-  });
-
-  it('Speaker remove in table', () => {
-    cy.get('[id=remove0]').click()
-    cy.contains('Borrar').click()
-    //cy.contains('Cancelar').click()
-  });
-  
-  it('Speaker remove in edit', () => {
-    cy.get('[id=editarTest0]').click()
-    cy.get('[id=removeHeader]').click()
-    cy.contains('Borrar').click()
-    //cy.contains('Cancelar').click()
+    cy.get('[id=editSwitch0]').click({force: true})
   });
 
   it('Speaker Search Name', () => {
@@ -47,7 +51,7 @@ describe('Evius Speaker', () => {
     cy.get('[id=searchname]').type('Prueba')
     cy.contains('Buscar').click()
     cy.get('[id=searchIconname]').click()
-    cy.contains('Borrar').click()
+    cy.contains('Borrar').click({force: true})
   })
 
   it('Speaker Search Profession', () => {
@@ -55,7 +59,36 @@ describe('Evius Speaker', () => {
     cy.get('[id=searchprofession]').type('Prueba')
     cy.contains('Buscar').click()
     cy.get('[id=searchIconprofession]').click().then(() =>
-      cy.contains('Borrar').click()
+      cy.contains('Borrar').click({force: true})
     )
   })
+
+  it('Speaker cancel remove in table', () => {
+    cy.get('[id=remove0]').click()
+    cy.contains('Cancelar').click()
+  });
+  
+  it('Speaker cancel remove in edit', () => {
+    cy.get('[id=editarTest0]').click()
+    cy.get('[id=removeHeader]').click()
+    cy.contains('Cancelar').click()
+  });
+
+  it('Speaker draggable posicion 1', () => {
+    cy.get('[id=drag0]')
+    .trigger('mousedown', { which: 1 })
+    .trigger('mousemove', { pageX: 100, pageY: 300 })
+    .trigger('mouseup', { force: true })
+  });
+
+  it('Speaker remove in table', () => {
+    cy.get('[id=remove0]').click()
+    cy.contains('Borrar').click()
+  });
+  
+  it('Speaker remove in edit', () => {
+    cy.get('[id=editarTest0]').click()
+    cy.get('[id=removeHeader]').click()
+    cy.contains('Borrar').click()
+  });
 });

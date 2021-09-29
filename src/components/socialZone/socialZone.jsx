@@ -120,7 +120,7 @@ let SocialZone = function(props) {
                       type='text'
                       name={'name'}
                       onChange={handleChange}
-                      placeholder='Buscar Participante...'
+                      placeholder='Buscar participante...'
                     />
                   </div>
                 )}

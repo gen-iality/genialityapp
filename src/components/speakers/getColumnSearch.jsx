@@ -30,7 +30,7 @@ export const getColumnSearchProps = (dataIndex, columnsData) => ({
          </Space>
       </div>
    ),
-   filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined, 'poinerEvent': 'none' }} id={`searchIcon${dataIndex}`} />,
+   filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} id={`searchIcon${dataIndex}`} />,
    onFilter: (value, record) =>
       record[dataIndex]
          ? record[dataIndex]

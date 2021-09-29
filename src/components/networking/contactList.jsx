@@ -113,7 +113,7 @@ const ContactList = ({ tabActive, agendarCita }) => {
                         {userProperties.map(
                           (property, key) =>
                             user[property.name] !== undefined &&
-                            (!property.visibleByAdmin ||
+                            (!property.sensibility ||
                               property.visibleByContacts ||
                               property.visibleByContacts == 'only_for_my_contacts') &&
                             property.name != 'picture' &&
