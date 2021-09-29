@@ -109,7 +109,7 @@ class Headers extends Component {
       this.setState(
         {
           name,
-          userEvent: {...user?.properties,_id:user?.account_id},
+          userEvent: {...user?.properties,_id:user?.account_id || data._id},
           photo,
           uid: data.uid,
           id: data._id,
