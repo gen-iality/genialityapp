@@ -83,11 +83,12 @@ function EviusReactQuill(props) {
       toolbar: {
         container: [
           [{ font: [] }],
-          [{ header: [0, 1, 2, 3] }],
-          [{ size: [] }],
+          [{ header: [0, 1, 2, 3, 4, 5,] }],
+          [{ size: ['small', false, 'large', 'huge'] }],
           [{ align: [] }],
           [{ syntax: true }],
-          [('bold', 'italic', 'blockquote')],
+          ['bold', 'italic', 'underline', 'strike','blockquote'],
+          [{ 'color': [] }, { 'background': [] }],
           [{ list: 'ordered' }, { list: 'bullet' }],
           ['link', 'image']
         ],
