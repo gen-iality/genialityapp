@@ -50,7 +50,7 @@ describe('search users networking', () => {
     const nameOrganizationNew = 'Jhon Smith';
     cy.wait(4000)
     //CAMBIA LA CANTIDAD DE USUARIOS PARA PASAR EL TEST
-    cy.contains('Total: 233');
+    cy.contains('Enviar solicitud de contacto');
   });
   //Búsqueda con parámetros Networking
   it('search users networking with params', () => {
@@ -69,7 +69,7 @@ describe('search users networking', () => {
     /*cy.get('#' + item)
       .contains('Enviar solicitud de contacto')
       .click({force: true} );*/
-    cy.get('#' + item).contains('Confrimación pendiente');
+    cy.get('#' + item).contains('Confirmación pendiente');
   });
 });
 
