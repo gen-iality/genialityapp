@@ -62,14 +62,14 @@ describe('search users networking', () => {
   });
   //validar envío de solicitud de contacto sección Newtworking
   it('send friendShip contact', () => {
-    cy.wait(4000)
+    cy.wait(6000)
     //cambiar indices para comprobar envio de solicitud de contacto o comentar el envío de solicitud
     const index=4;
     const item = 'user-item-'+index;
     /*cy.get('#' + item)
       .contains('Enviar solicitud de contacto')
       .click({force: true} );*/
-    cy.get('#' + item).contains('Confirmación pendiente');
+    cy.get('#' + item).contains('Confrimación pendiente');
   });
 });
 
