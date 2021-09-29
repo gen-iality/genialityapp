@@ -139,7 +139,7 @@ function EviusReactQuill(props) {
     setupToolBarImageUploadInput(reactQuilllRef);
   }, []);
 
-  return <ReactQuill ref={reactQuilllRef} modules={modules} onChange={props.handleChange} value={props.data} />;
+  return <ReactQuill id='reactQuill' ref={reactQuilllRef} modules={modules} onChange={props.handleChange} value={props.data} />;
 }
 
 export default EviusReactQuill;

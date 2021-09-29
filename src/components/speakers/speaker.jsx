@@ -284,7 +284,7 @@ async function dataTheLoaded() {
               <>
                 {
                   !showDescription_activity ? (
-                    <Button type="link" onClick={()=>setShowDescription_activity(true)} style={{'color': 'blue'}}>
+                    <Button id='btnDescription' type="link" onClick={()=>setShowDescription_activity(true)} style={{'color': 'blue'}}>
                       { !showDescription_activity && !data.newItem ? (
                         <div> <EditOutlined style={{'marginRight': '5px'}} /> Editar/mostrar descripción </div>
                       ) : (
