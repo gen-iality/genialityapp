@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaqsApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
 import { Modal, message } from 'antd';
