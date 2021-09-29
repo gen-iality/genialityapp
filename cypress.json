@@ -1,5 +1,5 @@
 {
   "projectId": "aesu36",
-  "baseUrl": "https://stagingtesting.evius.co"
+  "baseUrl": "http://localhost:3000"
 }
 

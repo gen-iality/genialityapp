@@ -15,7 +15,7 @@ describe('Evius Initial', () => {
     });
   });
 
-  it.only('User can not register', () => {
+  it('User can not register', () => {
     cy.contains('Registrarme').click();
     cy.fixture('fakeuser.json').then((userfake) => {
       cy.registerUser(userfake);
