@@ -27,11 +27,11 @@ describe("login",()=>{
   })
   //USUARIO LOGUEADO
   it('logged in', () => {
-    cy.get("#email").type("evius@evius.co");
-    cy.get("#password").type("mocion2040");
+    cy.get("#email").type("jaimedaniel.bm91@gmail.com");
+    cy.get("#password").type("j1234567");
     cy.get("#login").click();
     cy.wait(3000);
-    cy.contains("EviusCo");
+    cy.contains("Jsoft");
   })
 
    //USUARIO LOGUEADO
