@@ -24,7 +24,7 @@ function Speaker (props) {
     history,
     matchUrl
   } = props;
-  const newCategoryUrl = '/event/' + eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
+  const newCategoryUrl = `/${matchUrl.split('/').slice(0)[1]}/` + eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
 
 const [data, setData] = useState(
   {

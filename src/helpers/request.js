@@ -626,8 +626,8 @@ export const FaqsApi = {
   byEvent: async (id) => {
     return await Actions.getAll(`api/events/${id}/faqs`).then(({ data }) => data);
   },
-  getOne: async (id) => {
-    return await Actions.get(`api/events/${id}/faqs/`, id);
+  getOne: async (id, eventId) => {
+    return await Actions.get(`api/events/${eventId}/faqs/`, id);
   },
   editOne: async (data, id, eventId) => {
     return await Actions.edit(`api/events/${eventId}/faqs`, data, id);

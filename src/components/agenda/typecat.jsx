@@ -16,37 +16,6 @@ const AgendaTypeCat = (props) => {
     {
       title: 'Nombre',
       dataIndex: 'name',
-    },
-    {
-      title: 'Opciones',
-      dataIndex: 'options',
-      render(val, item) {      
-        return (
-          <Row wrap gutter={[8, 8]}>
-            <Col >
-              <Tooltip placement='topLeft' title='Editar' >
-                <Link 
-                  key='edit' 
-                  to={{ pathname: `${props.matchUrl}/categorias/categoria`, state: { edit: item._id } }}
-                >
-                  <Button icon={<EditOutlined />} type='primary' size="small" />
-                </Link>
-              </Tooltip>
-            </Col>
-            <Col >
-              <Tooltip placement='topLeft' title='Eliminar' >
-                <Button
-                  key='delete'
-                  onClick={() => remove(item._id)}
-                  icon={<DeleteOutlined />}
-                  type='danger'
-                  size="small"
-                />
-              </Tooltip>
-            </Col>    
-          </Row>
-        );
-      },
     }
   ];
   const [columns, setColumns ] = useState([]);
@@ -132,6 +101,9 @@ const AgendaTypeCat = (props) => {
         list={list}
         key='_id'
         pagination={false}
+        actions
+        editPath={`${props.matchUrl}/categorias/categoria`}
+        remove={remove}
       />
     </div>
   );

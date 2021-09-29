@@ -1,13 +1,59 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import arrayMove from 'array-move';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
-import { Table as TableAnt } from 'antd';
+import { Table as TableAnt, Row, Col, Tooltip, Button } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const Table = ( props ) => {
-  const { header, list, key, loading, pagination, draggable, components } = props;
+  const { header, list, key, loading, pagination, draggable, components, actions, editPath, remove } = props;
+  
+  const options = {
+    title: 'Opciones',
+    dataIndex: 'options',
+    render(val, item) {      
+      return (
+        <Row wrap gutter={[8, 8]}>
+          <Col >
+            {
+              editPath && (
+                <Tooltip placement='topLeft' title='Editar' >
+                  <Link 
+                    key='edit'
+                    to={{ pathname: editPath, state: { edit: item._id } }}
+                  >
+                    <Button icon={<EditOutlined />} type='primary' size="small" />
+                  </Link>
+                </Tooltip>
+              )
+            }
+          </Col>
+          <Col >
+            {
+              remove && (
+                <Tooltip placement='topLeft' title='Eliminar' >
+                  <Button
+                    key='delete'
+                    onClick={() => remove(item._id)}
+                    icon={<DeleteOutlined />}
+                    type='danger'
+                    size="small"
+                  />
+                </Tooltip>
+              )
+            }
+          </Col>    
+        </Row>
+      );
+    },
+  }
+
+  if(actions) {
+    header.push(options);
+  }
   /* const componentFunctions = {
     body: {
       wrapper: DraggableContainer,
