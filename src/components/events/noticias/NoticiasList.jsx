@@ -64,6 +64,7 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
           noticias.length > 0 &&
           noticias.map((news) => (
             <>
+            {console.log("NOTICIA==>",news)}
               <Col style={{ paddingBottom: '30px' }} xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                 {moment().format('YYYY-MM-DD') === moment(news.created_at).format('YYYY-MM-DD') ? (
                   <Badge.Ribbon text='Nuevo' color='cyan'>
@@ -73,7 +74,7 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
                         <img
                           style={{ height: '28vh', objectFit: 'cover' }}
                           alt='example'
-                          src={news && news.image && news.image[0] !== null ? news.image[0] : imgNotFound}
+                          src={news && news.image  ? news.image : imgNotFound}
                         />
                       }
                       actions={[
