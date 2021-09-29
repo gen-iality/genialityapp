@@ -344,7 +344,7 @@ class ListEventUser extends Component {
            extra={<Button type='primary' onClick={this.closeModal}>
              Cerrar
            </Button>}
-            title='Información Adicional'
+            title='Información adicional'
             subTitle='Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
                   se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.'
             
