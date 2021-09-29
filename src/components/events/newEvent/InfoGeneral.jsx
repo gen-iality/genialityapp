@@ -456,17 +456,16 @@ class InfoGeneral extends Component {
                   </select>
                 </div>
               </div>
-            </div>
-            <SelectInput
-              id={'selectOrganization'}
-              name={'Organizado por:'}
-              isMulti={false}
-              selectedOptions={selectedOrganizer}
-              selectOption={this.selectOrganizer}
-              options={organizers}
-              required={true}
-            />
-            <Button id={'addOrganization'} onClick={() => this.setState({ newOrganization: true })}>
+            </div>          
+                    <SelectInput 
+                      name={ "Organizado por:" }                   
+                      isMulti={false}
+                      selectedOptions={selectedOrganizer}
+                      selectOption={this.selectOrganizer}
+                      options={organizers}
+                      required={true}
+                    />              
+                <Button id={'addOrganization'}  onClick={()=>this.setState({newOrganization:true})}>
               Agregar organización
             </Button>
             <SelectInput
@@ -505,12 +504,17 @@ class InfoGeneral extends Component {
             initialValues={{ remember: false }}
             onFinish={this.onFinish}
             onFinishFailed={this.onFinishFailed}
-            autoComplete='off'>
-            <Form.Item label='Nombre' name='name' rules={[{ required: true, message: 'Ingrese un nombre válido' }]}>
+            autoComplete="off"
+          >
+            <Form.Item
+              label="Nombre"
+              name="name"
+              rules={[{ required: true, message: 'Ingrese un nombre válido' }]}
+            >
               <Input id='nameOrganizer'></Input>
-            </Form.Item>
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button id={'addOrganizers'} type='primary' htmlType='submit'>
+              </Form.Item>
+              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button  id={'addOrganizers'} type="primary" htmlType="submit">
                 Agregar
               </Button>
             </Form.Item>

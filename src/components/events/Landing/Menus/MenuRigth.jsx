@@ -17,7 +17,7 @@ const MenuRigth = (props) => {
       {!eventPrivate.private && (
         <>
           <Menu.Item
-            id="button_open_menu"
+            id={'openMenu'}
             className='animate__animated animate__headShake animate__slower animate__infinite'
             key='0'
             id={'openMenu'}
