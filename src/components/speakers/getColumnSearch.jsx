@@ -8,7 +8,7 @@ export const getColumnSearchProps = (dataIndex, columnsData) => ({
    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
          <Input
-            id={`search ${dataIndex}`}
+            id={`search${dataIndex}`}
             placeholder={`Search ${dataIndex}`}
             value={selectedKeys[0]}
             onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
