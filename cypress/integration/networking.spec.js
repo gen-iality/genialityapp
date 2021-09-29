@@ -54,13 +54,15 @@ describe('search users networking', () => {
   });
   //Búsqueda con parámetros Networking
   it('search users networking with params', () => {
+    cy.wait(4000)
     const search = 'alcaldia@evius.co';
-    cy.get('#inputSearch').type(search);
+    cy.get('#inputSearch').type(search, { force: true });
     cy.contains('Total: 1');
     cy.contains('Correo: alcaldia@evius.co');
   });
   //validar envío de solicitud de contacto sección Newtworking
   it('send friendShip contact', () => {
+    cy.wait(4000)
     const item = 'user-item-2';
     cy.get('#' + item)
       .contains('Enviar solicitud de Contacto')
