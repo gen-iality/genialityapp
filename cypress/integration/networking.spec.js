@@ -66,7 +66,7 @@ describe('search users networking', () => {
 });
 
 //Envío de solicitud de contacto en socialZone
-describe.only('send friendShip in socialzone', () => {
+describe('send friendShip in socialzone', () => {
   const urleAddEvent = '/landing/5ea23acbd74d5c4b360ddde2';
   beforeEach(() => {
     cy.setCookie(
@@ -77,7 +77,8 @@ describe.only('send friendShip in socialzone', () => {
   });
   it('send friendShip contact socialZone', () => {
     const item = '#popover5f11bd670da32b2aac459042';
-    cy.get('#button_open_menu')
+    cy.wait(3000);
+    cy.get('#openMenu')
       .scrollIntoView()
       .click({ force: true });
     //Esperamos que se realice la petición
@@ -88,7 +89,7 @@ describe.only('send friendShip in socialzone', () => {
       .trigger('mouseover');
     cy.get('.anticon-usergroup-add').click();
     //Esperamos que se realice la petición
-    cy.wait(1000);
+    cy.wait(3000);
     //Comprobamos si se bloquea el botón al enviar la solicitud
     cy.get('.anticon-usergroup-add').should('have.css', 'color', 'rgb(128, 128, 128)');
   });

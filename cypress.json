@@ -1,4 +1,5 @@
 {
   "projectId": "aesu36",
-  "baseUrl": "http://evius.co"
+  "baseUrl": "http://localhost:3000"  
 }
+
