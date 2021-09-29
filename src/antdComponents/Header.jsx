@@ -74,6 +74,7 @@ const Header = ( props ) => {
           {
             edit && (
               <Button 
+                id='removeHeader'
                 onClick={remove} 
                 type="link" 
                 danger 
