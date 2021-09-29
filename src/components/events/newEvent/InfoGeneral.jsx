@@ -514,7 +514,7 @@ class InfoGeneral extends Component {
               <Input  id="nameOrganizer"></Input>
               </Form.Item>
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
+              <Button id={"addOrganizers"} type="primary" htmlType="submit">
                 Agregar
               </Button>
             </Form.Item>
