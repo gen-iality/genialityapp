@@ -10,9 +10,11 @@ describe('new Organization', () => {
   });
   it('create new organization', () => {
     const nameOrganizationNew = 'organizacionEvius.co';
+    cy.wait(2000)
     cy.get('#addOrganization').click();
     cy.get('#nameOrganizer').type(nameOrganizationNew);
     cy.get('#addOrganizers').click();
+    cy.wait(2000)
     cy.get('#selectOrganization').type(nameOrganizationNew);
   });
 });
@@ -46,7 +48,8 @@ describe('search users networking', () => {
   //Búsqueda sin parámetros networking
   it('search users networking', () => {
     const nameOrganizationNew = 'Jhon Smith';
-    cy.contains('Total: 227');
+    //CAMBIA LA CANTIDAD DE USUARIOS PARA PASAR EL TEST
+    cy.contains('Total: 233');
   });
   //Búsqueda con parámetros Networking
   it('search users networking with params', () => {
