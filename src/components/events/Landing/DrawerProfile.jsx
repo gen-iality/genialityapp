@@ -153,7 +153,7 @@ const DrawerProfile = (props) => {
               bordered
               dataSource={propertiesProfile && propertiesProfile.propertiesUserPerfil }
               renderItem={(item) =>
-                (((item.visibleByContacts && isMycontact) || (!item.visibleByContacts && !item.sensibility) ) ||
+                (((item.visibleByContacts && isMycontact && !item.sensibility) || !item.sensibility ) ||
                   userSelected?._id == cUser.value._id) &&
                 userSelected?.properties[item.name] && item.name!=='picture'  && item.name !== 'imagendeperfil' && item.type!=="avatar" && (
                   <List.Item>   
