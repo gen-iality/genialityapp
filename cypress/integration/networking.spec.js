@@ -63,7 +63,9 @@ describe('search users networking', () => {
   //validar envío de solicitud de contacto sección Newtworking
   it('send friendShip contact', () => {
     cy.wait(4000)
-    const item = 'user-item-2';
+    //cambiar indices para comprobar envio de solicitud de contacto
+    const index=2;
+    const item = 'user-item-'+index;
     cy.get('#' + item)
       .contains('Enviar solicitud de Contacto')
       .click();
