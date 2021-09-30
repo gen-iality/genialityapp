@@ -797,7 +797,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                 )}
                 {notLoggedAndRegister && (
                   <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-                    <Alert
+                    <Alert                      
                       className='animate__animated animate__bounceIn'
                       style={{
                         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',

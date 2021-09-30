@@ -97,9 +97,10 @@ let SocialZone = function(props) {
       )}
       {props.generalTabs.attendees && (
         <>
+
           {' '}
           <TabPane
-            style={styleTabAttendes}
+            style={styleTabAttendes}           
             tab={
               <div style={{ color: cEvent.value.styles.textMenu }}>
                 <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
