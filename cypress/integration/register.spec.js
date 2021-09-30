@@ -57,7 +57,7 @@ describe('login', () => {
   });*/
 
   it('forgot password user not registered', () => {
-    cy.contains('Olvidé mi contraseña').click();
+    cy.get('#forgotpassword').click();
     cy.get('#email').type('jaimedaniel_bm91@gmnail.com');
     cy.get('#submitButton').click();
     cy.wait(2000);
