@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router';
 import { Actions, NewsFeed } from '../../helpers/request';
-import { Button, Card, Col, Row, Input, Form, DatePicker } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { handleRequestError } from '../../helpers/utils';
+import { toolbarEditor } from '../../helpers/constants';
+import { Col, Row, Input, Form, DatePicker, Modal, Card, message } from 'antd';
 import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
@@ -10,52 +10,54 @@ import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import Header from '../../antdComponents/Header';
+import { useHistory } from 'react-router-dom';
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
-/* export const toolbarEditor = {
-  toolbar: [
-    [{ font: [] }],
-    [{ header: [0, 1, 2, 3] }],
-    [{ size: [] }],
-    [{ align: [] }],
-    [{ syntax: true }],
-    ['bold', 'italic', 'blockquote'],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    ['link', 'image'],
-  ],
-}; */
+const { confirm } = Modal;
 
-function NewCE(props) {
-  console.log(props, props.match.params.id);
-  const [noticia, setNoticia] = useState();
-  const [descriptionShort, setDescriptionShort] = useState('');
-  const [description, setDescription] = useState('');
-  const [picture, setPicture] = useState(null);
-  const [imageFile, setImgFile] = useState(null);
-  const [errImg, setErrImg] = useState();
-  const [fileMsg, setFileMsg] = useState();
-  const [error, setError] = useState(null);
-  const [idNew, setIdNew] = useState();
-  const [fecha, setFecha] = useState(moment());
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
+};
+
+const NewCE = (props) => {
+  const history = useHistory();
+  const locationState = props.location.state;
+  const [notice, setNotice] = useState({
+    title: '',
+    description_short: '',
+    description_complete: '',
+    image: '',
+    picture: '',
+    linkYoutube: '',
+    time: moment()
+  });
 
   useEffect(() => {
-    if (props.match.params.id) {
+    if (locationState.edit) {
       getNew();
     }
   }, []);
 
   const getNew = async () => {
-    setIdNew(props.match.params.id);
-    await NewsFeed.getOne(props.eventId, props.match.params.id).then((notice) => {
-      setPicture(notice.image);
-      setDescriptionShort(notice.description_short);
-      setDescription(notice.description_complete);
-      setFecha(moment(notice.created_at));
-      setNoticia(notice);
-    });
+    const data = await NewsFeed.getOne(props.eventId, locationState.edit);
+    setNotice({...data, time:moment(data.time)})
   }
 
-  const changeInput = (e, key) => {
-    setNoticia({ ...noticia, [key]: e.target.value });
+  const handleChange = (e) => {
+    const { name } = e.target;
+    const { value } = e.target;
+    setNotice({
+      ...notice,
+      [name] : value
+    })
+  };
+
+  const changeDescription = (e, name) => {
+    setNotice({
+      ...notice,
+      [name]: e
+    })
   };
 
   const changeImg = (files) => {
@@ -64,7 +66,10 @@ function NewCE(props) {
       path = [],
       self = this;
     if (file) {
-      setImgFile(file);
+      setNotice({
+        ...notice,
+        image: file
+      })
 
       //envia el archivo de imagen como POST al API
       const uploaders = files.map((file) => {
@@ -77,221 +82,208 @@ function NewCE(props) {
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
       Axios.all(uploaders).then(() => {
-        setPicture(path[0]);
-        setImgFile(null);
+        setNotice({
+          ...notice,
+          image: null,
+          picture: path[0]
+        })
 
-        toast.success(<FormattedMessage id='toast.img' defaultMessage='Ok!' />);
+        message.open({
+          type: 'success',
+          content: <> <FormattedMessage id='toast.img' defaultMessage='Ok!' /></>,
+        });
       });
     } else {
-      setErrImg('Solo se permiten imágenes. Intentalo de nuevo');
+      message.open({
+        type: 'error',
+        content: handleRequestError(e).message,
+      });
     }
   };
 
-  function onChangeDate(date, dateString) {
-    setFecha(date);
+  const onChangeDate = (date, dateString) => {
+    console.log(date, dateString);
+    setNotice({...notice, time:date});
   }
 
-  const changeDescriptionShort = (e) => {
-    setDescriptionShort(e);
-  };
+  const onSubmit = async () => {
+    console.log(notice);
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras se guarda la información..</>,
+    });
 
-  const changeDescription = (e) => {
-    setDescription(e);
-  };
-  const isUrl = (string) => {
     try {
-      return Boolean(new URL(string));
+      if(locationState.edit) {
+        await NewsFeed.editOne(notice, locationState.edit, props.eventId);
+      } else {
+        await NewsFeed.create(notice, props.eventId);
+      }     
+    
+      message.destroy(loading.key);
+      message.open({
+        type: 'success',
+        content: <> Información guardada correctamente!</>,
+      });
+      history.push(`${props.match.url}`);
     } catch (e) {
-      return false;
+      message.destroy(loading.key);
+      message.open({
+        type: 'error',
+        content: handleRequestError(e).message,
+      });
     }
-  };
+  }
 
-  const saveNew = async () => {
-    let validators = {};
-
-    if (description === '') {
-      validators.description = true;
-    } else {
-      validators.description = false;
-    }
-    if (descriptionShort === '') {
-      validators.descriptionShort = true;
-    } else {
-      validators.descriptionShort = false;
-    }
-    if (picture === null) {
-      validators.picture = true;
-    } else {
-      validators.picture = false;
-    }
-
-    if (fecha === null && fecha !== '' && !fecha) {
-      validators.fecha = true;
-    } else {
-      validators.fecha = false;
-    }
-    if (noticia) {
-      if (noticia.video != '' && noticia.video !== null && !isUrl(noticia.video)) {
-        validators.video = false;
-      }
-    }
-
-    setError(validators);
-    if (
-      validators &&
-      validators.video == false &&
-      validators.picture == false &&
-      validators.descriptionShort == false &&
-      validators.description == false
-    ) {
-      try {
-        if (idNew !== undefined) {
-          let resp = await NewsFeed.editOne(
-            {
-              title: noticia.title,
-              description_complete: description,
-              description_short: descriptionShort,
-              linkYoutube: noticia.linkYoutube || null,
-              image: picture !== null ? picture : null,
-              time: fecha.format('YYYY-DD-MM'),
-            },
-            noticia._id,
-            props.eventId
-          );
-          if (resp) {
-            props.history.push(`/event/${props.eventId}/news`);
+  const remove = () => {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    if(locationState.edit) {
+      confirm({
+        title: `¿Está seguro de eliminar la información?`,
+        icon: <ExclamationCircleOutlined />,
+        content: 'Una vez eliminado, no lo podrá recuperar',
+        okText: 'Borrar',
+        okType: 'danger',
+        cancelText: 'Cancelar',
+        onOk() {
+          const onHandlerRemove = async () => {
+            try {
+              await NewsFeed.deleteOne(locationState.edit, props.eventId);
+              message.destroy(loading.key);
+              message.open({
+                type: 'success',
+                content: <> Se eliminó la información correctamente!</>,
+              });
+              history.push(`${props.match.url}`);
+            } catch (e) {
+              message.destroy(loading.key);
+              message.open({
+                type: 'error',
+                content: handleRequestError(e).message,
+              });
+            }
           }
-        } else {
-          // alert("A GUARDAR")
-          const newRole = await NewsFeed.create(
-            {
-              title: noticia.title,
-              description_complete: description,
-              description_short: descriptionShort,
-              linkYoutube: noticia.linkYoutube || null,
-              image: picture !== null ? picture : null,
-              time: fecha.format('YYYY-DD-MM'),
-            },
-            props.eventId
-          );
-          if (newRole) {
-            props.history.push(`/event/${props.eventId}/news`);
-          }
+          onHandlerRemove();
         }
-      } catch (e) {
-        e;
-      }
+      });
     }
-  };
+  }
+
   return (
-    <Form>
+    <Form
+      onFinish={onSubmit}
+      {...formLayout}
+    >
       <Header 
         title={'Noticia'}
         back
         save
         form
-        edit={state.edit}
+        edit={locationState.edit}
         remove={remove}
       />
 
-      <Row>
-        <ArrowLeftOutlined /> <span style={{ marginLeft: 30 }}>Agregar Noticias</span>
-      </Row>
-      <Card style={{ width: 950, margin: 'auto', marginTop: 30 }}>
-        <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} onFinish={saveNew}>
-          <Form.Item
-            //name={'title'}
-            label={
-              <Col span={4}>
-                <label style={{ marginTop: '2%' }} className='label'>
-                  Título de la noticia: *
-                </label>
-              </Col>
-            }
-            rules={[{ required: true, message: 'Ingrese el título de la noticia' }]}>
-            <Input
-              value={noticia && noticia.title}
-              placeholder='Título de la noticia'
-              name={'survey'}
-              onChange={(e) => changeInput(e, 'title')}
+      <Row justify='center' wrap gutter={12}>
+        <Col span={16}>
+          <Form.Item label={'Título'} >
+            <Input 
+              name={'title'}
+              value={notice.title}
+              placeholder={'Título de la noticia'}
+              onChange={(e) => handleChange(e)}
             />
-          </Form.Item>
-          <Form.Item label={'Subtítulo *'}>
-            <ReactQuill value={descriptionShort} modules={toolbarEditor} onChange={changeDescriptionShort} />
-            {error != null && error.descriptionShort && (
-              <small style={{ color: 'red' }}>El subtítulo es requerido</small>
-            )}
-          </Form.Item>
-          <Form.Item label={'Noticia: *'}>
-            <ReactQuill value={description} modules={toolbarEditor} onChange={changeDescription} />
-            {error != null && error.description && <small style={{ color: 'red' }}>La noticia es requerido</small>}
-          </Form.Item>
-          <Form.Item label={'Imagen: *'}>
-            <ImageInput
-              picture={picture}
-              imageFile={imageFile}
-              divClass={'drop-img'}
-              content={<img src={picture} alt={'Imagen Perfil'} />}
-              classDrop={'dropzone'}
-              contentDrop={
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                  }}
-                  className={`button is-primary is-inverted is-outlined ${imageFile ? 'is-loading' : ''}`}>
-                  Cambiar foto
-                </button>
-              }
-              contentZone={
-                <div className='has-text-grey has-text-weight-bold has-text-centered'>
-                  <span>Subir foto</span>
-                  <br />
-                  <small>(Tamaño recomendado: 1280px x 960px)</small>
-                </div>
-              }
-              changeImg={changeImg}
-              errImg={errImg}
-              style={{
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative',
-                height: '200px',
-                width: '100%',
-                borderWidth: 2,
-                borderColor: '#b5b5b5',
-                borderStyle: 'dashed',
-                borderRadius: 10,
-              }}
-            />
-            {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
-            {fileMsg && <p className='help is-success'>{fileMsg}</p>}
-          </Form.Item>
-          <Form.Item label='Link del video:'>
-            <Input
-              value={noticia && noticia.linkYoutube}
-              type='url'
-              placeholder='www.video.com'
-              name={'noticia'}
-              onChange={(e) => changeInput(e, 'linkYoutube')}
-            />
-            {error != null && error.video && <small style={{ color: 'red' }}>Link de video no válido</small>}
-          </Form.Item>
-          <Form.Item label='Fecha:' name={'fechaNoticia'}>
-            <DatePicker value={fecha} onChange={onChangeDate} />
-            {error != null && error.fecha && <small style={{ color: 'red' }}>Fecha no válida</small>}
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 5, span: 18 }}>
-            <Button type='primary' htmlType='submit'>
-              Guardar
-            </Button>
+          <Form.Item label={'Subtítulo'}>
+            <ReactQuill 
+              name={'description_short'}
+              value={notice.description_short}
+              modules={toolbarEditor}
+              onChange={(e) => changeDescription(e, 'description_short')} 
+            />
           </Form.Item>
-        </Form>
-      </Card>
+
+          <Form.Item label={'Noticia'}>
+            <ReactQuill
+              name={'description_complete'}
+              value={notice.description_complete} 
+              modules={toolbarEditor} 
+              onChange={(e) => changeDescription(e, 'description_complete')} 
+            />
+          </Form.Item>
+
+          <Form.Item label={'Imagen'}>
+            <Card style={{'textAlign': 'center'}}>
+              <Form.Item noStyle>
+                <ImageInput
+                  picture={notice.picture}
+                  imageFile={notice.image}
+                  divClass={'drop-img'}
+                  content={<img src={notice.picture} alt={'Imagen Perfil'} />}
+                  classDrop={'dropzone'}
+                  contentDrop={
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                      }}
+                      className={`button is-primary is-inverted is-outlined ${notice.image ? 'is-loading' : ''}`}>
+                      Cambiar foto
+                    </button>
+                  }
+                  contentZone={
+                    <div className='has-text-grey has-text-weight-bold has-text-centered'>
+                      <span>Subir foto</span>
+                      <br />
+                      <small>(Tamaño recomendado: 1280px x 960px)</small>
+                    </div>
+                  }
+                  changeImg={changeImg}
+                  /* errImg={errImg} */
+                  style={{
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    height: '200px',
+                    width: '100%',
+                    borderWidth: 2,
+                    borderColor: '#b5b5b5',
+                    borderStyle: 'dashed',
+                    borderRadius: 10,
+                  }}
+                />
+              </Form.Item>
+            </Card>
+          </Form.Item>
+
+          <Form.Item label='Link del video'>
+            <Input
+              name={'linkYoutube'}
+              value={notice.linkYoutube}
+              type='url'
+              placeholder={'www.video.com'}
+              onChange={(e) => handleChange(e)}
+            />
+          </Form.Item>
+
+          <Form.Item label={'Fecha'} >
+            <DatePicker 
+              name={'time'}
+              format='YYYY-DD-MM'
+              value={moment(notice.time)} 
+              onChange={onChangeDate}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
     </Form>
   );
 }
 
-export default withRouter(NewCE);
+export default NewCE;

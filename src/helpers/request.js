@@ -593,11 +593,11 @@ export const NewsFeed = {
   getOne: async (eventId, idnew) => {
     return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}`);
   },
-  editOne: async (data, id) => {
-    return await Actions.edit(`api/events/${id}/newsfeed`, data, id);
+  editOne: async (data, id, eventId) => {
+    return await Actions.edit(`api/events/${eventId}/newsfeed`, data, id);
   },
-  deleteOne: async (id, idNew) => {
-    return await Actions.delete(`api/events/${id}/newsfeed`, idNew);
+  deleteOne: async (id, eventId) => {
+    return await Actions.delete(`api/events/${eventId}/newsfeed`, id);
   },
   create: async (data, id) => {
     return await Actions.create(`api/events/${id}/newsfeed`, data);

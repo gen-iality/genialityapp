@@ -11,13 +11,15 @@ import ImageInput from '../shared/imageInput';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router';
-import { message } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { message, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
+import moment from 'moment';
+
+const { confirm } = Modal;
 
 const News = ( props ) => {
-  /* const { event, matchUrl } = props; */
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const columns = [
@@ -28,6 +30,13 @@ const News = ( props ) => {
     {
       title: 'Fecha de Publicación',
       dataIndex: 'time',
+      render(val, item) {
+        return (
+          <div>
+            {moment(item.time).format('YYYY-DD-MM')}
+          </div>
+        )
+      }
     }
   ];
 
@@ -84,7 +93,7 @@ const News = ( props ) => {
         title={'Noticias'}
         titleTooltip={'Agregue o edite las Noticias que se muestran en la aplicación'}
         addUrl={{
-          pathname: `${props.match.url}/addnoticia`,
+          pathname: `${props.match.url}/new`,
           state: { new: true },
         }}
       />
@@ -96,7 +105,7 @@ const News = ( props ) => {
         key='_id'
         pagination={false}
         actions
-        editPath={`${props.match.url}/addnoticia`}
+        editPath={`${props.match.url}/new`}
         remove={remove}
       />
     </div>

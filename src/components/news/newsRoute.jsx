@@ -17,9 +17,9 @@ const NewsSectionRoutes = (props) => {
       <Route exact path={`${path}/`}>
         <News {...props} />
       </Route>
-      {/* <Route path={`${path}/new`}>
+      <Route path={`${path}/new`}>
         <NewCE {...props} />
-      </Route> */}
+      </Route>
       <Route path={`${path}/addnoticia/:id?`}>
         <AddNews {...props} />
       </Route>
