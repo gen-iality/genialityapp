@@ -31,6 +31,7 @@ describe('new Organization default', () => {
   });
   it('create organization default', () => {
     const nameOrganizationNew = 'Jhon Smith';
+    cy.wait(4000)
     cy.get('#selectOrganization').type(nameOrganizationNew);
   });
 });
