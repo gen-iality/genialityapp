@@ -32,6 +32,32 @@ describe('Evius Speaker', () => {
     cy.contains('Guardar').click()
   });
 
+  it('Two speaker Create', () => {
+    cy.contains('Agregar').click()
+    cy.get('[name=published]').click()
+    cy.get('[name=name]').type('Margarita Gonzalez 24274')
+    cy.get('[name=profession]').type('Analista de Testeo')
+    cy.get('[name=published]').click()
+    cy.fixture('BOTON_STANDS.png').as('logo')
+    cy.get('input[type=file]').then(function (el) {
+      const blob = Cypress.Blob.base64StringToBlob(this.logo, 'image/png')
+    
+      const file = new File([blob], this.logo, { type: 'image/png' })
+      const list = new DataTransfer()
+    
+      list.items.add(file)
+      const myFileList = list.files
+    
+      el[0].files = myFileList
+      el[0].dispatchEvent(new Event('change', { bubbles: true }))
+    })
+    cy.wait(500)
+    cy.get('[id=btnDescription]').click()
+    cy.get('[id=reactQuill]').type('Esta es Margarita Gonzalez, Analista de Testeo, todo esto es para una prueba de testeo')
+    cy.wait(100)
+    cy.contains('Guardar').click()
+  });
+
   it('Speaker Edit', () => {
     cy.get('[id=editarTest0]').click()
     cy.get('[name=published]').click()
@@ -85,11 +111,13 @@ describe('Evius Speaker', () => {
     cy.get('[id=remove0]').click()
     cy.contains('Borrar').click()
   });
-  
+
   it('Speaker remove in edit', () => {
     cy.wait(4000)
     cy.get('[id=editarTest0]').click()
     cy.get('[id=removeHeader]').click()
     cy.contains('Borrar').click()
   });
+  
+
 });
