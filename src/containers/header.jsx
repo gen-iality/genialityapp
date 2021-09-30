@@ -131,6 +131,8 @@ class Headers extends Component {
     } else if (splited[1] === 'eventadmin' || splited[1] === 'orgadmin') {
       this.setState({ showAdmin: true, showEventMenu: false, menuOpen: false });
       window.scrollTo(0, 0);
+    }else{
+      this.setState({ showAdmin: false, showEventMenu: false, menuOpen: false });
     }
   };
 

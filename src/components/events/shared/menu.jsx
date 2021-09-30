@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink, withRouter, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { rolPermissions } from '../../../helpers/constants';
 import { Menu } from 'antd';
@@ -45,8 +45,7 @@ class MenuConfig extends Component {
     if (!navigator.onLine) e.preventDefault();
   };
 
-  eventOrganization =  async () =>{
-    const eventId = this.props.match.params.event
+  eventOrganization =  async (eventId) =>{
       const currentEvent =  await EventsApi.getOne(eventId)
       const organizationId = currentEvent.organizer_id
       this.setState({organizationId})
@@ -56,22 +55,20 @@ class MenuConfig extends Component {
     const { pathname } = this.props.location;
     const splitted = pathname.split('/');
     this.setState({ url: '/' + splitted[1] + '/' + splitted[2] });
-    this.eventOrganization()
+    this.eventOrganization(splitted[2])
   }
 
   componentDidUpdate(prevProps) {
     const { match } = this.props;
     if (this.props.match.url !== prevProps.match.url) {
       this.setState({ url: match.url });
-      this.eventOrganization()
-
     }
   }
 
   render() {
     const { permissions } = this.props;
     const { url, organizationId } = this.state;
-console.log("10. ", organizationId)
+
     return (
       <Fragment>
         <Menu
