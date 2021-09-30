@@ -210,7 +210,7 @@ const ModalLoginHelpers = (props) => {
         )}
         {!loading && (
           <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
-            <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+            <Button id={"submitButton"} htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
               {textoButton}
             </Button>
           </Form.Item>
