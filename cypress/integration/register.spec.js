@@ -6,14 +6,14 @@ describe('Evius Initial', () => {
   });
 
   it('User can register', () => {
-    cy.contains('Registrarme').click();
+    cy.get('#rc-tabs-0-tab-2').click();
     cy.fixture('fakeuser.json').then((userfake) => {
       cy.registerUser(userfake);
       cy.get('#register').click({ force: true });
       cy.wait(3000);
       //DESCOMENTAR Y CAMBIAR FAKE USER PARA NUEVOS REGISTROS
      // cy.contains('Registro Exitoso')
-      cy.contains( 'Ya se encuentra registrado.');
+      cy.get('.ant-alert-warning');
     });
   });
 
@@ -34,17 +34,17 @@ describe('login', () => {
   });
   //USUARIO NO LOGUEADO
   it('User not logged', () => {
-    cy.contains('Iniciar sesión');
-    cy.contains('Registrarme');
+    cy.get('#rc-tabs-0-tab-1');
+    cy.get('#rc-tabs-0-tab-2');
   });
   //USUARIO LOGUEADO
   it('logged in', () => {
     cy.clearCookies()
-    cy.get('#email').type('evius@evius.co');
-    cy.get('#password').type('mocion2040');
-    cy.get('#login').click();
-    cy.wait(3000);
-    cy.contains('Juan López');
+    cy.get('#email').type('jaimedaniel.bm91@gmail.com');
+    cy.get('#password').type('j1234567');
+    cy.get('#loginButton').click();
+    cy.wait(15000);
+    cy.contains('Jsoft');
   });
 
   //RECUPERAR CONTRASEÑA DESCOMENTAR PARA PROBAR RECUPERAR CONTRASEÑA
@@ -61,6 +61,6 @@ describe('login', () => {
     cy.get('#email').type('jaimedaniel_bm91@gmnail.com');
     cy.get('#submitButton').click();
     cy.wait(2000);
-    cy.contains('Este email no se encuentra registrado en este evento');
+    cy.get('.ant-alert-error');
   });
 });
