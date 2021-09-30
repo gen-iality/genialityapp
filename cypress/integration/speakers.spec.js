@@ -87,6 +87,7 @@ describe('Evius Speaker', () => {
   });
   
   it('Speaker remove in edit', () => {
+    cy.wait(4000)
     cy.get('[id=editarTest0]').click()
     cy.get('[id=removeHeader]').click()
     cy.contains('Borrar').click()
