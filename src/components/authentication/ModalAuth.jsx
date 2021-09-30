@@ -173,6 +173,7 @@ const ModalAuth = (props) => {
                   <Typography.Text
                     onClick={() => handleChangeTypeModal('recover')}
                     underline
+                    id={'forgotpassword'}
                     type='secondary'
                     style={{ float: 'right', cursor: 'pointer' }}>
                     {intl.formatMessage({ id: 'modal.option.restore', defaultMessage: 'Olvidé mi contraseña' })}
@@ -203,7 +204,7 @@ const ModalAuth = (props) => {
               )}
               {!loading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
-                  <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+                  <Button id={'loginButton'} htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
                     {intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })}
                   </Button>
                 </Form.Item>

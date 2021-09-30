@@ -259,6 +259,18 @@ class Datos extends Component {
         ),
       },
       {
+        title: 'Sensible (Networking)',
+        dataIndex: 'sensibility',
+        align: 'center',
+        render: (record, key) => (
+          <Checkbox
+            name='sensibility'
+            onChange={() => this.changeCheckBox(key, 'sensibility')}
+            checked={record}
+          />
+        ),
+      },
+      {
         title: 'Visible solo admin',
         dataIndex: 'visibleByAdmin',
         align: 'center',

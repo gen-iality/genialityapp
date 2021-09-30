@@ -534,7 +534,7 @@ class AgendaEdit extends Component {
 
   //Validación de campos
 
-  validForm = () => {
+  validForm = () => {    
     let title = [];
     if (this.state.name.length <= 0) title.push('El nombre es requerido');
 
