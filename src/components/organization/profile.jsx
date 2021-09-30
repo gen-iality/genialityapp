@@ -25,7 +25,6 @@ function OrganizationInformation(props) {
       try {
          const organizationEdit = await OrganizationApi.editOne(body, organizationId);
          props.setOrganization(organizationEdit)
-         console.log("10. organizationEdit ", organizationEdit)
          message.success('Información actualizada correctamente');
       } catch (error) {
          message.error('No se pudo actualizar la información');

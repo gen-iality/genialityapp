@@ -6,7 +6,7 @@ import LogOut from '../shared/logOut';
 import OrganizationProfile from './profile';
 import Styles from '../App/styles';
 import Properties from './properties';
-import OrgUsers from './users';
+import OrgMembers from './members';
 import OrgEvents from './events';
 
 function Organization(props) {
@@ -107,17 +107,14 @@ function Organization(props) {
                               exact
                               path={`${props.match.url}/events`}
                               render={() => (
-                                 // <OrgEvents org={organization} />
-                                 <h1>events</h1>
+                                 <OrgEvents org={organization} />
                               )}
                            />
                            <Route
                               exact
                               path={`${props.match.url}/members`}
-                              // component={OrgUsers}
                               render={() => (
-                                 // <OrgEvents org={organization} />
-                                 <h1>members</h1>
+                                 <OrgMembers org={organization} />
                               )}
                               org={organization}
                               url={props.match.url}

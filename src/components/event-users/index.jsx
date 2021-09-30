@@ -617,7 +617,7 @@ class ListEventUser extends Component {
                   </span>
                   <span className='text-button'>Agregar Usuario</span>
                 </button>
-               <Row><span style={{fontSize:10}}> <Link to={`/event/${this.props.event._id}/invitados/importar-excel`}>Importar usuarios</Link></span></Row> 
+               <Row><span style={{fontSize:10}}> <Link to={`/eventadmin/${this.props.event._id}/invitados/importar-excel`}>Importar usuarios</Link></span></Row> 
               </div>
               {usersReq.length > 0 && (
                 <div className='column is-narrow has-text-centered export button-c is-centered'>

@@ -513,6 +513,9 @@ export const OrganizationApi = {
   deleteUser: async (org, member) => {
     return await Actions.delete(`/api/organizations/${org}/users/`, member);
   },
+  getEventsStatistics: async (org) => {
+    return await Actions.get(`/api/organizations/${org}/eventsstadistics`);
+  },
 };
 export const BadgeApi = {
   create: async (data) => {

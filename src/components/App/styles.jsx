@@ -442,7 +442,6 @@ class Styles extends Component {
     const thereIsAnOrganization = this.props.org?._id
 
     this.state.data = { styles: this.state.styles };
-console.log("10. body ", this.state.data)
     try {
       if(thereIsAnOrganization){
          info = await OrganizationApi.editOne(this.state.data, thereIsAnOrganization);

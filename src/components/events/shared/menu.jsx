@@ -71,8 +71,7 @@ class MenuConfig extends Component {
   render() {
     const { permissions } = this.props;
     const { url, organizationId } = this.state;
-    console.log("10. organizationId ", organizationId)
-
+console.log("10. ", organizationId)
     return (
       <Fragment>
         <Menu
