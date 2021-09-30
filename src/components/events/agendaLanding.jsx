@@ -561,7 +561,7 @@ class Agenda extends Component {
     const { hideBtnDetailAgenda, show_inscription, data, survey, documents } = this.state;
 
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
-    const list =
+   const list =
       date != null
         ? data
             .filter(
@@ -740,8 +740,7 @@ class Agenda extends Component {
                         paddingLeft: '25px',
                       }}>
                       {days.map((day, index) => (
-                       
-                       this.getActivitiesByDayVisibility(day) && this.getActivitiesByDayVisibility(day).length>0 &&  <TabPane
+                      this.getActivitiesByDayVisibility(day) && this.getActivitiesByDayVisibility(day).length > 0 && <TabPane
                           style={{ paddingLeft: '20px', paddingRight: '20px' }}
                           tab={
                             <span
