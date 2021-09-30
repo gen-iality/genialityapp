@@ -203,7 +203,7 @@ const ModalAuth = (props) => {
               )}
               {!loading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
-                  <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+                  <Button id={'loginButton'} htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
                     {intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })}
                   </Button>
                 </Form.Item>
