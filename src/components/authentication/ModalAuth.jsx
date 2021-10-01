@@ -105,6 +105,9 @@ const ModalAuth = (props) => {
             setErrorLogin(true);
             setLoading(false);
           }
+        } else {
+          setErrorLogin(true);
+            setLoading(false);
         }
       });
   };
