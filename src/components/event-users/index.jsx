@@ -221,7 +221,7 @@ class ListEventUser extends Component {
       categories:[] ,   
       label: "Checkin",
       mandatory: false,
-      name: "checkedin_at",      
+      name: "checked_in",      
       organizer: null,
       tickets: [],
       type: "boolean",
@@ -257,8 +257,9 @@ class ListEventUser extends Component {
             title: item.label,
             dataIndex: item.name,
             key: item.name,
-            render: (record, key) =>
-              item.type == 'file' ? (
+            render: (record, key) =>{
+            console.log("KEY==>",key);
+             return item.type == 'file' ? (
                 <a target='__blank' download={item?.name} href={key[item?.name]?.file?.response}>
                   {key[item?.name]?.file?.name}
                 </a>
@@ -266,9 +267,9 @@ class ListEventUser extends Component {
                 <Image width={40} height={40} src={key[item?.name]} />
               ) : (
                 key[item.name]
-              ),
-          };
-        });
+              )
+          }
+        }})
       columns = [...columns, ...extraColumns];
       let rol = {
         title: 'Rol',
@@ -333,7 +334,7 @@ class ListEventUser extends Component {
             totalWithWeight,
           });
 
-          //console.log("ATTENDESS==>",updatedAttendees)
+          console.log("ATTENDESS==>",updatedAttendees)
           //console.log("ATTENDESSFIND==>",updatedAttendees.filter((at)=>at.email=='nieblesrafael@yahoo.com'))
 
           for (let i = 0; i < updatedAttendees.length; i++) {
@@ -427,7 +428,7 @@ class ListEventUser extends Component {
   addUser = () => {
     html.classList.add('is-clipped');
     this.setState((prevState) => {
-      return { editUser: !prevState.editUser, edit: false, selectedUser: null };
+      return { editUser: !prevState.editUser, edit: false, selectedUser: null  };
     });
   };
 
@@ -454,17 +455,15 @@ class ListEventUser extends Component {
   checkIn = async (id) => {
     const { qrData } = this.state;
     const { event } = this.props;
-    qrData.another = true;
-
+    qrData.another = true;   
     try {
-      await TicketsApi.checkInAttendee(event._id, id);
+     let resp= await TicketsApi.checkInAttendee(event._id, id);
+
       //toast.success('Usuario Chequeado');
     } catch (e) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
     }
-
     //return;
-
     const userRef = firestore.collection(`${event._id}_event_attendees`).doc(id);
 
     // Actualiza el usuario en la base de datos

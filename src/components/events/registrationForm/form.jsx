@@ -117,7 +117,7 @@ const FormRegister = ({
   closeModal,
   conditionals,  
   organization,
-  submitForm,
+  callback,
   setSectionPermissions,
 }) => {
   const intl = useIntl();  
@@ -140,16 +140,14 @@ const FormRegister = ({
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   //initialValues.codearea = null;
-  let { eventPrivate } = useContext(HelperContext);
+  let helperContext=useContext(HelperContext);
+  let eventPrivate  = helperContext?.eventPrivate || null;
   let cEventUser = useContext(CurrentEventUserContext);
-  let cEvent = useContext(CurrentEventContext);
+  let cEvent = useContext(CurrentEventContext) ;
 
-
-  eventId=eventId ? eventId: cEvent.value ? cEvent.value._id:null, 
-  eventUser=eventUser?eventUser:cEventUser.value? cEventUser.value:{},
-  eventUserId= eventUserId?eventUserId:cEventUser.value? cEventUser.value._id:null,  
+  eventId=eventId ? eventId: cEvent && cEvent?.value ? cEvent?.value?._id:null,   
   initialValues=initialValues?initialValues:eventUser?eventUser:{}
-
+  
   const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
   useEffect(() => {
     let formType = !eventUserId ? 'register' : 'transfer';
@@ -157,7 +155,7 @@ const FormRegister = ({
     setSubmittedForm(false);
     hideConditionalFieldsToDefault(conditionals, eventUser);
 
-    getEventData(eventId);
+    !organization && getEventData(eventId);
     form.resetFields();
     if (window.fbq) {
       window.fbq('track', 'CompleteRegistration');
@@ -195,6 +193,9 @@ const FormRegister = ({
   const onFinish = async (values) => {
     if (areacodeselected) {
       values['code'] = areacodeselected;
+    }
+    if(values.checked_id){
+      values.checkedin_at=new Date()
     }
 
     setSectionPermissions({ view: false, ticketview: false });
@@ -260,9 +261,9 @@ const FormRegister = ({
           // textMessage.content = "Usuario " + statusMessage;
           textMessage.content = 'Usuario ' + formMessage.successMessage;
 
-          let $msg =
+          let $msg = !callback?
             event.registration_message ||
-            `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`;
+            `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`:'';
 
           setSuccessMessage($msg);
 
@@ -271,7 +272,9 @@ const FormRegister = ({
 
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
           //todo el proceso de logueo depende del token en la url por eso se recarga la página
-        
+        if (callback){
+          callback()
+        }else{
           if (!event.validateEmail && resp.data.user.initial_token) {
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
@@ -286,6 +289,7 @@ const FormRegister = ({
           } else {
             window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${1}`);
           }
+        }
         
         } else {
           // window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
@@ -315,6 +319,7 @@ const FormRegister = ({
       } catch (err) {
         // textMessage.content = "Error... Intentalo mas tarde";
         textMessage.content = formMessage.errorMessage;
+        console.log("ERROR==>",err)
 
         textMessage.key = key;
         message.error(textMessage);
@@ -393,7 +398,7 @@ const FormRegister = ({
       let labelPosition = m.labelPosition;
       let target = name;
       console.log(initialValues)
-      let value = !submitForm?  eventUser && eventUser['properties'] ? eventUser['properties'][target] : '': initialValues ? initialValues[target]:'';
+      let value = !callback?  eventUser && eventUser['properties'] ? eventUser['properties'][target] : '': initialValues ? initialValues[target]:'';
 
       //no entiendo b esto para que funciona
       if (conditionals.state === 'enabled') {
@@ -764,7 +769,7 @@ const FormRegister = ({
             <Form
               form={form}
               layout='vertical'
-              onFinish={submitForm?submitForm:onFinish}
+              onFinish={onFinish}
               validateMessages={{
                 required: intl.formatMessage({ id: 'form.field.required' }),
                 types: {
@@ -808,7 +813,7 @@ const FormRegister = ({
                 <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
                   <Form.Item>
                     <Button type='primary' htmlType='submit'>
-                      {eventUser
+                      {eventUser && eventUser?.email!=""
                         ? intl.formatMessage({ id: 'registration.button.update' })
                         : eventId === '5f9824fc1f8ccc414e33bec2'
                         ? 'Votar y Enviar'
