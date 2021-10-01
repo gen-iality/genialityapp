@@ -11,6 +11,7 @@ import { Actions } from '../../helpers/request';
 import Moment from 'moment';
 import FormComponent from '../events/registrationForm/form';
 import { Modal } from 'antd';
+import withContext from '../../Context/withContext';
 
 class UserModal extends Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class UserModal extends Component {
       statesList: [],
       rolesList: [],
       message: {},
-      user: {},
+      user: null,
       state: '',
       rol: '',
       prevState: '',
@@ -36,7 +37,7 @@ class UserModal extends Component {
     const self = this;
     const { rolesList } = this.props;
     self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : '' });
-    const tickets = await eventTicketsApi.getAll(this.props.eventId);
+    const tickets = await eventTicketsApi.getAll(this.props.cEvent.value._id);
     if (tickets.length > 0) this.setState({ tickets });
     let user = {};
     if (this.props.edit) {
@@ -108,11 +109,11 @@ class UserModal extends Component {
           snap.checked_in = false;
         }
 
-        let respAddEvento = await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
+        let respAddEvento = await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.cEvent.value?._id}`, snap);
 
         if (respAddEvento.data && respAddEvento.data.rol_id == '60e8a8b7f6817c280300dc23') {
           let updateRol = await Actions.put(
-            `/api/events/${this.props.eventId}/eventusers/${respAddEvento.data._id}/updaterol`,
+            `/api/events/${this.props.cEvent.value?._id}/eventusers/${respAddEvento.data._id}/updaterol`,
             {
               rol_id: this.state.rol,
             }
@@ -121,7 +122,7 @@ class UserModal extends Component {
 
         if (this.props.byActivity && respAddEvento.data.user) {
           let respActivity = await Activity.Register(
-            this.props.eventId,
+            this.props.cEvent.value?._id,
             respAddEvento.data.user._id,
             this.props.activityId
           );
@@ -145,11 +146,11 @@ class UserModal extends Component {
         }
 
         let respAddEvento = await Actions.put(
-          `/api/events/${this.props.eventId}/eventusers/${this.state.userId}`,
+          `/api/events/${this.props.cEvent.value?._id}/eventusers/${this.state.userId}`,
           snap
         );
         let updateRol = await Actions.put(
-          `/api/events/${this.props.eventId}/eventusers/${this.state.userId}/updaterol`,
+          `/api/events/${this.props.cEvent.value?._id}/eventusers/${this.state.userId}/updaterol`,
           {
             rol_id: this.state.rol,
           }
@@ -179,7 +180,7 @@ class UserModal extends Component {
     let message = {};
     const snap = { properties: this.state.user, rol_id: this.state.rol };
 
-    const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
+    const userRef = firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`);
     if (!this.state.edit) {
       snap.updated_at = new Date();
       snap.created_at = new Date();
@@ -235,243 +236,15 @@ class UserModal extends Component {
     this.setState({ message, create: false });
   }
 
-  printUser = () => {
-    const resp = this.props.badgeEvent;
-    const { user } = this.state;
-    const canvas = document.getElementsByTagName('CANVAS')[0];
-    let qr = canvas ? canvas.toDataURL() : '';
-    if (resp._id) {
-      if (this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
-      let oIframe = this.ifrmPrint;
-      let badge = resp.BadgeFields;
-      let oDoc = oIframe.contentWindow || oIframe.contentDocument;
-      if (oDoc.document) {
-        oDoc = oDoc.document;
-      }
-      // Head
-      oDoc.write('<head><title>Escarapela</title>');
-      // body
-      oDoc.write('<body onload="window.print()"><div>');
-      // Datos
-      let i = 0;
-      for (; i < badge.length; ) {
-        if (badge[i].line) {
-          if (badge[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
-          //se pone esta condición por un bug cuando se va a imprimir no se porque quedo en blanco
-          else if (badge[i].id_properties)
-            oDoc.write(
-              `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
-                user[badge[i].id_properties.value]
-                  ? user[badge[i].id_properties.value]
-                  : user[badge[i].id_properties.label]
-                  ? user[badge[i].id_properties.label]
-                  : ''
-              }</p>`
-            );
-          i++;
-        } else {
-          if (badge[i + 1] && !badge[i + 1].line) {
-            oDoc.write(`<div style="display: flex">`);
-            if (!badge[i].qr) {
-              oDoc.write(`<div style="margin-right: 20px">`);
-              oDoc.write(
-                `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
-                  user[badge[i].id_properties.value]
-                    ? user[badge[i].id_properties.value]
-                    : user[badge[i].id_properties.label]
-                    ? user[badge[i].id_properties.label]
-                    : ''
-                }</p>`
-              );
-              oDoc.write(`</div>`);
-            } else {
-              oDoc.write(`<div style="margin-right: 20px">`);
-              oDoc.write(`<div><img src=${qr}></div>`);
-              oDoc.write(`</div>`);
-            }
-            if (!badge[i + 1].qr) {
-              oDoc.write(`<div style="margin-right: 20px">`);
-              oDoc.write(
-                `<p style="font-family: Lato, sans-serif;font-size: ${badge[i + 1].size}px;text-transform: uppercase">${
-                  user[badge[i + 1].id_properties.value]
-                    ? user[badge[i + 1].id_properties.value]
-                    : user[badge[i + 1].id_properties.label]
-                    ? user[badge[i + 1].id_properties.label]
-                    : ''
-                }</p>`
-              );
-              oDoc.write(`</div>`);
-            } else {
-              oDoc.write(`<div style="margin-right: 20px">`);
-              oDoc.write(`<div><img src=${qr}></div>`);
-              oDoc.write(`</div>`);
-            }
-            oDoc.write(`</div>`);
-            i = i + 2;
-          } else {
-            oDoc.write(`<div style="display: flex">`);
-            oDoc.write(`<div style="margin-right: 20px">`);
-            if (!badge[i].qr) {
-              oDoc.write(
-                `<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${
-                  user[badge[i].id_properties.value]
-                    ? user[badge[i].id_properties.value]
-                    : user[badge[i].id_properties.label]
-                    ? user[badge[i].id_properties.label]
-                    : ''
-                }</p>`
-              );
-            } else {
-              oDoc.write(`<div><img src=${qr}></div>`);
-            }
-            oDoc.write(`</div>`);
-            oDoc.write(`</div>`);
-            i++;
-          }
-        }
-      }
-      oDoc.close();
-    } else this.setState({ noBadge: true });
-  };
-
-  renderForm = () => {
-    const { extraFields } = this.props;
-    let formUI = extraFields.map((m, key) => {
-      let type = m.type || 'text';
-      let props = m.props || {};
-      let name = m.name;
-      let mandatory = m.mandatory;
-      let target = name;
-      let value = this.state.user[target];
-      let input = (
-        <input
-          {...props}
-          className='input'
-          type={type}
-          key={key}
-          name={name}
-          value={value}
-          onChange={(e) => {
-            this.onChange(e, type);
-          }}
-        />
-      );
-      if (type === 'boolean') {
-        input = (
-          <React.Fragment>
-            <input
-              name={name}
-              id={name}
-              className='is-checkradio is-primary is-rtl'
-              type='checkbox'
-              checked={value}
-              onChange={(e) => {
-                this.onChange(e, type);
-              }}
-            />
-            <label className={`label has-text-grey-light is-capitalized ${mandatory ? 'required' : ''}`} htmlFor={name}>
-              {name}
-            </label>
-          </React.Fragment>
-        );
-      }
-      if (type === 'list') {
-        input = m.options.map((o, key) => {
-          return (
-            <option key={key} value={o.value}>
-              {o.value}
-            </option>
-          );
-        });
-        input = (
-          <div className='select'>
-            <select
-              name={name}
-              value={value}
-              onChange={(e) => {
-                this.onChange(e, type);
-              }}>
-              <option value={''}>Seleccione...</option>
-              {input}
-            </select>
-          </div>
-        );
-      }
-      return (
-        <div key={'g' + key} className='field'>
-          {m.type !== 'boolean' && (
-            <label
-              className={`label has-text-grey-light is-capitalized ${mandatory ? 'required' : ''}`}
-              key={'l' + key}
-              htmlFor={key}>
-              {name}
-            </label>
-          )}
-          <div className='control control-container'>{input}</div>
-        </div>
-      );
-    });
-    return formUI;
-  };
-
-  onChange = (e, type) => {
-    const { value, name } = e.target;
-    type === 'boolean'
-      ? this.setState((prevState) => {
-          return { user: { ...this.state.user, [name]: !prevState.user[name] } };
-        }, this.validForm)
-      : this.setState({ user: { ...this.state.user, [name]: value } }, this.validForm);
-  };
-
-  selectChange = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
-    this.setState({ [name]: value }, this.validForm);
-  };
-
-  validForm = () => {
-    const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\\.[^@]+');
-    const { extraFields } = this.props,
-      { user } = this.state,
-      mandatories = extraFields.filter((field) => field.mandatory),
-      validations = [];
-    let errors = 0;
-    mandatories.map((field, key) => {
-      if (field.type === 'email')
-        valid =
-          (user[field.name] &&
-            user[field.name].length > 5 &&
-            user[field.name].length < 61 &&
-            EMAIL_REGEX.test(user[field.name])) ||
-          false;
-      if (
-        field.type === 'text' ||
-        field.type === 'list' ||
-        field.type == 'country' ||
-        field.type == 'city' ||
-        field.type === 'date'
-      )
-        valid =
-          (user[field.name] && user[field.name].length > 0 && user[field.name] !== '' && user[field.name] !== null) ||
-          false;
-      if (field.type === 'number')
-        valid = (user[field.name] && user[field.name].length > 6 && parseInt(user[field.name]) > 0) || false;
-      if (field.type === 'boolean') valid = typeof user[field.name] === 'boolean' || false;
-      //valid=valid?valid:false;
-      return (validations[field.name] = valid);
-    });
-    let valid = Object.values(validations).includes(false);
-    this.setState({ valid: valid });
-  };
 
   deleteUser = async () => {
     const { substractSyncQuantity } = this.props;
     let message = {};
     // let resultado = null;
     const self = this;
-    const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
+    const userRef = firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`);
     try {
-      await Actions.delete(`/api/events/${this.props.eventId}/eventusers`, this.state.userId);
+      await Actions.delete(`/api/events/${this.props.cEvent.value?._id}/eventusers`, this.state.userId);
       message = { class: 'msg_warning', content: 'USER DELETED' };
       toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
     } catch (e) {
@@ -515,7 +288,7 @@ class UserModal extends Component {
   };
 
   goBadge = () => {
-    this.setState({ redirect: true, url_redirect: '/event/' + this.props.eventId + '/badge', noBadge: false });
+    this.setState({ redirect: true, url_redirect: '/event/' + this.props.cEvent.value?._id + '/badge', noBadge: false });
   };
   closeNoBadge = () => {
     this.setState({ noBadge: false });
@@ -524,7 +297,7 @@ class UserModal extends Component {
   unCheck = () => {
     const { substractSyncQuantity } = this.props;
 
-    const userRef = firestore.collection(`${this.props.eventId}_event_attendees`).doc(this.props.value._id);
+    const userRef = firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`).doc(this.props.value._id);
     userRef
       .update({ checked_in: false, checked_at: app.firestore.FieldValue.delete() })
       .then(() => {
@@ -542,6 +315,9 @@ class UserModal extends Component {
   closeUnCheck = () => {
     this.setState({ uncheck: false });
   };
+  submitValues=(values)=>{
+   console.log("VALUES==>", values)
+  }
 
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
@@ -560,14 +336,12 @@ class UserModal extends Component {
             paddingBottom: '0px',
             marginTop:'30px'
           }}>
-          <FormComponent
-            handleModal={this.props.handleModal}
-            noredirect={true}
-            conditionals={this.props.event.fields_conditions || []}
+          <FormComponent     
+            conditionals={this.props.cEvent.value?.fields_conditions || []}
             initialValues={this.props.value}
-            eventUser={user}
-            extraFieldsOriginal={this.props.extraFields}
-            eventId={this.props.eventId}
+            eventUser={user || {}}
+            extraFieldsOriginal={this.props.extraFields}            
+            submitForm={this.submitValues}
           />
         </div>
       </Modal>
@@ -575,4 +349,4 @@ class UserModal extends Component {
   }
 }
 
-export default UserModal;
+export default withContext(UserModal);

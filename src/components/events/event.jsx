@@ -30,6 +30,8 @@ import ConferenceRoute from '../zoom/index';
 import ReportNetworking from '../networking/report';
 import NewsSectionRoutes from '../news/newsRoute' ;
 import ProductSectionRoutes from '../products/productsRoute' ;
+import { withRouter } from 'react-router-dom';
+import withContext from '../../Context/withContext';
 
 //import Test from "../events/testButton"
 import { Layout } from 'antd';
@@ -342,4 +344,4 @@ const mapStateToProps = (state) => ({
   error: state.rols.error,
 });
 
-export default connect(mapStateToProps)(Event);
+export default connect(mapStateToProps)(withContext(withRouter(Event)));

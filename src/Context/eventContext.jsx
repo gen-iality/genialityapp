@@ -11,18 +11,19 @@ let initialContextState = { status: 'LOADING', value: null };
 export function CurrentEventProvider({ children }) {
   const [eventContext, setEventContext] = useState(initialContextState);
   let { event_id } = useParams();
+  let { event } = useParams();
 
   useEffect(() => {
-    if (!event_id) return;
+    if (!event_id && !event) return;
     async function fetchEvent() {
-      let eventGlobal = await EventsApi.getOne(event_id);
+      let eventGlobal = await EventsApi.getOne(event_id || event);
       //const ticketsEvent=await eventTicketsApi.getAll(event_id);
       // eventGlobal={...eventGlobal,tickets:ticketsEvent}
 
       setEventContext({ status: 'LOADED', value: eventGlobal });
     }
     fetchEvent();
-  }, [event_id]);
+  }, [event_id,event]);
 
   return <CurrentEventContext.Provider value={eventContext}>{children}</CurrentEventContext.Provider>;
 }

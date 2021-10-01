@@ -39,6 +39,7 @@ import { connect } from 'react-redux';
 import { useContext } from 'react';
 import HelperContext from '../../../Context/HelperContext';
 import { CurrentEventUserContext } from '../../../Context/eventUserContext';
+import { CurrentEventContext } from '../../../Context/eventContext';
 // import InputFile from "./inputFile"
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -114,14 +115,12 @@ const FormRegister = ({
   eventUser,
   eventUserId,
   closeModal,
-  conditionals,
-  noredirect,
-  handleModal,
-  showSection,
+  conditionals,  
+  organization,
+  submitForm,
   setSectionPermissions,
 }) => {
-  const intl = useIntl();
-  const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
+  const intl = useIntl();  
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
@@ -140,9 +139,18 @@ const FormRegister = ({
   let [areacodeselected, setareacodeselected] = useState();
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
-  initialValues.codearea = null;
+  //initialValues.codearea = null;
   let { eventPrivate } = useContext(HelperContext);
   let cEventUser = useContext(CurrentEventUserContext);
+  let cEvent = useContext(CurrentEventContext);
+
+
+  eventId=eventId ? eventId: cEvent.value ? cEvent.value._id:null, 
+  eventUser=eventUser?eventUser:cEventUser.value? cEventUser.value:{},
+  eventUserId= eventUserId?eventUserId:cEventUser.value? cEventUser.value._id:null,  
+  initialValues=initialValues?initialValues:eventUser?eventUser:{}
+
+  const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
   useEffect(() => {
     let formType = !eventUserId ? 'register' : 'transfer';
     setFormMessage(FormTags(formType));
@@ -263,10 +271,7 @@ const FormRegister = ({
 
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
           //todo el proceso de logueo depende del token en la url por eso se recarga la página
-          if(noredirect){
-              // CERRAMOS MODAL            
-              handleModal()
-          }else{
+        
           if (!event.validateEmail && resp.data.user.initial_token) {
             setLogguedurl(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
             setTimeout(function() {
@@ -281,7 +286,7 @@ const FormRegister = ({
           } else {
             window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=${1}`);
           }
-        }
+        
         } else {
           // window.location.replace(`/landing/${eventId}/${eventPrivate.section}?register=800`);
           //Usuario ACTUALIZADO
@@ -388,7 +393,7 @@ const FormRegister = ({
       let labelPosition = m.labelPosition;
       let target = name;
       console.log(initialValues)
-      let value = !noredirect?  eventUser && eventUser['properties'] ? eventUser['properties'][target] : '': initialValues ? initialValues[target]:'';
+      let value = !submitForm?  eventUser && eventUser['properties'] ? eventUser['properties'][target] : '': initialValues ? initialValues[target]:'';
 
       //no entiendo b esto para que funciona
       if (conditionals.state === 'enabled') {
@@ -402,7 +407,7 @@ const FormRegister = ({
       }
       let input = (
         <Input
-          disabled={m.name == 'email' && initialValues.email ? true : false}
+          disabled={m.name == 'email' && initialValues?.email ? true : false}
           {...props}
           addonBefore={
             labelPosition === 'izquierda' && (
@@ -759,7 +764,7 @@ const FormRegister = ({
             <Form
               form={form}
               layout='vertical'
-              onFinish={onFinish}
+              onFinish={submitForm?submitForm:onFinish}
               validateMessages={{
                 required: intl.formatMessage({ id: 'form.field.required' }),
                 types: {
