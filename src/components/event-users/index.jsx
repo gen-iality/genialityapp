@@ -14,12 +14,12 @@ import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } 
 import EventContent from '../events/shared/content';
 import Moment from 'moment';
 import { TicketsApi } from '../../helpers/request';
-import { Button, Card, Checkbox, Col, Drawer, Image, Row, Statistic, Table, Typography } from 'antd';
+import { Button, Card, Checkbox, Col, Drawer, Image, message, Row, Statistic, Table, Typography } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
 import { EditOutlined, FullscreenOutlined } from '@ant-design/icons';
-
+const imgNotFound="https://www.latercera.com/resizer/m0bOOb9drSJfRI-C8RtRL_B4EGE=/375x250/smart/arc-anglerfish-arc2-prod-copesa.s3.amazonaws.com/public/Z2NK6DYAPBHO3BVPUE25LQ22ZA.jpg";
 const { Title } = Typography;
 
 /*            switch (field.type) {
@@ -139,9 +139,8 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
     var self = this;
-
-    return item.checkedin_at ? (
-      <p>{Moment(item.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
+    return item.checkedin_at || item.properties?.checkedin_at ? (
+      <p>{Moment(item.checkedin_at|| item.properties.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
     ) : (
       <div>
         <Checkbox
@@ -150,10 +149,10 @@ class ListEventUser extends Component {
           disabled={item.checkedin_at}
           type='checkbox'
           name={'checkinUser' + item._id}
-          checked={item.checkedin_at}
+          checked={item.checkedin_at || item.properties?.checkedin_at}
           // eslint-disable-next-line no-unused-vars
           onChange={(e) => {
-            self.checkIn(item._id);
+            self.checkIn(item._id,item);
           }}
         />
         <label htmlFor={'checkinUser' + item._id} />
@@ -257,11 +256,10 @@ class ListEventUser extends Component {
             title: item.label,
             dataIndex: item.name,
             key: item.name,
-            render: (record, key) =>{
-            console.log("KEY==>",key);
+            render: (record, key) =>{            
              return item.type == 'file' ? (
                 <a target='__blank' download={item?.name} href={key[item?.name]?.file?.response}>
-                  {key[item?.name]?.file?.name}
+                 {key[item?.name]?.file?.name}
                 </a>
               ) : item.type == 'avatar' ? (
                 <Image width={40} height={40} src={key[item?.name]} />
@@ -355,12 +353,16 @@ class ListEventUser extends Component {
               ) {
                 updatedAttendees[i]['properties'][key.name] =
                   updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
-              }
+              }          
 
-              if (key.type == 'file') {
-                console.log(updatedAttendees[i][key.name]);
+              if (key.type == 'file') {                
                 updatedAttendees[i][key.name] = updatedAttendees[i][key.name];
               }
+
+              if (key.type == 'avatar') {
+                //console.log(updatedAttendees[i].properties["picture"]);
+               updatedAttendees[i][key.name] = updatedAttendees[i]?.user?.picture || imgNotFound;
+              }             
               if (extraFields) {
                 let codearea = extraFields?.filter((field) => field.type == 'codearea');
                 if (
@@ -452,7 +454,7 @@ class ListEventUser extends Component {
     });
   };
 
-  checkIn = async (id) => {
+  checkIn = async (id,item) => {
     const { qrData } = this.state;
     const { event } = this.props;
     qrData.another = true;   
@@ -465,16 +467,23 @@ class ListEventUser extends Component {
     }
     //return;
     const userRef = firestore.collection(`${event._id}_event_attendees`).doc(id);
-
+    
     // Actualiza el usuario en la base de datos
+   
     userRef
       .update({
+        ...item,
         updated_at: new Date(),
         checkedin_at: new Date(),
         checked_at: new Date(),
+        properties:{
+          ...item.properties,
+           checkedin_at: new Date(),
+           checked_in: true,
+        }
       })
       .then(() => {
-        toast.success('Usuario Chequeado');
+       message.success("Usuario checkeado..")
       })
       .catch((error) => {
         console.error('Error updating document: ', error);
@@ -512,6 +521,7 @@ class ListEventUser extends Component {
   openEditModalUser = (item) => {
     html.classList.add('is-clipped');
     console.log('SELECTED ITEM==>', item);
+    item={...item,checked_in:item.properties?.checked_in || item.checked_in,checkedin_at:item.properties?.checkedin_at || item.checkedin_at}
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
 

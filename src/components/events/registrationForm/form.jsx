@@ -118,6 +118,7 @@ const FormRegister = ({
   conditionals,  
   organization,
   callback,
+  options,
   setSectionPermissions,
 }) => {
   const intl = useIntl();  
@@ -194,8 +195,10 @@ const FormRegister = ({
     if (areacodeselected) {
       values['code'] = areacodeselected;
     }
-    if(values.checked_id){
+    if(values.checked_in){     
       values.checkedin_at=new Date()
+    }else{
+      values.checkedin_at=""
     }
 
     setSectionPermissions({ view: false, ticketview: false });
@@ -218,7 +221,7 @@ const FormRegister = ({
     // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
     message.loading({ content: intl.formatMessage({ id: 'registration.message.loading' }), key }, 10);
 
-    const snap = { properties: { ...values, typeRegister: typeRegister } };
+    const snap = {properties: { ...values, typeRegister: typeRegister }};
 
     let textMessage = {};
     textMessage.key = key;
@@ -820,6 +823,11 @@ const FormRegister = ({
                         : intl.formatMessage({ id: 'registration.button.create' })}
                     </Button>
                   </Form.Item>
+                  {options && eventUser && eventUser?.email!="" && options.map((option)=>
+                    <Button icon={option.icon} onClick={()=>option.action(eventUser)} type={option.type} style={{marginLeft:10}}>
+                      {option.text}
+                    </Button>
+                  )}
                 </Col>
               </Row>
             </Form>

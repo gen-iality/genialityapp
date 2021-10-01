@@ -9,7 +9,7 @@ function updateAttendees(currentAttendees, snapshot) {
   let user = 0;
   snapshot.docChanges().forEach((change) => {
     user = change.doc.data();
-
+   console.log("USER==>", user)
     user = { ...user, ...user.properties };
 
     //por si acas
@@ -19,8 +19,7 @@ function updateAttendees(currentAttendees, snapshot) {
 
     user.created_at = user.created_at && user.created_at.toDate ? user.created_at.toDate() : null;
     user.updated_at = user.updated_at && user.updated_at.toDate ? user.updated_at.toDate() : null;
-    user.checkedin_at = user.checkedin_at && user.checkedin_at.toDate ? user.checkedin_at.toDate() : null;
-
+    user.checkedin_at = user.checkedin_at && user.checkedin_at.toDate ? user.checkedin_at.toDate() : null;   
     switch (change.type) {
       case 'added':
         change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
