@@ -8,7 +8,9 @@ import Table from '../../antdComponents/Table';
 const { confirm } = Modal;
 
 const CMS = ( props ) => {
-  const { title, titleTooltip, back, addUrl, columns, key, pagination, actions, editPath, API, eventId} = props;
+  const {  API, eventId, title, titleTooltip, back, addUrl, columns, key, pagination, actions, editPath, 
+    search, setColumnsData, draggable
+  } = props;
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [ list, setList ] = useState([]);
   const [ loading, setLoading ] = useState(true);
@@ -77,6 +79,9 @@ const CMS = ( props ) => {
         actions={actions}
         editPath={editPath}
         remove={remove}
+        search={search}
+        setColumnsData={setColumnsData}
+        draggable={draggable}
       />
     </div>
   )

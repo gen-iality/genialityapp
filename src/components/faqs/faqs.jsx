@@ -1,11 +1,16 @@
+import { useState } from 'react';
 import { FaqsApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
+import { getColumnSearchProps } from '../speakers/getColumnSearch';
 
 const Faqs = (props) => {
+  let [columnsData, setColumnsData] = useState({});
+
   const columns = [
     {
       title: 'Título',
       dataIndex: 'title',
+      ...getColumnSearchProps('title', columnsData)
     },
     {
       title: 'Contenido',
@@ -14,7 +19,8 @@ const Faqs = (props) => {
         return (
           <div dangerouslySetInnerHTML={{ __html: item.content }} />
         )
-      }
+      },
+      ...getColumnSearchProps('content', columnsData)
     }
   ];
 
@@ -33,6 +39,8 @@ const Faqs = (props) => {
       editPath={`${props.matchUrl}/faq`}
       pagination={false}
       actions
+      search
+      setColumnsData={setColumnsData}
     />
   );
 }

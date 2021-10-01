@@ -1,15 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import arrayMove from 'array-move';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import { Table as TableAnt, Row, Col, Tooltip, Button } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, DragOutlined } from '@ant-design/icons';
+import { sortableHandle } from 'react-sortable-hoc';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const Table = ( props ) => {
-  const { header, list, key, loading, pagination, draggable, components, actions, editPath, remove } = props;
+  const { header, list, key, loading, pagination, draggable, actions, editPath, remove, search, setColumnsData
+  } = props;
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const [components, setComponents] = useState('');
   
   const options = {
     title: 'Opciones',
@@ -54,26 +59,55 @@ const Table = ( props ) => {
   if(actions) {
     header.push(options);
   }
-  /* const componentFunctions = {
-    body: {
-      wrapper: DraggableContainer,
-      row: DraggableBodyRow,
-    },
-  };
-  const components = draggable ? componentFunctions : '';
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  console.log(m()); */
+
+  useEffect(() => {
+    if(search) {
+      setColumnsData({
+        data: props,
+        searchedColumn: searchedColumn,
+        handleSearch,
+        handleReset,
+        searchText: searchText,
+      });
+    }
+
+    if(draggable) {
+      header.unshift({
+        title: '',
+        dataIndex: 'move',
+        width: '50px',
+        render(val, item) {
+           const DragHandle = sortableHandle(() => <DragOutlined id={`drag${item.index}`} style={{ cursor: 'grab', color: '#999', 'visibility': 'visible' }} />);
+           return <DragHandle />;
+        }
+     },
+     {
+        title: 'Orden',
+        dataIndex: 'index',
+        render(val, item) {
+           return <div>{val + 1}</div>;
+        },
+     });
+
+      const componentFunctions = {
+        body: {
+          wrapper: DraggableContainer,
+          row: DraggableBodyRow,
+        },
+      };
+      setComponents(draggable ? componentFunctions : '');
+    }
+  }, [])
 
   //FN para búsqueda en la tabla 2/3
-  function handleSearch(selectedKeys, confirm, dataIndex) {
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   }
 
   //FN para búsqueda en la tabla 3/3
-  function handleReset(clearFilters) {
+  const handleReset = (clearFilters) => {
       clearFilters();
       setSearchText('');
   }
@@ -93,7 +127,7 @@ const Table = ( props ) => {
     }
   }
 
-  /* //FN para el draggable 2/3
+  //FN para el draggable 2/3
   const DraggableContainer = (props) => (
     <SortableContainer useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props} />
   );
@@ -102,8 +136,8 @@ const Table = ( props ) => {
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
     const index = sortAndIndexSpeakers()?.findIndex((x) => x.index === restProps['data-row-key']);
     return <SortableItem index={index} {...restProps} />;
-  }; */
-  
+  };
+
   return (
     <TableAnt 
       columns={header}
