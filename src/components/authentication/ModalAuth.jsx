@@ -29,7 +29,7 @@ const ModalAuth = (props) => {
   const [loading, setLoading] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
   const [form1] = Form.useForm();
-  let { handleChangeTypeModal, typeModal, handleChangeTabModal } = useContext(HelperContext);
+  let { handleChangeTypeModal, typeModal, handleChangeTabModal,tabLogin } = useContext(HelperContext);
   const intl = useIntl();
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const ModalAuth = (props) => {
   }, []);
   useEffect(() => {
     form1.resetFields();
-  }, [typeModal]);
+  }, [typeModal,tabLogin]);
   const callback = (key) => {
     form1.resetFields();
     handleChangeTabModal(key);
@@ -123,7 +123,7 @@ const ModalAuth = (props) => {
         zIndex={1000}
         closable={false}
         visible={true}>
-        <Tabs onChange={callback} centered size='large'>
+        <Tabs onChange={callback} centered size='large' defaultActiveKey={tabLogin} >
           <TabPane tab={intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })} key='1'>
             <Form
               form={form1}
