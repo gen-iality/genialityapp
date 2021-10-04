@@ -24,7 +24,7 @@ class Styles extends Component {
       //Se realizan estas constantes para optimizar mas el codigo,de esta manera se mapea en el markup para utilizarlo posteriormente
       colorDrawer: [
         {
-          title: 'Color de fondo para el evento',
+          title: `Color de fondo para ${this.props.org?._id ? 'la organización' : 'el evento'}`,
           description: 'Si escoges luego una imagen de fondo, esa imagen reemplazara este color.',
           fieldColorName: 'containerBgColor',
           editIsVisible: false,
@@ -92,7 +92,7 @@ class Styles extends Component {
       {
         title: 'Elige una imagen para el banner superior en desktop: (Tamaño recomendado 1920x540)',
         description:
-          'Por defecto en el baner superior se muestra la imagen prinicpal del evento aqui la puedes cambiar',
+        `Por defecto en el baner superior se muestra la imagen prinicpal ${this.props.org?._id ? 'de la organización' : 'del evento'} aqui la puedes cambiar`,
         imageFieldName: 'banner_image',
         button: 'Eliminar banner superior',
         width: 1920,
@@ -129,7 +129,7 @@ class Styles extends Component {
         height: 180,
       },
       {
-        title: 'Elige una imagen para el footer del evento: (Tamaño recomendado 1920x280)',
+        title: `Elige una imagen para el footer ${this.props.org?._id ? 'de la organización' : 'del evento'}: (Tamaño recomendado 1920x280)`,
         imageFieldName: 'banner_footer',
         button: 'Eliminar pie de pagina',
         width: 1920,
@@ -137,7 +137,7 @@ class Styles extends Component {
       },
       {
         title: 'Elige una imagen para el footer del email: (Tamaño recomendado 600x220)',
-        description: 'Por defecto se reduce la imagen automaticamente del footer del evento',
+        description: `Por defecto se reduce la imagen automaticamente del footer ${this.props.org?._id ? 'de la organización' : 'del evento'}`,
         imageFieldName: 'banner_footer_email',
         button: 'Eliminar pie de pagina de email',
         width: 600,

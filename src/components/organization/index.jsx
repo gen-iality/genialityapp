@@ -31,7 +31,6 @@ function Organization(props) {
          ) : (
             <section className='columns'>
                <aside className='column menu event-aside is-2 has-text-weight-bold'>
-                  <p className='subtitle'>Organizacion:</p>
                   <div className={`is-hidden-mobile`}>
                      <p className='menu-label has-text-centered-mobile'>
                         <NavLink

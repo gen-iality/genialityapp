@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { OrganizationApi } from '../../helpers/request';
+import { parseData2Excel } from '../../helpers/utils';
 import Loading from '../loaders/loading';
-import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
+import { FormattedDate, FormattedTime } from 'react-intl';
 import SearchComponent from '../shared/searchTable';
 import Pagination from '../shared/pagination';
 import ErrorServe from '../modal/serverError';
 import ImportUsers from '../import-users/importUser';
 import UserOrg from '../modal/userOrg';
+/** export Excel */
 import XLSX from 'xlsx';
 import { useHistory } from 'react-router-dom';
 import { Table, Typography, Button, Select, Row } from 'antd';
-import { UserAddOutlined, DownloadOutlined, QrcodeOutlined, IdcardOutlined, ScanOutlined } from '@ant-design/icons';
+import { UserAddOutlined, QrcodeOutlined, IdcardOutlined, ScanOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
 import { Background } from 'react-parallax';
+import ExcelExportColumns from './tableColums/excelExportColumns';
 
 const { Title, Text } = Typography;
 
@@ -76,10 +79,7 @@ function OrgMembers(props) {
                   <Button style={{ marginLeft: 20 }} icon={<UserAddOutlined />}>
                      Agregar Usuario
                   </Button>
-
-                  <Button style={{ marginLeft: 20 }} icon={<DownloadOutlined />}>
-                     Exportar
-                  </Button>
+                  {membersData.length > 0 && <ExcelExportColumns membersData={membersData} />}
 
                   <Select
                      defaultValue={`options`}
