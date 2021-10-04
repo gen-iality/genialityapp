@@ -5,25 +5,46 @@ import { EventsApi, eventTicketsApi } from '../helpers/request';
 
 export const CurrentEventContext = React.createContext();
 
-//status: 'LOADING' | 'LOADED' | 'error'
-let initialContextState = { status: 'LOADING', value: null };
-
 export function CurrentEventProvider({ children }) {
+  let { event_id, event_name,event } = useParams();
+  let eventNameFormated = null;
+  let initialContextState = { status: 'LOADING', value: null, nameEvent: '' };
+
+  if (event_name) {
+    eventNameFormated = event_name.replaceAll('---', 'more');
+    eventNameFormated = eventNameFormated.replaceAll('-', '%20');
+    eventNameFormated = eventNameFormated.replaceAll('more', '"-"');
+    console.log('formateado', eventNameFormated);
+    initialContextState = { status: 'LOADING', value: null, nameEvent: event_name };
+  }
+
   const [eventContext, setEventContext] = useState(initialContextState);
-  let { event_id } = useParams();
-  let { event } = useParams();
 
   useEffect(() => {
-    if (!event_id && !event) return;
-    async function fetchEvent() {
-      let eventGlobal = await EventsApi.getOne(event_id || event);
-      //const ticketsEvent=await eventTicketsApi.getAll(event_id);
-      // eventGlobal={...eventGlobal,tickets:ticketsEvent}
+    async function fetchEvent(type) {
+      let eventGlobal;
+      let dataevent;
+      switch (type) {
+        case 'id':
+          console.log('idevent');
+          eventGlobal = await EventsApi.getOne(event_id || event);
+          dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event};
+          break;
 
-      setEventContext({ status: 'LOADED', value: eventGlobal });
+        case 'name':
+          eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated);
+          dataevent = { status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name };
+          break;
+      }
+      setEventContext(dataevent);
     }
-    fetchEvent();
-  }, [event_id,event]);
+
+    if (event_id || event) {
+      fetchEvent('id');
+    } else if (event_name) {
+      fetchEvent('name');
+    }
+  }, [event_id, event_name,event]);
 
   return <CurrentEventContext.Provider value={eventContext}>{children}</CurrentEventContext.Provider>;
 }

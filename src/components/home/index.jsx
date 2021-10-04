@@ -110,6 +110,15 @@ class Home extends Component {
       });
   }
 
+  FriendLyUrl(url) {
+    var encodedUrl = url.toString().toLowerCase();
+    encodedUrl = encodedUrl.split(/\&+/).join('-and-');
+    encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-');
+    encodedUrl = encodedUrl.split(/-+/).join('-');
+    encodedUrl = encodedUrl.trim('-');
+    return encodedUrl;
+  }
+
   render() {
     const { timeout, typeEvent, serverError, errorData, events, loading, hasMore } = this.state;
     return (

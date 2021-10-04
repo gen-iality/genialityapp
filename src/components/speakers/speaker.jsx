@@ -1,287 +1,345 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import EviusReactQuill from '../shared/eviusReactQuill';
-import { FaChevronLeft } from 'react-icons/fa';
-import EventContent from '../events/shared/content';
-import Loading from '../loaders/loading';
 import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
-import { imageBox } from '../../helpers/constants';
 import { CategoriesAgendaApi, SpeakersApi } from '../../helpers/request';
-import { FaWhmcs } from 'react-icons/fa';
 import Creatable from 'react-select';
-import { Button } from 'antd';
+import { Button, Typography, Row, Col, Form, Input, Image, Empty, Card, Switch, Modal, message, Tooltip } from 'antd';
+import { LeftOutlined, UserOutlined , SettingOutlined, DeleteOutlined, SaveOutlined, ExclamationCircleOutlined, PlusCircleOutlined, UpOutlined, EditOutlined } from '@ant-design/icons';
+import Header from '../../antdComponents/Header';
 
-class Speaker extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      isLoading: false,
-      name: '',
-      profession: '',
-      description: '',
-      description_activity: 'false',
-      image: '',
-      imageData: '',
-      networks: [],
-      order: '',
-      selectedCategories: [],
-      categories: [],
-      isloadingSelect: { types: true, categories: true },
-    };
-    this.descriptionActivity = this.descriptionActivity.bind(this);
+const { Title } = Typography;
+const { confirm } = Modal;
+
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
+};
+
+function Speaker (props) {
+  const {
+    eventID,
+    location: { state },
+    history,
+    matchUrl
+  } = props;
+  const newCategoryUrl = '/eventadmin/' + eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
+
+const [data, setData] = useState(
+  {
+    name :'',
+    description:'',
+    description_activity :false,
+    profession:'',
+    published :true,
+    image:'',
+    order: 0,
+    category_id:'',
+    index:0,
+    newItem: true
   }
+)
+const [showDescription_activity, setShowDescription_activity] = useState(false)
+const [redirect, setRedirect] = useState(false)
+const [errorImage, setErrorImage] = useState('')
+const [categories, setCategories] = useState([])
+const [selectedCategories, setSelectedCategories] = useState([])
+const [isloadingSelect, setIsloadingSelect] = useState({ types: true, categories: true })
 
-  async componentDidMount() {
-    const {
-      eventID,
-      location: { state },
-    } = this.props;
-    let categories = await CategoriesAgendaApi.byEvent(this.props.eventID);
+useEffect(() => {
+  dataTheLoaded()
+  
+}, [])
 
-    categories = handleSelect(categories);
-    if (state.edit) {
-      const info = await SpeakersApi.getOne(state.edit, eventID);
-      Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
+async function dataTheLoaded() {
+  let categoriesData = await CategoriesAgendaApi.byEvent(eventID);
 
-      this.setState({ selectedCategories: fieldsSelect(info.category_id, categories) });
+  //Filtrado de categorias
+  categoriesData = handleSelect(categoriesData);
+
+  if (state.edit) {
+    const info = await SpeakersApi.getOne(state.edit, eventID);
+
+    info ? setData({...info, newItem: false}) : ''
+
+    setShowDescription_activity(info?.description_activity)
+    const field = fieldsSelect(info.category_id, categoriesData);
+
+    setSelectedCategories(field)
+
+    if(info.description === '<p><br></p>')
+    {
+      setDescription('')
     }
-    const isloadingSelect = { types: false, categories: false };
-    this.setState({ loading: false, isloadingSelect, categories });
   }
+  const isloadingSelectChanged = { types: '', categories: '' };
 
-  handleChange = (e) => {
-    const { name } = e.target;
-    const { value } = e.target;
-    this.setState({ [name]: value });
+  setCategories(categoriesData)
+  setIsloadingSelect(isloadingSelectChanged)
+}
+
+ function handleChange (e) {
+   const { name } = e.target;
+   const { value } = e.target;
+   setData({
+    ...data,
+    [name] : value
+  })
   };
-  handleImage = async (files) => {
+
+  async function handleImage(files) {
     try {
       const file = files[0];
       if (file) {
-        const image = await uploadImage(file);
-        this.setState({ image });
+        const imageData = await uploadImage(file);
+        setData({
+          ...data,
+          image: imageData
+        })
       } else {
-        this.setState({ errImg: 'Only images files allowed. Please try again :)' });
+        setErrorImage('Solo se permiten archivos de imágenes. Inténtalo de nuevo :)')
       }
     } catch (e) {
       sweetAlert.showError(handleRequestError(e));
     }
   };
 
-  chgTxt = (content) => {
-    this.setState({ description: content });
+  function chgTxt (content) {
+    let description = content;
+    if(description === '<p><br></p>'){
+      description = '';
+    }
+    setData({
+      ...data,
+      description
+    })
   };
 
-  submit = async () => {
+  async function submit (values){
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras guarda la información..</>,
+    });
+    const { name, profession, description, image, order, published } = values;
+
+    const body = {
+      name,
+      image,
+      description_activity: showDescription_activity,
+      description,
+      profession,
+      published,
+      category_id: selectedCategories?.value,
+      order: parseInt(order),
+      index: parseInt(order)
+    };
     try {
-      sweetAlert.showLoading('Espera (:', 'Guardando...');
-      const {
-        eventID,
-        location: { state },
-      } = this.props;
-      this.setState({ isLoading: true });
-      const { name, profession, description_activity, description, image, order } = this.state;
-
-      const info = {
-        name,
-        image,
-        description_activity,
-        description,
-        profession,
-        //category_id: selectedCategories.length ? selectedCategories.value : null,
-        order: parseInt(order),
-      };
-
-      if (state.edit) await SpeakersApi.editOne(info, state.edit, eventID);
-      else await SpeakersApi.create(eventID, info);
-      sweetAlert.hideLoading();
-      sweetAlert.showSuccess('Información guardada');
-      this.props.history.push(`/event/${eventID}/speakers`)
+      if (state.edit) await SpeakersApi.editOne(body, state.edit, eventID);
+      else await SpeakersApi.create(eventID, body);
+      message.destroy(loading.key);
+      message.open({
+        type: 'success',
+        content: <> Conferencista guardado correctamente!</>,
+      });
+      history.push(`/eventadmin/${eventID}/speakers`)
     } catch (e) {
-      sweetAlert.showError(handleRequestError(e));
+      message.destroy(loading.key);
+      message.open({
+        type: 'error',
+        content: handleRequestError(e).message,
+      });
     }
   };
 
-  remove = () => {
-    const {
-      eventID,
-      location: { state },
-    } = this.props;
+  function remove() {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
     if (state.edit) {
-      sweetAlert.twoButton(`Está seguro de borrar a ${this.state.name}`, 'warning', true, 'Borrar', async (result) => {
-        try {
-          if (result.value) {
-            sweetAlert.showLoading('Espera (:', 'Borrando...');
-            await SpeakersApi.deleteOne(state.edit, eventID);
-            this.setState({ redirect: true });
-            sweetAlert.hideLoading();
+      confirm({
+        title: `¿Está seguro de eliminar al conferencista?`,
+        icon: <ExclamationCircleOutlined />,
+        content: 'Una vez eliminado, no lo podrá recuperar',
+        okText: 'Borrar',
+        okType: 'danger',
+        cancelText: 'Cancelar',
+        onOk() {
+          const onHandlerRemoveSpeaker = async () => {
+            try {
+              await SpeakersApi.deleteOne(state.edit, eventID);
+              setRedirect(true)
+              message.destroy(loading.key);
+              message.open({
+                type: 'success',
+                content: <> Se eliminó al conferencista correctamente!</>,
+              });
+            } catch (e) {
+              message.destroy(loading.key);
+              message.open({
+                type: 'error',
+                content: handleRequestError(e).message,
+              });
+            }
           }
-        } catch (e) {
-          sweetAlert.showError(handleRequestError(e));
+          onHandlerRemoveSpeaker();
         }
       });
-    } else this.setState({ redirect: true });
+    } else setRedirect(true);
   };
 
-  descriptionActivity(e) {
-    this.setState({ description_activity: e.target.value });
-  }
-
   //FN para guardar en el estado la opcion seleccionada
-  selectCategory = (selectedCategories) => {
-    //
-    this.setState({ selectedCategories });
+  function selectCategory(selectedCategories) {
+    setSelectedCategories(selectedCategories)
   };
 
   //FN para ir a una ruta específica (ruedas en los select)
-  goSection = (path, state) => {
-    this.props.history.push(path, state);
+  function goSection (path, state) {
+    history.push(path, state);
   };
 
-  render() {
-    const { matchUrl } = this.props;
-    const newCategoryUrl = '/event/' + this.props.eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
-    const {
-      redirect,
-      loading,
-      name,
-      profession,
-      description,
-      image,
-      order,
-      categories,
-      selectedCategories,
-      isloadingSelect,
-    } = this.state;
-    if (!this.props.location.state || redirect) return <Redirect to={matchUrl} />;
+    if (!props.location.state || redirect) return <Redirect to={matchUrl} />;
     return (
-      <EventContent
-        title={
-          <span>
-            <Link to={matchUrl}>
-              <FaChevronLeft />
-            </Link>
-            Conferencista
-          </span>
-        }>
-        {loading ? (
-          <Loading />
-        ) : (
-          <div className='columns'>
-            <div className='column is-8'>
-              <div className='field'>
-                <label className='label'>Nombre</label>
-                <div className='control'>
-                  <input
-                    className='input'
-                    type='text'
-                    name={'name'}
-                    value={name}
-                    onChange={this.handleChange}
-                    placeholder='Nombre conferencista'
-                  />
-                </div>
-              </div>
-              <div className='field'>
-                <label className='label'>Profesión</label>
-                <div className='control'>
-                  <input
-                    className='input'
-                    type='text'
-                    name={'profession'}
-                    value={profession}
-                    onChange={this.handleChange}
-                    placeholder='Profesión'
-                  />
-                </div>
-              </div>
-              <div className='field'>
-                <label className='label'>Descripción de conferencias</label>
-                <div className='select'>
-                  <select
-                    defaultValue={this.state.description_activity}
-                    onChange={(e) => {
-                      this.descriptionActivity(e);
-                    }}>
-                    <option value='true'>Si</option>
-                    <option value='false'>No</option>
-                  </select>
-                </div>
-              </div>
-              <div className='field'>
-                <label className='label'>Orden de conferencistas</label>
-                <input className='input' type='number' name={'order'} value={order} onChange={this.handleChange} />
-              </div>
-              <div className='field'>
-                <label className='label'>Descripción (opcional)</label>
-                <div className='control'>
-                  <EviusReactQuill name='description' data={description} handleChange={this.chgTxt} />
-                </div>
-              </div>
-            </div>
-            <div className='column is-4 general'>
-              <div className='field is-grouped'>
-                <button className='button is-text' onClick={this.remove}>
-                  x Eliminar conferencista
-                </button>
-                <button onClick={this.submit} className={`button is-primary`}>
-                  Guardar
-                </button>
-              </div>
-              <div className='section-gray'>
-                <label className='label has-text-grey-light'>Imagen</label>
-                <div className='columns'>
-                  <div className='column'>
-                    {image ? (
-                      <img src={image} alt={`speaker_${name}`} className='author-image' />
-                    ) : (
-                      <div dangerouslySetInnerHTML={{ __html: imageBox }} />
+      <Form
+        onFinish={() => submit(data)}
+        {...formLayout}
+      >
+        <Header 
+          title={'Conferencistas'}
+          back
+          save
+          form
+          edit={state.edit}
+          remove={remove}
+          extra={(
+            <Form.Item label={'Visible'} labelCol={{span: 13}}>
+              <Switch 
+                checkedChildren="Sí"
+                unCheckedChildren="No" 
+                name={'published'}
+                checked={data.published}
+                onChange={(checked) =>
+                  setData({
+                    ...data,
+                    published: checked
+                  })
+                }
+              />
+            </Form.Item>
+          )}
+        />
+
+        <Row justify='center' wrap gutter={12}>
+          <Col span={12}>
+            <Form.Item label={'Nombre'} >
+              <Input
+                value={data.name}
+                placeholder='Nombre del conferencista'
+                name={'name'}
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Item>
+            
+            <Form.Item label={'Ocupación'} >
+              <Input
+                value={data.profession}
+                placeholder='Ocupación del conferencista'
+                name={'profession'}
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Item>
+            <Form.Item label={'Carga de imagen'}>
+              <Card style={{'textAlign': 'center'}}>
+                <Form.Item noStyle>
+                  <p>Dimensiones: 1080px x 1080px</p>
+                  <Dropzone
+                    style={{ fontSize: '21px', fontWeight: 'bold' }}
+                    onDrop={handleImage}
+                    accept='image/*'
+                    className='zone'>
+                    <Button type='dashed' danger>
+                      {data.image ? 'Cambiar imagen' : 'Subir imagen'}
+                    </Button>
+                  </Dropzone>
+                  <div style={{'marginTop': '10px'}}>
+                    {
+                      data.image ? (
+                      <Image src={data.image} height={250} width={300} />
+                      ) : (
+                        <Empty 
+                          image={<UserOutlined style={{'fontSize': '100px'}} />}
+                          description="No hay Imagen"
+                        />
                     )}
                   </div>
-                  <div className='column is-9'>
-                    <div className='has-text-left'>
-                      <p>Dimensiones: 1080px x 1080px</p>
-                      <Dropzone
-                        style={{ fontSize: '21px', fontWeight: 'bold' }}
-                        onDrop={this.handleImage}
-                        accept='image/*'
-                        className='zone'>
-                        <Button type='dashed' danger>
-                          {image ? 'Cambiar imagen' : 'Subir imagen'}
-                        </Button>
-                      </Dropzone>
-                    </div>
-                  </div>
-                </div>
-                <label className='label has-text-grey-light'>Categoria</label>
-                <div className='columns'>
-                  <div className='column is-10'>
-                    <Creatable
-                      isClearable
-                      styles={catStyles}
-                      onChange={this.selectCategory}
-                      isDisabled={isloadingSelect.categories}
-                      isLoading={isloadingSelect.categories}
-                      options={categories}
-                      placeholder={'Sin categoría....'}
-                      value={selectedCategories}
-                    />
-                  </div>
-                  <div className='column is-2'>
-                    <button onClick={() => this.goSection(`${newCategoryUrl}/agenda/categorias`)} className='button'>
-                      <FaWhmcs />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </EventContent>
+                </Form.Item>
+              </Card>
+            </Form.Item>
+            
+            <Form.Item label={'Descripción'} >
+              <>
+                {
+                  !showDescription_activity ? (
+                    <Button id='btnDescription' type="link" onClick={()=>setShowDescription_activity(true)} style={{'color': 'blue'}}>
+                      { !showDescription_activity && !data.newItem ? (
+                        <div> <EditOutlined style={{'marginRight': '5px'}} /> Editar/mostrar descripción </div>
+                      ) : (
+                        <div> <PlusCircleOutlined style={{'marginRight': '5px'}} /> Agregar/mostrar descripción </div>
+                        
+                      )}
+                    </Button>
+                  ) : (<Tooltip placement="top" text={'Si oculta la infomación da a entender que no desea mostrar el contenido de la misma'}>
+                    <Button type="link" onClick={()=>setShowDescription_activity(false)} style={{'color': 'blue'}}>
+                    <div><UpOutlined style={{'marginRight': '5px'}}/>
+                      Ocultar descripción </div>
+                    </Button>
+                    </Tooltip>
+                  )
+                }
+              </>
+              {
+                showDescription_activity && (
+                  <EviusReactQuill 
+                    name={'description'} 
+                    data={data.description} 
+                    handleChange={chgTxt}
+                    style={{'marginTop': '5px'}}
+                  />
+                )
+              }
+            </Form.Item>
+            
+            <Form.Item label='Categoría'>
+              <Row wrap gutter={16}>
+                <Col span={22}>
+                  <Creatable
+                    isClearable
+                    styles={catStyles}
+                    onChange={selectCategory}
+                    isDisabled={isloadingSelect.categories}
+                    isLoading={isloadingSelect.categories}
+                    options={categories}
+                    placeholder={'Sin categoría....'}
+                    value={selectedCategories}
+                  />
+                </Col>
+                <Col span={2}>
+                  <Form.Item>
+                    <Button onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)} icon={<SettingOutlined />}>
+                    </Button> 
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form.Item>
+            
+          </Col>
+        </Row>
+      </Form>
     );
-  }
+  
 }
 
 //Estilos para el tipo

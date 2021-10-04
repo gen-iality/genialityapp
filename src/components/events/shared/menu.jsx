@@ -216,7 +216,7 @@ class MenuConfig extends Component {
               </NavLink>
             </Menu.Item>
 
-            {permissions.data.ids.includes(rolPermissions.admin_staff._id) && false && (
+            {permissions.data.ids?.includes(rolPermissions.admin_staff._id) && false && (
               <Menu.Item key='18'>
                   Organizadores
                 <NavLink onClick={this.handleClick} to={`${url}/staff`}>
@@ -259,7 +259,7 @@ class MenuConfig extends Component {
               </NavLink>
             </Menu.Item>
 
-            {permissions.data.ids.includes(rolPermissions.admin_badge._id) && (
+            {permissions.data.ids?.includes(rolPermissions.admin_badge._id) && (
               <Menu.Item key='22'>
                   Configurarr Escarapela
                 <NavLink onClick={this.handleClick} to={`${url}/badge`}>
@@ -269,7 +269,7 @@ class MenuConfig extends Component {
           </SubMenu>
 
           {/* COnfiguración de invitados */}
-          {permissions.data.ids.includes(rolPermissions.admin_invitations._id) && false && (
+          {permissions.data.ids?.includes(rolPermissions.admin_invitations._id) && false && (
             <SubMenu
               key='sub4'
               title={
@@ -296,7 +296,7 @@ class MenuConfig extends Component {
           )}
 
           {/* Seccion de envio de comunicaciones */}
-          {(permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true) && (
+          {(permissions.data.ids?.includes(rolPermissions.admin_invitations._id) || true) && (
             <SubMenu
               key='sub5'
               title={

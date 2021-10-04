@@ -3,15 +3,13 @@ import { useEffect } from 'react';
 import { getCurrentUser } from '../helpers/request';
 
 export const CurrentUserContext = React.createContext();
-
 let initialContextState = { status: 'LOADING', value: null };
-
 export function CurrentUserProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(initialContextState);
 
   useEffect(async () => {
     let dataUser = await getCurrentUser();
-    setCurrentUser({ status: 'LOADING', value: dataUser });
+    setCurrentUser({ status: 'LOADED', value: dataUser });
   }, []);
 
   return <CurrentUserContext.Provider value={currentUser}>{children}</CurrentUserContext.Provider>;

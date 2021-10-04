@@ -160,9 +160,7 @@ class UserModal extends Component {
       <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible={true}>
         <div
           // className='asistente-list'
-          style={{
-            height: '500px',
-            overflowY: 'scroll',
+          style={{            
             paddingLeft: '0px',
             paddingRight: '0px',
             paddingTop: '0px',
@@ -170,10 +168,10 @@ class UserModal extends Component {
             marginTop:'30px'
           }}>
           <FormComponent     
-            conditionals={this.props.cEvent?.value?.fields_conditions || []}
-            initialValues={this.props.value}
-            eventUser={user|| {}}
-            extraFieldsOriginal={this.props.extraFields}         
+            conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
+            initialOtherValue={this.props.value}
+            eventUserOther={user|| {}}
+            fields={this.props.extraFields}         
             organization={true}
             options={this.state.options}
             callback={()=>this.props.handleModal()}

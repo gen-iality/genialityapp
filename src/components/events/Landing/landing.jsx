@@ -5,7 +5,7 @@ import { UseCurrentUser } from '../../../Context/userContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { HelperContext } from '../../../Context/HelperContext';
 /** ant design */
-import { Layout, Spin, notification, Button, Drawer, Modal, Result, Typography } from 'antd';
+import { Layout, Spin, notification, Button } from 'antd';
 import 'react-toastify/dist/ReactToastify.css';
 /** Components */
 import TopBanner from './TopBanner';
@@ -34,6 +34,9 @@ import { EnableFacebookPixelByEVENT } from './helpers/facebookPixelHelper';
 import { Ripple } from 'react-preloaders';
 import ModalRegister from './modalRegister';
 import { toast } from 'react-toastify';
+import ModalAuth from '../../authentication/ModalAuth';
+import ModalLoginHelpers from '../../authentication/ModalLoginHelpers';
+import ModalPermission from '../../authentication/ModalPermission';
 
 const iniitalstatetabs = {
   attendees: false,
@@ -67,7 +70,7 @@ const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
-  let { isNotification, ChangeActiveNotification, eventPrivate } = useContext(HelperContext);
+  let { isNotification, ChangeActiveNotification, typeModal } = useContext(HelperContext);
   const [register, setRegister] = useState(null);
 
   const ButtonRender = (status, activity) => {
@@ -99,7 +102,7 @@ const Landing = (props) => {
         ChangeActiveNotification(false, 'none', 'none');
       },
       btn: ButtonRender(type, activity),
-      duration:type=='ended' || type=='open'?7:3
+      duration: type == 'ended' || type == 'open' ? 7 : 3,
     });
   };
 
@@ -147,6 +150,10 @@ const Landing = (props) => {
 
   return (
     <>
+      <ModalAuth />
+      <ModalLoginHelpers />
+      <ModalPermission />
+      {/*update: modal de actualizar || register: modal de registro */}
       {register !== null && <ModalRegister register={register} setRegister={setRegister} event={cEventContext.value} />}
       <Layout>
         <AppointmentModal
