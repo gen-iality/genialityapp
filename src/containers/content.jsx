@@ -13,6 +13,10 @@ import { SurveysProvider } from '../Context/surveysContext';
 
 import { HelperContextProvider } from '../Context/HelperContext';
 import EventOrganization from '../components/eventOrganization';
+import { NewEventProvider } from '../Context/newEventContext';
+
+
+
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -55,7 +59,6 @@ const ContentContainer = () => {
           </CurrentEventProvider>
         </Route>
 
-
         <Route path='/event/:event_name'>
           <CurrentEventProvider>
             <CurrentUserEventProvider>
@@ -69,8 +72,6 @@ const ContentContainer = () => {
             </CurrentUserEventProvider>
           </CurrentEventProvider>
         </Route>
-
-
 
         <Route path='/social/:event_id' component={socialZone} />
         {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
@@ -86,7 +87,11 @@ const ContentContainer = () => {
         <PrivateRoute path='/my_events' component={Events} />
         <PrivateRoute path='/orgadmin/:event' component={Event} />
         <PrivateRoute path='/eventadmin/:event' component={Event} />
-        <PrivateRoute path='/create-event' component={NewEvent} />
+        <PrivateRoute path='/create-event'>
+          <NewEventProvider>
+            <NewEvent />
+          </NewEventProvider>
+        </PrivateRoute>
         <PrivateRoute path='/profile/:id' component={MyProfile} />
         <Route exact path='/organization/:id/events' component={EventOrganization} />
         <PrivateRoute path='/admin/organization/:id' component={Organization} />

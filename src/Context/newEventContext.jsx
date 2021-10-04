@@ -1,7 +1,117 @@
-import React, { createContext } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import moment from 'moment';
 
 export const cNewEventContext = createContext();
 
-export const newEventProvider = ({ children }) => {
-  return <cNewEventContext.Provider value={{}}>{children}</cNewEventContext.Provider>;
+export const NewEventProvider = ({ children }) => {
+  const [addDescription, setAddDescription] = useState(false);
+  const [typeTransmission, setTypeTransmission] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(new Date());
+  const fechaActual = new Date();
+  const fechaInicialFin = new Date(new Date().setHours(fechaActual.getHours() + 1));
+  const [selectedHours, setSelectedHours] = useState({ from: fechaActual, at: fechaInicialFin });
+  const [dateEvent, setDateEvent] = useState();
+  const [selectedDateEvent, setSelectedDateEvent] = useState();
+  const [valueInputs, setValueInputs] = useState();
+  const [errorInputs, setErrorInputs]=useState([]);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+  const visibilityDescription=(value)=>{
+    setAddDescription(value);
+  }
+
+  const setError=({name,value},list)=>{
+      if(!list){
+        setErrorInputs([...errorInputs,{name:name,value:value}]);
+      }else{
+        setErrorInputs([...list,{[name]:value}]); 
+      }
+    
+  }
+  const changeSelectDay=(day)=>{
+    setSelectedDay(day);
+  }
+  const changeSelectHours=(hour)=>{
+    setSelectedHours(hour);
+  }
+
+  const changetypeTransmision=(type)=>{
+    setTypeTransmission(type);
+  }
+  const handleOk = () => {
+    setIsModalVisible(false);
+    setSelectedDateEvent({
+      from: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.from).format('HH:mm'),
+      at: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.at).format('HH:mm'),
+    });
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleDayClick = (day) => {
+    setSelectedDay(day);
+  };
+  const handleInput=( event,name)=>{      
+    setValueInputs({[name]:event.target.value})
+    if(name=="name"){
+        if(event.target.value.length>=4){
+            let errorsPending=errorInputs.filter((err)=>!err[name]);
+            console.log("ERRPENDING==>",errorsPending)
+            !errorInputs.includes({name:'name',value:false}) && setError({name:'name',value:false,errorsPending})
+        }
+    }
+  }
+
+  useEffect(()=>{
+    setSelectedDateEvent({
+        from: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.from).format('HH:mm'),
+        at: moment(selectedDay).format('YYYY-MM-DD') + ' ' + moment(selectedHours.at).format('HH:mm'),
+      });
+  },[])
+ 
+  useEffect(() => {
+    if (selectedDateEvent) {
+      setDateEvent(selectedDateEvent.from + '     -     ' + selectedDateEvent.at);
+    }
+  }, [selectedDateEvent]);
+  return (
+    <cNewEventContext.Provider
+      value={{
+        addDescription,
+        typeTransmission,
+        isModalVisible,
+        selectedDay,
+        selectedHours,
+        dateEvent,
+        selectedDateEvent,
+        showModal,
+        handleOk,
+        handleCancel,
+        handleDayClick,
+        visibilityDescription,
+        changetypeTransmision,
+        changeSelectHours,
+        changeSelectDay,
+        handleInput,
+        valueInputs,
+        setError,
+        errorInputs
+      }}>
+      {children}
+    </cNewEventContext.Provider>
+  );
 };
+
+export const useContextNewEvent = () => {
+  let context = useContext(cNewEventContext);
+  if (!context) {
+    throw new Error('useContextNewEvent debe estar dentro del proveedor');
+  }
+  return context;
+};
+export default cNewEventContext;
