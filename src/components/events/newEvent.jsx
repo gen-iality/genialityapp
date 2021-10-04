@@ -8,6 +8,35 @@ import { Actions } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { BaseUrl } from '../../helpers/constants';
+import { Steps, Button, message, Card, Row } from 'antd';
+import { PictureOutlined, ScheduleOutlined, VideoCameraOutlined } from '@ant-design/icons';
+/*vistas de paso a paso */
+import Informacion from './newEvent/informacion';
+import Apariencia from './newEvent/apariencia';
+import Tranmitir from './newEvent/transmitir';
+/*vista de resultado de la creacion de un evento */
+import Resultado from './newEvent/resultado';
+
+const { Step } = Steps;
+
+/* Objeto que compone el paso a paso y su contenido */
+const steps = [
+  {
+    title: 'Información',
+    icon: <ScheduleOutlined />,
+    content: <Informacion />,
+  },
+  {
+    title: 'Apariencia',
+    icon: <PictureOutlined />,
+    content: <Apariencia />,
+  },
+  {
+    title: 'Transmisión',
+    icon: <VideoCameraOutlined />,
+    content: <Tranmitir />,
+  },
+];
 
 class NewEvent extends Component {
   constructor(props) {
@@ -35,11 +64,12 @@ class NewEvent extends Component {
         info: false,
         fields: false,
       },
+      current: 0,
     };
     this.saveEvent = this.saveEvent.bind(this);
   }
 
-  nextStep = (field, data, next) => {
+  /*  nextStep = (field, data, next) => {
     this.setState(
       (prevState) => {
         return { [field]: data, stepsValid: { ...prevState.stepsValid, [field]: true } };
@@ -48,7 +78,7 @@ class NewEvent extends Component {
         this.goTo(next);
       }
     );
-  };
+  }; */
 
   async saveEvent(fields) {
     const { info } = this.state;
@@ -92,7 +122,7 @@ class NewEvent extends Component {
         toolbarDefaultBg: '#FFFFFF',
         brandDark: '#FFFFFF',
         brandLight: '#FFFFFF',
-        textMenu: '#00000',
+        textMenu: '#FFFFFF',
         activeText: '#FFFFFF',
         bgButtonsEvent: '#FFFFFF',
         banner_image_email: null,
@@ -112,8 +142,7 @@ class NewEvent extends Component {
         data_loader_page: null,
       },
     };
-    
- try {
+    try {
       const result = await Actions.create('/api/events', data);
       this.setState({ loading: false });
       if (result._id) {
@@ -144,7 +173,7 @@ class NewEvent extends Component {
     }
   }
 
-  prevStep = (field, data, prev) => {
+  /* prevStep = (field, data, prev) => {
     this.setState({ [field]: data }, () => {
       this.goTo(prev);
     });
@@ -152,12 +181,60 @@ class NewEvent extends Component {
 
   goTo = (route) => {
     this.props.history.push(`${this.props.match.url}/${route}`);
+  }; */
+
+  /*Funciones para navegar en el paso a paso */
+  next = () => {
+    let current = this.state.current + 1;
+    this.setState({ current });
+  };
+
+  prev = () => {
+    let current = this.state.current - 1;
+    this.setState({ current });
   };
 
   render() {
+    const { current } = this.state;
     return (
-      <div className='event-main'>
-        <div className='steps'>
+      <Row justify='center' className='newEvent'>
+        {/* Items del paso a paso */}
+        <div className='itemStep'>
+          <Steps current={current} responsive>
+            {steps.map((item) => (
+              <Step key={item.title} title={item.title} icon={item.icon} />
+            ))}
+          </Steps>
+        </div>
+        <Card className='card-container' bodyStyle={{ borderTop: '25px solid #50D3C9', borderRadius: '5px' }}>
+          {/* Contenido de cada item del paso a paso */}
+          <Row justify='center' style={{ marginBottom: '8px' }}>
+            {steps[current].content}
+          </Row>
+          {/* Botones de navegacion dentro del paso a paso */}
+          <div className='button-container'>
+            {current > 0 && (
+              <Button className='button' size='large' onClick={() => this.prev()}>
+                Anterior
+              </Button>
+            )}
+            {current < steps.length - 1 && (
+              <Button className='button' type='primary' size='large' onClick={() => this.next()}>
+                Siguiente
+              </Button>
+            )}
+            {current === steps.length - 1 && (
+              <Button
+                className='button'
+                type='primary'
+                size='large'
+                onClick={() => message.success('Processing complete!')}>
+                Crear evento
+              </Button>
+            )}
+          </div>
+        </Card>
+        {/* <div className='steps'>
           <NavLink
             activeClassName={'is-active'}
             to={`${this.props.match.url}/main`}
@@ -204,8 +281,8 @@ class NewEvent extends Component {
               <InfoAsistentes nextStep={this.saveEvent} prevStep={this.prevStep} data={this.state.fields} />
             )}
           />
-        </Switch>
-      </div>
+        </Switch> */}
+      </Row>
     );
   }
 }
