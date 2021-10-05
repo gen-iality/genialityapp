@@ -9,7 +9,7 @@ const { confirm } = Modal;
 
 const CMS = ( props ) => {
   const {  API, eventId, title, titleTooltip, back, addUrl, columns, key, pagination, actions, editPath, 
-    search, setColumnsData, draggable
+    search, setColumnsData, draggable, downloadFile
   } = props;
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [ list, setList ] = useState([]);
@@ -82,6 +82,7 @@ const CMS = ( props ) => {
         search={search}
         setColumnsData={setColumnsData}
         draggable={draggable}
+        downloadFile={downloadFile}
       />
     </div>
   )
