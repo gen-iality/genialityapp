@@ -15,6 +15,22 @@ function Apariencia() {
     borderRadius: '5px',
     cursor: 'pointer',
   };
+  async function handleImage(files) {
+    try {
+      const file = files[0];
+      if (file) {
+        const imageData = await uploadImage(file);
+        setData({
+          ...data,
+          image: imageData
+        })
+      } else {
+        setErrorImage('Solo se permiten archivos de imágenes. Inténtalo de nuevo :)')
+      }
+    } catch (e) {
+      sweetAlert.showError(handleRequestError(e));
+    }
+  };
 
   return (
     <>

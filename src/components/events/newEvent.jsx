@@ -18,8 +18,6 @@ import Tranmitir from './newEvent/transmitir';
 import Resultado from './newEvent/resultado';
 import { cNewEventContext } from '../../Context/newEventContext';
 
-
-
 const { Step } = Steps;
 
 /* Objeto que compone el paso a paso y su contenido */
@@ -41,7 +39,7 @@ const steps = [
   },
 ];
 
-class NewEvent extends Component { 
+class NewEvent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -71,7 +69,6 @@ class NewEvent extends Component {
     };
     this.saveEvent = this.saveEvent.bind(this);
   }
- 
 
   /*  nextStep = (field, data, next) => {
     this.setState(
@@ -189,33 +186,27 @@ class NewEvent extends Component {
 
   /*Funciones para navegar en el paso a paso */
   next = () => {
-   switch (this.state.current){
-     case 0:
-       let err=0;
-      let eventNewContext = this.context;
-      console.log("VALUES1==>",eventNewContext)
-       console.log("VALUES==>",eventNewContext.valuesInput)
-       if(eventNewContext.validateField('name',true,4)){        
-        err++;
-       }
-       if(eventNewContext.validateField('description',eventNewContext.addDescription,9)){       
-        err++;
-       }
-       if(err==0){
-        this.nextPage()
-       }  
-       
-       break;
-   }
-   
+    switch (this.state.current) {
+      case 0:
+        let eventNewContext = this.context;
+        if (
+          eventNewContext.validateField([
+            { name: 'name', required: true, length: 4 },
+            { name: 'description', required: eventNewContext.addDescription, length: 9 },
+          ])
+        ) {
+          console.log('ERROR INPUTS==>', eventNewContext.errorInputs);
+        } else {
+          this.nextPage();
+        }
+        break;
+    }
   };
 
-  nextPage=()=>{
-    let current = this.state.current + 1;
-    console.log(this.state.current);
-    alert(this.state.current);
+  nextPage = () => {
+    let current = this.state.current + 1;  
     this.setState({ current });
-  }
+  };
 
   prev = () => {
     let current = this.state.current - 1;
@@ -224,8 +215,7 @@ class NewEvent extends Component {
 
   render() {
     const { current } = this.state;
-    let value = this.context;
-    console.log("VALUES CONTEXT==>",value )
+    let value = this.context;   
     return (
       <Row justify='center' className='newEvent'>
         {/* Items del paso a paso */}
@@ -316,5 +306,5 @@ class NewEvent extends Component {
     );
   }
 }
-NewEvent.contextType=cNewEventContext;
-export default withRouter(NewEvent );
+NewEvent.contextType = cNewEventContext;
+export default withRouter(NewEvent);

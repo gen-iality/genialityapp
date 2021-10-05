@@ -42,7 +42,7 @@ const Informacion = (props) => {
           <Text>
             Nombre del evento <span className='text-color'>*</span>
           </Text>
-          <Input  onChange={(e)=>handleInput(e,"name")} placeholder='Nombre del evento' />
+          <Input value={valueInputs['name'] || ''}  onChange={(e)=>handleInput(e,"name")} placeholder='Nombre del evento' />
           {containsError('name') &&  <Col> <small className='text-color'>Ingrese un nombre correcto para el evento</small></Col> }
         </div>
         <div>
@@ -57,7 +57,7 @@ const Informacion = (props) => {
                   </Tooltip>
                 </Link>
               </Text>
-              <Input.TextArea onChange={(e)=> handleInput(e,'description')}></Input.TextArea>
+              <Input.TextArea value={valueInputs['description'] || ''}  onChange={(e)=> handleInput(e,'description')}></Input.TextArea>
               {containsError('description') &&  <Col> <small className='text-color'>Ingrese una descripción válida</small></Col> }
             </div>
           ) : (
