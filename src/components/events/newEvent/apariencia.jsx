@@ -22,7 +22,7 @@ function Apariencia(props) {
     cursor: 'pointer',
   };
  //Cambio en el input de imagen
- const changeImg = (files,indexImage) => {  
+ const changeImg = async (files,indexImage) => {  
   const file = files[0];
   const url = '/api/files/upload',
     path = [],
@@ -38,7 +38,7 @@ function Apariencia(props) {
     });
 
     // eslint-disable-next-line no-unused-vars
-    Axios.all(uploaders).then((data) => {      
+    await Axios.all(uploaders).then((data) => {      
       saveImageEvent( path[0],indexImage);
        
       message.success("Imagen cargada correctamente...");
