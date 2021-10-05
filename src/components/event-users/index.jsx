@@ -257,9 +257,9 @@ class ListEventUser extends Component {
             dataIndex: item.name,
             key: item.name,
             render: (record, key) =>{            
-             return item.type == 'file' ? (
-                <a target='__blank' download={item?.name} href={key[item?.name]?.url}>
-                 {key[item?.name]?.name}
+             return item.type == 'file' ? (              
+                <a target='__blank' download={item?.name} href={key[item?.name]}>
+                 {this.obtenerName(key[item?.name])}
                 </a>
               ) : item.type == 'avatar' ? (
                 <Image width={40} height={40} src={key[item?.name]} />
@@ -413,6 +413,15 @@ class ListEventUser extends Component {
       this.setState({ timeout: true, errorData });
     }
   }
+
+  obtenerName=(fileUrl)=>{
+    if(typeof fileUrl =='string'){
+      let splitUrl=fileUrl?.split("/");
+      return splitUrl[splitUrl.length-1];
+    }else{
+      return null;
+    }
+    }
 
   exportFile = async (e) => {
     e.preventDefault();

@@ -66,6 +66,15 @@ function OutsideAlerter(props) {
 
   return <div ref={wrapperRef}>{props.children}</div>;
 }
+//OBTENER NOMBRE ARCHIVO
+function obtenerName(fileUrl){
+  if(typeof fileUrl =='string'){
+    let splitUrl=fileUrl?.split("/");
+    return splitUrl[splitUrl.length-1];
+  }else{
+    return null;
+  }
+  }
 
 /** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
  * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
@@ -192,24 +201,19 @@ const FormRegister = ({
       values.checkedin_at = '';
     }
 
-    //console.log("FILES==>",values)
+    
     //OBTENER RUTA ARCHIVOS FILE
     Object.values(extraFields).map((value) => {
       if (value.type == 'file') {
-        values[value.name] = {
-          url: values[value.name]?.fileList
+        values[value.name] = 
+          values[value.name]?.fileList
             ? values[value.name]?.fileList[0]?.response.trim()
-            : values[value.name]
-            ? values[value.name]?.url
-            : null,
-          name: values[value.name]?.fileList
-            ? values[value.name]?.fileList[0].name
-            : values[value.name]
-            ? values[value.name]?.name
-            : null,
-        };
+            : typeof values[value.name] =='string'
+            ? values[value.name]
+            : null;         
       }
-    });  
+    }); 
+    
     const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
 
     if (data.length == 0 || cEventUser.value) {
@@ -601,7 +605,7 @@ const FormRegister = ({
             multiple={false}
             listType='text'
             beforeUpload={beforeUpload}
-            defaultFileList={value.url ? [{ name: value?.name, url: value?.url }] : []}>
+            defaultFileList={value ? [{ name:typeof value =='string'? obtenerName(value):null, url: typeof value =='string'? value:null }] : []}>
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         );
