@@ -186,22 +186,27 @@ class NewEvent extends Component {
 
   /*Funciones para navegar en el paso a paso */
   next = () => {
+    let eventNewContext = this.context;
     switch (this.state.current) {
       case 0:
-        let eventNewContext = this.context;
         if (
           eventNewContext.validateField([
             { name: 'name', required: true, length: 4 },
             { name: 'description', required: eventNewContext.addDescription, length: 9 },
           ])
-        ) {
-          console.log('ERROR INPUTS==>', eventNewContext.errorInputs);
+        ) {          
+          message.error("Error en los campos..")
         } else {
           this.nextPage();
         }
         break;
       case 1:
+        eventNewContext.changeTransmision(false);
         this.nextPage();
+        console.log(eventNewContext.valueInputs);
+        break;
+      case 2:
+        
         break;
     }
   };
@@ -212,8 +217,14 @@ class NewEvent extends Component {
   };
 
   prev = () => {
-    let current = this.state.current - 1;
-    this.setState({ current });
+    let eventNewContext = this.context;
+    if(eventNewContext.optTransmitir && this.state.current==2){
+      eventNewContext.changeTransmision(false)
+    }else{
+      let current = this.state.current - 1;
+      this.setState({ current });
+    }
+   
   };
 
   render() {

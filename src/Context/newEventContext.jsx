@@ -16,6 +16,7 @@ export const NewEventProvider = ({ children }) => {
   const [valueInputs, setValueInputs] = useState({});
   const [errorInputs, setErrorInputs] = useState([]);
   const [imageEvents,setImageEvents]=useState({});
+  const [optTransmitir, setOptTransmitir] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -50,6 +51,9 @@ export const NewEventProvider = ({ children }) => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+  const changeTransmision=(value)=>{
+    setOptTransmitir(value);
+  }
 
   const handleDayClick = (day) => {
     setSelectedDay(day);
@@ -102,6 +106,9 @@ export const NewEventProvider = ({ children }) => {
     }
     return false;
   };
+ const onChangeCheck=(check)=>{    
+    setValueInputs({...valueInputs,["temaDark"]:check});   
+  }
 
   useEffect(() => {
     setSelectedDateEvent({
@@ -139,8 +146,10 @@ export const NewEventProvider = ({ children }) => {
         containsError,
         validateField,
         imageEvents,
-        saveImageEvent
-
+        saveImageEvent,
+        onChangeCheck,
+        optTransmitir,
+        changeTransmision
       }}>
       {children}
     </cNewEventContext.Provider>

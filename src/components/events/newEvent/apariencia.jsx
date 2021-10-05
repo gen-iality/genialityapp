@@ -7,7 +7,7 @@ import { useContextNewEvent } from '../../../Context/newEventContext';
 
 
 function Apariencia(props) {
-  const {saveImageEvent,imageEvents}= useContextNewEvent();
+  const {saveImageEvent,imageEvents,onChangeCheck,valueInputs}= useContextNewEvent();
 
   const ImagenStyle = {
     width: '100%',
@@ -70,7 +70,7 @@ function Apariencia(props) {
             <div>
               <p className='theme'>Tema</p>
               <span style={{ fontSize: '12px' }}>
-                Claro <Switch /> Oscuro
+                Claro <Switch checked={valueInputs['temaDark'] || false} onChange={onChangeCheck}  /> Oscuro
               </span>
             </div>
           </Col>
