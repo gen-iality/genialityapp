@@ -304,8 +304,8 @@ class ListEventUser extends Component {
              
               updatedAttendees[i][codearea[0].name]=updatedAttendees[i]['code']?"(+"+updatedAttendees[i]['code']+")"+updatedAttendees[i].user[codearea[0].name]:"(+0)"+updatedAttendees[i].user[codearea[0].name]
             }else{
-              console.log("KEY==>",updatedAttendees[i]['properties'][key])
-            updatedAttendees[i][key.name] =  updatedAttendees[i]['properties'][key.name]==true ?"SI":updatedAttendees[i]['properties'][key.name]==false?"NO":updatedAttendees[i]?.user[key.name];
+             // console.log("KEY==>",updatedAttendees[i]['properties'][key])
+            //updatedAttendees[i][key.name] =  updatedAttendees[i]['properties'][key.name]==true ?"SI":updatedAttendees[i]['properties'][key.name]==false?"NO":updatedAttendees[i]?.user[key.name];
             updatedAttendees[i]["textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio"]= self.props.event._id=="60c8affc0b4f4b417d252b29" ? "SI" :""          
           }
           }
