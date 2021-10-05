@@ -28,19 +28,22 @@ const Informacion = (props) => {
     dateEvent,
     handleInput,
     valueInputs,
-    errorInputs
+    errorInputs,
+    containsError
   } = useContextNewEvent();
+
+ 
   return (
     
     <div className='step-information'>
       <Space direction='vertical' size='middle'>
         <div>
-        {console.log("INPUTS==>",errorInputs)}
+        {console.log("EINPUTS==>",errorInputs)}
           <Text>
             Nombre del evento <span className='text-color'>*</span>
           </Text>
           <Input  onChange={(e)=>handleInput(e,"name")} placeholder='Nombre del evento' />
-          {(errorInputs?.name!=null|| errorInputs?.name=='') &&  <Col> <small className='text-color'>Ingrese un nombre correcto para el evento</small></Col> }
+          {containsError('name') &&  <Col> <small className='text-color'>Ingrese un nombre correcto para el evento</small></Col> }
         </div>
         <div>
           {addDescription ? (
@@ -54,7 +57,8 @@ const Informacion = (props) => {
                   </Tooltip>
                 </Link>
               </Text>
-              <Input.TextArea></Input.TextArea>
+              <Input.TextArea onChange={(e)=> handleInput(e,'description')}></Input.TextArea>
+              {containsError('description') &&  <Col> <small className='text-color'>Ingrese una descripción válida</small></Col> }
             </div>
           ) : (
             <Link onClick={() => visibilityDescription(true)}>

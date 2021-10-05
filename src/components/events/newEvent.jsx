@@ -191,14 +191,20 @@ class NewEvent extends Component {
   next = () => {
    switch (this.state.current){
      case 0:
+       let err=0;
       let eventNewContext = this.context;
       console.log("VALUES1==>",eventNewContext)
        console.log("VALUES==>",eventNewContext.valuesInput)
-       if(!eventNewContext.valuesInput?.name){
-        eventNewContext.setError({name:"name",value:true})
-       }else{
-         this.nextPage()
+       if(eventNewContext.validateField('name',true,4)){        
+        err++;
        }
+       if(eventNewContext.validateField('description',eventNewContext.addDescription,9)){       
+        err++;
+       }
+       if(err==0){
+        this.nextPage()
+       }  
+       
        break;
    }
    
