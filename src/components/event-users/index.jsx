@@ -258,8 +258,8 @@ class ListEventUser extends Component {
             key: item.name,
             render: (record, key) =>{            
              return item.type == 'file' ? (
-                <a target='__blank' download={item?.name} href={key[item?.name]?.file?.response}>
-                 {key[item?.name]?.file?.name}
+                <a target='__blank' download={item?.name} href={key[item?.name]?.url}>
+                 {key[item?.name]?.name}
                 </a>
               ) : item.type == 'avatar' ? (
                 <Image width={40} height={40} src={key[item?.name]} />

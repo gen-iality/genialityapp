@@ -82,7 +82,7 @@ let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) =
     // delete updatedField['_id'];
     // delete updatedField['updated_at'];
     // delete updatedField['created_at'];
-    EventFieldsApi.registerListFieldOptionTaken(taken, fieldId, cEvent.value?._id);
+    EventFieldsApi.registerListFieldOptionTaken(taken, fieldId, eventId);
   });
 };
 
@@ -93,18 +93,18 @@ const FormRegister = ({
   eventUserOther,
   eventUserId,
   closeModal,
-  conditionalsOther,  
+  conditionalsOther,
   organization,
   callback,
   options,
   setSectionPermissions,
 }) => {
   const intl = useIntl();
-  const cEvent= UseEventContext();
-  const cEventUser=UseUserEvent();
-  const cUser=UseCurrentUser();
-  const {tabLogin,typeModal,eventPrivate}= useContext( HelperContext)
-  const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || {}); 
+  const cEvent = UseEventContext();
+  const cEventUser = UseUserEvent();
+  const cUser = UseCurrentUser();
+  const { tabLogin, typeModal, eventPrivate } = useContext(HelperContext);
+  const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || {});
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
@@ -124,15 +124,19 @@ const FormRegister = ({
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState(
-   organization? initialOtherValue: cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
+    organization ? initialOtherValue : cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
   );
   //initialValues?.contrasena = '';
   //initialValues?.password = '';
-  const [conditionals, setconditionals] = useState(organization? conditionalsOther:cEvent.value?.fields_conditions || []);
-  const [eventUser, seteventUser] = useState(organization? eventUserOther:cEventUser.value || {});
-  const [extraFieldsOriginal, setextraFieldsOriginal] = useState(organization? fields:cEvent.value?.user_properties || {});
+  const [conditionals, setconditionals] = useState(
+    organization ? conditionalsOther : cEvent.value?.fields_conditions || []
+  );
+  const [eventUser, seteventUser] = useState(organization ? eventUserOther : cEventUser.value || {});
+  const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
+    organization ? fields : cEvent.value?.user_properties || {}
+  );
   //initialValues.codearea = null;
-  console.log("EVENT USER==>",eventUser)
+  console.log('EVENT USER==>', eventUser);
 
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';
@@ -182,12 +186,30 @@ const FormRegister = ({
     if (areacodeselected) {
       values['code'] = areacodeselected;
     }
-    if(values.checked_in){     
-      values.checkedin_at=new Date()
-    }else{
-      values.checkedin_at=""
+    if (values.checked_in) {
+      values.checkedin_at = new Date();
+    } else {
+      values.checkedin_at = '';
     }
 
+    //console.log("FILES==>",values)
+    //OBTENER RUTA ARCHIVOS FILE
+    Object.values(extraFields).map((value) => {
+      if (value.type == 'file') {
+        values[value.name] = {
+          url: values[value.name]?.fileList
+            ? values[value.name]?.fileList[0]?.response.trim()
+            : values[value.name]
+            ? values[value.name]?.url
+            : null,
+          name: values[value.name]?.fileList
+            ? values[value.name]?.fileList[0].name
+            : values[value.name]
+            ? values[value.name]?.name
+            : null,
+        };
+      }
+    });  
     const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
 
     if (data.length == 0 || cEventUser.value) {
@@ -256,38 +278,39 @@ const FormRegister = ({
             textMessage.content = 'Usuario ' + formMessage.successMessage;
 
             let $msg =
-              organization==1?'':event.registration_message ||
-              `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`;
+              organization == 1
+                ? ''
+                : event.registration_message ||
+                  `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`;
 
             setSuccessMessage($msg);
 
             setSubmittedForm(true);
             message.success(intl.formatMessage({ id: 'registration.message.created' }));
 
-            if(callback){
+            if (callback) {
               //si se envía un callback por props se ejecuta
               callback();
-            }else{
-
-            //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
-            //todo el proceso de logueo depende del token en la url por eso se recarga la página
-            if (!event.validateEmail && resp.data.user.initial_token) {
-              setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
-              setTimeout(function() {
-                window.location.replace(
-                  cEvent.value?._id == '60cb7c70a9e4de51ac7945a2'
-                    ? `/landing/${cEvent.value?._id}/success/${
-                        cEventUser.value == null ? typeRegister : 'free'
-                      }?token=${resp.data.user.initial_token}`
-                    : `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${
-                        !eventUser?._id ? 2 : 4
-                      }&token=${resp.data.user.initial_token}`
-                );
-              }, 100);
             } else {
-              window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${1}`);
+              //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
+              //todo el proceso de logueo depende del token en la url por eso se recarga la página
+              if (!event.validateEmail && resp.data.user.initial_token) {
+                setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
+                setTimeout(function() {
+                  window.location.replace(
+                    cEvent.value?._id == '60cb7c70a9e4de51ac7945a2'
+                      ? `/landing/${cEvent.value?._id}/success/${
+                          cEventUser.value == null ? typeRegister : 'free'
+                        }?token=${resp.data.user.initial_token}`
+                      : `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${
+                          !eventUser?._id ? 2 : 4
+                        }&token=${resp.data.user.initial_token}`
+                  );
+                }, 100);
+              } else {
+                window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${1}`);
+              }
             }
-          }
           } else {
             // window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=800`);
             //Usuario ACTUALIZADO
@@ -316,7 +339,7 @@ const FormRegister = ({
         } catch (err) {
           // textMessage.content = "Error... Intentalo mas tarde";
           textMessage.content = formMessage.errorMessage;
-          console.log("ERROR==>",err)
+          console.log('ERROR==>', err);
           textMessage.key = key;
           message.error(textMessage);
         }
@@ -396,9 +419,14 @@ const FormRegister = ({
       let mandatory = m.mandatory;
       let description = m.description;
       let labelPosition = m.labelPosition;
-      let target = name;
-      console.log(initialValues)
-      let value = !callback?  eventUser && eventUser['properties'] ? eventUser['properties'][target] : '': initialValues ? initialValues[target]:'';
+      let target = name;      
+      let value = !callback
+        ? eventUser && eventUser['properties']
+          ? eventUser['properties'][target]
+          : ''
+        : initialValues
+        ? initialValues[target]
+        : '';
 
       //no entiendo b esto para que funciona
       if (conditionals.state === 'enabled') {
@@ -502,7 +530,7 @@ const FormRegister = ({
                   // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
                   // style={eventUserId && hideFields}
                   valuePropName={'checked'}
-                 /* label={
+                  /* label={
                     (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
                       ? label
                       : '' && (labelPosition !== 'arriba' || !labelPosition)
@@ -566,7 +594,6 @@ const FormRegister = ({
       }
 
       if (type === 'file') {
-        console.log("FILE VALUE==>",value)
         input = (
           <Upload
             accept='application/pdf'
@@ -574,14 +601,7 @@ const FormRegister = ({
             multiple={false}
             listType='text'
             beforeUpload={beforeUpload}
-            defaultFileList={
-              value && value?.fileList
-                ? value?.fileList?.map((file) => {
-                    file.url = file?.response || null;
-                    return file;
-                  })
-                : []
-            }>
+            defaultFileList={value.url ? [{ name: value?.name, url: value?.url }] : []}>
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         );
@@ -822,7 +842,7 @@ const FormRegister = ({
                 )}
                 {notLoggedAndRegister && (
                   <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
-                    <Alert                      
+                    <Alert
                       className='animate__animated animate__bounceIn'
                       style={{
                         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
@@ -842,21 +862,27 @@ const FormRegister = ({
                   </Col>
                 )}
 
-                <Col span={24} align="center">
-                  <Form.Item>                   
+                <Col span={24} align='center'>
+                  <Form.Item>
                     <Button type='primary' htmlType='submit'>
-                      {initialValues!=null && Object.keys(initialValues).length>0
+                      {initialValues != null && Object.keys(initialValues).length > 0
                         ? intl.formatMessage({ id: 'registration.button.update' })
                         : cEvent.value?._id === '5f9824fc1f8ccc414e33bec2'
                         ? 'Votar y Enviar'
                         : intl.formatMessage({ id: 'registration.button.create' })}
                     </Button>
-                    {options && initialValues!=null && options.map((option)=>
-                    <Button icon={option.icon} onClick={()=>option.action(eventUser)} type={option.type} style={{marginLeft:10}}>
-                      {option.text}
-                    </Button>
-                  )}
-                  </Form.Item>                  
+                    {options &&
+                      initialValues != null &&
+                      options.map((option) => (
+                        <Button
+                          icon={option.icon}
+                          onClick={() => option.action(eventUser)}
+                          type={option.type}
+                          style={{ marginLeft: 10 }}>
+                          {option.text}
+                        </Button>
+                      ))}
+                  </Form.Item>
                 </Col>
               </Row>
             </Form>
