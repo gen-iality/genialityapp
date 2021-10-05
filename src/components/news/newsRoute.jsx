@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom';
  * ---------------------*/
 import News from './news';
 import AddNews from './addNews';
+import NewCE from './newCE';
 
 const NewsSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -15,6 +16,9 @@ const NewsSectionRoutes = (props) => {
     <Switch>
       <Route exact path={`${path}/`}>
         <News {...props} />
+      </Route>
+      <Route path={`${path}/new`}>
+        <NewCE {...props} />
       </Route>
       <Route path={`${path}/addnoticia/:id?`}>
         <AddNews {...props} />

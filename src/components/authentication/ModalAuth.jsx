@@ -174,6 +174,7 @@ const ModalAuth = (props) => {
                   <Typography.Text
                     onClick={() => handleChangeTypeModal('recover')}
                     underline
+                    id={'forgotpassword'}
                     type='secondary'
                     style={{ float: 'right', cursor: 'pointer' }}>
                     {intl.formatMessage({ id: 'modal.option.restore', defaultMessage: 'Olvidé mi contraseña' })}

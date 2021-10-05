@@ -2,24 +2,79 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { withRouter } from 'react-router-dom';
 import { SpeakersApi } from '../../helpers/request';
-import { Table, Modal, message } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { sortableContainer, sortableElement } from 'react-sortable-hoc';
-import arrayMove from 'array-move';
+import { Modal, message, Row, Col, Popover, Image, Empty, Avatar, Switch } from 'antd';
+import { ExclamationCircleOutlined, UserOutlined } from '@ant-design/icons';
+/* import { columns } from './columns'; */
+import CMS from '../newComponent/CMS';
 import Header from '../../antdComponents/Header';
-import { columns } from './columns';
-
-const SortableItem = sortableElement((props) => <tr {...props} />);
-const SortableContainer = sortableContainer((props) => <tbody {...props} />);
+import Table from '../../antdComponents/Table';
+import { getColumnSearchProps } from './getColumnSearch';
 
 const { confirm } = Modal;
 
 function SpeakersList(props) {
-   const [searchText, setSearchText] = useState('');
-   const [searchedColumn, setSearchedColumn] = useState('');
+  let [columnsData, setColumnsData] = useState({});
+  const columns = [
+   {
+      title: 'Imagen',
+      dataIndex: 'image',
+      render(val, item) {
+         /*
+          * Dentro de la imagen se realizó al momento de mostrar en la tabla un Avatar, para darle mejor apariencia.
+          * Para ver más amplia la imagen se realizó un popover con la etiqueta de "Image" que permite ver mejor la imagen
+          */
+         return (
+            <Row gutter={8}>
+               <Col>
+                  <Popover
+                     placement='top'
+                     content={() => (
+                        <>
+                           {item.image ? (
+                              <Image key={'img' + item._id} width={200} height={200} src={item.image} />
+                           ) : (
+                              <Empty description='Imagen no encontrada' />
+                           )}
+                        </>
+                     )}>
+                     {item.image ? (
+                        <Avatar key={'img' + item._id} src={item.image} />
+                     ) : (
+                        <Avatar icon={<UserOutlined />} />
+                     )}
+                  </Popover>
+               </Col>
+            </Row>
+         );
+      },
+   },
+   {
+      title: 'Nombre',
+      dataIndex: 'name',
+      ...getColumnSearchProps('name', columnsData),
+   },
+   {
+      title: 'Profesión',
+      dataIndex: 'profession',
+      ...getColumnSearchProps('profession', columnsData),
+   },
+   {
+      title: 'Visible',
+      dataIndex: 'published',
+      render(val, item) {
+         const [publish, setPublish] = useState(item.published);
+         const update = async (checked) => {
+            item.published = checked;
+            const res = await SpeakersApi.editOne(item, item._id, item.event_id);
+            if (res) setPublish(res.published);
+         };
+         return <Switch checkedChildren='Sí' unCheckedChildren='No' onChange={update} checked={publish} id={`editSwitch${item.index}`} />;
+      },
+   }
+  ];
 
-   const queryClient = useQueryClient();
-   const { isLoading, data } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
+  const queryClient = useQueryClient();
+  const { isLoading, data } = useQuery('getSpeakersByEvent', () => SpeakersApi.byEvent(props.eventID));
 
    function sortAndIndexSpeakers() {
       let list = [];
@@ -34,11 +89,11 @@ function SpeakersList(props) {
       }
    }
 
-   function remove(info) {
+   function remove(id) {
       //Se coloco la constante "eventId" porque se perdia al momento de hacer la llamada al momento de eliminar
       const eventId = props.eventID;
       confirm({
-         title: `¿Está seguro de eliminar a ${info.name}?`,
+         title: `¿Está seguro de eliminar la información?`,
          icon: <ExclamationCircleOutlined />,
          content: 'Una vez eliminado, no lo podrá recuperar',
          okText: 'Borrar',
@@ -51,32 +106,6 @@ function SpeakersList(props) {
             onHandlerRemoveSpeaker();
          },
       });
-   }
-
-   //FN para búsqueda en la tabla 2/3
-   function handleSearch(selectedKeys, confirm, dataIndex) {
-      confirm();
-      setSearchText(selectedKeys[0]);
-      setSearchedColumn(dataIndex);
-   }
-
-   //FN para búsqueda en la tabla 3/3
-   function handleReset(clearFilters) {
-      clearFilters();
-      setSearchText('');
-   }
-
-   //FN para el draggable 1/3
-   function onSortEnd({ oldIndex, newIndex }) {
-      if (oldIndex !== newIndex) {
-         let newData = arrayMove([].concat(sortAndIndexSpeakers()), oldIndex, newIndex).filter((el) => !!el);
-         if (newData) {
-            newData = newData.map((speaker, key) => {
-               return { ...speaker, index: key };
-            });
-         }
-         updateOrDeleteSpeakers.mutateAsync({ newData, state: 'update' });
-      }
    }
 
    const updateOrDeleteSpeakers = useMutation(
@@ -137,25 +166,10 @@ function SpeakersList(props) {
       }
    );
 
-   //FN para el draggable 2/3
-   const DraggableContainer = (props) => (
-      <SortableContainer useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props} />
-   );
-
-   //FN para el draggable 3/3
-   const DraggableBodyRow = ({ className, style, ...restProps }) => {
-      const index = sortAndIndexSpeakers()?.findIndex((x) => x.index === restProps['data-row-key']);
-      return <SortableItem index={index} {...restProps} />;
-   };
-
-   const columnsData = {
-      data: props,
-      searchedColumn: searchedColumn,
-      handleSearch,
-      handleReset,
-      remove,
-      searchText: searchText,
-   };
+   const changeToUpdate = (newData) => {
+      console.log(newData, 'aaaaaa');
+      updateOrDeleteSpeakers.mutate({newData, state: 'update'})
+   }
 
    return (
       <div>
@@ -169,21 +183,19 @@ function SpeakersList(props) {
          />
 
          <Table
-            columns={columns(columnsData)}
-            dataSource={sortAndIndexSpeakers()}
-            size='small'
-            rowKey='index'
+            header={columns}
+            list={sortAndIndexSpeakers()}
+            key='index'
             loading={isLoading}
-            hasData={sortAndIndexSpeakers()}
-            components={{
-               body: {
-                  wrapper: DraggableContainer,
-                  row: DraggableBodyRow,
-               },
-            }}
+            search
+            setColumnsData={setColumnsData}
+            draggable
+            actions
+            editPath={`${props.matchUrl}/speaker`}
+            setList={changeToUpdate}
+            remove={remove}
             pagination={false}
          />
-         {/* <ReactQueryDevtools initialIsOpen /> */}
       </div>
    );
 }

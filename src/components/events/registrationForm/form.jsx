@@ -478,11 +478,11 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                   // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
                   // style={eventUserId && hideFields}
                   valuePropName={'checked'}
-                  label={
+                 /* label={
                     (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
                       ? label
                       : '' && (labelPosition !== 'arriba' || !labelPosition)
-                  }
+                  }*/
                   name={name}
                   rules={[rule]}
                   key={'l' + key}

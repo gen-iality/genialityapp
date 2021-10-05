@@ -448,20 +448,19 @@ export const DocumentsApi = {
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/documents`, true).then(({ data }) => data);
   },
-
-  getFiles: async (event, id) => {
+  getFiles: async (id, event) => {
     return await Actions.getAll(`api/events/${event}/documents?father_id=${id}`);
   },
-  getOne: async (event, id) => {
+  getOne: async (id, event) => {
     return await Actions.getOne(`api/events/${event}/documents/`, id);
   },
-  editOne: async (event, data, id) => {
+  editOne: async (data, id, event) => {
     return await Actions.edit(`api/events/${event}/documents`, data, id);
   },
-  deleteOne: async (event, id) => {
+  deleteOne: async (id, event) => {
     return await Actions.delete(`api/events/${event}/documents`, id);
   },
-  create: async (event, data) => {
+  create: async (data, event) => {
     return await Actions.create(`api/events/${event}/documents`, data);
   },
 };
@@ -593,11 +592,11 @@ export const NewsFeed = {
   getOne: async (eventId, idnew) => {
     return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}`);
   },
-  editOne: async (data, id) => {
-    return await Actions.edit(`api/events/${id}/newsfeed`, data, id);
+  editOne: async (data, id, eventId) => {
+    return await Actions.edit(`api/events/${eventId}/newsfeed`, data, id);
   },
-  deleteOne: async (id, idNew) => {
-    return await Actions.delete(`api/events/${id}/newsfeed`, idNew);
+  deleteOne: async (id, eventId) => {
+    return await Actions.delete(`api/events/${eventId}/newsfeed`, id);
   },
   create: async (data, id) => {
     return await Actions.create(`api/events/${id}/newsfeed`, data);
@@ -626,8 +625,8 @@ export const FaqsApi = {
   byEvent: async (id) => {
     return await Actions.getAll(`api/events/${id}/faqs`).then(({ data }) => data);
   },
-  getOne: async (id) => {
-    return await Actions.get(`api/events/${id}/faqs/`, id);
+  getOne: async (id, eventId) => {
+    return await Actions.get(`api/events/${eventId}/faqs/`, id);
   },
   editOne: async (data, id, eventId) => {
     return await Actions.edit(`api/events/${eventId}/faqs`, data, id);
