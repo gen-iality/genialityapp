@@ -1,4 +1,4 @@
-import React, {  useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { listenSurveysData } from '../helpers/helperEvent';
 import InitSurveysCompletedListener from '../components/events/surveys/functions/initSurveyCompletedListener';
 import { UseEventContext } from './eventContext';
@@ -88,10 +88,9 @@ export function SurveysProvider({ children }) {
 
       return (
          !shouldDisplaySurvey() &&
-         (state.currentSurvey.allow_gradable_survey === 'false' ||
-            state.currentSurvey.allow_gradable_survey === false ||
-            state.currentSurvey.displayGraphsInGradableSurveys === 'true' ||
-            state.currentSurvey.displayGraphsInGradableSurveys === true)
+         // state.currentSurvey.allow_gradable_survey === 'false' ||
+         // state.currentSurvey.allow_gradable_survey === false ||
+         (state.currentSurvey.displayGraphsInSurveys === 'true' || state.currentSurvey.displayGraphsInSurveys === true)
       );
    }
 
@@ -123,10 +122,12 @@ export function SurveysProvider({ children }) {
    function surveysToBeListedByActivity() {
       let listOfSurveysFilteredByActivity;
       if (state.currentActivity) {
-         listOfSurveysFilteredByActivity = state.surveys&& state.surveys.filter(
-            (item) =>
-               item.activity_id === state.currentActivity._id || item.isGlobal === 'true' || item.isGlobal === true
-         );
+         listOfSurveysFilteredByActivity =
+            state.surveys &&
+            state.surveys.filter(
+               (item) =>
+                  item.activity_id === state.currentActivity._id || item.isGlobal === 'true' || item.isGlobal === true
+            );
       }
       return listOfSurveysFilteredByActivity;
    }
@@ -136,7 +137,9 @@ export function SurveysProvider({ children }) {
       if (!state.currentSurvey && !surveysToBeListedByActivity()) {
          return false;
       }
-      recentlyOpenedSurvey =  surveysToBeListedByActivity()&& surveysToBeListedByActivity().filter((item) => item?._id === state.currentSurvey?._id);
+      recentlyOpenedSurvey =
+         surveysToBeListedByActivity() &&
+         surveysToBeListedByActivity().filter((item) => item?._id === state.currentSurvey?._id);
 
       if (recentlyOpenedSurvey && recentlyOpenedSurvey.length > 0) {
          return true;
@@ -186,7 +189,6 @@ export function UseSurveysContext() {
 
    return contextsurveys;
 }
-
 
 function shouldActivateUpdatedSurvey(state, surveyChangedNew) {
    let shouldActivateSurvey = false;
