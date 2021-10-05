@@ -15,6 +15,7 @@ export const NewEventProvider = ({ children }) => {
   const [selectedDateEvent, setSelectedDateEvent] = useState();
   const [valueInputs, setValueInputs] = useState({});
   const [errorInputs, setErrorInputs] = useState([]);
+  const [imageEvents,setImageEvents]=useState({});
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -23,6 +24,10 @@ export const NewEventProvider = ({ children }) => {
     setAddDescription(value);
     setValueInputs({...valueInputs,['description']:''})
   };
+
+  const saveImageEvent=(image,index)=>{      
+    setImageEvents({...imageEvents,[index]:image})
+  }
 
   const changeSelectDay = (day) => {
     setSelectedDay(day);
@@ -133,6 +138,9 @@ export const NewEventProvider = ({ children }) => {
         errorInputs,
         containsError,
         validateField,
+        imageEvents,
+        saveImageEvent
+
       }}>
       {children}
     </cNewEventContext.Provider>

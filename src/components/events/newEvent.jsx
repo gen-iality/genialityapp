@@ -200,11 +200,14 @@ class NewEvent extends Component {
           this.nextPage();
         }
         break;
+      case 1:
+        this.nextPage();
+        break;
     }
   };
 
   nextPage = () => {
-    let current = this.state.current + 1;  
+    let current = this.state.current + 1;
     this.setState({ current });
   };
 
@@ -215,7 +218,7 @@ class NewEvent extends Component {
 
   render() {
     const { current } = this.state;
-    let value = this.context;   
+    let value = this.context;
     return (
       <Row justify='center' className='newEvent'>
         {/* Items del paso a paso */}

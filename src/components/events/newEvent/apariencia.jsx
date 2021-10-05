@@ -1,8 +1,14 @@
 import React from 'react';
 import ImgInput from '../../shared/imageInput';
-import { Row, Col, Switch } from 'antd';
+import { Row, Col, Switch, message } from 'antd';
+import { Actions } from '../../../helpers/request';
+import Axios from 'axios';
+import { useContextNewEvent } from '../../../Context/newEventContext';
 
-function Apariencia() {
+
+function Apariencia(props) {
+  const {saveImageEvent,imageEvents}= useContextNewEvent();
+
   const ImagenStyle = {
     width: '100%',
     height: '110px',
@@ -15,38 +21,48 @@ function Apariencia() {
     borderRadius: '5px',
     cursor: 'pointer',
   };
-  async function handleImage(files) {
-    try {
-      const file = files[0];
-      if (file) {
-        const imageData = await uploadImage(file);
-        setData({
-          ...data,
-          image: imageData
-        })
-      } else {
-        setErrorImage('Solo se permiten archivos de imágenes. Inténtalo de nuevo :)')
-      }
-    } catch (e) {
-      sweetAlert.showError(handleRequestError(e));
-    }
-  };
+ //Cambio en el input de imagen
+ const changeImg = (files,indexImage) => {  
+  const file = files[0];
+  const url = '/api/files/upload',
+    path = [],
+    self = this;
+  if (file) {
+   
+    const uploaders = files.map((file) => {
+      let data = new FormData();
+      data.append('file', file);
+      return Actions.post(url, data).then((image) => {
+        if (image) path.push(image);
+      });
+    });
+
+    // eslint-disable-next-line no-unused-vars
+    Axios.all(uploaders).then((data) => {      
+      saveImageEvent( path[0],indexImage);
+       
+      message.success("Imagen cargada correctamente...");
+    });
+  } else {
+    message.error("Error al cargar imagen.")
+  }
+};
 
   return (
     <>
       <div className='step-aparencia' style={{ marginTop: '5%' }}>
         <Row gutter={[8, 8]}>
           <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
-            <ImgInput style={ImagenStyle} width='320' height='180' text='Agregar logo'></ImgInput>
+            <ImgInput indexImage={'logo'} changeImg={changeImg} picture={imageEvents['logo'] || '#FFF'} style={ImagenStyle} width='320' height='180' text='Agregar logo'></ImgInput>
           </Col>
           <Col xs={24} sm={24} md={12} lg={18} xl={18} xxl={18}>
-            <ImgInput style={ImagenStyle} width='1920' height='540' text='Agregar portada'></ImgInput>
+            <ImgInput indexImage={'portada'}  changeImg={changeImg} picture={imageEvents['portada'] || '#FFF'} style={ImagenStyle} width='1920' height='540' text='Agregar portada'></ImgInput>
           </Col>
           <Col xs={24} sm={24} md={12} lg={18} xl={18} xxl={18}>
-            <ImgInput style={ImagenStyle} width='1920' height='280' text='Agregar pie de pagina'></ImgInput>
+            <ImgInput indexImage={'piepagina'}  changeImg={changeImg} picture={imageEvents['piepagina'] || '#FFF'} style={ImagenStyle} width='1920' height='280' text='Agregar pie de pagina'></ImgInput>
           </Col>
           <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
-            <ImgInput style={ImagenStyle} width='1920' height='2160' text='Agregar imagen de fondo'></ImgInput>
+            <ImgInput indexImage={'imgfondo'}  changeImg={changeImg} picture={imageEvents['imgfondo'] || '#FFF'}  style={ImagenStyle} width='1920' height='2160' text='Agregar imagen de fondo'></ImgInput>
           </Col>
         </Row>
         <Row className='container-swicht'>

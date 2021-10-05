@@ -37,8 +37,7 @@ const Informacion = (props) => {
     
     <div className='step-information'>
       <Space direction='vertical' size='middle'>
-        <div>
-        {console.log("EINPUTS==>",errorInputs)}
+        <div>       
           <Text>
             Nombre del evento <span className='text-color'>*</span>
           </Text>

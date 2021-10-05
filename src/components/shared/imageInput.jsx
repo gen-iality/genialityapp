@@ -52,9 +52,10 @@ let ImageInput = (props) => {
           <img src={props.picture} alt={"Imagen"} />
           <Dropzone
             accept="image/*"
-            onDrop={(e) => {
+            onDrop={async (e) => {              
               setStillOldImage(props.picture);
-              props.changeImg(e);
+              await props.changeImg(e,props.indexImage);
+             
             }}
             className={classDrop}>
             {contentDrop}
@@ -62,7 +63,7 @@ let ImageInput = (props) => {
         </div>
       ) : (
           <div>
-            <Dropzone accept="image/*" onDrop={props.changeImg} style={style}>
+            <Dropzone accept="image/*" onDrop={async (e)=>{ setStillOldImage(props.picture); await props.changeImg(e,props.indexImage)}} style={style}>
               <div className="has-text-grey has-text-weight-bold has-text-centered">
                 <span>Subir foto</span>
                 <br />
