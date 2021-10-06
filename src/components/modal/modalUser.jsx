@@ -33,14 +33,15 @@ class UserModal extends Component {
       valid: true,
       checked_in: false,
       tickets: [],
-      options:[
+      options: [
         {
-          type:"danger",
-          text:"Eliminar/Borrar",
-          icon:<DeleteOutlined />,
-          action:this.deleteUser
-        }
-      ]
+          type: 'danger',
+          text: 'Eliminar/Borrar',
+          icon: <DeleteOutlined />,
+          action: this.deleteUser,
+        },
+      ],
+      loadingregister: false,
     };
   }
 
@@ -48,17 +49,17 @@ class UserModal extends Component {
     const self = this;
     const { rolesList } = this.props;
     self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : '' });
-    const tickets = await eventTicketsApi.getAll(this.props.cEvent?.value?._id || "5ea23acbd74d5c4b360ddde2");
+    const tickets = await eventTicketsApi.getAll(this.props.cEvent?.value?._id || '5ea23acbd74d5c4b360ddde2');
     if (tickets.length > 0) this.setState({ tickets });
     let user = {};
     if (this.props.edit) {
-      const { value } = this.props;     
+      const { value } = this.props;
       if (value.properties) {
         Object.keys(value.properties).map((obj) => {
           return (user[obj] = value.properties[obj]);
         });
         let checked_in = value.checkedin_at ? true : false;
-        user={...user,_id:value._id}
+        user = { ...user, _id: value._id };
         this.setState({
           user,
           ticket_id: value.ticket_id,
@@ -69,7 +70,6 @@ class UserModal extends Component {
           prevState: value.state_id,
           valid: false,
         });
-      
       } else {
         Object.keys(value).map((obj) => {
           return (user[obj] = value[obj]);
@@ -99,8 +99,7 @@ class UserModal extends Component {
     this.setState({ user: {}, edit: false });
   }
 
-  deleteUser = async (user) => {  
- 
+  deleteUser = async (user) => {
     const { substractSyncQuantity } = this.props;
     let messages = {};
     // let resultado = null;
@@ -108,9 +107,9 @@ class UserModal extends Component {
     const userRef = firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`);
     try {
       await Actions.delete(`/api/events/${this.props.cEvent.value?._id}/eventusers`, user._id);
-     // message = { class: 'msg_warning', content: 'USER DELETED' };
+      // message = { class: 'msg_warning', content: 'USER DELETED' };
       toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
-      message.success("Eliminado correctamente")
+      message.success('Eliminado correctamente');
     } catch (e) {
       ///Esta condición se agrego porque algunas veces los datos no se sincronizan
       //bien de mongo a firebase y terminamos con asistentes que no existen
@@ -147,10 +146,31 @@ class UserModal extends Component {
   };
 
   closeModal = () => {
-    let message = { class: '', content: '' };    
+    let message = { class: '', content: '' };
     this.setState({ user: {}, valid: true, modal: false, uncheck: false, message }, this.props.handleModal());
   };
 
+  saveUser = async (values) => {
+    this.setState({ loadingregister: true });
+    console.log('callback=>', values);
+    let resp;
+    if(values){
+      const snap = { properties: values };
+      resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
+      console.log("USERADD==>",resp)
+    }
+    if (this.props.byActivity) {     
+       
+    }
+    if (resp) {
+      message.success('Usuario agregado correctamente');
+      this.props.handleModal();
+    } else {
+      message.error('Usuario agregado correctamente');
+    }
+
+    this.setState({ loadingregister: false });
+  };
 
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
@@ -160,21 +180,22 @@ class UserModal extends Component {
       <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible={true}>
         <div
           // className='asistente-list'
-          style={{            
+          style={{
             paddingLeft: '0px',
             paddingRight: '0px',
             paddingTop: '0px',
             paddingBottom: '0px',
-            marginTop:'30px'
+            marginTop: '30px',
           }}>
-          <FormComponent     
+          <FormComponent
             conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
             initialOtherValue={this.props.value}
-            eventUserOther={user|| {}}
-            fields={this.props.extraFields}         
+            eventUserOther={user || {}}
+            fields={this.props.extraFields}
             organization={true}
             options={this.state.options}
-            callback={()=>this.props.handleModal()}
+            callback={this.saveUser}
+            loadingregister={this.state.loadingregister}
           />
         </div>
       </Modal>

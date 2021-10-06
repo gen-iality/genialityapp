@@ -404,6 +404,7 @@ class CheckAgenda extends Component {
     this.setState({ selectedRowKeys: idEventUsers, attendeesForSendMessage });
   }
   goBack = () => this.props.history.goBack();
+ 
 
   render() {
     const {
@@ -447,7 +448,7 @@ class CheckAgenda extends Component {
             updateView={this.cargarUsuarios}
             checkinActivity={this.checkIn}
             updateList={this.updateAttendeesList}
-            substractSyncQuantity={this.substractSyncQuantity}
+            substractSyncQuantity={this.substractSyncQuantity}            
           />
         )}
         <EventContent

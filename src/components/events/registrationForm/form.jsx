@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
-import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Divider, Upload, Select } from 'antd';
+import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Divider, Upload, Select, Spin } from 'antd';
 import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
@@ -106,6 +106,7 @@ const FormRegister = ({
   organization,
   callback,
   options,
+  loadingregister,
   setSectionPermissions,
 }) => {
   const intl = useIntl();
@@ -213,9 +214,12 @@ const FormRegister = ({
             : null;         
       }
     }); 
-    
-    const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
+    if (callback) {
+      callback(values)
 
+    }else{
+    const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
+    
     if (data.length == 0 || cEventUser.value) {
       setSectionPermissions({ view: false, ticketview: false });
       values.password = password;
@@ -262,7 +266,7 @@ const FormRegister = ({
           message.error(textMessage);
         }
       } else {
-        try {
+        try {         
           let resp = await UsersApi.createOne(snap, cEvent.value?._id);
 
           // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
@@ -292,10 +296,8 @@ const FormRegister = ({
             setSubmittedForm(true);
             message.success(intl.formatMessage({ id: 'registration.message.created' }));
 
-            if (callback) {
-              //si se envía un callback por props se ejecuta
-              callback();
-            } else {
+         
+           
               //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
               //todo el proceso de logueo depende del token en la url por eso se recarga la página
               if (!event.validateEmail && resp.data.user.initial_token) {
@@ -314,7 +316,7 @@ const FormRegister = ({
               } else {
                 window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${1}`);
               }
-            }
+            
           } else {
             // window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=800`);
             //Usuario ACTUALIZADO
@@ -340,6 +342,7 @@ const FormRegister = ({
               setPayMessage(true);
             }
           }
+        
         } catch (err) {
           // textMessage.content = "Error... Intentalo mas tarde";
           textMessage.content = formMessage.errorMessage;
@@ -352,6 +355,7 @@ const FormRegister = ({
       // alert("YA ESTAS REGISTRADO..")
       setNotLoggedAndRegister(true);
     }
+  }
   };
 
   const valuesChange = (changedValues, allValues) => {
@@ -867,9 +871,9 @@ const FormRegister = ({
                 )}
 
                 <Col span={24} align='center'>
-                  <Form.Item>
+                  {!loadingregister && <Form.Item>
                     <Button type='primary' htmlType='submit'>
-                      {initialValues != null && Object.keys(initialValues).length > 0
+                      {initialValues != null && Object.keys(initialValues).length > 0 
                         ? intl.formatMessage({ id: 'registration.button.update' })
                         : cEvent.value?._id === '5f9824fc1f8ccc414e33bec2'
                         ? 'Votar y Enviar'
@@ -886,7 +890,8 @@ const FormRegister = ({
                           {option.text}
                         </Button>
                       ))}
-                  </Form.Item>
+                  </Form.Item>}
+                  {loadingregister && <Spin />}
                 </Col>
               </Row>
             </Form>
