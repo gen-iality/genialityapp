@@ -114,7 +114,10 @@ class UserModal extends Component {
       ///Esta condición se agrego porque algunas veces los datos no se sincronizan
       //bien de mongo a firebase y terminamos con asistentes que no existen
       if (e.response && e.response.status === 404) {
-        console.log(userRef)
+        let respdelete1=await UsersApi.deleteUsers('615dd4876a959d694a2a7ab6')
+        let respdelete2=await UsersApi.deleteUsers('615ddb385dae82055078a544')
+        console.log("RESPDELETE==>",respdelete1)
+        console.log("RESPDELETE2==>",respdelete1)
         userRef.doc(user._id).delete();
         message.success('Eliminado correctamente');
       } else {
@@ -157,19 +160,41 @@ class UserModal extends Component {
     let resp;
     let respActivity=true;
     if(values){
+      if (values.checked_in) {
+        values.checkedin_at = new Date();
+      } else {
+        values.checkedin_at = '';
+      }
+      console.log("ACA VALUES==>",values)
       const snap = { properties: values };
       resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
       console.log("USERADD==>",resp)
+      if (this.props.byActivity && resp.data._id) {      
+        respActivity = await Activity.Register(
+              this.props.cEvent?.value?._id,
+              resp.data.user._id,
+              this.props.activityId
+            ); 
+             
+        }
+
+        if(values.checked_in && this.props.activityId){  
+              
+          let userRef= await firestore.collection(`${this.props.cEvent?.value?._id}_event_attendees`).doc("activity").collection(`${this.props.activityId}`);
+          userRef.doc(resp.data._id)
+          .set({
+            ...resp.data ,    
+            updated_at: new Date(),
+            checked_in:true,
+            checkedin_at: new Date(),
+            checked_at: new Date(),
+          })          
+        }
+        await this.props.updateView();
     }
-   if (this.props.byActivity && resp.data._id) {      
-    respActivity = await Activity.Register(
-          this.props.cEvent?.value?._id,
-          resp.data.user._id,
-          this.props.activityId
-        ); 
-        console.log("RESPUESTA ACTIVITY==>",respActivity)   
-    }
+  
     if (resp && respActivity) {
+      
       message.success('Usuario agregado correctamente');
       this.props.handleModal();
     } else {

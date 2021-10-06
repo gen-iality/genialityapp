@@ -704,8 +704,8 @@ class ListEventUser extends Component {
                 <Row>
                   <span style={{ fontSize: 10 }}>
                     {' '}
-                    <Link to={`/event/${this.props.event._id}/invitados/importar-excel`}>Importar usuarios</Link>
-                  </span>
+                    <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>Importar usuarios</Link>
+                  </span> 
                 </Row>
               </div>
               {usersReq.length > 0 && (

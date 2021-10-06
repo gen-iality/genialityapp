@@ -83,9 +83,47 @@ class CheckAgenda extends Component {
       this.createColumnsTable(properties,self);
       
       //Parse de campos para mostrar primero el nombre, email y luego el resto
-      const eventFields = fieldNameEmailFirst(properties);
+      let eventFields = fieldNameEmailFirst(properties);
+      console.log("eventFields0==>",eventFields)
+      let arrayFields=Array.from(eventFields )
+      
+      arrayFields.push({
+        author:null,
+        categories:[] ,   
+        label: "Rol",
+        mandatory: true,
+        name: "rol_id",      
+        organizer: null,
+        tickets: [],
+        type: "list",
+        fields_conditions:[],
+        unique: false,
+        options: rolesList,     
+        visibleByAdmin: false,
+        visibleByContacts: "public",
+        _id: {$oid: '614260d226e7862220497eac1'}
+       }
+       )
+  
+       arrayFields.push({
+        author:null,
+        categories:[] ,   
+        label: "Checkin",
+        mandatory: false,
+        name: "checked_in",      
+        organizer: null,
+        tickets: [],
+        type: "boolean",
+        fields_conditions:[],
+        unique: false,         
+        visibleByAdmin: false,
+        visibleByContacts: "public",
+        _id: {$oid: '614260d226e7862220497eac2'}
+       }
+       )
+       console.log("eventFields2==>",arrayFields)
 
-      this.setState({ eventFields, agendaID, eventID: event._id,rolesList,userRef });
+      this.setState({ eventFields:arrayFields, agendaID, eventID: event._id,rolesList,userRef });
       let newList = [...this.state.attendees];
       
       newList = await Activity.getActivyAssitantsAdmin(this.props.event._id, agendaID);
@@ -113,10 +151,10 @@ class CheckAgenda extends Component {
   }
 
   checkedincomponent = (text, item, index) => {  
-  
+  console.log("ITEM==>",item)
    const self=this;
-    return item.checkedin_at ? (
-      <p>{Moment(item.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
+    return item.checkedin_at || item.properties?.checkedin_at ? (
+      <p>{Moment(item.checkedin_at || item.properties?.checkedin_at ).format('D/MMM/YY H:mm:ss A')}</p>
     ) : (
       <div>
         <input
@@ -246,6 +284,7 @@ class CheckAgenda extends Component {
   //FN para checkin
   checkIn = async (id,check=null,snap=null,edit=true) => {
     const { attendees } = this.state;
+    console.log("ATTENDESS=>",attendees,id)
     
     //Se busca en el listado total con el id
     
@@ -395,7 +434,7 @@ class CheckAgenda extends Component {
   onSelectChange(idEventUsers) {
     const { attendees } = this.state;
     let attendeesForSendMessage = [];
-    alert("A CHECKIN")
+    
 
     for (let i = 0; idEventUsers.length > i; i++) {
       attendeesForSendMessage = attendees.filter((item) => idEventUsers.indexOf(item._id) !== -1);
@@ -499,8 +538,8 @@ class CheckAgenda extends Component {
                 </button>
               </div>
               <div className='column is-narrow has-text-centered button-c is-centered'>
-                <Button onClick={() =>this.props.history.push( `/event/${this.props.event._id}/invitados/importar-excel`)}>Importar Usuario</Button>
-               
+                <Button onClick={() =>this.props.history.push( `/eventAdmin/${this.props.event._id}/invitados/importar-excel`)}>Importar Usuario</Button>
+                
               </div>
             </div>
           </div>

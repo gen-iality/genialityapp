@@ -338,6 +338,11 @@ export const UsersApi = {
   deleteOne: async (user, id) => {
     return await Actions.delete(`/api/user/events/${id}`, user);
   },
+
+  deleteUsers: async (user) => {
+    return await Actions.delete(`/api/users`,user);
+  },
+  
 };
 
 export const AttendeeApi = {
