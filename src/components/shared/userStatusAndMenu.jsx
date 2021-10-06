@@ -22,9 +22,9 @@ const ItemStyle = {
 };
 
 const UserStatusAndMenu = (props) => {
-  let user = props.cUser?.value;
-  let photo = props.cUser?.value?.picture;
-  let name = props.cUser?.value?.names;
+  let user = props.user;
+  let photo = props.photo;
+  let name = props.name;
   let logout = props.logout;
   const [visible,setVisible]=useState(true)
 

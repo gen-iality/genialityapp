@@ -45,7 +45,7 @@ class triviaEdit extends Component {
       show_horizontal_bar: true,
       allow_vote_value_per_user: false,
       ranking: false,
-      displayGraphsInGradableSurveys: false,
+      displayGraphsInSurveys: false,
 
       // mensajes para encuestas calificables
       initialMessage: null,
@@ -115,7 +115,7 @@ class triviaEdit extends Component {
         neutral_Message: Update.neutral_Message ? Update.neutral_Message : '',
         lose_Message: Update.lose_Message ? Update.lose_Message : '',
         ranking: Update.rankingVisible ? Update.rankingVisible : 'false',
-        displayGraphsInGradableSurveys: Update.displayGraphsInGradableSurveys ? Update.displayGraphsInGradableSurveys : 'false',
+        displayGraphsInSurveys: Update.displayGraphsInSurveys ? Update.displayGraphsInSurveys : 'false',
 
         minimumScore: Update.minimumScore ? Update.minimumScore : 0,
       });
@@ -248,7 +248,7 @@ class triviaEdit extends Component {
         hasMinimumScore: this.state.hasMinimumScore,
         isGlobal: this.state.isGlobal,
         rankingVisible: this.state.ranking,
-        displayGraphsInGradableSurveys: this.state.displayGraphsInGradableSurveys,
+        displayGraphsInSurveys: this.state.displayGraphsInSurveys,
         showNoVotos: this.state.showNoVotos,
 
         //Survey State
@@ -278,7 +278,7 @@ class triviaEdit extends Component {
               isOpened: data.open,
               isPublished: data.publish,
               rankingVisible: data.rankingVisible,
-              displayGraphsInGradableSurveys: data.displayGraphsInGradableSurveys,
+              displayGraphsInSurveys: data.displayGraphsInSurveys,
 
               minimumScore: data.minimumScore,
               activity_id: data.activity_id,
@@ -440,7 +440,7 @@ class triviaEdit extends Component {
   };
 
   toggleSwitch = (variable, state) => {
-    let { allow_gradable_survey, allow_vote_value_per_user, ranking, displayGraphsInGradableSurveys } = this.state;
+    let { allow_gradable_survey, allow_vote_value_per_user, ranking, displayGraphsInSurveys } = this.state;
     switch (variable) {
       case 'allow_gradable_survey':
         if (state && allow_vote_value_per_user === 'true')
@@ -458,8 +458,8 @@ class triviaEdit extends Component {
         this.setState({ ranking: ranking === 'true' ? 'false' : 'true' });
         // this.setState({ allow_vote_value_per_user: state ? 'true' : 'false' });
         break;
-      case 'displayGraphsInGradableSurveys':
-        this.setState({ displayGraphsInGradableSurveys: displayGraphsInGradableSurveys === 'true' ? 'false' : 'true' });
+      case 'displayGraphsInSurveys':
+        this.setState({ displayGraphsInSurveys: displayGraphsInSurveys === 'true' ? 'false' : 'true' });
 
         break;
 
@@ -490,7 +490,7 @@ class triviaEdit extends Component {
       isGlobal,
       ranking,
       showNoVotos,
-      displayGraphsInGradableSurveys
+      displayGraphsInSurveys
     } = this.state;
     const { Option } = Select;
     const columns = [
@@ -619,11 +619,11 @@ class triviaEdit extends Component {
             <div>
                 <div>
                 <label style={{ marginTop: '3%' }} className='label'>
-                Mostar gráficas en encuestas calificables
+                Mostar gráficas en las encuestas 
                 </label>
                 <Switch
-                  checked={displayGraphsInGradableSurveys === 'true' || displayGraphsInGradableSurveys === true}
-                  onChange={(checked) => this.toggleSwitch('displayGraphsInGradableSurveys', checked)}
+                  checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys === true}
+                  onChange={(checked) => this.toggleSwitch('displayGraphsInSurveys', checked)}
                 />
               </div>
             <div>
