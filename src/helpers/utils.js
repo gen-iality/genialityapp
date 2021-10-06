@@ -116,7 +116,7 @@ export function parseData2Excel(data, fields,roles=null) {
               : item.properties[name];
           break;
         default:
-          str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : item?.user[name];
+          str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : item?.user? item?.user[name]:'';
       }
 
       if (type === 'complex' && str) {
