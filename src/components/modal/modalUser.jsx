@@ -160,7 +160,7 @@ class UserModal extends Component {
       console.log("USERADD==>",resp)
     }
     if (this.props.byActivity) {     
-       
+        
     }
     if (resp) {
       message.success('Usuario agregado correctamente');
