@@ -277,7 +277,7 @@ class ListEventUser extends Component {
              ) / 100;
            this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight,totalWithWeight });
           
-           //console.log("ATTENDESS==>",updatedAttendees)
+           console.log("ATTENDESS==>",updatedAttendees)
            //console.log("ATTENDESSFIND==>",updatedAttendees.filter((at)=>at.email=='nieblesrafael@yahoo.com'))
          
           for (let i = 0; i < updatedAttendees.length; i++) {
@@ -304,8 +304,8 @@ class ListEventUser extends Component {
              
               updatedAttendees[i][codearea[0].name]=updatedAttendees[i]['code']?"(+"+updatedAttendees[i]['code']+")"+updatedAttendees[i].user[codearea[0].name]:"(+0)"+updatedAttendees[i].user[codearea[0].name]
             }else{
-             // console.log("KEY==>",updatedAttendees[i]['properties'][key])
-            //updatedAttendees[i][key.name] =  updatedAttendees[i]['properties'][key.name]==true ?"SI":updatedAttendees[i]['properties'][key.name]==false?"NO":updatedAttendees[i]?.user[key.name];
+             //console.log("KEY==>",updatedAttendees[i]['properties'][key.name])
+            updatedAttendees[i][key.name] = Array.isArray(updatedAttendees[i]['properties'][key.name])? updatedAttendees[i]['properties'][key.name][0]:  updatedAttendees[i]['properties'][key.name];
             updatedAttendees[i]["textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio"]= self.props.event._id=="60c8affc0b4f4b417d252b29" ? "SI" :""          
           }
           }
@@ -325,7 +325,7 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-         
+          console.log("ATTENDESSTWO==>",updatedAttendees)
           this.setState({
             users: updatedAttendees,
             usersReq: updatedAttendees,
@@ -723,7 +723,7 @@ class ListEventUser extends Component {
             ) : (
               <div className='table-wrapper'>
                 <div className='table-container' style={{ height: '60vh' }}>                  
-                  {this.state.columns && (
+                  {this.state.columns && users &&(
                     <Table
                       className='table-striped-rows'
                       rowKey='_id'
