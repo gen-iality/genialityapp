@@ -1,10 +1,10 @@
-import { Col, Row } from 'antd';
+import { Col, Modal, Row } from 'antd';
 import React, { useState } from 'react';
 import { useContextNewEvent } from '../../../Context/newEventContext';
 import OptTranmitir from './optTransmitir';
 
 function Transmitir() {
-  const {changeTransmision,optTransmitir}= useContextNewEvent();
+  const {changeTransmision,optTransmitir,changeOrganization,organization}= useContextNewEvent();
   return (
     <>
       {optTransmitir == false ? (
@@ -29,11 +29,17 @@ function Transmitir() {
                     Tu evento será transmitido desde evius usando tus camara y teniendo la posibilidad de agregar
                     efectos profesionales
                   </p>
-                  <a onClick={() => changeTransmision(true)}>Ver opciones de transmisión externas</a>
+                  {/*<a onClick={() => changeTransmision(true)}>Ver opciones de transmisión externas</a>*/}
+                  {<a onClick={() => changeOrganization(true)}>Organización</a>}
                 </div>
               </div>
             </Col>
           </Row>
+        {organization && <Modal title="Basic Modal" visible={organization} onCancel={()=>changeOrganization(false)}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>}
         </div>
       ) : (
         <OptTranmitir />

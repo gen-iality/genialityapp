@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import EviusReactQuill from '../../shared/eviusReactQuill'; /* Se debe usar este componente para la descripcion */
 import { DateTimePicker } from 'react-widgets';
 import EventImage from '../../../eventimage.png';
@@ -8,10 +8,12 @@ import Modal from 'antd/lib/modal/Modal';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../Context/newEventContext';
+import { OrganizationApi } from '../../../helpers/request';
 
 const { Text, Link, Title, Paragraph } = Typography;
 
 const Informacion = (props) => {
+  const [organizations,setOrganizations]=useState([]);
   const {
     addDescription,
     showModal,
@@ -31,7 +33,32 @@ const Informacion = (props) => {
     errorInputs,
     containsError
   } = useContextNewEvent();
+  
+  useEffect(() => {
+    console.log("USERINFORMATION==>",props.currentUser)
+     if(props.currentUser){
+      obtainOrganizations();
+     }
 
+     async function obtainOrganizations(){
+      let organizations=await OrganizationApi.mine();
+      console.log(organizations);
+      setOrganizations("ORGANIZATIONS==>",organizations)
+     }
+   
+  }, [props.currentUser])
+
+  const createOrganization =async(user=0,name)=>{  
+    let newOrganization={        
+      name: user==0?this.state.currentUser?.name ||  this.state.currentUser?.names:name            
+    }     
+    //CREAR ORGANIZACION------------------------------
+    let create=await OrganizationApi.createOrganization(newOrganization);
+    if(create){        
+    return create;
+    }
+    return null;
+  }
  
   return (
     

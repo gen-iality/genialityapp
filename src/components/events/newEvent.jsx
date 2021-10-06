@@ -4,7 +4,7 @@ import InfoGeneral from './newEvent/InfoGeneral';
 import InfoAsistentes from './newEvent/infoAsistentes';
 import Moment from 'moment';
 
-import { Actions } from '../../helpers/request';
+import { Actions, UsersApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { BaseUrl } from '../../helpers/constants';
@@ -18,31 +18,13 @@ import Tranmitir from './newEvent/transmitir';
 import Resultado from './newEvent/resultado';
 import { cNewEventContext } from '../../Context/newEventContext';
 
-
 const { Step } = Steps;
 
 /* Objeto que compone el paso a paso y su contenido */
-const steps = [
-  {
-    title: 'Información',
-    icon: <ScheduleOutlined />,
-    content: <Informacion />,
-  },
-  {
-    title: 'Apariencia',
-    icon: <PictureOutlined />,
-    content: <Apariencia />,
-  },
-  {
-    title: 'Transmisión',
-    icon: <VideoCameraOutlined />,
-    content: <Tranmitir />,
-  },
-];
 
 class NewEvent extends Component {
   constructor(props) {
-    super(props);
+    super(props); 
     this.state = {
       info: {
         name: '',
@@ -67,12 +49,40 @@ class NewEvent extends Component {
         fields: false,
       },
       current: 0,
+      currentUser: null,
+      steps: [
+        {
+          title: 'Información',
+          icon: <ScheduleOutlined />,
+        },
+        {
+          title: 'Apariencia',
+          icon: <PictureOutlined />,
+        },
+        {
+          title: 'Transmisión',
+          icon: <VideoCameraOutlined />,
+        },
+      ],
     };
     this.saveEvent = this.saveEvent.bind(this);
   }
-  componentDidMount(){
-    console.log("props==>",this.props.match.params.user)
+  async componentDidMount() {
+    if (this.props.match.params.user) {
+      let profileUser = await UsersApi.getProfile(this.props.match.params.user);
+      this.setState({ currentUser: profileUser });
+    }
   }
+  obtainContent = (step) => {
+    switch (step.title) {
+      case 'Información':
+        return <Informacion currentUser={this.state.currentUser} />;
+      case 'Apariencia':
+        return <Apariencia currentUser={this.state.currentUser} />;
+      case 'Transmisión':
+        return <Tranmitir currentUser={this.state.currentUser} />;
+    }
+  };
 
   /*  nextStep = (field, data, next) => {
     this.setState(
@@ -198,8 +208,8 @@ class NewEvent extends Component {
             { name: 'name', required: true, length: 4 },
             { name: 'description', required: eventNewContext.addDescription, length: 9 },
           ])
-        ) {          
-          message.error("Error en los campos..")
+        ) {
+          message.error('Error en los campos..');
         } else {
           this.nextPage();
         }
@@ -210,7 +220,6 @@ class NewEvent extends Component {
         console.log(eventNewContext.valueInputs);
         break;
       case 2:
-        
         break;
     }
   };
@@ -222,13 +231,12 @@ class NewEvent extends Component {
 
   prev = () => {
     let eventNewContext = this.context;
-    if(eventNewContext.optTransmitir && this.state.current==2){
-      eventNewContext.changeTransmision(false)
-    }else{
+    if (eventNewContext.optTransmitir && this.state.current == 2) {
+      eventNewContext.changeTransmision(false);
+    } else {
       let current = this.state.current - 1;
       this.setState({ current });
     }
-   
   };
 
   render() {
@@ -239,7 +247,7 @@ class NewEvent extends Component {
         {/* Items del paso a paso */}
         <div className='itemStep'>
           <Steps current={current} responsive>
-            {steps.map((item) => (
+            {this.state.steps.map((item) => (
               <Step key={item.title} title={item.title} icon={item.icon} />
             ))}
           </Steps>
@@ -247,7 +255,7 @@ class NewEvent extends Component {
         <Card className='card-container' bodyStyle={{ borderTop: '25px solid #50D3C9', borderRadius: '5px' }}>
           {/* Contenido de cada item del paso a paso */}
           <Row justify='center' style={{ marginBottom: '8px' }}>
-            {steps[current].content}
+            {this.obtainContent(this.state.steps[current])}
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
           <div className='button-container'>
@@ -256,12 +264,12 @@ class NewEvent extends Component {
                 Anterior
               </Button>
             )}
-            {current < steps.length - 1 && (
+            {current < this.state.steps.length - 1 && (
               <Button className='button' type='primary' size='large' onClick={() => this.next()}>
                 Siguiente
               </Button>
             )}
-            {current === steps.length - 1 && (
+            {current === this.state.steps.length - 1 && (
               <Button
                 className='button'
                 type='primary'
