@@ -71,7 +71,10 @@ async function dataTheLoaded() {
 
     if(info.description === '<p><br></p>')
     {
-      setDescription('')
+      setData({
+        ...data,
+        description: ''
+      })
     }
   }
   const isloadingSelectChanged = { types: '', categories: '' };

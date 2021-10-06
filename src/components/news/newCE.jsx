@@ -201,6 +201,7 @@ const NewCE = (props) => {
 
           <Form.Item label={'Subtítulo'}>
             <ReactQuill 
+              id='description_short'
               name={'description_short'}
               value={notice.description_short}
               modules={toolbarEditor}
@@ -210,6 +211,7 @@ const NewCE = (props) => {
 
           <Form.Item label={'Noticia'}>
             <ReactQuill
+              id='description_complete'
               name={'description_complete'}
               value={notice.description_complete} 
               modules={toolbarEditor} 

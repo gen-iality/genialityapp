@@ -29,15 +29,17 @@ const Faq = (props) => {
 
   const getOne = async () => {
     const response = await FaqsApi.getOne(locationState.edit, eventID);
-    let res = response.data;
-    setFaq(res.find(faqs => faqs._id === locationState.edit));
-    if(faq.content === '<p><br></p>') {
+    let data = response.data.find(faqs => faqs._id === locationState.edit);
+    console.log(data);
+    setFaq(data);
+    if(data.content === '<p><br></p>') {
       setFaq({...faq, content: ''})
     }
     console.log(faq);
   }
 
   const onSubmit = async () => {
+    console.log(faq);
     const loading = message.open({
       key: 'loading',
       type: 'loading',
@@ -132,20 +134,21 @@ const Faq = (props) => {
       
       <Row justify='center' wrap gutter={12}>
         <Col >
-          <Form.Item label={'Título'} >
+          {/* <Form.Item label={'Título'} >
             <Input 
+              value={faq.title}
               name={'title'}
               placeholder={'Título de la pregunta frecuente'}
-              value={faq.title}
               onChange={(e) => handleChange(e)}
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item label={'Contenido'}>
             <ReactQuill
-              name={'content'}
+              id='faqContent'
               value={faq.content}
-              modules={toolbarEditor}
+              name={'content'}
               onChange={HandleQuillEditorChange}
+              modules={toolbarEditor}
             />
           </Form.Item>
         </Col>

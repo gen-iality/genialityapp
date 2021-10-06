@@ -15,12 +15,18 @@ const Table = ( props ) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [components, setComponents] = useState('');
+  list.map((list, index) => {
+    if(!list.index) {
+      list.index = index;
+    }
+  })
   console.log(list);
   
   const options = {
     title: 'Opciones',
     dataIndex: 'options',
-    render(val, item) {      
+    render(val, item) { 
+      console.log(item.index);
       return (
         <Row wrap gutter={[8, 8]}>
           <Col>
@@ -28,7 +34,8 @@ const Table = ( props ) => {
               downloadFile && (
                 <Tooltip placement='topLeft' title='Descargar' >
                   <Button
-                    key='download'
+                    key={`downloadAction${item.index}`}
+                    id={`downloadAction${item.index}`}
                     icon={<DownloadOutlined />}
                     size='small'
                     type='primary'
@@ -44,7 +51,8 @@ const Table = ( props ) => {
               editPath && (
                 <Tooltip placement='topLeft' title='Editar' >
                   <Link 
-                    key='edit'
+                    key={`editAction${item.index}`}
+                    id={`editAction${item.index}`}
                     to={{ pathname: editPath, state: { edit: item._id } }}
                   >
                     <Button icon={<EditOutlined />} type='primary' size="small" />
@@ -58,7 +66,8 @@ const Table = ( props ) => {
               remove && (
                 <Tooltip placement='topLeft' title='Eliminar' >
                   <Button
-                    key='delete'
+                    key={`removeAction${item.index}`}
+                    id={`removeAction${item.index}`}
                     onClick={() => remove(item._id)}
                     icon={<DeleteOutlined />}
                     type='danger'
