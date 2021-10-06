@@ -32,15 +32,7 @@ class UserModal extends Component {
       confirmCheck: true,
       valid: true,
       checked_in: false,
-      tickets: [],
-      options: [
-        {
-          type: 'danger',
-          text: 'Eliminar/Borrar',
-          icon: <DeleteOutlined />,
-          action: this.deleteUser,
-        },
-      ],
+      tickets: [],    
       loadingregister: false,
     };
   }
@@ -98,13 +90,21 @@ class UserModal extends Component {
   componentWillUnmount() {
     this.setState({ user: {}, edit: false });
   }
+  options= [
+    {
+      type: 'danger',
+      text: 'Eliminar/Borrar',
+      icon: <DeleteOutlined />,
+      action: ()=>this.deleteUser(this.state.user),
+    },
+  ];
 
   deleteUser = async (user) => {
     const { substractSyncQuantity } = this.props;
     let messages = {};
     // let resultado = null;
     const self = this;
-    const userRef = firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`);
+    const userRef = !this.props.byActivity? firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`): firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`).doc("activity").collection(`${this.props.activityId}`);
     try {
       await Actions.delete(`/api/events/${this.props.cEvent.value?._id}/eventusers`, user._id);
       // message = { class: 'msg_warning', content: 'USER DELETED' };
@@ -114,11 +114,12 @@ class UserModal extends Component {
       ///Esta condición se agrego porque algunas veces los datos no se sincronizan
       //bien de mongo a firebase y terminamos con asistentes que no existen
       if (e.response && e.response.status === 404) {
-        userRef.doc(this.state.userId).delete();
-        toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+        console.log(userRef)
+        userRef.doc(user._id).delete();
+        message.success('Eliminado correctamente');
       } else {
         messages = { class: 'msg_danger', content: e };
-        toast.info(e);
+        message.error('Error al eliminar');
       }
     } finally {
       setTimeout(() => {
@@ -137,7 +138,7 @@ class UserModal extends Component {
         toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
 
         //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
-        substractSyncQuantity();
+        //substractSyncQuantity();
       });
     setTimeout(() => {
       message.class = message.content = '';
@@ -154,15 +155,21 @@ class UserModal extends Component {
     this.setState({ loadingregister: true });
     console.log('callback=>', values);
     let resp;
+    let respActivity=true;
     if(values){
       const snap = { properties: values };
       resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
       console.log("USERADD==>",resp)
     }
-    if (this.props.byActivity) {     
-        
+   if (this.props.byActivity && resp.data._id) {      
+    respActivity = await Activity.Register(
+          this.props.cEvent?.value?._id,
+          resp.data.user._id,
+          this.props.activityId
+        ); 
+        console.log("RESPUESTA ACTIVITY==>",respActivity)   
     }
-    if (resp) {
+    if (resp && respActivity) {
       message.success('Usuario agregado correctamente');
       this.props.handleModal();
     } else {
@@ -193,7 +200,7 @@ class UserModal extends Component {
             eventUserOther={user || {}}
             fields={this.props.extraFields}
             organization={true}
-            options={this.state.options}
+            options={this.options}
             callback={this.saveUser}
             loadingregister={this.state.loadingregister}
           />
