@@ -25,26 +25,8 @@ const { Step } = Steps;
 class NewEvent extends Component {
   constructor(props) {
     super(props); 
-    this.state = {
-      info: {
-        name: '',
-        location: {},
-        description: '',
-        category_ids: [],
-        venue: '',
-        event_type_id: '',
-        hour_start: Moment().toDate(),
-        date_start: Moment().toDate(),
-        hour_end: Moment().toDate(),
-        date_end: Moment().toDate(),
-        address: '',
-        type_event: '',
-        allow_register: '',
-      },
-      fields: [],
-      tickets: {},
-      content: [],
-      stepsValid: {
+    this.state = {    
+        stepsValid: {
         info: false,
         fields: false,
       },
@@ -96,37 +78,35 @@ class NewEvent extends Component {
   }; */
 
   async saveEvent(fields) {
-    const { info } = this.state;
-    // const self = this;
-    //this.setState({loading:true});
-    const hour_start = Moment(info.hour_start).format('HH:mm');
-    const date_start = Moment(info.date_start).format('YYYY-MM-DD');
-    const hour_end = Moment(info.hour_end).format('HH:mm');
-    const date_end = Moment(info.date_end).format('YYYY-MM-DD');
-    const datetime_from = Moment(date_start + ' ' + hour_start, 'YYYY-MM-DD HH:mm');
-    const datetime_to = Moment(date_end + ' ' + hour_end, 'YYYY-MM-DD HH:mm');
+    let eventNewContext = this.context;
+    console.log(eventNewContext.valueInputs.name)
+    console.log(eventNewContext.valueInputs.description)
+    console.log(eventNewContext.selectedDateEvent)
+    console.log(eventNewContext.selectOrganization)
+    console.log(eventNewContext.imageEvents)
+    if(eventNewContext.selectOrganization){
     const data = {
-      name: info.name,
-      address: info.address,
-      type_event: info.type_event,
-      datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
-      datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
-      picture: info.picture,
-      venue: info.venue,
-      location: info.location,
-      visibility: info.visibility ? info.visibility : 'PUBLIC',
-      description: info.description,
-      category_ids: info.categories,
-      organizer_id: info.organizer_id,
-      event_type_id: info.event_type_id,
-      user_properties: [...fields],
-      allow_register: info.allow_register,
+      name: eventNewContext.valueInputs.name,
+      address: '',
+      type_event: 'onlineEvent',
+      datetime_from:eventNewContext.selectedDateEvent?.from ,
+      datetime_to: eventNewContext.selectedDateEvent?.at,
+      picture: null,
+      venue: '',
+      location: '',
+      visibility: 'PUBLIC',
+      description: eventNewContext.valueInputs?.description || '',
+      category_ids: [],
+      organizer_id: eventNewContext.selectOrganization.id,
+      event_type_id: '5bf47203754e2317e4300b68',
+      user_properties: [],
+      allow_register: true,
       styles: {
         buttonColor: '#FFF',
         banner_color: '#FFF',
         menu_color: '#FFF',
-        event_image: null,
-        banner_image: null,
+        event_image: eventNewContext.imageEvents?.logo || null,
+        banner_image: eventNewContext.imageEvents?.portada || null,
         menu_image: null,
         brandPrimary: '#FFFFFF',
         brandSuccess: '#FFFFFF',
@@ -141,9 +121,9 @@ class NewEvent extends Component {
         activeText: '#FFFFFF',
         bgButtonsEvent: '#FFFFFF',
         banner_image_email: null,
-        BackgroundImage: null,
+        BackgroundImage: eventNewContext.imageEvents?.imgfondo || null ,
         FooterImage: null,
-        banner_footer: null,
+        banner_footer: eventNewContext.imageEvents?.piepagina || null,
         mobile_banner: null,
         banner_footer_email: null,
         show_banner: false,
@@ -157,7 +137,13 @@ class NewEvent extends Component {
         data_loader_page: null,
       },
     };
-    try {
+    console.log("EVENT TO CREATE==>",data)
+  }else{
+   message.error("Seleccione una organización")
+  }
+
+    
+  /*  try {
       const result = await Actions.create('/api/events', data);
       this.setState({ loading: false });
       if (result._id) {
@@ -185,7 +171,7 @@ class NewEvent extends Component {
         this.setState({ serverError: true, loader: false, errorData });
       }
       console.error(error.config);
-    }
+    }*/
   }
 
   /* prevStep = (field, data, prev) => {
@@ -258,7 +244,7 @@ class NewEvent extends Component {
             {this.obtainContent(this.state.steps[current])}
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
-          <div className='button-container'>
+         { <div className='button-container'>
             {current > 0 && (
               <Button className='button' size='large' onClick={() => this.prev()}>
                 Anterior
@@ -274,11 +260,11 @@ class NewEvent extends Component {
                 className='button'
                 type='primary'
                 size='large'
-                onClick={() => message.success('Processing complete!')}>
+                onClick={() => this.saveEvent()}>
                 Crear evento
               </Button>
             )}
-          </div>
+          </div>}
         </Card>
         {/* <div className='steps'>
           <NavLink

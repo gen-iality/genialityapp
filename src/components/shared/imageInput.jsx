@@ -66,7 +66,7 @@ let ImageInput = (props) => {
           <div>
             <Dropzone accept="image/*" onDrop={async (e)=>{ setStillOldImage(true); await props.changeImg(e,props.indexImage);setStillOldImage(false);}} style={style}>
               {!stillOldImage && <div className="has-text-grey has-text-weight-bold has-text-centered">
-                <span>Subir foto</span>
+                <span>Subir foto ({props.indexImage})</span>
                 <br />
                 <small>(Tamaño recomendado: {widthText}px x {heighText}px)</small>
               </div>}

@@ -14,14 +14,13 @@ import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } 
 import EventContent from '../events/shared/content';
 import Moment from 'moment';
 import { TicketsApi } from '../../helpers/request';
-import { Button, Card, Col, Drawer, Row, Statistic, Table,Typography } from 'antd';
+import { Button, Card, Checkbox, Col, Drawer, Image, message, Row, Statistic, Table, Typography } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
-import { FullscreenOutlined } from '@ant-design/icons';
-
-const {Title}=Typography;
-
+import { EditOutlined, FullscreenOutlined } from '@ant-design/icons';
+const imgNotFound="https://www.latercera.com/resizer/m0bOOb9drSJfRI-C8RtRL_B4EGE=/375x250/smart/arc-anglerfish-arc2-prod-copesa.s3.amazonaws.com/public/Z2NK6DYAPBHO3BVPUE25LQ22ZA.jpg";
+const { Title } = Typography;
 
 /*            switch (field.type) {
               case "boolean":
@@ -90,6 +89,7 @@ class ListEventUser extends Component {
       totalPesoVoto: 0,
       configfast: {},
       isModalVisible: false,
+      fieldsForm:[]
     };
   }
 
@@ -103,7 +103,7 @@ class ListEventUser extends Component {
         onClick={(e) => {
           this.openEditModalUser(item);
         }}>
-        <i className='fas fa-edit' />
+           <EditOutlined />
       </span>
     );
   };
@@ -118,15 +118,14 @@ class ListEventUser extends Component {
   };
 
   rol_component = (text, item, index) => {
-    if(this.state.rolesList){
-      for(let role of this.state.rolesList ){
-        if (item.rol_id==role._id) {
-          return <p>{role.name}</p>;    
-      
+    if (this.state.rolesList) {
+      for (let role of this.state.rolesList) {
+        if (item.rol_id == role._id) {
+          return <p>{role.name}</p>;
+        }
+      }
     }
-  } 
-  }
-}
+  };
 
   // eslint-disable-next-line no-unused-vars
   updated_at_component = (text, item, index) => {
@@ -140,21 +139,20 @@ class ListEventUser extends Component {
   // eslint-disable-next-line no-unused-vars
   checkedincomponent = (text, item, index) => {
     var self = this;
-
-    return item.checkedin_at ? (
-      <p>{Moment(item.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
+    return item.checkedin_at || item.properties?.checkedin_at ? (
+      <p>{Moment(item.checkedin_at|| item.properties.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
     ) : (
       <div>
-        <input
+        <Checkbox
           className='is-checkradio is-primary is-small'
           id={'checkinUser' + item._id}
           disabled={item.checkedin_at}
           type='checkbox'
           name={'checkinUser' + item._id}
-          checked={item.checkedin_at}
+          checked={item.checkedin_at || item.properties?.checkedin_at}
           // eslint-disable-next-line no-unused-vars
           onChange={(e) => {
-            self.checkIn(item._id);
+            self.checkIn(item._id,item);
           }}
         />
         <label htmlFor={'checkinUser' + item._id} />
@@ -191,6 +189,48 @@ class ListEventUser extends Component {
       let extraFields = fieldNameEmailFirst(properties);
       extraFields = this.addDefaultLabels(extraFields);
       extraFields = this.orderFieldsByWeight(extraFields);
+      let fieldsForm=Array.from(extraFields);
+     // AGREGAR EXTRAFIELDS DE ROL Y CHECKIN
+     let rolesOptions=rolesList.map((rol)=>{
+       return {
+         label:rol.name,
+         value:rol._id
+       }
+     })
+     fieldsForm.push({
+      author:null,
+      categories:[] ,   
+      label: "Rol",
+      mandatory: true,
+      name: "rol_id",      
+      organizer: null,
+      tickets: [],
+      type: "list",
+      fields_conditions:[],
+      unique: false,
+      options: rolesOptions,     
+      visibleByAdmin: false,
+      visibleByContacts: "public",
+      _id: {$oid: '614260d226e7862220497eac1'}
+     }
+     )
+
+     fieldsForm.push({
+      author:null,
+      categories:[] ,   
+      label: "Checkin",
+      mandatory: false,
+      name: "checked_in",      
+      organizer: null,
+      tickets: [],
+      type: "boolean",
+      fields_conditions:[],
+      unique: false,         
+      visibleByAdmin: false,
+      visibleByContacts: "public",
+      _id: {$oid: '614260d226e7862220497eac2'}
+     }
+     )
 
       let columns = [];
       let checkInColumn = {
@@ -212,8 +252,22 @@ class ListEventUser extends Component {
           return item.type != 'tituloseccion';
         })
         .map((item) => {
-          return { title: item.label, dataIndex: item.name, key: item.name};
-        });
+          return {
+            title: item.label,
+            dataIndex: item.name,
+            key: item.name,
+            render: (record, key) =>{            
+             return item.type == 'file' ? (              
+                <a target='__blank' download={item?.name} href={key[item?.name]}>
+                 {this.obtenerName(key[item?.name])}
+                </a>
+              ) : item.type == 'avatar' ? (
+                <Image width={40} height={40} src={key[item?.name]} />
+              ) : (
+                key[item.name]
+              )
+          }
+        }})
       columns = [...columns, ...extraColumns];
       let rol = {
         title: 'Rol',
@@ -240,7 +294,7 @@ class ListEventUser extends Component {
 
       this.setState({ columns: columns });
 
-      this.setState({ extraFields, rolesList, badgeEvent });
+      this.setState({ extraFields, rolesList, badgeEvent,fieldsForm });
       const { usersRef } = this.state;
 
       firestore
@@ -259,7 +313,7 @@ class ListEventUser extends Component {
           let currentAttendees = [...this.state.usersReq];
           let updatedAttendees = updateAttendees(currentAttendees, snapshot);
           let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
-          
+
           let totalCheckedInWithWeight =
             Math.round(
               updatedAttendees.reduce(
@@ -267,49 +321,66 @@ class ListEventUser extends Component {
                 0
               ) * 100
             ) / 100;
-             //total de pesos
-             let totalWithWeight =
-             Math.round(
-               updatedAttendees.reduce(
-                 (acc, item) => acc + (parseFloat(item.pesovoto ? item.pesovoto : 1)),
-                 0
-               ) * 100
-             ) / 100;
-           this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight,totalWithWeight });
-          
-           //console.log("ATTENDESS==>",updatedAttendees)
-           //console.log("ATTENDESSFIND==>",updatedAttendees.filter((at)=>at.email=='nieblesrafael@yahoo.com'))
-         
-          for (let i = 0; i < updatedAttendees.length; i++) {
-            
-              // Arreglo temporal para que se muestre el listado de usuarios sin romperse
-            // algunos campos no son string y no se manejan bien
-           //console.log("FIELDS==>",extraFields)
-           extraFields.forEach(function(key) {            
-            if (
-              !(
-                (updatedAttendees[i][key.name] && updatedAttendees[i][key.name].getMonth) ||
-                typeof updatedAttendees[i][key.name] == 'string' ||
-                typeof updatedAttendees[i][key.name] == 'boolean' ||
-                typeof updatedAttendees[i][key.name] == 'number' ||
-                Number(updatedAttendees[i][key.name]) ||
-                updatedAttendees[i][key.name] === null || updatedAttendees[i][key.name] === undefined
-              )
-            ) {                
-              updatedAttendees[i]['properties'][key.name] = updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
-            }
-            if(extraFields){
-              let codearea=extraFields?.filter((field)=>field.type=='codearea')                
-            if(codearea[0] && updatedAttendees[i] && Object.keys(updatedAttendees[i]).includes(codearea[0].name) && key.name==codearea[0].name){
-             
-              updatedAttendees[i][codearea[0].name]=updatedAttendees[i]['code']?"(+"+updatedAttendees[i]['code']+")"+updatedAttendees[i].user[codearea[0].name]:"(+0)"+updatedAttendees[i].user[codearea[0].name]
-            }else{
-              console.log("KEY==>",updatedAttendees[i]['properties'][key])
-            //updatedAttendees[i][key.name] =  updatedAttendees[i]['properties'][key.name]==true ?"SI":updatedAttendees[i]['properties'][key.name]==false?"NO":updatedAttendees[i]?.user[key.name];
-            updatedAttendees[i]["textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio"]= self.props.event._id=="60c8affc0b4f4b417d252b29" ? "SI" :""          
-          }
-          }
+          //total de pesos
+          let totalWithWeight =
+            Math.round(
+              updatedAttendees.reduce((acc, item) => acc + parseFloat(item.pesovoto ? item.pesovoto : 1), 0) * 100
+            ) / 100;
+          this.setState({
+            totalCheckedIn: totalCheckedIn,
+            totalCheckedInWithWeight: totalCheckedInWithWeight,
+            totalWithWeight,
           });
+
+          console.log("ATTENDESS==>",updatedAttendees)
+          //console.log("ATTENDESSFIND==>",updatedAttendees.filter((at)=>at.email=='nieblesrafael@yahoo.com'))
+
+          for (let i = 0; i < updatedAttendees.length; i++) {
+            // Arreglo temporal para que se muestre el listado de usuarios sin romperse
+            // algunos campos no son string y no se manejan bien
+            //console.log("FIELDS==>",extraFields)
+            extraFields.forEach(function(key) {
+              if (
+                !(
+                  (updatedAttendees[i][key.name] && updatedAttendees[i][key.name].getMonth) ||
+                  typeof updatedAttendees[i][key.name] == 'string' ||
+                  typeof updatedAttendees[i][key.name] == 'boolean' ||
+                  typeof updatedAttendees[i][key.name] == 'number' ||
+                  Number(updatedAttendees[i][key.name]) ||
+                  updatedAttendees[i][key.name] === null ||
+                  updatedAttendees[i][key.name] === undefined
+                )
+              ) {
+                updatedAttendees[i]['properties'][key.name] =
+                  updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
+              }          
+
+              if (key.type == 'file') {                
+                updatedAttendees[i][key.name] = updatedAttendees[i][key.name];
+              }
+
+              if (key.type == 'avatar') {
+                //console.log(updatedAttendees[i].properties["picture"]);
+               updatedAttendees[i][key.name] = updatedAttendees[i]?.user?.picture || imgNotFound;
+              }             
+              if (extraFields) {
+                let codearea = extraFields?.filter((field) => field.type == 'codearea');
+                if (
+                  codearea[0] &&
+                  updatedAttendees[i] &&
+                  Object.keys(updatedAttendees[i]).includes(codearea[0].name) &&
+                  key.name == codearea[0].name
+                ) {
+                  updatedAttendees[i][codearea[0].name] = updatedAttendees[i]['code']
+                    ? '(+' + updatedAttendees[i]['code'] + ')' + updatedAttendees[i].user[codearea[0].name]
+                    : '(+0)' + updatedAttendees[i].user[codearea[0].name];
+                } else {
+                  //updatedAttendees[i][key.name] =  updatedAttendees[i]['properties'][key.name]==true ?"SI":updatedAttendees[i]['properties'][key.name]==false?"NO":updatedAttendees[i]?.user[key.name];
+                  updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] =
+                    self.props.event._id == '60c8affc0b4f4b417d252b29' ? 'SI' : '';
+                }
+              }
+            });
 
             if (updatedAttendees[i].payment) {
               updatedAttendees[i].payment =
@@ -325,11 +396,11 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-         
+
           this.setState({
             users: updatedAttendees,
             usersReq: updatedAttendees,
-            auxArr: updatedAttendees,           
+            auxArr: updatedAttendees,
             loading: false,
           });
         },
@@ -343,14 +414,22 @@ class ListEventUser extends Component {
     }
   }
 
+  obtenerName=(fileUrl)=>{
+    if(typeof fileUrl =='string'){
+      let splitUrl=fileUrl?.split("/");
+      return splitUrl[splitUrl.length-1];
+    }else{
+      return null;
+    }
+    }
+
   exportFile = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
     const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
-    
 
-    const data = await parseData2Excel(attendees, this.state.extraFields,this.state.rolesList);
+    const data = await parseData2Excel(attendees, this.state.extraFields, this.state.rolesList);
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
@@ -360,7 +439,7 @@ class ListEventUser extends Component {
   addUser = () => {
     html.classList.add('is-clipped');
     this.setState((prevState) => {
-      return { editUser: !prevState.editUser, edit: false };
+      return { editUser: !prevState.editUser, edit: false, selectedUser: null  };
     });
   };
 
@@ -384,31 +463,36 @@ class ListEventUser extends Component {
     });
   };
 
-  checkIn = async (id) => {
+  checkIn = async (id,item) => {
     const { qrData } = this.state;
     const { event } = this.props;
-    qrData.another = true;
-
+    qrData.another = true;   
     try {
-      await TicketsApi.checkInAttendee(event._id, id);
+     let resp= await TicketsApi.checkInAttendee(event._id, id);
+
       //toast.success('Usuario Chequeado');
     } catch (e) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
     }
-
     //return;
-
     const userRef = firestore.collection(`${event._id}_event_attendees`).doc(id);
-
+    
     // Actualiza el usuario en la base de datos
+   
     userRef
       .update({
+        ...item,
         updated_at: new Date(),
         checkedin_at: new Date(),
         checked_at: new Date(),
+        properties:{
+          ...item.properties,
+           checkedin_at: new Date(),
+           checked_in: true,
+        }
       })
       .then(() => {
-        toast.success('Usuario Chequeado');
+       message.success("Usuario checkeado..")
       })
       .catch((error) => {
         console.error('Error updating document: ', error);
@@ -445,6 +529,8 @@ class ListEventUser extends Component {
 
   openEditModalUser = (item) => {
     html.classList.add('is-clipped');
+    console.log('SELECTED ITEM==>', item);
+    item={...item,checked_in:item.properties?.checked_in || item.checked_in,checkedin_at:item.properties?.checkedin_at || item.checkedin_at}
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
 
@@ -492,7 +578,7 @@ class ListEventUser extends Component {
           acompanates += parseInt(user.properties.acompanates, 10);
       });
       const users = value === '' ? [...this.state.auxArr].slice(0, 50) : list;
-     
+
       this.setState({ users, ticket: value, checkIn: check, total: list.length + acompanates });
     });
   };
@@ -541,14 +627,12 @@ class ListEventUser extends Component {
       event: { event_stages },
     } = this.props;
 
-   
-
     const inscritos =
-    this.state.configfast && this.state.configfast.totalAttendees
-      ? this.state.configfast.totalAttendees
-      : usersReq.length;
+      this.state.configfast && this.state.configfast.totalAttendees
+        ? this.state.configfast.totalAttendees
+        : usersReq.length;
 
-      const participantes = Math.round((totalCheckedIn / inscritos) * 100);
+    const participantes = Math.round((totalCheckedIn / inscritos) * 100);
     const asistenciaCoeficientes = Math.round((totalCheckedInWithWeight / 100) * 100);
 
     return (
@@ -571,7 +655,7 @@ class ListEventUser extends Component {
           </div>
 
           <div className='columns checkin-tags-wrapper is-flex-touch'>
-          <div>
+            <div>
               <div className='tags' style={{ flexWrap: 'nowrap' }}>
                 <span className='tag is-white'>Inscritos:</span>
                 <span className='tag is-light'>{inscritos || 0}</span>
@@ -607,7 +691,7 @@ class ListEventUser extends Component {
                 Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
               </p>
             </div>
-          </div>         
+          </div>
           <div className='columns'>
             <div className='is-flex-touch columns container-options'>
               <div className='column is-narrow has-text-centered button-c is-centered'>
@@ -617,7 +701,12 @@ class ListEventUser extends Component {
                   </span>
                   <span className='text-button'>Agregar Usuario</span>
                 </button>
-               <Row><span style={{fontSize:10}}> <Link to={`/event/${this.props.event._id}/invitados/importar-excel`}>Importar usuarios</Link></span></Row> 
+                <Row>
+                  <span style={{ fontSize: 10 }}>
+                    {' '}
+                    <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>Importar usuarios</Link>
+                  </span> 
+                </Row>
               </div>
               {usersReq.length > 0 && (
                 <div className='column is-narrow has-text-centered export button-c is-centered'>
@@ -722,11 +811,11 @@ class ListEventUser extends Component {
               </Fragment>
             ) : (
               <div className='table-wrapper'>
-                <div className='table-container' style={{ height: '60vh' }}>                  
+                <div className='table-container' style={{ height: '60vh' }}>
                   {this.state.columns && (
                     <Table
-                      className='table-striped-rows'
-                      rowKey='_id'
+                      size='middle'
+                      //rowKey='_id'
                       dataSource={users}
                       columns={this.state.columns}
                     />
@@ -740,19 +829,18 @@ class ListEventUser extends Component {
 
         {!this.props.loading && editUser && (
           <UserModal
-          handleModal={this.modalUser}
-          modal={editUser}
-          eventId={this.props.eventId}
-          ticket={ticket}
-          tickets={this.state.listTickets}
-          rolesList={this.state.rolesList}
-          value={this.state.selectedUser}
-          checkIn={this.checkIn}
-          badgeEvent={this.state.badgeEvent}
-          extraFields={this.state.extraFields}
-          spacesEvent={spacesEvent}
-          edit={this.state.edit}
-          substractSyncQuantity={this.substractSyncQuantity}
+            handleModal={this.modalUser}
+            modal={editUser}          
+            ticket={ticket}          
+            tickets={this.state.listTickets}
+            rolesList={this.state.rolesList}
+            value={this.state.selectedUser}
+            checkIn={this.checkIn}
+            badgeEvent={this.state.badgeEvent}
+            extraFields={this.state.fieldsForm}
+            spacesEvent={spacesEvent}
+            edit={this.state.edit}
+            substractSyncQuantity={this.substractSyncQuantity}
           />
         )}
         {this.state.qrModal && (
@@ -768,7 +856,7 @@ class ListEventUser extends Component {
           />
         )}
         {timeout && <ErrorServe errorData={this.state.errorData} />}
-        
+
         <Drawer
           title='Estadísticas'
           visible={this.state.isModalVisible}
@@ -788,12 +876,29 @@ class ListEventUser extends Component {
           <Row align='middle' justify='center' style={{}}>
             <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
               <Row align='middle'>
-                <Card bodyStyle={{paddingLeft:'0px',paddingRight:'0px'}} bordered={false} cover={this.props.event.styles.event_image?(<img style={{objectFit:'cover', width:'100vw'}} src={this.props.event.styles.event_image} alt="Logo evento" />):''}>
-                  {this.props.event.name? (<Card.Meta description={<Title level={5}>{this.props.event.name}</Title>} />):''}
+                <Card
+                  bodyStyle={{ paddingLeft: '0px', paddingRight: '0px' }}
+                  bordered={false}
+                  cover={
+                    this.props.event.styles.event_image ? (
+                      <img
+                        style={{ objectFit: 'cover', width: '100vw' }}
+                        src={this.props.event.styles.event_image}
+                        alt='Logo evento'
+                      />
+                    ) : (
+                      ''
+                    )
+                  }>
+                  {this.props.event.name ? (
+                    <Card.Meta description={<Title level={5}>{this.props.event.name}</Title>} />
+                  ) : (
+                    ''
+                  )}
                 </Card>
               </Row>
             </Col>
-            <Col  xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>
+            <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>
               <Row align='middle'>
                 <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                   <Card bodyStyle={{}} style={{}} bordered={false}>
@@ -830,12 +935,19 @@ class ListEventUser extends Component {
                           Asistencia por Coeficientes
                         </Title>
                       }
-                      value={totalCheckedInWithWeight + '/'+this.state.totalWithWeight + ' (' + Math.round((totalCheckedInWithWeight/this.state.totalWithWeight)*100) + '%)'}
+                      value={
+                        totalCheckedInWithWeight +
+                        '/' +
+                        this.state.totalWithWeight +
+                        ' (' +
+                        Math.round((totalCheckedInWithWeight / this.state.totalWithWeight) * 100) +
+                        '%)'
+                      }
                     />
                   </Card>
                 </Col>
               </Row>
-            </Col>          
+            </Col>
           </Row>
         </Drawer>
       </React.Fragment>

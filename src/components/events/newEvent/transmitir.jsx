@@ -1,10 +1,58 @@
-import { Col, Modal, Row } from 'antd';
-import React, { useState } from 'react';
+import { Button, Col, Modal, Row, List, Typography, message } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useContextNewEvent } from '../../../Context/newEventContext';
+import { OrganizationApi } from '../../../helpers/request';
 import OptTranmitir from './optTransmitir';
 
-function Transmitir() {
-  const {changeTransmision,optTransmitir,changeOrganization,organization}= useContextNewEvent();
+function Transmitir(props) {
+  const {
+    changeTransmision,
+    optTransmitir,
+    changeOrganization,
+    organization,
+    selectOrganization,
+    selectedOrganization,
+  } = useContextNewEvent();
+  const [organizations, setOrganizations] = useState([]);
+
+  useEffect(() => {
+    if (props.currentUser) {
+      
+      obtainOrganizations();
+    }
+
+    async function obtainOrganizations() {
+      let organizations = await OrganizationApi.mine();
+      if(organization.length==0){
+        await createOrganization();
+        organizations = await OrganizationApi.mine();
+      }
+      
+      setOrganizations(organizations);
+      selectedOrganization(organizations && organizations[0])
+    }
+  }, [props.currentUser]);
+
+  const createOrganization = async () => {
+    let newOrganization = {
+      name: props.currentUser?.names ||  props.currentUser?.name,
+    };
+    //CREAR ORGANIZACION------------------------------
+    let create = await OrganizationApi.createOrganization(newOrganization);
+    if (create) {
+      return create;
+    }
+    return null;
+  };
+
+  const selectOrganizationOK = () => {
+    if (!selectOrganization || selectOrganization == null) {
+      message.error('Por favor seleccione una organización');
+    } else {
+      changeOrganization(false);
+    }
+  };
+
   return (
     <>
       {optTransmitir == false ? (
@@ -30,16 +78,38 @@ function Transmitir() {
                     efectos profesionales
                   </p>
                   {/*<a onClick={() => changeTransmision(true)}>Ver opciones de transmisión externas</a>*/}
-                  {<a onClick={() => changeOrganization(true)}>Organización</a>}
+                  {<a onClick={() => changeOrganization(true)}>Organización: {selectOrganization?.name}</a>}
                 </div>
               </div>
             </Col>
           </Row>
-        {organization && <Modal title="Basic Modal" visible={organization} onCancel={()=>changeOrganization(false)}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Modal>}
+          {organization && (
+            <Modal
+              onOk={selectOrganizationOK}
+              okText='Seleccionar'
+              cancelText='Cerrar'
+              title='Organización'
+              visible={organization}
+              onCancel={() => changeOrganization(false)}>
+              <List
+                style={{ height: 400, overflowY: 'auto' }}
+                size='small'
+                bordered
+                dataSource={organizations}
+                renderItem={(item) => (
+                  <List.Item
+                    style={{
+                      cursor: 'pointer',
+                      color: selectOrganization?.id == item.id ? 'white' : 'rgba(0, 0, 0, 0.85)',
+                      background: selectOrganization?.id == item.id ? '#40a9ff' : 'white',
+                    }}
+                    onClick={() => selectedOrganization(item)}>
+                    {item.name}
+                  </List.Item>
+                )}
+              />
+            </Modal>
+          )}
         </div>
       ) : (
         <OptTranmitir />

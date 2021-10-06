@@ -18,6 +18,7 @@ export const NewEventProvider = ({ children }) => {
   const [imageEvents,setImageEvents]=useState({});
   const [optTransmitir, setOptTransmitir] = useState(false);
   const [organization, setOrganization] = useState(false);
+  const [selectOrganization, setSelectOrganization] = useState();
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -57,6 +58,10 @@ export const NewEventProvider = ({ children }) => {
   }
   const changeOrganization=(value)=>{
     setOrganization(value);
+  }
+
+  const selectedOrganization=(value)=>{
+    setSelectOrganization(value);
   }
 
   const handleDayClick = (day) => {
@@ -155,7 +160,9 @@ export const NewEventProvider = ({ children }) => {
         optTransmitir,
         changeTransmision,
         changeOrganization,
-        organization
+        organization,
+        selectOrganization,
+        selectedOrganization
       }}>
       {children}
     </cNewEventContext.Provider>

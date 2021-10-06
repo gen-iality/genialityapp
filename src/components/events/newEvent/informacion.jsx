@@ -12,8 +12,7 @@ import { OrganizationApi } from '../../../helpers/request';
 
 const { Text, Link, Title, Paragraph } = Typography;
 
-const Informacion = (props) => {
-  const [organizations,setOrganizations]=useState([]);
+const Informacion = (props) => { 
   const {
     addDescription,
     showModal,
@@ -32,36 +31,10 @@ const Informacion = (props) => {
     valueInputs,
     errorInputs,
     containsError
-  } = useContextNewEvent();
+  } = useContextNewEvent();  
   
-  useEffect(() => {
-    console.log("USERINFORMATION==>",props.currentUser)
-     if(props.currentUser){
-      obtainOrganizations();
-     }
-
-     async function obtainOrganizations(){
-      let organizations=await OrganizationApi.mine();
-      console.log(organizations);
-      setOrganizations("ORGANIZATIONS==>",organizations)
-     }
-   
-  }, [props.currentUser])
-
-  const createOrganization =async(user=0,name)=>{  
-    let newOrganization={        
-      name: user==0?this.state.currentUser?.name ||  this.state.currentUser?.names:name            
-    }     
-    //CREAR ORGANIZACION------------------------------
-    let create=await OrganizationApi.createOrganization(newOrganization);
-    if(create){        
-    return create;
-    }
-    return null;
-  }
  
-  return (
-    
+  return (    
     <div className='step-information'>
       <Space direction='vertical' size='middle'>
         <div>       
