@@ -445,6 +445,7 @@ class Styles extends Component {
     try {
       if(thereIsAnOrganization){
          info = await OrganizationApi.editOne(this.state.data, thereIsAnOrganization);
+         this.props.setOrganization(info)
       }else{
          info = await Actions.put(`/api/events/${eventId}`, this.state.data);
       }

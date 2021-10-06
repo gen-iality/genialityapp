@@ -5,9 +5,9 @@ import { OrganizationApi } from '../../helpers/request';
 import LogOut from '../shared/logOut';
 import OrganizationProfile from './profile';
 import Styles from '../App/styles';
-import Properties from './properties';
-import OrgMembers from './members';
 import OrgEvents from './events';
+import OrgMembers from './members';
+import Datos from '../events/datos';
 
 function Organization(props) {
    const [organization, setOrganization] = useState({});
@@ -93,41 +93,33 @@ function Organization(props) {
                            <Route
                               exact
                               path={`${props.match.url}/information`}
-                              render={() => <OrganizationProfile org={organization} setOrganization={setOrganization}/>}
+                              render={() => (
+                                 <OrganizationProfile org={organization} setOrganization={setOrganization} />
+                              )}
                            />
                            <Route
                               exact
                               path={`${props.match.url}/appearance`}
-                              render={() => (
-                                 <Styles org={organization} />
-                              )}
+                              render={() => <Styles org={organization} setOrganization={setOrganization} />}
                            />
                            <Route
                               exact
                               path={`${props.match.url}/events`}
-                              render={() => (
-                                 <OrgEvents org={organization} />
-                              )}
+                              render={() => <OrgEvents org={organization} />}
                            />
                            <Route
                               exact
                               path={`${props.match.url}/members`}
-                              render={() => (
-                                 <OrgMembers org={organization} />
-                              )}
-                              org={organization}
-                              url={props.match.url}
+                              render={() => <OrgMembers org={organization} url={props.match.url} />}
                            />
                            <Route
                               exact
                               path={`${props.match.url}/membersettings`}
                               // component={OrgUsers}
                               render={() => (
-                                 // <OrgEvents org={organization} />
-                                 <h1>membersettings</h1>
+                                 <Datos org={organization} url={props.match.url} />
+                                 // <h1>membersettings</h1>
                               )}
-                              org={organization}
-                              url={props.match.url}
                            />
                            <Route component={NoMatch} />
                         </Switch>

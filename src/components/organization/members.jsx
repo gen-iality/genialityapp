@@ -12,12 +12,13 @@ import UserOrg from '../modal/userOrg';
 import XLSX from 'xlsx';
 import { useHistory } from 'react-router-dom';
 import { Table, Typography, Button, Select, Row } from 'antd';
-import { UserAddOutlined, QrcodeOutlined, IdcardOutlined, ScanOutlined } from '@ant-design/icons';
+import { UserAddOutlined, DownloadOutlined, QrcodeOutlined, IdcardOutlined, ScanOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
 import { Background } from 'react-parallax';
 import ExcelExportColumns from './tableColums/excelExportColumns';
+import moment from 'moment';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 function OrgMembers(props) {
    const [membersData, setMembersData] = useState([]);
@@ -43,6 +44,28 @@ function OrgMembers(props) {
       history.replace({ pathname: url });
    }
 
+   async function exportFile(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const fieldsMembersData = [];
+
+      membersData.map((data) => {
+         const properties = {
+            _id: data._id,
+            created_at: data.created_at,
+            updated_at: data.updated_at,
+            ...data.properties,
+         };
+
+         fieldsMembersData.push(properties);
+      });
+
+      const ws = XLSX.utils.json_to_sheet(fieldsMembersData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Members');
+      XLSX.writeFile(wb, `Miembros_${moment().format('l')}.xlsx`);
+   }
+
    return (
       <>
          {isLoading ? (
@@ -65,7 +88,7 @@ function OrgMembers(props) {
                         textAlign: 'center',
                         borderRadius: 4,
                      }}>
-                     Inscritos: {membersData.length} | Participantes: {membersData.length}
+                     Inscritos: {membersData.length}
                   </Title>
                </Row>
 
@@ -79,25 +102,11 @@ function OrgMembers(props) {
                   <Button style={{ marginLeft: 20 }} icon={<UserAddOutlined />}>
                      Agregar Usuario
                   </Button>
-                  {membersData.length > 0 && <ExcelExportColumns membersData={membersData} />}
-
-                  <Select
-                     defaultValue={`options`}
-                     style={{ width: 200, marginLeft: 20 }}
-                     // value={this.state.typeScanner}
-                     // defaultValue={this.state.typeScanner}
-                     // onChange={this.handleChange}
-                  >
-                     <option key={1} value='options'>
-                        <ScanOutlined /> Escanear...
-                     </option>
-                     <option key={2} value='scanner-qr'>
-                        <QrcodeOutlined /> Escanear QR
-                     </option>
-                     <option key={3} value='scanner-document'>
-                        <IdcardOutlined /> Escanear Documento
-                     </option>
-                  </Select>
+                  {membersData.length > 0 && (
+                     <Button style={{ marginLeft: 20 }} icon={<DownloadOutlined />} onClick={exportFile}>
+                        Exportar
+                     </Button>
+                  )}
                </Row>
 
                <Table
