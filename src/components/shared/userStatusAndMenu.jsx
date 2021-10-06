@@ -57,7 +57,7 @@ const UserStatusAndMenu = (props) => {
             <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
         </Menu.Item>}
   
-       {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/create-event`)}>
+       {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/create-event/${props.userEvent._id}`)}>
             <Button type='primary' size='medium'>
               <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
             </Button>

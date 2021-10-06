@@ -18,6 +18,7 @@ import Tranmitir from './newEvent/transmitir';
 import Resultado from './newEvent/resultado';
 import { cNewEventContext } from '../../Context/newEventContext';
 
+
 const { Step } = Steps;
 
 /* Objeto que compone el paso a paso y su contenido */
@@ -68,6 +69,9 @@ class NewEvent extends Component {
       current: 0,
     };
     this.saveEvent = this.saveEvent.bind(this);
+  }
+  componentDidMount(){
+    console.log("props==>",this.props.match.params.user)
   }
 
   /*  nextStep = (field, data, next) => {
