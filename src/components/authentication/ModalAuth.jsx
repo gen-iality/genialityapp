@@ -29,7 +29,7 @@ const ModalAuth = (props) => {
   const [loading, setLoading] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
   const [form1] = Form.useForm();
-  let { handleChangeTypeModal, typeModal, handleChangeTabModal,tabLogin } = useContext(HelperContext);
+  let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
   const intl = useIntl();
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const ModalAuth = (props) => {
   }, []);
   useEffect(() => {
     form1.resetFields();
-  }, [typeModal,tabLogin]);
+  }, [typeModal, tabLogin]);
   const callback = (key) => {
     form1.resetFields();
     handleChangeTabModal(key);
@@ -83,16 +83,18 @@ const ModalAuth = (props) => {
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
       .then((response) => {
-        loginNormal = true;        
+        loginNormal = true;
         setErrorLogin(false);
         //setLoading(false);
       })
-      .catch(async () => {       
+      .catch(async () => {
         let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
         if (user.data.length > 0) {
-         
-         
-          if (user.data[0].properties?.password == data.password || user.data[0].contrasena == data.password || user.data[0]?.user?.contrasena == data.password) {
+          if (
+            user.data[0].properties?.password == data.password ||
+            user.data[0].contrasena == data.password ||
+            user.data[0]?.user?.contrasena == data.password
+          ) {
             window.location.href =
               window.origin + '/landing/' + props.cEvent.value?._id + '?token=' + user.data[0]?.user?.initial_token;
             loginFirst = true;
@@ -101,13 +103,13 @@ const ModalAuth = (props) => {
             //loginFirebase(data)
             //leafranciscobar@gmail.com
             //Mariaguadalupe2014
-          }else{            
+          } else {
             setErrorLogin(true);
             setLoading(false);
           }
         } else {
           setErrorLogin(true);
-            setLoading(false);
+          setLoading(false);
         }
       });
   };
@@ -126,7 +128,7 @@ const ModalAuth = (props) => {
         zIndex={1000}
         closable={false}
         visible={true}>
-        <Tabs onChange={callback} centered size='large' defaultActiveKey={tabLogin} >
+        <Tabs onChange={callback} centered size='large' defaultActiveKey={tabLogin}>
           <TabPane tab={intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })} key='1'>
             <Form
               form={form1}
@@ -159,10 +161,15 @@ const ModalAuth = (props) => {
                 label={intl.formatMessage({ id: 'modal.label.password', defaultMessage: 'Contraseña' })}
                 name='password'
                 style={{ marginBottom: '15px' }}
-                rules={[{ required: true, message: intl.formatMessage({
-                  id: 'modal.rule.required.password',
-                  defaultMessage: 'Ingrese una contraseña',
-                }), }]}>
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({
+                      id: 'modal.rule.required.password',
+                      defaultMessage: 'Ingrese una contraseña',
+                    }),
+                  },
+                ]}>
                 <Input.Password
                   disabled={loading}
                   size='large'
@@ -207,7 +214,12 @@ const ModalAuth = (props) => {
               )}
               {!loading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
-                  <Button id={'loginButton'} htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+                  <Button
+                    id={'loginButton'}
+                    htmlType='submit'
+                    block
+                    style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                    size='large'>
                     {intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })}
                   </Button>
                 </Form.Item>
