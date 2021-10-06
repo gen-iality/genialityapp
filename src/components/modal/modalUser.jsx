@@ -32,15 +32,8 @@ class UserModal extends Component {
       confirmCheck: true,
       valid: true,
       checked_in: false,
-      tickets: [],
-      options:[
-        {
-          type:"danger",
-          text:"Eliminar/Borrar",
-          icon:<DeleteOutlined />,
-          action:this.deleteUser
-        }
-      ]
+      tickets: [],    
+      loadingregister: false,
     };
   }
 
@@ -48,17 +41,17 @@ class UserModal extends Component {
     const self = this;
     const { rolesList } = this.props;
     self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : '' });
-    const tickets = await eventTicketsApi.getAll(this.props.cEvent?.value?._id || "5ea23acbd74d5c4b360ddde2");
+    const tickets = await eventTicketsApi.getAll(this.props.cEvent?.value?._id || '5ea23acbd74d5c4b360ddde2');
     if (tickets.length > 0) this.setState({ tickets });
     let user = {};
     if (this.props.edit) {
-      const { value } = this.props;     
+      const { value } = this.props;
       if (value.properties) {
         Object.keys(value.properties).map((obj) => {
           return (user[obj] = value.properties[obj]);
         });
         let checked_in = value.checkedin_at ? true : false;
-        user={...user,_id:value._id}
+        user = { ...user, _id: value._id };
         this.setState({
           user,
           ticket_id: value.ticket_id,
@@ -69,7 +62,6 @@ class UserModal extends Component {
           prevState: value.state_id,
           valid: false,
         });
-      
       } else {
         Object.keys(value).map((obj) => {
           return (user[obj] = value[obj]);
@@ -98,28 +90,39 @@ class UserModal extends Component {
   componentWillUnmount() {
     this.setState({ user: {}, edit: false });
   }
+  options= [
+    {
+      type: 'danger',
+      text: 'Eliminar/Borrar',
+      icon: <DeleteOutlined />,
+      action: ()=>this.deleteUser(this.state.user),
+    },
+  ];
 
-  deleteUser = async (user) => {  
- 
+  deleteUser = async (user) => {
     const { substractSyncQuantity } = this.props;
     let messages = {};
     // let resultado = null;
     const self = this;
-    const userRef = firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`);
+    const userRef = !this.props.byActivity? firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`): firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`).doc("activity").collection(`${this.props.activityId}`);
     try {
       await Actions.delete(`/api/events/${this.props.cEvent.value?._id}/eventusers`, user._id);
-     // message = { class: 'msg_warning', content: 'USER DELETED' };
+      // message = { class: 'msg_warning', content: 'USER DELETED' };
       toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
-      message.success("Eliminado correctamente")
+      message.success('Eliminado correctamente');
     } catch (e) {
       ///Esta condición se agrego porque algunas veces los datos no se sincronizan
       //bien de mongo a firebase y terminamos con asistentes que no existen
       if (e.response && e.response.status === 404) {
-        userRef.doc(this.state.userId).delete();
-        toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
+        let respdelete1=await UsersApi.deleteUsers('615dd4876a959d694a2a7ab6')
+        let respdelete2=await UsersApi.deleteUsers('615ddb385dae82055078a544')
+        console.log("RESPDELETE==>",respdelete1)
+        console.log("RESPDELETE2==>",respdelete1)
+        userRef.doc(user._id).delete();
+        message.success('Eliminado correctamente');
       } else {
         messages = { class: 'msg_danger', content: e };
-        toast.info(e);
+        message.error('Error al eliminar');
       }
     } finally {
       setTimeout(() => {
@@ -138,7 +141,7 @@ class UserModal extends Component {
         toast.info(<FormattedMessage id='toast.user_deleted' defaultMessage='Ok!' />);
 
         //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
-        substractSyncQuantity();
+        //substractSyncQuantity();
       });
     setTimeout(() => {
       message.class = message.content = '';
@@ -147,10 +150,59 @@ class UserModal extends Component {
   };
 
   closeModal = () => {
-    let message = { class: '', content: '' };    
+    let message = { class: '', content: '' };
     this.setState({ user: {}, valid: true, modal: false, uncheck: false, message }, this.props.handleModal());
   };
 
+  saveUser = async (values) => {
+    this.setState({ loadingregister: true });
+    console.log('callback=>', values);
+    let resp;
+    let respActivity=true;
+    if(values){
+      if (values.checked_in) {
+        values.checkedin_at = new Date();
+      } else {
+        values.checkedin_at = '';
+      }
+      console.log("ACA VALUES==>",values)
+      const snap = { properties: values };
+      resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
+      console.log("USERADD==>",resp)
+      if (this.props.byActivity && resp.data._id) {      
+        respActivity = await Activity.Register(
+              this.props.cEvent?.value?._id,
+              resp.data.user._id,
+              this.props.activityId
+            ); 
+             
+        }
+
+        if(values.checked_in && this.props.activityId){  
+              
+          let userRef= await firestore.collection(`${this.props.cEvent?.value?._id}_event_attendees`).doc("activity").collection(`${this.props.activityId}`);
+          userRef.doc(resp.data._id)
+          .set({
+            ...resp.data ,    
+            updated_at: new Date(),
+            checked_in:true,
+            checkedin_at: new Date(),
+            checked_at: new Date(),
+          })          
+        }
+        await this.props.updateView();
+    }
+  
+    if (resp && respActivity) {
+      
+      message.success('Usuario agregado correctamente');
+      this.props.handleModal();
+    } else {
+      message.error('Usuario agregado correctamente');
+    }
+
+    this.setState({ loadingregister: false });
+  };
 
   render() {
     const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
@@ -160,21 +212,22 @@ class UserModal extends Component {
       <Modal closable footer={false} onCancel={() => this.props.handleModal()} visible={true}>
         <div
           // className='asistente-list'
-          style={{            
+          style={{
             paddingLeft: '0px',
             paddingRight: '0px',
             paddingTop: '0px',
             paddingBottom: '0px',
-            marginTop:'30px'
+            marginTop: '30px',
           }}>
-          <FormComponent     
+          <FormComponent
             conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
             initialOtherValue={this.props.value}
-            eventUserOther={user|| {}}
-            fields={this.props.extraFields}         
+            eventUserOther={user || {}}
+            fields={this.props.extraFields}
             organization={true}
-            options={this.state.options}
-            callback={()=>this.props.handleModal()}
+            options={this.options}
+            callback={this.saveUser}
+            loadingregister={this.state.loadingregister}
           />
         </div>
       </Modal>
