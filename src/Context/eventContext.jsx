@@ -26,7 +26,7 @@ export function CurrentEventProvider({ children }) {
       let dataevent;
       switch (type) {
         case 'id':
-          console.log('idevent');
+          console.log('idevent=>',event);
           eventGlobal = await EventsApi.getOne(event_id || event);
           dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event};
           break;
@@ -40,6 +40,7 @@ export function CurrentEventProvider({ children }) {
     }
 
     if (event_id || event) {
+      console.log("EVENT==>",event)
       fetchEvent('id');
     } else if (event_name) {
       fetchEvent('name');

@@ -24,9 +24,9 @@ const { Step } = Steps;
 
 class NewEvent extends Component {
   constructor(props) {
-    super(props); 
-    this.state = {    
-        stepsValid: {
+    super(props);
+    this.state = {
+      stepsValid: {
         info: false,
         fields: false,
       },
@@ -46,6 +46,7 @@ class NewEvent extends Component {
           icon: <VideoCameraOutlined />,
         },
       ],
+      loading: false,
     };
     this.saveEvent = this.saveEvent.bind(this);
   }
@@ -79,99 +80,83 @@ class NewEvent extends Component {
 
   async saveEvent(fields) {
     let eventNewContext = this.context;
-    console.log(eventNewContext.valueInputs.name)
-    console.log(eventNewContext.valueInputs.description)
+    this.setState({ loading: true });
+    //console.log(eventNewContext.valueInputs.name)
+    //console.log(eventNewContext.valueInputs.description)
     console.log(eventNewContext.selectedDateEvent)
-    console.log(eventNewContext.selectOrganization)
-    console.log(eventNewContext.imageEvents)
-    if(eventNewContext.selectOrganization){
-    const data = {
-      name: eventNewContext.valueInputs.name,
-      address: '',
-      type_event: 'onlineEvent',
-      datetime_from:eventNewContext.selectedDateEvent?.from ,
-      datetime_to: eventNewContext.selectedDateEvent?.at,
-      picture: null,
-      venue: '',
-      location: '',
-      visibility: 'PUBLIC',
-      description: eventNewContext.valueInputs?.description || '',
-      category_ids: [],
-      organizer_id: eventNewContext.selectOrganization.id,
-      event_type_id: '5bf47203754e2317e4300b68',
-      user_properties: [],
-      allow_register: true,
-      styles: {
-        buttonColor: '#FFF',
-        banner_color: '#FFF',
-        menu_color: '#FFF',
-        event_image: eventNewContext.imageEvents?.logo || null,
-        banner_image: eventNewContext.imageEvents?.portada || null,
-        menu_image: null,
-        brandPrimary: '#FFFFFF',
-        brandSuccess: '#FFFFFF',
-        brandInfo: '#FFFFFF',
-        brandDanger: '#FFFFFF',
-        containerBgColor: '#ffffff',
-        brandWarning: '#FFFFFF',
-        toolbarDefaultBg: '#FFFFFF',
-        brandDark: '#FFFFFF',
-        brandLight: '#FFFFFF',
-        textMenu: '#FFFFFF',
-        activeText: '#FFFFFF',
-        bgButtonsEvent: '#FFFFFF',
-        banner_image_email: null,
-        BackgroundImage: eventNewContext.imageEvents?.imgfondo || null ,
-        FooterImage: null,
-        banner_footer: eventNewContext.imageEvents?.piepagina || null,
-        mobile_banner: null,
-        banner_footer_email: null,
-        show_banner: false,
-        show_card_banner: true,
-        show_inscription: false,
-        hideDatesAgenda: true,
-        hideDatesAgendaItem: false,
-        hideHoursAgenda: false,
-        hideBtnDetailAgenda: true,
-        loader_page: 'no',
-        data_loader_page: null,
-      },
-    };
-    console.log("EVENT TO CREATE==>",data)
-  }else{
-   message.error("Seleccione una organización")
-  }
+    //console.log(eventNewContext.selectOrganization)
+    //console.log(eventNewContext.imageEvents)
+    if (eventNewContext.selectOrganization) {
+      const data = {
+        name: eventNewContext.valueInputs.name,
+        address: '',
+        type_event: 'onlineEvent',
+        datetime_from: eventNewContext.selectedDateEvent?.from+":00",
+        datetime_to: eventNewContext.selectedDateEvent?.at+":00",
+        picture: null,
+        venue: '',
+        location: '',
+        visibility: 'PUBLIC',
+        description: eventNewContext.valueInputs?.description || '',
+        category_ids: [],
+        organizer_id: eventNewContext.selectOrganization.id,
+        event_type_id: '5bf47203754e2317e4300b68',
+        user_properties: [],
+        allow_register: true,
+        styles: {
+          buttonColor: '#FFF',
+          banner_color: '#FFF',
+          menu_color: '#FFF',
+          event_image: eventNewContext.imageEvents?.logo || null,
+          banner_image: eventNewContext.imageEvents?.portada || null,
+          menu_image: null,
+          brandPrimary: '#FFFFFF',
+          brandSuccess: '#FFFFFF',
+          brandInfo: '#FFFFFF',
+          brandDanger: '#FFFFFF',
+          containerBgColor: '#ffffff',
+          brandWarning: '#FFFFFF',
+          toolbarDefaultBg: '#FFFFFF',
+          brandDark: '#FFFFFF',
+          brandLight: '#FFFFFF',
+          textMenu: '#FFFFFF',
+          activeText: '#FFFFFF',
+          bgButtonsEvent: '#FFFFFF',
+          banner_image_email: null,
+          BackgroundImage: eventNewContext.imageEvents?.imgfondo || null,
+          FooterImage: null,
+          banner_footer: eventNewContext.imageEvents?.piepagina || null,
+          mobile_banner: null,
+          banner_footer_email: null,
+          show_banner: false,
+          show_card_banner: true,
+          show_inscription: false,
+          hideDatesAgenda: true,
+          hideDatesAgendaItem: false,
+          hideHoursAgenda: false,
+          hideBtnDetailAgenda: true,
+          loader_page: 'no',
+          data_loader_page: null,
+        },
+      };
+      console.log('EVENT TO CREATE==>', data);
+      //CREAR EVENTO
+      try {
+        const result = await Actions.create('/api/events', data);
 
-    
-  /*  try {
-      const result = await Actions.create('/api/events', data);
-      this.setState({ loading: false });
-      if (result._id) {
-        window.location.replace(`${BaseUrl}/event/${result._id}`);
-      } else {
-        toast.warn(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
-        this.setState({ msg: 'Cant Create', create: false });
-      }
-    } catch (error) {
-      toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
-      if (error.response) {
-        console.error(error.response);
-        const { status, data } = error.response;
-        console.error('STATUS', status, status === 401);
-        if (status === 401) this.setState({ timeout: true, loader: false });
-        else this.setState({ serverError: true, loader: false, errorData: data });
-      } else {
-        let errorData = error.message;
-        console.error('Error', error.message);
-        if (error.request) {
-          console.error(error.request);
-          errorData = error.request;
+        if (result._id) {
+          message.success("Evento creado correctamente..");
+          window.location.replace(`${BaseUrl}/eventadmin/${result._id}`);
+        } else {
+          message.error(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
         }
-        errorData.status = 708;
-        this.setState({ serverError: true, loader: false, errorData });
+      } catch (error) {
+        console.log(error)
+        message.error("Error al crear el evento");
       }
-      console.error(error.config);
-    }*/
+    } else {
+      message.error('Seleccione una organización');
+    }
   }
 
   /* prevStep = (field, data, prev) => {
@@ -244,27 +229,25 @@ class NewEvent extends Component {
             {this.obtainContent(this.state.steps[current])}
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
-         { <div className='button-container'>
-            {current > 0 && (
-              <Button className='button' size='large' onClick={() => this.prev()}>
-                Anterior
-              </Button>
-            )}
-            {current < this.state.steps.length - 1 && (
-              <Button className='button' type='primary' size='large' onClick={() => this.next()}>
-                Siguiente
-              </Button>
-            )}
-            {current === this.state.steps.length - 1 && (
-              <Button
-                className='button'
-                type='primary'
-                size='large'
-                onClick={() => this.saveEvent()}>
-                Crear evento
-              </Button>
-            )}
-          </div>}
+          {
+            <div className='button-container'>
+              {current > 0 && (
+                <Button className='button' size='large' onClick={() => this.prev()}>
+                  Anterior
+                </Button>
+              )}
+              {current < this.state.steps.length - 1 && (
+                <Button className='button' type='primary' size='large' onClick={() => this.next()}>
+                  Siguiente
+                </Button>
+              )}
+              {current === this.state.steps.length - 1 && (
+                <Button className='button' type='primary' size='large' onClick={() => this.saveEvent()}>
+                  Crear evento
+                </Button>
+              )}
+            </div>
+          }
         </Card>
         {/* <div className='steps'>
           <NavLink
