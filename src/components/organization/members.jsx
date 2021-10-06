@@ -24,13 +24,26 @@ function OrgMembers(props) {
    const [membersData, setMembersData] = useState([]);
    const [isLoading, setIsLoading] = useState(true);
    const [lastUpdate, setLastUpdate] = useState();
+   const [searchText, setSearchText] = useState('');
+   const [searchedColumn, setSearchedColumn] = useState('');
    let { _id: organizationId } = props.org;
    const history = useHistory();
 
    async function getEventsStatisticsData() {
       const { data } = await OrganizationApi.getUsers(organizationId);
+      const fieldsMembersData = [];
 
-      setMembersData(data);
+      data.map((membersData) => {
+         const properties = {
+            _id: membersData._id,
+            created_at: membersData.created_at,
+            updated_at: membersData.updated_at,
+            ...membersData.properties,
+         };
+
+         fieldsMembersData.push(properties);
+      });
+      setMembersData(fieldsMembersData);
       setIsLoading(false);
    }
 
@@ -47,24 +60,19 @@ function OrgMembers(props) {
    async function exportFile(e) {
       e.preventDefault();
       e.stopPropagation();
-      const fieldsMembersData = [];
 
-      membersData.map((data) => {
-         const properties = {
-            _id: data._id,
-            created_at: data.created_at,
-            updated_at: data.updated_at,
-            ...data.properties,
-         };
-
-         fieldsMembersData.push(properties);
-      });
-
-      const ws = XLSX.utils.json_to_sheet(fieldsMembersData);
+      const ws = XLSX.utils.json_to_sheet(membersData);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Members');
       XLSX.writeFile(wb, `Miembros_${moment().format('l')}.xlsx`);
    }
+
+   const columnsData = {
+      searchedColumn,
+      setSearchedColumn,
+      searchText,
+      setSearchText,
+   };
 
    return (
       <>
@@ -110,7 +118,7 @@ function OrgMembers(props) {
                </Row>
 
                <Table
-                  columns={columns(goToEvent)}
+                  columns={columns(goToEvent, columnsData)}
                   dataSource={membersData}
                   size='small'
                   rowKey='index'

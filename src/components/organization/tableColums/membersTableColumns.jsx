@@ -1,8 +1,8 @@
 import React from 'react';
-import { Tag, Button } from 'antd';
-import { EditOutlined, ExclamationCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
+import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
 
-export const columns = (goToEvent) => [
+export const columns = (goToEvent, columnsData) => [
    {
       title: 'Editar',
       dataIndex: 'index',
@@ -10,14 +10,6 @@ export const columns = (goToEvent) => [
       fixed: 'left',
       render(val, item, index) {
          return <EditOutlined />;
-      },
-   },
-   {
-      title: 'Ingreso',
-      dataIndex: 'name',
-      align: 'center',
-      render(val, item) {
-         return item.name;
       },
    },
    {
@@ -29,25 +21,21 @@ export const columns = (goToEvent) => [
       title: 'Nombres',
       dataIndex: 'name',
       align: 'center',
-      render(val, item) {
-         return item.properties.name;
-      },
+      ...membersGetColumnSearchProps('name', columnsData),
    },
    {
       title: 'Correo',
-      dataIndex: 'checked_in_not',
+      dataIndex: 'email',
       align: 'center',
-      render(val, item) {
-         return item.properties.email;
-      },
+
+      ...membersGetColumnSearchProps('email', columnsData),
    },
    {
       title: 'Rol',
       dataIndex: 'position',
       align: 'center',
-      render(val, item) {
-         return item.properties.position;
-      },
+
+      ...membersGetColumnSearchProps('position', columnsData),
    },
    {
       title: 'Creado',

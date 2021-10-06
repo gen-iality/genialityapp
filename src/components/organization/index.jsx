@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Route, NavLink, Redirect, Switch, withRouter } from 'react-router-dom';
 import Loading from '../loaders/loading';
 import { OrganizationApi } from '../../helpers/request';
-import LogOut from '../shared/logOut';
 import OrganizationProfile from './profile';
 import Styles from '../App/styles';
 import OrgEvents from './events';
@@ -81,7 +80,7 @@ function Organization(props) {
                </aside>
                <div className='column is-10'>
                   {loading ? (
-                     <p>Cargando</p>
+                     <Loading />
                   ) : (
                      <section className='section'>
                         <Switch>
@@ -115,11 +114,7 @@ function Organization(props) {
                            <Route
                               exact
                               path={`${props.match.url}/membersettings`}
-                              // component={OrgUsers}
-                              render={() => (
-                                 <Datos org={organization} url={props.match.url} />
-                                 // <h1>membersettings</h1>
-                              )}
+                              render={() => <Datos org={organization} url={props.match.url} />}
                            />
                            <Route component={NoMatch} />
                         </Switch>
@@ -141,18 +136,5 @@ function NoMatch({ location }) {
       </div>
    );
 }
-
-const Protected = ({ component: Component, org, url, ...rest }) => (
-   <Route
-      {...rest}
-      render={(props) =>
-         org.user_properties && org.user_properties.length > 0 ? (
-            <Component {...props} org={org} />
-         ) : (
-            <Redirect push to={`${url}/profile`} />
-         )
-      }
-   />
-);
 
 export default withRouter(Organization);
