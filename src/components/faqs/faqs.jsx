@@ -15,12 +15,12 @@ const Faqs = (props) => {
     {
       title: 'Contenido',
       dataIndex: 'content',
+      ...getColumnSearchProps('content', columnsData),
       render(val, item) {
         return (
           <div dangerouslySetInnerHTML={{ __html: item.content }} />
         )
       },
-      ...getColumnSearchProps('content', columnsData)
     }
   ];
 

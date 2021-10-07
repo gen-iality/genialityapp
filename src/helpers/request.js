@@ -304,6 +304,9 @@ export const InvitationsApi = {
   getAll: async (id) => {
     return await Actions.getAll(`/api/events/${id}/invitation`);
   },
+  byEvent: async (event) => {
+    return await Actions.getAll(`api/events/${event}/invitation`, true).then(({ data }) => data);
+  }
 };
 
 export const UsersApi = {
@@ -413,11 +416,12 @@ export const SurveysApi = {
   getAll: async (event) => {
     return await Actions.getAll(`/api/events/${event}/surveys`);
   },
-
+  byEvent: async (event) => {
+    return await Actions.getAll(`api/events/${event}/surveys`, true).then(({ data }) => data);
+  },
   getByActivity: async (event, activity_id) => {
     return await Actions.getAll(`/api/events/${event}/surveys?indexby=activity_id&value=${activity_id}`);
   },
-
   getOne: async (event, id) => {
     return await Actions.getOne(`/api/events/${event}/surveys/`, id);
   },

@@ -1,6 +1,7 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
 import { PlusCircleOutlined, SaveOutlined, LeftOutlined, DeleteOutlined } from '@ant-design/icons';
+import ExportReport from "../components/networking/exportReport";
 
 const { Title } = Typography;
 
@@ -16,7 +17,9 @@ const Header = ( props ) => {
     saveMethod, //viene el método para guardar
     back, //boolean, permite aparecer el icono para volver atrás
     form, //si viene, es para poder saber sí el botón de guardar colocarlo como "submit"
-    extra //código adicional de alguna acción fuera de la estructura en el header
+    extra, //código adicional de alguna acción fuera de la estructura en el header
+    exportData,
+    dataToExport
   } = props;
 
   return (
@@ -67,6 +70,13 @@ const Header = ( props ) => {
               >
                 {'Guardar'}
               </Button>
+            )
+          }
+        </Col>
+        <Col>
+          {
+            exportData && (
+              <ExportReport invitations={dataToExport} />
             )
           }
         </Col>

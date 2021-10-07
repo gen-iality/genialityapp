@@ -275,8 +275,12 @@ class Event extends Component {
 
               <Route path={`${match.url}/dashboard`} render={() => <DashboardEvent eventName={this.state.event.name} eventId={this.state.event._id} />} />
               <Route path={`${match.url}/orders`} render={() => <OrdersEvent eventId={this.state.event._id} />} />
-              <Route path={`${match.url}/certificados`} render={() => <ListCertificados event={this.state.event} />} />
-              <Route path={`${match.url}/espacios`} render={() => <Espacios eventID={this.state.event._id} />} />
+              <Route path={`${match.url}/certificados`} render={() => 
+                <ListCertificados event={this.state.event} matchUrl={match.url} />}
+              />
+              <Route path={`${match.url}/espacios`} render={() => 
+                <Espacios eventId={this.state.event._id} event={this.state.event} matchUrl={match.url} />} 
+              />
               <Route
                 path={`${match.url}/reporte-certificados`}
                 render={() => <ReporteCertificados eventId={this.state.event._id} />}
@@ -293,10 +297,10 @@ class Event extends Component {
                 render={() => <NotificationsApp eventId={this.state.event._id} />}
               />
               <Route  path={`${match.url}/news`}>
-              <NewsSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
+                <NewsSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
               </Route>
               <Route  path={`${match.url}/product`}>
-              <ProductSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
+                <ProductSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
               </Route>
               <Route path={`${match.url}/faqs`} render={() => 
                 <FAQS eventId={this.state.event._id} event={this.state.event} matchUrl={match.url} />} />              

@@ -15,11 +15,14 @@ const Table = ( props ) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [components, setComponents] = useState('');
-  list.map((list, index) => {
-    if(!list.index) {
-      list.index = index;
-    }
-  })
+  /* if(list && !list[0].index) {
+    list.map((list, index) => {
+      if(!list.index) {
+        list.index = index;
+      }
+    })
+  } */
+  
   console.log(list);
   
   const options = {
@@ -114,6 +117,7 @@ const Table = ( props ) => {
         handleSearch,
         handleReset,
         searchText: searchText,
+        list: list
       });
     }
 

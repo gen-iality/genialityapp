@@ -9,7 +9,7 @@ const { confirm } = Modal;
 
 const CMS = ( props ) => {
   const {  API, eventId, title, titleTooltip, back, addUrl, columns, key, pagination, actions, editPath, 
-    search, setColumnsData, draggable, downloadFile
+    search, setColumnsData, draggable, downloadFile, exportData
   } = props;
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [ list, setList ] = useState([]);
@@ -21,7 +21,11 @@ const CMS = ( props ) => {
 
   const getList = async () => {
     const data = await API.byEvent(eventId);
-    setList(data);
+    if(data.data){
+      setList(data.data);
+    } else {
+      setList(data);
+    }
     setLoading(false);
   }
 
@@ -68,6 +72,8 @@ const CMS = ( props ) => {
         titleTooltip={titleTooltip}
         back={back}
         addUrl={addUrl}
+        exportData={exportData}
+        dataToExport={list}
       />
 
       <Table 
