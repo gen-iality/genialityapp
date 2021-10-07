@@ -4,6 +4,8 @@ import { withRouter } from 'react-router-dom';
 import { OrganizationFuction } from '../../helpers/request';
 import EventCard from '../shared/eventCard';
 import moment from 'moment';
+import ModalAuth from '../authentication/ModalAuth';
+import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
 
 const { Title, Text } = Typography;
 
@@ -54,6 +56,8 @@ class EventOrganization extends Component {
   render() {
     return (
       <React.Fragment>
+        <ModalAuth organization={"landing"} idOrganization={this.props.match.params.id} />
+        <ModalLoginHelpers />
         {!this.state.loading && this.state.orgId ? (
           <>
             {/* BANNER */}
