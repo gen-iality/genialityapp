@@ -136,8 +136,8 @@ const FormRegister = ({
   const [initialValues, setinitialValues] = useState(
     organization ? initialOtherValue : cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
   );
-  //initialValues?.contrasena = '';
-  //initialValues?.password = '';
+  initialValues.contrasena = '';
+  initialValues.password = '';
   const [conditionals, setconditionals] = useState(
     organization ? conditionalsOther : cEvent.value?.fields_conditions || []
   );
