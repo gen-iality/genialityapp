@@ -117,10 +117,12 @@ const Landing = (props) => {
   let { currentActivity, tabs } = props;
 
   useEffect(() => {
+
+    console.log(" cEventContext", cEventContext)
     cEventContext.status === 'LOADED' &&
       firestore
         .collection('events')
-        .doc(cEventContext.value._id)
+        .doc(cEventContext.value?._id)
         .onSnapshot(function(eventSnapshot) {
           if (eventSnapshot.exists) {
             if (eventSnapshot.data().tabs !== undefined) {
