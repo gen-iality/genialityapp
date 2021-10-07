@@ -28,13 +28,13 @@ import CheckAgenda from '../agenda/checkIn';
 import ReportList from '../agenda/report';
 import ConferenceRoute from '../zoom/index';
 import ReportNetworking from '../networking/report';
-import NewsSectionRoutes from '../news/newsRoute' ;
-import ProductSectionRoutes from '../products/productsRoute' ;
+import NewsSectionRoutes from '../news/newsRoute';
+import ProductSectionRoutes from '../products/productsRoute';
 import { withRouter } from 'react-router-dom';
 import withContext from '../../Context/withContext';
 
 //import Test from "../events/testButton"
-import { Layout } from 'antd';
+import { Layout, Space } from 'antd';
 
 const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
@@ -61,7 +61,6 @@ const ConfigurationApp = asyncComponent(() => import('../App/configuration'));
 const NotificationsApp = asyncComponent(() => import('../pushNotifications/index'));
 const Wall = asyncComponent(() => import('../wall/index'));
 const NewsApp = asyncComponent(() => import('../news/news'));
-
 
 const FAQS = asyncComponent(() => import('../faqs'));
 const EventsTicket = asyncComponent(() => import('../ticketsEvent/index'));
@@ -137,9 +136,32 @@ class Event extends Component {
     this.setState({ event });
   };
 
+  isUpper(str) {
+    return !/[a-z]/.test(str) && /[A-Z]/.test(str);
+  }
+
+  FriendLyUrl(url) {
+    let formatupperorlowercase = url.toString().toLowerCase();
+    if (this.isUpper(url.toString())) {
+      formatupperorlowercase = url.toString().toUpperCase();
+    } else {
+      formatupperorlowercase = url.toString().toLowerCase();
+    }
+    var encodedUrl = formatupperorlowercase;
+    encodedUrl = encodedUrl.split(/\&+/).join('-and-');
+    if (this.isUpper(url)) {
+      encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-');
+    } else {
+      encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-');
+    }
+    encodedUrl = encodedUrl.split(/-+/).join('-');
+    encodedUrl = encodedUrl.trim('-');
+    return encodedUrl;
+  }
+
   render() {
     const { match, permissions, showMenu } = this.props;
-    console.log("${match.url}",match.url)
+    // console.log("${match.url}",match.url)
     const { timeout } = this.state;
     if (this.state.loading || this.props.loading || permissions.loading) return <Loading />;
     if (this.props.error || permissions.error) return <ErrorServe errorData={permissions.error} />;
@@ -150,9 +172,19 @@ class Event extends Component {
           <Menu match={match} />
         </Sider>
         <Content className='column event-main' style={{ width: 500 }}>
-          <Link to={`/landing/${this.state.event._id}`}>
-            <h2 className='name-event'>Ir a {this.state.event.name}</h2>
-          </Link>
+          <Space direction='vertical'>
+            <a target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
+              <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
+                Ir al evento: (version antigua) {this.state.event.name}
+              </h2>
+            </a>
+            {console.log('this.state.event', this.state.event)}
+            <a target='_blank' href={`${window.location.origin}/event/${this.FriendLyUrl(this.state.event.name)}`}>
+              <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
+                Ir al evento: (con nombre) {this.state.event.name}
+              </h2>
+            </a>
+          </Space>
           <section className='section event-wrapper'>
             <Switch>
               <Route exact path={`${match.url}/`} render={() => <Redirect to={`${match.url}/agenda`} />} />
@@ -275,7 +307,10 @@ class Event extends Component {
                 <Route path={`${match.url}/pages`} component={Pages} />
               )}
 
-              <Route path={`${match.url}/dashboard`} render={() => <DashboardEvent eventName={this.state.event.name} eventId={this.state.event._id} />} />
+              <Route
+                path={`${match.url}/dashboard`}
+                render={() => <DashboardEvent eventName={this.state.event.name} eventId={this.state.event._id} />}
+              />
               <Route path={`${match.url}/orders`} render={() => <OrdersEvent eventId={this.state.event._id} />} />
               <Route path={`${match.url}/certificados`} render={() => <ListCertificados event={this.state.event} />} />
               <Route path={`${match.url}/espacios`} render={() => <Espacios eventID={this.state.event._id} />} />
@@ -294,13 +329,13 @@ class Event extends Component {
                 path={`${match.url}/notificationsApp`}
                 render={() => <NotificationsApp eventId={this.state.event._id} />}
               />
-              <Route  path={`${match.url}/news`}>
-              <NewsSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
+              <Route path={`${match.url}/news`}>
+                <NewsSectionRoutes eventId={this.state.event._id} event={this.state.event} />
               </Route>
-              <Route  path={`${match.url}/product`}>
-              <ProductSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
+              <Route path={`${match.url}/product`}>
+                <ProductSectionRoutes eventId={this.state.event._id} event={this.state.event} />
               </Route>
-              <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} />} />              
+              <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} />} />
               <Route
                 path={`${match.url}/ticketsEvent`}
                 render={() => <EventsTicket eventId={this.state.event._id} />}

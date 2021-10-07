@@ -76,7 +76,7 @@ class Events extends Component {
                           bordered={false}
                           right={[
                             <div className='edit' key={'event-' + event._id}>
-                              <Link className='button-edit has-text-grey-light' to={`/event/${event._id}`}>
+                              <Link className='button-edit has-text-grey-light' to={`/eventadmin/${event._id}`}>
                                 <Space>
                                   <span>
                                     <i className='fas fa-lg fa-cogs' />
