@@ -110,10 +110,24 @@ class Home extends Component {
       });
   }
 
+  isUpper(str) {
+    return !/[a-z]/.test(str) && /[A-Z]/.test(str);
+  }
+
   FriendLyUrl(url) {
-    var encodedUrl = url.toString().toLowerCase();
+    let formatupperorlowercase = url.toString().toLowerCase();
+    if (this.isUpper(url.toString())) {
+      formatupperorlowercase = url.toString().toUpperCase();
+    } else {
+      formatupperorlowercase = url.toString().toLowerCase();
+    }
+    var encodedUrl = formatupperorlowercase;
     encodedUrl = encodedUrl.split(/\&+/).join('-and-');
-    encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-');
+    if (this.isUpper(url)) {
+      encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-');
+    } else {
+      encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-');
+    }
     encodedUrl = encodedUrl.split(/-+/).join('-');
     encodedUrl = encodedUrl.trim('-');
     return encodedUrl;
