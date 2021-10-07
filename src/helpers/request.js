@@ -667,7 +667,7 @@ export const SpacesApi = {
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/spaces`, true).then(({ data }) => data);
   },
-  getOne: async (event, id) => {
+  getOne: async (id, event) => {
     return await Actions.get(`api/events/${event}/spaces/`, id);
   },
   editOne: async (data, id, event) => {

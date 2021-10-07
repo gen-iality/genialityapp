@@ -5,12 +5,13 @@ import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import { Table as TableAnt, Row, Col, Tooltip, Button } from 'antd';
 import { EditOutlined, DeleteOutlined, DragOutlined, DownloadOutlined } from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
+import ExportExcel from '../components/newComponent/ExportExcel';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const Table = ( props ) => {
-  const { header, list, key, loading, pagination, draggable, actions, editPath, remove, search, setColumnsData, setList, downloadFile
+  const { header, list, key, loading, pagination, draggable, actions, editPath, remove, search, setColumnsData, setList, downloadFile, exportData, fileName
   } = props;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -23,7 +24,7 @@ const Table = ( props ) => {
     })
   } */
   
-  console.log(list);
+  console.log(list, 'init');
   
   const options = {
     title: 'Opciones',
@@ -172,17 +173,41 @@ const Table = ( props ) => {
   };
 
   return (
-    <TableAnt 
-      columns={header}
-      dataSource={list}
-      hasData={list}
-      size='small'
-      hasData={list.length}
-      rowKey={key}
-      loading={loading}
-      pagination={pagination}
-      components={components}
-    />
+    <div>
+      {/* <Row wrap justify='end' gutter={[8, 8]}>
+        <Col>
+          { exportData && (
+          <Button type='primary' icon={<DownloadOutlined />}>
+            {'Exportar'}
+            <ExportExcel column={header} dataSource={list} />
+          </Button>
+          )}
+        </Col>
+        
+      </Row> */}
+      
+      <TableAnt 
+        columns={header}
+        dataSource={list}
+        hasData={list}
+        size='small'
+        /* hasData={list.length} */
+        rowKey={key}
+        loading={loading}
+        pagination={pagination}
+        components={components}
+        title={() => (
+          <Row wrap justify='end' gutter={[8, 8]}>
+            <Col>
+              { exportData && (
+                <ExportExcel columns={header} list={list} fileName={fileName} />
+              )}
+            </Col>
+          </Row>
+        )}
+      />
+    </div>
+    
   )
 }
 

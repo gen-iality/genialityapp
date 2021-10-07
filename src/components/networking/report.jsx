@@ -40,7 +40,14 @@ const Report = (props) => {
     {
       title: 'Respuesta',
       dataIndex: 'response',
-      ...getColumnSearchProps('response', columnsData)
+      ...getColumnSearchProps('response', columnsData),
+      render(val, item) {
+        return (
+          <div>
+            {item.response ? item.response : 'Sin Respuesta'}
+          </div>
+          )
+      },
     },
     {
       title: 'Fecha de creación',
@@ -64,6 +71,7 @@ const Report = (props) => {
       key='_id'
       search
       setColumnsData={setColumnsData}
+      fileName='Employees'
     />
   );
 }
