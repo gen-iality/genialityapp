@@ -18,10 +18,11 @@ const stylePaddingMobile = {
 };
 
 const ModalLoginHelpers = (props) => {
-  let { handleChangeTypeModal, typeModal } = useContext(HelperContext);
+  let { handleChangeTypeModal, typeModal, handleChangeTabModal } = useContext(HelperContext);
   // typeModal --> recover || send
   const [registerUser, setRegisterUser] = useState(false);
   const [sendRecovery, setSendRecovery] = useState(null);
+  const [resul, setresul] = useState('');
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const intl = useIntl();
@@ -44,6 +45,7 @@ const ModalLoginHelpers = (props) => {
           defaultMessage: 'Se ha enviado una nueva contraseña a:',
         })} ${email} `
       );
+      setresul('OK');
     } catch (error) {
       setSendRecovery(
         `${intl.formatMessage({
@@ -75,6 +77,7 @@ const ModalLoginHelpers = (props) => {
         const { data } = await EventsApi.getStatusRegister(props.cEvent.value?._id, values.email);
         if (data?.length > 0) {
           let resp = await UsersApi.createOne(data[0]?.properties, props.cEvent.value?._id);
+          setresul(resp && resp.message);
           if (resp && resp.message == 'OK') {
             setSendRecovery(
               `${intl.formatMessage({
@@ -90,6 +93,7 @@ const ModalLoginHelpers = (props) => {
               defaultMessage: 'no se encuentra registrado en este evento',
             })}`
           );
+          setresul('noRegister');
         }
       } catch (error) {
         setSendRecovery(
@@ -185,6 +189,22 @@ const ModalLoginHelpers = (props) => {
               textAlign: 'start',
               borderRadius: '5px',
             }}
+            description={
+              resul !== 'OK' && (
+                <Button
+                  size='middle'
+                  type='primary'
+                  onClick={() => {
+                    handleChangeTabModal('2');
+                    handleChangeTypeModal(null);
+                    setSendRecovery(null);
+                    setRegisterUser(false);
+                    form.resetFields();
+                  }}>
+                  {intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })}
+                </Button>
+              )
+            }
           />
         )}
         {registerUser && (
@@ -206,11 +226,30 @@ const ModalLoginHelpers = (props) => {
               textAlign: 'start',
               borderRadius: '5px',
             }}
+            description={
+              <Button
+                size='middle'
+                type='primary'
+                onClick={() => {
+                  handleChangeTabModal('2');
+                  handleChangeTypeModal(null);
+                  setSendRecovery(null);
+                  setRegisterUser(false);
+                  form.resetFields();
+                }}>
+                {intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })}
+              </Button>
+            }
           />
         )}
         {!loading && (
           <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
-            <Button htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+            <Button
+              id={'submitButton'}
+              htmlType='submit'
+              block
+              style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+              size='large'>
               {textoButton}
             </Button>
           </Form.Item>

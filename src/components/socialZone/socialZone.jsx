@@ -86,7 +86,7 @@ let SocialZone = function(props) {
                 size='small'
                 // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
                 count={totalPrivateMessages}>
-                Chats
+                <div style={{ color: cEvent.value.styles.textMenu }}> Chats</div>
               </Badge>
             </>
           }
@@ -96,9 +96,10 @@ let SocialZone = function(props) {
       )}
       {props.generalTabs.attendees && (
         <>
+
           {' '}
           <TabPane
-            style={styleTabAttendes}
+            style={styleTabAttendes}           
             tab={
               <div style={{ color: cEvent.value.styles.textMenu }}>
                 <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
@@ -119,7 +120,7 @@ let SocialZone = function(props) {
                       type='text'
                       name={'name'}
                       onChange={handleChange}
-                      placeholder='Buscar Participante...'
+                      placeholder='Buscar participante...'
                     />
                   </div>
                 )}

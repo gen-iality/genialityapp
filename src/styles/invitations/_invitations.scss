@@ -59,11 +59,11 @@
         outline: 1px solid $grey-light;
         overflow-x: visible;
         overflow-y: auto;
-        table {
+       /* table {
           tr:nth-child(even) {
             background-color: #dfdfdf;
           }
-        }
+        }*/
       }
     }
   }

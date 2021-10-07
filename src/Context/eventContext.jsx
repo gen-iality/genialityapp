@@ -6,7 +6,7 @@ import { EventsApi, eventTicketsApi } from '../helpers/request';
 export const CurrentEventContext = React.createContext();
 
 export function CurrentEventProvider({ children }) {
-  let { event_id, event_name } = useParams();
+  let { event_id, event_name,event } = useParams();
   let eventNameFormated = null;
   let initialContextState = { status: 'LOADING', value: null, nameEvent: '' };
 
@@ -27,8 +27,8 @@ export function CurrentEventProvider({ children }) {
       switch (type) {
         case 'id':
           console.log('idevent');
-          eventGlobal = await EventsApi.getOne(event_id);
-          dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id };
+          eventGlobal = await EventsApi.getOne(event_id || event);
+          dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event};
           break;
 
         case 'name':
@@ -39,12 +39,12 @@ export function CurrentEventProvider({ children }) {
       setEventContext(dataevent);
     }
 
-    if (event_id) {
+    if (event_id || event) {
       fetchEvent('id');
     } else if (event_name) {
       fetchEvent('name');
     }
-  }, [event_id, event_name]);
+  }, [event_id, event_name,event]);
 
   return <CurrentEventContext.Provider value={eventContext}>{children}</CurrentEventContext.Provider>;
 }

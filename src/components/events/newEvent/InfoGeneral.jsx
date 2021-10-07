@@ -468,7 +468,7 @@ class InfoGeneral extends Component {
                       options={organizers}
                       required={true}
                     />              
-                <Button onClick={()=>this.setState({newOrganization:true})}>
+                <Button id={'addOrganization'}  onClick={()=>this.setState({newOrganization:true})}>
               Agregar organización
             </Button>           
             <SelectInput
@@ -510,10 +510,10 @@ class InfoGeneral extends Component {
               name="name"
               rules={[{ required: true, message: 'Ingrese un nombre válido' }]}
             >
-              <Input></Input>
+              <Input id='nameOrganizer'></Input>
               </Form.Item>
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
+              <Button  id={'addOrganizers'} type="primary" htmlType="submit">
                 Agregar
               </Button>
             </Form.Item>

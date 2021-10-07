@@ -77,7 +77,7 @@ const DrawerProfile = (props) => {
                 type='text'
                 size='middle'
                 style={{ backgroundColor: '#F4F4F4', color: '#FAAD14' }}>
-                {intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })} 
+                {intl.formatMessage({ id: 'modal.title.update', defaultMessage: 'Actualizar mis datos' })}
               </Button>
             )}
           </Space>
@@ -184,13 +184,14 @@ const DrawerProfile = (props) => {
                 bordered
                 dataSource={propertiesProfile && propertiesProfile.propertiesUserPerfil}
                 renderItem={(item) =>
-                  ((item.visibleByContacts && isMycontact) ||
-                    (!item.visibleByContacts && !item.visibleByAdmin) ||
+                  ((item.visibleByContacts && isMycontact && !item.sensibility) ||
+                    !item.sensibility ||
                     userSelected?._id == cUser.value._id) &&
                   userSelected?.properties[item.name] &&
                   item.name !== 'picture' &&
                   item.name !== 'imagendeperfil' &&
-                  item.type !== 'password' && item.type !== 'avatar'  && (
+                  item.type !== 'password' &&
+                  item.type !== 'avatar' && (
                     <List.Item>
                       <List.Item.Meta
                         title={item.label}

@@ -6,16 +6,15 @@ import { Button, Row, Col, Avatar, Tooltip, Popover, Image, Empty, Switch } from
 import { DeleteOutlined, EditOutlined, UserOutlined, DragOutlined } from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
 
-const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
-
 export const columns = (columnsData) => [
    {
       title: '',
       dataIndex: 'move',
       width: '50px',
       render(val, item) {
+         const DragHandle = sortableHandle(() => <DragOutlined id={`drag${item.index}`} style={{ cursor: 'grab', color: '#999', 'visibility': 'visible' }} />);
          return <DragHandle />;
-      },
+      }
    },
    {
       title: 'Orden',
@@ -77,7 +76,7 @@ export const columns = (columnsData) => [
             const res = await SpeakersApi.editOne(item, item._id, item.event_id);
             if (res) setPublish(res.published);
          };
-         return <Switch checkedChildren='Sí' unCheckedChildren='No' onChange={update} checked={publish} />;
+         return <Switch checkedChildren='Sí' unCheckedChildren='No' onChange={update} checked={publish} id={`editSwitch${item.index}`} />;
       },
    },
    {
@@ -94,16 +93,17 @@ export const columns = (columnsData) => [
                      <Link
                         key='edit'
                         to={{ pathname: `${columnsData.data.matchUrl}/speaker`, state: { edit: item._id } }}>
-                        <Button icon={<EditOutlined />} type='primary' size='small' />
+                        <Button icon={<EditOutlined />} type='primary' size='small' id={`editarTest${item.index}`} />
                      </Link>
                   </Tooltip>
                </Col>
                <Col >
                   <Tooltip placement='topLeft' title='Eliminar Conferencista'>
                      <Button
+                        id={`remove${item.index}`}
                         key='delete'
                         onClick={() => {
-                            columnsData.remove(item);
+                           columnsData.remove(item);
                         }}
                         icon={<DeleteOutlined />}
                         type='danger'

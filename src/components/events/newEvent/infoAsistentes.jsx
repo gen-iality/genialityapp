@@ -11,7 +11,7 @@ class InfoAsistentes extends Component {
       modal: false,
       edit: false,
       info: initModal,
-    };
+    }; 
   }
 
   componentDidMount() {

@@ -83,11 +83,12 @@ function EviusReactQuill(props) {
       toolbar: {
         container: [
           [{ font: [] }],
-          [{ header: [0, 1, 2, 3] }],
-          [{ size: [] }],
+          [{ header: [0, 1, 2, 3, 4, 5,] }],
+          [{ size: ['small', false, 'large', 'huge'] }],
           [{ align: [] }],
           [{ syntax: true }],
-          [('bold', 'italic', 'blockquote')],
+          ['bold', 'italic', 'underline', 'strike','blockquote'],
+          [{ 'color': [] }, { 'background': [] }],
           [{ list: 'ordered' }, { list: 'bullet' }],
           ['link', 'image']
         ],
@@ -139,7 +140,7 @@ function EviusReactQuill(props) {
     setupToolBarImageUploadInput(reactQuilllRef);
   }, []);
 
-  return <ReactQuill ref={reactQuilllRef} modules={modules} onChange={props.handleChange} value={props.data} />;
+  return <ReactQuill id='reactQuill' ref={reactQuilllRef} modules={modules} onChange={props.handleChange} value={props.data} />;
 }
 
 export default EviusReactQuill;

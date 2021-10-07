@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
-import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Divider, Upload, Select } from 'antd';
+import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Divider, Upload, Select, Spin } from 'antd';
 import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
@@ -66,6 +66,15 @@ function OutsideAlerter(props) {
 
   return <div ref={wrapperRef}>{props.children}</div>;
 }
+//OBTENER NOMBRE ARCHIVO
+function obtenerName(fileUrl){
+  if(typeof fileUrl =='string'){
+    let splitUrl=fileUrl?.split("/");
+    return splitUrl[splitUrl.length-1];
+  }else{
+    return null;
+  }
+  }
 
 /** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
  * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
@@ -82,17 +91,29 @@ let updateTakenOptionInTakeableList = (camposConOpcionTomada, values, eventId) =
     // delete updatedField['_id'];
     // delete updatedField['updated_at'];
     // delete updatedField['created_at'];
-    EventFieldsApi.registerListFieldOptionTaken(taken, fieldId, cEvent.value?._id);
+    EventFieldsApi.registerListFieldOptionTaken(taken, fieldId, eventId);
   });
 };
 
-const FormRegister = ({ closeModal, setSectionPermissions }) => {
-  let { eventPrivate, tabLogin,typeModal } = useContext(HelperContext);
-  let cEventUser = UseUserEvent();
-  let cEvent = UseEventContext();
-  let cUser = UseCurrentUser();
-
+const FormRegister = ({
+  initialOtherValue,
+  eventId,
+  fields,
+  eventUserOther,
+  eventUserId,
+  closeModal,
+  conditionalsOther,
+  organization,
+  callback,
+  options,
+  loadingregister,
+  setSectionPermissions,
+}) => {
   const intl = useIntl();
+  const cEvent = UseEventContext();
+  const cEventUser = UseUserEvent();
+  const cUser = UseCurrentUser();
+  const { tabLogin, typeModal, eventPrivate } = useContext(HelperContext);
   const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || {});
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -113,14 +134,19 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
   const [initialValues, setinitialValues] = useState(
-    cEventUser?.value? cEventUser?.value : cUser.value? cUser.value : {}
-  );  
-  initialValues.contrasena=''
-  initialValues.password=''
-  const [conditionals, setconditionals] = useState(cEvent.value?.fields_conditions || []);
-  const [eventUser, seteventUser] = useState(cEventUser.value || {});
-  const [extraFieldsOriginal, setextraFieldsOriginal] = useState(cEvent.value?.user_properties || {});
-  initialValues.codearea = null;
+    organization ? initialOtherValue : cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
+  );
+  //initialValues?.contrasena = '';
+  //initialValues?.password = '';
+  const [conditionals, setconditionals] = useState(
+    organization ? conditionalsOther : cEvent.value?.fields_conditions || []
+  );
+  const [eventUser, seteventUser] = useState(organization ? eventUserOther : cEventUser.value || {});
+  const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
+    organization ? fields : cEvent.value?.user_properties || {}
+  );
+  //initialValues.codearea = null;
+  console.log('EVENT USER==>', eventUser);
 
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';
@@ -128,7 +154,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
     setSubmittedForm(false);
     hideConditionalFieldsToDefault(conditionals, cEventUser);
 
-    getEventData(cEvent.value?._id);
+    !organization && getEventData(eventId);
     form.resetFields();
     if (window.fbq) {
       window.fbq('track', 'CompleteRegistration');
@@ -152,7 +178,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
   useEffect(() => {
     form.resetFields();
     setGeneralFormErrorMessageVisible(false);
-  }, [tabLogin,typeModal]);
+  }, [tabLogin, typeModal]);
   const showGeneralMessage = (values, error, date) => {
     setGeneralFormErrorMessageVisible(true);
     setTimeout(() => {
@@ -170,9 +196,30 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
     if (areacodeselected) {
       values['code'] = areacodeselected;
     }
+    if (values.checked_in) {
+      values.checkedin_at = new Date();
+    } else {
+      values.checkedin_at = '';
+    }
 
+    
+    //OBTENER RUTA ARCHIVOS FILE
+    Object.values(extraFields).map((value) => {
+      if (value.type == 'file') {
+        values[value.name] = 
+          values[value.name]?.fileList
+            ? values[value.name]?.fileList[0]?.response.trim()
+            : typeof values[value.name] =='string'
+            ? values[value.name]
+            : null;         
+      }
+    }); 
+    if (callback) {
+      callback(values)
+
+    }else{
     const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
-
+    
     if (data.length == 0 || cEventUser.value) {
       setSectionPermissions({ view: false, ticketview: false });
       values.password = password;
@@ -219,7 +266,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
           message.error(textMessage);
         }
       } else {
-        try {
+        try {         
           let resp = await UsersApi.createOne(snap, cEvent.value?._id);
 
           // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
@@ -239,32 +286,37 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
             textMessage.content = 'Usuario ' + formMessage.successMessage;
 
             let $msg =
-              event.registration_message ||
-              `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`;
+              organization == 1
+                ? ''
+                : event.registration_message ||
+                  `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`;
 
             setSuccessMessage($msg);
 
             setSubmittedForm(true);
             message.success(intl.formatMessage({ id: 'registration.message.created' }));
 
-            //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
-            //todo el proceso de logueo depende del token en la url por eso se recarga la página
-            if (!event.validateEmail && resp.data.user.initial_token) {
-              setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
-              setTimeout(function() {
-                window.location.replace(
-                  cEvent.value?._id == '60cb7c70a9e4de51ac7945a2'
-                    ? `/landing/${cEvent.value?._id}/success/${
-                        cEventUser.value == null ? typeRegister : 'free'
-                      }?token=${resp.data.user.initial_token}`
-                    : `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${
-                        !eventUser?._id ? 2 : 4
-                      }&token=${resp.data.user.initial_token}`
-                );
-              }, 100);
-            } else {
-              window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${1}`);
-            }
+         
+           
+              //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
+              //todo el proceso de logueo depende del token en la url por eso se recarga la página
+              if (!event.validateEmail && resp.data.user.initial_token) {
+                setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
+                setTimeout(function() {
+                  window.location.replace(
+                    cEvent.value?._id == '60cb7c70a9e4de51ac7945a2'
+                      ? `/landing/${cEvent.value?._id}/success/${
+                          cEventUser.value == null ? typeRegister : 'free'
+                        }?token=${resp.data.user.initial_token}`
+                      : `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${
+                          !eventUser?._id ? 2 : 4
+                        }&token=${resp.data.user.initial_token}`
+                  );
+                }, 100);
+              } else {
+                window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${1}`);
+              }
+            
           } else {
             // window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=800`);
             //Usuario ACTUALIZADO
@@ -290,18 +342,20 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
               setPayMessage(true);
             }
           }
+        
         } catch (err) {
           // textMessage.content = "Error... Intentalo mas tarde";
           textMessage.content = formMessage.errorMessage;
-
+          console.log('ERROR==>', err);
           textMessage.key = key;
           message.error(textMessage);
         }
       }
     } else {
-     // alert("YA ESTAS REGISTRADO..")
+      // alert("YA ESTAS REGISTRADO..")
       setNotLoggedAndRegister(true);
     }
+  }
   };
 
   const valuesChange = (changedValues, allValues) => {
@@ -373,8 +427,14 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
       let mandatory = m.mandatory;
       let description = m.description;
       let labelPosition = m.labelPosition;
-      let target = name;
-      let value = eventUser && eventUser['properties'] ? eventUser['properties'][target] : '';
+      let target = name;      
+      let value = !callback
+        ? eventUser && eventUser['properties']
+          ? eventUser['properties'][target]
+          : ''
+        : initialValues
+        ? initialValues[target]
+        : '';
 
       //no entiendo b esto para que funciona
       if (conditionals.state === 'enabled') {
@@ -388,7 +448,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
       }
       let input = (
         <Input
-          disabled={m.name == 'email' && initialValues.email ? true : false}
+          disabled={m.name == 'email' && initialValues?.email ? true : false}
           {...props}
           addonBefore={
             labelPosition === 'izquierda' && (
@@ -478,11 +538,11 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                   // validateStatus={type=='codearea' && mandatory && (numberareacode==null || areacodeselected==null)&& 'error'}
                   // style={eventUserId && hideFields}
                   valuePropName={'checked'}
-                  label={
+                  /* label={
                     (labelPosition !== 'izquierda' || !labelPosition) && type !== 'tituloseccion'
                       ? label
                       : '' && (labelPosition !== 'arriba' || !labelPosition)
-                  }
+                  }*/
                   name={name}
                   rules={[rule]}
                   key={'l' + key}
@@ -549,14 +609,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
             multiple={false}
             listType='text'
             beforeUpload={beforeUpload}
-            defaultFileList={
-              value && value.fileList
-                ? value.fileList.map((file) => {
-                    file.url = file.response || null;
-                    return file;
-                  })
-                : []
-            }>
+            defaultFileList={value ? [{ name:typeof value =='string'? obtenerName(value):null, url: typeof value =='string'? value:null }] : []}>
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         );
@@ -648,7 +701,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                 fileList={ImgUrl}
                 beforeUpload={beforeUpload}>
                 <Button type='primary' icon={<UploadOutlined />}>
-                {intl.formatMessage({ id: 'form.button.avatar', defaultMessage: 'Subir imagen de perfil' })}
+                  {intl.formatMessage({ id: 'form.button.avatar', defaultMessage: 'Subir imagen de perfil' })}
                 </Button>
               </Upload>
             </ImgCrop>
@@ -786,7 +839,7 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                         color: '#000000',
                         borderLeft: '5px solid #FAAD14',
                         fontSize: '14px',
-                        borderRadius:'5px'
+                        borderRadius: '5px',
                       }}
                       message={intl.formatMessage({ id: 'form.missing.required.fields' })}
                       type='warning'
@@ -805,10 +858,9 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                         color: '#000000',
                         borderLeft: '5px solid #FAAD14',
                         fontSize: '14px',
-                        borderRadius:'5px'
+                        borderRadius: '5px',
                       }}
-                      
-                      afterClose={()=>setNotLoggedAndRegister(false)}
+                      afterClose={() => setNotLoggedAndRegister(false)}
                       message={intl.formatMessage({ id: 'registration.already.registered' })}
                       //description={intl.formatMessage({ id: 'registration.message.success.subtitle' })}
                       type='warning'
@@ -818,20 +870,28 @@ const FormRegister = ({ closeModal, setSectionPermissions }) => {
                   </Col>
                 )}
 
-                <Col span={24}>
-                  <Form.Item>
-                    <Button
-                      size='large'
-                      block
-                      style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                      htmlType='submit'>
-                      {cEventUser.value
+                <Col span={24} align='center'>
+                  {!loadingregister && <Form.Item>
+                    <Button type='primary' htmlType='submit'>
+                      {initialValues != null && Object.keys(initialValues).length > 0 
                         ? intl.formatMessage({ id: 'registration.button.update' })
                         : cEvent.value?._id === '5f9824fc1f8ccc414e33bec2'
                         ? 'Votar y Enviar'
                         : intl.formatMessage({ id: 'registration.button.create' })}
                     </Button>
-                  </Form.Item>
+                    {options &&
+                      initialValues != null &&
+                      options.map((option) => (
+                        <Button
+                          icon={option.icon}
+                          onClick={() => option.action(eventUser)}
+                          type={option.type}
+                          style={{ marginLeft: 10 }}>
+                          {option.text}
+                        </Button>
+                      ))}
+                  </Form.Item>}
+                  {loadingregister && <Spin />}
                 </Col>
               </Row>
             </Form>
