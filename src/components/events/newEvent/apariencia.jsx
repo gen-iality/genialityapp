@@ -66,14 +66,14 @@ function Apariencia(props) {
           </Col>
         </Row>
         <Row className='container-swicht'>
-          <Col xs={24} sm={24} md={12} lg={16} xl={16} xxl={16}>
+          {/*<Col xs={24} sm={24} md={12} lg={16} xl={16} xxl={16}>
             <div>
               <p className='theme'>Tema</p>
               <span style={{ fontSize: '12px' }}>
                 Claro <Switch checked={valueInputs['temaDark'] || false} onChange={onChangeCheck}  /> Oscuro
               </span>
             </div>
-          </Col>
+  </Col>*/}
           <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
             <div>
               <span className='nota'>
