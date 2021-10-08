@@ -3,12 +3,13 @@ import { NavLink, withRouter, Switch, Route, Redirect } from 'react-router-dom';
 import InfoGeneral from './newEvent/InfoGeneral';
 import InfoAsistentes from './newEvent/infoAsistentes';
 import Moment from 'moment';
+import * as Cookie from 'js-cookie';
 
-import { Actions, OrganizationFuction, UsersApi } from '../../helpers/request';
+import { Actions, OrganizationFuction, UsersApi, AgendaApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
-import { BaseUrl } from '../../helpers/constants';
-import { Steps, Button, message, Card, Row } from 'antd';
+import { BaseUrl, host_list } from '../../helpers/constants';
+import { Steps, Button, message, Card, Row, Spin } from 'antd';
 import { PictureOutlined, ScheduleOutlined, VideoCameraOutlined } from '@ant-design/icons';
 /*vistas de paso a paso */
 import Informacion from './newEvent/informacion';
@@ -17,6 +18,8 @@ import Tranmitir from './newEvent/transmitir';
 /*vista de resultado de la creacion de un evento */
 import Resultado from './newEvent/resultado';
 import { cNewEventContext } from '../../Context/newEventContext';
+import Service from '../../components/agenda/roomManager/service';
+import { firestore } from '../../helpers/firebase';
 
 const { Step } = Steps;
 
@@ -25,7 +28,11 @@ const { Step } = Steps;
 class NewEvent extends Component {
   constructor(props) {
     super(props);
+    let valores = window.location.search;
+    let urlParams = new URLSearchParams(valores);
+    
     this.state = {
+       orgId:urlParams.get('orgId'),
       stepsValid: {
         info: false,
         fields: false,
@@ -41,15 +48,16 @@ class NewEvent extends Component {
           title: 'Apariencia',
           icon: <PictureOutlined />,
         },
-        {
+        /* {
           title: 'Transmisión',
           icon: <VideoCameraOutlined />,
-        },
+        },*/
       ],
       loading: false,
     };
     this.saveEvent = this.saveEvent.bind(this);
   }
+
   async componentDidMount() {
     if (this.props.match.params.user) {
       let profileUser = await UsersApi.getProfile(this.props.match.params.user);
@@ -58,22 +66,20 @@ class NewEvent extends Component {
     const valores = window.location.search;
     const urlParams = new URLSearchParams(valores);
     var orgId = urlParams.get('orgId');
-    if(orgId){
+    if (orgId) {
       let eventNewContext = this.context;
-      let organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);   
-      if(organization){
-        organization={...organization,id:organization._id}
-        eventNewContext.selectedOrganization(organization)
-        eventNewContext.eventByOrganization(true)
+      let organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
+      if (organization) {
+        organization = { ...organization, id: organization._id };
+        eventNewContext.selectedOrganization(organization);
+        eventNewContext.eventByOrganization(true);
       }
     }
-
-
   }
   obtainContent = (step) => {
     switch (step.title) {
       case 'Información':
-        return <Informacion currentUser={this.state.currentUser} />;
+        return <Informacion orgId={this.state.orgId} currentUser={this.state.currentUser} />;
       case 'Apariencia':
         return <Apariencia currentUser={this.state.currentUser} />;
       case 'Transmisión':
@@ -97,7 +103,7 @@ class NewEvent extends Component {
     this.setState({ loading: true });
     //console.log(eventNewContext.valueInputs.name)
     //console.log(eventNewContext.valueInputs.description)
-    console.log(eventNewContext.selectedDateEvent)
+    //console.log(eventNewContext.selectedDateEvent);
     //console.log(eventNewContext.selectOrganization)
     //console.log(eventNewContext.imageEvents)
     if (eventNewContext.selectOrganization) {
@@ -105,8 +111,8 @@ class NewEvent extends Component {
         name: eventNewContext.valueInputs.name,
         address: '',
         type_event: 'onlineEvent',
-        datetime_from: eventNewContext.selectedDateEvent?.from+":00",
-        datetime_to: eventNewContext.selectedDateEvent?.at+":00",
+        datetime_from: eventNewContext.selectedDateEvent?.from + ':00',
+        datetime_to: eventNewContext.selectedDateEvent?.at + ':00',
         picture: null,
         venue: '',
         location: '',
@@ -133,7 +139,7 @@ class NewEvent extends Component {
           toolbarDefaultBg: '#FFFFFF',
           brandDark: '#FFFFFF',
           brandLight: '#FFFFFF',
-          textMenu: '#FFFFFF',
+          textMenu: '#555352',
           activeText: '#FFFFFF',
           bgButtonsEvent: '#FFFFFF',
           banner_image_email: null,
@@ -142,8 +148,8 @@ class NewEvent extends Component {
           banner_footer: eventNewContext.imageEvents?.piepagina || null,
           mobile_banner: null,
           banner_footer_email: null,
-          show_banner: false,
-          show_card_banner: true,
+          show_banner: 'true',
+          show_card_banner: false,
           show_inscription: false,
           hideDatesAgenda: true,
           hideDatesAgendaItem: false,
@@ -153,25 +159,137 @@ class NewEvent extends Component {
           data_loader_page: null,
         },
       };
-      console.log('EVENT TO CREATE==>', data);
+      const newMenu = {
+        itemsMenu: {
+          evento: {
+            name: 'evento',
+            position: 1,
+            section: 'evento',
+            icon: 'CalendarOutlined',
+            checked: true,
+            permissions: 'public',
+          },
+          agenda: {
+            name: 'Mi agenda',
+            position: null,
+            section: 'agenda',
+            icon: 'ReadOutlined',
+            checked: true,
+            permissions: 'public',
+          },
+        },
+      };
+
+      //console.log('EVENT TO CREATE==>', data);
       //CREAR EVENTO
       try {
         const result = await Actions.create('/api/events', data);
-
         if (result._id) {
-          message.success("Evento creado correctamente..");
-          window.location.replace(`${BaseUrl}/eventadmin/${result._id}`);
+          //HABILTAR SECCIONES POR DEFECTO
+          const sections = await Actions.put(`api/events/${result._id}`, newMenu);
+
+          if (sections?._id) {
+            //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL EVENTO
+            const activity = {
+              name: eventNewContext.valueInputs.name,
+              subtitle: null,
+              image: eventNewContext.imageEvents?.logo || null,
+              description: null,
+              capacity: 100,
+              event_id: result._id,
+              datetime_end: eventNewContext.selectedDateEvent?.at + ':00',
+              datetime_start: eventNewContext.selectedDateEvent?.from + ':00',
+            };
+            const agenda = await AgendaApi.create(result._id, activity);
+            //console.log("RESPUESTA AGENDA==>",agenda)
+            if (agenda._id) {
+              if (eventNewContext.typeTransmission == 1) {
+                let sala = await this.createZoomRoom(agenda, result._id);
+                if (sala) {
+                  message.success('Evento creado correctamente..');
+                  window.location.replace(`${BaseUrl}/eventadmin/${result._id}`);
+                } else {
+                  message.error('Error al crear sala');
+                }
+              } else {
+                message.success('Evento creado correctamente..');
+                window.location.replace(`${BaseUrl}/eventadmin/${result._id}`);
+              }
+            }
+          } else {
+            message.error('Error al crear el evento');
+          }
         } else {
-          message.error(<FormattedMessage id='toast.warning' defaultMessage='Idk' />);
+          message.error('Error al crear el evento');
         }
       } catch (error) {
-        console.log(error)
-        message.error("Error al crear el evento");
+        console.log(error);
+        message.error('Error al crear el evento');
       }
     } else {
       message.error('Seleccione una organización');
     }
   }
+
+  createZoomRoom = async (activity, event_id) => {
+    const service = new Service(firestore);
+    const evius_token = Cookie.get('evius_token');
+    console.log('CRATE ZOOM ROOM==>', activity, event_id, evius_token);
+
+    // Se valida si es el host se selecciona de manera manual o automáticamente
+    // Si la seleccion del host es manual se envia el campo host_id con el id del host tipo string
+    // Si la seleccion del host es automática se envia el campo host_ids con un array de strings con los ids de los hosts
+    const host_field = 'host_ids';
+    let host_ids = host_list.map((host) => host.host_id);
+    const host_value = host_ids;
+
+    const body = {
+      token: evius_token,
+      activity_id: activity._id,
+      activity_name: activity.name,
+      event_id: event_id,
+      agenda: activity.name,
+      date_start_zoom: activity.date_start_zoom,
+      date_end_zoom: activity.date_end_zoom,
+      [host_field]: host_value,
+    };
+
+    const response = await service.setZoomRoom(evius_token, body);
+
+    if (
+      Object.keys(response).length > 0 &&
+      typeof response.meeting_id !== 'undefined' &&
+      typeof response.zoom_host_id !== 'undefined' &&
+      typeof response.zoom_host_name !== 'undefined'
+    ) {
+      // const configuration = await service.getConfiguration(event_id, activity._id);
+
+      const isPublished = true;
+      const platform = 'zoom';
+      const meeting_id = response.meeting_id;
+      const roomStatus = true;
+      const chat = true;
+      const surveys = true;
+      const games = false;
+      const attendees = true;
+      const host_id = response.zoom_host_id;
+      const host_name = response.zoom_host_name;
+
+      const roomInfo = { roomStatus, platform, meeting_id, isPublished, host_id, host_name };
+      const tabs = { chat, surveys, games, attendees };
+
+      const result = await service.createOrUpdateActivity(event_id, activity._id, roomInfo, tabs);
+      if (result) {
+        return true;
+      } else {
+        message.error(result.message);
+        return false;
+      }
+    } else {
+      message.error(response.message);
+      return false;
+    }
+  };
 
   /* prevStep = (field, data, prev) => {
     this.setState({ [field]: data }, () => {
@@ -226,7 +344,7 @@ class NewEvent extends Component {
 
   render() {
     const { current } = this.state;
-    let value = this.context;
+    let context = this.context;
     return (
       <Row justify='center' className='newEvent'>
         {/* Items del paso a paso */}
@@ -243,7 +361,7 @@ class NewEvent extends Component {
             {this.obtainContent(this.state.steps[current])}
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
-          {
+          {!this.state.loading && !context.loadingOrganization && (
             <div className='button-container'>
               {current > 0 && (
                 <Button className='button' size='large' onClick={() => this.prev()}>
@@ -261,7 +379,12 @@ class NewEvent extends Component {
                 </Button>
               )}
             </div>
-          }
+          )}
+          {(this.state.loading || context.loadingOrganization) && (
+            <Row justify='center'>
+              Espere.. <Spin />
+            </Row>
+          )}
         </Card>
         {/* <div className='steps'>
           <NavLink

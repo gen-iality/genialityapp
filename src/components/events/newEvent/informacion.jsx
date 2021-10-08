@@ -2,9 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import EviusReactQuill from '../../shared/eviusReactQuill'; /* Se debe usar este componente para la descripcion */
 import { DateTimePicker } from 'react-widgets';
 import EventImage from '../../../eventimage.png';
-import { Badge, Card, Col, Input, Row, Space, Tooltip, Typography,Form } from 'antd';
+import { Badge, Card, Col, Input, Row, Space, Tooltip, Typography,Form,Modal,List } from 'antd';
 import { CalendarOutlined, CheckCircleFilled, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import Modal from 'antd/lib/modal/Modal';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useContextNewEvent } from '../../../Context/newEventContext';
@@ -13,6 +12,7 @@ import { OrganizationApi } from '../../../helpers/request';
 const { Text, Link, Title, Paragraph } = Typography;
 
 const Informacion = (props) => { 
+  const [organizations, setOrganizations] = useState([]);
   const {
     addDescription,
     showModal,
@@ -30,9 +30,59 @@ const Informacion = (props) => {
     handleInput,
     valueInputs,
     errorInputs,
-    containsError
+    containsError, 
+    changeOrganization,
+    organization,
+    selectOrganization,
+    selectedOrganization,
+    isbyOrganization,   
+    isLoadingOrganization
   } = useContextNewEvent();  
   
+  useEffect(() => {
+    if (props.currentUser && !props.orgId) {      
+      obtainOrganizations();
+    }
+   
+   // console.log("ISBYORGANIZATION==>",isbyOrganization)
+
+    async function obtainOrganizations() {
+      console.log("SELECT ORGANIZATION==>",selectOrganization)
+      if(!selectOrganization){
+        isLoadingOrganization(true)
+      let organizations = await OrganizationApi.mine();
+      if(organization.length==0){
+        await createOrganization();
+        organizations = await OrganizationApi.mine();
+      }
+      
+      setOrganizations(organizations);
+      selectedOrganization(organizations && organizations[0])
+      isLoadingOrganization(false)
+    }
+  }
+  }, [props.orgId,props.currentUser]);
+
+  const createOrganization = async () => {
+    let newOrganization = {
+      name: props.currentUser?.names ||  props.currentUser?.name,
+    };
+    //CREAR ORGANIZACION------------------------------
+    let create = await OrganizationApi.createOrganization(newOrganization);
+    console.log("CREATE==>",create)
+    if (create) {
+      return create;
+    }
+    return null;
+  };
+
+  const selectOrganizationOK = () => {
+    if (!selectOrganization || selectOrganization == null) {
+      message.error('Por favor seleccione una organización');
+    } else {
+      changeOrganization(false);
+    }
+  };
  
   return (    
     <div className='step-information'>
@@ -73,7 +123,34 @@ const Informacion = (props) => {
         </div>
         <div>
           <Space direction='vertical'>
-            <Text>
+          {<a onClick={() => changeOrganization(true)}>Organización: {selectOrganization?.name}</a>}
+          {organization && !isbyOrganization && (
+            <Modal
+              onOk={selectOrganizationOK}
+              okText='Seleccionar'
+              cancelText='Cerrar'
+              title='Organización'
+              visible={organization &&  !isbyOrganization }
+              onCancel={() => changeOrganization(false)}>
+              <List
+                style={{ height: 400, overflowY: 'auto' }}
+                size='small'
+                bordered
+                dataSource={organizations}
+                renderItem={(item) => (
+                  <List.Item
+                    style={{
+                      cursor: 'pointer',
+                      color: selectOrganization?.id == item.id ? 'white' : 'rgba(0, 0, 0, 0.85)',
+                      background: selectOrganization?.id == item.id ? '#40a9ff' : 'white',
+                    }}
+                    onClick={() => selectedOrganization(item)}>
+                    {item.name}
+                  </List.Item>
+                )}
+              />
+            </Modal>)}
+           {/* <Text>
               Tipo de transmisión <span className='text-color'>*</span>
             </Text>
             <Row gutter={[16, 16]} justify='center'>
@@ -110,7 +187,7 @@ const Informacion = (props) => {
                   </Badge>
                 </Row>
               </Col>
-            </Row>
+           </Row>*/}
           </Space>
         </div>
       </Space>

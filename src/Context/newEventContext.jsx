@@ -20,6 +20,7 @@ export const NewEventProvider = ({ children }) => {
   const [organization, setOrganization] = useState(false);
   const [selectOrganization, setSelectOrganization] = useState();
   const [isbyOrganization, setIsbyOrganization] = useState(false);
+  const [loadingOrganization, setLoadingOrganization] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -35,6 +36,9 @@ export const NewEventProvider = ({ children }) => {
 
   const eventByOrganization=(value)=>{      
     setIsbyOrganization(value)
+  }
+  const isLoadingOrganization=(value)=>{      
+    setLoadingOrganization(value)
   }
 
   const changeSelectDay = (day) => {
@@ -169,7 +173,10 @@ export const NewEventProvider = ({ children }) => {
         selectOrganization,
         selectedOrganization,
         eventByOrganization,
-        isbyOrganization
+        isbyOrganization,
+        loadingOrganization,
+        isLoadingOrganization
+        
       }}>
       {children}
     </cNewEventContext.Provider>
