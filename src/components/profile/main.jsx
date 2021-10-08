@@ -1,8 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
 import { Avatar, Card, Col, Layout, Menu, Row, Space, Statistic, Tabs, Typography, Grid, Divider } from 'antd';
-import { ArrowUpOutlined, LikeOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { AppstoreFilled } from '@ant-design/icons';
 import OrganizationCard from './organizationCard';
+import NewCard from './newCard';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -15,12 +16,12 @@ const MainProfile = () => {
     <Layout style={{ height: '90.8vh' }}>
       <Sider
         defaultCollapsed={true}
-        width={!screens.xs ? 300 : '90vw'}
+        width={!screens.xs ? 300 : '92vw'}
         style={{ backgroundColor: '#ffffff' }}
         breakpoint='lg'
         collapsedWidth='0'
-        zeroWidthTriggerStyle={{ top: '-40px', width: '50px', right: '-40px' }}>
-        <Row justify='center'>
+        zeroWidthTriggerStyle={{ top: '-40px', width: '50px' }}>
+        <Row justify='center' gutter={[10, 20]}>
           <Space
             size={5}
             direction='vertical'
@@ -44,37 +45,40 @@ const MainProfile = () => {
           <Col style={{ padding: '30px' }} span={24}>
             <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
               <Statistic
-                title='Eventos creados'
+                title={ <span style={{fontSize:'18px'}}>Eventos creados</span> }
                 value={5}
                 precision={0}
-                valueStyle={{ color: '#3f8600', fontSize: '35px' }}
+                valueStyle={{ color: '#3f8600', fontSize: '50px' }}
               />
             </Card>
           </Col>
         </Row>
       </Sider>
       <Layout>
-        <Content style={{ margin: '0px', padding: '10px' }}>
+        <Content style={{ margin: '0px', padding: '10px', overflowY: 'auto' }}>
           <Tabs defaultActiveKey='1'>
             {!screens.xs && (
-              <TabPane tab='Todos' key='1'>
+              <TabPane
+                tab={
+                  <Space size={0}>
+                    <AppstoreFilled /> Todos
+                  </Space>
+                }
+                key='1'>
                 <Row gutter={[16, 16]}>
                   <Col span={24}>
-                    <Divider orientation='left'>Organizaciones</Divider>{' '}
+                    <Divider orientation='left'>Eventos creado</Divider>
                     <Row gutter={[16, 16]}>
-                      <Col key={'index1'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                        <OrganizationCard />
+                      <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
+                        <NewCard entityType='event' />
                       </Col>
-                    </Row>
-                  </Col>
-                  <Col span={24}>
-                    <Divider orientation='left'>Eventos creado</Divider>{' '}
-                    <Row gutter={[16, 16]}>
+                      {/* aqui empieza el mapeo de eventCard.jsx maximo 4 */}
                       <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <Card
                           cover={<img style={{ objectFit: 'cover' }} src='https://picsum.photos/300/200' />}
                           style={{ width: '100%' }}></Card>
                       </Col>
+                      {/* aqui termina el mapeo de eventCard.jsx maximo 4  */}
                     </Row>
                   </Col>
                   <Col span={24}>
@@ -87,11 +91,27 @@ const MainProfile = () => {
                       </Col>
                     </Row>
                   </Col>
+                  <Col span={24}>
+                    <Divider orientation='left'>Organizaciones</Divider>
+                    <Row gutter={[16, 16]}>
+                      <Col key={'index1'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
+                        <NewCard entityType='organization' />
+                      </Col>
+                      {/* aqui empieza el mapeo maximo 6 */}
+                      <Col key={'index1'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
+                        <OrganizationCard />
+                      </Col>
+                      {/* aqui termina el mapeo maximo 6 */}
+                    </Row>
+                  </Col>
                 </Row>
               </TabPane>
             )}
-            <TabPane tab='Organiaciones' key='2'>
+            <TabPane tab='Organizaciones' key='2'>
               <Row gutter={[16, 16]}>
+                <Col key={'index1'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
+                  <NewCard entityType='organization' />
+                </Col>
                 <Col key={'index'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                   <OrganizationCard />
                 </Col>
@@ -114,6 +134,9 @@ const MainProfile = () => {
             </TabPane>
             <TabPane tab='Eventos creados' key='3'>
               <Row gutter={[16, 16]}>
+                <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
+                  <NewCard entityType='event' />
+                </Col>
                 <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
                   <Card
                     cover={<img style={{ objectFit: 'cover' }} src='https://picsum.photos/300/200' />}
