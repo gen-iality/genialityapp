@@ -32,7 +32,6 @@ const MainProfile = () => {
               usuario@email.com
             </Typography.Text>
           </Space>
-
           <Col span={24}>
             <Menu style={{ width: '100%', border: 'none' }} mode='inline'>
               <Menu.Item key='m1'>Option 1</Menu.Item>
@@ -41,11 +40,10 @@ const MainProfile = () => {
               <Menu.Item key='m4'>Option 4</Menu.Item>
             </Menu>
           </Col>
-
           <Col style={{ padding: '30px' }} span={24}>
             <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
               <Statistic
-                title={ <span style={{fontSize:'18px'}}>Eventos creados</span> }
+                title={<span style={{ fontSize: '18px' }}>Eventos creados</span>}
                 value={5}
                 precision={0}
                 valueStyle={{ color: '#3f8600', fontSize: '50px' }}
@@ -109,23 +107,8 @@ const MainProfile = () => {
             )}
             <TabPane tab='Organizaciones' key='2'>
               <Row gutter={[16, 16]}>
-                <Col key={'index1'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
+                <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                   <NewCard entityType='organization' />
-                </Col>
-                <Col key={'index'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                  <OrganizationCard />
-                </Col>
-                <Col key={'index'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                  <OrganizationCard />
-                </Col>
-                <Col key={'index'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                  <OrganizationCard />
-                </Col>
-                <Col key={'index'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                  <OrganizationCard />
-                </Col>
-                <Col key={'index'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                  <OrganizationCard />
                 </Col>
                 <Col key={'index'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                   <OrganizationCard />
@@ -134,17 +117,12 @@ const MainProfile = () => {
             </TabPane>
             <TabPane tab='Eventos creados' key='3'>
               <Row gutter={[16, 16]}>
-                <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
+                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                   <NewCard entityType='event' />
                 </Col>
                 <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
                   <Card
                     cover={<img style={{ objectFit: 'cover' }} src='https://picsum.photos/300/200' />}
-                    style={{ width: '100%' }}></Card>
-                </Col>
-                <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
-                  <Card
-                    cover={<img style={{ objectFit: 'cover' }} src='https://random.imagecdn.app/300/200' />}
                     style={{ width: '100%' }}></Card>
                 </Col>
               </Row>
@@ -154,21 +132,6 @@ const MainProfile = () => {
                 <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
                   <Card
                     cover={<img style={{ objectFit: 'cover' }} src='https://random.imagecdn.app/300/200' />}
-                    style={{ width: '100%' }}></Card>
-                </Col>
-                <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
-                  <Card
-                    cover={<img style={{ objectFit: 'cover' }} src='https://picsum.photos/300/200' />}
-                    style={{ width: '100%' }}></Card>
-                </Col>
-                <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
-                  <Card
-                    cover={<img style={{ objectFit: 'cover' }} src='https://random.imagecdn.app/300/200' />}
-                    style={{ width: '100%' }}></Card>
-                </Col>
-                <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
-                  <Card
-                    cover={<img style={{ objectFit: 'cover' }} src='https://picsum.photos/300/200' />}
                     style={{ width: '100%' }}></Card>
                 </Col>
               </Row>

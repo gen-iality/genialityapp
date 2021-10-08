@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Card, message, Space, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import ModalCreateOrg from './modalCreateOrg';
+
+// Componente modal para la creacion de una organizacion <ModalCreateOrg/>
 
 const NewCard = (props) => {
   const entity = props.entityType ? props.entityType : 'event';

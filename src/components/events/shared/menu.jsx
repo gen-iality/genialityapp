@@ -316,7 +316,7 @@ class MenuConfig extends Component {
               </Menu.Item>
 
               <Menu.Item key='28'>
-                Enviar información a asistenes
+                Enviar información a asistentes
                 <NavLink onClick={this.handleClick} to={`${url}/invitados`}></NavLink>
               </Menu.Item>
             </SubMenu>
