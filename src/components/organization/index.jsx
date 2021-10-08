@@ -7,6 +7,8 @@ import Styles from '../App/styles';
 import OrgEvents from './events';
 import OrgMembers from './members';
 import Datos from '../events/datos';
+import { Tag } from 'antd';
+import { DoubleRightOutlined } from '@ant-design/icons';
 
 function Organization(props) {
    const [organization, setOrganization] = useState({});
@@ -18,7 +20,7 @@ function Organization(props) {
       setOrganization(org);
       setLoading(false);
    }
-
+   console.log('10. organization ', organization);
    useEffect(() => {
       getOrganizationData();
    }, []);
@@ -83,17 +85,26 @@ function Organization(props) {
                      <Loading />
                   ) : (
                      <section className='section'>
+                        <Tag color='success' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft:20 }}>
+                           <a
+                              target='_blank'
+                              href={`${window.location.origin}/organization/${organization._id}/events
+                        `}>
+                              {`Ir al landing de la organización: ${organization.name}`}
+                           </a>
+                        </Tag>
+
                         <Switch>
                            <Route
                               exact
                               path={`${props.match.url}/`}
                               render={() => <Redirect to={`${props.match.url}/events`} />}
                            />
-                              <Route
-                                 exact
-                                 path={`${props.match.url}/events`}
-                                 render={() => <OrgEvents org={organization} />}
-                              />
+                           <Route
+                              exact
+                              path={`${props.match.url}/events`}
+                              render={() => <OrgEvents org={organization} />}
+                           />
                            <Route
                               exact
                               path={`${props.match.url}/information`}
