@@ -179,11 +179,11 @@ class Event extends Component {
               </h2>
             </a>
             {console.log('this.state.event', this.state.event)}
-            <a target='_blank' href={`${window.location.origin}/event/${this.FriendLyUrl(this.state.event.name)}`}>
+            {/* <a target='_blank' href={`${window.location.origin}/event/${this.FriendLyUrl(this.state.event.name)}`}>
               <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
                 Ir al evento: (con nombre) {this.state.event.name}
               </h2>
-            </a>
+            </a> */}
           </Space>
           <section className='section event-wrapper'>
             <Switch>
