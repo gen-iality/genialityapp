@@ -28,28 +28,23 @@ export function CurrentEventProvider({ children }) {
     async function fetchEvent(type) {
       let eventGlobal;
       let dataevent;
-      try {
-        switch (type) {
-          case 'id':
-            eventGlobal = await EventsApi.getOne(event_id || event);
-            if (eventGlobal) dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event };
-            else dataevent = { error: 'not found', status: 'ERROR', value: null, nameEvent: null };
-            break;
+      switch (type) {
+        case 'id':
+          console.log('idevent=>',event);
+          eventGlobal = await EventsApi.getOne(event_id || event);
+          dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event};
+          break;
 
-          case 'name':
-            eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated);          
-            if (eventGlobal.data.length)
-              dataevent = { status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name };
-            else dataevent = { error: 'not found', status: 'ERROR', value: null, nameEvent: null };
-            break;
-        }
-      } catch (e) {
-        dataevent = { error: 'not found', status: 'ERROR', value: null, nameEvent: null };
+        case 'name':
+          eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated);
+          dataevent = { status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name };
+          break;
       }
       setEventContext(dataevent);
     }
 
     if (event_id || event) {
+      console.log("EVENT==>",event)
       fetchEvent('id');
     } else if (event_name) {
       fetchEvent('name');

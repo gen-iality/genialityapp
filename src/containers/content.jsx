@@ -13,6 +13,10 @@ import { SurveysProvider } from '../Context/surveysContext';
 
 import { HelperContextProvider } from '../Context/HelperContext';
 import EventOrganization from '../components/eventOrganization';
+import { NewEventProvider } from '../Context/newEventContext';
+
+
+
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -81,6 +85,12 @@ const ContentContainer = () => {
         {/* <WithFooter> */}
         <Route path='/page/:id' component={HomeProfile} />
         <PrivateRoute path='/my_events' component={Events} />
+        <PrivateRoute path='/orgadmin/:event' component={Event} />       
+        <PrivateRoute path='/create-event/:user?'>
+          <NewEventProvider>
+            <NewEvent />
+          </NewEventProvider>
+        </PrivateRoute>
 
         <PrivateRoute path='/eventadmin/:event'>
           <CurrentEventProvider>

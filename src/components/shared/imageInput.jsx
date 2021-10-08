@@ -1,12 +1,13 @@
+import { Spin } from "antd";
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 
 let ImageInput = (props) => {
   //Esto es para detectar cuando despues de cargar una imagen, la imagen efectivamente cargo y quitar el loading
   const [stillOldImage, setStillOldImage] = useState(false);
-  if (stillOldImage && stillOldImage !== props.picture) {
+ /* if (stillOldImage && stillOldImage !== props.picture) {
     setStillOldImage(false);
-  }
+  }*/
 
   // let width = (props.width) / 2 || 640;
   // let height = (props.height) / 2 || 320;
@@ -52,9 +53,10 @@ let ImageInput = (props) => {
           <img src={props.picture} alt={"Imagen"} />
           <Dropzone
             accept="image/*"
-            onDrop={(e) => {
-              setStillOldImage(props.picture);
-              props.changeImg(e);
+            onDrop={async (e) => {              
+              setStillOldImage(true);
+              await props.changeImg(e,props.indexImage);
+              setStillOldImage(false);
             }}
             className={classDrop}>
             {contentDrop}
@@ -62,12 +64,13 @@ let ImageInput = (props) => {
         </div>
       ) : (
           <div>
-            <Dropzone accept="image/*" onDrop={props.changeImg} style={style}>
-              <div className="has-text-grey has-text-weight-bold has-text-centered">
-                <span>Subir foto</span>
+            <Dropzone accept="image/*" onDrop={async (e)=>{ setStillOldImage(true); await props.changeImg(e,props.indexImage);setStillOldImage(false);}} style={style}>
+              {!stillOldImage && <div className="has-text-grey has-text-weight-bold has-text-centered">
+                <span>Subir foto ({props.indexImage})</span>
                 <br />
                 <small>(Tamaño recomendado: {widthText}px x {heighText}px)</small>
-              </div>
+              </div>}
+              {stillOldImage && <Spin />}
             </Dropzone>
             <span>{props.errImg}</span>
           </div>
