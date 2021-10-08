@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Actions, EventFieldsApi } from '../../../helpers/request';
+import { Actions, EventFieldsApi, OrganizationApi } from '../../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import EventContent from '../shared/content';
@@ -34,6 +34,7 @@ class Datos extends Component {
     this.eventID = this.props.eventID;
     this.html = document.querySelector('html');
     this.submitOrder = this.submitOrder.bind(this);
+    this.organization = this.props?.org
   }
 
   async componentDidMount() {
@@ -51,9 +52,14 @@ class Datos extends Component {
   // Funcion para traer la información
   fetchFields = async () => {
     try {
-      let fields = await EventFieldsApi.getAll(this.eventID);
-      fields = this.orderFieldsByWeight(fields);
-      fields = this.updateIndex(fields);
+      let fields
+      if(this.organization){
+        fields = this.organization.user_properties
+      }else{
+        fields = await EventFieldsApi.getAll(this.eventID);
+        fields = this.orderFieldsByWeight(fields);
+        fields = this.updateIndex(fields);
+      }
       this.setState({ fields, loading: false });
     } catch (e) {
       this.showError(e);
@@ -75,11 +81,15 @@ class Datos extends Component {
   //Guardar campo en el evento
   saveField = async (field) => {
     try {
-      if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
-      else await EventFieldsApi.createOne(field, this.eventID);
-      let totaluser = await firestore.collection(`${this.eventID}_event_attendees`).get();
-
-      if (totaluser.docs.length > 0 && field.name == 'pesovoto') {
+      let totaluser = {}
+      if(this.organization){
+        console.log("10. aqui se editan los checkBox, falta api ", field, field._id, this.organization._id)
+      }else{
+        if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
+        else await EventFieldsApi.createOne(field, this.eventID);
+        totaluser = await firestore.collection(`${this.eventID}_event_attendees`).get();
+      }
+      if (totaluser?.docs?.length > 0 && field.name == 'pesovoto') {
         firestore
           .collection(`${this.eventID}_event_attendees`)
           .get()
@@ -108,7 +118,13 @@ class Datos extends Component {
 
   //Funcion para guardar el orden de los datos
   async submitOrder() {
-    await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
+    if(this.organization){
+      console.log("10. Aqui se edita el orden de los campos ", this.state.properties, this.organization._id)
+      const data = await OrganizationApi.editOne(this.state.properties, this.organization._id)
+      console.log("10.data ", data)
+    }else{
+      await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
+    }
 
     notification.open({
       message: 'Información salvada',
@@ -125,8 +141,13 @@ class Datos extends Component {
   //Borrar dato de la lista
   removeField = async () => {
     try {
-      await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventID);
-      this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
+      if(this.organization){
+        console.log("10. Aqui se eleminan los campos ", this.state.deleteModal, this.organization._id)
+        this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
+      }else{
+        await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventID);
+        this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
+      }
       await this.fetchFields();
       setTimeout(() => {
         this.setState({ message: {}, deleteModal: false });
@@ -135,6 +156,11 @@ class Datos extends Component {
       this.showError(e);
     }
   };
+  
+  closeDelete = () => {
+    this.setState({ deleteModal: false });
+  };
+
   closeModal = () => {
     this.html.classList.remove('is-clipped');
     this.setState({ inputValue: '', modal: false, info: {}, edit: false });
@@ -307,7 +333,7 @@ class Datos extends Component {
             <Fragment>
               <EventContent
                 title={'Recopilación de datos'}
-                description={'Configure los datos que desea recolectar de los asistentes del evento'}
+                description={`Configure los datos que desea recolectar de los asistentes ${this.organization ?'de la organización':'del evento'}`}
                 addAction={this.addField}
                 addTitle={'Agregar dato'}>
                 <Table
@@ -343,9 +369,9 @@ class Datos extends Component {
               )}
             </Fragment>
           </TabPane>
-          <TabPane tab='Campos Relacionados' key='2'>
+          {this.props.eventID && <TabPane tab='Campos Relacionados' key='2'>
             <RelationField eventId={this.props.eventID} fields={fields} />
-          </TabPane>
+          </TabPane>}
         </Tabs>
         {/*<DragDrop eventId={this.props.eventID} list={fields} />*/}
       </div>

@@ -331,7 +331,7 @@ class ListEventUser extends Component {
              ) / 100;
            this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight,totalWithWeight });
           
-           console.log("ATTENDESS==>",updatedAttendees)
+           //console.log("ATTENDESS==>",updatedAttendees)
            //console.log("ATTENDESSFIND==>",updatedAttendees.filter((at)=>at.email=='nieblesrafael@yahoo.com'))
          
           for (let i = 0; i < updatedAttendees.length; i++) {
@@ -378,7 +378,7 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 'No se ha registrado el pago';
             }
           }
-          console.log("ATTENDESSTWO==>",updatedAttendees)
+         // console.log("ATTENDESSTWO==>",updatedAttendees)
           this.setState({
             users: updatedAttendees,
             usersReq: updatedAttendees,

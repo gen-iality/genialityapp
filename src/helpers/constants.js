@@ -387,3 +387,26 @@ export const areaCode = [
   { label: 'Zambia', value: 260 },
   { label: 'Zimbabue', value: 263 },
 ];
+
+export const host_list= [
+  {
+    host_id: 'KthHMroFQK24I97YoqxBZw',
+    host_name: 'host1@evius.co'
+  },
+  {
+    host_id: '15DKHS_6TqWIFpwShasM4w',
+    host_name: 'host2@evius.co'
+  },
+  {
+    host_id: 'FIRVnSoZR7WMDajgtzf5Uw',
+    host_name: 'host3@evius.co'
+  },
+  {
+    host_id: 'YaXq_TW2f791cVpP8og',
+    host_name: 'host4@evius.co'
+  },
+  {
+    host_id: 'mSkbi8PmSSqQEWsm6FQiAA',
+    host_name: 'host5@evius.co'
+  }
+];

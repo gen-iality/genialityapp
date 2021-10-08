@@ -14,7 +14,7 @@ class RelationshipFields extends Component {
       data: [],
       showModal: false,
     };
-    this.submit = this.submit.bind(this);
+    //this.submit = this.submit.bind(this);
   }
 
   componentDidMount() {

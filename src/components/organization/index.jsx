@@ -1,194 +1,151 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, NavLink, Redirect, Switch, withRouter } from 'react-router-dom';
 import Loading from '../loaders/loading';
 import { OrganizationApi } from '../../helpers/request';
-import LogOut from '../shared/logOut';
 import OrganizationProfile from './profile';
-import Properties from './properties';
-import OrgUsers from './users';
+import Styles from '../App/styles';
 import OrgEvents from './events';
+import OrgMembers from './members';
+import Datos from '../events/datos';
+import { Tag } from 'antd';
+import { DoubleRightOutlined } from '@ant-design/icons';
 
-class Organization extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true
-    };
-  }
+function Organization(props) {
+   const [organization, setOrganization] = useState({});
+   const [loading, setLoading] = useState({});
+   const organizationId = props.match.params.id;
 
-  async componentDidMount() {
-    let orgId = this.props.match.params.id;
-    try {
-      if (orgId === 'create') {
-        const org = {
-          name: '',
-          location: {},
-          doc: {},
-          network: { facebook: '', twitter: '', instagram: '', linkedIn: '' },
-          email: '',
-          nit: '',
-          phone: '',
-          user_properties: []
-        };
-        this.setState({ create: true, loading: false, org });
-      } else {
-        const org = await OrganizationApi.getOne(orgId);
-        const resp = await OrganizationApi.events(orgId);
-        org.location = org.location ? org.location : {};
-        org.doc = org.doc ? org.doc : {};
-        org.network = org.network ? org.network : { facebook: '', twitter: '', instagram: '', linkedIn: '' };
-        org.user_properties = org.user_properties ? org.user_properties : campos;
-        this.setState({ org, loading: false, events: resp.data, valid: false });
-      }
-    } catch (e) {
-      this.setState({ timeout: true, loading: false });
-    }
-  }
+   async function getOrganizationData() {
+      const org = await OrganizationApi.getOne(organizationId);
+      setOrganization(org);
+      setLoading(false);
+   }
 
-  async getDerivedStateFromProps(nextProps) {
-    let orgId = nextProps.match.params.id;
-    try {
-      if (orgId === 'create') {
-        const org = {
-          name: '',
-          location: {},
-          doc: {},
-          network: { facebook: '', twitter: '', instagram: '', linkedIn: '' },
-          email: '',
-          nit: '',
-          phone: '',
-          user_properties: []
-        };
-        this.setState({ create: true, loading: false, org });
-      } else {
-        const org = await OrganizationApi.getOne(orgId);
-        const resp = await OrganizationApi.events(orgId);
-        org.location = org.location ? org.location : {};
-        org.doc = org.doc ? org.doc : {};
-        org.network = org.network ? org.network : { facebook: '', twitter: '', instagram: '', linkedIn: '' };
-        org.user_properties = org.user_properties ? org.user_properties : campos;
-        this.setState({ org, loading: false, events: resp.data, valid: false });
-      }
-    } catch (e) {
-      this.setState({ timeout: true, loading: false });
-    }
-  }
+   useEffect(() => {
+      getOrganizationData();
+   }, []);
 
-  updateOrg = (org) => {
-    this.setState({ org });
-  };
+   return (
+      <>
+         {loading ? (
+            <Loading />
+         ) : (
+            <section className='columns'>
+               <aside className='column menu event-aside is-2 has-text-weight-bold'>
+                  <div className={`is-hidden-mobile`}>
+                     <p className='menu-label has-text-centered-mobile'>
+                        <NavLink
+                           className='item'
+                           // onClick={this.handleClick}
+                           activeClassName={'active'}
+                           to={`${props.match.url}/events`}>
+                           Eventos
+                        </NavLink>
+                     </p>
+                     <p className='menu-label has-text-centered-mobile'>
+                        <NavLink
+                           className='item'
+                           // onClick={this.handleClick}
+                           activeClassName={'active'}
+                           to={`${props.match.url}/information`}>
+                           Información
+                        </NavLink>
+                     </p>
+                     <p className='menu-label has-text-centered-mobile'>
+                        <NavLink
+                           className='item'
+                           // onClick={this.handleClick}
+                           activeClassName={'active'}
+                           to={`${props.match.url}/appearance`}>
+                           Apariencia
+                        </NavLink>
+                     </p>
+                     <p className='menu-label has-text-centered-mobile'>
+                        <NavLink
+                           className='item'
+                           // onClick={this.handleClick}
+                           activeClassName={'active'}
+                           to={`${props.match.url}/members`}>
+                           Miembros
+                        </NavLink>
+                     </p>
+                     <p className='menu-label has-text-centered-mobile'>
+                        <NavLink
+                           className='item'
+                           // onClick={this.handleClick}
+                           activeClassName={'active'}
+                           to={`${props.match.url}/membersettings`}>
+                           Configuración miembros
+                        </NavLink>
+                     </p>
+                  </div>
+               </aside>
+               <div className='column is-10'>
+                  {loading ? (
+                     <Loading />
+                  ) : (
+                     <section className='section'>
+                        <Tag color='#2bf4d5' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft:20 }}>
+                           <a
+                              target='_blank'
+                              href={`${window.location.origin}/organization/${organization._id}/events
+                        `}>
+                              {`Ir al landing de la organización: ${organization.name}`}
+                           </a>
+                        </Tag>
 
-  render() {
-    const { match } = this.props;
-    const { timeout, create, loading, org } = this.state;
-    return (
-      <React.Fragment>
-        {loading ? (
-          <Loading />
-        ) : (
-          <section className='columns'>
-            <aside className='column menu event-aside is-2 has-text-weight-bold'>
-              <p className='subtitle'>Organizacion:</p>
-              <p className='title has-text-weight-bold'>{create ? 'Nueva organización' : org.name}</p>
-              {!create && (
-                <div className={`is-hidden-mobile`}>
-                  <p className='menu-label has-text-centered-mobile'>
-                    <NavLink
-                      className='item'
-                      onClick={this.handleClick}
-                      activeClassName={'active'}
-                      to={`${match.url}/profile`}>
-                      Detalles
-                    </NavLink>
-                  </p>
-                  <p className='menu-label has-text-centered-mobile'>
-                    <NavLink
-                      className='item'
-                      onClick={this.handleClick}
-                      activeClassName={'active'}
-                      to={`${match.url}/properties`}>
-                      Campos
-                    </NavLink>
-                  </p>
-                  <p className='menu-label has-text-centered-mobile'>
-                    <NavLink
-                      className='item'
-                      onClick={this.handleClick}
-                      activeClassName={'active'}
-                      to={`${match.url}/users`}>
-                      Usuarios
-                    </NavLink>
-                  </p>
-                  <p className='menu-label has-text-centered-mobile'>
-                    <NavLink
-                      className='item'
-                      onClick={this.handleClick}
-                      activeClassName={'active'}
-                      to={`${match.url}/events`}>
-                      Eventos
-                    </NavLink>
-                  </p>
-                </div>
-              )}
-            </aside>
-            <div className='column is-10'>
-              {this.props.loading ? (
-                <p>Cargando</p>
-              ) : (
-                <section className='section'>
-                  <Switch>
-                    <Route exact path={`${match.url}/`} render={() => <Redirect to={`${match.url}/profile`} />} />
-                    <Route
-                      exact
-                      path={`${match.url}/profile`}
-                      render={() => <OrganizationProfile org={org} updateOrg={this.updateOrg} />}
-                    />
-                    <Route
-                      exact
-                      path={`${match.url}/properties`}
-                      render={() => <Properties org={org} updateOrg={this.updateOrg} />}
-                    />
-                    <Protected exact path={`${match.url}/users`} component={OrgUsers} org={org} url={match.url} />
-                    <Route exact path={`${match.url}/events`} render={() => <OrgEvents org={org} />} />
-                    <Route component={NoMatch} />
-                  </Switch>
-                </section>
-              )}
-            </div>
-          </section>
-        )}
-        {timeout && <LogOut />}
-      </React.Fragment>
-    );
-  }
+                        <Switch>
+                           <Route
+                              exact
+                              path={`${props.match.url}/`}
+                              render={() => <Redirect to={`${props.match.url}/events`} />}
+                           />
+                           <Route
+                              exact
+                              path={`${props.match.url}/events`}
+                              render={() => <OrgEvents org={organization} />}
+                           />
+                           <Route
+                              exact
+                              path={`${props.match.url}/information`}
+                              render={() => (
+                                 <OrganizationProfile org={organization} setOrganization={setOrganization} />
+                              )}
+                           />
+                           <Route
+                              exact
+                              path={`${props.match.url}/appearance`}
+                              render={() => <Styles org={organization} setOrganization={setOrganization} />}
+                           />
+                           <Route
+                              exact
+                              path={`${props.match.url}/members`}
+                              render={() => <OrgMembers org={organization} url={props.match.url} />}
+                           />
+                           <Route
+                              exact
+                              path={`${props.match.url}/membersettings`}
+                              render={() => <Datos org={organization} url={props.match.url} />}
+                           />
+                           <Route component={NoMatch} />
+                        </Switch>
+                     </section>
+                  )}
+               </div>
+            </section>
+         )}
+      </>
+   );
 }
 
 function NoMatch({ location }) {
-  return (
-    <div>
-      <h3>
-        No match for <code>{location.pathname}</code>
-      </h3>
-    </div>
-  );
+   return (
+      <div>
+         <h3>
+            No match for <code>{location.pathname}</code>
+         </h3>
+      </div>
+   );
 }
-
-const Protected = ({ component: Component, org, url, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      org.user_properties && org.user_properties.length > 0 ? (
-        <Component {...props} org={org} />
-      ) : (
-        <Redirect push to={`${url}/profile`} />
-      )
-    }
-  />
-);
-
-const campos = [
-  { name: 'email', unique: true, mandatory: true, type: 'email' },
-  { name: 'displayName', unique: false, mandatory: true, type: 'text' }
-];
 
 export default withRouter(Organization);

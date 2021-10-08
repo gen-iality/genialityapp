@@ -1,54 +1,64 @@
-import React, {Component} from 'react';
-import EventCard from "../shared/eventCard";
-import {Link} from "react-router-dom";
-import {OrganizationApi} from "../../helpers/request";
-import LoadingEvent from "../loaders/loadevent";
+import React, { useEffect, useState } from 'react';
+import Loading from '../loaders/loading';
+import { useHistory } from 'react-router-dom';
+import { getCurrentUser, OrganizationApi } from '../../helpers/request';
+import { Table, Button, Row } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { columns } from './tableColums/eventTableColumns';
+import withContext from '../../Context/withContext';
 
-class OrgEvents extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            events:[],
-            loading:true
-        }
-    }
+function OrgEvents(props) {
+   const [eventData, setEventData] = useState([]);
+   const [isLoading, setIsLoading] = useState(true);
+   let { _id: organizationId } = props.org;
+   const history = useHistory();
 
-    async componentDidMount(){
-        let {org} = this.props;
-        const resp = await OrganizationApi.events(org._id);
-        this.setState({loading:false,events:resp.data});
-    }
+   async function getEventsStatisticsData() {
+      const { data } = await OrganizationApi.getEventsStatistics(organizationId);
 
-    render() {
-        const {loading,events} = this.state;
-        return (
-            <div className="profile-data columns">
-                <div className="column is-12">
-                    <h2 className="data-title">
-                        <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br/>
-                        <span className="has-text-grey-dark is-size-3">Eventos</span>
-                    </h2>
-                    {
-                        loading ? <LoadingEvent/>:
-                            <div className="columns home is-multiline is-mobile">
-                                {
-                                    events.map((event)=>{
-                                        return  <EventCard event={event} key={event._id} action={''} size={'column is-one-third'} right={<div className="edit">
-                                            <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
-                                                                <span className="icon is-medium">
-                                                                    <i className="fas fa-lg fa-pencil-alt"/>
-                                                                </span>
-                                                <span className="is-size-7 is-italic">Editar</span>
-                                            </Link>
-                                        </div>}/>
-                                    })
-                                }
-                            </div>
-                    }
-                </div>
-            </div>
-        );
-    }
+      setEventData(data);
+      setIsLoading(false);
+   }
+
+   useEffect(() => {
+      getEventsStatisticsData();
+   }, []);
+
+   function goToEvent(eventId) {
+      const url = `/eventadmin/${eventId}/agenda`;
+      history.replace({ pathname: url });
+   }
+
+   function linkToTheMenuRouteS(menuRoute) {
+      window.open(`${window.location.origin}${menuRoute}`, '_blank', 'noopener,noreferrer')
+   }
+
+   return (
+      <>
+         {isLoading ? (
+            <Loading />
+         ) : (
+            <>
+               <Row justify='start' style={{ marginBottom: '10px' }}>
+                  <Button
+                     onClick={() => linkToTheMenuRouteS(`/create-event/${props.cUser?.value?._id}?orgId=${organizationId}`)}
+                     style={{ marginLeft: 20 }}
+                     icon={<PlusOutlined />}>
+                     Crear Evento
+                  </Button>
+               </Row>
+               <Table
+                  columns={columns(goToEvent)}
+                  dataSource={eventData}
+                  size='small'
+                  rowKey='index'
+                  pagination={false}
+                  scroll={{ x: 1300 }}
+               />
+            </>
+         )}
+      </>
+   );
 }
 
-export default OrgEvents;
+export default withContext(OrgEvents);
