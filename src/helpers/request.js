@@ -558,7 +558,7 @@ export const CertsApi = {
     return await Actions.getAll(`api/events/${event}/certificates`).then(({ data }) => data);
   },
   getOne: async (id) => {
-    return await Actions.get(`api/certificate/`, id);
+    return await Actions.getOne(`api/certificate/`, id);
   },
   generate: async (content, image) => {
     return await Actions.get(`api/pdfcertificate?content=` + content + '&image=' + image + '&download=1');

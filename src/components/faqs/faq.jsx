@@ -134,14 +134,14 @@ const Faq = (props) => {
       
       <Row justify='center' wrap gutter={12}>
         <Col >
-          {/* <Form.Item label={'Título'} >
+          <Form.Item label={'Título'} >
             <Input 
               value={faq.title}
               name={'title'}
               placeholder={'Título de la pregunta frecuente'}
               onChange={(e) => handleChange(e)}
             />
-          </Form.Item> */}
+          </Form.Item>
           <Form.Item label={'Contenido'}>
             <ReactQuill
               id='faqContent'
