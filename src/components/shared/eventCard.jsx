@@ -4,12 +4,20 @@ import { Link, withRouter } from 'react-router-dom';
 import EventImage from '../../eventimage.png';
 import { Badge, Card, Space } from 'antd';
 
+
+
+const isUpper = (str)=> {
+  return !/[a-z]/.test(str) && /[A-Z]/.test(str);
+}
+
 const FriendLyUrl = (url) => {
-  let slug = url.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ').toLowerCase();
+  let slug = url.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ');
   slug = url.replace(/^\s+|\s+$/gm, '');
   slug = url.replace(/\s+/g, '-');
   return slug;
 };
+
+
 
 class EventCard extends Component {
   render() {

@@ -55,7 +55,6 @@ const ContentContainer = () => {
           </CurrentEventProvider>
         </Route>
 
-
         <Route path='/event/:event_name'>
           <CurrentEventProvider>
             <CurrentUserEventProvider>
@@ -69,8 +68,6 @@ const ContentContainer = () => {
             </CurrentUserEventProvider>
           </CurrentEventProvider>
         </Route>
-
-
 
         <Route path='/social/:event_id' component={socialZone} />
         {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
@@ -112,11 +109,24 @@ const ContentContainer = () => {
             </CurrentUserEventProvider>
           </CurrentEventProvider>
         </PrivateRoute>
-        
+
         <PrivateRoute path='/create-event' component={NewEvent} />
         <PrivateRoute path='/profile/:id' component={MyProfile} />
-        <Route exact path='/organization/:id/events' component={EventOrganization} />
-        <Route path='/admin/organization/:id' component={Organization} />
+
+        <Route exact path='/organization/:id/events' >
+        <CurrentEventProvider>
+          <CurrentUserEventProvider>
+            <CurrentUserProvider>
+              <HelperContextProvider>
+                <SurveysProvider>
+                  <EventOrganization />
+                </SurveysProvider>
+              </HelperContextProvider>
+            </CurrentUserProvider>
+          </CurrentUserEventProvider>
+        </CurrentEventProvider>
+        </Route>
+        <PrivateRoute path='/admin/organization/:id' component={Organization} />
         <PrivateRoute path='/purchase/:id' component={Purchase} />
         <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
         <PrivateRoute path='/tickets/:id' component={Tickets} />
