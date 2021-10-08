@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import EviusReactQuill from '../../shared/eviusReactQuill'; /* Se debe usar este componente para la descripcion */
 import { DateTimePicker } from 'react-widgets';
 import EventImage from '../../../eventimage.png';
-import { Badge, Card, Col, Input, Row, Space, Tooltip, Typography, Form, Modal, List, Button } from 'antd';
+import { Badge, Card, Col, Input, Row, Space, Tooltip, Typography, Form, Modal, List, Button, Spin } from 'antd';
 import { CalendarOutlined, CheckCircleFilled, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
@@ -13,6 +13,7 @@ const { Text, Link, Title, Paragraph } = Typography;
 
 const Informacion = (props) => {
   const [organizations, setOrganizations] = useState([]);
+  const [loadingAdd, setLoadingAdd] = useState(false);
   const {
     addDescription,
     showModal,
@@ -38,40 +39,44 @@ const Informacion = (props) => {
     isbyOrganization,
     isLoadingOrganization,
     createOrganizationF,
-    newOrganization
+    newOrganization,
   } = useContextNewEvent();
 
   useEffect(() => {
     if (props.currentUser && !props.orgId) {
-      obtainOrganizations();
-    }
-
-    // console.log("ISBYORGANIZATION==>",isbyOrganization)
-
-    async function obtainOrganizations() {
-      console.log('SELECT ORGANIZATION==>', selectOrganization);
-      if (!selectOrganization) {
-        isLoadingOrganization(true);
-        let organizations = await OrganizationApi.mine();
-        if (organization.length == 0) {
-          await createOrganization();
-          organizations = await OrganizationApi.mine();
-        }
-
-        setOrganizations(organizations);
-        selectedOrganization(organizations && organizations[0]);
-        isLoadingOrganization(false);
-      }
-    }
+      obtainOrganizations();     
+    } // console.log("ISBYORGANIZATION==>",isbyOrganization)
   }, [props.orgId, props.currentUser]);
+  async function obtainOrganizations() {    
+    isLoadingOrganization(true);
+    let organizations = await OrganizationApi.mine(); 
+    if (organizations.length == 0) {    
+      await createOrganization();
+      organizations = await OrganizationApi.mine();
+    }
 
-  const createOrganization = async () => {
+    setOrganizations(organizations);
+    selectedOrganization(organizations && organizations[0]);
+    isLoadingOrganization(false);
+  }
+  const createNewOrganization = async (value) => {
+    //alert(value);
+    //console.log(value);
+    setLoadingAdd(true)
+    const addOrganization = await createOrganization(value.name);
+    if (addOrganization) {
+      await obtainOrganizations();      
+      newOrganization(false);
+      setLoadingAdd(false)
+    }
+  };
+  const createOrganization = async (name) => {
     let newOrganization = {
-      name: props.currentUser?.names || props.currentUser?.name,
+      name: !name ? props.currentUser?.names || props.currentUser?.name : name,
     };
     //CREAR ORGANIZACION------------------------------
     let create = await OrganizationApi.createOrganization(newOrganization);
-    //console.log('CREATE==>', create);
+    console.log('CREATE==>', create);
     if (create) {
       return create;
     }
@@ -146,34 +151,82 @@ const Informacion = (props) => {
         </div>
         <div>
           <Space direction='vertical'>
-            {<a onClick={() => changeOrganization(true)}>Organización: {selectOrganization?.name}</a>}
+            {<a onClick={() => { newOrganization(false); changeOrganization(true);}}>Organización: {selectOrganization?.name}</a>}
             {organization && !isbyOrganization && (
               <Modal
+                footer={
+                  createOrganizationF
+                    ? null
+                    : [
+                        <Button key='back' onClick={() => changeOrganization(false)}>
+                          Cerrar
+                        </Button>,
+                        <Button key='submit' type='primary' onClick={selectOrganizationOK}>
+                          Seleccionar
+                        </Button>,
+                      ]
+                }
                 onOk={selectOrganizationOK}
                 okText='Seleccionar'
                 cancelText='Cerrar'
                 title='Organización'
                 visible={organization && !isbyOrganization}
                 onCancel={() => changeOrganization(false)}>
-                  {!createOrganizationF && <Row style={{marginBottom:10}} justify={'end'}><Button onClick={()=>newOrganization(true)}>Crear organización</Button></Row>}
-                  {createOrganizationF && <Row style={{marginBottom:10}} justify={'end'}><Button onClick={()=>newOrganization(false)}>Ver organizaciones</Button></Row>}
-                {!createOrganizationF &&<List
-                  style={{ height: 400, overflowY: 'auto' }}
-                  size='small'
-                  bordered                  
-                  dataSource={organizations}
-                  renderItem={(item) => (
-                    <List.Item
-                      style={{
-                        cursor: 'pointer',
-                        color: selectOrganization?.id == item.id ? 'white' : 'rgba(0, 0, 0, 0.85)',
-                        background: selectOrganization?.id == item.id ? '#40a9ff' : 'white',
-                      }}
-                      onClick={() => selectedOrganization(item)}>
-                      {item.name}
-                    </List.Item>
-                  )}
-                />}
+                {!createOrganizationF && (
+                  <Row style={{ marginBottom: 10 }} justify={'end'}>
+                    <Button onClick={() => newOrganization(true)}><PlusCircleOutlined /> Agregar</Button>
+                  </Row>
+                )}
+                {createOrganizationF && (
+                  <Row style={{ marginBottom: 10 }} justify={'end'}>
+                    <Button onClick={() => newOrganization(false)}>Ver organizaciones</Button>
+                  </Row>
+                )}
+                {!createOrganizationF && (
+                  <List
+                    style={{ height: 400, overflowY: 'auto' }}
+                    size='small'
+                    bordered
+                    dataSource={organizations}
+                    renderItem={(item) => (
+                      <List.Item
+                        style={{
+                          cursor: 'pointer',
+                          color: selectOrganization?.id == item.id ? 'white' : 'rgba(0, 0, 0, 0.85)',
+                          background: selectOrganization?.id == item.id ? '#40a9ff' : 'white',
+                        }}
+                        onClick={() => selectedOrganization(item)}>
+                        {item.name}
+                      </List.Item>
+                    )}
+                  />
+                )}
+                {createOrganizationF && (
+                  <div style={{ minHeight: 450 }}>
+                    {' '}
+                    <Form
+                      name='basic'
+                      labelCol={{ span: 8 }}
+                      wrapperCol={{ span: 16 }}
+                      initialValues={{ remember: false }}
+                      onFinish={createNewOrganization}
+                      onFinishFailed={null}
+                      autoComplete='off'>
+                      <Form.Item
+                        label='Nombre'
+                        name='name'
+                        rules={[{ required: true, message: 'Ingrese un nombre válido' }]}>
+                        <Input></Input>
+                      </Form.Item>
+                     {!loadingAdd && <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Button type='primary' htmlType='submit'>
+                          Agregar
+                        </Button>
+                      </Form.Item>}
+                      {loadingAdd && <Row justify={'center'}><Spin /></Row>}
+                    </Form>
+                  </div>
+                )}
               </Modal>
             )}
             {/* <Text>
