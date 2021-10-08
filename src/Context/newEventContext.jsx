@@ -19,6 +19,7 @@ export const NewEventProvider = ({ children }) => {
   const [optTransmitir, setOptTransmitir] = useState(false);
   const [organization, setOrganization] = useState(false);
   const [selectOrganization, setSelectOrganization] = useState();
+  const [loadingOrganization, setLoadingOrganization] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -30,6 +31,10 @@ export const NewEventProvider = ({ children }) => {
 
   const saveImageEvent=(image,index)=>{      
     setImageEvents({...imageEvents,[index]:image})
+  }
+
+  const isLoadingOrganization=(value)=>{      
+    setLoadingOrganization(value)
   }
 
   const changeSelectDay = (day) => {
@@ -162,7 +167,10 @@ export const NewEventProvider = ({ children }) => {
         changeOrganization,
         organization,
         selectOrganization,
-        selectedOrganization
+        selectedOrganization,
+        loadingOrganization,
+        isLoadingOrganization
+        
       }}>
       {children}
     </cNewEventContext.Provider>

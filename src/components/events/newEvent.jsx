@@ -327,7 +327,7 @@ class NewEvent extends Component {
 
   render() {
     const { current } = this.state;
-    let value = this.context;
+    let context = this.context;
     return (
       <Row justify='center' className='newEvent'>
         {/* Items del paso a paso */}
@@ -344,7 +344,7 @@ class NewEvent extends Component {
             {this.obtainContent(this.state.steps[current])}
           </Row>
           {/* Botones de navegacion dentro del paso a paso */}
-          {!this.state.loading && (
+          {!this.state.loading && !context.loadingOrganization && (
             <div className='button-container'>
               {current > 0 && (
                 <Button className='button' size='large' onClick={() => this.prev()}>
@@ -363,7 +363,7 @@ class NewEvent extends Component {
               )}
             </div>
           )}
-          {this.state.loading && (
+          {(this.state.loading || context.loadingOrganization) && (
             <Row justify='center'>
               Espere.. <Spin />
             </Row>

@@ -12,6 +12,7 @@ function Transmitir(props) {
     organization,
     selectOrganization,
     selectedOrganization,
+    isLoadingOrganization
   } = useContextNewEvent();
   const [organizations, setOrganizations] = useState([]);
 
@@ -22,14 +23,16 @@ function Transmitir(props) {
     }
 
     async function obtainOrganizations() {
-      let organizations = await OrganizationApi.mine();
-      if(organization.length==0){
+      isLoadingOrganization(true)
+      let organizations = await OrganizationApi.mine();     
+      if(organizations.length==0){    
         await createOrganization();
         organizations = await OrganizationApi.mine();
       }
       
       setOrganizations(organizations);
       selectedOrganization(organizations && organizations[0])
+      isLoadingOrganization(false)
     }
   }, [props.currentUser]);
 
@@ -39,6 +42,7 @@ function Transmitir(props) {
     };
     //CREAR ORGANIZACION------------------------------
     let create = await OrganizationApi.createOrganization(newOrganization);
+    console.log("CREATE==>",create)
     if (create) {
       return create;
     }
