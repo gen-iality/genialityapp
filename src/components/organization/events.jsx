@@ -32,7 +32,7 @@ function OrgEvents(props) {
    function linkToTheMenuRouteS(menuRoute) {
       window.open(`${window.location.origin}${menuRoute}`, '_blank', 'noopener,noreferrer')
    }
-console.log("10. props ", props)
+
    return (
       <>
          {isLoading ? (
