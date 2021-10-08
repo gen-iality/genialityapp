@@ -20,7 +20,7 @@ function Organization(props) {
       setOrganization(org);
       setLoading(false);
    }
-   console.log('10. organization ', organization);
+
    useEffect(() => {
       getOrganizationData();
    }, []);
@@ -85,7 +85,7 @@ function Organization(props) {
                      <Loading />
                   ) : (
                      <section className='section'>
-                        <Tag color='success' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft:20 }}>
+                        <Tag color='#2bf4d5' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft:20 }}>
                            <a
                               target='_blank'
                               href={`${window.location.origin}/organization/${organization._id}/events

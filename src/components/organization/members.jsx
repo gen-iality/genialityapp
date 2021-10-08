@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { OrganizationApi } from '../../helpers/request';
+import { OrganizationApi, RolAttApi } from '../../helpers/request';
 import { parseData2Excel } from '../../helpers/utils';
 import Loading from '../loaders/loading';
 import { FormattedDate, FormattedTime } from 'react-intl';
@@ -9,14 +9,14 @@ import ErrorServe from '../modal/serverError';
 import ImportUsers from '../import-users/importUser';
 import UserOrg from '../modal/userOrg';
 /** export Excel */
-import XLSX from 'xlsx';
 import { useHistory } from 'react-router-dom';
 import { Table, Typography, Button, Select, Row } from 'antd';
-import { UserAddOutlined, DownloadOutlined, QrcodeOutlined, IdcardOutlined, ScanOutlined } from '@ant-design/icons';
+import { UserAddOutlined, DownloadOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
 import { Background } from 'react-parallax';
-import ExcelExportColumns from './tableColums/excelExportColumns';
+import UserModal from '../modal/modalUser';
 import moment from 'moment';
+import withContext from '../../Context/withContext';
 
 const { Title } = Typography;
 
@@ -26,6 +26,9 @@ function OrgMembers(props) {
    const [lastUpdate, setLastUpdate] = useState();
    const [searchText, setSearchText] = useState('');
    const [searchedColumn, setSearchedColumn] = useState('');
+   const [addOrEditUser, setAddOrEditUser] = useState(false);
+   const [extraFields, setExtraFields] = useState([]);
+   const [roleList, setRoleList] = useState([]);
    let { _id: organizationId } = props.org;
    const history = useHistory();
 
@@ -47,9 +50,16 @@ function OrgMembers(props) {
       setIsLoading(false);
    }
 
+   async function getRoleList() {
+      const roleListData = await RolAttApi.byEventRolsGeneral();
+      setRoleList(roleListData)
+   }
+
    useEffect(() => {
       getEventsStatisticsData();
       setLastUpdate(new Date());
+      getRoleList()
+      setExtraFields(props.org.user_properties)
    }, []);
 
    function goToEvent(eventId) {
@@ -66,6 +76,24 @@ function OrgMembers(props) {
       XLSX.utils.book_append_sheet(wb, ws, 'Members');
       XLSX.writeFile(wb, `Miembros_${moment().format('l')}.xlsx`);
    }
+
+   function addUser() {
+      console.log('10. Agregar o editar usuario');
+      setAddOrEditUser((prevState) => {
+         return !prevState;
+      });
+   }
+   function modalUser() {
+      setAddOrEditUser((prevState) => {
+         return !prevState;
+      });
+   }
+   function editModalUser(item) {
+      console.log('10. SELECTED ITEM==>', item);
+      // html.classList.add('is-clipped');
+      // item={...item,checked_in:item.properties?.checked_in || item.checked_in,checkedin_at:item.properties?.checkedin_at || item.checkedin_at}
+      // this.setState({ editUser: true, selectedUser: item, edit: true });
+    };
 
    const columnsData = {
       searchedColumn,
@@ -107,7 +135,7 @@ function OrgMembers(props) {
                </div>
 
                <Row justify='end' style={{ marginBottom: '10px' }}>
-                  <Button style={{ marginLeft: 20 }} icon={<UserAddOutlined />}>
+                  <Button onClick={addUser} style={{ marginLeft: 20 }} icon={<UserAddOutlined />}>
                      Agregar Usuario
                   </Button>
                   {membersData.length > 0 && (
@@ -116,18 +144,34 @@ function OrgMembers(props) {
                      </Button>
                   )}
                </Row>
-
                <Table
-                  columns={columns(goToEvent, columnsData)}
+                  columns={columns(columnsData, editModalUser)}
                   dataSource={membersData}
                   size='small'
                   rowKey='index'
                   pagination={false}
                   scroll={{ x: 1300 }}
                />
+               {addOrEditUser && (
+                  <UserModal
+                     handleModal={modalUser}
+                     modal={addOrEditUser}
+                     ticket={''}
+                     tickets={[]}
+                     rolesList={roleList}
+                     value={null}
+                     // checkIn={true}
+                     // badgeEvent={true}
+                     extraFields={extraFields}
+                     spacesEvent={undefined}
+                     edit={false}
+                     // substractSyncQuantity={true}
+                     organizationId={props.org._id}
+                  />
+               )}
             </>
          )}
       </>
    );
 }
-export default OrgMembers;
+export default withContext(OrgMembers);

@@ -1,15 +1,25 @@
 import React from 'react';
+import { Tooltip, Button } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumnSearchProps';
 
-export const columns = (goToEvent, columnsData) => [
+export const columns = (columnsData, editModalUser) => [
    {
       title: 'Editar',
       dataIndex: 'index',
       width: 60,
       fixed: 'left',
       render(val, item, index) {
-         return <EditOutlined />;
+         return (
+            <Tooltip title='Editar'>
+               <Button
+                  type='primary'
+                  onClick={(e) => {
+                     editModalUser(item);
+                  }}
+                  icon={<EditOutlined />}></Button>
+            </Tooltip>
+         );
       },
    },
    {

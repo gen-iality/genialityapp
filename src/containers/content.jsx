@@ -13,6 +13,7 @@ import { SurveysProvider } from '../Context/surveysContext';
 
 import { HelperContextProvider } from '../Context/HelperContext';
 import EventOrganization from '../components/eventOrganization';
+import Organization from '../components/organization';
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -21,7 +22,7 @@ const Landing = asyncComponent(() => import('../components/events/Landing/landin
 const Transition = asyncComponent(() => import('../components/shared/Animate_Img/index'));
 const Events = asyncComponent(() => import('../components/events'));
 const NewEvent = asyncComponent(() => import('../components/events/newEvent'));
-const Organization = asyncComponent(() => import('../components/organization'));
+// const Organization = asyncComponent(() => import('../components/organization'));
 const MyProfile = asyncComponent(() => import('../components/profile'));
 const Purchase = asyncComponent(() => import('../components/profile/purchase'));
 const EventEdit = asyncComponent(() => import('../components/profile/events'));
@@ -126,7 +127,21 @@ const ContentContainer = () => {
           </CurrentUserEventProvider>
         </CurrentEventProvider>
         </Route>
-        <PrivateRoute path='/admin/organization/:id' component={Organization} />
+
+        <Route path='/admin/organization/:id' >
+        <CurrentEventProvider>
+          <CurrentUserEventProvider>
+            <CurrentUserProvider>
+              <HelperContextProvider>
+                <SurveysProvider>
+                  <Organization />
+                </SurveysProvider>
+              </HelperContextProvider>
+            </CurrentUserProvider>
+          </CurrentUserEventProvider>
+        </CurrentEventProvider>
+        </Route>
+        {/* <PrivateRoute path='/admin/organization/:id' component={Organization} /> */}
         <PrivateRoute path='/purchase/:id' component={Purchase} />
         <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
         <PrivateRoute path='/tickets/:id' component={Tickets} />
