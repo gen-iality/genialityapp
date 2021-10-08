@@ -21,6 +21,7 @@ export const NewEventProvider = ({ children }) => {
   const [selectOrganization, setSelectOrganization] = useState();
   const [isbyOrganization, setIsbyOrganization] = useState(false);
   const [loadingOrganization, setLoadingOrganization] = useState(false);
+  const [createOrganizationF,setCreateOrganization]=useState(false)
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -32,6 +33,10 @@ export const NewEventProvider = ({ children }) => {
 
   const saveImageEvent=(image,index)=>{      
     setImageEvents({...imageEvents,[index]:image})
+  }
+
+  const newOrganization=(value)=>{      
+    setCreateOrganization(value)
   }
 
   const eventByOrganization=(value)=>{      
@@ -175,8 +180,9 @@ export const NewEventProvider = ({ children }) => {
         eventByOrganization,
         isbyOrganization,
         loadingOrganization,
-        isLoadingOrganization
-        
+        isLoadingOrganization,
+        createOrganizationF,
+        newOrganization        
       }}>
       {children}
     </cNewEventContext.Provider>

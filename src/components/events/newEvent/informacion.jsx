@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import EviusReactQuill from '../../shared/eviusReactQuill'; /* Se debe usar este componente para la descripcion */
 import { DateTimePicker } from 'react-widgets';
 import EventImage from '../../../eventimage.png';
-import { Badge, Card, Col, Input, Row, Space, Tooltip, Typography,Form,Modal,List } from 'antd';
+import { Badge, Card, Col, Input, Row, Space, Tooltip, Typography, Form, Modal, List, Button } from 'antd';
 import { CalendarOutlined, CheckCircleFilled, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
@@ -11,7 +11,7 @@ import { OrganizationApi } from '../../../helpers/request';
 
 const { Text, Link, Title, Paragraph } = Typography;
 
-const Informacion = (props) => { 
+const Informacion = (props) => {
   const [organizations, setOrganizations] = useState([]);
   const {
     addDescription,
@@ -30,46 +30,48 @@ const Informacion = (props) => {
     handleInput,
     valueInputs,
     errorInputs,
-    containsError, 
+    containsError,
     changeOrganization,
     organization,
     selectOrganization,
     selectedOrganization,
-    isbyOrganization,   
-    isLoadingOrganization
-  } = useContextNewEvent();  
-  
+    isbyOrganization,
+    isLoadingOrganization,
+    createOrganizationF,
+    newOrganization
+  } = useContextNewEvent();
+
   useEffect(() => {
-    if (props.currentUser && !props.orgId) {      
+    if (props.currentUser && !props.orgId) {
       obtainOrganizations();
     }
-   
-   // console.log("ISBYORGANIZATION==>",isbyOrganization)
+
+    // console.log("ISBYORGANIZATION==>",isbyOrganization)
 
     async function obtainOrganizations() {
-      console.log("SELECT ORGANIZATION==>",selectOrganization)
-      if(!selectOrganization){
-        isLoadingOrganization(true)
-      let organizations = await OrganizationApi.mine();
-      if(organization.length==0){
-        await createOrganization();
-        organizations = await OrganizationApi.mine();
+      console.log('SELECT ORGANIZATION==>', selectOrganization);
+      if (!selectOrganization) {
+        isLoadingOrganization(true);
+        let organizations = await OrganizationApi.mine();
+        if (organization.length == 0) {
+          await createOrganization();
+          organizations = await OrganizationApi.mine();
+        }
+
+        setOrganizations(organizations);
+        selectedOrganization(organizations && organizations[0]);
+        isLoadingOrganization(false);
       }
-      
-      setOrganizations(organizations);
-      selectedOrganization(organizations && organizations[0])
-      isLoadingOrganization(false)
     }
-  }
-  }, [props.orgId,props.currentUser]);
+  }, [props.orgId, props.currentUser]);
 
   const createOrganization = async () => {
     let newOrganization = {
-      name: props.currentUser?.names ||  props.currentUser?.name,
+      name: props.currentUser?.names || props.currentUser?.name,
     };
     //CREAR ORGANIZACION------------------------------
     let create = await OrganizationApi.createOrganization(newOrganization);
-    console.log("CREATE==>",create)
+    //console.log('CREATE==>', create);
     if (create) {
       return create;
     }
@@ -83,16 +85,25 @@ const Informacion = (props) => {
       changeOrganization(false);
     }
   };
- 
-  return (    
+
+  return (
     <div className='step-information'>
       <Space direction='vertical' size='middle'>
-        <div>       
+        <div>
           <Text>
             Nombre del evento <span className='text-color'>*</span>
           </Text>
-          <Input value={valueInputs['name'] || ''}  onChange={(e)=>handleInput(e,"name")} placeholder='Nombre del evento' />
-          {containsError('name') &&  <Col> <small className='text-color'>Ingrese un nombre correcto para el evento</small></Col> }
+          <Input
+            value={valueInputs['name'] || ''}
+            onChange={(e) => handleInput(e, 'name')}
+            placeholder='Nombre del evento'
+          />
+          {containsError('name') && (
+            <Col>
+              {' '}
+              <small className='text-color'>Ingrese un nombre correcto para el evento</small>
+            </Col>
+          )}
         </div>
         <div>
           {addDescription ? (
@@ -106,8 +117,15 @@ const Informacion = (props) => {
                   </Tooltip>
                 </Link>
               </Text>
-              <Input.TextArea value={valueInputs['description'] || ''}  onChange={(e)=> handleInput(e,'description')}></Input.TextArea>
-              {containsError('description') &&  <Col> <small className='text-color'>Ingrese una descripción válida</small></Col> }
+              <Input.TextArea
+                value={valueInputs['description'] || ''}
+                onChange={(e) => handleInput(e, 'description')}></Input.TextArea>
+              {containsError('description') && (
+                <Col>
+                  {' '}
+                  <small className='text-color'>Ingrese una descripción válida</small>
+                </Col>
+              )}
             </div>
           ) : (
             <Link onClick={() => visibilityDescription(true)}>
@@ -119,38 +137,46 @@ const Informacion = (props) => {
           <Text>
             Fecha del evento <span className='text-color'>*</span>
           </Text>
-          <Input value={dateEvent || ""} onClick={showModal} suffix={<CalendarOutlined />} placeholder='Clic para agregar fecha' />
+          <Input
+            value={dateEvent || ''}
+            onClick={showModal}
+            suffix={<CalendarOutlined />}
+            placeholder='Clic para agregar fecha'
+          />
         </div>
         <div>
           <Space direction='vertical'>
-          {<a onClick={() => changeOrganization(true)}>Organización: {selectOrganization?.name}</a>}
-          {organization && !isbyOrganization && (
-            <Modal
-              onOk={selectOrganizationOK}
-              okText='Seleccionar'
-              cancelText='Cerrar'
-              title='Organización'
-              visible={organization &&  !isbyOrganization }
-              onCancel={() => changeOrganization(false)}>
-              <List
-                style={{ height: 400, overflowY: 'auto' }}
-                size='small'
-                bordered
-                dataSource={organizations}
-                renderItem={(item) => (
-                  <List.Item
-                    style={{
-                      cursor: 'pointer',
-                      color: selectOrganization?.id == item.id ? 'white' : 'rgba(0, 0, 0, 0.85)',
-                      background: selectOrganization?.id == item.id ? '#40a9ff' : 'white',
-                    }}
-                    onClick={() => selectedOrganization(item)}>
-                    {item.name}
-                  </List.Item>
-                )}
-              />
-            </Modal>)}
-           {/* <Text>
+            {<a onClick={() => changeOrganization(true)}>Organización: {selectOrganization?.name}</a>}
+            {organization && !isbyOrganization && (
+              <Modal
+                onOk={selectOrganizationOK}
+                okText='Seleccionar'
+                cancelText='Cerrar'
+                title='Organización'
+                visible={organization && !isbyOrganization}
+                onCancel={() => changeOrganization(false)}>
+                  {!createOrganizationF && <Row style={{marginBottom:10}} justify={'end'}><Button onClick={()=>newOrganization(true)}>Crear organización</Button></Row>}
+                  {createOrganizationF && <Row style={{marginBottom:10}} justify={'end'}><Button onClick={()=>newOrganization(false)}>Ver organizaciones</Button></Row>}
+                {!createOrganizationF &&<List
+                  style={{ height: 400, overflowY: 'auto' }}
+                  size='small'
+                  bordered                  
+                  dataSource={organizations}
+                  renderItem={(item) => (
+                    <List.Item
+                      style={{
+                        cursor: 'pointer',
+                        color: selectOrganization?.id == item.id ? 'white' : 'rgba(0, 0, 0, 0.85)',
+                        background: selectOrganization?.id == item.id ? '#40a9ff' : 'white',
+                      }}
+                      onClick={() => selectedOrganization(item)}>
+                      {item.name}
+                    </List.Item>
+                  )}
+                />}
+              </Modal>
+            )}
+            {/* <Text>
               Tipo de transmisión <span className='text-color'>*</span>
             </Text>
             <Row gutter={[16, 16]} justify='center'>
@@ -202,11 +228,10 @@ const Informacion = (props) => {
         cancelText='Cancelar'
         onCancel={handleCancel}
         width={600}>
-      
         <Row gutter={[16, 16]} justify='center' align='top'>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <DayPicker onDayClick={changeSelectDay} selectedDays={selectedDay} value={selectedDay} />
-          </Col>         
+          </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Title level={4} type='secondary'>
               Asignar hora
@@ -220,7 +245,7 @@ const Informacion = (props) => {
                     </div>
                     <DateTimePicker
                       value={selectedHours.from}
-                      onChange={(hours) => changeSelectHours({...selectedHours,from:hours})}
+                      onChange={(hours) => changeSelectHours({ ...selectedHours, from: hours })}
                       date={false}
                     />
                   </Space>
@@ -232,7 +257,7 @@ const Informacion = (props) => {
                     </div>
                     <DateTimePicker
                       value={selectedHours.at}
-                      onChange={(hours) => changeSelectHours({...selectedHours,at:hours})}
+                      onChange={(hours) => changeSelectHours({ ...selectedHours, at: hours })}
                       date={false}
                     />
                   </Space>
@@ -244,7 +269,6 @@ const Informacion = (props) => {
             </Paragraph>
           </Col>
         </Row>
-        
       </Modal>
     </div>
   );
