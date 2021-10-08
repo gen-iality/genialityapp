@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormattedMessage } from 'react-intl';
 import Quill from 'react-quill';
-import { Checkbox } from 'antd';
+import { Button, Checkbox, Row, Space } from 'antd';
 Moment.locale('es-us');
 
 class SendRsvp extends Component {
@@ -20,6 +20,7 @@ class SendRsvp extends Component {
       rsvp: {},
       include_date: true,
       selection: [],
+      showimgDefault: true,
     };
     this.submit = this.submit.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
@@ -131,7 +132,7 @@ class SendRsvp extends Component {
         message: rsvp.message,
         image_header: rsvp.image_header,
         image_footer: rsvp.image_footer,
-        image: rsvp.image,
+        image: showimgDefault ? rsvp.image : '',
         eventUsersIds: users,
         include_date: include_date,
       };
@@ -339,27 +340,46 @@ class SendRsvp extends Component {
 
             <div className='column is-10'>
               <div className='rsvp-pic'>
-                <p className='rsvp-pic-txt'>
-                  Sube una imagen <br /> <small>(Por defecto será la del evento)</small>
-                </p>
-                <ImageInput
-                  picture={this.state.rsvp.image}
-                  imageFile={this.state.imageFile}
-                  divClass={'rsvp-pic-img'}
-                  content={<img src={this.state.rsvp.image} alt={'Imagen Perfil'} />}
-                  classDrop={'dropzone'}
-                  contentDrop={
-                    <button
-                      className={`button is-primary is-inverted is-outlined ${
-                        this.state.imageFile ? 'is-loading' : ''
-                      }`}>
-                      Cambiar foto
-                    </button>
-                  }
-                  contentZone={<div>Subir foto</div>}
-                  changeImg={this.changeImg}
-                  errImg={this.state.errImg}
-                />
+                <Space direction='vertical'>
+                  <p className='rsvp-pic-txt'>
+                    Sube una imagen <br /> <small>(Por defecto será la del evento)</small>
+                  </p>
+
+                  <Row style={{ margin: 10 }}>
+                    {!this.state.showimgDefault ? (
+                      <Button onClick={() => this.setState({ showimgDefault: true })} type="success">
+                       Mostrar imagen por defecto
+                      </Button>
+                    ) : (
+                      <Button onClick={() => this.setState({ showimgDefault: false })} danger>
+                        Quitar imagen por defecto
+                      </Button>
+                    )}
+                  </Row>
+                </Space>
+
+                {this.state.showimgDefault && (
+                  <Row>
+                    <ImageInput
+                      picture={this.state.rsvp?.image}
+                      imageFile={this.state.imageFile}
+                      divClass={'rsvp-pic-img'}
+                      content={<img src={this.state.rsvp?.image} alt={'Imagen Perfil'} />}
+                      classDrop={'dropzone'}
+                      contentDrop={
+                        <button
+                          className={`button is-primary is-inverted is-outlined ${
+                            this.state.imageFile ? 'is-loading' : ''
+                          }`}>
+                          Cambiar foto
+                        </button>
+                      }
+                      contentZone={<div>Subir foto</div>}
+                      changeImg={this.changeImg}
+                      errImg={this.state.errImg}
+                    />
+                  </Row>
+                )}
               </div>
             </div>
 
