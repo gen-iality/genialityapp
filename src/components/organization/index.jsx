@@ -36,6 +36,15 @@ function Organization(props) {
                            className='item'
                            // onClick={this.handleClick}
                            activeClassName={'active'}
+                           to={`${props.match.url}/events`}>
+                           Eventos
+                        </NavLink>
+                     </p>
+                     <p className='menu-label has-text-centered-mobile'>
+                        <NavLink
+                           className='item'
+                           // onClick={this.handleClick}
+                           activeClassName={'active'}
                            to={`${props.match.url}/information`}>
                            Información
                         </NavLink>
@@ -47,15 +56,6 @@ function Organization(props) {
                            activeClassName={'active'}
                            to={`${props.match.url}/appearance`}>
                            Apariencia
-                        </NavLink>
-                     </p>
-                     <p className='menu-label has-text-centered-mobile'>
-                        <NavLink
-                           className='item'
-                           // onClick={this.handleClick}
-                           activeClassName={'active'}
-                           to={`${props.match.url}/events`}>
-                           Eventos
                         </NavLink>
                      </p>
                      <p className='menu-label has-text-centered-mobile'>
@@ -87,8 +87,13 @@ function Organization(props) {
                            <Route
                               exact
                               path={`${props.match.url}/`}
-                              render={() => <Redirect to={`${props.match.url}/information`} />}
+                              render={() => <Redirect to={`${props.match.url}/events`} />}
                            />
+                              <Route
+                                 exact
+                                 path={`${props.match.url}/events`}
+                                 render={() => <OrgEvents org={organization} />}
+                              />
                            <Route
                               exact
                               path={`${props.match.url}/information`}
@@ -100,11 +105,6 @@ function Organization(props) {
                               exact
                               path={`${props.match.url}/appearance`}
                               render={() => <Styles org={organization} setOrganization={setOrganization} />}
-                           />
-                           <Route
-                              exact
-                              path={`${props.match.url}/events`}
-                              render={() => <OrgEvents org={organization} />}
                            />
                            <Route
                               exact
