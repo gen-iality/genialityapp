@@ -126,17 +126,31 @@ class SendRsvp extends Component {
     });
     this.setState({ dataMail: users, disabled: true });
     try {
-      const data = {
-        content_header: rsvp.content_header,
-        subject: rsvp.subject,
-        message: rsvp.message,
-        image_header: rsvp.image_header,
-        image_footer: rsvp.image_footer,
-        image: showimgDefault ? rsvp.image : '',
-        eventUsersIds: users,
-        include_date: include_date,
-      };
+      let data;
 
+      if (this.state.showimgDefault) {
+        data = {
+          content_header: rsvp.content_header,
+          subject: rsvp.subject,
+          message: rsvp.message,
+          image_header: rsvp.image_header,
+          image_footer: rsvp.image_footer,
+          image: rsvp.image,
+          eventUsersIds: users,
+          include_date: include_date,
+        };
+      }else{
+        data={
+          content_header: rsvp.content_header,
+          subject: rsvp.subject,
+          message: rsvp.message,
+          image_header: rsvp.image_header,
+          image_footer: rsvp.image_footer,
+          eventUsersIds: users,
+          include_date: include_date,
+        }
+      }
+      console.log("Dataenviar",data)
       await EventsApi.sendRsvp(JSON.stringify(data), event._id);
       toast.success(<FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />);
       this.setState({ disabled: false, redirect: true, url_redirect: '/event/' + event._id + '/messages' });
@@ -347,8 +361,8 @@ class SendRsvp extends Component {
 
                   <Row style={{ margin: 10 }}>
                     {!this.state.showimgDefault ? (
-                      <Button onClick={() => this.setState({ showimgDefault: true })} type="success">
-                       Mostrar imagen por defecto
+                      <Button onClick={() => this.setState({ showimgDefault: true })} type='success'>
+                        Mostrar imagen por defecto
                       </Button>
                     ) : (
                       <Button onClick={() => this.setState({ showimgDefault: false })} danger>
