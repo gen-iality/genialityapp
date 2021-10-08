@@ -1,11 +1,12 @@
 import { Col, Row, Typography, Badge, Spin, Space, Divider } from 'antd';
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { OrganizationFuction } from '../../helpers/request';
 import EventCard from '../shared/eventCard';
 import moment from 'moment';
 import ModalAuth from '../authentication/ModalAuth';
 import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
+import { EditOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
@@ -75,7 +76,7 @@ class EventOrganization extends Component {
               {this.state.organization && (
                 <div style={{ marginBottom: '50px',marginTop:'20px' }}>
                   <Space direction='vertical' size={5}>
-                    <Text style={{ marginBottom: '-15px', fontSize: '20px' }}>Organizador</Text>
+                    <Link to={`/admin/organization/${this.props.match.params.id}`} style={{ marginBottom: '-15px', fontSize: '20px' ,cursor:'pointer' }}><EditOutlined />Administrar</Link>
                     <Text style={{ fontSize: '40px', fontWeight: '600', lineHeight: '2.25rem' }} type='secondary'>
                       {this.state.organization.name}
                     </Text>

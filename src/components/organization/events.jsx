@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Loading from '../loaders/loading';
 import { useHistory } from 'react-router-dom';
-import { OrganizationApi } from '../../helpers/request';
+import { getCurrentUser, OrganizationApi } from '../../helpers/request';
 import { Table, Button, Row } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/eventTableColumns';
@@ -9,6 +9,7 @@ import { columns } from './tableColums/eventTableColumns';
 function OrgEvents(props) {
    const [eventData, setEventData] = useState([]);
    const [isLoading, setIsLoading] = useState(true);
+   const [currentUser, setCurrentUser] = useState();
    let { _id: organizationId } = props.org;
    const history = useHistory();
 
@@ -19,7 +20,11 @@ function OrgEvents(props) {
       setIsLoading(false);
    }
 
-   useEffect(() => {
+   useEffect(async() => {
+      const user=await getCurrentUser()
+      if(user){
+         setCurrentUser(user)
+      }
       getEventsStatisticsData();
    }, []);
 
@@ -40,7 +45,7 @@ function OrgEvents(props) {
             <>
                <Row justify='start' style={{ marginBottom: '10px' }}>
                   <Button
-                     onClick={() => linkToTheMenuRouteS(`/create-event`)}
+                     onClick={() => linkToTheMenuRouteS(`/create-event/${currentUser?._id}?orgId=${organizationId}`)}
                      style={{ marginLeft: 20 }}
                      icon={<PlusOutlined />}>
                      Crear Evento
