@@ -37,6 +37,7 @@ const Tickets = asyncComponent(() => import('../components/tickets'));
 const socialZone = asyncComponent(() => import('../components/socialZone/socialZone'));
 const AppointmentAccept = asyncComponent(() => import('../components/networking/appointmentAccept'));
 const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
+const ForbiddenPage = asyncComponent(() => import('../components/forbiddenPage'));
 const QueryTesting = asyncComponent(() => import('../components/events/surveys/components/queryTesting'));
 const EventFinished = asyncComponent(() => import('../components/eventFinished/eventFinished'));
 
@@ -87,7 +88,7 @@ const ContentContainer = () => {
         {/* <WithFooter> */}
         <Route path='/page/:id' component={HomeProfile} />
         <PrivateRoute path='/my_events' component={Events} />
-        <PrivateRoute path='/orgadmin/:event' component={Event} />       
+        <PrivateRoute path='/orgadmin/:event' component={Event} />
         <PrivateRoute path='/create-event/:user?'>
           <NewEventProvider>
             <NewEvent />
@@ -125,33 +126,22 @@ const ContentContainer = () => {
         <PrivateRoute path='/create-event' component={NewEvent} />
         <PrivateRoute path='/profile/:id' component={MyProfile} />
 
-        <Route exact path='/organization/:id/events' >
-        <CurrentEventProvider>
-          <CurrentUserEventProvider>
-            <CurrentUserProvider>
-              <HelperContextProvider>
-                <SurveysProvider>
-                  <EventOrganization />
-                </SurveysProvider>
-              </HelperContextProvider>
-            </CurrentUserProvider>
-          </CurrentUserEventProvider>
-        </CurrentEventProvider>
+        <Route exact path='/organization/:id/events'>
+          <CurrentEventProvider>
+            <CurrentUserEventProvider>
+              <CurrentUserProvider>
+                <HelperContextProvider>
+                  <SurveysProvider>
+                    <EventOrganization />
+                  </SurveysProvider>
+                </HelperContextProvider>
+              </CurrentUserProvider>
+            </CurrentUserEventProvider>
+          </CurrentEventProvider>
         </Route>
 
-        <Route path='/admin/organization/:id' >
-        <CurrentEventProvider>
-          <CurrentUserEventProvider>
-            <CurrentUserProvider>
-              <HelperContextProvider>
-                <SurveysProvider>
-                  <Organization />
-                </SurveysProvider>
-              </HelperContextProvider>
-            </CurrentUserProvider>
-          </CurrentUserEventProvider>
-        </CurrentEventProvider>
-        </Route>
+        <PrivateRoute path='/admin/organization/:id' component={Organization} />
+
         {/* <PrivateRoute path='/admin/organization/:id' component={Organization} /> */}
         <PrivateRoute path='/purchase/:id' component={Purchase} />
         <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
@@ -166,7 +156,6 @@ const ContentContainer = () => {
         <Route path='/api/generatorQr/:id' component={QRedirect} />
         <Route exact path='/transition/:event' component={Transition} />
         <Route exact path='/eventfinished' component={EventFinished} />
-        
 
         <Route
           path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
@@ -200,18 +189,20 @@ function RedirectPortal() {
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={(props) =>
-      Cookie.get('evius_token') ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-          to={{
-            pathname: '/',
-            state: { from: props.location },
-          }}
-        />
-      )
-    }
+    render={(props) => (
+      <CurrentEventProvider>
+        <CurrentUserEventProvider>
+          <CurrentUserProvider>
+            <HelperContextProvider>
+              <SurveysProvider>
+                {Cookie.get('evius_token') ? <Component {...props} />: <ForbiddenPage />}
+                
+              </SurveysProvider>
+            </HelperContextProvider>
+          </CurrentUserProvider>
+        </CurrentUserEventProvider>
+      </CurrentEventProvider>
+    )}
   />
 );
 
