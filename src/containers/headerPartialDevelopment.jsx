@@ -135,7 +135,7 @@ class Headers extends Component {
   logout = () => {
     Cookie.remove('token');
     Cookie.remove('evius_token');
-    window.location.replace(`${AuthUrl}/logout`);
+    window.location.reload();
   };
 
   openMenu = () => {
