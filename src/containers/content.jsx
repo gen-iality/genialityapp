@@ -174,7 +174,7 @@ const ContentContainer = () => {
         />
         <Route
           exact
-          path='/events'
+          path='/'
           render={() => (
             <WithFooter>
               <Home />
