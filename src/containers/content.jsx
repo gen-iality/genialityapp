@@ -15,9 +15,7 @@ import { HelperContextProvider } from '../Context/HelperContext';
 import EventOrganization from '../components/eventOrganization';
 import Organization from '../components/organization';
 import { NewEventProvider } from '../Context/newEventContext';
-
-
-
+import MainProfile from '../components/profile/main';
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -73,6 +71,9 @@ const ContentContainer = () => {
             </CurrentUserEventProvider>
           </CurrentEventProvider>
         </Route>
+
+        {/*Ruta para ver resumen */}
+        <Route path='/myprofile' component={MainProfile} />
 
         <Route path='/social/:event_id' component={socialZone} />
         {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
