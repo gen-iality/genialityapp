@@ -45,33 +45,9 @@ const ContentContainer = () => {
   return (
     <main className='main'>
       <Switch>
-        <Route path='/landing/:event_id'>
-          <CurrentEventProvider>
-            <CurrentUserEventProvider>
-              <CurrentUserProvider>
-                <HelperContextProvider>
-                  <SurveysProvider>
-                    <Landing />
-                  </SurveysProvider>
-                </HelperContextProvider>
-              </CurrentUserProvider>
-            </CurrentUserEventProvider>
-          </CurrentEventProvider>
-        </Route>
+        <RouteContext path='/landing/:event_id' component={Landing} />
 
-        <Route path='/event/:event_name'>
-          <CurrentEventProvider>
-            <CurrentUserEventProvider>
-              <CurrentUserProvider>
-                <HelperContextProvider>
-                  <SurveysProvider>
-                    <Landing />
-                  </SurveysProvider>
-                </HelperContextProvider>
-              </CurrentUserProvider>
-            </CurrentUserEventProvider>
-          </CurrentEventProvider>
-        </Route>
+        <RouteContext path='/event/:event_name' component={Landing} />
 
         {/*Ruta para ver resumen */}
         <Route path='/myprofile' component={MainProfile} />
@@ -95,54 +71,18 @@ const ContentContainer = () => {
           </NewEventProvider>
         </PrivateRoute>
 
-        <PrivateRoute path='/eventadmin/:event'>
-          <CurrentEventProvider>
-            <CurrentUserEventProvider>
-              <CurrentUserProvider>
-                <HelperContextProvider>
-                  <SurveysProvider>
-                    <Event />
-                  </SurveysProvider>
-                </HelperContextProvider>
-              </CurrentUserProvider>
-            </CurrentUserEventProvider>
-          </CurrentEventProvider>
-        </PrivateRoute>
-
-        <PrivateRoute path='/orgadmin/:event'>
-          <CurrentEventProvider>
-            <CurrentUserEventProvider>
-              <CurrentUserProvider>
-                <HelperContextProvider>
-                  <SurveysProvider>
-                    <Event />
-                  </SurveysProvider>
-                </HelperContextProvider>
-              </CurrentUserProvider>
-            </CurrentUserEventProvider>
-          </CurrentEventProvider>
-        </PrivateRoute>
+        <PrivateRoute path='/eventadmin/:event' component={Event}/>
+        <PrivateRoute path='/orgadmin/:event' component={Event} />
 
         <PrivateRoute path='/create-event' component={NewEvent} />
         <PrivateRoute path='/profile/:id' component={MyProfile} />
 
-        <Route exact path='/organization/:id/events'>
-          <CurrentEventProvider>
-            <CurrentUserEventProvider>
-              <CurrentUserProvider>
-                <HelperContextProvider>
-                  <SurveysProvider>
-                    <EventOrganization />
-                  </SurveysProvider>
-                </HelperContextProvider>
-              </CurrentUserProvider>
-            </CurrentUserEventProvider>
-          </CurrentEventProvider>
-        </Route>
+        <RouteContext exact path='/organization/:id/events' component={EventOrganization} />
+        <RouteContext exact path='/organization/:id'        component={EventOrganization} />
 
         <PrivateRoute path='/admin/organization/:id' component={Organization} />
 
-        {/* <PrivateRoute path='/admin/organization/:id' component={Organization} /> */}
+
         <PrivateRoute path='/purchase/:id' component={Purchase} />
         <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
         <PrivateRoute path='/tickets/:id' component={Tickets} />
@@ -185,6 +125,26 @@ function QRedirect({ match }) {
 function RedirectPortal() {
   return <div>{window.location.assign('http://portal.evius.co/')}</div>;
 }
+
+
+const RouteContext = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (
+      <CurrentEventProvider>
+        <CurrentUserEventProvider>
+          <CurrentUserProvider>
+            <HelperContextProvider>
+              <SurveysProvider>
+                <Component {...props} />
+              </SurveysProvider>
+            </HelperContextProvider>
+          </CurrentUserProvider>
+        </CurrentUserEventProvider>
+      </CurrentEventProvider>
+    )}
+  />
+);
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route

@@ -31,14 +31,22 @@ export function CurrentEventProvider({ children }) {
           case 'id':
             console.log('eventGlobal=>', event_id);
             eventGlobal = await EventsApi.getOne(event_id || event);
-            console.log('eventGlobal',eventGlobal )
-            dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event };
+            console.log('eventGlobal', eventGlobal);
+            if (eventGlobal) {
+              dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event };
+            } else {
+              dataevent = { error:'Not Found',status: 'ERROR', value: null, nameEvent: null };
+            }
             break;
 
           case 'name':
             eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated);
             console.log('eventGlobal==>', eventGlobal);
-            dataevent = { status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name };
+            if (eventGlobal.data.length) {
+              dataevent = {  status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name };
+            } else {
+              dataevent = { error:'Not Found',status: 'ERROR', value: null, nameEvent: null };
+            }
             break;
         }
         setEventContext(dataevent);
