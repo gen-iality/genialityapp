@@ -149,7 +149,7 @@ export const getCurrentUser = () => {
             Cookie.remove('evius_token');           
             setTimeout(() => {
               window.location.reload();
-            }, 0);
+            }, 2000);
             //this.setState({ timeout: true, loader: false })
           } else {
             //this.setState({ serverError: true, loader: false, errorData: data })
