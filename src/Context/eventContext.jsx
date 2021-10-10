@@ -10,7 +10,7 @@ export function CurrentEventProvider({ children }) {
   let { event_id, event_name, event } = useParams();
 
   let eventNameFormated = null;
-  let initialContextState = { status: 'LOADING', value: null, nameEvent: '' };
+  let initialContextState = { status: 'LOADING', value: null, nameEvent: event_name || "" };
 
   if (event_name) {
     eventNameFormated = event_name.replaceAll('---', 'more');
@@ -29,7 +29,7 @@ export function CurrentEventProvider({ children }) {
       try {
         switch (type) {
           case 'id':
-            console.log('eventGlobal=>', event_id);
+            
             eventGlobal = await EventsApi.getOne(event_id || event);
             console.log('eventGlobal', eventGlobal);
             if (eventGlobal) {
@@ -49,6 +49,7 @@ export function CurrentEventProvider({ children }) {
             }
             break;
         }
+        console.log('eventGlobalxxxx', eventGlobal);
         setEventContext(dataevent);
       } catch (e) {
         dataevent = { error: e.message, status: 'ERROR', value: null, nameEvent: null };
@@ -56,6 +57,7 @@ export function CurrentEventProvider({ children }) {
       }
     }
 
+    console.log('eventi',event_id,event)
     if (event_id || event) {
       console.log('EVENT==>', event);
       fetchEvent('id');

@@ -141,7 +141,7 @@ class MenuConfig extends Component {
             </Menu.Item>
             <Menu.Item key='110'>
                 Contenido Informativo
-              <NavLink onClick={this.handleClick} to={`${url}/documents`}>
+              <NavLink onClick={this.handleClick} to={`${url}/informativesection`}>
               </NavLink>
             </Menu.Item>
             <Menu.Item key='9'>

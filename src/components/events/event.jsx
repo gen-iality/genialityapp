@@ -56,6 +56,7 @@ const DashboardEvent = asyncComponent(() => import('../dashboard'));
 const OrdersEvent = asyncComponent(() => import('../orders'));
 const Pages = asyncComponent(() => import('../pages'));
 const ListCertificados = asyncComponent(() => import('../certificados'));
+const AdminInformativeSection = asyncComponent(() => import('./informativeSections/adminInformativeSection'));
 const ReporteCertificados = asyncComponent(() => import('../certificados/reporte'));
 const ConfigurationApp = asyncComponent(() => import('../App/configuration'));
 const NotificationsApp = asyncComponent(() => import('../pushNotifications/index'));
@@ -290,6 +291,7 @@ class Event extends Component {
               />
               <Route path={`${match.url}/orders`} render={() => <OrdersEvent eventId={this.state.event._id} />} />
               <Route path={`${match.url}/certificados`} render={() => <ListCertificados event={this.state.event} />} />
+              <Route path={`${match.url}/informativesection`} render={() => <AdminInformativeSection event={this.state.event} />} />
               <Route path={`${match.url}/espacios`} render={() => <Espacios eventID={this.state.event._id} />} />
               <Route
                 path={`${match.url}/reporte-certificados`}
