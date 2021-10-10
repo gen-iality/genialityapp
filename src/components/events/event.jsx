@@ -136,29 +136,6 @@ class Event extends Component {
     this.setState({ event });
   };
 
-  isUpper(str) {
-    return !/[a-z]/.test(str) && /[A-Z]/.test(str);
-  }
-
-  FriendLyUrl(url) {
-    let formatupperorlowercase = url.toString().toLowerCase();
-    if (this.isUpper(url.toString())) {
-      formatupperorlowercase = url.toString().toUpperCase();
-    } else {
-      formatupperorlowercase = url.toString().toLowerCase();
-    }
-    var encodedUrl = formatupperorlowercase;
-    encodedUrl = encodedUrl.split(/\&+/).join('-and-');
-    if (this.isUpper(url)) {
-      encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-');
-    } else {
-      encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-');
-    }
-    encodedUrl = encodedUrl.split(/-+/).join('-');
-    encodedUrl = encodedUrl.trim('-');
-    return encodedUrl;
-  }
-
   render() {
     const { match, permissions, showMenu } = this.props;
     // console.log("${match.url}",match.url)

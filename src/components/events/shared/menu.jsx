@@ -99,7 +99,7 @@ class MenuConfig extends Component {
             </Menu.Item>
 
             <Menu.Item key='2'>
-                Conferencistas
+                Host/Anfitriones
               <NavLink onClick={this.handleClick} to={`${url}/speakers`}>
               </NavLink>
             </Menu.Item>
@@ -139,7 +139,11 @@ class MenuConfig extends Component {
               <NavLink onClick={this.handleClick} to={`${url}/documents`}>
               </NavLink>
             </Menu.Item>
-
+            <Menu.Item key='110'>
+                Contenido Informativo
+              <NavLink onClick={this.handleClick} to={`${url}/documents`}>
+              </NavLink>
+            </Menu.Item>
             <Menu.Item key='9'>
                 Reporte de Networking
               <NavLink onClick={this.handleClick} to={`${url}/reportNetworking`}>
