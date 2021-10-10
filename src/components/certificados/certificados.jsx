@@ -26,12 +26,12 @@ const Certificados = (props) => {
     {
       title: 'Fecha de creación',
       dataIndex: 'created_at',
+      ...getColumnSearchProps('created_at', columnsData),
       render(val, item) {
         return (
           <div>{moment(item.created_at).format('YYYY-DD-MM')}</div>
         )
       },
-      ...getColumnSearchProps('created_at', columnsData)
     }
   ];
 
