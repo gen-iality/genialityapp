@@ -46,7 +46,9 @@ class Home extends Component {
       this.setState({ loading: true, typeEvent: type });
       const resp =
         type === 'next'
-          ? await EventsApi.getPublic('?pageSize=30')
+          ? await EventsApi.getPublic(
+              '?pageSize=30&filtered=[{%22field%22:%22datetime_to%22,%22value%22:%222021-10-10%22,%22comparator%22:%22%3E%22}]'
+            )
           : await EventsApi.getOldEvents(`?pageSize=${pageSize}`);
 
       const events = resp.data.filter((item) => item.organizer);

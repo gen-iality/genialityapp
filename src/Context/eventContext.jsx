@@ -37,7 +37,7 @@ export function CurrentEventProvider({ children }) {
 
         case 'name':
           eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated);
-          console.log("eventGlobal==>",eventGlobal)
+          console.log("eventGlobal==>",eventGlobal.data[0])
           dataevent = { status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name };
           break;
       }
