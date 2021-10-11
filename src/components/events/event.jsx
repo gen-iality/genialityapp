@@ -308,24 +308,13 @@ class Event extends Component {
                 path={`${match.url}/notificationsApp`}
                 render={() => <NotificationsApp eventId={this.state.event._id} />}
               />
-<<<<<<< HEAD
-              <Route  path={`${match.url}/news`}>
-                <NewsSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
-              </Route>
-              <Route  path={`${match.url}/product`}>
-                <ProductSectionRoutes eventId={this.state.event._id} event={this.state.event}  />
-              </Route>
-              <Route path={`${match.url}/faqs`} render={() => 
-                <FAQS eventId={this.state.event._id} event={this.state.event} matchUrl={match.url} />} />              
-=======
               <Route path={`${match.url}/news`}>
                 <NewsSectionRoutes eventId={this.state.event._id} event={this.state.event} />
               </Route>
               <Route path={`${match.url}/product`}>
                 <ProductSectionRoutes eventId={this.state.event._id} event={this.state.event} />
               </Route>
-              <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} />} />
->>>>>>> beta3_newLanding
+              <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} event={this.state.event} matchUrl={match.url} />} />
               <Route
                 path={`${match.url}/ticketsEvent`}
                 render={() => <EventsTicket eventId={this.state.event._id} />}
