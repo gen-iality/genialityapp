@@ -7,9 +7,9 @@ const ProductCard = ({ galery, eventId, history }) => {
   return (
     <Card
       actions={[
-        <div style={{ fontWeight: 'bold', fontSize: '18px' }} onClick={null} key={'act-' + galery.id}>
+        (galery?.currency && galery?.currency) &&<div style={{ fontWeight: 'bold', fontSize: '18px' }} onClick={null} key={'act-' + galery.id}>
           {(galery?.currency && galery?.currency) +" $ "+( galery.start_price?.toLocaleString('es-CO') || galery.price?.toLocaleString('es-CO')) }
-        </div>,
+        </div>
       ]}
       bordered={false}
       bodyStyle={{ padding: '10px 10px', minHeight: '120px' }}
@@ -23,10 +23,10 @@ const ProductCard = ({ galery, eventId, history }) => {
             <Title level={5} ellipsis={{ rows: 2 }}>
               {galery.name}
             </Title>
-            <div>
+            {galery && galery.by &&<div>
               <span style={{ fontWeight: 'bold' }}>by:&nbsp;</span>
               {galery && galery.by ? galery.by : 'Sin artista'}
-            </div>
+            </div>}
           </Space>
         }
       />
