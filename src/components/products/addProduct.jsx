@@ -100,17 +100,19 @@ function AddProduct(props) {
 
    const saveProduct = async () => {
       let validators = {};
+      validators.price = false;
+      validators.creator = false
 
       if (name === '') {
          validators.name = true;
       } else {
          validators.name = false;
       }
-      if (name === '') {
+      /*if (name === '') {
          validators.creator = true;
       } else {
          validators.creator = false;
-      }
+      }*/
       if (description === '') {
          validators.description = true;
       } else {
@@ -121,11 +123,12 @@ function AddProduct(props) {
       } else {
          validators.picture = false;
       }
-      if (price === '') {
+     /* if (price === '') {
          validators.price = true;
       } else {
          validators.price = false;
-      }
+      }*/
+      console.log()
       setError(validators);
       if (
          validators &&
@@ -201,10 +204,10 @@ function AddProduct(props) {
                <Form.Item
                   label={
                      <label style={{ marginTop: '2%' }} className='label'>
-                        Por <label style={{ color: 'red' }}>*</label>
+                        Por {/*<label style={{ color: 'red' }}>*</label>*/}
                      </label>
                   }
-                  rules={[{ required: true, message: 'Ingrese el nombre del autor o creador la producto' }]}>
+                  rules={[{ required: false}]}>
                   <Input
                      value={creator}
                      placeholder='Nombre del autor, creador o descripcion corta'
@@ -227,19 +230,19 @@ function AddProduct(props) {
                <Form.Item
                   label={
                      <label style={{ marginTop: '2%' }} className='label'>
-                        Valor <label style={{ color: 'red' }}>*</label>
+                        Valor {/*<label style={{ color: 'red' }}>*</label>*/}
                      </label>
                   }
-                  rules={[{ required: true, message: 'Ingrese el valor del producto' }]}>
+                  rules={[{ required: false, message: 'Ingrese el valor del producto' }]}>
                   <Input
                      value={price}
                      placeholder='Valor del producto'
                      name={'price'}
                      onChange={(e) => changeInput(e, 'price')}
                   />{' '}
-                  {error != null && error.price && (
+                  {/*error != null && error.price && (
                      <small style={{ color: 'red' }}>El valor del producto es requerido</small>
-                  )}
+                  )*/}
                </Form.Item>
                <Form.Item
                   label={

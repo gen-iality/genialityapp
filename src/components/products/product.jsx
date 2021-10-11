@@ -139,9 +139,10 @@ class Product extends Component {
 
    render() {
       return (
+         
          <div>
             <Title level={4}>{'Producto'}</Title>
-
+            {console.log("LIST PRODUCT==>",this.state.list[0]?.price==null?'nulo':'otravaina')}
             <Row justify='end' style={{ marginBottom: '10px' }}>
                <Button onClick={this.newProduct} type='primary' style={{marginRight:'20px'}} icon={<PlusCircleOutlined />}>
                   {'Crear producto'}
@@ -197,7 +198,7 @@ class Product extends Component {
                      )}
                   />
                   <Column key='_id' title='Por' align='center' dataIndex='by' />
-                  <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" +" $ "+(prod?.start_price|| prod?.price)}</div>)} />
+                  <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" .concat((data || prod?.price)?" $ "+prod?.price:"").concat((prod?.start_price|| prod?.price||''))}</div>)} />
                   <Column
                      key='_id'
                      title='Imagenes del producto'
