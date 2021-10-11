@@ -87,7 +87,7 @@ let SocialZone = function(props) {
                 size='small'
                 // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
                 count={totalPrivateMessages}>
-                Chats
+                <div style={{ color: cEvent.value.styles.textMenu }}> Chats</div>
               </Badge>
             </>
           }

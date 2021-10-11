@@ -13,6 +13,9 @@ import { SurveysProvider } from '../Context/surveysContext';
 
 import { HelperContextProvider } from '../Context/HelperContext';
 import EventOrganization from '../components/eventOrganization';
+import Organization from '../components/organization';
+import { NewEventProvider } from '../Context/newEventContext';
+import MainProfile from '../components/profile/main';
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -21,7 +24,7 @@ const Landing = asyncComponent(() => import('../components/events/Landing/landin
 const Transition = asyncComponent(() => import('../components/shared/Animate_Img/index'));
 const Events = asyncComponent(() => import('../components/events'));
 const NewEvent = asyncComponent(() => import('../components/events/newEvent'));
-const Organization = asyncComponent(() => import('../components/organization'));
+// const Organization = asyncComponent(() => import('../components/organization'));
 const MyProfile = asyncComponent(() => import('../components/profile'));
 const Purchase = asyncComponent(() => import('../components/profile/purchase'));
 const EventEdit = asyncComponent(() => import('../components/profile/events'));
@@ -34,6 +37,7 @@ const Tickets = asyncComponent(() => import('../components/tickets'));
 const socialZone = asyncComponent(() => import('../components/socialZone/socialZone'));
 const AppointmentAccept = asyncComponent(() => import('../components/networking/appointmentAccept'));
 const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
+const ForbiddenPage = asyncComponent(() => import('../components/forbiddenPage'));
 const QueryTesting = asyncComponent(() => import('../components/events/surveys/components/queryTesting'));
 const EventFinished = asyncComponent(() => import('../components/eventFinished/eventFinished'));
 
@@ -41,36 +45,12 @@ const ContentContainer = () => {
   return (
     <main className='main'>
       <Switch>
-        <Route path='/landing/:event_id'>
-          <CurrentEventProvider>
-            <CurrentUserEventProvider>
-              <CurrentUserProvider>
-                <HelperContextProvider>
-                  <SurveysProvider>
-                    <Landing />
-                  </SurveysProvider>
-                </HelperContextProvider>
-              </CurrentUserProvider>
-            </CurrentUserEventProvider>
-          </CurrentEventProvider>
-        </Route>
+        <RouteContext path='/landing/:event_id' component={Landing} />
 
+        <RouteContext path='/event/:event_name' component={Landing} />
 
-        <Route path='/event/:event_name'>
-          <CurrentEventProvider>
-            <CurrentUserEventProvider>
-              <CurrentUserProvider>
-                <HelperContextProvider>
-                  <SurveysProvider>
-                    <Landing />
-                  </SurveysProvider>
-                </HelperContextProvider>
-              </CurrentUserProvider>
-            </CurrentUserEventProvider>
-          </CurrentEventProvider>
-        </Route>
-
-
+        {/*Ruta para ver resumen */}
+        <Route path='/myprofile' component={MainProfile} />
 
         <Route path='/social/:event_id' component={socialZone} />
         {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
@@ -85,11 +65,24 @@ const ContentContainer = () => {
         <Route path='/page/:id' component={HomeProfile} />
         <PrivateRoute path='/my_events' component={Events} />
         <PrivateRoute path='/orgadmin/:event' component={Event} />
-        <PrivateRoute path='/eventadmin/:event' component={Event} />
+        <PrivateRoute path='/create-event/:user?'>
+          <NewEventProvider>
+            <NewEvent />
+          </NewEventProvider>
+        </PrivateRoute>
+
+        <PrivateRoute path='/eventadmin/:event' component={Event}/>
+        <PrivateRoute path='/orgadmin/:event' component={Event} />
+
         <PrivateRoute path='/create-event' component={NewEvent} />
         <PrivateRoute path='/profile/:id' component={MyProfile} />
-        <Route exact path='/organization/:id/events' component={EventOrganization} />
+
+        <RouteContext exact path='/organization/:id/events' component={EventOrganization} />
+        <RouteContext exact path='/organization/:id'        component={EventOrganization} />
+
         <PrivateRoute path='/admin/organization/:id' component={Organization} />
+
+
         <PrivateRoute path='/purchase/:id' component={Purchase} />
         <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
         <PrivateRoute path='/tickets/:id' component={Tickets} />
@@ -103,7 +96,6 @@ const ContentContainer = () => {
         <Route path='/api/generatorQr/:id' component={QRedirect} />
         <Route exact path='/transition/:event' component={Transition} />
         <Route exact path='/eventfinished' component={EventFinished} />
-        <Route exact path='/' component={RedirectPortal} />
 
         <Route
           path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
@@ -111,7 +103,7 @@ const ContentContainer = () => {
         />
         <Route
           exact
-          path='/events'
+          path='/'
           render={() => (
             <WithFooter>
               <Home />
@@ -134,21 +126,43 @@ function RedirectPortal() {
   return <div>{window.location.assign('http://portal.evius.co/')}</div>;
 }
 
+
+const RouteContext = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (
+      <CurrentEventProvider>
+        <CurrentUserEventProvider>
+          <CurrentUserProvider>
+            <HelperContextProvider>
+              <SurveysProvider>
+                <Component {...props} />
+              </SurveysProvider>
+            </HelperContextProvider>
+          </CurrentUserProvider>
+        </CurrentUserEventProvider>
+      </CurrentEventProvider>
+    )}
+  />
+);
+
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={(props) =>
-      Cookie.get('evius_token') ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-          to={{
-            pathname: '/',
-            state: { from: props.location },
-          }}
-        />
-      )
-    }
+    render={(props) => (
+      <CurrentEventProvider>
+        <CurrentUserEventProvider>
+          <CurrentUserProvider>
+            <HelperContextProvider>
+              <SurveysProvider>
+                {Cookie.get('evius_token') ? <Component {...props} />: <ForbiddenPage />}
+                
+              </SurveysProvider>
+            </HelperContextProvider>
+          </CurrentUserProvider>
+        </CurrentUserEventProvider>
+      </CurrentEventProvider>
+    )}
   />
 );
 

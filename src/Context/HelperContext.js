@@ -498,8 +498,8 @@ export const HelperContextProvider = ({ children }) => {
   function GetPermissionsEvent() {
     if (cEvent.value != null) {
       let routePermissions =
-        cEvent.value && Object.values(cEvent.value.itemsMenu).filter((item) => item.section === 'tickets');
-      if (routePermissions[0] && routePermissions[0].permissions == 'assistants' && cEventuser.value == null) {
+        cEvent.value && cEvent.value.itemsMenu && Object.values(cEvent.value.itemsMenu)?.filter((item) => item.section === 'tickets');
+      if (routePermissions && routePermissions[0] && routePermissions[0].permissions == 'assistants' && cEventuser.value == null) {
         seteventPrivate({
           private: true,
           section: 'permissions',

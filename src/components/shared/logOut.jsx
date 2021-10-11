@@ -19,7 +19,7 @@ class LogOut extends Component {
     element.classList.remove('is-active');
     Cookie.remove('token');
     Cookie.remove('evius_token');
-    this.props.history.replace('/');
+    window.location.reload();
   };
 
   render() {

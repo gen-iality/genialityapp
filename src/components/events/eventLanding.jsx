@@ -69,7 +69,7 @@ class eventLanding extends Component {
             </Row>
           )} */}
           {/* Si event video existe */}
-          {this.props.cEvent.value.video && (
+          { this.props.cEvent.value?._id !=='6137e3447efe8b067d51fc8a' && this.props.cEvent.value.video && (
             <div className='column is-centered mediaplayer'>
               <ReactPlayer
                 width={'100%'}
@@ -361,6 +361,20 @@ class eventLanding extends Component {
                   </Col>
                 </Row>
               </div>
+            </div>
+          )}
+           {this.props.cEvent?.value._id == '6137e3447efe8b067d51fc8a' &&this.props.cEvent.value.video && (
+            <div className='column is-centered mediaplayer'>
+              <ReactPlayer
+                width={'100%'}
+                height={'35vw'}
+                style={{
+                  display: 'block',
+                  margin: '0 auto',
+                }}
+                url={this.props.cEvent.value.video}
+                controls
+              />
             </div>
           )}
         </Card>

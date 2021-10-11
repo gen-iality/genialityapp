@@ -106,6 +106,9 @@ export function parseData2Excel(data, fields,roles=null) {
         case 'multiplelist':
           str = Array.isArray(item.properties[name]) ? item.properties[name].join() : item.properties[name];
           break;
+          case 'multiplelisttable':           
+          str = Array.isArray(item.properties[name]) ? item.properties[name][0].label : item.properties[name];
+          break;
           case 'codearea':           
             str = item[name];
             break;
@@ -116,7 +119,7 @@ export function parseData2Excel(data, fields,roles=null) {
               : item.properties[name];
           break;
         default:
-          str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : item?.user[name];
+          str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : item?.user? item?.user[name]:'';
       }
 
       if (type === 'complex' && str) {

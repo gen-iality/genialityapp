@@ -74,7 +74,7 @@ class CreatePost extends Component {
   }
 
   componentDidMount(){
-    console.log('Marlon 2',this.props.cUser.value)
+  
   }
 
   //Funcion para guardar el post y enviar el mensaje de publicacion

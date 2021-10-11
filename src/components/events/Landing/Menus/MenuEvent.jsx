@@ -22,6 +22,8 @@ const MenuEvent = ({ isMobile }) => {
             !eventPrivate.private &&
             Object.keys(event.itemsMenu).map((key) => {
               //icono personalizado
+              if (!event.itemsMenu[key].name || !event.itemsMenu[key].section){return <></>}
+
               let IconoComponente = iconComponents[event.itemsMenu[key].icon];
 
               return key == 'networking' ? (
@@ -71,7 +73,8 @@ const MenuEvent = ({ isMobile }) => {
               Object.keys(event.itemsMenu).map((key) => {
                 //icono personalizado
                 let IconoComponente = iconComponents[event.itemsMenu[key].icon];
-
+                if (!event.itemsMenu[key].name || !event.itemsMenu[key].section){return <></>}
+                
                 return (
                   <Menu.Item
                     style={{ position: 'relative', color: event.styles.textMenu }}

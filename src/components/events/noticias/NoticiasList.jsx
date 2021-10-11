@@ -109,7 +109,7 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
                       <img
                         style={{ height: '28vh', objectFit: 'cover' }}
                         alt='example'
-                        src={news && news.image && news.image[0] !== null ? news.image[0] : imgNotFound}
+                        src={news && news.image  ? news.image : imgNotFound}
                       />
                     }
                     actions={[

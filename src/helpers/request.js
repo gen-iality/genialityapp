@@ -145,9 +145,11 @@ export const getCurrentUser = () => {
               draggable: true,
               progress: undefined,
             });
+            Cookie.remove('token');
+            Cookie.remove('evius_token');           
             setTimeout(() => {
-              window.location.href = '/';
-            }, 5000);
+              window.location.reload();
+            }, 2000);
             //this.setState({ timeout: true, loader: false })
           } else {
             //this.setState({ serverError: true, loader: false, errorData: data })
@@ -341,6 +343,11 @@ export const UsersApi = {
   deleteOne: async (user, id) => {
     return await Actions.delete(`/api/user/events/${id}`, user);
   },
+
+  deleteUsers: async (user) => {
+    return await Actions.delete(`/api/users`,user);
+  },
+  
 };
 
 export const AttendeeApi = {
@@ -515,6 +522,9 @@ export const OrganizationApi = {
   },
   deleteUser: async (org, member) => {
     return await Actions.delete(`/api/organizations/${org}/users/`, member);
+  },
+  getEventsStatistics: async (org) => {
+    return await Actions.get(`/api/organizations/${org}/eventsstadistics`);
   },
 };
 export const BadgeApi = {

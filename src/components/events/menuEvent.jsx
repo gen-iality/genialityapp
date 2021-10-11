@@ -105,13 +105,6 @@ class MenuEvent extends Component {
         checked: false,
         permissions: 'public',
       },
-      my_section: {
-        name: 'Seccion Personalizada',
-        section: 'my_section',
-        icon: 'EnterOutlined',
-        checked: false,
-        permissions: 'public',
-      },
       companies: {
         name: 'Empresas',
         section: 'companies',
@@ -160,7 +153,7 @@ class MenuEvent extends Component {
         icon: 'PlaySquareOutlined',
         checked: false,
         permissions: 'public',
-      },
+      }    
     };
   }
 

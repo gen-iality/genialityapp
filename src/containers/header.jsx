@@ -95,12 +95,12 @@ class Headers extends Component {
 
     //Si existe el token consultamos la información del usuario
     const data = await getCurrentUser();
-    console.log('USERDATA==>', data);
+    // console.log('USERDATA==>', data);
   
     if (data) {
-      console.log("DATA==>",data)
+      // console.log("DATA==>",data)
       const user = await EventsApi.getEventUser(data._id, eventId);
-      console.log('USERDATA2==>', user);
+      // console.log('USERDATA2==>', user);
       const photo = user!=null ? user.user?.picture:data.picture
       const name = user!=null?user?.properties?.name || user?.properties?.names: data.name || data.names;
 
@@ -136,6 +136,8 @@ class Headers extends Component {
     } else if (splited[1] === 'eventadmin' || splited[1] === 'orgadmin') {
       this.setState({ showAdmin: true, showEventMenu: false, menuOpen: false });
       window.scrollTo(0, 0);
+    }else{
+      this.setState({ showAdmin: false, showEventMenu: false, menuOpen: false });
     }
   };
 
@@ -144,9 +146,9 @@ class Headers extends Component {
       this.props.loginInfo.name !== prevProps.loginInfo.name ||
       this.props.loginInfo.picture !== prevProps.loginInfo.picture
     ) {
-      console.log('LOGIN INFO==>', this.props.loginInfo);
+      // console.log('LOGIN INFO==>', this.props.loginInfo);
       const user = await EventsApi.getEventUser(this.props?.loginInfo?._id, this.state.eventId);
-      console.log('USERDATA2==>', user);
+      // console.log('USERDATA2==>', user);
       const photo = user?.user? user.user?.picture:this.props.loginInfo.picture;
       const name = user?.user ?user?.properties?.name || user?.properties?.names: this.props.loginInfo.name || this.props.loginInfo.names;
 
@@ -172,7 +174,7 @@ class Headers extends Component {
         // Solucion temporal, se esta trabajando un reducer que permita identificar
         // el eventId sin importar su posición, actualmente se detecta un problema
         // cuando la url tiene el eventId en una posicion diferente al final
-        window.location.replace('/');
+        window.location.reload();
       })
       .catch(function(error) {
         // An error happened.

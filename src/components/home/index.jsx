@@ -110,14 +110,6 @@ class Home extends Component {
       });
   }
 
-  FriendLyUrl(url) {
-    let slug = url.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ').toLowerCase();
-    slug = url.replace(/^\s+|\s+$/gm, '');
-    slug = url.replaceAll("-","%20")
-    slug = url.replace(/\s+/g, '-');
-    return slug;
-  }
-
   render() {
     const { timeout, typeEvent, serverError, errorData, events, loading, hasMore } = this.state;
     return (

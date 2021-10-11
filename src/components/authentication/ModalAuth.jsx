@@ -27,35 +27,38 @@ const stylePaddingMobile = {
 const ModalAuth = (props) => {
   const screens = useBreakpoint();
   const [loading, setLoading] = useState(false);
-  const [errorLogin, setErrorLogin] = useState(false);
+  const [errorLogin, setErrorLogin] = useState(false);  
   const [form1] = Form.useForm();
-  let { handleChangeTypeModal, typeModal, handleChangeTabModal } = useContext(HelperContext);
+  let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
   const intl = useIntl();
+ 
 
   useEffect(() => {
     async function userAuth() {
+    // console.log("IDORG==>",props.idOrganization)
       app.auth().onAuthStateChanged((user) => {
         if (user) {
           user.getIdToken().then(async function(idToken) {
             if (idToken && !Cookie.get('evius_token')) {
-              Cookie.set('evius_token', idToken, { expires: 180 });
+              Cookie.set('evius_token', idToken, { expires: 180 });             
+              let url=props.organization=="landing"?`/organization/${props.idOrganization}/events?token=${idToken}` :`/landing/${props.cEvent.value?._id}?token=${idToken}`;
               setTimeout(function() {
-                window.location.replace(`/landing/${props.cEvent.value?._id}?token=${idToken}`);
+                window.location.replace(url);
               }, 1000);
             }
           });
         }
       });
-    }
-
+    } 
     userAuth();
     return () => {
       form1.resetFields();
     };
   }, []);
+  
   useEffect(() => {
     form1.resetFields();
-  }, [typeModal]);
+  }, [typeModal, tabLogin]);
   const callback = (key) => {
     form1.resetFields();
     handleChangeTabModal(key);
@@ -83,29 +86,33 @@ const ModalAuth = (props) => {
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
       .then((response) => {
-        loginNormal = true;        
-        setErrorLogin(false);        
+        loginNormal = true;
+        setErrorLogin(false);
         //setLoading(false);
       })
-      .catch(async () => {       
+      .catch(async () => {
         let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
         if (user.data.length > 0) {
-         
-         
-          if (user.data[0].properties?.password == data.password || user.data[0].contrasena == data.password || user.data[0]?.user?.contrasena == data.password) {
-            console.log("USER REVIEW==>",user.data[0])
-          window.location.href =
-            window.origin + '/landing/' + props.cEvent.value?._id + '?token=' + user.data[0]?.user?.initial_token;
+          if (
+            user.data[0].properties?.password == data.password ||
+            user.data[0].contrasena == data.password ||
+            user.data[0]?.user?.contrasena == data.password
+          ) {
+            let url=props.organization=="landing"?`/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}` :`/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
+            window.location.href =url;
             loginFirst = true;
             setErrorLogin(false);
             //setLoading(false);
             //loginFirebase(data)
             //leafranciscobar@gmail.com
             //Mariaguadalupe2014
-          }else{            
+          } else {
             setErrorLogin(true);
             setLoading(false);
           }
+        } else {
+          setErrorLogin(true);
+          setLoading(false);
         }
       });
   };
@@ -115,7 +122,7 @@ const ModalAuth = (props) => {
     console.error('Failed:', errorInfo);
   };
   return (
-    props.cUser?.value == null &&
+    props.cUser?.status=='LOADED' && props.cUser?.value == null &&
     typeModal == null && (
       <Modal
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
@@ -124,7 +131,7 @@ const ModalAuth = (props) => {
         zIndex={1000}
         closable={false}
         visible={true}>
-        <Tabs onChange={callback} centered size='large'>
+        <Tabs onChange={callback} centered size='large' defaultActiveKey={tabLogin}>
           <TabPane tab={intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })} key='1'>
             <Form
               form={form1}
@@ -157,10 +164,15 @@ const ModalAuth = (props) => {
                 label={intl.formatMessage({ id: 'modal.label.password', defaultMessage: 'Contraseña' })}
                 name='password'
                 style={{ marginBottom: '15px' }}
-                rules={[{ required: true, message: intl.formatMessage({
-                  id: 'modal.rule.required.password',
-                  defaultMessage: 'Ingrese una contraseña',
-                }), }]}>
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({
+                      id: 'modal.rule.required.password',
+                      defaultMessage: 'Ingrese una contraseña',
+                    }),
+                  },
+                ]}>
                 <Input.Password
                   disabled={loading}
                   size='large'
@@ -205,15 +217,20 @@ const ModalAuth = (props) => {
               )}
               {!loading && (
                 <Form.Item style={{ marginBottom: '15px' }}>
-                  <Button id={'loginButton'} htmlType='submit' block style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }} size='large'>
+                  <Button
+                    id={'loginButton'}
+                    htmlType='submit'
+                    block
+                    style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                    size='large'>
                     {intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })}
                   </Button>
                 </Form.Item>
               )}
               {loading && <LoadingOutlined style={{ fontSize: '50px' }} />}
             </Form>
-            <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
-            <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+           {props.organization!=='landing' && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
+           {props.organization!=='landing' &&<div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
               <Typography.Paragraph type='secondary'>
                 {intl.formatMessage({
                   id: 'modal.info.options',
@@ -237,9 +254,9 @@ const ModalAuth = (props) => {
                   {intl.formatMessage({ id: 'modal.option.send', defaultMessage: 'Enviar acceso a mi correo' })}
                 </Button>
               </Space>
-            </div>
+            </div>}
           </TabPane>
-          {props.cEventUser?.value == null && (
+          {props.cEventUser?.value == null && props.organization!=='landing' && (
             <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
               <div
                 // className='asistente-list'
