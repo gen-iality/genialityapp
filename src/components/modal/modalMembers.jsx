@@ -34,7 +34,7 @@ function ModalMembers(props) {
       //           .collection(`${this.props.activityId}`);
       try {
          //  await Actions.delete(`/api/events/${props.cEvent.value?._id}/eventusers`, user._id);
-         props.closeOrOpenModalMembers()
+         props.closeOrOpenModalMembers();
          message.success('Eliminado correctamente');
       } catch (e) {
          message.error('Hubo un error al eliminar');
@@ -75,13 +75,13 @@ function ModalMembers(props) {
       let resp;
 
       const snap = { properties: values };
-if(props.editMember){
-console.log("10. editando")
-}else{
-    console.log("10. creando")
-}
-    //   resp = await OrganizationApi.saveUser(props.organizationId, snap);
-    //   console.log('10. resp ', resp);
+      if (props.editMember) {
+         console.log('10. editando');
+      } else {
+         console.log('10. creando');
+      }
+      //   resp = await OrganizationApi.saveUser(props.organizationId, snap);
+      //   console.log('10. resp ', resp);
 
       //  if (props.updateView) {
       //     console.log('10. ingreseeee');
@@ -90,14 +90,14 @@ console.log("10. editando")
 
       if (resp) {
          message.success('Usuario agregado correctamente');
-         props.closeOrOpenModalMembers()
+         props.closeOrOpenModalMembers();
       } else {
          message.error('No fue posible agregar el Usuario');
       }
    }
 
    return (
-      <Modal closable footer={false} onCancel={() => props.handleModal()} visible={true}>
+      <Modal closable footer={false} visible={true}>
          <div
             // className='asistente-list'
             style={{
