@@ -11,9 +11,9 @@ const isUpper = (str)=> {
 }
 
 const FriendLyUrl = (url) => {
-  let slug = url.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ');
-  slug = url.replace(/^\s+|\s+$/gm, '');
-  slug = url.replace(/\s+/g, '-');
+  let slug = url?.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ');
+  slug = url?.replace(/^\s+|\s+$/gm, '');
+  slug = url?.replace(/\s+/g, '-');
   return slug;
 };
 
