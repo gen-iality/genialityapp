@@ -75,13 +75,13 @@ function DetailsProduct(props) {
             <Card >
               <Space direction='vertical' style={{ width: '100%' }}>
                 <Title level={3}>{product && product.name ? product.name : 'Nombre de la obra'}</Title>
-                <OfertaProduct updateValues={setUpdateValue} hability={habilty} messageF={messageF} product={product} eventId={eventId} />
-                <Divider orientation='left'>
+                {product && (product.price || product.start_price) && <OfertaProduct updateValues={setUpdateValue} hability={habilty} messageF={messageF} product={product} eventId={eventId} />}
+               {product && product.by && <Divider orientation='left'>
                   <Title style={{ marginBottom: '0px' }} level={5}>
                     Artista
                   </Title>
-                </Divider>
-                <Text>{product && product.by ? product.by : 'Sin Artista'} </Text>
+                </Divider>}
+                {product && product.by && <Text>{product && product.by ? product.by : 'Sin Artista'} </Text>}
                 <Divider orientation='left'>
                   <Title level={5}>Descripción</Title>
                 </Divider>
