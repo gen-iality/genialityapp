@@ -14,10 +14,10 @@ import { Table, Typography, Button, Select, Row } from 'antd';
 import { UserAddOutlined, DownloadOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
 import { Background } from 'react-parallax';
-import UserModal from '../modal/modalUser';
+import ModalMembers from '../modal/modalMembers';
 import moment from 'moment';
 import withContext from '../../Context/withContext';
-import XLSX from 'xlsx'
+import XLSX from 'xlsx';
 
 const { Title } = Typography;
 
@@ -30,6 +30,8 @@ function OrgMembers(props) {
    const [addOrEditUser, setAddOrEditUser] = useState(false);
    const [extraFields, setExtraFields] = useState([]);
    const [roleList, setRoleList] = useState([]);
+   const [selectedUser, setSelectedUser] = useState([]);
+   const [editMember, setEditMember] = useState(false);
    let { _id: organizationId } = props.org;
    const history = useHistory();
 
@@ -53,14 +55,14 @@ function OrgMembers(props) {
 
    async function getRoleList() {
       const roleListData = await RolAttApi.byEventRolsGeneral();
-      setRoleList(roleListData)
+      setRoleList(roleListData);
    }
 
    useEffect(() => {
       getEventsStatisticsData();
       setLastUpdate(new Date());
-      getRoleList()
-      setExtraFields(props.org.user_properties)
+      getRoleList();
+      setExtraFields(props.org.user_properties);
    }, []);
 
    function goToEvent(eventId) {
@@ -78,23 +80,23 @@ function OrgMembers(props) {
       XLSX.writeFile(wb, `Miembros_${moment().format('l')}.xlsx`);
    }
 
-   function addUser() {
-      console.log('10. Agregar o editar usuario');
+   function closeOrOpenModalMembers() {
       setAddOrEditUser((prevState) => {
          return !prevState;
       });
    }
-   function modalUser() {
-      setAddOrEditUser((prevState) => {
-         return !prevState;
-      });
+
+   function addUser() {
+      console.log('10. Agregar o editar usuario');
+      setSelectedUser(null);
+      closeOrOpenModalMembers();
    }
    function editModalUser(item) {
       console.log('10. SELECTED ITEM==>', item);
-      // html.classList.add('is-clipped');
-      // item={...item,checked_in:item.properties?.checked_in || item.checked_in,checkedin_at:item.properties?.checkedin_at || item.checkedin_at}
-      // this.setState({ editUser: true, selectedUser: item, edit: true });
-    };
+      setSelectedUser(item);
+      closeOrOpenModalMembers();
+      setEditMember(true)
+   }
 
    const columnsData = {
       searchedColumn,
@@ -154,20 +156,14 @@ function OrgMembers(props) {
                   scroll={{ x: 1300 }}
                />
                {addOrEditUser && (
-                  <UserModal
-                     handleModal={modalUser}
+                  <ModalMembers
+                     handleModal={closeOrOpenModalMembers}
                      modal={addOrEditUser}
-                     ticket={''}
-                     tickets={[]}
                      rolesList={roleList}
-                     value={null}
-                     // checkIn={true}
-                     // badgeEvent={true}
                      extraFields={extraFields}
-                     spacesEvent={undefined}
-                     edit={false}
-                     // substractSyncQuantity={true}
-                     organizationId={props.org._id}
+                     value={selectedUser}
+                     editMember={editMember}
+                     closeOrOpenModalMembers={closeOrOpenModalMembers}
                   />
                )}
             </>
