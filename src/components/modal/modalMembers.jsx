@@ -97,9 +97,8 @@ function ModalMembers(props) {
    }
 
    return (
-      <Modal closable footer={false} visible={true}>
+      <Modal closable footer={false} visible={true} onCancel={() => props.closeOrOpenModalMembers()} >
          <div
-            // className='asistente-list'
             style={{
                paddingLeft: '0px',
                paddingRight: '0px',
