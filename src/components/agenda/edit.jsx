@@ -347,7 +347,7 @@ class AgendaEdit extends Component {
             date_end_zoom: result.date_end_zoom,
           });
 
-          for (let i = 0; i < selected_document.length; i++) {
+          for (let i = 0; i < selected_document?.length; i++) {
             await DocumentsApi.editOne(event._id, data, selected_document[i]._id);
           }
         } else {
@@ -365,7 +365,7 @@ class AgendaEdit extends Component {
 
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
-        this.props.history.push(`/event/${event._id}/agenda`);
+        this.props.history.push(`/eventadmin/${event._id}/agenda`);
       } catch (e) {
         sweetAlert.showError(handleRequestError(e));
       }
@@ -482,13 +482,14 @@ class AgendaEdit extends Component {
     //const description_storage = window.sessionStorage.getItem('description');
 
     const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
-    const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
-
+    const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');  
     const activity_categories_ids =
-      selectedCategories[0] === undefined ? [] : selectedCategories.map(({ value }) => value);
-
+    selectedCategories!==undefined?  selectedCategories[0] === undefined ? [] : selectedCategories.map(({ value }) => value):[];
+    
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
-    const host_ids = selectedHosts >= 0 ? [] : selectedHosts.map(({ value }) => value);
+   
+    const host_ids = selectedHosts!==undefined ? selectedHosts.length == 1 && selectedHosts[0]==undefined  ? [] : selectedHosts.filter((host)=>host!==undefined).map(({ value }) => value && value):[];
+    
     const type_id = selectedType === undefined ? '' : selectedType.value;
     return {
       name,
@@ -735,7 +736,7 @@ class AgendaEdit extends Component {
                       </Link>
                     </div>
                   </div>
-                  <div className='field'>
+                {/*  <div className='field'>
                     <label className={`label`}>Clasificar actividad como:</label>
                     <div className='control'>
                       <input
@@ -779,7 +780,7 @@ class AgendaEdit extends Component {
                         <strong>EXCLUSIVA</strong>: Solo algunos asistentes (roles) pueden participar en la actividad
                       </label>
                     </div>
-                  </div>
+                  </div>*/}
                   {access_restriction_type !== 'OPEN' && (
                     <Fragment>
                       <div style={{ display: 'flex' }}>
