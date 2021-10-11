@@ -19,7 +19,10 @@ const Faq = (props) => {
   const eventID = props.event._id;
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
-  const [faq, setFaq] = useState({});
+  const [faq, setFaq] = useState({
+    title: '',
+    content: ''
+  });
   
   useEffect(() => {
     if(locationState.edit) {
@@ -31,9 +34,9 @@ const Faq = (props) => {
     const response = await FaqsApi.getOne(locationState.edit, eventID);
     let data = response.data.find(faqs => faqs._id === locationState.edit);
     console.log(data);
-    setFaq(data);
+    setFaq({...data, content: data.content, title: data.title});
     if(data.content === '<p><br></p>') {
-      setFaq({...faq, content: ''})
+      setFaq({...faq, content: '', title: data.title})
     }
     console.log(faq);
   }

@@ -114,11 +114,11 @@ const Document = ( props ) => {
   };
 
   const onHandlerFile = async (e) => {
-    console.log(e.file);
+    console.log(e.file.originFileObj);
     setDocumentList(e.fileList);
     
     const ref = firebase.storage().ref();
-    setFiles(e.file);
+    setFiles(e.file.originFileObj);
     
     //Se crea el nombre con base a la fecha y nombre del archivo
     const name = moment().format('YYYY-DD-MM') + '-' + files.name;
@@ -126,12 +126,14 @@ const Document = ( props ) => {
     //Se extrae la extencion del archivo por necesidad del aplicativo
     
     setExtention(name.split('.').pop());
-    setDocument({...document, format: extention, title: fileName, name: fileName, file: files, type: 'type', format: extention});
 
     /* this.setState({ fileName: name }); */
-    setUploadTask(ref.child(`documents/${props.event._id}/${name}`).put(files));
+    console.log(fileName, name);
+    let uploadTaskRef = ref.child(`documents/${props.event._id}/${name}`).put(files)
+    /* setUploadTask(uploadTaskRef); */
+    console.log(uploadTaskRef);
     //Se envia a firebase y se pasa la validacion para poder saber el estado del documento
-    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, stateUploadFile, wrongUpdateFiles);
+    uploadTaskRef.on(firebase.storage.TaskEvent.STATE_CHANGED, stateUploadFile, wrongUpdateFiles, succesUploadFile(uploadTaskRef));
 
   }
 
@@ -159,6 +161,15 @@ const Document = ( props ) => {
         break;
     }
   };
+
+  const succesUploadFile = async (uploadTaskRef) => {
+    let file;
+    await uploadTaskRef.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+      file = downloadURL;
+      console.log(downloadURL);
+    });
+    setDocument({...document, format: extention, title: fileName, name: fileName, file: file, type: 'type'});
+  }
 
   return (
     <Form

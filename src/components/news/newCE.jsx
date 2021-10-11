@@ -6,7 +6,6 @@ import { Col, Row, Input, Form, DatePicker, Modal, Card, message } from 'antd';
 import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
-import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import Header from '../../antdComponents/Header';
@@ -90,7 +89,7 @@ const NewCE = (props) => {
 
         message.open({
           type: 'success',
-          content: <> <FormattedMessage id='toast.img' defaultMessage='Ok!' /></>,
+          content: <> Se anexo la imagen correctamente</>,
         });
       });
     } else {

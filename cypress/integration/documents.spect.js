@@ -6,58 +6,68 @@ describe('Evius Documents', () => {
     cy.visit(`${urlToTest}`);
   });
 
-  /* it('Documents Create', () => {
+  it('Documents Create', () => {
     cy.contains('Agregar').click()
-    cy.get('[name=title]').type('Es un documento', {force: true}) 
-    cy.fixture('BOTON_STANDS.png').as('logo')
-    cy.get('input[type=file]').then(function (el) {
-      const blob = Cypress.Blob.base64StringToBlob(this.logo, 'image/png')
-    
-      const file = new File([blob], this.logo, { type: 'image/png' })
-      const list = new DataTransfer()
-    
-      list.items.add(file)
-      const myFileList = list.files
-    
-      el[0].files = myFileList
-      el[0].dispatchEvent(new Event('change', { bubbles: true }))
+    cy.get('[name=title]').type('Es un documentoaaa', {force: true}) 
+    cy.fixture('BOTON_STANDS.png').then(fileContent => {
+      cy.get('input[type="file"]').attachFile({
+          fileContent: fileContent.toString(),
+          fileName: 'BOTON_STANDS.png',
+          mimeType: 'image/png'
+      });
+    });
+    cy.on('uncaught:exception', (err, runnable) => {
+      // returning false here prevents Cypress from
+      // failing the test
+      return false
     })
+    cy.wait(600)
     cy.contains('Guardar').click()
-  }); */
+  });
 
-  /* it('Documents Edit', () => {
-    cy.wait(250)
-    cy.get('[id=editAction3]').click()
+  it('Documents Edit', () => {
+    cy.get('[id=editAction0]').click()
     cy.get('[name=title]').clear()
-    cy.get('[id=faqContent]').clear()
-    cy.get('[name=title]').type('¿Se puede ingresar a la parte de CMS 2?', {force: true})  
-    cy.get('[id=faqContent]').type('Si se puede acceder 2s')
+    cy.get('[name=title]').type('Es un documento 2', {force: true}) 
+    cy.fixture('BOTON_STANDS.png').then(fileContent => {
+      cy.get('input[type="file"]').attachFile({
+          fileContent: fileContent.toString(),
+          fileName: 'BOTON_STANDS.png',
+          mimeType: 'image/png'
+      });
+    });
+    cy.on('uncaught:exception', (err, runnable) => {
+      // returning false here prevents Cypress from
+      // failing the test
+      return false
+    })
+    cy.wait(600)
     cy.contains('Guardar').click()
-  }); */
-
-  /* 
+  });
 
   it('Documents cancel remove in table', () => {
-    cy.get('[id=removeAction3]').click()
+    cy.get('[id=removeAction0]').click()
     cy.contains('Cancelar').click()
   });
   
   it('Documents cancel remove in edit', () => {
-    cy.get('[id=editarAction3]').click()
+    cy.get('[id=editAction0]').click()
     cy.get('[id=removeHeader]').click()
     cy.contains('Cancelar').click()
   });
 
   it('Documents remove in table', () => {
-    cy.get('[id=removeAction3]').click()
+    cy.get('[id=removeAction0]').click()
     cy.contains('Borrar').click()
   });
 
   it('Documents remove in edit', () => {
-    cy.wait(4000)
-    cy.get('[id=editarAction3]').click()
+    cy.get('[id=editAction0]').click()
     cy.get('[id=removeHeader]').click()
     cy.contains('Borrar').click()
-  }); */
+  });
 
+  it('Documents Download', () => {
+    cy.get('[id=downloadAction0]').click()
+  })
 });
