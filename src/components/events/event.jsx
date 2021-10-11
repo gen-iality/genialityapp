@@ -140,21 +140,33 @@ class Event extends Component {
     return !/[a-z]/.test(str) && /[A-Z]/.test(str);
   }
 
+  isLowerCase(str) {
+    return /[a-z]/.test(str) && !/[A-Z]/.test(str);
+  }
+
   FriendLyUrl(url) {
     let formatupperorlowercase = url.toString().toLowerCase();
     if (this.isUpper(url.toString())) {
       formatupperorlowercase = url.toString().toUpperCase();
-    } else {
+    } else if (this.isLowerCase(url.toString())) {
       formatupperorlowercase = url.toString().toLowerCase();
+    } else {
+      formatupperorlowercase = url.toString();
+      console.log("por aca",formatupperorlowercase,"original",url)
     }
+
     var encodedUrl = formatupperorlowercase;
     encodedUrl = encodedUrl.split(/\&+/).join('-and-');
     if (this.isUpper(url)) {
       encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-');
-    } else {
+    } else if(this.isLowerCase(url.toString())) {
       encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-');
+    }else{
+      encodedUrl = encodedUrl.split(/-+/).join('-');
     }
-    encodedUrl = encodedUrl.split(/-+/).join('-');
+
+
+    encodedUrl = encodedUrl.replaceAll(' ','-')
     encodedUrl = encodedUrl.trim('-');
     return encodedUrl;
   }

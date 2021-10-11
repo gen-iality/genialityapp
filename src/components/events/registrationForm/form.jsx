@@ -136,7 +136,7 @@ const FormRegister = ({
   const [initialValues, setinitialValues] = useState(
     organization ? initialOtherValue : cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
   );
-  if(initialValues){
+  if(Object.keys(initialValues).length>0){
     initialValues.contrasena = '';
     initialValues.password = '';
   }
