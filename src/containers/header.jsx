@@ -230,8 +230,11 @@ class Headers extends Component {
               </Row>
 
               {/* Dropdown de navegacion para el usuario  */}
-
-              <UserStatusAndMenu
+              {!this.state.userEvent && <Row style={{marginBottom:10,marginTop:10}} justify='space-between' align='middle'> 
+                    <Button style={{marginRight:5}}>Iniciar sesión</Button>
+                    <Button>Registrarme</Button>
+              </Row>}
+             {this.state.userEvent && <UserStatusAndMenu
                 isLoading={this.state.loader}
                 user={this.state.user}
                 menuOpen={this.state.menuOpen}
@@ -243,7 +246,7 @@ class Headers extends Component {
                 logout={this.logout}
                 openMenu={this.openMenu}
                 loginInfo={this.props.loginInfo}
-              />
+              />}
             </Row>
           </Menu>
         </Header>
