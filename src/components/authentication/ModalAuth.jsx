@@ -238,13 +238,13 @@ const ModalAuth = (props) => {
                 })}
               </Typography.Paragraph>
               <Space direction='vertical' style={{ width: '100%' }}>
-                <Button
+                {/* <Button
                   disabled={loading}
                   block
                   style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
                   size='large'>
                   Invitado anónimo
-                </Button>
+                </Button> */}
                 <Button
                   disabled={loading}
                   onClick={() => handleChangeTypeModal('mail')}
