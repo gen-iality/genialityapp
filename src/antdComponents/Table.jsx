@@ -20,28 +20,26 @@ const Table = ( props ) => {
       list.index = index;
     }
   })
-  console.log(list);
   
   const options = {
     title: 'Opciones',
     dataIndex: 'options',
     render(val, item) { 
-      console.log(item.index);
       return (
         <Row wrap gutter={[8, 8]}>
           <Col>
             {
               downloadFile && (
                 <Tooltip placement='topLeft' title='Descargar' >
-                  <Button
-                    key={`downloadAction${item.index}`}
-                    id={`downloadAction${item.index}`}
-                    icon={<DownloadOutlined />}
-                    size='small'
-                    type='primary'
-                    target='_blank'
-                    href={item.file}
-                  />
+                  <a href={item.file} target="_blank" >
+                    <Button
+                      key={`downloadAction${item.index}`}
+                      id={`downloadAction${item.index}`}
+                      icon={<DownloadOutlined />}
+                      size='small'
+                      type='primary'
+                    />
+                  </a>
                 </Tooltip>
               )
             }

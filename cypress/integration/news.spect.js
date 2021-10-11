@@ -6,7 +6,7 @@ describe('Evius News', () => {
     cy.visit(`${urlToTest}`);
   });
 
-  /* it('News Create', () => {
+  it('News Create', () => {
     cy.contains('Agregar').click()
     cy.get('[name=title]').type('¿Se puede ingresar a la parte de CMS?', {force: true}) 
     cy.get('[id=description_short]').type('Esta es una noticia corta')
@@ -24,12 +24,12 @@ describe('Evius News', () => {
       el[0].files = myFileList
       el[0].dispatchEvent(new Event('change', { bubbles: true }))
     })
-    cy.get('[name=linkYoutube]').type('¿Se puede ingresar a la parte de CMS?', {force: true}) 
+    cy.get('[name=linkYoutube]').type('https://www.youtube.com/watch?v=_7jUA-Gqp4M', {force: true}) 
     cy.get('[name=time]').type('2021-05-10', {force: true}) 
     cy.contains('Guardar').click()
-  }); */
+  });
 
-  /* it('News Edit', () => {
+  it('News Edit', () => {
     cy.wait(250)
     cy.get('[id=editAction3]').click()
     cy.get('[name=title]').clear()
@@ -39,9 +39,7 @@ describe('Evius News', () => {
     cy.get('[id=description_short]').type('Esta es una noticia corta 2')
     cy.get('[id=description_complete]').type('Esta es una noticia larga 2')
     cy.contains('Guardar').click()
-  }); */
-
-  /* 
+  });
 
   it('News cancel remove in table', () => {
     cy.get('[id=removeAction3]').click()
@@ -49,7 +47,7 @@ describe('Evius News', () => {
   });
   
   it('News cancel remove in edit', () => {
-    cy.get('[id=editarAction3]').click()
+    cy.get('[id=editAction3]').click()
     cy.get('[id=removeHeader]').click()
     cy.contains('Cancelar').click()
   });
@@ -61,9 +59,9 @@ describe('Evius News', () => {
 
   it('News remove in edit', () => {
     cy.wait(4000)
-    cy.get('[id=editarAction3]').click()
+    cy.get('[id=editAction3]').click()
     cy.get('[id=removeHeader]').click()
     cy.contains('Borrar').click()
-  }); */
+  });
 
 });

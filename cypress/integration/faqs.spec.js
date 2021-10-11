@@ -6,26 +6,28 @@ describe('Evius Faqs', () => {
     cy.visit(`${urlToTest}`);
   });
 
-  /* it('Faqs Create', () => {
+  it('Faqs Create', () => {
     cy.contains('Agregar').click()
     cy.get('[name=title]').type('¿Se puede ingresar a la parte de CMS?', {force: true}) 
     cy.get('[id=faqContent]').then(() => {
-      cy.get('[class=ql-editor]')
-    }).type('Si se puede acceder')
+      cy.get('.ql-editor').type('Si se puede acceder')
+    })
     cy.contains('Guardar').click()
-  }); */
+  }); 
 
-  /* it('Faqs Edit', () => {
+  it('Faqs Edit', () => {
     cy.wait(250)
     cy.get('[id=editAction3]').click()
     cy.get('[name=title]').clear()
-    cy.get('[id=faqContent]').clear()
+    cy.get('[id=faqContent]').then(() => {
+      cy.get('.ql-editor').clear()
+    })
     cy.get('[name=title]').type('¿Se puede ingresar a la parte de CMS 2?', {force: true})  
-    cy.get('[id=faqContent]').type('Si se puede acceder 2s')
+    cy.get('[id=faqContent]').then(() => {
+      cy.get('.ql-editor').type('Si se puede acceder 2')
+    })
     cy.contains('Guardar').click()
-  }); */
-
-  /* 
+  });
 
   it('Faqs Search Title', () => {
     cy.get('[id=searchIcontitle]').click()
@@ -50,7 +52,7 @@ describe('Evius Faqs', () => {
   });
   
   it('Faqs cancel remove in edit', () => {
-    cy.get('[id=editarAction3]').click()
+    cy.get('[id=editAction3]').click()
     cy.get('[id=removeHeader]').click()
     cy.contains('Cancelar').click()
   });
@@ -62,9 +64,9 @@ describe('Evius Faqs', () => {
 
   it('Faqs remove in edit', () => {
     cy.wait(4000)
-    cy.get('[id=editarAction3]').click()
+    cy.get('[id=editAction3]').click()
     cy.get('[id=removeHeader]').click()
     cy.contains('Borrar').click()
-  }); */
+  });
 
 });
