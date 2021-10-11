@@ -4,6 +4,7 @@ import { Avatar, Card, Col, Layout, Menu, Row, Space, Statistic, Tabs, Typograph
 import { AppstoreFilled } from '@ant-design/icons';
 import OrganizationCard from './organizationCard';
 import NewCard from './newCard';
+import ExploreEvents from './exploreEvents';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -17,7 +18,7 @@ const MainProfile = () => {
       <Sider
         defaultCollapsed={true}
         width={!screens.xs ? 300 : '92vw'}
-        style={{ backgroundColor: '#ffffff' }}
+        style={{ backgroundColor: '#ffffff', paddingTop:'10px', paddingBottom:'10px' }}
         breakpoint='lg'
         collapsedWidth='0'
         zeroWidthTriggerStyle={{ top: '-40px', width: '50px' }}>
@@ -82,11 +83,14 @@ const MainProfile = () => {
                   <Col span={24}>
                     <Divider orientation='left'>Eventos en los que estoy registrado</Divider>
                     <Row gutter={[16, 16]}>
-                      <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
+                      <Col span={24}>
+                        <ExploreEvents/>
+                      </Col>
+                      {/* <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <Card
                           cover={<img style={{ objectFit: 'cover' }} src='https://picsum.photos/300/200' />}
                           style={{ width: '100%' }}></Card>
-                      </Col>
+                      </Col> */}
                     </Row>
                   </Col>
                   <Col span={24}>

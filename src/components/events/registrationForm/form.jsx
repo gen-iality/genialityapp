@@ -114,7 +114,7 @@ const FormRegister = ({
   const cEventUser = UseUserEvent();
   const cUser = UseCurrentUser();
   const { tabLogin, typeModal, eventPrivate } = useContext(HelperContext);
-  const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || {});
+  const [extraFields, setExtraFields] = useState(cEvent.value?.user_properties || [] || fields);
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
@@ -136,7 +136,7 @@ const FormRegister = ({
   const [initialValues, setinitialValues] = useState(
     organization ? initialOtherValue : cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
   );
-  if(initialValues){
+  if(Object.keys(initialValues).length>0){
     initialValues.contrasena = '';
     initialValues.password = '';
   }

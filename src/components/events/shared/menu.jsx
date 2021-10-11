@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink, withRouter, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { rolPermissions } from '../../../helpers/constants';
 import { Menu } from 'antd';
@@ -11,7 +11,9 @@ import {
   NotificationOutlined,
   IdcardOutlined,
   LineChartOutlined,
+  ApartmentOutlined
 } from '@ant-design/icons';
+import { EventsApi } from '../../../helpers/request'
 
 const { SubMenu } = Menu;
 
@@ -29,6 +31,7 @@ class MenuConfig extends Component {
       guestTab: true,
       url: '',
       collapsed: false,
+      organizationId:''
     };
   }
 
@@ -42,10 +45,17 @@ class MenuConfig extends Component {
     if (!navigator.onLine) e.preventDefault();
   };
 
+  eventOrganization =  async (eventId) =>{
+      const currentEvent =  await EventsApi.getOne(eventId)
+      const organizationId = currentEvent.organizer_id
+      this.setState({organizationId})
+  }
+
   componentDidMount() {
     const { pathname } = this.props.location;
     const splitted = pathname.split('/');
     this.setState({ url: '/' + splitted[1] + '/' + splitted[2] });
+    this.eventOrganization(splitted[2])
   }
 
   componentDidUpdate(prevProps) {
@@ -57,7 +67,8 @@ class MenuConfig extends Component {
 
   render() {
     const { permissions } = this.props;
-    const { url } = this.state;
+    const { url, organizationId } = this.state;
+
     return (
       <Fragment>
         <Menu
@@ -216,7 +227,7 @@ class MenuConfig extends Component {
               </NavLink>
             </Menu.Item>
 
-            {permissions.data.ids?.includes(rolPermissions.admin_staff._id) && false && (
+            {permissions.data.ids.includes(rolPermissions.admin_staff._id) && false && (
               <Menu.Item key='18'>
                   Organizadores
                 <NavLink onClick={this.handleClick} to={`${url}/staff`}>
@@ -259,7 +270,7 @@ class MenuConfig extends Component {
               </NavLink>
             </Menu.Item>
 
-            {permissions.data.ids?.includes(rolPermissions.admin_badge._id) && (
+            {permissions.data.ids.includes(rolPermissions.admin_badge._id) && (
               <Menu.Item key='22'>
                   Configurarr Escarapela
                 <NavLink onClick={this.handleClick} to={`${url}/badge`}>
@@ -269,7 +280,7 @@ class MenuConfig extends Component {
           </SubMenu>
 
           {/* COnfiguración de invitados */}
-          {permissions.data.ids?.includes(rolPermissions.admin_invitations._id) && false && (
+          {permissions.data.ids.includes(rolPermissions.admin_invitations._id) && false && (
             <SubMenu
               key='sub4'
               title={
@@ -296,7 +307,7 @@ class MenuConfig extends Component {
           )}
 
           {/* Seccion de envio de comunicaciones */}
-          {(permissions.data.ids?.includes(rolPermissions.admin_invitations._id) || true) && (
+          {(permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true) && (
             <SubMenu
               key='sub5'
               title={
@@ -360,6 +371,21 @@ class MenuConfig extends Component {
               <NavLink onClick={this.handleClick} to={`${url}/dashboard`}></NavLink>
             </Menu.Item>
           </SubMenu>
+           {/* Seccion de Organización */}
+           {(permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true) && (
+            <SubMenu
+              key='sub9'
+              title={
+                <span>
+                  <ApartmentOutlined />
+                  <span>Administrar organizaciones</span>
+                </span>
+              }>
+              <Menu.Item key='30'>
+                Panel de administración
+                <NavLink onClick={this.handleClick} to={`/admin/organization/${organizationId}`}></NavLink>
+              </Menu.Item>
+            </SubMenu>)}
         </Menu>
       </Fragment>
     );

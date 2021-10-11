@@ -27,32 +27,35 @@ const stylePaddingMobile = {
 const ModalAuth = (props) => {
   const screens = useBreakpoint();
   const [loading, setLoading] = useState(false);
-  const [errorLogin, setErrorLogin] = useState(false);
+  const [errorLogin, setErrorLogin] = useState(false);  
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
   const intl = useIntl();
+ 
 
   useEffect(() => {
     async function userAuth() {
+    // console.log("IDORG==>",props.idOrganization)
       app.auth().onAuthStateChanged((user) => {
         if (user) {
           user.getIdToken().then(async function(idToken) {
             if (idToken && !Cookie.get('evius_token')) {
-              Cookie.set('evius_token', idToken, { expires: 180 });
+              Cookie.set('evius_token', idToken, { expires: 180 });             
+              let url=props.organization=="landing"?`/organization/${props.idOrganization}/events?token=${idToken}` :`/landing/${props.cEvent.value?._id}?token=${idToken}`;
               setTimeout(function() {
-                window.location.replace(`/landing/${props.cEvent.value?._id}?token=${idToken}`);
+                window.location.replace(url);
               }, 1000);
             }
           });
         }
       });
-    }
-
+    } 
     userAuth();
     return () => {
       form1.resetFields();
     };
   }, []);
+  
   useEffect(() => {
     form1.resetFields();
   }, [typeModal, tabLogin]);
@@ -95,8 +98,8 @@ const ModalAuth = (props) => {
             user.data[0].contrasena == data.password ||
             user.data[0]?.user?.contrasena == data.password
           ) {
-            window.location.href =
-              window.origin + '/landing/' + props.cEvent.value?._id + '?token=' + user.data[0]?.user?.initial_token;
+            let url=props.organization=="landing"?`/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}` :`/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
+            window.location.href =url;
             loginFirst = true;
             setErrorLogin(false);
             //setLoading(false);
@@ -119,7 +122,7 @@ const ModalAuth = (props) => {
     console.error('Failed:', errorInfo);
   };
   return (
-    props.cUser?.value == null &&
+    props.cUser?.status=='LOADED' && props.cUser?.value == null &&
     typeModal == null && (
       <Modal
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
@@ -226,8 +229,8 @@ const ModalAuth = (props) => {
               )}
               {loading && <LoadingOutlined style={{ fontSize: '50px' }} />}
             </Form>
-            <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
-            <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+           {props.organization!=='landing' && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
+           {props.organization!=='landing' &&<div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
               <Typography.Paragraph type='secondary'>
                 {intl.formatMessage({
                   id: 'modal.info.options',
@@ -235,13 +238,13 @@ const ModalAuth = (props) => {
                 })}
               </Typography.Paragraph>
               <Space direction='vertical' style={{ width: '100%' }}>
-                <Button
+                {/* <Button
                   disabled={loading}
                   block
                   style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
                   size='large'>
                   Invitado anónimo
-                </Button>
+                </Button> */}
                 <Button
                   disabled={loading}
                   onClick={() => handleChangeTypeModal('mail')}
@@ -251,9 +254,9 @@ const ModalAuth = (props) => {
                   {intl.formatMessage({ id: 'modal.option.send', defaultMessage: 'Enviar acceso a mi correo' })}
                 </Button>
               </Space>
-            </div>
+            </div>}
           </TabPane>
-          {props.cEventUser?.value == null && (
+          {props.cEventUser?.value == null && props.organization!=='landing' && (
             <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
               <div
                 // className='asistente-list'

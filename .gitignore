@@ -27,3 +27,5 @@ yarn-error.log*
 debug.log
 
 /cypress/videos
+
+yarn.lock

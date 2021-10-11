@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ImageInput from '../shared/imageInput';
 import axios from 'axios/index';
 import { toast } from 'react-toastify';
-import { Actions } from '../../helpers/request';
+import { Actions, OrganizationApi } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 import LogOut from '../shared/logOut';
 import { SketchPicker } from 'react-color';
@@ -24,7 +24,7 @@ class Styles extends Component {
       //Se realizan estas constantes para optimizar mas el codigo,de esta manera se mapea en el markup para utilizarlo posteriormente
       colorDrawer: [
         {
-          title: 'Color de fondo para el evento',
+          title: `Color de fondo para ${this.props.org?._id ? 'la organización' : 'el evento'}`,
           description: 'Si escoges luego una imagen de fondo, esa imagen reemplazara este color.',
           fieldColorName: 'containerBgColor',
           editIsVisible: false,
@@ -92,7 +92,7 @@ class Styles extends Component {
       {
         title: 'Elige una imagen para el banner superior en desktop: (Tamaño recomendado 1920x540)',
         description:
-          'Por defecto en el baner superior se muestra la imagen prinicpal del evento aqui la puedes cambiar',
+        `Por defecto en el baner superior se muestra la imagen prinicpal ${this.props.org?._id ? 'de la organización' : 'del evento'} aqui la puedes cambiar`,
         imageFieldName: 'banner_image',
         button: 'Eliminar banner superior',
         width: 1920,
@@ -129,7 +129,7 @@ class Styles extends Component {
         height: 180,
       },
       {
-        title: 'Elige una imagen para el footer del evento: (Tamaño recomendado 1920x280)',
+        title: `Elige una imagen para el footer ${this.props.org?._id ? 'de la organización' : 'del evento'}: (Tamaño recomendado 1920x280)`,
         imageFieldName: 'banner_footer',
         button: 'Eliminar pie de pagina',
         width: 1920,
@@ -137,7 +137,7 @@ class Styles extends Component {
       },
       {
         title: 'Elige una imagen para el footer del email: (Tamaño recomendado 600x220)',
-        description: 'Por defecto se reduce la imagen automaticamente del footer del evento',
+        description: `Por defecto se reduce la imagen automaticamente del footer ${this.props.org?._id ? 'de la organización' : 'del evento'}`,
         imageFieldName: 'banner_footer_email',
         button: 'Eliminar pie de pagina de email',
         width: 600,
@@ -306,50 +306,58 @@ class Styles extends Component {
   }
   //Se consulta la api para traer los datos ya guardados y enviarlos al state
   async componentDidMount() {
-    const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
-    info.styles = info.styles ? info.styles : {};
+    const thereIsAnOrganization = this.props.org?._id
+    let dataStyles
+    let info
 
-    if (info.styles) {
+    if(thereIsAnOrganization){
+      dataStyles = this.props.org?.styles ? this.props.org.styles : {}
+    }else{
+      info = await Actions.getAll(`/api/events/${this.props.eventId}`);
+     dataStyles = info.styles ? info.styles : {};
+    }
+    
+      if (dataStyles) {
       this.setState({
         styles: {
-          brandPrimary: info.styles.brandPrimary || '#FFFFFF',
-          brandSuccess: info.styles.brandSuccess || '#FFFFFF',
-          brandInfo: info.styles.brandInfo || '#FFFFFF',
-          brandDanger: info.styles.brandDanger || '#FFFFFF',
-          containerBgColor: info.styles.containerBgColor || '#FFFFFF',
-          brandWarning: info.styles.brandWarning || '#FFFFFF',
-          toolbarDefaultBg: info.styles.toolbarDefaultBg || '#FFFFFF',
-          brandDark: info.styles.brandDark || '#FFFFFF',
-          brandLight: info.styles.brandLight || '#FFFFFF',
-          textMenu: info.styles.textMenu || '#000000',
-          toolbarMenuSocial: info.styles.toolbarMenuSocial || '#FFFFFF',
-          activeText: info.styles.activeText || '#FFFFFF',
-          bgButtonsEvent: info.styles.bgButtonsEvent || '#FFFFFF',
+          brandPrimary: dataStyles.brandPrimary || '#FFFFFF',
+          brandSuccess: dataStyles.brandSuccess || '#FFFFFF',
+          brandInfo: dataStyles.brandInfo || '#FFFFFF',
+          brandDanger: dataStyles.brandDanger || '#FFFFFF',
+          containerBgColor: dataStyles.containerBgColor || '#FFFFFF',
+          brandWarning: dataStyles.brandWarning || '#FFFFFF',
+          toolbarDefaultBg: dataStyles.toolbarDefaultBg || '#FFFFFF',
+          brandDark: dataStyles.brandDark || '#FFFFFF',
+          brandLight: dataStyles.brandLight || '#FFFFFF',
+          textMenu: dataStyles.textMenu || '#000000',
+          toolbarMenuSocial: dataStyles.toolbarMenuSocial || '#FFFFFF',
+          activeText: dataStyles.activeText || '#FFFFFF',
+          bgButtonsEvent: dataStyles.bgButtonsEvent || '#FFFFFF',
           // color de los iconos del menu derecho
-          color_icon_socialzone: info.styles.color_icon_socialzone || '#000000',
-          color_tab_agenda: info.styles.color_tab_agenda || '#000000',
+          color_icon_socialzone: dataStyles.color_icon_socialzone || '#000000',
+          color_tab_agenda: dataStyles.color_tab_agenda || '#000000',
           // bgCalendarDayEvent: info.style.bgCalendarDayEvent || "#FFFFFF",
-          event_image: info.styles.event_image || null,
-          banner_image: info.styles.banner_image || null,
-          banner_image_email: info.styles.banner_image_email || null,
-          menu_image: info.styles.menu_image || null,
-          BackgroundImage: info.styles.BackgroundImage || null,
-          FooterImage: info.styles.FooterImage || null,
-          banner_footer: info.styles.banner_footer || null,
-          mobile_banner: info.styles.mobile_banner || null,
-          banner_footer_email: info.styles.banner_footer_email || null,
-          show_banner: info.styles.show_banner || false,
-          show_title: info.styles?.show_title  || false,
-          show_video_widget: info.styles?.show_video_widget  || false,
-          show_card_banner: info.styles.show_card_banner || true,
-          show_inscription: info.show_inscription || false,
-          hideDatesAgenda: info.styles.hideDatesAgenda || false,
-          hideBtnDetailAgenda: info.styles.hideBtnDetailAgenda || true,
-          loader_page: info.styles.loader_page || 'no',
-          data_loader_page: info.styles.data_loader_page || '',
+          event_image: dataStyles.event_image || null,
+          banner_image: dataStyles.banner_image || null,
+          banner_image_email: dataStyles.banner_image_email || null,
+          menu_image: dataStyles.menu_image || null,
+          BackgroundImage: dataStyles.BackgroundImage || null,
+          FooterImage: dataStyles.FooterImage || null,
+          banner_footer: dataStyles.banner_footer || null,
+          mobile_banner: dataStyles.mobile_banner || null,
+          banner_footer_email: dataStyles.banner_footer_email || null,
+          show_banner: dataStyles.show_banner || false,
+          show_title: dataStyles?.show_title  || false,
+          show_video_widget: dataStyles?.show_video_widget  || false,
+          show_card_banner: dataStyles.show_card_banner || true,
+          show_inscription: info?.show_inscription || false,
+          hideDatesAgenda: dataStyles.hideDatesAgenda || false,
+          hideBtnDetailAgenda: dataStyles.hideBtnDetailAgenda || true,
+          loader_page: dataStyles.loader_page || 'no',
+          data_loader_page: dataStyles.data_loader_page || '',
           // Estilos de las actividades de la agenda
-          hideDatesAgendaItem: info.styles.hideDatesAgendaItem || false,
-          hideHoursAgenda: info.styles.hideHoursAgenda || false,
+          hideDatesAgendaItem: dataStyles.hideDatesAgendaItem || false,
+          hideHoursAgenda: dataStyles.hideHoursAgenda || false,
         },
       });
     }
@@ -429,13 +437,18 @@ class Styles extends Component {
       e.preventDefault();
       e.stopPropagation();
     }
-
+    let info
     const { eventId } = this.state;
+    const thereIsAnOrganization = this.props.org?._id
 
     this.state.data = { styles: this.state.styles };
-
     try {
-      const info = await Actions.put(`/api/events/${eventId}`, this.state.data);
+      if(thereIsAnOrganization){
+         info = await OrganizationApi.editOne(this.state.data, thereIsAnOrganization);
+         this.props.setOrganization(info)
+      }else{
+         info = await Actions.put(`/api/events/${eventId}`, this.state.data);
+      }
 
       this.setState({ loading: false });
       if (info._id) {
@@ -546,7 +559,6 @@ class Styles extends Component {
 
   render() {
     const { timeout } = this.state;
-    
 
     return (
       <React.Fragment>

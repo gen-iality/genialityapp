@@ -14,6 +14,11 @@ import { SurveysProvider } from '../Context/surveysContext';
 import { HelperContextProvider } from '../Context/HelperContext';
 import EventOrganization from '../components/eventOrganization';
 import MainProfile from '../components/profile/main';
+import Organization from '../components/organization';
+import { NewEventProvider } from '../Context/newEventContext';
+
+
+
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -22,7 +27,7 @@ const Landing = asyncComponent(() => import('../components/events/Landing/landin
 const Transition = asyncComponent(() => import('../components/shared/Animate_Img/index'));
 const Events = asyncComponent(() => import('../components/events'));
 const NewEvent = asyncComponent(() => import('../components/events/newEvent'));
-const Organization = asyncComponent(() => import('../components/organization'));
+// const Organization = asyncComponent(() => import('../components/organization'));
 const MyProfile = asyncComponent(() => import('../components/profile'));
 const Purchase = asyncComponent(() => import('../components/profile/purchase'));
 const EventEdit = asyncComponent(() => import('../components/profile/events'));
@@ -56,7 +61,6 @@ const ContentContainer = () => {
           </CurrentEventProvider>
         </Route>
 
-
         <Route path='/event/:event_name'>
           <CurrentEventProvider>
             <CurrentUserEventProvider>
@@ -86,6 +90,12 @@ const ContentContainer = () => {
         {/* <WithFooter> */}
         <Route path='/page/:id' component={HomeProfile} />
         <PrivateRoute path='/my_events' component={Events} />
+        <PrivateRoute path='/orgadmin/:event' component={Event} />       
+        <PrivateRoute path='/create-event/:user?'>
+          <NewEventProvider>
+            <NewEvent />
+          </NewEventProvider>
+        </PrivateRoute>
 
         <PrivateRoute path='/eventadmin/:event'>
           <CurrentEventProvider>
@@ -114,11 +124,38 @@ const ContentContainer = () => {
             </CurrentUserEventProvider>
           </CurrentEventProvider>
         </PrivateRoute>
-        
+
         <PrivateRoute path='/create-event' component={NewEvent} />
         <PrivateRoute path='/profile/:id' component={MyProfile} />
-        <Route exact path='/organization/:id/events' component={EventOrganization} />
-        <PrivateRoute path='/admin/organization/:id' component={Organization} />
+
+        <Route exact path='/organization/:id/events' >
+        <CurrentEventProvider>
+          <CurrentUserEventProvider>
+            <CurrentUserProvider>
+              <HelperContextProvider>
+                <SurveysProvider>
+                  <EventOrganization />
+                </SurveysProvider>
+              </HelperContextProvider>
+            </CurrentUserProvider>
+          </CurrentUserEventProvider>
+        </CurrentEventProvider>
+        </Route>
+
+        <Route path='/admin/organization/:id' >
+        <CurrentEventProvider>
+          <CurrentUserEventProvider>
+            <CurrentUserProvider>
+              <HelperContextProvider>
+                <SurveysProvider>
+                  <Organization />
+                </SurveysProvider>
+              </HelperContextProvider>
+            </CurrentUserProvider>
+          </CurrentUserEventProvider>
+        </CurrentEventProvider>
+        </Route>
+        {/* <PrivateRoute path='/admin/organization/:id' component={Organization} /> */}
         <PrivateRoute path='/purchase/:id' component={Purchase} />
         <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
         <PrivateRoute path='/tickets/:id' component={Tickets} />

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { app, firestore } from '../../helpers/firebase';
-import { Activity, eventTicketsApi, TicketsApi, UsersApi } from '../../helpers/request';
+import { Activity, eventTicketsApi, TicketsApi, UsersApi, OrganizationApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import Dialog from './twoAction';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
@@ -167,8 +167,13 @@ class UserModal extends Component {
       }
       console.log("ACA VALUES==>",values)
       const snap = { properties: values };
-      resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
-      console.log("USERADD==>",resp)
+      if(this.props.organizationId){
+        resp = await OrganizationApi.saveUser(this.props.organizationId, snap)
+        console.log("10. resp ", resp)
+      }else{
+        resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
+        console.log("10. USERADD==>",resp)
+      }
       if (this.props.byActivity && resp.data._id) {      
         respActivity = await Activity.Register(
               this.props.cEvent?.value?._id,
@@ -190,7 +195,9 @@ class UserModal extends Component {
             checked_at: new Date(),
           })          
         }
-        await this.props.updateView();
+        if(this.props.updateView){console.log("10. ingreseeee")
+          await this.props.updateView();
+        }
     }
   
     if (resp && respActivity) {
