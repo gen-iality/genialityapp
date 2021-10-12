@@ -121,11 +121,13 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       getCurrentUser(Cookie.get('evius_token')).then(async (user) => {
         // Servicio que obtiene el eventUserId del usuario actual
         let eventUser = currentUser;
+        console.log("USEREVENT==>",eventUser,eventId)
 
         // Servicio que trae las invitaciones / solicitudes recibidas
         Networking.getInvitationsReceived(eventId, eventUser._id).then(async ({ data }) => {
         
           setCurrentUserId(eventUser._id);
+          console.log("DATA==>",data)
 
           // Solo se obtendran las invitaciones que no tengan respuesta
           if (data.length > 0) {
@@ -141,8 +143,11 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
 
         // Servicio que trae las invitaciones / solicitudes enviadas
         Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
-          if (data.length > 0)
+          if (data.length > 0){
             setRequestListSent(data.filter((item) => !item.response || item.response === 'rejected'));
+            console.log("DATA2==>",data)
+            setLoading(false);
+          }
         });
       });
     } else {

@@ -91,14 +91,15 @@ export const isMyContacts=(contact,listContacts)=>{
 
   export const haveRequest=(user,listRequest,socialZone=0)=>{    
     if(listRequest.length>0){
-      console.log("LIST SENT==>",listRequest,user)
+      console.log("user==>",user,socialZone)
       for(let i=0;i<listRequest.length;i++){
-        if(listRequest[i].id_user_requesting=="5f11bd670da32b2aac459042"){
+        if(listRequest[i].id_user_requesting==user?.eventUserId){
           console.log("ACAESTOY==>",i)
         }
       }
-      let request=listRequest.filter((userRequest)=>socialZone==0?userRequest.id_user_requesting==user._id :userRequest.id_user_requesting== user.eventUserId);
-      console.log("LISTA==>",request,user._id)
+      console.log("USERREQUEST==>",user)
+      let request=listRequest?.filter((userRequest)=>socialZone==0?userRequest.id_user_requesting==user?._id :userRequest.id_user_requesting== user.eventUserId);
+      console.log("LISTA==>",request,user?.eventUserId)
       if(request.length>0){
         return true;
       }
