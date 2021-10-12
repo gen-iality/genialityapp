@@ -523,6 +523,21 @@ export const OrganizationApi = {
   getEventsStatistics: async (org) => {
     return await Actions.get(`/api/organizations/${org}/eventsstadistics`);
   },
+  editAllUserProperties: async (org, data) => {
+    return await Actions.put(`api/organizations/${org}`, data);
+  },
+  editOneUserProperties: async (org, fieldId, data) => {
+    return await Actions.edit(`api/organizations/${org}/userproperties`, data, fieldId);
+  },
+  createOneUserProperties: async (org, data) => {
+    return await Actions.post(`/api/organizations/${org}/userproperties`, data);
+  },
+  getUserProperties: async (org) => {
+    return await Actions.get(`/api/organizations/${org}/userproperties`);
+  },
+  deleteUserProperties: async (org, fieldId) => {
+    return await Actions.delete(`/api/organizations/${org}/userproperties`, fieldId);
+  },
 };
 export const BadgeApi = {
   create: async (data) => {

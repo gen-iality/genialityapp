@@ -72,7 +72,7 @@ class Headers extends Component {
     return eventId;
   };
 
-  async componentDidMount() {console.log("10. header props ", this.props)
+  async componentDidMount() {
     const eventId = this.setEventId();
     this.setState({ eventId });
 
