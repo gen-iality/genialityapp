@@ -7,7 +7,8 @@
     "header.profile": "My profile",
     "header.my_tickets": "Mis Entradas / Tickets",
     "header.my_events": "Administrar mis eventos",
-    "header.create_event": "Crear Evento",
+    "header.create_event": "Create event",
+    "header.my_organizations": "My organizations",
     "header.logout": "Salir",
     "header.my_events_create": "Events created",
     "header.my_orders": "My Orders",
@@ -132,6 +133,7 @@
   "es": {
     "header.help": "Ayuda",
     "header.create_event": "Crear Evento",
+    "header.my_organizations": "Mis organizaciones",
     "header.login": "Ingresar",
     "header.home": "Inicio",
     "header.wait": "Espera...",

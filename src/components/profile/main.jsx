@@ -1,23 +1,42 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar, Card, Col, Layout, Menu, Row, Space, Statistic, Tabs, Typography, Grid, Divider } from 'antd';
 import { AppstoreFilled } from '@ant-design/icons';
 import OrganizationCard from './organizationCard';
 import NewCard from './newCard';
+import ExploreEvents from './exploreEvents';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
 
-const MainProfile = () => {
+const MainProfile = (props) => {
+  const [activeTab, setActiveTab] = useState()
   const screens = useBreakpoint();
+  const selectedTab = props.match.params.tab;
+
+  useEffect(() => {
+    switch (selectedTab) {
+      case 'organization':
+        setActiveTab('2')
+        break;
+      case 'events':
+        setActiveTab('3')
+        break;
+      case 'tickets':
+        setActiveTab('4')
+        break;
+      default:
+        setActiveTab('1');
+    }
+  }, [])
   console.log('pantallas', screens);
+
   return (
     <Layout style={{ height: '90.8vh' }}>
       <Sider
         defaultCollapsed={true}
         width={!screens.xs ? 300 : '92vw'}
-        style={{ backgroundColor: '#ffffff' }}
+        style={{ backgroundColor: '#ffffff', paddingTop:'10px', paddingBottom:'10px' }}
         breakpoint='lg'
         collapsedWidth='0'
         zeroWidthTriggerStyle={{ top: '-40px', width: '50px' }}>
@@ -54,7 +73,12 @@ const MainProfile = () => {
       </Sider>
       <Layout>
         <Content style={{ margin: '0px', padding: '10px', overflowY: 'auto' }}>
-          <Tabs defaultActiveKey='1'>
+          <Tabs
+          defaultActiveKey={activeTab}
+          activeKey={activeTab}
+          onTabClick={(key) => {
+            setActiveTab(key);
+          }}>
             {!screens.xs && (
               <TabPane
                 tab={
@@ -82,11 +106,14 @@ const MainProfile = () => {
                   <Col span={24}>
                     <Divider orientation='left'>Eventos en los que estoy registrado</Divider>
                     <Row gutter={[16, 16]}>
-                      <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
+                      <Col span={24}>
+                        <ExploreEvents/>
+                      </Col>
+                      {/* <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <Card
                           cover={<img style={{ objectFit: 'cover' }} src='https://picsum.photos/300/200' />}
                           style={{ width: '100%' }}></Card>
-                      </Col>
+                      </Col> */}
                     </Row>
                   </Col>
                   <Col span={24}>
@@ -143,4 +170,4 @@ const MainProfile = () => {
   );
 };
 
-export default MainProfile;
+export default withContext(MainProfile);
