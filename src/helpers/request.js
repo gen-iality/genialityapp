@@ -399,6 +399,9 @@ export const EventFieldsApi = {
   getAll: async (event) => {
     return await Actions.getAll(`/api/events/${event}/userproperties`);
   },
+  byEvent: async (event) => {
+    return await Actions.getAll(`/api/events/${event}/userproperties`);
+  },
   getOne: async (event, id) => {
     return await Actions.getOne(`/api/events/${event}/userproperties/${id}`);
   },

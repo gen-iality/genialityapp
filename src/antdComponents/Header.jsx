@@ -10,13 +10,14 @@ const Header = ( props ) => {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado
     addUrl, //link para ir a la vista de agregar
+    addFn, //link para ir a la vista de agregar
     edit, //id del elemento a editar
     remove, //método para eliminar
     save, //boolean, para que aparezca el botón de guardar
     saveMethod, //viene el método para guardar
     back, //boolean, permite aparecer el icono para volver atrás
     form, //si viene, es para poder saber sí el botón de guardar colocarlo como "submit"
-    extra //código adicional de alguna acción fuera de la estructura en el header
+    extra, //código adicional de alguna acción fuera de la estructura en el header
   } = props;
 
   return (
@@ -25,7 +26,7 @@ const Header = ( props ) => {
         {
           back && (
             <Tooltip placement='bottomLeft' title={'Atrás'}>
-              <LeftOutlined onClick={() => history.goBack()}/>
+              <LeftOutlined id='goBack' onClick={() => history.goBack()}/>
             </Tooltip>
           )
         }
@@ -52,6 +53,13 @@ const Header = ( props ) => {
                   {'Agregar'}
                 </Button>
               </Link>
+            )
+          }
+          {
+            addFn && (
+              <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={addFn}>
+                {'Agregar'}
+              </Button>
             )
           }
         </Col>

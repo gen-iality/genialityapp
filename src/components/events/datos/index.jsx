@@ -6,11 +6,12 @@ import EventContent from '../shared/content';
 import EventModal from '../shared/eventModal';
 import DatosModal from './modal';
 import Dialog from '../../modal/twoAction';
-import { Tabs, Table, Checkbox, notification, Button } from 'antd';
+import { Tabs, Table, Checkbox, notification, Button, Select } from 'antd';
 import RelationField from './relationshipFields';
 import { EditOutlined, DeleteOutlined, DragOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
+import CMS from '../../newComponent/CMS';
 
 import { firestore } from '../../../helpers/firebase';
 
@@ -18,6 +19,7 @@ const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', c
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 const { TabPane } = Tabs;
+const { Option } = Select;
 
 class Datos extends Component {
   constructor(props) {
@@ -326,6 +328,14 @@ class Datos extends Component {
         ),
       },
     ];
+
+    const colsPlant = [
+      {
+        title: 'Dato',
+        dataIndex: 'label',
+      },
+    ]
+    
     return (
       <div>
         <Tabs defaultActiveKey='1'>
@@ -372,6 +382,25 @@ class Datos extends Component {
           {this.props.eventID && <TabPane tab='Campos Relacionados' key='2'>
             <RelationField eventId={this.props.eventID} fields={fields} />
           </TabPane>}
+          <TabPane tab='Plantillas' key='3'>
+            <CMS 
+              API={EventFieldsApi}
+              eventId={this.props.eventID}
+              title={'Plantillas'}
+              addFn
+              columns={colsPlant}
+              editFn
+              pagination={false}
+              extra={(
+                <Select defaultValue='Plantilla 1'>
+                  <Option value='Plantilla 1'>Plantilla 1</Option>
+                  <Option value='Plantilla 2'>Plantilla 2</Option>
+                </Select>
+              )}
+              /* draggable */
+              actions
+            />
+          </TabPane>
         </Tabs>
         {/*<DragDrop eventId={this.props.eventID} list={fields} />*/}
       </div>
