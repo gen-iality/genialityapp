@@ -63,7 +63,7 @@ function OrgMembers(props) {
       setLastUpdate(new Date());
       getRoleList();
       setExtraFields(props.org.user_properties);
-   }, []);
+   }, [props.org.user_properties]);
 
    function goToEvent(eventId) {
       const url = `/eventadmin/${eventId}/agenda`;
@@ -161,7 +161,7 @@ function OrgMembers(props) {
                      modal={addOrEditUser}
                      rolesList={roleList}
                      extraFields={extraFields}
-                     value={selectedUser}
+                     value={selectedUser || []}
                      editMember={editMember}
                      closeOrOpenModalMembers={closeOrOpenModalMembers}
                   />
