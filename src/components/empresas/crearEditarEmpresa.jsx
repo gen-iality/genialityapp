@@ -166,7 +166,7 @@ function CrearEditarEmpresa({ event, match, history }) {
       };
       setSubmitting(true);
       apply(createOrEdit, paramsArray)
-        .then(() => history.push(`/event/${event._id}/empresas`))
+        .then(() => history.push(`/eventadmin/${event._id}/empresas`))
         .catch((error) => {
           notification.error(errorObject);
           setSubmitting(false);

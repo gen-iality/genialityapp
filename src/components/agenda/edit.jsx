@@ -365,7 +365,7 @@ class AgendaEdit extends Component {
 
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
-        this.props.history.push(`/event/${event._id}/agenda`);
+        this.props.history.push(`/eventadmin/${event._id}/agenda`);
       } catch (e) {
         sweetAlert.showError(handleRequestError(e));
       }
