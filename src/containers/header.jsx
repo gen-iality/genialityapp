@@ -302,8 +302,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   setEventData,
   addLoginInformation,
-  showMenu,
-  setModal
+  showMenu,  
 };
 
 let HeaderWithContext = withContext(withRouter(Headers));
