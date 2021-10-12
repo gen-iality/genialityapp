@@ -69,7 +69,8 @@ class eventLanding extends Component {
             </Row>
           )} */}
           {/* Si event video existe */}
-          { this.props.cEvent.value?._id !=='6137e3447efe8b067d51fc8a' && this.props.cEvent.value.video && (
+            {/* {console.log("this.props.cEvent.value?.video_position",this.props.cEvent.value?.video)} */}
+          {this.props.cEvent.value?.video_position =="true" && this.props.cEvent.value.video && (
             <div className='column is-centered mediaplayer'>
               <ReactPlayer
                 width={'100%'}
@@ -83,6 +84,7 @@ class eventLanding extends Component {
               />
             </div>
           )}
+
           {this.props.cEvent.value._id === '5f0622f01ce76d5550058c32' ? (
             <>
               <h3 style={{ fontWeight: 700 }}>
@@ -363,20 +365,22 @@ class eventLanding extends Component {
               </div>
             </div>
           )}
-           {this.props.cEvent?.value._id == '6137e3447efe8b067d51fc8a' &&this.props.cEvent.value.video && (
-            <div className='column is-centered mediaplayer'>
-              <ReactPlayer
-                width={'100%'}
-                height={'35vw'}
-                style={{
-                  display: 'block',
-                  margin: '0 auto',
-                }}
-                url={this.props.cEvent.value.video}
-                controls
-              />
-            </div>
-          )}
+          {(this.props.cEvent.value?.video_position == "false" ||
+            this.props.cEvent.value.video_position == undefined) &&
+            this.props.cEvent.value.video && (
+              <div className='column is-centered mediaplayer'>
+                <ReactPlayer
+                  width={'100%'}
+                  height={'35vw'}
+                  style={{
+                    display: 'block',
+                    margin: '0 auto',
+                  }}
+                  url={this.props.cEvent.value.video}
+                  controls
+                />
+              </div>
+            )}
         </Card>
         {/*Contenedor personalizado COMPENSAR - Detalle de la actividad del evento*/}
         {/* {this.props.cEvent.value._id === '5f4e41d5eae9886d464c6bf4' && this.state.activityId && (

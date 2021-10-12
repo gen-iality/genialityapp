@@ -56,7 +56,6 @@ const DashboardEvent = asyncComponent(() => import('../dashboard'));
 const OrdersEvent = asyncComponent(() => import('../orders'));
 const Pages = asyncComponent(() => import('../pages'));
 const ListCertificados = asyncComponent(() => import('../certificados'));
-const AdminInformativeSection = asyncComponent(() => import('./informativeSections/adminInformativeSection'));
 const ReporteCertificados = asyncComponent(() => import('../certificados/reporte'));
 const ConfigurationApp = asyncComponent(() => import('../App/configuration'));
 const NotificationsApp = asyncComponent(() => import('../pushNotifications/index'));
@@ -137,6 +136,41 @@ class Event extends Component {
     this.setState({ event });
   };
 
+  isUpper(str) {
+    return !/[a-z]/.test(str) && /[A-Z]/.test(str);
+  }
+
+  isLowerCase(str) {
+    return /[a-z]/.test(str) && !/[A-Z]/.test(str);
+  }
+
+  FriendLyUrl(url) {
+    let formatupperorlowercase = url.toString().toLowerCase();
+    if (this.isUpper(url.toString())) {
+      formatupperorlowercase = url.toString().toUpperCase();
+    } else if (this.isLowerCase(url.toString())) {
+      formatupperorlowercase = url.toString().toLowerCase();
+    } else {
+      formatupperorlowercase = url.toString();
+      console.log("por aca",formatupperorlowercase,"original",url)
+    }
+
+    var encodedUrl = formatupperorlowercase;
+    encodedUrl = encodedUrl.split(/\&+/).join('-and-');
+    if (this.isUpper(url)) {
+      encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-');
+    } else if(this.isLowerCase(url.toString())) {
+      encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-');
+    }else{
+      encodedUrl = encodedUrl.split(/-+/).join('-');
+    }
+
+
+    encodedUrl = encodedUrl.replaceAll(' ','-')
+    encodedUrl = encodedUrl.trim('-');
+    return encodedUrl;
+  }
+
   render() {
     const { match, permissions, showMenu } = this.props;
     // console.log("${match.url}",match.url)
@@ -153,15 +187,15 @@ class Event extends Component {
           <Space direction='vertical'>
             <a target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
               <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
-                Ir al evento: {this.state.event.name}
+                Ir al evento: (version antigua)
               </h2>
             </a>
             {console.log('this.state.event', this.state.event)}
-            {/* <a target='_blank' href={`${window.location.origin}/event/${encodeURI(this.state.event.name)}`}>
+            <a target='_blank' href={`${window.location.origin}/event/${this.FriendLyUrl(this.state.event.name)}`}>
               <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
-                Ir al evento: (con nombre) {this.state.event.name}
+                Ir al evento: (con nombre) 
               </h2>
-            </a> */}
+            </a>
           </Space>
           <section className='section event-wrapper'>
             <Switch>
@@ -291,7 +325,6 @@ class Event extends Component {
               />
               <Route path={`${match.url}/orders`} render={() => <OrdersEvent eventId={this.state.event._id} />} />
               <Route path={`${match.url}/certificados`} render={() => <ListCertificados event={this.state.event} />} />
-              <Route path={`${match.url}/informativesection`} render={() => <AdminInformativeSection event={this.state.event} />} />
               <Route path={`${match.url}/espacios`} render={() => <Espacios eventID={this.state.event._id} />} />
               <Route
                 path={`${match.url}/reporte-certificados`}

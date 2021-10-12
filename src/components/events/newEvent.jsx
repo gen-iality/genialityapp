@@ -207,13 +207,13 @@ class NewEvent extends Component {
                 let sala = await this.createZoomRoom(agenda, result._id);
                 if (sala) {
                   message.success('Evento creado correctamente..');
-                  window.location.replace(`/eventadmin/${result._id}`);
+                  window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
                 } else {
                   message.error('Error al crear sala');
                 }
               } else {
                 message.success('Evento creado correctamente..');
-                window.location.replace(`/eventadmin/${result._id}`);
+                window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
               }
             }
           } else {
