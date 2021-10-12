@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar, Card, Col, Layout, Menu, Row, Space, Statistic, Tabs, Typography, Grid, Divider } from 'antd';
 import { AppstoreFilled } from '@ant-design/icons';
 import OrganizationCard from './organizationCard';
@@ -10,9 +9,28 @@ const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
 
-const MainProfile = () => {
+const MainProfile = (props) => {
+  const [activeTab, setActiveTab] = useState()
   const screens = useBreakpoint();
+  const selectedTab = props.match.params.tab;
+
+  useEffect(() => {
+    switch (selectedTab) {
+      case 'organization':
+        setActiveTab('2')
+        break;
+      case 'events':
+        setActiveTab('3')
+        break;
+      case 'tickets':
+        setActiveTab('4')
+        break;
+      default:
+        setActiveTab('1');
+    }
+  }, [])
   console.log('pantallas', screens);
+
   return (
     <Layout style={{ height: '90.8vh' }}>
       <Sider
@@ -55,7 +73,12 @@ const MainProfile = () => {
       </Sider>
       <Layout>
         <Content style={{ margin: '0px', padding: '10px', overflowY: 'auto' }}>
-          <Tabs defaultActiveKey='1'>
+          <Tabs
+          defaultActiveKey={activeTab}
+          activeKey={activeTab}
+          onTabClick={(key) => {
+            setActiveTab(key);
+          }}>
             {!screens.xs && (
               <TabPane
                 tab={
@@ -147,4 +170,4 @@ const MainProfile = () => {
   );
 };
 
-export default MainProfile;
+export default withContext(MainProfile);
