@@ -90,14 +90,6 @@ class menuLanding extends Component {
           checked: false,
           permissions: 'public',
         },
-        my_section: {
-          name: 'Seccion Personalizada',
-          position: '',
-          section: 'my_section',
-          icon: 'EnterOutlined',
-          checked: false,
-          permissions: 'public',
-        },
         companies: {
           name: 'Empresas',
           position: '',
@@ -141,7 +133,7 @@ class menuLanding extends Component {
           permissions: 'public',
         },
         informativeSection1: {
-          name: 'Seccion Informativa Segunda',
+          name: 'Seccion Informativa',
           position: '',
           section: 'informativeSection1',
           icon: 'FileDoneOutlined',

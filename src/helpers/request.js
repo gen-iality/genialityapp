@@ -145,9 +145,11 @@ export const getCurrentUser = () => {
               draggable: true,
               progress: undefined,
             });
+            Cookie.remove('token');
+            Cookie.remove('evius_token');           
             setTimeout(() => {
-              window.location.href = '/';
-            }, 5000);
+              window.location.reload();
+            }, 2000);
             //this.setState({ timeout: true, loader: false })
           } else {
             //this.setState({ serverError: true, loader: false, errorData: data })

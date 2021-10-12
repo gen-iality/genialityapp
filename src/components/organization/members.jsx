@@ -17,6 +17,7 @@ import { Background } from 'react-parallax';
 import UserModal from '../modal/modalUser';
 import moment from 'moment';
 import withContext from '../../Context/withContext';
+import XLSX from 'xlsx'
 
 const { Title } = Typography;
 

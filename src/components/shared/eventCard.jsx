@@ -4,8 +4,6 @@ import { Link, withRouter } from 'react-router-dom';
 import EventImage from '../../eventimage.png';
 import { Badge, Card, Space } from 'antd';
 
-
-
 const isUpper = (str)=> {
   return !/[a-z]/.test(str) && /[A-Z]/.test(str);
 }
@@ -46,7 +44,7 @@ class EventCard extends Component {
           }>
           <Link
             // onClick={() => Cookies.set('idevent', event._id)}
-            to={{ pathname: `/event/${FriendLyUrl(event.name)}`, state: { event: event } }}>
+            to={{ pathname: `/event/${encodeURI(event.name)}`, state: { event: event } }}>
             <Card
               bordered={bordered}
               loading={loading}

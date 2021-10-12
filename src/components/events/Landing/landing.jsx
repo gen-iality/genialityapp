@@ -117,8 +117,6 @@ const Landing = (props) => {
   let { currentActivity, tabs } = props;
 
   useEffect(() => {
-
-    console.log(" cEventContext", cEventContext)
     cEventContext.status === 'LOADED' &&
       firestore
         .collection('events')
