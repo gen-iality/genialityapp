@@ -405,6 +405,7 @@ class General extends Component {
       datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
       picture: path.length > 1 ? path : event.picture,
       video: event.video || null,
+      video_position: event.video_position === 'true' || event.video_position === true ? 'true' : 'false',
       venue: event.venue,
       analytics: event.analytics,
       address: event.address,
@@ -1020,6 +1021,17 @@ class General extends Component {
                     onChange={this.handleChange}
                   />
                 </div>
+              </div>
+              <div className='field'>
+                <label style={{ marginTop: '3%' }} className='label has-text-grey-light'>
+                  Posición del video
+                </label>
+                <Switch
+                  name={'video_position'}
+                  checked={event.video_position === true || event.video_position === 'true'}
+                  checkedChildren="Arriba" unCheckedChildren="Abajo"
+                  onChange={(checked) => this.setState({ event: { ...this.state.event, video_position: checked ? 'true' : 'false' } })}
+                />
               </div>
 
               <SelectInput

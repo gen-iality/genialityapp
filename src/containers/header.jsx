@@ -9,15 +9,19 @@ import ErrorServe from '../components/modal/serverError';
 import UserStatusAndMenu from '../components/shared/userStatusAndMenu';
 import { connect } from 'react-redux';
 import * as userActions from '../redux/user/actions';
+
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
 import { Menu, Drawer, Button, Col, Row, Layout } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { parseUrl } from '../helpers/constants';
 import withContext from '../Context/withContext';
+import HelperContext from '../Context/HelperContext';
+import ModalAuth from '../components/authentication/ModalAuth';
 
 const { setEventData } = eventActions;
 const { addLoginInformation, showMenu } = userActions;
+
 
 const { Header } = Layout;
 const zIndex = {
@@ -49,9 +53,12 @@ class Headers extends Component {
       tabEvtCat: true,
       eventId: null,
       userEvent: null,
+      visibleModal:false,
+      tabModal:'1'
     };
     this.setEventId = this.setEventId.bind(this);
     this.logout = this.logout.bind(this);
+    this.modalClose=this.modalClose.bind(this);
   }
 
   showDrawer = () => {
@@ -74,7 +81,7 @@ class Headers extends Component {
 
   async componentDidMount() {
     const eventId = this.setEventId();
-    this.setState({ eventId });
+    this.setState({ eventId }); 
 
     /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
     let evius_token = null;
@@ -128,7 +135,9 @@ class Headers extends Component {
       this.setState({ timeout: true, loader: false });
     }
   }
-
+  modalClose(){
+    this.setState({modalVisible:false})
+  }
   handleMenu = (location) => {
     const splited = location.pathname.split('/');
     if (splited[1] === '') {
@@ -229,11 +238,14 @@ class Headers extends Component {
                 )}
               </Row>
 
-              {/* Dropdown de navegacion para el usuario  */}
+              
               {!this.state.userEvent && <Row style={{marginBottom:10,marginTop:10}} justify='space-between' align='middle'> 
-                    <Button style={{marginRight:5}}>Iniciar sesión</Button>
-                    <Button>Registrarme</Button>
+                    <Button onClick={()=>this.setState({modalVisible:true,tabModal:'1'}) } style={{marginRight:5}}>Iniciar sesión</Button>
+                    <Button onClick={()=>this.setState({modalVisible:true,tabModal:'2'} )}>Registrarme</Button>
               </Row>}
+
+              <ModalAuth tab={this.state.tabModal} closeModal={this.modalClose} organization='register' visible={this.state.modalVisible} />
+              {/* Dropdown de navegacion para el usuario  */}
              {this.state.userEvent && <UserStatusAndMenu
                 isLoading={this.state.loader}
                 user={this.state.user}
@@ -284,13 +296,15 @@ const mapStateToProps = (state) => ({
   permissions: state.permissions,
   error: state.categories.error,
   event: state.event.data,
+  modalVisible:state.stage.modal
 });
 
 const mapDispatchToProps = {
   setEventData,
   addLoginInformation,
   showMenu,
+  setModal
 };
 
-let HeaderWithContext = withContext(Headers);
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HeaderWithContext));
+let HeaderWithContext = withContext(withRouter(Headers));
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderWithContext);
