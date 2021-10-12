@@ -332,7 +332,7 @@ class Datos extends Component {
         <Tabs defaultActiveKey='1'>
           <TabPane tab='Configuración General' key='1'>
             <Fragment>
-              <ModalCreateTemplate />
+              {/* <ModalCreateTemplate /> */}
               <EventContent
                 title={'Recopilación de datos'}
                 description={`Configure los datos que desea recolectar de los asistentes ${this.organization ?'de la organización':'del evento'}`}
