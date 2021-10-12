@@ -21,7 +21,8 @@ export const NewEventProvider = ({ children }) => {
   const [selectOrganization, setSelectOrganization] = useState();
   const [isbyOrganization, setIsbyOrganization] = useState(false);
   const [loadingOrganization, setLoadingOrganization] = useState(false);
-  const [createOrganizationF,setCreateOrganization]=useState(false)
+  const [createOrganizationF,setCreateOrganization]=useState(false);
+  const [templateId, setTemplateId]=useState()
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -132,6 +133,9 @@ export const NewEventProvider = ({ children }) => {
  const onChangeCheck=(check)=>{    
     setValueInputs({...valueInputs,["temaDark"]:check});   
   }
+  const selectTemplate=(idTemplate)=>{    
+    setTemplateId(idTemplate)
+  }
 
   useEffect(() => {
     setSelectedDateEvent({
@@ -182,7 +186,9 @@ export const NewEventProvider = ({ children }) => {
         loadingOrganization,
         isLoadingOrganization,
         createOrganizationF,
-        newOrganization        
+        newOrganization,
+        templateId,
+        selectTemplate        
       }}>
       {children}
     </cNewEventContext.Provider>

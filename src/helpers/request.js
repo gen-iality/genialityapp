@@ -300,6 +300,12 @@ export const EventsApi = {
       `/api/users/signInWithEmailAndPassword`,
       data
     );
+  },
+  createTemplateEvent:async(eventId,idTemplate)=>{
+    return await Actions.put(
+      `/api/events/${eventId}/templateproperties/${idTemplate}/addtemplateporperties`,
+      {}
+    );
   }
 };
 export const InvitationsApi = {
@@ -538,6 +544,9 @@ export const OrganizationApi = {
   deleteUserProperties: async (org, fieldId) => {
     return await Actions.delete(`/api/organizations/${org}/userproperties`, fieldId);
   },
+  getTemplateOrganization:async(org)=>{
+    return await Actions.get(`/api/organizations/${org}/templateproperties`);
+  }
 };
 export const BadgeApi = {
   create: async (data) => {
