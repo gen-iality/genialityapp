@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, useState } from 'react';
 import { Actions, EventFieldsApi, OrganizationApi } from '../../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
@@ -6,7 +6,7 @@ import EventContent from '../shared/content';
 import EventModal from '../shared/eventModal';
 import DatosModal from './modal';
 import Dialog from '../../modal/twoAction';
-import { Tabs, Table, Checkbox, notification, Button, Select } from 'antd';
+import { Tabs, Table, Checkbox, notification, Button, Select, Radio } from 'antd';
 import RelationField from './relationshipFields';
 import { EditOutlined, DeleteOutlined, DragOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
@@ -32,6 +32,7 @@ class Datos extends Component {
       edit: false,
       fields: [],
       properties: null,
+      value: ''
     };
     this.eventID = this.props.eventID;
     this.html = document.querySelector('html');
@@ -244,9 +245,13 @@ class Datos extends Component {
       });
     }
   };
-
+  
+  onChange1 = e => {
+    console.log('radio checked', e.target.value);
+    this.setState({value: e.target.value});
+  };
   render() {
-    const { fields, modal, edit, info } = this.state;
+    const { fields, modal, edit, info, value } = this.state;
     const columns = [
       {
         title: '',
@@ -331,6 +336,13 @@ class Datos extends Component {
 
     const colsPlant = [
       {
+        title: 'Plantilla por defecto',
+        dataIndex: '',
+        width: '50px',
+        render: (record, key) =>
+          <Radio onChange={this.onChange1} value={value} />
+      },
+      {
         title: 'Dato',
         dataIndex: 'label',
       },
@@ -391,12 +403,12 @@ class Datos extends Component {
               columns={colsPlant}
               editFn
               pagination={false}
-              extra={(
+              /* extra={(
                 <Select defaultValue='Plantilla 1'>
                   <Option value='Plantilla 1'>Plantilla 1</Option>
                   <Option value='Plantilla 2'>Plantilla 2</Option>
                 </Select>
-              )}
+              )} */
               /* draggable */
               actions
             />
