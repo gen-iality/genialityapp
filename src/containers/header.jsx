@@ -184,7 +184,7 @@ class Headers extends Component {
         // Solucion temporal, se esta trabajando un reducer que permita identificar
         // el eventId sin importar su posición, actualmente se detecta un problema
         // cuando la url tiene el eventId en una posicion diferente al final
-        window.location.reload();
+        window.location.replace(window.location.origin);
       })
       .catch(function(error) {
         // An error happened.
