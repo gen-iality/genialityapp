@@ -30,7 +30,7 @@ function OrgMembers(props) {
    const [addOrEditUser, setAddOrEditUser] = useState(false);
    const [extraFields, setExtraFields] = useState([]);
    const [roleList, setRoleList] = useState([]);
-   const [selectedUser, setSelectedUser] = useState([]);
+   const [selectedUser, setSelectedUser] = useState({});
    const [editMember, setEditMember] = useState(false);
    let { _id: organizationId } = props.org;
    const history = useHistory();
@@ -88,7 +88,7 @@ function OrgMembers(props) {
 
    function addUser() {
       console.log('10. Agregar o editar usuario');
-      setSelectedUser(null);
+      setSelectedUser({});
       closeOrOpenModalMembers();
    }
    function editModalUser(item) {
@@ -161,7 +161,7 @@ function OrgMembers(props) {
                      modal={addOrEditUser}
                      rolesList={roleList}
                      extraFields={extraFields}
-                     value={selectedUser || []}
+                     value={selectedUser}
                      editMember={editMember}
                      closeOrOpenModalMembers={closeOrOpenModalMembers}
                   />
