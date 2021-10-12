@@ -50,6 +50,7 @@ export const HelperContextProvider = ({ children }) => {
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [tabLogin, setTabLogin] = useState('1');
+  const [visibleLoginEvents,setVisibleLoginEvents]=useState(false)
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
@@ -58,12 +59,13 @@ export const HelperContextProvider = ({ children }) => {
     setTabLogin(tab);
   }
 
-  useEffect(() => {
+  useEffect(() => {    
     if (!cEvent.value) return;
     let firstroute = Object.keys(cEvent.value.itemsMenu);
     if (firstroute[0] != undefined) {
       seteventPrivate({ private: false, section: firstroute[0] });
     }
+    
   }, []);
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
@@ -312,13 +314,19 @@ export const HelperContextProvider = ({ children }) => {
     return act && act.length > 0 ? act[0] : null;
   };
 
+  function visibilityLoginEvents(value){
+    alert("CHANGE STATUS"+value)
+    setVisibleLoginEvents(value)
+  }
+
   useEffect(() => {
-    if (cEvent.value != null) {
+    if (cEvent?.value != null) {
       containsNetWorking();
       GetInfoAgenda();
       getProperties(cEvent.value._id);
       GetActivitiesEvent(cEvent.value._id);
     }
+   
   }, [cEvent.value]);
 
   /* CARGAR CHAT PRIVADOS */
@@ -547,8 +555,10 @@ export const HelperContextProvider = ({ children }) => {
         handleChangeTypeModal,
         handleChangeTabModal,
         tabLogin,
+        visibleLoginEvents,
+        visibilityLoginEvents
       }}>
-      {children}
+      {children}      
     </HelperContext.Provider>
   );
 };

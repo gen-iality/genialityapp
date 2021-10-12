@@ -39,7 +39,6 @@ const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
 const ForbiddenPage = asyncComponent(() => import('../components/forbiddenPage'));
 const QueryTesting = asyncComponent(() => import('../components/events/surveys/components/queryTesting'));
 const EventFinished = asyncComponent(() => import('../components/eventFinished/eventFinished'));
-
 const ContentContainer = () => {
   return (
     <main className='main'>
@@ -71,12 +70,12 @@ const ContentContainer = () => {
           </NewEventProvider>
         </PrivateRoute>
 
-        <PrivateRoute path='/eventadmin/:event' component={Event}/>
+        <PrivateRoute path='/eventadmin/:event' component={Event} />
         <PrivateRoute path='/orgadmin/:event' component={Event} />
         <PrivateRoute path='/create-event' component={NewEvent} />
         <PrivateRoute path='/profile/:id' component={MyProfile} />
         <RouteContext exact path='/organization/:id/events' component={EventOrganization} />
-        <RouteContext exact path='/organization/:id'        component={EventOrganization} />
+        <RouteContext exact path='/organization/:id' component={EventOrganization} />
         <PrivateRoute path='/admin/organization/:id' component={Organization} />
         <PrivateRoute path='/purchase/:id' component={Purchase} />
         <PrivateRoute path='/eventEdit/:id' component={EventEdit} />
@@ -97,15 +96,11 @@ const ContentContainer = () => {
           path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
           component={AppointmentAccept}
         />
-        <Route
-          exact
-          path='/events'
-          render={() => (
-            <WithFooter>
-              <Home />
-            </WithFooter>
-          )}
-        />
+        <RouteContextChildren path='/events'>
+          <WithFooter>
+            <Home />
+          </WithFooter>
+        </RouteContextChildren>
         <Route component={NotFoundPage} />
       </Switch>
     </main>
@@ -121,7 +116,6 @@ function QRedirect({ match }) {
 function RedirectPortal() {
   return <div>{window.location.assign('http://portal.evius.co/')}</div>;
 }
-
 
 const RouteContext = ({ component: Component, ...rest }) => (
   <Route
@@ -151,8 +145,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
           <CurrentUserProvider>
             <HelperContextProvider>
               <SurveysProvider>
-                {Cookie.get('evius_token') ? <Component {...props} />: <ForbiddenPage />}
-                
+                {Cookie.get('evius_token') ? <Component {...props} /> : <ForbiddenPage />}
               </SurveysProvider>
             </HelperContextProvider>
           </CurrentUserProvider>
@@ -160,6 +153,20 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
       </CurrentEventProvider>
     )}
   />
+);
+
+const RouteContextChildren = ({ children: children, ...rest }) => (
+  <Route {...rest}>
+    <CurrentEventProvider>
+      <CurrentUserEventProvider>
+        <CurrentUserProvider>
+          <HelperContextProvider>
+            <SurveysProvider>{children}</SurveysProvider>
+          </HelperContextProvider>
+        </CurrentUserProvider>
+      </CurrentUserEventProvider>
+    </CurrentEventProvider>
+  </Route>
 );
 
 export default React.memo(ContentContainer);
