@@ -5,7 +5,6 @@ import OrganizationCard from './organizationCard';
 import NewCard from './newCard';
 import ExploreEvents from './exploreEvents';
 import withContext from '../../Context/withContext';
-
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;

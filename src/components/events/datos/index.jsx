@@ -13,6 +13,7 @@ import { sortableContainer, sortableElement, sortableHandle } from 'react-sortab
 import arrayMove from 'array-move';
 
 import { firestore } from '../../../helpers/firebase';
+import ModalCreateTemplate from '../../shared/modalCreateTemplate';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
@@ -337,6 +338,7 @@ class Datos extends Component {
         <Tabs defaultActiveKey='1'>
           <TabPane tab='Configuración General' key='1'>
             <Fragment>
+              {/* <ModalCreateTemplate /> */}
               <EventContent
                 title={'Recopilación de datos'}
                 description={`Configure los datos que desea recolectar de los asistentes ${this.organization ?'de la organización':'del evento'}`}
