@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import WithLoading from './withLoading';
 import { Menu, Dropdown, Avatar, Button, Col, Row, Space } from 'antd';
@@ -50,13 +50,16 @@ const UserStatusAndMenu = (props) => {
             <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
           </NavLink>
         </Menu.Item>
-        {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/tickets/${props.userEvent._id}`)}>
+        {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/myprofile/tickets`)}>
             <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
         </Menu.Item>}
-        {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/eventEdit/${props.userEvent._id}#events`)}>
+        {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/myprofile/events`)}>
             <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
         </Menu.Item>}
-  
+        {visible && <Menu.Item style={ItemStyle} onClick={()=>{ linkToTheMenuRouteS(`/myprofile/organization`)}}>
+            <FormattedMessage id='header.my_organizations' defaultMessage='Administrar Mis Eventos' />
+        </Menu.Item>}
+
        {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(window.location.toString().includes('admin/organization')?`/create-event/${props.userEvent._id}/?orgId=${window.location.pathname.split('/')[3]}`:window.location.toString().includes('organization')?`/create-event/${props.userEvent._id}/?orgId=${props.eventId}`:`/create-event/${props.userEvent._id}`)}>
             <Button type='primary' size='medium'>
               <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />

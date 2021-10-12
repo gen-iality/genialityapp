@@ -24,7 +24,6 @@ const Landing = asyncComponent(() => import('../components/events/Landing/landin
 const Transition = asyncComponent(() => import('../components/shared/Animate_Img/index'));
 const Events = asyncComponent(() => import('../components/events'));
 const NewEvent = asyncComponent(() => import('../components/events/newEvent'));
-// const Organization = asyncComponent(() => import('../components/organization'));
 const MyProfile = asyncComponent(() => import('../components/profile'));
 const Purchase = asyncComponent(() => import('../components/profile/purchase'));
 const EventEdit = asyncComponent(() => import('../components/profile/events'));
@@ -50,7 +49,8 @@ const ContentContainer = () => {
         <RouteContext path='/event/:event_name' component={Landing} />
 
         {/*Ruta para ver resumen */}
-        <Route path='/myprofile' component={MainProfile} />
+        <PrivateRoute exact path='/myprofile/:tab' component={MainProfile} />
+        <PrivateRoute exact path='/myprofile' component={MainProfile} />
 
         <Route path='/social/:event_id' component={socialZone} />
         {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
