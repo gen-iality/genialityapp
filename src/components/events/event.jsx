@@ -187,13 +187,13 @@ class Event extends Component {
           <Space direction='vertical'>
             <a target='_blank' href={`${window.location.origin}/landing/${this.state.event._id}`}>
               <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
-                Ir al evento: (version antigua) {this.state.event.name}
+                Ir al evento: (version antigua)
               </h2>
             </a>
             {console.log('this.state.event', this.state.event)}
             <a target='_blank' href={`${window.location.origin}/event/${this.FriendLyUrl(this.state.event.name)}`}>
               <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
-                Ir al evento: (con nombre) {this.state.event.name}
+                Ir al evento: (con nombre) 
               </h2>
             </a>
           </Space>
