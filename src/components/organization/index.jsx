@@ -12,22 +12,21 @@ import { DoubleRightOutlined } from '@ant-design/icons';
 
 function Organization(props) {
    const [organization, setOrganization] = useState({});
-   const [loading, setLoading] = useState({});
+   const [isLoading, setIsLoading] = useState(true);
    const organizationId = props.match.params.id;
 
    async function getOrganizationData() {
       const org = await OrganizationApi.getOne(organizationId);
       setOrganization(org);
-      setLoading(false);
+      setIsLoading(false);
    }
-
    useEffect(() => {
       getOrganizationData();
-   }, []);
+   }, [props.location.pathname]);
 
    return (
       <>
-         {loading ? (
+         {isLoading ? (
             <Loading />
          ) : (
             <section className='columns'>
@@ -81,7 +80,7 @@ function Organization(props) {
                   </div>
                </aside>
                <div className='column is-10'>
-                  {loading ? (
+                  {isLoading ? (
                      <Loading />
                   ) : (
                      <section className='section'>
@@ -109,13 +108,13 @@ function Organization(props) {
                               exact
                               path={`${props.match.url}/information`}
                               render={() => (
-                                 <OrganizationProfile org={organization} setOrganization={setOrganization} />
+                                 <OrganizationProfile org={organization}  />
                               )}
                            />
                            <Route
                               exact
                               path={`${props.match.url}/appearance`}
-                              render={() => <Styles org={organization} setOrganization={setOrganization} />}
+                              render={() => <Styles org={organization}  />}
                            />
                            <Route
                               exact

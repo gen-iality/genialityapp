@@ -30,7 +30,7 @@ function OrgMembers(props) {
    const [addOrEditUser, setAddOrEditUser] = useState(false);
    const [extraFields, setExtraFields] = useState([]);
    const [roleList, setRoleList] = useState([]);
-   const [selectedUser, setSelectedUser] = useState([]);
+   const [selectedUser, setSelectedUser] = useState({});
    const [editMember, setEditMember] = useState(false);
    let { _id: organizationId } = props.org;
    const history = useHistory();
@@ -63,7 +63,7 @@ function OrgMembers(props) {
       setLastUpdate(new Date());
       getRoleList();
       setExtraFields(props.org.user_properties);
-   }, []);
+   }, [props.org.user_properties]);
 
    function goToEvent(eventId) {
       const url = `/eventadmin/${eventId}/agenda`;
@@ -88,7 +88,7 @@ function OrgMembers(props) {
 
    function addUser() {
       console.log('10. Agregar o editar usuario');
-      setSelectedUser(null);
+      setSelectedUser({});
       closeOrOpenModalMembers();
    }
    function editModalUser(item) {
