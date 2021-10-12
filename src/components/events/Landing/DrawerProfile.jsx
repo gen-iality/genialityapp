@@ -31,7 +31,7 @@ const DrawerProfile = (props) => {
   useEffect(() => {
     if (props.profileuser !== null) {
       let isContact = isMyContacts(props.profileuser, props.cHelper.contacts);
-
+      console.log("ISCONTACT==>",isContact)
     
       setIsMe(cUser.value._id == props.profileuser._id);
       setIsMyContact(isContact);
@@ -39,8 +39,8 @@ const DrawerProfile = (props) => {
     }
   }, [props.profileuser]);
   const haveRequestUser=(user)=>{
-    console.log("HEPERVALUE==>",requestSend,user)
-   return haveRequest(user,requestSend);
+    //console.log("HEPERVALUE==>",requestSend,user)
+   return haveRequest(user,requestSend,1);
   }
   return (
     <>
@@ -89,13 +89,14 @@ const DrawerProfile = (props) => {
           <Col span={24}>
             <Row justify='center' style={{ marginTop: '20px' }}>
               <Space size='middle'>
-                <Tooltip title={haveRequestUser( userSelected,1)?'Solicitud pendiente':'Solicitar contacto'}>
+                <Tooltip title={haveRequestUser(userSelected)?'Solicitud pendiente':'Solicitar contacto'}>
                   {userSelected && userSelected._id !== cUser.value._id && (
                     <Button
                       size='large'
                       shape='circle'
                       icon={<UsergroupAddOutlined />}
-                      onClick={haveRequestUser( userSelected,1)?null:async () => {
+                      disabled={haveRequestUser(userSelected) || isMycontact}
+                      onClick={haveRequestUser(userSelected)?null:async () => {
                         let sendResp = await SendFriendship(
                           {
                             eventUserIdReceiver: userSelected.eventUserId,
