@@ -18,6 +18,7 @@ import { parseUrl } from '../helpers/constants';
 import withContext from '../Context/withContext';
 import HelperContext from '../Context/HelperContext';
 import ModalAuth from '../components/authentication/ModalAuth';
+import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 
 const { setEventData } = eventActions;
 const { addLoginInformation, showMenu } = userActions;
@@ -136,7 +137,7 @@ class Headers extends Component {
     }
   }
   modalClose(){
-    this.setState({modalVisible:false})
+    this.setState({modalVisible:false,tabModal:''})
   }
   handleMenu = (location) => {
     const splited = location.pathname.split('/');
@@ -238,13 +239,14 @@ class Headers extends Component {
                 )}
               </Row>
 
-              
-              {!this.state.userEvent && <Row style={{marginBottom:10,marginTop:10}} justify='space-between' align='middle'> 
+              {console.log("LENGTHURL==>",window.location.href.toString().split('/').length)}
+              {!this.state.userEvent && !window.location.href.toString().includes('landing') && window.location.href.toString().split('/').length==4 && <Row style={{marginBottom:10,marginTop:10}} justify='space-between' align='middle'> 
                     <Button onClick={()=>this.setState({modalVisible:true,tabModal:'1'}) } style={{marginRight:5}}>Iniciar sesión</Button>
                     <Button onClick={()=>this.setState({modalVisible:true,tabModal:'2'} )}>Registrarme</Button>
               </Row>}
 
               <ModalAuth tab={this.state.tabModal} closeModal={this.modalClose} organization='register' visible={this.state.modalVisible} />
+              <ModalLoginHelpers />
               {/* Dropdown de navegacion para el usuario  */}
              {this.state.userEvent && <UserStatusAndMenu
                 isLoading={this.state.loader}

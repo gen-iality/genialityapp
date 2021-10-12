@@ -8,7 +8,7 @@ import * as Cookie from 'js-cookie';
 import { useIntl } from 'react-intl';
 
 import React, { useContext, useEffect, useState } from 'react';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi, UsersApi } from '../../helpers/request';
 import { stubTrue } from 'lodash-es';
 
 
@@ -34,9 +34,9 @@ const ModalAuth = (props) => {
   let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
   const intl = useIntl(); 
  useEffect(()=>{
-  if(props.tab){
+  if(props.tab){    
     handleChangeTabModal(props.tab)
-  }
+  }  
  },[props.tab])
   useEffect(() => {
     async function userAuth() {
@@ -48,7 +48,7 @@ const ModalAuth = (props) => {
               let url =
                 props.organization == 'landing'
                   ? `/organization/${props.idOrganization}/events?token=${idToken}`
-                  : `/landing/${props.cEvent.value?._id}?token=${idToken}`;
+                  : props.organization == 'register'?`/myprofile?token=${idToken}`: `/landing/${props.cEvent.value?._id}?token=${idToken}`;
               setTimeout(function() {
                 window.location.replace(url);
               }, 1000);
@@ -93,11 +93,14 @@ const ModalAuth = (props) => {
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
       .then((response) => {
+        console.log("RESPONSE==>",response)
         loginNormal = true;
         setErrorLogin(false);
         //setLoading(false);
       })
-      .catch(async () => {
+      .catch(async (e) => {
+        console.log("ERROR==>",e)
+       // if(props.organization!=='register'){
         let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
         if (user.data.length > 0) {
           if (
@@ -124,6 +127,11 @@ const ModalAuth = (props) => {
           setErrorLogin(true);
           setLoading(false);
         }
+     // }else{
+       //let login= await EventsApi.signInWithEmailAndPassword(data)
+       // let user=await UsersApi.findByEmail(data.email);
+       // console.log("USEROBTENIDO==>",user,login)
+    // }
       });
   };
 
@@ -247,8 +255,8 @@ const ModalAuth = (props) => {
               )}
               {loading && <LoadingOutlined style={{ fontSize: '50px' }} />}
             </Form>
-            {props.organization !== 'landing' && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
-            {props.organization !== 'landing' && (
+            {props.organization !== 'landing' && props.organization !== 'register'  && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
+            {props.organization !== 'landing' && props.organization !== 'register'  && (
               <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
                 <Typography.Paragraph type='secondary'>
                   {intl.formatMessage({

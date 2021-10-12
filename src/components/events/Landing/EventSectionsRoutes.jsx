@@ -124,14 +124,14 @@ const EventSectionRoutes = (props) => {
     <>
       {props.viewVirtualconference && (
         <>
-          {props.cEvent.value.styles.show_title &&
-            (props.cEvent.value.styles.show_title === true || props.cEvent.value.styles.show_title === 'true') && (
+          {props.cEvent.value?.styles?.show_title &&
+            (props.cEvent.value?.styles.show_title === true || props.cEvent.value?.styles?.show_title === 'true') && (
               <InfoEvent />
             )}
           <VirtualConferenceBig />
-          {props.cEvent.value.styles.show_video_widget &&
-            (props.cEvent.value.styles.show_video_widget === true ||
-              props.cEvent.value.styles.show_video_widget === 'true') && <ListVideoCard idevent={props.cEvent.value} />}
+          {props.cEvent.value?.styles?.show_video_widget &&
+            (props.cEvent.value?.styles?.show_video_widget === true ||
+              props.cEvent.value?.styles?.show_video_widget === 'true') && <ListVideoCard idevent={props.cEvent.value} />}
         </>
       )}
 
