@@ -883,7 +883,7 @@ const FormRegister = ({
                         : intl.formatMessage({ id: 'registration.button.create' })}
                     </Button>
                     {options &&
-                      initialValues != null &&
+                      Object.keys(initialValues).length > 0  &&
                       options.map((option) => (
                         <Button
                           icon={option.icon}

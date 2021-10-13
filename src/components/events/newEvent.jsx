@@ -5,7 +5,7 @@ import InfoAsistentes from './newEvent/infoAsistentes';
 import Moment from 'moment';
 import * as Cookie from 'js-cookie';
 
-import { Actions, OrganizationFuction, UsersApi, AgendaApi } from '../../helpers/request';
+import { Actions, OrganizationFuction, UsersApi, AgendaApi, EventsApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { BaseUrl, host_list } from '../../helpers/constants';
@@ -207,13 +207,23 @@ class NewEvent extends Component {
                 let sala = await this.createZoomRoom(agenda, result._id);
                 if (sala) {
                   message.success('Evento creado correctamente..');
-                  window.location.replace(`/eventadmin/${result._id}`);
+                  window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
                 } else {
                   message.error('Error al crear sala');
                 }
               } else {
-                message.success('Evento creado correctamente..');
-                window.location.replace(`/eventadmin/${result._id}`);
+                //CREAR TEMPLATE PARA EL EVENTO
+                let template=!eventNewContext.templateId&&true;
+                if(eventNewContext.templateId){
+                  template= await EventsApi.createTemplateEvent(result._id,eventNewContext.templateId);
+                }               
+               if(template){
+                // console.log("RESPUESTA TEMPLATE==>",template)
+                 message.success('Evento creado correctamente..');
+                 window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
+               }else{
+                message.error('Error al crear evento con su template');
+               }               
               }
             }
           } else {

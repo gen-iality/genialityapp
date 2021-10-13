@@ -128,11 +128,11 @@ class Product extends Component {
    };
 
    newProduct = () => {
-      this.props.history.push(`/event/${this.props.eventId}/product/addproduct`);
+      this.props.history.push(`/eventadmin/${this.props.eventId}/product/addproduct`);
    };
 
    configuration= () => {
-      this.props.history.push(`/event/${this.props.eventId}/product/configuration`);
+      this.props.history.push(`/eventadmin/${this.props.eventId}/product/configuration`);
    };
 
    goBack = () => this.props.history.goBack();

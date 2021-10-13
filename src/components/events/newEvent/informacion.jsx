@@ -2,7 +2,22 @@ import React, { useContext, useEffect, useState } from 'react';
 import EviusReactQuill from '../../shared/eviusReactQuill'; /* Se debe usar este componente para la descripcion */
 import { DateTimePicker } from 'react-widgets';
 import EventImage from '../../../eventimage.png';
-import { Badge, Card, Col, Input, Row, Space, Tooltip, Typography, Form, Modal, List, Button, Spin } from 'antd';
+import {
+  Badge,
+  Card,
+  Col,
+  Input,
+  Row,
+  Space,
+  Tooltip,
+  Typography,
+  Form,
+  Modal,
+  List,
+  Button,
+  Spin,
+  Select,
+} from 'antd';
 import { CalendarOutlined, CheckCircleFilled, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
@@ -10,6 +25,7 @@ import { useContextNewEvent } from '../../../Context/newEventContext';
 import { OrganizationApi } from '../../../helpers/request';
 
 const { Text, Link, Title, Paragraph } = Typography;
+const { Option } = Select;
 
 const Informacion = (props) => {
   const [organizations, setOrganizations] = useState([]);
@@ -40,17 +56,19 @@ const Informacion = (props) => {
     isLoadingOrganization,
     createOrganizationF,
     newOrganization,
+    selectTemplate,
+    templateId,
   } = useContextNewEvent();
 
   useEffect(() => {
     if (props.currentUser && !props.orgId) {
-      obtainOrganizations();     
+      obtainOrganizations();
     } // console.log("ISBYORGANIZATION==>",isbyOrganization)
   }, [props.orgId, props.currentUser]);
-  async function obtainOrganizations() {    
+  async function obtainOrganizations() {
     isLoadingOrganization(true);
-    let organizations = await OrganizationApi.mine(); 
-    if (organizations.length == 0) {    
+    let organizations = await OrganizationApi.mine();
+    if (organizations.length == 0) {
       await createOrganization();
       organizations = await OrganizationApi.mine();
     }
@@ -62,12 +80,12 @@ const Informacion = (props) => {
   const createNewOrganization = async (value) => {
     //alert(value);
     //console.log(value);
-    setLoadingAdd(true)
+    setLoadingAdd(true);
     const addOrganization = await createOrganization(value.name);
     if (addOrganization) {
-      await obtainOrganizations();      
+      await obtainOrganizations();
       newOrganization(false);
-      setLoadingAdd(false)
+      setLoadingAdd(false);
     }
   };
   const createOrganization = async (name) => {
@@ -89,6 +107,26 @@ const Informacion = (props) => {
     } else {
       changeOrganization(false);
     }
+  };
+  const handleChange = (value) => {
+    selectTemplate(value);
+  };
+
+  useEffect(() => {
+    if (selectOrganization) {
+      obtenerTemplates();
+      selectTemplate(
+        selectOrganization.template_properties ? selectOrganization?.template_properties[0]._id['$oid'] : undefined
+      );
+    }
+    async function obtenerTemplates() {
+      let resp = await obtainTemplates(selectOrganization?._id);
+      //console.log("TEMPLATES==>",resp,selectOrganization)
+    }
+  }, [selectOrganization]);
+
+  const obtainTemplates = async () => {
+    await OrganizationApi.getTemplateOrganization(selectOrganization?._id);
   };
 
   return (
@@ -151,7 +189,15 @@ const Informacion = (props) => {
         </div>
         <div>
           <Space direction='vertical'>
-            {<a onClick={() => { newOrganization(false); changeOrganization(true);}}>Organización: {selectOrganization?.name}</a>}
+            {
+              <a
+                onClick={() => {
+                  newOrganization(false);
+                  changeOrganization(true);
+                }}>
+                Organización: {selectOrganization?.name}
+              </a>
+            }
             {organization && !isbyOrganization && (
               <Modal
                 footer={
@@ -174,7 +220,9 @@ const Informacion = (props) => {
                 onCancel={() => changeOrganization(false)}>
                 {!createOrganizationF && (
                   <Row style={{ marginBottom: 10 }} justify={'end'}>
-                    <Button onClick={() => newOrganization(true)}><PlusCircleOutlined /> Agregar</Button>
+                    <Button onClick={() => newOrganization(true)}>
+                      <PlusCircleOutlined /> Agregar
+                    </Button>
                   </Row>
                 )}
                 {createOrganizationF && (
@@ -218,12 +266,18 @@ const Informacion = (props) => {
                         rules={[{ required: true, message: 'Ingrese un nombre válido' }]}>
                         <Input></Input>
                       </Form.Item>
-                     {!loadingAdd && <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                        <Button type='primary' htmlType='submit'>
-                          Agregar
-                        </Button>
-                      </Form.Item>}
-                      {loadingAdd && <Row justify={'center'}><Spin /></Row>}
+                      {!loadingAdd && (
+                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                          <Button type='primary' htmlType='submit'>
+                            Agregar
+                          </Button>
+                        </Form.Item>
+                      )}
+                      {loadingAdd && (
+                        <Row justify={'center'}>
+                          <Spin />
+                        </Row>
+                      )}
                     </Form>
                   </div>
                 )}
@@ -269,6 +323,18 @@ const Informacion = (props) => {
            </Row>*/}
           </Space>
         </div>
+        {/*console.log("ORGANIZATION SELECTED==>",selectOrganization)*/}
+        {/* SELECT TEMPLATE BY ORGANIZATION */}
+        {selectOrganization?.template_properties && (
+          <Space direction='vertical'>
+            <Text>Template: </Text>
+            <Select value={templateId} style={{ minWidth: '400px' }} onChange={handleChange}>
+              {selectOrganization.template_properties.map((template) => (
+                <Option value={template._id['$oid']}>{template.name}</Option>
+              ))}
+            </Select>
+          </Space>
+        )}
       </Space>
 
       {/* Modal de fecha */}
@@ -318,7 +384,8 @@ const Informacion = (props) => {
               </Space>
             </Card>
             <Paragraph type='secondary' style={{ marginTop: '10px' }}>
-              Si tu evento incluye varias actividades las podras crear en la seccion agenda despues de crear el evento.
+              Si tu evento se extiende por más de un día podrás ajustar las fechas en la sección{' '}
+              <strong>Datos del evento</strong> una vez lo hayas creado.
             </Paragraph>
           </Col>
         </Row>

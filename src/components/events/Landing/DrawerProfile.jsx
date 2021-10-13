@@ -9,7 +9,7 @@ import { formatDataToString } from '../../../helpers/utils';
 import { HelperContext } from '../../../Context/HelperContext';
 import { setViewPerfil } from '../../../redux/viewPerfil/actions';
 import { connect } from 'react-redux';
-import { addNotification, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
+import { addNotification, haveRequest, isMyContacts, SendFriendship } from '../../../helpers/netWorkingFunctions';
 import { UseEventContext } from '../../../Context/eventContext';
 import { UseUserEvent } from '../../../Context/eventUserContext';
 import { setUserAgenda } from '../../../redux/networking/actions';
@@ -22,7 +22,7 @@ const DrawerProfile = (props) => {
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
   let cEventUser = UseUserEvent();
-  let { propertiesProfile, handleChangeTypeModal } = useContext(HelperContext);
+  let { propertiesProfile,requestSend, handleChangeTypeModal } = useContext(HelperContext);
   const [userSelected, setUserSelected] = useState();
   const [isMycontact, setIsMyContact] = useState();
   const [isMe, setIsMe] = useState(false);
@@ -31,12 +31,17 @@ const DrawerProfile = (props) => {
   useEffect(() => {
     if (props.profileuser !== null) {
       let isContact = isMyContacts(props.profileuser, props.cHelper.contacts);
+      console.log("ISCONTACT==>",isContact)
+    
       setIsMe(cUser.value._id == props.profileuser._id);
       setIsMyContact(isContact);
-      setUserSelected(props.profileuser);
+      setUserSelected(props.profileuser); 
     }
   }, [props.profileuser]);
-
+  const haveRequestUser=(user)=>{
+    //console.log("HEPERVALUE==>",requestSend,user)
+   return haveRequest(user,requestSend,1);
+  }
   return (
     <>
       <Drawer
@@ -84,13 +89,14 @@ const DrawerProfile = (props) => {
           <Col span={24}>
             <Row justify='center' style={{ marginTop: '20px' }}>
               <Space size='middle'>
-                <Tooltip title='Solicitar contacto'>
+                <Tooltip title={haveRequestUser(userSelected)?'Solicitud pendiente':'Solicitar contacto'}>
                   {userSelected && userSelected._id !== cUser.value._id && (
                     <Button
                       size='large'
                       shape='circle'
                       icon={<UsergroupAddOutlined />}
-                      onClick={async () => {
+                      disabled={haveRequestUser(userSelected) || isMycontact}
+                      onClick={haveRequestUser(userSelected)?null:async () => {
                         let sendResp = await SendFriendship(
                           {
                             eventUserIdReceiver: userSelected.eventUserId,

@@ -11,141 +11,148 @@ import { Tag } from 'antd';
 import { DoubleRightOutlined } from '@ant-design/icons';
 
 function Organization(props) {
-   const [organization, setOrganization] = useState({});
-   const [loading, setLoading] = useState({});
-   const organizationId = props.match.params.id;
+  const [organization, setOrganization] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const organizationId = props.match.params.id;
 
-   async function getOrganizationData() {
-      const org = await OrganizationApi.getOne(organizationId);
-      setOrganization(org);
-      setLoading(false);
-   }
+  async function getOrganizationData() {
+    const org = await OrganizationApi.getOne(organizationId);
+    setOrganization(org);
+    setIsLoading(false);
+  }
+  useEffect(() => {
+    getOrganizationData();
+  }, [props.location.pathname]);
 
-   useEffect(() => {
-      getOrganizationData();
-   }, []);
+  console.log("props.match.params.id",props.match.params.id)
+  return (
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <section className='columns'>
+          <aside className='column menu event-aside is-2 has-text-weight-bold'>
+            <div className={`is-hidden-mobile`}>
+              <p className='menu-label has-text-centered-mobile'>
+                <NavLink
+                  className='item'
+                  // onClick={this.handleClick}
+                  activeClassName={'active'}
+                  to={`${props.match.url}/events`}>
+                  Eventos
+                </NavLink>
+              </p>
+              <p className='menu-label has-text-centered-mobile'>
+                <NavLink
+                  className='item'
+                  // onClick={this.handleClick}
+                  activeClassName={'active'}
+                  to={`${props.match.url}/information`}>
+                  Información
+                </NavLink>
+              </p>
+              <p className='menu-label has-text-centered-mobile'>
+                <NavLink
+                  className='item'
+                  // onClick={this.handleClick}
+                  activeClassName={'active'}
+                  to={`${props.match.url}/appearance`}>
+                  Apariencia
+                </NavLink>
+              </p>
+              <p className='menu-label has-text-centered-mobile'>
+                <NavLink
+                  className='item'
+                  // onClick={this.handleClick}
+                  activeClassName={'active'}
+                  to={`${props.match.url}/members`}>
+                  Miembros
+                </NavLink>
+              </p>
+              <p className='menu-label has-text-centered-mobile'>
+                <NavLink
+                  className='item'
+                  // onClick={this.handleClick}
+                  activeClassName={'active'}
+                  to={`${props.match.url}/membersettings`}>
+                  Configuración miembros
+                </NavLink>
+              </p>
 
-   return (
-      <>
-         {loading ? (
-            <Loading />
-         ) : (
-            <section className='columns'>
-               <aside className='column menu event-aside is-2 has-text-weight-bold'>
-                  <div className={`is-hidden-mobile`}>
-                     <p className='menu-label has-text-centered-mobile'>
-                        <NavLink
-                           className='item'
-                           // onClick={this.handleClick}
-                           activeClassName={'active'}
-                           to={`${props.match.url}/events`}>
-                           Eventos
-                        </NavLink>
-                     </p>
-                     <p className='menu-label has-text-centered-mobile'>
-                        <NavLink
-                           className='item'
-                           // onClick={this.handleClick}
-                           activeClassName={'active'}
-                           to={`${props.match.url}/information`}>
-                           Información
-                        </NavLink>
-                     </p>
-                     <p className='menu-label has-text-centered-mobile'>
-                        <NavLink
-                           className='item'
-                           // onClick={this.handleClick}
-                           activeClassName={'active'}
-                           to={`${props.match.url}/appearance`}>
-                           Apariencia
-                        </NavLink>
-                     </p>
-                     <p className='menu-label has-text-centered-mobile'>
-                        <NavLink
-                           className='item'
-                           // onClick={this.handleClick}
-                           activeClassName={'active'}
-                           to={`${props.match.url}/members`}>
-                           Miembros
-                        </NavLink>
-                     </p>
-                     <p className='menu-label has-text-centered-mobile'>
-                        <NavLink
-                           className='item'
-                           // onClick={this.handleClick}
-                           activeClassName={'active'}
-                           to={`${props.match.url}/membersettings`}>
-                           Configuración miembros
-                        </NavLink>
-                     </p>
-                  </div>
-               </aside>
-               <div className='column is-10'>
-                  {loading ? (
-                     <Loading />
-                  ) : (
-                     <section className='section'>
-                        <Tag color='#2bf4d5' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft:20 }}>
-                           <a
-                              target='_blank'
-                              href={`${window.location.origin}/organization/${organization._id}/events
+              <p className='menu-label has-text-centered-mobile'>
+                <NavLink
+                  className='item'
+                  // onClick={this.handleClick}
+                  activeClassName={'active'}
+                  to={`${props.match.url}/templatesettings`}>
+                  Configuración de plantillas
+                </NavLink>
+              </p>
+            </div>
+          </aside>
+          <div className='column is-10'>
+            {isLoading ? (
+              <Loading />
+            ) : (
+              <section className='section'>
+                <Tag color='#2bf4d5' icon={<DoubleRightOutlined />} style={{ marginBottom: 10, marginLeft: 20 }}>
+                  <a
+                    target='_blank'
+                    href={`${window.location.origin}/organization/${organization._id}/events
                         `}>
-                              {`Ir al landing de la organización: ${organization.name}`}
-                           </a>
-                        </Tag>
+                    {`Ir al landing de la organización: ${organization.name}`}
+                  </a>
+                </Tag>
 
-                        <Switch>
-                           <Route
-                              exact
-                              path={`${props.match.url}/`}
-                              render={() => <Redirect to={`${props.match.url}/events`} />}
-                           />
-                           <Route
-                              exact
-                              path={`${props.match.url}/events`}
-                              render={() => <OrgEvents org={organization} />}
-                           />
-                           <Route
-                              exact
-                              path={`${props.match.url}/information`}
-                              render={() => (
-                                 <OrganizationProfile org={organization} setOrganization={setOrganization} />
-                              )}
-                           />
-                           <Route
-                              exact
-                              path={`${props.match.url}/appearance`}
-                              render={() => <Styles org={organization} setOrganization={setOrganization} />}
-                           />
-                           <Route
-                              exact
-                              path={`${props.match.url}/members`}
-                              render={() => <OrgMembers org={organization} url={props.match.url} />}
-                           />
-                           <Route
-                              exact
-                              path={`${props.match.url}/membersettings`}
-                              render={() => <Datos org={organization} url={props.match.url} />}
-                           />
-                           <Route component={NoMatch} />
-                        </Switch>
-                     </section>
-                  )}
-               </div>
-            </section>
-         )}
-      </>
-   );
+                <Switch>
+                  <Route
+                    exact
+                    path={`${props.match.url}/`}
+                    render={() => <Redirect to={`${props.match.url}/events`} />}
+                  />
+                  <Route exact path={`${props.match.url}/events`} render={() => <OrgEvents org={organization} />} />
+                  <Route
+                    exact
+                    path={`${props.match.url}/information`}
+                    render={() => <OrganizationProfile org={organization} />}
+                  />
+                  <Route exact path={`${props.match.url}/appearance`} render={() => <Styles org={organization} />} />
+                  <Route
+                    exact
+                    path={`${props.match.url}/members`}
+                    render={() => <OrgMembers org={organization} url={props.match.url} />}
+                  />
+                  <Route
+                    exact
+                    path={`${props.match.url}/membersettings`}
+                    render={() => <Datos type="organization" org={organization} url={props.match.url} />}
+                  />
+
+                  <Route
+                    exact
+                    path={`${props.match.url}/templatesettings`}
+                    render={() => <Datos  type="organization" eventID={props.match.params.id} org={organization} url={props.match.url} />}
+                  />
+
+                  <Route component={NoMatch} />
+                </Switch>
+              </section>
+            )}
+          </div>
+        </section>
+      )}
+    </>
+  );
 }
 
 function NoMatch({ location }) {
-   return (
-      <div>
-         <h3>
-            No match for <code>{location.pathname}</code>
-         </h3>
-      </div>
-   );
+  return (
+    <div>
+      <h3>
+        No match for <code>{location.pathname}</code>
+      </h3>
+    </div>
+  );
 }
 
 export default withRouter(Organization);

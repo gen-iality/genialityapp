@@ -227,10 +227,10 @@ const ChatList = (props) => {
                   ]}>
                   <List.Item.Meta
                     avatar={
-                      item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl ? (
+                      item.participants?.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl ? (
                         <Avatar
                           src={
-                            item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl
+                            item.participants?.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl
                           }
                         />
                       ) : (

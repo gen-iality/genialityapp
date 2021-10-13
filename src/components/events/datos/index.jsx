@@ -1,23 +1,25 @@
-import React, { Component, Fragment } from 'react';
-import { Actions, EventFieldsApi, OrganizationApi } from '../../../helpers/request';
+import React, { Component, Fragment, useState } from 'react';
+import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import EventContent from '../shared/content';
 import EventModal from '../shared/eventModal';
 import DatosModal from './modal';
 import Dialog from '../../modal/twoAction';
-import { Tabs, Table, Checkbox, notification, Button } from 'antd';
+import { Tabs, Table, Checkbox, notification, Button, Select, Radio } from 'antd';
 import RelationField from './relationshipFields';
 import { EditOutlined, DeleteOutlined, DragOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
-
+import CMS from '../../newComponent/CMS';
 import { firestore } from '../../../helpers/firebase';
+import ModalCreateTemplate from '../../shared/modalCreateTemplate';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 const { TabPane } = Tabs;
+const { Option } = Select;
 
 class Datos extends Component {
   constructor(props) {
@@ -30,11 +32,15 @@ class Datos extends Component {
       edit: false,
       fields: [],
       properties: null,
+      value: '',
+      visibleModal: false,
+      isEditTemplate: { status: false, datafields: [] },
     };
     this.eventID = this.props.eventID;
     this.html = document.querySelector('html');
     this.submitOrder = this.submitOrder.bind(this);
-    this.organization = this.props?.org
+    this.handlevisibleModal = this.handlevisibleModal.bind(this);
+    this.organization = this.props?.org;
   }
 
   async componentDidMount() {
@@ -52,10 +58,11 @@ class Datos extends Component {
   // Funcion para traer la información
   fetchFields = async () => {
     try {
-      let fields
-      if(this.organization){
-        fields = this.organization.user_properties
-      }else{
+      const organizationId = this?.organization?._id;
+      let fields;
+      if (organizationId) {
+        fields = await OrganizationApi.getUserProperties(organizationId);
+      } else {
         fields = await EventFieldsApi.getAll(this.eventID);
         fields = this.orderFieldsByWeight(fields);
         fields = this.updateIndex(fields);
@@ -81,10 +88,13 @@ class Datos extends Component {
   //Guardar campo en el evento
   saveField = async (field) => {
     try {
-      let totaluser = {}
-      if(this.organization){
-        console.log("10. aqui se editan los checkBox, falta api ", field, field._id, this.organization._id)
-      }else{
+      let totaluser = {};
+      const organizationId = this?.organization?._id;
+
+      if (organizationId) {
+        if (this.state.edit) await OrganizationApi.editOneUserProperties(organizationId, field._id, field);
+        else await OrganizationApi.createOneUserProperties(organizationId, field);
+      } else {
         if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
         else await EventFieldsApi.createOne(field, this.eventID);
         totaluser = await firestore.collection(`${this.eventID}_event_attendees`).get();
@@ -118,11 +128,11 @@ class Datos extends Component {
 
   //Funcion para guardar el orden de los datos
   async submitOrder() {
-    if(this.organization){
-      console.log("10. Aqui se edita el orden de los campos ", this.state.properties, this.organization._id)
-      const data = await OrganizationApi.editOne(this.state.properties, this.organization._id)
-      console.log("10.data ", data)
-    }else{
+    const organizationId = this?.organization?._id;
+    if (organizationId) {
+      console.log('10. this.state.properties ', this.state.properties);
+      await OrganizationApi.editAllUserProperties(organizationId, this.state.properties);
+    } else {
       await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
     }
 
@@ -141,10 +151,11 @@ class Datos extends Component {
   //Borrar dato de la lista
   removeField = async () => {
     try {
-      if(this.organization){
-        console.log("10. Aqui se eleminan los campos ", this.state.deleteModal, this.organization._id)
+      const organizationId = this?.organization?._id;
+      if (organizationId) {
+        await OrganizationApi.deleteUserProperties(organizationId, this.state.deleteModal);
         this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
-      }else{
+      } else {
         await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventID);
         this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
       }
@@ -156,7 +167,7 @@ class Datos extends Component {
       this.showError(e);
     }
   };
-  
+
   closeDelete = () => {
     this.setState({ deleteModal: false });
   };
@@ -243,8 +254,18 @@ class Datos extends Component {
     }
   };
 
+  onChange1 = async (e, plantId) => {
+    console.log('e, radio checked', plantId);
+    this.setState({ value: '' });
+    await OrganizationPlantillaApi.putOne(this.props.eventID, plantId);
+  };
+
+  handlevisibleModal = () => {
+    this.setState({ visibleModal: !this.state.visibleModal });
+  };
+
   render() {
-    const { fields, modal, edit, info } = this.state;
+    const { fields, modal, edit, info, value } = this.state;
     const columns = [
       {
         title: '',
@@ -289,11 +310,7 @@ class Datos extends Component {
         dataIndex: 'sensibility',
         align: 'center',
         render: (record, key) => (
-          <Checkbox
-            name='sensibility'
-            onChange={() => this.changeCheckBox(key, 'sensibility')}
-            checked={record}
-          />
+          <Checkbox name='sensibility' onChange={() => this.changeCheckBox(key, 'sensibility')} checked={record} />
         ),
       },
       {
@@ -316,64 +333,164 @@ class Datos extends Component {
         dataIndex: '',
         render: (key) => (
           <>
-           {key.name !== 'email' &&  (
-            <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
-           )}
-            {key.name !== 'email' && key.name !== 'names' &&  (
+            {key.name !== 'email' && <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />}
+            {key.name !== 'email' && key.name !== 'names' && (
               <DeleteOutlined style={{ float: 'right' }} onClick={() => this.setState({ deleteModal: key._id })} />
             )}
           </>
         ),
       },
     ];
+
+    const colsPlant = [
+      {
+        title: 'Plantilla',
+        dataIndex: '',
+        width: '50px',
+        render: (record, key) => <Radio onClick={(e) => this.onChange1(e, record._id)} value={value} />,
+      },
+      {
+        title: 'Nombre',
+        dataIndex: 'name',
+      },
+    ];
+
     return (
       <div>
         <Tabs defaultActiveKey='1'>
-          <TabPane tab='Configuración General' key='1'>
-            <Fragment>
-              <EventContent
-                title={'Recopilación de datos'}
-                description={`Configure los datos que desea recolectar de los asistentes ${this.organization ?'de la organización':'del evento'}`}
-                addAction={this.addField}
-                addTitle={'Agregar dato'}>
-                <Table
-                  columns={columns}
-                  dataSource={fields}
-                  pagination={false}
-                  rowKey='index'
-                  components={{
-                    body: {
-                      wrapper: this.DraggableContainer,
-                      row: this.DraggableBodyRow,
-                    },
-                  }}
-                />
-                <Button style={{ marginTop: '3%' }} disabled={this.state.available} onClick={this.submitOrder}>
-                  Guardar orden de Datos
+          {this.state.visibleModal && (
+            <ModalCreateTemplate
+              visible={this.state.visibleModal}
+              handlevisibleModal={this.handlevisibleModal}
+              organizationid={this.props.eventID}
+            />
+          )}
+
+          {/* {this.props.type !== 'organization' && (
+            <TabPane tab='Configuración General' key='1'>
+              <Fragment>
+                <EventContent
+                  title={'Recopilación de datos'}
+                  description={`Configure los datos que desea recolectar de los asistentes ${
+                    this.organization ? 'de la organización' : 'del evento'
+                  }`}
+                  addAction={this.addField}
+                  addTitle={'Agregar dato'}>
+                  <Table
+                    columns={columns}
+                    dataSource={fields}
+                    pagination={false}
+                    rowKey='index'
+                    components={{
+                      body: {
+                        wrapper: this.DraggableContainer,
+                        row: this.DraggableBodyRow,
+                      },
+                    }}
+                  />
+                  <Button style={{ marginTop: '3%' }} disabled={this.state.available} onClick={this.submitOrder}>
+                    Guardar orden de Datos
+                  </Button>
+                </EventContent>
+                {modal && (
+                  <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
+                    <DatosModal edit={edit} info={info} action={this.saveField} />
+                  </EventModal>
+                )}
+                {this.state.deleteModal && (
+                  <Dialog
+                    modal={this.state.deleteModal}
+                    title={'Borrar Dato'}
+                    content={<p>Seguro de borrar este dato?</p>}
+                    first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.removeField }}
+                    message={this.state.message}
+                    second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
+                  />
+                )}
+              </Fragment>
+            </TabPane>
+          )} */}
+
+          {/* {this.props.eventID && this.props.type != 'organization' && (
+            <TabPane tab='Campos Relacionados' key='2'>
+              <RelationField eventId={this.props.eventID} fields={fields} />
+            </TabPane>
+          )} */}
+
+          <TabPane tab='Plantillas' key='3'>
+            {this.state.isEditTemplate.status ? (
+              <Fragment>
+                <Button
+                  danger
+                  style={{ marginTop: '3%' }}
+                  onClick={() =>
+                    this.setState({ isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] } })
+                  }>
+                  Volver a plantillas
                 </Button>
-              </EventContent>
-              {modal && (
-                <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
-                  <DatosModal edit={edit} info={info} action={this.saveField} />
-                </EventModal>
-              )}
-              {this.state.deleteModal && (
-                <Dialog
-                  modal={this.state.deleteModal}
-                  title={'Borrar Dato'}
-                  content={<p>Seguro de borrar este dato?</p>}
-                  first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.removeField }}
-                  message={this.state.message}
-                  second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
-                />
-              )}
-            </Fragment>
+
+                <EventContent
+                  title={'Recopilación de datos'}
+                  description={`Configure los datos que desea recolectar de los asistentes ${
+                    this.organization ? 'de la organización' : 'del evento'
+                  }`}
+                  addAction={this.addField}
+                  addTitle={'Agregar dato'}>
+                  <Table
+                    columns={columns}
+                    dataSource={this.state.isEditTemplate.datafields}
+                    pagination={false}
+                    rowKey='index'
+                    components={{
+                      body: {
+                        wrapper: this.DraggableContainer,
+                        row: this.DraggableBodyRow,
+                      },
+                    }}
+                  />
+                  <Button style={{ marginTop: '3%' }} disabled={this.state.available} onClick={this.submitOrder}>
+                    Guardar orden de Datos
+                  </Button>
+                </EventContent>
+                {modal && (
+                  <>
+                    <EventModal
+                      modal={modal}
+                      title={edit ? 'Editar Dato' : 'Agregar Dato'}
+                      closeModal={this.closeModal}>
+                      <DatosModal edit={edit} info={info} action={this.saveField} />
+                    </EventModal>
+                  </>
+                )}
+                {this.state.deleteModal && (
+                  <Dialog
+                    modal={this.state.deleteModal}
+                    title={'Borrar Dato'}
+                    content={<p>Seguro de borrar este dato?</p>}
+                    first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.removeField }}
+                    message={this.state.message}
+                    second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
+                  />
+                )}
+              </Fragment>
+            ) : (
+              <CMS
+                API={OrganizationPlantillaApi}
+                eventId={this.props.event?.organizer_id ? this.props.event?.organizer_id : this.props.eventID}
+                title={'Plantillas de recoleccion de datos'}
+                addFn={() => this.setState({ visibleModal: true })}
+                columns={colsPlant}
+                editFn={(values) =>
+                  this.setState({
+                    isEditTemplate: { ...this.state.isEditTemplate, status: true, datafields: values.user_properties },
+                  })
+                }
+                pagination={false}
+                actions
+              />
+            )}
           </TabPane>
-          {this.props.eventID && <TabPane tab='Campos Relacionados' key='2'>
-            <RelationField eventId={this.props.eventID} fields={fields} />
-          </TabPane>}
         </Tabs>
-        {/*<DragDrop eventId={this.props.eventID} list={fields} />*/}
       </div>
     );
   }

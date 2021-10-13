@@ -12,6 +12,7 @@ const Header = ( props ) => {
     title, //titulo del encabezado
     titleTooltip, //tooltip para el encabezado
     addUrl, //link para ir a la vista de agregar
+    addFn, //link para ir a la vista de agregar
     edit, //id del elemento a editar
     remove, //método para eliminar
     save, //boolean, para que aparezca el botón de guardar
@@ -54,6 +55,13 @@ const Header = ( props ) => {
                   {'Agregar'}
                 </Button>
               </Link>
+            )
+          }
+          {
+            addFn && (
+              <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={addFn}>
+                {'Agregar'}
+              </Button>
             )
           }
         </Col>
