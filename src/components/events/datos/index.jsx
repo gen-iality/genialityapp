@@ -39,8 +39,12 @@ class Datos extends Component {
     this.eventID = this.props.eventID;
     this.html = document.querySelector('html');
     this.submitOrder = this.submitOrder.bind(this);
+<<<<<<< HEAD
     this.handlevisibleModal = this.handlevisibleModal.bind(this);
     this.organization = this.props?.sendprops?.org;
+=======
+    this.organization = this.props?.org;
+>>>>>>> 9b32cb226b0de9ff28cb92e1a3712bc2ee036132
   }
 
   async componentDidMount() {
@@ -58,10 +62,16 @@ class Datos extends Component {
   // Funcion para traer la información
   fetchFields = async () => {
     try {
+<<<<<<< HEAD
       const organizationId = this?.organization?._id;
       let fields;
       if (organizationId) {
         fields = await this.props.getFields();
+=======
+      let fields;
+      if (this.organization) {
+        fields = this.organization.user_properties;
+>>>>>>> 9b32cb226b0de9ff28cb92e1a3712bc2ee036132
       } else {
         fields = await EventFieldsApi.getAll(this.eventID);
         fields = this.orderFieldsByWeight(fields);
@@ -89,11 +99,16 @@ class Datos extends Component {
   saveField = async (field) => {
     try {
       let totaluser = {};
+<<<<<<< HEAD
       const organizationId = this?.organization?._id;
 
       if (organizationId) {
         if (this.state.edit) await this.props.editField(field._id, field);
         else await this.props.createNewField(field);
+=======
+      if (this.organization) {
+        console.log('10. aqui se editan los checkBox, falta api ', field, field._id, this.organization._id);
+>>>>>>> 9b32cb226b0de9ff28cb92e1a3712bc2ee036132
       } else {
         if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
         else await EventFieldsApi.createOne(field, this.eventID);
@@ -128,9 +143,16 @@ class Datos extends Component {
 
   //Funcion para guardar el orden de los datos
   async submitOrder() {
+<<<<<<< HEAD
     const organizationId = this?.organization?._id;
     if (organizationId) {
       await this.props.orderFields(this.state.properties);
+=======
+    if (this.organization) {
+      console.log('10. Aqui se edita el orden de los campos ', this.state.properties, this.organization._id);
+      const data = await OrganizationApi.editOne(this.state.properties, this.organization._id);
+      console.log('10.data ', data);
+>>>>>>> 9b32cb226b0de9ff28cb92e1a3712bc2ee036132
     } else {
       await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
     }
@@ -150,9 +172,14 @@ class Datos extends Component {
   //Borrar dato de la lista
   removeField = async () => {
     try {
+<<<<<<< HEAD
       const organizationId = this?.organization?._id;
       if (organizationId) {
         await this.props.deleteField(this.state.deleteModal);
+=======
+      if (this.organization) {
+        console.log('10. Aqui se eleminan los campos ', this.state.deleteModal, this.organization._id);
+>>>>>>> 9b32cb226b0de9ff28cb92e1a3712bc2ee036132
         this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
       } else {
         await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventID);
@@ -332,8 +359,15 @@ class Datos extends Component {
         dataIndex: '',
         render: (key) => (
           <>
+<<<<<<< HEAD
             {key.name !== 'email' && <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />}
             {key.name !== 'email' && key.name !== 'names' && (
+=======
+            {key.name !== 'email' && key.name !== 'contrasena' && (
+              <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
+            )}
+            {key.name !== 'email' && key.name !== 'names' && key.name !== 'contrasena' && (
+>>>>>>> 9b32cb226b0de9ff28cb92e1a3712bc2ee036132
               <DeleteOutlined style={{ float: 'right' }} onClick={() => this.setState({ deleteModal: key._id })} />
             )}
           </>
@@ -357,6 +391,7 @@ class Datos extends Component {
     return (
       <div>
         <Tabs defaultActiveKey='1'>
+<<<<<<< HEAD
           {this.state.visibleModal && (
             <ModalCreateTemplate
               visible={this.state.visibleModal}
@@ -490,6 +525,55 @@ class Datos extends Component {
               />
             )}
           </TabPane>
+=======
+          <TabPane tab='Configuración General' key='1'>
+            <Fragment>
+              <EventContent
+                title={'Recopilación de datos'}
+                description={`Configure los datos que desea recolectar de los asistentes ${
+                  this.organization ? 'de la organización' : 'del evento'
+                }`}
+                addAction={this.addField}
+                addTitle={'Agregar dato'}>
+                <Table
+                  columns={columns}
+                  dataSource={fields}
+                  pagination={false}
+                  rowKey='index'
+                  components={{
+                    body: {
+                      wrapper: this.DraggableContainer,
+                      row: this.DraggableBodyRow,
+                    },
+                  }}
+                />
+                <Button style={{ marginTop: '3%' }} disabled={this.state.available} onClick={this.submitOrder}>
+                  Guardar orden de Datos
+                </Button>
+              </EventContent>
+              {modal && (
+                <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
+                  <DatosModal edit={edit} info={info} action={this.saveField} />
+                </EventModal>
+              )}
+              {this.state.deleteModal && (
+                <Dialog
+                  modal={this.state.deleteModal}
+                  title={'Borrar Dato'}
+                  content={<p>Seguro de borrar este dato?</p>}
+                  first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.removeField }}
+                  message={this.state.message}
+                  second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
+                />
+              )}
+            </Fragment>
+          </TabPane>
+          {this.props.eventID && (
+            <TabPane tab='Campos Relacionados' key='2'>
+              <RelationField eventId={this.props.eventID} fields={fields} />
+            </TabPane>
+          )}
+>>>>>>> 9b32cb226b0de9ff28cb92e1a3712bc2ee036132
         </Tabs>
       </div>
     );

@@ -44,7 +44,6 @@ const General = asyncComponent(() => import('./general'));
 const Badge = asyncComponent(() => import('../badge'));
 const Informativesection = asyncComponent(() => import('../events/informativeSections/adminInformativeSection'));
 
-
 //invitations
 const InvitedUsers = asyncComponent(() => import('../invitations'));
 
@@ -154,7 +153,6 @@ class Event extends Component {
       formatupperorlowercase = url.toString().toLowerCase();
     } else {
       formatupperorlowercase = url.toString();
-      console.log('por aca', formatupperorlowercase, 'original', url);
     }
 
     var encodedUrl = formatupperorlowercase;
