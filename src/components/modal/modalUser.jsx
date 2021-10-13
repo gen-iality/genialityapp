@@ -228,7 +228,7 @@ class UserModal extends Component {
           }}>
           <FormComponent
             conditionalsOther={this.props.cEvent?.value?.fields_conditions || []}
-            initialOtherValue={this.props.value}
+            initialOtherValue={this.props.value || {}}
             eventUserOther={user || {}}
             fields={this.props.extraFields}
             organization={true}
