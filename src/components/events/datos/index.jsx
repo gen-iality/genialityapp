@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useState } from 'react';
-import { Actions, EventFieldsApi, OrganizationApi } from '../../../helpers/request';
+import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import EventContent from '../shared/content';
@@ -246,10 +246,12 @@ class Datos extends Component {
     }
   };
   
-  onChange1 = e => {
-    console.log('radio checked', e.target.value);
-    this.setState({value: e.target.value});
+  onChange1 = async (e, plantId) => {
+    console.log('e, radio checked', plantId);
+    this.setState({value: ''});
+    await OrganizationPlantillaApi.putOne(this.props.eventID, plantId);
   };
+
   render() {
     const { fields, modal, edit, info, value } = this.state;
     const columns = [
@@ -336,15 +338,15 @@ class Datos extends Component {
 
     const colsPlant = [
       {
-        title: 'Plantilla por defecto',
+        title: 'Plantilla',
         dataIndex: '',
         width: '50px',
         render: (record, key) =>
-          <Radio onChange={this.onChange1} value={value} />
+          <Radio onClick={(e) => this.onChange1(e, record._id)} value={value} />
       },
       {
-        title: 'Dato',
-        dataIndex: 'label',
+        title: 'Nombre',
+        dataIndex: 'name',
       },
     ]
     
@@ -396,20 +398,13 @@ class Datos extends Component {
           </TabPane>}
           <TabPane tab='Plantillas' key='3'>
             <CMS 
-              API={EventFieldsApi}
-              eventId={this.props.eventID}
+              API={OrganizationPlantillaApi}
+              eventId={this.props.event.organizer_id}
               title={'Plantillas'}
               addFn
               columns={colsPlant}
               editFn
               pagination={false}
-              /* extra={(
-                <Select defaultValue='Plantilla 1'>
-                  <Option value='Plantilla 1'>Plantilla 1</Option>
-                  <Option value='Plantilla 2'>Plantilla 2</Option>
-                </Select>
-              )} */
-              /* draggable */
               actions
             />
           </TabPane>

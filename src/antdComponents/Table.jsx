@@ -90,10 +90,11 @@ const Table = ( props ) => {
     },
   }
 
+  if(actions) {
+    header.push(options);
+  }
+  
   useEffect(() => {
-    if(actions) {
-      actionsFn();
-    }
   
     if(draggable) {
       draggableFn();
@@ -104,9 +105,6 @@ const Table = ( props ) => {
     }
   }, [])
 
-  const actionsFn = () => {
-    header.push(options);
-  }
 
   const draggableFn = () => {
     header.unshift({
@@ -192,9 +190,9 @@ const Table = ( props ) => {
       <TableAnt 
         columns={header}
         dataSource={list}
-        hasData={list}
+        /* hasData={list} */
         size='small'
-        /* hasData={list.length} */
+        hasData={list && list.length}
         rowKey={record => record.index}
         loading={loading}
         pagination={pagination}

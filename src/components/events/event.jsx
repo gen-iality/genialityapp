@@ -212,7 +212,7 @@ class Event extends Component {
                 path={`${match.url}/wall`}
                 render={() => <Wall event={this.state.event} eventId={this.state.event._id} />}
               />
-              <Route path={`${match.url}/datos`} render={() => <Datos eventID={this.state.event._id} />} />
+              <Route path={`${match.url}/datos`} render={() => <Datos eventID={this.state.event._id} event={this.state.event} />} />
               <Route
                 path={`${match.url}/agenda`}
                 render={() => <AgendaRoutes event={this.state.event} updateEvent={this.updateEvent} />}

@@ -767,6 +767,14 @@ export const SpeakersApi = {
     return await Actions.create(`api/events/${event}/host`, data);
   },
 };
+export const OrganizationPlantillaApi = {
+  byEvent: async (organization) => {
+    return await Actions.get(`api/organizations/${organization}/templateproperties`);
+  },
+  putOne: async (event, templatepropertie) => {
+    return await Actions.put(`api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties`);
+  },
+};
 
 export const ExternalSurvey = async (meeting_id) => {
   return await Actions.get(`${ApiEviusZoomSurvey}/?meeting_id=${meeting_id}`);
