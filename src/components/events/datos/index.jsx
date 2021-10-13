@@ -1,16 +1,17 @@
-import React, { Component, Fragment } from 'react';
-import { Actions, EventFieldsApi, OrganizationApi } from '../../../helpers/request';
+import React, { Component, Fragment, useState } from 'react';
+import { Actions, EventFieldsApi, OrganizationApi, OrganizationPlantillaApi } from '../../../helpers/request';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import EventContent from '../shared/content';
 import EventModal from '../shared/eventModal';
 import DatosModal from './modal';
 import Dialog from '../../modal/twoAction';
-import { Tabs, Table, Checkbox, notification, Button } from 'antd';
+import { Tabs, Table, Checkbox, notification, Button, Select, Radio } from 'antd';
 import RelationField from './relationshipFields';
 import { EditOutlined, DeleteOutlined, DragOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
+import CMS from '../../newComponent/CMS';
 
 import { firestore } from '../../../helpers/firebase';
 import ModalCreateTemplate from '../../shared/modalCreateTemplate';
@@ -19,6 +20,7 @@ const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', c
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 const { TabPane } = Tabs;
+const { Option } = Select;
 
 class Datos extends Component {
   constructor(props) {
@@ -31,6 +33,7 @@ class Datos extends Component {
       edit: false,
       fields: [],
       properties: null,
+      value: ''
     };
     this.eventID = this.props.eventID;
     this.html = document.querySelector('html');
@@ -249,9 +252,15 @@ class Datos extends Component {
       });
     }
   };
+  
+  onChange1 = async (e, plantId) => {
+    console.log('e, radio checked', plantId);
+    this.setState({value: ''});
+    await OrganizationPlantillaApi.putOne(this.props.eventID, plantId);
+  };
 
   render() {
-    const { fields, modal, edit, info } = this.state;
+    const { fields, modal, edit, info, value } = this.state;
     const columns = [
       {
         title: '',
@@ -333,6 +342,21 @@ class Datos extends Component {
         ),
       },
     ];
+
+    const colsPlant = [
+      {
+        title: 'Plantilla',
+        dataIndex: '',
+        width: '50px',
+        render: (record, key) =>
+          <Radio onClick={(e) => this.onChange1(e, record._id)} value={value} />
+      },
+      {
+        title: 'Nombre',
+        dataIndex: 'name',
+      },
+    ]
+    
     return (
       <div>
         <Tabs defaultActiveKey='1'>
@@ -380,6 +404,18 @@ class Datos extends Component {
           {this.props.eventID && <TabPane tab='Campos Relacionados' key='2'>
             <RelationField eventId={this.props.eventID} fields={fields} />
           </TabPane>}
+          <TabPane tab='Plantillas' key='3'>
+            <CMS 
+              API={OrganizationPlantillaApi}
+              eventId={this.props.event.organizer_id}
+              title={'Plantillas'}
+              addFn
+              columns={colsPlant}
+              editFn
+              pagination={false}
+              actions
+            />
+          </TabPane>
         </Tabs>
         {/*<DragDrop eventId={this.props.eventID} list={fields} />*/}
       </div>

@@ -405,6 +405,9 @@ export const EventFieldsApi = {
   getAll: async (event) => {
     return await Actions.getAll(`/api/events/${event}/userproperties`);
   },
+  byEvent: async (event) => {
+    return await Actions.getAll(`/api/events/${event}/userproperties`);
+  },
   getOne: async (event, id) => {
     return await Actions.getOne(`/api/events/${event}/userproperties/${id}`);
   },
@@ -786,6 +789,14 @@ export const SpeakersApi = {
   },
   create: async (event, data) => {
     return await Actions.create(`api/events/${event}/host`, data);
+  },
+};
+export const OrganizationPlantillaApi = {
+  byEvent: async (organization) => {
+    return await Actions.get(`api/organizations/${organization}/templateproperties`);
+  },
+  putOne: async (event, templatepropertie) => {
+    return await Actions.put(`api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties`);
   },
 };
 
