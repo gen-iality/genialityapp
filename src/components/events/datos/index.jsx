@@ -33,10 +33,13 @@ class Datos extends Component {
       fields: [],
       properties: null,
       value: '',
+      visibleModal: false,
+      isEditTemplate: { status: false, datafields: [] },
     };
     this.eventID = this.props.eventID;
     this.html = document.querySelector('html');
     this.submitOrder = this.submitOrder.bind(this);
+    this.handlevisibleModal = this.handlevisibleModal.bind(this);
     this.organization = this.props?.org;
   }
 
@@ -257,6 +260,10 @@ class Datos extends Component {
     await OrganizationPlantillaApi.putOne(this.props.eventID, plantId);
   };
 
+  handlevisibleModal = () => {
+    this.setState({ visibleModal: !this.state.visibleModal });
+  };
+
   render() {
     const { fields, modal, edit, info, value } = this.state;
     const columns = [
@@ -351,10 +358,17 @@ class Datos extends Component {
     return (
       <div>
         <Tabs defaultActiveKey='1'>
-          {this.props.type !== 'organization' && (
+          {this.state.visibleModal && (
+            <ModalCreateTemplate
+              visible={this.state.visibleModal}
+              handlevisibleModal={this.handlevisibleModal}
+              organizationid={this.props.eventID}
+            />
+          )}
+
+          {/* {this.props.type !== 'organization' && (
             <TabPane tab='Configuración General' key='1'>
               <Fragment>
-                <ModalCreateTemplate />
                 <EventContent
                   title={'Recopilación de datos'}
                   description={`Configure los datos que desea recolectar de los asistentes ${
@@ -395,26 +409,88 @@ class Datos extends Component {
                 )}
               </Fragment>
             </TabPane>
-          )}
-          {this.props.eventID && this.props.type != 'organization' && (
+          )} */}
+
+          {/* {this.props.eventID && this.props.type != 'organization' && (
             <TabPane tab='Campos Relacionados' key='2'>
               <RelationField eventId={this.props.eventID} fields={fields} />
             </TabPane>
-          )}
+          )} */}
+
           <TabPane tab='Plantillas' key='3'>
-            <CMS
-              API={OrganizationPlantillaApi}
-              eventId={this.props.event?.organizer_id ? this.props.event?.organizer_id : this.props.eventID}
-              title={'Plantillas'}
-              addFn={()=>alert("aja alejandra")}
-              columns={colsPlant}
-              editFn
-              pagination={false}
-              actions
-            />
+            {this.state.isEditTemplate.status ? (
+              <Fragment>
+                <Button
+                  danger
+                  style={{ marginTop: '3%' }}
+                  onClick={() =>
+                    this.setState({ isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] } })
+                  }>
+                  Volver a plantillas
+                </Button>
+
+                <EventContent
+                  title={'Recopilación de datos'}
+                  description={`Configure los datos que desea recolectar de los asistentes ${
+                    this.organization ? 'de la organización' : 'del evento'
+                  }`}
+                  addAction={this.addField}
+                  addTitle={'Agregar dato'}>
+                  <Table
+                    columns={columns}
+                    dataSource={this.state.isEditTemplate.datafields}
+                    pagination={false}
+                    rowKey='index'
+                    components={{
+                      body: {
+                        wrapper: this.DraggableContainer,
+                        row: this.DraggableBodyRow,
+                      },
+                    }}
+                  />
+                  <Button style={{ marginTop: '3%' }} disabled={this.state.available} onClick={this.submitOrder}>
+                    Guardar orden de Datos
+                  </Button>
+                </EventContent>
+                {modal && (
+                  <>
+                    <EventModal
+                      modal={modal}
+                      title={edit ? 'Editar Dato' : 'Agregar Dato'}
+                      closeModal={this.closeModal}>
+                      <DatosModal edit={edit} info={info} action={this.saveField} />
+                    </EventModal>
+                  </>
+                )}
+                {this.state.deleteModal && (
+                  <Dialog
+                    modal={this.state.deleteModal}
+                    title={'Borrar Dato'}
+                    content={<p>Seguro de borrar este dato?</p>}
+                    first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.removeField }}
+                    message={this.state.message}
+                    second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
+                  />
+                )}
+              </Fragment>
+            ) : (
+              <CMS
+                API={OrganizationPlantillaApi}
+                eventId={this.props.event?.organizer_id ? this.props.event?.organizer_id : this.props.eventID}
+                title={'Plantillas de recoleccion de datos'}
+                addFn={() => this.setState({ visibleModal: true })}
+                columns={colsPlant}
+                editFn={(values) =>
+                  this.setState({
+                    isEditTemplate: { ...this.state.isEditTemplate, status: true, datafields: values.user_properties },
+                  })
+                }
+                pagination={false}
+                actions
+              />
+            )}
           </TabPane>
         </Tabs>
-        
       </div>
     );
   }

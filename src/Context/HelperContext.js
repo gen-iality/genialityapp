@@ -51,6 +51,13 @@ export const HelperContextProvider = ({ children }) => {
   const [typeModal, setTypeModal] = useState(null);
   const [tabLogin, setTabLogin] = useState('1');
   const [visibleLoginEvents,setVisibleLoginEvents]=useState(false)
+  const [reloadTemplatesCms, setreloadTemplatesCms] = useState(false)
+
+
+  function handleReloadTemplatesCms(){
+    setreloadTemplatesCms(!reloadTemplatesCms)
+  }
+
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
@@ -556,7 +563,9 @@ export const HelperContextProvider = ({ children }) => {
         handleChangeTabModal,
         tabLogin,
         visibleLoginEvents,
-        visibilityLoginEvents
+        visibilityLoginEvents,
+        reloadTemplatesCms,
+        handleReloadTemplatesCms
       }}>
       {children}      
     </HelperContext.Provider>

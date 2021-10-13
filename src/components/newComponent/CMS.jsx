@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { handleRequestError } from '../../helpers/utils';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal, message } from 'antd';
 import Header from '../../antdComponents/Header';
 import Table from '../../antdComponents/Table';
+import HelperContext from '../../Context/HelperContext';
 
 const { confirm } = Modal;
 
@@ -14,10 +15,11 @@ const CMS = ( props ) => {
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [ list, setList ] = useState([]);
   const [ loading, setLoading ] = useState(true);
+  let { reloadTemplatesCms } = useContext(HelperContext);
 
   useEffect(() => {
     getList();
-  }, [])
+  }, [reloadTemplatesCms])
 
   const getList = async () => {
     const data = await API.byEvent(eventId);
