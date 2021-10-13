@@ -9,6 +9,7 @@ import OrgMembers from './members';
 import Datos from '../events/datos';
 import { Tag } from 'antd';
 import { DoubleRightOutlined } from '@ant-design/icons';
+import MenuLanding from '../menuLanding';
 
 function Organization(props) {
   const [organization, setOrganization] = useState({});
@@ -24,7 +25,7 @@ function Organization(props) {
     getOrganizationData();
   }, [props.location.pathname]);
 
-  console.log("props.match.params.id",props.match.params.id)
+  console.log('props.match.params.id', props.match.params.id);
   return (
     <>
       {isLoading ? (
@@ -88,6 +89,15 @@ function Organization(props) {
                   Configuración de plantillas
                 </NavLink>
               </p>
+              <p className='menu-label has-text-centered-mobile'>
+                <NavLink
+                  className='item'
+                  // onClick={this.handleClick}
+                  activeClassName={'active'}
+                  to={`${props.match.url}/menuItems`}>
+                  Menú items
+                </NavLink>
+              </p>
             </div>
           </aside>
           <div className='column is-10'>
@@ -125,13 +135,28 @@ function Organization(props) {
                   <Route
                     exact
                     path={`${props.match.url}/membersettings`}
-                    render={() => <Datos type="organization" org={organization} url={props.match.url} />}
+                    render={() => <Datos type='organization' org={organization} url={props.match.url} />}
                   />
 
                   <Route
                     exact
                     path={`${props.match.url}/templatesettings`}
-                    render={() => <Datos  type="organization" eventID={props.match.params.id} org={organization} url={props.match.url} />}
+                    render={() => (
+                      <Datos
+                        type='organization'
+                        eventID={props.match.params.id}
+                        org={organization}
+                        url={props.match.url}
+                      />
+                    )}
+                  />
+
+                  <Route
+                    exact
+                    path={`${props.match.url}/menuItems`}
+                    render={() => (
+                     <MenuLanding organization={1} />
+                    )}
                   />
 
                   <Route component={NoMatch} />

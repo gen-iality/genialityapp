@@ -194,8 +194,13 @@ class menuLanding extends Component {
 
   async componentDidMount() {
     const menuBase = this.state.menu;
-    const menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}`);
-
+    let menuLanding={}
+    if (this.props.organization != 1) {
+      menuLanding  = await Actions.getAll(`/api/events/${this.props.event._id}`);
+    }else{
+     //OBTENER DE ORGANIZACIÓN
+     menuLanding.itemsMenu=[]
+    }
     for (const prop in menuBase) {
       for (const prop1 in menuLanding.itemsMenu) {
         if (prop1 === prop) {
@@ -215,7 +220,9 @@ class menuLanding extends Component {
     let itemsMenuData = {};
     let itemsMenuToSave = {};
     let items = Object.values(itemsMenu);
-
+    
+    items=items.map((item)=>{return {...item ,position:item.position=!item.position?30:parseInt(item.position)}})
+    console.log("ITEMSPOSITION==>",items)   
     items.sort(function(a, b) {
       if (a.position) return a.position - b.position;
     });
@@ -243,7 +250,11 @@ class menuLanding extends Component {
     } else {
       newMenu.allow_register = false;
     }
-    await Actions.put(`api/events/${this.props.event._id}`, newMenu);
+    if(this.props.organization!==1){
+      await Actions.put(`api/events/${this.props.event._id}`, newMenu);
+    }else{
+       console.log("MENU GUARDADDO==>",newMenu)
+    }   
     toast.success('Información guardada');
     message.destroy(loadingSave.key);
     message.open({
@@ -300,25 +311,25 @@ class menuLanding extends Component {
 
   orderPosition(key, order) {
     let itemsMenuToOrder = { ...this.state.itemsMenu };
-    itemsMenuToOrder[key].position = order;
+    itemsMenuToOrder[key].position = order!==''?parseInt(order):0;
 
     this.setState({ itemsMenu: itemsMenuToOrder });
   }
   render() {
     return (
       <Fragment>
-        <Title level={3}>Habilitar secciones del evento</Title>
+        <Title level={3}>{this.props.organization!=1?'Habilitar secciones del evento':'Secciones a habilitar para cada evento'}</Title>
         <h3>(Podrás guardar la configuración de tu menú en la parte inferior)</h3>
         <Row gutter={16}>
           {console.log('MENU SECTIONS ', this.state.menu)}
           {Object.keys(this.state.menu).map((key) => {
             return (
               <div key={key}>
-                <Col style={{ marginTop: '3%' }} span={8}>
+                <Col style={{ marginTop: '3%',marginRight:this.props.organization==1?20:'' }} span={8}>
                   <Card
                     title={<Title level={4}>{this.state.menu[key].name}</Title>}
                     bordered={true}
-                    style={{ width: 300, marginTop: '2%' }}>
+                    style={{ width: this.props.organization==1? 350:300, marginTop: '2%' }}>
                     <div style={{ marginBottom: '3%' }}>
                       <Button
                         onClick={() => {
