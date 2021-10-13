@@ -214,7 +214,7 @@ class menuLanding extends Component {
             this.changeMarkup(prop, menuLanding.itemsMenu[prop1].markup);
           }
           this.changePermissions(prop, menuLanding.itemsMenu[prop1].permissions);
-        }
+        } 
       }
     }
   }
