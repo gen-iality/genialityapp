@@ -218,7 +218,7 @@ class Event extends Component {
                 render={() => <AgendaRoutes event={this.state.event} updateEvent={this.updateEvent} />}
               />
               <Route path={`${match.url}/empresas`}>
-                <EmpresasRoutes event={this.state.event} />
+                <EmpresasRoutes event={this.state.event} matchUrl={match.url} />
               </Route>
               <Route path={`${match.url}/trivia`} render={() => <TriviaRoutes event={this.state.event} />} />
               <Route path={`${match.url}/documents`} render={() => <DocumentsRoutes event={this.state.event} />} />
@@ -325,7 +325,7 @@ class Event extends Component {
               />
               <Route path={`${match.url}/orders`} render={() => <OrdersEvent eventId={this.state.event._id} />} />
               <Route path={`${match.url}/certificados`} render={() => <ListCertificados event={this.state.event} />} />
-              <Route path={`${match.url}/espacios`} render={() => <Espacios eventID={this.state.event._id} />} />
+              <Route path={`${match.url}/espacios`} render={() => <Espacios eventID={this.state.event._id} event={this.state.event} matchUrl={match.url}/>} />
               <Route
                 path={`${match.url}/reporte-certificados`}
                 render={() => <ReporteCertificados eventId={this.state.event._id} />}

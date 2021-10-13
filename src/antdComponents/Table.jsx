@@ -200,9 +200,8 @@ const Table = (props) => {
       <TableAnt
         columns={header}
         dataSource={list}
-        /* hasData={list} */
         size='small'
-        hasData={list && list.length}
+        /* hasData={list && list.length} */
         rowKey={(record) => record.index}
         loading={loading}
         pagination={pagination}
