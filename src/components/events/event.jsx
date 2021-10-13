@@ -196,6 +196,12 @@ class Event extends Component {
                 Ir al evento: (con nombre) 
               </h2>
             </a>
+
+            <a target='_blank' href={`https://cancilleria.evius.co/landing/${this.state.event._id}`}>
+              <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
+                Ir al evento: (Cancilleria)
+              </h2>
+            </a>
           </Space>
           <section className='section event-wrapper'>
             <Switch>
