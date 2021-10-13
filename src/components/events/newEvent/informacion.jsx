@@ -2,7 +2,22 @@ import React, { useContext, useEffect, useState } from 'react';
 import EviusReactQuill from '../../shared/eviusReactQuill'; /* Se debe usar este componente para la descripcion */
 import { DateTimePicker } from 'react-widgets';
 import EventImage from '../../../eventimage.png';
-import { Badge, Card, Col, Input, Row, Space, Tooltip, Typography, Form, Modal, List, Button, Spin,Select  } from 'antd';
+import {
+  Badge,
+  Card,
+  Col,
+  Input,
+  Row,
+  Space,
+  Tooltip,
+  Typography,
+  Form,
+  Modal,
+  List,
+  Button,
+  Spin,
+  Select,
+} from 'antd';
 import { CalendarOutlined, CheckCircleFilled, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
@@ -42,12 +57,12 @@ const Informacion = (props) => {
     createOrganizationF,
     newOrganization,
     selectTemplate,
-    templateId
+    templateId,
   } = useContextNewEvent();
 
   useEffect(() => {
     if (props.currentUser && !props.orgId) {
-      obtainOrganizations();    
+      obtainOrganizations();
     } // console.log("ISBYORGANIZATION==>",isbyOrganization)
   }, [props.orgId, props.currentUser]);
   async function obtainOrganizations() {
@@ -93,24 +108,26 @@ const Informacion = (props) => {
       changeOrganization(false);
     }
   };
-  const handleChange=(value)=>{    
-    selectTemplate(value)
-  }
+  const handleChange = (value) => {
+    selectTemplate(value);
+  };
 
-  useEffect(()=>{
-    if(selectOrganization){
+  useEffect(() => {
+    if (selectOrganization) {
       obtenerTemplates();
-      selectTemplate(selectOrganization.template_properties?selectOrganization?.template_properties[0]._id['$oid']:undefined)
+      selectTemplate(
+        selectOrganization.template_properties ? selectOrganization?.template_properties[0]._id['$oid'] : undefined
+      );
     }
-    async function obtenerTemplates(){
-      let resp=await obtainTemplates(selectOrganization?._id);
+    async function obtenerTemplates() {
+      let resp = await obtainTemplates(selectOrganization?._id);
       //console.log("TEMPLATES==>",resp,selectOrganization)
     }
-  },[selectOrganization])
+  }, [selectOrganization]);
 
-  const obtainTemplates=async()=>{
-    await OrganizationApi.getTemplateOrganization(selectOrganization?._id)
-  }
+  const obtainTemplates = async () => {
+    await OrganizationApi.getTemplateOrganization(selectOrganization?._id);
+  };
 
   return (
     <div className='step-information'>
@@ -305,18 +322,19 @@ const Informacion = (props) => {
               </Col>
            </Row>*/}
           </Space>
-          </div>
-          {/*console.log("ORGANIZATION SELECTED==>",selectOrganization)*/}
-          {/* SELECT TEMPLATE BY ORGANIZATION */}
-         {selectOrganization?.template_properties && <Space  direction='vertical'>
+        </div>
+        {/*console.log("ORGANIZATION SELECTED==>",selectOrganization)*/}
+        {/* SELECT TEMPLATE BY ORGANIZATION */}
+        {selectOrganization?.template_properties && (
+          <Space direction='vertical'>
             <Text>Template: </Text>
-            <Select value={templateId} style={{minWidth:'400px'}}  onChange={handleChange}>
-              {selectOrganization.template_properties.map((template)=>
-              <Option value={template._id['$oid']}>{template.name}</Option>
-              )}            
+            <Select value={templateId} style={{ minWidth: '400px' }} onChange={handleChange}>
+              {selectOrganization.template_properties.map((template) => (
+                <Option value={template._id['$oid']}>{template.name}</Option>
+              ))}
             </Select>
-          </Space>}
-        
+          </Space>
+        )}
       </Space>
 
       {/* Modal de fecha */}
@@ -366,7 +384,8 @@ const Informacion = (props) => {
               </Space>
             </Card>
             <Paragraph type='secondary' style={{ marginTop: '10px' }}>
-              Si tu evento incluye varias actividades las podras crear en la seccion agenda despues de crear el evento.
+              Si tu evento se extiende por más de un día podrás ajustar las fechas en la sección{' '}
+              <strong>Datos del evento</strong> una vez lo hayas creado.
             </Paragraph>
           </Col>
         </Row>
