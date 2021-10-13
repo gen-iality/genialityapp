@@ -156,7 +156,7 @@ function AddNews(props) {
             props.eventId
           );
           if (resp) {
-            props.history.push(`/event/${props.eventId}/news`);
+            props.history.push(`/eventadmin/${props.eventId}/news`);
           }
         } else {
           // alert("A GUARDAR")

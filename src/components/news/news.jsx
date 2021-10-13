@@ -113,7 +113,7 @@ class News extends Component {
       });
     }*/
     
-    this.props.history.push(`/event/${this.props.eventId}/news/addnoticia`)
+    this.props.history.push(`/eventadmin/${this.props.eventId}/news/addnoticia`)
   };
 
   removeNewRole = () => {
