@@ -16,7 +16,7 @@ const MenuStyle = {
 const ItemStyle = {
   backgroundColor: 'white',
   //border: '1px solid #cccccc',
-  minWidth:150,
+  minWidth: 150,
   padding: 5,
   margin: 5,
 };
@@ -26,56 +26,77 @@ const UserStatusAndMenu = (props) => {
   let photo = props.photo;
   let name = props.name;
   let logout = props.logout;
-  const [visible,setVisible]=useState(true)
+  const [visible, setVisible] = useState(true);
 
   function linkToTheMenuRouteS(menuRoute) {
-    window.location.href = `${window.location.origin}${menuRoute}`
+    window.location.href = `${window.location.origin}${menuRoute}`;
   }
-  useEffect(()=>{
-    if(props.eventId && props.eventId=='60cb7c70a9e4de51ac7945a2')
-    setVisible(false)
-  },[props.eventId])
-  let menu = (
-      !props.cUser?.value?.isAnonymous ?  
-      <Menu>
-        <Menu.Item style={ItemStyle}>
-          <NavLink
-            onClick={(e) => {
-              e.preventDefault();
-              props.location.pathname.includes('landing')
-                ? props.setViewPerfil({ view: true, perfil: { _id: props.userEvent?._id, properties: props.userEvent } })
-                : null;
-            }}
-            to={''}>
-            <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
-          </NavLink>
-        </Menu.Item>
-        {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/myprofile/tickets`)}>
-            <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
-        </Menu.Item>}
-        {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(`/myprofile/events`)}>
-            <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
-        </Menu.Item>}
-        {visible && <Menu.Item style={ItemStyle} onClick={()=>{ linkToTheMenuRouteS(`/myprofile/organization`)}}>
-            <FormattedMessage id='header.my_organizations' defaultMessage='Administrar Mis Eventos' />
-        </Menu.Item>}
-
-       {visible && <Menu.Item style={ItemStyle} onClick={()=> linkToTheMenuRouteS(window.location.toString().includes('admin/organization')?`/create-event/${props.userEvent._id}/?orgId=${window.location.pathname.split('/')[3]}`:window.location.toString().includes('organization')?`/create-event/${props.userEvent._id}/?orgId=${props.eventId}`:`/create-event/${props.userEvent._id}`)}>
-            <Button type='primary' size='medium'>
-              <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
-            </Button>
-        </Menu.Item>}
-        <Menu.Divider />
-        <Menu.Item style={ItemStyle}>
-          <a onClick={logout}>
-            <LogoutOutlined />
-            <FormattedMessage id='header.logout' defaultMessage='Log Out' />
-          </a>
-        </Menu.Item>
-      </Menu> :  <Menu>
+  useEffect(() => {
+    if (props.eventId && props.eventId == '60cb7c70a9e4de51ac7945a2') setVisible(false);
+  }, [props.eventId]);
+  let menu = !props.cUser?.value?.isAnonymous ? (
+    <Menu>
       <Menu.Item style={ItemStyle}>
-      {`Bienvenido ${props.cUser?.value?.names}`}
+        <NavLink
+          onClick={(e) => {
+            e.preventDefault();
+            props.location.pathname.includes('landing')
+              ? props.setViewPerfil({ view: true, perfil: { _id: props.userEvent?._id, properties: props.userEvent } })
+              : null;
+          }}
+          to={''}>
+          <FormattedMessage id='header.profile' defaultMessage='Mi Perfil' />
+        </NavLink>
       </Menu.Item>
+      {visible && (
+        <Menu.Item style={ItemStyle} onClick={() => linkToTheMenuRouteS(`/myprofile/tickets`)}>
+          <FormattedMessage id='header.my_tickets' defaultMessage='Mis Entradas / Ticket' />
+        </Menu.Item>
+      )}
+      {visible && (
+        <Menu.Item style={ItemStyle} onClick={() => linkToTheMenuRouteS(`/myprofile/events`)}>
+          <FormattedMessage id='header.my_events' defaultMessage='Administrar Mis Eventos' />
+        </Menu.Item>
+      )}
+      {visible && (
+        <Menu.Item
+          style={ItemStyle}
+          onClick={() => {
+            linkToTheMenuRouteS(`/myprofile/organization`);
+          }}>
+          <FormattedMessage id='header.my_organizations' defaultMessage='Administrar Mis Eventos' />
+        </Menu.Item>
+      )}
+
+      {visible && (
+        <Menu.Item
+          style={ItemStyle}
+          onClick={() =>
+            linkToTheMenuRouteS(
+              window.location.toString().includes('admin/organization')
+                ? `/create-event/${props.userEvent._id}/?orgId=${window.location.pathname.split('/')[3]}`
+                : window.location.toString().includes('organization') &&
+                  !window.location.toString().includes('myprofile')
+                ? `/create-event/${props.userEvent._id}/?orgId=${props.eventId}`
+                : `/create-event/${props.userEvent._id}`
+            )
+          }>
+          <Button type='primary' size='medium'>
+            <FormattedMessage id='header.create_event' defaultMessage='Crear Evento' />
+          </Button>
+        </Menu.Item>
+      )}
+      <Menu.Divider />
+      <Menu.Item style={ItemStyle}>
+        <a onClick={logout}>
+          <LogoutOutlined />
+          <FormattedMessage id='header.logout' defaultMessage='Log Out' />
+        </a>
+      </Menu.Item>
+    </Menu>
+  ) : (
+    <Menu>
+      <Menu.Item style={ItemStyle}>{`Bienvenido ${props.cUser?.value?.names}`}</Menu.Item>
     </Menu>
   );
 

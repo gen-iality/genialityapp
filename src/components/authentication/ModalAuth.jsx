@@ -8,7 +8,9 @@ import * as Cookie from 'js-cookie';
 import { useIntl } from 'react-intl';
 
 import React, { useContext, useEffect, useState } from 'react';
-import { EventsApi } from '../../helpers/request';
+import { EventsApi, UsersApi } from '../../helpers/request';
+import { stubTrue } from 'lodash-es';
+
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -27,21 +29,26 @@ const stylePaddingMobile = {
 const ModalAuth = (props) => {
   const screens = useBreakpoint();
   const [loading, setLoading] = useState(false);
-  const [errorLogin, setErrorLogin] = useState(false);  
+  const [errorLogin, setErrorLogin] = useState(false);
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
-  const intl = useIntl();
- 
-
+  const intl = useIntl(); 
+ useEffect(()=>{
+  if(props.tab){    
+    handleChangeTabModal(props.tab)
+  }  
+ },[props.tab])
   useEffect(() => {
     async function userAuth() {
-    // console.log("IDORG==>",props.idOrganization)
       app.auth().onAuthStateChanged((user) => {
         if (user) {
           user.getIdToken().then(async function(idToken) {
             if (idToken && !Cookie.get('evius_token')) {
-              Cookie.set('evius_token', idToken, { expires: 180 });             
-              let url=props.organization=="landing"?`/organization/${props.idOrganization}/events?token=${idToken}` :`/landing/${props.cEvent.value?._id}?token=${idToken}`;
+              Cookie.set('evius_token', idToken, { expires: 180 });
+              let url =
+                props.organization == 'landing'
+                  ? `/organization/${props.idOrganization}/events?token=${idToken}`
+                  : props.organization == 'register'?`/myprofile?token=${idToken}`: `/landing/${props.cEvent.value?._id}?token=${idToken}`;
               setTimeout(function() {
                 window.location.replace(url);
               }, 1000);
@@ -49,13 +56,13 @@ const ModalAuth = (props) => {
           });
         }
       });
-    } 
+    }
     userAuth();
     return () => {
       form1.resetFields();
     };
   }, []);
-  
+
   useEffect(() => {
     form1.resetFields();
   }, [typeModal, tabLogin]);
@@ -86,11 +93,14 @@ const ModalAuth = (props) => {
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
       .then((response) => {
+        console.log("RESPONSE==>",response)
         loginNormal = true;
         setErrorLogin(false);
         //setLoading(false);
       })
-      .catch(async () => {
+      .catch(async (e) => {
+        console.log("ERROR==>",e)
+       // if(props.organization!=='register'){
         let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
         if (user.data.length > 0) {
           if (
@@ -98,8 +108,11 @@ const ModalAuth = (props) => {
             user.data[0].contrasena == data.password ||
             user.data[0]?.user?.contrasena == data.password
           ) {
-            let url=props.organization=="landing"?`/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}` :`/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
-            window.location.href =url;
+            let url =
+              props.organization == 'landing'
+                ? `/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}`
+                : `/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
+            window.location.href = url;
             loginFirst = true;
             setErrorLogin(false);
             //setLoading(false);
@@ -114,6 +127,11 @@ const ModalAuth = (props) => {
           setErrorLogin(true);
           setLoading(false);
         }
+     // }else{
+       //let login= await EventsApi.signInWithEmailAndPassword(data)
+       // let user=await UsersApi.findByEmail(data.email);
+       // console.log("USEROBTENIDO==>",user,login)
+    // }
       });
   };
 
@@ -122,16 +140,24 @@ const ModalAuth = (props) => {
     console.error('Failed:', errorInfo);
   };
   return (
-    props.cUser?.status=='LOADED' && props.cUser?.value == null &&
+    props.cUser?.status == 'LOADED' &&
+    props.cUser?.value == null &&
     typeModal == null && (
-      <Modal
+      <Modal 
+        onCancel={props.organization == 'register'?()=> props.closeModal():null}
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
         footer={null}
         zIndex={1000}
-        closable={false}
-        visible={true}>
-        <Tabs onChange={callback} centered size='large' defaultActiveKey={tabLogin}>
+        closable={props.organization == 'register'? true:false}
+        visible={
+          props.organization == 'register' && props.visible == true
+            ? true
+            : props.organization !== 'register'
+            ? true
+            : false
+        }>
+        <Tabs onChange={callback} centered size='large'  activeKey={tabLogin}>
           <TabPane tab={intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })} key='1'>
             <Form
               form={form1}
@@ -229,34 +255,36 @@ const ModalAuth = (props) => {
               )}
               {loading && <LoadingOutlined style={{ fontSize: '50px' }} />}
             </Form>
-           {props.organization!=='landing' && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
-           {props.organization!=='landing' &&<div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-              <Typography.Paragraph type='secondary'>
-                {intl.formatMessage({
-                  id: 'modal.info.options',
-                  defaultMessage: 'Mira otras formas de entrar al evento',
-                })}
-              </Typography.Paragraph>
-              <Space direction='vertical' style={{ width: '100%' }}>
-                {/* <Button
+            {props.organization !== 'landing' && props.organization !== 'register'  && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
+            {props.organization !== 'landing' && props.organization !== 'register'  && (
+              <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+                <Typography.Paragraph type='secondary'>
+                  {intl.formatMessage({
+                    id: 'modal.info.options',
+                    defaultMessage: 'Mira otras formas de entrar al evento',
+                  })}
+                </Typography.Paragraph>
+                <Space direction='vertical' style={{ width: '100%' }}>
+                  {/* <Button
                   disabled={loading}
                   block
                   style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
                   size='large'>
                   Invitado anónimo
                 </Button> */}
-                <Button
-                  disabled={loading}
-                  onClick={() => handleChangeTypeModal('mail')}
-                  block
-                  style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
-                  size='large'>
-                  {intl.formatMessage({ id: 'modal.option.send', defaultMessage: 'Enviar acceso a mi correo' })}
-                </Button>
-              </Space>
-            </div>}
+                  <Button
+                    disabled={loading}
+                    onClick={() => handleChangeTypeModal('mail')}
+                    block
+                    style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
+                    size='large'>
+                    {intl.formatMessage({ id: 'modal.option.send', defaultMessage: 'Enviar acceso a mi correo' })}
+                  </Button>
+                </Space>
+              </div>
+            )}
           </TabPane>
-          {props.cEventUser?.value == null && props.organization!=='landing' && (
+          {props.cEventUser?.value == null && props.organization !== 'landing' && (
             <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
               <div
                 // className='asistente-list'
@@ -268,7 +296,19 @@ const ModalAuth = (props) => {
                   paddingTop: '0px',
                   paddingBottom: '0px',
                 }}>
-                <FormComponent />
+                {props.organization != 'register' && <FormComponent />}
+                {props.organization == 'register' && (
+                  <FormComponent
+                    conditionalsOther={[]}
+                    initialOtherValue={{}}
+                    eventUserOther={{}}
+                    fields={fieldsUser}
+                    organization={true}
+                    options={[]}
+                    callback={() => alert('TODO BIEN')}
+                    loadingregister={null}
+                  />
+                )}
               </div>
             </TabPane>
           )}
@@ -279,3 +319,82 @@ const ModalAuth = (props) => {
 };
 
 export default withContext(ModalAuth);
+
+
+const fieldsUser=[
+  {
+    name: 'avatar',
+    mandatory: true,
+    visibleByContacts: false,
+    visibleByAdmin: false,
+    label: 'Imagen de perfil',
+    description: null,
+    type: 'avatar',
+    justonebyattendee: false,
+    updated_at: '2021-09-22 14:25:33',
+    created_at: '2021-09-21 21:56:24',
+    _id: {
+      $oid: '6160b1a7f6cfdd38d4502e74',
+    },
+    author: null,
+    categories: [],
+    event_type: null,
+    organiser: null,
+    organizer: null,
+    currency: {},                          
+    tickets: [],
+    index: 2,
+    order_weight: 1,
+  },
+  {
+    name: 'names',
+    mandatory: true,
+    visibleByContacts: false,
+    visibleByAdmin: false,
+    label: 'Nombre',
+    description: null,
+    type: 'text',
+    options: [],
+    justonebyattendee: false,
+    updated_at: '2021-09-22 14:25:31',
+    created_at: '2021-09-21 22:43:05',
+    _id: {
+      $oid: '6160b1a7f6cfdd38d4502e72',
+    },
+    author: null,
+    categories: [],
+    event_type: null,
+    organiser: null,
+    organizer: null,
+    currency: { },
+    tickets: [],
+    index: 0,
+    order_weight: 2,
+  },
+  {
+    name: 'email',
+    mandatory: true,
+    visibleByContacts: false,
+    visibleByAdmin: false,
+    label: 'Correo electrónico',
+    description: null,
+    type: 'email',
+    options: [ ],
+    justonebyattendee: false,
+    updated_at: '2021-09-22 14:25:32',
+    created_at: '2021-09-21 21:18:04',
+    _id: {
+      $oid: '6160b1a7f6cfdd38d4502e73',
+    },
+    author: null,
+    categories: [],
+    event_type: null,
+    organiser: null,
+    organizer: null,
+    currency: {},
+    tickets: [],
+    index: 1,
+    order_weight: 3,
+    sensibility: true,
+  },                      
+];
