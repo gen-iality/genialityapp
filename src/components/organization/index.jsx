@@ -7,6 +7,7 @@ import Styles from '../App/styles';
 import OrgEvents from './events';
 import OrgMembers from './members';
 import Datos from '../events/datos';
+import MemberSettings from './memberSettings';
 import { Tag } from 'antd';
 import { DoubleRightOutlined } from '@ant-design/icons';
 import MenuLanding from '../menuLanding';
@@ -135,7 +136,7 @@ function Organization(props) {
                   <Route
                     exact
                     path={`${props.match.url}/membersettings`}
-                    render={() => <Datos type='organization' org={organization} url={props.match.url} />}
+                    render={() => <MemberSettings org={organization} url={props.match.url} />}
                   />
 
                   <Route
@@ -147,17 +148,15 @@ function Organization(props) {
                         eventID={props.match.params.id}
                         org={organization}
                         url={props.match.url}
+                        createNewField={(field) => {
+                          console.log('CREATENEWFIELD==');
+                          alert('NEW FIELD==>');
+                        }}
                       />
                     )}
                   />
 
-                  <Route
-                    exact
-                    path={`${props.match.url}/menuItems`}
-                    render={() => (
-                     <MenuLanding organization={1} />
-                    )}
-                  />
+                  <Route exact path={`${props.match.url}/menuItems`} render={() => <MenuLanding organization={1} />} />
 
                   <Route component={NoMatch} />
                 </Switch>

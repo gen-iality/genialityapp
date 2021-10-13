@@ -40,7 +40,8 @@ class Datos extends Component {
     this.html = document.querySelector('html');
     this.submitOrder = this.submitOrder.bind(this);
     this.handlevisibleModal = this.handlevisibleModal.bind(this);
-    this.organization = this.props?.org;
+    this.organization = this.props?.sendprops ? this.props?.sendprops?.org : this.props?.org;
+    console.log('ORGANIZATION==>', this.props?.org);
   }
 
   async componentDidMount() {
@@ -60,13 +61,14 @@ class Datos extends Component {
     try {
       const organizationId = this?.organization?._id;
       let fields;
-      if (organizationId) {
-        fields = await OrganizationApi.getUserProperties(organizationId);
+      if (organizationId && !this.props.eventID) {
+        fields = await this.props.getFields();
       } else {
         fields = await EventFieldsApi.getAll(this.eventID);
         fields = this.orderFieldsByWeight(fields);
         fields = this.updateIndex(fields);
       }
+      console.log('FIELDS==>', fields);
       this.setState({ fields, loading: false });
     } catch (e) {
       this.showError(e);
@@ -90,10 +92,10 @@ class Datos extends Component {
     try {
       let totaluser = {};
       const organizationId = this?.organization?._id;
-
+      console.log('STATE_ID==>', this.state.edit);
       if (organizationId) {
-        if (this.state.edit) await OrganizationApi.editOneUserProperties(organizationId, field._id, field);
-        else await OrganizationApi.createOneUserProperties(organizationId, field);
+        if (this.state.edit) await this.props.editField(field._id, field);
+        else await this.props.createNewField(field);
       } else {
         if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
         else await EventFieldsApi.createOne(field, this.eventID);
@@ -130,8 +132,7 @@ class Datos extends Component {
   async submitOrder() {
     const organizationId = this?.organization?._id;
     if (organizationId) {
-      console.log('10. this.state.properties ', this.state.properties);
-      await OrganizationApi.editAllUserProperties(organizationId, this.state.properties);
+      await this.props.orderFields(this.state.properties);
     } else {
       await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
     }
@@ -153,7 +154,7 @@ class Datos extends Component {
     try {
       const organizationId = this?.organization?._id;
       if (organizationId) {
-        await OrganizationApi.deleteUserProperties(organizationId, this.state.deleteModal);
+        await this.props.deleteField(this.state.deleteModal);
         this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
       } else {
         await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventID);
@@ -417,17 +418,19 @@ class Datos extends Component {
             </TabPane>
           )} */}
 
-          <TabPane tab='Plantillas' key='3'>
-            {this.state.isEditTemplate.status ? (
+          <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
+            {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (
               <Fragment>
-                <Button
-                  danger
-                  style={{ marginTop: '3%' }}
-                  onClick={() =>
-                    this.setState({ isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] } })
-                  }>
-                  Volver a plantillas
-                </Button>
+                {this.props.type !== 'configMembers' && (
+                  <Button
+                    danger
+                    style={{ marginTop: '3%' }}
+                    onClick={() =>
+                      this.setState({ isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] } })
+                    }>
+                    Volver a plantillas
+                  </Button>
+                )}
 
                 <EventContent
                   title={'Recopilación de datos'}
@@ -438,7 +441,7 @@ class Datos extends Component {
                   addTitle={'Agregar dato'}>
                   <Table
                     columns={columns}
-                    dataSource={this.state.isEditTemplate.datafields}
+                    dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
                     pagination={false}
                     rowKey='index'
                     components={{
