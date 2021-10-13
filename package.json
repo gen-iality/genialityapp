@@ -24,6 +24,7 @@
     "chartjs-plugin-datalabels": "^2.0.0",
     "classnames": "^2.2.6",
     "core-js": "^2.6.11",
+    "cowsay": "^1.5.0",
     "craco-antd": "^1.19",
     "firebase": "^7.7.0",
     "firebase-admin": "^8.10.0",
