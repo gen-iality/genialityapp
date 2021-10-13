@@ -152,21 +152,19 @@ class Event extends Component {
       formatupperorlowercase = url.toString().toLowerCase();
     } else {
       formatupperorlowercase = url.toString();
-      console.log("por aca",formatupperorlowercase,"original",url)
     }
 
     var encodedUrl = formatupperorlowercase;
     encodedUrl = encodedUrl.split(/\&+/).join('-and-');
     if (this.isUpper(url)) {
       encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-');
-    } else if(this.isLowerCase(url.toString())) {
+    } else if (this.isLowerCase(url.toString())) {
       encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-');
-    }else{
+    } else {
       encodedUrl = encodedUrl.split(/-+/).join('-');
     }
 
-
-    encodedUrl = encodedUrl.replaceAll(' ','-')
+    encodedUrl = encodedUrl.replaceAll(' ', '-');
     encodedUrl = encodedUrl.trim('-');
     return encodedUrl;
   }
@@ -193,7 +191,7 @@ class Event extends Component {
             {console.log('this.state.event', this.state.event)}
             <a target='_blank' href={`${window.location.origin}/event/${this.FriendLyUrl(this.state.event.name)}`}>
               <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
-                Ir al evento: (con nombre) 
+                Ir al evento: (con nombre)
               </h2>
             </a>
 
