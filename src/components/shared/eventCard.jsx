@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Moment from 'moment';
 import { Link, withRouter } from 'react-router-dom';
 import EventImage from '../../eventimage.png';
-import { Badge, Card, Space } from 'antd';
+import { Badge, Card, Space, Typography } from 'antd';
 
 const isUpper = (str)=> {
   return !/[a-z]/.test(str) && /[A-Z]/.test(str);
@@ -79,7 +79,7 @@ class EventCard extends Component {
               <Meta
                 style={{}}
                 description={
-                  <div>
+                  <Space size={1} direction='vertical'>
                     <span style={{ fontSize: '12px' }}>
                       <Space>
                         <i className='fas fa-calendar-alt' />
@@ -88,7 +88,7 @@ class EventCard extends Component {
                         <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
                       </Space>
                     </span>
-                    <h3 style={{ fontWeight: 'bold' }}>{event.name}</h3>
+                    <Typography.Text style={{ fontWeight: 'bold' }}>{event.name}</Typography.Text>
                     <span>
                       {event.organizer?.name
                         ? event.organizer?.name
@@ -96,7 +96,7 @@ class EventCard extends Component {
                         ? event.author?.displayName
                         : event.author?.names}
                     </span>
-                  </div>
+                  </Space>
                 }
               />
             </Card>
