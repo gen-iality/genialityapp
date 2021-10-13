@@ -239,14 +239,14 @@ class Headers extends Component {
                 )}
               </Row>
 
-              {console.log("LENGTHURL==>",window.location.href.toString().split('/').length)}
-              {!this.state.userEvent && !window.location.href.toString().includes('landing') && window.location.href.toString().split('/').length==4 && <Row style={{marginBottom:10,marginTop:10}} justify='space-between' align='middle'> 
+            
+              {/*!this.state.userEvent && !window.location.href.toString().includes('landing') && window.location.href.toString().split('/').length==4 && <Row style={{marginBottom:10,marginTop:10}} justify='space-between' align='middle'> 
                     <Button onClick={()=>this.setState({modalVisible:true,tabModal:'1'}) } style={{marginRight:5}}>Iniciar sesión</Button>
                     <Button onClick={()=>this.setState({modalVisible:true,tabModal:'2'} )}>Registrarme</Button>
-              </Row>}
+                      </Row>*/}
 
-              <ModalAuth tab={this.state.tabModal} closeModal={this.modalClose} organization='register' visible={this.state.modalVisible} />
-              <ModalLoginHelpers />
+             {/* <ModalAuth tab={this.state.tabModal} closeModal={this.modalClose} organization='register' visible={this.state.modalVisible} />
+              <ModalLoginHelpers />*/}
               {/* Dropdown de navegacion para el usuario  */}
              {this.state.userEvent && <UserStatusAndMenu
                 isLoading={this.state.loader}
