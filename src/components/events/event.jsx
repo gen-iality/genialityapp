@@ -42,6 +42,8 @@ const { Sider, Content } = Layout;
 //Code Splitting
 const General = asyncComponent(() => import('./general'));
 const Badge = asyncComponent(() => import('../badge'));
+const Informativesection = asyncComponent(() => import('../events/informativeSections/adminInformativeSection'));
+
 
 //invitations
 const InvitedUsers = asyncComponent(() => import('../invitations'));
@@ -152,21 +154,20 @@ class Event extends Component {
       formatupperorlowercase = url.toString().toLowerCase();
     } else {
       formatupperorlowercase = url.toString();
-      console.log("por aca",formatupperorlowercase,"original",url)
+      console.log('por aca', formatupperorlowercase, 'original', url);
     }
 
     var encodedUrl = formatupperorlowercase;
     encodedUrl = encodedUrl.split(/\&+/).join('-and-');
     if (this.isUpper(url)) {
       encodedUrl = encodedUrl.split(/[^A-Z0-9]/).join('-');
-    } else if(this.isLowerCase(url.toString())) {
+    } else if (this.isLowerCase(url.toString())) {
       encodedUrl = encodedUrl.split(/[^a-z0-9]/).join('-');
-    }else{
+    } else {
       encodedUrl = encodedUrl.split(/-+/).join('-');
     }
 
-
-    encodedUrl = encodedUrl.replaceAll(' ','-')
+    encodedUrl = encodedUrl.replaceAll(' ', '-');
     encodedUrl = encodedUrl.trim('-');
     return encodedUrl;
   }
@@ -193,7 +194,13 @@ class Event extends Component {
             {console.log('this.state.event', this.state.event)}
             <a target='_blank' href={`${window.location.origin}/event/${this.FriendLyUrl(this.state.event.name)}`}>
               <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
-                Ir al evento: (con nombre) 
+                Ir al evento: (con nombre)
+              </h2>
+            </a>
+
+            <a target='_blank' href={`https://cancilleria.evius.co/landing/${this.state.event._id}`}>
+              <h2 style={{ fontWeight: 'bold' }} className='name-event  button add'>
+                Ir al evento: (Cancilleria)
               </h2>
             </a>
           </Space>
@@ -212,7 +219,10 @@ class Event extends Component {
                 path={`${match.url}/wall`}
                 render={() => <Wall event={this.state.event} eventId={this.state.event._id} />}
               />
-              <Route path={`${match.url}/datos`} render={() => <Datos eventID={this.state.event._id} event={this.state.event} />} />
+              <Route
+                path={`${match.url}/datos`}
+                render={() => <Datos eventID={this.state.event._id} event={this.state.event} />}
+              />
               <Route
                 path={`${match.url}/agenda`}
                 render={() => <AgendaRoutes event={this.state.event} updateEvent={this.updateEvent} />}
@@ -267,6 +277,14 @@ class Event extends Component {
                   url={match.url}
                 />
               }
+
+              <Protected
+                path={`${match.url}/informativesection`}
+                component={Informativesection}
+                eventId={this.state.event._id}
+                event={this.state.event}
+                url={match.url}
+              />
               {/** AÚN NO TIENEN PERMISOS */}
               <Route
                 path={`${match.url}/invitados`}
