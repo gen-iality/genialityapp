@@ -34,7 +34,7 @@ class Datos extends Component {
     this.eventID = this.props.eventID;
     this.html = document.querySelector('html');
     this.submitOrder = this.submitOrder.bind(this);
-    this.organization = this.props?.org
+    this.organization = this.props?.org;
   }
 
   async componentDidMount() {
@@ -52,10 +52,10 @@ class Datos extends Component {
   // Funcion para traer la información
   fetchFields = async () => {
     try {
-      let fields
-      if(this.organization){
-        fields = this.organization.user_properties
-      }else{
+      let fields;
+      if (this.organization) {
+        fields = this.organization.user_properties;
+      } else {
         fields = await EventFieldsApi.getAll(this.eventID);
         fields = this.orderFieldsByWeight(fields);
         fields = this.updateIndex(fields);
@@ -81,10 +81,10 @@ class Datos extends Component {
   //Guardar campo en el evento
   saveField = async (field) => {
     try {
-      let totaluser = {}
-      if(this.organization){
-        console.log("10. aqui se editan los checkBox, falta api ", field, field._id, this.organization._id)
-      }else{
+      let totaluser = {};
+      if (this.organization) {
+        console.log('10. aqui se editan los checkBox, falta api ', field, field._id, this.organization._id);
+      } else {
         if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
         else await EventFieldsApi.createOne(field, this.eventID);
         totaluser = await firestore.collection(`${this.eventID}_event_attendees`).get();
@@ -118,11 +118,11 @@ class Datos extends Component {
 
   //Funcion para guardar el orden de los datos
   async submitOrder() {
-    if(this.organization){
-      console.log("10. Aqui se edita el orden de los campos ", this.state.properties, this.organization._id)
-      const data = await OrganizationApi.editOne(this.state.properties, this.organization._id)
-      console.log("10.data ", data)
-    }else{
+    if (this.organization) {
+      console.log('10. Aqui se edita el orden de los campos ', this.state.properties, this.organization._id);
+      const data = await OrganizationApi.editOne(this.state.properties, this.organization._id);
+      console.log('10.data ', data);
+    } else {
       await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
     }
 
@@ -141,10 +141,10 @@ class Datos extends Component {
   //Borrar dato de la lista
   removeField = async () => {
     try {
-      if(this.organization){
-        console.log("10. Aqui se eleminan los campos ", this.state.deleteModal, this.organization._id)
+      if (this.organization) {
+        console.log('10. Aqui se eleminan los campos ', this.state.deleteModal, this.organization._id);
         this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
-      }else{
+      } else {
         await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventID);
         this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
       }
@@ -156,7 +156,7 @@ class Datos extends Component {
       this.showError(e);
     }
   };
-  
+
   closeDelete = () => {
     this.setState({ deleteModal: false });
   };
@@ -289,11 +289,7 @@ class Datos extends Component {
         dataIndex: 'sensibility',
         align: 'center',
         render: (record, key) => (
-          <Checkbox
-            name='sensibility'
-            onChange={() => this.changeCheckBox(key, 'sensibility')}
-            checked={record}
-          />
+          <Checkbox name='sensibility' onChange={() => this.changeCheckBox(key, 'sensibility')} checked={record} />
         ),
       },
       {
@@ -316,10 +312,10 @@ class Datos extends Component {
         dataIndex: '',
         render: (key) => (
           <>
-           {key.name !== 'email' &&  (
-            <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
-           )}
-            {key.name !== 'email' && key.name !== 'names' &&  (
+            {key.name !== 'email' && key.name !== 'contrasena' && (
+              <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
+            )}
+            {key.name !== 'email' && key.name !== 'names' && key.name !== 'contrasena' && (
               <DeleteOutlined style={{ float: 'right' }} onClick={() => this.setState({ deleteModal: key._id })} />
             )}
           </>
@@ -333,7 +329,9 @@ class Datos extends Component {
             <Fragment>
               <EventContent
                 title={'Recopilación de datos'}
-                description={`Configure los datos que desea recolectar de los asistentes ${this.organization ?'de la organización':'del evento'}`}
+                description={`Configure los datos que desea recolectar de los asistentes ${
+                  this.organization ? 'de la organización' : 'del evento'
+                }`}
                 addAction={this.addField}
                 addTitle={'Agregar dato'}>
                 <Table
@@ -369,9 +367,11 @@ class Datos extends Component {
               )}
             </Fragment>
           </TabPane>
-          {this.props.eventID && <TabPane tab='Campos Relacionados' key='2'>
-            <RelationField eventId={this.props.eventID} fields={fields} />
-          </TabPane>}
+          {this.props.eventID && (
+            <TabPane tab='Campos Relacionados' key='2'>
+              <RelationField eventId={this.props.eventID} fields={fields} />
+            </TabPane>
+          )}
         </Tabs>
         {/*<DragDrop eventId={this.props.eventID} list={fields} />*/}
       </div>

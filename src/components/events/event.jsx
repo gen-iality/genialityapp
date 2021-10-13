@@ -152,7 +152,6 @@ class Event extends Component {
       formatupperorlowercase = url.toString().toLowerCase();
     } else {
       formatupperorlowercase = url.toString();
-      console.log("por aca",formatupperorlowercase,"original",url)
     }
 
     var encodedUrl = formatupperorlowercase;
