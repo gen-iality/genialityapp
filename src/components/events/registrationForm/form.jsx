@@ -133,6 +133,7 @@ const FormRegister = ({
   let [areacodeselected, setareacodeselected] = useState();
   let [numberareacode, setnumberareacode] = useState(null);
   let [fieldCode, setFieldCode] = useState(null);
+  let { handleChangeTypeModal, handleChangeTabModal } = useContext(HelperContext);
   const [initialValues, setinitialValues] = useState(
     organization ? initialOtherValue : cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
   );
@@ -865,7 +866,19 @@ const FormRegister = ({
                       }}
                       afterClose={() => setNotLoggedAndRegister(false)}
                       message={intl.formatMessage({ id: 'registration.already.registered' })}
-                      //description={intl.formatMessage({ id: 'registration.message.success.subtitle' })}
+                      description={
+                       (
+                          <Button
+                            size='middle'
+                            type='primary'
+                            onClick={() => {
+                              handleChangeTabModal('1');
+                              setNotLoggedAndRegister(false)
+                            }}>
+                            {intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })}
+                          </Button>
+                        )
+                      }
                       type='warning'
                       showIcon
                       closable

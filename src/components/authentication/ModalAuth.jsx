@@ -131,7 +131,7 @@ const ModalAuth = (props) => {
         zIndex={1000}
         closable={false}
         visible={true}>
-        <Tabs onChange={callback} centered size='large' defaultActiveKey={tabLogin}>
+        <Tabs onChange={callback} centered size='large'  activeKey={tabLogin}>
           <TabPane tab={intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })} key='1'>
             <Form
               form={form1}
@@ -231,12 +231,12 @@ const ModalAuth = (props) => {
             </Form>
            {props.organization!=='landing' && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
            {props.organization!=='landing' &&<div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-              <Typography.Paragraph type='secondary'>
+              {/* <Typography.Paragraph type='secondary'>
                 {intl.formatMessage({
                   id: 'modal.info.options',
                   defaultMessage: 'Mira otras formas de entrar al evento',
                 })}
-              </Typography.Paragraph>
+              </Typography.Paragraph> */}
               <Space direction='vertical' style={{ width: '100%' }}>
                 {/* <Button
                   disabled={loading}
@@ -246,10 +246,12 @@ const ModalAuth = (props) => {
                   Invitado anónimo
                 </Button> */}
                 <Button
+                  icon={<MailOutlined />}
                   disabled={loading}
                   onClick={() => handleChangeTypeModal('mail')}
+                  type='primary'
                   block
-                  style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
+                  // style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
                   size='large'>
                   {intl.formatMessage({ id: 'modal.option.send', defaultMessage: 'Enviar acceso a mi correo' })}
                 </Button>
