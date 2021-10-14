@@ -503,7 +503,7 @@ export const SurveysApi = {
   editOne: async (data, id, event) => {
     return await Actions.edit(`/api/events/${event}/surveys`, data, id);
   },
-  deleteOne: async (event, id) => {
+  deleteOne: async (id, event) => {
     return await Actions.delete(`/api/events/${event}/surveys`, id);
   },
   createQuestion: async (event, id, data) => {

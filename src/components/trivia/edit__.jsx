@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
-import { Form, Row, Col, message, Input, Modal, Upload, Button, InputNumber, InputNumber } from 'antd';
+import { Form, Row, Col, message, Input, Modal, Upload, Button, InputNumber, Switch } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import firebase from 'firebase';
 import Header from '../../antdComponents/Header';
@@ -16,7 +16,7 @@ const formLayout = {
 };
 
 const triviaEdit = ( props ) => {
-  const locationState = props.location.state;
+  const locationState = props.location ? props.location : '';
   const history = useHistory();
   const [trivia, setTrivia] = useState({});
   const [agenda, setAgenda] = useState({});
@@ -144,6 +144,40 @@ const triviaEdit = ( props ) => {
               name={''}
             />
           </Form.Item>
+          <Row justify='space-between' wrap gutter={[8, 8]}>
+            <Col>
+              <Form.Item label={'Publicar encuesta'}>
+                <Switch
+                  checked={publish === 'true' || publish === true}
+                  onChange={(checked) => this.setState({ publish: checked ? 'true' : 'false' })}
+                />
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item label={'Encuesta abierta'}>
+                <Switch
+                  checked={openSurvey === 'true' || openSurvey === true}
+                  onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
+                />
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item label={'Permitir usuarios anonimos'}>
+                <Switch
+                  checked={allow_anonymous_answers === 'true' || allow_anonymous_answers === true}
+                  onChange={(checked) => this.setState({ allow_anonymous_answers: checked ? 'true' : 'false' })}
+                />
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item label={'Mostar gráficas en las encuestas'}>
+                <Switch
+                  checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys === true}
+                  onChange={(checked) => this.toggleSwitch('displayGraphsInSurveys', checked)}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
           {/* <Form.Item label={'Archivo'} >
             <Upload
               name={'file'}
