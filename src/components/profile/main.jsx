@@ -41,8 +41,9 @@ const MainProfile = (props) => {
         usersInscription.push(eventByTicket);
       }
       settickets(usersInscription);
+      setticketsLimited(usersInscription.slice(0, 4));
     });
-    setticketsLimited(tickets.slice(0, 4));
+
     /* ----------------------------------*/
     /* Organizaciones del usuario */
     const organizations = await OrganizationApi.mine();
@@ -89,19 +90,23 @@ const MainProfile = (props) => {
               usuario@email.com
             </Typography.Text>
           </Space>
-          <Col span={24}>
-            <Menu style={{ width: '100%', border: 'none' }} mode='inline'>
-              <Menu.Item key='m1'>Option 1</Menu.Item>
-              <Menu.Item key='m2'>Option 2</Menu.Item>
-              <Menu.Item key='m3'>Option 3</Menu.Item>
-              <Menu.Item key='m4'>Option 4</Menu.Item>
-            </Menu>
-          </Col>
-          <Col style={{ padding: '30px' }} span={24}>
+          <Col style={{ paddingLeft: '30px', paddingRight: '30px' }} span={24}>
             <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
               <Statistic
                 title={<span style={{ fontSize: '18px' }}>Eventos creados</span>}
-                value={5}
+                value={events.length && events.length > 0 ? events.length : 0}
+                loading={events.length ? false : true}
+                precision={0}
+                valueStyle={{ color: '#3f8600', fontSize: '50px' }}
+              />
+            </Card>
+          </Col>
+          <Col style={{ paddingLeft: '30px', paddingRight: '30px' }} span={24}>
+            <Card style={{ textAlign: 'center', borderRadius: '15px' }}>
+              <Statistic
+                title={<span style={{ fontSize: '18px' }}>Eventos en los que estoy registrado</span>}
+                value={tickets.length && tickets.length > 0 ? tickets.length : 0}
+                loading={tickets.length ? false : true}
                 precision={0}
                 valueStyle={{ color: '#3f8600', fontSize: '50px' }}
               />
