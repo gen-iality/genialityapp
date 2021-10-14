@@ -8,7 +8,7 @@ import Creatable from 'react-select';
 import { FaWhmcs } from 'react-icons/fa';
 import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import { Tabs, message, Row, Col, Checkbox, Space, Typography, Button, Form, Input } from 'antd';
+import { Tabs, message, Row, Col, Checkbox, Space, Typography, Button, Form, Input, InputNumber } from 'antd';
 import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
 import { DeleteOutlined, ExclamationCircleOutlined, SettingOutlined } from '@ant-design/icons';
@@ -636,17 +636,23 @@ class AgendaEdit extends Component {
               save
               form
               remove={this.remove}
-              /* 
-              edit={locationState.edit} */
+              edit={this.props.location.state.edit}
+              extra={(
+                <Button 
+                  type='primary'
+                  onClick={this.submit2}
+                >
+                  Duplicar para traducir
+                </Button>
+              )}
             />
 
             <Row justify='center' wrap gutter={12}>
-              <Col span={20}>
+              <Col span={18}>
                 <Form.Item label={'Nombre'}>
                   <Input
                     ref={this.name}
                     autoFocus
-                    className='input'
                     type='text'
                     name={'name'}
                     value={name}
@@ -740,280 +746,200 @@ class AgendaEdit extends Component {
                     </Col>
                   </Row>
                 </Form.Item>
-                {/* {access_restriction_type !== 'OPEN' && ( */}
-                  
-                    <Fragment>
-                      <div style={{ display: 'flex' }}>
-                        <label className='label required'>Asginar a :</label>
-                        <button className='button is-text is-small' onClick={this.addRoles}>
-                          todos los roles
-                        </button>
-                      </div>
-                      <div className='columns'>
-                        <div className='column is-10'>
-                          <Select
-                            isClearable
-                            isMulti
-                            styles={creatableStyles}
-                            onChange={this.selectRol}
-                            options={roles}
-                            placeholder={'Seleccione al menos un rol...'}
-                            value={selectedRol}
-                          />
-                        </div>
-                        <div className='column is-2'>
-                          <button
-                            onClick={() => this.goSection(matchUrl.replace('agenda', 'tipo-asistentes'))}
-                            className='button'>
-                            <FaWhmcs />
-                          </button>
-                        </div>
-                      </div>
-                    </Fragment>
-                  {/* )} */}
+                {access_restriction_type !== 'OPEN' && (
+                  <Form.Item label={`Asignar a: `}>
+                    <Row wrap justify='space-between'>
+                      <Col span={17}>
+                        <Select
+                          isClearable
+                          isMulti
+                          styles={creatableStyles}
+                          onChange={this.selectRol}
+                          options={roles}
+                          placeholder={'Seleccione al menos un rol...'}
+                          value={selectedRol}
+                        />
+                      </Col>
+                      <Col >
+                        <Button onClick={this.addRoles}>
+                          Todos los roles
+                        </Button>
+                      </Col>
+                      <Col >
+                        <Button
+                          onClick={() => this.goSection(matchUrl.replace('agenda', 'tipo-asistentes'))}
+                          icon={<SettingOutlined />}
+                        />
+                      </Col>
+                    </Row>
+                  </Form.Item>
+                )}
+                <Form.Item label={'Documentos'}>
+                  <Select
+                    isClearable
+                    isMulti
+                    styles={creatableStyles}
+                    onChange={this.selectDocuments}
+                    options={nameDocuments}
+                    value={selected_document}
+                  />
+                </Form.Item>
+                <Form.Item label={'Link del vídeo'}>
+                  <Input 
+                    name='video' 
+                    type='text' 
+                    value={video} 
+                    onChange={this.handleChange} 
+                  />
+                </Form.Item>
+                <Form.Item label={'Texto de email para confirmación de registro'}>
+                  <EviusReactQuill
+                    name='registration_message'
+                    data={this.state.registration_message}
+                    handleChange={(e) => this.handleChangeReactQuill(e, 'registration_message')}
+                  />
+                </Form.Item>
+                <Form.Item label={'Descripción'}>
+                  <Space>
+                    <ExclamationCircleOutlined style={{ color: '#faad14' }} />
+                    <Typography.Text type='secondary'>
+                      Esta información no es visible en la Agenda/Actividad en versión Mobile.
+                    </Typography.Text>
+                  </Space>
+                  <EviusReactQuill
+                    name='description'
+                    data={this.state.description}
+                    handleChange={(e) => this.handleChangeReactQuill(e, 'description')}
+                  />
+                </Form.Item>
+                <Form.Item label={'Imagen'}>
+                  <p>Dimensiones: 1000px x 278px</p>
+                  <Dropzone onDrop={this.changeImg} accept='image/*' className='zone'>
+                    <button className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</button>
+                  </Dropzone>
+                  {image && <img src={image} alt={`activity_${name}`} />}
+                </Form.Item>
+                <Form.Item label={'Capacidad'}>
+                  <InputNumber
+                    min={0}
+                    name={'capacity'}
+                    value={capacity}
+                    onChange={this.handleChange}
+                    placeholder={'Cupo total'}
+                  />
+                </Form.Item>
+                <Form.Item label={'Categorías'}>
+                  <Row wrap gutter={[8, 8]}>
+                    <Col span={23}>
+                      <Creatable
+                        isClearable
+                        styles={catStyles}
+                        onChange={this.selectCategory}
+                        onCreateOption={(value) => this.handleCreate(value, 'categories')}
+                        isDisabled={isLoading.categories}
+                        isLoading={isLoading.categories}
+                        isMulti
+                        options={categories}
+                        placeholder={'Sin categoría....'}
+                        value={selectedCategories}
+                      />
+                    </Col>
+                    <Col span={1}>
+                      <Button 
+                        onClick={() => this.goSection(`${matchUrl}/categorias`)}
+                        icon={<SettingOutlined />}
+                      />
+                    </Col>
+                  </Row>
+                </Form.Item>
+                <Form.Item label={'Tipo de actividad'}>
+                  <Row wrap gutter={[8, 8]}>
+                    <Col span={23}>
+                      <Creatable
+                        isClearable
+                        styles={creatableStyles}
+                        className='basic-multi-select'
+                        classNamePrefix='select'
+                        isDisabled={isLoading.types}
+                        isLoading={isLoading.types}
+                        onChange={this.selectType}
+                        onCreateOption={(value) => this.handleCreate(value, 'types')}
+                        options={types}
+                        value={selectedType}
+                      />
+                    </Col>
+                    <Col span={1}>
+                      <Link to={`${matchUrl}/tipos`}>
+                        <Button icon={<SettingOutlined />} />
+                      </Link>
+                    </Col>
+                  </Row>
+                </Form.Item>
               </Col>
             </Row>
           </Form>
-          <EventContent title='Actividad' closeAction={this.goBack}>
-            {loading ? (
-              <Loading />
-            ) : (
-              <div className='columns'>
-                <div className='column is-7'>
-                  
-                  
-                
-                  
-                  <div className='field'>
-                    <label className='label'>Documentos</label>
-                    <Select
-                      isClearable
-                      isMulti
-                      styles={creatableStyles}
-                      onChange={this.selectDocuments}
-                      options={nameDocuments}
-                      value={selected_document}
-                    />
-                  </div>
-                  {/* <label className="label">Ticket</label>
-                  <div>
-                    <Select
-                      isClearable
-                      isMulti
-                      styles={creatableStyles}
-                      onChange={this.selectTickets}
-                      options={tickets}
-                      value={selectedTickets}
-                    />
-                  </div> */}
-
-                  <div className='field'>
-                    <label className='label'>Link del video</label>
-                    <input className='input' name='video' type='text' value={video} onChange={this.handleChange} />
-                  </div>
-
-                  <div className='field'>
-                    <label className='label'>Texto de email para confirmación de registro </label>
-                    <div className='control'>
-                      <EviusReactQuill
-                        name='registration_message'
-                        data={this.state.registration_message}
-                        handleChange={(e) => this.handleChangeReactQuill(e, 'registration_message')}
-                      />
-                    </div>
-                  </div>
-
-                  <div className='field'>
-                    <label className='label'>Descripción</label>
-                    <Space>
-                      <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-                      <Typography.Text type='secondary'>
-                        Esta información no es visible en la Agenda/Actividad en versión Mobile.
-                      </Typography.Text>
-                    </Space>
-                    <div className='control'>
-                      <EviusReactQuill
-                        name='description'
-                        data={this.state.description}
-                        handleChange={(e) => this.handleChangeReactQuill(e, 'description')}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className='column is-5 general'>
-                  <div className='field is-grouped'>
-                    <Space>
-                      <Button icon={<DeleteOutlined />} type='danger' dashed onClick={this.remove}>
-                        Eliminar actividad
-                      </Button>
-                      <button onClick={this.submit} className='button is-primary'>
-                        Guardar
-                      </button>
-                    </Space>
-                  </div>
-                  <div className='field is-grouped'>
-                    <button onClick={this.submit2} className='button is-primary'>
-                      Duplicar para traducir
-                    </button>
-                  </div>
-                  <div className='section-gray'>
-                    <div className='field'>
-                      <label className='label has-text-grey-light'>Imagen</label>
-                      <p>Dimensiones: 1000px x 278px</p>
-                      <Dropzone onDrop={this.changeImg} accept='image/*' className='zone'>
-                        <button className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</button>
-                      </Dropzone>
-                      {image && <img src={image} alt={`activity_${name}`} />}
-                    </div>
-                    <div className='field'>
-                      <label className={`label`}>Capacidad</label>
-                      <div className='control'>
-                        <input
-                          className='input'
-                          type='number'
-                          min={0}
-                          name={'capacity'}
-                          value={capacity}
-                          onChange={this.handleChange}
-                          placeholder='Cupo total'
-                        />
-                      </div>
-                    </div>
-                    <label className='label'>Categorías</label>
-                    <div className='columns'>
-                      <div className='column is-10'>
-                        <Creatable
-                          isClearable
-                          styles={catStyles}
-                          onChange={this.selectCategory}
-                          onCreateOption={(value) => this.handleCreate(value, 'categories')}
-                          isDisabled={isLoading.categories}
-                          isLoading={isLoading.categories}
-                          isMulti
-                          options={categories}
-                          placeholder={'Sin categoría....'}
-                          value={selectedCategories}
-                        />
-                      </div>
-                      <div className='column is-2'>
-                        <button onClick={() => this.goSection(`${matchUrl}/categorias`)} className='button'>
-                          <FaWhmcs />
-                        </button>
-                      </div>
-                    </div>
-                    <label className='label'>Tipo de actividad</label>
-                    <div className='columns'>
-                      <div className='control column is-10'>
-                        <Creatable
-                          isClearable
-                          styles={creatableStyles}
-                          className='basic-multi-select'
-                          classNamePrefix='select'
-                          isDisabled={isLoading.types}
-                          isLoading={isLoading.types}
-                          onChange={this.selectType}
-                          onCreateOption={(value) => this.handleCreate(value, 'types')}
-                          options={types}
-                          value={selectedType}
-                        />
-                      </div>
-                      <div className='column is-2'>
-                        <Link to={`${matchUrl}/tipos`}>
-                          <button className='button'>
-                            <FaWhmcs />
-                          </button>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* componente de vista previa en revision, por firebase se tiene problemas si se deja como un modal y al mismo tiempo si se abre otra ventana para su administracion, se soluciona si se abre en una pestaña nueva */}
-
-                  {/* {(this.state.meeting_id || this.state.vimeo_id) && (
-                    <>
-                      <button
-                        style={{ marginTop: '2%' }}
-                        className='button is-primary'
-                        onClick={() => {
-                          this.toggleConference(true);
-                        }}>
-                        Ver Conferencia (Vista previa)
-                      </button>
-                    </>
-                  )}
-
-                  {this.state.conferenceVisible && (
-                    <ZoomComponent
-                      toggleConference={this.toggleConference}
-                      meetingId={this.state.meeting_id || this.state.vimeo_id}
-                      userEntered={this.state.currentUser}
-                      event={this.props.event}
-                      activity={this.state.info}
-                    />
-                  )} */}
-                </div>
-              </div>
-            )}
-          </EventContent>
         </TabPane>
         <TabPane tab='Seleccion de lenguaje' key='2'>
-          {this.props.location.state.edit ? (
-            <AgendaLanguaje
-              platform={platform}
-              eventId={this.props.event._id}
-              activityId={this.props.location.state.edit}
-            />
-          ) : (
-            <p>
-              Por favor primero crear la actividad, paso seguido edite la misma para crear las conferencias en
-              diferentes idiomas
-            </p>
-          )}
+          <Row justify='center' wrap gutter={12}>
+            <Col span={18}>
+              {this.props.location.state.edit ? (
+                <AgendaLanguaje
+                  platform={platform}
+                  eventId={this.props.event._id}
+                  activityId={this.props.location.state.edit}
+                />
+              ) : (
+                <p>
+                  Por favor primero crear la actividad, paso seguido edite la misma para crear las conferencias en
+                  diferentes idiomas
+                </p>
+              )}
+            </Col>
+          </Row>
         </TabPane>
         <TabPane tab='Espacio Virtual' key='3'>
-          {loading ? (
-            <Loading />
-          ) : (
-            <>
-              <RoomManager
-                event_id={this.props.event._id}
-                activity_id={this.state.activity_id}
-                activity_name={this.state.name}
-                firestore={firestore}
-                date_start_zoom={date_start_zoom}
-                date_end_zoom={date_end_zoom}
-                date_activity={this.state.date}
-                pendingChangesSave={this.state.pendingChangesSave}
-              />
-              <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
-              {this.state.isExternal && (
-                <SurveyExternal
-                  isExternal={this.state.isExternal}
-                  meeting_id={this.state.externalSurveyID}
-                  event_id={this.props.event._id}
-                  activity_id={this.state.activity_id}
-                />
+          <Row justify='center' wrap gutter={12} >
+            <Col span={18}>
+              {loading ? (
+                <Loading />
+              ) : (
+                <>
+                  <RoomManager
+                    event_id={this.props.event._id}
+                    activity_id={this.state.activity_id}
+                    activity_name={this.state.name}
+                    firestore={firestore}
+                    date_start_zoom={date_start_zoom}
+                    date_end_zoom={date_end_zoom}
+                    date_activity={this.state.date}
+                    pendingChangesSave={this.state.pendingChangesSave}
+                  />
+                  <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
+                  {this.state.isExternal && (
+                    <SurveyExternal
+                      isExternal={this.state.isExternal}
+                      meeting_id={this.state.externalSurveyID}
+                      event_id={this.props.event._id}
+                      activity_id={this.state.activity_id}
+                    />
+                  )}
+                </>
               )}
-            </>
-          )}
+            </Col>
+          </Row>
         </TabPane>
         <TabPane tab='Avanzado' key='4'>
-          <Row>
-            <Col xs={24}>
+          <Row justify='center' wrap gutter={12}>
+            <Col span={18}>
               <Checkbox
                 defaultChecked={info && (info.requires_registration || info.requires_registration === 'true')}
                 onChange={this.handleChange}
                 name='requires_registration'>
                 La actividad requiere registro
               </Checkbox>
-            </Col>
-          </Row>
-          <Row style={{ marginTop: 8 }}>
-            <Col xs={24}>
-              <button onClick={this.submit} className='button is-primary'>
+              <Button onClick={this.submit} type='primary'>
                 Guardar
-              </button>
+              </Button>
             </Col>
           </Row>
         </TabPane>
