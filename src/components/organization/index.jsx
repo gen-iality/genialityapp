@@ -27,6 +27,21 @@ function Organization(props) {
   }, [props.location.pathname]);
 
   console.log('props.match.params.id', props.match.params.id);
+  async function updateTemplate(template, fields) {
+    let newTemplate = {
+      name: template.template.name,
+      user_properties: fields,
+    };
+    let resp = await OrganizationApi.updateTemplateOrganization(
+      props.match.params.id,
+      template.template._id,
+      newTemplate
+    );
+    if (resp) {
+      return true;
+    }
+    return false;
+  }
   return (
     <>
       {isLoading ? (
@@ -148,21 +163,39 @@ function Organization(props) {
                         eventID={props.match.params.id}
                         org={organization}
                         url={props.match.url}
-                        createNewField={async (fields, template) => {
+                        edittemplate={true}
+                        createNewField={async (fields, template, updateTable) => {
                           let fieldsNew = Array.from(template.datafields || []);
                           fieldsNew.push(fields);
-                          let newTemplate = {
-                            name: template.template.name,
-                            user_properties: fieldsNew,
-                          };
-                          //alert('NEW FIELD==>');
-
-                          let resp = await OrganizationApi.updateTemplateOrganization(
-                            props.match.params.id,
-                            template.template._id,
-                            newTemplate
-                          );
+                          let resp = await updateTemplate(template, fieldsNew);
+                          if (resp) {
+                            updateTable(fieldsNew);
+                          }
                           //console.log('ADDFILED==>', resp, newTemplate);
+                        }}
+                        orderFields={async (fields, template, updateTable) => {
+                          let resp = await updateTemplate(template, fields);
+                          if (resp) {
+                            updateTable(fields);
+                          }
+                        }}
+                        editField={async (fieldId, fieldupdate, template, updateTable) => {
+                          template.datafields = template.datafields.map((field) => {
+                            return field?.order_weight == fieldupdate?.order_weight ? fieldupdate : field;
+                          });
+                          let resp = await updateTemplate(template, template.datafields);
+                          if (resp) {
+                            updateTable(template.datafields);
+                          }
+                        }}
+                        deleteField={async (nameField, template, updateTable) => {
+                          console.log(nameField, template);
+                          let newtemplate = template.datafields?.filter((field) => field.name != nameField);
+                          console.log('TEMPLATES==>', newtemplate);
+                          let resp = await updateTemplate(template, newtemplate);
+                          if (resp) {
+                            updateTable(newtemplate);
+                          }
                         }}
                       />
                     )}

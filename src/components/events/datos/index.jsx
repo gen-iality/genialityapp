@@ -39,13 +39,19 @@ class Datos extends Component {
     this.eventID = this.props.eventID;
     this.html = document.querySelector('html');
     this.submitOrder = this.submitOrder.bind(this);
+    this.updateTable = this.updateTable.bind(this);
     this.handlevisibleModal = this.handlevisibleModal.bind(this);
     this.organization = this.props?.sendprops ? this.props?.sendprops?.org : this.props?.org;
-    console.log('ORGANIZATION==>', this.props?.org);
   }
 
   async componentDidMount() {
     await this.fetchFields();
+  }
+  updateTable(fields) {
+    let fieldsorder = this.orderFieldsByWeight(fields);
+    fieldsorder = this.updateIndex(fieldsorder);
+    this.setState({ isEditTemplate: { ...this.state.isEditTemplate, datafields: fieldsorder } });
+    //alert('EDITTEMPLATE==>', this.props.edittemplate);
   }
 
   orderFieldsByWeight = (extraFields) => {
@@ -60,18 +66,19 @@ class Datos extends Component {
   fetchFields = async () => {
     try {
       const organizationId = this?.organization?._id;
-      let fields;
-      if (organizationId && !this.props.eventID) {
+      let fields = [];
+      if (organizationId && !this.props.eventID && !this.props.edittemplate) {
         fields = await this.props.getFields();
-      } else {
+      } else if (!this.props.edittemplate) {
         fields = await EventFieldsApi.getAll(this.eventID);
+
         fields = this.orderFieldsByWeight(fields);
         fields = this.updateIndex(fields);
       }
-      console.log('FIELDS==>', fields);
+      //console.log('FIELDS==>', fields);
       this.setState({ fields, loading: false });
     } catch (e) {
-      this.showError(e);
+      this.showError(e, 'ERROR');
     }
   };
   //Permite asignarle un index a los elementos
@@ -94,8 +101,8 @@ class Datos extends Component {
       const organizationId = this?.organization?._id;
       console.log('STATE_ID==>', this.state.edit);
       if (organizationId) {
-        if (this.state.edit) await this.props.editField(field._id, field);
-        else await this.props.createNewField(field, this.state.isEditTemplate);
+        if (this.state.edit) await this.props.editField(field._id, field, this.state.isEditTemplate, this.updateTable);
+        else await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
       } else {
         if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
         else await EventFieldsApi.createOne(field, this.eventID);
@@ -131,10 +138,12 @@ class Datos extends Component {
   //Funcion para guardar el orden de los datos
   async submitOrder() {
     const organizationId = this?.organization?._id;
-    if (organizationId) {
+    if (organizationId && !this.eventID) {
       await this.props.orderFields(this.state.properties);
-    } else {
+    } else if (!this.eventID && !organizationId) {
       await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
+    } else {
+      await this.props.orderFields(this.state.isEditTemplate.datafields, this.state.isEditTemplate, this.updateTable);
     }
 
     notification.open({
@@ -154,7 +163,7 @@ class Datos extends Component {
     try {
       const organizationId = this?.organization?._id;
       if (organizationId) {
-        await this.props.deleteField(this.state.deleteModal);
+        await this.props.deleteField(this.state.deleteModal, this.state.isEditTemplate, this.updateTable);
         this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'FIELD DELETED' } });
       } else {
         await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventID);
@@ -232,7 +241,12 @@ class Datos extends Component {
   );
   //Función para hacer que el row sea draggable
   DraggableBodyRow = ({ className, style, ...restProps }) => {
-    const { fields } = this.state;
+    const fields =
+      this.state.fields.length > 0
+        ? this.state.fields
+        : this.state.isEditTemplate?.datafields.length > 0
+        ? this.state.isEditTemplate?.datafields
+        : [];
     // function findIndex base on Table rowKey props and should always be a right array index
     const index = fields.findIndex((x) => x.index === restProps['data-row-key']);
     return <SortableItem index={index} {...restProps} />;
@@ -241,7 +255,14 @@ class Datos extends Component {
   //Función que se ejecuta cuando se termina de hacer drag
   onSortEnd = ({ oldIndex, newIndex }) => {
     let user_properties = this.state.user_properties;
-    const { fields } = this.state;
+    console.log('FIELDSSTATE==>', this.state.fields);
+    const fields =
+      this.state.fields.length > 0
+        ? this.state.fields
+        : this.state.isEditTemplate?.datafields?.length > 0
+        ? this.state.isEditTemplate?.datafields
+        : [];
+
     if (oldIndex !== newIndex) {
       let newData = arrayMove([].concat(fields), oldIndex, newIndex).filter((el) => !!el);
       newData = this.updateIndex(newData);
@@ -249,6 +270,7 @@ class Datos extends Component {
       this.setState({
         fields: newData,
         user_properties,
+        isEditTemplate: { ...this.state.isEditTemplate, datafields: newData },
         available: false,
         properties: { user_properties: user_properties },
       });
@@ -289,7 +311,7 @@ class Datos extends Component {
         align: 'center',
         render: (record, key) =>
           key.name !== 'email' && key.name !== 'names' ? (
-            <Checkbox name='mandatory' onChange={() => this.changeCheckBox(key, 'mandatory')} defaultChecked={record} />
+            <Checkbox name='mandatory' onChange={() => this.changeCheckBox(key, 'mandatory')} checked={record} />
           ) : (
             <Checkbox checked />
           ),
@@ -336,7 +358,10 @@ class Datos extends Component {
           <>
             {key.name !== 'email' && <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />}
             {key.name !== 'email' && key.name !== 'names' && (
-              <DeleteOutlined style={{ float: 'right' }} onClick={() => this.setState({ deleteModal: key._id })} />
+              <DeleteOutlined
+                style={{ float: 'right' }}
+                onClick={() => this.setState({ deleteModal: key._id || key.name })}
+              />
             )}
           </>
         ),
@@ -483,16 +508,18 @@ class Datos extends Component {
                 title={'Plantillas de recoleccion de datos'}
                 addFn={() => this.setState({ visibleModal: true })}
                 columns={colsPlant}
-                editFn={(values) =>
+                editFn={(values) => {
+                  let fields = this.orderFieldsByWeight(values.user_properties);
+                  fields = this.updateIndex(fields);
                   this.setState({
                     isEditTemplate: {
                       ...this.state.isEditTemplate,
                       status: true,
-                      datafields: values.user_properties,
+                      datafields: fields,
                       template: values,
                     },
-                  })
-                }
+                  });
+                }}
                 pagination={false}
                 actions
               />
