@@ -4,9 +4,9 @@ import { Link, withRouter } from 'react-router-dom';
 import EventImage from '../../eventimage.png';
 import { Badge, Card, Space, Typography } from 'antd';
 
-const isUpper = (str)=> {
+const isUpper = (str) => {
   return !/[a-z]/.test(str) && /[A-Z]/.test(str);
-}
+};
 
 const FriendLyUrl = (url) => {
   let slug = url?.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ');
@@ -15,12 +15,19 @@ const FriendLyUrl = (url) => {
   return slug;
 };
 
-
-
 class EventCard extends Component {
   render() {
-    const { event, bordered, right, loading } = this.props;
+    const { event, bordered, right, loading, isAdmin } = this.props;
     const { Meta } = Card;
+
+    const styleNormal = {
+      fontWeight: 'bold'
+    }
+
+    const styleAdmin = {
+      fontWeight: 'bold',
+      width:'250px'
+    }
     return (
       <div className='animate__animated animate__fadeIn'>
         <Badge.Ribbon
@@ -54,7 +61,7 @@ class EventCard extends Component {
                   <img
                     className='animate__animated animate__fadeIn animate__slower'
                     loading='lazy'
-                    style={{ objectFit: 'cover', height: 180 }}
+                    style={{ objectFit: 'cover', height: '180px' }}
                     src={typeof event.picture === 'object' ? event.picture[0] : event.picture}
                     alt='Evius.co'
                   />
@@ -62,7 +69,7 @@ class EventCard extends Component {
                   <img
                     className='animate__animated animate__fadeIn animate__slower'
                     loading='lazy'
-                    style={{ objectFit: 'cover', height: 180 }}
+                    style={{ objectFit: 'cover', height: '180px' }}
                     src={
                       event.styles
                         ? event.styles.banner_image && event.styles.banner_image !== undefined
@@ -88,7 +95,7 @@ class EventCard extends Component {
                         <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM YYYY')}</time>
                       </Space>
                     </span>
-                    <Typography.Text style={{ fontWeight: 'bold' }}>{event.name}</Typography.Text>
+                    <Typography.Text ellipsis={isAdmin ? true : false} style={isAdmin ? styleAdmin : styleNormal}>{event.name}</Typography.Text>
                     <span>
                       {event.organizer?.name
                         ? event.organizer?.name

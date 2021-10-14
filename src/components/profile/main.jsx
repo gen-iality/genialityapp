@@ -5,7 +5,7 @@ import OrganizationCard from './organizationCard';
 import NewCard from './newCard';
 import ExploreEvents from './exploreEvents';
 import withContext from '../../Context/withContext';
-import { EventsApi, TicketsApi } from '../../helpers/request';
+import { EventsApi, TicketsApi, OrganizationApi } from '../../helpers/request';
 import EventCard from '../shared/eventCard';
 import { Link } from 'react-router-dom';
 import * as Cookie from 'js-cookie';
@@ -18,23 +18,37 @@ const MainProfile = (props) => {
   const [activeTab, setActiveTab] = useState();
   const [events, setevents] = useState([]);
   const [tickets, settickets] = useState([]);
+  const [organizations, setorganizations] = useState([]);
+  const [eventsLimited, seteventsLimited] = useState([]);
+  const [ticketsLimited, setticketsLimited] = useState([]);
+  const [organizationsLimited, setorganizationsLimited] = useState([]);
   const screens = useBreakpoint();
   const selectedTab = props.match.params.tab;
 
   const fetchItem = async () => {
+    /* Eventos creados por el usuario    */
     const events = await EventsApi.mine();
+    setevents(events);
+    seteventsLimited(events.slice(0, 3));
+    /* ----------------------------------*/
+    /* Eventos en los que esta registrado el usuario */
     const token = Cookie.get('evius_token');
-    const tickets = await TicketsApi.getAll(token);
+    const ticketsall = await TicketsApi.getAll(token);
     const usersInscription = [];
-    tickets.forEach(async (element) => {
+    ticketsall.forEach(async (element) => {
       const eventByTicket = await EventsApi.getOne(element.event_id);
       if (eventByTicket) {
         usersInscription.push(eventByTicket);
       }
       settickets(usersInscription);
     });
-
-    setevents(events);
+    setticketsLimited(tickets.slice(0, 4));
+    /* ----------------------------------*/
+    /* Organizaciones del usuario */
+    const organizations = await OrganizationApi.mine();
+    setorganizations(organizations);
+    setorganizationsLimited(organizations.slice(0, 5));
+    /* ----------------------------------*/
   };
 
   useEffect(() => {
@@ -53,7 +67,7 @@ const MainProfile = (props) => {
         setActiveTab('1');
     }
   }, []);
-  console.log('pantallas', tickets);
+  console.log('pantallas', ticketsLimited);
 
   return (
     <Layout style={{ height: '90.8vh' }}>
@@ -119,25 +133,54 @@ const MainProfile = (props) => {
                         <NewCard entityType='event' />
                       </Col>
                       {/* aqui empieza el mapeo de eventCard.jsx maximo 4 */}
-                      <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
-                        <Card
-                          cover={<img style={{ objectFit: 'cover' }} src='https://picsum.photos/300/200' />}
-                          style={{ width: '100%' }}></Card>
-                      </Col>
+                      {eventsLimited.length > 0 &&
+                        eventsLimited.map((event) => {
+                          return (
+                            <Col key={event._id} xs={24} sm={12} md={12} lg={8} xl={6}>
+                              <EventCard
+                                isAdmin
+                                bordered={false}
+                                key={event._id}
+                                event={event}
+                                action={{ name: 'Ver', url: `landing/${event._id}` }}
+                                right={[
+                                  <div key={'event-' + event._id}>
+                                    <Link to={`/eventadmin/${event._id}`}>
+                                      <Space>
+                                        <SettingOutlined />
+                                        <span>Administrar</span>
+                                      </Space>
+                                    </Link>
+                                  </div>,
+                                ]}
+                              />
+                            </Col>
+                          );
+                        })}
                       {/* aqui termina el mapeo de eventCard.jsx maximo 4  */}
                     </Row>
                   </Col>
                   <Col span={24}>
                     <Divider orientation='left'>Eventos en los que estoy registrado</Divider>
                     <Row gutter={[16, 16]}>
-                      <Col span={24}>
-                        <ExploreEvents />
-                      </Col>
-                      {/* <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
-                        <Card
-                          cover={<img style={{ objectFit: 'cover' }} src='https://picsum.photos/300/200' />}
-                          style={{ width: '100%' }}></Card>
-                      </Col> */}
+                      {ticketsLimited.length > 0 ? (
+                        ticketsLimited.map((event) => {
+                          return (
+                            <Col key={event._id} xs={24} sm={12} md={12} lg={8} xl={6}>
+                              <EventCard
+                                bordered={false}
+                                key={event._id}
+                                event={event}
+                                action={{ name: 'Ver', url: `landing/${event._id}` }}
+                              />
+                            </Col>
+                          );
+                        })
+                      ) : (
+                        <Col span={24}>
+                          <ExploreEvents />
+                        </Col>
+                      )}
                     </Row>
                   </Col>
                   <Col span={24}>
@@ -147,9 +190,14 @@ const MainProfile = (props) => {
                         <NewCard entityType='organization' />
                       </Col>
                       {/* aqui empieza el mapeo maximo 6 */}
-                      <Col key={'index1'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                        <OrganizationCard />
-                      </Col>
+                      {organizationsLimited.length > 0 &&
+                        organizationsLimited.map((organization) => {
+                          return (
+                            <Col key={'index'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
+                              <OrganizationCard data={organization} />
+                            </Col>
+                          );
+                        })}
                       {/* aqui termina el mapeo maximo 6 */}
                     </Row>
                   </Col>
@@ -161,9 +209,14 @@ const MainProfile = (props) => {
                 <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
                   <NewCard entityType='organization' />
                 </Col>
-                <Col key={'index'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                  <OrganizationCard />
-                </Col>
+                {organizations.length > 0 &&
+                  organizations.map((organization) => {
+                    return (
+                      <Col key={'index'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
+                        <OrganizationCard data={organization} />
+                      </Col>
+                    );
+                  })}
               </Row>
             </TabPane>
             <TabPane tab='Eventos creados' key='3'>
@@ -175,12 +228,13 @@ const MainProfile = (props) => {
                   return (
                     <Col key={event._id} xs={24} sm={12} md={12} lg={8} xl={6}>
                       <EventCard
+                        isAdmin
                         bordered={false}
                         key={event._id}
                         event={event}
                         action={{ name: 'Ver', url: `landing/${event._id}` }}
                         right={[
-                          <div  key={'event-' + event._id}>
+                          <div key={'event-' + event._id}>
                             <Link to={`/eventadmin/${event._id}`}>
                               <Space>
                                 <SettingOutlined />

@@ -19,7 +19,9 @@ const NewCard = (props) => {
   return (
     <Card
       onClick={entity === 'event' ? newEvent : newOrganization}
-      style={{ borderRadius: '10px', border: '2px dashed #cccccc', cursor: 'pointer', height: '100%' }}>
+      style={{ borderRadius: '10px', border: '2px dashed #cccccc', cursor: 'pointer', height: '100%', display: "flex",
+      alignItems: "center",
+      justifyContent: "center", }}>
       <Space size={5} direction='vertical' style={{ textAlign: 'center', width: '100%' }}>
         <PlusOutlined style={{ fontSize: '80px', paddingTop: '10%', paddingBottom: '10%', color: '#cccccc' }} />
         <Typography.Text style={{ fontSize: '15px', width: '120px', color: '#cccccc', fontWeight: 'bold' }}>
