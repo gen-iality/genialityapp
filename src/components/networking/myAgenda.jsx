@@ -73,6 +73,8 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
     }
   }, [currentRoom]);
 
+
+
   if (loading) {
     return (
       <Row align='middle' justify='center' style={{ height: 100 }}>
@@ -256,6 +258,18 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
     }
   };
 
+  const validDateRoom=(room)=>{
+    console.log("ROOM==>",room);
+    //room.timestamp_start
+    let dateFrom= moment(room.timestamp_start).format('YYYY-MM-DD');
+    
+    if(moment().format('YYYY-MM-DD')==dateFrom){
+      
+      return true;
+    }
+    return false;
+  }
+
   return (
     <Row justify='center' style={{ marginBottom: '20px' }}>
       <Card
@@ -313,12 +327,12 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
               <Button
                 block
                 type='primary'
-                disabled={loading || enableMeetings}
+                disabled={loading || (!enableMeetings && !validDateRoom(data))}
                 loading={loading}
                 onClick={() => {
                   accessMeetRoom(data, eventUser);
                 }}>
-                {!enableMeetings ? 'Ingresar a reunión' : 'Reunión Cerrada'}
+                {validDateRoom(data) && !enableMeetings ? 'Ingresar a reunión' : !validDateRoom(data) && !enableMeetings?'Reunión no iniciada':'Reunión Cerrada'}
               </Button>
             </Col>
           </Row>
