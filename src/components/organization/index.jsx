@@ -148,9 +148,22 @@ function Organization(props) {
                         eventID={props.match.params.id}
                         org={organization}
                         url={props.match.url}
-                        createNewField={(field) => {
-                          console.log('CREATENEWFIELD==');
-                          alert('NEW FIELD==>');
+                        createNewField={async (fields, template) => {
+                          let fieldsNew = Array.from(template.datafields || []);
+                          fieldsNew.push(fields);
+                          let newTemplate = {
+                            name: template.template.name,
+                            user_properties: fieldsNew,
+                          };
+                          console.log('CREATENEWFIELD==>', fieldsNew, template, template.datafields);
+                          //alert('NEW FIELD==>');
+                          console.log('ADDFILED1==>', resp, newTemplate);
+                          let resp = await OrganizationApi.updateTemplateOrganization(
+                            props.match.params.id,
+                            template.template._id,
+                            newTemplate
+                          );
+                          console.log('ADDFILED==>', resp, newTemplate);
                         }}
                       />
                     )}

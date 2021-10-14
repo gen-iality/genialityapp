@@ -34,7 +34,7 @@ class Datos extends Component {
       properties: null,
       value: '',
       visibleModal: false,
-      isEditTemplate: { status: false, datafields: [] },
+      isEditTemplate: { status: false, datafields: [], template: null },
     };
     this.eventID = this.props.eventID;
     this.html = document.querySelector('html');
@@ -95,7 +95,7 @@ class Datos extends Component {
       console.log('STATE_ID==>', this.state.edit);
       if (organizationId) {
         if (this.state.edit) await this.props.editField(field._id, field);
-        else await this.props.createNewField(field);
+        else await this.props.createNewField(field, this.state.isEditTemplate);
       } else {
         if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
         else await EventFieldsApi.createOne(field, this.eventID);
@@ -485,7 +485,12 @@ class Datos extends Component {
                 columns={colsPlant}
                 editFn={(values) =>
                   this.setState({
-                    isEditTemplate: { ...this.state.isEditTemplate, status: true, datafields: values.user_properties },
+                    isEditTemplate: {
+                      ...this.state.isEditTemplate,
+                      status: true,
+                      datafields: values.user_properties,
+                      template: values,
+                    },
                   })
                 }
                 pagination={false}
