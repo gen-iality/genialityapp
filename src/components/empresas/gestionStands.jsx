@@ -176,7 +176,7 @@ const Stands=(props)=>{
        
       }
       return(<div> 
-        <Row style={{width:700, marginBottom:20}}> <Link to={`/event/${props.event._id}/empresas`}><ArrowLeftOutlined /></Link> <div style={{marginLeft:30}}>Configuración</div>
+        <Row style={{width:700, marginBottom:20}}> <Link to={`/eventadmin/${props.event._id}/empresas`}><ArrowLeftOutlined /></Link> <div style={{marginLeft:30}}>Configuración</div>
          </Row>
      
 

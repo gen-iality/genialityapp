@@ -3,11 +3,11 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Button, Card, Row, Input, Form, message } from 'antd';
 import { useState } from 'react';
 import { withRouter } from 'react-router';
-import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
 import { Actions, EventsApi } from '../../helpers/request';
 import { useEffect } from 'react';
+import EviusReactQuill from '../shared/eviusReactQuill';
 
 export const toolbarEditor = {
    toolbar: [
@@ -222,7 +222,7 @@ function AddProduct(props) {
                         Descripción <label style={{ color: 'red' }}>*</label>
                      </label>
                   }>
-                  <ReactQuill value={description} modules={toolbarEditor} onChange={changeDescription} />
+                  <EviusReactQuill data={description} onChange={changeDescription} />
                   {error != null && error.description && (
                      <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
                   )}

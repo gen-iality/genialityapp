@@ -101,7 +101,7 @@ class Product extends Component {
    }
 
    editProduct = (cert) => {
-      this.props.history.push(`/event/${this.props.eventId}/product/addproduct/${cert._id}`);
+      this.props.history.push(`/eventadmin/${this.props.eventId}/product/addproduct/${cert._id}`);
    };
 
    removeProduct = (data) => {
