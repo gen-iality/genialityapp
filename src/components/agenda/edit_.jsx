@@ -8,11 +8,10 @@ import Creatable from 'react-select';
 import { FaWhmcs } from 'react-icons/fa';
 import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import { Tabs, message, Row, Col, Checkbox, Space, Typography, Button, Form, Input } from 'antd';
+import { Tabs, message, Row, Col, Checkbox, Space, Typography } from 'antd';
 import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
-import { DeleteOutlined, ExclamationCircleOutlined, SettingOutlined } from '@ant-design/icons';
-import Header from '../../antdComponents/Header';
+import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 // En revision vista previa
 //import ZoomComponent from '../events/zoomComponent';
 
@@ -35,14 +34,8 @@ import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
 import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
+import { Button } from 'antd';
 const { TabPane } = Tabs;
-
-const formLayout = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
-};
-
-const { Option } = SelectAntd;
 
 class AgendaEdit extends Component {
   constructor(props) {
@@ -626,80 +619,82 @@ class AgendaEdit extends Component {
     return (
       <Tabs defaultActiveKey='1'>
         <TabPane tab='Agenda' key='1'>
-          <Form
-            onFinish={this.submit}
-            {...formLayout}
-          >
-            <Header 
-              title={'Actividad'}
-              back
-              save
-              form
-              remove={this.remove}
-              /* 
-              edit={locationState.edit} */
-            />
+          <EventContent title='Actividad' closeAction={this.goBack}>
+            {loading ? (
+              <Loading />
+            ) : (
+              <div className='columns'>
+                <div className='column is-7'>
+                  <div className='field'>
+                    <label className='label required'>Nombre</label>
+                    <div className='control'>
+                      <input
+                        ref={this.name}
+                        autoFocus
+                        className='input'
+                        type='text'
+                        name={'name'}
+                        value={name}
+                        onChange={this.handleChange}
+                        placeholder='Nombre de handleChangela actividad'
+                      />
+                    </div>
+                  </div>
 
-            <Row justify='center' wrap gutter={12}>
-              <Col span={20}>
-                <Form.Item label={'Nombre'}>
-                  <Input
-                    ref={this.name}
-                    autoFocus
-                    className='input'
-                    type='text'
-                    name={'name'}
-                    value={name}
-                    onChange={this.handleChange}
-                    placeholder={'Nombre de la actividad'}
-                  />
-                </Form.Item>
-                <Form.Item label={'Subtítulo'}>
-                  <Input
-                    className='input'
-                    type='text'
-                    name={'subtitle'}
-                    value={subtitle}
-                    onChange={this.handleChange}
-                    placeholder={'Ej: Salón 1, Zona Norte, Área de juegos'}
-                  />
-                </Form.Item>
-                <Form.Item label={'Día'}>
-                  <SelectAntd
-                    name='date'
-                    options={this.state.days}
-                    style={{ width: '100%' }}
-                    defaultValue={date}
-                    onChange={(value) => this.handleChangeDate(value, 'date')}
-                  />
-                </Form.Item>
-                <Row wrap justify='space-between' gutter={[8, 8]}>
-                  <Col>
-                    <Form.Item label={'Hora Inicio'}>
-                      <DateTimePicker
-                        value={hour_start}
-                        dropUp
-                        step={15}
-                        date={false}
-                        onChange={(value) => this.handleChangeDate(value, 'hour_start')}
+                  <div className='field'>
+                    <label className='label'>Subtítulo</label>
+                    <div className='control'>
+                      <input
+                        className='input'
+                        type='text'
+                        name={'subtitle'}
+                        value={subtitle}
+                        onChange={this.handleChange}
+                        placeholder='Ej: Salón 1, Zona Norte, Área de juegos'
                       />
-                    </Form.Item>
-                  </Col>
-                  <Col>
-                    <Form.Item label={'Hora Fin'}>
-                      <DateTimePicker
-                        value={hour_end}
-                        dropUp
-                        step={15}
-                        date={false}
-                        onChange={(value) => this.handleChangeDate(value, 'hour_end')}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Form.Item label={'Conferencista'}>
-                  <Row wrap gutter={[8, 8]}>
-                    <Col span={23}>
+                    </div>
+                  </div>
+                  <div className='field'>
+                    <label className='label'>Día</label>
+
+                    <SelectAntd
+                      name='date'
+                      options={this.state.days}
+                      style={{ width: '100%' }}
+                      defaultValue={date}
+                      onChange={(value) => this.handleChangeDate(value, 'date')}
+                    />
+                  </div>
+                  <div className='columns'>
+                    <div className='column'>
+                      <div className='field'>
+                        <label className='label'>Hora Inicio</label>
+                        <DateTimePicker
+                          value={hour_start}
+                          dropUp
+                          step={15}
+                          date={false}
+                          onChange={(value) => this.handleChangeDate(value, 'hour_start')}
+                        />
+                      </div>
+                    </div>
+
+                    <div className='column'>
+                      <div className='field'>
+                        <label className='label'>Hora Fin</label>
+                        <DateTimePicker
+                          value={hour_end}
+                          dropUp
+                          step={15}
+                          date={false}
+                          onChange={(value) => this.handleChangeDate(value, 'hour_end')}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <label className='label'>Conferencista</label>
+                  <div className='columns'>
+                    <div className='column is-10'>
                       <Select
                         isClearable
                         isMulti
@@ -708,40 +703,85 @@ class AgendaEdit extends Component {
                         options={hosts}
                         value={selectedHosts}
                       />
-                    </Col>
-                    <Col span={1}>
-                      <Button
+                    </div>
+                    <div className='column is-2'>
+                      <button
                         onClick={() => this.goSection(matchUrl.replace('agenda', 'speakers'), { child: true })}
-                        icon={<SettingOutlined />}
-                      />
-                    </Col>
-                  </Row>
-                </Form.Item>
-                <Form.Item label={'Espacio'}>
-                  <Row wrap gutter={[8, 8]}>
-                    <Col span={23}>
-                      <SelectAntd name={'space_id'} value={space_id} onChange={this.handleChange}>
-                        <Option value={''}>Seleccione un lugar/salón ...</Option>
-                        {spaces.map((space) => {
-                          return (
-                            <Option key={space.value} value={space.value}>
-                              {space.label}
-                            </Option>
-                          );
-                        })}
-                      </SelectAntd>
-                    </Col>
-                    <Col span={1}>
+                        className='button'>
+                        <FaWhmcs />
+                      </button>
+                    </div>
+                  </div>
+                  <label className='label'>Espacio</label>
+                  <div className='field has-addons'>
+                    <div className='control'>
+                      <div className='select'>
+                        <select name={'space_id'} value={space_id} onChange={this.handleChange}>
+                          <option value={''}>Seleccione un lugar/salón ...</option>
+                          {spaces.map((space) => {
+                            return (
+                              <option key={space.value} value={space.value}>
+                                {space.label}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                    <div className='control'>
                       <Link to={matchUrl.replace('agenda', 'espacios')}>
-                        <Button
-                          icon={<SettingOutlined />}
-                        />
+                        <button className='button'>
+                          <FaWhmcs />
+                        </button>
                       </Link>
-                    </Col>
-                  </Row>
-                </Form.Item>
-                {/* {access_restriction_type !== 'OPEN' && ( */}
-                  
+                    </div>
+                  </div>
+                {/*  <div className='field'>
+                    <label className={`label`}>Clasificar actividad como:</label>
+                    <div className='control'>
+                      <input
+                        type='radio'
+                        id={'radioOpen'}
+                        name='access_restriction_type'
+                        checked={access_restriction_type === 'OPEN'}
+                        className='is-checkradio'
+                        value={'OPEN'}
+                        onChange={this.handleChange}
+                      />
+                      <label htmlFor={'radioOpen'}>
+                        <strong>ABIERTA</strong>: Todos los asistentes (roles) pueden participar en la actividad
+                      </label>
+                    </div>
+                    <div className='control'>
+                      <input
+                        type='radio'
+                        id={'radioSuggested'}
+                        name='access_restriction_type'
+                        checked={access_restriction_type === 'SUGGESTED'}
+                        className='is-checkradio'
+                        value={'SUGGESTED'}
+                        onChange={this.handleChange}
+                      />
+                      <label htmlFor={'radioSuggested'}>
+                        <strong>RECOMENDADA</strong>: Actividad sugerida para algunos asistentes (roles)
+                      </label>
+                    </div>
+                    <div className='control'>
+                      <input
+                        type='radio'
+                        id={'radioExclusive'}
+                        name='access_restriction_type'
+                        checked={access_restriction_type === 'EXCLUSIVE'}
+                        className='is-checkradio'
+                        value={'EXCLUSIVE'}
+                        onChange={this.handleChange}
+                      />
+                      <label htmlFor={'radioExclusive'}>
+                        <strong>EXCLUSIVA</strong>: Solo algunos asistentes (roles) pueden participar en la actividad
+                      </label>
+                    </div>
+                  </div>*/}
+                  {access_restriction_type !== 'OPEN' && (
                     <Fragment>
                       <div style={{ display: 'flex' }}>
                         <label className='label required'>Asginar a :</label>
@@ -770,20 +810,7 @@ class AgendaEdit extends Component {
                         </div>
                       </div>
                     </Fragment>
-                  {/* )} */}
-              </Col>
-            </Row>
-          </Form>
-          <EventContent title='Actividad' closeAction={this.goBack}>
-            {loading ? (
-              <Loading />
-            ) : (
-              <div className='columns'>
-                <div className='column is-7'>
-                  
-                  
-                
-                  
+                  )}
                   <div className='field'>
                     <label className='label'>Documentos</label>
                     <Select

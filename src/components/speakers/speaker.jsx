@@ -333,8 +333,7 @@ async function dataTheLoaded() {
                 </Col>
                 <Col span={2}>
                   <Form.Item>
-                    <Button id='goToCategory' onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)} icon={<SettingOutlined />}>
-                    </Button> 
+                    <Button id='goToCategory' onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)} icon={<SettingOutlined />}/>
                   </Form.Item>
                 </Col>
               </Row>
