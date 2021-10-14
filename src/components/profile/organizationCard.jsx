@@ -11,10 +11,13 @@ const OrganizationCard = (props) => {
   const actionview = screens.xs ? <EyeOutlined key='view' /> : <span key='view'>Visitar</span>;
 
   return (
-    <Card actions={[actionAdmin, actionview]} style={{ borderRadius: '10px' }}>
-      <Space size={5} direction='vertical' style={{ textAlign: 'center', width: '100%' }}>
-        <Avatar size={{ xs: 100, sm: 100, md: 60, lg: 80, xl: 100, xxl: 100 }} src={'https://i.pravatar.cc/200'} />
-        <Typography.Text style={{ fontSize: '14px', width: '120px' }}>Nombre de la organizacion</Typography.Text>
+    <Card actions={[actionAdmin, actionview]} style={{ borderRadius: '10px' }} bodyStyle={{minHeight:'200px', textAlign:'center'}}>
+      <Space size={6} direction='vertical' style={{ textAlign: 'center', width: '100%' }}>
+        <Avatar
+          size={{ xs: 100, sm: 100, md: 100, lg: 100, xl: 100, xxl: 100 }}
+          src={props.data?.style?.event_image || 'http://via.placeholder.com/500/50D3C9/FFFFFF?text=Image'}
+        />
+        <Typography.Text style={{ fontSize: '14px', width: '130px' }}>{props.data?.name}</Typography.Text>
       </Space>
     </Card>
   );
