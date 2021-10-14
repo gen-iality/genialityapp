@@ -332,8 +332,10 @@ class Datos extends Component {
         dataIndex: '',
         render: (key) => (
           <>
-            {key.name !== 'email' && <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />}
-            {key.name !== 'email' && key.name !== 'names' && (
+            {key.name !== 'email' && key.name !== 'contrasena' && (
+              <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
+            )}
+            {key.name !== 'email' && key.name !== 'names' && key.name !== 'contrasena' && (
               <DeleteOutlined style={{ float: 'right' }} onClick={() => this.setState({ deleteModal: key._id })} />
             )}
           </>
@@ -419,15 +421,16 @@ class Datos extends Component {
           <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
             {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (
               <Fragment>
-                {this.props.type !== 'configMembers' && 
-                <Button
-                  danger
-                  style={{ marginTop: '3%' }}
-                  onClick={() =>
-                    this.setState({ isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] } })
-                  }>
-                  Volver a plantillas
-                </Button>}
+                {this.props.type !== 'configMembers' && (
+                  <Button
+                    danger
+                    style={{ marginTop: '3%' }}
+                    onClick={() =>
+                      this.setState({ isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] } })
+                    }>
+                    Volver a plantillas
+                  </Button>
+                )}
 
                 <EventContent
                   title={'Recopilación de datos'}
@@ -438,7 +441,7 @@ class Datos extends Component {
                   addTitle={'Agregar dato'}>
                   <Table
                     columns={columns}
-                    dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields }
+                    dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
                     pagination={false}
                     rowKey='index'
                     components={{
