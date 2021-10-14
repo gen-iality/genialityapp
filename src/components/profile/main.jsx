@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Card, Col, Layout, Menu, Row, Space, Statistic, Tabs, Typography, Grid, Divider } from 'antd';
-import { AppstoreFilled, SettingOutlined } from '@ant-design/icons';
+import { AppstoreFilled, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import OrganizationCard from './organizationCard';
 import NewCard from './newCard';
 import ExploreEvents from './exploreEvents';
@@ -84,7 +84,11 @@ const MainProfile = (props) => {
             size={5}
             direction='vertical'
             style={{ textAlign: 'center', paddingLeft: '15px', paddingRight: '15px' }}>
-            <Avatar size={150} src={props?.cUser?.value?.picture || 'https://i.pravatar.cc/300'} />
+            {props?.cUser?.value?.picture ? (
+              <Avatar size={150} src={props?.cUser?.value?.picture} />
+            ) : (
+              <Avatar style={{ backgroundColor: '#50D3C9' }} size={150} icon={<UserOutlined />} />
+            )}
             <Typography.Text style={{ fontSize: '20px', width: '250px' }}>
               {props?.cUser?.value?.names || props?.cUser?.value?.displayName || props?.cUser?.value?.name}
             </Typography.Text>

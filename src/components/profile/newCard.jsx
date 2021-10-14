@@ -8,7 +8,7 @@ import ModalCreateOrg from './modalCreateOrg';
 const NewCard = (props) => {
   const entity = props.entityType ? props.entityType : 'event';
   const [isVisible, setIsVisible] = useState(false);
-  console.log('10. props ', props);
+
   function linkToTheMenuRouteS(menuRoute) {
     window.location.href = `${window.location.origin}${menuRoute}`;
   }
