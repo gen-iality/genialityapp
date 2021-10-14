@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { Table, Tooltip, Space, Button, Image, Modal, message, Typography, Row, Col } from 'antd';
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, DragOutlined, ShoppingCartOutlined, SaveOutlined, SettingOutlined } from '@ant-design/icons';
+import { Table, Tooltip, Space, Button, Image, Modal, message, Typography, Row, Spin } from 'antd';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusCircleOutlined, DragOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import { EventsApi } from '../../helpers/request';
 import Loading from '../loaders/loading';
 import { withRouter } from 'react-router';
-import Header from '../../antdComponents/Header';
+import { product } from 'ramda';
 
 const { Column } = Table;
 const { confirm } = Modal;
-const { Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 const  DragHandle = sortableHandle(() => <DragOutlined  style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement(props => <tr {...props} />);
 const SortableContainer = sortableContainer(props => <tbody {...props} />)
@@ -101,7 +101,7 @@ class Product extends Component {
    }
 
    editProduct = (cert) => {
-      this.props.history.push(`/eventadmin/${this.props.eventId}/product/addproduct/${cert._id}`);
+      this.props.history.push(`/event/${this.props.eventId}/product/addproduct/${cert._id}`);
    };
 
    removeProduct = (data) => {
@@ -139,26 +139,20 @@ class Product extends Component {
 
    render() {
       return (
+         
          <div>
-           <Header 
-              title={'Producto'}
-              titleTooltip={'Agregue o edite los Productos que se muestran en la aplicación'}
-              addFn={this.newProduct}
-              extra={(
-                <Row wrap gutter={[8, 8]}>
-                  <Col>
-                    <Button onClick={this.savePosition} type="primary" icon={<SaveOutlined />}>
-                      {'Guardar orden'}
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Button type="primary" icon={<SettingOutlined />} onClick={this.configuration}>
-                      {'Configuración'}
-                    </Button>
-                  </Col>
-                </Row>
-              )}
-            />
+            <Title level={4}>{'Producto'}</Title>
+            <Row justify='end' style={{ marginBottom: '10px' }}>
+               <Button onClick={this.newProduct} type='primary' style={{marginRight:'20px'}} icon={<PlusCircleOutlined />}>
+                  {'Crear producto'}
+               </Button>
+               <Button onClick={this.configuration} type='primary' style={{marginRight:'20px'}} icon={<PlusCircleOutlined />}>
+                  {'Configuración'}
+               </Button>
+               <Button onClick={this.savePosition} type='primary'  icon={<PlusCircleOutlined />}>
+                  {'Guardar posición'}
+               </Button>
+            </Row>
 
             {this.state.loading ? (
                <Loading />

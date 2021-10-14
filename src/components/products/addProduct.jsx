@@ -1,66 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button, Card, Row, Input, Form, message } from 'antd';
-import { useState } from 'react';
+import { Button, Card, Row, Input, Form, message, Col } from 'antd';
 import { withRouter } from 'react-router';
 import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
 import { Actions, EventsApi } from '../../helpers/request';
-import { useEffect } from 'react';
+import Header from '../../antdComponents/Header';
 
 export const toolbarEditor = {
-   toolbar: [
-      [{ font: [] }],
-      [{ header: [0, 1, 2, 3] }],
-      [{ size: [] }],
-      [{ align: [] }],
-      [{ syntax: true }],
-      ['bold', 'italic', 'blockquote'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link', 'image'],
-   ],
+  toolbar: [
+    [{ font: [] }],
+    [{ header: [0, 1, 2, 3] }],
+    [{ size: [] }],
+    [{ align: [] }],
+    [{ syntax: true }],
+    ['bold', 'italic', 'blockquote'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link', 'image'],
+  ],
+};
+
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
 };
 
 function AddProduct(props) {
-   const [product, setProduct] = useState();
-   const [name, setName] = useState('');
-   const [creator, setCreator] = useState('');
-   const [description, setDescription] = useState('');
-   const [price, setPrice] = useState('');
-   const [picture, setPicture] = useState(null);
-   const [optionalPicture, setOptionalPicture] = useState(null);
-   const [imageFile, setImgFile] = useState(null);
-   const [imageFileOptional, setImgFileOptional] = useState(null);
-   const [errImg, setErrImg] = useState();
-   const [error, setError] = useState(null);
-   const [idNew, setIdNew] = useState();
-   useEffect(() => {
-      if (props.match.params.id) {
-         setIdNew(props.match.params.id);
-         EventsApi.getOneProduct(props.eventId, props.match.params.id).then((product) => {
-            setProduct(product);
-            setName(product.name);
-            setCreator(product.by);
-            setDescription(product.description ||"");
-            setPicture(product.image && product.image[0] ? product.image[0] : null);
-            setOptionalPicture(product.image && product.image[1] ? product.image[1] : null);
-            setPrice(product.price);
-         });
-      }
-   }, []);
+  const [product, setProduct] = useState();
+  const [name, setName] = useState('');
+  const [creator, setCreator] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [picture, setPicture] = useState(null);
+  const [optionalPicture, setOptionalPicture] = useState(null);
+  const [imageFile, setImgFile] = useState(null);
+  const [imageFileOptional, setImgFileOptional] = useState(null);
+  const [errImg, setErrImg] = useState();
+  const [error, setError] = useState(null);
+  const [idNew, setIdNew] = useState();
 
-   const goBack = () => props.history.goBack();
+  useEffect(() => {
+    if (props.match.params.id) {
+      setIdNew(props.match.params.id);
+      EventsApi.getOneProduct(props.eventId, props.match.params.id).then((product) => {
+        setProduct(product);
+        setName(product.name);
+        setCreator(product.by);
+        setDescription(product.description ||"");
+        setPicture(product.image && product.image[0] ? product.image[0] : null);
+        setOptionalPicture(product.image && product.image[1] ? product.image[1] : null);
+        setPrice(product.price);
+      });
+    }
+  }, []);
 
-   const changeInput = (e, key) => {
-      if (key === 'name') {
-         setName(e.target.value);
-      } else if (key === 'price') {
-         setPrice(e.target.value);
-      } else if (key === 'creator') {
-         setCreator(e.target.value);
-      }
-   };
+  const goBack = () => props.history.goBack();
+
+  const changeInput = (e, key) => {
+    if (key === 'name') {
+        setName(e.target.value);
+    } else if (key === 'price') {
+        setPrice(e.target.value);
+    } else if (key === 'creator') {
+        setCreator(e.target.value);
+    }
+  };
 
    const changeDescription = (e) => {
       if (description.length < 10000) {
@@ -108,11 +113,6 @@ function AddProduct(props) {
       } else {
          validators.name = false;
       }
-      /*if (name === '') {
-         validators.creator = true;
-      } else {
-         validators.creator = false;
-      }*/
       if (description === '') {
          validators.description = true;
       } else {
@@ -123,12 +123,6 @@ function AddProduct(props) {
       } else {
          validators.picture = false;
       }
-     /* if (price === '') {
-         validators.price = true;
-      } else {
-         validators.price = false;
-      }*/
-      console.log()
       setError(validators);
       if (
          validators &&
@@ -176,179 +170,217 @@ function AddProduct(props) {
       }
    };
 
+   const remove = () => {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    if(props.match.params.id) {
+      confirm({
+        title: `¿Está seguro de eliminar la información?`,
+        icon: <ExclamationCircleOutlined />,
+        content: 'Una vez eliminado, no lo podrá recuperar',
+        okText: 'Borrar',
+        okType: 'danger',
+        cancelText: 'Cancelar',
+        onOk() {
+          const onHandlerRemove = async () => {
+            try {
+              await EventsApi.deleteOne(props.match.params.id, props.eventId);
+              message.destroy(loading.key);
+              message.open({
+                type: 'success',
+                content: <> Se eliminó la información correctamente!</>,
+              });
+              goBack();
+            } catch (e) {
+              message.destroy(loading.key);
+              message.open({
+                type: 'error',
+                content: handleRequestError(e).message,
+              });
+            }
+          }
+          onHandlerRemove();
+        }
+      });
+    }
+  }
+
    return (
-      <div>
-         <Row>
-            <Button shape='circle' onClick={goBack} icon={<ArrowLeftOutlined />} />{' '}
-            <span style={{ marginLeft: 30 }}>Agregar Producto</span>
-         </Row>
-         <Card style={{ width: 950, margin: 'auto', marginTop: 30 }}>
-            <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} onFinish={saveProduct}>
-               <Form.Item
-                  label={
-                     <label style={{ marginTop: '2%' }} className='label'>
-                        Nombre del producto <label style={{ color: 'red' }}>*</label>
-                     </label>
-                  }
-                  rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]}>
-                  <Input
-                     value={name}
-                     placeholder='Nombre del producto'
-                     name={'name'}
-                     onChange={(e) => changeInput(e, 'name')}
-                  />
-                  {error != null && error.name && (
-                     <small style={{ color: 'red' }}>El nombre del producto es requerido</small>
-                  )}
-               </Form.Item>
-               <Form.Item
-                  label={
-                     <label style={{ marginTop: '2%' }} className='label'>
-                        Por {/*<label style={{ color: 'red' }}>*</label>*/}
-                     </label>
-                  }
-                  rules={[{ required: false}]}>
-                  <Input
-                     value={creator}
-                     placeholder='Nombre del autor, creador o descripcion corta'
-                     name={'creator'}
-                     onChange={(e) => changeInput(e, 'creator')}
-                  />
-                  {error != null && error.creator && <small style={{ color: 'red' }}>Este campo es requerido</small>}
-               </Form.Item>
-               <Form.Item
-                  label={
-                     <label style={{ marginTop: '2%' }} className='label'>
-                        Descripción <label style={{ color: 'red' }}>*</label>
-                     </label>
-                  }>
-                  <ReactQuill value={description} modules={toolbarEditor} onChange={changeDescription} />
-                  {error != null && error.description && (
-                     <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
-                  )}
-               </Form.Item>
-               <Form.Item
-                  label={
-                     <label style={{ marginTop: '2%' }} className='label'>
-                        Valor {/*<label style={{ color: 'red' }}>*</label>*/}
-                     </label>
-                  }
-                  rules={[{ required: false, message: 'Ingrese el valor del producto' }]}>
-                  <Input
-                     value={price}
-                     placeholder='Valor del producto'
-                     name={'price'}
-                     onChange={(e) => changeInput(e, 'price')}
-                  />{' '}
-                  {/*error != null && error.price && (
-                     <small style={{ color: 'red' }}>El valor del producto es requerido</small>
-                  )*/}
-               </Form.Item>
-               <Form.Item
-                  label={
-                     <label style={{ marginTop: '2%' }} className='label'>
-                        Imagen <label style={{ color: 'red' }}>*</label>
-                     </label>
-                  }>
-                  <ImageInput
-                     width={1080}
-                     height={1080}
-                     picture={picture}
-                     imageFile={imageFile}
-                     divClass={'drop-img'}
-                     content={<img src={picture} alt={'Imagen Perfil'} />}
-                     classDrop={'dropzone'}
-                     contentDrop={
-                        <button
-                           onClick={(e) => {
-                              e.preventDefault();
-                           }}
-                           className={`button is-primary is-inverted is-outlined ${imageFile ? 'is-loading' : ''}`}>
-                           Cambiar foto
-                        </button>
-                     }
-                     contentZone={
-                        <div className='has-text-grey has-text-weight-bold has-text-centered'>
-                           <span>Subir foto</span>
-                           <br />
-                           <small>(Tamaño recomendado: 1280px x 960px)</small>
-                        </div>
-                     }
-                     changeImg={(file) => changeImg(file, 'Imagen')}
-                     errImg={errImg}
-                     style={{
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        position: 'relative',
-                        height: '200px',
-                        width: '100%',
-                        borderWidth: 2,
-                        borderColor: '#b5b5b5',
-                        borderStyle: 'dashed',
-                        borderRadius: 10,
-                     }}
-                  />
-                  {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
-               </Form.Item>
-               <Form.Item
-                  label={
-                     <label style={{ marginTop: '2%' }} className='label'>
-                        Imagen opcional
-                     </label>
-                  }>
-                  <ImageInput
-                     width={1080}
-                     height={1080}
-                     picture={optionalPicture}
-                     imageFile={imageFileOptional}
-                     divClass={'drop-img'}
-                     content={<img src={optionalPicture} alt={'Imagen Perfil'} />}
-                     classDrop={'dropzone'}
-                     contentDrop={
-                        <button
-                           onClick={(e) => {
-                              e.preventDefault();
-                           }}
-                           className={`button is-primary is-inverted is-outlined ${
-                              imageFileOptional ? 'is-loading' : ''
-                           }`}>
-                           Cambiar foto
-                        </button>
-                     }
-                     contentZone={
-                        <div className='has-text-grey has-text-weight-bold has-text-centered'>
-                           <span>Subir foto</span>
-                           <br />
-                           <small>(Tamaño recomendado: 1280px x 960px)</small>
-                        </div>
-                     }
-                     changeImg={(file) => changeImg(file, 'Imagen opcional')}
-                     errImg={errImg}
-                     style={{
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        position: 'relative',
-                        height: '200px',
-                        width: '100%',
-                        borderWidth: 2,
-                        borderColor: '#b5b5b5',
-                        borderStyle: 'dashed',
-                        borderRadius: 10,
-                     }}
-                  />
-               </Form.Item>
-               <Form.Item wrapperCol={{ offset: 5, span: 18 }}>
-                  <Button type='primary' htmlType='submit'>
-                     Guardar
-                  </Button>
-               </Form.Item>
-            </Form>
-         </Card>
-      </div>
+    <Form
+    {...formLayout}
+      onFinish={saveProduct}
+    >
+      <Header 
+        title={'Producto'}
+        back
+        save
+        form
+        edit={props.match.params.id}
+        remove={remove}
+      />
+      <Row justify='center' wrap gutter={12}>
+        <Col span={16}>
+          <Form.Item
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Nombre del producto <label style={{ color: 'red' }}>*</label>
+              </label>
+            }
+            rules={[{ required: true, message: 'Ingrese el nombre de la producto' }]}
+          >
+            <Input
+              value={name}
+              placeholder='Nombre del producto'
+              name={'name'}
+              onChange={(e) => changeInput(e, 'name')}
+            />
+            {error != null && error.name && (
+                <small style={{ color: 'red' }}>El nombre del producto es requerido</small>
+            )}
+          </Form.Item>
+          <Form.Item
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Por 
+              </label>
+            }
+            rules={[{ required: false}]}>
+            <Input
+              value={creator}
+              placeholder='Nombre del autor, creador o descripcion corta'
+              name={'creator'}
+              onChange={(e) => changeInput(e, 'creator')}
+            />
+            {error != null && error.creator && <small style={{ color: 'red' }}>Este campo es requerido</small>}
+          </Form.Item>
+          <Form.Item
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Descripción <label style={{ color: 'red' }}>*</label>
+              </label>
+            }>
+              <ReactQuill value={description} modules={toolbarEditor} onChange={changeDescription} />
+              {error != null && error.description && (
+                  <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
+              )}
+          </Form.Item>
+          <Form.Item
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Valor 
+              </label>
+            }
+            rules={[{ required: false, message: 'Ingrese el valor del producto' }]}>
+            <Input
+              value={price}
+              placeholder='Valor del producto'
+              name={'price'}
+              onChange={(e) => changeInput(e, 'price')}
+            />{' '}
+          </Form.Item>
+          <Form.Item
+            label={
+              <label style={{ marginTop: '2%' }} className='label'>
+                Imagen <label style={{ color: 'red' }}>*</label>
+              </label>
+          }>
+            <ImageInput
+              width={1080}
+              height={1080}
+              picture={picture}
+              imageFile={imageFile}
+              divClass={'drop-img'}
+              content={<img src={picture} alt={'Imagen Perfil'} />}
+              classDrop={'dropzone'}
+              contentDrop={
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                  }}
+                  className={`button is-primary is-inverted is-outlined ${imageFile ? 'is-loading' : ''}`}>
+                  Cambiar foto
+                </button>
+              }
+              contentZone={
+                <div className='has-text-grey has-text-weight-bold has-text-centered'>
+                    <span>Subir foto</span>
+                    <br />
+                    <small>(Tamaño recomendado: 1280px x 960px)</small>
+                </div>
+              }
+              changeImg={(file) => changeImg(file, 'Imagen')}
+              errImg={errImg}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+                height: '200px',
+                width: '100%',
+                borderWidth: 2,
+                borderColor: '#b5b5b5',
+                borderStyle: 'dashed',
+                borderRadius: 10,
+              }}
+            />
+            {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
+          </Form.Item>
+          <Form.Item
+            label={
+                <label style={{ marginTop: '2%' }} className='label'>
+                  Imagen opcional
+                </label>
+            }>
+            <ImageInput
+              width={1080}
+              height={1080}
+              picture={optionalPicture}
+              imageFile={imageFileOptional}
+              divClass={'drop-img'}
+              content={<img src={optionalPicture} alt={'Imagen Perfil'} />}
+              classDrop={'dropzone'}
+              contentDrop={
+                <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                    }}
+                    className={`button is-primary is-inverted is-outlined ${
+                      imageFileOptional ? 'is-loading' : ''
+                    }`}>
+                    Cambiar foto
+                </button>
+              }
+              contentZone={
+                <div className='has-text-grey has-text-weight-bold has-text-centered'>
+                    <span>Subir foto</span>
+                    <br />
+                    <small>(Tamaño recomendado: 1280px x 960px)</small>
+                </div>
+              }
+              changeImg={(file) => changeImg(file, 'Imagen opcional')}
+              errImg={errImg}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+                height: '200px',
+                width: '100%',
+                borderWidth: 2,
+                borderColor: '#b5b5b5',
+                borderStyle: 'dashed',
+                borderRadius: 10,
+              }}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form>
    );
 }
 

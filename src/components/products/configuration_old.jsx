@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Button, Card, Col, message, Row, Spin, Switch } from 'antd';
 import { withRouter } from 'react-router';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
 import { firestore } from '../../helpers/firebase';
-import Header from '../../antdComponents/Header';
+import { useEffect } from 'react';
 
 const Configuration = (props) => {
   const [checkSubasta, setCheckSubasta] = useState(false);
@@ -57,23 +57,31 @@ const Configuration = (props) => {
 
   return (
     !loadingData ? <>
-    <Header 
-      title={'Configuración'}
-      back
-      save
-      saveMethod={saveConfiguration}
-    />
-    <Row justify='center' wrap gutter={12}>
-      <Col span={16}>
-        <p>Habilitar puja</p>
-        <Switch checked={checkSubasta} onChange={onChange} />
-        <br /> <br />
-        <p>Mensaje a mostrar al deshabilitar</p>
-        <ReactQuill value={messageF} modules={toolbarEditor} onChange={changeMessage} />
+     <Col style={{marginBottom:20}}>
+        <Row>
+          <Button shape='circle' onClick={goBack} icon={<ArrowLeftOutlined />} />{' '}
+          <span style={{ marginLeft: 30 }}>Configuración</span>
+        </Row>
       </Col>
-    </Row>
-     
-    </>:<div style={{textAlign:'center'}}><Spin/></div>
+      <Col>
+        <Card style={{width:700,margin:'auto'}}>
+          <Row>
+            <span>Habilitar puja</span>
+          </Row>
+          <Row style={{ paddingBottom: 20 }}>
+            {' '}
+            <Switch checked={checkSubasta} onChange={onChange} />
+          </Row>
+          <Row>Mensaje a mostrar al deshabilitar</Row>
+          <Row style={{ height: '300px', padding: '10px 20px 90px 0px' }}>
+            <ReactQuill value={messageF} modules={toolbarEditor} onChange={changeMessage} />
+          </Row>
+          <Row>
+            {loading?<><Spin></Spin> Por favor espere...</>: <Button onClick={saveConfiguration} type='primary'>Guardar</Button>}
+          </Row>
+        </Card>
+      </Col>
+    </>:<div style={{textAlign:'center'}}><Spin></Spin></div>
   );
 };
 
