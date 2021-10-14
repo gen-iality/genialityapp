@@ -696,8 +696,13 @@ const FormRegister = ({
               <Upload
                 accept='image/png,image/jpeg'
                 onChange={(file) => {
+                  const fls = (file ? file.fileList : [])
+                  .map(fl => ({
+                    ...fl,
+                    status: 'success',
+                  }))
                   setImageAvatar(file);
-                  setImgUrl(file.fileList);
+                  setImgUrl(fls);
                 }}
                 multiple={false}
                 listType='picture'
