@@ -11,7 +11,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { EventsApi, UsersApi } from '../../helpers/request';
 import { stubTrue } from 'lodash-es';
 
-
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
 
@@ -32,12 +31,12 @@ const ModalAuth = (props) => {
   const [errorLogin, setErrorLogin] = useState(false);
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
-  const intl = useIntl(); 
- useEffect(()=>{
-  if(props.tab){    
-    handleChangeTabModal(props.tab)
-  }  
- },[props.tab])
+  const intl = useIntl();
+  useEffect(() => {
+    if (props.tab) {
+      handleChangeTabModal(props.tab);
+    }
+  }, [props.tab]);
   useEffect(() => {
     async function userAuth() {
       app.auth().onAuthStateChanged((user) => {
@@ -48,7 +47,9 @@ const ModalAuth = (props) => {
               let url =
                 props.organization == 'landing'
                   ? `/organization/${props.idOrganization}/events?token=${idToken}`
-                  : props.organization == 'register'?`/myprofile?token=${idToken}`: `/landing/${props.cEvent.value?._id}?token=${idToken}`;
+                  : props.organization == 'register'
+                  ? `/myprofile?token=${idToken}`
+                  : `/landing/${props.cEvent.value?._id}?token=${idToken}`;
               setTimeout(function() {
                 window.location.replace(url);
               }, 1000);
@@ -93,14 +94,14 @@ const ModalAuth = (props) => {
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
       .then((response) => {
-        console.log("RESPONSE==>",response)
+        console.log('RESPONSE==>', response);
         loginNormal = true;
         setErrorLogin(false);
         //setLoading(false);
       })
       .catch(async (e) => {
-        console.log("ERROR==>",e)
-       // if(props.organization!=='register'){
+        console.log('ERROR==>', e);
+        // if(props.organization!=='register'){
         let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
         if (user.data.length > 0) {
           if (
@@ -127,11 +128,11 @@ const ModalAuth = (props) => {
           setErrorLogin(true);
           setLoading(false);
         }
-     // }else{
-       //let login= await EventsApi.signInWithEmailAndPassword(data)
-       // let user=await UsersApi.findByEmail(data.email);
-       // console.log("USEROBTENIDO==>",user,login)
-    // }
+        // }else{
+        //let login= await EventsApi.signInWithEmailAndPassword(data)
+        // let user=await UsersApi.findByEmail(data.email);
+        // console.log("USEROBTENIDO==>",user,login)
+        // }
       });
   };
 
@@ -143,21 +144,15 @@ const ModalAuth = (props) => {
     props.cUser?.status == 'LOADED' &&
     props.cUser?.value == null &&
     typeModal == null && (
-      <Modal 
-        onCancel={props.organization == 'register'?()=> props.closeModal():null}
+      <Modal
+        onCancel={props.organization == 'register' ? () => props.closeModal() : null}
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
         footer={null}
         zIndex={1000}
-        closable={props.organization == 'register'? true:false}
-        visible={
-          props.organization == 'register' && props.visible == true
-            ? true
-            : props.organization !== 'register'
-            ? true
-            : false
-        }>
-        <Tabs onChange={callback} centered size='large'  activeKey={tabLogin}>
+        closable={false}
+        visible={true}>
+        <Tabs onChange={callback} centered size='large' activeKey={tabLogin}>
           <TabPane tab={intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })} key='1'>
             <Form
               form={form1}
@@ -255,15 +250,15 @@ const ModalAuth = (props) => {
               )}
               {loading && <LoadingOutlined style={{ fontSize: '50px' }} />}
             </Form>
-            {props.organization !== 'landing' && props.organization !== 'register'  && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
-            {props.organization !== 'landing' && props.organization !== 'register'  && (
+            {props.organization !== 'landing' && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
+            {props.organization !== 'landing' && (
               <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
-                <Typography.Paragraph type='secondary'>
-                  {intl.formatMessage({
-                    id: 'modal.info.options',
-                    defaultMessage: 'Mira otras formas de entrar al evento',
-                  })}
-                </Typography.Paragraph>
+                {/* <Typography.Paragraph type='secondary'>
+                {intl.formatMessage({
+                  id: 'modal.info.options',
+                  defaultMessage: 'Mira otras formas de entrar al evento',
+                })}
+              </Typography.Paragraph> */}
                 <Space direction='vertical' style={{ width: '100%' }}>
                   {/* <Button
                   disabled={loading}
@@ -273,10 +268,12 @@ const ModalAuth = (props) => {
                   Invitado anónimo
                 </Button> */}
                   <Button
+                    icon={<MailOutlined />}
                     disabled={loading}
                     onClick={() => handleChangeTypeModal('mail')}
+                    type='primary'
                     block
-                    style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
+                    // style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
                     size='large'>
                     {intl.formatMessage({ id: 'modal.option.send', defaultMessage: 'Enviar acceso a mi correo' })}
                   </Button>
@@ -320,8 +317,7 @@ const ModalAuth = (props) => {
 
 export default withContext(ModalAuth);
 
-
-const fieldsUser=[
+const fieldsUser = [
   {
     name: 'avatar',
     mandatory: true,
@@ -341,7 +337,7 @@ const fieldsUser=[
     event_type: null,
     organiser: null,
     organizer: null,
-    currency: {},                          
+    currency: {},
     tickets: [],
     index: 2,
     order_weight: 1,
@@ -366,7 +362,7 @@ const fieldsUser=[
     event_type: null,
     organiser: null,
     organizer: null,
-    currency: { },
+    currency: {},
     tickets: [],
     index: 0,
     order_weight: 2,
@@ -379,7 +375,7 @@ const fieldsUser=[
     label: 'Correo electrónico',
     description: null,
     type: 'email',
-    options: [ ],
+    options: [],
     justonebyattendee: false,
     updated_at: '2021-09-22 14:25:32',
     created_at: '2021-09-21 21:18:04',
@@ -396,5 +392,5 @@ const fieldsUser=[
     index: 1,
     order_weight: 3,
     sensibility: true,
-  },                      
+  },
 ];

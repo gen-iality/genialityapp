@@ -7,6 +7,7 @@ import Styles from '../App/styles';
 import OrgEvents from './events';
 import OrgMembers from './members';
 import Datos from '../events/datos';
+import MemberSettings from './memberSettings';
 import { Tag } from 'antd';
 import { DoubleRightOutlined } from '@ant-design/icons';
 
@@ -125,7 +126,7 @@ function Organization(props) {
                   <Route
                     exact
                     path={`${props.match.url}/membersettings`}
-                    render={() => <Datos type="organization" org={organization} url={props.match.url} />}
+                    render={() => <MemberSettings org={organization} url={props.match.url} />}
                   />
 
                   <Route
