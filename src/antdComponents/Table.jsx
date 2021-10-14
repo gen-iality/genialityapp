@@ -37,6 +37,7 @@ const Table = (props) => {
     title: 'Opciones',
     dataIndex: 'options',
     render(val, item) {
+      console.log(item.index);
       return (
         <Row wrap gutter={[8, 8]}>
           <Col>
@@ -98,6 +99,14 @@ const Table = (props) => {
       );
     },
   };
+
+  if(list) {
+    list.map((list, index) => {
+      if(!list.index) {
+        list.index = index;
+      }
+    })
+  }
 
   if (actions) {
     header.push(options);
