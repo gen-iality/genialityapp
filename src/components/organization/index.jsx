@@ -155,15 +155,14 @@ function Organization(props) {
                             name: template.template.name,
                             user_properties: fieldsNew,
                           };
-                          console.log('CREATENEWFIELD==>', fieldsNew, template, template.datafields);
                           //alert('NEW FIELD==>');
-                          console.log('ADDFILED1==>', resp, newTemplate);
+
                           let resp = await OrganizationApi.updateTemplateOrganization(
                             props.match.params.id,
                             template.template._id,
                             newTemplate
                           );
-                          console.log('ADDFILED==>', resp, newTemplate);
+                          //console.log('ADDFILED==>', resp, newTemplate);
                         }}
                       />
                     )}
