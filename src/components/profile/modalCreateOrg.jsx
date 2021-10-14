@@ -3,7 +3,7 @@ import { Modal, Form, Input, Button, Typography, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { UploadOutlined } from '@ant-design/icons';
 
-const ModalCreateOrg = () => {
+const ModalCreateOrg = (props) => {
   return (
     <Modal
       bodyStyle={{ textAlign: 'center', paddingRight: '80px', paddingLeft: '80px', paddingTop: '80px', height: '70vh' }}
@@ -11,7 +11,8 @@ const ModalCreateOrg = () => {
       footer={null}
       zIndex={1000}
       closable={true}
-      visible={true}>
+      visible={props.isVisible}
+      onCancel={() => props.setIsVisible(false)}>
       <Form layout='vertical'>
         <Typography.Title level={4} type='secondary'>
           Nueva organizacion

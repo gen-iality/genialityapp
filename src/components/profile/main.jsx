@@ -83,10 +83,12 @@ const MainProfile = (props) => {
             size={5}
             direction='vertical'
             style={{ textAlign: 'center', paddingLeft: '15px', paddingRight: '15px' }}>
-            <Avatar size={150} src={'https://i.pravatar.cc/300'} />
-            <Typography.Text style={{ fontSize: '20px', width: '250px' }}>Nombre del usuario</Typography.Text>
+            <Avatar size={150} src={props?.cUser?.value?.picture || 'https://i.pravatar.cc/300'} />
+            <Typography.Text style={{ fontSize: '20px', width: '250px' }}>
+              {props?.cUser?.value?.names || props?.cUser?.value?.displayName || props?.cUser?.value?.name}
+            </Typography.Text>
             <Typography.Text type='secondary' style={{ fontSize: '16px', width: '220px', wordBreak: 'break-all' }}>
-              usuario@email.com
+              {props?.cUser?.value?.email}
             </Typography.Text>
           </Space>
           <Col span={24}>
@@ -130,7 +132,7 @@ const MainProfile = (props) => {
                     <Divider orientation='left'>Eventos creado</Divider>
                     <Row gutter={[16, 16]}>
                       <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
-                        <NewCard entityType='event' />
+                        <NewCard entityType='event' cUser={props.cUser} />
                       </Col>
                       {/* aqui empieza el mapeo de eventCard.jsx maximo 4 */}
                       {eventsLimited.length > 0 &&
@@ -187,7 +189,7 @@ const MainProfile = (props) => {
                     <Divider orientation='left'>Organizaciones</Divider>
                     <Row gutter={[16, 16]}>
                       <Col key={'index1'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                        <NewCard entityType='organization' />
+                        <NewCard entityType='organization' cUser={props.cUser} />
                       </Col>
                       {/* aqui empieza el mapeo maximo 6 */}
                       {organizationsLimited.length > 0 &&
@@ -207,7 +209,7 @@ const MainProfile = (props) => {
             <TabPane tab='Organizaciones' key='2'>
               <Row gutter={[16, 16]}>
                 <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                  <NewCard entityType='organization' />
+                  <NewCard entityType='organization' cUser={props.cUser} />
                 </Col>
                 {organizations.length > 0 &&
                   organizations.map((organization) => {
@@ -222,7 +224,7 @@ const MainProfile = (props) => {
             <TabPane tab='Eventos creados' key='3'>
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                  <NewCard entityType='event' />
+                  <NewCard entityType='event' cUser={props.cUser} />
                 </Col>
                 {events.map((event) => {
                   return (
