@@ -44,21 +44,26 @@ const EventSectionRoutes = (props) => {
   let { event_id, event_name } = useParams();
   let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal } = useContext(HelperContext);
 
+  //redirigir a evento Cancilleria
+  if (event_id === '610976f24e10472fb738d65b') {
+    window.location.replace('https://cancilleria.evius.co/landing/610976f24e10472fb738d65b/evento');
+  }
+
   function ValidateViewPermissions(route, nombresection) {
     console.log(route, nombresection);
     if (props.cEvent.value !== null) {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
-       if (
+      if (
         routePermissions.length > 0 &&
         routePermissions[0].permissions === 'assistants' &&
         props.cUser.value !== null &&
-        props.cEventUser.value==null
+        props.cEventUser.value == null
       ) {
-        handleChangeTypeModal("register");
-       // handleChangeTypeModal(null);
+        handleChangeTypeModal('register');
+        // handleChangeTypeModal(null);
         // props.setSectionPermissions({ view: true, section: nombresection });
-         return false;
+        return false;
       } else if (
         routePermissions.length > 0 &&
         routePermissions[0].permissions === 'public' &&
