@@ -3,9 +3,7 @@ import EviusReactQuill from '../../shared/eviusReactQuill';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { EventsApi } from '../../../helpers/request';
 import { UseEventContext } from '../../../Context/eventContext';
-import { Form ,message, Button  } from 'antd';
-
-
+import { Form, message, Button } from 'antd';
 
 export default function AdmininformativeSection1(props) {
   const eventContext = UseEventContext();
@@ -13,20 +11,20 @@ export default function AdmininformativeSection1(props) {
 
   const onFinish = (values) => {
     async function save() {
-      console.log('minu',eventContext.value.itemsMenu)
+      console.log('minu', eventContext.value.itemsMenu);
       const data = {
         itemsMenu: {
           ...eventContext.value.itemsMenu,
           informativeSection1: { ...eventContext.value.itemsMenu?.informativeSection1, markup: content },
         },
       };
-      console.log('minu',data)
+      console.log('minu', data);
 
-      try{
-      const result = await EventsApi.editOne(data, eventContext.value._id);
-      message.info('Guardado');
-      }catch(e){
-        message.info('Error',e.message);
+      try {
+        const result = await EventsApi.editOne(data, eventContext.value._id);
+        message.success('Guardado');
+      } catch (e) {
+        message.error('Error', e.message);
       }
     }
     save();

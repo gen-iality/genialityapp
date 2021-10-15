@@ -1,9 +1,25 @@
-import React from 'react';
-import { Modal, Form, Input, Button, Typography, Upload } from 'antd';
+import React, { useState } from 'react';
+import { Modal, Form, Input, Button, Typography, Upload, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { UploadOutlined } from '@ant-design/icons';
+import functionCreateNewOrganization from './functionCreateNewOrganization';
 
-const ModalCreateOrg = () => {
+const ModalCreateOrg = (props) => {
+  let [imageAvatar, setImageAvatar] = useState(null);
+
+  const beforeUpload = (file) => {
+    const isLt5M = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      message.error('Image must smaller than 5MB!');
+    }
+    return isLt5M ? true : false;
+  };
+
+  const saveNewOrganization = (values) => {
+    const newValues = { ...values, logo: imageAvatar };
+    functionCreateNewOrganization(newValues);
+  };
+
   return (
     <Modal
       bodyStyle={{ textAlign: 'center', paddingRight: '80px', paddingLeft: '80px', paddingTop: '80px', height: '70vh' }}
@@ -11,22 +27,48 @@ const ModalCreateOrg = () => {
       footer={null}
       zIndex={1000}
       closable={true}
-      visible={true}>
-      <Form layout='vertical'>
+      visible={props.isVisible}
+      onCancel={() => {
+        props.setIsVisible(false);
+      }}>
+      <Form onFinish={saveNewOrganization} autoComplete='off' layout='vertical'>
         <Typography.Title level={4} type='secondary'>
           Nueva organizacion
         </Typography.Title>
         <Form.Item>
           <ImgCrop rotate shape='round'>
-            <Upload multiple={false} listType='picture' maxCount={1}>
-              <Button type='primary' shape='circle' style={{ height: '100px', width: '100px' }}>
-                Subir logo
-              </Button>
+            <Upload
+              accept='image/png,image/jpeg'
+              onChange={(file) => {
+                const fls = (file ? file.fileList : []).map((fl) => ({
+                  ...fl,
+                  status: 'success',
+                }));
+                if (file.fileList.length > 0) {
+                  setImageAvatar(fls);
+                } else {
+                  setImageAvatar(null);
+                }
+              }}
+              multiple={false}
+              listType='picture'
+              maxCount={1}
+              fileList={imageAvatar}
+              beforeUpload={beforeUpload}>
+              {imageAvatar === null && (
+                <Button type='primary' shape='circle' style={{ height: '100px', width: '100px' }}>
+                  Subir logo
+                </Button>
+              )}
             </Upload>
           </ImgCrop>
         </Form.Item>
-        <Form.Item label={'Nombre de la organizacion'} name='email' style={{ marginBottom: '10px' }}>
-          <Input type='email' size='large' placeholder={'Nombre de la organizacion'} />
+        <Form.Item
+          label={'Nombre de la organizacion'}
+          name='name'
+          style={{ marginBottom: '10px' }}
+          rules={[{ required: true, message: 'Ingrese un nombre para su organización!' }]}>
+          <Input type='text' size='large' placeholder={'Nombre de la organizacion'} />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
