@@ -121,13 +121,13 @@ class Home extends Component {
           <div className='tabs'>
             <ul>
               <li
-                onClick={!loading ? () => this.fetchEvent('next') : ''}
-                className={typeEvent === 'next' ? 'is-active' : ''}>
+                onClick={!loading ? () => this.fetchEvent('next') : null}
+                className={typeEvent === 'next' ? 'is-active' : null}>
                 <a>Próximos</a>
               </li>
               <li
-                onClick={!loading ? () => this.fetchEvent('prev') : ''}
-                className={typeEvent === 'prev' ? 'is-active' : ''}>
+                onClick={!loading ? () => this.fetchEvent('prev') : null}
+                className={typeEvent === 'prev' ? 'is-active' : null}>
                 <a>Pasados</a>
               </li>
             </ul>

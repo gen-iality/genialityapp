@@ -8,36 +8,50 @@ import HelperContext from '../../Context/HelperContext';
 
 const { confirm } = Modal;
 
-const CMS = ( props ) => {
-  const {  API, eventId, title, titleTooltip, back, addUrl, columns, key, pagination, actions, editPath, 
-    search, setColumnsData, draggable, downloadFile, exportData, fileName, extra, addFn, editFn
+const CMS = (props) => {
+  const {
+    API,
+    eventId,
+    title,
+    titleTooltip,
+    back,
+    addUrl,
+    columns,
+    key,
+    pagination,
+    actions,
+    editPath,
+    search,
+    setColumnsData,
+    draggable,
+    downloadFile,
+    exportData,
+    fileName,
+    extra,
+    addFn,
+    editFn,
   } = props;
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
-  const [ list, setList ] = useState([]);
-  const [ loading, setLoading ] = useState(true);
+  const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(true);
   let { reloadTemplatesCms } = useContext(HelperContext);
 
   useEffect(() => {
     getList();
-  }, [reloadTemplatesCms])
+  }, [reloadTemplatesCms]);
 
   const getList = async () => {
     const data = await API.byEvent(eventId);
     console.log(data);
-    if(data.data){
+    if (data.data) {
       setList(data.data);
     } else {
       setList(data);
     }
     setLoading(false);
-  }
+  };
 
   const remove = (id) => {
-    const loading = message.open({
-      key: 'loading',
-      type: 'loading',
-      content: <> Por favor espere miestras borra la información..</>,
-    });
     confirm({
       title: `¿Está seguro de eliminar la información?`,
       icon: <ExclamationCircleOutlined />,
@@ -46,6 +60,11 @@ const CMS = ( props ) => {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
+        const loading = message.open({
+          key: 'loading',
+          type: 'loading',
+          content: <> Por favor espere miestras borra la información..</>,
+        });
         const onHandlerRemove = async () => {
           try {
             await API.deleteOne(id, eventId);
@@ -62,24 +81,17 @@ const CMS = ( props ) => {
               content: handleRequestError(e).message,
             });
           }
-        }
+        };
         onHandlerRemove();
-      }
+      },
     });
   };
 
   return (
     <div>
-      <Header
-        title={title}
-        titleTooltip={titleTooltip}
-        back={back}
-        addUrl={addUrl}
-        extra={extra}
-        addFn={addFn}
-      />
+      <Header title={title} titleTooltip={titleTooltip} back={back} addUrl={addUrl} extra={extra} addFn={addFn} />
 
-      <Table 
+      <Table
         header={columns}
         loading={loading}
         list={list}
@@ -98,7 +110,7 @@ const CMS = ( props ) => {
         fileName={fileName}
       />
     </div>
-  )
-}
+  );
+};
 
 export default CMS;

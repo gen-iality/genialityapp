@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste';
 import { Actions } from '../../helpers/request';
+import { Input } from 'antd';
 
 const { Quill } = ReactQuill;
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
@@ -12,15 +13,21 @@ Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
  * También centralizamos la configuración de QUILL para que sea la misma en todo lado donde lo usamos
  * @param {*} props
  */
+const { TextArea } = Input;
 
 function EviusReactQuill(props) {
   let reactQuilllRef = useRef(null);
   const [modules, setModules] = useState({});
-
+  const [codeBlock, setCodeBlock] = useState(false);
   //Habilitar solo para efectos de testeo del funcionamiento del componente
   // useEffect(() => {
   //
   // }, [props.data]);
+  function activeCodeBlock(code) {
+    if (code) {
+      setCodeBlock(!codeBlock);
+    }
+  }
 
   useEffect(() => {
     let imageHandler = async (imageDataUrl, type, imageData, reactQuilllRef) => {
@@ -83,25 +90,26 @@ function EviusReactQuill(props) {
       toolbar: {
         container: [
           [{ font: [] }],
-          [{ header: [0, 1, 2, 3, 4, 5,] }],
+          [{ header: [0, 1, 2, 3, 4, 5] }],
           [{ size: ['small', false, 'large', 'huge'] }],
           [{ align: [] }],
           [{ syntax: true }],
-          ['bold', 'italic', 'underline', 'strike','blockquote'],
-          [{ 'color': [] }, { 'background': [] }],
+          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+          [{ color: [] }, { background: [] }],
           [{ list: 'ordered' }, { list: 'bullet' }],
-          ['link', 'image']
+          ['link', 'image', 'code-block'],
         ],
         handlers: {
-          image: imageHandlerUpload
-        }
+          image: imageHandlerUpload,
+          ['code-block']: activeCodeBlock,
+        },
       },
       imageDropAndPaste: {
         // add an custom image handler
         handler: (imageDataUrl, type, imageData) => {
           imageHandler(imageDataUrl, type, imageData, reactQuilllRef);
-        }
-      }
+        },
+      },
     });
     let setupToolBarImageUploadInput = (reactQuilllRef) => {
       var ImageData = QuillImageDropAndPaste.ImageData;
@@ -138,9 +146,25 @@ function EviusReactQuill(props) {
     };
 
     setupToolBarImageUploadInput(reactQuilllRef);
-  }, []);
+  }, [codeBlock]);
 
-  return <ReactQuill id='reactQuill' ref={reactQuilllRef} modules={modules} onChange={props.handleChange} value={props.data} />;
+  return (
+    <>
+      <ReactQuill
+        id='reactQuill'
+        ref={reactQuilllRef}
+        modules={modules}
+        onChange={props.handleChange}
+        value={props.data}
+      />
+      {codeBlock && <TextArea value={props.data} onChange={(e) => props.handleChange(e.target.value)} autoSize />}
+      {codeBlock && (
+        <pre style={{ whiteSpace: 'normal', wordBreak: 'break-all' }} className='language-bash'>
+          {props.data}
+        </pre>
+      )}
+    </>
+  );
 }
 
 export default EviusReactQuill;

@@ -1,28 +1,14 @@
 import axios from 'axios';
-import {
-  ApiUrl,
-  ApiEviusZoomSurvey
-} from './constants';
-import {
-  ToastContainer,
-  toast
-} from 'react-toastify';
+import { ApiUrl, ApiEviusZoomSurvey } from './constants';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import * as Cookie from 'js-cookie';
-import {
-  handleSelect
-} from './utils';
-import {
-  firestore
-} from './firebase';
-import {
-  parseUrl
-} from '../helpers/constants';
+import { handleSelect } from './utils';
+import { firestore } from './firebase';
+import { parseUrl } from '../helpers/constants';
 import Moment from 'moment';
-import {
-  async
-} from 'ramda-adjunct';
+import { async } from 'ramda-adjunct';
 const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
@@ -51,7 +37,7 @@ let evius_token = null;
 let dataUrl = parseUrl(document.URL);
 if (dataUrl && dataUrl.token) {
   Cookie.set('evius_token', dataUrl.token, {
-    expires: 180
+    expires: 180,
   });
   evius_token = dataUrl.token;
 }
@@ -67,12 +53,10 @@ if (evius_token) {
 
 /** ACTUALIZAMOS EL BEARER TOKEN SI SE VENCIO Y NOS VIENE UN NUEVO TOKEN EN EL HEADER */
 privateInstance.interceptors.response.use((response) => {
-  const {
-    headers
-  } = response;
+  const { headers } = response;
   if (headers.new_token) {
     Cookie.set('evius_token', headers.new_token, {
-      expires: 180
+      expires: 180,
     });
     privateInstance.defaults.params = {};
     privateInstance.defaults.params['evius_token'] = headers.new_token;
@@ -96,69 +80,37 @@ export const fireStoreApi = {
 };
 export const Actions = {
   create: (url, data, unsafe) => {
-    if (unsafe) return publicInstance.post(url, data).then(({
-      data
-    }) => data);
-    return privateInstance.post(url, data).then(({
-      data
-    }) => data);
+    if (unsafe) return publicInstance.post(url, data).then(({ data }) => data);
+    return privateInstance.post(url, data).then(({ data }) => data);
   },
   delete: (url, id, unsafe) => {
-    if (unsafe) return publicInstance.delete(`${url}${id}`).then(({
-      data
-    }) => data);
-    return privateInstance.delete(`${url}/${id}`).then(({
-      data
-    }) => data);
+    if (unsafe) return publicInstance.delete(`${url}${id}`).then(({ data }) => data);
+    return privateInstance.delete(`${url}/${id}`).then(({ data }) => data);
   },
   edit: (url, data, id, unsafe) => {
-    if (unsafe) return publicInstance.put(`${url}${id}`, data).then(({
-      data
-    }) => data);
-    return privateInstance.put(`${url}/${id}`, data).then(({
-      data
-    }) => data);
+    if (unsafe) return publicInstance.put(`${url}${id}`, data).then(({ data }) => data);
+    return privateInstance.put(`${url}/${id}`, data).then(({ data }) => data);
   },
   post: (url, data, unsafe) => {
-    if (unsafe) return publicInstance.post(url, data).then(({
-      data
-    }) => data);
-    return privateInstance.post(url, data).then(({
-      data
-    }) => data);
+    if (unsafe) return publicInstance.post(url, data).then(({ data }) => data);
+    return privateInstance.post(url, data).then(({ data }) => data);
   },
   get: (url, unsafe) => {
-    if (unsafe) return publicInstance.get(url).then(({
-      data
-    }) => data);
-    return privateInstance.get(url).then(({
-      data
-    }) => data);
+    if (unsafe) return publicInstance.get(url).then(({ data }) => data);
+    return privateInstance.get(url).then(({ data }) => data);
   },
 
   put: (url, data, unsafe) => {
-    if (unsafe) return publicInstance.put(url, data).then(({
-      data
-    }) => data);
-    return privateInstance.put(url, data).then(({
-      data
-    }) => data);
+    if (unsafe) return publicInstance.put(url, data).then(({ data }) => data);
+    return privateInstance.put(url, data).then(({ data }) => data);
   },
   getOne: (url, id, unsafe) => {
-    if (unsafe) return publicInstance.get(`${url}${id}`).then(({
-      data
-    }) => data);
-    return privateInstance.get(`${url}${id}`).then(({
-      data
-    }) => data);
+    if (unsafe) return publicInstance.get(`${url}${id}`).then(({ data }) => data);
+    return privateInstance.get(`${url}${id}`).then(({ data }) => data);
   },
   getAll: (url, unsafe) => {
-    if (unsafe) return publicInstance.get(`${url}`).then(({
-      data
-    }) => data);
-    return privateInstance.get(`${url}`).then(({
-      data
-    }) => data);
+    if (unsafe) return publicInstance.get(`${url}`).then(({ data }) => data);
+    return privateInstance.get(`${url}`).then(({ data }) => data);
   },
 };
 
@@ -186,10 +138,7 @@ export const getCurrentUser = () => {
       } catch (error) {
         if (error.response) {
           // eslint-disable-next-line no-unused-vars
-          const {
-            status,
-            data
-          } = error.response;
+          const { status, data } = error.response;
           if (status === 401) {
             toast.error('🔑 Tu token a caducado, redirigiendo al login!', {
               position: 'top-right',
@@ -351,16 +300,11 @@ export const EventsApi = {
     );
   },
   signInWithEmailAndPassword: async (data) => {
-    return await Actions.post(
-      `/api/users/signInWithEmailAndPassword`,
-      data
-    );
+    return await Actions.post(`/api/users/signInWithEmailAndPassword`, data);
   },
   createTemplateEvent: async (eventId, idTemplate) => {
-    return await Actions.put(
-      `/api/events/${eventId}/templateproperties/${idTemplate}/addtemplateporperties`, {}
-    );
-  }
+    return await Actions.put(`/api/events/${eventId}/templateproperties/${idTemplate}/addtemplateporperties`, {});
+  },
 };
 export const InvitationsApi = {
   getAll: async (id) => {
@@ -404,7 +348,6 @@ export const UsersApi = {
   deleteUsers: async (user) => {
     return await Actions.delete(`/api/users`, user);
   },
-
 };
 
 export const AttendeeApi = {
@@ -451,7 +394,7 @@ export const TicketsApi = {
   checkInAttendee: async (event_id, eventUser_id) => {
     //let data = { checkedin_at: new Date().toISOString() };
     let data = {
-      checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss')
+      checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss'),
     };
     return await Actions.put(`/api/events/${event_id}/eventusers/${eventUser_id}`, data);
   },
@@ -518,9 +461,7 @@ export const DocumentsApi = {
     return await Actions.getAll(`api/events/${event}/documents`, true);
   },
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/documents`, true).then(({
-      data
-    }) => data);
+    return await Actions.getAll(`api/events/${event}/documents`, true).then(({ data }) => data);
   },
 
   getFiles: async (event, id) => {
@@ -555,12 +496,12 @@ export const TypesApi = {
 export const OrganizationApi = {
   mine: async () => {
     const resp = await Actions.getAll('api/me/organizations');
-    console.log(resp.data)
+    console.log(resp.data);
     let data = resp.data.map((item) => {
       return {
         id: item._id,
         name: item.name,
-        styles: item.styles
+        styles: item.styles,
       };
     });
     return data;
@@ -612,7 +553,10 @@ export const OrganizationApi = {
   },
   getTemplateOrganization: async (org) => {
     return await Actions.get(`/api/organizations/${org}/templateproperties`);
-  }
+  },
+  updateTemplateOrganization: async (orgId, idTemplate, data) => {
+    return await Actions.put(`/api/organizations/${orgId}/templateproperties/${idTemplate}`, data);
+  },
 };
 export const BadgeApi = {
   create: async (data) => {
@@ -646,17 +590,13 @@ export const HelperApi = {
 export const discountCodesApi = {
   exchangeCode: async (template_id, data) => {
     let url = `api/code/exchangeCode`;
-    return await publicInstance.put(url, data).then(({
-      data
-    }) => data);
+    return await publicInstance.put(url, data).then(({ data }) => data);
   },
 };
 
 export const CertsApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/certificates`).then(({
-      data
-    }) => data);
+    return await Actions.getAll(`api/events/${event}/certificates`).then(({ data }) => data);
   },
   getOne: async (id) => {
     return await Actions.get(`api/certificate/`, id);
@@ -692,9 +632,7 @@ export const CertsApi = {
 
 export const NewsFeed = {
   byEvent: async (id) => {
-    return await Actions.getAll(`api/events/${id}/newsfeed`).then(({
-      data
-    }) => data);
+    return await Actions.getAll(`api/events/${id}/newsfeed`).then(({ data }) => data);
   },
   getOne: async (eventId, idnew) => {
     return await Actions.get(`api/events/${eventId}/newsfeed/${idnew}`);
@@ -712,9 +650,7 @@ export const NewsFeed = {
 
 export const PushFeed = {
   byEvent: async (id) => {
-    return await Actions.getAll(`api/events/${id}/sendpush`).then(({
-      data
-    }) => data);
+    return await Actions.getAll(`api/events/${id}/sendpush`).then(({ data }) => data);
   },
   getOne: async (id) => {
     return await Actions.get(`api/events/${id}/sendpush/`, id);
@@ -732,9 +668,7 @@ export const PushFeed = {
 
 export const FaqsApi = {
   byEvent: async (id) => {
-    return await Actions.getAll(`api/events/${id}/faqs`).then(({
-      data
-    }) => data);
+    return await Actions.getAll(`api/events/${id}/faqs`).then(({ data }) => data);
   },
   getOne: async (id) => {
     return await Actions.get(`api/events/${id}/faqs/`, id);
@@ -772,9 +706,7 @@ export const RolAttApi = {
 };
 export const SpacesApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/spaces`, true).then(({
-      data
-    }) => data);
+    return await Actions.getAll(`api/events/${event}/spaces`, true).then(({ data }) => data);
   },
   getOne: async (event, id) => {
     return await Actions.get(`api/events/${event}/spaces/`, id);
@@ -791,9 +723,7 @@ export const SpacesApi = {
 };
 export const CategoriesAgendaApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/categoryactivities`).then(({
-      data
-    }) => data);
+    return await Actions.getAll(`api/events/${event}/categoryactivities`).then(({ data }) => data);
   },
   getOne: async (id, event) => {
     return await Actions.getOne(`api/events/${event}/categoryactivities/`, id);
@@ -810,9 +740,7 @@ export const CategoriesAgendaApi = {
 };
 export const TypesAgendaApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/type`).then(({
-      data
-    }) => data);
+    return await Actions.getAll(`api/events/${event}/type`).then(({ data }) => data);
   },
   getOne: async (id, event) => {
     return await Actions.getOne(`api/events/${event}/type/`, id);
@@ -855,9 +783,7 @@ export const AgendaApi = {
 };
 export const SpeakersApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/host`).then(({
-      data
-    }) => data);
+    return await Actions.getAll(`api/events/${event}/host`).then(({ data }) => data);
   },
   getOne: async (id, event) => {
     return await Actions.getOne(`api/events/${event}/host/`, id);
@@ -873,11 +799,9 @@ export const SpeakersApi = {
   },
 };
 
-
 export const OrganizationPlantillaApi = {
-
-  createTemplate: async (organization,data) => {
-    return await Actions.post(`api/organizations/${organization}/templateproperties`,data);
+  createTemplate: async (organization, data) => {
+    return await Actions.post(`api/organizations/${organization}/templateproperties`, data);
   },
 
   byEvent: async (organization) => {
@@ -885,6 +809,11 @@ export const OrganizationPlantillaApi = {
   },
   putOne: async (event, templatepropertie) => {
     return await Actions.put(`api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties`);
+  },
+  deleteOne: async (organization, template) => {
+    console.log('ELIMINAR TEMPLATE');
+    return false;
+    //return await Actions.delete(`api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties`);
   },
 };
 
@@ -897,7 +826,7 @@ export const Activity = {
     var info = {
       event_id: event,
       user_id,
-      activity_id
+      activity_id,
     };
     return await Actions.create(`api/events/${event}/activities_attendees`, info);
   },
