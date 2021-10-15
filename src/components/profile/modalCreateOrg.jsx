@@ -16,7 +16,7 @@ const ModalCreateOrg = (props) => {
   };
 
   const saveNewOrganization = (values) => {
-    const newValues = { ...values, logo: imageAvatar };
+    const newValues = { ...values, logo: imageAvatar, closeModal: props.setIsVisible, fetchItem: props.fetchItem };
     functionCreateNewOrganization(newValues);
   };
 
