@@ -217,7 +217,7 @@ class AgendaEdit extends Component {
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
     const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
-    const host_ids = selectedHosts >= 0 ? [] :selectedHosts?.filter((host)=>host!==null).map(({ value }) => value);
+    const host_ids = selectedHosts? selectedHosts.length >= 0 ? [] :selectedHosts?.filter((host)=>host!==null).map(({ value }) => value):[];
 
     const type_id = selectedType.value;
     return {
