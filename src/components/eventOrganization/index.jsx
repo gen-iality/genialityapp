@@ -57,7 +57,11 @@ class EventOrganization extends Component {
     return (
       <React.Fragment>
         {console.log('Marlon', this.state.organization)}
-        <ModalAuth organization={'landing'} idOrganization={this.props.match.params.id} />
+        <ModalAuth
+          organization={'landing'}
+          idOrganization={this.props.match.params.id}
+          logo={this.state.organization?.styles?.event_image}
+        />
         <ModalLoginHelpers />
         {!this.state.loading && this.state.orgId ? (
           <>

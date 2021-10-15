@@ -145,6 +145,7 @@ const ModalAuth = (props) => {
     props.cUser?.value == null &&
     typeModal == null && (
       <Modal
+        maskStyle={props.organization == 'landing' && { backgroundColor: '#333333' }}
         onCancel={props.organization == 'register' ? () => props.closeModal() : null}
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
@@ -162,7 +163,11 @@ const ModalAuth = (props) => {
               style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
               {props.organization == 'landing' && (
                 <Form.Item>
-                  <Image src={'http://via.placeholder.com/500/50D3C9/FFFFFF?text=Image'} width={150} height={150} />
+                  <Image
+                    src={props.logo ? props.logo : 'http://via.placeholder.com/500/50D3C9/FFFFFF?text=No%20Image'}
+                    width={200}
+                    height={200}
+                  />
                 </Form.Item>
               )}
               <Form.Item
