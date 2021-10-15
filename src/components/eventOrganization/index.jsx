@@ -35,29 +35,29 @@ class EventOrganization extends Component {
   }
   //Obtener los datos necesarios de la organización
   fetchItem = async (orgId) => {
-      
     const events = await OrganizationFuction.getEventsNextByOrg(orgId);
-    let proximos=[]
-    let pasados=[]
-    let fechaActual= moment();
-    events.map((event)=>{
-      if (moment(event.datetime_from).isAfter(fechaActual)){
-          proximos.push(event)
-      }else{
-        pasados.push(event)
-      }       
-    })
+    let proximos = [];
+    let pasados = [];
+    let fechaActual = moment();
+    events.map((event) => {
+      if (moment(event.datetime_from).isAfter(fechaActual)) {
+        proximos.push(event);
+      } else {
+        pasados.push(event);
+      }
+    });
 
     const organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
     if (events) {
-      this.setState({ events:proximos,eventsOld:pasados,organization, loading: false });
+      this.setState({ events: proximos, eventsOld: pasados, organization, loading: false });
     }
   };
 
   render() {
     return (
       <React.Fragment>
-        <ModalAuth organization={"landing"} idOrganization={this.props.match.params.id} />
+        {console.log('Marlon', this.state.organization)}
+        <ModalAuth organization={'landing'} idOrganization={this.props.match.params.id} />
         <ModalLoginHelpers />
         {!this.state.loading && this.state.orgId ? (
           <>
@@ -74,9 +74,14 @@ class EventOrganization extends Component {
 
             <div style={{ padding: '5vw' }}>
               {this.state.organization && (
-                <div style={{ marginBottom: '50px',marginTop:'20px' }}>
+                <div style={{ marginBottom: '50px', marginTop: '20px' }}>
                   <Space direction='vertical' size={5}>
-                    <Link to={`/admin/organization/${this.props.match.params.id}`} style={{ marginBottom: '-15px', fontSize: '20px' ,cursor:'pointer' }}><EditOutlined />Administrar</Link>
+                    <Link
+                      to={`/admin/organization/${this.props.match.params.id}`}
+                      style={{ marginBottom: '-15px', fontSize: '20px', cursor: 'pointer' }}>
+                      <EditOutlined />
+                      Administrar
+                    </Link>
                     <Text style={{ fontSize: '40px', fontWeight: '600', lineHeight: '2.25rem' }} type='secondary'>
                       {this.state.organization.name}
                     </Text>

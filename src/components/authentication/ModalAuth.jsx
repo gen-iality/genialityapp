@@ -1,5 +1,5 @@
 import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
-import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin } from 'antd';
+import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin, Image } from 'antd';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
@@ -160,6 +160,11 @@ const ModalAuth = (props) => {
               onFinishFailed={onFinishFailed}
               layout='vertical'
               style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+              {props.organization == 'landing' && (
+                <Form.Item>
+                  <Image src={'http://via.placeholder.com/500/50D3C9/FFFFFF?text=Image'} width={150} height={150} />
+                </Form.Item>
+              )}
               <Form.Item
                 label={intl.formatMessage({ id: 'modal.label.email', defaultMessage: 'Correo electrónico' })}
                 name='email'
