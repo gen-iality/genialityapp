@@ -33,6 +33,7 @@ function HeaderEventInfo({ title, organizado, place, dateStart, dateEnd, dates, 
       style={{
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        borderRadius:'10px'
       }}>
       <TweenOne className='banner-user-text'>
         {/* Fecha del evento */}
