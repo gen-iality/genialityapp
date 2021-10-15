@@ -1,4 +1,5 @@
 import React from 'react';
+import { Grid } from 'antd';
 import { Route, Redirect, withRouter, Switch } from 'react-router-dom';
 import Event from '../components/events/event';
 import * as Cookie from 'js-cookie';
@@ -39,7 +40,9 @@ const NotFoundPage = asyncComponent(() => import('../components/notFoundPage'));
 const ForbiddenPage = asyncComponent(() => import('../components/forbiddenPage'));
 const QueryTesting = asyncComponent(() => import('../components/events/surveys/components/queryTesting'));
 const EventFinished = asyncComponent(() => import('../components/eventFinished/eventFinished'));
+const { useBreakpoint } = Grid;
 const ContentContainer = () => {
+  const screens = useBreakpoint();
   return (
     <main className='main'>
       <Switch>
@@ -49,6 +52,11 @@ const ContentContainer = () => {
 
         {/*Ruta para ver resumen */}
         <PrivateRoute exact path='/myprofile/:tab' component={MainProfile} />
+        {screens.xs ? (
+          <Route exact path='/myprofile' render={() => <Redirect to='/myprofile/organization' />} />
+        ) : (
+          <PrivateRoute exact path='/myprofile' component={MainProfile} />
+        )}
         <PrivateRoute exact path='/myprofile' component={MainProfile} />
 
         <Route path='/social/:event_id' component={socialZone} />
