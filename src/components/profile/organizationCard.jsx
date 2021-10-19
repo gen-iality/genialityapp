@@ -1,5 +1,6 @@
 import { EyeOutlined, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Card, Space, Typography, Grid } from 'antd';
+import { truncate } from 'lodash-es';
 import React from 'react';
 
 const { useBreakpoint } = Grid;
@@ -35,12 +36,16 @@ const OrganizationCard = (props) => {
       actions={[actionAdmin, actionview]}
       style={{ borderRadius: '10px' }}
       bodyStyle={{ minHeight: '200px', textAlign: 'center' }}>
-      <Space size={6} direction='vertical' style={{ textAlign: 'center', width: '100%' }}>
+      <Space size={8} direction='vertical' style={{ textAlign: 'center', width: '100%' }}>
         <Avatar
           size={{ xs: 100, sm: 100, md: 100, lg: 100, xl: 100, xxl: 100 }}
           src={props.data?.styles?.event_image || 'http://via.placeholder.com/500/50D3C9/FFFFFF?text=Image'}
         />
-        <Typography.Text style={{ fontSize: '14px', width: '130px' }}>{props.data?.name}</Typography.Text>
+        <Typography.Paragraph
+          ellipsis={{ rows: 2 }}
+          style={{ fontSize: '14px', width: '130px', lineHeight: '1.15rem' }}>
+          {props.data?.name}
+        </Typography.Paragraph>
       </Space>
     </Card>
   );
