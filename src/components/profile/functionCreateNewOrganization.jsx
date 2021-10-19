@@ -1,6 +1,6 @@
 import { saveImageStorage } from '../../helpers/helperSaveImage';
 import { OrganizationApi } from '../../helpers/request';
-
+import { message } from 'antd';
 const functionCreateNewOrganization = (props) => {
   const styles = {
     buttonColor: '#FFF',
@@ -36,12 +36,18 @@ const functionCreateNewOrganization = (props) => {
     loader_page: 'no',
     data_loader_page: null,
   };
+  const loading = message.open({
+    key: 'loading',
+    type: 'loading',
+    content: <> Estamos creando la organización.</>,
+  });
 
   const uploadLogo = async () => {
-    if (props.logo !== null && props.logo.length > 0) {
-      const urlOfTheUploadedImage =
-        //   await saveImageStorage(props.logo.fileList[0].thumbUrl);
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXAFdyWWUZrK2dG6oJBLkhcSZFl6tAE-qYBg&usqp=CAU';
+    const selectedLogo = props.logo !== null ? props.logo[0].thumbUrl : null;
+
+    if (selectedLogo) {
+      const urlOfTheUploadedImage = await saveImageStorage(selectedLogo);
+
       return urlOfTheUploadedImage;
     }
     return null;
@@ -50,13 +56,22 @@ const functionCreateNewOrganization = (props) => {
   const sendData = async () => {
     const imageUrl = await uploadLogo();
     const dataStyles = { ...styles, event_image: imageUrl };
-    // console.log('10. data STYLOS ', dataStyles);
     const body = {
       name: props.name,
       styles: dataStyles,
     };
-    console.log('10. BODY  ==>> ', body);
-    // const data = await OrganizationApi.createOrganization(body);
+
+    const response = await OrganizationApi.createOrganization(body);
+    /** se trae la function fetchItem desde el main.jsx para poder actualizar la data */
+    await props.fetchItem;
+    if (response?._id) {
+      message.destroy(loading.key);
+      message.success('Organización creada correctamente');
+      props.closeModal(false);
+    } else {
+      message.error('La organización no pudo ser creada');
+      this.props.closeModal(false);
+    }
   };
 
   sendData();

@@ -810,10 +810,8 @@ export const OrganizationPlantillaApi = {
   putOne: async (event, templatepropertie) => {
     return await Actions.put(`api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties`);
   },
-  deleteOne: async (organization, template) => {
-    console.log('ELIMINAR TEMPLATE');
-    return false;
-    //return await Actions.delete(`api/events/${event}/templateproperties/${templatepropertie}/addtemplateporperties`);
+  deleteOne: async (template, organization) => {
+    return await Actions.delete(`api/organizations/${organization}/templateproperties`, template);
   },
 };
 
