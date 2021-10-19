@@ -557,6 +557,9 @@ export const OrganizationApi = {
   updateTemplateOrganization: async (orgId, idTemplate, data) => {
     return await Actions.put(`/api/organizations/${orgId}/templateproperties/${idTemplate}`, data);
   },
+  editMenu: async (data, id) => {
+    return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=true`, data);
+  },
 };
 export const BadgeApi = {
   create: async (data) => {
