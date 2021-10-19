@@ -6,11 +6,11 @@ describe('Evius Spaces', () => {
     cy.visit(`${urlToTest}`);
   });
 
-  /* it('Spaces Create', () => {
+  it('Spaces Create', () => {
     cy.contains('Agregar').click()
     cy.get('[name=name]').type('Pruebas de cypress', {force: true}) 
     cy.contains('Guardar').click()
-  });  */
+  }); 
 
   it('Spaces Edit', () => {
     cy.wait(250)

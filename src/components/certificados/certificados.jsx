@@ -19,7 +19,7 @@ const Certificados = (props) => {
       ...getColumnSearchProps('rol', columnsData),
       render(val, item) {
         return (
-          <div>{item.rol ? item.rol : 'Sin Rol'}</div>
+          <div>{item.rol && item.rol.name ? item.rol.name : 'Sin Rol'}</div>
         )
       },
     },

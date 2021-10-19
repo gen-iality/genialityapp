@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CertsApi, RolAttApi } from '../../helpers/request';
 import { useHistory } from 'react-router-dom';
 import { handleRequestError } from '../../helpers/utils';
-import { Row, Col, Form, Input, message, Modal, Select, Button, Upload } from 'antd';
+import { Row, Col, Form, Input, message, Modal, Select, Button, Upload, Image } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 import ReactQuill from 'react-quill';
@@ -29,7 +29,7 @@ const imageFile =
 const Certificado = (props) => {
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
-  const [certificado, setCertificado] = useState({});
+  const [certificado, setCertificado] = useState({content: initContent, imageFile: imageFile, imageData: imageFile, image: imageFile});
   const [roles, setRoles] = useState([]);
   const [rol, setRol] = useState({});
   const tags = [
@@ -48,22 +48,19 @@ const Certificado = (props) => {
   useEffect(() => {
     if(locationState.edit) {
       getOne();
-    } else {
-      setCertificado({content: initContent, imageFile: imageFile, imageData: imageFile, image: imageFile})
     }
     getRoles();
-    previewCertificate();
   }, []);
 
   const getOne = async () => {
     const data = await CertsApi.getOne(locationState.edit);
     console.log(data, 'dataCert');
-    /* if(!data.content && data.content === '<p><br></p>') {
+    if(!data.content && data.content === '<p><br></p>') {
       setCertificado({...data, content: initContent});
-    } */
-    /* if(!data.rol) {
+    }
+    if(!data.rol) {
       setRol({});
-    } */
+    }
     setCertificado({...data, imageFile: data.background});
   }
 
@@ -78,17 +75,18 @@ const Certificado = (props) => {
       if(locationState.edit) {
         const data = {
           content: certificado.content,
-          background: certificado.image
+          background: certificado.image,
+          rol: certificado.rol
         }
         await CertsApi.editOne(data, locationState.edit);
       } else {
         const data = {
           name: certificado.name,
-          rol_id: rol._id,
+          rol_id: certificado.rol._id,
           content: certificado.content,
           event_id: props.event._id,
           background: certificado.image,
-          /* rol: rol */
+          rol: certificado.rol
         }
         await CertsApi.create(data);
       }     
@@ -98,7 +96,7 @@ const Certificado = (props) => {
         type: 'success',
         content: <> Información guardada correctamente!</>,
       });
-      history.push(`${props.matchUrl}/certificados`);
+      history.push(`${props.matchUrl}`);
     } catch (e) {
       message.destroy(loading.key);
       message.open({
@@ -131,7 +129,7 @@ const Certificado = (props) => {
                 type: 'success',
                 content: <> Se eliminó la información correctamente!</>,
               });
-              history.push(`${props.matchUrl}/certificados`);
+              history.push(`${props.matchUrl}`);
             } catch (e) {
               message.destroy(loading.key);
               message.open({
@@ -158,9 +156,10 @@ const Certificado = (props) => {
   }
 
   const onChangeRol = async (e) => {
+    console.log(e, 'e');
     setRol(roles.find(rol => rol._id === e));
-    console.log(rol, 'rol');
-    setCertificado({...certificado, rol: rol});
+    console.log(rol, 'rol', roles.find(rol => rol._id === e));
+    setCertificado({...certificado, rol: roles.find(rol => rol._id === e)});
   }
 
   const chgTxt = (content) => {
@@ -173,40 +172,7 @@ const Certificado = (props) => {
       ...certificado,
       content: contents
     })
-    previewCertificate();
   };
-
-  const previewCertificate = () => {
-    console.log(props.event);
-    props.event.datetime_from = moment(props.event.datetime_from).format('DD-MM-YYYY');
-    props.event.datetime_to = moment(props.event.datetime_to).format('DD-MM-YYYY');
-    let content = certificado.content;
-    const userRef = firestore.collection(`${props.event._id}_event_attendees`);
-    userRef
-      .orderBy('updated_at', 'desc')
-      .limit(1)
-      .get()
-      .then((querySnapshot) => {
-        if (!querySnapshot.empty) {
-          const oneUser = querySnapshot.docs[0].data();
-          /* console.log(oneUser, '2'); */
-          tags.map((item) => {
-            let value;
-            if (item.tag.includes('event.')) value = props.event[item.value];
-            else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin Tiquete';
-            else if (item.tag.includes('rol.')) {
-              let rols = roles.find((rol1) => rol1._id === oneUser.rol_id);
-              let rolName = rols ? rols.name.toUpperCase() : 'Sin Rol'
-              value = rolName;
-            } else value = oneUser.properties[item.value];
-            if(item.tag){
-              content = content.replace(`[${item.tag}]`, value);
-            }
-          });
-          setPreviewCert(content);
-        }
-      })
-  }
 
   const handleImage = (e) => {
     const file = e.file;
@@ -215,16 +181,13 @@ const Certificado = (props) => {
       //Si la imagen cumple con el formato se crea el URL para mostrarlo
       setCertificado({...certificado, imageFile: window.URL.createObjectURL(file.originFileObj)})
       //Se crea un elemento Image para convertir la image en Base64 y tener el tipo y el formato
-      const i = new Image();
-      i.onload = () => {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          const imageData = { data: reader.result, full: file.type, type: file.type.split('/')[1] };
-          setCertificado({...certificado, imageData: imageData, imageFile: imageData, image: imageData});
-        };
+      
+      let reader = new FileReader();
+      reader.readAsDataURL(file.originFileObj);
+      reader.onload = () => {
+        const imageData = { data: reader.result, full: file.type, type: file.type.split('/')[1] };
+        setCertificado({...certificado, imageData: imageData, imageFile: imageData, image: imageData});
       };
-      i.src = file.preview;
     } else {
       message.open({
         type: 'error',
@@ -234,28 +197,55 @@ const Certificado = (props) => {
   };
 
   const generate = () => {
-    console.log(certificado);
-    const body = {content: previewCert, image: certificado.imageData};
-    CertsApi.generateCert(body).then((file) => {
-      console.log(file, 'file');
-      const blob = new Blob([file.blob], { type: file.type, charset: 'UTF-8' });
-      // IE doesn't allow using a blob object directly as link href
-      // instead it is necessary to use msSaveOrOpenBlob
-      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-        window.navigator.msSaveOrOpenBlob(blob);
-        return;
+    props.event.datetime_from = moment(props.event.datetime_from).format('DD-MM-YYYY');
+    props.event.datetime_to = moment(props.event.datetime_to).format('DD-MM-YYYY');
+    let content = certificado.content;
+    const userRef = firestore.collection(`${props.event._id}_event_attendees`);
+    userRef
+    .orderBy('updated_at', 'desc')
+    .limit(1)
+    .get()
+    .then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        const oneUser = querySnapshot.docs[0].data();
+        tags.map((item) => {
+          let value;
+          if (item.tag.includes('event.')) value = props.event[item.value];
+          else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin Tiquete';
+          else if (item.tag.includes('rol.')) {
+            let rols = roles.find((rol1) => rol1._id === oneUser.rol_id);
+            let rolName = rols ? rols.name.toUpperCase() : 'Sin Rol'
+            value = rolName;
+          } else value = oneUser.properties[item.value];
+          if(item.tag){
+            content = content.replace(`[${item.tag}]`, value);
+          }
+        });
+        setPreviewCert(content);
+        const body = {content: previewCert, image: certificado.imageData.data ? certificado.imageData.data : certificado.imageData};
+        CertsApi.generateCert(body).then((file) => {
+          console.log(file, 'file');
+          const blob = new Blob([file.blob], { type: file.type, charset: 'UTF-8' });
+          // IE doesn't allow using a blob object directly as link href
+          // instead it is necessary to use msSaveOrOpenBlob
+          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(blob);
+            return;
+          }
+          const data = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.dataType = 'json';
+          link.href = data;
+          link.download = `certificado${certificado.name}.pdf`;
+          link.dispatchEvent(new MouseEvent('click'));
+          setTimeout(() => {
+            // For Firefox it is necessary to delay revoking the ObjectURL
+            window.URL.revokeObjectURL(data);
+          }, 60);
+        });
       }
-      const data = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.dataType = 'json';
-      link.href = data;
-      link.download = `certificado${certificado.name}.pdf`;
-      link.dispatchEvent(new MouseEvent('click'));
-      setTimeout(() => {
-        // For Firefox it is necessary to delay revoking the ObjectURL
-        window.URL.revokeObjectURL(data);
-      }, 60);
-    });
+    })
+    
   }
 
   return (
@@ -295,15 +285,15 @@ const Certificado = (props) => {
       
       <Row justify='center' wrap gutter={12}>
         <Col span={20}>
-          <Form.Item label={'Nombre'} >
-              <Input 
-                value={certificado.name}
-                name={'name'}
-                placeholder={'Nombre del certificado'}
-                onChange={(e) => handleChange(e)}
-              />
-            </Form.Item>
-          {/* <Row wrap gutter={[12, 12]}>
+          {/* <Form.Item label={'Nombre'} >
+            <Input 
+              value={certificado.name}
+              name={'name'}
+              placeholder={'Nombre del certificado'}
+              onChange={(e) => handleChange(e)}
+            />
+          </Form.Item> */}
+          <Row wrap gutter={[16, 16]}>
             <Col span={12}>
               <Form.Item label={'Nombre'} >
                 <Input 
@@ -318,38 +308,49 @@ const Certificado = (props) => {
               <Form.Item label={'Rol'}>
                 <Select 
                   name={'rol'} 
+                  id={'rol'}
                   onChange={(e) => {onChangeRol(e)}}
                   placeholder={'Seleccione Rol'}
                 >
                   {
                     roles.map(rol => (
-                      <Option key={rol._id}>{rol.name}</Option>
+                      <Option key={rol._id} >{rol.name}</Option>
                     ))
                   }
                 </Select>
               </Form.Item>
             </Col>
-          </Row> */}
-        </Col>
-        <Col span={20}>
-          <p>Etiquetas Disponibles</p>
-          <p>Use etiquetas para ingresar información referente al evento o los asistentes</p>
-          <Row wrap gutter={[18, 8]}>
-            {tags.map((item, key) => (
-              <Col key={key} >
-                <code>{item.tag}</code>
-                <p>{item.label}</p>
-              </Col>
-            ))}
           </Row>
+          <Row gutter={[16, 16]}>
+            <Col span={16}>
+              <Form.Item label={'Etiquetas Disponibles'}>
+                <p>Use etiquetas para ingresar información referente al evento o los asistentes</p>
+                <Row wrap gutter={[18, 8]}>
+                  {tags.map((item, key) => (
+                    <Col key={key} >
+                      <code>{item.tag}</code>
+                      <p>{item.label}</p>
+                    </Col>
+                  ))}
+                </Row>
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label={'Imagen de Fondo'}>
+              </Form.Item>
+                <Image 
+                  src={certificado.imageFile.data ? certificado.imageFile.data : imageFile} 
+                  alt={'Imagen Certificado'} 
+                />
+            </Col>
+          </Row>
+          
           <Form.Item label={'Certificado'}>
             <div className='editor-certificado'>
               <div style={{border: '1px solid', width: '800px', position: 'relative', margin: 'auto'}}>
-                {/* <img src={imageFile} alt='background-cert' className='bg' /> */}
                 <div className='texto-certificado'>
                   <ReactQuill
                     id='certContent'
-                    /* theme='bubble' */
                     value={certificado.content}
                     name={'content'}
                     onChange={chgTxt}
@@ -358,15 +359,6 @@ const Certificado = (props) => {
                 </div>
               </div>
             </div>
-          </Form.Item>
-          <Form.Item label={'Imagen de Fondo'}>
-            <div className='editor-certificado'>
-              <div className='contenedor' >
-                <img src={certificado.imageFile} alt='background-cert' className='bg' />
-                {/* <div style={{textAlign: 'center'}} dangerouslySetInnerHTML={{ __html: previewCert }}/> */}
-              </div>
-            </div>
-            
           </Form.Item>
         </Col>
       </Row>

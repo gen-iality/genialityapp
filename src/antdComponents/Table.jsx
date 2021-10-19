@@ -37,7 +37,6 @@ const Table = (props) => {
     title: 'Opciones',
     dataIndex: 'options',
     render(val, item) {
-      console.log(item.index);
       return (
         <Row wrap gutter={[8, 8]}>
           <Col>
