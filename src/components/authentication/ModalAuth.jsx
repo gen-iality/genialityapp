@@ -1,5 +1,5 @@
 import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
-import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin, Image } from 'antd';
+import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin, Image, Skeleton } from 'antd';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
@@ -163,13 +163,17 @@ const ModalAuth = (props) => {
               style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
               {props.organization == 'landing' && (
                 <Form.Item>
-                  <Image
-                    style={{ borderRadius: '100px', objectFit: 'cover' }}
-                    preview={{ maskClassName: 'circularMask' }}
-                    src={props.logo ? props.logo : 'http://via.placeholder.com/500/50D3C9/FFFFFF?text=No%20Image'}
-                    width={200}
-                    height={200}
-                  />
+                  {props.logo ? (
+                    <Image
+                      style={{ borderRadius: '100px', objectFit: 'cover' }}
+                      preview={{ maskClassName: 'circularMask' }}
+                      src={props.logo ? props.logo : 'http://via.placeholder.com/500/50D3C9/FFFFFF?text=No%20Image'}
+                      width={200}
+                      height={200}
+                    />
+                  ) : (
+                    <Skeleton.Avatar active={true} size={200} shape='circle' />
+                  )}
                 </Form.Item>
               )}
               <Form.Item
