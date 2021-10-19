@@ -12,8 +12,8 @@ import * as userActions from '../redux/user/actions';
 
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { Menu, Drawer, Button, Col, Row, Layout, Space } from 'antd';
+import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
 import { parseUrl } from '../helpers/constants';
 import withContext from '../Context/withContext';
 import HelperContext from '../Context/HelperContext';
@@ -22,7 +22,6 @@ import ModalLoginHelpers from '../components/authentication/ModalLoginHelpers';
 
 const { setEventData } = eventActions;
 const { addLoginInformation, showMenu } = userActions;
-
 
 const { Header } = Layout;
 const zIndex = {
@@ -54,12 +53,12 @@ class Headers extends Component {
       tabEvtCat: true,
       eventId: null,
       userEvent: null,
-      visibleModal:false,
-      tabModal:'1'
+      visiblemodal: false,
+      tabModal: '1',
     };
     this.setEventId = this.setEventId.bind(this);
     this.logout = this.logout.bind(this);
-    this.modalClose=this.modalClose.bind(this);
+    this.modalClose = this.modalClose.bind(this);
   }
 
   showDrawer = () => {
@@ -82,7 +81,7 @@ class Headers extends Component {
 
   async componentDidMount() {
     const eventId = this.setEventId();
-    this.setState({ eventId }); 
+    this.setState({ eventId });
 
     /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
     let evius_token = null;
@@ -104,20 +103,20 @@ class Headers extends Component {
     //Si existe el token consultamos la información del usuario
     const data = await getCurrentUser();
     // console.log('USERDATA==>', data);
-  
+
     if (data) {
       // console.log("DATA==>",data)
       const user = await EventsApi.getEventUser(data._id, eventId);
       // console.log('USERDATA2==>', user);
-      const photo = user!=null ? user.user?.picture:data.picture
-      const name = user!=null?user?.properties?.name || user?.properties?.names: data.name || data.names;
+      const photo = user != null ? user.user?.picture : data.picture;
+      const name = user != null ? user?.properties?.name || user?.properties?.names : data.name || data.names;
 
       const organizations = await OrganizationApi.mine();
 
       this.setState(
         {
           name,
-          userEvent: {...user?.properties,_id:user?.account_id || data._id},
+          userEvent: { ...user?.properties, _id: user?.account_id || data._id },
           photo,
           uid: data.uid,
           id: data._id,
@@ -136,8 +135,8 @@ class Headers extends Component {
       this.setState({ timeout: true, loader: false });
     }
   }
-  modalClose(){
-    this.setState({modalVisible:false,tabModal:''})
+  modalClose() {
+    this.setState({ modalVisible: false, tabModal: '' });
   }
   handleMenu = (location) => {
     const splited = location.pathname.split('/');
@@ -146,7 +145,7 @@ class Headers extends Component {
     } else if (splited[1] === 'eventadmin' || splited[1] === 'orgadmin') {
       this.setState({ showAdmin: true, showEventMenu: false, menuOpen: false });
       window.scrollTo(0, 0);
-    }else{
+    } else {
       this.setState({ showAdmin: false, showEventMenu: false, menuOpen: false });
     }
   };
@@ -159,10 +158,17 @@ class Headers extends Component {
       // console.log('LOGIN INFO==>', this.props.loginInfo);
       const user = await EventsApi.getEventUser(this.props?.loginInfo?._id, this.state.eventId);
       // console.log('USERDATA2==>', user);
-      const photo = user?.user? user.user?.picture:this.props.loginInfo.picture;
-      const name = user?.user ?user?.properties?.name || user?.properties?.names: this.props.loginInfo.name || this.props.loginInfo.names;
+      const photo = user?.user ? user.user?.picture : this.props.loginInfo.picture;
+      const name = user?.user
+        ? user?.properties?.name || user?.properties?.names
+        : this.props.loginInfo.name || this.props.loginInfo.names;
 
-      this.setState({ name, photo, user: true,userEvent: {...user?.properties,_id:user?.account_id || this.props?.loginInfo?._id}, });
+      this.setState({
+        name,
+        photo,
+        user: true,
+        userEvent: { ...user?.properties, _id: user?.account_id || this.props?.loginInfo?._id },
+      });
     }
 
     if (prevProps && prevProps.location !== this.props.location) {
@@ -184,7 +190,7 @@ class Headers extends Component {
         // Solucion temporal, se esta trabajando un reducer que permita identificar
         // el eventId sin importar su posición, actualmente se detecta un problema
         // cuando la url tiene el eventId en una posicion diferente al final
-        window.location.replace(window.location.origin);
+        window.location.replace(window.location.origin + '/events');
       })
       .catch(function(error) {
         // An error happened.
@@ -239,28 +245,49 @@ class Headers extends Component {
                 )}
               </Row>
 
-            
-              {/*!this.state.userEvent && !window.location.href.toString().includes('landing') && window.location.href.toString().split('/').length==4 && <Row style={{marginBottom:10,marginTop:10}} justify='space-between' align='middle'> 
-                    <Button onClick={()=>this.setState({modalVisible:true,tabModal:'1'}) } style={{marginRight:5}}>Iniciar sesión</Button>
-                    <Button onClick={()=>this.setState({modalVisible:true,tabModal:'2'} )}>Registrarme</Button>
-                      </Row>*/}
+              {!this.state.userEvent &&
+                !window.location.href.toString().includes('landing') &&
+                window.location.href.toString().split('/').length == 4 && (
+                  <Space>
+                    <Button
+                      size='large'
+                      style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
+                      onClick={() => this.setState({ modalVisible: true, tabModal: '2' })}>
+                      Registrarme
+                    </Button>
+                    <Button
+                      icon={<LockOutlined />}
+                      size='large'
+                      onClick={() => this.setState({ modalVisible: true, tabModal: '1' })}
+                      style={{ marginRight: 5 }}>
+                      Iniciar sesión
+                    </Button>
+                  </Space>
+                )}
 
-             {/* <ModalAuth tab={this.state.tabModal} closeModal={this.modalClose} organization='register' visible={this.state.modalVisible} />
-              <ModalLoginHelpers />*/}
+              {/* <ModalAuth
+                tab={this.state.tabModal}
+                closeModal={this.modalClose}
+                organization='register'
+                visible={this.state.modalVisible}
+              />
+              <ModalLoginHelpers /> */}
               {/* Dropdown de navegacion para el usuario  */}
-             {this.state.userEvent && <UserStatusAndMenu
-                isLoading={this.state.loader}
-                user={this.state.user}
-                menuOpen={this.state.menuOpen}
-                loader={this.state.loader}
-                photo={photo}
-                name={name}
-                userEvent={this.state.userEvent}
-                eventId={this.state.eventId}
-                logout={this.logout}
-                openMenu={this.openMenu}
-                loginInfo={this.props.loginInfo}
-              />}
+              {this.state.userEvent && (
+                <UserStatusAndMenu
+                  isLoading={this.state.loader}
+                  user={this.state.user}
+                  menuOpen={this.state.menuOpen}
+                  loader={this.state.loader}
+                  photo={photo}
+                  name={name}
+                  userEvent={this.state.userEvent}
+                  eventId={this.state.eventId}
+                  logout={this.logout}
+                  openMenu={this.openMenu}
+                  loginInfo={this.props.loginInfo}
+                />
+              )}
             </Row>
           </Menu>
         </Header>
@@ -298,13 +325,13 @@ const mapStateToProps = (state) => ({
   permissions: state.permissions,
   error: state.categories.error,
   event: state.event.data,
-  modalVisible:state.stage.modal
+  modalVisible: state.stage.modal,
 });
 
 const mapDispatchToProps = {
   setEventData,
   addLoginInformation,
-  showMenu,  
+  showMenu,
 };
 
 let HeaderWithContext = withContext(withRouter(Headers));
