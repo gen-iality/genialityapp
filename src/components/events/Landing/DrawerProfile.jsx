@@ -26,12 +26,13 @@ const DrawerProfile = (props) => {
   const [userSelected, setUserSelected] = useState();
   const [isMycontact, setIsMyContact] = useState();
   const [isMe, setIsMe] = useState(false);
+  const [send, setSend] = useState(false);
   const intl = useIntl();
 
   useEffect(() => {
     if (props.profileuser !== null) {
       let isContact = isMyContacts(props.profileuser, props.cHelper.contacts);
-      console.log("ISCONTACT==>",isContact)
+      //console.log("ISCONTACT==>",isContact)
     
       setIsMe(cUser.value._id == props.profileuser._id);
       setIsMyContact(isContact);
@@ -95,8 +96,9 @@ const DrawerProfile = (props) => {
                       size='large'
                       shape='circle'
                       icon={<UsergroupAddOutlined />}
-                      disabled={haveRequestUser(userSelected) || isMycontact}
+                      disabled={haveRequestUser(userSelected) || isMycontact || send}
                       onClick={haveRequestUser(userSelected)?null:async () => {
+                        setSend(true);
                         let sendResp = await SendFriendship(
                           {
                             eventUserIdReceiver: userSelected.eventUserId,

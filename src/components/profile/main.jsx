@@ -216,7 +216,7 @@ const MainProfile = (props) => {
                       <Divider orientation='left'>Organizaciones</Divider>
                       <Row gutter={[16, 16]}>
                         <Col key={'index1'} xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                          <NewCard entityType='organization' cUser={props.cUser} />
+                          <NewCard entityType='organization' cUser={props.cUser} fetchItem={fetchItem} />
                         </Col>
                         {/* aqui empieza el mapeo maximo 6 */}
                         {organizationsLimited.length > 0 &&
@@ -244,7 +244,7 @@ const MainProfile = (props) => {
               ) : (
                 <Row gutter={[16, 16]}>
                   <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
-                    <NewCard entityType='organization' cUser={props.cUser} />
+                    <NewCard entityType='organization' cUser={props.cUser} fetchItem={fetchItem} />
                   </Col>
                   {organizations.length > 0 &&
                     organizations.map((organization) => {

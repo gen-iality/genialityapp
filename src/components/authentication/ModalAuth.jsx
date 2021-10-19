@@ -291,34 +291,36 @@ const ModalAuth = (props) => {
               </div>
             )}
           </TabPane>
-          {props.cEventUser?.value == null && props.organization !== 'landing' && (
-            <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
-              <div
-                // className='asistente-list'
-                style={{
-                  height: 'auto',
-                  overflowY: 'hidden',
-                  paddingLeft: '5px',
-                  paddingRight: '5px',
-                  paddingTop: '0px',
-                  paddingBottom: '0px',
-                }}>
-                {props.organization != 'register' && <FormComponent />}
-                {props.organization == 'register' && (
-                  <FormComponent
-                    conditionalsOther={[]}
-                    initialOtherValue={{}}
-                    eventUserOther={{}}
-                    fields={fieldsUser}
-                    organization={true}
-                    options={[]}
-                    callback={() => alert('TODO BIEN')}
-                    loadingregister={null}
-                  />
-                )}
-              </div>
-            </TabPane>
-          )}
+          {props.cEventUser?.value == null &&
+            props.organization !== 'landing' &&
+            props.cEvent.value?._id != '60797bfb2a9cc06ce973a1f4' && (
+              <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
+                <div
+                  // className='asistente-list'
+                  style={{
+                    height: 'auto',
+                    overflowY: 'hidden',
+                    paddingLeft: '5px',
+                    paddingRight: '5px',
+                    paddingTop: '0px',
+                    paddingBottom: '0px',
+                  }}>
+                  {props.organization != 'register' && <FormComponent />}
+                  {props.organization == 'register' && (
+                    <FormComponent
+                      conditionalsOther={[]}
+                      initialOtherValue={{}}
+                      eventUserOther={{}}
+                      fields={fieldsUser}
+                      organization={true}
+                      options={[]}
+                      callback={() => alert('TODO BIEN')}
+                      loadingregister={null}
+                    />
+                  )}
+                </div>
+              </TabPane>
+            )}
         </Tabs>
       </Modal>
     )
