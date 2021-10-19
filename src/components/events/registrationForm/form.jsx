@@ -1,7 +1,22 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { UsersApi, TicketsApi, EventsApi, EventFieldsApi } from '../../../helpers/request';
 import FormTags, { setSuccessMessageInRegisterForm } from './constants';
-import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Divider, Upload, Select, Spin } from 'antd';
+import {
+  Collapse,
+  Form,
+  Input,
+  Col,
+  Row,
+  message,
+  Checkbox,
+  Alert,
+  Card,
+  Button,
+  Divider,
+  Upload,
+  Select,
+  Spin,
+} from 'antd';
 import { LoadingOutlined, PlayCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import ReactSelect from 'react-select';
@@ -67,14 +82,14 @@ function OutsideAlerter(props) {
   return <div ref={wrapperRef}>{props.children}</div>;
 }
 //OBTENER NOMBRE ARCHIVO
-function obtenerName(fileUrl){
-  if(typeof fileUrl =='string'){
-    let splitUrl=fileUrl?.split("/");
-    return splitUrl[splitUrl.length-1];
-  }else{
+function obtenerName(fileUrl) {
+  if (typeof fileUrl == 'string') {
+    let splitUrl = fileUrl?.split('/');
+    return splitUrl[splitUrl.length - 1];
+  } else {
     return null;
   }
-  }
+}
 
 /** CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
  * debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
@@ -108,6 +123,7 @@ const FormRegister = ({
   options,
   loadingregister,
   setSectionPermissions,
+  errorRegisterUser,
 }) => {
   const intl = useIntl();
   const cEvent = UseEventContext();
@@ -137,7 +153,7 @@ const FormRegister = ({
   const [initialValues, setinitialValues] = useState(
     organization ? initialOtherValue : cEventUser?.value ? cEventUser?.value : cUser.value ? cUser.value : {}
   );
-  if(Object.keys(initialValues).length>0){
+  if (Object.keys(initialValues).length > 0) {
     initialValues.contrasena = '';
     initialValues.password = '';
   }
@@ -206,100 +222,94 @@ const FormRegister = ({
       values.checkedin_at = '';
     }
 
-    
     //OBTENER RUTA ARCHIVOS FILE
     Object.values(extraFields).map((value) => {
       if (value.type == 'file') {
-        values[value.name] = 
-          values[value.name]?.fileList
-            ? values[value.name]?.fileList[0]?.response.trim()
-            : typeof values[value.name] =='string'
-            ? values[value.name]
-            : null;         
+        values[value.name] = values[value.name]?.fileList
+          ? values[value.name]?.fileList[0]?.response.trim()
+          : typeof values[value.name] == 'string'
+          ? values[value.name]
+          : null;
       }
-    }); 
-   
-    if (imageAvatar) {    
+    });
+
+    if (imageAvatar) {
       values.picture = imageAvatar.fileList[0].response;
     }
     if (callback) {
-      callback(values)
+      callback(values);
+    } else {
+      const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
 
-    }else{
-    const { data } = await EventsApi.getStatusRegister(cEvent.value?._id, values.email);
-    
-    if (data.length == 0 || cEventUser.value) {
-      setSectionPermissions({ view: false, ticketview: false });
-      values.password = password;
-          
+      if (data.length == 0 || cEventUser.value) {
+        setSectionPermissions({ view: false, ticketview: false });
+        values.password = password;
 
-      // values.files = fileSave
+        // values.files = fileSave
 
-      setGeneralFormErrorMessageVisible(false);
-      setNotLoggedAndRegister(false);
+        setGeneralFormErrorMessageVisible(false);
+        setNotLoggedAndRegister(false);
 
-      const key = 'registerUserService';
+        const key = 'registerUserService';
 
-      // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
-      message.loading({ content: intl.formatMessage({ id: 'registration.message.loading' }), key }, 10);
+        // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
+        message.loading({ content: intl.formatMessage({ id: 'registration.message.loading' }), key }, 10);
 
-      const snap = { properties: { ...values, typeRegister: typeRegister } };
+        const snap = { properties: { ...values, typeRegister: typeRegister } };
 
-      let textMessage = {};
-      textMessage.key = key;
-      let eventUserId;
+        let textMessage = {};
+        textMessage.key = key;
+        let eventUserId;
 
-      if (eventUserId) {
-        try {
-          await TicketsApi.transferToUser(cEvent.value?._id, eventUserId, snap);
-          // textMessage.content = "Transferencia Realizada";
-          textMessage.content = formMessage.successMessage;
-          setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
-
-          setSubmittedForm(true);
-          message.success(textMessage);
-          setTimeout(() => {
-            closeModal({ status: 'sent_transfer', message: 'Transferencia Hecha' });
-          }, 4000);
-        } catch (err) {
-          console.error('Se presento un problema', err);
-          // textMessage.content = "Error... Intentalo mas tarde";
-          textMessage.content = formMessage.errorMessage;
-          message.error(textMessage);
-        }
-      } else {
-        try {         
-          let resp = await UsersApi.createOne(snap, cEvent.value?._id);
-
-          // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
-          // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
-          //
-          let camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
-          updateTakenOptionInTakeableList(camposConOpcionTomada, values, cEvent.value?._id);
-
-          //FIN CAMPO LISTA  tipo justonebyattendee //
-
-          //if (resp.status !== 'UPDATED') {
-
-          if (resp.data && resp.data.user && resp.data.user.initial_token) {
-            setSuccessMessageInRegisterForm(resp.status);
-            // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
-            // textMessage.content = "Usuario " + statusMessage;
-            textMessage.content = 'Usuario ' + formMessage.successMessage;
-
-            let $msg =
-              organization == 1
-                ? ''
-                : event.registration_message ||
-                  `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`;
-
-            setSuccessMessage($msg);
+        if (eventUserId) {
+          try {
+            await TicketsApi.transferToUser(cEvent.value?._id, eventUserId, snap);
+            // textMessage.content = "Transferencia Realizada";
+            textMessage.content = formMessage.successMessage;
+            setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
 
             setSubmittedForm(true);
-            message.success(intl.formatMessage({ id: 'registration.message.created' }));
+            message.success(textMessage);
+            setTimeout(() => {
+              closeModal({ status: 'sent_transfer', message: 'Transferencia Hecha' });
+            }, 4000);
+          } catch (err) {
+            console.error('Se presento un problema', err);
+            // textMessage.content = "Error... Intentalo mas tarde";
+            textMessage.content = formMessage.errorMessage;
+            message.error(textMessage);
+          }
+        } else {
+          try {
+            let resp = await UsersApi.createOne(snap, cEvent.value?._id);
 
-         
-           
+            // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
+            // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
+            //
+            let camposConOpcionTomada = extraFields.filter((m) => m.type == 'list' && m.justonebyattendee);
+            updateTakenOptionInTakeableList(camposConOpcionTomada, values, cEvent.value?._id);
+
+            //FIN CAMPO LISTA  tipo justonebyattendee //
+
+            //if (resp.status !== 'UPDATED') {
+
+            if (resp.data && resp.data.user && resp.data.user.initial_token) {
+              setSuccessMessageInRegisterForm(resp.status);
+              // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
+              // textMessage.content = "Usuario " + statusMessage;
+              textMessage.content = 'Usuario ' + formMessage.successMessage;
+
+              let $msg =
+                organization == 1
+                  ? ''
+                  : event.registration_message ||
+                    `Fuiste registrado al evento  ${values.email || ''}, revisa tu correo para confirmar.`;
+
+              setSuccessMessage($msg);
+
+              setSubmittedForm(true);
+              message.success(intl.formatMessage({ id: 'registration.message.created' }));
+
               //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
               //todo el proceso de logueo depende del token en la url por eso se recarga la página
               if (!event.validateEmail && resp.data.user.initial_token) {
@@ -318,50 +328,48 @@ const FormRegister = ({
               } else {
                 window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${1}`);
               }
-            
-          } else {
-            // window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=800`);
-            //Usuario ACTUALIZADO
-            // let msg =
-            //   'Ya se ha realizado previamente el registro con el correo: ' +
-            //   values.email +
-            //   ', se ha enviado un nuevo correo con enlace de ingreso.';
-            // textMessage.content = msg;
-            if (typeRegister == 'free') {
-              let msg =
-                intl.formatMessage({ id: 'registration.already.registered' }) +
-                ' ' +
-                intl.formatMessage({ id: 'registration.message.success.subtitle' });
-
-              textMessage.content = msg;
-
-              setSuccessMessage(msg);
-              // Retorna un mensaje en caso de que ya se encuentre registrado el correo
-              setNotLoggedAndRegister(true);
-              message.success(msg);
             } else {
-              //alert('A PAGAR');
-              setPayMessage(true);
+              // window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=800`);
+              //Usuario ACTUALIZADO
+              // let msg =
+              //   'Ya se ha realizado previamente el registro con el correo: ' +
+              //   values.email +
+              //   ', se ha enviado un nuevo correo con enlace de ingreso.';
+              // textMessage.content = msg;
+              if (typeRegister == 'free') {
+                let msg =
+                  intl.formatMessage({ id: 'registration.already.registered' }) +
+                  ' ' +
+                  intl.formatMessage({ id: 'registration.message.success.subtitle' });
+
+                textMessage.content = msg;
+
+                setSuccessMessage(msg);
+                // Retorna un mensaje en caso de que ya se encuentre registrado el correo
+                setNotLoggedAndRegister(true);
+                message.success(msg);
+              } else {
+                //alert('A PAGAR');
+                setPayMessage(true);
+              }
             }
+          } catch (err) {
+            // textMessage.content = "Error... Intentalo mas tarde";
+            textMessage.content = formMessage.errorMessage;
+            console.log('ERROR==>', err);
+            textMessage.key = key;
+            message.error(textMessage);
           }
-        
-        } catch (err) {
-          // textMessage.content = "Error... Intentalo mas tarde";
-          textMessage.content = formMessage.errorMessage;
-          console.log('ERROR==>', err);
-          textMessage.key = key;
-          message.error(textMessage);
         }
+      } else {
+        // alert("YA ESTAS REGISTRADO..")
+        setNotLoggedAndRegister(true);
       }
-    } else {
-      // alert("YA ESTAS REGISTRADO..")
-      setNotLoggedAndRegister(true);
     }
-  }
   };
 
   const valuesChange = (changedValues, allValues) => {
-   // console.log('VALUES==>', allValues);
+    // console.log('VALUES==>', allValues);
     updateFieldsVisibility(conditionals, allValues);
   };
 
@@ -429,7 +437,7 @@ const FormRegister = ({
       let mandatory = m.mandatory;
       let description = m.description;
       let labelPosition = m.labelPosition;
-      let target = name;      
+      let target = name;
       let value = !callback
         ? eventUser && eventUser['properties']
           ? eventUser['properties'][target]
@@ -611,7 +619,16 @@ const FormRegister = ({
             multiple={false}
             listType='text'
             beforeUpload={beforeUpload}
-            defaultFileList={value ? [{ name:typeof value =='string'? obtenerName(value):null, url: typeof value =='string'? value:null }] : []}>
+            defaultFileList={
+              value
+                ? [
+                    {
+                      name: typeof value == 'string' ? obtenerName(value) : null,
+                      url: typeof value == 'string' ? value : null,
+                    },
+                  ]
+                : []
+            }>
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         );
@@ -696,21 +713,29 @@ const FormRegister = ({
                 accept='image/png,image/jpeg'
                 onChange={(file) => {
                   //alert("ONCHANGE")
-                  //console.log("FILE==>",file.fileList)                 
+                  //console.log("FILE==>",file.fileList)
                   //console.log("FILEFORMATTER==>",file)
                   setImageAvatar(file);
-                 /*  setImgUrl(fls);
+                  /*  setImgUrl(fls);
                  const fls = (file ? file.fileList : [])                  
                   .map(fl => ({
                     ...fl,
                     status: 'success',
                   }))*/
-                  
                 }}
                 multiple={false}
                 listType='picture'
                 maxCount={1}
-                defaultFileList={value ? [{ name:typeof value =='string'? obtenerName(value):null, url: typeof value =='string'? value:null }] : []}
+                defaultFileList={
+                  value
+                    ? [
+                        {
+                          name: typeof value == 'string' ? obtenerName(value) : null,
+                          url: typeof value == 'string' ? value : null,
+                        },
+                      ]
+                    : []
+                }
                 beforeUpload={beforeUpload}>
                 <Button type='primary' icon={<UploadOutlined />}>
                   {intl.formatMessage({ id: 'form.button.avatar', defaultMessage: 'Subir imagen de perfil' })}
@@ -875,17 +900,15 @@ const FormRegister = ({
                       afterClose={() => setNotLoggedAndRegister(false)}
                       message={intl.formatMessage({ id: 'registration.already.registered' })}
                       description={
-                       (
-                          <Button
-                            size='middle'
-                            type='primary'
-                            onClick={() => {
-                              handleChangeTabModal('1');
-                              setNotLoggedAndRegister(false)
-                            }}>
-                            {intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })}
-                          </Button>
-                        )
+                        <Button
+                          size='middle'
+                          type='primary'
+                          onClick={() => {
+                            handleChangeTabModal('1');
+                            setNotLoggedAndRegister(false);
+                          }}>
+                          {intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })}
+                        </Button>
                       }
                       type='warning'
                       showIcon
@@ -894,27 +917,48 @@ const FormRegister = ({
                   </Col>
                 )}
 
+                {errorRegisterUser && (
+                  <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                    <Alert
+                      className='animate__animated animate__bounceIn'
+                      type='warning'
+                      showIcon
+                      style={{
+                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                        backgroundColor: '#FFFFFF',
+                        color: '#000000',
+                        borderLeft: '5px solid #FAAD14',
+                        fontSize: '14px',
+                        borderRadius: '5px',
+                      }}
+                      message={'Ya te encuetras registrado en evius'}
+                    />
+                  </Col>
+                )}
+
                 <Col span={24} align='center'>
-                  {!loadingregister && <Form.Item>
-                    <Button type='primary' htmlType='submit'>
-                      {initialValues != null && Object.keys(initialValues).length > 0 
-                        ? intl.formatMessage({ id: 'registration.button.update' })
-                        : cEvent.value?._id === '5f9824fc1f8ccc414e33bec2'
-                        ? 'Votar y Enviar'
-                        : intl.formatMessage({ id: 'registration.button.create' })}
-                    </Button>
-                    {options &&
-                      Object.keys(initialValues).length > 0  &&
-                      options.map((option) => (
-                        <Button
-                          icon={option.icon}
-                          onClick={() => option.action(eventUser)}
-                          type={option.type}
-                          style={{ marginLeft: 10 }}>
-                          {option.text}
-                        </Button>
-                      ))}
-                  </Form.Item>}
+                  {!loadingregister && (
+                    <Form.Item>
+                      <Button type='primary' htmlType='submit'>
+                        {initialValues != null && Object.keys(initialValues).length > 0
+                          ? intl.formatMessage({ id: 'registration.button.update' })
+                          : cEvent.value?._id === '5f9824fc1f8ccc414e33bec2'
+                          ? 'Votar y Enviar'
+                          : intl.formatMessage({ id: 'registration.button.create' })}
+                      </Button>
+                      {options &&
+                        Object.keys(initialValues).length > 0 &&
+                        options.map((option) => (
+                          <Button
+                            icon={option.icon}
+                            onClick={() => option.action(eventUser)}
+                            type={option.type}
+                            style={{ marginLeft: 10 }}>
+                            {option.text}
+                          </Button>
+                        ))}
+                    </Form.Item>
+                  )}
                   {loadingregister && <Spin />}
                 </Col>
               </Row>

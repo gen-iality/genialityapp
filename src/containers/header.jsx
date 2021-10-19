@@ -271,7 +271,7 @@ class Headers extends Component {
                 organization='register'
                 visible={this.state.modalVisible}
               />
-              <ModalLoginHelpers />
+              <ModalLoginHelpers organization={1} />
               {/* Dropdown de navegacion para el usuario  */}
               {this.state.userEvent && (
                 <UserStatusAndMenu
