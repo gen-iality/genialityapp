@@ -8,8 +8,28 @@ const { useBreakpoint } = Grid;
 const OrganizationCard = (props) => {
   const screens = useBreakpoint();
 
-  const actionAdmin = screens.xs ? <SettingOutlined key='admin' /> : <span key='admin'>Administrar</span>;
-  const actionview = screens.xs ? <EyeOutlined key='view' /> : <span key='view'>Visitar</span>;
+  const adminOrganization = () => {
+    window.location.href = `${window.location.origin}/admin/organization/${props.data.id}/events`;
+  };
+
+  const landingOrganization = () => {
+    window.location.href = `${window.location.origin}/organization/${props.data.id}/events`;
+  };
+
+  const actionAdmin = screens.xs ? (
+    <SettingOutlined key='admin' onClick={() => adminOrganization()} />
+  ) : (
+    <span onClick={() => adminOrganization()} key='admin'>
+      Administrar
+    </span>
+  );
+  const actionview = screens.xs ? (
+    <EyeOutlined onClick={() => landingOrganization()} key='view' />
+  ) : (
+    <span onClick={() => landingOrganization()} key='view'>
+      Visitar
+    </span>
+  );
 
   return (
     <Card

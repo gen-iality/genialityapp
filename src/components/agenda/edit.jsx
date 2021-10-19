@@ -491,7 +491,7 @@ class AgendaEdit extends Component {
         : [];
 
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
-    const host_ids = selectedHosts >= 0 ? [] : selectedHosts.filter((host) => host != null).map(({ value }) => value);
+    const host_ids = selectedHosts >= 0 ? [] : selectedHosts?.filter((host) => host != null).map(({ value }) => value);
     const type_id = selectedType === undefined ? '' : selectedType.value;
     return {
       name,

@@ -22,7 +22,7 @@ const NewCard = (props) => {
 
   return (
     <>
-      <ModalCreateOrg isVisible={isVisible} setIsVisible={setIsVisible} />
+      <ModalCreateOrg isVisible={isVisible} setIsVisible={setIsVisible} fetchItem={props.fetchItem} />
       <Card
         onClick={entity === 'event' ? newEvent : newOrganization}
         style={{
