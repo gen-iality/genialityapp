@@ -54,6 +54,7 @@ class EventOrganization extends Component {
   };
 
   render() {
+    console.log('10. this.state.organization. ', this.state.organization);
     return (
       <React.Fragment>
         {console.log('Marlon', this.state.organization)}
@@ -66,10 +67,13 @@ class EventOrganization extends Component {
         {!this.state.loading && this.state.orgId ? (
           <>
             {/* BANNER */}
-            {this.state.organization && (
+            {this.state.organization !== null && (
               <div style={{ width: '100%', maxHeight: '350px' }}>
-                {!this.state.organization.banner_image_email == '' ? (
-                  <img style={{ objectFit: 'cover', width: '100%' }} src={this.state.organization.banner_image_email} />
+                {this.state.organization.styles.banner_image !== null || '' ? (
+                  <img
+                    style={{ objectFit: 'cover', width: '100%' }}
+                    src={this.state.organization.styles.banner_image}
+                  />
                 ) : (
                   ''
                 )}
@@ -133,10 +137,13 @@ class EventOrganization extends Component {
               </div>
             </div>
             {/* FOOTER */}
-            {this.state.organization && (
+            {this.state.organization !== null && (
               <div style={{ width: '100%', maxHeight: '350px' }}>
-                {!this.state.organization.footer_image_email == '' ? (
-                  <img style={{ objectFit: 'cover', width: '100%' }} src={this.state.organization.footer_image_email} />
+                {this.state.organization.styles.banner_footer !== null || '' ? (
+                  <img
+                    style={{ objectFit: 'cover', width: '100%' }}
+                    src={this.state.organization.styles.banner_footer}
+                  />
                 ) : (
                   ''
                 )}
