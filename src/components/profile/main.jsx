@@ -9,6 +9,7 @@ import { EventsApi, TicketsApi, OrganizationApi } from '../../helpers/request';
 import EventCard from '../shared/eventCard';
 import { Link } from 'react-router-dom';
 import * as Cookie from 'js-cookie';
+import moment from 'moment';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -29,14 +30,16 @@ const MainProfile = (props) => {
   const fetchItem = async () => {
     /* Eventos creados por el usuario    */
     const events = await EventsApi.mine();
-    setevents(events);
+    const eventsDataSorted = events.sort((a, b) => moment(b.datetime_from) - moment(a.datetime_from));
+    setevents(eventsDataSorted);
     seteventsLimited(events.slice(0, 3));
     /* ----------------------------------*/
     /* Eventos en los que esta registrado el usuario */
     const token = Cookie.get('evius_token');
     const ticketsall = await TicketsApi.getAll(token);
+    const ticketsDataSorted = ticketsall.sort((a, b) => moment(b.created_at) - moment(a.created_at));
     const usersInscription = [];
-    ticketsall.forEach(async (element) => {
+    ticketsDataSorted.forEach(async (element) => {
       const eventByTicket = await EventsApi.getOne(element.event_id);
       if (eventByTicket) {
         usersInscription.push(eventByTicket);
@@ -48,8 +51,9 @@ const MainProfile = (props) => {
     /* ----------------------------------*/
     /* Organizaciones del usuario */
     const organizations = await OrganizationApi.mine();
-    setorganizations(organizations);
-    setorganizationsLimited(organizations.slice(0, 5));
+    const organizationDataSorted = organizations.sort((a, b) => moment(b.created_at) - moment(a.created_at));
+    setorganizations(organizationDataSorted);
+    setorganizationsLimited(organizationDataSorted.slice(0, 5));
     /* ----------------------------------*/
     setIsLoading(false);
   };

@@ -502,6 +502,7 @@ export const OrganizationApi = {
         id: item._id,
         name: item.name,
         styles: item.styles,
+        created_at: item.created_at,
       };
     });
     return data;
