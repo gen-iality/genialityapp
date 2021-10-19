@@ -35,10 +35,10 @@ const FeriasList = ({ event_id, setVirtualConference, setTopBanner, cEvent }) =>
         .collection('event_companies')
         .doc(event_id)
         .onSnapshot((resp) => {
-          let standTypesOptions = resp.data().stand_types;
+          let standTypesOptions = resp.data()?.stand_types;
           setTypeStand(standTypesOptions);
           setStandsColor(standTypesOptions);
-          setConfig(resp.data().config);
+          setConfig(resp.data()?.config);
           let companiesSort = companies.sort((a, b) => a.index && b.index && a.index - b.index);
           setCompaniesEvent(companiesSort);
         });

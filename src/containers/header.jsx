@@ -53,7 +53,7 @@ class Headers extends Component {
       tabEvtCat: true,
       eventId: null,
       userEvent: null,
-      visiblemodal: false,
+      modalVisible: false,
       tabModal: '1',
     };
     this.setEventId = this.setEventId.bind(this);
@@ -265,13 +265,13 @@ class Headers extends Component {
                   </Space>
                 )}
 
-              {/* <ModalAuth
+              <ModalAuth
                 tab={this.state.tabModal}
                 closeModal={this.modalClose}
                 organization='register'
                 visible={this.state.modalVisible}
               />
-              <ModalLoginHelpers /> */}
+              <ModalLoginHelpers />
               {/* Dropdown de navegacion para el usuario  */}
               {this.state.userEvent && (
                 <UserStatusAndMenu

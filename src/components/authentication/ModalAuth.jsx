@@ -101,38 +101,38 @@ const ModalAuth = (props) => {
       })
       .catch(async (e) => {
         console.log('ERROR==>', e);
-        // if(props.organization!=='register'){
-        let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
-        if (user.data.length > 0) {
-          if (
-            user.data[0].properties?.password == data.password ||
-            user.data[0].contrasena == data.password ||
-            user.data[0]?.user?.contrasena == data.password
-          ) {
-            let url =
-              props.organization == 'landing'
-                ? `/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}`
-                : `/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
-            window.location.href = url;
-            loginFirst = true;
-            setErrorLogin(false);
-            //setLoading(false);
-            //loginFirebase(data)
-            //leafranciscobar@gmail.com
-            //Mariaguadalupe2014
+        if (props.organization !== 'register') {
+          let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
+          if (user.data.length > 0) {
+            if (
+              user.data[0].properties?.password == data.password ||
+              user.data[0].contrasena == data.password ||
+              user.data[0]?.user?.contrasena == data.password
+            ) {
+              let url =
+                props.organization == 'landing'
+                  ? `/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}`
+                  : `/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
+              window.location.href = url;
+              loginFirst = true;
+              setErrorLogin(false);
+              //setLoading(false);
+              //loginFirebase(data)
+              //leafranciscobar@gmail.com
+              //Mariaguadalupe2014
+            } else {
+              setErrorLogin(true);
+              setLoading(false);
+            }
           } else {
             setErrorLogin(true);
             setLoading(false);
           }
         } else {
-          setErrorLogin(true);
-          setLoading(false);
+          let login = await EventsApi.signInWithEmailAndPassword(data);
+          let user = await UsersApi.findByEmail(data.email);
+          console.log('USEROBTENIDO==>', user, login);
         }
-        // }else{
-        //let login= await EventsApi.signInWithEmailAndPassword(data)
-        // let user=await UsersApi.findByEmail(data.email);
-        // console.log("USEROBTENIDO==>",user,login)
-        // }
       });
   };
 
@@ -151,8 +151,8 @@ const ModalAuth = (props) => {
         centered
         footer={null}
         zIndex={1000}
-        closable={false}
-        visible={true}>
+        closable={props.organization == 'register' ? true : false}
+        visible={props.organization == 'register' ? props.visible : true}>
         <Tabs onChange={callback} centered size='large' activeKey={tabLogin}>
           <TabPane tab={intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })} key='1'>
             <Form

@@ -41,7 +41,10 @@ class DatosModal extends Component {
 
     //Generamos el nombre del campo para la base de datos(name) a partir del  label solo si el campo se esta creando
     if (name === 'label' && !this.state.info._id) {
-      tmpInfo['name'] = this.generateFieldNameForLabel(name, value);
+      console.log('NAME==>', name, value);
+      if (tmpInfo['name'] !== 'names' && tmpInfo['name'] !== 'email' && tmpInfo['name'] !== 'picture') {
+        tmpInfo['name'] = this.generateFieldNameForLabel(name, value);
+      }
     }
     tmpInfo[name] = value;
     this.setState({ info: tmpInfo }, this.validForm);
@@ -118,7 +121,7 @@ class DatosModal extends Component {
     const info = Object.assign({}, this.state.info);
     info.name = toCapitalizeLower(info.name);
     if (info.type !== 'list' && info.type !== 'multiplelist') delete info.options;
-    this.props.action(info);
+    this.props.action(info, this.state.event?._id);
     const initModal = {
       name: '',
       mandatory: false,
