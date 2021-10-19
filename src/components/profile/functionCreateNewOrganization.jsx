@@ -36,10 +36,10 @@ const functionCreateNewOrganization = (props) => {
     loader_page: 'no',
     data_loader_page: null,
   };
-  const loading = message.open({
+  const loading = message.loading({
+    duration: 90,
     key: 'loading',
-    type: 'loading',
-    content: <> Estamos creando la organización.</>,
+    content: 'Estamos creando la organización.',
   });
 
   const uploadLogo = async () => {
@@ -63,7 +63,8 @@ const functionCreateNewOrganization = (props) => {
 
     const response = await OrganizationApi.createOrganization(body);
     /** se trae la function fetchItem desde el main.jsx para poder actualizar la data */
-    await props.fetchItem;
+    await props.fetchItem();
+    props.resetFields();
     if (response?._id) {
       message.destroy(loading.key);
       message.success('Organización creada correctamente');

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Modal, Form, Input, Button, Typography, Upload, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { UploadOutlined } from '@ant-design/icons';
 import functionCreateNewOrganization from './functionCreateNewOrganization';
 
 const ModalCreateOrg = (props) => {
+  const [form] = Form.useForm();
   let [imageAvatar, setImageAvatar] = useState(null);
 
   const beforeUpload = (file) => {
@@ -15,8 +15,18 @@ const ModalCreateOrg = (props) => {
     return isLt5M ? true : false;
   };
 
+  function resetFields() {
+    form.resetFields();
+    setImageAvatar(null);
+  }
   const saveNewOrganization = (values) => {
-    const newValues = { ...values, logo: imageAvatar, closeModal: props.setIsVisible, fetchItem: props.fetchItem };
+    const newValues = {
+      ...values,
+      logo: imageAvatar,
+      closeModal: props.setIsVisible,
+      fetchItem: props.fetchItem,
+      resetFields: resetFields,
+    };
     functionCreateNewOrganization(newValues);
   };
 
@@ -30,8 +40,9 @@ const ModalCreateOrg = (props) => {
       visible={props.isVisible}
       onCancel={() => {
         props.setIsVisible(false);
+        resetFields();
       }}>
-      <Form onFinish={saveNewOrganization} autoComplete='off' layout='vertical'>
+      <Form onFinish={saveNewOrganization} form={form} autoComplete='off' layout='vertical'>
         <Typography.Title level={4} type='secondary'>
           Nueva organizacion
         </Typography.Title>
