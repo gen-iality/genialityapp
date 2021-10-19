@@ -37,7 +37,7 @@ const OrganizationCard = (props) => {
       style={{ borderRadius: '10px' }}
       bodyStyle={{ minHeight: '200px', textAlign: 'center' }}>
       <Space size={8} direction='vertical' style={{ textAlign: 'center', width: '100%' }}>
-        {props.data?.styles ? (
+        {props.data ? (
           <Avatar
             size={{ xs: 100, sm: 100, md: 100, lg: 100, xl: 100, xxl: 100 }}
             src={props.data?.styles?.event_image || 'http://via.placeholder.com/500/50D3C9/FFFFFF?text=Image'}
