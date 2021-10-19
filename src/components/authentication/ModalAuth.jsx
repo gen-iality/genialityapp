@@ -164,6 +164,8 @@ const ModalAuth = (props) => {
               {props.organization == 'landing' && (
                 <Form.Item>
                   <Image
+                    style={{ borderRadius: '100px', objectFit: 'cover' }}
+                    preview={{ maskClassName: 'circularMask' }}
                     src={props.logo ? props.logo : 'http://via.placeholder.com/500/50D3C9/FFFFFF?text=No%20Image'}
                     width={200}
                     height={200}
