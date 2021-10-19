@@ -9,7 +9,6 @@ import { useIntl } from 'react-intl';
 
 import React, { useContext, useEffect, useState } from 'react';
 import { EventsApi, UsersApi } from '../../helpers/request';
-import { stubTrue } from 'lodash-es';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -29,6 +28,7 @@ const ModalAuth = (props) => {
   const screens = useBreakpoint();
   const [loading, setLoading] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
+  const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
   const intl = useIntl();
@@ -64,8 +64,25 @@ const ModalAuth = (props) => {
     };
   }, []);
 
+  const registerUser = async (values) => {
+    console.log('VALUES==>', values);
+    setLoading(true);
+    try {
+      let resp = await UsersApi.createUser(values);
+      if (resp) {
+        console.log('REGISTER USER==>', resp);
+      }
+    } catch (error) {
+      setErrorRegisterUSer(true);
+      console.log('ERROR REGISTER');
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     form1.resetFields();
+    setErrorRegisterUSer(false);
+    setErrorLogin(false);
   }, [typeModal, tabLogin]);
   const callback = (key) => {
     form1.resetFields();
@@ -320,8 +337,9 @@ const ModalAuth = (props) => {
                       fields={fieldsUser}
                       organization={true}
                       options={[]}
-                      callback={() => alert('TODO BIEN')}
-                      loadingregister={null}
+                      callback={(values) => registerUser(values)}
+                      loadingregister={loading}
+                      errorRegisterUser={errorRegisterUSer}
                     />
                   )}
                 </div>
@@ -338,7 +356,7 @@ export default withContext(ModalAuth);
 const fieldsUser = [
   {
     name: 'avatar',
-    mandatory: true,
+    mandatory: false,
     visibleByContacts: false,
     visibleByAdmin: false,
     label: 'Imagen de perfil',
@@ -410,5 +428,29 @@ const fieldsUser = [
     index: 1,
     order_weight: 3,
     sensibility: true,
+  },
+  {
+    name: 'password',
+    mandatory: true,
+    visibleByContacts: false,
+    visibleByAdmin: false,
+    label: 'Contraseña',
+    description: null,
+    type: 'password',
+    justonebyattendee: false,
+    updated_at: '2021-09-22 14:25:33',
+    created_at: '2021-09-21 21:56:24',
+    _id: {
+      $oid: '6160b1a7f6cfdd38d4502e74',
+    },
+    author: null,
+    categories: [],
+    event_type: null,
+    organiser: null,
+    organizer: null,
+    currency: {},
+    tickets: [],
+    index: 2,
+    order_weight: 1,
   },
 ];
