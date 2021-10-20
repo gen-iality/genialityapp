@@ -6,11 +6,17 @@ import { Actions, OrganizationApi } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 import LogOut from '../shared/logOut';
 import { SketchPicker } from 'react-color';
-import { Button, Card, message, Typography, Modal, Space } from 'antd';
+import { Button, Card, message, Typography, Modal, Space, Row, Col, Form, Input, Tag, Select } from 'antd';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
+import Header from '../../antdComponents/Header';
 
 const { Title, Text } = Typography;
+const { Option } = Select;
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
+};
 
 class Styles extends Component {
   constructor(props) {
@@ -561,133 +567,137 @@ class Styles extends Component {
 
     return (
       <React.Fragment>
-        <div className='columns general'>
-          <div className='column is-12'>
-            <h2 className='title-section'>Configuración de Estilos</h2>
-            {this.state.colorDrawer.map((item, key) => (
-              <div className='column inner-column' key={key}>
-                {item.editIsVisible && (
-                  <Modal
-                    closable={false}
-                    footer={[
-                      <Button key='ok' type='primary' onClick={() => this.handleClickSelectColor(key)}>
-                        Aceptar
-                      </Button>,
-                    ]}
-                    title={<Title level={5}>{item.title}</Title>}
-                    visible={item.editIsVisible}>
-                    <Space wrap size='large' align='start'>
-                      <SketchPicker
-                        color={this.state.styles[item.fieldColorName]}
-                        onChangeComplete={(color) => {
-                          this.onColorChange(color, item.fieldColorName);
-                        }}
-                      />
-                      <Space direction='vertical'>
-                        <Text
-                          style={{ fontSize: '20px' }}
-                          code
-                          copyable={{
-                            text: `${this.state.styles[item.fieldColorName].toUpperCase()}`,
-                            onCopy: () => message.success('Color hexadecimal copiado'),
-                          }}>{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
-                        <Text
-                          style={{ fontSize: '20px' }}
-                          code
-                          copyable={{
-                            text: `${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
-                              this.hexToRgb(this.state.styles[item.fieldColorName])?.g
-                            },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b}`,
-                            onCopy: () => message.success('Color rgb copiado'),
-                          }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
-                          this.hexToRgb(this.state.styles[item.fieldColorName])?.g
-                        },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b})`}</Text>
-                      </Space>
-                    </Space>
-                  </Modal>
-                )}
+        <Form
+          onFinish={this.submit}
+          {...formLayout}
+        >
+          <Header 
+            title={'Configuración de Estilos'}
+            save
+            form
+          />
 
-                <div onClick={() => this.handleClickSelectColor(key)}>
-                  <p className='label'>{item.title}</p>
-                  {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
-                  <input
-                    type='color'
-                    disabled
-                    style={{ marginRight: '3%', width: '5%' }}
-                    value={this.state.styles[item.fieldColorName]}
-                    onChange={() => {}}
-                  />
-                  {/* <button className='button'> {item.editIsVisible ? 'Seleccionar' : 'Escoger'}</button> */}
+          <Row justify='center' wrap gutter={[8, 8]}>
+            <Col span={12}>
+              {this.state.colorDrawer.map((item, key) => (
+                
+                <div key={key}>
+                  {item.editIsVisible && (
+                    <Modal
+                      closable={false}
+                      footer={[
+                        <Button key='ok' type='primary' onClick={() => this.handleClickSelectColor(key)}>
+                          Aceptar
+                        </Button>,
+                      ]}
+                      title={<Title level={5}>{item.title}</Title>}
+                      visible={item.editIsVisible}>
+                      <Space wrap size='large' align='start'>
+                        <SketchPicker
+                          color={this.state.styles[item.fieldColorName]}
+                          onChangeComplete={(color) => {
+                            this.onColorChange(color, item.fieldColorName);
+                          }}
+                        />
+                        <Space direction='vertical'>
+                          <Text
+                            style={{ fontSize: '20px' }}
+                            code
+                            copyable={{
+                              text: `${this.state.styles[item.fieldColorName].toUpperCase()}`,
+                              onCopy: () => message.success('Color hexadecimal copiado'),
+                            }}>{`HEX ${this.state.styles[item.fieldColorName].toUpperCase()}`}</Text>
+                          <Text
+                            style={{ fontSize: '20px' }}
+                            code
+                            copyable={{
+                              text: `${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
+                                this.hexToRgb(this.state.styles[item.fieldColorName])?.g
+                              },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b}`,
+                              onCopy: () => message.success('Color rgb copiado'),
+                            }}>{`RGB (${this.hexToRgb(this.state.styles[item.fieldColorName])?.r},${
+                            this.hexToRgb(this.state.styles[item.fieldColorName])?.g
+                          },${this.hexToRgb(this.state.styles[item.fieldColorName])?.b})`}</Text>
+                        </Space>
+                      </Space>
+                    </Modal>
+                  )}
+
+                  <Form.Item label={item.title} onClick={() => this.handleClickSelectColor(key)}>
+                    {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
+                    <Tag style={{ width: '20%' }} color={this.state.styles[item.fieldColorName]}>
+                      {this.state.styles[item.fieldColorName]}
+                    </Tag>
+                  </Form.Item>
                 </div>
-              </div>
-            ))}
-            {this.selectsDrawer.map((item, key) => (
-              <div className='column inner-column' key={key}>
-                <p className='label'>{item.label}</p>
-                {
-                  <div className='select'>
-                    <select
+              ))}
+
+              {this.selectsDrawer.map((item, key) => (
+                <div key={key}>
+                  <Form.Item label={item.label}>
+                    <Select
                       defaultValue={item.defaultValue}
                       value={this.state.styles[item.name]}
                       name={item.name}
                       onChange={(e) => this.handleChange(e)}
-                      style={{ width: 120 }}>
+                      style={{ width: 120 }}
+                    >
                       {item.options.map((item2, key) => (
-                        <option key={key} value={item2.value}>
+                        <Option key={key} value={item2.value}>
                           {item2.label}
-                        </option>
+                        </Option>
                       ))}
-                    </select>
-                  </div>
-                }
-                {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
-                  <div>
-                    <label className='label'>Link de video</label>
-                    <input
-                      defaultValue={this.state.styles['data_loader_page']}
-                      type='text'
-                      className='input'
-                      onChange={(e) => this.getDataLoaderPage(e.target.value)}
-                    />
-                  </div>
-                )}
-                {item.name === 'loader_page' && this.state.styles.loader_page === 'code' && (
-                  <ReactQuill
-                    onChange={this.getDataLoaderPage}
-                    defaultValue={this.state.styles.data_loader_page}
-                    style={{ marginTop: '5%' }}
-                    modules={toolbarEditor}
-                  />
-                )}
-              </div>
-            ))}
-            {this.imageDrawer.map((item, key) => (
-              <div className='column inner-column' key={key}>
-                <p className='label '>{item.title}</p>
-                {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
-
-                <div className='control'>
-                  <ImageInput
-                    picture={this.state.styles[item.imageFieldName]}
-                    width={item.width}
-                    height={item.height}
-                    changeImg={(files) => {
-                      this.saveEventImage(files, item.imageFieldName);
-                    }}
-                    errImg={this.state.errImg}
-                  />
-                  {this.state.styles[item.imageFieldName] && (
-                    <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
+                    </Select>
+                  </Form.Item>
+                  
+                  {item.name === 'loader_page' && this.state.styles.loader_page === 'text' && (
+                    <Form.Item label={'Link de video'}>
+                      <Input
+                        defaultValue={this.state.styles['data_loader_page']}
+                        type='text'
+                        onChange={(e) => this.getDataLoaderPage(e.target.value)}
+                      />
+                    </Form.Item>
+                  )}
+                  {item.name === 'loader_page' && this.state.styles.loader_page === 'code' && (
+                    <Form.Item>
+                      <ReactQuill
+                        id={item.name}
+                        onChange={this.getDataLoaderPage}
+                        defaultValue={this.state.styles.data_loader_page}
+                        style={{ marginTop: '5%' }}
+                        modules={toolbarEditor}
+                      />
+                    </Form.Item>
                   )}
                 </div>
-                {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
-              </div>
-            ))}
-            <Button type='primary' onClick={this.submit}>
-              Guardar
-            </Button>
-          </div>
-        </div>
+              ))}
+
+              {this.imageDrawer.map((item, key) => (
+                <div key={key}>
+                  <Form.Item label={item.title}>
+                    {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
+
+                    <ImageInput
+                      picture={this.state.styles[item.imageFieldName]}
+                      width={item.width}
+                      height={item.height}
+                      changeImg={(files) => {
+                        this.saveEventImage(files, item.imageFieldName);
+                      }}
+                      errImg={this.state.errImg}
+                    />
+                    {this.state.styles[item.imageFieldName] && (
+                      <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
+                    )}
+                  </Form.Item>
+
+                  {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
+                </div>
+              ))}
+            </Col>
+          </Row>
+        </Form>
         {timeout && <LogOut />}
       </React.Fragment>
     );

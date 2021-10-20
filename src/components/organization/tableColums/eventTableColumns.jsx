@@ -7,8 +7,8 @@ export const columns = (goToEvent) => [
    {
       title: 'Nombre del evento',
       dataIndex: 'name',
-      align: 'center',
-      render(val, item) {
+      /* align: 'center', */
+      /* render(val, item) {
          return (
             <Paragraph
                onClick={() => goToEvent(item._id)}
@@ -20,8 +20,18 @@ export const columns = (goToEvent) => [
                {item.name}
             </Paragraph>
          );
-      },
-      fixed: 'left',
+      }, */
+      /* fixed: 'left', */
+      render(val, item) {
+         return (
+            <Button 
+               type='link'
+               onClick={() => goToEvent(item._id)}
+            >
+               <span style={{color: '#2E9AFE'}}>{item.name}</span>
+            </Button>
+         )
+      }
    },
    {
       title: 'Total usuarios',
@@ -32,16 +42,16 @@ export const columns = (goToEvent) => [
       title: 'Usuarios sin checkIn',
       dataIndex: 'checked_in_not',
       align: 'center',
-      render(val, item) {
+      /* render(val, item) {
          return item.checked_in_not;
-      },
+      }, */
    },
    {
       title: 'Usuarios con checkIn',
       dataIndex: 'checked_in',
       align: 'center',
-      render(val, item) {
+      /* render(val, item) {
          return item.checked_in;
-      },
+      }, */
    },
 ];

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Loading from '../loaders/loading';
 import { useHistory } from 'react-router-dom';
 import { getCurrentUser, OrganizationApi } from '../../helpers/request';
-import { Table, Button, Row } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Table, Button, Row, Col } from 'antd';
+import { PlusOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/eventTableColumns';
 import withContext from '../../Context/withContext';
+import Header from '../../antdComponents/Header';
+import ExportExcel from '../newComponent/ExportExcel'
 
 function OrgEvents(props) {
    const [eventData, setEventData] = useState([]);
@@ -35,28 +37,37 @@ function OrgEvents(props) {
 
    return (
       <>
-         {isLoading ? (
-            <Loading />
-         ) : (
-            <>
-               <Row justify='start' style={{ marginBottom: '10px' }}>
-                  <Button
-                     onClick={() => linkToTheMenuRouteS(`/create-event/${props.cUser?.value?._id}?orgId=${organizationId}`)}
-                     style={{ marginLeft: 20 }}
-                     icon={<PlusOutlined />}>
-                     Crear Evento
-                  </Button>
+         <Header 
+            title='Eventos'
+         />
+         <Table
+            columns={columns(goToEvent)}
+            dataSource={eventData}
+            loading={isLoading}
+            size='small'
+            rowKey='index'
+            pagination={false}
+            title={() => (
+               <Row wrap justify='end' gutter={[8, 8]}>
+                  <Col>
+                     <ExportExcel 
+                        columns={columns(goToEvent)} 
+                        list={eventData} 
+                        fileName={'eventReport'} 
+                     />
+                  </Col>
+                  <Col>
+                     <Button 
+                        type="primary" 
+                        icon={<PlusCircleOutlined />} 
+                        onClick={() => linkToTheMenuRouteS(`/create-event/${props.cUser?.value?._id}?orgId=${organizationId}`)}
+                     >
+                        {'Agregar'}
+                     </Button>
+                  </Col>
                </Row>
-               <Table
-                  columns={columns(goToEvent)}
-                  dataSource={eventData}
-                  size='small'
-                  rowKey='index'
-                  pagination={false}
-                  scroll={{ x: 1300 }}
-               />
-            </>
-         )}
+            )}
+         />
       </>
    );
 }

@@ -2,15 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { OrganizationApi } from '../../helpers/request';
 import Loading from '../loaders/loading';
-import { Form, Input, Button, Row, message } from 'antd';
+import { Form, Input, Button, Row, Col, message } from 'antd';
+import Header from '../../antdComponents/Header';
 
-const layout = {
-   labelCol: {
-      span: 8,
-   },
-   wrapperCol: {
-      span: 16,
-   },
+const formLayout = {
+   labelCol: { span: 24 },
+   wrapperCol: { span: 24 }
 };
 
 function OrganizationInformation(props) {
@@ -30,21 +27,36 @@ function OrganizationInformation(props) {
       }
    }
    return (
-      <Row align='middle' justify='center'>
-         <Form {...layout} name='nest-messages' onFinish={updateOrganization}>
-            <Form.Item name={['organization', 'name']} label='Nombre' initialValue={name}>
-               <Input />
-            </Form.Item>
-            <Form.Item name={['organization', 'description']} label='Descripción' initialValue={description}>
-               <Input.TextArea />
-            </Form.Item>
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-               <Button type='primary' htmlType='submit'>
-                  Editar
-               </Button>
-            </Form.Item>
+      <div>
+         <Form 
+            {...formLayout} 
+            name='nest-messages' 
+            onFinish={updateOrganization}
+         >
+
+         <Header 
+            title={'Información'}
+            save
+            form
+         />
+
+            <Row justify='center' gutter={[8, 8]} wrap>
+               <Col span={12}>
+                  <Form.Item name={['organization', 'name']} label='Nombre' initialValue={name}>
+                     <Input />
+                  </Form.Item>
+                  <Form.Item name={['organization', 'description']} label='Descripción' initialValue={description}>
+                     <Input.TextArea />
+                  </Form.Item>
+                  {/* <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                     <Button type='primary' htmlType='submit'>
+                        Editar
+                     </Button>
+                  </Form.Item> */}
+               </Col>
+            </Row>
          </Form>
-      </Row>
+      </div>
    );
 }
 
