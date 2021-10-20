@@ -1,4 +1,4 @@
-import { Col, Row, Typography, Badge, Spin, Space, Divider } from 'antd';
+import { Col, Row, Typography, Badge, Grid, Space, Divider, Image, Empty, Button } from 'antd';
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { OrganizationFuction } from '../../helpers/request';
@@ -7,9 +7,9 @@ import moment from 'moment';
 import ModalAuth from '../authentication/ModalAuth';
 import ModalLoginHelpers from '../authentication/ModalLoginHelpers';
 import { EditOutlined } from '@ant-design/icons';
+import Loading from '../profile/loading';
 
-const { Title, Text } = Typography;
-
+const { Title, Text, Paragraph } = Typography;
 class EventOrganization extends Component {
   constructor(props) {
     super(props);
@@ -55,7 +55,11 @@ class EventOrganization extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <div
+        style={{
+          backgroundImage: `url(${this.state.organization?.styles?.BackgroundImage})`,
+          backgroundColor: `${this.state.organization?.styles?.containerBgColor || '#FFFFFF'}`,
+        }}>
         {console.log('Marlon', this.state.organization)}
         <ModalAuth
           organization={'landing'}
@@ -67,10 +71,10 @@ class EventOrganization extends Component {
           <>
             {/* BANNER */}
             {this.state.organization !== null && (
-              <div style={{ width: '100%', maxHeight: '350px' }}>
+              <div style={{ width: '100%' }}>
                 {this.state.organization.styles.banner_image !== null || '' ? (
                   <img
-                    style={{ objectFit: 'cover', width: '100%' }}
+                    style={{ objectFit: 'cover', width: '100%', maxHeight: '400px' }}
                     src={this.state.organization.styles.banner_image}
                   />
                 ) : (
@@ -79,29 +83,68 @@ class EventOrganization extends Component {
               </div>
             )}
 
-            <div style={{ padding: '5vw' }}>
+            <div style={{ paddingLeft: '5vw', paddingRight: '5vw', paddingBottom: '5vw' }}>
               {this.state.organization && (
-                <div style={{ marginBottom: '50px', marginTop: '20px' }}>
-                  <Space direction='vertical' size={5}>
-                    <Link
-                      to={`/admin/organization/${this.props.match.params.id}`}
-                      style={{ marginBottom: '-15px', fontSize: '20px', cursor: 'pointer' }}>
-                      <EditOutlined />
-                      Administrar
-                    </Link>
-                    <Text style={{ fontSize: '40px', fontWeight: '600', lineHeight: '2.25rem' }} type='secondary'>
-                      {this.state.organization.name}
-                    </Text>
-                  </Space>
-                </div>
+                <Row
+                  gutter={[10, 10]}
+                  style={{
+                    marginBottom: '40px',
+                    marginTop: '20px',
+                    backgroundColor: '#FFFFFF',
+                    padding: '5px',
+                    borderRadius: '10px',
+                  }}>
+                  <Col xs={24} sm={24} md={24} lg={8} xl={4} xxl={4}>
+                    <Row justify={'start'}>
+                      <Image
+                        style={{
+                          borderRadius: '20px',
+                          objectFit: 'cover',
+                          border: '4px solid #FFFFFF',
+                          //boxShadow: '2px 2px 10px 1px rgba(0,0,0,0.25)',
+                          backgroundColor: '#FFFFFF;',
+                        }}
+                        preview={{ maskClassName: 'roundedMask' }}
+                        src={
+                          this.state.organization?.styles?.event_image ||
+                          'http://via.placeholder.com/500/50D3C9/FFFFFF?text=No%20Image'
+                        }
+                        width={'100%'}
+                        height={'100%'}
+                      />
+                    </Row>
+                  </Col>
+                  <Col xs={24} sm={24} md={24} lg={16} xl={20} xxl={20}>
+                    <Space direction='vertical' size={8} style={{ width: '100%' }}>
+                      <Link
+                        to={`/admin/organization/${this.props.match.params.id}`}
+                        style={{ marginBottom: '-15px', fontSize: '20px', cursor: 'pointer' }}>
+                        <Button type='text' icon={<EditOutlined />}>
+                          Administrar
+                        </Button>
+                      </Link>
+                      <Text style={{ fontSize: '40px', fontWeight: '600', lineHeight: '2.25rem' }} type='secondary'>
+                        {this.state.organization.name}
+                      </Text>
+                      <Paragraph
+                        ellipsis={{
+                          rows: 3,
+                          expandable: true,
+                          symbol: <span style={{ color: '#2D7FD6', fontSize: '12px' }}>Ver más</span>,
+                        }}>
+                        {this.state.organization.description ? this.state.organization.description : ''}
+                      </Paragraph>
+                    </Space>
+                  </Col>
+                </Row>
               )}
-              {/* Lista de evntos próximos */}
-              <div>
+              {/* Lista de eventos próximos */}
+              <div style={{ backgroundColor: '#FFFFFF', padding: '5px', borderRadius: '10px' }}>
                 <Badge offset={[60, 22]} count={`${this.state.events.length} Eventos`}>
                   <Title level={2}>Próximos</Title>
                 </Badge>
                 <Row gutter={[16, 16]}>
-                  {this.state.events &&
+                  {this.state.events && this.state.events.length > 0 ? (
                     this.state.events.map((event, index) => (
                       <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <EventCard
@@ -111,17 +154,22 @@ class EventOrganization extends Component {
                           action={{ name: 'Ver', url: `landing/${event._id}` }}
                         />
                       </Col>
-                    ))}
+                    ))
+                  ) : (
+                    <div style={{ height: '250px', width: '100%' }}>
+                      <Empty description='No hay eventos próximos agendados' />
+                    </div>
+                  )}
                 </Row>
               </div>
               <Divider />
               {/* Lista de eventos pasados */}
-              <div>
+              <div style={{ backgroundColor: '#FFFFFF', padding: '5px', borderRadius: '10px' }}>
                 <Badge offset={[60, 22]} count={`${this.state.eventsOld.length} Eventos`}>
                   <Title level={2}>Pasados</Title>
                 </Badge>
                 <Row gutter={[16, 16]}>
-                  {this.state.eventsOld &&
+                  {this.state.eventsOld && this.state.eventsOld.length > 0 ? (
                     this.state.eventsOld.map((event, index) => (
                       <Col key={index} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <EventCard
@@ -131,7 +179,12 @@ class EventOrganization extends Component {
                           action={{ name: 'Ver', url: `landing/${event._id}` }}
                         />
                       </Col>
-                    ))}
+                    ))
+                  ) : (
+                    <div style={{ height: '250px', width: '100%' }}>
+                      <Empty description='No hay eventos pasados' />
+                    </div>
+                  )}
                 </Row>
               </div>
             </div>
@@ -140,7 +193,7 @@ class EventOrganization extends Component {
               <div style={{ width: '100%', maxHeight: '350px' }}>
                 {this.state.organization.styles.banner_footer !== null || '' ? (
                   <img
-                    style={{ objectFit: 'cover', width: '100%' }}
+                    style={{ objectFit: 'cover', width: '100%', maxHeight: '250px' }}
                     src={this.state.organization.styles.banner_footer}
                   />
                 ) : (
@@ -150,11 +203,11 @@ class EventOrganization extends Component {
             )}
           </>
         ) : (
-          <div style={{ width: '100vw', height: '100vh', textAlign: 'center', paddingTop: '20%' }}>
-            <Spin size='large' />
+          <div style={{ width: '100vw', height: '100vh', textAlign: 'center' }}>
+            <Loading />
           </div>
         )}
-      </React.Fragment>
+      </div>
     );
   }
 }
