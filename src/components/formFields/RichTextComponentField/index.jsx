@@ -15,7 +15,7 @@ function RichTextComponentField ( rawProps ) {
   const editorRef = useRef()
   const props = omit( NOT_PROPS_KEYS, rawProps )
   const formItemProps = pick( FORM_ITEM_PROPS_KEYS, rawProps )
-  const { maxLength, name } = rawProps
+  const { maxLength, name, id } = rawProps
 
   const validate = useCallback( () => {
     if ( editorRef && editorRef.current && typeof editorRef.current.getEditor === 'function' ) {
@@ -51,6 +51,7 @@ function RichTextComponentField ( rawProps ) {
             validateStatus={ fieldError ? "error" : undefined }
           >
             <ReactQuill
+              id={ id }
               ref={ editorRef }
               modules={ toolbarEditor }
               { ...props }              

@@ -38,7 +38,6 @@ describe('Evius Trivia', () => {
     
     cy.get('[name=allow_gradable_survey]').click().then((value) => {
       if(value.button) {
-        console.log(value);
         //If allow_gradable_survey react-quill
       cy.get('[id=initialMessage]').clear()
       cy.get('[id=initialMessage]').type('Mensaje Inicial')

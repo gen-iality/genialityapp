@@ -142,6 +142,7 @@ function Empresas({ event, match }) {
       title: 'Opciones',
       dataIndex: 'id',
       render(value,record) {
+        console.log(value, record);
         return (
           <Row gutter={[8, 8]}>
             {/* <Col>
@@ -160,8 +161,8 @@ function Empresas({ event, match }) {
             <Col>
               <Tooltip placement='topLeft' title='Eliminar'>
                 <Button
-                  key={`removeAction${value.index}`}
-                  id={`removeAction${value.index}`}
+                  key={`removeAction${record.index}`}
+                  id={`removeAction${record.index}`}
                   onClick={() => deleteCompany(value)}
                   icon={<DeleteOutlined />}
                   type='danger'
@@ -226,7 +227,7 @@ function Empresas({ event, match }) {
             </Col>
             <Col>
               <Link to={`${match.url}/configuration`}>
-                <Button type="primary" icon={<SettingOutlined />}>
+                <Button type="primary" icon={<SettingOutlined />} id={'configuration'}>
                   {'Configuración'}
                 </Button>
               </Link>

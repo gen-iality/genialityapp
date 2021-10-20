@@ -261,12 +261,14 @@ function CrearEditarEmpresa( props ) {
                   name='description'
                   label='Descripción larga'
                   maxLength={DESCRIPTION_MAX_LENGTH}
+                  id='description'
                 />
 
                 <RichTextComponentField
                   name='short_description'
                   label='Descripción Corta'
                   maxLength={DESCRIPTION_MAX_LENGTH}
+                  id='short_description'
                 />
 
                 <Field
