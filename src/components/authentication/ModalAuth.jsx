@@ -37,7 +37,10 @@ const ModalAuth = (props) => {
       handleChangeTabModal(props.tab);
     }
   }, [props.tab]);
+
+  console.log('PROPS==>', props);
   useEffect(() => {
+    console.log('PROPSORGANIZATION==>', props.organization);
     async function userAuth() {
       app.auth().onAuthStateChanged((user) => {
         if (user) {
@@ -45,9 +48,9 @@ const ModalAuth = (props) => {
             if (idToken && !Cookie.get('evius_token')) {
               Cookie.set('evius_token', idToken, { expires: 180 });
               let url =
-                props.organization == 'landing'
+                props.organization && props.organization == 'landing'
                   ? `/organization/${props.idOrganization}/events?token=${idToken}`
-                  : props.organization == 'register'
+                  : props.organization && props.organization == 'register'
                   ? `/myprofile?token=${idToken}`
                   : `/landing/${props.cEvent.value?._id}?token=${idToken}`;
               setTimeout(function() {
