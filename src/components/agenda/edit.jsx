@@ -394,7 +394,7 @@ class AgendaEdit extends Component {
         else {
           const agenda = await AgendaApi.create(event._id, info);
           this.setState({ activity_id: agenda._id });
-          this.props.history.push(`/event/${event._id}/agenda`);
+          this.props.history.push(`/eventadmin/${event._id}/agenda`);
         }
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
@@ -707,6 +707,7 @@ class AgendaEdit extends Component {
                   <Row wrap gutter={[8, 8]}>
                     <Col span={23}>
                       <Select
+                        id={'hosts'}
                         isClearable
                         isMulti
                         styles={creatableStyles}
@@ -776,6 +777,7 @@ class AgendaEdit extends Component {
                 )}
                 <Form.Item label={'Documentos'}>
                   <Select
+                    id={'nameDocuments'}
                     isClearable
                     isMulti
                     styles={creatableStyles}
