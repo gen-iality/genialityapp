@@ -69,6 +69,8 @@ class Datos extends Component {
       let fields = [];
       if (organizationId && !this.props.eventID && !this.props.edittemplate) {
         fields = await this.props.getFields();
+        fields = this.orderFieldsByWeight(fields);
+        fields = this.updateIndex(fields);
       } else if (!this.props.edittemplate) {
         fields = await EventFieldsApi.getAll(this.eventID);
 

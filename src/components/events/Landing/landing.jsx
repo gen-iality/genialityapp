@@ -150,7 +150,7 @@ const Landing = (props) => {
 
   return (
     <>
-      <ModalAuth />
+      <ModalAuth organization='event' />
       <ModalLoginHelpers />
       <ModalPermission />
       {/*update: modal de actualizar || register: modal de registro */}

@@ -265,13 +265,15 @@ class Headers extends Component {
                   </Space>
                 )}
 
-              <ModalAuth
-                tab={this.state.tabModal}
-                closeModal={this.modalClose}
-                organization='register'
-                visible={this.state.modalVisible}
-              />
-              <ModalLoginHelpers organization={1} />
+              {window.location.href.toString().includes('events') && (
+                <ModalAuth
+                  tab={this.state.tabModal}
+                  closeModal={this.modalClose}
+                  organization='register'
+                  visible={this.state.modalVisible}
+                />
+              )}
+              {window.location.href.toString().includes('events') && <ModalLoginHelpers organization={1} />}
               {/* Dropdown de navegacion para el usuario  */}
               {this.state.userEvent && (
                 <UserStatusAndMenu
