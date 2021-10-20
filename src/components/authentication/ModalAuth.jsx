@@ -1,5 +1,5 @@
 import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
-import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin, Image } from 'antd';
+import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin, Image, Skeleton } from 'antd';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
@@ -9,7 +9,6 @@ import { useIntl } from 'react-intl';
 
 import React, { useContext, useEffect, useState } from 'react';
 import { EventsApi, UsersApi } from '../../helpers/request';
-import { stubTrue } from 'lodash-es';
 
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
@@ -29,6 +28,7 @@ const ModalAuth = (props) => {
   const screens = useBreakpoint();
   const [loading, setLoading] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
+  const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
   let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
   const intl = useIntl();
@@ -64,8 +64,25 @@ const ModalAuth = (props) => {
     };
   }, []);
 
+  const registerUser = async (values) => {
+    console.log('VALUES==>', values);
+    setLoading(true);
+    try {
+      let resp = await UsersApi.createUser(values);
+      if (resp) {
+        console.log('REGISTER USER==>', resp);
+      }
+    } catch (error) {
+      setErrorRegisterUSer(true);
+      console.log('ERROR REGISTER');
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     form1.resetFields();
+    setErrorRegisterUSer(false);
+    setErrorLogin(false);
   }, [typeModal, tabLogin]);
   const callback = (key) => {
     form1.resetFields();
@@ -101,38 +118,38 @@ const ModalAuth = (props) => {
       })
       .catch(async (e) => {
         console.log('ERROR==>', e);
-        // if(props.organization!=='register'){
-        let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
-        if (user.data.length > 0) {
-          if (
-            user.data[0].properties?.password == data.password ||
-            user.data[0].contrasena == data.password ||
-            user.data[0]?.user?.contrasena == data.password
-          ) {
-            let url =
-              props.organization == 'landing'
-                ? `/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}`
-                : `/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
-            window.location.href = url;
-            loginFirst = true;
-            setErrorLogin(false);
-            //setLoading(false);
-            //loginFirebase(data)
-            //leafranciscobar@gmail.com
-            //Mariaguadalupe2014
+        if (props.organization !== 'register') {
+          let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
+          if (user.data.length > 0) {
+            if (
+              user.data[0].properties?.password == data.password ||
+              user.data[0].contrasena == data.password ||
+              user.data[0]?.user?.contrasena == data.password
+            ) {
+              let url =
+                props.organization == 'landing'
+                  ? `/organization/${props.idOrganization}/events?token=${user.data[0]?.user?.initial_token}`
+                  : `/landing/${props.cEvent.value?._id}?token=${user.data[0]?.user?.initial_token}`;
+              window.location.href = url;
+              loginFirst = true;
+              setErrorLogin(false);
+              //setLoading(false);
+              //loginFirebase(data)
+              //leafranciscobar@gmail.com
+              //Mariaguadalupe2014
+            } else {
+              setErrorLogin(true);
+              setLoading(false);
+            }
           } else {
             setErrorLogin(true);
             setLoading(false);
           }
         } else {
-          setErrorLogin(true);
-          setLoading(false);
+          let login = await EventsApi.signInWithEmailAndPassword(data);
+          let user = await UsersApi.findByEmail(data.email);
+          console.log('USEROBTENIDO==>', user, login);
         }
-        // }else{
-        //let login= await EventsApi.signInWithEmailAndPassword(data)
-        // let user=await UsersApi.findByEmail(data.email);
-        // console.log("USEROBTENIDO==>",user,login)
-        // }
       });
   };
 
@@ -151,8 +168,8 @@ const ModalAuth = (props) => {
         centered
         footer={null}
         zIndex={1000}
-        closable={false}
-        visible={true}>
+        closable={props.organization == 'register' ? true : false}
+        visible={props.organization == 'register' ? props.visible : true}>
         <Tabs onChange={callback} centered size='large' activeKey={tabLogin}>
           <TabPane tab={intl.formatMessage({ id: 'modal.title.login', defaultMessage: 'Iniciar sesión' })} key='1'>
             <Form
@@ -163,11 +180,17 @@ const ModalAuth = (props) => {
               style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
               {props.organization == 'landing' && (
                 <Form.Item>
-                  <Image
-                    src={props.logo ? props.logo : 'http://via.placeholder.com/500/50D3C9/FFFFFF?text=No%20Image'}
-                    width={200}
-                    height={200}
-                  />
+                  {props.logo ? (
+                    <Image
+                      style={{ borderRadius: '100px', objectFit: 'cover' }}
+                      preview={{ maskClassName: 'circularMask' }}
+                      src={props.logo ? props.logo : 'http://via.placeholder.com/500/50D3C9/FFFFFF?text=No%20Image'}
+                      width={200}
+                      height={200}
+                    />
+                  ) : (
+                    <Skeleton.Avatar active={true} size={200} shape='circle' />
+                  )}
                 </Form.Item>
               )}
               <Form.Item
@@ -314,8 +337,9 @@ const ModalAuth = (props) => {
                       fields={fieldsUser}
                       organization={true}
                       options={[]}
-                      callback={() => alert('TODO BIEN')}
-                      loadingregister={null}
+                      callback={(values) => registerUser(values)}
+                      loadingregister={loading}
+                      errorRegisterUser={errorRegisterUSer}
                     />
                   )}
                 </div>
@@ -332,7 +356,7 @@ export default withContext(ModalAuth);
 const fieldsUser = [
   {
     name: 'avatar',
-    mandatory: true,
+    mandatory: false,
     visibleByContacts: false,
     visibleByAdmin: false,
     label: 'Imagen de perfil',
@@ -404,5 +428,29 @@ const fieldsUser = [
     index: 1,
     order_weight: 3,
     sensibility: true,
+  },
+  {
+    name: 'password',
+    mandatory: true,
+    visibleByContacts: false,
+    visibleByAdmin: false,
+    label: 'Contraseña',
+    description: null,
+    type: 'password',
+    justonebyattendee: false,
+    updated_at: '2021-09-22 14:25:33',
+    created_at: '2021-09-21 21:56:24',
+    _id: {
+      $oid: '6160b1a7f6cfdd38d4502e74',
+    },
+    author: null,
+    categories: [],
+    event_type: null,
+    organiser: null,
+    organizer: null,
+    currency: {},
+    tickets: [],
+    index: 2,
+    order_weight: 1,
   },
 ];

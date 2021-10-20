@@ -255,6 +255,7 @@ export const EventsApi = {
       `/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`
     );
   },
+
   //obtener products subasta silenciosa
   getProducts: async (eventId) => {
     return await Actions.get(`/api/events/${eventId}/products`);
@@ -347,6 +348,9 @@ export const UsersApi = {
 
   deleteUsers: async (user) => {
     return await Actions.delete(`/api/users`, user);
+  },
+  createUser: async (user) => {
+    return await Actions.post(`/api/users`, user);
   },
 };
 
@@ -557,6 +561,9 @@ export const OrganizationApi = {
   },
   updateTemplateOrganization: async (orgId, idTemplate, data) => {
     return await Actions.put(`/api/organizations/${orgId}/templateproperties/${idTemplate}`, data);
+  },
+  editMenu: async (data, id) => {
+    return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=true`, data);
   },
 };
 export const BadgeApi = {

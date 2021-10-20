@@ -201,7 +201,11 @@ function Organization(props) {
                     )}
                   />
 
-                  <Route exact path={`${props.match.url}/menuItems`} render={() => <MenuLanding organization={1} />} />
+                  <Route
+                    exact
+                    path={`${props.match.url}/menuItems`}
+                    render={() => <MenuLanding organizationObj={organization} organization={1} />}
+                  />
 
                   <Route component={NoMatch} />
                 </Switch>

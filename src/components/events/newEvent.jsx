@@ -30,9 +30,9 @@ class NewEvent extends Component {
     super(props);
     let valores = window.location.search;
     let urlParams = new URLSearchParams(valores);
-    
+
     this.state = {
-       orgId:urlParams.get('orgId'),
+      orgId: urlParams.get('orgId'),
       stepsValid: {
         info: false,
         fields: false,
@@ -186,7 +186,10 @@ class NewEvent extends Component {
         const result = await Actions.create('/api/events', data);
         if (result._id) {
           //HABILTAR SECCIONES POR DEFECTO
-          const sections = await Actions.put(`api/events/${result._id}`, newMenu);
+          const sections = await Actions.put(
+            `api/events/${result._id}`,
+            eventNewContext.selectOrganization.itemsMenu || newMenu
+          );
 
           if (sections?._id) {
             //CREAR ACTIVIDAD CON EL MISMO NOMBRE DEL EVENTO
@@ -213,17 +216,17 @@ class NewEvent extends Component {
                 }
               } else {
                 //CREAR TEMPLATE PARA EL EVENTO
-                let template=!eventNewContext.templateId&&true;
-                if(eventNewContext.templateId){
-                  template= await EventsApi.createTemplateEvent(result._id,eventNewContext.templateId);
-                }               
-               if(template){
-                // console.log("RESPUESTA TEMPLATE==>",template)
-                 message.success('Evento creado correctamente..');
-                 window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
-               }else{
-                message.error('Error al crear evento con su template');
-               }               
+                let template = !eventNewContext.templateId && true;
+                if (eventNewContext.templateId) {
+                  template = await EventsApi.createTemplateEvent(result._id, eventNewContext.templateId);
+                }
+                if (template) {
+                  // console.log("RESPUESTA TEMPLATE==>",template)
+                  message.success('Evento creado correctamente..');
+                  window.location.replace(`${window.location.origin}/eventadmin/${result._id}`);
+                } else {
+                  message.error('Error al crear evento con su template');
+                }
               }
             }
           } else {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, Button, Typography, Upload, message } from 'antd';
+import { Modal, Form, Input, Button, Typography, Upload, message, Space } from 'antd';
 import ImgCrop from 'antd-img-crop';
+import { PictureOutlined } from '@ant-design/icons';
 import functionCreateNewOrganization from './functionCreateNewOrganization';
 
 const ModalCreateOrg = (props) => {
@@ -32,7 +33,14 @@ const ModalCreateOrg = (props) => {
 
   return (
     <Modal
-      bodyStyle={{ textAlign: 'center', paddingRight: '80px', paddingLeft: '80px', paddingTop: '80px', height: '70vh' }}
+      bodyStyle={{
+        textAlign: 'center',
+        paddingRight: '80px',
+        paddingLeft: '80px',
+        paddingTop: '80px',
+        paddingBottom: '50px',
+        height: 'auto',
+      }}
       centered
       footer={null}
       zIndex={1000}
@@ -67,8 +75,11 @@ const ModalCreateOrg = (props) => {
               fileList={imageAvatar}
               beforeUpload={beforeUpload}>
               {imageAvatar === null && (
-                <Button type='primary' shape='circle' style={{ height: '100px', width: '100px' }}>
-                  Subir logo
+                <Button type='primary' shape='circle' style={{ height: '150px', width: '150px' }}>
+                  <Space direction='vertical'>
+                    <PictureOutlined style={{ fontSize: '40px' }} />
+                    Subir logo
+                  </Space>
                 </Button>
               )}
             </Upload>

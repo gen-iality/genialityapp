@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Card, Col, Layout, Menu, Row, Space, Statistic, Tabs, Typography, Grid, Divider } from 'antd';
+import { Avatar, Card, Col, Layout, Row, Space, Statistic, Tabs, Typography, Grid, Divider, Skeleton } from 'antd';
 import { AppstoreFilled, SettingOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import OrganizationCard from './organizationCard';
 import NewCard from './newCard';
@@ -10,6 +10,7 @@ import EventCard from '../shared/eventCard';
 import { Link } from 'react-router-dom';
 import * as Cookie from 'js-cookie';
 import moment from 'moment';
+import Loading from './loading';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -90,11 +91,7 @@ const MainProfile = (props) => {
             direction='vertical'
             style={{ textAlign: 'center', paddingLeft: '15px', paddingRight: '15px' }}>
             {isLoading ? (
-              <Avatar
-                style={{ backgroundColor: '#50D3C9' }}
-                size={150}
-                icon={<LoadingOutlined style={{ fontSize: '50px' }} />}
-              />
+              <Skeleton.Avatar active={true} size={150} shape='circle' />
             ) : (
               <>
                 {props?.cUser?.value?.picture ? (
@@ -152,11 +149,7 @@ const MainProfile = (props) => {
                 }
                 key='1'>
                 {isLoading ? (
-                  <Space
-                    direction='horizontal'
-                    style={{ width: '100%', justifyContent: 'center', alignContent: 'center' }}>
-                    <LoadingOutlined style={{ fontSize: '50px' }} />
-                  </Space>
+                  <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
                     <Col span={24}>
@@ -244,11 +237,7 @@ const MainProfile = (props) => {
             )}
             <TabPane tab='Organizaciones' key='2'>
               {isLoading ? (
-                <Space
-                  direction='horizontal'
-                  style={{ width: '100%', justifyContent: 'center', alignContent: 'center' }}>
-                  <LoadingOutlined style={{ fontSize: '50px' }} />
-                </Space>
+                <Loading />
               ) : (
                 <Row gutter={[16, 16]}>
                   <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
@@ -267,11 +256,7 @@ const MainProfile = (props) => {
             </TabPane>
             <TabPane tab='Eventos creados' key='3'>
               {isLoading ? (
-                <Space
-                  direction='horizontal'
-                  style={{ width: '100%', justifyContent: 'center', alignContent: 'center' }}>
-                  <LoadingOutlined style={{ fontSize: '50px' }} />
-                </Space>
+                <Loading />
               ) : (
                 <Row gutter={[16, 16]}>
                   <Col xs={24} sm={12} md={12} lg={8} xl={6}>
@@ -309,11 +294,7 @@ const MainProfile = (props) => {
             </TabPane>
             <TabPane tab='Registros a eventos' key='4'>
               {isLoading ? (
-                <Space
-                  direction='horizontal'
-                  style={{ width: '100%', justifyContent: 'center', alignContent: 'center' }}>
-                  <LoadingOutlined style={{ fontSize: '50px' }} />
-                </Space>
+                <Loading />
               ) : (
                 <Row gutter={[16, 16]}>
                   {tickets.map((event) => {
