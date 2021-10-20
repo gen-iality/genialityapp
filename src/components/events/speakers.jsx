@@ -21,12 +21,11 @@ class Speakers extends Component {
       speakersWithCategory: [],
       speakersWithoutCategory: [],
       speakerCategories: [],
-      renderSpeakerCategories: false
+      renderSpeakerCategories: false,
     };
   }
 
   async componentDidMount() {
-
     //Se hace la consulta a la api de speakers
     let speakers = await SpeakersApi.byEvent(this.props.cEvent.value._id);
 
@@ -103,7 +102,7 @@ class Speakers extends Component {
     let InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(eventId, id);
     //Se manda al estado la consulta
     this.setState({
-      activityesBySpeaker: InfoActivityesBySpeaker.data
+      activityesBySpeaker: InfoActivityesBySpeaker.data,
     });
   }
 
@@ -117,10 +116,10 @@ class Speakers extends Component {
         nombre: name,
         cargo: profession,
         descripcion: description,
-        category
+        category,
       },
 
-      modalVisible: true
+      modalVisible: true,
     });
   }
 
@@ -151,7 +150,7 @@ class Speakers extends Component {
       speakerCategories,
       speakersWithCategory,
       speakersWithoutCategory,
-      renderSpeakerCategories
+      renderSpeakerCategories,
     } = this.state;
 
     let eventId = this.props.cEvent.value._id;
@@ -171,7 +170,7 @@ class Speakers extends Component {
                         padding: '5px',
                         borderRadius: '5px',
                         backgroundColor: '#FFFFFF',
-                        boxSizing: 'border-box'
+                        boxSizing: 'border-box',
                       }}>
                       <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
                     </div>
@@ -201,8 +200,8 @@ class Speakers extends Component {
                                         );
                                       }
                                     }}
-                                    hoverable
-                                    style={{ paddingTop: '30px' }}
+                                    hoverable={speaker.description ? true : false}
+                                    style={{ paddingTop: '30px', borderRadius: '20px' }}
                                     cover={
                                       speaker.image ? (
                                         <Avatar
@@ -218,17 +217,19 @@ class Speakers extends Component {
                                         />
                                       )
                                     }
-                                    actions={[this.btnViewMore(speaker)]}>
+                                    actions={speaker.description && [this.btnViewMore(speaker)]}>
                                     <Meta
                                       title={[
-                                        <div style={{textAlign:'center'}} key={'speaker-name' + key}>
-                                          <span >{speaker.name}</span>
-                                        </div>
+                                        <div style={{ textAlign: 'center' }} key={'speaker-name' + key}>
+                                          <span>{speaker.name}</span>
+                                        </div>,
                                       ]}
                                       description={[
-                                        <div style={{ minHeight: '100px' }} key={'speaker-description' + key}>
+                                        <div
+                                          style={{ minHeight: '100px', textAlign: 'center' }}
+                                          key={'speaker-description' + key}>
                                           <p>{speaker.profession}</p>
-                                        </div>
+                                        </div>,
                                       ]}
                                     />
                                   </Card>
@@ -246,7 +247,9 @@ class Speakers extends Component {
           </>
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
-        <div className='container-calendar-speaker calendar-speakers' style={{ marginTop: '50px' }}>
+        <div
+          className='container-calendar-speaker calendar-speakers'
+          style={{ marginTop: '40px', marginBottom: '40px' }}>
           {/* Mapeo de datos para mostrar los Speakers */}
           <div className='calendar-speakers'>
             {speakersWithoutCategory.length &&
@@ -270,8 +273,8 @@ class Speakers extends Component {
                         );
                       }
                     }}
-                    hoverable
-                    style={{ paddingTop: '30px' }}
+                    hoverable={speaker.description ? true : false}
+                    style={{ paddingTop: '30px', borderRadius: '20px' }}
                     cover={
                       speaker.image ? (
                         <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} src={speaker.image} />
@@ -279,17 +282,17 @@ class Speakers extends Component {
                         <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} icon={<UserOutlined />} />
                       )
                     }
-                    actions={[this.btnViewMore(speaker)]}>
+                    actions={speaker.description && [this.btnViewMore(speaker)]}>
                     <Meta
                       title={[
-                        <div style={{textAlign:'center'}} key={'speaker-name  ' + key}>
-                          <span style={{ fontSize: '18px', fontWeight: 'bold',  }}>{speaker.name}</span>
-                        </div>
+                        <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
+                          <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{speaker.name}</span>
+                        </div>,
                       ]}
                       description={[
-                        <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign:'center' }}>
+                        <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
                           <p>{speaker.profession}</p>
-                        </div>
+                        </div>,
                       ]}
                     />
                   </Card>
@@ -301,7 +304,13 @@ class Speakers extends Component {
         {/* Modal de Speakers para mostrar la información del conferencista junto con sus actividades */}
 
         <Modal
-          title={infoSpeaker.category ? infoSpeaker.category : this.props.cEvent.value._id!=='60cb7c70a9e4de51ac7945a2'? 'Conferencista':'Artista'}
+          title={
+            infoSpeaker.category
+              ? infoSpeaker.category
+              : this.props.cEvent.value._id !== '60cb7c70a9e4de51ac7945a2'
+              ? 'Conferencista'
+              : 'Artista'
+          }
           centered
           width={1000}
           visible={this.state.modalVisible}
@@ -309,7 +318,7 @@ class Speakers extends Component {
           footer={[
             <Button key='cerrar' type='primary' onClick={() => this.setModalVisible(false)}>
               Cerrar
-            </Button>
+            </Button>,
           ]}>
           <Row>
             {/* Imagen del conferencista */}
@@ -367,5 +376,5 @@ class Speakers extends Component {
   }
 }
 
-let SpeakerswithContext  =  withContext(Speakers)
+let SpeakerswithContext = withContext(Speakers);
 export default SpeakerswithContext;

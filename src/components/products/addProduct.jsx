@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Card, Row, Input, Form, message, Col, Modal } from 'antd';
 import { withRouter } from 'react-router';
-import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
 import { Actions, EventsApi } from '../../helpers/request';

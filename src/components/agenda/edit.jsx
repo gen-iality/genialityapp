@@ -254,7 +254,6 @@ class AgendaEdit extends Component {
     if (name === 'requires_registration') {
       value = e.target.checked;
     }
-
     // BACKLOG -> porque host_id se setea siempre que se setea un estado
     this.setState({ [name]: value });
   };
@@ -489,14 +488,16 @@ class AgendaEdit extends Component {
     //const description_storage = window.sessionStorage.getItem('description');
 
     const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
-    const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');  
+    const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
     const activity_categories_ids =
-    selectedCategories!==undefined?  selectedCategories[0] === undefined ? [] : selectedCategories.map(({ value }) => value):[];
-    
+      selectedCategories !== undefined
+        ? selectedCategories[0] === undefined
+          ? []
+          : selectedCategories.map(({ value }) => value)
+        : [];
+
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
-   
-    const host_ids = selectedHosts!==undefined ? selectedHosts.length == 1 && selectedHosts[0]==undefined  ? [] : selectedHosts.filter((host)=>host!==undefined).map(({ value }) => value && value):[];
-    
+    const host_ids = selectedHosts >= 0 ? [] : selectedHosts?.filter((host) => host != null).map(({ value }) => value);
     const type_id = selectedType === undefined ? '' : selectedType.value;
     return {
       name,
@@ -542,7 +543,7 @@ class AgendaEdit extends Component {
 
   //Validación de campos
 
-  validForm = () => {    
+  validForm = () => {
     let title = [];
     if (this.state.name.length <= 0) title.push('El nombre es requerido');
 

@@ -3,7 +3,7 @@
     display: grid;
     justify-content: center;
     grid-template-columns: repeat(auto-fill, minmax(290px, 26rem));
-    grid-gap: 50px;
+    grid-gap: 40px;
   }
 
   .content-information-speakers {
@@ -12,4 +12,12 @@
       min-height: 5rem;
     }
   }
+}
+
+.ant-card-actions {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #fff0;
+  border-top: 1px solid #f0f0f0;
 }

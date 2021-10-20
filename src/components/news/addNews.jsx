@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import { useState } from 'react';
 import { withRouter } from 'react-router';
 import { Input, Form, DatePicker } from 'antd';
-import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
 import { toast } from 'react-toastify';
@@ -12,6 +11,7 @@ import { Actions, NewsFeed } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import { useEffect } from 'react';
+import EviusReactQuill from '../shared/eviusReactQuill'; 
 
 export const toolbarEditor = {
   toolbar: [
@@ -172,7 +172,7 @@ function AddNews(props) {
             props.eventId
           );
           if (newRole) {
-            props.history.push(`/event/${props.eventId}/news`);
+            props.history.push(`/eventadmin/${props.eventId}/news`);
           }
         }
       } catch (e) {
@@ -183,7 +183,7 @@ function AddNews(props) {
   return (
     <div>
       <Row>
-        <ArrowLeftOutlined /> <span style={{ marginLeft: 30 }}>Agregar Noticias</span>
+        <ArrowLeftOutlined onClick={()=> props.history.push(`/eventadmin/${props.eventId}/news`)} /> <span style={{ marginLeft: 30 }}>Agregar Noticias</span>
       </Row>
       <Card style={{ width: 950, margin: 'auto', marginTop: 30 }}>
         <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} onFinish={saveNew}>
@@ -205,13 +205,13 @@ function AddNews(props) {
             />
           </Form.Item>
           <Form.Item label={'Subtítulo *'}>
-            <ReactQuill value={descriptionShort} modules={toolbarEditor} onChange={changeDescriptionShort} />
+            <EviusReactQuill data={descriptionShort} onChange={changeDescriptionShort} />
             {error != null && error.descriptionShort && (
               <small style={{ color: 'red' }}>El subtítulo es requerido</small>
             )}
           </Form.Item>
           <Form.Item label={'Noticia: *'}>
-            <ReactQuill value={description} modules={toolbarEditor} onChange={changeDescription} />
+            <EviusReactQuill data={description}  onChange={changeDescription} />
             {error != null && error.description && <small style={{ color: 'red' }}>La noticia es requerido</small>}
           </Form.Item>
           <Form.Item label={'Imagen: *'}>

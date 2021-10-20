@@ -10,6 +10,7 @@ import Datos from '../events/datos';
 import MemberSettings from './memberSettings';
 import { Tag } from 'antd';
 import { DoubleRightOutlined } from '@ant-design/icons';
+import MenuLanding from '../menuLanding';
 
 function Organization(props) {
   const [organization, setOrganization] = useState({});
@@ -25,7 +26,22 @@ function Organization(props) {
     getOrganizationData();
   }, [props.location.pathname]);
 
-  console.log("props.match.params.id",props.match.params.id)
+  console.log('props.match.params.id', props.match.params.id);
+  async function updateTemplate(template, fields) {
+    let newTemplate = {
+      name: template.template.name,
+      user_properties: fields,
+    };
+    let resp = await OrganizationApi.updateTemplateOrganization(
+      props.match.params.id,
+      template.template._id,
+      newTemplate
+    );
+    if (resp) {
+      return true;
+    }
+    return false;
+  }
   return (
     <>
       {isLoading ? (
@@ -89,6 +105,15 @@ function Organization(props) {
                   Configuración de plantillas
                 </NavLink>
               </p>
+              <p className='menu-label has-text-centered-mobile'>
+                <NavLink
+                  className='item'
+                  // onClick={this.handleClick}
+                  activeClassName={'active'}
+                  to={`${props.match.url}/menuItems`}>
+                  Menú items
+                </NavLink>
+              </p>
             </div>
           </aside>
           <div className='column is-10'>
@@ -132,8 +157,51 @@ function Organization(props) {
                   <Route
                     exact
                     path={`${props.match.url}/templatesettings`}
-                    render={() => <Datos  type="organization" eventID={props.match.params.id} org={organization} url={props.match.url} />}
+                    render={() => (
+                      <Datos
+                        type='organization'
+                        eventID={props.match.params.id}
+                        org={organization}
+                        url={props.match.url}
+                        edittemplate={true}
+                        createNewField={async (fields, template, updateTable) => {
+                          let fieldsNew = Array.from(template.datafields || []);
+                          fieldsNew.push(fields);
+                          let resp = await updateTemplate(template, fieldsNew);
+                          if (resp) {
+                            updateTable(fieldsNew);
+                          }
+                          //console.log('ADDFILED==>', resp, newTemplate);
+                        }}
+                        orderFields={async (fields, template, updateTable) => {
+                          let resp = await updateTemplate(template, fields);
+                          if (resp) {
+                            updateTable(fields);
+                          }
+                        }}
+                        editField={async (fieldId, fieldupdate, template, updateTable) => {
+                          template.datafields = template.datafields.map((field) => {
+                            return field?.order_weight == fieldupdate?.order_weight ? fieldupdate : field;
+                          });
+                          let resp = await updateTemplate(template, template.datafields);
+                          if (resp) {
+                            updateTable(template.datafields);
+                          }
+                        }}
+                        deleteField={async (nameField, template, updateTable) => {
+                          console.log(nameField, template);
+                          let newtemplate = template.datafields?.filter((field) => field.name != nameField);
+                          console.log('TEMPLATES==>', newtemplate);
+                          let resp = await updateTemplate(template, newtemplate);
+                          if (resp) {
+                            updateTable(newtemplate);
+                          }
+                        }}
+                      />
+                    )}
                   />
+
+                  <Route exact path={`${props.match.url}/menuItems`} render={() => <MenuLanding organization={1} />} />
 
                   <Route component={NoMatch} />
                 </Switch>

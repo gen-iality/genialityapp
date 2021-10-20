@@ -308,7 +308,7 @@ class ListEventUser extends Component {
   };
 
   haveRequestUser(user){
-    console.log("HEPERVALUE==>",this.props.cHelper.requestSend)
+    //console.log("HEPERVALUE==>",this.props.cHelper.requestSend)
    return haveRequest(user,this.props.cHelper.requestSend);
   }
 
@@ -583,7 +583,7 @@ class ListEventUser extends Component {
                                     <Row>
                                       <Col xs={24}>
                                         <div>
-                                          {console.log("ASSISTANTDATA==>",asistantData )}
+                                          {/*console.log("ASSISTANTDATA==>",asistantData )*/}
                                           {/* {!data.visible || !data.visibleByContacts && */
                                           asistantData.map(
                                             (property, propertyIndex) =>

@@ -1,5 +1,5 @@
 import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
-import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin } from 'antd';
+import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin, Image } from 'antd';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
@@ -145,6 +145,7 @@ const ModalAuth = (props) => {
     props.cUser?.value == null &&
     typeModal == null && (
       <Modal
+        maskStyle={props.organization == 'landing' && { backgroundColor: '#333333' }}
         onCancel={props.organization == 'register' ? () => props.closeModal() : null}
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
@@ -160,6 +161,15 @@ const ModalAuth = (props) => {
               onFinishFailed={onFinishFailed}
               layout='vertical'
               style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
+              {props.organization == 'landing' && (
+                <Form.Item>
+                  <Image
+                    src={props.logo ? props.logo : 'http://via.placeholder.com/500/50D3C9/FFFFFF?text=No%20Image'}
+                    width={200}
+                    height={200}
+                  />
+                </Form.Item>
+              )}
               <Form.Item
                 label={intl.formatMessage({ id: 'modal.label.email', defaultMessage: 'Correo electrónico' })}
                 name='email'
@@ -281,34 +291,36 @@ const ModalAuth = (props) => {
               </div>
             )}
           </TabPane>
-          {props.cEventUser?.value == null && props.organization !== 'landing' && (
-            <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
-              <div
-                // className='asistente-list'
-                style={{
-                  height: 'auto',
-                  overflowY: 'hidden',
-                  paddingLeft: '5px',
-                  paddingRight: '5px',
-                  paddingTop: '0px',
-                  paddingBottom: '0px',
-                }}>
-                {props.organization != 'register' && <FormComponent />}
-                {props.organization == 'register' && (
-                  <FormComponent
-                    conditionalsOther={[]}
-                    initialOtherValue={{}}
-                    eventUserOther={{}}
-                    fields={fieldsUser}
-                    organization={true}
-                    options={[]}
-                    callback={() => alert('TODO BIEN')}
-                    loadingregister={null}
-                  />
-                )}
-              </div>
-            </TabPane>
-          )}
+          {props.cEventUser?.value == null &&
+            props.organization !== 'landing' &&
+            props.cEvent.value?._id != '60797bfb2a9cc06ce973a1f4' && (
+              <TabPane tab={intl.formatMessage({ id: 'modal.title.register', defaultMessage: 'Registrarme' })} key='2'>
+                <div
+                  // className='asistente-list'
+                  style={{
+                    height: 'auto',
+                    overflowY: 'hidden',
+                    paddingLeft: '5px',
+                    paddingRight: '5px',
+                    paddingTop: '0px',
+                    paddingBottom: '0px',
+                  }}>
+                  {props.organization != 'register' && <FormComponent />}
+                  {props.organization == 'register' && (
+                    <FormComponent
+                      conditionalsOther={[]}
+                      initialOtherValue={{}}
+                      eventUserOther={{}}
+                      fields={fieldsUser}
+                      organization={true}
+                      options={[]}
+                      callback={() => alert('TODO BIEN')}
+                      loadingregister={null}
+                    />
+                  )}
+                </div>
+              </TabPane>
+            )}
         </Tabs>
       </Modal>
     )
