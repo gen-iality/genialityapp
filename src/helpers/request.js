@@ -524,19 +524,19 @@ export const OrganizationApi = {
     return await Actions.getOne(`/api/organizations/${id}/`, 'events');
   },
   getUsers: async (id) => {
-    return await Actions.get(`/api/organizations/${id}/users`);
+    return await Actions.get(`/api/organizations/${id}/organizationusers`);
   },
   getUser: async (org, member) => {
     return await Actions.getOne(`/api/organizations/${org}/users/`, member);
   },
   saveUser: async (org, data) => {
-    return await Actions.post(`/api/organizations/${org}/users`, data);
+    return await Actions.post(`/api/organizations/${org}/addorganizationuser`, data);
   },
   editUser: async (org, member, data) => {
-    return await Actions.edit(`/api/organizations/${org}/users`, data, member);
+    return await Actions.edit(`/api/organizations/${org}/organizationusers`, data, member);
   },
   deleteUser: async (org, member) => {
-    return await Actions.delete(`/api/organizations/${org}/users/`, member);
+    return await Actions.delete(`/api/organizations/${org}/organizationusers`, member);
   },
   getEventsStatistics: async (org) => {
     return await Actions.get(`/api/organizations/${org}/eventsstadistics`);
