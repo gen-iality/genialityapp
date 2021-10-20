@@ -11,7 +11,8 @@ export const createChatRoom = (idroom) => {
           .doc('initial')
           .set({
             name: 'Evius.co',
-            profilePicUrl: 'https://storage.googleapis.com/eviusauth.appspot.com/evius/events/Re391nNxdz7DhzJLuRekOW67j9ejpDYLsJ6xOE8U.jpg',
+            profilePicUrl:
+              'https://storage.googleapis.com/eviusauth.appspot.com/evius/events/Re391nNxdz7DhzJLuRekOW67j9ejpDYLsJ6xOE8U.jpg',
             text: 'Bienvenidos al chat de Evius.co',
             timestamp: app.firestore.FieldValue.serverTimestamp(),
           })
@@ -28,4 +29,31 @@ export const createChatRoom = (idroom) => {
     .catch(function(error) {
       console.error('There was an error uploading a file to Cloud Storage:', error);
     });
+};
+
+const addInitalMessage = (colection) => {
+  firestoreeviuschat
+    .collection(colection)
+    .add({
+      name: 'Evius',
+      text: 'Bienvenidos al chat de Evius',
+      profilePicUrl: 'https://cutt.ly/sRxhivy',
+      timestamp: app.firestore.FieldValue.serverTimestamp(),
+    })
+    .then(function(messageRef) {})
+    .then(() => console.log('se escribio el msj'))
+    .catch(function(error) {
+      console.error('There was an error uploading a file to Cloud Storage:', error);
+    });
+};
+
+export const createChatInitalPrivate = (idchat) => {
+  console.log("que le envio",idchat);
+  firestoreeviuschat.collection('messages' + idchat).get().then((response) => {
+    // console.log("response",response)
+    if(response.docs.length==0) {
+      addInitalMessage('messages' + idchat)
+    }
+  })
+
 };

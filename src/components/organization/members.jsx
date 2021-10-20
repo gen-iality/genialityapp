@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { OrganizationApi, RolAttApi } from '../../helpers/request';
-import { parseData2Excel } from '../../helpers/utils';
-import Loading from '../loaders/loading';
 import { FormattedDate, FormattedTime } from 'react-intl';
-import SearchComponent from '../shared/searchTable';
-import Pagination from '../shared/pagination';
-import ErrorServe from '../modal/serverError';
-import ImportUsers from '../import-users/importUser';
-import UserOrg from '../modal/userOrg';
 /** export Excel */
 import { useHistory } from 'react-router-dom';
-import { Table, Typography, Button, Select, Row } from 'antd';
-import { UserAddOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Table, Typography, Button, Row } from 'antd';
+import { UserAddOutlined, DownloadOutlined, LoadingOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
-import { Background } from 'react-parallax';
 import ModalMembers from '../modal/modalMembers';
 import moment from 'moment';
 import withContext from '../../Context/withContext';
@@ -38,7 +30,6 @@ function OrgMembers(props) {
   async function getEventsStatisticsData() {
     const { data } = await OrganizationApi.getUsers(organizationId);
     const fieldsMembersData = [];
-
     data.map((membersData) => {
       const properties = {
         _id: membersData._id,
@@ -49,6 +40,7 @@ function OrgMembers(props) {
 
       fieldsMembersData.push(properties);
     });
+    console.log('10. fieldsMembersData ', fieldsMembersData);
     setMembersData(fieldsMembersData);
     setIsLoading(false);
   }
@@ -58,11 +50,14 @@ function OrgMembers(props) {
     setRoleList(roleListData);
   }
 
-  useEffect(() => {
+  function startingComponent() {
     getEventsStatisticsData();
     setLastUpdate(new Date());
     getRoleList();
     setExtraFields(props.org.user_properties);
+  }
+  useEffect(() => {
+    startingComponent();
   }, [props.org.user_properties]);
 
   function goToEvent(eventId) {
@@ -105,67 +100,67 @@ function OrgMembers(props) {
 
   return (
     <>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <>
-          <p>
-            <small>
-              {' '}
-              Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
-              búsqueda.
-            </small>{' '}
-          </p>
-          <Row justify='start'>
-            <Title
-              level={5}
-              type='secondary'
-              style={{
-                backgroundColor: '#F5F5F5',
-                textAlign: 'center',
-                borderRadius: 4,
-              }}>
-              Inscritos: {membersData.length}
-            </Title>
-          </Row>
+      <>
+        <p>
+          <small>
+            {' '}
+            Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.
+          </small>{' '}
+        </p>
+        <Row justify='start'>
+          <Title
+            level={5}
+            type='secondary'
+            style={{
+              backgroundColor: '#F5F5F5',
+              textAlign: 'center',
+              borderRadius: 4,
+              paddingLeft: 10,
+              paddingRight: 10,
+            }}>
+            Inscritos: {isLoading ? <LoadingOutlined style={{ fontSize: '15px' }} /> : membersData.length}
+          </Title>
+        </Row>
 
-          <div>
-            <small>
-              Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
-            </small>
-          </div>
+        <div>
+          <small>
+            Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+          </small>
+        </div>
 
-          <Row justify='end' style={{ marginBottom: '10px' }}>
-            <Button onClick={addUser} style={{ marginLeft: 20 }} icon={<UserAddOutlined />}>
-              Agregar Usuario
+        <Row justify='end' style={{ marginBottom: '10px' }}>
+          <Button onClick={addUser} style={{ marginLeft: 20 }} icon={<UserAddOutlined />}>
+            Agregar Usuario
+          </Button>
+          {membersData.length > 0 && (
+            <Button style={{ marginLeft: 20 }} icon={<DownloadOutlined />} onClick={exportFile}>
+              Exportar
             </Button>
-            {membersData.length > 0 && (
-              <Button style={{ marginLeft: 20 }} icon={<DownloadOutlined />} onClick={exportFile}>
-                Exportar
-              </Button>
-            )}
-          </Row>
-          <Table
-            columns={columns(columnsData, editModalUser)}
-            dataSource={membersData}
-            size='small'
-            rowKey='index'
-            pagination={false}
-            scroll={{ x: 1300 }}
-          />
-          {addOrEditUser && (
-            <ModalMembers
-              handleModal={closeOrOpenModalMembers}
-              modal={addOrEditUser}
-              rolesList={roleList}
-              extraFields={extraFields}
-              value={selectedUser}
-              editMember={editMember}
-              closeOrOpenModalMembers={closeOrOpenModalMembers}
-            />
           )}
-        </>
-      )}
+        </Row>
+        <Table
+          columns={columns(columnsData, editModalUser)}
+          dataSource={membersData}
+          size='small'
+          rowKey='index'
+          pagination={false}
+          scroll={{ x: 1300 }}
+          loading={isLoading}
+        />
+        {addOrEditUser && (
+          <ModalMembers
+            handleModal={closeOrOpenModalMembers}
+            modal={addOrEditUser}
+            rolesList={roleList}
+            extraFields={extraFields}
+            value={selectedUser}
+            editMember={editMember}
+            closeOrOpenModalMembers={closeOrOpenModalMembers}
+            organizationId={organizationId}
+            startingComponent={startingComponent}
+          />
+        )}
+      </>
     </>
   );
 }

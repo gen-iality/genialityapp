@@ -71,7 +71,7 @@ const ChatList = (props) => {
     HandlePublicPrivate(key);
   }
 
-  console.log('privateChatsList', privateChatsList);
+  // console.log('privateChatsList', privateChatsList);
   if (!cUser.value)
     return (
       <Form className='asistente-list' {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
