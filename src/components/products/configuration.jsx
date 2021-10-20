@@ -69,7 +69,7 @@ const Configuration = (props) => {
         <Switch checked={checkSubasta} onChange={onChange} />
         <br /> <br />
         <p>Mensaje a mostrar al deshabilitar</p>
-        <ReactQuill value={messageF} modules={toolbarEditor} onChange={changeMessage} />
+        <ReactQuill id={'messageF'} value={messageF} modules={toolbarEditor} onChange={changeMessage} />
       </Col>
     </Row>
      

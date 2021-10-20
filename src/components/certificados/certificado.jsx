@@ -307,8 +307,7 @@ const Certificado = (props) => {
             <Col span={12}>
               <Form.Item label={'Rol'}>
                 <Select 
-                  name={'rol'} 
-                  id={'rol'}
+                  name={'rol'}
                   onChange={(e) => {onChangeRol(e)}}
                   placeholder={'Seleccione Rol'}
                 >

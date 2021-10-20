@@ -11,7 +11,6 @@ import Header from '../../antdComponents/Header';
 const { Column } = Table;
 const { confirm } = Modal;
 const { Paragraph } = Typography;
-const  DragHandle = sortableHandle(() => <DragOutlined  style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement(props => <tr {...props} />);
 const SortableContainer = sortableContainer(props => <tbody {...props} />)
 
@@ -152,7 +151,7 @@ class Product extends Component {
                     </Button>
                   </Col>
                   <Col>
-                    <Button type="primary" icon={<SettingOutlined />} onClick={this.configuration}>
+                    <Button type="primary" icon={<SettingOutlined />} onClick={this.configuration} id={'configuration'} >
                       {'Configuración'}
                     </Button>
                   </Col>
@@ -179,7 +178,12 @@ class Product extends Component {
                   title=''
                   dataIndex='move'
                   width='50px'
-                  render={ () => <DragHandle />}
+                  render={ (data, index) => {
+                     const DragHandle = sortableHandle(() => (
+                     <DragOutlined id={`drag${index.index}`} style={{ cursor: 'grab', color: '#999', visibility: 'visible' }} />
+                     ));
+                     return <DragHandle />;
+                  }}
                   />
                   <Column
                   title='Posición'
@@ -227,6 +231,7 @@ class Product extends Component {
                            <Tooltip key={index} placement='topLeft' title='Editar'>
                               <Button
                                  key={index}
+                                 id={`editAction${index.index}`}
                                  onClick={() => this.editProduct(data)}
                                  type='primary'
                                  icon={<EditOutlined style={{ fontSize: 25 }} />}
@@ -235,6 +240,7 @@ class Product extends Component {
                            <Tooltip key={index} placement='topLeft' title='Eliminar'>
                               <Button
                                  key={index}
+                                 id={`removeAction${index.index}`}
                                  onClick={() => this.removeProduct(data)}
                                  type='danger'
                                  icon={<DeleteOutlined style={{ fontSize: 25 }} />}
@@ -243,7 +249,8 @@ class Product extends Component {
                            <Tooltip key={index} placement='topLeft' title='Ofertas'>
                               <Button
                                  key={index}
-                                 onClick={() => this.props.history.push(`/event/${this.props.eventId}/product/${data._id}/oferts`) }
+                                 id={`shoppingAction${index.index}`}
+                                 onClick={() => this.props.history.push(`/eventadmin/${this.props.eventId}/product/${data._id}/oferts`) }
                                  color={'#1890ff'}
                                  icon={<ShoppingCartOutlined style={{ fontSize: 25 }} />}
                               />

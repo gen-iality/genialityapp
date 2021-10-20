@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button, Card, Row, Input, Form, message, Col } from 'antd';
+import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, Card, Row, Input, Form, message, Col, Modal } from 'antd';
 import { withRouter } from 'react-router';
 import ReactQuill from 'react-quill';
 import ImageInput from '../shared/imageInput';
@@ -25,6 +25,8 @@ const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
 };
+
+const { confirm } = Modal;
 
 function AddProduct(props) {
   const [product, setProduct] = useState();
@@ -160,7 +162,7 @@ function AddProduct(props) {
                   props.eventId
                );
                if (newProduct) {
-                  props.history.push(`/event/${props.eventId}/product`);
+                  props.history.push(`/eventadmin/${props.eventId}/product`);
                }
             }
          } catch (e) {
@@ -187,7 +189,7 @@ function AddProduct(props) {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await EventsApi.deleteOne(props.match.params.id, props.eventId);
+              await EventsApi.deleteProduct(props.match.params.id, props.eventId);
               message.destroy(loading.key);
               message.open({
                 type: 'success',
@@ -262,7 +264,12 @@ function AddProduct(props) {
                 Descripción <label style={{ color: 'red' }}>*</label>
               </label>
             }>
-              <ReactQuill value={description} modules={toolbarEditor} onChange={changeDescription} />
+              <ReactQuill 
+                value={description} 
+                id={'descriptionProduct'} 
+                modules={toolbarEditor} 
+                onChange={changeDescription} 
+              />
               {error != null && error.description && (
                   <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
               )}

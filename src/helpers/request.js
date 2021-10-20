@@ -322,7 +322,7 @@ export const EventsApi = {
   createProducts: async (data, eventId) => {
     return await Actions.post(`/api/events/${eventId}/products`, data);
   },
-  deleteProduct: async (eventId, galleryId) => {
+  deleteProduct: async (galleryId, eventId) => {
     return await Actions.delete(`/api/events/${eventId}/products`, galleryId);
   },
   validPrice: async (eventId, productId) => {

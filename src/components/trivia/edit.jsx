@@ -2,12 +2,13 @@ import React, { Component, Fragment } from 'react';
 import EventContent from '../events/shared/content';
 import { selectOptions } from './constants';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
+import { handleRequestError } from '../../helpers/utils';
 import { createOrUpdateSurvey, getSurveyConfiguration } from './services';
 import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
 import { Button, Row, Col, Table, Modal, Input, Switch, message, Select, Tag, InputNumber, Form, Tooltip } from 'antd';
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import FormQuestionEdit from './formEdit';
 import Header from '../../antdComponents/Header';
 
@@ -68,6 +69,7 @@ class triviaEdit extends Component {
     };
     this.submit = this.submit.bind(this);
     this.submitWithQuestions = this.submitWithQuestions.bind(this);
+    this.remove = this.remove.bind(this);
   }
 
   //Funcion para poder cambiar el value del input o select
@@ -294,7 +296,7 @@ class triviaEdit extends Component {
             },
             { eventId: this.props.event._id, name: data.survey, category: 'none' }
           );
-
+          this.goBack();
           message.success({ content: setDataInFire.message, key: 'updating' });
         })
         .catch((err) => {
@@ -440,7 +442,7 @@ class triviaEdit extends Component {
   // Funcion usada para determinar el tiempo limite en segundos de la emcuesta
   setTime_limit = (e) => {
     var reg = new RegExp('^\\d+$')
-    const { value } = e.target;
+    const { value } = e;
     if(reg.test(value)){
       this.setState({ time_limit: value });
 
@@ -477,6 +479,43 @@ class triviaEdit extends Component {
     }
   };
 
+  remove = () => {
+    let self = this;
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            await SurveysApi.deleteOne(self.state.idSurvey, self.props.event._id);
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: <> Se eliminó la información correctamente!</>,
+            });
+            self.goBack();
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: handleRequestError(e).message,
+            });
+          }
+        }
+        onHandlerRemove();
+      }
+    });
+  };
+
   render() {
     const {
       survey,
@@ -501,7 +540,6 @@ class triviaEdit extends Component {
       showNoVotos,
       displayGraphsInSurveys
     } = this.state;
-    const { Option } = Select;
     const columns = [
       {
         title: 'Pregunta',
@@ -579,8 +617,8 @@ class triviaEdit extends Component {
           back
           save
           form
-          /* remove={remove}
-          edit={locationState.edit} */
+          remove={this.remove}
+          edit={this.state.idSurvey}
         />
 
         <Row justify='center' wrap gutter={8}> 
@@ -590,14 +628,15 @@ class triviaEdit extends Component {
                 <Input 
                   value={survey} 
                   placeholder={'Nombre de la encuesta' }
-                  name={'survey'} onChange={this.changeInput} 
+                  name={'survey'} 
+                  onChange={this.changeInput} 
                 />
               </Form.Item>
             ) : <>
               <Form.Item label={'Tiempo límite en segundos por pregunta'}>
                 <InputNumber 
                   min={0}
-                  value={time_limit}
+                  defaultValue={time_limit}
                   name={'time'}
                   onChange={this.setTime_limit}
                 />
@@ -606,6 +645,7 @@ class triviaEdit extends Component {
                 <Col>
                   <Form.Item label={'Permitir usuarios anonimos'}>
                     <Switch
+                      name={'allow_anonymous_answers'}
                       checked={allow_anonymous_answers === 'true' || allow_anonymous_answers === true}
                       onChange={(checked) => this.setState({ allow_anonymous_answers: checked ? 'true' : 'false' })}
                     />
@@ -614,6 +654,7 @@ class triviaEdit extends Component {
                 <Col>
                   <Form.Item label={'Publicar encuesta'}>
                     <Switch
+                      name={'publish'}
                       checked={publish === 'true' || publish === true}
                       onChange={(checked) => this.setState({ publish: checked ? 'true' : 'false' })}
                     />
@@ -622,6 +663,7 @@ class triviaEdit extends Component {
                 <Col>
                   <Form.Item label={'Mostar gráficas en las encuestas'}>
                     <Switch
+                      name={'displayGraphsInSurveys'}
                       checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys === true}
                       onChange={(checked) => this.toggleSwitch('displayGraphsInSurveys', checked)}
                     />
@@ -630,6 +672,7 @@ class triviaEdit extends Component {
                 <Col>
                   <Form.Item label={'Encuesta abierta'}>
                     <Switch
+                      name={'openSurvey'}
                       checked={openSurvey === 'true' || openSurvey === true}
                       onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
                     />
@@ -638,6 +681,7 @@ class triviaEdit extends Component {
               </Row>
               <Form.Item label={'Elegir tipo de grafica'}>
                 <Select
+                  name={'graphyType'}
                   defaultValue={this.state.graphyType}
                   style={{ width: 120 }}
                   onChange={(graphy) => this.setState({ graphyType: graphy })}>
@@ -648,30 +692,35 @@ class triviaEdit extends Component {
               </Form.Item>
               <Form.Item label={'Mostrar porcentaje de participantes sin votar en las gráficas'}>
                 <Switch
+                  name={'showNoVotos'}
                   checked={showNoVotos === 'true' || showNoVotos === true}
                   onChange={(checked) => this.setState({ showNoVotos: checked ? 'true' : 'false' })}
                 />
               </Form.Item>
               <Form.Item label={'Encuesta global (visible en todas las actividades)'}>
                 <Switch
+                  name={'isGlobal'}
                   checked={isGlobal === 'true' || isGlobal === true}
                   onChange={(checked) => this.setState({ isGlobal: checked ? 'true' : 'false' })}
                 />
               </Form.Item>
               <Form.Item label={'Permitir valor del voto por usuario'}>
                 <Switch
+                  name={'allow_vote_value_per_user'}
                   checked={allow_vote_value_per_user === 'true' || allow_vote_value_per_user === true}
                   onChange={(checked) => this.toggleSwitch('allow_vote_value_per_user', checked)}
                 />
               </Form.Item>
               <Form.Item label={'Encuesta calificable'}>
                 <Switch
+                  name={'allow_gradable_survey'}
                   checked={allow_gradable_survey === 'true' || allow_gradable_survey === true}
                   onChange={(checked) => this.toggleSwitch('allow_gradable_survey', checked)}
                 />
               </Form.Item>
               <Form.Item label={'Habilitar ranking'}>
                 <Switch
+                  name={'ranking'}
                   checked={ranking === 'true' || ranking === true}
                   onChange={(checked) => this.toggleSwitch('ranking', checked)}
                 />
@@ -679,6 +728,7 @@ class triviaEdit extends Component {
               {(allow_gradable_survey === 'true' || allow_gradable_survey === true) && (
                 <Form.Item label={'Requiere puntaje mínimo para aprobar'}>
                   <Switch
+                    name={'hasMinimumScore'}
                     checked={hasMinimumScore === 'true' || hasMinimumScore === true}
                     onChange={(checked) => this.setState({ hasMinimumScore: checked ? 'true' : 'false' })}
                   />
@@ -695,6 +745,7 @@ class triviaEdit extends Component {
               )}
               <Form.Item label={'Relacionar esta encuesta a una actividad'}>
                 <Select 
+                  name={'activity_id'}
                   value={activity_id} 
                   onChange={this.changeInput}
                 >
@@ -711,6 +762,8 @@ class triviaEdit extends Component {
                 <>
                   <Form.Item label={'Texto de muestra para la pantalla inicial de la encuesta'}>
                     <ReactQuill 
+                      name={'initialMessage'}
+                      id={'initialMessage'}
                       value={this.state.initialMessage} 
                       modules={toolbarEditor} 
                       onChange={this.onChange} 
@@ -718,6 +771,8 @@ class triviaEdit extends Component {
                   </Form.Item>
                   <Form.Item label={'Mensaje al ganar'}>
                     <ReactQuill 
+                      name={'win_Message'}
+                      id={'win_Message'}
                       value={this.state.win_Message} 
                       modules={toolbarEditor} 
                       onChange={this.onChangeWin} 
@@ -725,13 +780,21 @@ class triviaEdit extends Component {
                   </Form.Item>
                   <Form.Item label={'Mensaje neutral'}>
                     <ReactQuill
+                      name={'neutral_Message'}
+                      id={'neutral_Message'}
                       value={this.state.neutral_Message}
                       modules={toolbarEditor}
                       onChange={this.onChangeNeutral}
                     />
                   </Form.Item>
                   <Form.Item label={'Mensaje al perder'}>
-                    <ReactQuill value={this.state.lose_Message} modules={toolbarEditor} onChange={this.onChangeLose} />
+                    <ReactQuill 
+                      name={'lose_Message'}
+                      id={'lose_Message'}
+                      value={this.state.lose_Message} 
+                      modules={toolbarEditor} 
+                      onChange={this.onChangeLose} 
+                    />
                   </Form.Item>
                 </>
               )}
