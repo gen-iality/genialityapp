@@ -163,7 +163,11 @@ const MainProfile = (props) => {
                       <Divider orientation='left'>Eventos creado</Divider>
                       <Row gutter={[16, 16]}>
                         <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
-                          <NewCard entityType='event' cUser={props.cUser} />
+                          {organizationsLimited.length > 0 ? (
+                            <NewCard entityType='event' cUser={props.cUser} org={organizationsLimited} />
+                          ) : (
+                            <NewCard entityType='event' cUser={props.cUser} />
+                          )}
                         </Col>
                         {/* aqui empieza el mapeo de eventCard.jsx maximo 4 */}
                         {eventsLimited.length > 0 &&
@@ -271,7 +275,11 @@ const MainProfile = (props) => {
               ) : (
                 <Row gutter={[16, 16]}>
                   <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                    <NewCard entityType='event' cUser={props.cUser} />
+                    {organizationsLimited.length > 0 ? (
+                      <NewCard entityType='event' cUser={props.cUser} org={organizationsLimited} />
+                    ) : (
+                      <NewCard entityType='event' cUser={props.cUser} />
+                    )}
                   </Col>
                   {events.map((event) => {
                     return (

@@ -22,153 +22,151 @@ import XLSX from 'xlsx';
 const { Title } = Typography;
 
 function OrgMembers(props) {
-   const [membersData, setMembersData] = useState([]);
-   const [isLoading, setIsLoading] = useState(true);
-   const [lastUpdate, setLastUpdate] = useState();
-   const [searchText, setSearchText] = useState('');
-   const [searchedColumn, setSearchedColumn] = useState('');
-   const [addOrEditUser, setAddOrEditUser] = useState(false);
-   const [extraFields, setExtraFields] = useState([]);
-   const [roleList, setRoleList] = useState([]);
-   const [selectedUser, setSelectedUser] = useState({});
-   const [editMember, setEditMember] = useState(false);
-   let { _id: organizationId } = props.org;
-   const history = useHistory();
+  const [membersData, setMembersData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [lastUpdate, setLastUpdate] = useState();
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const [addOrEditUser, setAddOrEditUser] = useState(false);
+  const [extraFields, setExtraFields] = useState([]);
+  const [roleList, setRoleList] = useState([]);
+  const [selectedUser, setSelectedUser] = useState({});
+  const [editMember, setEditMember] = useState(false);
+  let { _id: organizationId } = props.org;
+  const history = useHistory();
 
-   async function getEventsStatisticsData() {
-      const { data } = await OrganizationApi.getUsers(organizationId);
-      const fieldsMembersData = [];
+  async function getEventsStatisticsData() {
+    const { data } = await OrganizationApi.getUsers(organizationId);
+    const fieldsMembersData = [];
 
-      data.map((membersData) => {
-         const properties = {
-            _id: membersData._id,
-            created_at: membersData.created_at,
-            updated_at: membersData.updated_at,
-            ...membersData.properties,
-         };
+    data.map((membersData) => {
+      const properties = {
+        _id: membersData._id,
+        created_at: membersData.created_at,
+        updated_at: membersData.updated_at,
+        ...membersData.properties,
+      };
 
-         fieldsMembersData.push(properties);
-      });
-      setMembersData(fieldsMembersData);
-      setIsLoading(false);
-   }
+      fieldsMembersData.push(properties);
+    });
+    setMembersData(fieldsMembersData);
+    setIsLoading(false);
+  }
 
-   async function getRoleList() {
-      const roleListData = await RolAttApi.byEventRolsGeneral();
-      setRoleList(roleListData);
-   }
+  async function getRoleList() {
+    const roleListData = await RolAttApi.byEventRolsGeneral();
+    setRoleList(roleListData);
+  }
 
-   useEffect(() => {
-      getEventsStatisticsData();
-      setLastUpdate(new Date());
-      getRoleList();
-      setExtraFields(props.org.user_properties);
-   }, [props.org.user_properties]);
+  useEffect(() => {
+    getEventsStatisticsData();
+    setLastUpdate(new Date());
+    getRoleList();
+    setExtraFields(props.org.user_properties);
+  }, [props.org.user_properties]);
 
-   function goToEvent(eventId) {
-      const url = `/eventadmin/${eventId}/agenda`;
-      history.replace({ pathname: url });
-   }
+  function goToEvent(eventId) {
+    const url = `/eventadmin/${eventId}/agenda`;
+    history.replace({ pathname: url });
+  }
 
-   async function exportFile(e) {
-      e.preventDefault();
-      e.stopPropagation();
+  async function exportFile(e) {
+    e.preventDefault();
+    e.stopPropagation();
 
-      const ws = XLSX.utils.json_to_sheet(membersData);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Members');
-      XLSX.writeFile(wb, `Miembros_${moment().format('l')}.xlsx`);
-   }
+    const ws = XLSX.utils.json_to_sheet(membersData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Members');
+    XLSX.writeFile(wb, `Miembros_${moment().format('l')}.xlsx`);
+  }
 
-   function closeOrOpenModalMembers() {
-      setAddOrEditUser((prevState) => {
-         return !prevState;
-      });
-   }
+  function closeOrOpenModalMembers() {
+    setAddOrEditUser((prevState) => {
+      return !prevState;
+    });
+  }
 
-   function addUser() {
-      console.log('10. Agregar o editar usuario');
-      setSelectedUser({});
-      closeOrOpenModalMembers();
-   }
-   function editModalUser(item) {
-      console.log('10. SELECTED ITEM==>', item);
-      setSelectedUser(item);
-      closeOrOpenModalMembers();
-      setEditMember(true)
-   }
+  function addUser() {
+    setSelectedUser({});
+    closeOrOpenModalMembers();
+  }
+  function editModalUser(item) {
+    setSelectedUser(item);
+    closeOrOpenModalMembers();
+    setEditMember(true);
+  }
 
-   const columnsData = {
-      searchedColumn,
-      setSearchedColumn,
-      searchText,
-      setSearchText,
-   };
+  const columnsData = {
+    searchedColumn,
+    setSearchedColumn,
+    searchText,
+    setSearchText,
+  };
 
-   return (
-      <>
-         {isLoading ? (
-            <Loading />
-         ) : (
-            <>
-               <p>
-                  <small>
-                     {' '}
-                     Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
-                     búsqueda.
-                  </small>{' '}
-               </p>
-               <Row justify='start'>
-                  <Title
-                     level={5}
-                     type='secondary'
-                     style={{
-                        backgroundColor: '#F5F5F5',
-                        textAlign: 'center',
-                        borderRadius: 4,
-                     }}>
-                     Inscritos: {membersData.length}
-                  </Title>
-               </Row>
+  return (
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <p>
+            <small>
+              {' '}
+              Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
+              búsqueda.
+            </small>{' '}
+          </p>
+          <Row justify='start'>
+            <Title
+              level={5}
+              type='secondary'
+              style={{
+                backgroundColor: '#F5F5F5',
+                textAlign: 'center',
+                borderRadius: 4,
+              }}>
+              Inscritos: {membersData.length}
+            </Title>
+          </Row>
 
-               <div>
-                  <small>
-                     Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
-                  </small>
-               </div>
+          <div>
+            <small>
+              Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+            </small>
+          </div>
 
-               <Row justify='end' style={{ marginBottom: '10px' }}>
-                  <Button onClick={addUser} style={{ marginLeft: 20 }} icon={<UserAddOutlined />}>
-                     Agregar Usuario
-                  </Button>
-                  {membersData.length > 0 && (
-                     <Button style={{ marginLeft: 20 }} icon={<DownloadOutlined />} onClick={exportFile}>
-                        Exportar
-                     </Button>
-                  )}
-               </Row>
-               <Table
-                  columns={columns(columnsData, editModalUser)}
-                  dataSource={membersData}
-                  size='small'
-                  rowKey='index'
-                  pagination={false}
-                  scroll={{ x: 1300 }}
-               />
-               {addOrEditUser && (
-                  <ModalMembers
-                     handleModal={closeOrOpenModalMembers}
-                     modal={addOrEditUser}
-                     rolesList={roleList}
-                     extraFields={extraFields}
-                     value={selectedUser}
-                     editMember={editMember}
-                     closeOrOpenModalMembers={closeOrOpenModalMembers}
-                  />
-               )}
-            </>
-         )}
-      </>
-   );
+          <Row justify='end' style={{ marginBottom: '10px' }}>
+            <Button onClick={addUser} style={{ marginLeft: 20 }} icon={<UserAddOutlined />}>
+              Agregar Usuario
+            </Button>
+            {membersData.length > 0 && (
+              <Button style={{ marginLeft: 20 }} icon={<DownloadOutlined />} onClick={exportFile}>
+                Exportar
+              </Button>
+            )}
+          </Row>
+          <Table
+            columns={columns(columnsData, editModalUser)}
+            dataSource={membersData}
+            size='small'
+            rowKey='index'
+            pagination={false}
+            scroll={{ x: 1300 }}
+          />
+          {addOrEditUser && (
+            <ModalMembers
+              handleModal={closeOrOpenModalMembers}
+              modal={addOrEditUser}
+              rolesList={roleList}
+              extraFields={extraFields}
+              value={selectedUser}
+              editMember={editMember}
+              closeOrOpenModalMembers={closeOrOpenModalMembers}
+            />
+          )}
+        </>
+      )}
+    </>
+  );
 }
 export default withContext(OrgMembers);

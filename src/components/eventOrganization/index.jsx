@@ -54,7 +54,6 @@ class EventOrganization extends Component {
   };
 
   render() {
-    console.log('10. this.state.organization. ', this.state.organization);
     return (
       <React.Fragment>
         {console.log('Marlon', this.state.organization)}

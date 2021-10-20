@@ -23,7 +23,7 @@ const ModalCreateOrg = (props) => {
     const newValues = {
       ...values,
       logo: imageAvatar,
-      closeModal: props.setIsVisible,
+      closeModal: props.setModalCreateOrgIsVisible,
       fetchItem: props.fetchItem,
       resetFields: resetFields,
     };
@@ -37,9 +37,9 @@ const ModalCreateOrg = (props) => {
       footer={null}
       zIndex={1000}
       closable={true}
-      visible={props.isVisible}
+      visible={props.modalCreateOrgIsVisible}
       onCancel={() => {
-        props.setIsVisible(false);
+        props.setModalCreateOrgIsVisible(false);
         resetFields();
       }}>
       <Form onFinish={saveNewOrganization} form={form} autoComplete='off' layout='vertical'>

@@ -2,27 +2,52 @@ import React, { useState } from 'react';
 import { Card, message, Space, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ModalCreateOrg from './modalCreateOrg';
+import ModalListOrg from './modalListOrg';
+import functionCreateNewOrganization from './functionCreateNewOrganization';
 
 // Componente modal para la creacion de una organizacion <ModalCreateOrg/>
 
 const NewCard = (props) => {
   const entity = props.entityType ? props.entityType : 'event';
-  const [isVisible, setIsVisible] = useState(false);
+  const [modalCreateOrgIsVisible, setModalCreateOrgIsVisible] = useState(false);
+  const [modalListOrgIsVisible, setModalListOrgIsVisible] = useState(false);
 
-  function linkToTheMenuRouteS(menuRoute) {
-    window.location.href = `${window.location.origin}${menuRoute}`;
-  }
   const newOrganization = () => {
-    setIsVisible(true);
+    setModalCreateOrgIsVisible(true);
   };
-
   const newEvent = () => {
-    linkToTheMenuRouteS(`/create-event/${props.cUser.value._id}`);
+    if (props?.org?.length > 0) {
+      setModalListOrgIsVisible(true);
+    } else {
+      const newValues = {
+        name: props.cUser.value.names || props.cUser.value.displayName,
+        logo: null,
+        newEventWithoutOrganization: true,
+        closeModal: setModalListOrgIsVisible,
+      };
+      functionCreateNewOrganization(newValues);
+    }
   };
 
   return (
     <>
-      <ModalCreateOrg isVisible={isVisible} setIsVisible={setIsVisible} fetchItem={props.fetchItem} />
+      {modalCreateOrgIsVisible && (
+        <ModalCreateOrg
+          modalCreateOrgIsVisible={modalCreateOrgIsVisible}
+          setModalCreateOrgIsVisible={setModalCreateOrgIsVisible}
+          fetchItem={props.fetchItem}
+        />
+      )}
+
+      {modalListOrgIsVisible && (
+        <ModalListOrg
+          modalListOrgIsVisible={modalListOrgIsVisible}
+          setModalListOrgIsVisible={setModalListOrgIsVisible}
+          org={props.org}
+          cUserId={props.cUser.value._id}
+        />
+      )}
+
       <Card
         onClick={entity === 'event' ? newEvent : newOrganization}
         style={{
