@@ -6,9 +6,9 @@ import EventContent from '../shared/content';
 import EventModal from '../shared/eventModal';
 import DatosModal from './modal';
 import Dialog from '../../modal/twoAction';
-import { Tabs, Table, Checkbox, notification, Button, Select, Radio, Row, Col, Tooltip, Modal } from 'antd';
+import { Tabs, Table, Checkbox, notification, Button, Select, Radio, Row, Col, Tooltip, Modal, message } from 'antd';
 import RelationField from './relationshipFields';
-import { EditOutlined, DeleteOutlined, DragOutlined, SaveOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, DragOutlined, SaveOutlined, PlusCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import CMS from '../../newComponent/CMS';
@@ -164,7 +164,45 @@ class Datos extends Component {
   };
   //Borrar dato de la lista
   removeField = async () => {
-    try {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            const organizationId = this?.organization?._id;
+            if (organizationId) {
+              await this.props.deleteField(this.state.deleteModal, this.state.isEditTemplate, this.updateTable);
+            } else {
+              await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventID);
+            }
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: <> Se eliminó la información correctamente!</>,
+            });
+            await this.fetchFields();
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: this.showError(e),
+            });
+          }
+        }
+        onHandlerRemove();
+      }
+    })
+    /* try {
       const organizationId = this?.organization?._id;
       if (organizationId) {
         await this.props.deleteField(this.state.deleteModal, this.state.isEditTemplate, this.updateTable);
@@ -179,7 +217,7 @@ class Datos extends Component {
       }, 800);
     } catch (e) {
       this.showError(e);
-    }
+    } */
   };
 
   closeDelete = () => {
@@ -380,7 +418,7 @@ class Datos extends Component {
                   <Button
                     key={`removeAction${key.index}`}
                     id={`removeAction${key.index}`}
-                    onClick={() => this.setState({ deleteModal: key._id || key.name })}
+                    onClick={() => this.removeField(key._id || key.name)}
                     icon={<DeleteOutlined />}
                     type='danger'
                     size='small'
@@ -503,7 +541,7 @@ class Datos extends Component {
                     <DatosModal edit={edit} info={info} action={this.saveField} />
                   </Modal>
                 )}
-                {this.state.deleteModal && (
+                {/* {this.state.deleteModal && (
                   <Dialog
                     modal={this.state.deleteModal}
                     title={'Borrar Dato'}
@@ -512,7 +550,7 @@ class Datos extends Component {
                     message={this.state.message}
                     second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
                   />
-                )}
+                )} */}
               </Fragment>
             </TabPane>
           )}
@@ -526,18 +564,70 @@ class Datos extends Component {
          { this.props.type == 'organization' && <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
             {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (
               <Fragment>
-                {this.props.type !== 'configMembers' && (
-                  <Button
-                    danger
-                    style={{ marginTop: '3%' }}
-                    onClick={() =>
-                      this.setState({ isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] } })
-                    }>
-                    Volver a plantillas
-                  </Button>
+                <Header 
+                  title={(
+                    <div>
+                      Recopilación de datos de plantillas
+                      {this.props.type !== 'configMembers' && (
+                        <Button
+                          type='link'
+                          style={{ color: 'blue' }}
+                          onClick={() =>
+                            this.setState({ isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] } })
+                          }>
+                          Volver a plantillas
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                />
+                <small>
+                  {`Configure los datos que desea recolectar de los asistentes ${
+                    this.organization ? 'de la organización' : 'del evento'
+                  }`}
+                </small>
+
+                <Table
+                  columns={columns}
+                  dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
+                  pagination={false}
+                  rowKey='index'
+                  size='small'
+                  components={{
+                    body: {
+                      wrapper: this.DraggableContainer,
+                      row: this.DraggableBodyRow,
+                    },
+                  }}
+                  title={() => (
+                    <Row justify='end' wrap gutter={[8, 8]}>
+                      <Col>
+                        <Button disabled={this.state.available} onClick={this.submitOrder} type="primary" icon={<SaveOutlined />}>
+                          {'Guardar orden'}
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addField}>
+                          {'Agregar'}
+                        </Button>
+                      </Col>
+                    </Row>
+                  )}
+                />
+                { modal && (
+                  <Modal 
+                    visible={modal}
+                    title={edit ? 'Editar Dato' : 'Agregar Dato'} 
+                    onOk={this.saveField} 
+                    onCancel={this.closeModal} 
+                    okText={'Guardar'}
+                    cancelText={'Cancelar'}
+                  >
+                    <DatosModal edit={edit} info={info} action={this.saveField} />
+                  </Modal>
                 )}
 
-                <EventContent
+                {/* <EventContent
                   title={'Recopilación de datos'}
                   description={`Configure los datos que desea recolectar de los asistentes ${
                     this.organization ? 'de la organización' : 'del evento'
@@ -579,7 +669,7 @@ class Datos extends Component {
                     message={this.state.message}
                     second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
                   />
-                )}
+                )} */}
               </Fragment>
             ) : (
               <CMS
