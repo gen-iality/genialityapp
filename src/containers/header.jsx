@@ -265,7 +265,7 @@ class Headers extends Component {
                   </Space>
                 )}
 
-              {window.location.href.toString().includes('events') && (
+              {window.location.href.toString().includes('events') && !window.location.href.toString().includes('organization')  && (
                 <ModalAuth
                   tab={this.state.tabModal}
                   closeModal={this.modalClose}

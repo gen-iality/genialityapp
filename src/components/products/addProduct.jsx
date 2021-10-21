@@ -222,7 +222,7 @@ function AddProduct(props) {
                         Descripción <label style={{ color: 'red' }}>*</label>
                      </label>
                   }>
-                  <EviusReactQuill data={description} onChange={changeDescription} />
+                  <EviusReactQuill data={description} handleChange={changeDescription} />
                   {error != null && error.description && (
                      <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
                   )}
