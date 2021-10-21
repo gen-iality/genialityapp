@@ -99,6 +99,14 @@ const Table = (props) => {
     },
   };
 
+  if(list) {
+    list.map((list, index) => {
+      if(!list.index) {
+        list.index = index;
+      }
+    })
+  }
+
   if (actions) {
     header.push(options);
   }
@@ -200,9 +208,8 @@ const Table = (props) => {
       <TableAnt
         columns={header}
         dataSource={list}
-        /* hasData={list} */
         size='small'
-        hasData={list && list.length}
+        /* hasData={list && list.length} */
         rowKey={(record) => record.index}
         loading={loading}
         pagination={pagination}

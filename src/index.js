@@ -23,6 +23,8 @@ const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 // Try full locale, try locale without region code, fallback to 'en'
 const messages = localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
 
+
+console.log("process.env.REACT_APP_BASE_URL",process.env.REACT_APP_BASE_URL)
 ReactDOM.render(
   <>
     <IntlProvider locale={languageWithoutRegionCode} messages={messages} defaultLocale='es'>

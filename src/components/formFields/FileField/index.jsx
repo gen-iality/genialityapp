@@ -71,7 +71,7 @@ function FileField(rawProps) {
             required={formItemProps.required}
             help={fieldError}
             validateStatus={fieldError ? 'error' : undefined}>
-            <Input value={field.value} />
+            {/* <Input value={field.value} /> */}
             <FileInput
               picture={field.value}
               width={ancho}

@@ -3,13 +3,15 @@ import { OrganizationApi, RolAttApi } from '../../helpers/request';
 import { FormattedDate, FormattedTime } from 'react-intl';
 /** export Excel */
 import { useHistory } from 'react-router-dom';
-import { Table, Typography, Button, Row } from 'antd';
-import { UserAddOutlined, DownloadOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Table, Typography, Button, Row, Col } from 'antd';
+import { UserAddOutlined, DownloadOutlined, LoadingOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
 import ModalMembers from '../modal/modalMembers';
 import moment from 'moment';
 import withContext from '../../Context/withContext';
 import XLSX from 'xlsx';
+import Header from '../../antdComponents/Header';
+import ExportExcel from '../newComponent/ExportExcel'
 
 const { Title } = Typography;
 
@@ -100,7 +102,85 @@ function OrgMembers(props) {
 
   return (
     <>
-      <>
+      <Header 
+        title={'Miembros'}
+      />
+      <p>
+        <small>
+          {' '}
+          Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.
+        </small>{' '}
+      </p>
+
+      <Table
+        columns={columns(columnsData, editModalUser)}
+        dataSource={membersData}
+        size='small'
+        rowKey='index'
+        pagination={false}
+        loading={isLoading}
+        title={() => (
+          <Row justify='space-between'>
+            <Row justify='start'>
+              <Title
+                level={5}
+                type='secondary'
+                style={{
+                  backgroundColor: '#F5F5F5',
+                  textAlign: 'center',
+                  borderRadius: 4,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                }}>
+                Inscritos: {isLoading ? <LoadingOutlined style={{ fontSize: '15px' }} /> : membersData.length}
+              </Title>
+
+              <div>
+                <small>
+                  Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+                </small>
+              </div>
+            </Row>
+            <Row wrap justify='end' gutter={[8, 8]}>
+              <Col>
+                { membersData.length && (
+                  <Button type='primary' icon={<DownloadOutlined />} onClick={exportFile}>
+                    Exportar
+                  </Button>
+                )}
+                {/* <ExportExcel 
+                  columns={columns(columnsData, editModalUser)} 
+                  list={membersData} 
+                  fileName={'memberReport'} 
+                /> */}
+              </Col>
+              <Col>
+                <Button 
+                  type="primary" 
+                  icon={<PlusCircleOutlined />} 
+                  onClick={addUser}
+                >
+                  {'Agregar'}
+                </Button>
+              </Col>
+            </Row>
+          </Row>
+       )}
+      />
+      {addOrEditUser && (
+        <ModalMembers
+          handleModal={closeOrOpenModalMembers}
+          modal={addOrEditUser}
+          rolesList={roleList}
+          extraFields={extraFields}
+          value={selectedUser}
+          editMember={editMember}
+          closeOrOpenModalMembers={closeOrOpenModalMembers}
+          organizationId={organizationId}
+          startingComponent={startingComponent}
+        />
+      )}
+      {/* <>
         <p>
           <small>
             {' '}
@@ -168,7 +248,7 @@ function OrgMembers(props) {
             startingComponent={startingComponent}
           />
         )}
-      </>
+      </> */}
     </>
   );
 }

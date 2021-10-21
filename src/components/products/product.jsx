@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
-import { Table, Tooltip, Space, Button, Image, Modal, message, Typography, Row, Spin } from 'antd';
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusCircleOutlined, DragOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Table, Tooltip, Space, Button, Image, Modal, message, Typography, Row, Col } from 'antd';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, DragOutlined, ShoppingCartOutlined, SaveOutlined, SettingOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import { EventsApi } from '../../helpers/request';
 import Loading from '../loaders/loading';
 import { withRouter } from 'react-router';
-import { product } from 'ramda';
+import Header from '../../antdComponents/Header';
 
 const { Column } = Table;
 const { confirm } = Modal;
-const { Title, Paragraph } = Typography;
-const  DragHandle = sortableHandle(() => <DragOutlined  style={{ cursor: 'grab', color: '#999' }} />);
+const { Paragraph } = Typography;
 const SortableItem = sortableElement(props => <tr {...props} />);
 const SortableContainer = sortableContainer(props => <tbody {...props} />)
 
@@ -139,21 +138,26 @@ class Product extends Component {
 
    render() {
       return (
-         
          <div>
-            <Title level={4}>{'Producto'}</Title>
-            {console.log("LIST PRODUCT==>",this.state.list[0]?.price==null?'nulo':'otravaina')}
-            <Row justify='end' style={{ marginBottom: '10px' }}>
-               <Button onClick={this.newProduct} type='primary' style={{marginRight:'20px'}} icon={<PlusCircleOutlined />}>
-                  {'Crear producto'}
-               </Button>
-               <Button onClick={this.configuration} type='primary' style={{marginRight:'20px'}} icon={<PlusCircleOutlined />}>
-                  {'Configuración'}
-               </Button>
-               <Button onClick={this.savePosition} type='primary'  icon={<PlusCircleOutlined />}>
-                  {'Guardar posición'}
-               </Button>
-            </Row>
+           <Header 
+              title={'Producto'}
+              titleTooltip={'Agregue o edite los Productos que se muestran en la aplicación'}
+              addFn={this.newProduct}
+              extra={(
+                <Row wrap gutter={[8, 8]}>
+                  <Col>
+                    <Button onClick={this.savePosition} type="primary" icon={<SaveOutlined />}>
+                      {'Guardar orden'}
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button type="primary" icon={<SettingOutlined />} onClick={this.configuration} id={'configuration'} >
+                      {'Configuración'}
+                    </Button>
+                  </Col>
+                </Row>
+              )}
+            />
 
             {this.state.loading ? (
                <Loading />
@@ -174,7 +178,12 @@ class Product extends Component {
                   title=''
                   dataIndex='move'
                   width='50px'
-                  render={ () => <DragHandle />}
+                  render={ (data, index) => {
+                     const DragHandle = sortableHandle(() => (
+                     <DragOutlined id={`drag${index.index}`} style={{ cursor: 'grab', color: '#999', visibility: 'visible' }} />
+                     ));
+                     return <DragHandle />;
+                  }}
                   />
                   <Column
                   title='Posición'
@@ -222,6 +231,7 @@ class Product extends Component {
                            <Tooltip key={index} placement='topLeft' title='Editar'>
                               <Button
                                  key={index}
+                                 id={`editAction${index.index}`}
                                  onClick={() => this.editProduct(data)}
                                  type='primary'
                                  icon={<EditOutlined style={{ fontSize: 25 }} />}
@@ -230,6 +240,7 @@ class Product extends Component {
                            <Tooltip key={index} placement='topLeft' title='Eliminar'>
                               <Button
                                  key={index}
+                                 id={`removeAction${index.index}`}
                                  onClick={() => this.removeProduct(data)}
                                  type='danger'
                                  icon={<DeleteOutlined style={{ fontSize: 25 }} />}
@@ -238,7 +249,8 @@ class Product extends Component {
                            <Tooltip key={index} placement='topLeft' title='Ofertas'>
                               <Button
                                  key={index}
-                                 onClick={() => this.props.history.push(`/event/${this.props.eventId}/product/${data._id}/oferts`) }
+                                 id={`shoppingAction${index.index}`}
+                                 onClick={() => this.props.history.push(`/eventadmin/${this.props.eventId}/product/${data._id}/oferts`) }
                                  color={'#1890ff'}
                                  icon={<ShoppingCartOutlined style={{ fontSize: 25 }} />}
                               />

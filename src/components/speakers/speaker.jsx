@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Redirect, withRouter } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
 import { CategoriesAgendaApi, SpeakersApi } from '../../helpers/request';
 import Creatable from 'react-select';
 import { Button, Typography, Row, Col, Form, Input, Image, Empty, Card, Switch, Modal, message, Tooltip } from 'antd';
-import { LeftOutlined, UserOutlined , SettingOutlined, DeleteOutlined, SaveOutlined, ExclamationCircleOutlined, PlusCircleOutlined, UpOutlined, EditOutlined } from '@ant-design/icons';
+import { LeftOutlined, UserOutlined , SettingOutlined, ExclamationCircleOutlined, PlusCircleOutlined, UpOutlined, EditOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 
 const { Title } = Typography;
@@ -24,7 +24,8 @@ function Speaker (props) {
     history,
     matchUrl
   } = props;
-  const newCategoryUrl = '/eventadmin/' + eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
+  const match = matchUrl.split('/').slice(0)[1];
+  const newCategoryUrl = `/${match}/` + eventID; // Ruta creada para el boton de nueva categoria /event/[eventID]
 
 const [data, setData] = useState(
   {
@@ -70,7 +71,10 @@ async function dataTheLoaded() {
 
     if(info.description === '<p><br></p>')
     {
-      setDescription('')
+      setData({
+        ...data,
+        description: ''
+      })
     }
   }
   const isloadingSelectChanged = { types: '', categories: '' };
@@ -143,7 +147,7 @@ async function dataTheLoaded() {
         type: 'success',
         content: <> Conferencista guardado correctamente!</>,
       });
-      history.push(`/eventadmin/${eventID}/speakers`)
+      history.push(`/${match}/${eventID}/speakers`)
     } catch (e) {
       message.destroy(loading.key);
       message.open({
@@ -260,7 +264,7 @@ async function dataTheLoaded() {
                     onDrop={handleImage}
                     accept='image/*'
                     className='zone'>
-                    <Button type='dashed' danger>
+                    <Button type='dashed' danger id='btnImg'>
                       {data.image ? 'Cambiar imagen' : 'Subir imagen'}
                     </Button>
                   </Dropzone>
@@ -303,6 +307,7 @@ async function dataTheLoaded() {
               {
                 showDescription_activity && (
                   <EviusReactQuill 
+                    id='description'
                     name={'description'} 
                     data={data.description} 
                     handleChange={chgTxt}
@@ -328,8 +333,7 @@ async function dataTheLoaded() {
                 </Col>
                 <Col span={2}>
                   <Form.Item>
-                    <Button onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)} icon={<SettingOutlined />}>
-                    </Button> 
+                    <Button id='goToCategory' onClick={() => goSection(`${newCategoryUrl}/agenda/categorias`)} icon={<SettingOutlined />}/>
                   </Form.Item>
                 </Col>
               </Row>
