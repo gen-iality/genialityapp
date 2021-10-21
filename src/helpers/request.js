@@ -255,6 +255,7 @@ export const EventsApi = {
       `/api/events/${id}/metricsbydate/eventusers?metrics_type=${type}&datetime_from=${fechaInicial}&datetime_to=${fechaFinal}`
     );
   },
+
   //obtener products subasta silenciosa
   getProducts: async (eventId) => {
     return await Actions.get(`/api/events/${eventId}/products`);
@@ -350,6 +351,9 @@ export const UsersApi = {
 
   deleteUsers: async (user) => {
     return await Actions.delete(`/api/users`, user);
+  },
+  createUser: async (user) => {
+    return await Actions.post(`/api/users`, user);
   },
 };
 
@@ -505,6 +509,7 @@ export const OrganizationApi = {
         id: item._id,
         name: item.name,
         styles: item.styles,
+        created_at: item.created_at,
       };
     });
     return data;
@@ -522,19 +527,19 @@ export const OrganizationApi = {
     return await Actions.getOne(`/api/organizations/${id}/`, 'events');
   },
   getUsers: async (id) => {
-    return await Actions.get(`/api/organizations/${id}/users`);
+    return await Actions.get(`/api/organizations/${id}/organizationusers`);
   },
   getUser: async (org, member) => {
     return await Actions.getOne(`/api/organizations/${org}/users/`, member);
   },
   saveUser: async (org, data) => {
-    return await Actions.post(`/api/organizations/${org}/users`, data);
+    return await Actions.post(`/api/organizations/${org}/addorganizationuser`, data);
   },
   editUser: async (org, member, data) => {
-    return await Actions.edit(`/api/organizations/${org}/users`, data, member);
+    return await Actions.edit(`/api/organizations/${org}/organizationusers`, data, member);
   },
   deleteUser: async (org, member) => {
-    return await Actions.delete(`/api/organizations/${org}/users/`, member);
+    return await Actions.delete(`/api/organizations/${org}/organizationusers`, member);
   },
   getEventsStatistics: async (org) => {
     return await Actions.get(`/api/organizations/${org}/eventsstadistics`);
@@ -559,6 +564,9 @@ export const OrganizationApi = {
   },
   updateTemplateOrganization: async (orgId, idTemplate, data) => {
     return await Actions.put(`/api/organizations/${orgId}/templateproperties/${idTemplate}`, data);
+  },
+  editMenu: async (data, id) => {
+    return await Actions.put(`/api/organizations/${id}?update_events_itemsMenu=true`, data);
   },
 };
 export const BadgeApi = {

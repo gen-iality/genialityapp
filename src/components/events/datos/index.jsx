@@ -69,6 +69,8 @@ class Datos extends Component {
       let fields = [];
       if (organizationId && !this.props.eventID && !this.props.edittemplate) {
         fields = await this.props.getFields();
+        fields = this.orderFieldsByWeight(fields);
+        fields = this.updateIndex(fields);
       } else if (!this.props.edittemplate) {
         fields = await EventFieldsApi.getAll(this.eventID);
 
@@ -140,7 +142,7 @@ class Datos extends Component {
     const organizationId = this?.organization?._id;
     if (organizationId && !this.eventID) {
       await this.props.orderFields(this.state.properties);
-    } else if (!this.eventID && !organizationId) {
+    } else if (this.eventID && !organizationId && this.props.byEvent) {
       await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
     } else {
       await this.props.orderFields(this.state.isEditTemplate.datafields, this.state.isEditTemplate, this.updateTable);
@@ -371,12 +373,12 @@ class Datos extends Component {
     ];
 
     const colsPlant = [
-      {
+    /*  {
         title: 'Plantilla',
         dataIndex: '',
         width: '50px',
         render: (record, key) => <Radio onClick={(e) => this.onChange1(e, record._id)} value={value} />,
-      },
+      },*/
       {
         title: 'Nombre',
         dataIndex: 'name',
@@ -394,7 +396,7 @@ class Datos extends Component {
             />
           )}
 
-          {/* {this.props.type !== 'organization' && (
+          {this.props.type !== 'organization' && (
             <TabPane tab='Configuración General' key='1'>
               <Fragment>
                 <EventContent
@@ -437,7 +439,7 @@ class Datos extends Component {
                 )}
               </Fragment>
             </TabPane>
-          )} */}
+          )}
 
           {/* {this.props.eventID && this.props.type != 'organization' && (
             <TabPane tab='Campos Relacionados' key='2'>
@@ -445,7 +447,7 @@ class Datos extends Component {
             </TabPane>
           )} */}
 
-          <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
+         { this.props.type == 'organization' && <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
             {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (
               <Fragment>
                 {this.props.type !== 'configMembers' && (
@@ -526,7 +528,7 @@ class Datos extends Component {
                 actions
               />
             )}
-          </TabPane>
+          </TabPane>}
         </Tabs>
       </div>
     );

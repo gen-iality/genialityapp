@@ -32,7 +32,7 @@ class UserModal extends Component {
       confirmCheck: true,
       valid: true,
       checked_in: false,
-      tickets: [],    
+      tickets: [],
       loadingregister: false,
     };
   }
@@ -90,12 +90,12 @@ class UserModal extends Component {
   componentWillUnmount() {
     this.setState({ user: {}, edit: false });
   }
-  options= [
+  options = [
     {
       type: 'danger',
       text: 'Eliminar/Borrar',
       icon: <DeleteOutlined />,
-      action: ()=>this.deleteUser(this.state.user),
+      action: () => this.deleteUser(this.state.user),
     },
   ];
 
@@ -104,7 +104,12 @@ class UserModal extends Component {
     let messages = {};
     // let resultado = null;
     const self = this;
-    const userRef = !this.props.byActivity? firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`): firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`).doc("activity").collection(`${this.props.activityId}`);
+    const userRef = !this.props.byActivity
+      ? firestore.collection(`${this.props.cEvent.value?._id}_event_attendees`)
+      : firestore
+          .collection(`${this.props.cEvent.value?._id}_event_attendees`)
+          .doc('activity')
+          .collection(`${this.props.activityId}`);
     try {
       await Actions.delete(`/api/events/${this.props.cEvent.value?._id}/eventusers`, user._id);
       // message = { class: 'msg_warning', content: 'USER DELETED' };
@@ -114,10 +119,10 @@ class UserModal extends Component {
       ///Esta condición se agrego porque algunas veces los datos no se sincronizan
       //bien de mongo a firebase y terminamos con asistentes que no existen
       if (e.response && e.response.status === 404) {
-        let respdelete1=await UsersApi.deleteUsers('615dd4876a959d694a2a7ab6')
-        let respdelete2=await UsersApi.deleteUsers('615ddb385dae82055078a544')
-        console.log("RESPDELETE==>",respdelete1)
-        console.log("RESPDELETE2==>",respdelete1)
+        let respdelete1 = await UsersApi.deleteUsers('615dd4876a959d694a2a7ab6');
+        let respdelete2 = await UsersApi.deleteUsers('615ddb385dae82055078a544');
+        console.log('RESPDELETE==>', respdelete1);
+        console.log('RESPDELETE2==>', respdelete1);
         userRef.doc(user._id).delete();
         message.success('Eliminado correctamente');
       } else {
@@ -158,47 +163,45 @@ class UserModal extends Component {
     this.setState({ loadingregister: true });
     console.log('callback=>', values);
     let resp;
-    let respActivity=true;
-    if(values){
+    let respActivity = true;
+    if (values) {
       if (values.checked_in) {
         values.checkedin_at = new Date();
       } else {
         values.checkedin_at = '';
       }
-      console.log("ACA VALUES==>",values)
+
       const snap = { properties: values };
 
-        resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
-        console.log("10. USERADD==>",resp)
+      resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
 
-      if (this.props.byActivity && resp.data._id) {      
+      if (this.props.byActivity && resp.data._id) {
         respActivity = await Activity.Register(
-              this.props.cEvent?.value?._id,
-              resp.data.user._id,
-              this.props.activityId
-            ); 
-             
-        }
+          this.props.cEvent?.value?._id,
+          resp.data.user._id,
+          this.props.activityId
+        );
+      }
 
-        if(values.checked_in && this.props.activityId){  
-              
-          let userRef= await firestore.collection(`${this.props.cEvent?.value?._id}_event_attendees`).doc("activity").collection(`${this.props.activityId}`);
-          userRef.doc(resp.data._id)
-          .set({
-            ...resp.data ,    
-            updated_at: new Date(),
-            checked_in:true,
-            checkedin_at: new Date(),
-            checked_at: new Date(),
-          })          
-        }
-        if(this.props.updateView){console.log("10. ingreseeee")
-          await this.props.updateView();
-        }
+      if (values.checked_in && this.props.activityId) {
+        let userRef = await firestore
+          .collection(`${this.props.cEvent?.value?._id}_event_attendees`)
+          .doc('activity')
+          .collection(`${this.props.activityId}`);
+        userRef.doc(resp.data._id).set({
+          ...resp.data,
+          updated_at: new Date(),
+          checked_in: true,
+          checkedin_at: new Date(),
+          checked_at: new Date(),
+        });
+      }
+      if (this.props.updateView) {
+        await this.props.updateView();
+      }
     }
-  
+
     if (resp && respActivity) {
-      
       message.success('Usuario agregado correctamente');
       this.props.handleModal();
     } else {

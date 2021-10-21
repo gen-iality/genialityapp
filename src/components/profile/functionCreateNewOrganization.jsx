@@ -36,12 +36,23 @@ const functionCreateNewOrganization = (props) => {
     loader_page: 'no',
     data_loader_page: null,
   };
-  const loading = message.open({
+
+  const loading = message.loading({
+    duration: 90,
     key: 'loading',
-    type: 'loading',
-    content: <> Estamos creando la organización.</>,
+    content: !props.newEventWithoutOrganization
+      ? 'Estamos creando la organización.'
+      : 'Redirigiendo al creador de eventos rápidos',
   });
 
+  function linkToCreateNewEvent(menuRoute) {
+    window.location.href = `${window.location.origin}${menuRoute}`;
+  }
+
+  function sendDataFinished() {
+    message.destroy(loading.key);
+    props.closeModal(false);
+  }
   const uploadLogo = async () => {
     const selectedLogo = props.logo !== null ? props.logo[0].thumbUrl : null;
 
@@ -62,15 +73,27 @@ const functionCreateNewOrganization = (props) => {
     };
 
     const response = await OrganizationApi.createOrganization(body);
-    /** se trae la function fetchItem desde el main.jsx para poder actualizar la data */
-    await props.fetchItem;
-    if (response?._id) {
-      message.destroy(loading.key);
-      message.success('Organización creada correctamente');
-      props.closeModal(false);
+
+    /** si el usuario no tiene una org, primero se crea y despues se redirige al creador de eventos sencillo */
+    if (props.newEventWithoutOrganization) {
+      if (response?._id) {
+        sendDataFinished();
+        linkToCreateNewEvent(`/create-event/${response.author}/?orgId=${response._id}`);
+      } else {
+        sendDataFinished();
+        message.error('Error al redirigir al creador de eventos rápidos');
+      }
     } else {
-      message.error('La organización no pudo ser creada');
-      this.props.closeModal(false);
+      await props.fetchItem();
+      /** se trae la function fetchItem desde el main.jsx para poder actualizar la data */
+      props.resetFields();
+      if (response?._id) {
+        sendDataFinished();
+        message.success('Organización creada correctamente');
+      } else {
+        sendDataFinished();
+        message.error('La organización no pudo ser creada');
+      }
     }
   };
 

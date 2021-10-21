@@ -8,6 +8,7 @@ import { UseUserEvent } from './eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { createChatInitalPrivate } from '../components/networking/agendaHook';
 
 export const HelperContext = createContext();
 
@@ -99,6 +100,7 @@ export const HelperContextProvider = ({ children }) => {
   /*ENTRAR A CHAT O ATTENDE EN EL MENU*/
   function HandleChatOrAttende(key) {
     setchatAttendeChats(key);
+    createChatInitalPrivate(`event_${cEvent.value._id}`);
   }
 
   /*ENTRAR A CHAT PUBLICO O PRIVADO*/
@@ -166,7 +168,7 @@ export const HelperContextProvider = ({ children }) => {
   function HandleGoToChat(idactualuser, idotheruser, chatname, section, callbackdata) {
     let data = {};
     let idactualuserEvent = cEventuser.value?._id;
-    if(!idactualuserEvent)return;
+    if (!idactualuserEvent) return;
     switch (section) {
       case 'private':
         data = {
@@ -175,6 +177,8 @@ export const HelperContextProvider = ({ children }) => {
           idotheruser,
           chatname,
         };
+        createChatInitalPrivate(idotheruser);
+
         break;
 
       case 'attendee':
@@ -184,9 +188,11 @@ export const HelperContextProvider = ({ children }) => {
           idotheruser,
           chatname,
         };
+        createChatInitalPrivate(generateUniqueIdFromOtherIds(idactualuser, idotheruser));
         break;
     }
 
+    console.log('dattaGOCHAT', data, section);
     setchatActual(data);
     ReadMessages(callbackdata);
   }
@@ -311,7 +317,7 @@ export const HelperContextProvider = ({ children }) => {
 
     if (data) {
       data = data.filter((request) => !request.response || request.response == 'accepted');
-      console.log('DATA REQUEST==>', data);
+      // console.log('DATA REQUEST==>', data);
       setRequestSend(data);
     }
   };
@@ -513,8 +519,15 @@ export const HelperContextProvider = ({ children }) => {
   function GetPermissionsEvent() {
     if (cEvent.value != null) {
       let routePermissions =
-        cEvent.value && cEvent.value.itemsMenu && Object.values(cEvent.value.itemsMenu)?.filter((item) => item.section === 'tickets');
-      if (routePermissions && routePermissions[0] && routePermissions[0].permissions == 'assistants' && cEventuser.value == null) {
+        cEvent.value &&
+        cEvent.value.itemsMenu &&
+        Object.values(cEvent.value.itemsMenu)?.filter((item) => item.section === 'tickets');
+      if (
+        routePermissions &&
+        routePermissions[0] &&
+        routePermissions[0].permissions == 'assistants' &&
+        cEventuser.value == null
+      ) {
         seteventPrivate({
           private: true,
           section: 'permissions',

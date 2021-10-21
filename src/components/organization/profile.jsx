@@ -10,8 +10,27 @@ const formLayout = {
    wrapperCol: { span: 24 }
 };
 
+const { Option } = Select;
+
 function OrganizationInformation(props) {
-   let { name, description, _id: organizationId } = props.org;
+  let { name, description, _id: organizationId ,typeevent} = props.org;
+
+  async function updateOrganization(values) {
+    const { name, description} = values.organization;
+    const body = {
+      name,
+      description,
+      typeevent      
+    };    
+    try {
+      await OrganizationApi.editOne(body, organizationId);
+      message.success("Información actualizada correctamente");
+    } catch (error) {
+      message.error("No se pudo actualizar la información");
+    }
+  }
+ 
+  
 
    async function updateOrganization(values) {
       const { name, description } = values.organization;

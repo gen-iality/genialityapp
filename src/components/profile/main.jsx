@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Card, Col, Layout, Menu, Row, Space, Statistic, Tabs, Typography, Grid, Divider } from 'antd';
+import { Avatar, Card, Col, Layout, Row, Space, Statistic, Tabs, Typography, Grid, Divider, Skeleton } from 'antd';
 import { AppstoreFilled, SettingOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import OrganizationCard from './organizationCard';
 import NewCard from './newCard';
@@ -9,6 +9,8 @@ import { EventsApi, TicketsApi, OrganizationApi } from '../../helpers/request';
 import EventCard from '../shared/eventCard';
 import { Link } from 'react-router-dom';
 import * as Cookie from 'js-cookie';
+import moment from 'moment';
+import Loading from './loading';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -29,14 +31,16 @@ const MainProfile = (props) => {
   const fetchItem = async () => {
     /* Eventos creados por el usuario    */
     const events = await EventsApi.mine();
-    setevents(events);
+    const eventsDataSorted = events.sort((a, b) => moment(b.datetime_from) - moment(a.datetime_from));
+    setevents(eventsDataSorted);
     seteventsLimited(events.slice(0, 3));
     /* ----------------------------------*/
     /* Eventos en los que esta registrado el usuario */
     const token = Cookie.get('evius_token');
     const ticketsall = await TicketsApi.getAll(token);
+    const ticketsDataSorted = ticketsall.sort((a, b) => moment(b.created_at) - moment(a.created_at));
     const usersInscription = [];
-    ticketsall.forEach(async (element) => {
+    ticketsDataSorted.forEach(async (element) => {
       const eventByTicket = await EventsApi.getOne(element.event_id);
       if (eventByTicket) {
         usersInscription.push(eventByTicket);
@@ -48,8 +52,9 @@ const MainProfile = (props) => {
     /* ----------------------------------*/
     /* Organizaciones del usuario */
     const organizations = await OrganizationApi.mine();
-    setorganizations(organizations);
-    setorganizationsLimited(organizations.slice(0, 5));
+    const organizationDataSorted = organizations.sort((a, b) => moment(b.created_at) - moment(a.created_at));
+    setorganizations(organizationDataSorted);
+    setorganizationsLimited(organizationDataSorted.slice(0, 5));
     /* ----------------------------------*/
     setIsLoading(false);
   };
@@ -86,11 +91,7 @@ const MainProfile = (props) => {
             direction='vertical'
             style={{ textAlign: 'center', paddingLeft: '15px', paddingRight: '15px' }}>
             {isLoading ? (
-              <Avatar
-                style={{ backgroundColor: '#50D3C9' }}
-                size={150}
-                icon={<LoadingOutlined style={{ fontSize: '50px' }} />}
-              />
+              <Skeleton.Avatar active={true} size={150} shape='circle' />
             ) : (
               <>
                 {props?.cUser?.value?.picture ? (
@@ -148,18 +149,18 @@ const MainProfile = (props) => {
                 }
                 key='1'>
                 {isLoading ? (
-                  <Space
-                    direction='horizontal'
-                    style={{ width: '100%', justifyContent: 'center', alignContent: 'center' }}>
-                    <LoadingOutlined style={{ fontSize: '50px' }} />
-                  </Space>
+                  <Loading />
                 ) : (
                   <Row gutter={[16, 16]}>
                     <Col span={24}>
                       <Divider orientation='left'>Eventos creado</Divider>
                       <Row gutter={[16, 16]}>
                         <Col key={'index'} xs={24} sm={12} md={12} lg={8} xl={6}>
-                          <NewCard entityType='event' cUser={props.cUser} />
+                          {organizationsLimited.length > 0 ? (
+                            <NewCard entityType='event' cUser={props.cUser} org={organizationsLimited} />
+                          ) : (
+                            <NewCard entityType='event' cUser={props.cUser} />
+                          )}
                         </Col>
                         {/* aqui empieza el mapeo de eventCard.jsx maximo 4 */}
                         {eventsLimited.length > 0 &&
@@ -236,11 +237,7 @@ const MainProfile = (props) => {
             )}
             <TabPane tab='Organizaciones' key='2'>
               {isLoading ? (
-                <Space
-                  direction='horizontal'
-                  style={{ width: '100%', justifyContent: 'center', alignContent: 'center' }}>
-                  <LoadingOutlined style={{ fontSize: '50px' }} />
-                </Space>
+                <Loading />
               ) : (
                 <Row gutter={[16, 16]}>
                   <Col xs={12} sm={8} md={8} lg={6} xl={4} xxl={4}>
@@ -259,15 +256,15 @@ const MainProfile = (props) => {
             </TabPane>
             <TabPane tab='Eventos creados' key='3'>
               {isLoading ? (
-                <Space
-                  direction='horizontal'
-                  style={{ width: '100%', justifyContent: 'center', alignContent: 'center' }}>
-                  <LoadingOutlined style={{ fontSize: '50px' }} />
-                </Space>
+                <Loading />
               ) : (
                 <Row gutter={[16, 16]}>
                   <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                    <NewCard entityType='event' cUser={props.cUser} />
+                    {organizationsLimited.length > 0 ? (
+                      <NewCard entityType='event' cUser={props.cUser} org={organizationsLimited} />
+                    ) : (
+                      <NewCard entityType='event' cUser={props.cUser} />
+                    )}
                   </Col>
                   {events.map((event) => {
                     return (
@@ -297,11 +294,7 @@ const MainProfile = (props) => {
             </TabPane>
             <TabPane tab='Registros a eventos' key='4'>
               {isLoading ? (
-                <Space
-                  direction='horizontal'
-                  style={{ width: '100%', justifyContent: 'center', alignContent: 'center' }}>
-                  <LoadingOutlined style={{ fontSize: '50px' }} />
-                </Space>
+                <Loading />
               ) : (
                 <Row gutter={[16, 16]}>
                   {tickets.map((event) => {

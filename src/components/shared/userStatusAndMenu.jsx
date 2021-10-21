@@ -105,7 +105,7 @@ const UserStatusAndMenu = (props) => {
   let loggedInuser = (
     <Row style={MenuStyle}>
       <Col style={MenuStyle}>
-        <Dropdown arrow overlay={menu}>
+        <Dropdown arrow overlay={menu} placement='bottomRight'>
           <a onClick={(e) => e.preventDefault()}>
             <Space
               className='shadowHover'

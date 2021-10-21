@@ -35,6 +35,9 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
         setNoticias(noticeList);
         setLoading(false);
         setEventId(match.params.event_id);
+      } else {
+        setNoticias([]);
+        setLoading(false);
       }
     });
 
@@ -64,7 +67,7 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
           noticias.length > 0 &&
           noticias.map((news) => (
             <>
-            {console.log("NOTICIA==>",news)}
+              {console.log('NOTICIA==>', news)}
               <Col style={{ paddingBottom: '30px' }} xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                 {moment().format('YYYY-MM-DD') === moment(news.created_at).format('YYYY-MM-DD') ? (
                   <Badge.Ribbon text='Nuevo' color='cyan'>
@@ -74,7 +77,7 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
                         <img
                           style={{ height: '28vh', objectFit: 'cover' }}
                           alt='example'
-                          src={news && news.image  ? news.image : imgNotFound}
+                          src={news && news.image ? news.image : imgNotFound}
                         />
                       }
                       actions={[
@@ -109,7 +112,7 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
                       <img
                         style={{ height: '28vh', objectFit: 'cover' }}
                         alt='example'
-                        src={news && news.image  ? news.image : imgNotFound}
+                        src={news && news.image ? news.image : imgNotFound}
                       />
                     }
                     actions={[
@@ -140,6 +143,9 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
               </Col>
             </>
           ))}
+        {noticias && noticias.length == 0 && (
+          <Card style={{ width: '100%', textAlign: 'center' }}>No existen noticias</Card>
+        )}
         {size && (
           <Button type='primary' block onClick={viewAll} style={{ fontSize: '18px', height: 'auto' }}>
             {!viewMenos ? 'Ver más' : 'Ver menos'}

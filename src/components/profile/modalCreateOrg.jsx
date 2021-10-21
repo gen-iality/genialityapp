@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, Button, Typography, Upload, message } from 'antd';
+import { Modal, Form, Input, Button, Typography, Upload, message, Space } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { UploadOutlined } from '@ant-design/icons';
+import { PictureOutlined } from '@ant-design/icons';
 import functionCreateNewOrganization from './functionCreateNewOrganization';
 
 const ModalCreateOrg = (props) => {
+  const [form] = Form.useForm();
   let [imageAvatar, setImageAvatar] = useState(null);
 
   const beforeUpload = (file) => {
@@ -15,23 +16,41 @@ const ModalCreateOrg = (props) => {
     return isLt5M ? true : false;
   };
 
+  function resetFields() {
+    form.resetFields();
+    setImageAvatar(null);
+  }
   const saveNewOrganization = (values) => {
-    const newValues = { ...values, logo: imageAvatar, closeModal: props.setIsVisible, fetchItem: props.fetchItem };
+    const newValues = {
+      ...values,
+      logo: imageAvatar,
+      closeModal: props.setModalCreateOrgIsVisible,
+      fetchItem: props.fetchItem,
+      resetFields: resetFields,
+    };
     functionCreateNewOrganization(newValues);
   };
 
   return (
     <Modal
-      bodyStyle={{ textAlign: 'center', paddingRight: '80px', paddingLeft: '80px', paddingTop: '80px', height: '70vh' }}
+      bodyStyle={{
+        textAlign: 'center',
+        paddingRight: '80px',
+        paddingLeft: '80px',
+        paddingTop: '80px',
+        paddingBottom: '50px',
+        height: 'auto',
+      }}
       centered
       footer={null}
       zIndex={1000}
       closable={true}
-      visible={props.isVisible}
+      visible={props.modalCreateOrgIsVisible}
       onCancel={() => {
-        props.setIsVisible(false);
+        props.setModalCreateOrgIsVisible(false);
+        resetFields();
       }}>
-      <Form onFinish={saveNewOrganization} autoComplete='off' layout='vertical'>
+      <Form onFinish={saveNewOrganization} form={form} autoComplete='off' layout='vertical'>
         <Typography.Title level={4} type='secondary'>
           Nueva organizacion
         </Typography.Title>
@@ -56,8 +75,11 @@ const ModalCreateOrg = (props) => {
               fileList={imageAvatar}
               beforeUpload={beforeUpload}>
               {imageAvatar === null && (
-                <Button type='primary' shape='circle' style={{ height: '100px', width: '100px' }}>
-                  Subir logo
+                <Button type='primary' shape='circle' style={{ height: '150px', width: '150px' }}>
+                  <Space direction='vertical'>
+                    <PictureOutlined style={{ fontSize: '40px' }} />
+                    Subir logo
+                  </Space>
                 </Button>
               )}
             </Upload>

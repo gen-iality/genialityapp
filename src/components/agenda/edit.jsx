@@ -54,32 +54,32 @@ class AgendaEdit extends Component {
       // El id de la actividad se inicializa al crear la actividad
       activity_id: false,
       isLoading: { types: true, categories: true },
-      name: '',
-      subtitle: '',
+      name: "",
+      subtitle: "",
       bigmaker_meeting_id: null,
-      has_date: '',
-      description: '',
-      registration_message: '',
-      date: '',
+      has_date: "",
+      description: "",
+      registration_message: "",
+      date: "",
       hour_start: new Date(),
       hour_end: new Date(),
       key: new Date(),
-      image: '',
-      locale: 'en',
+      image: "",
+      locale: "en",
       capacity: 0,
-      type_id: '',
-      space_id: '',
-      access_restriction_type: 'OPEN',
+      type_id: "",
+      space_id: "",
+      access_restriction_type: "OPEN",
       selectedCategories: [],
       selectedHosts: [],
-      selectedType: '',
+      selectedType: "",
       selectedRol: [],
       days: [],
       spaces: [],
       categories: [],
-      start_url: '',
-      join_url: '',
-      meeting_id: '',
+      start_url: "",
+      join_url: "",
+      meeting_id: "",
       documents: [],
       types: [],
       roles: [],
@@ -88,12 +88,15 @@ class AgendaEdit extends Component {
       nameDocuments: [],
       tickets: [],
       selectedTicket: [],
-      platform: '',
-      vimeo_id: '',
-      name_host: '',
+      platform: "",
+      vimeo_id: "",
+      name_host: "",
       isExternal: false,
       service: new Service(firestore),
-      externalSurveyID: '',
+      externalSurveyID: "",
+      length: "",
+      latitude: "",
+      isPhysical:false,
 
       //Estado para detectar cambios en la fecha/hora de la actividad sin guardar
       pendingChangesSave: false,
@@ -112,12 +115,23 @@ class AgendaEdit extends Component {
   // VALIDAR SI TIENE ENCUESTAS EXTERNAS
   validateRoom = async () => {
     const { service } = this.state;
-    const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, this.state.activity_id);
+    const hasVideoconference = await service.validateHasVideoconference(
+      this.props.event._id,
+      this.state.activity_id
+    );
     if (hasVideoconference) {
-      const configuration = await service.getConfiguration(this.props.event._id, this.state.activity_id);
+      const configuration = await service.getConfiguration(
+        this.props.event._id,
+        this.state.activity_id
+      );
       this.setState({
-        isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
-        externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
+        isExternal:
+          configuration.platform && configuration.platform === "zoomExterno"
+            ? true
+            : false,
+        externalSurveyID: configuration.meeting_id
+          ? configuration.meeting_id
+          : null,
       });
     }
   };
@@ -133,7 +147,7 @@ class AgendaEdit extends Component {
     } = this.props;
     let days = [];
     const ticketEvent = [];
-    let vimeo_id = '';
+    let vimeo_id = "";
     try {
       const tickets = await eventTicketsApi.getAll(event._id);
       for (let i = 0; tickets.length > i; i++) {
@@ -144,8 +158,12 @@ class AgendaEdit extends Component {
         });
       }
 
-      vimeo_id = event.vimeo_id ? event.vimeo_id : '';
-      this.setState({ tickets: ticketEvent, platform: event.event_platform, vimeo_id: vimeo_id });
+      vimeo_id = event.vimeo_id ? event.vimeo_id : "";
+      this.setState({
+        tickets: ticketEvent,
+        platform: event.event_platform,
+        vimeo_id: vimeo_id,
+      });
 
       //Si existe dates, itera sobre el array de fechas especificas, dandole el formato especifico
       if (event.dates && event.dates.length > 0) {
@@ -153,19 +171,19 @@ class AgendaEdit extends Component {
         Date.parse(date);
 
         for (var i = 0; i < date.length; i++) {
-          let formatDate = Moment(date[i], ['YYYY-MM-DD']).format('YYYY-MM-DD');
+          let formatDate = Moment(date[i], ["YYYY-MM-DD"]).format("YYYY-MM-DD");
           days.push({ value: formatDate, label: formatDate });
         }
         //Si no, recibe la fecha inicio y la fecha fin y le da el formato especifico a mostrar
       } else {
         const init = Moment(event.date_start);
         const end = Moment(event.date_end);
-        const diff = end.diff(init, 'days');
+        const diff = end.diff(init, "days");
         //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
         for (let i = 0; i < diff + 1; i++) {
           let formatDate = Moment(init)
-            .add(i, 'd')
-            .format('YYYY-MM-DD');
+            .add(i, "d")
+            .format("YYYY-MM-DD");
           days.push({ value: formatDate, label: formatDate });
         }
       }
@@ -177,7 +195,11 @@ class AgendaEdit extends Component {
 
     let nameDocuments = [];
     for (let i = 0; i < documents.length; i += 1) {
-      nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
+      nameDocuments.push({
+        ...documents[i],
+        value: documents[i].title,
+        label: documents[i].title,
+      });
     }
     this.setState({ nameDocuments });
 
@@ -211,7 +233,9 @@ class AgendaEdit extends Component {
         requires_registration: info.requires_registration || false,
       });
 
-      Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
+      Object.keys(this.state).map((key) =>
+        info[key] ? this.setState({ [key]: info[key] }) : ""
+      );
       const { date, hour_start, hour_end } = handleDate(info);
 
       let currentUser = await getCurrentUser();
@@ -224,7 +248,10 @@ class AgendaEdit extends Component {
         selectedTickets: info.selectedTicket ? info.selectedTicket : [],
         selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
         selectedType: fieldsSelect(info.type_id, types),
-        selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
+        selectedCategories: fieldsSelect(
+          info.activity_categories_ids,
+          categories
+        ),
         currentUser: currentUser,
       });
     } else {
@@ -247,11 +274,16 @@ class AgendaEdit extends Component {
     this.validateRoom();
   }
 
+  handlePhysical = () => {
+    let isPhysical = this.state.isPhysical
+    this.setState({ isPhysical: !isPhysical });
+  }
+
   //FN general para cambio en input
   handleChange = async (e) => {
     let { name, value } = e.target;
 
-    if (name === 'requires_registration') {
+    if (name === "requires_registration") {
       value = e.target.checked;
     }
     // BACKLOG -> porque host_id se setea siempre que se setea un estado
@@ -284,9 +316,11 @@ class AgendaEdit extends Component {
       this.setState({ isLoading: { ...this.isLoading, [name]: true } });
       //Se revisa a que ruta apuntar
       const item =
-        name === 'types'
+        name === "types"
           ? await TypesAgendaApi.create(this.props.event._id, { name: value })
-          : await CategoriesAgendaApi.create(this.props.event._id, { name: value });
+          : await CategoriesAgendaApi.create(this.props.event._id, {
+              name: value,
+            });
       const newOption = { label: value, value: item._id, item };
       this.setState(
         (prevState) => ({
@@ -294,12 +328,17 @@ class AgendaEdit extends Component {
           [name]: [...prevState[name], newOption],
         }),
         () => {
-          if (name === 'types') this.setState({ selectedType: newOption });
-          else this.setState((state) => ({ selectedCategories: [...state.selectedCategories, newOption] }));
+          if (name === "types") this.setState({ selectedType: newOption });
+          else
+            this.setState((state) => ({
+              selectedCategories: [...state.selectedCategories, newOption],
+            }));
         }
       );
     } catch (e) {
-      this.setState((prevState) => ({ isLoading: { ...prevState.isLoading, [name]: false } }));
+      this.setState((prevState) => ({
+        isLoading: { ...prevState.isLoading, [name]: false },
+      }));
       sweetAlert.showError(handleRequestError(e));
     }
   };
@@ -311,7 +350,9 @@ class AgendaEdit extends Component {
         const image = await uploadImage(file);
         this.setState({ image });
       } else {
-        this.setState({ errImg: 'Only images files allowed. Please try again :)' });
+        this.setState({
+          errImg: "Only images files allowed. Please try again :)",
+        });
       }
     } catch (e) {
       sweetAlert.showError(handleRequestError(e));
@@ -333,7 +374,7 @@ class AgendaEdit extends Component {
       try {
         const info = this.buildInfo();
 
-        sweetAlert.showLoading('Espera (:', 'Guardando...');
+        sweetAlert.showLoading("Espera (:", "Guardando...");
         const {
           event,
           location: { state },
@@ -354,7 +395,11 @@ class AgendaEdit extends Component {
           });
 
           for (let i = 0; i < selected_document?.length; i++) {
-            await DocumentsApi.editOne(event._id, data, selected_document[i]._id);
+            await DocumentsApi.editOne(
+              event._id,
+              data,
+              selected_document[i]._id
+            );
           }
         } else {
           const agenda = await AgendaApi.create(event._id, info);
@@ -370,7 +415,8 @@ class AgendaEdit extends Component {
         this.setState({ pendingChangesSave: false });
 
         sweetAlert.hideLoading();
-        sweetAlert.showSuccess('Información guardada');
+        sweetAlert.showSuccess("Información guardada");
+        console.log("Info agenda: ", info);
         this.props.history.push(`/eventadmin/${event._id}/agenda`);
       } catch (e) {
         sweetAlert.showError(handleRequestError(e));
@@ -383,7 +429,7 @@ class AgendaEdit extends Component {
       try {
         const info = this.buildInfoLanguage();
 
-        sweetAlert.showLoading('Espera (:', 'Guardando...');
+        sweetAlert.showLoading("Espera (:", "Guardando...");
         const {
           event,
           location: { state },
@@ -396,7 +442,7 @@ class AgendaEdit extends Component {
           this.props.history.push(`/eventadmin/${event._id}/agenda`);
         }
         sweetAlert.hideLoading();
-        sweetAlert.showSuccess('Información guardada');
+        sweetAlert.showSuccess("Información guardada");
       } catch (e) {
         sweetAlert.showError(handleRequestError(e));
       }
@@ -423,11 +469,19 @@ class AgendaEdit extends Component {
       registration_message,
       selected_document,
       image,
+      length,
+      latitude,
     } = this.state;
-    const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
-    const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
-    const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
-    const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
+    const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
+    const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
+    const activity_categories_ids =
+      selectedCategories.length > 0
+        ? selectedCategories.map(({ value }) => value)
+        : [];
+    const access_restriction_rol_ids =
+      access_restriction_type !== "OPEN"
+        ? selectedRol.map(({ value }) => value)
+        : [];
 
     const type_id = selectedType.value;
     return {
@@ -448,6 +502,8 @@ class AgendaEdit extends Component {
       has_date,
       selected_document,
       requires_registration,
+      length,
+      latitude,
     };
   };
 
@@ -482,13 +538,15 @@ class AgendaEdit extends Component {
       name_host,
       key,
       requires_registration,
+      length,
+      latitude,
     } = this.state;
 
     //const registration_message_storage = window.sessionStorage.getItem('registration_message');
     //const description_storage = window.sessionStorage.getItem('description');
 
-    const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
-    const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
+    const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
+    const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
     const activity_categories_ids =
       selectedCategories !== undefined
         ? selectedCategories[0] === undefined
@@ -496,9 +554,17 @@ class AgendaEdit extends Component {
           : selectedCategories.map(({ value }) => value)
         : [];
 
-    const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
-    const host_ids = selectedHosts >= 0 ? [] : selectedHosts?.filter((host) => host != null).map(({ value }) => value);
-    const type_id = selectedType === undefined ? '' : selectedType.value;
+    const access_restriction_rol_ids =
+      access_restriction_type !== "OPEN"
+        ? selectedRol.map(({ value }) => value)
+        : [];
+    const host_ids =
+      selectedHosts >= 0
+        ? []
+        : selectedHosts
+            ?.filter((host) => host != null)
+            .map(({ value }) => value);
+    const type_id = selectedType === undefined ? "" : selectedType.value;
     return {
       name,
       subtitle,
@@ -515,7 +581,7 @@ class AgendaEdit extends Component {
       access_restriction_rol_ids,
       type_id,
       has_date,
-      timeConference: '',
+      timeConference: "",
       selected_document,
       meeting_id: meeting_id,
       vimeo_id: vimeo_id,
@@ -528,15 +594,19 @@ class AgendaEdit extends Component {
       key,
       requires_registration,
       host_ids,
+      length,
+      latitude,
     };
   };
 
   //FN para eliminar la actividad
   remove = async () => {
     if (this.state.activity_id) {
-      if (await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id)) {
+      if (
+        await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id)
+      ) {
         this.setState({ redirect: true });
-        sweetAlert.showSuccess('Correcto', 'Actividad eliminada');
+        sweetAlert.showSuccess("Correcto", "Actividad eliminada");
       }
     }
   };
@@ -545,15 +615,19 @@ class AgendaEdit extends Component {
 
   validForm = () => {
     let title = [];
-    if (this.state.name.length <= 0) title.push('El nombre es requerido');
+    if (this.state.name.length <= 0) title.push("El nombre es requerido");
 
-    if (this.state.date === '' || this.state.date === 'Invalid date') title.push('Seleccione el día');
+    if (this.state.date === "" || this.state.date === "Invalid date")
+      title.push("Seleccione el día");
 
-    if (this.state.hour_start === '' || this.state.hour_start === 'Invalid date')
-      title.push('Seleccione una hora de inicio valida');
+    if (
+      this.state.hour_start === "" ||
+      this.state.hour_start === "Invalid date"
+    )
+      title.push("Seleccione una hora de inicio valida");
 
-    if (this.state.hour_end === '' || this.state.hour_end === 'Invalid date')
-      title.push('Seleccione una hora de finalización valida');
+    if (this.state.hour_end === "" || this.state.hour_end === "Invalid date")
+      title.push("Seleccione una hora de finalización valida");
 
     if (title.length > 0) {
       //   sweetAlert.twoButton(title, "warning", false, "OK", () => { });
@@ -581,9 +655,9 @@ class AgendaEdit extends Component {
   }
 
   handleChangeReactQuill = (e, label) => {
-    if (label === 'description') {
+    if (label === "description") {
       this.setState({ description: e });
-    } else if (label === 'registration_message') {
+    } else if (label === "registration_message") {
       this.setState({ registration_message: e });
     }
   };
@@ -621,9 +695,12 @@ class AgendaEdit extends Component {
       platform,
       date_start_zoom,
       date_end_zoom,
+      length,
+      latitude,
     } = this.state;
     const { matchUrl } = this.props;
-    if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
+    if (!this.props.location.state || this.state.redirect)
+      return <Redirect to={matchUrl} />;
     return (
       <Tabs defaultActiveKey='1'>
         <TabPane tab='Agenda' key='1'>
@@ -935,9 +1012,14 @@ class AgendaEdit extends Component {
           <Row justify='center' wrap gutter={12}>
             <Col span={18}>
               <Checkbox
-                defaultChecked={info && (info.requires_registration || info.requires_registration === 'true')}
+                defaultChecked={
+                  info &&
+                  (info.requires_registration ||
+                    info.requires_registration === "true")
+                }
                 onChange={this.handleChange}
-                name='requires_registration'>
+                name="requires_registration"
+              >
                 La actividad requiere registro
               </Checkbox>
               <Button onClick={this.submit} type='primary'>

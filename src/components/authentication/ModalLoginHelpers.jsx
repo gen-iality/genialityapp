@@ -5,6 +5,7 @@ import { EventsApi, UsersApi } from '../../helpers/request';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
 import { useIntl } from 'react-intl';
+import { auth } from '../../helpers/firebase';
 
 const { useBreakpoint } = Grid;
 
@@ -62,13 +63,27 @@ const ModalLoginHelpers = (props) => {
     setSendRecovery(null);
     // SI EL EVENTO ES PARA RECUPERAR CONTRASEÑA
     if (typeModal == 'recover') {
-      const { data } = await EventsApi.getStatusRegister(props.cEvent.value?._id, values.email);
-      //console.log("RESPUESTA REGISTER USER==>",data)
-      if (data.length == 0) {
-        setRegisterUser(true);
+      if (!props.organization) {
+        const { data } = await EventsApi.getStatusRegister(props.cEvent.value?._id, values.email);
+        //console.log("RESPUESTA REGISTER USER==>",data)
+        if (data.length == 0) {
+          setRegisterUser(true);
+        } else {
+          //RECUPERAR CONTRASEÑA
+          handleRecoveryPass(values);
+        }
       } else {
-        //RECUPERAR CONTRASEÑA
-        handleRecoveryPass(values);
+        //alert('ACA');
+        const userExists = await UsersApi.findByEmail(values.email);
+        if (userExists.length > 0) {
+          auth.sendPasswordResetEmail(values.email);
+          setSendRecovery(`Para recuperar contraseña se ha enviado un link al correo: ${values.email} `);
+          setresul('OK');
+          //setRegisterUser(true);
+        } else {
+          setSendRecovery(`${values.email} no se encuentra registrado..`);
+        }
+        setLoading(false);
       }
     } else {
       //ENVIAR ACCESO AL CORREO
