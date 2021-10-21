@@ -205,13 +205,13 @@ function AddNews(props) {
             />
           </Form.Item>
           <Form.Item label={'Subtítulo *'}>
-            <EviusReactQuill data={descriptionShort} onChange={changeDescriptionShort} />
+            <EviusReactQuill data={descriptionShort} handleChange={changeDescriptionShort} />
             {error != null && error.descriptionShort && (
               <small style={{ color: 'red' }}>El subtítulo es requerido</small>
             )}
           </Form.Item>
           <Form.Item label={'Noticia: *'}>
-            <EviusReactQuill data={description}  onChange={changeDescription} />
+            <EviusReactQuill data={description}  handleChange={changeDescription} />
             {error != null && error.description && <small style={{ color: 'red' }}>La noticia es requerido</small>}
           </Form.Item>
           <Form.Item label={'Imagen: *'}>
