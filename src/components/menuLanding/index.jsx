@@ -1,9 +1,15 @@
 import React, { Component, Fragment } from 'react';
-import { Typography, Select, Card, Input, Button, Col, Row, message, Spin } from 'antd';
+import { Typography, Select, Card, Input, Button, Col, Row, message, Spin, Form, InputNumber } from 'antd';
 import { Actions, OrganizationApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
+import Header from '../../antdComponents/Header';
+
 const { Title } = Typography;
 const { Option } = Select;
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
+};
 
 class menuLanding extends Component {
   constructor(props) {
@@ -357,11 +363,70 @@ class menuLanding extends Component {
   render() {
     return (
       <Fragment>
-        <Title level={3}>
+        <Form
+          {...formLayout}
+          onFinish={this.submit}
+        >
+          <Header 
+            title={this.props.organization != 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'}
+            description={'(Podrás guardar la configuración de tu menú en la parte inferior)'}
+            save
+            form
+          />
+
+          <Row gutter={[16, 16]} wrap>
+            {
+              Object.keys(this.state.menu).map((key) => (
+                <Col key={key} xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
+                  <Card 
+                    title={this.state.menu[key].name}
+                    bordered={true}
+                  >
+                    <Form.Item>
+                      <Button
+                        onClick={() => {this.mapActiveItemsToAvailable(key);}}
+                      >
+                        {this.state.menu[key].checked === true ? 'Deshabilitar' : 'Habilitar'}
+                      </Button>
+                    </Form.Item>
+                    <Form.Item label={'Cambiar nombre de la sección'}>
+                      <Input
+                        disabled={this.state.menu[key].checked === true ? false : true}
+                        //value={this.state.menu[key].name}
+                        onChange={(e) => {this.changeNameMenu(key, e.target.value);}}
+                        placeholder={this.state.menu[key].name}
+                      />
+                    </Form.Item>
+                    <Form.Item label={'Permisos para la sección'}>
+                      <Select
+                        key={this.state.keySelect}
+                        disabled={this.state.menu[key].checked === true ? false : true}
+                        value={this.state.menu[key].permissions}
+                        onChange={(e) => {this.changePermissions(key, e);}}>
+                        <Option value='public'>Abierto para todos</Option>
+                        <Option value='assistants'>Usuarios inscritos al evento</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item label={'Posición en el menú'}>
+                      <InputNumber
+                        disabled={this.state.menu[key].checked === true ? false : true}
+                        value={this.state.menu[key].position}
+                        onChange={(e) => this.orderPosition(key, e.target.value)} 
+                      />
+                    </Form.Item>
+                  </Card>
+                </Col>
+              ))
+            }
+          </Row>
+        </Form>
+        
+        
+        {/* <Title level={3}>
           {this.props.organization != 1 ? 'Habilitar secciones del evento' : 'Secciones a habilitar para cada evento'}
         </Title>
-        <h3>(Podrás guardar la configuración de tu menú en la parte inferior)</h3>
-        <Row gutter={16}>
+        <h3>(Podrás guardar la configuración de tu menú en la parte inferior)</h3> */}
+        {/* <Row gutter={16}>
           {console.log('MENU SECTIONS ', this.state.menu)}
           {Object.keys(this.state.menu).map((key) => {
             return (
@@ -419,7 +484,7 @@ class menuLanding extends Component {
               </div>
             );
           })}
-        </Row>
+        </Row> */}
         {/* <Row>
                     <div style={{ marginTop: "4%" }}>
                         {this.state.menu["informativeSection"].checked && (
@@ -440,11 +505,11 @@ class menuLanding extends Component {
                         )}
                     </div>
                 </Row> */}
-        <Row>
+        {/* <Row>
           <Button style={{ marginTop: '1%' }} type='primary' size='large' onClick={this.submit}>
             Guardar
           </Button>
-        </Row>
+        </Row> */}
       </Fragment>
     );
   }
