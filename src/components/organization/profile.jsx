@@ -10,8 +10,6 @@ const formLayout = {
    wrapperCol: { span: 24 }
 };
 
-const { Option } = Select;
-
 function OrganizationInformation(props) {
   let { name, description, _id: organizationId ,typeevent} = props.org;
 
@@ -29,8 +27,6 @@ function OrganizationInformation(props) {
       message.error("No se pudo actualizar la información");
     }
   }
- 
-  
 
    async function updateOrganization(values) {
       const { name, description } = values.organization;
@@ -67,11 +63,6 @@ function OrganizationInformation(props) {
                   <Form.Item name={['organization', 'description']} label='Descripción' initialValue={description}>
                      <Input.TextArea />
                   </Form.Item>
-                  {/* <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                     <Button type='primary' htmlType='submit'>
-                        Editar
-                     </Button>
-                  </Form.Item> */}
                </Col>
             </Row>
          </Form>
