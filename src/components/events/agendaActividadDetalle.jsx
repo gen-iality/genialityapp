@@ -82,7 +82,7 @@ let AgendaActividadDetalle = (props) => {
   const [ currentActivity, setcurrentActivity ] = useState(null);
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
   let history = useHistory();
-  let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth } = useContext(
+  let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth, chatAttendeChats } = useContext(
     HelperContext
   );
 
@@ -219,7 +219,7 @@ let AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     if (
-      /*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === "game"
+      chatAttendeChats === "4"
     ) {
       const sharedProperties = {
         position: "fixed",
@@ -250,7 +250,7 @@ let AgendaActividadDetalle = (props) => {
       setVideoStyles({ width: "100%", height: "80vh", transition: "300ms" });
       setVideoButtonStyles({ display: "none" });
     }
-  }, [ mainStageContent, isMobile ]);
+  }, [ chatAttendeChats, isMobile ]);
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
@@ -299,8 +299,10 @@ let AgendaActividadDetalle = (props) => {
   };
 
   useEffect(() => {
+
+    console.log("chatAttendeChats", chatAttendeChats)
     if (
-      /*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === "game"
+      chatAttendeChats === "4"
     ) {
       const sharedProperties = {
         position: "fixed",
@@ -331,7 +333,7 @@ let AgendaActividadDetalle = (props) => {
       setVideoStyles({ width: "100%", height: "80vh", transition: "300ms" });
       setVideoButtonStyles({ display: "none" });
     }
-  }, [ mainStageContent, isMobile ]);
+  }, [ chatAttendeChats, isMobile ]);
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     firestore
@@ -563,8 +565,7 @@ let AgendaActividadDetalle = (props) => {
               {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
 
               {meetingState === "open_meeting_room" &&
-                // mainStageContent !== 'surveyDetalle' &&
-                // mainStageContent !== 'games' &&
+
 
                 platform !== "" &&
                 platform !== null ? (
@@ -610,7 +611,7 @@ let AgendaActividadDetalle = (props) => {
                   ) : (
                     <>
                       {platform === "zoomExterno" &&
-                        mainStageContent !== "game" ? (
+                        chatAttendeChats !== "4" ? (
                         openZoomExterno()
                       ) : (props.currentUser &&
                         currentActivity !== null &&
@@ -619,14 +620,14 @@ let AgendaActividadDetalle = (props) => {
                           !currentActivity.requires_registration) ? (
                         <>
                           {(platform === "zoom" || platform === "vimeo") &&
-                            mainStageContent !== "game" ? (
+                            chatAttendeChats !== "4" ? (
                             <ZoomIframe
                               platform={platform}
                               meeting_id={meeting_id}
                               generalTabs={props.tabs}
                             />
                           ) : (
-                           <>  {mainStageContent==="game"&&<Game />}</>
+                            <>  {chatAttendeChats === "4" && <Game />}</>
                           )}
                           <div
                             style={videoButtonStyles}
@@ -655,11 +656,11 @@ let AgendaActividadDetalle = (props) => {
                 )
               )}
 
-              {mainStageContent == "surveyDetalle" && (
+              {/* {mainStageContent == "surveyDetalle" && (
                 <>
                   <h1>Encuestas MainStage</h1>
                 </>
-              )}
+              )} */}
 
               {(meetingState === "" || meetingState == null) &&
                 currentActivity != null &&
@@ -687,8 +688,8 @@ let AgendaActividadDetalle = (props) => {
                 )}
 
               {meetingState === "closed_meeting_room" &&
-                mainStageContent !== "surveyDetalle" &&
-                mainStageContent !== "game" && (
+
+                chatAttendeChats !== "4" && (
                   <div className="column is-centered mediaplayer">
                     <img
                       className="activity_image"
@@ -715,8 +716,8 @@ let AgendaActividadDetalle = (props) => {
               {(meetingState === "ended_meeting_room" || !meetingState) &&
                 currentActivity !== null &&
                 currentActivity.video &&
-                mainStageContent !== "surveyDetalle" &&
-                mainStageContent !== "game" ? (
+
+                chatAttendeChats !== "4" ? (
                 <div className="column is-centered mediaplayer">
                   <ReactPlayer
                     width={"100%"}
@@ -734,8 +735,8 @@ let AgendaActividadDetalle = (props) => {
                   {meetingState === "ended_meeting_room" &&
                     ((currentActivity !== null && currentActivity.image) ||
                       image_event) &&
-                    mainStageContent !== "surveyDetalle" &&
-                    mainStageContent !== "game" && (
+
+                    chatAttendeChats !== "4" && (
                       <div>
                         <img
                           className="activity_image"
