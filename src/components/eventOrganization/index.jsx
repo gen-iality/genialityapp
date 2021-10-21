@@ -72,10 +72,10 @@ class EventOrganization extends Component {
             {/* BANNER */}
             {this.state.organization !== null && (
               <div style={{ width: '100%' }}>
-                {this.state.organization.styles.banner_image !== null || '' ? (
+                {this.state.organization.styles?.banner_image !== null || '' ? (
                   <img
                     style={{ objectFit: 'cover', width: '100%', maxHeight: '400px' }}
-                    src={this.state.organization.styles.banner_image}
+                    src={this.state.organization.styles?.banner_image}
                   />
                 ) : (
                   ''
@@ -191,10 +191,10 @@ class EventOrganization extends Component {
             {/* FOOTER */}
             {this.state.organization !== null && (
               <div style={{ width: '100%', maxHeight: '350px' }}>
-                {this.state.organization.styles.banner_footer !== null || '' ? (
+                {this.state.organization.styles?.banner_footer || '' ? (
                   <img
                     style={{ objectFit: 'cover', width: '100%', maxHeight: '250px' }}
-                    src={this.state.organization.styles.banner_footer}
+                    src={this.state.organization.styles?.banner_footer}
                   />
                 ) : (
                   ''

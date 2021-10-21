@@ -199,12 +199,18 @@ class menuLanding extends Component {
       menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}`);
     } else {
       //OBTENER DE ORGANIZACIÓN
+     // alert("ORGANIZATION")
+     
       menuLanding.itemsMenu = this.props.organizationObj.itemsMenu || [];
       console.log('ITEMS==>', menuLanding.itemsMenu);
+      this.state.itemsMenu=menuLanding.itemsMenu
+      let items=menuLanding.itemsMenu
+    
     }
     for (const prop in menuBase) {
       for (const prop1 in menuLanding.itemsMenu) {
         if (prop1 === prop) {
+          console.log("INGRESO ACA")
           this.mapActiveItemsToAvailable(prop);
           this.changeNameMenu(prop, menuLanding.itemsMenu[prop1]?.name);
           this.changePositionMenu(prop, menuLanding.itemsMenu[prop1].position);
@@ -257,9 +263,11 @@ class menuLanding extends Component {
       await Actions.put(`api/events/${this.props.event._id}`, newMenu);
     } else {
       //ACTUALIZAR ORGANIZACION
+     // console.log("ORGANIZATIONOBJ==>",this.props.organizationObj.itemsMenu)
+     //console.log(this.props.organizationObj)
       let updateOrganization = {
         ...this.props.organizationObj,
-        itemsMenu: { ...this.props.organizationObj.itemsMenu, ...menu },
+        itemsMenu: {...menu },
       };
       let resp = await OrganizationApi.editMenu(updateOrganization, updateOrganization._id);
       if (resp) {
@@ -276,10 +284,11 @@ class menuLanding extends Component {
 
   async mapActiveItemsToAvailable(key) {
     let menuBase = { ...this.state.menu };
-    let itemsMenuDB = { ...this.state.itemsMenu };
+    let itemsMenuDB ={ ...this.state.itemsMenu };
+    console.log("ITEMSMENUTOAVAILABLE==>",this.state.itemsMenu )
     console.log('items menù', itemsMenuDB);
     console.log('primero=>', menuBase[key]);
-    menuBase[key].checked = !menuBase[key].checked;
+    menuBase[key].checked = !menuBase[key].checked;  
     console.log('segundo=>', menuBase[key]);
 
     if (menuBase[key].checked) {
@@ -292,46 +301,57 @@ class menuLanding extends Component {
   }
 
   changeNameMenu(key, name) {
+    let menuBase = { ...this.state.menu };
     let itemsMenuDB = { ...this.state.itemsMenu };
+    console.log("CHANGEMENU==>",key, name)
     if (name !== '') {
       if (itemsMenuDB[key]) {
         itemsMenuDB[key].name = name;
+        menuBase[key].name=itemsMenuDB[key].name||name;
       }
     }
     this.setState({ itemsMenu: itemsMenuDB });
   }
 
   changePositionMenu(key, position) {
+    let menuBase = { ...this.state.menu };
     let itemsMenuDB = { ...this.state.itemsMenu };
     if (position !== '') {
       if (itemsMenuDB[key]) {
         itemsMenuDB[key].position = position;
+        menuBase[key].position= position || itemsMenuDB[key].position
       }
     }
     this.setState({ itemsMenu: itemsMenuDB });
   }
 
   changeMarkup(key, markup) {
+    let menuBase = { ...this.state.menu };
     let itemsMenuDB = { ...this.state.itemsMenu };
     if (markup !== '') {
       itemsMenuDB[key].markup = markup;
+      menuBase[key].markup= itemsMenuDB[key].markup || markup;
     }
     this.setState({ itemsMenu: itemsMenuDB });
   }
 
   changePermissions(key, access) {
+    let menuBase = { ...this.state.menu };
     let itemsMenuDB = { ...this.state.itemsMenu };
+    console.log("itemsMenuDB",itemsMenuDB)
     if (itemsMenuDB[key]) {
       itemsMenuDB[key].permissions = access;
+      menuBase[key].permissions=itemsMenuDB[key].permissions || access;
     }
 
     this.setState({ itemsMenu: itemsMenuDB, keySelect: Date.now() });
   }
 
   orderPosition(key, order) {
+    let itemsMenu = { ...this.state.menu };
     let itemsMenuToOrder = { ...this.state.itemsMenu };
     itemsMenuToOrder[key].position = order !== '' ? parseInt(order) : 0;
-
+    itemsMenu [key].position= itemsMenuToOrder[key].position || order !== '' ? parseInt(order) : 0
     this.setState({ itemsMenu: itemsMenuToOrder });
   }
   render() {
@@ -364,7 +384,7 @@ class menuLanding extends Component {
                       <label>Cambiar nombre de la sección</label>
                       <Input
                         disabled={this.state.menu[key].checked === true ? false : true}
-                        value={this.state.menu[key].name}
+                       //value={this.state.menu[key].name}
                         onChange={(e) => {
                           this.changeNameMenu(key, e.target.value);
                         }}
@@ -376,7 +396,7 @@ class menuLanding extends Component {
                       <Select
                         key={this.state.keySelect}
                         disabled={this.state.menu[key].checked === true ? false : true}
-                        defaultValue={this.state.menu[key].permissions}
+                        value={this.state.menu[key].permissions}
                         style={{ width: 200 }}
                         onChange={(e) => {
                           this.changePermissions(key, e);

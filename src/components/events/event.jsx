@@ -219,7 +219,7 @@ class Event extends Component {
               />
               <Route
                 path={`${match.url}/datos`}
-                render={() => <Datos eventID={this.state.event._id} event={this.state.event} />}
+                render={() => <Datos byEvent={1}  eventID={this.state.event._id} event={this.state.event} />}
               />
               <Route
                 path={`${match.url}/agenda`}
