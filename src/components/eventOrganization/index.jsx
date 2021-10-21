@@ -139,7 +139,7 @@ class EventOrganization extends Component {
                 </Row>
               )}
               {/* Lista de eventos próximos */}
-              <div style={{ backgroundColor: '#FFFFFF', padding: '5px', borderRadius: '10px' }}>
+              <div style={{ backgroundColor: '#FFFFFF', padding: '10px', borderRadius: '10px' }}>
                 <Badge offset={[60, 22]} count={`${this.state.events.length} Eventos`}>
                   <Title level={2}>Próximos</Title>
                 </Badge>
@@ -164,7 +164,7 @@ class EventOrganization extends Component {
               </div>
               <Divider />
               {/* Lista de eventos pasados */}
-              <div style={{ backgroundColor: '#FFFFFF', padding: '5px', borderRadius: '10px' }}>
+              <div style={{ backgroundColor: '#FFFFFF', padding: '10px', borderRadius: '10px' }}>
                 <Badge offset={[60, 22]} count={`${this.state.eventsOld.length} Eventos`}>
                   <Title level={2}>Pasados</Title>
                 </Badge>
