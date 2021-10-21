@@ -12,14 +12,27 @@ export default function AdmininformativeSection1(props) {
   const onFinish = (values) => {
     async function save() {
       console.log('minu', eventContext.value.itemsMenu);
+      
+      let informativeMenu   = {
+        "name" : "Sección informativa 2",
+        "position" : 30,
+        "section" : "informativeSection1",
+        "icon" : "FileDoneOutlined",
+        "markup" : null,
+        "checked" : true,
+        "permissions" : "public"
+      }
+
+      informativeMenu  = (eventContext.value.itemsMenu && eventContext.value.itemsMenu.informativeSection1 )  ? eventContext.value.itemsMenu.informativeSection1:informativeMenu;
+      informativeMenu = {...informativeMenu, markup: content }
       const data = {
         itemsMenu: {
           ...eventContext.value.itemsMenu,
-          informativeSection1: { ...eventContext.value.itemsMenu?.informativeSection1, markup: content },
-        },
+          informativeSection1: informativeMenu,
+        }
       };
       console.log('minu', data);
-
+     
       try {
         const result = await EventsApi.editOne(data, eventContext.value._id);
         message.success('Guardado');
