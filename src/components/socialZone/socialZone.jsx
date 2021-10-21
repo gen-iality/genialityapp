@@ -214,7 +214,7 @@ let SocialZone = function(props) {
             </>
           }
           key='4'>
-          <Row justify='space-between'>
+          {/* <Row justify='space-between'>
             <Col span={4}>
               <ArrowLeftOutlined
                 style={{ color: cEvent.value.styles.textMenu }}
@@ -230,7 +230,7 @@ let SocialZone = function(props) {
             <Col span={4}>
               <VideoCameraOutlined style={{ color: cEvent.value.styles.textMenu }} />
             </Col>
-          </Row>
+          </Row> */}
 
           <GameRanking currentUser={currentUser} cEvent={cEvent.value} />
         </TabPane>
