@@ -40,7 +40,7 @@ function OrgMembers(props) {
 
       fieldsMembersData.push(properties);
     });
-    console.log('10. fieldsMembersData ', fieldsMembersData);
+
     setMembersData(fieldsMembersData);
     setIsLoading(false);
   }
@@ -128,10 +128,18 @@ function OrgMembers(props) {
           </small>
         </div>
 
-        <Row justify='end' style={{ marginBottom: '10px' }}>
-          <Button onClick={addUser} style={{ marginLeft: 20 }} icon={<UserAddOutlined />}>
-            Agregar Usuario
-          </Button>
+        <Row justify='end' style={{ marginBottom: '10px', marginRight: '10px' }}>
+          {extraFields && extraFields.length > 0 ? (
+            <Button onClick={addUser} style={{ marginLeft: 20 }} icon={<UserAddOutlined />}>
+              Agregar Usuario
+            </Button>
+          ) : (
+            <small>
+              Para agregar un usuario, por favor cree los campos con los datos a recolectar en el menú: configuración
+              miembros
+            </small>
+          )}
+
           {membersData.length > 0 && (
             <Button style={{ marginLeft: 20 }} icon={<DownloadOutlined />} onClick={exportFile}>
               Exportar
