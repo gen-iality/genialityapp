@@ -51,6 +51,13 @@ export const HelperContextProvider = ({ children }) => {
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [tabLogin, setTabLogin] = useState('1');
+  const [currentActivity, setcurrenActivity] = useState()
+
+
+  function handleChangeCurrentActivity(activity) {
+    setcurrenActivity(activity)
+  }
+
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
@@ -560,6 +567,8 @@ export const HelperContextProvider = ({ children }) => {
         handleChangeTypeModal,
         handleChangeTabModal,
         tabLogin,
+        handleChangeCurrentActivity,
+        currentActivity,
       }}>
       {children}
     </HelperContext.Provider>

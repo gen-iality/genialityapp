@@ -11,7 +11,6 @@ import {
   AttendeeApi,
   discountCodesApi,
 } from '../../helpers/request';
-import AgendaActividadDetalle from './agendaActividadDetalle';
 import { Modal, Button, Card, Spin, notification, Input, Alert, Divider, Space, Tabs, Badge } from 'antd';
 import { firestore } from '../../helpers/firebase';
 import AgendaActivityItem from './AgendaActivityItem';

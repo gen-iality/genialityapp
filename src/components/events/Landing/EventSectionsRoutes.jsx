@@ -17,7 +17,7 @@ import WallForm from '../../wall/index';
 import Ferias from '../ferias/index';
 import VirtualConferenceBig from '../virtualConferenceBig';
 import CertificadoLanding from '../../certificados/cerLanding';
-import AgendaActividadDetalle from '../agendaActividadDetalle';
+
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
 import MyAgendaIndepend from '../../networking/myAgendaIndepend';
@@ -38,6 +38,7 @@ import UserLoginContainer from '../UserLoginContainer';
 import InfoEvent from '../../shared/infoEvent';
 import ResponsePayu from '../registrationForm/responsePayu';
 import { useParams } from 'react-router-dom';
+import AgendaActividadDetalle from '../AgendaActividadDetalle';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -218,7 +219,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <>
-                <AgendaActividadDetalle setVirtualConference={props.setVirtualConference} />
+                <AgendaActividadDetalle />
               </>
             )
           }
