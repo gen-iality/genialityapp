@@ -19,7 +19,6 @@ function OrganizationInformation(props) {
   let { name, description, _id: organizationId, type_event } = props.org;
 
   async function updateOrganization(values) {
-    console.log('10. values ', values);
     const { name, description, typevent } = values.organization;
     const body = {
       name,
