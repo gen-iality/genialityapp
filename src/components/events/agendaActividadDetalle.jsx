@@ -70,16 +70,16 @@ let AgendaActividadDetalle = (props) => {
   let cUser = UseCurrentUser();
 
   let { activity_id } = useParams();
-  let [idSpeaker, setIdSpeaker] = useState(false);
-  let [orderedHost, setOrderedHost] = useState([]);
-  const [meetingState, setMeetingState] = useState(null);
-  const [meeting_id, setMeeting_id] = useState(null);
-  const [platform, setPlatform] = useState(null);
+  let [ idSpeaker, setIdSpeaker ] = useState(false);
+  let [ orderedHost, setOrderedHost ] = useState([]);
+  const [ meetingState, setMeetingState ] = useState(null);
+  const [ meeting_id, setMeeting_id ] = useState(null);
+  const [ platform, setPlatform ] = useState(null);
   const totalAttendees = useState(0);
   const totalAttendeesCheckedin = useState(0);
-  const [names, setNames] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [currentActivity, setcurrentActivity] = useState(null);
+  const [ names, setNames ] = useState(null);
+  const [ email, setEmail ] = useState(null);
+  const [ currentActivity, setcurrentActivity ] = useState(null);
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
   let history = useHistory();
   let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth } = useContext(
@@ -99,7 +99,7 @@ let AgendaActividadDetalle = (props) => {
     }
 
     function orderHost(hosts) {
-      hosts.sort(function(a, b) {
+      hosts.sort(function (a, b) {
         return a.order - b.order;
       });
       setOrderedHost(hosts);
@@ -123,21 +123,19 @@ let AgendaActividadDetalle = (props) => {
   }, []);
 
   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
-  const [videoStyles, setVideoStyles] = useState(null);
-  const [videoButtonStyles, setVideoButtonStyles] = useState(null);
+  const [ videoStyles, setVideoStyles ] = useState(null);
+  const [ videoButtonStyles, setVideoButtonStyles ] = useState(null);
 
   // Array que contiene las actividades del espacio (que comparten el mismo meeting_id y platform)
-  const [activitiesSpace, setActivitiesSpace] = useState([]);
+  const [ activitiesSpace, setActivitiesSpace ] = useState([]);
 
-  const [activeTab, setActiveTab] = useState("description");
+  const [ activeTab, setActiveTab ] = useState("description");
   let mainStageContent = props.mainStageContent;
 
-  console.log("====================================");
-  console.log("mainStageContent", mainStageContent);
-  console.log("====================================");
+
 
   //Estado para detección si la vista es para mobile
-  const [isMobile, setIsMobile] = useState(false);
+  const [ isMobile, setIsMobile ] = useState(false);
 
   useEffect(() => {
     // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
@@ -190,7 +188,7 @@ let AgendaActividadDetalle = (props) => {
     }
 
     GetStateMeetingRoom();
-  }, [activity_id]);
+  }, [ activity_id ]);
 
   useEffect(() => {
     async function listeningSpaceRoom() {
@@ -203,7 +201,7 @@ let AgendaActividadDetalle = (props) => {
         .where("platform", "==", platform)
         .onSnapshot((snapshot) => {
           const list = [];
-          snapshot.forEach(function(doc) {
+          snapshot.forEach(function (doc) {
             if (doc.exists) {
               const response = doc.data();
               list.push(response);
@@ -217,7 +215,7 @@ let AgendaActividadDetalle = (props) => {
     (async () => {
       await listeningSpaceRoom();
     })();
-  }, [meeting_id, platform, props.cEvent.value]);
+  }, [ meeting_id, platform, props.cEvent.value ]);
 
   useEffect(() => {
     if (
@@ -252,7 +250,7 @@ let AgendaActividadDetalle = (props) => {
       setVideoStyles({ width: "100%", height: "80vh", transition: "300ms" });
       setVideoButtonStyles({ display: "none" });
     }
-  }, [mainStageContent, isMobile]);
+  }, [ mainStageContent, isMobile ]);
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
@@ -289,7 +287,7 @@ let AgendaActividadDetalle = (props) => {
         props.setHasOpenSurveys(data.hasOpenSurveys);
       });
     }
-  }, [props.cEvent.value, currentActivity]);
+  }, [ props.cEvent.value, currentActivity ]);
 
   {
     Moment.locale(window.navigator.language);
@@ -333,7 +331,7 @@ let AgendaActividadDetalle = (props) => {
       setVideoStyles({ width: "100%", height: "80vh", transition: "300ms" });
       setVideoButtonStyles({ display: "none" });
     }
-  }, [mainStageContent, isMobile]);
+  }, [ mainStageContent, isMobile ]);
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     firestore
@@ -369,7 +367,7 @@ let AgendaActividadDetalle = (props) => {
         props.setHasOpenSurveys(data.hasOpenSurveys);
       });
     }
-  }, [props.cEvent.value, currentActivity]);
+  }, [ props.cEvent.value, currentActivity ]);
 
   {
     Moment.locale(window.navigator.language);
@@ -382,7 +380,7 @@ let AgendaActividadDetalle = (props) => {
           style={{ padding: "1 !important" }}
           className={
             props.cEvent.value._id === "5fca68b7e2f869277cfa31b0" ||
-            props.cEvent.value._id === "5f99a20378f48e50a571e3b6"
+              props.cEvent.value._id === "5f99a20378f48e50a571e3b6"
               ? "magicland-agenda_information"
               : "agenda_information"
           }
@@ -455,13 +453,13 @@ let AgendaActividadDetalle = (props) => {
                   : meetingState === "ended_meeting_room" &&
                     currentActivity !== null &&
                     currentActivity.video
-                  ? "Grabado"
-                  : meetingState === "ended_meeting_room" &&
-                    currentActivity !== null
-                  ? "Terminada"
-                  : meetingState === "closed_meeting_room"
-                  ? "Por iniciar"
-                  : ""}
+                    ? "Grabado"
+                    : meetingState === "ended_meeting_room" &&
+                      currentActivity !== null
+                      ? "Terminada"
+                      : meetingState === "closed_meeting_room"
+                        ? "Por iniciar"
+                        : ""}
               </Row>
             </Col>
             <Col
@@ -488,10 +486,10 @@ let AgendaActividadDetalle = (props) => {
                             (configfast.totalAttendees
                               ? configfast.totalAttendees
                               : totalAttendees)) *
-                            100 *
-                            100
+                          100 *
+                          100
                         ) /
-                          100 +
+                        100 +
                         "%)"}
                       )
                     </>
@@ -512,14 +510,14 @@ let AgendaActividadDetalle = (props) => {
                     xl={{ order: 3, span: 4 }}
                   >
                     {props.cEvent.value._id === "5f99a20378f48e50a571e3b6" ||
-                    props.cEvent.value._id === "5fca68b7e2f869277cfa31b0" ||
-                    props.cEvent.value.id === "60061bfac8c0284c432069c8" ? (
+                      props.cEvent.value._id === "5fca68b7e2f869277cfa31b0" ||
+                      props.cEvent.value.id === "60061bfac8c0284c432069c8" ? (
                       <></>
                     ) : (
                       <div>
                         {Moment.tz(
                           currentActivity !== null &&
-                            currentActivity.datetime_start,
+                          currentActivity.datetime_start,
                           "YYYY-MM-DD h:mm",
                           "America/Bogota"
                         )
@@ -527,7 +525,7 @@ let AgendaActividadDetalle = (props) => {
                           .format("DD MMM YYYY")}{" "}
                         {Moment.tz(
                           currentActivity !== null &&
-                            currentActivity.datetime_start,
+                          currentActivity.datetime_start,
                           "YYYY-MM-DD h:mm",
                           "America/Bogota"
                         )
@@ -536,7 +534,7 @@ let AgendaActividadDetalle = (props) => {
                         -{" "}
                         {Moment.tz(
                           currentActivity !== null &&
-                            currentActivity.datetime_end,
+                          currentActivity.datetime_end,
                           "YYYY-MM-DD h:mm",
                           "America/Bogota"
                         )
@@ -565,11 +563,11 @@ let AgendaActividadDetalle = (props) => {
               {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
 
               {meetingState === "open_meeting_room" &&
-              // mainStageContent !== 'surveyDetalle' &&
-              // mainStageContent !== 'games' &&
+                // mainStageContent !== 'surveyDetalle' &&
+                // mainStageContent !== 'games' &&
 
-              platform !== "" &&
-              platform !== null ? (
+                platform !== "" &&
+                platform !== null ? (
                 <>
                   {platform === "dolby" && names === null && email === null ? (
                     <Card title="Ingresa tus datos para entrar a la transmisión">
@@ -612,23 +610,23 @@ let AgendaActividadDetalle = (props) => {
                   ) : (
                     <>
                       {platform === "zoomExterno" &&
-                      mainStageContent !== "game" ? (
+                        mainStageContent !== "game" ? (
                         openZoomExterno()
                       ) : (props.currentUser &&
-                          currentActivity !== null &&
-                          currentActivity.requires_registration) ||
+                        currentActivity !== null &&
+                        currentActivity.requires_registration) ||
                         (currentActivity !== null &&
                           !currentActivity.requires_registration) ? (
                         <>
-                          {platform === "zoom" &&
-                          mainStageContent !== "game" ? (
+                          {(platform === "zoom" || platform === "vimeo") &&
+                            mainStageContent !== "game" ? (
                             <ZoomIframe
                               platform={platform}
                               meeting_id={meeting_id}
                               generalTabs={props.tabs}
                             />
                           ) : (
-                            <Game />
+                           <>  {mainStageContent==="game"&&<Game />}</>
                           )}
                           <div
                             style={videoButtonStyles}
@@ -678,10 +676,10 @@ let AgendaActividadDetalle = (props) => {
                         props.cEvent.value.styles?.banner_image
                           ? props.cEvent.value.styles?.banner_image
                           : currentActivity?.image
-                          ? currentActivity?.image
-                          : image_event
-                          ? image_event
-                          : imagePlaceHolder
+                            ? currentActivity?.image
+                            : image_event
+                              ? image_event
+                              : imagePlaceHolder
                       }
                       alt="Activity"
                     />
@@ -701,13 +699,13 @@ let AgendaActividadDetalle = (props) => {
                       }}
                       src={
                         props.cEvent.status == "LOADED" &&
-                        props.cEvent.value.styles.banner_image
+                          props.cEvent.value.styles.banner_image
                           ? props.cEvent.value.styles?.banner_image
                           : currentActivity?.image
-                          ? currentActivity?.image
-                          : image_event
-                          ? image_event
-                          : imagePlaceHolder
+                            ? currentActivity?.image
+                            : image_event
+                              ? image_event
+                              : imagePlaceHolder
                       }
                       alt="Activity"
                     />
@@ -715,10 +713,10 @@ let AgendaActividadDetalle = (props) => {
                 )}
 
               {(meetingState === "ended_meeting_room" || !meetingState) &&
-              currentActivity !== null &&
-              currentActivity.video &&
-              mainStageContent !== "surveyDetalle" &&
-              mainStageContent !== "game" ? (
+                currentActivity !== null &&
+                currentActivity.video &&
+                mainStageContent !== "surveyDetalle" &&
+                mainStageContent !== "game" ? (
                 <div className="column is-centered mediaplayer">
                   <ReactPlayer
                     width={"100%"}
@@ -750,10 +748,10 @@ let AgendaActividadDetalle = (props) => {
                             props.cEvent.value.styles.banner_image
                               ? props.cEvent.value.styles.banner_image
                               : currentActivity.image
-                              ? currentActivity.image
-                              : image_event
-                              ? image_event
-                              : imagePlaceHolder
+                                ? currentActivity.image
+                                : image_event
+                                  ? image_event
+                                  : imagePlaceHolder
                           }
                           alt="Activity"
                         />
@@ -765,15 +763,15 @@ let AgendaActividadDetalle = (props) => {
               {/*logo quemado de aval para el evento de magicland */}
               {(props.cEvent.value._id === "5f99a20378f48e50a571e3b6" ||
                 props.cEvent.value._id === "5fca68b7e2f869277cfa31b0") && (
-                <Row justify="center" style={{ marginTop: "6%" }}>
-                  <Col span={24}>
-                    <img
-                      src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fbanner.jpg?alt=media&token=4aab5da2-bbba-4a44-9bdd-d2161ea58b0f"
-                      alt="aval"
-                    />
-                  </Col>
-                </Row>
-              )}
+                  <Row justify="center" style={{ marginTop: "6%" }}>
+                    <Col span={24}>
+                      <img
+                        src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fbanner.jpg?alt=media&token=4aab5da2-bbba-4a44-9bdd-d2161ea58b0f"
+                        alt="aval"
+                      />
+                    </Col>
+                  </Row>
+                )}
               {currentActivity !== null && currentActivity.secondvideo && (
                 <div className="column is-centered mediaplayer">
                   <strong>Pt. 2</strong>
@@ -795,7 +793,7 @@ let AgendaActividadDetalle = (props) => {
           </header>
 
           {props.cEvent.value._id === "5fca68b7e2f869277cfa31b0" ||
-          props.cEvent.value._id === "5f99a20378f48e50a571e3b6" ? (
+            props.cEvent.value._id === "5f99a20378f48e50a571e3b6" ? (
             <></>
           ) : (
             <div className="calendar-category has-margin-top-7"></div>
@@ -826,7 +824,7 @@ let AgendaActividadDetalle = (props) => {
                   <br />
                   {(currentActivity !== null &&
                     currentActivity.hosts.length === 0) ||
-                  props.cEvent.value._id === "601470367711a513cc7061c2" ? (
+                    props.cEvent.value._id === "601470367711a513cc7061c2" ? (
                     <div></div>
                   ) : (
                     <div className="List-conferencistas">

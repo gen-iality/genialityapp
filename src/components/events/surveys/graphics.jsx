@@ -16,6 +16,7 @@ import { SurveysContext } from '../../../Context/surveysContext';
 
 const { setCurrentSurvey, setSurveyVisible } = SurveyActions;
 
+
 class Graphics extends Component {
   static contextType = SurveysContext
   constructor(props) {

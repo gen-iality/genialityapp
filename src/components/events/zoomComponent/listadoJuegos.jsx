@@ -54,7 +54,7 @@ export default function ListadoJuegos(props) {
         <li onClick={() => props.changeContentDisplayed('game2')}>Juego 2</li>
         <li onClick={() => props.changeContentDisplayed('conference')}>Conferencia</li>
       </ul> */}
-      <Row justify='space-between'>
+      {/* <Row justify='space-between'>
         <Col span={4}>
           <ArrowLeftOutlined onClick={() => props.handleConferenceStyles()} />
         </Col>
@@ -64,7 +64,7 @@ export default function ListadoJuegos(props) {
         <Col span={4}>
           <VideoCameraOutlined />
         </Col>
-      </Row>
+      </Row> */}
       {/*JUEGOS*/}
       {/* <Card
         hoverable
