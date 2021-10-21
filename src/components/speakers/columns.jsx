@@ -89,7 +89,7 @@ export const columns = (columnsData) => [
              */
             <Row wrap gutter={[8, 8]}>
                <Col >
-                  <Tooltip placement='topLeft' title='Editar Conferencista'>
+                  <Tooltip placement='topLeft' title='Editar'>
                      <Link
                         key='edit'
                         to={{ pathname: `${columnsData.data.matchUrl}/speaker`, state: { edit: item._id } }}>
@@ -98,10 +98,11 @@ export const columns = (columnsData) => [
                   </Tooltip>
                </Col>
                <Col >
-                  <Tooltip placement='topLeft' title='Eliminar Conferencista'>
+                  <Tooltip placement='topLeft' title='Eliminar'>
                      <Button
                         id={`remove${item.index}`}
                         key='delete'
+                        id={`remove${item.index}`}
                         onClick={() => {
                            columnsData.remove(item);
                         }}

@@ -11,8 +11,7 @@ import Loading from '../../loaders/loading';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import API from '../../../helpers/request';
 import * as Cookie from 'js-cookie';
-import { Button, Input, Modal,Form } from 'antd';
-
+import { Button, Input, Modal, Form } from 'antd';
 
 class InfoGeneral extends Component {
   constructor(props) {
@@ -26,70 +25,68 @@ class InfoGeneral extends Component {
       selectedCategories: [],
       selectedOrganizer: {},
       selectedType: {},
-      currentUserr:null,
-      newOrganization:false
+      currentUserr: null,
+      newOrganization: false,
     };
     this.onFinish = this.onFinish.bind(this);
-  } 
-  async getCurrentUser(){
-  let evius_token = Cookie.get('evius_token');  
-  if (!evius_token) {
-    this.setState({ currentUser: 'guest', loading: false });
-  } else {
-    try {
-      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
-      if(resp?.data){       
-        this.setState({ currentUser: resp.data});
+  }
+  async getCurrentUser() {
+    let evius_token = Cookie.get('evius_token');
+    if (!evius_token) {
+      this.setState({ currentUser: 'guest', loading: false });
+    } else {
+      try {
+        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get('evius_token')}`);
+        if (resp?.data) {
+          this.setState({ currentUser: resp.data });
+        }
+      } catch (e) {
+        console.log('EXCEPTION==>', e);
       }
-    }catch(e){
-      console.log("EXCEPTION==>",e)
     }
   }
-}
 
-  async onFinish(values){
-    console.log(values)
-    await this.updateOrganization(values.name)
+  async onFinish(values) {
+    console.log(values);
+    await this.updateOrganization(values.name);
   }
 
-  async onFinishFailed(){
-
-  }
-  async createOrganization(user=0,name){  
-    let newOrganization={        
-      name: user==0?this.state.currentUser?.name ||  this.state.currentUser?.names:name            
-    }     
+  async onFinishFailed() {}
+  async createOrganization(user = 0, name) {
+    let newOrganization = {
+      name: user == 0 ? this.state.currentUser?.name || this.state.currentUser?.names : name,
+    };
     //CREAR ORGANIZACION------------------------------
-    let create=await OrganizationApi.createOrganization(newOrganization);
-    if(create){        
-    return create;
+    let create = await OrganizationApi.createOrganization(newOrganization);
+    if (create) {
+      return create;
     }
     return null;
   }
-  async updateOrganization(name){    
-  let organizationNew=await this.createOrganization(1,name);
-  let organizers=await OrganizationApi.mine();
-  organizers = organizers.map((item) => {        
-    return { value: item.id, label: item.name };
-  }); 
-  this.setState({organizers, newOrganization:false}) 
+  async updateOrganization(name) {
+    let organizationNew = await this.createOrganization(1, name);
+    let organizers = await OrganizationApi.mine();
+    organizers = organizers.map((item) => {
+      return { value: item.id, label: item.name };
+    });
+    this.setState({ organizers, newOrganization: false });
   }
 
   async componentDidMount() {
     try {
-      await this.getCurrentUser()
+      await this.getCurrentUser();
       const event = this.props.data;
       const categories = await CategoriesApi.getAll();
       const types = await TypesApi.getAll();
-      let organizers = await OrganizationApi.mine();     
-      if(organizers && organizers.length==0){               
-        let organization=await  this.createOrganization();
-        organizers.push(organization)
+      let organizers = await OrganizationApi.mine();
+      if (organizers && organizers.length == 0) {
+        let organization = await this.createOrganization();
+        organizers.push(organization);
       }
-      organizers = organizers.map((item) => {        
+      organizers = organizers.map((item) => {
         return { value: item.id, label: item.name };
-      });    
-   
+      });
+
       const { selectedCategories, selectedOrganizer, selectedType } = handleFields(
         organizers,
         types,
@@ -470,7 +467,7 @@ class InfoGeneral extends Component {
                     />              
                 <Button id={'addOrganization'}  onClick={()=>this.setState({newOrganization:true})}>
               Agregar organización
-            </Button>           
+            </Button>
             <SelectInput
               name={'Tipo'}
               isMulti={false}
@@ -495,9 +492,13 @@ class InfoGeneral extends Component {
             Siguiente
           </button>
         </div>
-        <Modal footer={false} title="Agregar organización" onCancel={()=>this.setState({newOrganization:false})} visible={this.state.newOrganization}>
-        <Form
-            name="basic"
+        <Modal
+          footer={false}
+          title='Agregar organización'
+          onCancel={() => this.setState({ newOrganization: false })}
+          visible={this.state.newOrganization}>
+          <Form
+            name='basic'
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
             initialValues={{ remember: false }}
@@ -517,7 +518,7 @@ class InfoGeneral extends Component {
                 Agregar
               </Button>
             </Form.Item>
-         </Form>
+          </Form>
         </Modal>
       </React.Fragment>
     );

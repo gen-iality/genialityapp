@@ -2,13 +2,23 @@ import React, { Component, Fragment } from 'react';
 import EventContent from '../events/shared/content';
 import { selectOptions } from './constants';
 import { SurveysApi, AgendaApi } from '../../helpers/request';
+import { handleRequestError } from '../../helpers/utils';
 import { createOrUpdateSurvey, getSurveyConfiguration } from './services';
 import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
-import { Button, Row, Col, Table, Modal, Input, Switch, message, Select, Tag } from 'antd';
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { Button, Row, Col, Table, Modal, Input, Switch, message, Select, Tag, InputNumber, Form, Tooltip } from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import FormQuestionEdit from './formEdit';
+import Header from '../../antdComponents/Header';
+
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
+};
+
+const { Option } = Select;
+const { confirm } = Modal;
 
 class triviaEdit extends Component {
   constructor(props) {
@@ -59,6 +69,7 @@ class triviaEdit extends Component {
     };
     this.submit = this.submit.bind(this);
     this.submitWithQuestions = this.submitWithQuestions.bind(this);
+    this.remove = this.remove.bind(this);
   }
 
   //Funcion para poder cambiar el value del input o select
@@ -285,7 +296,7 @@ class triviaEdit extends Component {
             },
             { eventId: this.props.event._id, name: data.survey, category: 'none' }
           );
-
+          this.goBack();
           message.success({ content: setDataInFire.message, key: 'updating' });
         })
         .catch((err) => {
@@ -431,7 +442,7 @@ class triviaEdit extends Component {
   // Funcion usada para determinar el tiempo limite en segundos de la emcuesta
   setTime_limit = (e) => {
     var reg = new RegExp('^\\d+$')
-    const { value } = e.target;
+    const { value } = e;
     if(reg.test(value)){
       this.setState({ time_limit: value });
 
@@ -468,6 +479,43 @@ class triviaEdit extends Component {
     }
   };
 
+  remove = () => {
+    let self = this;
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            await SurveysApi.deleteOne(self.state.idSurvey, self.props.event._id);
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: <> Se eliminó la información correctamente!</>,
+            });
+            self.goBack();
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: handleRequestError(e).message,
+            });
+          }
+        }
+        onHandlerRemove();
+      }
+    });
+  };
+
   render() {
     const {
       survey,
@@ -492,7 +540,6 @@ class triviaEdit extends Component {
       showNoVotos,
       displayGraphsInSurveys
     } = this.state;
-    const { Option } = Select;
     const columns = [
       {
         title: 'Pregunta',
@@ -533,271 +580,234 @@ class triviaEdit extends Component {
         title: 'Acciones',
         key: 'action',
         render: (text, record) => (
-          <div>
-            <Button onClick={() => this.deleteQuestion(record.id)} style={{ marginRight: 16, color: 'red' }}>
-              <span className='icon'>
-                <i className='fas fa-trash-alt' />
-              </span>
-            </Button>
-
-            <Button onClick={() => this.editQuestion(record.id)}>
-              <span className='icon'>
-                <i className='fas fa-edit' />
-              </span>
-            </Button>
-          </div>
+          <Row gutter={[8, 8]}>
+            <Col>
+              <Tooltip placement='topLeft' title='Editar'>
+                <Button 
+                  icon={<EditOutlined />} 
+                  type='primary' 
+                  size='small' 
+                  onClick={() => this.editQuestion(record.id)}
+                />
+              </Tooltip>
+            </Col>
+            <Col>
+              <Tooltip placement='topLeft' title='Eliminar'>
+                <Button
+                  key={`removeAction${record.index}`}
+                  id={`removeAction${record.index}`}
+                  onClick={() => this.deleteQuestion(record.id)}
+                  icon={<DeleteOutlined />}
+                  type='danger'
+                  size='small'
+                />
+              </Tooltip>
+            </Col>
+          </Row>
         ),
       },
     ];
     return (
-      <Fragment>
-        <EventContent title='Encuestas' closeAction={this.goBack}>
-          <div>
-            <div>
-              <label style={{ marginTop: '2%' }} className='label'>
-                Nombre de la Encuesta
-              </label>
-              <Input value={survey} placeholder='Nombre de la encuesta' name={'survey'} onChange={this.changeInput} />
-            </div>
-          </div>
+      <Form
+        onFinish={this.state.idSurvey ? this.submitWithQuestions : this.submit}
+        {...formLayout}
+      >
+        <Header 
+          title={'Encuesta'}
+          back
+          save
+          form
+          remove={this.remove}
+          edit={this.state.idSurvey}
+        />
 
-          {this.state.idSurvey && (
-            <div>
-              <label style={{ marginTop: '3%' }} className='label'>
-                Tiempo límite en segundos por pregunta
-              </label>
-              <input type='number' name='time' id='time' value={time_limit} onChange={this.setTime_limit} pattern="[0-9]+" mim='0'/>
-            </div>
-          )}
-
-          {this.state.idSurvey && (
-            <div>
-              <label style={{ marginTop: '3%' }} className='label'>
-                Publicar encuesta
-              </label>
-              <Switch
-                checked={publish === 'true' || publish === true}
-                onChange={(checked) => this.setState({ publish: checked ? 'true' : 'false' })}
-              />
-            </div>
-          )}
-
-          {this.state.idSurvey && (
-            <div>
-              <label style={{ marginTop: '3%' }} className='label'>
-                Pausar Encuesta
-              </label>
-              <Switch
-                checked={freezeGame === 'true' || freezeGame === true}
-                onChange={(checked) => this.setState({ freezeGame: checked ? 'true' : 'false' })}
-              />
-            </div>
-          )}
-          {this.state.idSurvey && (
-            <div>
-              <label style={{ marginTop: '3%' }} className='label'>
-                Encuesta abierta
-              </label>
-              <Switch
-                checked={openSurvey === 'true' || openSurvey === true}
-                onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
-              />
-            </div>
-          )}
-          {this.state.idSurvey && (
-            <div>
-              <label style={{ marginTop: '3%' }} className='label'>
-                Permitir usuarios anonimos
-              </label>
-              <Switch
-                checked={allow_anonymous_answers === 'true' || allow_anonymous_answers === true}
-                onChange={(checked) => this.setState({ allow_anonymous_answers: checked ? 'true' : 'false' })}
-              />
-            </div>
-          )}
-          {this.state.idSurvey && (
-            <div>
-                <div>
-                <label style={{ marginTop: '3%' }} className='label'>
-                Mostar gráficas en las encuestas 
-                </label>
-                <Switch
-                  checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys === true}
-                  onChange={(checked) => this.toggleSwitch('displayGraphsInSurveys', checked)}
+        <Row justify='center' wrap gutter={8}> 
+          <Col span={16}>
+            { !this.state.idSurvey ? (
+              <Form.Item label={'Nombre'} >
+                <Input 
+                  value={survey} 
+                  placeholder={'Nombre de la encuesta' }
+                  name={'survey'} 
+                  onChange={this.changeInput} 
                 />
-              </div>
-            <div>
-              <label style={{ marginTop: '3%' }} className='label'>
-                Elegir tipo de grafica
-              </label>
-              {/* <Switch
-                checked={show_horizontal_bar === 'true' || show_horizontal_bar === true}
-                onChange={(checked) => this.setState({ show_horizontal_bar: checked ? 'true' : 'false' })}
-              /> */}
-              <Select
-                defaultValue={this.state.graphyType}
-                style={{ width: 120 }}
-                onChange={(graphy) => this.setState({ graphyType: graphy })}>
-                <Option value='y'>Horizontal</Option>
-                <Option value='x'>vertical</Option>
-                <Option value='pie'>Torta</Option>
-              </Select>
-            </div>
-            </div>
-          )}
-          {this.state.idSurvey && (
-            <div>
-              <label style={{ marginTop: '3%' }} className='label'>
-                Mostrar porcentaje de participantes sin votar en las gráficas
-              </label>
-              <Switch
-                checked={showNoVotos === 'true' || showNoVotos === true}
-                onChange={(checked) => this.setState({ showNoVotos: checked ? 'true' : 'false' })}
-              />
-            </div>
-          )}
-
-          {this.state.idSurvey && (
-            <div>
-              <label style={{ marginTop: '3%' }} className='label'>
-                Encuesta global (visible en todas las actividades)
-              </label>
-              <Switch
-                checked={isGlobal === 'true' || isGlobal === true}
-                onChange={(checked) => this.setState({ isGlobal: checked ? 'true' : 'false' })}
-              />
-            </div>
-          )}
-
-          {this.state.idSurvey && (
-            <div>
-              <label style={{ marginTop: '3%' }} className='label'>
-                Permitir valor del voto por usuario
-              </label>
-              <Switch
-                checked={allow_vote_value_per_user === 'true' || allow_vote_value_per_user === true}
-                onChange={(checked) => this.toggleSwitch('allow_vote_value_per_user', checked)}
-              />
-            </div>
-          )}
-
-          {this.state.idSurvey && (
-            <>
-              <div>
-                <label style={{ marginTop: '3%' }} className='label'>
-                  Encuesta calificable
-                </label>
+              </Form.Item>
+            ) : <>
+              <Form.Item label={'Tiempo límite en segundos por pregunta'}>
+                <InputNumber 
+                  min={0}
+                  defaultValue={time_limit}
+                  name={'time'}
+                  onChange={this.setTime_limit}
+                />
+              </Form.Item>
+              <Row justify='space-between' wrap gutter={[8, 8]}>
+                <Col>
+                  <Form.Item label={'Permitir usuarios anonimos'}>
+                    <Switch
+                      name={'allow_anonymous_answers'}
+                      checked={allow_anonymous_answers === 'true' || allow_anonymous_answers === true}
+                      onChange={(checked) => this.setState({ allow_anonymous_answers: checked ? 'true' : 'false' })}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item label={'Publicar encuesta'}>
+                    <Switch
+                      name={'publish'}
+                      checked={publish === 'true' || publish === true}
+                      onChange={(checked) => this.setState({ publish: checked ? 'true' : 'false' })}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item label={'Mostar gráficas en las encuestas'}>
+                    <Switch
+                      name={'displayGraphsInSurveys'}
+                      checked={displayGraphsInSurveys === 'true' || displayGraphsInSurveys === true}
+                      onChange={(checked) => this.toggleSwitch('displayGraphsInSurveys', checked)}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item label={'Encuesta abierta'}>
+                    <Switch
+                      name={'openSurvey'}
+                      checked={openSurvey === 'true' || openSurvey === true}
+                      onChange={(checked) => this.setState({ openSurvey: checked ? 'true' : 'false' })}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Form.Item label={'Elegir tipo de grafica'}>
+                <Select
+                  name={'graphyType'}
+                  defaultValue={this.state.graphyType}
+                  style={{ width: 120 }}
+                  onChange={(graphy) => this.setState({ graphyType: graphy })}>
+                  <Option value='y'>Horizontal</Option>
+                  <Option value='x'>vertical</Option>
+                  <Option value='pie'>Torta</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item label={'Mostrar porcentaje de participantes sin votar en las gráficas'}>
                 <Switch
+                  name={'showNoVotos'}
+                  checked={showNoVotos === 'true' || showNoVotos === true}
+                  onChange={(checked) => this.setState({ showNoVotos: checked ? 'true' : 'false' })}
+                />
+              </Form.Item>
+              <Form.Item label={'Encuesta global (visible en todas las actividades)'}>
+                <Switch
+                  name={'isGlobal'}
+                  checked={isGlobal === 'true' || isGlobal === true}
+                  onChange={(checked) => this.setState({ isGlobal: checked ? 'true' : 'false' })}
+                />
+              </Form.Item>
+              <Form.Item label={'Permitir valor del voto por usuario'}>
+                <Switch
+                  name={'allow_vote_value_per_user'}
+                  checked={allow_vote_value_per_user === 'true' || allow_vote_value_per_user === true}
+                  onChange={(checked) => this.toggleSwitch('allow_vote_value_per_user', checked)}
+                />
+              </Form.Item>
+              <Form.Item label={'Encuesta calificable'}>
+                <Switch
+                  name={'allow_gradable_survey'}
                   checked={allow_gradable_survey === 'true' || allow_gradable_survey === true}
                   onChange={(checked) => this.toggleSwitch('allow_gradable_survey', checked)}
                 />
-              </div>
-              <div>
-                <label style={{ marginTop: '3%' }} className='label'>
-                  Habilitar ranking
-                </label>
+              </Form.Item>
+              <Form.Item label={'Habilitar ranking'}>
                 <Switch
+                  name={'ranking'}
                   checked={ranking === 'true' || ranking === true}
                   onChange={(checked) => this.toggleSwitch('ranking', checked)}
                 />
-              </div>
+              </Form.Item>
               {(allow_gradable_survey === 'true' || allow_gradable_survey === true) && (
-                <div>
-                  <label style={{ marginTop: '3%' }} className='label'>
-                    Requiere puntaje mínimo para aprobar
-                  </label>
+                <Form.Item label={'Requiere puntaje mínimo para aprobar'}>
                   <Switch
+                    name={'hasMinimumScore'}
                     checked={hasMinimumScore === 'true' || hasMinimumScore === true}
                     onChange={(checked) => this.setState({ hasMinimumScore: checked ? 'true' : 'false' })}
                   />
-                </div>
+                </Form.Item>
               )}
               {(hasMinimumScore === true || hasMinimumScore === 'true') && (
-                <div>
-                  <label style={{ marginTop: '3%' }} className='label'>
-                    Puntaje mínimo para aprobar
-                  </label>
-                  <input name='minimumScore' value={minimumScore} onChange={this.changeInput} />
-                </div>
+                <Form.Item label={'Puntaje mínimo para aprobar'}>
+                  <Input 
+                    name={'minimumScore'} 
+                    value={minimumScore} 
+                    onChange={this.changeInput} 
+                  />
+                </Form.Item>
               )}
-            </>
-          )}
-
-          {this.state.idSurvey && (
-            <div>
-              <label style={{ marginTop: '2%' }} className='label'>
-                Relacionar esta encuesta a una actividad
-              </label>
-              <div className='select'>
-                <select name='activity_id' value={activity_id} onChange={this.changeInput}>
-                  <option value=''>No relacionar</option>
+              <Form.Item label={'Relacionar esta encuesta a una actividad'}>
+                <Select 
+                  name={'activity_id'}
+                  value={activity_id} 
+                  onChange={this.changeInput}
+                >
+                  <Option value=''>{'No relacionar'}</Option>
                   {dataAgenda.map((activity, key) => (
-                    <option key={key} value={activity._id}>
+                    <Option key={key} value={activity._id}>
                       {activity.name}
-                    </option>
+                    </Option>
                   ))}
-                </select>
-              </div>
-            </div>
-          )}
-          {this.state.idSurvey ? (
-            <div className='column'>
-              <button onClick={this.submitWithQuestions} className='columns is-pulled-right button is-primary'>
-                Guardar
-              </button>
-            </div>
-          ) : (
-            <div className='column'>
-              <button onClick={this.submit} className='columns is-pulled-right button is-primary'>
-                Guardar
-              </button>
-            </div>
-          )}
+                </Select>
+              </Form.Item>
 
-          {allow_gradable_survey === 'true' && (
-            <Fragment>
-              <div>
-                <label style={{ marginTop: '3%' }} className='label'>
-                  Texto de muestra para la pantalla inicial de la encuesta
-                </label>
-                <ReactQuill value={this.state.initialMessage} modules={toolbarEditor} onChange={this.onChange} />
-              </div>
-              <div>
-                <label style={{ marginTop: '3%' }} className='label'>
-                  Mensaje al ganar
-                </label>
-                <ReactQuill value={this.state.win_Message} modules={toolbarEditor} onChange={this.onChangeWin} />
-              </div>
-              <div>
-                <label style={{ marginTop: '3%' }} className='label'>
-                  Mensaje neutral
-                </label>
-                <ReactQuill
-                  value={this.state.neutral_Message}
-                  modules={toolbarEditor}
-                  onChange={this.onChangeNeutral}
-                />
-              </div>
-              <div>
-                <label style={{ marginTop: '3%' }} className='label'>
-                  Mensaje al perder
-                </label>
-                <ReactQuill value={this.state.lose_Message} modules={toolbarEditor} onChange={this.onChangeLose} />
-              </div>
-            </Fragment>
-          )}
+              {allow_gradable_survey === 'true' && (
+                <>
+                  <Form.Item label={'Texto de muestra para la pantalla inicial de la encuesta'}>
+                    <ReactQuill 
+                      name={'initialMessage'}
+                      id={'initialMessage'}
+                      value={this.state.initialMessage} 
+                      modules={toolbarEditor} 
+                      onChange={this.onChange} 
+                    />
+                  </Form.Item>
+                  <Form.Item label={'Mensaje al ganar'}>
+                    <ReactQuill 
+                      name={'win_Message'}
+                      id={'win_Message'}
+                      value={this.state.win_Message} 
+                      modules={toolbarEditor} 
+                      onChange={this.onChangeWin} 
+                    />
+                  </Form.Item>
+                  <Form.Item label={'Mensaje neutral'}>
+                    <ReactQuill
+                      name={'neutral_Message'}
+                      id={'neutral_Message'}
+                      value={this.state.neutral_Message}
+                      modules={toolbarEditor}
+                      onChange={this.onChangeNeutral}
+                    />
+                  </Form.Item>
+                  <Form.Item label={'Mensaje al perder'}>
+                    <ReactQuill 
+                      name={'lose_Message'}
+                      id={'lose_Message'}
+                      value={this.state.lose_Message} 
+                      modules={toolbarEditor} 
+                      onChange={this.onChangeLose} 
+                    />
+                  </Form.Item>
+                </>
+              )}
 
-          {this.state.idSurvey && (
-            <div>
-              <Row>
-                <Col span={7} style={{ marginTop: '3%' }}>
-                  <Button block size='large' onClick={this.addNewQuestion}>
-                    Agregar Pregunta
-                  </Button>
-                </Col>
-              </Row>
+              <Header 
+                title={'Pregunta'}
+                addFn={this.addNewQuestion}
+              />
 
-              <Table style={{ marginTop: '5%' }} dataSource={question} columns={columns} />
+              <Table 
+                dataSource={question} 
+                columns={columns}
+              />
               {this.state.idSurvey && Object.entries(currentQuestion).length !== 0 && (
                 <Modal
                   width={700}
@@ -825,10 +835,10 @@ class triviaEdit extends Component {
                   />
                 </Modal>
               )}
-            </div>
-          )}
-        </EventContent>
-      </Fragment>
+            </>}
+          </Col>
+        </Row>
+      </Form>
     );
   }
 }

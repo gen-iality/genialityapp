@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import { withRouter } from 'react-router-dom';
 import { SpeakersApi } from '../../helpers/request';
 import { Table, Modal, message } from 'antd';

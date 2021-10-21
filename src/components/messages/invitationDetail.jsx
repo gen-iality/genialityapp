@@ -11,7 +11,6 @@ class InvitationDetail extends Component {
       step: 0,
       users:[]
     };
-    console.log("PROPS==>",props)
   }
   
 

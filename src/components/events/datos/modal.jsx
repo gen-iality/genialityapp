@@ -1,8 +1,16 @@
 import React, { Component, Fragment } from 'react';
 import { typeInputs } from '../../../helpers/constants';
 import CreatableSelect from 'react-select/lib/Creatable';
-import { Checkbox } from 'antd';
+import { Checkbox, Form, Input, Radio, Select, InputNumber, Button } from 'antd';
+
 const html = document.querySelector('html');
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
+};
+const { Option } = Select;
+const { TextArea } = Input;
+
 class DatosModal extends Component {
   constructor(props) {
     super(props);
@@ -140,8 +148,122 @@ class DatosModal extends Component {
     const { edit } = this.props;
     return (
       <Fragment>
-        <section className='modal-card-body'>
-          <div className='field'>
+        {/* <section className='modal-card-body'> */}
+          <Form
+            onFinish={this.saveField}
+            {...formLayout}
+          >
+            <Form.Item label={'Nombre Campo'}>
+              <Input
+                name={'label'}
+                type='text'
+                placeholder={'Ej: Celular'}
+                value={info.label}
+                onChange={this.handleChange}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Input
+                name={'name'}
+                type='text'
+                placeholder={'Nombre del campo en base de datos'}
+                value={info.name}
+                disabled={true}
+                onChange={this.handleChange}
+              />
+            </Form.Item>
+            <Form.Item label={'Posición Nombre del Campo'}>
+              <Radio.Group onChange={this.handleChange} value={info.labelPosition} name={'labelPosition'}>
+                <Radio value={'arriba'} checked={info.labelPosition === 'arriba' || !info.labelPosition}>Arriba &nbsp;</Radio>
+                <Radio value={'izquierda'} checked={info.labelPosition === 'izquierda'}>Izquierda &nbsp;</Radio>
+                <Radio value={'derecha'} checked={info.labelPosition === 'derecha'}>Derecha &nbsp;</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item label={'Tipo de dato'}>
+              <Select
+                disabled={info.name === 'picture' || info.name == 'email' || info.name == 'names' ? true : false}
+                onChange={this.handleChange}
+                name={'type'}
+                value={info.type}
+              >
+                <Option value={''}>Seleccione...</Option>
+                {typeInputs.map((type, key) => {
+                  return (
+                    <Option key={key} value={type.value}>
+                      {type.label}
+                    </Option>
+                  );
+                })}
+              </Select>
+              {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
+                <div className='control'>
+                  <CreatableSelect
+                    components={{ DropdownIndicator: null }}
+                    inputValue={inputValue}
+                    isClearable
+                    isMulti
+                    menuIsOpen={false}
+                    onChange={this.changeOption}
+                    onInputChange={this.handleInputChange}
+                    onKeyDown={(e) => {
+                      this.handleKeyDown(e);
+                    }}
+                    placeholder='Escribe la opción y presiona Enter o Tab...x'
+                    value={info.options}
+                    //required={true}
+                  />
+                  <Checkbox
+                    name={`justonebyattendee`}
+                    checked={info.justonebyattendee}
+                    onChange={this.changeFieldjustonebyattendee}>
+                    Solo una opción por usuario (cuando un asistente selecciona una opción esta desaparece del listado)
+                  </Checkbox>
+                </div>
+              )}
+            </Form.Item>
+            <Form.Item label={'Obligatorio'} htmlFor={`mandatoryModal`}>
+              <Checkbox
+                id={`mandatoryModal`}
+                name={`mandatory`}
+                checked={info.mandatory}
+                onChange={this.changeFieldCheck}
+              />
+            </Form.Item>
+            <Form.Item label={'Visible para Contactos'} htmlFor={`visibleByContactsModal`}>
+              <Checkbox 
+                id={`visibleByContactsModal`}
+                name={`visibleByContacts`}
+                checked={info.visibleByContacts}
+                onChange={this.changeFieldCheckVisibleByContacts}
+              />
+            </Form.Item>
+            <Form.Item label={'Visible para Admin'} htmlFor={`visibleByAdminModal`}>
+              <Checkbox
+                id={`visibleByAdminModal`}
+                name={`visibleByAdmin`}
+                checked={info.visibleByAdmin}
+                onChange={this.changeFieldCheckVisibleByAdmin}
+              />
+            </Form.Item>
+            <Form.Item label={'Descripción'}>
+              <TextArea 
+                placeholder={'Descripción corta'}
+                name={'description'}
+                value={info.description || ''}
+                onChange={this.handleChange}
+              />
+            </Form.Item>
+            <Form.Item label={'Posición / Orden'}>
+              <InputNumber
+                min={0}
+                name={'order_weight'}
+                placeholder='1'
+                value={info.order_weight}
+                onChange={this.handleChange}
+              />
+            </Form.Item>
+          </Form>
+          {/* <div className='field'>
             <label className='label required has-text-grey-light'>Nombre Campo </label>
             <div className='control'>
               <input
@@ -310,13 +432,13 @@ class DatosModal extends Component {
                 onChange={this.handleChange}
               />
             </div>
-          </div>
-        </section>
+          </div> */}
+        {/* </section>
         <footer className='modal-card-foot'>
-          <button className='button is-primary' onClick={this.saveField} disabled={valid}>
+          <Button type='primary' onClick={this.saveField} disabled={valid}>
             {edit ? 'Guardar' : 'Agregar'}
-          </button>
-        </footer>
+          </Button>
+        </footer> */}
       </Fragment>
     );
   }

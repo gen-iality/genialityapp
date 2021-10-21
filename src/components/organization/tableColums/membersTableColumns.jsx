@@ -5,29 +5,10 @@ import { membersGetColumnSearchProps } from '../searchFunctions/membersGetColumn
 
 export const columns = (columnsData, editModalUser) => [
   {
-    title: 'Editar',
-    dataIndex: 'index',
-    width: 60,
-    fixed: 'left',
-    align: 'center',
-    render(val, item, index) {
-      return (
-        <Tooltip title='Editar'>
-          <Button
-            type='primary'
-            onClick={(e) => {
-              editModalUser(item);
-            }}
-            icon={<EditOutlined />}></Button>
-        </Tooltip>
-      );
-    },
-  },
-  {
     title: 'Avatar',
     dataIndex: 'picture',
-    width: 70,
-    align: 'center',
+    /* width: 70,
+    align: 'center', */
     render(val, item, index) {
       return (
         <Row gutter={8}>
@@ -53,27 +34,27 @@ export const columns = (columnsData, editModalUser) => [
   {
     title: 'Nombres',
     dataIndex: 'names',
-    align: 'center',
+    /* align: 'center', */
     ...membersGetColumnSearchProps('name', columnsData),
   },
   {
     title: 'Correo',
     dataIndex: 'email',
-    align: 'center',
+    /* align: 'center', */
 
     ...membersGetColumnSearchProps('email', columnsData),
   },
   {
     title: 'Rol',
     dataIndex: 'position',
-    align: 'center',
+    /* align: 'center', */
 
     ...membersGetColumnSearchProps('position', columnsData),
   },
   {
     title: 'Creado',
     dataIndex: 'created_at',
-    align: 'center',
+    /* align: 'center', */
     render(val, item) {
       return item.created_at;
     },
@@ -81,9 +62,30 @@ export const columns = (columnsData, editModalUser) => [
   {
     title: 'Actualizado',
     dataIndex: 'updated_at',
-    align: 'center',
+    /* align: 'center', */
     render(val, item) {
       return item.updated_at;
+    },
+  },
+  {
+    title: 'Opción',
+    dataIndex: 'index',
+    /* width: 60,
+    fixed: 'left',
+    align: 'center', */
+    render(val, item, index) {
+      return (
+        <Tooltip title='Editar'>
+          <Button
+            type='primary'
+            size='small'
+            onClick={(e) => {
+              editModalUser(item);
+            }}
+            icon={<EditOutlined />}>
+          </Button>
+        </Tooltip>
+      );
     },
   },
 ];

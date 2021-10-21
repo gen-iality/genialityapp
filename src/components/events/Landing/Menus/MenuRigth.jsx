@@ -20,6 +20,7 @@ const MenuRigth = (props) => {
             id={'openMenu'}
             className='animate__animated animate__headShake animate__slower animate__infinite'
             key='0'
+            id={'openMenu'}
             icon={
               <>
                 <ArrowLeftOutlined

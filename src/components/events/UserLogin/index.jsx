@@ -33,7 +33,6 @@ class UserLogin extends Component {
         (this.props.eventId === '5fb69178cb4e49174574ed12' && true),
       enabledOneTimeLoginLink: this.props.eventId === '5f99a20378f48e50a571e3b6' && true,
     });
-    console.log("PROPS==>",this.props)
   }
 
   render() {

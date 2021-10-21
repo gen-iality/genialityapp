@@ -1,8 +1,8 @@
-import { CaretLeftOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Form, notification, Row, Typography } from 'antd';
+import React, { useCallback, useState, useEffect } from 'react';
+import { CaretLeftOutlined, DeleteOutlined, PlusCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, Col, Form, notification, Row, Input } from 'antd';
 import { Field, FieldArray, Formik } from 'formik';
 import { apply, keys } from 'ramda';
-import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 
@@ -17,15 +17,14 @@ import useGetCompanyInitialValues from './customHooks/useGetCompanyInitialValues
 import useGetEventCompaniesStandTypesOptions from './customHooks/useGetEventCompaniesStandTypesOptions';
 import useGetEventCompaniesSocialNetworksOptions from './customHooks/useGetEventCompaniesSocialNetworksOptions';
 import { createEventCompany, updateEventCompany } from './services';
-import { useEffect } from 'react';
 import { firestore } from '../../helpers/firebase';
-import { useState } from 'react';
+import Header from '../../antdComponents/Header';
 
-const { Title } = Typography;
 const formLayout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
 };
+
 const buttonsLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
@@ -137,8 +136,10 @@ export const defaultInitialValues = {
 };
 export const companyFormKeys = keys(defaultInitialValues);
 
-function CrearEditarEmpresa({ event, match, history }) {
+function CrearEditarEmpresa( props ) {
+  const { event, match, history } = props;
   const { companyId } = match.params;
+  /* const locationState = props.location.state; */
   const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(event._id);
   const [socialNetworksOptions, loadingSocialNetworks] = useGetEventCompaniesSocialNetworksOptions(event._id);
   const [initialValues, loadingInitialValues] = useGetCompanyInitialValues(event._id, companyId);
@@ -175,427 +176,462 @@ function CrearEditarEmpresa({ event, match, history }) {
     [history, event._id, companyId, tamanio]
   );
 
+  const remove = () => {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    if(locationState.edit) {
+      confirm({
+        title: `¿Está seguro de eliminar la información?`,
+        icon: <ExclamationCircleOutlined />,
+        content: 'Una vez eliminado, no lo podrá recuperar',
+        okText: 'Borrar',
+        okType: 'danger',
+        cancelText: 'Cancelar',
+        onOk() {
+          const onHandlerRemove = async () => {
+            try {
+              firestore
+                .collection('event_companies')
+                .doc(event._id)
+                .collection('companies').doc(companyId).delete();
+              message.destroy(loading.key);
+              message.open({
+                type: 'success',
+                content: <> Se eliminó la información correctamente!</>,
+              });
+              history.push(`/eventadmin/${event._id}/empresas`);
+            } catch (e) {
+              message.destroy(loading.key);
+              message.open({
+                type: 'error',
+                content: handleRequestError(e).message,
+              });
+            }
+          }
+          onHandlerRemove();
+        }
+      });
+    }
+  }
+
   if (loadingStandTypes || loadingSocialNetworks || loadingInitialValues) {
     return <Loading />;
   }
 
   return (
-    <div>
-      <Title level={4}>{!companyId ? 'Crear empresa' : 'Editar empresa'}</Title>
-      <div>
-        <Formik
-          enableReinitialize
-          initialValues={initialValues}
-          // validationSchema={validationSchema}
-          onSubmit={onSubmit}>
-          {({ isSubmitting, errors, values, handleSubmit, handleReset }) => {
-            console.error(errors);
-            return (
-              <Form onReset={handleReset} onSubmitCapture={handleSubmit} {...formLayout}>
-                <Row justify='start'>
-                  <Col xs={20}>
-                    <Field
-                    required
-                      name='name'
-                      component={InputField}
-                      label='Nombre empresa'
-                      placeholder='Ingrese el nombre de su empresa o stand'
-                      maxLength={NAME_MAX_LENGTH}
-                    />
+    <Formik
+      enableReinitialize
+      initialValues={initialValues}
+      // validationSchema={validationSchema}
+      onSubmit={onSubmit}>
+      {({ isSubmitting, errors, values, handleSubmit, handleReset }) => {
+        console.error(errors);
+        return (
+          <Form onReset={handleReset} onSubmitCapture={handleSubmit} {...formLayout}>
+            <Header 
+              title={'Empresa'}
+              form
+              back
+              save
+              form
+              remove={remove}
+              edit={companyId}
+            />
+            <Row justify='center'>
+              <Col span={20}>
+                <Field
+                  required
+                  name='name'
+                  component={InputField}
+                  label='Nombre empresa'
+                  placeholder='Ingrese el nombre de su empresa o stand'
+                  maxLength={NAME_MAX_LENGTH}
+                />
 
-                    <Field name='video_url' component={InputField} label='Video' placeholder='Url video' />
+                <Field name='video_url' component={InputField} label='Video' placeholder='Url video' />
 
-                    <ImageField required name='stand_image' label='Banner de la empresa' />
+                <ImageField required name='stand_image' label='Banner de la empresa' />
 
-                    <ImageField name='list_image' label='Logo de la empresa' />
+                <ImageField name='list_image' label='Logo de la empresa' />
 
-                    <RichTextComponentField
-                      name='description'
-                      label='Descripción larga'
-                      maxLength={DESCRIPTION_MAX_LENGTH}
-                    />
+                <RichTextComponentField
+                  name='description'
+                  label='Descripción larga'
+                  maxLength={DESCRIPTION_MAX_LENGTH}
+                  id='description'
+                />
 
-                    <RichTextComponentField
-                      name='short_description'
-                      label='Descripción Corta'
-                      maxLength={DESCRIPTION_MAX_LENGTH}
-                    />
+                <RichTextComponentField
+                  name='short_description'
+                  label='Descripción Corta'
+                  maxLength={DESCRIPTION_MAX_LENGTH}
+                  id='short_description'
+                />
 
-                    <Field
-                      name='telefono'
-                      component={InputField}
-                      label='Teléfono de la empresa'
-                      placeholder='Ingrese su telefono'
-                    />
-                    <Field
-                      name='email'
-                      component={InputField}
-                      label='correo de la empresa'
-                      placeholder='ejemplo@ejemplo.com'
-                    />
-                    <Field name='webpage' component={InputField} label='Página web' placeholder='Url página web' />
-                    {/* <ImageField
-                      name='contact_info.image'
-                      label='Imagen de información de contacto'
-                      placeholder='Url imagen'
-                      maxLength={URL_MAX_LENGTH}
-                    />
+                <Field
+                  name='telefono'
+                  component={InputField}
+                  label='Teléfono de la empresa'
+                  placeholder='Ingrese su telefono'
+                />
+                <Field
+                  name='email'
+                  component={InputField}
+                  label='correo de la empresa'
+                  placeholder='ejemplo@ejemplo.com'
+                />
+                <Field name='webpage' component={InputField} label='Página web' placeholder='Url página web' />
 
-                    <RichTextComponentField
-                      name='contact_info.description'
-                      label='Descripción de información de contacto'
-                      maxLength={CONTACT_INFO_DESCRIPTION_MAX_LENGTH}
-                    />*/}
+                <Field
+                  name='stand_type'
+                  component={SelectField}
+                  label='Tipo de stand'
+                  placeholder='Tipo de stand'
+                  options={standTypesOptions}
+                />
 
-                    <Field
-                      name='stand_type'
-                      component={SelectField}
-                      label='Tipo de stand'
-                      placeholder='Tipo de stand'
-                      options={standTypesOptions}
-                    />
+                <FileField name='brochure' label='Brochure' placeholder='' />
 
-                    <FileField name='brochure' label='Brochure' placeholder='' />
+                <FieldArray
+                  name='services'
+                  render={(arrayHelpers) => {
+                    return !!values.services && values.services.length > 0 ? (
+                      <>
+                        {values.services.map((_service, serviceIndex) => (
+                          <div key={`service-item-${serviceIndex}`}>
+                            <Field
+                            required
+                              name={`services[${serviceIndex}].nombre`}
+                              component={InputField}
+                              label={`Nombre servicio ${serviceIndex + 1}`}
+                              placeholder='Nombre del servicio'
+                              maxLength={20}
+                            />
 
-                    <FieldArray
-                      name='services'
-                      render={(arrayHelpers) => {
-                        return !!values.services && values.services.length > 0 ? (
-                          <>
-                            {values.services.map((_service, serviceIndex) => (
-                              <div key={`service-item-${serviceIndex}`}>
-                                <Field
-                                required
-                                  name={`services[${serviceIndex}].nombre`}
-                                  component={InputField}
-                                  label={`Nombre servicio ${serviceIndex + 1}`}
-                                  placeholder='Nombre del servicio'
-                                  maxLength={20}
-                                />
+                            <Field
+                            required
+                              name={`services[${serviceIndex}].category`}
+                              component={SelectField}
+                              label={`Categoría servicio ${serviceIndex + 1}`}
+                              placeholder='Categoría'
+                              options={[
+                                { value: 'Servicio', label: 'Servicio' },
+                                { value: 'Producto', label: 'Producto' },
+                              ]}
+                            />
 
-                                <Field
-                                required
-                                  name={`services[${serviceIndex}].category`}
-                                  component={SelectField}
-                                  label={`Categoría servicio ${serviceIndex + 1}`}
-                                  placeholder='Categoría'
-                                  options={[
-                                    { value: 'Servicio', label: 'Servicio' },
-                                    { value: 'Producto', label: 'Producto' },
-                                  ]}
-                                />
+                            <RichTextComponentField
+                            required
+                              name={`services[${serviceIndex}].description`}
+                              label={`Descripción servicio ${serviceIndex + 1}`}
+                              maxLength={SERVICE_DESCRIPTION_MAX_LENGTH}
+                            />
 
-                                <RichTextComponentField
-                                required
-                                  name={`services[${serviceIndex}].description`}
-                                  label={`Descripción servicio ${serviceIndex + 1}`}
-                                  maxLength={SERVICE_DESCRIPTION_MAX_LENGTH}
-                                />
+                            <Field
+                            required
+                              name={`services[${serviceIndex}].web_url`}
+                              component={InputField}
+                              label={`Web url ${serviceIndex + 1}`}
+                              placeholder='Enlace para ver tu producto o servicio en tu web'
+                            />
 
-                                <Field
-                                required
-                                  name={`services[${serviceIndex}].web_url`}
-                                  component={InputField}
-                                  label={`Web url ${serviceIndex + 1}`}
-                                  placeholder='Enlace para ver tu producto o servicio en tu web'
-                                />
+                            <ImageField
+                            required
+                              name={`services[${serviceIndex}].image`}
+                              label={`Imagen servicio ${serviceIndex + 1}`}
+                              placeholder='Url imagen'
+                              maxLength={URL_MAX_LENGTH}
+                            />
 
-                                <ImageField
-                                required
-                                  name={`services[${serviceIndex}].image`}
-                                  label={`Imagen servicio ${serviceIndex + 1}`}
-                                  placeholder='Url imagen'
-                                  maxLength={URL_MAX_LENGTH}
-                                />
+                            <Form.Item {...buttonsLayout}>
+                              {values.services.length > 0 && (
+                                <Button
+                                  type='danger'
+                                  icon={<DeleteOutlined />}
+                                  onClick={() => {
+                                    arrayHelpers.remove(serviceIndex);
+                                  }}
+                                  style={{ marginRight: '20px' }}>
+                                  {'Eliminar'}
+                                </Button>
+                              )}
 
-                                <Form.Item {...buttonsLayout}>
-                                  {values.services.length > 0 && (
-                                    <Button
-                                      type='danger'
-                                      icon={<DeleteOutlined />}
-                                      onClick={() => {
-                                        arrayHelpers.remove(serviceIndex);
-                                      }}
-                                      style={{ marginRight: '20px' }}>
-                                      {'Eliminar'}
-                                    </Button>
-                                  )}
-
-                                  {/* values.services.length < SERVICES_LIMIT && */}
-                                  {serviceIndex === values.services.length - 1 && (
-                                    <Button
-                                      type='primary'
-                                      icon={<PlusCircleOutlined />}
-                                      onClick={() => {
-                                        arrayHelpers.push({ description: '', image: '', web_url: '' });
-                                      }}>
-                                      {'Agregar servicio'}
-                                    </Button>
-                                  )}
-                                </Form.Item>
-                              </div>
-                            ))}
-                          </>
-                        ) : (
-                          <Form.Item {...buttonsLayout}>
-                            <Button
-                              type='primary'
-                              icon={<PlusCircleOutlined />}
-                              onClick={() => {
-                                arrayHelpers.push({ description: '', image: '', web_url: '' });
-                              }}>
-                              {'Agregar servicio'}
-                            </Button>
-                          </Form.Item>
-                        );
-                      }}
-                    />
-                    <FieldArray
-                      name='social_networks'
-                      render={(arrayHelpers) => {
-                        return !!values.social_networks && values.social_networks.length > 0 ? (
-                          <>
-                            {values.social_networks.map((_sn, socialNetworkIndex) => (
-                              <div key={`social-network-item-${socialNetworkIndex}`}>
-                                <Field
-                                  name={`social_networks[${socialNetworkIndex}].network`}
-                                  component={SelectField}
-                                  label={`Red social ${socialNetworkIndex + 1}`}
-                                  placeholder='Red social'
-                                  options={socialNetworksOptions}
-                                />
-
-                                <Field
-                                  name={`social_networks[${socialNetworkIndex}].url`}
-                                  component={InputField}
-                                  label={`Url red social ${socialNetworkIndex + 1}`}
-                                  placeholder='Url red social'
-                                  maxLength={URL_MAX_LENGTH}
-                                />
-
-                                <Form.Item {...buttonsLayout}>
-                                  {values.social_networks.length > 0 && (
-                                    <Button
-                                      type='danger'
-                                      icon={<DeleteOutlined />}
-                                      onClick={() => {
-                                        arrayHelpers.remove(socialNetworkIndex);
-                                      }}
-                                      style={{ marginRight: '20px' }}>
-                                      {'Eliminar'}
-                                    </Button>
-                                  )}
-                                  {values.social_networks.length < SOCIAL_NETWORKS_LIMIT &&
-                                    socialNetworkIndex === values.social_networks.length - 1 && (
-                                      <Button
-                                        type='primary'
-                                        icon={<PlusCircleOutlined />}
-                                        onClick={() => {
-                                          arrayHelpers.push({ url: '', network: undefined });
-                                        }}>
-                                        {'Agregar red social'}
-                                      </Button>
-                                    )}
-                                </Form.Item>
-                              </div>
-                            ))}
-                          </>
-                        ) : (
-                          <Form.Item {...buttonsLayout}>
-                            <Button
-                              type='primary'
-                              icon={<PlusCircleOutlined />}
-                              onClick={() => {
-                                arrayHelpers.push({ url: '', network: undefined });
-                              }}>
-                              {'Agregar red social'}
-                            </Button>
-                          </Form.Item>
-                        );
-                      }}
-                    />
-                    <FieldArray
-                      name='advisor'
-                      render={(arrayHelpers) => {
-                        return !!values.advisor && values.advisor.length > 0 ? (
-                          <>
-                            {values.advisor.map((_sn, advisorIndex) => (
-                              <div key={`advisor-item-${advisorIndex}`}>
-                                <Field
-                                required
-                                  name={`advisor[${advisorIndex}].name`}
-                                  component={InputField}
-                                  label={`Nombre del contacto advisor ${advisorIndex + 1}`}
-                                  placeholder='Nombre del contacto advisor'
-                                />
-                                <Field
-                                required
-                                  name={`advisor[${advisorIndex}].cargo`}
-                                  component={InputField}
-                                  label={`Cargo del advisor ${advisorIndex + 1}`}
-                                  placeholder='Cargo advisor'
-                                />
-                                <Field
-                                required
-                                  name={`advisor[${advisorIndex}].codPais`}
-                                  component={InputField}
-                                  label={`Codigo del pais advisor ${advisorIndex + 1}`}
-                                  placeholder='Ingrese el codigo internacional de su pais sin agregar (+)'
-                                />
-                                <Field
-                                required
-                                  name={`advisor[${advisorIndex}].number`}
-                                  component={InputField}
-                                  label={`Número de contacto advisor ${advisorIndex + 1}`}
-                                  placeholder='Número de contacto advisor'
-                                />
-                                <Field
-                                required
-                                  name={`advisor[${advisorIndex}].email`}
-                                  component={InputField}
-                                  label={`Email de contacto advisor ${advisorIndex + 1}`}
-                                  placeholder='Email de contacto advisor'
-                                />
-                                <ImageField
-                                required
-                                  name={`advisor[${advisorIndex}].image`}
-                                  label={`Imagen del contacto advisor ${advisorIndex + 1}`}
-                                  placeholder='Url imagen'
-                                  maxLength={URL_MAX_LENGTH}
-                                />
-                                <Form.Item {...buttonsLayout}>
-                                  {values.advisor.length > 0 && (
-                                    <Button
-                                      type='danger'
-                                      icon={<DeleteOutlined />}
-                                      onClick={() => {
-                                        arrayHelpers.remove(advisorIndex);
-                                      }}
-                                      style={{ marginRight: '20px' }}>
-                                      {'Eliminar'}
-                                    </Button>
-                                  )}
-                                  {/*values.advisor.length < ADVISOR_LIMIT && */}
-                                  {advisorIndex === values.advisor.length - 1 && (
-                                    <Button
-                                      type='primary'
-                                      icon={<PlusCircleOutlined />}
-                                      onClick={() => {
-                                        arrayHelpers.push({
-                                          name: '',
-                                          image: '',
-                                          codPais: '',
-                                          number: '',
-                                          email: '',
-                                          cargo: '',
-                                        });
-                                      }}>
-                                      {'Agregar advisor'}
-                                    </Button>
-                                  )}
-                                </Form.Item>
-                              </div>
-                            ))}
-                          </>
-                        ) : (
-                          <Form.Item {...buttonsLayout}>
-                            <Button
-                              type='primary'
-                              icon={<PlusCircleOutlined />}
-                              onClick={() => {
-                                arrayHelpers.push({
-                                  name: '',
-                                  image: '',
-                                  codPais: '',
-                                  number: '',
-                                  email: '',
-                                  cargo: '',
-                                });
-                              }}>
-                              {'Agregar advisor'}
-                            </Button>
-                          </Form.Item>
-                        );
-                      }}
-                    />
-
-                    <FieldArray
-                      name='gallery'
-                      render={(arrayHelpers) => {
-                        return !!values.gallery && values.gallery.length > 0 ? (
-                          <>
-                            {values.gallery.map((_sn, galleryIndex) => (
-                              <div key={`social-network-item-${galleryIndex}`}>
-                                <ImageField
-                                  name={`gallery[${galleryIndex}].image`}
-                                  label={`Imagen galería ${galleryIndex + 1}`}
-                                />
-
-                                <Form.Item {...buttonsLayout}>
-                                  {values.gallery.length > 1 && (
-                                    <Button
-                                      type='danger'
-                                      icon={<DeleteOutlined />}
-                                      onClick={() => {
-                                        arrayHelpers.remove(galleryIndex);
-                                      }}
-                                      style={{ marginRight: '20px' }}>
-                                      {'Eliminar'}
-                                    </Button>
-                                  )}
-                                  {values.gallery.length < GALLERY_LIMIT && galleryIndex === values.gallery.length - 1 && (
-                                    <Button
-                                      type='primary'
-                                      icon={<PlusCircleOutlined />}
-                                      onClick={() => {
-                                        arrayHelpers.push({ image: '' });
-                                      }}>
-                                      {'Agregar imagen'}
-                                    </Button>
-                                  )}
-                                </Form.Item>
-                              </div>
-                            ))}
-                          </>
-                        ) : (
-                          <Form.Item {...buttonsLayout}>
-                            <Button
-                              type='primary'
-                              icon={<PlusCircleOutlined />}
-                              onClick={() => {
-                                arrayHelpers.push({ image: '' });
-                              }}>
-                              {'Agregar imagen'}
-                            </Button>
-                          </Form.Item>
-                        );
-                      }}
-                    />
-
-                    <Field name='visible' component={SwitchField} label='Visible' />
-
-                    <Form.Item {...buttonsLayout}>
-                      <Link to={`/event/${event._id}/empresas`}>
+                              {/* values.services.length < SERVICES_LIMIT && */}
+                              {serviceIndex === values.services.length - 1 && (
+                                <Button
+                                  type='primary'
+                                  icon={<PlusCircleOutlined />}
+                                  onClick={() => {
+                                    arrayHelpers.push({ description: '', image: '', web_url: '' });
+                                  }}>
+                                  {'Agregar servicio'}
+                                </Button>
+                              )}
+                            </Form.Item>
+                          </div>
+                        ))}
+                      </>
+                    ) : (
+                      <Form.Item {...buttonsLayout}>
                         <Button
-                          disabled={isSubmitting}
-                          loading={isSubmitting}
-                          icon={<CaretLeftOutlined />}
-                          style={{ marginRight: '20px' }}>
-                          {'Volver'}
+                          type='primary'
+                          icon={<PlusCircleOutlined />}
+                          onClick={() => {
+                            arrayHelpers.push({ description: '', image: '', web_url: '' });
+                          }}>
+                          {'Agregar servicio'}
                         </Button>
-                      </Link>
-                      <Button type='primary' htmlType='submit' disabled={isSubmitting} loading={isSubmitting}>
-                        {'Guardar'}
-                      </Button>
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Form>
-            );
-          }}
-        </Formik>
-      </div>
-    </div>
+                      </Form.Item>
+                    );
+                  }}
+                />
+                <FieldArray
+                  name='social_networks'
+                  render={(arrayHelpers) => {
+                    return !!values.social_networks && values.social_networks.length > 0 ? (
+                      <>
+                        {values.social_networks.map((_sn, socialNetworkIndex) => (
+                          <div key={`social-network-item-${socialNetworkIndex}`}>
+                            <Field
+                              name={`social_networks[${socialNetworkIndex}].network`}
+                              component={SelectField}
+                              label={`Red social ${socialNetworkIndex + 1}`}
+                              placeholder='Red social'
+                              options={socialNetworksOptions}
+                            />
+
+                            <Field
+                              name={`social_networks[${socialNetworkIndex}].url`}
+                              component={InputField}
+                              label={`Url red social ${socialNetworkIndex + 1}`}
+                              placeholder='Url red social'
+                              maxLength={URL_MAX_LENGTH}
+                            />
+
+                            <Form.Item {...buttonsLayout}>
+                              {values.social_networks.length > 0 && (
+                                <Button
+                                  type='danger'
+                                  icon={<DeleteOutlined />}
+                                  onClick={() => {
+                                    arrayHelpers.remove(socialNetworkIndex);
+                                  }}
+                                  style={{ marginRight: '20px' }}>
+                                  {'Eliminar'}
+                                </Button>
+                              )}
+                              {values.social_networks.length < SOCIAL_NETWORKS_LIMIT &&
+                                socialNetworkIndex === values.social_networks.length - 1 && (
+                                  <Button
+                                    type='primary'
+                                    icon={<PlusCircleOutlined />}
+                                    onClick={() => {
+                                      arrayHelpers.push({ url: '', network: undefined });
+                                    }}>
+                                    {'Agregar red social'}
+                                  </Button>
+                                )}
+                            </Form.Item>
+                          </div>
+                        ))}
+                      </>
+                    ) : (
+                      <Form.Item {...buttonsLayout}>
+                        <Button
+                          type='primary'
+                          icon={<PlusCircleOutlined />}
+                          onClick={() => {
+                            arrayHelpers.push({ url: '', network: undefined });
+                          }}>
+                          {'Agregar red social'}
+                        </Button>
+                      </Form.Item>
+                    );
+                  }}
+                />
+                <FieldArray
+                  name='advisor'
+                  render={(arrayHelpers) => {
+                    return !!values.advisor && values.advisor.length > 0 ? (
+                      <>
+                        {values.advisor.map((_sn, advisorIndex) => (
+                          <div key={`advisor-item-${advisorIndex}`}>
+                            <Field
+                            required
+                              name={`advisor[${advisorIndex}].name`}
+                              component={InputField}
+                              label={`Nombre del contacto advisor ${advisorIndex + 1}`}
+                              placeholder='Nombre del contacto advisor'
+                            />
+                            <Field
+                            required
+                              name={`advisor[${advisorIndex}].cargo`}
+                              component={InputField}
+                              label={`Cargo del advisor ${advisorIndex + 1}`}
+                              placeholder='Cargo advisor'
+                            />
+                            <Field
+                            required
+                              name={`advisor[${advisorIndex}].codPais`}
+                              component={InputField}
+                              label={`Codigo del pais advisor ${advisorIndex + 1}`}
+                              placeholder='Ingrese el codigo internacional de su pais sin agregar (+)'
+                            />
+                            <Field
+                            required
+                              name={`advisor[${advisorIndex}].number`}
+                              component={InputField}
+                              label={`Número de contacto advisor ${advisorIndex + 1}`}
+                              placeholder='Número de contacto advisor'
+                            />
+                            <Field
+                            required
+                              name={`advisor[${advisorIndex}].email`}
+                              component={InputField}
+                              label={`Email de contacto advisor ${advisorIndex + 1}`}
+                              placeholder='Email de contacto advisor'
+                            />
+                            <ImageField
+                            required
+                              name={`advisor[${advisorIndex}].image`}
+                              label={`Imagen del contacto advisor ${advisorIndex + 1}`}
+                              placeholder='Url imagen'
+                              maxLength={URL_MAX_LENGTH}
+                            />
+                            <Form.Item {...buttonsLayout}>
+                              {values.advisor.length > 0 && (
+                                <Button
+                                  type='danger'
+                                  icon={<DeleteOutlined />}
+                                  onClick={() => {
+                                    arrayHelpers.remove(advisorIndex);
+                                  }}
+                                  style={{ marginRight: '20px' }}>
+                                  {'Eliminar'}
+                                </Button>
+                              )}
+                              {/*values.advisor.length < ADVISOR_LIMIT && */}
+                              {advisorIndex === values.advisor.length - 1 && (
+                                <Button
+                                  type='primary'
+                                  icon={<PlusCircleOutlined />}
+                                  onClick={() => {
+                                    arrayHelpers.push({
+                                      name: '',
+                                      image: '',
+                                      codPais: '',
+                                      number: '',
+                                      email: '',
+                                      cargo: '',
+                                    });
+                                  }}>
+                                  {'Agregar advisor'}
+                                </Button>
+                              )}
+                            </Form.Item>
+                          </div>
+                        ))}
+                      </>
+                    ) : (
+                      <Form.Item {...buttonsLayout}>
+                        <Button
+                          type='primary'
+                          icon={<PlusCircleOutlined />}
+                          onClick={() => {
+                            arrayHelpers.push({
+                              name: '',
+                              image: '',
+                              codPais: '',
+                              number: '',
+                              email: '',
+                              cargo: '',
+                            });
+                          }}>
+                          {'Agregar advisor'}
+                        </Button>
+                      </Form.Item>
+                    );
+                  }}
+                />
+
+                <FieldArray
+                  name='gallery'
+                  render={(arrayHelpers) => {
+                    return !!values.gallery && values.gallery.length > 0 ? (
+                      <>
+                        {values.gallery.map((_sn, galleryIndex) => (
+                          <div key={`social-network-item-${galleryIndex}`}>
+                            <ImageField
+                              name={`gallery[${galleryIndex}].image`}
+                              label={`Imagen galería ${galleryIndex + 1}`}
+                            />
+
+                            <Form.Item {...buttonsLayout}>
+                              {values.gallery.length > 1 && (
+                                <Button
+                                  type='danger'
+                                  icon={<DeleteOutlined />}
+                                  onClick={() => {
+                                    arrayHelpers.remove(galleryIndex);
+                                  }}
+                                  style={{ marginRight: '20px' }}>
+                                  {'Eliminar'}
+                                </Button>
+                              )}
+                              {values.gallery.length < GALLERY_LIMIT && galleryIndex === values.gallery.length - 1 && (
+                                <Button
+                                  type='primary'
+                                  icon={<PlusCircleOutlined />}
+                                  onClick={() => {
+                                    arrayHelpers.push({ image: '' });
+                                  }}>
+                                  {'Agregar imagen'}
+                                </Button>
+                              )}
+                            </Form.Item>
+                          </div>
+                        ))}
+                      </>
+                    ) : (
+                      <Form.Item {...buttonsLayout}>
+                        <Button
+                          type='primary'
+                          icon={<PlusCircleOutlined />}
+                          onClick={() => {
+                            arrayHelpers.push({ image: '' });
+                          }}>
+                          {'Agregar imagen'}
+                        </Button>
+                      </Form.Item>
+                    );
+                  }}
+                />
+
+                <Field name='visible' component={SwitchField} label='Visible' />
+
+                {/* <Form.Item {...buttonsLayout}>
+                  <Link to={`/event/${event._id}/empresas`}>
+                    <Button
+                      disabled={isSubmitting}
+                      loading={isSubmitting}
+                      icon={<CaretLeftOutlined />}
+                      style={{ marginRight: '20px' }}>
+                      {'Volver'}
+                    </Button>
+                  </Link>
+                  <Button type='primary' htmlType='submit' disabled={isSubmitting} loading={isSubmitting}>
+                    {'Guardar'}
+                  </Button>
+                </Form.Item> */}
+              </Col>
+            </Row>
+          </Form>
+        );
+      }}
+    </Formik>
   );
 }
 

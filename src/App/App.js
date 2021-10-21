@@ -8,11 +8,8 @@ import store from '../redux/store';
 import MainRouter from '../containers/router';
 import 'bulma-spacing/css/bulma-spacing.min.css';
 import withContext from '../Context/withContext';
-import {
-  QueryClient,
-  QueryClientProvider,
-} from 'react-query'
-const queryClient = new QueryClient()
+import { QueryClient, QueryClientProvider } from 'react-query';
+const queryClient = new QueryClient();
 
 class App extends Component {
   constructor(props) {
@@ -42,7 +39,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-        <MainRouter />
+          <MainRouter />
         </QueryClientProvider>
       </Provider>
     );
