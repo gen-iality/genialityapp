@@ -54,10 +54,17 @@ function Organization(props) {
           >
             {React.createElement(collapseMenu ? MenuUnfoldOutlined : MenuFoldOutlined)}
           </Button>
-          <Row gutter={8} >
+          <Row gutter={[8, 8]} wrap>
             {
               !collapseMenu && (
-                <Col span={6}>
+                <Col 
+                  xs={collapseMenu ? 24 : 0} 
+                  sm={collapseMenu ? 24 : 0} 
+                  md={collapseMenu ? 24 : 6} 
+                  lg={collapseMenu ? 24 : 6} 
+                  xl={collapseMenu ? 24 : 6} 
+                  xxl={collapseMenu ? 24 : 6}
+                >
                   <Menu
                     defaultSelectedKeys={['1']}
                     defaultOpenKeys={['1']}
@@ -110,7 +117,14 @@ function Organization(props) {
                 </Col>
               )
             }
-            <Col span={collapseMenu ? 24 : 18}>
+            <Col
+              xs={24} 
+              sm={24} 
+              md={collapseMenu ? 24 : 18} 
+              lg={collapseMenu ? 24 : 18} 
+              xl={collapseMenu ? 24 : 18} 
+              xxl={collapseMenu ? 24 : 18}
+            >
               {isLoading ? (
                 <Loading />
               ) : (
