@@ -857,13 +857,13 @@ class AgendaEdit extends Component {
                 <Form.Item label={'Link del vídeo'}>
                   <Input name='video' type='text' value={video} onChange={this.handleChange} />
                 </Form.Item>
-                <Form.Item label={'Texto de email para confirmación de registro'}>
+                {/* <Form.Item label={'Texto de email para confirmación de registro'}>
                   <EviusReactQuill
                     name='registration_message'
                     data={this.state.registration_message}
                     handleChange={(e) => this.handleChangeReactQuill(e, 'registration_message')}
                   />
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item label={'Descripción'}>
                   <Space>
                     <ExclamationCircleOutlined style={{ color: '#faad14' }} />
