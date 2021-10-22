@@ -150,7 +150,7 @@ const FormRegister = ({
     organization ? fields : cEvent.value?.user_properties || {}
   );
   //initialValues.codearea = null;
-  console.log('EVENT USER==>', eventUser);
+  //console.log('EVENT USER==>', eventUser);
 
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';
@@ -218,6 +218,10 @@ const FormRegister = ({
             : null;         
       }
     }); 
+   
+    if (imageAvatar) {    
+      values.picture = imageAvatar.fileList[0].response;
+    }
     if (callback) {
       callback(values)
 
@@ -227,13 +231,7 @@ const FormRegister = ({
     if (data.length == 0 || cEventUser.value) {
       setSectionPermissions({ view: false, ticketview: false });
       values.password = password;
-      let ruta = '';
-      if (imageAvatar) {
-        if (imageAvatar.fileList.length > 0) {
-          ruta = await saveImageStorage(imageAvatar.fileList[0].thumbUrl);
-        }
-        values.picture = ruta;
-      }
+          
 
       // values.files = fileSave
 
@@ -363,7 +361,7 @@ const FormRegister = ({
   };
 
   const valuesChange = (changedValues, allValues) => {
-    console.log('VALUES==>', allValues);
+   // console.log('VALUES==>', allValues);
     updateFieldsVisibility(conditionals, allValues);
   };
 
@@ -694,20 +692,25 @@ const FormRegister = ({
           <div style={{ textAlign: 'center' }}>
             <ImgCrop rotate shape='round'>
               <Upload
+                action={'https://api.evius.co/api/files/upload/'}
                 accept='image/png,image/jpeg'
                 onChange={(file) => {
-                  const fls = (file ? file.fileList : [])
+                  //alert("ONCHANGE")
+                  //console.log("FILE==>",file.fileList)                 
+                  //console.log("FILEFORMATTER==>",file)
+                  setImageAvatar(file);
+                 /*  setImgUrl(fls);
+                 const fls = (file ? file.fileList : [])                  
                   .map(fl => ({
                     ...fl,
                     status: 'success',
-                  }))
-                  setImageAvatar(file);
-                  setImgUrl(fls);
+                  }))*/
+                  
                 }}
                 multiple={false}
                 listType='picture'
                 maxCount={1}
-                fileList={ImgUrl}
+                defaultFileList={value ? [{ name:typeof value =='string'? obtenerName(value):null, url: typeof value =='string'? value:null }] : []}
                 beforeUpload={beforeUpload}>
                 <Button type='primary' icon={<UploadOutlined />}>
                   {intl.formatMessage({ id: 'form.button.avatar', defaultMessage: 'Subir imagen de perfil' })}

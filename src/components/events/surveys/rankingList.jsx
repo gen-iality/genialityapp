@@ -1,51 +1,67 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Avatar } from 'antd';
-import {UseEventContext} from '../../../Context/eventContext'
+import { Row, Col, Avatar, Divider, List, Skeleton } from 'antd';
+import { UseEventContext } from '../../../Context/eventContext'
 
-export default function RankingList({data}) {
+export default function RankingList({ data }) {
   function formatName(name) {
     const result = decodeURIComponent(name);
     return result;
   }
 
-  const [list, setList] = useState([]);
+  const [ list, setList ] = useState([]);
+  const [ loading, setloading ] = useState(false)
 
   let cEvent = UseEventContext();
 
   useEffect(() => {
+    setloading(true);
     setList(data);
-  }, [data]);
+    setloading(false);
+  }, [ data ]);
+
+
+  const styleListPlayer = {
+    background: 'white',
+    color: '#333F44',
+    padding: 5,
+    margin: 4,
+    display: 'flex',
+    borderRadius: '5px',
+    fontWeight: '500',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    height: '6vh',
+  };
+
 
   return (
-    <div style={{ marginTop: 16 }}>
-      <h3 style={{ fontSize: '14px', fontWeight: '700' }}>Ranking de jugadores</h3>
-      <div className='container-ranking' style={{ marginTop: 16 }}>
-        {list.length > 0 ? (
-          list.map((item, key) => (
-            <div className='card-games-ranking' key={'item' + key}>
-              <Row justify='space-between' align='middle'>
-                <Col span={6}>
-                  <Avatar size={35}>
-                    {item.name && item.name.charAt(0).toUpperCase()}
-                    {item.name && item.name.substring(item.name.indexOf(' ') + 1, item.name.indexOf(' ') + 2)}
-                  </Avatar>
-                </Col>
-                <Col span={12}>
-                  <h3 style={{ fontWeight: '700' }}>{formatName(item.name)}</h3>
-                </Col>
-                <Col span={6}>
-                  <h4 >{item.score} Pts</h4>
-                </Col>
-              </Row>
-            </div>
-          ))
-        ) : (
-          <div className='card-games-ranking'>
-            <Row>
-              <Col>No hay resultados</Col>
-            </Row>
-          </div>
-        )}
+    <div style={{ marginTop: 16, width: '26vw' }}>
+      <Row justify="center">
+        <h1 style={{ fontSize: '25px', fontWeight: 'bold', lineHeight: '3px', color: `${cEvent.value.styles.textMenu}` }}>Ranking</h1>
+        <Divider style={{ backgroundColor: `${cEvent.value.styles.textMenu}` }} />
+      </Row>
+      <div className='container-ranking' style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
+        <List
+          className="demo-loadmore-list"
+          loading={loading}
+          itemLayout="horizontal"
+          dataSource={data}
+          renderItem={(item, key) => (
+            <List.Item
+              style={styleListPlayer}
+              actions={[ <a key="list-loadmore-edit"> {item.score} Puntos </a>, ]}
+            >
+              <Skeleton avatar title={false} loading={loading} active>
+                <List.Item.Meta
+                  avatar={<Avatar>
+                    {key + 1}</Avatar>}
+                  title={<a style={{ fontWeight: '500', fontSize: '14px', }} href="#">{formatName(item.name)}</a>}
+                />
+              </Skeleton>
+            </List.Item>
+          )}
+        />
+
       </div>
     </div>
   );

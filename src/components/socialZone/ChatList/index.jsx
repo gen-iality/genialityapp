@@ -71,7 +71,7 @@ const ChatList = (props) => {
     HandlePublicPrivate(key);
   }
 
-  console.log('privateChatsList', privateChatsList);
+  // console.log('privateChatsList', privateChatsList);
   if (!cUser.value)
     return (
       <Form className='asistente-list' {...layout} name='basic' initialValues={{ remember: true }} onFinish={onFinish}>
@@ -150,6 +150,7 @@ const ChatList = (props) => {
           }
           key='public'>
           <iframe
+          style={{marginTop:'8px'}}
             title='chatevius'
             className='ChatEviusLan'
             src={
@@ -194,7 +195,7 @@ const ChatList = (props) => {
               renderItem={(item) => (
                 <List.Item
                   style={styleItemCard}
-                  actions={[
+                  extra={[
                     <a
                       key='list-loadmore-edit'
                       onClick={() => {
@@ -238,9 +239,9 @@ const ChatList = (props) => {
                       )
                     }
                     title={
-                      <a style={{ color: 'black' }} key='list-loadmore-edit'>
+                      <Typography.Text  style={{ color: 'black',width:'200px' }} key='list-loadmore-edit'>
                         {item.name ? item.name : item.names}
-                      </a>
+                      </Typography.Text>
                     }
                   />
                 </List.Item>
