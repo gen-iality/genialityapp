@@ -20,6 +20,7 @@ const Header = ( props ) => {
     back, //boolean, permite aparecer el icono para volver atrás
     form, //si viene, es para poder saber sí el botón de guardar colocarlo como "submit"
     extra, //código adicional de alguna acción fuera de la estructura en el header
+    description,
   } = props;
 
   return (
@@ -36,6 +37,11 @@ const Header = ( props ) => {
           {title}
         </Tooltip>
       </Title>
+      {
+        description && (
+          <small>{description}</small>
+        )
+      }
 
       <Row wrap justify='end' gutter={[8, 8]}>
         <Col>
