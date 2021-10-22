@@ -107,7 +107,7 @@ const HeaderColumns = (props) => {
             >
                 <div style={{ padding: "8px" }}>
                     <Row style={{ textAlign: "left", fontWeight: "bolder" }}>
-                        {currentActivity !== null && currentActivity.name}
+                        {currentActivity && currentActivity?.name}
                         {/* {configfast && configfast.enableCount && (
                             <>
                                 ( &nbsp;

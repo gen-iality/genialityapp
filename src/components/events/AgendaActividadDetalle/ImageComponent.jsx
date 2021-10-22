@@ -2,6 +2,16 @@ import React from 'react'
 import WithEviusContext from '../../../Context/withContext';
 
 const ImageComponent = (props) => {
+
+    const imagePlaceHolder =
+        "https://via.placeholder.com/1500x540/" +
+        props.cEvent.value.styles.toolbarDefaultBg.replace("#", "") +
+        "/" +
+        props.cEvent.value.styles.textMenu.replace("#", "") +
+        "?text=" +
+        props.cEvent.value.name;
+
+
     return (
         <div className="column is-centered mediaplayer">
             <img

@@ -563,16 +563,7 @@ let AgendaActividadDetalle = (props) => {
 
           <header>
             <div>
-              {/* Hora del evento */}
-              {/* <p className='card-header-title has-padding-left-0 '>
-                {Moment(currentActivity.datetime_start).format('h:mm a')} -{' '}
-                {Moment(currentActivity.datetime_end).format('h:mm a')}
-              </p> */}
-
-              {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
-
               {meetingState === "open_meeting_room" &&
-
 
                 platform !== "" &&
                 platform !== null ? (

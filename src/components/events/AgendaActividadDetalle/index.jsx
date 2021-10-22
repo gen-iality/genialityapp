@@ -36,7 +36,9 @@ import { firestore } from "../../../helpers/firebase";
 import * as SurveyActions from "../../../redux/survey/actions";
 import { CheckinActiviy } from "./utils";
 import SurveyDrawer from "../surveys/components/surveyDrawer";
-import HeaderColumnswithContext, { HeaderColumns } from "./HeaderColumns";
+import HeaderColumnswithContext from "./HeaderColumns";
+import HCOActividad  from "./HOC_Actividad";
+
 const {
     setCurrentSurvey,
     setSurveyVisible,
@@ -52,15 +54,7 @@ const AgendaActividadDetalle = (props) => {
     const [ videoStyles, setVideoStyles ] = useState(null);
     const [ videoButtonStyles, setVideoButtonStyles ] = useState(null);
     let [ idSpeaker, setIdSpeaker ] = useState(false);
-    const [ userActivity, setuserActivity ] = useState({})
-    const imagePlaceHolder =
-        "https://via.placeholder.com/1500x540/" +
-        props.cEvent.value.styles.toolbarDefaultBg.replace("#", "") +
-        "/" +
-        props.cEvent.value.styles.textMenu.replace("#", "") +
-        "?text=" +
-        props.cEvent.value.name;
-
+  
 
 
     const intl = useIntl();
@@ -175,9 +169,6 @@ const AgendaActividadDetalle = (props) => {
         }
     }, [ chatAttendeChats, isMobile ]);
 
-    const handleSignInForm = (values) => {
-        setuserActivity({ names: values.names, email: values.email })
-    };
 
 
     return (
@@ -189,6 +180,7 @@ const AgendaActividadDetalle = (props) => {
                     className="agenda_information"
                 >
                     <HeaderColumnswithContext isVisible={true} />
+                    <HCOActividad/>
                 </Card>
 
             </div>
