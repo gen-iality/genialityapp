@@ -8,19 +8,11 @@ import Creatable from 'react-select';
 import { FaWhmcs } from 'react-icons/fa';
 import EventContent from '../events/shared/content';
 import Loading from '../loaders/loading';
-import {
-  Tabs,
-  message,
-  Row,
-  Col,
-  Checkbox,
-  Space,
-  Typography,
-  Switch,
-} from 'antd';
+import { Tabs, message, Row, Col, Checkbox, Space, Typography, Button, Form, Input, InputNumber, Switch } from 'antd';
 import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
-import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, ExclamationCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import Header from '../../antdComponents/Header';
 // En revision vista previa
 //import ZoomComponent from '../events/zoomComponent';
 
@@ -35,13 +27,7 @@ import {
   eventTicketsApi,
   getCurrentUser,
 } from '../../helpers/request';
-import {
-  fieldsSelect,
-  handleRequestError,
-  handleSelect,
-  sweetAlert,
-  uploadImage,
-} from '../../helpers/utils';
+import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from '../../helpers/utils';
 import Dropzone from 'react-dropzone';
 import { Select as SelectAntd } from 'antd';
 import 'react-tabs/style/react-tabs.css';
@@ -49,8 +35,14 @@ import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
 import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
-import { Button } from 'antd';
 const { TabPane } = Tabs;
+
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
+};
+
+const { Option } = SelectAntd;
 
 class AgendaEdit extends Component {
   constructor(props) {
@@ -123,23 +115,12 @@ class AgendaEdit extends Component {
   // VALIDAR SI TIENE ENCUESTAS EXTERNAS
   validateRoom = async () => {
     const { service } = this.state;
-    const hasVideoconference = await service.validateHasVideoconference(
-      this.props.event._id,
-      this.state.activity_id
-    );
+    const hasVideoconference = await service.validateHasVideoconference(this.props.event._id, this.state.activity_id);
     if (hasVideoconference) {
-      const configuration = await service.getConfiguration(
-        this.props.event._id,
-        this.state.activity_id
-      );
+      const configuration = await service.getConfiguration(this.props.event._id, this.state.activity_id);
       this.setState({
-        isExternal:
-          configuration.platform && configuration.platform === 'zoomExterno'
-            ? true
-            : false,
-        externalSurveyID: configuration.meeting_id
-          ? configuration.meeting_id
-          : null,
+        isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
+        externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
       });
     }
   };
@@ -241,9 +222,7 @@ class AgendaEdit extends Component {
         requires_registration: info.requires_registration || false,
       });
 
-      Object.keys(this.state).map((key) =>
-        info[key] ? this.setState({ [key]: info[key] }) : ''
-      );
+      Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
       const { date, hour_start, hour_end } = handleDate(info);
 
       let currentUser = await getCurrentUser();
@@ -256,10 +235,7 @@ class AgendaEdit extends Component {
         selectedTickets: info.selectedTicket ? info.selectedTicket : [],
         selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
         selectedType: fieldsSelect(info.type_id, types),
-        selectedCategories: fieldsSelect(
-          info.activity_categories_ids,
-          categories
-        ),
+        selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
         currentUser: currentUser,
       });
     } else {
@@ -294,7 +270,6 @@ class AgendaEdit extends Component {
     if (name === 'requires_registration') {
       value = e.target.checked;
     }
-
     // BACKLOG -> porque host_id se setea siempre que se setea un estado
     this.setState({ [name]: value });
   };
@@ -404,11 +379,7 @@ class AgendaEdit extends Component {
           });
 
           for (let i = 0; i < selected_document?.length; i++) {
-            await DocumentsApi.editOne(
-              event._id,
-              data,
-              selected_document[i]._id
-            );
+            await DocumentsApi.editOne(event._id, data, selected_document[i]._id);
           }
         } else {
           const agenda = await AgendaApi.create(event._id, info);
@@ -448,7 +419,7 @@ class AgendaEdit extends Component {
         else {
           const agenda = await AgendaApi.create(event._id, info);
           this.setState({ activity_id: agenda._id });
-          this.props.history.push(`/event/${event._id}/agenda`);
+          this.props.history.push(`/eventadmin/${event._id}/agenda`);
         }
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
@@ -483,14 +454,8 @@ class AgendaEdit extends Component {
     } = this.state;
     const datetime_start = date + ' ' + Moment(hour_start).format('HH:mm');
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
-    const activity_categories_ids =
-      selectedCategories.length > 0
-        ? selectedCategories.map(({ value }) => value)
-        : [];
-    const access_restriction_rol_ids =
-      access_restriction_type !== 'OPEN'
-        ? selectedRol.map(({ value }) => value)
-        : [];
+    const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
+    const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
 
     const type_id = selectedType.value;
     return {
@@ -563,16 +528,8 @@ class AgendaEdit extends Component {
           : selectedCategories.map(({ value }) => value)
         : [];
 
-    const access_restriction_rol_ids =
-      access_restriction_type !== 'OPEN'
-        ? selectedRol.map(({ value }) => value)
-        : [];
-    const host_ids =
-      selectedHosts >= 0
-        ? []
-        : selectedHosts
-            ?.filter((host) => host != null)
-            .map(({ value }) => value);
+    const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
+    const host_ids = selectedHosts >= 0 ? [] : selectedHosts?.filter((host) => host != null).map(({ value }) => value);
     const type_id = selectedType === undefined ? '' : selectedType.value;
     return {
       name,
@@ -611,9 +568,7 @@ class AgendaEdit extends Component {
   //FN para eliminar la actividad
   remove = async () => {
     if (this.state.activity_id) {
-      if (
-        await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id)
-      ) {
+      if (await AgendaApi.deleteOne(this.state.activity_id, this.props.event._id)) {
         this.setState({ redirect: true });
         sweetAlert.showSuccess('Correcto', 'Actividad eliminada');
       }
@@ -626,13 +581,9 @@ class AgendaEdit extends Component {
     let title = [];
     if (this.state.name.length <= 0) title.push('El nombre es requerido');
 
-    if (this.state.date === '' || this.state.date === 'Invalid date')
-      title.push('Seleccione el día');
+    if (this.state.date === '' || this.state.date === 'Invalid date') title.push('Seleccione el día');
 
-    if (
-      this.state.hour_start === '' ||
-      this.state.hour_start === 'Invalid date'
-    )
+    if (this.state.hour_start === '' || this.state.hour_start === 'Invalid date')
       title.push('Seleccione una hora de inicio valida');
 
     if (this.state.hour_end === '' || this.state.hour_end === 'Invalid date')
@@ -708,92 +659,86 @@ class AgendaEdit extends Component {
       latitude,
     } = this.state;
     const { matchUrl } = this.props;
-    if (!this.props.location.state || this.state.redirect)
-      return <Redirect to={matchUrl} />;
+    if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
     return (
       <Tabs defaultActiveKey='1'>
         <TabPane tab='Agenda' key='1'>
-          <EventContent title='Actividad' closeAction={this.goBack}>
-            {loading ? (
-              <Loading />
-            ) : (
-              <div className='columns'>
-                <div className='column is-7'>
-                  <div className='field'>
-                    <label className='label required'>Nombre</label>
-                    <div className='control'>
-                      <input
-                        ref={this.name}
-                        autoFocus
-                        className='input'
-                        type='text'
-                        name={'name'}
-                        value={name}
-                        onChange={this.handleChange}
-                        placeholder='Nombre de handleChangela actividad'
+          <Form onFinish={this.submit} {...formLayout}>
+            <Header
+              title={'Actividad'}
+              back
+              save
+              form
+              remove={this.remove}
+              edit={this.props.location.state.edit}
+              extra={
+                <Button type='primary' onClick={this.submit2}>
+                  Duplicar para traducir
+                </Button>
+              }
+            />
+
+            <Row justify='center' wrap gutter={12}>
+              <Col span={18}>
+                <Form.Item label={'Nombre'}>
+                  <Input
+                    ref={this.name}
+                    autoFocus
+                    type='text'
+                    name={'name'}
+                    value={name}
+                    onChange={this.handleChange}
+                    placeholder={'Nombre de la actividad'}
+                  />
+                </Form.Item>
+                <Form.Item label={'Subtítulo'}>
+                  <Input
+                    className='input'
+                    type='text'
+                    name={'subtitle'}
+                    value={subtitle}
+                    onChange={this.handleChange}
+                    placeholder={'Ej: Salón 1, Zona Norte, Área de juegos'}
+                  />
+                </Form.Item>
+                <Form.Item label={'Día'}>
+                  <SelectAntd
+                    name='date'
+                    options={this.state.days}
+                    style={{ width: '100%' }}
+                    defaultValue={date}
+                    onChange={(value) => this.handleChangeDate(value, 'date')}
+                  />
+                </Form.Item>
+                <Row wrap justify='space-between' gutter={[8, 8]}>
+                  <Col>
+                    <Form.Item label={'Hora Inicio'}>
+                      <DateTimePicker
+                        value={hour_start}
+                        dropUp
+                        step={15}
+                        date={false}
+                        onChange={(value) => this.handleChangeDate(value, 'hour_start')}
                       />
-                    </div>
-                  </div>
-
-                  <div className='field'>
-                    <label className='label'>Subtítulo</label>
-                    <div className='control'>
-                      <input
-                        className='input'
-                        type='text'
-                        name={'subtitle'}
-                        value={subtitle}
-                        onChange={this.handleChange}
-                        placeholder='Ej: Salón 1, Zona Norte, Área de juegos'
+                    </Form.Item>
+                  </Col>
+                  <Col>
+                    <Form.Item label={'Hora Fin'}>
+                      <DateTimePicker
+                        value={hour_end}
+                        dropUp
+                        step={15}
+                        date={false}
+                        onChange={(value) => this.handleChangeDate(value, 'hour_end')}
                       />
-                    </div>
-                  </div>
-                  <div className='field'>
-                    <label className='label'>Día</label>
-
-                    <SelectAntd
-                      name='date'
-                      options={this.state.days}
-                      style={{ width: '100%' }}
-                      defaultValue={date}
-                      onChange={(value) => this.handleChangeDate(value, 'date')}
-                    />
-                  </div>
-                  <div className='columns'>
-                    <div className='column'>
-                      <div className='field'>
-                        <label className='label'>Hora Inicio</label>
-                        <DateTimePicker
-                          value={hour_start}
-                          dropUp
-                          step={15}
-                          date={false}
-                          onChange={(value) =>
-                            this.handleChangeDate(value, 'hour_start')
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    <div className='column'>
-                      <div className='field'>
-                        <label className='label'>Hora Fin</label>
-                        <DateTimePicker
-                          value={hour_end}
-                          dropUp
-                          step={15}
-                          date={false}
-                          onChange={(value) =>
-                            this.handleChangeDate(value, 'hour_end')
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <label className='label'>Conferencista</label>
-                  <div className='columns'>
-                    <div className='column is-10'>
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Form.Item label={'Conferencista'}>
+                  <Row wrap gutter={[8, 8]}>
+                    <Col span={23}>
                       <Select
+                        id={'hosts'}
                         isClearable
                         isMulti
                         styles={creatableStyles}
@@ -801,455 +746,262 @@ class AgendaEdit extends Component {
                         options={hosts}
                         value={selectedHosts}
                       />
-                    </div>
-                    <div className='column is-2'>
-                      <button
-                        onClick={() =>
-                          this.goSection(
-                            matchUrl.replace('agenda', 'speakers'),
-                            { child: true }
-                          )
-                        }
-                        className='button'
-                      >
-                        <FaWhmcs />
-                      </button>
-                    </div>
-                  </div>
-                  <label className='label'>Espacio</label>
-                  <div className='field has-addons'>
-                    <div className='control'>
-                      <div className='select'>
-                        <select
-                          name={'space_id'}
-                          value={space_id}
-                          onChange={this.handleChange}
-                        >
-                          <option value={''}>
-                            Seleccione un lugar/salón ...
-                          </option>
-                          {spaces.map((space) => {
-                            return (
-                              <option key={space.value} value={space.value}>
-                                {space.label}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    </div>
-                    <div className='control'>
-                      <Link to={matchUrl.replace('agenda', 'espacios')}>
-                        <button className='button'>
-                          <FaWhmcs />
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
-                  <label className='label'>¿Tiene espacio físico?</label>
-                  <Switch
-                    checked={this.state.isPhysical}
-                    checkedChildren='Si'
-                    unCheckedChildren='No'
-                    onChange={this.handlePhysical}
-                  />
-                  {this.state.isPhysical && (
-                    <>
-                      <div className='field'>
-                        <label className='label'>Longitud</label>
-                        <div className='control'>
-                          <input
-                            ref={this.longitud}
-                            autoFocus
-                            className='input'
-                            type='number'
-                            name={'length'}
-                            value={length}
-                            onChange={this.handleChange}
-                            placeholder='Ej. 4.677027'
-                          />
-                        </div>
-                      </div>
-                      <div className='field'>
-                        <label className='label'>Latitud</label>
-                        <div className='control'>
-                          <input
-                            ref={this.latitud}
-                            autoFocus
-                            className='input'
-                            type='number'
-                            name={'latitude'}
-                            value={latitude}
-                            onChange={this.handleChange}
-                            placeholder='Ej. -74.094086'
-                          />
-                        </div>
-                      </div>
-                    </>
-                  )}
-
-                  {/*  <div className='field'>
-                    <label className={`label`}>Clasificar actividad como:</label>
-                    <div className='control'>
-                      <input
-                        type='radio'
-                        id={'radioOpen'}
-                        name='access_restriction_type'
-                        checked={access_restriction_type === 'OPEN'}
-                        className='is-checkradio'
-                        value={'OPEN'}
-                        onChange={this.handleChange}
-                      />
-                      <label htmlFor={'radioOpen'}>
-                        <strong>ABIERTA</strong>: Todos los asistentes (roles) pueden participar en la actividad
-                      </label>
-                    </div>
-                    <div className='control'>
-                      <input
-                        type='radio'
-                        id={'radioSuggested'}
-                        name='access_restriction_type'
-                        checked={access_restriction_type === 'SUGGESTED'}
-                        className='is-checkradio'
-                        value={'SUGGESTED'}
-                        onChange={this.handleChange}
-                      />
-                      <label htmlFor={'radioSuggested'}>
-                        <strong>RECOMENDADA</strong>: Actividad sugerida para algunos asistentes (roles)
-                      </label>
-                    </div>
-                    <div className='control'>
-                      <input
-                        type='radio'
-                        id={'radioExclusive'}
-                        name='access_restriction_type'
-                        checked={access_restriction_type === 'EXCLUSIVE'}
-                        className='is-checkradio'
-                        value={'EXCLUSIVE'}
-                        onChange={this.handleChange}
-                      />
-                      <label htmlFor={'radioExclusive'}>
-                        <strong>EXCLUSIVA</strong>: Solo algunos asistentes (roles) pueden participar en la actividad
-                      </label>
-                    </div>
-                  </div>*/}
-                  {access_restriction_type !== 'OPEN' && (
-                    <Fragment>
-                      <div style={{ display: 'flex' }}>
-                        <label className='label required'>Asginar a :</label>
-                        <button
-                          className='button is-text is-small'
-                          onClick={this.addRoles}
-                        >
-                          todos los roles
-                        </button>
-                      </div>
-                      <div className='columns'>
-                        <div className='column is-10'>
-                          <Select
-                            isClearable
-                            isMulti
-                            styles={creatableStyles}
-                            onChange={this.selectRol}
-                            options={roles}
-                            placeholder={'Seleccione al menos un rol...'}
-                            value={selectedRol}
-                          />
-                        </div>
-                        <div className='column is-2'>
-                          <button
-                            onClick={() =>
-                              this.goSection(
-                                matchUrl.replace('agenda', 'tipo-asistentes')
-                              )
-                            }
-                            className='button'
-                          >
-                            <FaWhmcs />
-                          </button>
-                        </div>
-                      </div>
-                    </Fragment>
-                  )}
-                  <div className='field'>
-                    <label className='label'>Documentos</label>
-                    <Select
-                      isClearable
-                      isMulti
-                      styles={creatableStyles}
-                      onChange={this.selectDocuments}
-                      options={nameDocuments}
-                      value={selected_document}
-                    />
-                  </div>
-                  {/* <label className="label">Ticket</label>
-                  <div>
-                    <Select
-                      isClearable
-                      isMulti
-                      styles={creatableStyles}
-                      onChange={this.selectTickets}
-                      options={tickets}
-                      value={selectedTickets}
-                    />
-                  </div> */}
-
-                  <div className='field'>
-                    <label className='label'>Link del video</label>
-                    <input
-                      className='input'
-                      name='video'
-                      type='text'
-                      value={video}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-
-                  {/* <div className="field">
-                    <label className="label">
-                      Texto de email para confirmación de registro{" "}
-                    </label>
-                    <div className="control">
-                      <EviusReactQuill
-                        name="registration_message"
-                        data={this.state.registration_message}
-                        handleChange={(e) =>
-                          this.handleChangeReactQuill(e, "registration_message")
-                        }
-                      />
-                    </div>
-                  </div> */}
-
-                  <div className='field'>
-                    <label className='label'>Descripción</label>
-                    <Space>
-                      <ExclamationCircleOutlined style={{ color: '#faad14' }} />
-                      <Typography.Text type='secondary'>
-                        Esta información no es visible en la Agenda/Actividad en
-                        versión Mobile.
-                      </Typography.Text>
-                    </Space>
-                    <div className='control'>
-                      <EviusReactQuill
-                        name='description'
-                        data={this.state.description}
-                        handleChange={(e) =>
-                          this.handleChangeReactQuill(e, 'description')
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className='column is-5 general'>
-                  <div className='field is-grouped'>
-                    <Space>
+                    </Col>
+                    <Col span={1}>
                       <Button
-                        icon={<DeleteOutlined />}
-                        type='danger'
-                        dashed
-                        onClick={this.remove}
-                      >
-                        Eliminar actividad
-                      </Button>
-                      <button
-                        onClick={this.submit}
-                        className='button is-primary'
-                      >
-                        Guardar
-                      </button>
-                    </Space>
-                  </div>
-                  <div className='field is-grouped'>
-                    <button
-                      onClick={this.submit2}
-                      className='button is-primary'
-                    >
-                      Duplicar para traducir
-                    </button>
-                  </div>
-                  <div className='section-gray'>
+                        onClick={() => this.goSection(matchUrl.replace('agenda', 'speakers'), { child: true })}
+                        icon={<SettingOutlined />}
+                      />
+                    </Col>
+                  </Row>
+                </Form.Item>
+                <Form.Item label={'Espacio'}>
+                  <Row wrap gutter={[8, 8]}>
+                    <Col span={23}>
+                      <SelectAntd name={'space_id'} value={space_id} onChange={this.handleChange}>
+                        <Option value={''}>Seleccione un lugar/salón ...</Option>
+                        {spaces.map((space) => {
+                          return (
+                            <Option key={space.value} value={space.value}>
+                              {space.label}
+                            </Option>
+                          );
+                        })}
+                      </SelectAntd>
+                    </Col>
+                    <Col span={1}>
+                      <Link to={matchUrl.replace('agenda', 'espacios')}>
+                        <Button icon={<SettingOutlined />} />
+                      </Link>
+                    </Col>
+                  </Row>
+                </Form.Item>
+                <label className='label'>¿Tiene espacio físico?</label>
+                <Switch
+                  checked={this.state.isPhysical}
+                  checkedChildren='Si'
+                  unCheckedChildren='No'
+                  onChange={this.handlePhysical}
+                />
+                {this.state.isPhysical && (
+                  <>
                     <div className='field'>
-                      <label className='label has-text-grey-light'>
-                        Imagen
-                      </label>
-                      <p>Dimensiones: 1000px x 278px</p>
-                      <Dropzone
-                        onDrop={this.changeImg}
-                        accept='image/*'
-                        className='zone'
-                      >
-                        <button className='button is-text'>
-                          {image ? 'Cambiar imagen' : 'Subir imagen'}
-                        </button>
-                      </Dropzone>
-                      {image && <img src={image} alt={`activity_${name}`} />}
-                    </div>
-                    <div className='field'>
-                      <label className={`label`}>Capacidad</label>
+                      <label className='label'>Longitud</label>
                       <div className='control'>
                         <input
+                          ref={this.longitud}
+                          autoFocus
                           className='input'
                           type='number'
-                          min={0}
-                          name={'capacity'}
-                          value={capacity}
+                          name={'length'}
+                          value={length}
                           onChange={this.handleChange}
-                          placeholder='Cupo total'
+                          placeholder='Ej. 4.677027'
                         />
                       </div>
                     </div>
-                    <label className='label'>Categorías</label>
-                    <div className='columns'>
-                      <div className='column is-10'>
-                        <Creatable
+                    <div className='field'>
+                      <label className='label'>Latitud</label>
+                      <div className='control'>
+                        <input
+                          ref={this.latitud}
+                          autoFocus
+                          className='input'
+                          type='number'
+                          name={'latitude'}
+                          value={latitude}
+                          onChange={this.handleChange}
+                          placeholder='Ej. -74.094086'
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+                {access_restriction_type !== 'OPEN' && (
+                  <Form.Item label={`Asignar a: `}>
+                    <Row wrap justify='space-between'>
+                      <Col span={17}>
+                        <Select
                           isClearable
-                          styles={catStyles}
-                          onChange={this.selectCategory}
-                          onCreateOption={(value) =>
-                            this.handleCreate(value, 'categories')
-                          }
-                          isDisabled={isLoading.categories}
-                          isLoading={isLoading.categories}
                           isMulti
-                          options={categories}
-                          placeholder={'Sin categoría....'}
-                          value={selectedCategories}
-                        />
-                      </div>
-                      <div className='column is-2'>
-                        <button
-                          onClick={() =>
-                            this.goSection(`${matchUrl}/categorias`)
-                          }
-                          className='button'
-                        >
-                          <FaWhmcs />
-                        </button>
-                      </div>
-                    </div>
-                    <label className='label'>Tipo de actividad</label>
-                    <div className='columns'>
-                      <div className='control column is-10'>
-                        <Creatable
-                          isClearable
                           styles={creatableStyles}
-                          className='basic-multi-select'
-                          classNamePrefix='select'
-                          isDisabled={isLoading.types}
-                          isLoading={isLoading.types}
-                          onChange={this.selectType}
-                          onCreateOption={(value) =>
-                            this.handleCreate(value, 'types')
-                          }
-                          options={types}
-                          value={selectedType}
+                          onChange={this.selectRol}
+                          options={roles}
+                          placeholder={'Seleccione al menos un rol...'}
+                          value={selectedRol}
                         />
-                      </div>
-                      <div className='column is-2'>
-                        <Link to={`${matchUrl}/tipos`}>
-                          <button className='button'>
-                            <FaWhmcs />
-                          </button>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* componente de vista previa en revision, por firebase se tiene problemas si se deja como un modal y al mismo tiempo si se abre otra ventana para su administracion, se soluciona si se abre en una pestaña nueva */}
-
-                  {/* {(this.state.meeting_id || this.state.vimeo_id) && (
-                    <>
-                      <button
-                        style={{ marginTop: '2%' }}
-                        className='button is-primary'
-                        onClick={() => {
-                          this.toggleConference(true);
-                        }}>
-                        Ver Conferencia (Vista previa)
-                      </button>
-                    </>
-                  )}
-
-                  {this.state.conferenceVisible && (
-                    <ZoomComponent
-                      toggleConference={this.toggleConference}
-                      meetingId={this.state.meeting_id || this.state.vimeo_id}
-                      userEntered={this.state.currentUser}
-                      event={this.props.event}
-                      activity={this.state.info}
-                    />
-                  )} */}
-                </div>
-              </div>
-            )}
-          </EventContent>
+                      </Col>
+                      <Col>
+                        <Button onClick={this.addRoles}>Todos los roles</Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          onClick={() => this.goSection(matchUrl.replace('agenda', 'tipo-asistentes'))}
+                          icon={<SettingOutlined />}
+                        />
+                      </Col>
+                    </Row>
+                  </Form.Item>
+                )}
+                <Form.Item label={'Documentos'}>
+                  <Select
+                    id={'nameDocuments'}
+                    isClearable
+                    isMulti
+                    styles={creatableStyles}
+                    onChange={this.selectDocuments}
+                    options={nameDocuments}
+                    value={selected_document}
+                  />
+                </Form.Item>
+                <Form.Item label={'Link del vídeo'}>
+                  <Input name='video' type='text' value={video} onChange={this.handleChange} />
+                </Form.Item>
+                <Form.Item label={'Texto de email para confirmación de registro'}>
+                  <EviusReactQuill
+                    name='registration_message'
+                    data={this.state.registration_message}
+                    handleChange={(e) => this.handleChangeReactQuill(e, 'registration_message')}
+                  />
+                </Form.Item>
+                <Form.Item label={'Descripción'}>
+                  <Space>
+                    <ExclamationCircleOutlined style={{ color: '#faad14' }} />
+                    <Typography.Text type='secondary'>
+                      Esta información no es visible en la Agenda/Actividad en versión Mobile.
+                    </Typography.Text>
+                  </Space>
+                  <EviusReactQuill
+                    name='description'
+                    data={this.state.description}
+                    handleChange={(e) => this.handleChangeReactQuill(e, 'description')}
+                  />
+                </Form.Item>
+                <Form.Item label={'Imagen'}>
+                  <p>Dimensiones: 1000px x 278px</p>
+                  <Dropzone onDrop={this.changeImg} accept='image/*' className='zone'>
+                    <button className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</button>
+                  </Dropzone>
+                  {image && <img src={image} alt={`activity_${name}`} />}
+                </Form.Item>
+                <Form.Item label={'Capacidad'}>
+                  <InputNumber
+                    min={0}
+                    name={'capacity'}
+                    value={capacity}
+                    onChange={this.handleChange}
+                    placeholder={'Cupo total'}
+                  />
+                </Form.Item>
+                <Form.Item label={'Categorías'}>
+                  <Row wrap gutter={[8, 8]}>
+                    <Col span={23}>
+                      <Creatable
+                        isClearable
+                        styles={catStyles}
+                        onChange={this.selectCategory}
+                        onCreateOption={(value) => this.handleCreate(value, 'categories')}
+                        isDisabled={isLoading.categories}
+                        isLoading={isLoading.categories}
+                        isMulti
+                        options={categories}
+                        placeholder={'Sin categoría....'}
+                        value={selectedCategories}
+                      />
+                    </Col>
+                    <Col span={1}>
+                      <Button onClick={() => this.goSection(`${matchUrl}/categorias`)} icon={<SettingOutlined />} />
+                    </Col>
+                  </Row>
+                </Form.Item>
+                <Form.Item label={'Tipo de actividad'}>
+                  <Row wrap gutter={[8, 8]}>
+                    <Col span={23}>
+                      <Creatable
+                        isClearable
+                        styles={creatableStyles}
+                        className='basic-multi-select'
+                        classNamePrefix='select'
+                        isDisabled={isLoading.types}
+                        isLoading={isLoading.types}
+                        onChange={this.selectType}
+                        onCreateOption={(value) => this.handleCreate(value, 'types')}
+                        options={types}
+                        value={selectedType}
+                      />
+                    </Col>
+                    <Col span={1}>
+                      <Link to={`${matchUrl}/tipos`}>
+                        <Button icon={<SettingOutlined />} />
+                      </Link>
+                    </Col>
+                  </Row>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
         </TabPane>
         <TabPane tab='Seleccion de lenguaje' key='2'>
-          {this.props.location.state.edit ? (
-            <AgendaLanguaje
-              platform={platform}
-              eventId={this.props.event._id}
-              activityId={this.props.location.state.edit}
-            />
-          ) : (
-            <p>
-              Por favor primero crear la actividad, paso seguido edite la misma
-              para crear las conferencias en diferentes idiomas
-            </p>
-          )}
-        </TabPane>
-        <TabPane tab='Espacio Virtual' key='3'>
-          {loading ? (
-            <Loading />
-          ) : (
-            <>
-              <RoomManager
-                event_id={this.props.event._id}
-                activity_id={this.state.activity_id}
-                activity_name={this.state.name}
-                firestore={firestore}
-                date_start_zoom={date_start_zoom}
-                date_end_zoom={date_end_zoom}
-                date_activity={this.state.date}
-                pendingChangesSave={this.state.pendingChangesSave}
-              />
-              <SurveyManager
-                event_id={this.props.event._id}
-                activity_id={this.state.activity_id}
-              />
-              {this.state.isExternal && (
-                <SurveyExternal
-                  isExternal={this.state.isExternal}
-                  meeting_id={this.state.externalSurveyID}
-                  event_id={this.props.event._id}
-                  activity_id={this.state.activity_id}
+          <Row justify='center' wrap gutter={12}>
+            <Col span={18}>
+              {this.props.location.state.edit ? (
+                <AgendaLanguaje
+                  platform={platform}
+                  eventId={this.props.event._id}
+                  activityId={this.props.location.state.edit}
                 />
+              ) : (
+                <p>
+                  Por favor primero crear la actividad, paso seguido edite la misma para crear las conferencias en
+                  diferentes idiomas
+                </p>
               )}
-            </>
-          )}
-        </TabPane>
-        <TabPane tab='Avanzado' key='4'>
-          <Row>
-            <Col xs={24}>
-              <Checkbox
-                defaultChecked={
-                  info &&
-                  (info.requires_registration ||
-                    info.requires_registration === 'true')
-                }
-                onChange={this.handleChange}
-                name='requires_registration'
-              >
-                La actividad requiere registro
-              </Checkbox>
             </Col>
           </Row>
-          <Row style={{ marginTop: 8 }}>
-            <Col xs={24}>
-              <button onClick={this.submit} className='button is-primary'>
+        </TabPane>
+        <TabPane tab='Espacio Virtual' key='3'>
+          <Row justify='center' wrap gutter={12}>
+            <Col span={18}>
+              {loading ? (
+                <Loading />
+              ) : (
+                <>
+                  <RoomManager
+                    event_id={this.props.event._id}
+                    activity_id={this.state.activity_id}
+                    activity_name={this.state.name}
+                    firestore={firestore}
+                    date_start_zoom={date_start_zoom}
+                    date_end_zoom={date_end_zoom}
+                    date_activity={this.state.date}
+                    pendingChangesSave={this.state.pendingChangesSave}
+                  />
+                  <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
+                  {this.state.isExternal && (
+                    <SurveyExternal
+                      isExternal={this.state.isExternal}
+                      meeting_id={this.state.externalSurveyID}
+                      event_id={this.props.event._id}
+                      activity_id={this.state.activity_id}
+                    />
+                  )}
+                </>
+              )}
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tab='Avanzado' key='4'>
+          <Row justify='center' wrap gutter={12}>
+            <Col span={18}>
+              <Checkbox
+                defaultChecked={info && (info.requires_registration || info.requires_registration === 'true')}
+                onChange={this.handleChange}
+                name='requires_registration'>
+                La actividad requiere registro
+              </Checkbox>
+              <Button onClick={this.submit} type='primary'>
                 Guardar
-              </button>
+              </Button>
             </Col>
           </Row>
         </TabPane>

@@ -1,5 +1,5 @@
-import { Button, Empty, message, Row, Table, Tag, Typography } from 'antd'
-import { DragOutlined, PlusCircleOutlined, SaveOutlined, SettingOutlined } from '@ant-design/icons'
+import { Button, Empty, message, Row, Table, Tag, Col, Tooltip, Modal } from 'antd'
+import { DragOutlined, ExclamationCircleOutlined, SaveOutlined, SettingOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
@@ -10,8 +10,10 @@ import useGetEventCompanies from './customHooks/useGetEventCompanies'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { firestore } from '../../helpers/firebase';
+import Header from '../../antdComponents/Header';
 
-const { Title } = Typography
+const { confirm } = Modal;
+
 const tableLocale = {
   emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No hay datos" />
 }
@@ -57,74 +59,130 @@ function Empresas({ event, match }) {
   }
 
   function deleteCompany(id){
-    firestore
-      .collection('event_companies')
-      .doc(event._id)
-      .collection('companies').doc(id).delete().then((resp)=>{
-            
-        let updateList= companyList.filter(company=>company.id!==id);     
-      setCompanyList(updateList);
-         orderCompany(updateList).then((r)=>{
-         })
-      });
-  
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            firestore
+              .collection('event_companies')
+              .doc(event._id)
+              .collection('companies').doc(id).delete().then((resp)=>{
+                    
+              let updateList= companyList.filter(company=>company.id!==id);     
+              setCompanyList(updateList);
+                orderCompany(updateList).then((r)=>{
+                })
+            });
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: <> Se eliminó la información correctamente!</>,
+            });
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: handleRequestError(e).message,
+            });
+          }
+        }
+        onHandlerRemove();
+      }
+    });
  }
 
 
  let companyColumns = [
-      {
-        title: '',
-        dataIndex: 'sort',
-        width: 30,
-        className: 'drag-visible',
-        render(companyName, record)   { return <DragHandle />}
-      },
-      {
-        title: 'Nombre',
-        dataIndex: 'name',
-        render(companyName, record) {
-          return (
-            <Link
-              to={`${match.url}/editar/${record.id}`}
-              title="Editar"
-            >
-              {companyName}
-            </Link>
-          )
-        }
-      },
-      {
-        title: 'Tipo de stand',
-        dataIndex: 'stand_type'
-      },
-      {
-        title: 'Visible',
-        dataIndex: 'visible',
-        render(visible) {
-          return visible
-            ? <Tag color="green">{'Visible'}</Tag>
-            : <Tag color="red">{'Oculto'}</Tag>
-        }
-      },
-      {
-        title: '',
-        dataIndex: 'id',
-        render(value,record) {
-          return <Button onClick={()=>deleteCompany(value)}>Eliminar</Button>
-            
-        }
-      },
-    ]
+    {
+      title: '',
+      dataIndex: 'sort',
+      width: 30,
+      className: 'drag-visible',
+      render(companyName, record)   { return <DragHandle />}
+    },
+    {
+      title: 'Nombre',
+      dataIndex: 'name',
+      render(companyName, record) {
+        return (
+          <Link
+            to={`${match.url}/editar/${record.id}`}
+            title="Editar"
+          >
+            {companyName}
+          </Link>
+        )
+      }
+    },
+    {
+      title: 'Tipo de stand',
+      dataIndex: 'stand_type'
+    },
+    {
+      title: 'Visible',
+      dataIndex: 'visible',
+      render(visible) {
+        return visible
+          ? <Tag color="green">{'Visible'}</Tag>
+          : <Tag color="red">{'Oculto'}</Tag>
+      }
+    },
+    {
+      title: 'Opciones',
+      dataIndex: 'id',
+      render(value,record) {
+        console.log(value, record);
+        return (
+          <Row gutter={[8, 8]}>
+            {/* <Col>
+              <Tooltip placement='topLeft' title='Editar'>
+                <Link
+                  key={`editAction${value.index}`}
+                  id={`editAction${value.index}`}
+                  to={{
+                    pathname: `${match.url}/crear`,
+                    state: { edit: value },
+                  }}>
+                  <Button icon={<EditOutlined />} type='primary' size='small' />
+                </Link>
+              </Tooltip>
+            </Col> */}
+            <Col>
+              <Tooltip placement='topLeft' title='Eliminar'>
+                <Button
+                  key={`removeAction${record.index}`}
+                  id={`removeAction${record.index}`}
+                  onClick={() => deleteCompany(value)}
+                  icon={<DeleteOutlined />}
+                  type='danger'
+                  size='small'
+                />
+              </Tooltip>
+            </Col>
+          </Row>
+        )
+          
+      }
+    },
+  ]
   
 
   if (loadingCompanies) {
     return <Loading />
   }
 
- 
-
  const onSortEnd = ({ oldIndex, newIndex }) => {
-    
     if (oldIndex !== newIndex) {
       const newData = arrayMove([].concat(companyList), oldIndex, newIndex).filter(el => !!el);
       for(let i=0;i<newData .length;i++){
@@ -146,7 +204,6 @@ function Empresas({ event, match }) {
   );
 
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
-    
     // function findIndex base on Table rowKey props and should always be a right array index
     const index = companyList.findIndex(x => x.index === restProps['data-row-key']);
     return <SortableItem index={index} {...restProps} />;
@@ -154,23 +211,30 @@ function Empresas({ event, match }) {
 
   return (
     <div>
-      <Title level={4}>{'Empresas'}</Title>
-
-      <Row justify="end" style={{ marginBottom: '10px' }}>     
-        <Link to={`${match.url}/crear`}>
-          <Button type="primary" icon={<PlusCircleOutlined />}>
-            {'Crear empresa'}
-          </Button>
-        </Link>
-        <Link style={{marginLeft:20}} to={`${match.url}/configuration`}>
-          <Button type="primary" icon={<SettingOutlined />}>
-            {'Configuración'}
-          </Button>
-        </Link>
-        <Button onClick={()=>orderCompany()} style={{marginLeft:20}} type="primary" icon={<SaveOutlined />}>
-            {'Guardar orden'}
-          </Button>
-      </Row>
+      <Header 
+        title={'Empresas'}
+        titleTooltip={'Agregue o edite las Empresas que se muestran en la aplicación'}
+        addUrl={{
+           pathname: `${match.url}/crear`,
+           state: { new: true },
+        }}
+        extra={(
+          <Row wrap gutter={[8, 8]}>
+            <Col>
+              <Button onClick={()=>orderCompany()} type="primary" icon={<SaveOutlined />}>
+                {'Guardar orden'}
+              </Button>
+            </Col>
+            <Col>
+              <Link to={`${match.url}/configuration`}>
+                <Button type="primary" icon={<SettingOutlined />} id={'configuration'}>
+                  {'Configuración'}
+                </Button>
+              </Link>
+            </Col>
+          </Row>
+        )}
+      />
 
       <Table
         locale={tableLocale}

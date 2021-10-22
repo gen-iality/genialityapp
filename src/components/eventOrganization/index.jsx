@@ -1,15 +1,4 @@
-import {
-  Col,
-  Row,
-  Typography,
-  Badge,
-  Grid,
-  Space,
-  Divider,
-  Image,
-  Empty,
-  Button,
-} from 'antd';
+import { Col, Row, Typography, Badge, Grid, Space, Divider, Image, Empty, Button } from 'antd';
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { OrganizationFuction } from '../../helpers/request';
@@ -37,7 +26,7 @@ class EventOrganization extends Component {
       organization: null,
       orgId: null,
       loading: true,
-      view:false,
+      view: false,
     };
   }
 
@@ -66,9 +55,7 @@ class EventOrganization extends Component {
       }
     });
 
-    const organization = await OrganizationFuction.obtenerDatosOrganizacion(
-      orgId
-    );
+    const organization = await OrganizationFuction.obtenerDatosOrganizacion(orgId);
     if (events) {
       this.setState({
         events: proximos,
@@ -80,19 +67,17 @@ class EventOrganization extends Component {
   };
 
   handleView = () => {
-    let ver = this.state.view
-    this.setState({view:!ver})
-  }
+    let ver = this.state.view;
+    this.setState({ view: !ver });
+  };
 
   render() {
     return (
       <div
         style={{
           backgroundImage: `url(${this.state.organization?.styles?.BackgroundImage})`,
-          backgroundColor: `${this.state.organization?.styles
-            ?.containerBgColor || '#FFFFFF'}`,
-        }}
-      >
+          backgroundColor: `${this.state.organization?.styles?.containerBgColor || '#FFFFFF'}`,
+        }}>
         {console.log('Org', this.state.organization)}
         <ModalAuth
           organization={'landing'}
@@ -105,14 +90,10 @@ class EventOrganization extends Component {
             {/* BANNER */}
             {this.state.organization !== null && (
               <div style={{ width: '100%' }}>
-                {this.state.organization.styles.banner_image !== null || '' ? (
+                {this.state.organization.styles?.banner_image !== null || '' ? (
                   <img
-                    style={{
-                      objectFit: 'cover',
-                      width: '100%',
-                      maxHeight: '400px',
-                    }}
-                    src={this.state.organization.styles.banner_image}
+                    style={{ objectFit: 'cover', width: '100%', maxHeight: '400px' }}
+                    src={this.state.organization.styles?.banner_image}
                   />
                 ) : (
                   ''
@@ -123,33 +104,20 @@ class EventOrganization extends Component {
                   style={{
                     position: 'fixed',
                     top: '100px',
-                    left: `${this.state.view ? '0px': '-110px'}`,
+                    left: `${this.state.view ? '0px' : '-110px'}`,
                     backgroundColor: '#FFFFFF',
                     borderRadius: '2px',
                     padding: '10px',
                     zIndex: 5,
-                    transition:'1s all'
-                  }}
-                >
-                  <InstagramOutlined
-                    style={{ fontSize: '25px', color: '#8C8C8C' }}
-                  />
-                  <FacebookOutlined
-                    style={{ fontSize: '25px', color: '#8C8C8C' }}
-                  />
-                  <GlobalOutlined
-                    style={{ fontSize: '25px', color: '#8C8C8C' }}
-                  />
+                    transition: '1s all',
+                  }}>
+                  <InstagramOutlined style={{ fontSize: '25px', color: '#8C8C8C' }} />
+                  <FacebookOutlined style={{ fontSize: '25px', color: '#8C8C8C' }} />
+                  <GlobalOutlined style={{ fontSize: '25px', color: '#8C8C8C' }} />
                   {this.state.view ? (
-                    <LeftOutlined
-                      onClick={this.handleView}
-                      style={{ fontSize: '25px', color: '#007ACC' }}
-                    />
+                    <LeftOutlined onClick={this.handleView} style={{ fontSize: '25px', color: '#007ACC' }} />
                   ) : (
-                    <RightOutlined
-                      onClick={this.handleView}
-                      style={{ fontSize: '25px', color: '#007ACC' }}
-                    />
+                    <RightOutlined onClick={this.handleView} style={{ fontSize: '25px', color: '#007ACC' }} />
                   )}
                 </Space>
               </div>
@@ -161,8 +129,7 @@ class EventOrganization extends Component {
                 paddingRight: '5vw',
                 paddingBottom: '5vw',
                 paddingTop: '0.5vw',
-              }}
-            >
+              }}>
               {this.state.organization && (
                 <Row
                   gutter={[10, 10]}
@@ -172,8 +139,7 @@ class EventOrganization extends Component {
                     backgroundColor: '#FFFFFF',
                     padding: '10px',
                     borderRadius: '20px',
-                  }}
-                >
+                  }}>
                   <Col xs={24} sm={24} md={24} lg={8} xl={4} xxl={4}>
                     <Row justify={'start'}>
                       <Image
@@ -185,10 +151,7 @@ class EventOrganization extends Component {
                           backgroundColor: '#FFFFFF;',
                         }}
                         preview={{ maskClassName: 'roundedMask' }}
-                        src={
-                          this.state.organization?.styles?.event_image ||
-                          'error'
-                        }
+                        src={this.state.organization?.styles?.event_image || 'error'}
                         fallback='http://via.placeholder.com/500/F5F5F7/CCCCCC?text=No%20Image'
                         width={'100%'}
                         height={'100%'}
@@ -196,19 +159,14 @@ class EventOrganization extends Component {
                     </Row>
                   </Col>
                   <Col xs={24} sm={24} md={24} lg={16} xl={20} xxl={20}>
-                    <Space
-                      direction='vertical'
-                      size={8}
-                      style={{ width: '100%' }}
-                    >
+                    <Space direction='vertical' size={8} style={{ width: '100%' }}>
                       <Link
                         to={`/admin/organization/${this.props.match.params.id}`}
                         style={{
                           marginBottom: '-15px',
                           fontSize: '20px',
                           cursor: 'pointer',
-                        }}
-                      >
+                        }}>
                         <Button type='text' icon={<EditOutlined />}>
                           Administrar
                         </Button>
@@ -219,26 +177,16 @@ class EventOrganization extends Component {
                           fontWeight: '600',
                           lineHeight: '2.25rem',
                         }}
-                        type='secondary'
-                      >
+                        type='secondary'>
                         {this.state.organization.name}
                       </Text>
                       <Paragraph
                         ellipsis={{
                           rows: 3,
                           expandable: true,
-                          symbol: (
-                            <span
-                              style={{ color: '#2D7FD6', fontSize: '12px' }}
-                            >
-                              Ver más
-                            </span>
-                          ),
-                        }}
-                      >
-                        {this.state.organization.description
-                          ? this.state.organization.description
-                          : ''}
+                          symbol: <span style={{ color: '#2D7FD6', fontSize: '12px' }}>Ver más</span>,
+                        }}>
+                        {this.state.organization.description ? this.state.organization.description : ''}
                       </Paragraph>
                     </Space>
                   </Col>
@@ -250,12 +198,8 @@ class EventOrganization extends Component {
                   backgroundColor: '#FFFFFF',
                   padding: '20px',
                   borderRadius: '20px',
-                }}
-              >
-                <Badge
-                  offset={[60, 22]}
-                  count={`${this.state.events.length} Eventos`}
-                >
+                }}>
+                <Badge offset={[60, 22]} count={`${this.state.events.length} Eventos`}>
                   <Title level={2}>Próximos</Title>
                 </Badge>
                 <Row gutter={[16, 16]}>
@@ -278,8 +222,7 @@ class EventOrganization extends Component {
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                      }}
-                    >
+                      }}>
                       <Empty description='No hay eventos próximos agendados' />
                     </div>
                   )}
@@ -292,12 +235,8 @@ class EventOrganization extends Component {
                   backgroundColor: '#FFFFFF',
                   padding: '20px',
                   borderRadius: '20px',
-                }}
-              >
-                <Badge
-                  offset={[60, 22]}
-                  count={`${this.state.eventsOld.length} Eventos`}
-                >
+                }}>
+                <Badge offset={[60, 22]} count={`${this.state.eventsOld.length} Eventos`}>
                   <Title level={2}>Pasados</Title>
                 </Badge>
                 <Row gutter={[16, 16]}>
@@ -320,8 +259,7 @@ class EventOrganization extends Component {
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                      }}
-                    >
+                      }}>
                       <Empty description='No hay eventos pasados' />
                     </div>
                   )}
@@ -331,14 +269,10 @@ class EventOrganization extends Component {
             {/* FOOTER */}
             {this.state.organization !== null && (
               <div style={{ width: '100%', maxHeight: '350px' }}>
-                {this.state.organization.styles.banner_footer !== null || '' ? (
+                {this.state.organization.styles?.banner_footer || '' ? (
                   <img
-                    style={{
-                      objectFit: 'cover',
-                      width: '100%',
-                      maxHeight: '250px',
-                    }}
-                    src={this.state.organization.styles.banner_footer}
+                    style={{ objectFit: 'cover', width: '100%', maxHeight: '250px' }}
+                    src={this.state.organization.styles?.banner_footer}
                   />
                 ) : (
                   ''

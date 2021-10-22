@@ -8,6 +8,11 @@ import { firestore } from '../../../helpers/firebase';
 const { Title } = Typography;
 const { Option } = Select;
 
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
+};
+
 class ActividadLanguage extends Component {
   constructor(props) {
     super(props);
@@ -226,7 +231,7 @@ class ActividadLanguage extends Component {
       <>
         <Fragment>
           <Title>Lenguaje para {activity.name}</Title>
-          <Form onFinish={this.onFinish}>
+          <Form onFinish={this.onFinish} {...formLayout}>
             <Form.Item
               label='Lenguaje'
               name='language'

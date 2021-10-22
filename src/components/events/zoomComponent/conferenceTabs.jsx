@@ -51,7 +51,7 @@ export default function ConferenceTabsComponent(props) {
                 <LiveChat {...props} />
               </TabPane>
             )}
-            {surveys && (
+            {/* {surveys && (
               <TabPane
                 tab={
                   <>
@@ -72,11 +72,9 @@ export default function ConferenceTabsComponent(props) {
                   </Col>
                 </Row>
 
-                {/* {props.currentSurvey && Object.keys(props.currentSurvey).length > 0 && (
-                  <RankingTrivia currentSurvey={props.currentSurvey} currentUser={props.currentUser} />
-                )} */}
+               
               </TabPane>
-            )}
+            )} */}
 
             {attendees && (
               <TabPane

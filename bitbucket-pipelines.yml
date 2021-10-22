@@ -1,0 +1,21 @@
+image: cypress/browsers:node14.17.0-chrome88-ff89
+
+ui-chrome-tests: &ui-chrome-tests
+  name: 'UI Tests - Chrome'
+  caches:
+    - cypress
+    - node
+  script:
+    - npx cypress run --record --key a321bdc6-24e5-4032-b465-05cbe221aa9e
+
+pipelines:
+  default:
+    - step:
+        <<: *ui-chrome-tests
+    - step:
+        <<: *ui-chrome-tests
+
+definitions:
+  caches:
+    yarn: $HOME/.cache
+    cypress: $HOME/.cache/Cypress

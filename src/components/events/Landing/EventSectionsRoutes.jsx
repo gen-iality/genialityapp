@@ -115,13 +115,13 @@ const EventSectionRoutes = (props) => {
   }, []);
 
   const validateTypeUrl = () => {
-    let url = '';
-    if (event_name) {
-      url = `/event/${event_name}/${obtenerFirstSection()}`;
-    } else if (event_id) {
-      url = `/landing/${props.cEvent.value._id}/${obtenerFirstSection()}`;
+    let url;
+    if(event_name){
+      url= `/event/${event_name}/${obtenerFirstSection()}`;
+    }else{
+      url= `/landing/${event_id}/${obtenerFirstSection()}`;
     }
-
+    
     return url;
   };
 
@@ -149,7 +149,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('documents', 'Documentos') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <DocumentsForm />
@@ -161,7 +161,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('interviews', 'interviews') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <MyAgendaIndepend />
@@ -173,7 +173,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('networking', 'Networking') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <NetworkingForm />
@@ -185,7 +185,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('informativeSection1', 'informativeSection1') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <InformativeSection2 />
@@ -202,7 +202,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('informativeSection', 'informativeSection') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <InformativeSection />
@@ -214,7 +214,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('agenda', 'Agenda') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <>
@@ -228,7 +228,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('speakers', 'Conferencistas') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <SpeakersForm />
@@ -239,7 +239,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('surveys', 'Encuestas') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <SurveyForm />
@@ -250,7 +250,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('partners', 'partners') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <Partners />
@@ -261,7 +261,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('faqs', 'faqs') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <FaqsForm />
@@ -273,7 +273,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('evento', 'Evento') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <EventHome />
@@ -285,7 +285,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('wall', 'Muro') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <WallForm />
@@ -296,7 +296,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('videos', 'Videos') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <Videos />
@@ -308,7 +308,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('ferias', 'Ferias') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <Ferias />
@@ -319,7 +319,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('noticias', 'Noticias') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <Noticias />
@@ -332,7 +332,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('tickets', 'Registro') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <div className='columns is-centered'>
@@ -346,7 +346,7 @@ const EventSectionRoutes = (props) => {
           {() =>
             ValidateViewPermissions('certs', 'certs') ? (
               <>
-                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+                <Redirect to={redirectToPermissions} />
               </>
             ) : (
               <CertificadoLanding />
@@ -356,7 +356,7 @@ const EventSectionRoutes = (props) => {
         <Route path={`${path}/producto`}>
           {() =>
             ValidateViewPermissions('producto', 'Galería') ? (
-              <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              <Redirect to={redirectToPermissions} />
             ) : (
               <Productos />
             )

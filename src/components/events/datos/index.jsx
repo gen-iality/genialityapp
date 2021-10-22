@@ -6,20 +6,22 @@ import EventContent from '../shared/content';
 import EventModal from '../shared/eventModal';
 import DatosModal from './modal';
 import Dialog from '../../modal/twoAction';
-import { Tabs, Table, Checkbox, notification, Button, Select, Radio } from 'antd';
+import { Tabs, Table, Checkbox, notification, Button, Select, Radio, Row, Col, Tooltip, Modal, message } from 'antd';
 import RelationField from './relationshipFields';
-import { EditOutlined, DeleteOutlined, DragOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, DragOutlined, SaveOutlined, PlusCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import CMS from '../../newComponent/CMS';
 import { firestore } from '../../../helpers/firebase';
 import ModalCreateTemplate from '../../shared/modalCreateTemplate';
+import Header from '../../../antdComponents/Header';
 
 const DragHandle = sortableHandle(() => <DragOutlined style={{ cursor: 'grab', color: '#999' }} />);
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 const { TabPane } = Tabs;
 const { Option } = Select;
+const { confirm } = Modal;
 
 class Datos extends Component {
   constructor(props) {
@@ -142,7 +144,7 @@ class Datos extends Component {
     const organizationId = this?.organization?._id;
     if (organizationId && !this.eventID) {
       await this.props.orderFields(this.state.properties);
-    } else if (!this.eventID && !organizationId) {
+    } else if (this.eventID && !organizationId && this.props.byEvent) {
       await Actions.put(`api/events/${this.props.eventID}`, this.state.properties);
     } else {
       await this.props.orderFields(this.state.isEditTemplate.datafields, this.state.isEditTemplate, this.updateTable);
@@ -162,7 +164,45 @@ class Datos extends Component {
   };
   //Borrar dato de la lista
   removeField = async () => {
-    try {
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            const organizationId = this?.organization?._id;
+            if (organizationId) {
+              await this.props.deleteField(this.state.deleteModal, this.state.isEditTemplate, this.updateTable);
+            } else {
+              await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventID);
+            }
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: <> Se eliminó la información correctamente!</>,
+            });
+            await this.fetchFields();
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: this.showError(e),
+            });
+          }
+        }
+        onHandlerRemove();
+      }
+    })
+    /* try {
       const organizationId = this?.organization?._id;
       if (organizationId) {
         await this.props.deleteField(this.state.deleteModal, this.state.isEditTemplate, this.updateTable);
@@ -177,7 +217,7 @@ class Datos extends Component {
       }, 800);
     } catch (e) {
       this.showError(e);
-    }
+    } */
   };
 
   closeDelete = () => {
@@ -295,7 +335,7 @@ class Datos extends Component {
       {
         title: '',
         dataIndex: 'sort',
-        width: 30,
+        /* width: 30, */
         className: 'drag-visible',
         render: () => <DragHandle />,
       },
@@ -357,8 +397,36 @@ class Datos extends Component {
         title: 'Action',
         dataIndex: '',
         render: (key) => (
-          <>
-            {key.name !== 'email' && key.name !== 'contrasena' && (
+          <Row wrap gutter={[8, 8]}>
+            <Col>
+              {key.name !== 'email' && key.name !== 'contrasena' && (
+                <Tooltip placement='topLeft' title='Editar'>
+                  <Button
+                    key={`editAction${key.index}`}
+                    id={`editAction${key.index}`}
+                    onClick={() => this.editField(key)}
+                    icon={<EditOutlined />}
+                    type='primary'
+                    size='small'
+                  />
+                </Tooltip>
+              )}
+            </Col>
+            <Col>
+              {key.name !== 'email' && key.name !== 'names' && key.name !== 'contrasena' && (
+                <Tooltip placement='topLeft' title='Eliminar'>
+                  <Button
+                    key={`removeAction${key.index}`}
+                    id={`removeAction${key.index}`}
+                    onClick={() => this.removeField(key._id || key.name)}
+                    icon={<DeleteOutlined />}
+                    type='danger'
+                    size='small'
+                  />
+                </Tooltip>
+              )}
+            </Col>
+            {/* {key.name !== 'email' && key.name !== 'contrasena' && (
               <EditOutlined style={{ float: 'left' }} onClick={() => this.editField(key)} />
             )}
             {key.name !== 'email' && key.name !== 'names' && key.name !== 'contrasena' && (
@@ -366,19 +434,19 @@ class Datos extends Component {
                 style={{ float: 'right' }}
                 onClick={() => this.setState({ deleteModal: key._id || key.name })}
               />
-            )}
-          </>
+            )} */}
+          </Row>
         ),
       },
     ];
 
     const colsPlant = [
-      {
+    /*  {
         title: 'Plantilla',
         dataIndex: '',
         width: '50px',
         render: (record, key) => <Radio onClick={(e) => this.onChange1(e, record._id)} value={value} />,
-      },
+      },*/
       {
         title: 'Nombre',
         dataIndex: 'name',
@@ -396,10 +464,46 @@ class Datos extends Component {
             />
           )}
 
-          {/* {this.props.type !== 'organization' && (
+          {this.props.type !== 'organization' && (
             <TabPane tab='Configuración General' key='1'>
               <Fragment>
-                <EventContent
+                <Header 
+                  title={'Recopilación de datos'}
+                />
+                <small>
+                  {`Configure los datos que desea recolectar de los asistentes ${
+                    this.organization ? 'de la organización' : 'del evento'
+                  }`}
+                </small>
+
+                <Table
+                  columns={columns}
+                  dataSource={fields}
+                  pagination={false}
+                  rowKey='index'
+                  size='small'
+                  components={{
+                    body: {
+                      wrapper: this.DraggableContainer,
+                      row: this.DraggableBodyRow,
+                    },
+                  }}
+                  title={() => (
+                    <Row justify='end' wrap gutter={[8, 8]}>
+                      <Col>
+                        <Button disabled={this.state.available} onClick={this.submitOrder} type="primary" icon={<SaveOutlined />}>
+                          {'Guardar orden'}
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addField}>
+                          {'Agregar'}
+                        </Button>
+                      </Col>
+                    </Row>
+                  )}
+                />
+                {/* <EventContent
                   title={'Recopilación de datos'}
                   description={`Configure los datos que desea recolectar de los asistentes ${
                     this.organization ? 'de la organización' : 'del evento'
@@ -421,13 +525,23 @@ class Datos extends Component {
                   <Button style={{ marginTop: '3%' }} disabled={this.state.available} onClick={this.submitOrder}>
                     Guardar orden de Datos
                   </Button>
-                </EventContent>
+                </EventContent> */}
                 {modal && (
-                  <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
+                  /* <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
                     <DatosModal edit={edit} info={info} action={this.saveField} />
-                  </EventModal>
+                  </EventModal> */
+                  <Modal 
+                    visible={modal}
+                    title={edit ? 'Editar Dato' : 'Agregar Dato'} 
+                    onOk={this.saveField} 
+                    onCancel={this.closeModal} 
+                    okText={'Guardar'}
+                    cancelText={'Cancelar'}
+                  >
+                    <DatosModal edit={edit} info={info} action={this.saveField} />
+                  </Modal>
                 )}
-                {this.state.deleteModal && (
+                {/* {this.state.deleteModal && (
                   <Dialog
                     modal={this.state.deleteModal}
                     title={'Borrar Dato'}
@@ -436,10 +550,10 @@ class Datos extends Component {
                     message={this.state.message}
                     second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
                   />
-                )}
+                )} */}
               </Fragment>
             </TabPane>
-          )} */}
+          )}
 
           {/* {this.props.eventID && this.props.type != 'organization' && (
             <TabPane tab='Campos Relacionados' key='2'>
@@ -447,21 +561,73 @@ class Datos extends Component {
             </TabPane>
           )} */}
 
-          <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
+         { this.props.type == 'organization' && <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
             {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (
               <Fragment>
-                {this.props.type !== 'configMembers' && (
-                  <Button
-                    danger
-                    style={{ marginTop: '3%' }}
-                    onClick={() =>
-                      this.setState({ isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] } })
-                    }>
-                    Volver a plantillas
-                  </Button>
+                <Header 
+                  title={(
+                    <div>
+                      Recopilación de datos de plantillas
+                      {this.props.type !== 'configMembers' && (
+                        <Button
+                          type='link'
+                          style={{ color: 'blue' }}
+                          onClick={() =>
+                            this.setState({ isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] } })
+                          }>
+                          Volver a plantillas
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                />
+                <small>
+                  {`Configure los datos que desea recolectar de los asistentes ${
+                    this.organization ? 'de la organización' : 'del evento'
+                  }`}
+                </small>
+
+                <Table
+                  columns={columns}
+                  dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
+                  pagination={false}
+                  rowKey='index'
+                  size='small'
+                  components={{
+                    body: {
+                      wrapper: this.DraggableContainer,
+                      row: this.DraggableBodyRow,
+                    },
+                  }}
+                  title={() => (
+                    <Row justify='end' wrap gutter={[8, 8]}>
+                      <Col>
+                        <Button disabled={this.state.available} onClick={this.submitOrder} type="primary" icon={<SaveOutlined />}>
+                          {'Guardar orden'}
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addField}>
+                          {'Agregar'}
+                        </Button>
+                      </Col>
+                    </Row>
+                  )}
+                />
+                { modal && (
+                  <Modal 
+                    visible={modal}
+                    title={edit ? 'Editar Dato' : 'Agregar Dato'} 
+                    onOk={this.saveField} 
+                    onCancel={this.closeModal} 
+                    okText={'Guardar'}
+                    cancelText={'Cancelar'}
+                  >
+                    <DatosModal edit={edit} info={info} action={this.saveField} />
+                  </Modal>
                 )}
 
-                <EventContent
+                {/* <EventContent
                   title={'Recopilación de datos'}
                   description={`Configure los datos que desea recolectar de los asistentes ${
                     this.organization ? 'de la organización' : 'del evento'
@@ -503,7 +669,7 @@ class Datos extends Component {
                     message={this.state.message}
                     second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
                   />
-                )}
+                )} */}
               </Fragment>
             ) : (
               <CMS
@@ -528,7 +694,7 @@ class Datos extends Component {
                 actions
               />
             )}
-          </TabPane>
+          </TabPane>}
         </Tabs>
       </div>
     );

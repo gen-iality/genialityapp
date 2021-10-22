@@ -26,5 +26,5 @@ yarn-error.log*
 
 debug.log
 
-/cypress/videos
+/cypress
 

@@ -52,6 +52,7 @@ class List extends Component {
   };
 
   handleSelect = (e) => {
+    console.log(e.target.value);
     this.setState({ rol: e.target.value, message: '' });
   };
 

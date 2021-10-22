@@ -50,6 +50,7 @@ class EventCard extends Component {
             </span>
           }>
           <Link
+            id="go_to_activity"
             // onClick={() => Cookies.set('idevent', event._id)}
             to={{ pathname: `/event/${encodeURI(event.name)}`, state: { event: event } }}>
             <Card

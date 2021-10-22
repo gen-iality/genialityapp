@@ -1,42 +1,60 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from "react";
+import { withRouter, Link } from "react-router-dom";
 import {
   ArrowLeftOutlined,
   CaretRightOutlined,
   CheckCircleOutlined,
   LoadingOutlined,
   UserOutlined,
-} from '@ant-design/icons';
-import { connect } from 'react-redux';
-import Moment from 'moment-timezone';
-import ReactPlayer from 'react-player';
-import { useIntl } from 'react-intl';
-import { TicketsApi, Activity, AgendaApi } from '../../helpers/request';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, Input, Alert } from 'antd';
-import { firestore } from '../../helpers/firebase';
-import ModalSpeaker from './modalSpeakers';
-import DocumentsList from '../documents/documentsList';
-import * as StageActions from '../../redux/stage/actions';
-import * as SurveyActions from '../../redux/survey/actions';
-import Game from './game';
-import EnVivo from '../../EnVivo.svg';
-import SurveyList from '../events/surveys/surveyList';
-import listenSurveysData from '../events/surveys/services/listenSurveysDataToAgendaActividadDetalle';
-import { useParams } from 'react-router-dom';
-import { setTopBanner } from '../../redux/topBanner/actions';
-import { setSpaceNetworking } from '../../redux/networking/actions';
-import withContext from '../../Context/withContext';
-import { UseCurrentUser } from '../../Context/userContext';
-import { UseUserEvent } from '../../Context/eventUserContext';
-import { UseSurveysContext } from '../../Context/surveysContext';
-import { HelperContext } from '../../Context/HelperContext';
-import { useHistory } from 'react-router-dom';
-import SurveyDrawer from './surveys/components/surveyDrawer';
-import ZoomIframe from './ZoomIframe';
+} from "@ant-design/icons";
+import { connect } from "react-redux";
+import Moment from "moment-timezone";
+import ReactPlayer from "react-player";
+import { useIntl } from "react-intl";
+import { TicketsApi, Activity, AgendaApi } from "../../helpers/request";
+import {
+  Row,
+  Col,
+  Button,
+  List,
+  Avatar,
+  Card,
+  Tabs,
+  Badge,
+  Typography,
+  Form,
+  Input,
+  Alert,
+} from "antd";
+import { firestore } from "../../helpers/firebase";
+import ModalSpeaker from "./modalSpeakers";
+import DocumentsList from "../documents/documentsList";
+import * as StageActions from "../../redux/stage/actions";
+import * as SurveyActions from "../../redux/survey/actions";
+import Game from "./game";
+import EnVivo from "../../EnVivo.svg";
+import SurveyList from "../events/surveys/surveyList";
+import listenSurveysData from "../events/surveys/services/listenSurveysDataToAgendaActividadDetalle";
+import { useParams } from "react-router-dom";
+import { setTopBanner } from "../../redux/topBanner/actions";
+import { setSpaceNetworking } from "../../redux/networking/actions";
+import withContext from "../../Context/withContext";
+import { UseCurrentUser } from "../../Context/userContext";
+import { UseUserEvent } from "../../Context/eventUserContext";
+import { UseSurveysContext } from "../../Context/surveysContext";
+import { HelperContext } from "../../Context/HelperContext";
+import { useHistory } from "react-router-dom";
+import SurveyDrawer from "./surveys/components/surveyDrawer";
+import ZoomIframe from "./ZoomIframe";
 
 const { TabPane } = Tabs;
 const { gotoActivity, setMainStage, setTabs } = StageActions;
-const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys, unsetCurrentSurvey } = SurveyActions;
+const {
+  setCurrentSurvey,
+  setSurveyVisible,
+  setHasOpenSurveys,
+  unsetCurrentSurvey,
+} = SurveyActions;
 
 const layout = {
   labelCol: { span: 8 },
@@ -64,7 +82,9 @@ let AgendaActividadDetalle = (props) => {
   const [ currentActivity, setcurrentActivity ] = useState(null);
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
   let history = useHistory();
-  let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth } = useContext(HelperContext);
+  let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth } = useContext(
+    HelperContext
+  );
 
   const configfast = useState({});
 
@@ -109,12 +129,10 @@ let AgendaActividadDetalle = (props) => {
   // Array que contiene las actividades del espacio (que comparten el mismo meeting_id y platform)
   const [ activitiesSpace, setActivitiesSpace ] = useState([]);
 
-  const [ activeTab, setActiveTab ] = useState('description');
+  const [ activeTab, setActiveTab ] = useState("description");
   let mainStageContent = props.mainStageContent;
 
-  console.log('====================================');
-  console.log("mainStageContent",mainStageContent);
-  console.log('====================================');
+
 
   //Estado para detección si la vista es para mobile
   const [ isMobile, setIsMobile ] = useState(false);
@@ -122,7 +140,7 @@ let AgendaActividadDetalle = (props) => {
   useEffect(() => {
     // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
     mediaQueryMatches();
-    window.addEventListener('resize', mediaQueryMatches);
+    window.addEventListener("resize", mediaQueryMatches);
 
     if (props.collapsed) {
       props.toggleCollapsed(1);
@@ -131,17 +149,24 @@ let AgendaActividadDetalle = (props) => {
     // Al cargar el componente se realiza el checkin del usuario en la actividad
     try {
       if (props.cEventUser && cUser.value && props.cEvent.value) {
-        TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
-        Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, cUser.value._id);
+        TicketsApi.checkInAttendee(
+          props.cEvent.value._id,
+          props.cEventUser.value._id
+        );
+        Activity.checkInAttendeeActivity(
+          props.cEvent.value._id,
+          activity_id,
+          cUser.value._id
+        );
       }
     } catch (e) {
-      console.error('fallo el checkin:', e);
+      console.error("fallo el checkin:", e);
     }
 
     if (cUser && cUser?.displayName && cUser?.email) {
       let innerName =
         cUser && cUser.properties && cUser.properties.casa
-          ? '(' + cUser.properties.casa + ')' + cUser.displayName
+          ? "(" + cUser.properties.casa + ")" + cUser.displayName
           : cUser.displayName;
       setNames(innerName);
       setEmail(cUser.email);
@@ -153,7 +178,7 @@ let AgendaActividadDetalle = (props) => {
       props.setMainStage(null);
       props.setCurrentSurvey(null);
       props.setSurveyVisible(false);
-      window.removeEventListener('resize', mediaQueryMatches);
+      window.removeEventListener("resize", mediaQueryMatches);
     };
   }, []);
 
@@ -169,11 +194,11 @@ let AgendaActividadDetalle = (props) => {
     async function listeningSpaceRoom() {
       if (meeting_id === null || platform === null) return false;
       firestore
-        .collection('events')
+        .collection("events")
         .doc(props.cEvent.value._id)
-        .collection('activities')
-        .where('meeting_id', '==', meeting_id)
-        .where('platform', '==', platform)
+        .collection("activities")
+        .where("meeting_id", "==", meeting_id)
+        .where("platform", "==", platform)
         .onSnapshot((snapshot) => {
           const list = [];
           snapshot.forEach(function (doc) {
@@ -193,43 +218,45 @@ let AgendaActividadDetalle = (props) => {
   }, [ meeting_id, platform, props.cEvent.value ]);
 
   useEffect(() => {
-    if (/*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === 'game') {
+    if (
+      /*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === "game"
+    ) {
       const sharedProperties = {
-        position: 'fixed',
-        right: '0',
-        width: '170px',
+        position: "fixed",
+        right: "0",
+        width: "170px",
       };
 
-      const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
+      const verticalVideo = isMobile ? { top: "5%" } : { bottom: "0" };
 
       setVideoStyles({
         ...sharedProperties,
         ...verticalVideo,
-        zIndex: '100',
-        transition: '300ms',
+        zIndex: "100",
+        transition: "300ms",
       });
 
-      const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
+      const verticalVideoButton = isMobile ? { top: "9%" } : { bottom: "27px" };
 
       setVideoButtonStyles({
         ...sharedProperties,
         ...verticalVideoButton,
-        zIndex: '101',
-        cursor: 'pointer',
-        display: 'block',
-        height: '96px',
+        zIndex: "101",
+        cursor: "pointer",
+        display: "block",
+        height: "96px",
       });
     } else {
-      setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
-      setVideoButtonStyles({ display: 'none' });
+      setVideoStyles({ width: "100%", height: "80vh", transition: "300ms" });
+      setVideoButtonStyles({ display: "none" });
     }
   }, [ mainStageContent, isMobile ]);
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
 
-    if (tab === 'games') {
-      props.setMainStage('game');
+    if (tab === "games") {
+      props.setMainStage("game");
     }
   }
 
@@ -246,11 +273,12 @@ let AgendaActividadDetalle = (props) => {
   const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
 
   const imagePlaceHolder =
-    'https://via.placeholder.com/1500x540/' +
-    colorFondo.replace('#', '') +
-    '/' +
-    colorTexto.replace('#', '') +
-    '?text=' + props.cEvent.value.name;
+    "https://via.placeholder.com/1500x540/" +
+    colorFondo.replace("#", "") +
+    "/" +
+    colorTexto.replace("#", "") +
+    "?text=" +
+    props.cEvent.value.name;
 
   useEffect(() => {
     if (currentActivity) {
@@ -271,43 +299,45 @@ let AgendaActividadDetalle = (props) => {
   };
 
   useEffect(() => {
-    if (/*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === 'game') {
+    if (
+      /*mainStageContent === 'surveyDetalle' ||*/ mainStageContent === "game"
+    ) {
       const sharedProperties = {
-        position: 'fixed',
-        right: '0',
-        width: '170px',
+        position: "fixed",
+        right: "0",
+        width: "170px",
       };
 
-      const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
+      const verticalVideo = isMobile ? { top: "5%" } : { bottom: "0" };
 
       setVideoStyles({
         ...sharedProperties,
         ...verticalVideo,
-        zIndex: '100',
-        transition: '300ms',
+        zIndex: "100",
+        transition: "300ms",
       });
 
-      const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
+      const verticalVideoButton = isMobile ? { top: "9%" } : { bottom: "27px" };
 
       setVideoButtonStyles({
         ...sharedProperties,
         ...verticalVideoButton,
-        zIndex: '101',
-        cursor: 'pointer',
-        display: 'block',
-        height: '96px',
+        zIndex: "101",
+        cursor: "pointer",
+        display: "block",
+        height: "96px",
       });
     } else {
-      setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
-      setVideoButtonStyles({ display: 'none' });
+      setVideoStyles({ width: "100%", height: "80vh", transition: "300ms" });
+      setVideoButtonStyles({ display: "none" });
     }
   }, [ mainStageContent, isMobile ]);
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     firestore
-      .collection('events')
+      .collection("events")
       .doc(event_id)
-      .collection('activities')
+      .collection("activities")
       .doc(activity_id)
       .onSnapshot((infoActivity) => {
         if (!infoActivity.exists) return;
@@ -344,28 +374,35 @@ let AgendaActividadDetalle = (props) => {
   }
 
   return (
-    <div className='is-centered'>
-      <div className=' container_agenda-information container-calendar2 is-three-fifths'>
+    <div className="is-centered">
+      <div className=" container_agenda-information container-calendar2 is-three-fifths">
         <Card
-          style={{ padding: '1 !important' }}
+          style={{ padding: "1 !important" }}
           className={
-            props.cEvent.value._id === '5fca68b7e2f869277cfa31b0' ||
-              props.cEvent.value._id === '5f99a20378f48e50a571e3b6'
-              ? 'magicland-agenda_information'
-              : 'agenda_information'
-          }>
-          <Row align='middle'>
+            props.cEvent.value._id === "5fca68b7e2f869277cfa31b0" ||
+              props.cEvent.value._id === "5f99a20378f48e50a571e3b6"
+              ? "magicland-agenda_information"
+              : "agenda_information"
+          }
+        >
+          <Row align="middle">
             <Col
               xs={{ order: 2, span: 8 }}
               sm={{ order: 2, span: 8 }}
               md={{ order: 1, span: 4 }}
               lg={{ order: 1, span: 4 }}
               xl={{ order: 1, span: 4 }}
-              style={{ padding: '4px' }}>
+              style={{ padding: "4px" }}
+            >
               <Link to={`${urlBack}`}>
-                <Row style={{ paddingLeft: '10px' }}>
-                  <Button type='primary' shape='round' icon={<ArrowLeftOutlined />} size='small'>
-                    {intl.formatMessage({ id: 'button.back.agenda' })}
+                <Row style={{ paddingLeft: "10px" }}>
+                  <Button
+                    type="primary"
+                    shape="round"
+                    icon={<ArrowLeftOutlined />}
+                    size="small"
+                  >
+                    {intl.formatMessage({ id: "button.back.agenda" })}
                   </Button>
                 </Row>
               </Link>
@@ -376,41 +413,53 @@ let AgendaActividadDetalle = (props) => {
               md={{ order: 1, span: 2 }}
               lg={{ order: 1, span: 2 }}
               xl={{ order: 1, span: 2 }}
-              style={{ padding: '4px' }}>
-              <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
+              style={{ padding: "4px" }}
+            >
+              <Row style={{ alignItems: "center", justifyContent: "center" }}>
                 <Col>
-                  {meetingState === 'open_meeting_room' ? (
-                    <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
-                  ) : meetingState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video ? (
-                    <CaretRightOutlined style={{ fontSize: '30px' }} />
-                  ) : meetingState === 'ended_meeting_room' && currentActivity !== null ? (
-                    <CheckCircleOutlined style={{ fontSize: '30px' }} />
-                  ) : meetingState === '' || meetingState == null ? (
+                  {meetingState === "open_meeting_room" ? (
+                    <img
+                      style={{ height: "4vh", width: "4vh" }}
+                      src={EnVivo}
+                      alt="React Logo"
+                    />
+                  ) : meetingState === "ended_meeting_room" &&
+                    currentActivity !== null &&
+                    currentActivity.video ? (
+                    <CaretRightOutlined style={{ fontSize: "30px" }} />
+                  ) : meetingState === "ended_meeting_room" &&
+                    currentActivity !== null ? (
+                    <CheckCircleOutlined style={{ fontSize: "30px" }} />
+                  ) : meetingState === "" || meetingState == null ? (
                     <></>
-                  ) : meetingState === 'closed_meeting_room' ? (
-                    <LoadingOutlined style={{ fontSize: '30px' }} />
+                  ) : meetingState === "closed_meeting_room" ? (
+                    <LoadingOutlined style={{ fontSize: "30px" }} />
                   ) : (
-                    ''
+                    ""
                   )}
                 </Col>
               </Row>
               <Row
                 style={{
-                  height: '2vh',
+                  height: "2vh",
                   fontSize: 11,
-                  fontWeight: 'normal',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                {meetingState === 'open_meeting_room'
-                  ? 'En vivo'
-                  : meetingState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video
-                    ? 'Grabado'
-                    : meetingState === 'ended_meeting_room' && currentActivity !== null
-                      ? 'Terminada'
-                      : meetingState === 'closed_meeting_room'
-                        ? 'Por iniciar'
-                        : ''}
+                  fontWeight: "normal",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {meetingState === "open_meeting_room"
+                  ? "En vivo"
+                  : meetingState === "ended_meeting_room" &&
+                    currentActivity !== null &&
+                    currentActivity.video
+                    ? "Grabado"
+                    : meetingState === "ended_meeting_room" &&
+                      currentActivity !== null
+                      ? "Terminada"
+                      : meetingState === "closed_meeting_room"
+                        ? "Por iniciar"
+                        : ""}
               </Row>
             </Col>
             <Col
@@ -419,68 +468,85 @@ let AgendaActividadDetalle = (props) => {
               md={{ order: 2, span: 18 }}
               lg={{ order: 2, span: 16 }}
               xl={{ order: 2, span: 18 }}
-              style={{ display: 'flex' }}>
-              <div style={{ padding: '8px' }}>
-                <Row style={{ textAlign: 'left', fontWeight: 'bolder' }}>
+              style={{ display: "flex" }}
+            >
+              <div style={{ padding: "8px" }}>
+                <Row style={{ textAlign: "left", fontWeight: "bolder" }}>
                   {currentActivity !== null && currentActivity.name}
                   {configfast && configfast.enableCount && (
                     <>
                       ( &nbsp;
-                      {configfast && configfast.totalAttendees ? configfast.totalAttendees : totalAttendees}
-                      {'/'} {totalAttendeesCheckedin}{' '}
-                      {'(' +
+                      {configfast && configfast.totalAttendees
+                        ? configfast.totalAttendees
+                        : totalAttendees}
+                      {"/"} {totalAttendeesCheckedin}{" "}
+                      {"(" +
                         Math.round(
                           (totalAttendeesCheckedin /
-                            (configfast.totalAttendees ? configfast.totalAttendees : totalAttendees)) *
+                            (configfast.totalAttendees
+                              ? configfast.totalAttendees
+                              : totalAttendees)) *
                           100 *
                           100
                         ) /
                         100 +
-                        '%)'}
+                        "%)"}
                       )
                     </>
                   )}
                 </Row>
-                <Row style={{ height: '2.5vh', fontSize: 10, fontWeight: 'normal' }}>
+                <Row
+                  style={{
+                    height: "2.5vh",
+                    fontSize: 10,
+                    fontWeight: "normal",
+                  }}
+                >
                   <div
                     xs={{ order: 1, span: 24 }}
                     sm={{ order: 1, span: 24 }}
                     md={{ order: 1, span: 24 }}
                     lg={{ order: 3, span: 6 }}
-                    xl={{ order: 3, span: 4 }}>
-                    {props.cEvent.value._id === '5f99a20378f48e50a571e3b6' ||
-                      props.cEvent.value._id === '5fca68b7e2f869277cfa31b0' ||
-                      props.cEvent.value.id === '60061bfac8c0284c432069c8' ? (
+                    xl={{ order: 3, span: 4 }}
+                  >
+                    {props.cEvent.value._id === "5f99a20378f48e50a571e3b6" ||
+                      props.cEvent.value._id === "5fca68b7e2f869277cfa31b0" ||
+                      props.cEvent.value.id === "60061bfac8c0284c432069c8" ? (
                       <></>
                     ) : (
                       <div>
                         {Moment.tz(
-                          currentActivity !== null && currentActivity.datetime_start,
-                          'YYYY-MM-DD h:mm',
-                          'America/Bogota'
+                          currentActivity !== null &&
+                          currentActivity.datetime_start,
+                          "YYYY-MM-DD h:mm",
+                          "America/Bogota"
                         )
                           .tz(Moment.tz.guess())
-                          .format('DD MMM YYYY')}{' '}
+                          .format("DD MMM YYYY")}{" "}
                         {Moment.tz(
-                          currentActivity !== null && currentActivity.datetime_start,
-                          'YYYY-MM-DD h:mm',
-                          'America/Bogota'
+                          currentActivity !== null &&
+                          currentActivity.datetime_start,
+                          "YYYY-MM-DD h:mm",
+                          "America/Bogota"
                         )
                           .tz(Moment.tz.guess())
-                          .format('h:mm a z')}{' '}
-                        -{' '}
+                          .format("h:mm a z")}{" "}
+                        -{" "}
                         {Moment.tz(
-                          currentActivity !== null && currentActivity.datetime_end,
-                          'YYYY-MM-DD h:mm',
-                          'America/Bogota'
+                          currentActivity !== null &&
+                          currentActivity.datetime_end,
+                          "YYYY-MM-DD h:mm",
+                          "America/Bogota"
                         )
                           .tz(Moment.tz.guess())
-                          .format('h:mm a z')}
+                          .format("h:mm a z")}
                       </div>
                     )}
                   </div>
 
-                  {currentActivity !== null && currentActivity.space && currentActivity.space.name}
+                  {currentActivity !== null &&
+                    currentActivity.space &&
+                    currentActivity.space.name}
                 </Row>
               </div>
             </Col>
@@ -496,40 +562,46 @@ let AgendaActividadDetalle = (props) => {
 
               {/*   ******************surveyDetalle=> PARA MOSTRAR DETALLE DE ENCUESTAS  ****************  */}
 
-              {meetingState === 'open_meeting_room' &&
+              {meetingState === "open_meeting_room" &&
                 // mainStageContent !== 'surveyDetalle' &&
                 // mainStageContent !== 'games' &&
 
-                platform !== '' &&
+                platform !== "" &&
                 platform !== null ? (
                 <>
-                  {platform === 'dolby' && names === null && email === null ? (
-                    <Card title='Ingresa tus datos para entrar a la transmisión'>
-                      <Form style={{ padding: '16px 8px' }} onFinish={handleSignInForm} {...layout}>
+                  {platform === "dolby" && names === null && email === null ? (
+                    <Card title="Ingresa tus datos para entrar a la transmisión">
+                      <Form
+                        style={{ padding: "16px 8px" }}
+                        onFinish={handleSignInForm}
+                        {...layout}
+                      >
                         <Form.Item
-                          name='names'
-                          label='Nombre'
+                          name="names"
+                          label="Nombre"
                           rules={[
                             {
                               required: true,
                             },
-                          ]}>
+                          ]}
+                        >
                           <Input />
                         </Form.Item>
                         <Form.Item
-                          name='email'
-                          label='Email'
+                          name="email"
+                          label="Email"
                           rules={[
                             {
                               required: true,
-                              type: 'email',
-                              message: 'Ingrese un email valido',
+                              type: "email",
+                              message: "Ingrese un email valido",
                             },
-                          ]}>
+                          ]}
+                        >
                           <Input />
                         </Form.Item>
                         <Form.Item {...tailLayout}>
-                          <Button type='primary' htmlType='submit'>
+                          <Button type="primary" htmlType="submit">
                             Entrar
                           </Button>
                         </Form.Item>
@@ -537,19 +609,35 @@ let AgendaActividadDetalle = (props) => {
                     </Card>
                   ) : (
                     <>
-                      {platform === 'zoomExterno' && mainStageContent !== 'game' ? (
+                      {platform === "zoomExterno" &&
+                        mainStageContent !== "game" ? (
                         openZoomExterno()
-                      ) : (props.currentUser && currentActivity !== null && currentActivity.requires_registration) ||
-                        (currentActivity !== null && !currentActivity.requires_registration) ? (
+                      ) : (props.currentUser &&
+                        currentActivity !== null &&
+                        currentActivity.requires_registration) ||
+                        (currentActivity !== null &&
+                          !currentActivity.requires_registration) ? (
                         <>
-                          <ZoomIframe platform={platform} meeting_id={meeting_id} generalTabs={props.tabs} />
-                          <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
+                          {(platform === "zoom" || platform === "vimeo") &&
+                            mainStageContent !== "game" ? (
+                            <ZoomIframe
+                              platform={platform}
+                              meeting_id={meeting_id}
+                              generalTabs={props.tabs}
+                            />
+                          ) : (
+                           <>  {mainStageContent==="game"&&<Game />}</>
+                          )}
+                          <div
+                            style={videoButtonStyles}
+                            onClick={() => props.setMainStage(null)}
+                          ></div>
                         </>
                       ) : (
                         <Alert
-                          message='Advertencia'
-                          description='Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento'
-                          type='warning'
+                          message="Advertencia"
+                          description="Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento"
+                          type="warning"
                           showIcon
                         />
                       )}
@@ -557,27 +645,33 @@ let AgendaActividadDetalle = (props) => {
                   )}
                 </>
               ) : (
-                meetingState == 'open_meeting_room' && (
-                  <Row style={{ fontSize: '25px', margin: 10 }} justify='center'>
+                meetingState == "open_meeting_room" && (
+                  <Row
+                    style={{ fontSize: "25px", margin: 10 }}
+                    justify="center"
+                  >
                     FALTA ASIGNAR EL ESPACIO EN VIVO
                   </Row>
                 )
               )}
 
-              {mainStageContent == 'surveyDetalle' && (
+              {mainStageContent == "surveyDetalle" && (
                 <>
                   <h1>Encuestas MainStage</h1>
                 </>
               )}
-              {(platform === 'zoomExterno' || platform === 'zoom') && mainStageContent == 'game' && <Game />}
 
-              {(meetingState === '' || meetingState == null) &&
+              {(meetingState === "" || meetingState == null) &&
                 currentActivity != null &&
                 currentActivity.video == null && (
-                  <div className='column is-centered mediaplayer'>
+                  <div className="column is-centered mediaplayer">
                     <img
-                      className='activity_image'
-                      style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
+                      className="activity_image"
+                      style={{
+                        width: "100%",
+                        height: "60vh",
+                        objectFit: "cover",
+                      }}
                       src={
                         props.cEvent.value.styles?.banner_image
                           ? props.cEvent.value.styles?.banner_image
@@ -587,20 +681,25 @@ let AgendaActividadDetalle = (props) => {
                               ? image_event
                               : imagePlaceHolder
                       }
-                      alt='Activity'
+                      alt="Activity"
                     />
                   </div>
                 )}
 
-              {meetingState === 'closed_meeting_room' &&
-                mainStageContent !== 'surveyDetalle' &&
-                mainStageContent !== 'game' && (
-                  <div className='column is-centered mediaplayer'>
+              {meetingState === "closed_meeting_room" &&
+                mainStageContent !== "surveyDetalle" &&
+                mainStageContent !== "game" && (
+                  <div className="column is-centered mediaplayer">
                     <img
-                      className='activity_image'
-                      style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
+                      className="activity_image"
+                      style={{
+                        width: "100%",
+                        height: "60vh",
+                        objectFit: "cover",
+                      }}
                       src={
-                        props.cEvent.status == 'LOADED' && props.cEvent.value.styles.banner_image
+                        props.cEvent.status == "LOADED" &&
+                          props.cEvent.value.styles.banner_image
                           ? props.cEvent.value.styles?.banner_image
                           : currentActivity?.image
                             ? currentActivity?.image
@@ -608,22 +707,22 @@ let AgendaActividadDetalle = (props) => {
                               ? image_event
                               : imagePlaceHolder
                       }
-                      alt='Activity'
+                      alt="Activity"
                     />
                   </div>
                 )}
 
-              {(meetingState === 'ended_meeting_room' || !meetingState) &&
+              {(meetingState === "ended_meeting_room" || !meetingState) &&
                 currentActivity !== null &&
                 currentActivity.video &&
-                mainStageContent !== 'surveyDetalle' &&
-                mainStageContent !== 'game' ? (
-                <div className='column is-centered mediaplayer'>
+                mainStageContent !== "surveyDetalle" &&
+                mainStageContent !== "game" ? (
+                <div className="column is-centered mediaplayer">
                   <ReactPlayer
-                    width={'100%'}
+                    width={"100%"}
                     style={{
-                      display: 'block',
-                      margin: '0 auto',
+                      display: "block",
+                      margin: "0 auto",
                     }}
                     url={currentActivity !== null && currentActivity.video}
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
@@ -632,14 +731,19 @@ let AgendaActividadDetalle = (props) => {
                 </div>
               ) : (
                 <>
-                  {meetingState === 'ended_meeting_room' &&
-                    ((currentActivity !== null && currentActivity.image) || image_event) &&
-                    mainStageContent !== 'surveyDetalle' &&
-                    mainStageContent !== 'game' && (
+                  {meetingState === "ended_meeting_room" &&
+                    ((currentActivity !== null && currentActivity.image) ||
+                      image_event) &&
+                    mainStageContent !== "surveyDetalle" &&
+                    mainStageContent !== "game" && (
                       <div>
                         <img
-                          className='activity_image'
-                          style={{ width: '100%', height: '60vh', objectFit: 'cover' }}
+                          className="activity_image"
+                          style={{
+                            width: "100%",
+                            height: "60vh",
+                            objectFit: "cover",
+                          }}
                           src={
                             props.cEvent.value.styles.banner_image
                               ? props.cEvent.value.styles.banner_image
@@ -649,7 +753,7 @@ let AgendaActividadDetalle = (props) => {
                                   ? image_event
                                   : imagePlaceHolder
                           }
-                          alt='Activity'
+                          alt="Activity"
                         />
                       </div>
                     )}
@@ -657,27 +761,29 @@ let AgendaActividadDetalle = (props) => {
               )}
 
               {/*logo quemado de aval para el evento de magicland */}
-              {(props.cEvent.value._id === '5f99a20378f48e50a571e3b6' ||
-                props.cEvent.value._id === '5fca68b7e2f869277cfa31b0') && (
-                  <Row justify='center' style={{ marginTop: '6%' }}>
+              {(props.cEvent.value._id === "5f99a20378f48e50a571e3b6" ||
+                props.cEvent.value._id === "5fca68b7e2f869277cfa31b0") && (
+                  <Row justify="center" style={{ marginTop: "6%" }}>
                     <Col span={24}>
                       <img
-                        src='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fbanner.jpg?alt=media&token=4aab5da2-bbba-4a44-9bdd-d2161ea58b0f'
-                        alt='aval'
+                        src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Magicland%2Fbanner.jpg?alt=media&token=4aab5da2-bbba-4a44-9bdd-d2161ea58b0f"
+                        alt="aval"
                       />
                     </Col>
                   </Row>
                 )}
               {currentActivity !== null && currentActivity.secondvideo && (
-                <div className='column is-centered mediaplayer'>
+                <div className="column is-centered mediaplayer">
                   <strong>Pt. 2</strong>
                   <ReactPlayer
-                    width={'100%'}
+                    width={"100%"}
                     style={{
-                      display: 'block',
-                      margin: '0 auto',
+                      display: "block",
+                      margin: "0 auto",
                     }}
-                    url={currentActivity !== null && currentActivity.secondvideo}
+                    url={
+                      currentActivity !== null && currentActivity.secondvideo
+                    }
                     //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                     controls
                   />
@@ -686,66 +792,99 @@ let AgendaActividadDetalle = (props) => {
             </div>
           </header>
 
-          {props.cEvent.value._id === '5fca68b7e2f869277cfa31b0' ||
-            props.cEvent.value._id === '5f99a20378f48e50a571e3b6' ? (
+          {props.cEvent.value._id === "5fca68b7e2f869277cfa31b0" ||
+            props.cEvent.value._id === "5f99a20378f48e50a571e3b6" ? (
             <></>
           ) : (
-            <div className='calendar-category has-margin-top-7'></div>
+            <div className="calendar-category has-margin-top-7"></div>
           )}
-          <div className='card-content has-text-left container_calendar-description'>
-            <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={handleChangeLowerTabs}>
+          <div className="card-content has-text-left container_calendar-description">
+            <Tabs
+              defaultActiveKey={activeTab}
+              activeKey={activeTab}
+              onChange={handleChangeLowerTabs}
+            >
               {
                 <TabPane
                   tab={
                     <>
-                      <p style={{ marginBottom: '0px' }}>{intl.formatMessage({ id: 'title.description' })}</p>
+                      <p style={{ marginBottom: "0px" }}>
+                        {intl.formatMessage({ id: "title.description" })}
+                      </p>
                     </>
                   }
-                  key='description'>
+                  key="description"
+                >
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: currentActivity !== null && currentActivity.description,
-                    }}></div>
+                      __html:
+                        currentActivity !== null && currentActivity.description,
+                    }}
+                  ></div>
                   <br />
-                  {(currentActivity !== null && currentActivity.hosts.length === 0) ||
-                    props.cEvent.value._id === '601470367711a513cc7061c2' ? (
+                  {(currentActivity !== null &&
+                    currentActivity.hosts.length === 0) ||
+                    props.cEvent.value._id === "601470367711a513cc7061c2" ? (
                     <div></div>
                   ) : (
-                    <div className='List-conferencistas'>
-                      <Title level={5}>{intl.formatMessage({ id: 'title.panelists' })} </Title>
-                      <p style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
+                    <div className="List-conferencistas">
+                      <Title level={5}>
+                        {intl.formatMessage({ id: "title.panelists" })}{" "}
+                      </Title>
+                      <p
+                        style={{ marginTop: "5%", marginBottom: "5%" }}
+                        className="has-text-left is-size-6-desktop"
+                      >
                         {orderedHost.length > 0 ? (
                           <>
-                            <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: '0 auto' }}>
-                              <Card style={{ textAlign: 'left' }}>
+                            <Col
+                              xs={24}
+                              sm={22}
+                              md={18}
+                              lg={18}
+                              xl={22}
+                              style={{ margin: "0 auto" }}
+                            >
+                              <Card style={{ textAlign: "left" }}>
                                 <List
-                                  itemLayout='horizontal'
+                                  itemLayout="horizontal"
                                   dataSource={orderedHost}
                                   renderItem={(item) => (
                                     <List.Item style={{ padding: 16 }}>
                                       <List.Item.Meta
                                         style={{
-                                          display: 'flex',
-                                          flexDirection: 'row',
-                                          alignItems: 'center',
+                                          display: "flex",
+                                          flexDirection: "row",
+                                          alignItems: "center",
                                         }}
                                         avatar={
                                           item.image ? (
-                                            <Avatar size={80} src={item.image} />
+                                            <Avatar
+                                              size={80}
+                                              src={item.image}
+                                            />
                                           ) : (
-                                            <Avatar size={80} icon={<UserOutlined />} />
+                                            <Avatar
+                                              size={80}
+                                              icon={<UserOutlined />}
+                                            />
                                           )
                                         }
                                         title={<strong>{item.name}</strong>}
                                         description={item.profession}
                                       />
-                                      <div className='btn-list-confencista'>
-                                        {item.description !== '<p><br></p>' &&
+                                      <div className="btn-list-confencista">
+                                        {item.description !== "<p><br></p>" &&
                                           item.description !== null &&
                                           item.description !== undefined && (
-                                            <Button className='button_lista' onClick={() => getSpeakers(item._id)}>
+                                            <Button
+                                              className="button_lista"
+                                              onClick={() =>
+                                                getSpeakers(item._id)
+                                              }
+                                            >
                                               {intl.formatMessage({
-                                                id: 'button.more.information',
+                                                id: "button.more.information",
                                               })}
                                             </Button>
                                           )}
@@ -780,15 +919,24 @@ let AgendaActividadDetalle = (props) => {
                   <TabPane
                     tab={
                       <>
-                        <p style={{ marginBottom: '0px' }}>Documentos</p>
+                        <p style={{ marginBottom: "0px" }}>Documentos</p>
                       </>
                     }
-                    key='docs'>
+                    key="docs"
+                  >
                     <div>
-                      <div style={{ marginTop: '5%', marginBottom: '5%' }} className='has-text-left is-size-6-desktop'>
+                      <div
+                        style={{ marginTop: "5%", marginBottom: "5%" }}
+                        className="has-text-left is-size-6-desktop"
+                      >
                         <b>Documentos:</b> &nbsp;
                         <div>
-                          <DocumentsList data={currentActivity !== null && currentActivity.selected_document} />
+                          <DocumentsList
+                            data={
+                              currentActivity !== null &&
+                              currentActivity.selected_document
+                            }
+                          />
                         </div>
                       </div>
                     </div>
@@ -800,49 +948,59 @@ let AgendaActividadDetalle = (props) => {
                 <TabPane
                   tab={
                     <>
-                      <p style={{ marginBottom: '0px' }} className='lowerTabs__mobile-visible'>
-                        <Badge dot={props.hasOpenSurveys} size='default'>
+                      <p
+                        style={{ marginBottom: "0px" }}
+                        className="lowerTabs__mobile-visible"
+                      >
+                        <Badge dot={props.hasOpenSurveys} size="default">
                           Encuestas
                         </Badge>
                       </p>
                     </>
-                  }>
+                  }
+                >
                   {cUser.value !== null ? (
                     <SurveyList eventSurveys={props.eventSurveys} />
                   ) : (
                     <div style={{ paddingTop: 30 }}>
                       <Alert
                         showIcon
-                        message='Para poder responder una encuesta debes ser usuario del sistema'
-                        type='warning'
+                        message="Para poder responder una encuesta debes ser usuario del sistema"
+                        type="warning"
                       />
-                      <Row style={{ marginTop: 30 }} justify='center'>
+                      <Row style={{ marginTop: 30 }} justify="center">
                         <Button onClick={redirectRegister}>Registrarme</Button>
                       </Row>
                     </div>
                   )}
                 </TabPane>
               )}
-              {props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
-                <TabPane
-                  tab={
-                    <>
-                      <p className='lowerTabs__mobile-visible' style={{ marginBottom: '0px' }}>
-                        Juegos
-                      </p>{' '}
-                    </>
-                  }
-                  key='games'></TabPane>
-              )}
+              {props.tabs &&
+                (props.tabs.games === true || props.tabs.games === "true") && (
+                  <TabPane
+                    tab={
+                      <>
+                        <p
+                          className="lowerTabs__mobile-visible"
+                          style={{ marginBottom: "0px" }}
+                        >
+                          Juegos
+                        </p>{" "}
+                      </>
+                    }
+                    key="games"
+                  ></TabPane>
+                )}
             </Tabs>
 
             <div
-              className='card-footer is-12 is-flex'
+              className="card-footer is-12 is-flex"
               style={{
-                borderTop: 'none',
-                justifyContent: 'space-between',
-                alignItems: 'flex-end',
-              }}></div>
+                borderTop: "none",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+              }}
+            ></div>
           </div>
         </Card>
       </div>
@@ -878,4 +1036,7 @@ const mapDispatchToProps = {
 };
 
 let AgendaActividadDetalleWithContext = withContext(AgendaActividadDetalle);
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AgendaActividadDetalleWithContext));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(AgendaActividadDetalleWithContext));
