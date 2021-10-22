@@ -1,26 +1,19 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { List, Tooltip, Popover, Avatar, Typography, Space, Tag, Image } from 'antd';
-import { EyeOutlined, MessageTwoTone } from '@ant-design/icons';
-import { InitialsNameUser } from '../hooks';
-import PopoverInfoUser from '../hooks/Popover';
+import { List } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
-import { UseCurrentUser } from '../../../Context/userContext';
 import { HelperContext } from '../../../Context/HelperContext';
-import Record from '@2fd/ant-design-icons/lib/Record';
+import UsersCard from '../../shared/usersCard';
+
 const AttendeList = function (props) {
   //contextos
-  let cUser = UseCurrentUser();
   let [ myattendelist, setmyattendelist ] = useState();
   let [ loading, setLoading ] = useState(false);
   let [ page, setPage ] = useState(0);
   let [ filteredlist, setfilteredlist ] = useState([]);
   let [ hasMore, setHasMore ] = useState(true);
   let {
-    createNewOneToOneChat,
     attendeeListPresence,
     attendeeList,
-    HandleChatOrAttende,
-    HandlePublicPrivate,
     imageforDefaultProfile,
   } = useContext(HelperContext);
   const pag = 15;
@@ -110,69 +103,7 @@ const AttendeList = function (props) {
         itemLayout='horizontal'
         dataSource={filteredlist && filteredlist}
         renderItem={(item) => (
-          <List.Item
-            style={styleListAttende}
-            actions={[
-              cUser.value ? (
-                <a
-                  key='list-loadmore-edit'
-                  onClick={() => {
-                    createNewOneToOneChat(
-                      cUser.value.uid,
-                      cUser.value.names || cUser.value.name,
-                      item.uid,
-                      item.names || item.name,
-                      item.imageProfile
-                    );
-                    HandleChatOrAttende('1');
-                    HandlePublicPrivate('private');
-                  }}>
-                  <Tooltip title={'Chatear'}>
-                    <MessageTwoTone style={{ fontSize: '27px' }} />
-                  </Tooltip>
-                </a>
-              ) : null,
-            ]}>
-            <List.Item.Meta
-
-              avatar={
-                <Avatar src={<Image src={item.imageProfile} preview={{ mask: <EyeOutlined /> }} />} size={45}>
-                  {!item.imageProfile && item.names ? item.names.charAt(0).toUpperCase() : item.names}
-                </Avatar>
-              }
-              title={
-                <Popover
-                  trigger='hover'
-
-                  placement='leftTop'
-                  content={<PopoverInfoUser item={item} props={props} />}>
-                  <Typography.Paragraph
-                    ellipsis={{ rows: 2 }}
-                    style={{
-                      color: 'black',
-                      cursor: 'pointer',
-                      width: '85%',
-                      fontSize: '15px',
-                      whiteSpace: 'break-spaces'
-                    }}
-                    key='list-loadmore-edit'>
-                    {item.names}
-                  </Typography.Paragraph>
-                </Popover>
-              }
-              description={
-                item.status === 'online' ? (
-                  <div style={{ color: '#52c41a', marginTop: '-10px' }}>
-                    <Tag color='#52C41A'>En linea</Tag>
-                  </div>
-                ) : (
-                  <div style={{ color: '#52c41a', marginTop: '-10px' }}>
-                    <Tag color='#CCCCCC'>Offline</Tag>
-                  </div>
-                )
-              }
-            />
-          </List.Item>
+          <UsersCard type='attendees' item={item} propsAttendees={props}/>
         )}></List>
     </InfiniteScroll>
   );
