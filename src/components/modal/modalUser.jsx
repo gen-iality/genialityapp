@@ -171,7 +171,7 @@ class UserModal extends Component {
         values.checkedin_at = '';
       }
 
-      const snap = { properties: values };
+      const snap = { rol_id: values.rol_id, properties: values };
 
       resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
 
