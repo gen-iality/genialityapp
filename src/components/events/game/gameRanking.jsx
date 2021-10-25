@@ -11,7 +11,7 @@ function GameRanking(props) {
   const [ myScore, setMyScore ] = useState('');
 
   const { currentUser, cEvent } = props;
-
+   
   useEffect(() => {
     let gameId = '0biWfCwWbUGhbZmfhkvu';
 
@@ -34,17 +34,29 @@ function GameRanking(props) {
       .collection('juegos/' + gameId + '/puntajes/')
       .orderBy('puntaje', 'desc')
       .limit(10)
-      .onSnapshot(function (querySnapshot) {
+      .onSnapshot(async(querySnapshot)=> {
         var puntajes = [];
-        querySnapshot.forEach(function (doc) {
-          const result = doc.data();
-
-          result[ 'score' ] = result.puntaje;
-          puntajes.push(result);
-        });
+      puntajes= await Promise.all( querySnapshot.docs.map( async (doc)=> {
+          const result = doc.data();          
+          let picture=await getDataUser(result.eventUser_id);          
+          result[ 'score' ] = result.puntaje;      
+          result['imageProfile']=picture;          
+          return result;
+        }))
         setRanking(puntajes);
       });
   }, [ currentUser ]);
+
+ const getDataUser= async (iduser)=>{      
+    let user=await firestore.collection(`${cEvent._id}_event_attendees`).where("account_id","==",iduser).get();    
+    if(user.docs.length>0 && cEvent.user_properties){
+      let fieldAvatar=cEvent.user_properties.filter((field)=>field.type=="avatar")
+      if(fieldAvatar.length>0){        
+        return user.docs[0].data().user?.picture;
+      }     
+    }
+    return undefined;
+  }
 
   return (
     <>
