@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import arrayMove from 'array-move';
 import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import { Table as TableAnt, Row, Col, Tooltip, Button } from 'antd';
-import { EditOutlined, DeleteOutlined, DragOutlined, DownloadOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, DragOutlined, DownloadOutlined, SettingOutlined } from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
 import ExportExcel from '../components/newComponent/ExportExcel';
 
@@ -28,6 +28,10 @@ const Table = (props) => {
     exportData,
     fileName,
     editFn,
+    extraFn,
+    extraFnIcon,
+    extraFnType,
+    extraFnTitle,
   } = props;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -39,6 +43,20 @@ const Table = (props) => {
     render(val, item) {
       return (
         <Row wrap gutter={[8, 8]}>
+          <Col>
+            {extraFn && (
+              <Tooltip placement='topLeft' title={extraFnTitle && extraFnTitle}>
+                <Button
+                  key={`extraAction${item.index}`}
+                  id={`extraAction${item.index}`}
+                  onClick={() => extraFn(item)}
+                  icon={extraFnIcon ? extraFnIcon : <SettingOutlined />}
+                  type={extraFnType ? extraFnType : 'primary'}
+                  size='small'
+                />
+              </Tooltip>
+            )}
+          </Col>
           <Col>
             {downloadFile && (
               <Tooltip placement='topLeft' title='Descargar'>
@@ -99,12 +117,12 @@ const Table = (props) => {
     },
   };
 
-  if(list) {
+  if (list) {
     list.map((list, index) => {
-      if(!list.index) {
+      if (!list.index) {
         list.index = index;
       }
-    })
+    });
   }
 
   if (actions) {
