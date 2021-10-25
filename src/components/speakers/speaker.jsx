@@ -3,7 +3,7 @@ import { Redirect, withRouter } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import EviusReactQuill from '../shared/eviusReactQuill';
 import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
-import { CategoriesAgendaApi, SpeakersApi } from '../../helpers/request';
+import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '../../helpers/request';
 import Creatable from 'react-select';
 import { Button, Typography, Row, Col, Form, Input, Image, Empty, Card, Switch, Modal, message, Tooltip } from 'antd';
 import {
@@ -61,6 +61,11 @@ function Speaker(props) {
 
   async function dataTheLoaded() {
     let categoriesData = await CategoriesAgendaApi.byEvent(eventID);
+    let event = await EventsApi.getOne(eventID);
+    //const typeEvent = await TypesApi.getAll();
+    if (event) {
+      setEvent(event);
+    }
 
     //Filtrado de categorias
     categoriesData = handleSelect(categoriesData);
@@ -281,7 +286,7 @@ function Speaker(props) {
             </Card>
           </Form.Item>
 
-          {event && event?.organizer?.type_event == 'Misión' && (
+          {event && (
             <Form.Item label={'Teléfono'} name={'phone'}>
               <Input
                 addonBefore={prefixSelector}
