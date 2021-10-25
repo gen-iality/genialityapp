@@ -5,7 +5,22 @@ import EviusReactQuill from '../shared/eviusReactQuill';
 import { fieldsSelect, handleRequestError, sweetAlert, uploadImage, handleSelect } from '../../helpers/utils';
 import { CategoriesAgendaApi, EventsApi, SpeakersApi } from '../../helpers/request';
 import Creatable from 'react-select';
-import { Button, Typography, Row, Col, Form, Input, Image, Empty, Card, Switch, Modal, message, Tooltip } from 'antd';
+import {
+  Button,
+  Typography,
+  Row,
+  Col,
+  Form,
+  Input,
+  Image,
+  Empty,
+  Card,
+  Switch,
+  Modal,
+  message,
+  Tooltip,
+  Select,
+} from 'antd';
 import {
   LeftOutlined,
   UserOutlined,
@@ -16,9 +31,11 @@ import {
   EditOutlined,
 } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
+import { areaCode } from '../../helpers/constants';
 
 const { Title } = Typography;
 const { confirm } = Modal;
+const { Option } = Select;
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -54,6 +71,7 @@ function Speaker(props) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [isloadingSelect, setIsloadingSelect] = useState({ types: true, categories: true });
   const [event, setEvent] = useState();
+  const [areacodeselected, setareacodeselected] = useState(57);
 
   useEffect(() => {
     dataTheLoaded();
@@ -66,6 +84,7 @@ function Speaker(props) {
     if (event) {
       setEvent(event);
     }
+    console.log('EVENT==>', event);
 
     //Filtrado de categorias
     categoriesData = handleSelect(categoriesData);
@@ -215,6 +234,27 @@ function Speaker(props) {
     history.push(path, state);
   }
 
+  const prefixSelector = (
+    <Select
+      showSearch
+      optionFilterProp='children'
+      style={{ fontSize: '12px', width: 150 }}
+      value={areacodeselected}
+      onChange={(val) => {
+        setareacodeselected(val);
+        console.log(val);
+      }}
+      placeholder='Codigo de area del pais'>
+      {areaCode.map((code, key) => {
+        return (
+          <Option key={key} value={code.value}>
+            {`${code.label} (+${code.value})`}
+          </Option>
+        );
+      })}
+    </Select>
+  );
+
   if (!props.location.state || redirect) return <Redirect to={matchUrl} />;
   return (
     <Form onFinish={() => submit(data)} {...formLayout}>
@@ -286,7 +326,7 @@ function Speaker(props) {
             </Card>
           </Form.Item>
 
-          {event && (
+          {event && event?.organizer?.type_event == 'Misión' && (
             <Form.Item label={'Teléfono'} name={'phone'}>
               <Input
                 addonBefore={prefixSelector}
