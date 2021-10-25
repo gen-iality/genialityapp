@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { List, Tag, Avatar, Badge, Image, Tooltip, Popover, Typography } from 'antd';
-import { MessageTwoTone, CrownTwoTone, EyeOutlined, CrownFilled } from '@ant-design/icons';
+import { List, Avatar, Badge, Image, Tooltip, Popover, Typography } from 'antd';
+import { MessageTwoTone, EyeOutlined, CrownFilled } from '@ant-design/icons';
 import PopoverInfoUser from '../socialZone/hooks/Popover';
 import { HelperContext } from '../../Context/HelperContext';
 import { UseCurrentUser } from '../../Context/userContext';
@@ -19,7 +19,7 @@ const styleList = {
   fontWeight: '500',
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
-  transition: '300ms all',
+  transition: '500ms all',
 };
 
 const styleListPointer = {
@@ -38,14 +38,18 @@ const styleListPointer = {
 
 function UsersCard(props) {
   let cUser = UseCurrentUser();
-  let { createNewOneToOneChat, HandleChatOrAttende, HandlePublicPrivate, imageforDefaultProfile } = useContext(
-    HelperContext
-  );
+  let {
+    createNewOneToOneChat,
+    HandleChatOrAttende,
+    HandlePublicPrivate,
+    imageforDefaultProfile,
+    HandleGoToChat,
+  } = useContext(HelperContext);
   const [actionCapture, setActionCapture] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [avatar, setAvatar] = useState('');
-  const { names, name, imageProfile, status, uid, participants, ultimo_mensaje, score } = props.item;
+  const { names, name, imageProfile, status, uid, participants, ultimo_mensaje, score, time } = props.item;
 
   function getPrivateChatImg() {
     let userLogo = null;
@@ -167,7 +171,7 @@ function UsersCard(props) {
   function privateChats() {
     setActionCapture(() => {
       /** Validar que la hora se guarde en firebase */
-      return ultimo_mensaje && <span>{moment().format('h:mm A')}</span>;
+      return time && <span>{moment(time.seconds * 1000).format('h:mm A')}</span>;
     });
     setTitle(() => {
       return (
@@ -186,11 +190,11 @@ function UsersCard(props) {
     });
     setDescription(() => {
       return ultimo_mensaje ? (
-        <Text ellipsis={{ rows: 1 }} style={{ color: '#555555', width: '90%' }}>
+        <Text ellipsis={{ rows: 1 }} style={{ color: '#52C41A', width: '90%' }}>
           {ultimo_mensaje}
         </Text>
       ) : (
-        <Text ellipsis={{ rows: 1 }} style={{ color: '#CCCCCC' }}>
+        <Text ellipsis={{ rows: 1 }} style={{ color: '#CCCCCC', width: '90%' }}>
           No hay mensajes nuevos
         </Text>
       );
@@ -213,7 +217,24 @@ function UsersCard(props) {
   }
 
   function ranking() {
-    setActionCapture(<Text style={{ fontSize: '24px', color:'#CCCCCC' }}>{props.position + 1}</Text>);
+    setActionCapture(
+      <Text
+        style={{
+          fontSize: '24px',
+          color: `${
+            props.position + 1 === 1
+              ? '#FFD800'
+              : props.position + 1 === 2
+              ? '#DADDE9'
+              : props.position + 1 === 3
+              ? '#D36A62'
+              : '#DDDDDD'
+          }`,
+          fontWeight: '600',
+        }}>
+        {props.position + 1}
+      </Text>
+    );
     setTitle(() => {
       return (
         <Text
@@ -230,12 +251,19 @@ function UsersCard(props) {
       );
     });
     setDescription(() => {
-      return <span>{score} Pts</span>;
+      return (
+        <div className='animate__animated animate__bounceIn' style={{ color: '#52C41A' }}>
+          {score} Pts
+        </div>
+      );
     });
     setAvatar(() => {
       return (
         <Badge offset={[-40, 3]} count={podiumValidate()}>
-          <Avatar src={imageProfile && imageProfile } style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))' }} size={45}>
+          <Avatar
+            src={imageProfile ? imageProfile : imageforDefaultProfile}
+            style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))' }}
+            size={45}>
             {!imageProfile && name && name.charAt(0).toUpperCase()}
           </Avatar>
         </Badge>
@@ -267,6 +295,20 @@ function UsersCard(props) {
 
   return (
     <List.Item
+      onClick={
+        props.type == 'privateChat'
+          ? () => {
+              HandleGoToChat(
+                cUser.value.uid,
+                props.item.id,
+                cUser.value.name ? cUser.value.name : cUser.value.names,
+                'private',
+                props.item,
+                null
+              );
+            }
+          : ''
+      }
       className='efect-scale'
       style={props.type == 'privateChat' ? styleListPointer : styleList}
       actions={[actionCapture]}>
