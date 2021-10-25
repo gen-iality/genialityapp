@@ -106,31 +106,33 @@ let AgendaActividadDetalle = (props) => {
 
   // VALIDAR ACTIVIDADES POR CODIGO
   useEffect(() => {
+    // let existmedellin = cityValid.filter((city) => city===)
     if (props.cEvent.value && props.cUser) {
       if (props.cEvent.value?._id == '61200dfb2c0e5301fa5e9d86') {
-        console.log('ACTIVIDAD==>', activity_id);
         if (activitiesCode.includes(activity_id)) {
           if (props.cEventUser.value) {
-            console.log('USUARIO==>', props.cEventUser.value);
             if (
               codeActivity.includes(props.cEventUser.value?.properties.codigo) ||
               cityValid.includes(props.cEventUser.value?.properties.ciudad)
             ) {
               setblockActivity(false);
+            } else {
+              setblockActivity(true);
             }
-          } else {
-            //alert("CUSER==>");
-            console.log('CUSER==>', props.cUser);
-            setblockActivity(true);
-            
-            //props.history.push(urlBack)
           }
         }
+      } else {
+        setblockActivity(false);
       }
     }
-    console.log(blockActivity)
-    
-  }, []);
+
+    console.log(
+      'el regue',
+      codeActivity.includes(props.cEventUser.value?.properties.codigo) ||
+        cityValid.includes(props.cEventUser.value?.properties.ciudad)
+    );
+    //console.log("EVENTO===>", props.cEvent.value._id)
+  }, [props.cEvent.value, props.cEventUser.value, props.cUser.value]);
 
   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
   const [videoStyles, setVideoStyles] = useState(null);
@@ -915,8 +917,15 @@ let AgendaActividadDetalle = (props) => {
       <Row>
         <Alert
           showIcon
-          style={{ width: '100%', marginTop: 40, marginBottom: 40, textAlign: 'center', fontSize: '18px'}}
-          message='Adquiere un código para poder ingresar'
+          style={{ width: '100%', marginTop: 40, marginBottom: 40, textAlign: 'center', fontSize: '19px' }}
+          message={
+            <>
+              ¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
+              <a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
+                https://iberofest.co/producto/edc/
+              </a>{' '}
+            </>
+          }
           type='warning'
         />
       </Row>
