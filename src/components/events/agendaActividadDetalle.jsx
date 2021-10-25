@@ -113,8 +113,8 @@ let AgendaActividadDetalle = (props) => {
           if (props.cEventUser.value) {
             console.log('USUARIO==>', props.cEventUser.value);
             if (
-              codeActivity.includes(props.cEventUser.value?.codigo) ||
-              cityValid.includes(props.cEventUser.value?.ciudad)
+              codeActivity.includes(props.cEventUser.value?.properties.codigo) ||
+              cityValid.includes(props.cEventUser.value?.properties.ciudad)
             ) {
               setblockActivity(false);
             }
@@ -122,13 +122,15 @@ let AgendaActividadDetalle = (props) => {
             //alert("CUSER==>");
             console.log('CUSER==>', props.cUser);
             setblockActivity(true);
+            
             //props.history.push(urlBack)
           }
         }
       }
     }
-    //console.log("EVENTO===>", props.cEvent.value._id)
-  }, [props.cEvent.value, props.cEventUser.value, props.cUser.value]);
+    console.log(blockActivity)
+    
+  }, []);
 
   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
   const [videoStyles, setVideoStyles] = useState(null);
@@ -886,30 +888,39 @@ let AgendaActividadDetalle = (props) => {
       {/* Drawer encuestas */}
       <SurveyDrawer colorFondo={colorFondo} colorTexto={colorTexto} />
     </div>
-  ) : ( <Card
-    style={{ padding: '1 !important' }}
-    className={'agenda_information'  }>
-    <Row align='middle'>
-    <div>
-      <img
-        className='activity_image'
-        style={{
-          width: '100%',
-          height: '60vh',
-          objectFit: 'cover',
-        }}
-        src={
-          props.cEvent.status == 'LOADED' && props.cEvent.value.styles.banner_image
-            ? props.cEvent.value.styles?.banner_image
-            : currentActivity?.image
-            ? currentActivity?.image
-            : image_event
-            ? image_event
-            : imagePlaceHolder
-        }
-        alt='Activity'
-      />
-    </div></Row><Row><Alert showIcon style={{width:'100%', marginTop:40, marginBottom:40, textAlign:'center'}} message="Adquiere un código para poder ingresar" type="warning" /></Row></Card>
+  ) : (
+    <Card style={{ padding: '1 !important' }} className={'agenda_information'}>
+      <Row align='middle'>
+        <div>
+          <img
+            className='activity_image'
+            style={{
+              width: '100%',
+              height: '60vh',
+              objectFit: 'cover',
+            }}
+            src={
+              props.cEvent.status == 'LOADED' && props.cEvent.value.styles.banner_image
+                ? props.cEvent.value.styles?.banner_image
+                : currentActivity?.image
+                ? currentActivity?.image
+                : image_event
+                ? image_event
+                : imagePlaceHolder
+            }
+            alt='Activity'
+          />
+        </div>
+      </Row>
+      <Row>
+        <Alert
+          showIcon
+          style={{ width: '100%', marginTop: 40, marginBottom: 40, textAlign: 'center', fontSize: '18px'}}
+          message='Adquiere un código para poder ingresar'
+          type='warning'
+        />
+      </Row>
+    </Card>
   );
 };
 
