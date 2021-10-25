@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Avatar, Divider, List, Skeleton } from 'antd';
-import { UseEventContext } from '../../../Context/eventContext'
+import { UseEventContext} from '../../../Context/eventContext'
+import { UseCurrentUser } from "../../../Context/userContext"
 import UsersCard from '../../shared/usersCard'
 export default function RankingList({ data }) {
   function formatName(name) {
@@ -10,8 +11,12 @@ export default function RankingList({ data }) {
 
   const [list, setList] = useState([]);
   const [loading, setloading] = useState(false)
-
+  let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
+
+  console.log('data',data)
+  console.log('user',cUser)
+
 
   useEffect(() => {
     setloading(true);

@@ -38,7 +38,7 @@ const styleListPointer = {
 
 function UsersCard(props) {
   let cUser = UseCurrentUser();
-  let { createNewOneToOneChat, HandleChatOrAttende, HandlePublicPrivate, imageforDefaultProfile } = useContext(
+  let { createNewOneToOneChat, HandleChatOrAttende, HandlePublicPrivate, imageforDefaultProfile, HandleGoToChat } = useContext(
     HelperContext
   );
   const [actionCapture, setActionCapture] = useState([]);
@@ -230,7 +230,7 @@ function UsersCard(props) {
       );
     });
     setDescription(() => {
-      return <span>{score} Pts</span>;
+      return <span style={{color:'#105FA8'}}>{score} Pts</span>;
     });
     setAvatar(() => {
       return (
@@ -267,6 +267,16 @@ function UsersCard(props) {
 
   return (
     <List.Item
+    onClick={props.type == 'privateChat' ? () => {
+                    HandleGoToChat(
+                      cUser.value.uid,
+                      props.item.id,
+                      cUser.value.name ? cUser.value.name : cUser.value.names,
+                      'private',
+                      props.item,
+                      null
+                    );
+                  }: ''}
       className='efect-scale'
       style={props.type == 'privateChat' ? styleListPointer : styleList}
       actions={[actionCapture]}>

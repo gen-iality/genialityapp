@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom';
 import React, { useContext, useState } from 'react';
-import { Tabs, Row, Badge, Col, Button, Alert } from 'antd';
-import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined } from '@ant-design/icons';
+import { Tabs, Row, Badge, Col, Button, Alert, Space } from 'antd';
+import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
@@ -106,16 +106,16 @@ let SocialZone = function(props) {
             }
             key='2'>
             <Row>
-              <Col sm={21}>
+              <Space size={10} style={{width:'100%'}}>
                 {!Object.keys(attendeeList).length ? (
                   ''
                 ) : (
-                  <div className='control' style={{ marginBottom: '10px', marginRight: '5px', color: 'white' }}>
+                  <div className='control' style={{ marginBottom: '10px', marginRight: '5px', color: 'white', width:'100%' }}>
                     <input
-                      style={{ color: 'white' }}
+                      style={{ color: cEvent.value.styles.textMenu }}
                       ref={busquedaRef}
                       autoFocus
-                      className='input'
+                      //className='input'
                       type='text'
                       name={'name'}
                       onChange={handleChange}
@@ -123,19 +123,17 @@ let SocialZone = function(props) {
                     />
                   </div>
                 )}
-              </Col>
-              <Col sm={2}>
                 {!Object.keys(attendeeList).length ? null : (
-                  <>
-                    {busqueda !== null && (
-                      <Button shape='circle' onClick={searhAttende}>
-                        {!isFiltered && <SearchOutlined />}
-                        {isFiltered && 'X'}
+                  
+                    busqueda !== null && (
+                      <Button icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />} shape='round' onClick={searhAttende}>
+                        {!isFiltered && 'Buscar'}
+                        {isFiltered && 'Borrar'}
                       </Button>
-                    )}
-                  </>
+                    )
                 )}
-              </Col>
+              </Space>
+              
             </Row>
             <div className='asistente-list'>
               {!Object.keys(attendeeList).length ? (
