@@ -45,18 +45,16 @@ const PopoverInfoUser = (props) => {
       <Card
         bordered={false}
         style={{ width: '300px', padding: '0', color: 'black' }}
-        actions={[
-          containtNetworking &&
-            (userSelected ? (
+        actions={
+          containtNetworking && [
+            userSelected ? (
               <Tooltip title='Ver perfil' onClick={() => props.setViewPerfil({ view: true, perfil: userSelected })}>
                 <UserOutlined style={{ fontSize: '20px', color: '#1890FF' }} />
               </Tooltip>
             ) : (
               <Spin />
-            )),
-
-          containtNetworking &&
-            (userSelected ? (
+            ),
+            userSelected ? (
               <Tooltip
                 onClick={
                   haveRequest(userSelected, requestSend, 1) ||
@@ -126,10 +124,8 @@ const PopoverInfoUser = (props) => {
               </Tooltip>
             ) : (
               <Spin />
-            )),
-
-          containtNetworking &&
-            (userSelected ? (
+            ),
+            userSelected ? (
               <Tooltip title='Agendar cita'>
                 <VideoCameraOutlined
                   onClick={async () => {
@@ -148,8 +144,9 @@ const PopoverInfoUser = (props) => {
               </Tooltip>
             ) : (
               <Spin />
-            )),
-        ]}>
+            ),
+          ]
+        }>
         <Meta
           avatar={
             props.item.user?.image || props.item.imageProfile ? (

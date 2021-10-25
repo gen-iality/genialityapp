@@ -40,17 +40,16 @@ export default function RankingList({ data }) {
 
 
   return (
-    <div style={{ marginTop: 16, width: '100%' }}
+    <div style={{ marginTop: 20, width: '100%', }}
     >
       <Row justify="center">
         <h1 style={{ fontSize: '25px', fontWeight: 'bold', lineHeight: '3px', color: `${cEvent.value.styles.textMenu}` }}>Ranking</h1>
-        <Divider style={{ backgroundColor: `${cEvent.value.styles.textMenu}` }} />
+        <Divider style={{ backgroundColor: `${cEvent.value.styles.textMenu}`, margin:'15px 0' }} />
       </Row>
       <div 
-      className='container-ranking' style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}
+       style={{  height: 'auto', overflowY: 'auto', paddingTop:'5px' }}
       >
         <List
-          className="demo-loadmore-list"
           loading={loading}
           itemLayout="horizontal"
           dataSource={data}

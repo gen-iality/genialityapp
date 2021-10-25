@@ -63,7 +63,9 @@ function GameRanking(props) {
       {!(Object.keys(currentUser).length === 0) && (
         <>
           {/*RANKING*/}
-          <Row justify='center'>
+          <Row justify='center' style={{backgroundColor: '#ffffff4d',
+    padding: 5,
+    borderRadius: '10px',}}>
 
             <RankingList data={ranking} cEvent={cEvent} />
           </Row>
