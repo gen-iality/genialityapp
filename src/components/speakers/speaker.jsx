@@ -53,6 +53,7 @@ function Speaker(props) {
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [isloadingSelect, setIsloadingSelect] = useState({ types: true, categories: true });
+  const [event, setEvent] = useState();
 
   useEffect(() => {
     dataTheLoaded();
