@@ -4,18 +4,14 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { HelperContext } from '../../../Context/HelperContext';
 import UsersCard from '../../shared/usersCard';
 
-const AttendeList = function (props) {
+const AttendeList = function(props) {
   //contextos
-  let [ myattendelist, setmyattendelist ] = useState();
-  let [ loading, setLoading ] = useState(false);
-  let [ page, setPage ] = useState(0);
-  let [ filteredlist, setfilteredlist ] = useState([]);
-  let [ hasMore, setHasMore ] = useState(true);
-  let {
-    attendeeListPresence,
-    attendeeList,
-    imageforDefaultProfile,
-  } = useContext(HelperContext);
+  let [myattendelist, setmyattendelist] = useState();
+  let [loading, setLoading] = useState(false);
+  let [page, setPage] = useState(0);
+  let [filteredlist, setfilteredlist] = useState([]);
+  let [hasMore, setHasMore] = useState(true);
+  let { attendeeListPresence, attendeeList, imageforDefaultProfile } = useContext(HelperContext);
   const pag = 15;
 
   useEffect(() => {
@@ -23,16 +19,16 @@ const AttendeList = function (props) {
 
     Object.keys(attendeeList).map((key) => {
       let mihijo = {
-        uid: attendeeList[ key ].user !== null && attendeeList[ key ].user.uid,
+        uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
         idattendpresence: key,
-        iduser: attendeeList[ key ].account_id,
-        name: attendeeList[ key ].properties.name,
-        names: attendeeList[ key ].properties.names,
-        status: attendeeListPresence[ key ] ? attendeeListPresence[ key ].state : 'offline',
-        email: attendeeList[ key ].properties.email,
-        properties: attendeeList[ key ].properties,
-        _id: attendeeList[ key ]._id,
-        imageProfile: attendeeList[ key ].user?.picture ? attendeeList[ key ].user?.picture : imageforDefaultProfile,
+        iduser: attendeeList[key].account_id,
+        name: attendeeList[key].properties.name,
+        names: attendeeList[key].properties.names,
+        status: attendeeListPresence[key] ? attendeeListPresence[key].state : 'offline',
+        email: attendeeList[key].properties.email,
+        properties: attendeeList[key].properties,
+        _id: attendeeList[key]._id,
+        imageProfile: attendeeList[key].user?.picture ? attendeeList[key].user?.picture : imageforDefaultProfile,
       };
 
       if (mihijo.status === 'online') {
@@ -46,7 +42,7 @@ const AttendeList = function (props) {
 
     setfilteredlist(ordenadousers.slice(0, pag));
     setPage(1);
-  }, [ attendeeListPresence, attendeeList ]);
+  }, [attendeeListPresence, attendeeList]);
 
   useEffect(() => {
     if (props.busqueda == undefined || props.busqueda == '') {
@@ -54,7 +50,7 @@ const AttendeList = function (props) {
     } else {
       setfilteredlist(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
     }
-  }, [ props.busqueda ]);
+  }, [props.busqueda]);
 
   const handleInfiniteOnLoad = () => {
     setLoading(true);
@@ -102,9 +98,7 @@ const AttendeList = function (props) {
       <List
         itemLayout='horizontal'
         dataSource={filteredlist && filteredlist}
-        renderItem={(item) => (
-          <UsersCard type='attendees' item={item} propsAttendees={props}/>
-        )}></List>
+        renderItem={(item) => <UsersCard type='attendees' item={item} propsAttendees={props} />}></List>
     </InfiniteScroll>
   );
 };
