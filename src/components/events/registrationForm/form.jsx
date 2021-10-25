@@ -157,6 +157,7 @@ const FormRegister = ({
     setFormMessage(FormTags(formType));
     setSubmittedForm(false);
     hideConditionalFieldsToDefault(conditionals, cEventUser);
+   
 
     !organization && getEventData(eventId);
     form.resetFields();
@@ -268,8 +269,11 @@ const FormRegister = ({
           message.error(textMessage);
         }
       } else {
-        try {         
+        console.log("EVENTO===>",cEvent.value);
+        try {   
+          console.log("EVENTOTRY===>",cEvent.value);      
           let resp = await UsersApi.createOne(snap, cEvent.value?._id);
+         
 
           // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
           // debe desaparecer del listado para que ninguna otra persona la pueda seleccionar
@@ -280,7 +284,7 @@ const FormRegister = ({
           //FIN CAMPO LISTA  tipo justonebyattendee //
 
           //if (resp.status !== 'UPDATED') {
-
+      
           if (resp.data && resp.data.user && resp.data.user.initial_token) {
             setSuccessMessageInRegisterForm(resp.status);
             // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
@@ -299,10 +303,11 @@ const FormRegister = ({
             message.success(intl.formatMessage({ id: 'registration.message.created' }));
 
          
-           
+               
               //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
               //todo el proceso de logueo depende del token en la url por eso se recarga la página
-              if (!event.validateEmail && resp.data.user.initial_token) {
+              console.log("INITIAL TOKEN AND VALID EMAIL",resp.data.user.initial_token,cEvent.value?.validateEmail)
+              if (!cEvent?.value?.validateEmail && resp.data.user.initial_token) {
                 setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
                 setTimeout(function() {
                   window.location.replace(
@@ -316,7 +321,7 @@ const FormRegister = ({
                   );
                 }, 100);
               } else {
-                window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${1}`);
+                window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ?1:4}`);
               }
             
           } else {

@@ -235,8 +235,8 @@ function UsersCard(props) {
     setAvatar(() => {
       return (
         <Badge offset={[-40, 3]} count={podiumValidate()}>
-          <Avatar style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))' }} size={45}>
-            {name && name.charAt(0).toUpperCase()}
+          <Avatar src={imageProfile && imageProfile } style={{ filter: ' drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))' }} size={45}>
+            {!imageProfile && name && name.charAt(0).toUpperCase()}
           </Avatar>
         </Badge>
       );
