@@ -77,7 +77,7 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
                         <img
                           style={{ height: '28vh', objectFit: 'cover' }}
                           alt='example'
-                          src={news && news.image ? news.image : imgNotFound}
+                          src={news && news.picture ? news.picture : imgNotFound}
                         />
                       }
                       actions={[
@@ -101,7 +101,9 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
                 /> */}
                       <Space direction='horizontal'>
                         <CalendarOutlined style={{ fontSize: '15px' }} />
-                        <Row style={{ color: 'rgba(0, 0, 0, 0.6)' }}>{`Fecha publicación: ${news.time}`}</Row>
+                        <Row style={{ color: 'rgba(0, 0, 0, 0.6)' }}>{`Fecha publicación: ${moment(news.time).format(
+                          'YYYY-MM-DD'
+                        )}`}</Row>
                       </Space>
                     </Card>
                   </Badge.Ribbon>
@@ -112,7 +114,7 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
                       <img
                         style={{ height: '28vh', objectFit: 'cover' }}
                         alt='example'
-                        src={news && news.image ? news.image : imgNotFound}
+                        src={news && news.picture ? news.picture : imgNotFound}
                       />
                     }
                     actions={[
@@ -136,7 +138,9 @@ const NoticiasList = ({ setVirtualConference, match, size }) => {
                 /> */}
                     <Space direction='horizontal'>
                       <CalendarOutlined style={{ fontSize: '15px' }} />
-                      <Row style={{ color: 'rgba(0, 0, 0, 0.6)' }}>{`Fecha publicación: ${news.time}`}</Row>
+                      <Row style={{ color: 'rgba(0, 0, 0, 0.6)' }}>{`Fecha publicación: ${moment(news.time).format(
+                        'YYYY-MM-DD'
+                      )}`}</Row>
                     </Space>
                   </Card>
                 )}

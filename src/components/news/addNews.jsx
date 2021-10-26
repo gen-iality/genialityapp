@@ -154,7 +154,7 @@ function AddNews(props) {
               description_short: descriptionShort,
               linkYoutube: noticia.linkYoutube || null,
               image: picture !== null ? picture : null,
-              time: fecha.format('YYYY-DD-MM'),
+              time: moment(noticia.time).format('YYYY-MM-DD'),
             },
             noticia._id,
             props.eventId
@@ -171,7 +171,7 @@ function AddNews(props) {
               description_short: descriptionShort,
               linkYoutube: noticia.linkYoutube || null,
               image: picture !== null ? picture : null,
-              time: fecha.format('YYYY-DD-MM'),
+              time: moment(noticia.time).format('YYYY-MM-DD'),
             },
             props.eventId
           );
