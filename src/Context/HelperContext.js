@@ -78,7 +78,7 @@ export const HelperContextProvider = ({ children }) => {
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [tabLogin, setTabLogin] = useState('1');
-  const [currentActivity, setcurrenActivity] = useState()
+  const [currentActivity, setcurrenActivity] = useState(null)
 
 
   function handleChangeCurrentActivity(activity) {

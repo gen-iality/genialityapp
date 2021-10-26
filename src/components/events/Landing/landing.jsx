@@ -70,7 +70,7 @@ const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
-  let { isNotification, ChangeActiveNotification, typeModal } = useContext(HelperContext);
+  let { isNotification, ChangeActiveNotification, typeModal,currentActivity } = useContext(HelperContext);
   const [register, setRegister] = useState(null);
 
   const ButtonRender = (status, activity) => {
@@ -114,7 +114,6 @@ const Landing = (props) => {
 
   let [generaltabs, setgeneraltabs] = useState(iniitalstatetabs);
   let [totalNewMessages, settotalnewmessages] = useState(0);
-  let { currentActivity, tabs } = props;
 
   useEffect(() => {
     cEventContext.status === 'LOADED' &&
@@ -186,7 +185,7 @@ const Landing = (props) => {
           generalTabs={generaltabs}
           currentActivity={currentActivity}
           totalNewMessages={totalNewMessages}
-          tabs={tabs}
+          tabs={props.tabs}
         />
         <MenuTabletsSocialZone
           totalNewMessages={totalNewMessages}

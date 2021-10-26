@@ -46,6 +46,7 @@ const EventSectionMenuRigth = (props) => {
                 optionselected={optionselected}
                 tab={1}
                 generalTabs={props.generalTabs}
+                currentActivity={props.currentActivity}
               />
             </>
           )}

@@ -6,7 +6,7 @@ import { DolbyCard } from './DolbyCard';
 import ZoomIframe from '../ZoomIframe';
 import { VideoActivity } from './VideoActivity';
 import { Row, Spin } from 'antd';
-import { Ripple } from 'react-preloaders';
+import Game from '../game';
 
 const RenderComponent = (props) => {
   let { currentActivity, chatAttendeChats } = useContext(HelperContext);
@@ -24,7 +24,7 @@ const RenderComponent = (props) => {
     }
   }, [currentActivity]);
 
-  let ComponentRender = <Ripple />;
+  let ComponentRender = <Spin />;
 
   switch (currentActivity?.platform) {
     case 'dolby':

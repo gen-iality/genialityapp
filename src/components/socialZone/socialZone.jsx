@@ -31,7 +31,7 @@ let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages } = useContext(HelperContext);
+  let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages,currentActivity } = useContext(HelperContext);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [busqueda, setBusqueda] = useState(null);
@@ -68,6 +68,10 @@ let SocialZone = function(props) {
   function redirectRegister() {
     history.push(`/landing/${cEvent.value._id}/tickets`);
   }
+
+// console.log("props.currentActivity",props.generalTabs);
+
+
   return (
     <Tabs
       defaultActiveKey='1'
