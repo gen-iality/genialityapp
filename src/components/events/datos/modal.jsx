@@ -280,7 +280,7 @@ class DatosModal extends Component {
           </Form.Item>
           <Form.Item>
             <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Button style={{ marginRight: 20 }} type='primary' htmlType='submit'>
+              <Button style={{ marginRight: 20 }} type='primary' htmlType='submit' id='btnSave'>
                 Guardar
               </Button>
 
