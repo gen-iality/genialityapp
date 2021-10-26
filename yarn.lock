@@ -7748,6 +7748,11 @@ gcs-resumable-upload@^2.2.4:
     pumpify "^2.0.0"
     stream-events "^1.0.4"
 
+gender-detection-from-name@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/gender-detection-from-name/-/gender-detection-from-name-1.6.0.tgz#56a9af5c9e7e7d54ecf127332de3ff776987b09e"
+  integrity sha512-Cff/pZqqgmEM5VEn2kZIdleScCQuLh+ZKSvfkgpopdyerQGnl+gF1gGQTLhsOZLGjogTA8oCSMrXMN4tuJKAmg==
+
 gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"

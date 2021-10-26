@@ -39,6 +39,7 @@ import InfoEvent from '../../shared/infoEvent';
 import ResponsePayu from '../registrationForm/responsePayu';
 import { useParams } from 'react-router-dom';
 import AgendaActividadDetalle from '../AgendaActividadDetalle';
+import MySection from '../newSection';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -207,6 +208,18 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <InformativeSection />
+            )
+          }
+        </Route>
+
+        <Route path={`${path}/my_section`}>
+          {() =>
+            ValidateViewPermissions('informativeSection', 'informativeSection') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <MySection  />
             )
           }
         </Route>

@@ -1,59 +1,82 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { List, Tooltip, Popover, Avatar, Typography, Space, Tag, Image } from 'antd';
-import { EyeOutlined, MessageTwoTone } from '@ant-design/icons';
-import { InitialsNameUser } from '../hooks';
-import PopoverInfoUser from '../hooks/Popover';
+import { List } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
-import { UseCurrentUser } from '../../../Context/userContext';
 import { HelperContext } from '../../../Context/HelperContext';
-import Record from '@2fd/ant-design-icons/lib/Record';
-const AttendeList = function (props) {
+import UsersCard from '../../shared/usersCard';
+
+const AttendeList = function(props) {
   //contextos
-  let cUser = UseCurrentUser();
-  let [ myattendelist, setmyattendelist ] = useState();
-  let [ loading, setLoading ] = useState(false);
-  let [ page, setPage ] = useState(0);
-  let [ filteredlist, setfilteredlist ] = useState([]);
-  let [ hasMore, setHasMore ] = useState(true);
+  let [myattendelist, setmyattendelist] = useState();
+  let [loading, setLoading] = useState(false);
+  let [page, setPage] = useState(0);
+  let [filteredlist, setfilteredlist] = useState([]);
+  let [hasMore, setHasMore] = useState(true);
   let {
-    createNewOneToOneChat,
     attendeeListPresence,
     attendeeList,
-    HandleChatOrAttende,
-    HandlePublicPrivate,
     imageforDefaultProfile,
+    knowMaleOrFemale,
+    maleIcons,
+    femaleicons,
   } = useContext(HelperContext);
   const pag = 15;
+
+  function whatGenderIs(gender) {
+    // console.log('gender', gender);
+    const ramdonicon = Math.floor(Math.random() * femaleicons.length);
+    const ramdoniconmale = Math.floor(Math.random() * maleIcons.length);
+    return gender == 'male'
+      ? maleIcons[ramdoniconmale]
+      : gender == 'female'
+      ? femaleicons[ramdonicon]
+      : gender == 'unknown' && imageforDefaultProfile;
+  }
 
   useEffect(() => {
     let ordenadousers = [];
 
     Object.keys(attendeeList).map((key) => {
-      let mihijo = {
-        uid: attendeeList[ key ].user !== null && attendeeList[ key ].user.uid,
-        idattendpresence: key,
-        iduser: attendeeList[ key ].account_id,
-        name: attendeeList[ key ].properties.name,
-        names: attendeeList[ key ].properties.names,
-        status: attendeeListPresence[ key ] ? attendeeListPresence[ key ].state : 'offline',
-        email: attendeeList[ key ].properties.email,
-        properties: attendeeList[ key ].properties,
-        _id: attendeeList[ key ]._id,
-        imageProfile: attendeeList[ key ].user?.picture ? attendeeList[ key ].user?.picture : imageforDefaultProfile,
-      };
+      if (attendeeListPresence[key]) {
+        let attendeProfile = {
+          uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
+          idattendpresence: key,
+          iduser: attendeeList[key].account_id,
+          name: attendeeList[key].properties.name,
+          names: attendeeList[key].properties.names,
+          status: attendeeListPresence[key]
+            ? attendeeListPresence[key].state
+            : attendeeListPresence[key].last_changed
+            ? attendeeListPresence[key].last_changed
+            : 'offline',
+          email: attendeeList[key].properties.email,
+          properties: attendeeList[key].properties,
+          _id: attendeeList[key]._id,
+          imageProfile: attendeeList[key].properties.picture
+            ? attendeeList[key].properties.picture
+            : whatGenderIs(
+                knowMaleOrFemale(attendeeList[key].properties.names && attendeeList[key].properties.names.split(' ')[0])
+              ),
 
-      if (mihijo.status === 'online') {
-        ordenadousers.unshift(mihijo);
-      } else if (mihijo.status === 'offline') {
-        ordenadousers.push(mihijo);
+
+        };
+
+        // console.log("attendeeList[key].properties.picture",attendeeList[key].properties.picture)
+
+        if (attendeProfile.status === 'online') {
+          ordenadousers.unshift(attendeProfile);
+        } else if (attendeProfile.status === 'offline') {
+          ordenadousers.push(attendeProfile);
+        }
       }
+
+      // imageProfile
     });
 
     setmyattendelist(ordenadousers);
 
     setfilteredlist(ordenadousers.slice(0, pag));
     setPage(1);
-  }, [ attendeeListPresence, attendeeList ]);
+  }, [attendeeListPresence, attendeeList]);
 
   useEffect(() => {
     if (props.busqueda == undefined || props.busqueda == '') {
@@ -61,7 +84,7 @@ const AttendeList = function (props) {
     } else {
       setfilteredlist(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
     }
-  }, [ props.busqueda ]);
+  }, [props.busqueda]);
 
   const handleInfiniteOnLoad = () => {
     setLoading(true);
@@ -109,71 +132,7 @@ const AttendeList = function (props) {
       <List
         itemLayout='horizontal'
         dataSource={filteredlist && filteredlist}
-        renderItem={(item) => (
-          <List.Item
-            style={styleListAttende}
-            actions={[
-              cUser.value ? (
-                <a
-                  key='list-loadmore-edit'
-                  onClick={() => {
-                    createNewOneToOneChat(
-                      cUser.value.uid,
-                      cUser.value.names || cUser.value.name,
-                      item.uid,
-                      item.names || item.name,
-                      item.imageProfile
-                    );
-                    HandleChatOrAttende('1');
-                    HandlePublicPrivate('private');
-                  }}>
-                  <Tooltip title={'Chatear'}>
-                    <MessageTwoTone style={{ fontSize: '27px' }} />
-                  </Tooltip>
-                </a>
-              ) : null,
-            ]}>
-            <List.Item.Meta
-
-              avatar={
-                <Avatar src={<Image src={item.imageProfile} preview={{ mask: <EyeOutlined /> }} />} size={45}>
-                  {!item.imageProfile && item.names ? item.names.charAt(0).toUpperCase() : item.names}
-                </Avatar>
-              }
-              title={
-                <Popover
-                  trigger='hover'
-
-                  placement='leftTop'
-                  content={<PopoverInfoUser item={item} props={props} />}>
-                  <Typography.Paragraph
-                    ellipsis={{ rows: 2 }}
-                    style={{
-                      color: 'black',
-                      cursor: 'pointer',
-                      width: '85%',
-                      fontSize: '15px',
-                      whiteSpace: 'break-spaces'
-                    }}
-                    key='list-loadmore-edit'>
-                    {item.names}
-                  </Typography.Paragraph>
-                </Popover>
-              }
-              description={
-                item.status === 'online' ? (
-                  <div style={{ color: '#52c41a', marginTop: '-10px' }}>
-                    <Tag color='#52C41A'>En linea</Tag>
-                  </div>
-                ) : (
-                  <div style={{ color: '#52c41a', marginTop: '-10px' }}>
-                    <Tag color='#CCCCCC'>Offline</Tag>
-                  </div>
-                )
-              }
-            />
-          </List.Item>
-        )}></List>
+        renderItem={(item) => <UsersCard type='attendees' item={item} propsAttendees={props} />}></List>
     </InfiniteScroll>
   );
 };

@@ -410,3 +410,7 @@ export const host_list= [
     host_name: 'host5@evius.co'
   }
 ];
+
+export const activitiesCode=["6172f2b78794bf51952c74f3","6172f2548794bf51952c74f2","61732b4cfbe4ff412315beb6","6172f380c5c23b745b6a3905"];
+export const cityValid=["medellin","Medellin","medellín","Medellín"];
+export const codeActivity=["EDC21CF110","EDC21IPH","EDC21MID7","EDC21CV48","1EDC21OFF","1EDC50OF21"]
