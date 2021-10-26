@@ -99,12 +99,12 @@ const Table = (props) => {
     },
   };
 
-  if(list) {
+  if (list) {
     list.map((list, index) => {
-      if(!list.index) {
+      if (!list.index) {
         list.index = index;
       }
-    })
+    });
   }
 
   if (actions) {

@@ -95,6 +95,7 @@ function AddProduct(props) {
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
       Axios.all(uploaders).then(() => {
+        console.log('PATH===>', path[0]);
         option === 'Imagen' ? setPicture(path[0]) : setOptionalPicture(path[0]);
         option === 'Imagen' ? setImgFile(null) : setImgFileOptional(null);
 
@@ -270,101 +271,97 @@ function AddProduct(props) {
               onChange={(e) => changeInput(e, 'price')}
             />{' '}
           </Form.Item>
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }} className='label'>
-                Imagen <label style={{ color: 'red' }}>*</label>
-              </label>
-            }>
-            <ImageInput
-              width={1080}
-              height={1080}
-              picture={picture}
-              imageFile={imageFile}
-              divClass={'drop-img'}
-              content={<img src={picture} alt={'Imagen Perfil'} />}
-              classDrop={'dropzone'}
-              contentDrop={
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                  }}
-                  className={`button is-primary is-inverted is-outlined ${imageFile ? 'is-loading' : ''}`}>
-                  Cambiar foto
-                </button>
-              }
-              contentZone={
-                <div className='has-text-grey has-text-weight-bold has-text-centered'>
-                  <span>Subir foto</span>
-                  <br />
-                  <small>(Tamaño recomendado: 1280px x 960px)</small>
-                </div>
-              }
-              changeImg={(file) => changeImg(file, 'Imagen')}
-              errImg={errImg}
-              style={{
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative',
-                height: '200px',
-                width: '100%',
-                borderWidth: 2,
-                borderColor: '#b5b5b5',
-                borderStyle: 'dashed',
-                borderRadius: 10,
-              }}
-            />
-            {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
-          </Form.Item>
-          <Form.Item
-            label={
-              <label style={{ marginTop: '2%' }} className='label'>
-                Imagen opcional
-              </label>
-            }>
-            <ImageInput
-              width={1080}
-              height={1080}
-              picture={optionalPicture}
-              imageFile={imageFileOptional}
-              divClass={'drop-img'}
-              content={<img src={optionalPicture} alt={'Imagen Perfil'} />}
-              classDrop={'dropzone'}
-              contentDrop={
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                  }}
-                  className={`button is-primary is-inverted is-outlined ${imageFileOptional ? 'is-loading' : ''}`}>
-                  Cambiar foto
-                </button>
-              }
-              contentZone={
-                <div className='has-text-grey has-text-weight-bold has-text-centered'>
-                  <span>Subir foto</span>
-                  <br />
-                  <small>(Tamaño recomendado: 1280px x 960px)</small>
-                </div>
-              }
-              changeImg={(file) => changeImg(file, 'Imagen opcional')}
-              errImg={errImg}
-              style={{
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative',
-                height: '200px',
-                width: '100%',
-                borderWidth: 2,
-                borderColor: '#b5b5b5',
-                borderStyle: 'dashed',
-                borderRadius: 10,
-              }}
-            />
-          </Form.Item>
+
+          <label style={{ marginTop: '2%' }} className='label'>
+            Imagen <label style={{ color: 'red' }}>*</label>
+          </label>
+
+          <ImageInput
+            width={1080}
+            height={1080}
+            picture={picture}
+            imageFile={imageFile}
+            divClass={'drop-img'}
+            content={<img src={picture} alt={'Imagen Perfil'} />}
+            classDrop={'dropzone'}
+            contentDrop={
+              <button
+                onClick={(e) => {
+                  // e.preventDefault();
+                }}
+                className={`button is-primary is-inverted is-outlined ${imageFile ? 'is-loading' : ''}`}>
+                Cambiar foto
+              </button>
+            }
+            contentZone={
+              <div className='has-text-grey has-text-weight-bold has-text-centered'>
+                <span>Subir foto</span>
+                <br />
+                <small>(Tamaño recomendado: 1280px x 960px)</small>
+              </div>
+            }
+            changeImg={(file) => changeImg(file, 'Imagen')}
+            errImg={errImg}
+            style={{
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              height: '200px',
+              width: '100%',
+              borderWidth: 2,
+              borderColor: '#b5b5b5',
+              borderStyle: 'dashed',
+              borderRadius: 10,
+            }}
+          />
+          {error != null && error.picture && <small style={{ color: 'red' }}>La imagen es requerida</small>}
+
+          <label style={{ marginTop: '2%' }} className='label'>
+            Imagen opcional
+          </label>
+
+          <ImageInput
+            width={1080}
+            height={1080}
+            picture={optionalPicture}
+            imageFile={imageFileOptional}
+            divClass={'drop-img'}
+            content={<img src={optionalPicture} alt={'Imagen Perfil'} />}
+            classDrop={'dropzone'}
+            contentDrop={
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+                className={`button is-primary is-inverted is-outlined ${imageFileOptional ? 'is-loading' : ''}`}>
+                Cambiar foto
+              </button>
+            }
+            contentZone={
+              <div className='has-text-grey has-text-weight-bold has-text-centered'>
+                <span>Subir foto</span>
+                <br />
+                <small>(Tamaño recomendado: 1280px x 960px)</small>
+              </div>
+            }
+            changeImg={(file) => changeImg(file, 'Imagen opcional')}
+            errImg={errImg}
+            style={{
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              height: '200px',
+              width: '100%',
+              borderWidth: 2,
+              borderColor: '#b5b5b5',
+              borderStyle: 'dashed',
+              borderRadius: 10,
+            }}
+          />
         </Col>
       </Row>
     </Form>

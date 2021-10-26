@@ -372,11 +372,14 @@ class ListEventUser extends Component {
                   if (key.type == 'avatar') {
                     updatedAttendees[i][key.name] = updatedAttendees[i].picture || imgNotFound;
                   } else {
-                    updatedAttendees[i][key.name] = Array.isArray(updatedAttendees[i]['properties'][key.name])
-                      ? updatedAttendees[i]['properties'][key.name][0]
-                      : updatedAttendees[i]['properties'][key.name];
-                    updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] =
-                      self.props.event._id == '60c8affc0b4f4b417d252b29' ? 'SI' : '';
+                    if (updatedAttendees[i][key.name]) {
+                      updatedAttendees[i][key.name] =
+                        updatedAttendees[i] && Array.isArray(updatedAttendees[i]['properties'][key.name])
+                          ? updatedAttendees[i]['properties'][key.name][0]
+                          : updatedAttendees[i]['properties'][key.name];
+                      updatedAttendees[i]['textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio'] =
+                        self.props.event._id == '60c8affc0b4f4b417d252b29' ? 'SI' : '';
+                    }
                   }
                 }
               }
