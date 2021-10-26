@@ -1,17 +1,19 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, createRef, Fragment } from 'react';
 import { typeInputs } from '../../../helpers/constants';
 import CreatableSelect from 'react-select/lib/Creatable';
-import { Checkbox, Form, Input, Radio, Select, InputNumber, Button } from 'antd';
+import { Checkbox, Form, Input, Radio, Select, InputNumber, Button, Row } from 'antd';
 
 const html = document.querySelector('html');
 const formLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 const { Option } = Select;
 const { TextArea } = Input;
 
 class DatosModal extends Component {
+  formRef = createRef();
+
   constructor(props) {
     super(props);
     this.state = {
@@ -32,7 +34,8 @@ class DatosModal extends Component {
 
   componentDidMount() {
     html.classList.add('is-clipped');
-    if (this.props.edit) this.setState({ info: this.props.info }, this.validForm);
+    if (this.props.info) this.setState({ info: this.props.info });
+    console.log('INFO RECIBIDA==>', this.props.info);
   }
 
   generateFieldNameForLabel(name, value) {
@@ -45,17 +48,21 @@ class DatosModal extends Component {
 
   handleChange = (e) => {
     let { name, value } = e.target;
+
     let tmpInfo = { ...this.state.info };
 
     //Generamos el nombre del campo para la base de datos(name) a partir del  label solo si el campo se esta creando
-    if (name === 'label' && !this.state.info._id) {
-      console.log('NAME==>', name, value);
+    if (name == 'label' && this.state.info._id == undefined) {
       if (tmpInfo['name'] !== 'names' && tmpInfo['name'] !== 'email' && tmpInfo['name'] !== 'picture') {
         tmpInfo['name'] = this.generateFieldNameForLabel(name, value);
+        this.formRef.current.setFieldsValue({
+          name: tmpInfo['name'],
+        });
       }
     }
     tmpInfo[name] = value;
-    this.setState({ info: tmpInfo }, this.validForm);
+    console.log('VALUE SELECT===>', value);
+    this.setState({ info: tmpInfo });
   };
 
   validForm = () => {
@@ -98,6 +105,7 @@ class DatosModal extends Component {
   //Funciones para lista de opciones del campo
   handleInputChange = (inputValue) => {
     this.setState({ inputValue });
+    console.log('INPUTVALUE==>', inputValue);
   };
 
   changeOption = (option) => {
@@ -111,10 +119,10 @@ class DatosModal extends Component {
     switch (event.keyCode) {
       case 9:
       case 13:
-        this.setState(
-          { inputValue: '', info: { ...this.state.info, options: [...this.state.info.options, createOption(value)] } },
-          this.validForm
-        );
+        this.setState({
+          inputValue: '',
+          info: { ...this.state.info, options: [...(this.state.info?.options || []), createOption(value)] },
+        });
         event.preventDefault();
         break;
       // eslint-disable-next-line no-empty
@@ -124,12 +132,18 @@ class DatosModal extends Component {
   };
 
   //Guardar campo en el evento
-  saveField = () => {
+  saveField = async (values) => {
     html.classList.remove('is-clipped');
     const info = Object.assign({}, this.state.info);
     info.name = toCapitalizeLower(info.name);
+    values.mandatory = info?.mandatory;
+    values.options = info?.options;
+    values.visibleByAdmin = info?.visibleByAdmin;
+    values.visibleByContacts = info.visibleByContacts;
+    values.description = info.description;
+    console.log('INFO==>', values);
     if (info.type !== 'list' && info.type !== 'multiplelist') delete info.options;
-    this.props.action(info, this.state.event?._id);
+    await this.props.action(values, this.state.event?._id);
     const initModal = {
       name: '',
       mandatory: false,
@@ -146,124 +160,137 @@ class DatosModal extends Component {
   render() {
     const { inputValue, info, valid } = this.state;
     const { edit } = this.props;
+
     return (
       <Fragment>
         {/* <section className='modal-card-body'> */}
-          <Form
-            onFinish={this.saveField}
-            {...formLayout}
-          >
-            <Form.Item label={'Nombre Campo'}>
-              <Input
-                name={'label'}
-                type='text'
-                placeholder={'Ej: Celular'}
-                value={info.label}
-                onChange={this.handleChange}
-              />
-            </Form.Item>
-            <Form.Item>
-              <Input
-                name={'name'}
-                type='text'
-                placeholder={'Nombre del campo en base de datos'}
-                value={info.name}
-                disabled={true}
-                onChange={this.handleChange}
-              />
-            </Form.Item>
-            <Form.Item label={'Posición Nombre del Campo'}>
-              <Radio.Group onChange={this.handleChange} value={info.labelPosition} name={'labelPosition'}>
-                <Radio value={'arriba'} checked={info.labelPosition === 'arriba' || !info.labelPosition}>Arriba &nbsp;</Radio>
-                <Radio value={'izquierda'} checked={info.labelPosition === 'izquierda'}>Izquierda &nbsp;</Radio>
-                <Radio value={'derecha'} checked={info.labelPosition === 'derecha'}>Derecha &nbsp;</Radio>
-              </Radio.Group>
-            </Form.Item>
-            <Form.Item label={'Tipo de dato'}>
-              <Select
-                disabled={info.name === 'picture' || info.name == 'email' || info.name == 'names' ? true : false}
-                onChange={this.handleChange}
-                name={'type'}
-                value={info.type}
-              >
-                <Option value={''}>Seleccione...</Option>
-                {typeInputs.map((type, key) => {
-                  return (
-                    <Option key={key} value={type.value}>
-                      {type.label}
-                    </Option>
-                  );
-                })}
-              </Select>
-              {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
-                <div className='control'>
-                  <CreatableSelect
-                    components={{ DropdownIndicator: null }}
-                    inputValue={inputValue}
-                    isClearable
-                    isMulti
-                    menuIsOpen={false}
-                    onChange={this.changeOption}
-                    onInputChange={this.handleInputChange}
-                    onKeyDown={(e) => {
-                      this.handleKeyDown(e);
-                    }}
-                    placeholder='Escribe la opción y presiona Enter o Tab...x'
-                    value={info.options}
-                    //required={true}
-                  />
-                  <Checkbox
-                    name={`justonebyattendee`}
-                    checked={info.justonebyattendee}
-                    onChange={this.changeFieldjustonebyattendee}>
-                    Solo una opción por usuario (cuando un asistente selecciona una opción esta desaparece del listado)
-                  </Checkbox>
-                </div>
-              )}
-            </Form.Item>
-            <Form.Item label={'Obligatorio'} htmlFor={`mandatoryModal`}>
+        <Form initialValues={this.props.info} ref={this.formRef} onFinish={this.saveField} {...formLayout}>
+          <Form.Item
+            initialValue={this.props.info?.label}
+            //value={info?.label + 'h' || 'value'}
+            label={'Nombre Campo'}
+            name={'label'}
+            rules={[{ required: true }]}>
+            <Input name='label' type='text' placeholder={'Ej: Celular'} onChange={this.handleChange} />
+          </Form.Item>
+          <Form.Item name='name' initialValue={this.props.info?.name}>
+            <Input
+              type='text'
+              placeholder={'Nombre del campo en base de datos'}
+              disabled={true}
+              //onChange={this.handleChange}
+            />
+          </Form.Item>
+          <Form.Item label={'Posición Nombre del Campo'} name='labelPosition'>
+            <Radio.Group onChange={this.handleChange} value={info.labelPosition} name={'labelPosition'}>
+              <Radio value={'arriba'} checked={info.labelPosition === 'arriba' || !info.labelPosition}>
+                Arriba &nbsp;
+              </Radio>
+              <Radio value={'izquierda'} checked={info.labelPosition === 'izquierda'}>
+                Izquierda &nbsp;
+              </Radio>
+              <Radio value={'derecha'} checked={info.labelPosition === 'derecha'}>
+                Derecha &nbsp;
+              </Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            initialValue={info?.type}
+            label={'Tipo de dato'}
+            name='type'
+            rules={[{ required: true, message: 'Seleccione un tipo de dato válido' }]}>
+            <Select
+              options={typeInputs}
+              disabled={info.name === 'picture' || info.name == 'email' || info.name == 'names' ? true : false}
+              onChange={(value) => this.handleChange({ target: { name: 'type', value: value } })}></Select>
+          </Form.Item>
+
+          {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
+            <CreatableSelect
+              components={{ DropdownIndicator: null }}
+              inputValue={inputValue}
+              isClearable
+              isMulti
+              menuIsOpen={false}
+              onChange={this.changeOption}
+              onInputChange={this.handleInputChange}
+              onKeyDown={(e) => {
+                this.handleKeyDown(e);
+              }}
+              placeholder='Escribe la opción y presiona Enter o Tab...x'
+              value={info?.options}
+              //required={true}
+            />
+          )}
+
+          {(info.type === 'list' || info.type === 'multiplelist' || info.type === 'multiplelisttable') && (
+            <Form.Item name='justonebyattendee'>
               <Checkbox
-                id={`mandatoryModal`}
-                name={`mandatory`}
-                checked={info.mandatory}
-                onChange={this.changeFieldCheck}
-              />
+                name={`justonebyattendee`}
+                checked={info.justonebyattendee}
+                onChange={this.changeFieldjustonebyattendee}>
+                Solo una opción por usuario (cuando un asistente selecciona una opción esta desaparece del listado)
+              </Checkbox>
             </Form.Item>
-            <Form.Item label={'Visible para Contactos'} htmlFor={`visibleByContactsModal`}>
-              <Checkbox 
-                id={`visibleByContactsModal`}
-                name={`visibleByContacts`}
-                checked={info.visibleByContacts}
-                onChange={this.changeFieldCheckVisibleByContacts}
-              />
-            </Form.Item>
-            <Form.Item label={'Visible para Admin'} htmlFor={`visibleByAdminModal`}>
-              <Checkbox
-                id={`visibleByAdminModal`}
-                name={`visibleByAdmin`}
-                checked={info.visibleByAdmin}
-                onChange={this.changeFieldCheckVisibleByAdmin}
-              />
-            </Form.Item>
-            <Form.Item label={'Descripción'}>
-              <TextArea 
-                placeholder={'Descripción corta'}
-                name={'description'}
-                value={info.description || ''}
-                onChange={this.handleChange}
-              />
-            </Form.Item>
-            <Form.Item label={'Posición / Orden'}>
-              <InputNumber
-                min={0}
-                name={'order_weight'}
-                placeholder='1'
-                value={info.order_weight}
-                onChange={this.handleChange}
-              />
-            </Form.Item>
-          </Form>
-          {/* <div className='field'>
+          )}
+          <Form.Item
+            label={'Obligatorio'}
+            initialValue={info.mandatory || false}
+            htmlFor={`mandatoryModal`}
+            name='mandatory'>
+            <Checkbox
+              id={`mandatoryModal`}
+              //name={`mandatory`}
+              checked={info.mandatory}
+              onChange={this.changeFieldCheck}
+            />
+          </Form.Item>
+          <Form.Item label={'Visible para Contactos'} htmlFor={`visibleByContactsModal`} name='visibleByContacts'>
+            <Checkbox
+              id={`visibleByContactsModal`}
+              name={`visibleByContacts`}
+              checked={info?.visibleByContacts}
+              onChange={this.changeFieldCheckVisibleByContacts}
+            />
+          </Form.Item>
+          <Form.Item label={'Visible para Admin'} htmlFor={`visibleByAdminModal`} name='visibleByAdmin'>
+            <Checkbox
+              id={`visibleByAdminModal`}
+              name={`visibleByAdmin`}
+              checked={info.visibleByAdmin}
+              onChange={this.changeFieldCheckVisibleByAdmin}
+            />
+          </Form.Item>
+          <Form.Item label={'Descripción'} name='description'>
+            <TextArea
+              placeholder={'Descripción corta'}
+              name={'description'}
+              value={info.description || ''}
+              onChange={this.handleChange}
+            />
+          </Form.Item>
+          <Form.Item label={'Posición / Orden'} name='order_weight'>
+            <InputNumber
+              min={0}
+              name={'order_weight'}
+              placeholder='1'
+              value={info.order_weight}
+              onChange={(value) => this.handleChange({ target: { name: 'order_weight', value: value } })}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Row style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Button style={{ marginRight: 20 }} type='primary' htmlType='submit'>
+                Guardar
+              </Button>
+
+              <Button onClick={() => this.props.cancel()} type='default' tmlType='button'>
+                Cancelar
+              </Button>
+            </Row>
+          </Form.Item>
+        </Form>
+        {/* <div className='field'>
             <label className='label required has-text-grey-light'>Nombre Campo </label>
             <div className='control'>
               <input

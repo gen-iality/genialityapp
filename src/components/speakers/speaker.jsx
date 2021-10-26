@@ -326,7 +326,7 @@ function Speaker(props) {
             </Card>
           </Form.Item>
 
-          {event && event?.organizer?.type_event == 'Misión' && (
+          {event && event?.organizer?.type_event == 'Misiones' && (
             <Form.Item label={'Teléfono'} name={'phone'}>
               <Input
                 addonBefore={prefixSelector}
