@@ -10,34 +10,19 @@ const formLayout = {
   wrapperCol: { span: 24 },
 };
 const { Option } = Select;
+const { TextArea } = Input;
 
 function OrganizationInformation(props) {
   let { name, description, _id: organizationId, type_event } = props.org;
   const [typeEvents, setTypeEvents] = useState([]);
 
   async function updateOrganization(values) {
-    const { name, description, typevent } = values.organization;
-    const body = {
-      name,
-      description,
-      type_event: typevent,
-    };
-    try {
-      await OrganizationApi.editOne(body, organizationId);
-      message.success('Información actualizada correctamente');
-    } catch (error) {
-      message.error('No se pudo actualizar la información');
-    }
-  }
-
-  async function updateOrganization(values) {
     const { name, description, type_event } = values.organization;
     const body = {
       name,
       description,
-      type_event,
+      type_event: type_event,
     };
-    console.log('BODY==>', body);
     try {
       await OrganizationApi.editOne(body, organizationId);
       message.success('Información actualizada correctamente');

@@ -439,10 +439,11 @@ class Styles extends Component {
       type: 'loading',
       content: <> Por favor espere..</>,
     });
-    if (e !== undefined) {
+    /* if (e !== undefined ) {
+      console.log(e);
       e.preventDefault();
       e.stopPropagation();
-    }
+    } */
     let info
     const { eventId } = this.state;
     const thereIsAnOrganization = this.props.org?._id
@@ -546,9 +547,11 @@ class Styles extends Component {
       : null;
   }
 
-  handleChange(e) {
-    let name = e.target.name;
-    let value = e.target.value;
+  handleChange(e, name) {
+    console.log(e, name);
+    /* let name = e.target.name; */
+    /* let value = e.target.value; */
+    let value = e;
 
     let styles = { ...this.state.styles };
     styles[name] = value;
@@ -568,7 +571,7 @@ class Styles extends Component {
     return (
       <React.Fragment>
         <Form
-          onFinish={this.submit}
+          onFinish={(e) => this.submit(e)}
           {...formLayout}
         >
           <Header 
@@ -625,7 +628,7 @@ class Styles extends Component {
 
                   <Form.Item label={item.title} onClick={() => this.handleClickSelectColor(key)}>
                     {item.description && <label className='label has-text-grey-light'>{item.description}</label>}
-                    <Tag style={{ width: '20%' }} color={this.state.styles[item.fieldColorName]}>
+                    <Tag style={{ width: '20%', borderColor: 'gray' }} color={this.state.styles[item.fieldColorName]} >
                       {this.state.styles[item.fieldColorName]}
                     </Tag>
                   </Form.Item>
@@ -636,10 +639,10 @@ class Styles extends Component {
                 <div key={key}>
                   <Form.Item label={item.label}>
                     <Select
-                      defaultValue={item.defaultValue}
+                      /* defaultValue={item.defaultValue} */
                       value={this.state.styles[item.name]}
                       name={item.name}
-                      onChange={(e) => this.handleChange(e)}
+                      onChange={(e) => this.handleChange(e, item.name)}
                       style={{ width: 120 }}
                     >
                       {item.options.map((item2, key) => (
