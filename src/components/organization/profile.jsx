@@ -10,6 +10,7 @@ const formLayout = {
    wrapperCol: { span: 24 }
 };
 const { Option } = Select;
+const { TextArea } = Input;
 
 function OrganizationInformation(props) {
   let { name, description, _id: organizationId, type_event } = props.org;
@@ -58,20 +59,31 @@ function OrganizationInformation(props) {
 
             <Row justify='center' gutter={[8, 8]} wrap>
                <Col span={12}>
-                  <Form.Item name={['organization', 'name']} label='Nombre' initialValue={name}>
-                     <Input />
+                  <Form.Item /* name={['organization', 'name']} */ label='Nombre' /* initialValue={name} */ >
+                     <Input 
+                        name={'name'}
+                        value={name}
+                     />
                   </Form.Item>
-                  <Form.Item name={['organization', 'description']} label='Descripción' initialValue={description}>
-                     <Input.TextArea />
+                  <Form.Item /* name={['organization', 'description']} */ label='Descripción' /* initialValue={description} */>
+                     <TextArea 
+                        name={'description'}
+                        value={description}
+                        id={'description'}
+                     />
                   </Form.Item>
                   <Form.Item
                      label='Tipo de eventos'
-                     initialValue={type_event || 'onlineEvent'}
-                     name={['organization', 'typevent']}>
-                     <Select onChange={null}>
+                     /* initialValue={type_event || 'onlineEvent'}
+                     name={['organization', 'typevent']} */>
+                     <Select 
+                        onChange={null}
+                        value={type_event || 'onlineEvent'}
+                        name={'typevent'}
+                     >
                      {' '}
-                     <Option value='physicalEvent'>Evento físico</Option>
-                     <Option value='onlineEvent'>Evento virtual</Option>
+                        <Option value='physicalEvent'>Evento físico</Option>
+                        <Option value='onlineEvent'>Evento virtual</Option>
                      </Select>
                   </Form.Item>
                </Col>
