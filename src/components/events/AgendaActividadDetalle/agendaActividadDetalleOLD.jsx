@@ -75,10 +75,13 @@ let AgendaActividadDetalle = (props) => {
   const [names, setNames] = useState(null);
   const [email, setEmail] = useState(null);
   const [currentActivity, setcurrentActivity] = useState(null);
-  const [blockActivity, setblockActivity] = useState(false);
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
   let history = useHistory();
-  let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth, chatAttendeChats } = useContext(HelperContext);
+  let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth, chatAttendeChats, theUserHasPlayed } = useContext(
+    HelperContext
+  );
+  const [blockActivity, setblockActivity] = useState(false);
+
 
   const configfast = useState({});
 
@@ -602,7 +605,9 @@ let AgendaActividadDetalle = (props) => {
                           {(platform === 'zoom' || platform === 'vimeo') && chatAttendeChats !== '4' ? (
                             <ZoomIframe platform={platform} meeting_id={meeting_id} generalTabs={props.tabs} />
                           ) : (
-                            <> {chatAttendeChats === '4' && <Game />}</>
+                            <>  {chatAttendeChats === "4" &&
+                            <Game openOtherGame={props.cEvent?.value?.openOtherGame} theUserHasPlayed={theUserHasPlayed} cEvent={props.cEvent.value} />}
+                            </>
                           )}
                           <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
                         </>

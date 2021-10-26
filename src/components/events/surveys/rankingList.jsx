@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Avatar, Divider, List, Skeleton } from 'antd';
-import { UseEventContext} from '../../../Context/eventContext'
+import { UseEventContext } from '../../../Context/eventContext'
+import moment from 'moment'
 import { UseCurrentUser } from "../../../Context/userContext"
 import UsersCard from '../../shared/usersCard'
 export default function RankingList({ data }) {
@@ -11,6 +12,7 @@ export default function RankingList({ data }) {
 
   const [list, setList] = useState([]);
   const [loading, setloading] = useState(false)
+
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
 
@@ -38,7 +40,6 @@ export default function RankingList({ data }) {
     height: '6vh',
   };
 
-
   return (
     <div style={{ marginTop: 20, width: '100%', }}
     >
@@ -54,19 +55,18 @@ export default function RankingList({ data }) {
           itemLayout="horizontal"
           dataSource={data}
           renderItem={(item, key) => (
-            <UsersCard type='ranking' item={item} position={key}/>
-            // <List.Item
-            //   style={styleListPlayer}
-            //   actions={[ <a key="list-loadmore-edit"> {item.score} Puntos </a>, ]}
-            // >
-            //   <Skeleton avatar title={false} loading={loading} active>
-            //     <List.Item.Meta
-            //       avatar={<Avatar>
-            //         {key + 1}</Avatar>}
-            //       title={<a style={{ fontWeight: '500', fontSize: '14px', }} href="#">{formatName(item.name)}</a>}
-            //     />
-            //   </Skeleton>
-            // </List.Item>
+            <List.Item
+              style={styleListPlayer}
+              actions={[<><a key="list-loadmore-edit"> {cEvent.value.scoreType === 'time' ? moment(item.score * 1000).format('mm:ss:SS') : item.score} {cEvent.value.scoreType !== 'time' && 'Puntos'} </a>{cEvent.value.scoreType === 'time' && <div style={{marginTop:-10}}> <small>min : seg : ms</small></div>}</>]}
+            >
+              <Skeleton avatar title={false} loading={loading} active>
+                <List.Item.Meta
+                  avatar={<Avatar>
+                    {key + 1}</Avatar>}
+                  title={<a style={{ fontWeight: '500', fontSize: '14px', }} href="#">{formatName(item.name)}</a>}
+                />
+              </Skeleton>
+            </List.Item>
           )}
         />
 
