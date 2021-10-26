@@ -8,7 +8,14 @@ import DatosModal from './modal';
 import Dialog from '../../modal/twoAction';
 import { Tabs, Table, Checkbox, notification, Button, Select, Radio, Row, Col, Tooltip, Modal, message } from 'antd';
 import RelationField from './relationshipFields';
-import { EditOutlined, DeleteOutlined, DragOutlined, SaveOutlined, PlusCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import {
+  EditOutlined,
+  DeleteOutlined,
+  DragOutlined,
+  SaveOutlined,
+  PlusCircleOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import CMS from '../../newComponent/CMS';
@@ -48,6 +55,7 @@ class Datos extends Component {
 
   async componentDidMount() {
     await this.fetchFields();
+    console.log('PROPS===>', this.props);
   }
   updateTable(fields) {
     let fieldsorder = this.orderFieldsByWeight(fields);
@@ -162,8 +170,37 @@ class Datos extends Component {
   editField = (info) => {
     this.setState({ info, modal: true, edit: true });
   };
+
+  onHandlerRemove = async (loading, item) => {
+    try {
+      const organizationId = this.organization?._id;
+      if (organizationId) {
+        await this.props.deleteField(item, this.state.isEditTemplate, this.updateTable);
+      } else {
+        await EventFieldsApi.deleteOne(item, this.eventID);
+      }
+      message.destroy(loading.key);
+      message.open({
+        type: 'success',
+        content: <> Se eliminó la información correctamente!</>,
+      });
+      await this.fetchFields();
+    } catch (e) {
+      console.log('EXCEPTION==>', e);
+      message.destroy(loading.key);
+      message.open({
+        type: 'error',
+        content: { e },
+      });
+    }
+  };
+
+  closeModal2 = () => {
+    this.setState({ info: {}, modal: false, edit: false });
+  };
   //Borrar dato de la lista
-  removeField = async () => {
+  removeField = async (item) => {
+    let self = this;
     const loading = message.open({
       key: 'loading',
       type: 'loading',
@@ -177,31 +214,9 @@ class Datos extends Component {
       okType: 'danger',
       cancelText: 'Cancelar',
       onOk() {
-        const onHandlerRemove = async () => {
-          try {
-            const organizationId = this?.organization?._id;
-            if (organizationId) {
-              await this.props.deleteField(this.state.deleteModal, this.state.isEditTemplate, this.updateTable);
-            } else {
-              await EventFieldsApi.deleteOne(this.state.deleteModal, this.eventID);
-            }
-            message.destroy(loading.key);
-            message.open({
-              type: 'success',
-              content: <> Se eliminó la información correctamente!</>,
-            });
-            await this.fetchFields();
-          } catch (e) {
-            message.destroy(loading.key);
-            message.open({
-              type: 'error',
-              content: this.showError(e),
-            });
-          }
-        }
-        onHandlerRemove();
-      }
-    })
+        self.onHandlerRemove(loading, item);
+      },
+    });
     /* try {
       const organizationId = this?.organization?._id;
       if (organizationId) {
@@ -441,7 +456,7 @@ class Datos extends Component {
     ];
 
     const colsPlant = [
-    /*  {
+      /*  {
         title: 'Plantilla',
         dataIndex: '',
         width: '50px',
@@ -467,9 +482,7 @@ class Datos extends Component {
           {this.props.type !== 'organization' && (
             <TabPane tab='Configuración General' key='1'>
               <Fragment>
-                <Header 
-                  title={'Recopilación de datos'}
-                />
+                <Header title={'Recopilación de datos'} />
                 <small>
                   {`Configure los datos que desea recolectar de los asistentes ${
                     this.organization ? 'de la organización' : 'del evento'
@@ -491,12 +504,16 @@ class Datos extends Component {
                   title={() => (
                     <Row justify='end' wrap gutter={[8, 8]}>
                       <Col>
-                        <Button disabled={this.state.available} onClick={this.submitOrder} type="primary" icon={<SaveOutlined />}>
+                        <Button
+                          disabled={this.state.available}
+                          onClick={this.submitOrder}
+                          type='primary'
+                          icon={<SaveOutlined />}>
                           {'Guardar orden'}
                         </Button>
                       </Col>
                       <Col>
-                        <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addField}>
+                        <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addField}>
                           {'Agregar'}
                         </Button>
                       </Col>
@@ -530,15 +547,13 @@ class Datos extends Component {
                   /* <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
                     <DatosModal edit={edit} info={info} action={this.saveField} />
                   </EventModal> */
-                  <Modal 
+                  <Modal
                     visible={modal}
-                    title={edit ? 'Editar Dato' : 'Agregar Dato'} 
-                    onOk={this.saveField} 
-                    onCancel={this.closeModal} 
-                    okText={'Guardar'}
-                    cancelText={'Cancelar'}
-                  >
-                    <DatosModal edit={edit} info={info} action={this.saveField} />
+                    title={edit ? 'Editar Dato' : 'Agregar Dato'}
+                    footer={false}
+                    onCancel={this.closeModal2}
+                    okText={'Guardar'}>
+                    <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} />
                   </Modal>
                 )}
                 {/* {this.state.deleteModal && (
@@ -561,73 +576,78 @@ class Datos extends Component {
             </TabPane>
           )} */}
 
-         { this.props.type == 'organization' && <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
-            {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (
-              <Fragment>
-                <Header 
-                  title={(
-                    <div>
-                      Recopilación de datos de plantillas
-                      {this.props.type !== 'configMembers' && (
-                        <Button
-                          type='link'
-                          style={{ color: 'blue' }}
-                          onClick={() =>
-                            this.setState({ isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] } })
-                          }>
-                          Volver a plantillas
-                        </Button>
-                      )}
-                    </div>
-                  )}
-                />
-                <small>
-                  {`Configure los datos que desea recolectar de los asistentes ${
-                    this.organization ? 'de la organización' : 'del evento'
-                  }`}
-                </small>
+          {this.props.type == 'organization' && (
+            <TabPane tab={this.props.type === 'configMembers' ? 'Configuración Miembros' : 'Plantillas'} key='3'>
+              {this.state.isEditTemplate.status || this.props.type === 'configMembers' ? (
+                <Fragment>
+                  <Header
+                    title={
+                      <div>
+                        Recopilación de datos de plantillas
+                        {this.props.type !== 'configMembers' && (
+                          <Button
+                            type='link'
+                            style={{ color: 'blue' }}
+                            onClick={() =>
+                              this.setState({
+                                isEditTemplate: { ...this.state.isEditTemplate, status: false, datafields: [] },
+                              })
+                            }>
+                            Volver a plantillas
+                          </Button>
+                        )}
+                      </div>
+                    }
+                  />
+                  <small>
+                    {`Configure los datos que desea recolectar de los asistentes ${
+                      this.organization ? 'de la organización' : 'del evento'
+                    }`}
+                  </small>
 
-                <Table
-                  columns={columns}
-                  dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
-                  pagination={false}
-                  rowKey='index'
-                  size='small'
-                  components={{
-                    body: {
-                      wrapper: this.DraggableContainer,
-                      row: this.DraggableBodyRow,
-                    },
-                  }}
-                  title={() => (
-                    <Row justify='end' wrap gutter={[8, 8]}>
-                      <Col>
-                        <Button disabled={this.state.available} onClick={this.submitOrder} type="primary" icon={<SaveOutlined />}>
-                          {'Guardar orden'}
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addField}>
-                          {'Agregar'}
-                        </Button>
-                      </Col>
-                    </Row>
+                  <Table
+                    columns={columns}
+                    dataSource={this.props.type === 'configMembers' ? fields : this.state.isEditTemplate.datafields}
+                    pagination={false}
+                    rowKey='index'
+                    size='small'
+                    components={{
+                      body: {
+                        wrapper: this.DraggableContainer,
+                        row: this.DraggableBodyRow,
+                      },
+                    }}
+                    title={() => (
+                      <Row justify='end' wrap gutter={[8, 8]}>
+                        <Col>
+                          <Button
+                            disabled={this.state.available}
+                            onClick={this.submitOrder}
+                            type='primary'
+                            icon={<SaveOutlined />}>
+                            {'Guardar orden'}
+                          </Button>
+                        </Col>
+                        <Col>
+                          <Button type='primary' icon={<PlusCircleOutlined />} size='middle' onClick={this.addField}>
+                            {'Agregar'}
+                          </Button>
+                        </Col>
+                      </Row>
+                    )}
+                  />
+                  {modal && (
+                    <Modal
+                      visible={modal}
+                      title={edit ? 'Editar Dato' : 'Agregar Dato'}
+                      footer={false}
+                      onCancel={this.closeModal2}
+                      cancelText={'Cancelar'}>
+                      <DatosModal cancel={this.closeModal2} edit={edit} info={info} action={this.saveField} />
+                    </Modal>
                   )}
-                />
-                { modal && (
-                  <Modal 
-                    visible={modal}
-                    title={edit ? 'Editar Dato' : 'Agregar Dato'} 
-                    onOk={this.saveField} 
-                    onCancel={this.closeModal} 
-                    okText={'Guardar'}
-                    cancelText={'Cancelar'}
-                  >
-                    <DatosModal edit={edit} info={info} action={this.saveField} />
-                  </Modal>
-                )}
 
-                {/* <EventContent
+                  {/* <EventContent
                   title={'Recopilación de datos'}
                   description={`Configure los datos que desea recolectar de los asistentes ${
                     this.organization ? 'de la organización' : 'del evento'
@@ -670,31 +690,32 @@ class Datos extends Component {
                     second={{ title: 'Cancelar', class: '', action: this.closeDelete }}
                   />
                 )} */}
-              </Fragment>
-            ) : (
-              <CMS
-                API={OrganizationPlantillaApi}
-                eventId={this.props.event?.organizer_id ? this.props.event?.organizer_id : this.props.eventID}
-                title={'Plantillas de recoleccion de datos'}
-                addFn={() => this.setState({ visibleModal: true })}
-                columns={colsPlant}
-                editFn={(values) => {
-                  let fields = this.orderFieldsByWeight(values.user_properties);
-                  fields = this.updateIndex(fields);
-                  this.setState({
-                    isEditTemplate: {
-                      ...this.state.isEditTemplate,
-                      status: true,
-                      datafields: fields,
-                      template: values,
-                    },
-                  });
-                }}
-                pagination={false}
-                actions
-              />
-            )}
-          </TabPane>}
+                </Fragment>
+              ) : (
+                <CMS
+                  API={OrganizationPlantillaApi}
+                  eventId={this.props.event?.organizer_id ? this.props.event?.organizer_id : this.props.eventID}
+                  title={'Plantillas de recoleccion de datos'}
+                  addFn={() => this.setState({ visibleModal: true })}
+                  columns={colsPlant}
+                  editFn={(values) => {
+                    let fields = this.orderFieldsByWeight(values.user_properties);
+                    fields = this.updateIndex(fields);
+                    this.setState({
+                      isEditTemplate: {
+                        ...this.state.isEditTemplate,
+                        status: true,
+                        datafields: fields,
+                        template: values,
+                      },
+                    });
+                  }}
+                  pagination={false}
+                  actions
+                />
+              )}
+            </TabPane>
+          )}
         </Tabs>
       </div>
     );
