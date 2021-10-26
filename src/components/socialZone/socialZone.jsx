@@ -60,7 +60,6 @@ let SocialZone = function(props) {
       setIsFiltered(false);
       setstrAttende('');
       setBusqueda(null);
-      //
       busquedaRef.current.value = '';
     }
   };
@@ -75,8 +74,6 @@ let SocialZone = function(props) {
   function redirectRegister() {
     history.push(`/landing/${cEvent.value._id}/tickets`);
   }
-
-  console.log('currentActivity', props.tabs);
 
   return (
     <Tabs
@@ -169,7 +166,7 @@ let SocialZone = function(props) {
         </>
       )}
 
-      {/* {currentActivity != null && (
+      {currentActivity != null && (
         <TabPane
           className='asistente-survey-list asistente-list'
           tab={
@@ -209,23 +206,22 @@ let SocialZone = function(props) {
             </div>
           )}
         </TabPane>
-      )} */}
+      )}
 
-      {props.tabs !== null &&
-        (props.tabs?.games === true || props?.tabs.games === 'true') && (
-          <TabPane
-            className='asistente-survey-list asistente-list'
-            tab={
-              <>
-                <p
-                  style={{ marginBottom: '0px', color: cEvent.value.styles.textMenu }}
-                  className='lowerTabs__mobile-hidden'>
-                  <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
-                </p>
-              </>
-            }
-            key='4'>
-            {/* <Row justify='space-between'>
+      {props.tabs !== null && (props.tabs?.games === true || props?.tabs.games === 'true') && (
+        <TabPane
+          className='asistente-survey-list asistente-list'
+          tab={
+            <>
+              <p
+                style={{ marginBottom: '0px', color: cEvent.value.styles.textMenu }}
+                className='lowerTabs__mobile-hidden'>
+                <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
+              </p>
+            </>
+          }
+          key='4'>
+          {/* <Row justify='space-between'>
             <Col span={4}>
               <ArrowLeftOutlined
                 style={{ color: cEvent.value.styles.textMenu }}
@@ -243,9 +239,9 @@ let SocialZone = function(props) {
             </Col>
           </Row> */}
 
-            <GameRanking currentUser={currentUser} cEvent={cEvent.value} setTheUserHasPlayed={setTheUserHasPlayed} />
-          </TabPane>
-        )}
+          <GameRanking currentUser={currentUser} cEvent={cEvent.value} setTheUserHasPlayed={setTheUserHasPlayed} />
+        </TabPane>
+      )}
     </Tabs>
   );
 };

@@ -5,8 +5,10 @@ import { HelperContext } from '../../../Context/HelperContext';
 import { DolbyCard } from './DolbyCard';
 import ZoomIframe from '../ZoomIframe';
 import { VideoActivity } from './VideoActivity';
-import { Row, Spin } from 'antd';
+import { Row, Space, Spin } from 'antd';
 import Game from '../game';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Ripple } from 'react-preloaders';
 
 const RenderComponent = (props) => {
   let { currentActivity, chatAttendeChats } = useContext(HelperContext);
@@ -17,6 +19,23 @@ const RenderComponent = (props) => {
     surveys: false,
   };
   const [tabsGeneral, settabsGeneral] = useState(tabsdefault);
+  const colorTexto = props.cEvent.value?.styles.textMenu;
+  const colorFondo = props.cEvent.value?.styles.toolbarDefaultBg;
+
+  const Preloader = () => (
+    <Space
+      direction='horizontal'
+      style={{
+        background: '#F7F7F7',
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'center',
+        width: '100%',
+        height: '80vh',
+      }}>
+      <LoadingOutlined style={{ fontSize: '100px', color: 'black' }} spin />
+    </Space>
+  );
 
   useEffect(() => {
     if (currentActivity) {
@@ -24,7 +43,7 @@ const RenderComponent = (props) => {
     }
   }, [currentActivity]);
 
-  let ComponentRender = <Spin />;
+  let ComponentRender = <Preloader />;
 
   switch (currentActivity?.platform) {
     case 'dolby':

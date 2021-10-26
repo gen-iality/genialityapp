@@ -10,12 +10,12 @@ import { MessageOutlined, SendOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { createChatInitalPrivate } from '../components/networking/agendaHook';
 import { getGender } from 'gender-detection-from-name';
-import {maleIcons, femaleicons } from '../helpers/constants'
+import { maleIcons, femaleicons } from '../helpers/constants';
 
 export const HelperContext = createContext();
 
 export function knowMaleOrFemale(nombre) {
-  return getGender(nombre, "es");
+  return getGender(nombre, 'es');
 }
 
 const initialStateNotification = {
@@ -57,16 +57,12 @@ export const HelperContextProvider = ({ children }) => {
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [tabLogin, setTabLogin] = useState('1');
-  const [currentActivity, setcurrenActivity] = useState(null)
-  const [theUserHasPlayed, setTheUserHasPlayed] = useState(null)
-
-  
+  const [currentActivity, setcurrenActivity] = useState(null);
+  const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
 
   function handleChangeCurrentActivity(activity) {
-    setcurrenActivity(activity)
+    setcurrenActivity(activity);
   }
-
-
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
@@ -199,7 +195,6 @@ export const HelperContextProvider = ({ children }) => {
         break;
     }
 
-    console.log('dattaGOCHAT', data, section);
     setchatActual(data);
     ReadMessages(callbackdata);
   }
@@ -582,7 +577,7 @@ export const HelperContextProvider = ({ children }) => {
         femaleicons,
         maleIcons,
         handleChangeCurrentActivity,
-        currentActivity
+        currentActivity,
       }}>
       {children}
     </HelperContext.Provider>

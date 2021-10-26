@@ -63,7 +63,7 @@ const AgendaActividadDetalle = (props) => {
         currentemp.platform = platform;
         currentemp.habilitar_ingreso = habilitar_ingreso;
         currentemp.tabs = tabs;
-        console.log('currentemp', currentemp);
+        // console.log('currentemp', currentemp);
         handleChangeCurrentActivity(currentemp);
       });
   }
@@ -74,7 +74,6 @@ const AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     CheckinActiviy(props.cEvent.value._id, props.match.params.activity_id, props.cEventUser, props.cUser);
-    console.log('props', props);
 
     async function getActividad() {
       return await AgendaApi.getOne(props.match.params.activity_id, props.cEvent.value._id);
@@ -95,11 +94,17 @@ const AgendaActividadDetalle = (props) => {
 
     props.setTopBanner(false);
     props.setVirtualConference(false);
-    HandleOpenCloseMenuRigth(false);
+    if (isCollapsedMenuRigth) {
+      HandleOpenCloseMenuRigth(false);
+    }
+
     return () => {
       props.setTopBanner(true);
       props.setVirtualConference(true);
-      HandleOpenCloseMenuRigth(!isCollapsedMenuRigth);
+      if(!isCollapsedMenuRigth){
+        HandleOpenCloseMenuRigth(true);
+      }
+      handleChangeCurrentActivity(null);
     };
   }, []);
 

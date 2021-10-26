@@ -5,7 +5,7 @@ import WithEviusContext from '../../Context/withContext';
 import HelperContext from '../../Context/HelperContext';
 
 function Game(props) {
-  let { theUserHasPlayed} = useContext(HelperContext);
+  let { theUserHasPlayed } = useContext(HelperContext);
 
   useEffect(() => {
     const evius_body = document.getElementById('evius-body');
@@ -24,8 +24,6 @@ function Game(props) {
     '/' +
     colorTexto.replace('#', '') +
     '?text=Muchas%20gracias%20por%20participar%20';
-
-  // console.log('props', props.cEvent.value?.openOtherGame);
 
   return (
     <>
@@ -56,7 +54,7 @@ function Game(props) {
                 }}
               />
             </div>
-          ) :  (
+          ) : (
             <iframe
               src={
                 `https://novanetagfarafiologos.netlify.app/` +
@@ -69,7 +67,9 @@ function Game(props) {
                     ? props.cEventUser.value.properties.displayName
                     : 'anonimo') +
                   '&email=' +
-                  (props.cEventUser.value.email ? props.cEventUser.value.email : 'evius@evius.co'))
+                  (props.cEventUser.value.properties?.email
+                    ? props.cEventUser.value.properties?.email
+                    : 'evius@evius.co'))
               }
               frameBorder='0'
               allow='autoplay; fullscreen; camera *;microphone *'
@@ -87,9 +87,11 @@ function Game(props) {
                 ? props.cEventUser.value._id
                 : '5e9caaa1d74d5c2f6a02a3c2') +
               '&displayName=' +
-              (props.cEventUser.value.displayName ? props.cEventUser.value.displayName : 'anonimo') +
+              (props.cEventUser.value.properties.displayName
+                ? props.cEventUser.value.properties.displayName
+                : 'anonimo') +
               '&email=' +
-              (props.cEventUser.value.email ? props.cEventUser.value.email : 'evius@evius.co'))
+              (props.cEventUser.value.properties?.email ? props.cEventUser.value.properties?.email : 'evius@evius.co'))
           }
           frameBorder='0'
           allow='autoplay; fullscreen; camera *;microphone *'
