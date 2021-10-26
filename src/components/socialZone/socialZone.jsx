@@ -166,7 +166,7 @@ let SocialZone = function(props) {
         </>
       )}
 
-      {currentActivity != null && (
+      {currentActivity !== null && (
         <TabPane
           className='asistente-survey-list asistente-list'
           tab={
@@ -208,7 +208,7 @@ let SocialZone = function(props) {
         </TabPane>
       )}
 
-      {props.tabs !== null && (props.tabs?.games === true || props?.tabs.games === 'true') && (
+      {currentActivity !== null && props.tabs !== null && (props.tabs?.games === true || props?.tabs.games === 'true') && (
         <TabPane
           className='asistente-survey-list asistente-list'
           tab={

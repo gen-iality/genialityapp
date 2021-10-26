@@ -50,9 +50,7 @@ const EventSectionRoutes = (props) => {
   if (event_id === '610976f24e10472fb738d65b') {
     window.location.replace('https://cancilleria.evius.co/landing/610976f24e10472fb738d65b/evento');
   }
-
   function ValidateViewPermissions(route, nombresection) {
-    console.log(route, nombresection);
     if (props.cEvent.value !== null) {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
