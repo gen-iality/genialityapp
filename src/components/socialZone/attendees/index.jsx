@@ -22,7 +22,7 @@ const AttendeList = function(props) {
   const pag = 15;
 
   function whatGenderIs(gender) {
-    console.log('gender', gender);
+    // console.log('gender', gender);
     const ramdonicon = Math.floor(Math.random() * femaleicons.length);
     const ramdoniconmale = Math.floor(Math.random() * maleIcons.length);
     return gender == 'male'
@@ -60,7 +60,7 @@ const AttendeList = function(props) {
 
         };
 
-        console.log("attendeeList[key].properties.picture",attendeeList[key].properties.picture)
+        // console.log("attendeeList[key].properties.picture",attendeeList[key].properties.picture)
 
         if (attendeProfile.status === 'online') {
           ordenadousers.unshift(attendeProfile);

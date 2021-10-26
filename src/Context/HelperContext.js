@@ -36,7 +36,6 @@ export const maleIcons = [
 ];
 
 export function knowMaleOrFemale(nombre) {
-  console.log("nombre llega",nombre);
   return getGender(nombre, "es");
 }
 
