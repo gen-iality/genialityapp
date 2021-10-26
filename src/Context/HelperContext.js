@@ -9,8 +9,36 @@ import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { createChatInitalPrivate } from '../components/networking/agendaHook';
+import { getGender } from 'gender-detection-from-name';
 
 export const HelperContext = createContext();
+
+export const femaleicons = [
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F1.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F2.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F3.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F4.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F5.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F6.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F7.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F8.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F9.png?alt=media',
+];
+
+export const maleIcons = [
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F1.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F2.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F3.png?alt=media',
+  'https://cdn-icons-png.flaticon.com/512/236/236831.png',
+  'https://cdn-icons-png.flaticon.com/512/236/236832.png',
+  'https://cdn-icons-png.flaticon.com/512/145/145859.png',
+  'https://cdn-icons-png.flaticon.com/512/4139/4139970.png',
+];
+
+export function knowMaleOrFemale(nombre) {
+  console.log("nombre llega",nombre);
+  return getGender(nombre, "es");
+}
 
 const initialStateNotification = {
   notify: false,
@@ -560,6 +588,9 @@ export const HelperContextProvider = ({ children }) => {
         handleChangeTypeModal,
         handleChangeTabModal,
         tabLogin,
+        knowMaleOrFemale,
+        femaleicons,
+        maleIcons,
       }}>
       {children}
     </HelperContext.Provider>

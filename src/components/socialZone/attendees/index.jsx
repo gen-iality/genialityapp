@@ -11,31 +11,65 @@ const AttendeList = function(props) {
   let [page, setPage] = useState(0);
   let [filteredlist, setfilteredlist] = useState([]);
   let [hasMore, setHasMore] = useState(true);
-  let { attendeeListPresence, attendeeList, imageforDefaultProfile } = useContext(HelperContext);
+  let {
+    attendeeListPresence,
+    attendeeList,
+    imageforDefaultProfile,
+    knowMaleOrFemale,
+    maleIcons,
+    femaleicons,
+  } = useContext(HelperContext);
   const pag = 15;
+
+  function whatGenderIs(gender) {
+    console.log('gender', gender);
+    const ramdonicon = Math.floor(Math.random() * femaleicons.length);
+    const ramdoniconmale = Math.floor(Math.random() * maleIcons.length);
+    return gender == 'male'
+      ? maleIcons[ramdoniconmale]
+      : gender == 'female'
+      ? femaleicons[ramdonicon]
+      : gender == 'unknown' && imageforDefaultProfile;
+  }
 
   useEffect(() => {
     let ordenadousers = [];
 
     Object.keys(attendeeList).map((key) => {
-      let mihijo = {
-        uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
-        idattendpresence: key,
-        iduser: attendeeList[key].account_id,
-        name: attendeeList[key].properties.name,
-        names: attendeeList[key].properties.names,
-        status: attendeeListPresence[key] ? attendeeListPresence[key].state : 'offline',
-        email: attendeeList[key].properties.email,
-        properties: attendeeList[key].properties,
-        _id: attendeeList[key]._id,
-        imageProfile: attendeeList[key].user?.picture ? attendeeList[key].user?.picture : imageforDefaultProfile,
-      };
+      if (attendeeListPresence[key]) {
+        let attendeProfile = {
+          uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
+          idattendpresence: key,
+          iduser: attendeeList[key].account_id,
+          name: attendeeList[key].properties.name,
+          names: attendeeList[key].properties.names,
+          status: attendeeListPresence[key]
+            ? attendeeListPresence[key].state
+            : attendeeListPresence[key].last_changed
+            ? attendeeListPresence[key].last_changed
+            : 'offline',
+          email: attendeeList[key].properties.email,
+          properties: attendeeList[key].properties,
+          _id: attendeeList[key]._id,
+          imageProfile: attendeeList[key].properties.picture
+            ? attendeeList[key].properties.picture
+            : whatGenderIs(
+                knowMaleOrFemale(attendeeList[key].properties.names && attendeeList[key].properties.names.split(' ')[0])
+              ),
 
-      if (mihijo.status === 'online') {
-        ordenadousers.unshift(mihijo);
-      } else if (mihijo.status === 'offline') {
-        ordenadousers.push(mihijo);
+
+        };
+
+        console.log("attendeeList[key].properties.picture",attendeeList[key].properties.picture)
+
+        if (attendeProfile.status === 'online') {
+          ordenadousers.unshift(attendeProfile);
+        } else if (attendeProfile.status === 'offline') {
+          ordenadousers.push(attendeProfile);
+        }
       }
+
+      // imageProfile
     });
 
     setmyattendelist(ordenadousers);
