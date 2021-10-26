@@ -6,6 +6,7 @@ import ImageInput from '../shared/imageInput';
 import Axios from 'axios';
 import { Actions, EventsApi } from '../../helpers/request';
 import Header from '../../antdComponents/Header';
+import EviusReactQuill from '../shared/eviusReactQuill';
 
 export const toolbarEditor = {
   toolbar: [
@@ -250,12 +251,7 @@ function AddProduct(props) {
                 Descripción <label style={{ color: 'red' }}>*</label>
               </label>
             }>
-            <ReactQuill
-              value={description}
-              id={'descriptionProduct'}
-              modules={toolbarEditor}
-              onChange={changeDescription}
-            />
+            <EviusReactQuill data={description} id={'descriptionProduct'} handleChange={changeDescription} />
             {error != null && error.description && (
               <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
             )}
