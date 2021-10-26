@@ -8,13 +8,12 @@ import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import ModalNotifications from './modalNotificacions';
 
 function pushNotification(props) {
-  const eventId = props.eventId;
+  const { _id: eventId, name: eventName } = props.event;
   let [columnsData, setColumnsData] = useState({});
+  let [isLoading, setIstloading] = useState(true);
   const [listUsersWithNotifications, setListUsersWithNotifications] = useState([]);
   const [modalSendNotificationVisible, setModalSendNotificationVisible] = useState(false);
   const [userToNotify, setUserToNotify] = useState(false);
-
-  let [isLoading, setIstloading] = useState(true);
 
   async function usersWithNotificationsEnabled() {
     let { data } = await UsersApi.getAll(eventId);
@@ -49,6 +48,7 @@ function pushNotification(props) {
     setUserToNotify(params);
     setModalSendNotificationVisible(true);
   }
+
   const columns = [
     {
       title: 'Nombre',
@@ -69,11 +69,13 @@ function pushNotification(props) {
           modalSendNotificationVisible={modalSendNotificationVisible}
           setModalSendNotificationVisible={setModalSendNotificationVisible}
           data={userToNotify || listUsersWithNotifications}
+          eventName={eventName}
         />
       )}
       <Header
         title={'push Notifications'}
         titleTooltip={'Envíe notificaciones push a dispositivos móviles que tenga instalada la app de evius'}
+        description='Se listan solo los usuarios con la app de evius o truni instalada en su dispositivo móvil'
         extra={notifyEveryoneButton}
       />
       <Table

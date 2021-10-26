@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
-import { Modal, Form, Input, Button, Typography, Upload, message, Space } from 'antd';
+import React from 'react';
+import { Modal, Form, Input, Button, Typography, message } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import axios from 'axios';
+
 const { TextArea } = Input;
+
 const ModalNotifications = (props) => {
-  const { modalSendNotificationVisible, setModalSendNotificationVisible, data } = props;
   const [form] = Form.useForm();
+  const { modalSendNotificationVisible, setModalSendNotificationVisible, data, eventName } = props;
 
   function resetFields() {
     form.resetFields();
   }
-  const sendNotifications = (values) => {
+
+  async function sendNotifications(values) {
     const { notificationMessage } = values;
-    console.log('10. notificationMessage ', notificationMessage);
     const loading = message.loading({
       duration: 90,
       key: 'loading',
@@ -20,31 +22,46 @@ const ModalNotifications = (props) => {
     });
 
     if (data.length > 0) {
-      console.log('10. notificacion general ', data);
+      const promisesResolved = await Promise.all(
+        data.map((item) => {
+          const body = {
+            token: item.token,
+            title: `${eventName} dice: `,
+            message: notificationMessage,
+          };
+          axios.post('https://eviusauth.web.app/notification', body);
+          return true;
+        })
+      );
+
+      if (promisesResolved) {
+        message.destroy(loading.key);
+        message.success('Notificación enviada correctamente');
+        setModalSendNotificationVisible(false);
+      }
     } else {
       const body = {
         token: data.token,
-        title: data.name || data.names,
+        title: `${eventName} dice: `,
         message: notificationMessage,
       };
-      console.log('10. notificacion unica ', data);
+
       axios
         .post('https://eviusauth.web.app/notification', body)
-        .then(function(response) {
-          console.log('10. response ', response);
+        .then(function() {
           message.destroy(loading.key);
           message.success('Notificación enviada correctamente');
           setModalSendNotificationVisible(false);
         })
-        .catch(function(error) {
-          console.log('10. error ', error);
+        .catch(function() {
+          /** el catch tambien se maneja como successs ya que la notificacion siempre es enviada desde que exista un token, la unica diferencia es que cuando la pantalla del dispositivo esta apagada devuelve error 500 */
           message.destroy(loading.key);
-          message.error(`Error al enviar la notificación, ${error}`);
+          message.success('Notificación enviada correctamente');
 
           setModalSendNotificationVisible(false);
         });
     }
-  };
+  }
 
   return (
     <Modal
@@ -74,7 +91,7 @@ const ModalNotifications = (props) => {
           name='notificationMessage'
           style={{ marginBottom: '10px' }}
           rules={[{ required: true, message: 'Ingrese un mensaje!' }]}>
-          <TextArea showCount maxLength={250} placeholder={'Máximo 250 caracteres'} />
+          <TextArea rows={8} showCount maxLength={250} placeholder={'Máximo 250 caracteres'} />
         </Form.Item>
         <Form.Item style={{ marginBottom: '10px', marginTop: '30px' }}>
           <Button
