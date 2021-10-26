@@ -11,7 +11,7 @@ import { Actions, NewsFeed } from '../../helpers/request';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import { useEffect } from 'react';
-import EviusReactQuill from '../shared/eviusReactQuill'; 
+import EviusReactQuill from '../shared/eviusReactQuill';
 
 export const toolbarEditor = {
   toolbar: [
@@ -39,9 +39,11 @@ function AddNews(props) {
   const [fecha, setFecha] = useState(moment());
 
   useEffect(() => {
-    if (props.match.params.id) {
-      setIdNew(props.match.params.id);
-      NewsFeed.getOne(props.eventId, props.match.params.id).then((notice) => {
+    console.log('PROPS==>', props, props.location.state.edit);
+    if (props.location.state.edit) {
+      setIdNew(props.location.state.edit);
+      NewsFeed.getOne(props.eventId, props.location.state.edit).then((notice) => {
+        console.log('NOTICIAEFFECT==>', noticie);
         setPicture(notice.image);
         setDescriptionShort(notice.description_short);
         setDescription(notice.description_complete);
@@ -50,6 +52,8 @@ function AddNews(props) {
       });
     }
   }, []);
+
+  console.log('PROPS==>', props, props.location.state.edit);
 
   const changeInput = (e, key) => {
     setNoticia({ ...noticia, [key]: e.target.value });
@@ -182,12 +186,15 @@ function AddNews(props) {
   };
   return (
     <div>
+      {console.log('NOTICIA===>', noticia)}
       <Row>
-        <ArrowLeftOutlined onClick={()=> props.history.push(`/eventadmin/${props.eventId}/news`)} /> <span style={{ marginLeft: 30 }}>Agregar Noticias</span>
+        <ArrowLeftOutlined onClick={() => props.history.push(`/eventadmin/${props.eventId}/news`)} />{' '}
+        <span style={{ marginLeft: 30 }}>Agregar Noticias</span>
       </Row>
       <Card style={{ width: 950, margin: 'auto', marginTop: 30 }}>
         <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} onFinish={saveNew}>
           <Form.Item
+            initialValue={noticia && noticia.title}
             //name={'title'}
             label={
               <Col span={4}>
@@ -211,7 +218,7 @@ function AddNews(props) {
             )}
           </Form.Item>
           <Form.Item label={'Noticia: *'}>
-            <EviusReactQuill data={description}  handleChange={changeDescription} />
+            <EviusReactQuill data={description} handleChange={changeDescription} />
             {error != null && error.description && <small style={{ color: 'red' }}>La noticia es requerido</small>}
           </Form.Item>
           <Form.Item label={'Imagen: *'}>
