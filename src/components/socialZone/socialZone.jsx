@@ -31,7 +31,7 @@ let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages } = useContext(HelperContext);
+  let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages, setTheUserHasPlayed } = useContext(HelperContext);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [busqueda, setBusqueda] = useState(null);
@@ -232,7 +232,7 @@ let SocialZone = function(props) {
             </Col>
           </Row> */}
 
-          <GameRanking currentUser={currentUser} cEvent={cEvent.value} />
+          <GameRanking currentUser={currentUser} cEvent={cEvent.value} setTheUserHasPlayed={setTheUserHasPlayed} />
         </TabPane>
       )}
     </Tabs>

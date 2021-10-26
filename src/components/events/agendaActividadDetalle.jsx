@@ -70,19 +70,19 @@ let AgendaActividadDetalle = (props) => {
   let cUser = UseCurrentUser();
 
   let { activity_id } = useParams();
-  let [ idSpeaker, setIdSpeaker ] = useState(false);
-  let [ orderedHost, setOrderedHost ] = useState([]);
-  const [ meetingState, setMeetingState ] = useState(null);
-  const [ meeting_id, setMeeting_id ] = useState(null);
-  const [ platform, setPlatform ] = useState(null);
+  let [idSpeaker, setIdSpeaker] = useState(false);
+  let [orderedHost, setOrderedHost] = useState([]);
+  const [meetingState, setMeetingState] = useState(null);
+  const [meeting_id, setMeeting_id] = useState(null);
+  const [platform, setPlatform] = useState(null);
   const totalAttendees = useState(0);
   const totalAttendeesCheckedin = useState(0);
-  const [ names, setNames ] = useState(null);
-  const [ email, setEmail ] = useState(null);
-  const [ currentActivity, setcurrentActivity ] = useState(null);
+  const [names, setNames] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [currentActivity, setcurrentActivity] = useState(null);
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
   let history = useHistory();
-  let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth, chatAttendeChats } = useContext(
+  let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth, chatAttendeChats, theUserHasPlayed } = useContext(
     HelperContext
   );
 
@@ -123,19 +123,19 @@ let AgendaActividadDetalle = (props) => {
   }, []);
 
   // Estado para controlar los estilos del componente de videoconferencia y boton para restaurar tamaño
-  const [ videoStyles, setVideoStyles ] = useState(null);
-  const [ videoButtonStyles, setVideoButtonStyles ] = useState(null);
+  const [videoStyles, setVideoStyles] = useState(null);
+  const [videoButtonStyles, setVideoButtonStyles] = useState(null);
 
   // Array que contiene las actividades del espacio (que comparten el mismo meeting_id y platform)
-  const [ activitiesSpace, setActivitiesSpace ] = useState([]);
+  const [activitiesSpace, setActivitiesSpace] = useState([]);
 
-  const [ activeTab, setActiveTab ] = useState("description");
+  const [activeTab, setActiveTab] = useState("description");
   let mainStageContent = props.mainStageContent;
 
 
 
   //Estado para detección si la vista es para mobile
-  const [ isMobile, setIsMobile ] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
@@ -188,7 +188,7 @@ let AgendaActividadDetalle = (props) => {
     }
 
     GetStateMeetingRoom();
-  }, [ activity_id ]);
+  }, [activity_id]);
 
   useEffect(() => {
     async function listeningSpaceRoom() {
@@ -215,7 +215,7 @@ let AgendaActividadDetalle = (props) => {
     (async () => {
       await listeningSpaceRoom();
     })();
-  }, [ meeting_id, platform, props.cEvent.value ]);
+  }, [meeting_id, platform, props.cEvent.value]);
 
   useEffect(() => {
     if (
@@ -250,7 +250,7 @@ let AgendaActividadDetalle = (props) => {
       setVideoStyles({ width: "100%", height: "80vh", transition: "300ms" });
       setVideoButtonStyles({ display: "none" });
     }
-  }, [ chatAttendeChats, isMobile ]);
+  }, [chatAttendeChats, isMobile]);
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
@@ -333,7 +333,7 @@ let AgendaActividadDetalle = (props) => {
       setVideoStyles({ width: "100%", height: "80vh", transition: "300ms" });
       setVideoButtonStyles({ display: "none" });
     }
-  }, [ chatAttendeChats, isMobile ]);
+  }, [chatAttendeChats, isMobile]);
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     firestore
@@ -369,7 +369,7 @@ let AgendaActividadDetalle = (props) => {
         props.setHasOpenSurveys(data.hasOpenSurveys);
       });
     }
-  }, [ props.cEvent.value, currentActivity ]);
+  }, [props.cEvent.value, currentActivity]);
 
   {
     Moment.locale(window.navigator.language);
@@ -627,7 +627,9 @@ let AgendaActividadDetalle = (props) => {
                               generalTabs={props.tabs}
                             />
                           ) : (
-                            <>  {chatAttendeChats === "4" && <Game />}</>
+                            <>  {chatAttendeChats === "4" &&
+                            <Game openOtherGame={props.cEvent?.value?.openOtherGame} theUserHasPlayed={theUserHasPlayed} cEvent={props.cEvent.value} />}
+                            </>
                           )}
                           <div
                             style={videoButtonStyles}

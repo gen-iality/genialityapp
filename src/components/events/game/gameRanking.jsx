@@ -3,6 +3,7 @@ import { firestore } from '../../../helpers/firebase';
 import { Row, Col, Avatar } from 'antd';
 
 import RankingList from '../../events/surveys/rankingList';
+
 import { connect } from 'react-redux';
 
 function GameRanking(props) {
@@ -10,10 +11,10 @@ function GameRanking(props) {
   const [ myName, setMyName ] = useState('');
   const [ myScore, setMyScore ] = useState('');
 
-  const { currentUser, cEvent } = props;
+  const { currentUser, cEvent, setTheUserHasPlayed } = props;
 
   useEffect(() => {
-    let gameId = '0biWfCwWbUGhbZmfhkvu';
+    let gameId =  cEvent.openOtherGame ? 'oV0g5pRhLzSzWQNO8W63' : '0biWfCwWbUGhbZmfhkvu';
 
     //Consulta del puntaje del currentUser
     if (!(Object.keys(currentUser).length === 0)) {
@@ -26,6 +27,11 @@ function GameRanking(props) {
           if (myScore) {
             setMyName(myScore.name);
             setMyScore(myScore.puntaje);
+          }
+          if (myScore?.puntaje) {
+            setTheUserHasPlayed(true)
+          } else {
+            setTheUserHasPlayed(false)
           }
         });
     }

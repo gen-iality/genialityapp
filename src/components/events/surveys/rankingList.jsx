@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Avatar, Divider, List, Skeleton } from 'antd';
 import { UseEventContext } from '../../../Context/eventContext'
-
+import moment from 'moment'
 export default function RankingList({ data }) {
   function formatName(name) {
     const result = decodeURIComponent(name);
     return result;
   }
 
-  const [ list, setList ] = useState([]);
-  const [ loading, setloading ] = useState(false)
+  const [list, setList] = useState([]);
+  const [loading, setloading] = useState(false)
 
   let cEvent = UseEventContext();
 
@@ -17,7 +17,7 @@ export default function RankingList({ data }) {
     setloading(true);
     setList(data);
     setloading(false);
-  }, [ data ]);
+  }, [data]);
 
 
   const styleListPlayer = {
@@ -32,7 +32,6 @@ export default function RankingList({ data }) {
     textOverflow: 'ellipsis',
     height: '6vh',
   };
-
 
   return (
     <div style={{ marginTop: 16, width: '26vw' }}>
@@ -49,7 +48,7 @@ export default function RankingList({ data }) {
           renderItem={(item, key) => (
             <List.Item
               style={styleListPlayer}
-              actions={[ <a key="list-loadmore-edit"> {item.score} Puntos </a>, ]}
+              actions={[<><a key="list-loadmore-edit"> {cEvent.value.scoreType === 'time' ? moment(item.score * 1000).format('mm:ss:SS') : item.score} {cEvent.value.scoreType !== 'time' && 'Puntos'} </a>{cEvent.value.scoreType === 'time' && <div style={{marginTop:-10}}> <small>min : seg : ms</small></div>}</>]}
             >
               <Skeleton avatar title={false} loading={loading} active>
                 <List.Item.Meta
