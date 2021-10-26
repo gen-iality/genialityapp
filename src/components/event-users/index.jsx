@@ -827,7 +827,6 @@ class ListEventUser extends Component {
                       columns={this.state.columns}
                     />
                   )}
-                  ;
                 </div>
               </div>
             )}
