@@ -31,7 +31,14 @@ let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages, setTheUserHasPlayed, currentActivity } = useContext(HelperContext);
+  let {
+    attendeeList,
+    HandleChatOrAttende,
+    chatAttendeChats,
+    totalPrivateMessages,
+    setTheUserHasPlayed,
+    currentActivity,
+  } = useContext(HelperContext);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [busqueda, setBusqueda] = useState(null);
@@ -69,8 +76,7 @@ let SocialZone = function(props) {
     history.push(`/landing/${cEvent.value._id}/tickets`);
   }
 
-// console.log("props.currentActivity",props.generalTabs);
-
+  console.log('currentActivity', props.tabs);
 
   return (
     <Tabs
@@ -110,11 +116,13 @@ let SocialZone = function(props) {
             }
             key='2'>
             <Row>
-              <Space size={10} style={{width:'100%'}}>
+              <Space size={10} style={{ width: '100%' }}>
                 {!Object.keys(attendeeList).length ? (
                   ''
                 ) : (
-                  <div className='control' style={{ marginBottom: '10px', marginRight: '5px', color: 'white', width:'100%' }}>
+                  <div
+                    className='control'
+                    style={{ marginBottom: '10px', marginRight: '5px', color: 'white', width: '100%' }}>
                     <input
                       style={{ color: cEvent.value.styles.textMenu }}
                       ref={busquedaRef}
@@ -127,17 +135,18 @@ let SocialZone = function(props) {
                     />
                   </div>
                 )}
-                {!Object.keys(attendeeList).length ? null : (
-                  
-                    busqueda !== null && (
-                      <Button icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />} shape='round' onClick={searhAttende}>
+                {!Object.keys(attendeeList).length
+                  ? null
+                  : busqueda !== null && (
+                      <Button
+                        icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
+                        shape='round'
+                        onClick={searhAttende}>
                         {!isFiltered && 'Buscar'}
                         {isFiltered && 'Borrar'}
                       </Button>
-                    )
-                )}
+                    )}
               </Space>
-              
             </Row>
             <div className='asistente-list'>
               {!Object.keys(attendeeList).length ? (
@@ -160,8 +169,7 @@ let SocialZone = function(props) {
         </>
       )}
 
-      {props.currentActivity !== null && props.tabs && (
-        // && (props.tabs.surveys === true || props.tabs.surveys === 'true')
+      {/* {currentActivity != null && (
         <TabPane
           className='asistente-survey-list asistente-list'
           tab={
@@ -201,22 +209,23 @@ let SocialZone = function(props) {
             </div>
           )}
         </TabPane>
-      )}
+      )} */}
 
-      {props.currentActivity !== null && props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
-        <TabPane
-          className='asistente-survey-list asistente-list'
-          tab={
-            <>
-              <p
-                style={{ marginBottom: '0px', color: cEvent.value.styles.textMenu }}
-                className='lowerTabs__mobile-hidden'>
-                <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
-              </p>
-            </>
-          }
-          key='4'>
-          {/* <Row justify='space-between'>
+      {props.tabs !== null &&
+        (props.tabs?.games === true || props?.tabs.games === 'true') && (
+          <TabPane
+            className='asistente-survey-list asistente-list'
+            tab={
+              <>
+                <p
+                  style={{ marginBottom: '0px', color: cEvent.value.styles.textMenu }}
+                  className='lowerTabs__mobile-hidden'>
+                  <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
+                </p>
+              </>
+            }
+            key='4'>
+            {/* <Row justify='space-between'>
             <Col span={4}>
               <ArrowLeftOutlined
                 style={{ color: cEvent.value.styles.textMenu }}
@@ -234,9 +243,9 @@ let SocialZone = function(props) {
             </Col>
           </Row> */}
 
-          <GameRanking currentUser={currentUser} cEvent={cEvent.value} setTheUserHasPlayed={setTheUserHasPlayed} />
-        </TabPane>
-      )}
+            <GameRanking currentUser={currentUser} cEvent={cEvent.value} setTheUserHasPlayed={setTheUserHasPlayed} />
+          </TabPane>
+        )}
     </Tabs>
   );
 };
