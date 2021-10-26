@@ -234,6 +234,7 @@ const FormRegister = ({
     });
 
     if (imageAvatar) {
+      console.log('IMAGEAVATAR==>', imageAvatar);
       values.picture = imageAvatar.fileList[0].response;
     }
     if (callback) {

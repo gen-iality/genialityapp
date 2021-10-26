@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import moment from 'moment';
 import CMS from '../newComponent/CMS';
 
-const News = ( props ) => {
+const News = (props) => {
   const columns = [
     {
       title: 'Título',
@@ -13,17 +13,13 @@ const News = ( props ) => {
       title: 'Fecha de Publicación',
       dataIndex: 'time',
       render(val, item) {
-        return (
-          <div>
-            {moment(item.time).format('YYYY-DD-MM')}
-          </div>
-        )
-      }
-    }
+        return <div>{moment(item.time).format('YYYY-DD-MM')}</div>;
+      },
+    },
   ];
-  
-  return(
-    <CMS 
+
+  return (
+    <CMS
       API={NewsFeed}
       eventId={props.event._id}
       title={'Noticias'}
@@ -38,7 +34,7 @@ const News = ( props ) => {
       pagination={false}
       actions
     />
-  )
-}
+  );
+};
 
 export default withRouter(News);

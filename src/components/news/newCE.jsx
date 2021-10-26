@@ -10,27 +10,20 @@ import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import Header from '../../antdComponents/Header';
 import { useHistory } from 'react-router-dom';
-import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import EviusReactQuill from '../shared/eviusReactQuill';
 
 const { confirm } = Modal;
 
 const formLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 
 const NewCE = (props) => {
   const history = useHistory();
   const locationState = props.location.state;
-  const [notice, setNotice] = useState({
-    title: '',
-    description_short: '',
-    description_complete: '',
-    image: '',
-    picture: '',
-    linkYoutube: '',
-    time: moment()
-  });
+  const [notice, setNotice] = useState();
 
   useEffect(() => {
     if (locationState.edit) {
@@ -40,23 +33,26 @@ const NewCE = (props) => {
 
   const getNew = async () => {
     const data = await NewsFeed.getOne(props.eventId, locationState.edit);
-    setNotice({...data, time:moment(data.time)})
-  }
+    console.log('DATA===>', data);
+    setNotice(data);
+  };
 
   const handleChange = (e) => {
     const { name } = e.target;
     const { value } = e.target;
     setNotice({
       ...notice,
-      [name] : value
-    })
+      [name]: value,
+    });
   };
 
   const changeDescription = (e, name) => {
-    setNotice({
-      ...notice,
-      [name]: e
-    })
+    if (notice) {
+      setNotice({
+        ...notice,
+        [name]: e,
+      });
+    }
   };
 
   const changeImg = (files) => {
@@ -67,8 +63,8 @@ const NewCE = (props) => {
     if (file) {
       setNotice({
         ...notice,
-        image: file
-      })
+        image: file,
+      });
 
       //envia el archivo de imagen como POST al API
       const uploaders = files.map((file) => {
@@ -84,8 +80,8 @@ const NewCE = (props) => {
         setNotice({
           ...notice,
           image: null,
-          picture: path[0]
-        })
+          picture: path[0],
+        });
 
         message.open({
           type: 'success',
@@ -102,8 +98,8 @@ const NewCE = (props) => {
 
   const onChangeDate = (date, dateString) => {
     console.log(date, dateString);
-    setNotice({...notice, time:date});
-  }
+    setNotice({ ...notice, time: date });
+  };
 
   const onSubmit = async () => {
     console.log(notice);
@@ -114,12 +110,12 @@ const NewCE = (props) => {
     });
 
     try {
-      if(locationState.edit) {
+      if (locationState.edit) {
         await NewsFeed.editOne(notice, locationState.edit, props.eventId);
       } else {
         await NewsFeed.create(notice, props.eventId);
-      }     
-    
+      }
+
       message.destroy(loading.key);
       message.open({
         type: 'success',
@@ -133,7 +129,7 @@ const NewCE = (props) => {
         content: handleRequestError(e).message,
       });
     }
-  }
+  };
 
   const remove = () => {
     const loading = message.open({
@@ -141,7 +137,7 @@ const NewCE = (props) => {
       type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
-    if(locationState.edit) {
+    if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -166,73 +162,65 @@ const NewCE = (props) => {
                 content: handleRequestError(e).message,
               });
             }
-          }
+          };
           onHandlerRemove();
-        }
+        },
       });
     }
-  }
+  };
 
   return (
-    <Form
-      onFinish={onSubmit}
-      {...formLayout}
-    >
-      <Header 
-        title={'Noticia'}
-        back
-        save
-        form
-        edit={locationState.edit}
-        remove={remove}
-      />
-
+    <Form onFinish={onSubmit} {...formLayout} initialValues={notice}>
+      <Header title={'Noticia'} back save form edit={locationState.edit} remove={remove} />
+      {console.log('NOTICIARENDER===>', notice)}
       <Row justify='center' wrap gutter={12}>
         <Col span={16}>
-          <Form.Item label={'Título'} >
-            <Input 
+          <Form.Item label={'Título'}>
+            <Input
               name={'title'}
-              value={notice.title}
+              value={notice && notice.title}
               placeholder={'Título de la noticia'}
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>
 
           <Form.Item label={'Subtítulo'}>
-            <ReactQuill 
+            <EviusReactQuill
               id='description_short'
               name={'description_short'}
-              value={notice.description_short}
-              modules={toolbarEditor}
-              onChange={(e) => changeDescription(e, 'description_short')} 
+              data={(notice && notice.description_short) || ''}
+              //modules={toolbarEditor}
+              handleChange={(e) => changeDescription(e, 'description_short')}
             />
           </Form.Item>
 
           <Form.Item label={'Noticia'}>
-            <ReactQuill
+            <EviusReactQuill
               id='description_complete'
               name={'description_complete'}
-              value={notice.description_complete} 
-              modules={toolbarEditor} 
-              onChange={(e) => changeDescription(e, 'description_complete')} 
+              data={(notice && notice.description_complete) || ''}
+              //modules={toolbarEditor}
+              handleChange={(e) => changeDescription(e, 'description_complete')}
             />
           </Form.Item>
 
           <Form.Item label={'Imagen'}>
-            <Card style={{'textAlign': 'center'}}>
+            <Card style={{ textAlign: 'center' }}>
               <Form.Item noStyle>
                 <ImageInput
-                  picture={notice.picture}
-                  imageFile={notice.image}
+                  picture={notice && notice.picture}
+                  imageFile={notice && notice.image}
                   divClass={'drop-img'}
-                  content={<img src={notice.picture} alt={'Imagen Perfil'} />}
+                  content={<img src={notice && notice?.picture} alt={'Imagen Perfil'} />}
                   classDrop={'dropzone'}
                   contentDrop={
                     <button
                       onClick={(e) => {
                         e.preventDefault();
                       }}
-                      className={`button is-primary is-inverted is-outlined ${notice.image ? 'is-loading' : ''}`}>
+                      className={`button is-primary is-inverted is-outlined ${
+                        notice && notice.image ? 'is-loading' : ''
+                      }`}>
                       Cambiar foto
                     </button>
                   }
@@ -266,18 +254,18 @@ const NewCE = (props) => {
           <Form.Item label='Link del video'>
             <Input
               name={'linkYoutube'}
-              value={notice.linkYoutube}
+              value={notice && notice.linkYoutube}
               type='url'
               placeholder={'www.video.com'}
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>
 
-          <Form.Item label={'Fecha'} >
-            <DatePicker 
+          <Form.Item label={'Fecha'}>
+            <DatePicker
               name={'time'}
               format='YYYY-DD-MM'
-              value={moment(notice.time)} 
+              value={notice && moment(notice.time)}
               onChange={onChangeDate}
             />
           </Form.Item>
@@ -285,6 +273,6 @@ const NewCE = (props) => {
       </Row>
     </Form>
   );
-}
+};
 
 export default NewCE;

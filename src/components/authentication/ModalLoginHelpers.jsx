@@ -77,11 +77,21 @@ const ModalLoginHelpers = (props) => {
         const userExists = await UsersApi.findByEmail(values.email);
         if (userExists.length > 0) {
           auth.sendPasswordResetEmail(values.email);
-          setSendRecovery(`Para recuperar contraseña se ha enviado un link al correo: ${values.email} `);
+          setSendRecovery(
+            `${intl.formatMessage({
+              id: 'modal.restore.alert.success',
+              defaultMessage: 'Se ha enviado una nueva contraseña a:',
+            })} ${values.email} `
+          );
           setresul('OK');
           //setRegisterUser(true);
         } else {
-          setSendRecovery(`${values.email} no se encuentra registrado..`);
+          setSendRecovery(
+            `${values.email} ${intl.formatMessage({
+              id: 'modal.message.notregistered.org',
+              defaultMessage: 'no se encuentra registrado.',
+            })} `
+          );
         }
         setLoading(false);
       }

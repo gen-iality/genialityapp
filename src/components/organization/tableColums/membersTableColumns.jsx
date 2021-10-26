@@ -77,6 +77,7 @@ export const columns = (columnsData, editModalUser) => [
       return (
         <Tooltip title='Editar'>
           <Button
+            id={`editAction${index}`}
             type='primary'
             size='small'
             onClick={(e) => {

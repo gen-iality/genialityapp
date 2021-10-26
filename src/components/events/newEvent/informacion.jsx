@@ -137,6 +137,7 @@ const Informacion = (props) => {
             Nombre del evento <span className='text-color'>*</span>
           </Text>
           <Input
+            name={'name'}
             value={valueInputs['name'] || ''}
             onChange={(e) => handleInput(e, 'name')}
             placeholder='Nombre del evento'
@@ -161,6 +162,7 @@ const Informacion = (props) => {
                 </Link>
               </Text>
               <Input.TextArea
+                id={'description'}
                 value={valueInputs['description'] || ''}
                 onChange={(e) => handleInput(e, 'description')}></Input.TextArea>
               {containsError('description') && (
