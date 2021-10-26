@@ -103,7 +103,6 @@ export const HelperContextProvider = ({ children }) => {
   /*ENTRAR A CHAT O ATTENDE EN EL MENU*/
   function HandleChatOrAttende(key) {
     setchatAttendeChats(key);
-    createChatInitalPrivate(`event_${cEvent.value._id}`);
   }
 
   /*ENTRAR A CHAT PUBLICO O PRIVADO*/

@@ -26,6 +26,7 @@ import SurveyDrawer from '../surveys/components/surveyDrawer';
 import HeaderColumnswithContext from './HeaderColumns';
 import HCOActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
+import AditionalInformation from './AditionalInformation';
 const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys, unsetCurrentSurvey } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {
@@ -47,6 +48,7 @@ const AgendaActividadDetalle = (props) => {
   {
     Moment.locale(window.navigator.language);
   }
+
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     firestore
@@ -101,7 +103,7 @@ const AgendaActividadDetalle = (props) => {
     return () => {
       props.setTopBanner(true);
       props.setVirtualConference(true);
-      if(!isCollapsedMenuRigth){
+      if (!isCollapsedMenuRigth) {
         HandleOpenCloseMenuRigth(true);
       }
       handleChangeCurrentActivity(null);
@@ -180,6 +182,7 @@ const AgendaActividadDetalle = (props) => {
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           <HeaderColumnswithContext isVisible={true} />
           <HCOActividad />
+          <AditionalInformation orderedHost={orderedHost} />
         </Card>
       </div>
       {/* Drawer encuestas */}
