@@ -8,7 +8,7 @@ import { VideoActivity } from './VideoActivity';
 import { Row, Space, Spin } from 'antd';
 import Game from '../game';
 import { LoadingOutlined } from '@ant-design/icons';
-import { Ripple } from 'react-preloaders';
+import { withRouter } from 'react-router-dom';
 
 const RenderComponent = (props) => {
   let { currentActivity, chatAttendeChats } = useContext(HelperContext);
@@ -19,7 +19,7 @@ const RenderComponent = (props) => {
     surveys: false,
   };
   const [tabsGeneral, settabsGeneral] = useState(tabsdefault);
-  const [activityState, setactivityState] = useState('nothing_state');
+  const [activityState, setactivityState] = useState();
 
   const Preloader = () => (
     <Space
@@ -38,14 +38,14 @@ const RenderComponent = (props) => {
 
   useEffect(() => {
     if (currentActivity) {
-      settabsGeneral(currentActivity.tabs);
-      setactivityState(currentActivity?.habilitar_ingreso ? currentActivity?.habilitar_ingreso : 'nothing_state');
+      setactivityState(currentActivity.habilitar_ingreso ? currentActivity.habilitar_ingreso : 'nothing_state');
+      settabsGeneral(currentActivity.tabs ? currentActivity.tabs : tabsdefault);
     }
-  }, [currentActivity]);
+  });
 
   let ComponentRender = <Preloader />;
 
-  console.log('currentActivity', activityState);
+  // console.log('activityState', activityState);
   switch (currentActivity?.platform) {
     case 'dolby':
       switch (activityState) {
@@ -208,11 +208,9 @@ const RenderComponent = (props) => {
       }
 
       break;
-
-   
   }
 
   return ComponentRender;
 };
 
-export default WithEviusContext(RenderComponent);
+export default withRouter(WithEviusContext(RenderComponent));

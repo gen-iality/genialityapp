@@ -8,7 +8,7 @@ import { UseUserEvent } from './eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { createChatInitalPrivate } from '../components/networking/agendaHook';
+import { createChatInitalPrivate, createChatRoom } from '../components/networking/agendaHook';
 import { getGender } from 'gender-detection-from-name';
 import { maleIcons, femaleicons } from '../helpers/constants';
 
@@ -108,7 +108,10 @@ export const HelperContextProvider = ({ children }) => {
   /*ENTRAR A CHAT PUBLICO O PRIVADO*/
   function HandlePublicPrivate(key) {
     setchatPublicPrivate(key);
-    // console.log("private key: " + key);
+    console.log('private key: ' + key);
+    if (key == 'public') {
+      createChatRoom('event_' + cEvent.value._id);
+    }
   }
 
   /*LECTURA DE MENSAJES*/

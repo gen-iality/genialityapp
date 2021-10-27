@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import HelperContext from '../../../Context/HelperContext';
 import { useIntl } from 'react-intl';
-import { Button, Tabs,Typography, Badge} from 'antd';
+import { Button, Tabs, Typography, Badge, Col, Card, List,Avatar  } from 'antd';
 import WithEviusContext from '../../../Context/withContext';
 import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
@@ -12,6 +12,8 @@ const AditionalInformation = (props) => {
   let { HandleChatOrAttende, currentActivity } = useContext(HelperContext);
   const intl = useIntl();
   const [activeTab, setActiveTab] = useState('description');
+  let [idSpeaker, setIdSpeaker] = useState(false);
+
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
@@ -19,6 +21,10 @@ const AditionalInformation = (props) => {
     if (tab === 'games') {
       HandleChatOrAttende('4');
     }
+  }
+
+  async function getSpeakers(idSpeaker) {
+    setIdSpeaker(idSpeaker);
   }
 
   return (

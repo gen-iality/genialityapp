@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
 import { useIntl } from 'react-intl';
@@ -19,8 +19,9 @@ import HeaderColumnswithContext from './HeaderColumns';
 import HCOActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
 import AditionalInformation from './AditionalInformation';
-
+import ImageComponentwithContext from './ImageComponent';
 const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys, unsetCurrentSurvey } = SurveyActions;
+
 
 const AgendaActividadDetalle = (props) => {
   let {
@@ -34,7 +35,6 @@ const AgendaActividadDetalle = (props) => {
   let cSurveys = UseSurveysContext();
   const [videoStyles, setVideoStyles] = useState(null);
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
-  let [idSpeaker, setIdSpeaker] = useState(false);
   let [blockActivity, setblockActivity] = useState(false);
 
   const intl = useIntl();
@@ -60,10 +60,6 @@ const AgendaActividadDetalle = (props) => {
         // console.log('currentemp', currentemp);
         handleChangeCurrentActivity(currentemp);
       });
-  }
-
-  async function getSpeakers(idSpeaker) {
-    setIdSpeaker(idSpeaker);
   }
 
   useEffect(() => {
@@ -150,7 +146,7 @@ const AgendaActividadDetalle = (props) => {
   useEffect(() => {
     if (props.cEvent.value && props.cUser) {
       if (props.cEvent.value?._id == '61200dfb2c0e5301fa5e9d86') {
-        if (activitiesCode.includes(activity_id)) {
+        if (activitiesCode.includes(props.match.params.activity_id)) {
           if (props.cEventUser.value) {
             if (
               codeActivity.includes(props.cEventUser.value?.properties.codigo) ||
@@ -168,12 +164,33 @@ const AgendaActividadDetalle = (props) => {
     }
   }, [props.cEvent.value, props.cEventUser.value, props.cUser.value]);
 
-  return !blockActivity ? (
+  return (
     <div className='is-centered'>
       <div className=' container_agenda-information container-calendar2 is-three-fifths'>
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           <HeaderColumnswithContext isVisible={true} />
-          <HCOActividad />
+          {!blockActivity ? (
+            <HCOActividad />
+          ) : (
+            <>
+              <Row>
+                <ImageComponentwithContext />
+                <Alert
+                  showIcon
+                  style={{ width: '100%', marginTop: 40, marginBottom: 40, textAlign: 'center', fontSize: '19px' }}
+                  message={
+                    <>
+                      ¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
+                      <a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
+                        https://iberofest.co/producto/edc/
+                      </a>{' '}
+                    </>
+                  }
+                  type='warning'
+                />
+              </Row>
+            </>
+          )}
           <AditionalInformation orderedHost={orderedHost} />
         </Card>
       </div>
@@ -183,27 +200,6 @@ const AgendaActividadDetalle = (props) => {
         colorTexto={props.cEvent.value.styles.textMenu}
       />
     </div>
-  ) : (
-    <Card style={{ padding: '1 !important' }} className={'agenda_information'}>
-      <Row align='middle'>
-        <HCOActividad />
-      </Row>
-      <Row>
-        <Alert
-          showIcon
-          style={{ width: '100%', marginTop: 40, marginBottom: 40, textAlign: 'center', fontSize: '19px' }}
-          message={
-            <>
-              ¿Quieres acceder a la membresía del taller? ingresa aqui:{' '}
-              <a style={{ color: '#3273dc' }} target='_blank' href='https://iberofest.co/producto/edc/'>
-                https://iberofest.co/producto/edc/
-              </a>{' '}
-            </>
-          }
-          type='warning'
-        />
-      </Row>
-    </Card>
   );
 };
 
