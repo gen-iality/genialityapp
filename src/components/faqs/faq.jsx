@@ -28,21 +28,18 @@ const Faq = (props) => {
     if(locationState.edit) {
       getOne();
     }
-  }, []);
+  }, [faq]);
 
   const getOne = async () => {
     const response = await FaqsApi.getOne(locationState.edit, eventID);
     let data = response.data.find(faqs => faqs._id === locationState.edit);
-    console.log(data);
-    setFaq({...data, content: data.content, title: data.title});
+    setFaq(response.data.find(faqs => faqs._id === locationState.edit));
     if(data.content === '<p><br></p>') {
       setFaq({...faq, content: '', title: data.title})
     }
-    console.log(faq);
   }
 
   const onSubmit = async () => {
-    console.log(faq);
     const loading = message.open({
       key: 'loading',
       type: 'loading',

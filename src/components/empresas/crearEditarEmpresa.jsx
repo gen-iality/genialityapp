@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { CaretLeftOutlined, DeleteOutlined, PlusCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Form, notification, Row, Input } from 'antd';
+import { Button, Col, Form, notification, Row, Input, message, Modal } from 'antd';
 import { Field, FieldArray, Formik } from 'formik';
 import { apply, keys } from 'ramda';
 import { Link } from 'react-router-dom';
@@ -24,6 +24,8 @@ const formLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
 };
+
+const { confirm } = Modal;
 
 const buttonsLayout = {
   wrapperCol: { offset: 8, span: 16 },
@@ -142,7 +144,7 @@ function CrearEditarEmpresa( props ) {
   /* const locationState = props.location.state; */
   const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(event._id);
   const [socialNetworksOptions, loadingSocialNetworks] = useGetEventCompaniesSocialNetworksOptions(event._id);
-  const [initialValues, loadingInitialValues] = useGetCompanyInitialValues(event._id, companyId);
+  const [initialValues, loadingInitialValues] = useGetCompanyInitialValues(event._id, props.location.state.edit);
   const [tamanio, setTamanio] = useState(0);
 
   useEffect(() => {
@@ -158,9 +160,9 @@ function CrearEditarEmpresa( props ) {
 
   const onSubmit = useCallback(
     (values, { setSubmitting }) => {
-      const isNewRecord = !companyId;
+      const isNewRecord = !props.location.state.edit;
       const createOrEdit = isNewRecord ? createEventCompany : updateEventCompany;
-      const paramsArray = isNewRecord ? [event._id, values, tamanio] : [event._id, companyId, values];
+      const paramsArray = isNewRecord ? [event._id, values, tamanio] : [event._id, props.location.state.edit, values];
       const errorObject = {
         message: 'Error',
         description: isNewRecord ? 'Ocurrió un error creando la empresa' : 'Ocurrió un error actualizando la empresa',
@@ -173,7 +175,7 @@ function CrearEditarEmpresa( props ) {
           setSubmitting(false);
         });
     },
-    [history, event._id, companyId, tamanio]
+    [history, event._id, props.location.state.edit, tamanio]
   );
 
   const remove = () => {
@@ -182,7 +184,7 @@ function CrearEditarEmpresa( props ) {
       type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
-    if(locationState.edit) {
+    if(props.location.state.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -196,7 +198,7 @@ function CrearEditarEmpresa( props ) {
               firestore
                 .collection('event_companies')
                 .doc(event._id)
-                .collection('companies').doc(companyId).delete();
+                .collection('companies').doc(props.location.state.edit).delete();
               message.destroy(loading.key);
               message.open({
                 type: 'success',
@@ -238,7 +240,7 @@ function CrearEditarEmpresa( props ) {
               save
               form
               remove={remove}
-              edit={companyId}
+              edit={props.location.state.edit}
             />
             <Row justify='center'>
               <Col span={20}>
