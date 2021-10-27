@@ -19,7 +19,6 @@ const requestStatusText = {
 };
 
 function AppointmentRequests({ eventUsers, notificacion,showpendingsend }) {
-  console.log("EVENT USERS==>",eventUsers)
   const [loading, setLoading] = useState(true);
   const [loading1, setLoading1] = useState(true);
   const [fetching, setFetching] = useState(false);
@@ -39,9 +38,6 @@ function AppointmentRequests({ eventUsers, notificacion,showpendingsend }) {
 
       getPendingAgendasFromEventUser(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
-          console.log("USER EVENT ID==>",userEventContext.value._id)
-          console.log("AGENDAS==>",agendas)
-        
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             const pendingAgendas = map((agenda) => {
               const ownerEventUser = find(propEq('_id', agenda.owner_id), eventUsers);
@@ -53,7 +49,6 @@ function AppointmentRequests({ eventUsers, notificacion,showpendingsend }) {
           }
         })
         .catch((error) => {
-          console.error(error);
           notification.error({
             message: 'Error',
             description: 'Obteniendo las citas pendientes'
@@ -73,7 +68,6 @@ function AppointmentRequests({ eventUsers, notificacion,showpendingsend }) {
 
       getPendingAgendasSent(eventContext.value._id, userEventContext.value._id)
         .then((agendas) => {
-          console.log("AGENDAS 2==>",agendas)
           if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
             
             const pendingAgendas = map((agenda) => {

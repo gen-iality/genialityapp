@@ -149,8 +149,7 @@ const FormRegister = ({
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
     organization ? fields : cEvent.value?.user_properties || {}
   );
-  //initialValues.codearea = null;
-  //console.log('EVENT USER==>', eventUser);
+
 
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';

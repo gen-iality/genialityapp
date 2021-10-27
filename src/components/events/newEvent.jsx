@@ -234,8 +234,6 @@ class NewEvent extends Component {
   createZoomRoom = async (activity, event_id) => {
     const service = new Service(firestore);
     const evius_token = Cookie.get('evius_token');
-    console.log('CRATE ZOOM ROOM==>', activity, event_id, evius_token);
-
     // Se valida si es el host se selecciona de manera manual o automáticamente
     // Si la seleccion del host es manual se envia el campo host_id con el id del host tipo string
     // Si la seleccion del host es automática se envia el campo host_ids con un array de strings con los ids de los hosts
