@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import HelperContext from '../../../Context/HelperContext';
 import { useIntl } from 'react-intl';
-import { Button, Tabs, Typography, Badge, Col, Card, List,Avatar  } from 'antd';
+import { Button, Tabs, Typography, Badge, Col, Card, List,Avatar,Alert  } from 'antd';
 import WithEviusContext from '../../../Context/withContext';
 import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';

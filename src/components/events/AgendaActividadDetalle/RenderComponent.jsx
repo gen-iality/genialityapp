@@ -41,7 +41,7 @@ const RenderComponent = (props) => {
       setactivityState(currentActivity.habilitar_ingreso ? currentActivity.habilitar_ingreso : 'nothing_state');
       settabsGeneral(currentActivity.tabs ? currentActivity.tabs : tabsdefault);
     }
-  });
+  },[currentActivity]);
 
   let ComponentRender = <Preloader />;
 
