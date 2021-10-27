@@ -47,6 +47,13 @@ let SocialZone = function(props) {
   let busquedaRef = useRef();
   let history = useHistory();
 
+  const [tabsSocialzone, settabsSocialzone] = useState({
+    chat:true,
+    games:false,
+    attendees: true,
+    surveys: true,
+  })
+
   const handleChange = async (e) => {
     const { value } = e.target;
     setBusqueda(value);
@@ -74,6 +81,10 @@ let SocialZone = function(props) {
   function redirectRegister() {
     history.push(`/landing/${cEvent.value._id}/tickets`);
   }
+
+  useEffect(() => {
+    settabsSocialzone(currentActivity?.tabs);
+  }, [currentActivity])
 
   return (
     <Tabs
@@ -208,7 +219,7 @@ let SocialZone = function(props) {
         </TabPane>
       )}
 
-      {currentActivity !== null && props.tabs !== null && (props.tabs?.games === true || props?.tabs.games === 'true') && (
+      {tabsSocialzone !== null  && (tabsSocialzone?.games === true || tabsSocialzone?.games === 'true') && (
         <TabPane
           className='asistente-survey-list asistente-list'
           tab={
