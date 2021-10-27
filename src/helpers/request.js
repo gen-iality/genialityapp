@@ -313,13 +313,13 @@ export const InvitationsApi = {
   },
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/invitation`, true).then(({ data }) => data);
-  }
+  },
 };
 
 export const UsersApi = {
   getAll: async (id, query) => {
     query = query ? query : '';
-    return await Actions.getAll(`/api/events/${id}/eventUsers${query}`);
+    return await Actions.getAll(`/api/events/${id}/eventusers${query}`);
   },
   getOne: async (event_id, user_id) => {
     return await Actions.getAll(`api/events/${event_id}/eventusers/${user_id}`);
