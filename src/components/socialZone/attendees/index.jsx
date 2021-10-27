@@ -56,8 +56,6 @@ const AttendeList = function(props) {
             : whatGenderIs(
                 knowMaleOrFemale(attendeeList[key].properties.names && attendeeList[key].properties.names.split(' ')[0])
               ),
-
-
         };
 
         // console.log("attendeeList[key].properties.picture",attendeeList[key].properties.picture)

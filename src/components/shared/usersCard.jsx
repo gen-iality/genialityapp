@@ -272,6 +272,7 @@ function UsersCard(props) {
   }
 
   function initComponent() {
+    console.log('props.type', props.type);
     switch (props.type) {
       case 'attendees':
         attendeeRender();
@@ -291,7 +292,7 @@ function UsersCard(props) {
 
   useEffect(() => {
     initComponent();
-  }, [ultimo_mensaje, status, props.item]);
+  }, []);
 
   return (
     <List.Item

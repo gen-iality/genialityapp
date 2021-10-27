@@ -212,6 +212,7 @@ export const HelperContextProvider = ({ children }) => {
         break;
     }
 
+    console.log('chat a ir', data);
     setchatActual(data);
     ReadMessages(callbackdata);
   }
