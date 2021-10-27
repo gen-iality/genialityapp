@@ -53,7 +53,7 @@ function UsersCard(props) {
 
   function getPrivateChatImg() {
     let userLogo = null;
-    console.log('Chat', props.item);
+    // console.log('Chat', props.item);
     if (participants) {
       const filtererdImg = participants?.filter((part) => part.idparticipant != cUser.value.uid);
 
@@ -291,7 +291,7 @@ function UsersCard(props) {
 
   useEffect(() => {
     initComponent();
-  }, [ultimo_mensaje, status, props.item]);
+  }, []);
 
   return (
     <List.Item

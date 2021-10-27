@@ -108,6 +108,7 @@ export const HelperContextProvider = ({ children }) => {
   /*ENTRAR A CHAT PUBLICO O PRIVADO*/
   function HandlePublicPrivate(key) {
     setchatPublicPrivate(key);
+    // console.log("private key: " + key);
   }
 
   /*LECTURA DE MENSAJES*/
@@ -218,6 +219,11 @@ export const HelperContextProvider = ({ children }) => {
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName, imageOtherprofile) => {
+    if (cEventuser.value == null) {
+      handleChangeTypeModal('register');
+      return;
+    }
+
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
     let imageProfileUseractual = cEventuser.value?.user?.picture
