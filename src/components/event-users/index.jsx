@@ -3,7 +3,7 @@ import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
 import XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import { firestore } from '../../helpers/firebase';
-import { BadgeApi, RolAttApi } from '../../helpers/request';
+import { BadgeApi, EventsApi, RolAttApi } from '../../helpers/request';
 import UserModal from '../modal/modalUser';
 import ErrorServe from '../modal/serverError';
 import SearchComponent from '../shared/searchTable';
@@ -182,12 +182,14 @@ class ListEventUser extends Component {
     let self = this;
     this.checkFirebasePersistence();
     try {
-      const { event } = this.props;
+      const event= await EventsApi.getOne(this.props.event._id);     
+      
       const properties = event.user_properties;
       const rolesList = await RolAttApi.byEventRolsGeneral();
       const badgeEvent = await BadgeApi.get(this.props.event._id);
 
       let extraFields = fieldNameEmailFirst(properties);
+      
       extraFields = this.addDefaultLabels(extraFields);
       extraFields = this.orderFieldsByWeight(extraFields);
       let fieldsForm = Array.from(extraFields);
