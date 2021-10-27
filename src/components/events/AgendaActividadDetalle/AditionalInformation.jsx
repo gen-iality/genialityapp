@@ -3,6 +3,7 @@ import HelperContext from '../../../Context/HelperContext';
 import { useIntl } from 'react-intl';
 import { Button, Tabs,Typography, Badge} from 'antd';
 import WithEviusContext from '../../../Context/withContext';
+import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
 const { TabPane } = Tabs;
 const { Title } = Typography;

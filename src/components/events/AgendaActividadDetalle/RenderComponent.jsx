@@ -19,8 +19,7 @@ const RenderComponent = (props) => {
     surveys: false,
   };
   const [tabsGeneral, settabsGeneral] = useState(tabsdefault);
-  const colorTexto = props.cEvent.value?.styles.textMenu;
-  const colorFondo = props.cEvent.value?.styles.toolbarDefaultBg;
+  const [activityState, setactivityState] = useState('nothing_state');
 
   const Preloader = () => (
     <Space
@@ -40,14 +39,16 @@ const RenderComponent = (props) => {
   useEffect(() => {
     if (currentActivity) {
       settabsGeneral(currentActivity.tabs);
+      setactivityState(currentActivity?.habilitar_ingreso ? currentActivity?.habilitar_ingreso : 'nothing_state');
     }
   }, [currentActivity]);
 
   let ComponentRender = <Preloader />;
 
+  console.log('currentActivity', activityState);
   switch (currentActivity?.platform) {
     case 'dolby':
-      switch (currentActivity?.habilitar_ingreso) {
+      switch (activityState) {
         case 'open_meeting_room':
           if ((props.cUser.value.name || props.cUser.value.email) == null || undefined || '') {
             ComponentRender = <DolbyCard />;
@@ -67,11 +68,15 @@ const RenderComponent = (props) => {
             ComponentRender = <ImageComponentwithContext />;
           }
           break;
+
+        case 'nothing_state':
+          ComponentRender = '';
+          break;
       }
       break;
 
     case 'zoomExterno':
-      switch (currentActivity?.habilitar_ingreso) {
+      switch (activityState) {
         case 'open_meeting_room':
           if (chatAttendeChats !== '4') {
             ComponentRender = zoomExternoHandleOpen(currentActivity, props.cEventUser.value);
@@ -92,12 +97,16 @@ const RenderComponent = (props) => {
             ComponentRender = <ImageComponentwithContext />;
           }
           break;
+
+        case 'nothing_state':
+          ComponentRender = '';
+          break;
       }
 
       break;
 
     case 'zoom':
-      switch (currentActivity?.habilitar_ingreso) {
+      switch (activityState) {
         case 'open_meeting_room':
           if (chatAttendeChats !== '4') {
             if (
@@ -139,13 +148,17 @@ const RenderComponent = (props) => {
           } else {
             ComponentRender = <ImageComponentwithContext />;
           }
+          break;
+
+        case 'nothing_state':
+          ComponentRender = '';
           break;
       }
 
       break;
 
     case 'vimeo':
-      switch (currentActivity?.habilitar_ingreso) {
+      switch (activityState) {
         case 'open_meeting_room':
           if (chatAttendeChats !== '4') {
             if (
@@ -188,18 +201,15 @@ const RenderComponent = (props) => {
             ComponentRender = <ImageComponentwithContext />;
           }
           break;
+
+        case 'nothing_state':
+          ComponentRender = '';
+          break;
       }
 
       break;
 
-    // default: {
-    //     component = <Row
-    //         style={{ fontSize: "25px", margin: 10 }}
-    //         justify="center"
-    //     >
-    //         FALTA ASIGNAR EL ESPACIO EN VIVO
-    //     </Row>
-    // }
+   
   }
 
   return ComponentRender;

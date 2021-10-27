@@ -1,20 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import {
-  ArrowLeftOutlined,
-  CaretRightOutlined,
-  CheckCircleOutlined,
-  LoadingOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'moment-timezone';
-import ReactPlayer from 'react-player';
 import { useIntl } from 'react-intl';
-import { Row, Col, Button, List, Avatar, Card, Tabs, Badge, Typography, Form, Input, Alert } from 'antd';
+import { Row, Card, Alert } from 'antd';
 import WithEviusContext from '../../../Context/withContext';
 import { setTopBanner } from '../../../redux/topBanner/actions';
-import { Activity, AgendaApi } from '../../../helpers/request';
+import { AgendaApi } from '../../../helpers/request';
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import HelperContext from '../../../Context/HelperContext';
 import { UseSurveysContext } from '../../../Context/surveysContext';
@@ -27,6 +19,7 @@ import HeaderColumnswithContext from './HeaderColumns';
 import HCOActividad from './HOC_Actividad';
 import { activitiesCode, cityValid, codeActivity } from '../../../helpers/constants';
 import AditionalInformation from './AditionalInformation';
+
 const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys, unsetCurrentSurvey } = SurveyActions;
 
 const AgendaActividadDetalle = (props) => {
@@ -48,7 +41,6 @@ const AgendaActividadDetalle = (props) => {
   {
     Moment.locale(window.navigator.language);
   }
-
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
     firestore
