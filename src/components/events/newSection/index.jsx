@@ -34,7 +34,6 @@ class MySection extends Component {
 
     render() {
         const { event } = this.state
-        console.log("EVENT==>",this.props.cEvent?.value?.itemsMenu?.my_section.markup)
         return (
             <Fragment>
                 <div dangerouslySetInnerHTML={this.createMarkup(this.props.cEvent?.value?.itemsMenu?.my_section.markup)} />

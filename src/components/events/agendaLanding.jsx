@@ -122,7 +122,6 @@ class Agenda extends Component {
   }
   /** extraemos los días en los que pasan actividades */
   setDaysWithAllActivities = (data) => {   
-    console.log("DAYS WITH ACTIVITIES=>",data)
     const dayswithactivities = [];
     data.map((activity) => {
       const datestring = Moment.tz(activity.datetime_start, 'YYYY-MM-DD HH:mm', 'America/Bogota')
@@ -195,8 +194,7 @@ class Agenda extends Component {
         //this.props.setTabs(tabs);
         return  updatedActivityInfo;
     }))
-   // console.log("FILTREDLIST==>",lista)
-    //listfiltered.map((lf)=>console.log("LF=>",lf))
+  
     return lista.filter((lf)=>lf.isPublished || lf.isPublished==undefined);
   }
 
@@ -250,7 +248,6 @@ class Agenda extends Component {
    //FILTRO
 
     let listFiltered=await this.filterStateMeetingRoom(data)
-    console.log("RETURN LIST==>",listFiltered)
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     //const filtered = this.filterByDay(this.state.days[0], data);
     await this.listeningStateMeetingRoom(data);

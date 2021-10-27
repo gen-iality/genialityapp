@@ -121,13 +121,10 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
       getCurrentUser(Cookie.get('evius_token')).then(async (user) => {
         // Servicio que obtiene el eventUserId del usuario actual
         let eventUser = currentUser;
-        console.log("USEREVENT==>",eventUser,eventId)
 
         // Servicio que trae las invitaciones / solicitudes recibidas
         Networking.getInvitationsReceived(eventId, eventUser._id).then(async ({ data }) => {
-        
           setCurrentUserId(eventUser._id);
-          console.log("DATA==>",data)
 
           // Solo se obtendran las invitaciones que no tengan respuesta
           if (data.length > 0) {
@@ -143,9 +140,8 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
 
         // Servicio que trae las invitaciones / solicitudes enviadas
         Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
-          if (data.length > 0){
+          if (data.length > 0) {
             setRequestListSent(data.filter((item) => !item.response || item.response === 'rejected'));
-            console.log("DATA2==>",data)
             setLoading(false);
           }
         });
@@ -187,7 +183,6 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
   // Funcion para aceptar o rechazar una invitacion o solicitud
   const sendResponseToInvitation = async (requestId, state) => {
     let data = { response: state ? 'accepted' : 'rejected' };
-  console.log("requestId==>",requestId)
     Networking.acceptOrDeclineInvitation(eventId, requestId._id, data)
       .then(async () => {
         message.success('Respuesta enviada');
@@ -202,7 +197,7 @@ export default function RequestList({ eventId, currentUser, tabActive, event, cu
         setRequestListReceived(requestListReceived.filter((item) => item._id != requestId._id));
       })
       .catch((err) => {
-        console.error("ERROR API==>",err);
+        // console.error('ERROR API==>', err);
         message.error('Hubo un problema', err);
       });
   };

@@ -160,245 +160,232 @@ let AgendaActividadDetalle = (props) => {
   let mainStageContent = props.mainStageContent;
 
   //Estado para detección si la vista es para mobile
-  // const [ isMobile, setIsMobile ] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // useEffect(() => {
-  //   // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
-  //   mediaQueryMatches();
-  //   window.addEventListener("resize", mediaQueryMatches);
+  useEffect(() => {
+    // Detectar el tamaño del screen al cargar el componente y se agrega listener para detectar cambios de tamaño
+    mediaQueryMatches();
+    window.addEventListener('resize', mediaQueryMatches);
 
-  //   if (props.collapsed) {
-  //     props.toggleCollapsed(1);
-  //   }
+    if (props.collapsed) {
+      props.toggleCollapsed(1);
+    }
 
-  //   // Al cargar el componente se realiza el checkin del usuario en la actividad
-  //   try {
-  //     if (props.cEventUser && cUser.value && props.cEvent.value) {
-  //       TicketsApi.checkInAttendee(
-  //         props.cEvent.value._id,
-  //         props.cEventUser.value._id
-  //       );
-  //       Activity.checkInAttendeeActivity(
-  //         props.cEvent.value._id,
-  //         activity_id,
-  //         cUser.value._id
-  //       );
-  //     }
-  //   } catch (e) {
-  //     console.error("fallo el checkin:", e);
-  //   }
+    // Al cargar el componente se realiza el checkin del usuario en la actividad
+    try {
+      if (props.cEventUser && cUser.value && props.cEvent.value) {
+        TicketsApi.checkInAttendee(props.cEvent.value._id, props.cEventUser.value._id);
+        Activity.checkInAttendeeActivity(props.cEvent.value._id, activity_id, cUser.value._id);
+      }
+    } catch (e) {
+      console.error('fallo el checkin:', e);
+    }
 
-  //   if (cUser && cUser?.displayName && cUser?.email) {
-  //     let innerName =
-  //       cUser && cUser.properties && cUser.properties.casa
-  //         ? "(" + cUser.properties.casa + ")" + cUser.displayName
-  //         : cUser.displayName;
-  //     setNames(innerName);
-  //     setEmail(cUser.email);
-  //   }
+    if (cUser && cUser?.displayName && cUser?.email) {
+      let innerName =
+        cUser && cUser.properties && cUser.properties.casa
+          ? '(' + cUser.properties.casa + ')' + cUser.displayName
+          : cUser.displayName;
+      setNames(innerName);
+      setEmail(cUser.email);
+    }
 
-  //   // Desmontado del componente
-  //   return () => {
-  //     props.gotoActivity(null);
-  //     props.setMainStage(null);
-  //     props.setCurrentSurvey(null);
-  //     props.setSurveyVisible(false);
-  //     window.removeEventListener("resize", mediaQueryMatches);
-  //   };
-  // }, []);
+    // Desmontado del componente
+    return () => {
+      props.gotoActivity(null);
+      props.setMainStage(null);
+      props.setCurrentSurvey(null);
+      props.setSurveyVisible(false);
+      window.removeEventListener('resize', mediaQueryMatches);
+    };
+  }, []);
 
-  // useEffect(() => {
-  //   async function GetStateMeetingRoom() {
-  //     await listeningStateMeetingRoom(props.cEvent.value._id, activity_id);
-  //   }
+  useEffect(() => {
+    async function GetStateMeetingRoom() {
+      await listeningStateMeetingRoom(props.cEvent.value._id, activity_id);
+    }
 
-  //   GetStateMeetingRoom();
-  // }, [ activity_id ]);
+    GetStateMeetingRoom();
+  }, [activity_id]);
 
-  // useEffect(() => {
-  //   async function listeningSpaceRoom() {
-  //     if (meeting_id === null || platform === null) return false;
-  //     firestore
-  //       .collection("events")
-  //       .doc(props.cEvent.value._id)
-  //       .collection("activities")
-  //       .where("meeting_id", "==", meeting_id)
-  //       .where("platform", "==", platform)
-  //       .onSnapshot((snapshot) => {
-  //         const list = [];
-  //         snapshot.forEach(function (doc) {
-  //           if (doc.exists) {
-  //             const response = doc.data();
-  //             list.push(response);
-  //           }
-  //         });
+  useEffect(() => {
+    async function listeningSpaceRoom() {
+      if (meeting_id === null || platform === null) return false;
+      firestore
+        .collection('events')
+        .doc(props.cEvent.value._id)
+        .collection('activities')
+        .where('meeting_id', '==', meeting_id)
+        .where('platform', '==', platform)
+        .onSnapshot((snapshot) => {
+          const list = [];
+          snapshot.forEach(function(doc) {
+            if (doc.exists) {
+              const response = doc.data();
+              list.push(response);
+            }
+          });
 
-  //         setActivitiesSpace(list);
-  //       });
-  //   }
+          setActivitiesSpace(list);
+        });
+    }
 
-  //   (async () => {
-  //     await listeningSpaceRoom();
-  //   })();
-  // }, [ meeting_id, platform, props.cEvent.value ]);
+    (async () => {
+      await listeningSpaceRoom();
+    })();
+  }, [meeting_id, platform, props.cEvent.value]);
 
-  // useEffect(() => {
-  //   if (
-  //     chatAttendeChats === "4"
-  //   ) {
-  //     const sharedProperties = {
-  //       position: "fixed",
-  //       right: "0",
-  //       width: "170px",
-  //     };
+  useEffect(() => {
+    if (chatAttendeChats === '4') {
+      const sharedProperties = {
+        position: 'fixed',
+        right: '0',
+        width: '170px',
+      };
 
-  //     const verticalVideo = isMobile ? { top: "5%" } : { bottom: "0" };
+      const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
 
-  //     setVideoStyles({
-  //       ...sharedProperties,
-  //       ...verticalVideo,
-  //       zIndex: "100",
-  //       transition: "300ms",
-  //     });
+      setVideoStyles({
+        ...sharedProperties,
+        ...verticalVideo,
+        zIndex: '100',
+        transition: '300ms',
+      });
 
-  //     const verticalVideoButton = isMobile ? { top: "9%" } : { bottom: "27px" };
+      const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
 
-  //     setVideoButtonStyles({
-  //       ...sharedProperties,
-  //       ...verticalVideoButton,
-  //       zIndex: "101",
-  //       cursor: "pointer",
-  //       display: "block",
-  //       height: "96px",
-  //     });
-  //   } else {
-  //     setVideoStyles({ width: "100%", height: "80vh", transition: "300ms" });
-  //     setVideoButtonStyles({ display: "none" });
-  //   }
-  // }, [ chatAttendeChats, isMobile ]);
+      setVideoButtonStyles({
+        ...sharedProperties,
+        ...verticalVideoButton,
+        zIndex: '101',
+        cursor: 'pointer',
+        display: 'block',
+        height: '96px',
+      });
+    } else {
+      setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
+      setVideoButtonStyles({ display: 'none' });
+    }
+  }, [chatAttendeChats, isMobile]);
 
-  // function handleChangeLowerTabs(tab) {
-  //   setActiveTab(tab);
+  function handleChangeLowerTabs(tab) {
+    setActiveTab(tab);
 
-  //   if (tab === "games") {
-  //     props.setMainStage("game");
-  //   }
-  // }
+    if (tab === 'games') {
+      props.setMainStage('game');
+    }
+  }
 
-  // function redirectRegister() {
-  //   history.push(`/landing/${props.cEvent.value._id}/tickets`);
-  // }
+  function redirectRegister() {
+    history.push(`/landing/${props.cEvent.value._id}/tickets`);
+  }
 
-  // async function getSpeakers(idSpeaker) {
-  //   setIdSpeaker(idSpeaker);
-  // }
+  async function getSpeakers(idSpeaker) {
+    setIdSpeaker(idSpeaker);
+  }
 
-  // const { image_event } = props;
-  // const colorTexto = props.cEvent.value.styles.textMenu;
-  // const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
+  const { image_event } = props;
+  const colorTexto = props.cEvent.value.styles.textMenu;
+  const colorFondo = props.cEvent.value.styles.toolbarDefaultBg;
 
-  // const imagePlaceHolder =
-  //   "https://via.placeholder.com/1500x540/" +
-  //   colorFondo.replace("#", "") +
-  //   "/" +
-  //   colorTexto.replace("#", "") +
-  //   "?text=" +
-  //   props.cEvent.value.name;
+  const imagePlaceHolder =
+    'https://via.placeholder.com/1500x540/' +
+    colorFondo.replace('#', '') +
+    '/' +
+    colorTexto.replace('#', '') +
+    '?text=' +
+    props.cEvent.value.name;
 
-  // useEffect(() => {
-  //   if (currentActivity) {
-  //     cSurveys.set_current_activity(currentActivity);
-  //     listenSurveysData(props.cEvent.value, currentActivity, cUser, (data) => {
-  //       props.setHasOpenSurveys(data.hasOpenSurveys);
-  //     });
-  //   }
-  // }, [ props.cEvent.value, currentActivity ]);
+  useEffect(() => {
+    if (currentActivity) {
+      cSurveys.set_current_activity(currentActivity);
+      listenSurveysData(props.cEvent.value, currentActivity, cUser, (data) => {
+        props.setHasOpenSurveys(data.hasOpenSurveys);
+      });
+    }
+  }, [props.cEvent.value, currentActivity]);
 
-  // {
-  //   Moment.locale(window.navigator.language);
-  // }
+  {
+    Moment.locale(window.navigator.language);
+  }
 
-  // const openZoomExterno = () => {
-  //   const { zoomExternoHandleOpen, eventUser, currentActivity } = props;
-  //   zoomExternoHandleOpen(currentActivity, eventUser);
-  // };
+  const openZoomExterno = () => {
+    const { zoomExternoHandleOpen, eventUser, currentActivity } = props;
+    zoomExternoHandleOpen(currentActivity, eventUser);
+  };
 
-  // useEffect(() => {
+  useEffect(() => {
+    if (chatAttendeChats === '4') {
+      const sharedProperties = {
+        position: 'fixed',
+        right: '0',
+        width: '170px',
+      };
 
-  //   console.log("chatAttendeChats", chatAttendeChats)
-  //   if (
-  //     chatAttendeChats === "4"
-  //   ) {
-  //     const sharedProperties = {
-  //       position: "fixed",
-  //       right: "0",
-  //       width: "170px",
-  //     };
+      const verticalVideo = isMobile ? { top: '5%' } : { bottom: '0' };
 
-  //     const verticalVideo = isMobile ? { top: "5%" } : { bottom: "0" };
+      setVideoStyles({
+        ...sharedProperties,
+        ...verticalVideo,
+        zIndex: '100',
+        transition: '300ms',
+      });
 
-  //     setVideoStyles({
-  //       ...sharedProperties,
-  //       ...verticalVideo,
-  //       zIndex: "100",
-  //       transition: "300ms",
-  //     });
+      const verticalVideoButton = isMobile ? { top: '9%' } : { bottom: '27px' };
 
-  //     const verticalVideoButton = isMobile ? { top: "9%" } : { bottom: "27px" };
+      setVideoButtonStyles({
+        ...sharedProperties,
+        ...verticalVideoButton,
+        zIndex: '101',
+        cursor: 'pointer',
+        display: 'block',
+        height: '96px',
+      });
+    } else {
+      setVideoStyles({ width: '100%', height: '80vh', transition: '300ms' });
+      setVideoButtonStyles({ display: 'none' });
+    }
+  }, [chatAttendeChats, isMobile]);
 
-  //     setVideoButtonStyles({
-  //       ...sharedProperties,
-  //       ...verticalVideoButton,
-  //       zIndex: "101",
-  //       cursor: "pointer",
-  //       display: "block",
-  //       height: "96px",
-  //     });
-  //   } else {
-  //     setVideoStyles({ width: "100%", height: "80vh", transition: "300ms" });
-  //     setVideoButtonStyles({ display: "none" });
-  //   }
-  // }, [ chatAttendeChats, isMobile ]);
+  async function listeningStateMeetingRoom(event_id, activity_id) {
+    firestore
+      .collection('events')
+      .doc(event_id)
+      .collection('activities')
+      .doc(activity_id)
+      .onSnapshot((infoActivity) => {
+        if (!infoActivity.exists) return;
+        const data = infoActivity.data();
+        const { habilitar_ingreso, meeting_id, platform, tabs } = data;
+        setMeeting_id(meeting_id);
+        setPlatform(platform);
+        // console.log("PLATAFORMA",platform)
+        setMeetingState(habilitar_ingreso);
+        props.setTabs(tabs);
+      });
+  }
 
-  // async function listeningStateMeetingRoom(event_id, activity_id) {
-  //   firestore
-  //     .collection("events")
-  //     .doc(event_id)
-  //     .collection("activities")
-  //     .doc(activity_id)
-  //     .onSnapshot((infoActivity) => {
-  //       if (!infoActivity.exists) return;
-  //       const data = infoActivity.data();
-  //       const { habilitar_ingreso, meeting_id, platform, tabs } = data;
-  //       setMeeting_id(meeting_id);
-  //       setPlatform(platform);
-  //       // console.log("PLATAFORMA",platform)
-  //       setMeetingState(habilitar_ingreso);
-  //       props.setTabs(tabs);
-  //     });
-  // }
+  const handleSignInForm = (values) => {
+    setNames(values.names);
+    setEmail(values.email);
+  };
 
-  // const handleSignInForm = (values) => {
-  //   setNames(values.names);
-  //   setEmail(values.email);
-  // };
+  const mediaQueryMatches = () => {
+    let screenWidth = window.innerWidth;
+    screenWidth <= 768 ? setIsMobile(true) : setIsMobile(false);
+  };
 
-  // const mediaQueryMatches = () => {
-  //   let screenWidth = window.innerWidth;
-  //   screenWidth <= 768 ? setIsMobile(true) : setIsMobile(false);
-  // };
+  useEffect(() => {
+    if (currentActivity) {
+      listenSurveysData(props.cEvent.value, currentActivity, cUser, (data) => {
+        props.setHasOpenSurveys(data.hasOpenSurveys);
+      });
+    }
+  }, [props.cEvent.value, currentActivity]);
 
-  // useEffect(() => {
-  //   if (currentActivity) {
-  //     listenSurveysData(props.cEvent.value, currentActivity, cUser, (data) => {
-  //       props.setHasOpenSurveys(data.hasOpenSurveys);
-  //     });
-  //   }
-  // }, [ props.cEvent.value, currentActivity ]);
-
-  // {
-  //   Moment.locale(window.navigator.language);
-  // }
+  {
+    Moment.locale(window.navigator.language);
+  }
 
   return !blockActivity ? (
     <div className='is-centered'>

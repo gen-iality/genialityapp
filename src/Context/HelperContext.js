@@ -233,7 +233,6 @@ export const HelperContextProvider = ({ children }) => {
       ],
     };
 
-    console.log('datachat', data);
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });

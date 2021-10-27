@@ -27,7 +27,7 @@ export const createChatRoom = (idroom) => {
             );
           });
       } else {
-        console.log("hay documentos", doc.data());
+        // console.log("hay documentos", doc.data());
       }
     })
     .then(() => console.log("chat  iniciado"))
