@@ -230,7 +230,7 @@ function CrearEditarEmpresa( props ) {
       // validationSchema={validationSchema}
       onSubmit={onSubmit}>
       {({ isSubmitting, errors, values, handleSubmit, handleReset }) => {
-        console.error(errors);
+        /* console.error(errors); */
         return (
           <Form onReset={handleReset} onSubmitCapture={handleSubmit} {...formLayout}>
             <Header 
