@@ -142,7 +142,6 @@ function Empresas({ event, match }) {
       title: 'Opciones',
       dataIndex: 'id',
       render(value,record) {
-        console.log(value, record);
         return (
           <Row gutter={[8, 8]}>
             <Col>
