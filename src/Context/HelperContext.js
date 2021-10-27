@@ -53,7 +53,7 @@ export const HelperContextProvider = ({ children }) => {
   const [tabLogin, setTabLogin] = useState('1');
   const [visibleLoginEvents, setVisibleLoginEvents] = useState(false);
   const [reloadTemplatesCms, setreloadTemplatesCms] = useState(false);
-  const [gameBaseUrl, setGameBaseUrl] = useState('');
+  const [gameData, setGameData] = useState('');
 
   function handleReloadTemplatesCms() {
     setreloadTemplatesCms(!reloadTemplatesCms);
@@ -576,8 +576,8 @@ export const HelperContextProvider = ({ children }) => {
         visibilityLoginEvents,
         reloadTemplatesCms,
         handleReloadTemplatesCms,
-        gameBaseUrl,
-        setGameBaseUrl,
+        gameData,
+        setGameData,
       }}>
       {children}
     </HelperContext.Provider>

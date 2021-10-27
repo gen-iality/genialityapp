@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { HelperContext } from '../../Context/HelperContext';
 
 function Game(props) {
-  let { gameBaseUrl } = useContext(HelperContext);
+  let { gameData } = useContext(HelperContext);
 
   useEffect(() => {
     const evius_body = document.getElementById('evius-body');
@@ -15,10 +15,11 @@ function Game(props) {
   }, []);
 
   const { currentUser } = props;
+
   return (
     <iframe
       src={
-        `${gameBaseUrl}` +
+        `${gameData.baseUrl}` +
         ('/?uid=' +
           (currentUser && currentUser._id ? currentUser._id : '5e9caaa1d74d5c2f6a02a3c2') +
           '&displayName=' +

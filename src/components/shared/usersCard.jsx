@@ -44,25 +44,13 @@ function UsersCard(props) {
     HandlePublicPrivate,
     imageforDefaultProfile,
     HandleGoToChat,
-    setGameBaseUrl,
+    setGameData,
   } = useContext(HelperContext);
   const [actionCapture, setActionCapture] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [avatar, setAvatar] = useState('');
-  const {
-    names,
-    name,
-    imageProfile,
-    status,
-    uid,
-    participants,
-    ultimo_mensaje,
-    score,
-    time,
-    picture,
-    baseUrl,
-  } = props.item;
+  const { names, name, imageProfile, status, uid, participants, ultimo_mensaje, score, time, picture } = props.item;
 
   function getPrivateChatImg() {
     let userLogo = null;
@@ -290,7 +278,7 @@ function UsersCard(props) {
         <a
           key='list-loadmore-edit'
           onClick={() => {
-            setGameBaseUrl(baseUrl);
+            setGameData(props.item);
           }}>
           <Tooltip title={'Jugar'}>
             <PlayCircleTwoTone style={{ fontSize: '24px' }} />

@@ -9,7 +9,6 @@ import { setCurrentSurvey } from '../../redux/survey/actions';
 import AttendeList from './attendees/index';
 import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
-import GameRanking from '../events/game/gameRanking';
 import GameList from '../events/game/gameList';
 import { useRef } from 'react';
 import { UseEventContext } from '../../Context/eventContext';
@@ -63,10 +62,7 @@ let SocialZone = function(props) {
   useEffect(() => {
     if (chatAttendeChats) {
       if (chatAttendeChats == 4) {
-        props.setMainStage('game');
-      } else {
         props.setMainStage('otherTab');
-        setGameBaseUrl('');
       }
     }
   }, [chatAttendeChats]);
@@ -241,7 +237,6 @@ let SocialZone = function(props) {
             </Col>
           </Row> */}
           <GameList cEvent={cEvent.value} />
-          {/* <GameRanking currentUser={currentUser} cEvent={cEvent.value} /> */}
         </TabPane>
       )}
     </Tabs>

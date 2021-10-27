@@ -18,7 +18,7 @@ import ModalSpeaker from './modalSpeakers';
 import DocumentsList from '../documents/documentsList';
 import * as StageActions from '../../redux/stage/actions';
 import * as SurveyActions from '../../redux/survey/actions';
-import Game from './game';
+import GameDrawer from './game/gameDrawer';
 import EnVivo from '../../EnVivo.svg';
 import SurveyList from '../events/surveys/surveyList';
 import listenSurveysData from '../events/surveys/services/listenSurveysDataToAgendaActividadDetalle';
@@ -64,7 +64,7 @@ let AgendaActividadDetalle = (props) => {
   const [currentActivity, setcurrentActivity] = useState(null);
   let urlBack = `/landing/${props.cEvent.value._id}/agenda`;
   let history = useHistory();
-  let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth, gameBaseUrl } = useContext(HelperContext);
+  let { HandleOpenCloseMenuRigth, isCollapsedMenuRigth, gameData, setGameData } = useContext(HelperContext);
 
   const configfast = useState({});
 
@@ -547,7 +547,17 @@ let AgendaActividadDetalle = (props) => {
                           {(platform === 'zoom' || platform === 'vimeo') && mainStageContent !== 'game' ? (
                             <ZoomIframe platform={platform} meeting_id={meeting_id} generalTabs={props.tabs} />
                           ) : (
-                            <> {mainStageContent === 'game' && gameBaseUrl && <Game />}</>
+                            <>
+                              {' '}
+                              {/* {mainStageContent !== 'game' && gameData && (
+                                <GameDrawer
+                                  gameData={gameData}
+                                  setGameData={setGameData}
+                                  colorFondo={colorFondo}
+                                  colorTexto={colorTexto}
+                                />
+                              )} */}
+                            </>
                           )}
                           <div style={videoButtonStyles} onClick={() => props.setMainStage(null)}></div>
                         </>
@@ -865,6 +875,16 @@ let AgendaActividadDetalle = (props) => {
       </div>
       {/* Drawer encuestas */}
       <SurveyDrawer colorFondo={colorFondo} colorTexto={colorTexto} />
+      {gameData && (
+        <GameDrawer
+          gameData={gameData}
+          setGameData={setGameData}
+          colorFondo={colorFondo}
+          colorTexto={colorTexto}
+          cUser={cUser.value}
+          cEvent={props.cEvent.value}
+        />
+      )}
     </div>
   );
 };

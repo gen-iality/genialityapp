@@ -6,11 +6,16 @@ import RankingList from '../../events/surveys/rankingList';
 import { connect } from 'react-redux';
 
 function GameRanking(props) {
-  const [ ranking, setRanking ] = useState([]);
-  const [ myName, setMyName ] = useState('');
-  const [ myScore, setMyScore ] = useState('');
-
   const { currentUser, cEvent } = props;
+  const [ranking, setRanking] = useState([]);
+  const [myName, setMyName] = useState('');
+  const [myScore, setMyScore] = useState('');
+
+  const styleRanking = {
+    backgroundColor: `${cEvent.styles.toolbarDefaultBg}`,
+    padding: 5,
+    borderRadius: '10px',
+  };
 
   useEffect(() => {
     let gameId = '0biWfCwWbUGhbZmfhkvu';
@@ -20,7 +25,7 @@ function GameRanking(props) {
       firestore
         .collection('juegos/' + gameId + '/puntajes/')
         .doc(currentUser._id)
-        .onSnapshot(function (response) {
+        .onSnapshot(function(response) {
           const myScore = response.data();
 
           if (myScore) {
@@ -34,25 +39,24 @@ function GameRanking(props) {
       .collection('juegos/' + gameId + '/puntajes/')
       .orderBy('puntaje', 'desc')
       .limit(10)
-      .onSnapshot(function (querySnapshot) {
+      .onSnapshot(function(querySnapshot) {
         var puntajes = [];
-        querySnapshot.forEach(function (doc) {
+        querySnapshot.forEach(function(doc) {
           const result = doc.data();
 
-          result[ 'score' ] = result.puntaje;
+          result['score'] = result.puntaje;
           puntajes.push(result);
         });
         setRanking(puntajes);
       });
-  }, [ currentUser ]);
+  }, [currentUser]);
 
   return (
     <>
       {!(Object.keys(currentUser).length === 0) && (
         <>
           {/*RANKING*/}
-          <Row justify='center'>
-
+          <Row justify='center' style={styleRanking}>
             <RankingList data={ranking} cEvent={cEvent} />
           </Row>
         </>
@@ -62,31 +66,33 @@ function GameRanking(props) {
 }
 
 const mapStateToProps = (state) => ({
-  currentUser: state.user.data
+  currentUser: state.user.data,
 });
 
 const RenderMeScore = ({ myName, myScore }) => (
-  <>{myName !== '' && myScore !== '' && (
-    <>
-      {/* <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px', color:cEvent.styles.textMenu }}>Mi Puntaje</h3> */}
-      <div className='card-games-ranking ranking-user'>
-        <Row justify='space-between'>
-          <Col span={6}>
-            <Avatar size={38}>
-              {myName && myName.charAt(0).toUpperCase()}
-              {myName && myName.substring(myName.indexOf(' ') + 1, myName.indexOf(' ') + 2)}
-            </Avatar>
-          </Col>
-          <Col span={12}>
-            <h3 style={{ fontWeight: '700', color: cEvent.styles.textMenu }}>{currentUser.displayName}</h3>
-          </Col>
-          <Col span={6}>
-            <h4 style={{ color: cEvent.styles.textMenu }}>{myScore} pts</h4>
-          </Col>
-        </Row>
-      </div>
-    </>
-  )} </>
-)
+  <>
+    {myName !== '' && myScore !== '' && (
+      <>
+        {/* <h3 style={{ fontSize: '14px', fontWeight: '700', marginTop: '3px', color:cEvent.styles.textMenu }}>Mi Puntaje</h3> */}
+        <div className='card-games-ranking ranking-user'>
+          <Row justify='space-between'>
+            <Col span={6}>
+              <Avatar size={38}>
+                {myName && myName.charAt(0).toUpperCase()}
+                {myName && myName.substring(myName.indexOf(' ') + 1, myName.indexOf(' ') + 2)}
+              </Avatar>
+            </Col>
+            <Col span={12}>
+              <h3 style={{ fontWeight: '700', color: cEvent.styles.textMenu }}>{currentUser.displayName}</h3>
+            </Col>
+            <Col span={6}>
+              <h4 style={{ color: cEvent.styles.textMenu }}>{myScore} pts</h4>
+            </Col>
+          </Row>
+        </div>
+      </>
+    )}{' '}
+  </>
+);
 
 export default connect(mapStateToProps)(GameRanking);
