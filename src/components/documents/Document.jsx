@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DocumentsApi } from '../../helpers/request';
 import { handleRequestError } from '../../helpers/utils';
-import { Form, Row, Col, message, Input, Modal, Upload, Button } from 'antd';
+import { Form, Row, Col, message, Input, Modal, Upload, Button, Checkbox } from 'antd';
 import { ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import firebase from 'firebase';
 import Header from '../../antdComponents/Header';
@@ -24,6 +24,7 @@ const Document = ( props ) => {
   let [files, setFiles] = useState('');
   let [fileName, setFileName] = useState('');
   let [extention, setExtention] = useState('');
+  const [folder, setFolder] = useState(false);
 
   useEffect(() => {
     if(locationState.edit) {
@@ -34,10 +35,16 @@ const Document = ( props ) => {
   const getDocument = async () => {
     const response = await DocumentsApi.getOne(locationState.edit, props.event._id);
     setDocument(response);
+    setFolder(response.folder);
     setFiles([response.file])
+    
   }
 
   const onSubmit = async () => {
+    if(folder) {
+      console.log('here', folder);
+      setDocument({...document, type: 'folder', folder});
+    }
     const loading = message.open({
       key: 'loading',
       type: 'loading',
@@ -46,9 +53,9 @@ const Document = ( props ) => {
 
     try {
       if(locationState.edit) {
-        await DocumentsApi.editOne(document, locationState.edit, props.event._id);
+        await DocumentsApi.editOne(!folder ? document : {title: document.title, type: 'folder', folder}, locationState.edit, props.event._id);
       } else {
-        await DocumentsApi.create(document, props.event._id);
+        await DocumentsApi.create(!folder ? document : {title: document.title, type: 'folder', folder}, props.event._id);
       }     
     
       message.destroy(loading.key);
@@ -83,13 +90,31 @@ const Document = ( props ) => {
         onOk() {
           const onHandlerRemove = async () => {
             try {
+              /* if(document.type === 'folder') {
+                const files = await DocumentsApi.getFiles(props.event._id, locationState.edit);
+
+                files.data.forEach((element) => {
+                  const ref = firebase.storage().ref(`documents/${props.event._id}/`);
+                  var desertRef = ref.child(`${element.name}`);
+
+                  //Delete the file
+                  desertRef
+                    .delete()
+                    .then(function() {
+                      //El dato se elimina aqui
+                    })
+                    .catch(function() {
+                      //Si no muestra el error
+                    });
+                });
+              } */
               await DocumentsApi.deleteOne(locationState.edit, props.event._id);
               message.destroy(loading.key);
               message.open({
                 type: 'success',
                 content: <> Se eliminó la información correctamente!</>,
               });
-              history.push(`${props.matchUrl}/faqs`);
+              history.push(`${props.matchUrl}`);
             } catch (e) {
               message.destroy(loading.key);
               message.open({
@@ -168,8 +193,22 @@ const Document = ( props ) => {
       file = downloadURL;
       console.log(downloadURL);
     });
-    setDocument({...document, format: extention, title: fileName, name: fileName, file: file, type: 'type'});
+    setDocument({...document, format: extention, title: fileName, name: fileName, file: file, type: 'file'});
   }
+
+  /* const createFolder = async () => {
+    let value = document.getElementById('folderName').value;
+
+    const data = {
+      type: 'folder',
+      title: value,
+    };
+    await DocumentsApi.create(this.props.event._id, data);
+    this.getDocuments();
+    this.setState({
+      visible: false,
+    });
+  }; */
 
   return (
     <Form
@@ -187,24 +226,34 @@ const Document = ( props ) => {
       
       <Row justify='center' wrap gutter={12}>
         <Col span={14}>
+          <Form.Item label={'¿Desea crear carpeta?'} >
+            <Checkbox 
+              checked={folder}
+              onChange={(e) => setFolder(e.target.checked)}
+            />
+          </Form.Item>
           <Form.Item label={'Título'} >
             <Input 
               name={'title'}
-              placeholder={'Título del documento'}
+              placeholder={folder ? 'Título de la carpeta' : 'Título del documento'}
               value={document.title}
               onChange={(e) => handleChange(e)}
             />
           </Form.Item>
-          <Form.Item label={'Archivo'} >
-            <Upload
-              name={'file'}
-              type='file'
-              defaultFileList={documentList}
-              onChange={(e) => onHandlerFile(e)}
-            >
-              <Button icon={<UploadOutlined />}>Toca para subir archivo</Button>
-            </Upload>
-          </Form.Item>
+          {
+            !folder && (
+              <Form.Item label={'Archivo'} >
+                <Upload
+                  name={'file'}
+                  type='file'
+                  defaultFileList={documentList}
+                  onChange={(e) => onHandlerFile(e)}
+                >
+                  <Button icon={<UploadOutlined />}>Toca para subir archivo</Button>
+                </Upload>
+              </Form.Item>
+            )
+          }
         </Col>
       </Row>
     </Form>

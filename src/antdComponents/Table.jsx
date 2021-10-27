@@ -58,7 +58,7 @@ const Table = (props) => {
             )}
           </Col>
           <Col>
-            {downloadFile && (
+            {downloadFile && item.type !== 'folder' && (
               <Tooltip placement='topLeft' title='Descargar'>
                 <a href={item.file} target='_blank'>
                   <Button
