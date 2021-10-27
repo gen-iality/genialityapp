@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import HelperContext from '../../../Context/HelperContext';
 import { useIntl } from 'react-intl';
-import { Button, Tabs, Typography, Badge, Col, Card, List,Avatar,Alert  } from 'antd';
+import { Button, Tabs, Typography, Badge, Col, Card, List,Avatar,Alert,Row  } from 'antd';
 import WithEviusContext from '../../../Context/withContext';
 import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
@@ -9,7 +9,7 @@ const { TabPane } = Tabs;
 const { Title } = Typography;
 
 const AditionalInformation = (props) => {
-  let { HandleChatOrAttende, currentActivity } = useContext(HelperContext);
+  let { HandleChatOrAttende, currentActivity, handleChangeTypeModal } = useContext(HelperContext);
   const intl = useIntl();
   const [activeTab, setActiveTab] = useState('description');
   let [idSpeaker, setIdSpeaker] = useState(false);
@@ -147,7 +147,7 @@ const AditionalInformation = (props) => {
                   type='warning'
                 />
                 <Row style={{ marginTop: 30 }} justify='center'>
-                  <Button onClick={redirectRegister}>Registrarme</Button>
+                  <Button onClick={()=>handleChangeTypeModal("register")}>Registrarme</Button>
                 </Row>
               </div>
             )}
