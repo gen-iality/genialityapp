@@ -272,7 +272,6 @@ function UsersCard(props) {
   }
 
   function initComponent() {
-    console.log('props.type', props.type);
     switch (props.type) {
       case 'attendees':
         attendeeRender();

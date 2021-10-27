@@ -212,7 +212,6 @@ export const HelperContextProvider = ({ children }) => {
         break;
     }
 
-    console.log('chat a ir', data);
     setchatActual(data);
     ReadMessages(callbackdata);
   }
@@ -237,6 +236,11 @@ export const HelperContextProvider = ({ children }) => {
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName, imageOtherprofile) => {
+    if (cEventuser.value == null) {
+      handleChangeTypeModal('register');
+      return;
+    }
+
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
     let imageProfileUseractual = cEventuser.value?.user?.picture

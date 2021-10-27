@@ -217,7 +217,7 @@ const EventSectionRoutes = (props) => {
                 <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
               </>
             ) : (
-              <MySection  />
+              <MySection />
             )
           }
         </Route>

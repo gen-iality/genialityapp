@@ -19,7 +19,6 @@ const { useBreakpoint } = Grid;
 let MeetingConferenceButton = ({ activity, zoomExternoHandleOpen, event, setActivity, eventUser }) => {
   const [infoActivity, setInfoActivity] = useState({});
   const screens = useBreakpoint();
-  console.log(screens);
 
   useEffect(() => {
     setInfoActivity(activity);
