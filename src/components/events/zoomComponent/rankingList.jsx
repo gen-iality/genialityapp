@@ -13,11 +13,8 @@ export default function RankingList({ data }) {
     setList(data);
   }, [data]);
 
-<<<<<<< HEAD
-=======
  
 
->>>>>>> 1b0329dab22401251bbbfd2bec9f8c061159d30a
   return (
     <div style={{ marginTop: 16 }}>
       <h3 style={{ fontSize: '14px', fontWeight: '700',color:"red !important" }}>Ranking de jugadores</h3>

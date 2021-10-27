@@ -303,7 +303,6 @@ let AgendaActividadDetalle = (props) => {
   };
 
   useEffect(() => {
-    console.log('chatAttendeChats', chatAttendeChats);
     if (chatAttendeChats === '4') {
       const sharedProperties = {
         position: 'fixed',

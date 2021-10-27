@@ -16,10 +16,6 @@ export default function RankingList({ data }) {
   let cUser = UseCurrentUser();
   let cEvent = UseEventContext();
 
-  console.log('data',data)
-  console.log('user',cUser)
-
-
   useEffect(() => {
     setloading(true);
     setList(data);
