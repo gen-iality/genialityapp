@@ -219,7 +219,7 @@ class Event extends Component {
               />
               <Route
                 path={`${match.url}/datos`}
-                render={() => <Datos byEvent={1}  eventID={this.state.event._id} event={this.state.event} />}
+                render={() => <Datos byEvent={1} eventID={this.state.event._id} event={this.state.event} />}
               />
               <Route
                 path={`${match.url}/agenda`}
@@ -341,7 +341,10 @@ class Event extends Component {
               />
               <Route path={`${match.url}/orders`} render={() => <OrdersEvent eventId={this.state.event._id} />} />
               <Route path={`${match.url}/certificados`} render={() => <ListCertificados event={this.state.event} />} />
-              <Route path={`${match.url}/espacios`} render={() => <Espacios eventID={this.state.event._id} event={this.state.event} matchUrl={match.url}/>} />
+              <Route
+                path={`${match.url}/espacios`}
+                render={() => <Espacios eventID={this.state.event._id} event={this.state.event} matchUrl={match.url} />}
+              />
               <Route
                 path={`${match.url}/reporte-certificados`}
                 render={() => <ReporteCertificados eventId={this.state.event._id} />}
@@ -355,7 +358,7 @@ class Event extends Component {
               />
               <Route
                 path={`${match.url}/notificationsApp`}
-                render={() => <NotificationsApp eventId={this.state.event._id} />}
+                render={() => <NotificationsApp event={this.state.event} />}
               />
               <Route path={`${match.url}/news`}>
                 <NewsSectionRoutes eventId={this.state.event._id} event={this.state.event} />
@@ -363,7 +366,10 @@ class Event extends Component {
               <Route path={`${match.url}/product`}>
                 <ProductSectionRoutes eventId={this.state.event._id} event={this.state.event} />
               </Route>
-              <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} event={this.state.event} matchUrl={match.url} />} />
+              <Route
+                path={`${match.url}/faqs`}
+                render={() => <FAQS eventId={this.state.event._id} event={this.state.event} matchUrl={match.url} />}
+              />
               <Route
                 path={`${match.url}/ticketsEvent`}
                 render={() => <EventsTicket eventId={this.state.event._id} />}
