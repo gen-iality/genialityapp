@@ -63,6 +63,7 @@ export const createChatInitalPrivate = (idchat) => {
     .collection("messages" + idchat)
     .get()
     .then((response) => {
+      // console.log("responsebusqueda",response.docs.length);
       if (response.docs.length == 0) {
         addInitalMessage("messages" + idchat);
       }

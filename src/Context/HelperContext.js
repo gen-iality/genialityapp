@@ -36,7 +36,7 @@ export const maleIcons = [
 ];
 
 export function knowMaleOrFemale(nombre) {
-  return getGender(nombre, "es");
+  return getGender(nombre, 'es');
 }
 
 const initialStateNotification = {
@@ -78,7 +78,7 @@ export const HelperContextProvider = ({ children }) => {
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [tabLogin, setTabLogin] = useState('1');
-  const [theUserHasPlayed, setTheUserHasPlayed] = useState(null)
+  const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
@@ -125,6 +125,7 @@ export const HelperContextProvider = ({ children }) => {
   /*ENTRAR A CHAT PUBLICO O PRIVADO*/
   function HandlePublicPrivate(key) {
     setchatPublicPrivate(key);
+    // console.log("private key: " + key);
   }
 
   /*LECTURA DE MENSAJES*/
