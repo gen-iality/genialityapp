@@ -8,7 +8,8 @@ const { Title } = Typography;
 const { Option } = Select;
 const formLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
+  size: 'small'
 };
 
 class menuLanding extends Component {
@@ -374,15 +375,15 @@ class menuLanding extends Component {
             form
           />
 
-          <Row gutter={[16, 16]} wrap>
+          <Row gutter={[8, 8]} wrap>
             {
-              Object.keys(this.state.menu).map((key) => (
-                <Col key={key} xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
+              Object.keys(this.state.menu).map((key, index) => (
+                <Col key={key} xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
                   <Card 
                     title={this.state.menu[key].name}
                     bordered={true}
                   >
-                    <Form.Item>
+                    <Form.Item name={this.state.menu[key].name}>
                       <Button
                         onClick={() => {this.mapActiveItemsToAvailable(key);}}
                       >
@@ -391,6 +392,7 @@ class menuLanding extends Component {
                     </Form.Item>
                     <Form.Item label={'Cambiar nombre de la sección'}>
                       <Input
+                        name={`name${index}`}
                         disabled={this.state.menu[key].checked === true ? false : true}
                         //value={this.state.menu[key].name}
                         onChange={(e) => {this.changeNameMenu(key, e.target.value);}}
@@ -399,6 +401,7 @@ class menuLanding extends Component {
                     </Form.Item>
                     <Form.Item label={'Permisos para la sección'}>
                       <Select
+                        name={`permissions${index}`}
                         key={this.state.keySelect}
                         disabled={this.state.menu[key].checked === true ? false : true}
                         value={this.state.menu[key].permissions}
@@ -409,9 +412,10 @@ class menuLanding extends Component {
                     </Form.Item>
                     <Form.Item label={'Posición en el menú'}>
                       <InputNumber
+                        name={`position${index}`}
                         disabled={this.state.menu[key].checked === true ? false : true}
                         value={this.state.menu[key].position}
-                        onChange={(e) => this.orderPosition(key, e.target.value)} 
+                        onChange={(e) => this.orderPosition(key, e)} 
                       />
                     </Form.Item>
                   </Card>
