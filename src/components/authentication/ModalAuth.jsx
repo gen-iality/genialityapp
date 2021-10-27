@@ -82,8 +82,7 @@ const ModalAuth = (props) => {
     let loginNormal = false;
     let loginFirst = false;
     setErrorLogin(false);
-    console.log('DATA==>', data.email.trim(), data.password.trim());
-    //HACK PARA ENTRAR CON LA CONTRASEÑA YA ASIGNADA LA PRIMERA VEZ
+   
     app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
