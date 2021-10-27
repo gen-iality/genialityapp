@@ -5,6 +5,7 @@ import { Button, Tabs, Typography, Badge, Col, Card, List,Avatar,Alert,Row  } fr
 import WithEviusContext from '../../../Context/withContext';
 import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
+import DocumentsList from '../documents/documentsList';
 const { TabPane } = Tabs;
 const { Title } = Typography;
 
