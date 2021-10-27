@@ -1,5 +1,5 @@
 import { withRouter } from 'react-router-dom';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Tabs, Row, Badge, Col, Button, Alert } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
@@ -10,13 +10,14 @@ import AttendeList from './attendees/index';
 import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
 import GameRanking from '../events/game/gameRanking';
+import GameList from '../events/game/gameList';
 import { useRef } from 'react';
 import { UseEventContext } from '../../Context/eventContext';
 import { UseCurrentUser } from '../../Context/userContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../Context/HelperContext';
-import { useEffect } from 'react';
+
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
 const callback = () => {};
@@ -31,7 +32,9 @@ let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages } = useContext(HelperContext);
+  let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages, setGameBaseUrl } = useContext(
+    HelperContext
+  );
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [busqueda, setBusqueda] = useState(null);
@@ -61,6 +64,9 @@ let SocialZone = function(props) {
     if (chatAttendeChats) {
       if (chatAttendeChats == 4) {
         props.setMainStage('game');
+      } else {
+        props.setMainStage('otherTab');
+        setGameBaseUrl('');
       }
     }
   }, [chatAttendeChats]);
@@ -83,7 +89,9 @@ let SocialZone = function(props) {
           tab={
             <>
               <Badge
-                onClick={() => HandleChatOrAttende('1')}
+                onClick={() => {
+                  HandleChatOrAttende('1'), props.setMainStage(null);
+                }}
                 size='small'
                 // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
                 count={totalPrivateMessages}>
@@ -232,8 +240,8 @@ let SocialZone = function(props) {
               <VideoCameraOutlined style={{ color: cEvent.value.styles.textMenu }} />
             </Col>
           </Row> */}
-
-          <GameRanking currentUser={currentUser} cEvent={cEvent.value} />
+          <GameList cEvent={cEvent.value} />
+          {/* <GameRanking currentUser={currentUser} cEvent={cEvent.value} /> */}
         </TabPane>
       )}
     </Tabs>

@@ -149,8 +149,8 @@ export default function RoomController(props) {
             {' '}
             <Header
               title={'Juegos disponibles'}
-              titleTooltip={'Seleccione los juego que desea mostrar en la zona social'}
-              description='Seleccione los juego que desea mostrar en la zona social'
+              titleTooltip={'Seleccione los juegos que desea mostrar en la zona social'}
+              description='Seleccione los juegos que desea mostrar en la zona social'
             />
             <Table
               key='index'

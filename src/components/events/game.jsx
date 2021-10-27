@@ -1,6 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { connect } from 'react-redux';
+import { HelperContext } from '../../Context/HelperContext';
+
 function Game(props) {
+  let { gameBaseUrl } = useContext(HelperContext);
+
   useEffect(() => {
     const evius_body = document.getElementById('evius-body');
     evius_body.style.cssText = 'overflow-y: hidden;';
@@ -14,8 +18,8 @@ function Game(props) {
   return (
     <iframe
       src={
-        `https://juegocastrol2.netlify.app/` +
-        ('?uid=' +
+        `${gameBaseUrl}` +
+        ('/?uid=' +
           (currentUser && currentUser._id ? currentUser._id : '5e9caaa1d74d5c2f6a02a3c2') +
           '&displayName=' +
           (currentUser.displayName ? currentUser.displayName : 'anonimo') +
