@@ -34,17 +34,10 @@ function GameRanking(props) {
             });
       }
 
-      let order = '';
-      if (props.cEvent.openOtherGame) {
-         order = 'asc';
-      } else {
-         order = 'desc';
-      }
-
       //Consulta de todos los puntajes
       firestore
          .collection('juegos/' + gameId + '/puntajes/')
-         .orderBy('puntaje', order)
+         .orderBy('puntaje', 'desc')
          .limit(10)
          .onSnapshot(async (querySnapshot) => {
             var puntajes = [];
@@ -57,7 +50,15 @@ function GameRanking(props) {
                   return result;
                })
             );
-            setRanking(puntajes);
+
+            if (props.cEvent.openOtherGame) {
+               const puntajeOrdenado = puntajes.sort(function(a, b) {
+                  return parseFloat(a.score) - parseFloat(b.score);
+               });
+               setRanking(puntajeOrdenado);
+            } else {
+               setRanking(puntajes);
+            }
          });
    }, []);
 
