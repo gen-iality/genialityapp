@@ -111,12 +111,12 @@ class Datos extends Component {
     try {
       let totaluser = {};
       const organizationId = this?.organization?._id;
-      console.log('STATE_ID==>', this.state.edit);
+      //console.log('STATE_ID==>', field, this.state.info);
       if (organizationId) {
         if (this.state.edit) await this.props.editField(field._id, field, this.state.isEditTemplate, this.updateTable);
         else await this.props.createNewField(field, this.state.isEditTemplate, this.updateTable);
       } else {
-        if (this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
+        if (this.state.edit) await EventFieldsApi.editOne(field, this.state?.info?._id, this.eventID);
         else await EventFieldsApi.createOne(field, this.eventID);
         totaluser = await firestore.collection(`${this.eventID}_event_attendees`).get();
       }
