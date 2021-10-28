@@ -53,8 +53,9 @@ function GameRanking(props) {
 
             if (props.cEvent.openOtherGame) {
                const puntajeOrdenado = puntajes.sort(function(a, b) {
-                  return parseInt(a.score, 10) - parseInt(b.score, 10);
+                  return parseFloat(a.score) - parseFloat(b.score);
                });
+               console.log("10. puntajeOrdenado ", puntajeOrdenado)
                setRanking(puntajeOrdenado);
             } else {
                setRanking(puntajes);
