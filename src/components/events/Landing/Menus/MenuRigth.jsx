@@ -9,8 +9,14 @@ import withContext from '../../../../Context/withContext';
 import { HelperContext } from '../../../../Context/HelperContext';
 
 const MenuRigth = (props) => {
-  let { HandleOpenCloseMenuRigth, HandleChatOrAttende, eventPrivate,totalPrivateMessages } = useContext(HelperContext);
-  
+  let {
+    HandleOpenCloseMenuRigth,
+    HandleChatOrAttende,
+    eventPrivate,
+    totalPrivateMessages,
+    currentActivity,
+  } = useContext(HelperContext);
+
   const animateIcon = 'animate__animated animate__bounceIn';
   return (
     <Menu mode='none' theme='light' style={stylesMenuItems}>
@@ -76,9 +82,9 @@ const MenuRigth = (props) => {
                 HandleChatOrAttende('2');
               }}></Menu.Item>
           )}
-          {props.currentActivity !== null &&
-            props.tabs &&
-            (props.tabs.surveys === 'true' || props.tabs.surveys === true) && (
+          {currentActivity !== null &&
+            currentActivity.tabs &&
+            (currentActivity?.tabs.surveys === 'true' || currentActivity?.tabs.surveys === true) && (
               <Menu.Item
                 key='3'
                 icon={
@@ -100,24 +106,26 @@ const MenuRigth = (props) => {
                   HandleChatOrAttende('3');
                 }}></Menu.Item>
             )}
-          {props.currentActivity !== null && props.tabs && (props.tabs.games === 'true' || props.tabs.games === true) && (
-            <Menu.Item
-              key='4'
-              icon={
-                <GamepadVariantOutline
-                  className={animateIcon + ' animate__delay-4s'}
-                  style={{
-                    fontSize: '32px',
-                    color: props.cEvent.value.styles?.textMenu,
-                  }}
-                />
-              }
-              style={{ paddingTop: '20px' }}
-              onClick={() => {
-                HandleOpenCloseMenuRigth();
-                HandleChatOrAttende('4');
-              }}></Menu.Item>
-          )}
+          {currentActivity !== null &&
+            currentActivity.tabs &&
+            (currentActivity?.tabs.games === 'true' || currentActivity?.tabs.games === true) && (
+              <Menu.Item
+                key='4'
+                icon={
+                  <GamepadVariantOutline
+                    className={animateIcon + ' animate__delay-4s'}
+                    style={{
+                      fontSize: '32px',
+                      color: props.cEvent.value.styles?.textMenu,
+                    }}
+                  />
+                }
+                style={{ paddingTop: '20px' }}
+                onClick={() => {
+                  HandleOpenCloseMenuRigth();
+                  HandleChatOrAttende('4');
+                }}></Menu.Item>
+            )}
         </>
       )}
     </Menu>

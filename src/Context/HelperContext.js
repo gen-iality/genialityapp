@@ -8,9 +8,15 @@ import { UseUserEvent } from './eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
 import { MessageOutlined, SendOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { createChatInitalPrivate } from '../components/networking/agendaHook';
+import { createChatInitalPrivate, createChatRoom } from '../components/networking/agendaHook';
+import { getGender } from 'gender-detection-from-name';
+import { maleIcons, femaleicons } from '../helpers/constants';
 
 export const HelperContext = createContext();
+
+export function knowMaleOrFemale(nombre) {
+  return getGender(nombre, 'es');
+}
 
 const initialStateNotification = {
   notify: false,
@@ -51,14 +57,18 @@ export const HelperContextProvider = ({ children }) => {
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [tabLogin, setTabLogin] = useState('1');
-  const [visibleLoginEvents,setVisibleLoginEvents]=useState(false)
-  const [reloadTemplatesCms, setreloadTemplatesCms] = useState(false)
+  const [visibleLoginEvents, setVisibleLoginEvents] = useState(false);
+  const [reloadTemplatesCms, setreloadTemplatesCms] = useState(false);
+  const [currentActivity, setcurrenActivity] = useState(null);
+  const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
 
-
-  function handleReloadTemplatesCms(){
-    setreloadTemplatesCms(!reloadTemplatesCms)
+  function handleReloadTemplatesCms() {
+    setreloadTemplatesCms(!reloadTemplatesCms);
   }
 
+  function handleChangeCurrentActivity(activity) {
+    setcurrenActivity(activity);
+  }
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
@@ -67,13 +77,12 @@ export const HelperContextProvider = ({ children }) => {
     setTabLogin(tab);
   }
 
-  useEffect(() => {    
+  useEffect(() => {
     if (!cEvent.value) return;
     let firstroute = Object.keys(cEvent.value.itemsMenu);
     if (firstroute[0] != undefined) {
       seteventPrivate({ private: false, section: firstroute[0] });
     }
-    
   }, []);
 
   let generateUniqueIdFromOtherIds = (ida, idb) => {
@@ -100,12 +109,15 @@ export const HelperContextProvider = ({ children }) => {
   /*ENTRAR A CHAT O ATTENDE EN EL MENU*/
   function HandleChatOrAttende(key) {
     setchatAttendeChats(key);
-    createChatInitalPrivate(`event_${cEvent.value._id}`);
   }
 
   /*ENTRAR A CHAT PUBLICO O PRIVADO*/
   function HandlePublicPrivate(key) {
     setchatPublicPrivate(key);
+    console.log('private key: ' + key);
+    if (key == 'public') {
+      createChatRoom('event_' + cEvent.value._id);
+    }
   }
 
   /*LECTURA DE MENSAJES*/
@@ -192,7 +204,6 @@ export const HelperContextProvider = ({ children }) => {
         break;
     }
 
-    console.log('dattaGOCHAT', data, section);
     setchatActual(data);
     ReadMessages(callbackdata);
   }
@@ -217,6 +228,11 @@ export const HelperContextProvider = ({ children }) => {
   };
 
   let createNewOneToOneChat = (idcurrentUser, currentName, idOtherUser, otherUserName, imageOtherprofile) => {
+    if (cEventuser.value == null) {
+      handleChangeTypeModal('register');
+      return;
+    }
+
     let newId = generateUniqueIdFromOtherIds(idcurrentUser, idOtherUser);
     let data = {};
     let imageProfileUseractual = cEventuser.value?.user?.picture
@@ -232,7 +248,6 @@ export const HelperContextProvider = ({ children }) => {
       ],
     };
 
-    console.log('datachat', data);
     firestore
       .doc('eventchats/' + cEvent.value._id + '/userchats/' + idcurrentUser + '/' + 'chats/' + newId)
       .set(data, { merge: true });
@@ -327,9 +342,9 @@ export const HelperContextProvider = ({ children }) => {
     return act && act.length > 0 ? act[0] : null;
   };
 
-  function visibilityLoginEvents(value){
-    alert("CHANGE STATUS"+value)
-    setVisibleLoginEvents(value)
+  function visibilityLoginEvents(value) {
+    alert('CHANGE STATUS' + value);
+    setVisibleLoginEvents(value);
   }
 
   useEffect(() => {
@@ -339,7 +354,6 @@ export const HelperContextProvider = ({ children }) => {
       getProperties(cEvent.value._id);
       GetActivitiesEvent(cEvent.value._id);
     }
-   
   }, [cEvent.value]);
 
   /* CARGAR CHAT PRIVADOS */
@@ -578,9 +592,16 @@ export const HelperContextProvider = ({ children }) => {
         visibleLoginEvents,
         visibilityLoginEvents,
         reloadTemplatesCms,
-        handleReloadTemplatesCms
+        handleReloadTemplatesCms,
+        theUserHasPlayed,
+        setTheUserHasPlayed,
+        knowMaleOrFemale,
+        femaleicons,
+        maleIcons,
+        handleChangeCurrentActivity,
+        currentActivity,
       }}>
-      {children}      
+      {children}
     </HelperContext.Provider>
   );
 };

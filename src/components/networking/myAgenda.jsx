@@ -111,7 +111,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                       userName +
                       '&URLRoomName=' +
                       currentRoom +
-                      '&passcode=87347104639499'
+                      '&passcode=52125404639499'
                     }
                     allow='autoplay;fullscreen; camera *;microphone *'
                     allowusermedia
@@ -221,7 +221,6 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
 function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom }) {
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
-  console.log('EVENT USER==>', data);
 
   //const userName = pathOr('', ['names','name'], data);
   const userName = data.owner_id == eventUser._id ? data.name ?? 'Sin nombre' : data.name_requesting ?? 'Sin nombre';
@@ -259,8 +258,6 @@ function AcceptedCard({ data, eventId, eventUser, enableMeetings, setCurrentRoom
   };
 
   const validDateRoom=(room)=>{
-    console.log("ROOM==>",room);
-    //room.timestamp_start
     let dateFrom= moment(room.timestamp_start).format('YYYY-MM-DD');
     
     if(moment().format('YYYY-MM-DD')==dateFrom){

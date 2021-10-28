@@ -165,8 +165,6 @@ const FormRegister = ({
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
     organization ? fields : cEvent.value?.user_properties || {}
   );
-  //initialValues.codearea = null;
-  //console.log('EVENT USER==>', eventUser);
 
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';
@@ -213,6 +211,10 @@ const FormRegister = ({
   };
 
   const onFinish = async (values) => {
+    if (values['email']) {
+      values['email'] = values['email'].toLowerCase();
+    }
+
     if (areacodeselected) {
       values['code'] = areacodeselected;
     }
@@ -234,7 +236,6 @@ const FormRegister = ({
     });
 
     if (imageAvatar) {
-      console.log('IMAGEAVATAR==>', imageAvatar);
       values.picture = imageAvatar.fileList[0].response;
     }
     if (callback) {
@@ -313,7 +314,8 @@ const FormRegister = ({
 
               //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
               //todo el proceso de logueo depende del token en la url por eso se recarga la página
-              if (!event.validateEmail && resp.data.user.initial_token) {
+              console.log('INITIAL TOKEN AND VALID EMAIL', resp.data.user.initial_token, cEvent.value?.validateEmail);
+              if (!cEvent?.value?.validateEmail && resp.data.user.initial_token) {
                 setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
                 setTimeout(function() {
                   window.location.replace(
@@ -327,7 +329,9 @@ const FormRegister = ({
                   );
                 }, 100);
               } else {
-                window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${1}`);
+                window.location.replace(
+                  `/landing/${cEvent.value?._id}/${eventPrivate.section}?register=${cEventUser.value == null ? 1 : 4}`
+                );
               }
             } else {
               // window.location.replace(`/landing/${cEvent.value?._id}/${eventPrivate.section}?register=800`);
@@ -948,7 +952,7 @@ const FormRegister = ({
                           : intl.formatMessage({ id: 'registration.button.create' })}
                       </Button>
                       {options &&
-                        Object.keys(initialValues).length > 0 &&
+                        initialValues != null &&
                         options.map((option) => (
                           <Button
                             icon={option.icon}

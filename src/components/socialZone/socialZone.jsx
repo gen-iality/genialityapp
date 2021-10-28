@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom';
 import React, { useContext, useState } from 'react';
-import { Tabs, Row, Badge, Col, Button, Alert } from 'antd';
-import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined } from '@ant-design/icons';
+import { Tabs, Row, Badge, Col, Button, Alert, Space } from 'antd';
+import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
@@ -31,7 +31,14 @@ let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages } = useContext(HelperContext);
+  let {
+    attendeeList,
+    HandleChatOrAttende,
+    chatAttendeChats,
+    totalPrivateMessages,
+    setTheUserHasPlayed,
+    currentActivity,
+  } = useContext(HelperContext);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [busqueda, setBusqueda] = useState(null);
@@ -39,6 +46,13 @@ let SocialZone = function(props) {
   let [isFiltered, setIsFiltered] = useState(false);
   let busquedaRef = useRef();
   let history = useHistory();
+
+  const [tabsSocialzone, settabsSocialzone] = useState({
+    chat:true,
+    games:false,
+    attendees: true,
+    surveys: true,
+  })
 
   const handleChange = async (e) => {
     const { value } = e.target;
@@ -53,7 +67,6 @@ let SocialZone = function(props) {
       setIsFiltered(false);
       setstrAttende('');
       setBusqueda(null);
-      //
       busquedaRef.current.value = '';
     }
   };
@@ -68,6 +81,11 @@ let SocialZone = function(props) {
   function redirectRegister() {
     history.push(`/landing/${cEvent.value._id}/tickets`);
   }
+
+  useEffect(() => {
+    settabsSocialzone(currentActivity?.tabs);
+  }, [currentActivity])
+
   return (
     <Tabs
       defaultActiveKey='1'
@@ -107,16 +125,18 @@ let SocialZone = function(props) {
             }
             key='2'>
             <Row>
-              <Col sm={21}>
+              <Space size={10} style={{ width: '100%' }}>
                 {!Object.keys(attendeeList).length ? (
                   ''
                 ) : (
-                  <div className='control' style={{ marginBottom: '10px', marginRight: '5px', color: 'white' }}>
+                  <div
+                    className='control'
+                    style={{ marginBottom: '10px', marginRight: '5px', color: 'white', width: '100%' }}>
                     <input
-                      style={{ color: 'white' }}
+                      style={{ color: cEvent.value.styles.textMenu }}
                       ref={busquedaRef}
                       autoFocus
-                      className='input'
+                      //className='input'
                       type='text'
                       name={'name'}
                       onChange={handleChange}
@@ -124,19 +144,18 @@ let SocialZone = function(props) {
                     />
                   </div>
                 )}
-              </Col>
-              <Col sm={2}>
-                {!Object.keys(attendeeList).length ? null : (
-                  <>
-                    {busqueda !== null && (
-                      <Button shape='circle' onClick={searhAttende}>
-                        {!isFiltered && <SearchOutlined />}
-                        {isFiltered && 'X'}
+                {!Object.keys(attendeeList).length
+                  ? null
+                  : busqueda !== null && (
+                      <Button
+                        icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
+                        shape='round'
+                        onClick={searhAttende}>
+                        {!isFiltered && 'Buscar'}
+                        {isFiltered && 'Borrar'}
                       </Button>
                     )}
-                  </>
-                )}
-              </Col>
+              </Space>
             </Row>
             <div className='asistente-list'>
               {!Object.keys(attendeeList).length ? (
@@ -159,8 +178,7 @@ let SocialZone = function(props) {
         </>
       )}
 
-      {props.currentActivity !== null && props.tabs && (
-        // && (props.tabs.surveys === true || props.tabs.surveys === 'true')
+      {currentActivity !== null && (
         <TabPane
           className='asistente-survey-list asistente-list'
           tab={
@@ -202,9 +220,9 @@ let SocialZone = function(props) {
         </TabPane>
       )}
 
-      {props.currentActivity !== null && props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
+      {tabsSocialzone !== null  && (tabsSocialzone?.games === true || tabsSocialzone?.games === 'true') && (
         <TabPane
-          className='asistente-survey-list'
+          className='asistente-survey-list asistente-list'
           tab={
             <>
               <p
@@ -233,7 +251,7 @@ let SocialZone = function(props) {
             </Col>
           </Row> */}
 
-          <GameRanking currentUser={currentUser} cEvent={cEvent.value} />
+          <GameRanking currentUser={currentUser} cEvent={cEvent.value} setTheUserHasPlayed={setTheUserHasPlayed} />
         </TabPane>
       )}
     </Tabs>

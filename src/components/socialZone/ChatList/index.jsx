@@ -10,6 +10,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { InitialsNameUser } from '../hooks';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../../Context/HelperContext';
+import UsersCard from '../../shared/usersCard';
 const { TabPane } = Tabs;
 const { setNotification } = notificationsActions;
 const { Text } = Typography;
@@ -193,58 +194,59 @@ const ChatList = (props) => {
               style={styleList}
               dataSource={privateChatsList}
               renderItem={(item) => (
-                <List.Item
-                  style={styleItemCard}
-                  extra={[
-                    <a
-                      key='list-loadmore-edit'
-                      onClick={() => {
-                        HandleGoToChat(
-                          cUser.value.uid,
-                          item.id,
-                          cUser.value.name ? cUser.value.name : cUser.value.names,
-                          'private',
-                          item,
-                          null
-                        );
-                      }}>
-                      <Tooltip title='Chatear'>
-                        {item.participants &&
-                        item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes &&
-                        item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes >
-                          0 ? (
-                          <Badge
-                            count={
-                              item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]
-                                ?.countmessajes
-                            }>
-                            <MessageTwoTone style={{ fontSize: '27px' }} />
-                          </Badge>
-                        ) : (
-                          <MessageTwoTone style={{ fontSize: '27px' }} />
-                        )}
-                      </Tooltip>
-                    </a>,
-                  ]}>
-                  <List.Item.Meta
-                    avatar={
-                      item.participants?.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl ? (
-                        <Avatar
-                          src={
-                            item.participants?.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl
-                          }
-                        />
-                      ) : (
-                        <Avatar src={imageforDefaultProfile} />
-                      )
-                    }
-                    title={
-                      <Typography.Text  style={{ color: 'black',width:'200px' }} key='list-loadmore-edit'>
-                        {item.name ? item.name : item.names}
-                      </Typography.Text>
-                    }
-                  />
-                </List.Item>
+                <UsersCard type='privateChat' item={item}/>
+                // <List.Item
+                //   style={styleItemCard}
+                //   extra={[
+                //     <a
+                //       key='list-loadmore-edit'
+                //       onClick={() => {
+                //         HandleGoToChat(
+                //           cUser.value.uid,
+                //           item.id,
+                //           cUser.value.name ? cUser.value.name : cUser.value.names,
+                //           'private',
+                //           item,
+                //           null
+                //         );
+                //       }}>
+                //       <Tooltip title='Chatear'>
+                //         {item.participants &&
+                //         item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes &&
+                //         item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]?.countmessajes >
+                //           0 ? (
+                //           <Badge
+                //             count={
+                //               item.participants.filter((part) => part.idparticipant != cUser.value.uid)[0]
+                //                 ?.countmessajes
+                //             }>
+                //             <MessageTwoTone style={{ fontSize: '27px' }} />
+                //           </Badge>
+                //         ) : (
+                //           <MessageTwoTone style={{ fontSize: '27px' }} />
+                //         )}
+                //       </Tooltip>
+                //     </a>,
+                //   ]}>
+                //   <List.Item.Meta
+                //     avatar={
+                //       item.participants?.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl ? (
+                //         <Avatar
+                //           src={
+                //             item.participants?.filter((part) => part.idparticipant != cUser.value.uid)[0]?.profilePicUrl
+                //           }
+                //         />
+                //       ) : (
+                //         <Avatar src={imageforDefaultProfile} />
+                //       )
+                //     }
+                //     title={
+                //       <Typography.Text  style={{ color: 'black',width:'200px' }} key='list-loadmore-edit'>
+                //         {item.name ? item.name : item.names}
+                //       </Typography.Text>
+                //     }
+                //   />
+                // </List.Item>
               )}
             />
           )}

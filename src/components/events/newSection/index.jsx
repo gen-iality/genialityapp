@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react"
+import withContext from '../../../Context/withContext';
 
 class MySection extends Component {
     constructor(props) {
@@ -14,7 +15,9 @@ class MySection extends Component {
             eventId: this.props.eventId,
             event: this.props.event
         })
+        console.log("PROPS==>",this.props)
     }
+    
 
     componentDidUpdate(prevProps) {
         if (this.props.event !== prevProps.event) {
@@ -33,10 +36,10 @@ class MySection extends Component {
         const { event } = this.state
         return (
             <Fragment>
-                <div dangerouslySetInnerHTML={this.createMarkup(event.initial_page)} />
+                <div dangerouslySetInnerHTML={this.createMarkup(this.props.cEvent?.value?.itemsMenu?.my_section.markup)} />
             </Fragment>
         )
     }
 }
 
-export default MySection
+export default withContext(MySection)

@@ -83,6 +83,16 @@ class WallList extends Component {
   componentDidMount() {
     this.getPosts();
   }
+  async getDataUser(iduser){     
+    let user=await firestore.collection(`${this.props.cEvent.value._id}_event_attendees`).where("account_id","==",iduser).get();  
+    if(user.docs.length>0 && this.props.cEvent.value.user_properties){
+      let fieldAvatar=this.props.cEvent.value?.user_properties.filter((field)=>field.type=="avatar")
+      if(fieldAvatar.length>0){        
+        return user.docs[0].data().user?.picture;
+      }     
+    }
+    return undefined;
+  }
 
   //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
   getPosts() {
@@ -94,19 +104,20 @@ class WallList extends Component {
         .doc(this.props.cEvent.value._id)
         .collection('posts')
         .orderBy('datePost', 'desc');
-      adminPostRef.onSnapshot((snapshot) => {
-        const dataPost = [];
+      adminPostRef.onSnapshot(async(snapshot) => {
+        let dataPost = [];
 
         if (snapshot.empty) {
           this.setState({ dataPost: dataPost });
         }
-
-        snapshot.docs.forEach((doc) => {
-          var data = doc.data();
-          data.id = doc.id;
-
-          dataPost.push(data);
-        });
+      console.log("snapshot===>",snapshot.docs.length)
+       dataPost= await Promise.all(snapshot.docs.map(async(doc) => {
+          var data = doc.data();         
+          console.log("dataPosts==>",doc.data());              
+            let picture= await this.getDataUser(doc.data().author)
+            return {...doc.data(), id: doc.id ,picture:picture };      
+        }));
+        console.log("DATA ACA====>",dataPost)
         this.setState({ dataPost: dataPost });
       });
     } catch (e) {
@@ -217,7 +228,7 @@ class WallList extends Component {
                       <List.Item.Meta
                         avatar={
                           item.authorImage ? (
-                            <Avatar src={item.authorImage} size={50} />
+                            <Avatar src={item.picture?item.picture:null} size={50} />
                           ) : (
                             <Avatar size={50}>
                               {item.authorName &&

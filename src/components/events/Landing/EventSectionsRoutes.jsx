@@ -17,7 +17,7 @@ import WallForm from '../../wall/index';
 import Ferias from '../ferias/index';
 import VirtualConferenceBig from '../virtualConferenceBig';
 import CertificadoLanding from '../../certificados/cerLanding';
-import AgendaActividadDetalle from '../agendaActividadDetalle';
+
 import { setVirtualConference } from '../../../redux/virtualconference/actions';
 import { setSpaceNetworking } from '../../../redux/networking/actions';
 import MyAgendaIndepend from '../../networking/myAgendaIndepend';
@@ -38,6 +38,8 @@ import UserLoginContainer from '../UserLoginContainer';
 import InfoEvent from '../../shared/infoEvent';
 import ResponsePayu from '../registrationForm/responsePayu';
 import { useParams } from 'react-router-dom';
+import AgendaActividadDetalle from '../AgendaActividadDetalle';
+import MySection from '../newSection';
 
 const EventSectionRoutes = (props) => {
   let { path } = useRouteMatch();
@@ -48,9 +50,7 @@ const EventSectionRoutes = (props) => {
   if (event_id === '610976f24e10472fb738d65b') {
     window.location.replace('https://cancilleria.evius.co/landing/610976f24e10472fb738d65b/evento');
   }
-
   function ValidateViewPermissions(route, nombresection) {
-    console.log(route, nombresection);
     if (props.cEvent.value !== null) {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
@@ -210,6 +210,18 @@ const EventSectionRoutes = (props) => {
           }
         </Route>
 
+        <Route path={`${path}/my_section`}>
+          {() =>
+            ValidateViewPermissions('informativeSection', 'informativeSection') ? (
+              <>
+                <Redirect to={`/landing/${props.cEvent.value._id}/permissions`} />
+              </>
+            ) : (
+              <MySection />
+            )
+          }
+        </Route>
+
         <Route path={`${path}/activity/:activity_id`}>
           {() =>
             ValidateViewPermissions('agenda', 'Agenda') ? (
@@ -218,7 +230,7 @@ const EventSectionRoutes = (props) => {
               </>
             ) : (
               <>
-                <AgendaActividadDetalle setVirtualConference={props.setVirtualConference} />
+                <AgendaActividadDetalle />
               </>
             )
           }
