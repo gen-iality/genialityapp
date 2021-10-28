@@ -79,7 +79,12 @@ const RenderComponent = (props) => {
               if (chatAttendeChats !== '4') {
                 ComponentRender = zoomExternoHandleOpen(currentActivity, props.cEventUser.value);
               } else if (chatAttendeChats == '4') {
-                ComponentRender = <GameDrawer />;
+                ComponentRender = (
+                  <>
+                    {zoomExternoHandleOpen(currentActivity, props.cEventUser.value)}
+                    <GameDrawer />
+                  </>
+                );
               }
 
             case 'closed_meeting_room':
@@ -129,7 +134,17 @@ const RenderComponent = (props) => {
                   );
                 }
               } else if (chatAttendeChats == '4') {
-                ComponentRender = <GameDrawer />;
+                ComponentRender = (
+                  <>
+                    {' '}
+                    <ZoomIframe
+                      platform={currentActivity?.platform}
+                      meeting_id={currentActivity?.meeting_id}
+                      generalTabs={tabsGeneral}
+                    />
+                    <GameDrawer />
+                  </>
+                );
               }
 
               break;
@@ -181,7 +196,17 @@ const RenderComponent = (props) => {
                   );
                 }
               } else if (chatAttendeChats == '4') {
-                ComponentRender = <GameDrawer />;
+                ComponentRender = (
+                  <>
+                    {' '}
+                    <ZoomIframe
+                      platform={currentActivity?.platform}
+                      meeting_id={currentActivity?.meeting_id}
+                      generalTabs={tabsGeneral}
+                    />
+                    <GameDrawer />
+                  </>
+                );
               }
 
               break;
