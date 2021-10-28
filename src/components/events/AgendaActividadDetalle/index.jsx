@@ -30,6 +30,7 @@ const AgendaActividadDetalle = (props) => {
     isCollapsedMenuRigth,
     currentActivity,
     handleChangeCurrentActivity,
+    setplatformActivity
   } = useContext(HelperContext);
   let [orderedHost, setOrderedHost] = useState([]);
   let cSurveys = UseSurveysContext();
@@ -57,7 +58,6 @@ const AgendaActividadDetalle = (props) => {
         currentemp.platform = platform;
         currentemp.habilitar_ingreso = habilitar_ingreso;
         currentemp.tabs = tabs;
-        // console.log('currentemp', currentemp);
         handleChangeCurrentActivity(currentemp);
       });
   }

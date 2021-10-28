@@ -114,7 +114,6 @@ export const HelperContextProvider = ({ children }) => {
   /*ENTRAR A CHAT PUBLICO O PRIVADO*/
   function HandlePublicPrivate(key) {
     setchatPublicPrivate(key);
-    console.log('private key: ' + key);
     if (key == 'public') {
       createChatRoom('event_' + cEvent.value._id);
     }
