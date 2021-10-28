@@ -22,8 +22,6 @@ const ImageComponent = (props) => {
         src={
           props.cEvent.value.styles?.banner_image
             ? props.cEvent.value.styles?.banner_image
-            : currentActivity?.image
-            ? currentActivity?.image
             : props.cEvent.value.styles.event_image
             ? props.cEvent.value.styles.event_image
             : imagePlaceHolder
