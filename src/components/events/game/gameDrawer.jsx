@@ -6,8 +6,6 @@ import GameRanking from '../../events/game/gameRanking';
 
 function GameDrawer(props) {
   const { gameData, setGameData, cUser, cEvent } = props;
-  // let cSurveys = UseSurveysContext();
-  // let cUser = UseCurrentUser();
 
   // Estado para hacer visible el ranking
   const [rankingVisible, setRankingVisible] = useState(false);
@@ -17,11 +15,9 @@ function GameDrawer(props) {
     setRankingVisible(!rankingVisible);
   };
   useEffect(() => {
-    // if (!cSurveys.shouldDisplayRanking()) {
-    //   setRankingVisible(true);
-    // }
     if (gameData !== '') {
       setGameVisible(true);
+      setRankingVisible(false);
     }
   }, [gameData]);
 
