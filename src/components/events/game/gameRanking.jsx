@@ -55,7 +55,6 @@ function GameRanking(props) {
                const puntajeOrdenado = puntajes.sort(function(a, b) {
                   return parseFloat(a.score) - parseFloat(b.score);
                });
-               console.log("10. puntajeOrdenado ", puntajeOrdenado)
                setRanking(puntajeOrdenado);
             } else {
                setRanking(puntajes);
