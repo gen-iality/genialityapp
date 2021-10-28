@@ -5,8 +5,8 @@ import { HelperContext } from '../../../Context/HelperContext';
 import { DolbyCard } from './DolbyCard';
 import ZoomIframe from '../ZoomIframe';
 import { VideoActivity } from './VideoActivity';
-import { Row, Space, Spin } from 'antd';
-import Game from '../game';
+import { Space } from 'antd';
+import GameDrawer from '../game/gameDrawer';
 import { LoadingOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 
@@ -37,10 +37,8 @@ const RenderComponent = (props) => {
     </Space>
   );
 
-
   useEffect(() => {
-
-  let ComponentRender = <Preloader/>;
+    let ComponentRender = <Preloader />;
 
     if (currentActivity) {
       setactivityState(currentActivity.habilitar_ingreso ? currentActivity.habilitar_ingreso : 'nothing_state');
@@ -81,7 +79,7 @@ const RenderComponent = (props) => {
               if (chatAttendeChats !== '4') {
                 ComponentRender = zoomExternoHandleOpen(currentActivity, props.cEventUser.value);
               } else if (chatAttendeChats == '4') {
-                ComponentRender = <Game />;
+                ComponentRender = <GameDrawer />;
               }
 
             case 'closed_meeting_room':
@@ -131,7 +129,7 @@ const RenderComponent = (props) => {
                   );
                 }
               } else if (chatAttendeChats == '4') {
-                ComponentRender = <Game />;
+                ComponentRender = <GameDrawer />;
               }
 
               break;
@@ -183,7 +181,7 @@ const RenderComponent = (props) => {
                   );
                 }
               } else if (chatAttendeChats == '4') {
-                ComponentRender = <Game />;
+                ComponentRender = <GameDrawer />;
               }
 
               break;

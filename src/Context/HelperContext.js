@@ -59,8 +59,10 @@ export const HelperContextProvider = ({ children }) => {
   const [tabLogin, setTabLogin] = useState('1');
   const [visibleLoginEvents, setVisibleLoginEvents] = useState(false);
   const [reloadTemplatesCms, setreloadTemplatesCms] = useState(false);
+  const [gameData, setGameData] = useState('');
   const [currentActivity, setcurrenActivity] = useState(null);
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
+  const [gameRanking, setGameRanking] = useState([]);
 
   function handleReloadTemplatesCms() {
     setreloadTemplatesCms(!reloadTemplatesCms);
@@ -592,6 +594,8 @@ export const HelperContextProvider = ({ children }) => {
         visibilityLoginEvents,
         reloadTemplatesCms,
         handleReloadTemplatesCms,
+        gameData,
+        setGameData,
         theUserHasPlayed,
         setTheUserHasPlayed,
         knowMaleOrFemale,
@@ -599,6 +603,8 @@ export const HelperContextProvider = ({ children }) => {
         maleIcons,
         handleChangeCurrentActivity,
         currentActivity,
+        gameRanking,
+        setGameRanking,
       }}>
       {children}
     </HelperContext.Provider>

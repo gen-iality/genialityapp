@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Tabs, Row, Badge, Col, Button, Alert, Space } from 'antd';
-import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import { connect } from 'react-redux';
 import * as StageActions from '../../redux/stage/actions';
@@ -9,14 +9,14 @@ import { setCurrentSurvey } from '../../redux/survey/actions';
 import AttendeList from './attendees/index';
 import * as notificationsActions from '../../redux/notifications/actions';
 import ChatList from './ChatList';
-import GameRanking from '../events/game/gameRanking';
+import GameList from '../events/game/gameList';
 import { useRef } from 'react';
 import { UseEventContext } from '../../Context/eventContext';
 import { UseCurrentUser } from '../../Context/userContext';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { HelperContext } from '../../Context/HelperContext';
-import { useEffect } from 'react';
+
 const { setMainStage } = StageActions;
 const { TabPane } = Tabs;
 const callback = () => {};
@@ -31,14 +31,9 @@ let SocialZone = function(props) {
   //contextos
   let cEvent = UseEventContext();
   let cUser = UseCurrentUser();
-  let {
-    attendeeList,
-    HandleChatOrAttende,
-    chatAttendeChats,
-    totalPrivateMessages,
-    setTheUserHasPlayed,
-    currentActivity,
-  } = useContext(HelperContext);
+  let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages, currentActivity } = useContext(
+    HelperContext
+  );
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
   let [busqueda, setBusqueda] = useState(null);
@@ -48,11 +43,11 @@ let SocialZone = function(props) {
   let history = useHistory();
 
   const [tabsSocialzone, settabsSocialzone] = useState({
-    chat:true,
-    games:false,
+    chat: true,
+    games: false,
     attendees: true,
     surveys: true,
-  })
+  });
 
   const handleChange = async (e) => {
     const { value } = e.target;
@@ -73,7 +68,7 @@ let SocialZone = function(props) {
   useEffect(() => {
     if (chatAttendeChats) {
       if (chatAttendeChats == 4) {
-        props.setMainStage('game');
+        props.setMainStage('otherTab');
       }
     }
   }, [chatAttendeChats]);
@@ -84,7 +79,7 @@ let SocialZone = function(props) {
 
   useEffect(() => {
     settabsSocialzone(currentActivity?.tabs);
-  }, [currentActivity])
+  }, [currentActivity]);
 
   return (
     <Tabs
@@ -101,7 +96,9 @@ let SocialZone = function(props) {
           tab={
             <>
               <Badge
-                onClick={() => HandleChatOrAttende('1')}
+                onClick={() => {
+                  HandleChatOrAttende('1'), props.setMainStage(null);
+                }}
                 size='small'
                 // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
                 count={totalPrivateMessages}>
@@ -220,7 +217,7 @@ let SocialZone = function(props) {
         </TabPane>
       )}
 
-      {tabsSocialzone !== null  && (tabsSocialzone?.games === true || tabsSocialzone?.games === 'true') && (
+      {tabsSocialzone !== null && (tabsSocialzone?.games === true || tabsSocialzone?.games === 'true') && (
         <TabPane
           className='asistente-survey-list asistente-list'
           tab={
@@ -250,8 +247,7 @@ let SocialZone = function(props) {
               <VideoCameraOutlined style={{ color: cEvent.value.styles.textMenu }} />
             </Col>
           </Row> */}
-
-          <GameRanking currentUser={currentUser} cEvent={cEvent.value} setTheUserHasPlayed={setTheUserHasPlayed} />
+          <GameList />
         </TabPane>
       )}
     </Tabs>

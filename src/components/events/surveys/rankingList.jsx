@@ -1,27 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Avatar, Divider, List, Skeleton } from 'antd';
-import { UseEventContext } from '../../../Context/eventContext'
-import moment from 'moment'
-import { UseCurrentUser } from "../../../Context/userContext"
-import UsersCard from '../../shared/usersCard'
-export default function RankingList({ data }) {
+import { Row, Avatar, Divider, List, Skeleton } from 'antd';
+import withContext from '../../../Context/withContext';
+
+function RankingList(props) {
+  const { cEvent, cHelper } = props;
+  const styles = cEvent.value.styles;
+  const { gameRanking } = cHelper;
   function formatName(name) {
     const result = decodeURIComponent(name);
     return result;
   }
 
-  const [list, setList] = useState([]);
-  const [loading, setloading] = useState(false)
-
-  let cUser = UseCurrentUser();
-  let cEvent = UseEventContext();
+  const [loading, setloading] = useState(false);
 
   useEffect(() => {
     setloading(true);
-    setList(data);
     setloading(false);
-  }, [data]);
-
+  }, [gameRanking]);
 
   const styleListPlayer = {
     background: 'white',
@@ -37,36 +32,42 @@ export default function RankingList({ data }) {
   };
 
   return (
-    <div style={{ marginTop: 20, width: '100%', }}
-    >
-      <Row justify="center">
-        <h1 style={{ fontSize: '25px', fontWeight: 'bold', lineHeight: '3px', color: `${cEvent.value.styles.textMenu}` }}>Ranking</h1>
-        <Divider style={{ backgroundColor: `${cEvent.value.styles.textMenu}`, margin:'15px 0' }} />
+    <div style={{ marginTop: 16, width: '26vw' }}>
+      <Row justify='center'>
+        <h1
+          style={{
+            fontSize: '25px',
+            fontWeight: 'bold',
+            lineHeight: '3px',
+            color: `${styles && styles.textMenu}`,
+          }}>
+          Ranking
+        </h1>
+        <Divider style={{ backgroundColor: `${styles && styles.textMenu}` }} />
       </Row>
-      <div 
-       style={{  height: 'auto', overflowY: 'auto', paddingTop:'5px' }}
-      >
+      <div className='container-ranking' style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
         <List
+          className='demo-loadmore-list'
           loading={loading}
-          itemLayout="horizontal"
-          dataSource={data}
+          itemLayout='horizontal'
+          dataSource={gameRanking}
           renderItem={(item, key) => (
-            <List.Item
-              style={styleListPlayer}
-              actions={[<><a key="list-loadmore-edit"> {cEvent.value.scoreType === 'time' ? moment(item.score * 1000).format('mm:ss:SS') : item.score} {cEvent.value.scoreType !== 'time' && 'Puntos'} </a>{cEvent.value.scoreType === 'time' && <div style={{marginTop:-10}}> <small>min : seg : ms</small></div>}</>]}
-            >
+            <List.Item style={styleListPlayer} actions={[<a key='list-loadmore-edit'> {item.score} Puntos </a>]}>
               <Skeleton avatar title={false} loading={loading} active>
                 <List.Item.Meta
-                  avatar={<Avatar>
-                    {key + 1}</Avatar>}
-                  title={<a style={{ fontWeight: '500', fontSize: '14px', }} href="#">{formatName(item.name)}</a>}
+                  avatar={<Avatar>{key + 1}</Avatar>}
+                  title={
+                    <a style={{ fontWeight: '500', fontSize: '14px' }} href='#'>
+                      {formatName(item.name)}
+                    </a>
+                  }
                 />
               </Skeleton>
             </List.Item>
           )}
         />
-
       </div>
     </div>
   );
 }
+export default withContext(RankingList);
