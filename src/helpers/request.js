@@ -864,6 +864,15 @@ export const Activity = {
   DeleteRegister: async (event, id) => {
     return await Actions.delete(`api/events/${event}/activities_attendees`, id);
   },
+
+  Update: async (event, user_id, data) => {
+    var info = {
+      event_id: event,
+      user_id,
+      // activity_id,
+    };
+    return await Actions.put(`api/events/${event}/activities_attendees/${user_id}`, data);
+  },
 };
 
 export const Networking = {

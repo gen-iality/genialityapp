@@ -82,7 +82,7 @@ class CheckAgenda extends Component {
       let { checkIn } = this.state;
       const properties = event.user_properties;
       const rolesList = await RolAttApi.byEventRolsGeneral();
-      console.log('ROLES==>', rolesList);
+      //console.log('ROLES==>', rolesList);
       let roles = rolesList?.map((role) => {
         return { label: role.name, value: role._id };
       });
@@ -95,10 +95,10 @@ class CheckAgenda extends Component {
 
       //Parse de campos para mostrar primero el nombre, email y luego el resto
       let eventFields = fieldNameEmailFirst(properties);
-      console.log('eventFields0==>', eventFields);
+
       let arrayFields = Array.from(eventFields);
 
-      arrayFields.push({
+      /* arrayFields.push({
         author: null,
         categories: [],
         label: 'Rol',
@@ -113,7 +113,7 @@ class CheckAgenda extends Component {
         visibleByAdmin: false,
         visibleByContacts: 'public',
         _id: { $oid: '614260d226e7862220497eac11' },
-      });
+      });*/
 
       arrayFields.push({
         author: null,
@@ -142,10 +142,10 @@ class CheckAgenda extends Component {
           : item.user
           ? { properties: { email: item.user.email, names: item.user.displayName } }
           : null;
-        item = { ...item, ...attendee };
+        item = { ...item, ...attendee, idActivity: item._id };
         return item;
       });
-      //console.log("NEWLIST1==>",newList)
+      // console.log('NEWLIST1==>', newList);
       //NO SE ESTAN ELIMINANDO LOS USUARIOS BIEN HACK PARA QUITARLOS
       newList = newList?.filter((users) => users.user !== null);
       newList = await this.obtenerCheckinAttende(userRef, newList);
@@ -224,6 +224,7 @@ class CheckAgenda extends Component {
         newUser.rol = newList[i].rol_id;
         newUser.checkedin_at = newList[i].checkedin_at;
         newUser._id = newList[i]._id;
+        newUser.idActivity = newList[i].idActivity;
         usersData.push(newUser);
       }
     }
@@ -232,6 +233,7 @@ class CheckAgenda extends Component {
   }
   openEditModalUser = (item) => {
     html.classList.add('is-clipped');
+    // console.log('ITEM EDITAR==>', item);
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
 
@@ -242,6 +244,7 @@ class CheckAgenda extends Component {
         data-tooltip={'Editar'}
         // eslint-disable-next-line no-unused-vars
         onClick={(e) => {
+          // console.log('EDIT USER==>', item);
           this.openEditModalUser(item);
         }}>
         <i className='fas fa-edit' />
