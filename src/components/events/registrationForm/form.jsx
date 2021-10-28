@@ -927,7 +927,7 @@ const FormRegister = ({
                   {!loadingregister && (
                     <Form.Item>
                       <Button type='primary' htmlType='submit'>
-                        {initialValues != null && Object.keys(initialValues).length > 0
+                        {initialValues?.properties != null && Object.keys(initialValues).length > 0
                           ? intl.formatMessage({ id: 'registration.button.update' })
                           : cEvent.value?._id === '5f9824fc1f8ccc414e33bec2'
                           ? 'Votar y Enviar'
@@ -935,15 +935,19 @@ const FormRegister = ({
                       </Button>
                       {options &&
                         initialValues != null &&
-                        options.map((option) => (
-                          <Button
-                            icon={option.icon}
-                            onClick={() => option.action(eventUser)}
-                            type={option.type}
-                            style={{ marginLeft: 10 }}>
-                            {option.text}
-                          </Button>
-                        ))}
+                        options.map(
+                          (option) => (
+                            (
+                              <Button
+                                icon={option.icon}
+                                onClick={() => option.action(eventUser)}
+                                type={option.type}
+                                style={{ marginLeft: 10 }}>
+                                {option.text}
+                              </Button>
+                            )
+                          )
+                        )}
                     </Form.Item>
                   )}
                   {loadingregister && <Spin />}
