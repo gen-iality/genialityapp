@@ -9,7 +9,7 @@ function updateAttendees(currentAttendees, snapshot) {
   let user = 0;
   snapshot.docChanges().forEach((change) => {
     user = change.doc.data();
-   console.log("USER==>", user)
+  //  console.log("USER==>", user)
     user = { ...user, ...user.properties };
 
     //por si acas

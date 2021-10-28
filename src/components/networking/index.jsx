@@ -668,9 +668,9 @@ class ListEventUser extends Component {
                                                  
                                                   for(let i=0;i<this.state.users.length;i++){
                                                     if(this.state.users[i]._id==users._id){
-                                                      console.log("STATE USER==>",this.state.users[i])
+                                                      // console.log("STATE USER==>",this.state.users[i])
                                                      this.state.users[i]={...this.state.users[i],send:1,loading:false}
-                                                     console.log("USER_CHANGE==>",this.state.users[i])                                                    
+                                                    //  console.log("USER_CHANGE==>",this.state.users[i])                                                    
                                                     }else{
                                                       this.state.users[i]={...this.state.users[i],loading:false}
                                                     }

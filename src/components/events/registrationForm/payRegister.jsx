@@ -39,7 +39,7 @@ export default withContext(PayForm);
   
   //Función que permite crear la orden
   const createOrder= async (amount,user)=>{    
-    console.log("USER==>",user)
+    // console.log("USER==>",user)
     let order={
       items:[eventId],
       account_id:user?.account_id,
@@ -50,7 +50,7 @@ export default withContext(PayForm);
     }
     let respOrder=await OrderFunctions.createOrder(order);
     if(respOrder){
-      console.log("RESPUESTAORDER==>",respOrder)
+      // console.log("RESPUESTAORDER==>",respOrder)
       return respOrder?._id;
     }
     
