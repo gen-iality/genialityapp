@@ -22,7 +22,6 @@ import AditionalInformation from './AditionalInformation';
 import ImageComponentwithContext from './ImageComponent';
 const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys, unsetCurrentSurvey } = SurveyActions;
 
-
 const AgendaActividadDetalle = (props) => {
   let {
     chatAttendeChats,
@@ -30,6 +29,7 @@ const AgendaActividadDetalle = (props) => {
     isCollapsedMenuRigth,
     currentActivity,
     handleChangeCurrentActivity,
+    setplatformActivity,
   } = useContext(HelperContext);
   let [orderedHost, setOrderedHost] = useState([]);
   let cSurveys = UseSurveysContext();
@@ -57,14 +57,11 @@ const AgendaActividadDetalle = (props) => {
         currentemp.platform = platform;
         currentemp.habilitar_ingreso = habilitar_ingreso;
         currentemp.tabs = tabs;
-        // console.log('currentemp', currentemp);
         handleChangeCurrentActivity(currentemp);
       });
   }
 
   useEffect(() => {
-    CheckinActiviy(props.cEvent.value._id, props.match.params.activity_id, props.cEventUser, props.cUser);
-
     async function getActividad() {
       return await AgendaApi.getOne(props.match.params.activity_id, props.cEvent.value._id);
     }
@@ -77,6 +74,7 @@ const AgendaActividadDetalle = (props) => {
     }
 
     getActividad().then((result) => {
+      console.log('result');
       handleChangeCurrentActivity(result);
       orderHost(result.hosts);
       cSurveys.set_current_activity(result);
@@ -106,6 +104,7 @@ const AgendaActividadDetalle = (props) => {
     if (currentActivity) {
       GetStateMeetingRoom();
       cSurveys.set_current_activity(currentActivity);
+      CheckinActiviy(props.cEvent.value._id, currentActivity._id, props.cEventUser, props.cUser);
     }
   }, [currentActivity]);
 
