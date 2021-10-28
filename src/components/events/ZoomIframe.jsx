@@ -11,7 +11,7 @@ const getMeetingPath = (platform, name, email, meeting_id, generalTabs, isHost) 
       meeting_id +
       `&userName=${name}` +
       `&email=${email}` +
-      `&disabledChat=${generalTabs.chat}` +
+      `&disabledChat=${generalTabs?generalTabs.chat:false}` +
       `&host=${isHost}`
     );
   } else if (platform === 'vimeo') {

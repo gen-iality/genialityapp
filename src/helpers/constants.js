@@ -410,3 +410,29 @@ export const host_list= [
     host_name: 'host5@evius.co'
   }
 ];
+
+export const activitiesCode=["6172f2b78794bf51952c74f3","6172f2548794bf51952c74f2","61732b4cfbe4ff412315beb6","6172f380c5c23b745b6a3905"];
+export const cityValid=["medellin","Medellin","medellín","Medellín"];
+export const codeActivity=["EDC21CF110","EDC21IPH","EDC21MID7","EDC21CV48","1EDC21OFF","1EDC50OF21"]
+
+export const femaleicons = [
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F1.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F2.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F3.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F4.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F5.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F6.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F7.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F8.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2F9.png?alt=media',
+];
+
+export const maleIcons = [
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F1.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F2.png?alt=media',
+  'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/genderschats%2Fmale%2F3.png?alt=media',
+  'https://cdn-icons-png.flaticon.com/512/236/236831.png',
+  'https://cdn-icons-png.flaticon.com/512/236/236832.png',
+  'https://cdn-icons-png.flaticon.com/512/145/145859.png',
+  'https://cdn-icons-png.flaticon.com/512/4139/4139970.png',
+];

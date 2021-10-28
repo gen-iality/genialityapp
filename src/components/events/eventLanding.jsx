@@ -7,7 +7,6 @@ import ReactPlayer from 'react-player';
 import { Row, Col } from 'antd';
 import { AgendaApi } from '../../helpers/request';
 import { parseUrl } from '../../helpers/constants';
-import AgendaActividadDetalle from '../../components/events/agendaActividadDetalle';
 import withContext from '../../Context/withContext';
 
 class eventLanding extends Component {
@@ -69,8 +68,8 @@ class eventLanding extends Component {
             </Row>
           )} */}
           {/* Si event video existe */}
-            {/* {console.log("this.props.cEvent.value?.video_position",this.props.cEvent.value?.video)} */}
-          {this.props.cEvent.value?.video_position =="true" && this.props.cEvent.value.video && (
+          {/* {console.log("this.props.cEvent.value?.video_position",this.props.cEvent.value?.video)} */}
+          {this.props.cEvent.value?.video_position == 'true' && this.props.cEvent.value.video && (
             <div className='column is-centered mediaplayer'>
               <ReactPlayer
                 width={'100%'}
@@ -365,7 +364,7 @@ class eventLanding extends Component {
               </div>
             </div>
           )}
-          {(this.props.cEvent.value?.video_position == "false" ||
+          {(this.props.cEvent.value?.video_position == 'false' ||
             this.props.cEvent.value.video_position == undefined) &&
             this.props.cEvent.value.video && (
               <div className='column is-centered mediaplayer'>
@@ -382,7 +381,6 @@ class eventLanding extends Component {
               </div>
             )}
         </Card>
-       
       </div>
     );
   }

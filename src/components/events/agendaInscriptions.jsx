@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Activity, AgendaApi, SpacesApi, SurveysApi, DocumentsApi } from '../../helpers/request';
 import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert, notification } from 'antd';
-import AgendaActividadDetalle from './agendaActividadDetalle';
+import AgendaActividadDetalle from './AgendaActividadDetalle';
 import Moment from 'moment-timezone';
 import ReactPlayer from 'react-player';
 import { firestore } from '../../helpers/firebase';
@@ -189,7 +189,7 @@ class AgendaInscriptions extends Component {
     } = this.state;
     return (
       <div>
-        {currentActivity && (
+        {/* {currentActivity && (
           <AgendaActividadDetalle
             visible={this.state.visible}
             onClose={this.onClose}
@@ -201,7 +201,7 @@ class AgendaInscriptions extends Component {
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
           />
-        )}
+        )} */}
 
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && loading && (

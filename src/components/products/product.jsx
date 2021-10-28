@@ -194,7 +194,7 @@ class Product extends Component {
                   <Column
                      key='_id'
                      title='Nombre'
-                     align='center'
+                     /* align='center' */
                      render={(data) => (
                         <Paragraph
                            ellipsis={{
@@ -207,7 +207,8 @@ class Product extends Component {
                      )}
                   />
                   <Column key='_id' title='Por' align='center' dataIndex='by' />
-                  <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" .concat((data || prod?.price)?" $ "+prod?.price:"").concat((prod?.start_price|| prod?.price||''))}</div>)} />
+                  <Column key='_id' title='Valor' align='center' dataIndex='price' render={(data,prod)=>(<div>$ {prod.price}</div>)}/>
+                  {/* <Column key='_id' title='Valor' dataIndex='start_price' align='center' render={(data,prod)=>(<div>{prod?.currency || "" .concat((data || prod?.price)?" $ "+prod?.price:"").concat((prod?.start_price|| prod?.price||''))}</div>)} /> */}
                   <Column
                      key='_id'
                      title='Imagenes del producto'
@@ -234,7 +235,8 @@ class Product extends Component {
                                  id={`editAction${index.index}`}
                                  onClick={() => this.editProduct(data)}
                                  type='primary'
-                                 icon={<EditOutlined style={{ fontSize: 25 }} />}
+                                 icon={<EditOutlined /* style={{ fontSize: 25 }} */ />}
+                                 size='small'
                               />
                            </Tooltip>
                            <Tooltip key={index} placement='topLeft' title='Eliminar'>
@@ -243,7 +245,8 @@ class Product extends Component {
                                  id={`removeAction${index.index}`}
                                  onClick={() => this.removeProduct(data)}
                                  type='danger'
-                                 icon={<DeleteOutlined style={{ fontSize: 25 }} />}
+                                 icon={<DeleteOutlined /* style={{ fontSize: 25 }} */ />}
+                                 size='small'
                               />
                            </Tooltip>
                            <Tooltip key={index} placement='topLeft' title='Ofertas'>
@@ -252,7 +255,8 @@ class Product extends Component {
                                  id={`shoppingAction${index.index}`}
                                  onClick={() => this.props.history.push(`/eventadmin/${this.props.eventId}/product/${data._id}/oferts`) }
                                  color={'#1890ff'}
-                                 icon={<ShoppingCartOutlined style={{ fontSize: 25 }} />}
+                                 icon={<ShoppingCartOutlined /* style={{ fontSize: 25 }} */ />}
+                                 size='small'
                               />
                            </Tooltip>
                         </Space>

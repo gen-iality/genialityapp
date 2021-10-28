@@ -60,6 +60,7 @@ const MenuTabletsSocialZone = (props) => {
           optionselected={optionselected}
           tab={1}
           generalTabs={props.generalTabs}
+          currentActivity={props.currentActivity}
         />
       </Drawer>
     </>

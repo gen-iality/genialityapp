@@ -16,28 +16,23 @@ export function CurrentEventProvider({ children }) {
     eventNameFormated = event_name.replaceAll('---', 'more');
     eventNameFormated = eventNameFormated.replaceAll('-', '%20');
     eventNameFormated = eventNameFormated.replaceAll('more', '"-"');
-    console.log('formateado', eventNameFormated);
     initialContextState = { error: null, status: 'LOADING', value: null, nameEvent: event_name };
   }
 
   const [eventContext, setEventContext] = useState(initialContextState);
 
   useEffect(() => {
-
-
     async function fetchEvent(type) {
       let eventGlobal;
       let dataevent;
       switch (type) {
         case 'id':
-          console.log('idevent=>',event);
           eventGlobal = await EventsApi.getOne(event_id || event);
-          dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event};
+          dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event };
           break;
 
         case 'name':
           eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated);
-          console.log("eventGlobal==>",eventGlobal.data[0])
           dataevent = { status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name };
           break;
       }
@@ -45,13 +40,10 @@ export function CurrentEventProvider({ children }) {
     }
 
     if (event_id || event) {
-      console.log("EVENT==>",event)
       fetchEvent('id');
     } else if (event_name) {
       fetchEvent('name');
     }
-
-    
   }, [event_id, event_name, event]);
 
   return (

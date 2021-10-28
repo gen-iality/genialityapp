@@ -42,7 +42,6 @@ const CMS = (props) => {
 
   const getList = async () => {
     const data = await API.byEvent(eventId);
-    console.log(data);
     if (data.data) {
       setList(data.data);
     } else {

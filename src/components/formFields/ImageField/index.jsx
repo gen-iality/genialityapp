@@ -59,12 +59,11 @@ function ImageField(rawProps) {
         const fieldError = meta.touched && meta.error;
 
         return (
-          <FormItem
-            label={formItemProps.label}
-            required={formItemProps.required}
-            help={fieldError}
-            validateStatus={fieldError ? 'error' : undefined}>
-            {/* <Input value={field.value} /> */}
+          <div>
+            <label style={{ marginTop: '2%' }} className='label'>
+              <label style={{ color: 'red' }}>*</label>
+              {formItemProps.label}
+            </label>
             <ImageInput
               picture={field.value}
               width={ancho}
@@ -75,7 +74,24 @@ function ImageField(rawProps) {
               errImg={errorMsg}
               {...props}
             />
-          </FormItem>
+          </div>
+        /* <FormItem
+            label={formItemProps.label}
+            required={formItemProps.required}
+            help={fieldError}
+            validateStatus={fieldError ? 'error' : undefined}>
+            //<Input value={field.value} />
+            <ImageInput
+              picture={field.value}
+              width={ancho}
+              height={alto}
+              changeImg={(files) => {
+                saveEventImage(form, field, files, 'nombre');
+              }}
+              errImg={errorMsg}
+              {...props}
+            />
+          </FormItem> */
         );
       }}
     </Field>

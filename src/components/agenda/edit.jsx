@@ -879,8 +879,8 @@ class AgendaEdit extends Component {
                 </Form.Item>
                 <Form.Item label={'Imagen'}>
                   <p>Dimensiones: 1000px x 278px</p>
-                  <Dropzone onDrop={this.changeImg} accept='image/*' className='zone'>
-                    <button className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</button>
+                  <Dropzone onChange={this.changeImg} onDrop={this.changeImg} accept='image/*' className='zone'>
+                    <span className='button is-text'>{image ? 'Cambiar imagen' : 'Subir imagen'}</span>
                   </Dropzone>
                   {image && <img src={image} alt={`activity_${name}`} />}
                 </Form.Item>

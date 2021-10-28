@@ -142,10 +142,9 @@ function Empresas({ event, match }) {
       title: 'Opciones',
       dataIndex: 'id',
       render(value,record) {
-        console.log(value, record);
         return (
           <Row gutter={[8, 8]}>
-            {/* <Col>
+            <Col>
               <Tooltip placement='topLeft' title='Editar'>
                 <Link
                   key={`editAction${value.index}`}
@@ -157,7 +156,7 @@ function Empresas({ event, match }) {
                   <Button icon={<EditOutlined />} type='primary' size='small' />
                 </Link>
               </Tooltip>
-            </Col> */}
+            </Col>
             <Col>
               <Tooltip placement='topLeft' title='Eliminar'>
                 <Button
@@ -242,6 +241,7 @@ function Empresas({ event, match }) {
         columns={companyColumns}
         pagination={false}
         rowKey="index"
+        size='small'
         components={{
           body: {
             wrapper: DraggableContainer,

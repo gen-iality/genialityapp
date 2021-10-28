@@ -139,8 +139,8 @@ class SendRsvp extends Component {
           eventUsersIds: users,
           include_date: include_date,
         };
-      }else{
-        data={
+      } else {
+        data = {
           content_header: rsvp.content_header,
           subject: rsvp.subject,
           message: rsvp.message,
@@ -148,12 +148,12 @@ class SendRsvp extends Component {
           image_footer: rsvp.image_footer,
           eventUsersIds: users,
           include_date: include_date,
-        }
+        };
       }
-      console.log("Dataenviar",data)
+      console.log('Dataenviar', data);
       await EventsApi.sendRsvp(JSON.stringify(data), event._id);
       toast.success(<FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />);
-      this.setState({ disabled: false, redirect: true, url_redirect: '/event/' + event._id + '/messages' });
+      this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
     } catch (e) {
       toast.error(<FormattedMessage id='toast.error' defaultMessage='Sry :(' />);
       this.setState({ disabled: false, timeout: true, loader: false });
@@ -347,7 +347,10 @@ class SendRsvp extends Component {
                 <div className='column is-8'>
                   Ubicación del evento
                   <br />
-                  <span className='rsvp-location'>{this.props.event.location.FormattedAddress}</span>
+                  {console.log('Que hay?', this.props.event)}
+                  <span className='rsvp-location'>
+                    {this.props.event.location !== null && this.props.event.location.FormattedAddress}
+                  </span>
                 </div>
               </div>
             </div>
@@ -459,10 +462,10 @@ class SendRsvp extends Component {
             <div className='columns is-centered-is-multiline'>
               <div className='column'>
                 <p className='rsvp-send-title'>
-                  Seleccionados <span>{this.state.selection.length}</span>
+                  Seleccionados <span>{this.state.selection?.length}</span>
                 </p>
                 <p>
-                  {this.state.selection.map((el) => {
+                  {this.state.selection?.map((el) => {
                     return el.properties.email + ', ';
                   })}
                 </p>
@@ -470,7 +473,7 @@ class SendRsvp extends Component {
             </div>
 
             <div className='column rsvp-send-users'>
-              {this.state.selection.map((item, key) => {
+              {this.state.selection?.map((item, key) => {
                 return (
                   <p key={key} className='selection'>
                     {item.email}
@@ -489,7 +492,7 @@ class SendRsvp extends Component {
         <Dialog
           modal={this.state.modal}
           title={'Confirmación'}
-          content={<p>Se van a enviar {this.state.selection.length} invitaciones</p>}
+          content={<p>Se van a enviar {this.state.selection?.length} invitaciones</p>}
           first={{ title: 'Enviar', class: 'is-info', action: this.submit, disabled: disabled }}
           second={{ title: 'Cancelar', class: '', action: this.closeModal }}
           message={{ class: '', content: '' }}

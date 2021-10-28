@@ -1,6 +1,6 @@
 import { withRouter } from 'react-router-dom';
 import React, { useContext, useState, useEffect } from 'react';
-import { Tabs, Row, Badge, Col, Button, Alert } from 'antd';
+import { Tabs, Row, Badge, Col, Button, Alert, Space } from 'antd';
 import { ArrowLeftOutlined, VideoCameraOutlined, SearchOutlined } from '@ant-design/icons';
 import SurveyList from '../events/surveys/surveyList';
 import { connect } from 'react-redux';
@@ -22,204 +22,215 @@ const { TabPane } = Tabs;
 const callback = () => {};
 const { setNotification } = notificationsActions;
 const styleTabAttendes = {
-  backgroundColor: '#ffffff4d',
-  padding: 5,
-  borderRadius: '10px',
+   backgroundColor: '#ffffff4d',
+   padding: 5,
+   borderRadius: '10px',
 };
 
 let SocialZone = function(props) {
-  //contextos
-  let cEvent = UseEventContext();
-  let cUser = UseCurrentUser();
-  let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages, setGameBaseUrl } = useContext(
-    HelperContext
-  );
-  const [currentUser, setCurrentUser] = useState(null);
-  const [totalNewMessages, setTotalNewMessages] = useState(0);
-  let [busqueda, setBusqueda] = useState(null);
-  let [strAttende, setstrAttende] = useState();
-  let [isFiltered, setIsFiltered] = useState(false);
-  let busquedaRef = useRef();
-  let history = useHistory();
+   //contextos
+   let cEvent = UseEventContext();
+   let cUser = UseCurrentUser();
+   let { attendeeList, HandleChatOrAttende, chatAttendeChats, totalPrivateMessages, currentActivity } = useContext(
+      HelperContext
+   );
+   const [currentUser, setCurrentUser] = useState(null);
+   const [totalNewMessages, setTotalNewMessages] = useState(0);
+   let [busqueda, setBusqueda] = useState(null);
+   let [strAttende, setstrAttende] = useState();
+   let [isFiltered, setIsFiltered] = useState(false);
+   let busquedaRef = useRef();
+   let history = useHistory();
 
-  const handleChange = async (e) => {
-    const { value } = e.target;
-    setBusqueda(value);
-  };
+   const [tabsSocialzone, settabsSocialzone] = useState({
+      chat: true,
+      games: false,
+      attendees: true,
+      surveys: true,
+   });
 
-  const searhAttende = () => {
-    if (!isFiltered && (busqueda != undefined || busqueda != '')) {
-      setstrAttende(busqueda);
-      setIsFiltered(true);
-    } else {
-      setIsFiltered(false);
-      setstrAttende('');
-      setBusqueda(null);
-      //
-      busquedaRef.current.value = '';
-    }
-  };
-  useEffect(() => {
-    if (chatAttendeChats) {
-      if (chatAttendeChats == 4) {
-        props.setMainStage('otherTab');
+   const handleChange = async (e) => {
+      const { value } = e.target;
+      setBusqueda(value);
+   };
+
+   const searhAttende = () => {
+      if (!isFiltered && (busqueda != undefined || busqueda != '')) {
+         setstrAttende(busqueda);
+         setIsFiltered(true);
+      } else {
+         setIsFiltered(false);
+         setstrAttende('');
+         setBusqueda(null);
+         busquedaRef.current.value = '';
       }
-    }
-  }, [chatAttendeChats]);
+   };
+   useEffect(() => {
+      if (chatAttendeChats) {
+         if (chatAttendeChats == 4) {
+            props.setMainStage('otherTab');
+         }
+      }
+   }, [chatAttendeChats]);
 
-  function redirectRegister() {
-    history.push(`/landing/${cEvent.value._id}/tickets`);
-  }
-  return (
-    <Tabs
-      defaultActiveKey='1'
-      onChange={callback}
-      activeKey={chatAttendeChats}
-      onTabClick={(key) => {
-        HandleChatOrAttende(key);
-      }}>
-      {(props.generalTabs.publicChat || props.generalTabs.privateChat) && (
-        <TabPane
-          id='open_menu_rigth'
-          className='asistente-chat-list'
-          tab={
-            <>
-              <Badge
-                onClick={() => {
-                  HandleChatOrAttende('1'), props.setMainStage(null);
-                }}
-                size='small'
-                // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
-                count={totalPrivateMessages}>
-                <div style={{ color: cEvent.value.styles.textMenu }}> Chats</div>
-              </Badge>
-            </>
-          }
-          key='1'>
-          <ChatList props={props} setCurrentUser={setCurrentUser} generalTabs={props.generalTabs} />
-        </TabPane>
-      )}
-      {props.generalTabs.attendees && (
-        <>
-          {' '}
-          <TabPane
-            style={styleTabAttendes}
-            tab={
-              <div style={{ color: cEvent.value.styles.textMenu }}>
-                <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
-              </div>
-            }
-            key='2'>
-            <Row>
-              <Col sm={21}>
-                {!Object.keys(attendeeList).length ? (
-                  ''
-                ) : (
-                  <div className='control' style={{ marginBottom: '10px', marginRight: '5px', color: 'white' }}>
-                    <input
-                      style={{ color: 'white' }}
-                      ref={busquedaRef}
-                      autoFocus
-                      className='input'
-                      type='text'
-                      name={'name'}
-                      onChange={handleChange}
-                      placeholder='Buscar participante...'
-                    />
-                  </div>
-                )}
-              </Col>
-              <Col sm={2}>
-                {!Object.keys(attendeeList).length ? null : (
+   function redirectRegister() {
+      history.push(`/landing/${cEvent.value._id}/tickets`);
+   }
+
+   useEffect(() => {
+      settabsSocialzone(currentActivity?.tabs);
+   }, [currentActivity]);
+
+   return (
+      <Tabs
+         defaultActiveKey='1'
+         onChange={callback}
+         activeKey={chatAttendeChats}
+         onTabClick={(key) => {
+            HandleChatOrAttende(key);
+         }}>
+         {(props.generalTabs.publicChat || props.generalTabs.privateChat) && (
+            <TabPane
+               id='open_menu_rigth'
+               className='asistente-chat-list'
+               tab={
                   <>
-                    {busqueda !== null && (
-                      <Button shape='circle' onClick={searhAttende}>
-                        {!isFiltered && <SearchOutlined />}
-                        {isFiltered && 'X'}
-                      </Button>
-                    )}
+                     <Badge
+                        onClick={() => {
+                           HandleChatOrAttende('1'), props.setMainStage(null);
+                        }}
+                        size='small'
+                        // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
+                        count={totalPrivateMessages}>
+                        <div style={{ color: cEvent.value.styles.textMenu }}> Chats</div>
+                     </Badge>
                   </>
-                )}
-              </Col>
-            </Row>
-            <div className='asistente-list'>
-              {!Object.keys(attendeeList).length ? (
-                <Row justify='center'>
-                  <p>No hay asistentes aún</p>
-                </Row>
-              ) : (
-                <AttendeList
-                  agendarCita={props.agendarCita}
-                  notificacion={props.notificacion}
-                  sendFriendship={props.sendFriendship}
-                  perfil={props.perfil}
-                  section={props.section}
-                  containNetWorking={props.containNetWorking}
-                  busqueda={strAttende}
-                />
-              )}
-            </div>
-          </TabPane>
-        </>
-      )}
-
-      {props.currentActivity !== null && props.tabs && (
-        // && (props.tabs.surveys === true || props.tabs.surveys === 'true')
-        <TabPane
-          className='asistente-survey-list asistente-list'
-          tab={
-            <div style={{ marginBottom: '0px' }}>
-              <Badge dot={props.hasOpenSurveys} size='default'>
-                <span style={{ color: cEvent.value.styles.textMenu }}>
-                  <FormattedMessage id='tabs.surveys.socialzone' defaultMessage='Encuestas' />
-                </span>
-              </Badge>
-            </div>
-          }
-          key='3'>
-          <Row
-            justify='space-between'
-            style={{ display: 'pointer' }}
-            onClick={() => {
-              props.setMainStage(null);
-              HandleChatOrAttende('1');
-            }}></Row>
-          {cUser.value !== null ? (
-            <SurveyList
-              eventSurveys={props.eventSurveys}
-              publishedSurveys={props.publishedSurveys}
-              listOfEventSurveys={props.listOfEventSurveys}
-              loadingSurveys={props.loadingSurveys}
-            />
-          ) : (
-            <div style={{ paddingTop: 30 }}>
-              <Alert
-                showIcon
-                message='Para poder responder una encuesta debes ser usuario del sistema'
-                type='warning'
-              />
-              <Row style={{ marginTop: 30 }} justify='center'>
-                <Button onClick={redirectRegister}>Registrarme</Button>
-              </Row>
-            </div>
-          )}
-        </TabPane>
-      )}
-
-      {props.currentActivity !== null && props.tabs && (props.tabs.games === true || props.tabs.games === 'true') && (
-        <TabPane
-          className='asistente-survey-list'
-          tab={
+               }
+               key='1'>
+               <ChatList props={props} setCurrentUser={setCurrentUser} generalTabs={props.generalTabs} />
+            </TabPane>
+         )}
+         {props.generalTabs.attendees && (
             <>
-              <p
-                style={{ marginBottom: '0px', color: cEvent.value.styles.textMenu }}
-                className='lowerTabs__mobile-hidden'>
-                <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
-              </p>
+               {' '}
+               <TabPane
+                  style={styleTabAttendes}
+                  tab={
+                     <div style={{ color: cEvent.value.styles.textMenu }}>
+                        <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
+                     </div>
+                  }
+                  key='2'>
+                  <Row>
+                     <Space size={10} style={{ width: '100%' }}>
+                        {!Object.keys(attendeeList).length ? (
+                           ''
+                        ) : (
+                           <div
+                              className='control'
+                              style={{ marginBottom: '10px', marginRight: '5px', color: 'white', width: '100%' }}>
+                              <input
+                                 style={{ color: cEvent.value.styles.textMenu }}
+                                 ref={busquedaRef}
+                                 autoFocus
+                                 //className='input'
+                                 type='text'
+                                 name={'name'}
+                                 onChange={handleChange}
+                                 placeholder='Buscar participante...'
+                              />
+                           </div>
+                        )}
+                        {!Object.keys(attendeeList).length
+                           ? null
+                           : busqueda !== null && (
+                                <Button
+                                   icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
+                                   shape='round'
+                                   onClick={searhAttende}>
+                                   {!isFiltered && 'Buscar'}
+                                   {isFiltered && 'Borrar'}
+                                </Button>
+                             )}
+                     </Space>
+                  </Row>
+                  <div className='asistente-list'>
+                     {!Object.keys(attendeeList).length ? (
+                        <Row justify='center'>
+                           <p>No hay asistentes aún</p>
+                        </Row>
+                     ) : (
+                        <AttendeList
+                           agendarCita={props.agendarCita}
+                           notificacion={props.notificacion}
+                           sendFriendship={props.sendFriendship}
+                           perfil={props.perfil}
+                           section={props.section}
+                           containNetWorking={props.containNetWorking}
+                           busqueda={strAttende}
+                        />
+                     )}
+                  </div>
+               </TabPane>
             </>
-          }
-          key='4'>
-          {/* <Row justify='space-between'>
+         )}
+
+         {currentActivity !== null && (
+            <TabPane
+               className='asistente-survey-list asistente-list'
+               tab={
+                  <div style={{ marginBottom: '0px' }}>
+                     <Badge dot={props.hasOpenSurveys} size='default'>
+                        <span style={{ color: cEvent.value.styles.textMenu }}>
+                           <FormattedMessage id='tabs.surveys.socialzone' defaultMessage='Encuestas' />
+                        </span>
+                     </Badge>
+                  </div>
+               }
+               key='3'>
+               <Row
+                  justify='space-between'
+                  style={{ display: 'pointer' }}
+                  onClick={() => {
+                     props.setMainStage(null);
+                     HandleChatOrAttende('1');
+                  }}></Row>
+               {cUser.value !== null ? (
+                  <SurveyList
+                     eventSurveys={props.eventSurveys}
+                     publishedSurveys={props.publishedSurveys}
+                     listOfEventSurveys={props.listOfEventSurveys}
+                     loadingSurveys={props.loadingSurveys}
+                  />
+               ) : (
+                  <div style={{ paddingTop: 30 }}>
+                     <Alert
+                        showIcon
+                        message='Para poder responder una encuesta debes ser usuario del sistema'
+                        type='warning'
+                     />
+                     <Row style={{ marginTop: 30 }} justify='center'>
+                        <Button onClick={redirectRegister}>Registrarme</Button>
+                     </Row>
+                  </div>
+               )}
+            </TabPane>
+         )}
+
+         {tabsSocialzone !== null && (tabsSocialzone?.games === true || tabsSocialzone?.games === 'true') && (
+            <TabPane
+               className='asistente-survey-list asistente-list'
+               tab={
+                  <>
+                     <p
+                        style={{ marginBottom: '0px', color: cEvent.value.styles.textMenu }}
+                        className='lowerTabs__mobile-hidden'>
+                        <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
+                     </p>
+                  </>
+               }
+               key='4'>
+               {/* <Row justify='space-between'>
             <Col span={4}>
               <ArrowLeftOutlined
                 style={{ color: cEvent.value.styles.textMenu }}
@@ -236,27 +247,27 @@ let SocialZone = function(props) {
               <VideoCameraOutlined style={{ color: cEvent.value.styles.textMenu }} />
             </Col>
           </Row> */}
-          <GameList cEvent={cEvent.value} />
-        </TabPane>
-      )}
-    </Tabs>
-  );
+               <GameList cEvent={cEvent.value} />
+            </TabPane>
+         )}
+      </Tabs>
+   );
 };
 
 const mapStateToProps = (state) => ({
-  mainStage: state.stage.data.mainStage,
-  currentSurvey: state.survey.data.currentSurvey,
-  hasOpenSurveys: state.survey.data.hasOpenSurveys,
-  currentActivity: state.stage.data.currentActivity,
-  event: state.event.data,
-  viewNotification: state.notifications.data,
-  tabs: state.stage.data.tabs,
+   mainStage: state.stage.data.mainStage,
+   currentSurvey: state.survey.data.currentSurvey,
+   hasOpenSurveys: state.survey.data.hasOpenSurveys,
+   currentActivity: state.stage.data.currentActivity,
+   event: state.event.data,
+   viewNotification: state.notifications.data,
+   tabs: state.stage.data.tabs,
 });
 
 const mapDispatchToProps = {
-  setMainStage,
-  setNotification,
-  setCurrentSurvey,
+   setMainStage,
+   setNotification,
+   setCurrentSurvey,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SocialZone));
