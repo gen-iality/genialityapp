@@ -122,8 +122,8 @@ class UserModal extends Component {
       if (e.response && e.response.status === 404) {
         let respdelete1 = await UsersApi.deleteUsers('615dd4876a959d694a2a7ab6');
         let respdelete2 = await UsersApi.deleteUsers('615ddb385dae82055078a544');
-        console.log('RESPDELETE==>', respdelete1);
-        console.log('RESPDELETE2==>', respdelete1);
+        //console.log('RESPDELETE==>', respdelete1);
+        // console.log('RESPDELETE2==>', respdelete1);
         userRef.doc(user._id).delete();
         message.success('Eliminado correctamente');
       } else {
@@ -162,7 +162,7 @@ class UserModal extends Component {
 
   saveUser = async (values) => {
     this.setState({ loadingregister: true });
-    console.log('callback=>', values);
+    //console.log('callback=>', values);
     let resp;
     let respActivity = true;
     if (values) {
