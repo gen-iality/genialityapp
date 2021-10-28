@@ -542,7 +542,9 @@ const FormRegister = ({
         } else {
           rule = {
             validator: (_, value) =>
-              value == true || value == false || value == '' ? Promise.resolve() : Promise.reject(textoError),
+              value == true || value == false || value == '' || value == undefined
+                ? Promise.resolve()
+                : Promise.reject(textoError),
           };
         }
         return (

@@ -85,6 +85,7 @@ class UserModal extends Component {
       });
       this.setState({ found: 1, user, edit: false, ticket_id: this.props.ticket });
     }
+    //console.log('EXTRAFIELDS===>', this.props.extraFields);
   }
 
   componentWillUnmount() {
@@ -165,13 +166,13 @@ class UserModal extends Component {
     let resp;
     let respActivity = true;
     if (values) {
-      if (values.checked_in) {
+      if (values?.checked_in) {
         values.checkedin_at = new Date();
       } else {
         values.checkedin_at = '';
       }
-
-      const snap = { rol_id: values.rol_id, properties: values };
+      const { rol_id, ...datos } = values;
+      const snap = { rol_id: rol_id, properties: datos };
 
       resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
 
@@ -194,6 +195,18 @@ class UserModal extends Component {
           checked_in: true,
           checkedin_at: new Date(),
           checked_at: new Date(),
+        });
+      } else {
+        let userRef = await firestore
+          .collection(`${this.props.cEvent?.value?._id}_event_attendees`)
+          .doc('activity')
+          .collection(`${this.props.activityId}`);
+        userRef.doc(resp.data._id).set({
+          ...resp.data,
+          updated_at: new Date(),
+          checked_in: false,
+          checkedin_at: '',
+          checked_at: '',
         });
       }
       if (this.props.updateView) {
