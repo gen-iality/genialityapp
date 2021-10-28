@@ -3,10 +3,12 @@ import { Row, Col, Button, Drawer, Avatar, Space } from 'antd';
 import { InfoCircleOutlined, CloseOutlined } from '@ant-design/icons';
 import Game from '../game';
 import GameRanking from '../../events/game/gameRanking';
+import withContext from '../../../Context/withContext';
 
 function GameDrawer(props) {
-  const { gameData, setGameData, cUser, cEvent } = props;
-
+  const { cHelper, cEvent } = props;
+  const styles = cEvent.value.styles;
+  const { gameData, setGameData } = cHelper;
   // Estado para hacer visible el ranking
   const [rankingVisible, setRankingVisible] = useState(false);
   const [gameVisible, setGameVisible] = useState(false);
@@ -34,8 +36,8 @@ function GameDrawer(props) {
     height: '40px',
     width: '40px',
     borderRadius: '8px',
-    color: `${props.colorTexto}`,
-    backgroundColor: `${gameData.picture ? '' : props.colorFondo}`,
+    color: `${styles.textMenu}`,
+    backgroundColor: `${gameData.picture ? '' : styles.toolbarDefaultBg}`,
   };
 
   return (
@@ -74,12 +76,12 @@ function GameDrawer(props) {
 
         <Row gutter={[8, 8]} justify='center'>
           <Col xl={rankingVisible === true ? 24 : 16} xxl={rankingVisible === true ? 24 : 16}>
-            <Game currentUser={cUser} />
+            <Game />
           </Col>
           <Col hidden={rankingVisible} xl={8} xxl={8}>
             <div style={{ width: '100%' }}>
               <div style={{ justifyContent: 'center', display: 'grid' }}>
-                <GameRanking currentUser={cUser} cEvent={cEvent} />
+                <GameRanking />
               </div>
             </div>
           </Col>
@@ -89,4 +91,4 @@ function GameDrawer(props) {
   );
 }
 
-export default GameDrawer;
+export default withContext(GameDrawer);

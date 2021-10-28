@@ -5,13 +5,15 @@ import RankingList from '../../events/surveys/rankingList';
 import WithEviusContext from '../../../Context/withContext';
 
 function GameRanking(props) {
-  const { currentUser, cEvent } = props;
-  const [ranking, setRanking] = useState([]);
+  const { cUser, cEvent, cHelper } = props;
+  const currentUser = cUser.value;
+  const currentEvent = cEvent.value;
+  const { setGameRanking } = cHelper;
   const [myName, setMyName] = useState('');
   const [myScore, setMyScore] = useState('');
 
   const styleRanking = {
-    backgroundColor: `${cEvent.styles.toolbarDefaultBg}`,
+    backgroundColor: `${currentEvent.styles.toolbarDefaultBg}`,
     padding: 5,
     borderRadius: '10px',
   };
@@ -46,7 +48,7 @@ function GameRanking(props) {
           result['score'] = result.puntaje;
           puntajes.push(result);
         });
-        setRanking(puntajes);
+        setGameRanking(puntajes);
       });
   }, [currentUser]);
 
@@ -56,7 +58,7 @@ function GameRanking(props) {
         <>
           {/*RANKING*/}
           <Row justify='center' style={styleRanking}>
-            <RankingList data={ranking} cEvent={cEvent} />
+            <RankingList />
           </Row>
         </>
       )}
@@ -78,7 +80,7 @@ const RenderMeScore = ({ myName, myScore }) => (
               </Avatar>
             </Col>
             <Col span={12}>
-              <h3 style={{ fontWeight: '700', color: cEvent.styles.textMenu }}>{currentUser.displayName}</h3>
+              <h3 style={{ fontWeight: '700', color: currentEvent.styles.textMenu }}>{currentUser.displayName}</h3>
             </Col>
             <Col span={6}>
               <h4 style={{ color: cEvent.styles.textMenu }}>{myScore} pts</h4>

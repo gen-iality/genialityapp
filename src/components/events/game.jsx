@@ -1,8 +1,10 @@
-import React, { useEffect, useContext } from 'react';
-import { HelperContext } from '../../Context/HelperContext';
+import React, { useEffect } from 'react';
+import withContext from '../../Context/withContext';
 
 function Game(props) {
-  let { gameData } = useContext(HelperContext);
+  const { cUser, cHelper } = props;
+  const { gameData } = cHelper;
+  const currentUser = cUser.value;
 
   useEffect(() => {
     const evius_body = document.getElementById('evius-body');
@@ -11,8 +13,6 @@ function Game(props) {
       evius_body.style.cssText = 'overflow-y: visible;';
     };
   }, []);
-
-  const { currentUser } = props;
 
   return (
     <iframe
@@ -33,4 +33,4 @@ function Game(props) {
   );
 }
 
-export default Game;
+export default withContext(Game);

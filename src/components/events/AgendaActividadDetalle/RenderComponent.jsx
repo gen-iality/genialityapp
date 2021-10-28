@@ -11,7 +11,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 
 const RenderComponent = (props) => {
-  let { currentActivity, chatAttendeChats, gameData, setGameData } = useContext(HelperContext);
+  let { currentActivity, chatAttendeChats } = useContext(HelperContext);
   let tabsdefault = {
     attendees: false,
     chat: true,
@@ -84,14 +84,7 @@ const RenderComponent = (props) => {
             ComponentRender = (
               <>
                 {zoomExternoHandleOpen(currentActivity, props.cEventUser.value)}
-                <GameDrawer
-                  gameData={gameData}
-                  setGameData={setGameData}
-                  colorFondo={props.cEvent.value.styles.toolbarDefaultBg}
-                  colorTexto={props.cEvent.value.styles.textMenu}
-                  cUser={props.cUser.value}
-                  cEvent={props.cEvent.value}
-                />
+                <GameDrawer />
               </>
             );
           }
@@ -150,14 +143,7 @@ const RenderComponent = (props) => {
                   meeting_id={currentActivity?.meeting_id}
                   generalTabs={tabsGeneral}
                 />
-                <GameDrawer
-                  gameData={gameData}
-                  setGameData={setGameData}
-                  colorFondo={props.cEvent.value.styles.toolbarDefaultBg}
-                  colorTexto={props.cEvent.value.styles.textMenu}
-                  cUser={props.cUser.value}
-                  cEvent={props.cEvent.value}
-                />
+                <GameDrawer />
               </>
             );
           }
@@ -218,14 +204,7 @@ const RenderComponent = (props) => {
                   meeting_id={currentActivity?.meeting_id}
                   generalTabs={tabsGeneral}
                 />
-                <GameDrawer
-                  gameData={gameData}
-                  setGameData={setGameData}
-                  colorFondo={props.cEvent.value.styles.toolbarDefaultBg}
-                  colorTexto={props.cEvent.value.styles.textMenu}
-                  cUser={props.cUser.value}
-                  cEvent={props.cEvent.value}
-                />
+                <GameDrawer />
               </>
             );
           }

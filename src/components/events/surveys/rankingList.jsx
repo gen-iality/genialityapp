@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Avatar, Divider, List, Skeleton } from 'antd';
-import { UseEventContext } from '../../../Context/eventContext';
+import { Row, Avatar, Divider, List, Skeleton } from 'antd';
+import withContext from '../../../Context/withContext';
 
-export default function RankingList({ data }) {
+function RankingList(props) {
+  const { cEvent, cHelper } = props;
+  const styles = cEvent.value.styles;
+  const { gameRanking } = cHelper;
   function formatName(name) {
     const result = decodeURIComponent(name);
     return result;
   }
 
-  const [list, setList] = useState([]);
   const [loading, setloading] = useState(false);
-
-  let cEvent = UseEventContext();
 
   useEffect(() => {
     setloading(true);
-    setList(data);
     setloading(false);
-  }, [data]);
+  }, [gameRanking]);
 
   const styleListPlayer = {
     background: 'white',
@@ -36,17 +35,22 @@ export default function RankingList({ data }) {
     <div style={{ marginTop: 16, width: '26vw' }}>
       <Row justify='center'>
         <h1
-          style={{ fontSize: '25px', fontWeight: 'bold', lineHeight: '3px', color: `${cEvent.value.styles.textMenu}` }}>
+          style={{
+            fontSize: '25px',
+            fontWeight: 'bold',
+            lineHeight: '3px',
+            color: `${styles && styles.textMenu}`,
+          }}>
           Ranking
         </h1>
-        <Divider style={{ backgroundColor: `${cEvent.value.styles.textMenu}` }} />
+        <Divider style={{ backgroundColor: `${styles && styles.textMenu}` }} />
       </Row>
       <div className='container-ranking' style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
         <List
           className='demo-loadmore-list'
           loading={loading}
           itemLayout='horizontal'
-          dataSource={data}
+          dataSource={gameRanking}
           renderItem={(item, key) => (
             <List.Item style={styleListPlayer} actions={[<a key='list-loadmore-edit'> {item.score} Puntos </a>]}>
               <Skeleton avatar title={false} loading={loading} active>
@@ -66,3 +70,4 @@ export default function RankingList({ data }) {
     </div>
   );
 }
+export default withContext(RankingList);

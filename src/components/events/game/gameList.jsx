@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { firestore } from '../../../helpers/firebase';
 import { Row, Divider, List } from 'antd';
 import UsersCard from '../../shared/usersCard';
-import { connect } from 'react-redux';
+import withContext from '../../../Context/withContext';
 
 function GameList(props) {
   const { cEvent } = props;
+  const currentEvent = cEvent.value;
   const [listOfGames, setListOfGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -31,10 +32,11 @@ function GameList(props) {
   return (
     <div style={{ marginTop: 16 }}>
       <Row justify='center'>
-        <h1 style={{ fontSize: '25px', fontWeight: 'bold', lineHeight: '3px', color: `${cEvent.styles.textMenu}` }}>
+        <h1
+          style={{ fontSize: '25px', fontWeight: 'bold', lineHeight: '3px', color: `${currentEvent.styles.textMenu}` }}>
           Lista de juegos
         </h1>
-        <Divider style={{ backgroundColor: `${cEvent.styles.textMenu}` }} />
+        <Divider style={{ backgroundColor: `${currentEvent.styles.textMenu}` }} />
       </Row>
       <div className='container-ranking' style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
         <List
@@ -48,8 +50,4 @@ function GameList(props) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  currentUser: state.user.data,
-});
-
-export default connect(mapStateToProps)(GameList);
+export default withContext(GameList);
