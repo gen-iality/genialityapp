@@ -165,7 +165,6 @@ const FormRegister = ({
   const [extraFieldsOriginal, setextraFieldsOriginal] = useState(
     organization ? fields : cEvent.value?.user_properties || {}
   );
-
   useEffect(() => {
     let formType = !cEventUser.value?._id ? 'register' : 'transfer';
     setFormMessage(FormTags(formType));
@@ -314,7 +313,7 @@ const FormRegister = ({
 
               //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado
               //todo el proceso de logueo depende del token en la url por eso se recarga la página
-              console.log('INITIAL TOKEN AND VALID EMAIL', resp.data.user.initial_token, cEvent.value?.validateEmail);
+              // console.log('INITIAL TOKEN AND VALID EMAIL', resp.data.user.initial_token, cEvent.value?.validateEmail);
               if (!cEvent?.value?.validateEmail && resp.data.user.initial_token) {
                 setLogguedurl(`/landing/${cEvent.value?._id}?token=${resp.data.user.initial_token}`);
                 setTimeout(function() {
@@ -489,7 +488,7 @@ const FormRegister = ({
             value={areacodeselected}
             onChange={(val) => {
               setareacodeselected(val);
-              console.log(val);
+              //console.log(val);
             }}
             placeholder='Codigo de area del pais'>
             {areaCode.map((code, key) => {
@@ -542,7 +541,9 @@ const FormRegister = ({
         } else {
           rule = {
             validator: (_, value) =>
-              value == true || value == false || value == '' ? Promise.resolve() : Promise.reject(textoError),
+              value == true || value == false || value == '' || value == undefined
+                ? Promise.resolve()
+                : Promise.reject(textoError),
           };
         }
         return (
