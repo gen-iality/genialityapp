@@ -9,21 +9,23 @@ function GameList(props) {
   const [listOfGames, setListOfGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  async function getGamesData() {
-    let gamesData = [];
+  function getGamesData() {
     const docRef = firestore.collection('gamesAvailable');
-    await docRef.get().then((querySnapshot) => {
+    const unSuscribe = docRef.where('showGame', '==', true).onSnapshot((querySnapshot) => {
+      let gamesData = [];
       querySnapshot.forEach((doc) => {
         gamesData.push({ ...doc.data(), id: doc.id });
       });
+      setListOfGames(gamesData);
+      setIsLoading(false);
     });
-
-    setListOfGames(gamesData);
-    setIsLoading(false);
+    return unSuscribe;
   }
 
   useEffect(() => {
-    getGamesData();
+    const unSuscribe = getGamesData();
+
+    return () => unSuscribe();
   }, []);
 
   return (

@@ -6,12 +6,12 @@ import { DolbyCard } from './DolbyCard';
 import ZoomIframe from '../ZoomIframe';
 import { VideoActivity } from './VideoActivity';
 import { Row, Space, Spin } from 'antd';
-import Game from '../game';
+import GameDrawer from '../game/gameDrawer';
 import { LoadingOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 
 const RenderComponent = (props) => {
-  let { currentActivity, chatAttendeChats } = useContext(HelperContext);
+  let { currentActivity, chatAttendeChats, gameData, setGameData } = useContext(HelperContext);
   let tabsdefault = {
     attendees: false,
     chat: true,
@@ -81,7 +81,19 @@ const RenderComponent = (props) => {
           if (chatAttendeChats !== '4') {
             ComponentRender = zoomExternoHandleOpen(currentActivity, props.cEventUser.value);
           } else if (chatAttendeChats == '4') {
-            ComponentRender = <Game />;
+            ComponentRender = (
+              <>
+                {zoomExternoHandleOpen(currentActivity, props.cEventUser.value)}
+                <GameDrawer
+                  gameData={gameData}
+                  setGameData={setGameData}
+                  colorFondo={props.cEvent.value.styles.toolbarDefaultBg}
+                  colorTexto={props.cEvent.value.styles.textMenu}
+                  cUser={props.cUser.value}
+                  cEvent={props.cEvent.value}
+                />
+              </>
+            );
           }
 
         case 'closed_meeting_room':
@@ -131,7 +143,23 @@ const RenderComponent = (props) => {
               );
             }
           } else if (chatAttendeChats == '4') {
-            ComponentRender = <Game />;
+            ComponentRender = (
+              <>
+                <ZoomIframe
+                  platform={currentActivity?.platform}
+                  meeting_id={currentActivity?.meeting_id}
+                  generalTabs={tabsGeneral}
+                />
+                <GameDrawer
+                  gameData={gameData}
+                  setGameData={setGameData}
+                  colorFondo={props.cEvent.value.styles.toolbarDefaultBg}
+                  colorTexto={props.cEvent.value.styles.textMenu}
+                  cUser={props.cUser.value}
+                  cEvent={props.cEvent.value}
+                />
+              </>
+            );
           }
 
           break;
@@ -183,7 +211,23 @@ const RenderComponent = (props) => {
               );
             }
           } else if (chatAttendeChats == '4') {
-            ComponentRender = <Game />;
+            ComponentRender = (
+              <>
+                <ZoomIframe
+                  platform={currentActivity?.platform}
+                  meeting_id={currentActivity?.meeting_id}
+                  generalTabs={tabsGeneral}
+                />
+                <GameDrawer
+                  gameData={gameData}
+                  setGameData={setGameData}
+                  colorFondo={props.cEvent.value.styles.toolbarDefaultBg}
+                  colorTexto={props.cEvent.value.styles.textMenu}
+                  cUser={props.cUser.value}
+                  cEvent={props.cEvent.value}
+                />
+              </>
+            );
           }
 
           break;

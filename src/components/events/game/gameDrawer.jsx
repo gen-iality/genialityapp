@@ -10,7 +10,7 @@ function GameDrawer(props) {
   // let cUser = UseCurrentUser();
 
   // Estado para hacer visible el ranking
-  const [rankingVisible, setRankingVisible] = useState(true);
+  const [rankingVisible, setRankingVisible] = useState(false);
   const [gameVisible, setGameVisible] = useState(false);
 
   const showRanking = () => {
@@ -41,6 +41,7 @@ function GameDrawer(props) {
     color: `${props.colorTexto}`,
     backgroundColor: `${gameData.picture ? '' : props.colorFondo}`,
   };
+
   return (
     <>
       <Drawer
@@ -77,7 +78,7 @@ function GameDrawer(props) {
 
         <Row gutter={[8, 8]} justify='center'>
           <Col xl={rankingVisible === true ? 24 : 16} xxl={rankingVisible === true ? 24 : 16}>
-            <Game />
+            <Game currentUser={cUser} />
           </Col>
           <Col hidden={rankingVisible} xl={8} xxl={8}>
             <div style={{ width: '100%' }}>
