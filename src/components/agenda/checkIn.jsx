@@ -293,7 +293,7 @@ class CheckAgenda extends Component {
   //FN para checkin
   checkIn = async (id, check = null, snap = null, edit = true) => {
     const { attendees } = this.state;
-    console.log('ATTENDESS=>', attendees, id);
+    // console.log('ATTENDESS=>', attendees, id);
 
     //Se busca en el listado total con el id
 
