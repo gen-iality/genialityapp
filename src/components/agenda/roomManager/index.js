@@ -26,6 +26,8 @@ class RoomManager extends Component {
       roomStatus: null,
       host_id: null,
       host_name: null,
+      //juegos disponibles
+      avalibleGames: [],
 
       // si este valor esta en false no se muestra el listado de host
       // tambien se termina a partir del valor de la variable si se envia un array por host_ids o un string por host_id
@@ -36,31 +38,31 @@ class RoomManager extends Component {
       host_list: [
         {
           host_id: 'KthHMroFQK24I97YoqxBZw',
-          host_name: 'host1@evius.co'
+          host_name: 'host1@evius.co',
         },
         {
           host_id: '15DKHS_6TqWIFpwShasM4w',
-          host_name: 'host2@evius.co'
+          host_name: 'host2@evius.co',
         },
         {
           host_id: 'FIRVnSoZR7WMDajgtzf5Uw',
-          host_name: 'host3@evius.co'
+          host_name: 'host3@evius.co',
         },
         {
           host_id: 'YaXq_TW2f791cVpP8og',
-          host_name: 'host4@evius.co'
+          host_name: 'host4@evius.co',
         },
         {
           host_id: 'mSkbi8PmSSqQEWsm6FQiAA',
-          host_name: 'host5@evius.co'
-        }
+          host_name: 'host5@evius.co',
+        },
       ],
 
       // Estado de los tabs
       chat: true,
       surveys: false,
       games: false,
-      attendees: false
+      attendees: false,
     };
   }
 
@@ -103,23 +105,22 @@ class RoomManager extends Component {
   validationRoom = async () => {
     const { event_id, activity_id } = this.props;
     const { service } = this.state;
-
     const hasVideoconference = await service.validateHasVideoconference(event_id, activity_id);
 
     if (hasVideoconference) {
       const configuration = await service.getConfiguration(event_id, activity_id);
-
       this.setState({
         isPublished: typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true,
         platform: configuration.platform ? configuration.platform : null,
         meeting_id: configuration.meeting_id ? configuration.meeting_id : null,
         roomStatus: configuration.habilitar_ingreso,
+        avalibleGames: configuration.avalibleGames,
         chat: configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false,
         surveys: configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false,
         games: configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false,
         attendees: configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false,
         host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
-        host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null
+        host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null,
       });
 
       // Si en firebase ya esta inicializado el campo platfom y meeting_id se habilita el tab controller
@@ -148,6 +149,22 @@ class RoomManager extends Component {
     this.setState({ roomStatus: e.target.value }, async () => await this.saveConfig());
   };
 
+  // Encargado de gestionar los juegos seleccionados
+  handleGamesSelected = async (status, itemId, listOfGames) => {
+    const { event_id, activity_id } = this.props;
+    const { service } = this.state;
+    const newData = [];
+    listOfGames.forEach((items) => {
+      if (items.id === itemId) {
+        newData.push({ ...items, showGame: status });
+      } else {
+        newData.push({ ...items });
+      }
+    });
+    this.setState({ avalibleGames: newData }, async () => await this.saveConfig());
+    // const configuration = await service.getConfiguration(event_id, activity_id);
+    // this.setState({ avalibleGames: configuration });
+  };
   // Encargado de gestionar los tabs de la video conferencia
   handleTabsController = (e, tab) => {
     const valueTab = e;
@@ -197,9 +214,10 @@ class RoomManager extends Component {
       attendees,
       isPublished,
       host_id,
-      host_name
+      host_name,
+      avalibleGames,
     } = this.state;
-    const roomInfo = { roomStatus, platform, meeting_id, isPublished, host_id, host_name };
+    const roomInfo = { roomStatus, platform, meeting_id, isPublished, host_id, host_name, avalibleGames };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };
   };
@@ -213,7 +231,7 @@ class RoomManager extends Component {
         host_id: null,
         host_name: null,
         hasVideoconference: false,
-        roomStatus: ''
+        roomStatus: '',
       },
       async () => await this.saveConfig()
     );
@@ -226,7 +244,6 @@ class RoomManager extends Component {
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
-
     try {
       const result = await service.createOrUpdateActivity(event_id, activity_id, roomInfo, tabs);
       if (result) Message.success(result.message);
@@ -255,7 +272,7 @@ class RoomManager extends Component {
         const data = {
           event_id,
           activity_id,
-          meeting_id
+          meeting_id,
         };
         const response = await service.getZoomRoom(data);
         if (
@@ -303,7 +320,7 @@ class RoomManager extends Component {
       agenda: activity_name,
       date_start_zoom,
       date_end_zoom,
-      [host_field]: host_value
+      [host_field]: host_value,
     };
     const response = await this.state.service.setZoomRoom(evius_token, body);
 
@@ -319,7 +336,7 @@ class RoomManager extends Component {
           meeting_id,
           host_id: zoom_host_id,
           host_name: zoom_host_name,
-          hasVideoconference: true
+          hasVideoconference: true,
         },
         async () => await this.saveConfig()
       );
@@ -384,7 +401,8 @@ class RoomManager extends Component {
       isPublished,
       select_host_manual,
       host_list,
-      host_id
+      host_id,
+      avalibleGames,
     } = this.state;
     const { event_id, activity_id, activity_name } = this.props;
     return (
@@ -417,23 +435,25 @@ class RoomManager extends Component {
                   deleteZoomRoom={this.deleteZoomRoom}
                 />
               )}
-            </TabPane>            
-              <TabPane tab='Controlador' key='controller'>
-                {loading ? (
-                  <Spin />
-                ) : (
-                  <RoomController
-                    platform={platform}
-                    roomStatus={roomStatus}
-                    attendees={attendees}
-                    chat={chat}
-                    surveys={surveys}
-                    games={games}
-                    handleRoomState={this.handleRoomState}
-                    handleTabsController={this.handleTabsController}
-                  />
-                )}
-              </TabPane>            
+            </TabPane>
+            <TabPane tab='Controlador' key='controller'>
+              {loading ? (
+                <Spin />
+              ) : (
+                <RoomController
+                  platform={platform}
+                  roomStatus={roomStatus}
+                  avalibleGames={avalibleGames}
+                  attendees={attendees}
+                  chat={chat}
+                  surveys={surveys}
+                  games={games}
+                  handleRoomState={this.handleRoomState}
+                  handleGamesSelected={this.handleGamesSelected}
+                  handleTabsController={this.handleTabsController}
+                />
+              )}
+            </TabPane>
           </Tabs>
         )}
       </Card>

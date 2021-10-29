@@ -24,7 +24,7 @@ class Service {
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
     const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
-    const { roomStatus, platform, meeting_id, isPublished, host_id, host_name } = roomInfo;
+    const { roomStatus, platform, meeting_id, isPublished, host_id, host_name, avalibleGames } = roomInfo;
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
       this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
@@ -42,6 +42,7 @@ class Service {
               isPublished,
               host_id,
               host_name,
+              avalibleGames,
             })
             .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
         } else {
@@ -58,6 +59,7 @@ class Service {
               host_id,
               host_name,
               tabs: tabsSchema,
+              avalibleGames,
             })
             .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
         }

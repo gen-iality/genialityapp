@@ -7,29 +7,57 @@ import { getColumnSearchProps } from '../../speakers/getColumnSearch';
 import { firestore } from '../../../helpers/firebase';
 
 export default function RoomController(props) {
-  const { handleRoomState, handleTabsController, roomStatus, surveys, games } = props;
+  const {
+    handleRoomState,
+    handleTabsController,
+    handleGamesSelected,
+    roomStatus,
+    surveys,
+    games,
+    avalibleGames,
+  } = props;
   const [listOfGames, setListOfGames] = useState([]);
   let [columnsData, setColumnsData] = useState({});
   const [showavailableGames, setShowavailableGames] = useState(games);
   const [isLoading, setIsLoading] = useState(true);
 
   async function getGamesData() {
-    let gamesData = [];
-    const docRef = firestore.collection('gamesAvailable');
-    await docRef.get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        gamesData.push({ ...doc.data(), id: doc.id });
+    if (avalibleGames === undefined) {
+      let gamesData = [];
+      const docRef = firestore.collection('gamesAvailable');
+      await docRef.get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          gamesData.push({ ...doc.data(), id: doc.id });
+        });
       });
-    });
 
-    setListOfGames(gamesData);
+      setListOfGames(gamesData);
+    } else {
+      setListOfGames(avalibleGames);
+    }
     setIsLoading(false);
   }
 
   useEffect(() => {
     getGamesData();
-  }, [games]);
+  }, [games, avalibleGames]);
 
+  function whatIsMyStatus(item) {
+    console.log('10. ', avalibleGames);
+    // if (avalibleGames && avalibleGames.length > 0) {
+    //   let itemFilter = avalibleGames.map((avalibleGame) => {
+    //     if (avalibleGame.id === item.id) {
+    //       // console.log('10. ifff');
+    //       return true;
+    //     } else {
+    //       // console.log('10. ifff');
+    //       return false;
+    //     }
+    //   });
+    //   // console.log('10. itemFilter[0] ', itemFilter[0]);
+    //   return itemFilter[0];
+    // }
+  }
   const columns = [
     {
       title: 'Logo',
@@ -71,26 +99,12 @@ export default function RoomController(props) {
       title: 'Visible',
       dataIndex: 'showGame',
       render(val, item) {
-        const [publish, setPublish] = useState(item.showGame);
-        const update = async (checked) => {
-          const docRef = firestore.collection('gamesAvailable').doc(item.id);
-          docRef
-            .update({
-              showGame: checked,
-            })
-            .then(() => {
-              setPublish(checked);
-            })
-            .catch((error) => {
-              console.error('Error updating document: ', error);
-            });
-        };
         return (
           <Switch
             checkedChildren='Sí'
             unCheckedChildren='No'
-            onChange={update}
-            checked={publish}
+            onChange={(status) => handleGamesSelected(status, item.id, listOfGames)}
+            checked={item.showGame}
             id={`editSwitch${item.index}`}
           />
         );
@@ -159,9 +173,6 @@ export default function RoomController(props) {
               setColumnsData={setColumnsData}
               loading={isLoading}
               search
-              // extraFn={extraField}
-              // extraFnIcon={<SendOutlined />}
-              // extraFnTitle='Enviar notificación a este usuario'
             />
           </>
         )}
