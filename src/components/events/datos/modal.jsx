@@ -35,7 +35,6 @@ class DatosModal extends Component {
   componentDidMount() {
     html.classList.add('is-clipped');
     if (this.props.info) this.setState({ info: this.props.info });
-    console.log('INFO RECIBIDA==>', this.props.info);
   }
 
   generateFieldNameForLabel(name, value) {
@@ -61,7 +60,7 @@ class DatosModal extends Component {
       }
     }
     tmpInfo[name] = value;
-    console.log('VALUE SELECT===>', value);
+
     this.setState({ info: tmpInfo });
   };
 
@@ -105,7 +104,6 @@ class DatosModal extends Component {
   //Funciones para lista de opciones del campo
   handleInputChange = (inputValue) => {
     this.setState({ inputValue });
-    console.log('INPUTVALUE==>', inputValue);
   };
 
   changeOption = (option) => {
@@ -141,7 +139,6 @@ class DatosModal extends Component {
     values.visibleByAdmin = info?.visibleByAdmin;
     values.visibleByContacts = info.visibleByContacts;
     values.description = info.description;
-    console.log('INFO==>', values);
     if (info.type !== 'list' && info.type !== 'multiplelist') delete info.options;
     await this.props.action(values, this.state.event?._id);
     const initModal = {

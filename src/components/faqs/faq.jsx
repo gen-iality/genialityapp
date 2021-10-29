@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaqsApi } from '../../helpers/request';
 import { useHistory } from 'react-router-dom';
 import { toolbarEditor } from '../../helpers/constants';
@@ -12,32 +12,30 @@ const { confirm } = Modal;
 
 const formLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 
 const Faq = (props) => {
   const eventID = props.event._id;
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
-  const [faq, setFaq] = useState({
-    title: '',
-    content: ''
-  });
-  
+  const [faq, setFaq] = useState();
+
   useEffect(() => {
-    if(locationState.edit) {
+    if (locationState.edit) {
       getOne();
     }
-  }, [faq]);
+  }, [locationState.edit]);
 
   const getOne = async () => {
     const response = await FaqsApi.getOne(locationState.edit, eventID);
-    let data = response.data.find(faqs => faqs._id === locationState.edit);
-    setFaq(response.data.find(faqs => faqs._id === locationState.edit));
-    if(data.content === '<p><br></p>') {
-      setFaq({...faq, content: '', title: data.title})
-    }
-  }
+    let data = response.data.find((faqs) => faqs._id === locationState.edit);
+
+    setFaq(data);
+    // if (data.content === '<p><br></p>') {
+    //   setFaq({ content: '', title: data.title });
+    // }
+  };
 
   const onSubmit = async () => {
     const loading = message.open({
@@ -47,12 +45,12 @@ const Faq = (props) => {
     });
 
     try {
-      if(locationState.edit) {
+      if (locationState.edit) {
         await FaqsApi.editOne(faq, locationState.edit, eventID);
       } else {
         await FaqsApi.create(faq, eventID);
-      }     
-    
+      }
+
       message.destroy(loading.key);
       message.open({
         type: 'success',
@@ -66,10 +64,12 @@ const Faq = (props) => {
         content: handleRequestError(e).message,
       });
     }
-  }
+  };
 
   const handleChange = (e) => {
-    setFaq({...faq, title: e.target.value});
+    if (faq) {
+      setFaq({ ...faq, title: e.target.value });
+    }
   };
 
   const onRemoveId = () => {
@@ -78,7 +78,7 @@ const Faq = (props) => {
       type: 'loading',
       content: <> Por favor espere miestras borra la información..</>,
     });
-    if(locationState.edit) {
+    if (locationState.edit) {
       confirm({
         title: `¿Está seguro de eliminar la información?`,
         icon: <ExclamationCircleOutlined />,
@@ -103,40 +103,32 @@ const Faq = (props) => {
                 content: handleRequestError(e).message,
               });
             }
-          }
+          };
           onHandlerRemove();
-        }
+        },
       });
     }
-  }
+  };
 
   const HandleQuillEditorChange = (contents) => {
     let content = contents;
-    if(content === '<p><br></p>'){
+    if (content === '<p><br></p>') {
       content = '';
     }
-    setFaq({...faq, content: content });
+    if (faq) {
+      setFaq({ ...faq, content: content });
+    }
   };
 
   return (
-    <Form
-      onFinish={onSubmit}
-      {...formLayout}
-    >
-      <Header 
-        title={'Pregunta Frecuente'}
-        back
-        save
-        form
-        remove={onRemoveId}
-        edit={locationState.edit}
-      />
-      
+    <Form onFinish={onSubmit} {...formLayout}>
+      <Header title={'Pregunta Frecuente'} back save form remove={onRemoveId} edit={locationState.edit} />
+
       <Row justify='center' wrap gutter={12}>
-        <Col >
-          <Form.Item label={'Título'} >
-            <Input 
-              value={faq.title}
+        <Col>
+          <Form.Item label={'Título'}>
+            <Input
+              value={faq && faq.title}
               name={'title'}
               placeholder={'Título de la pregunta frecuente'}
               onChange={(e) => handleChange(e)}
@@ -145,7 +137,7 @@ const Faq = (props) => {
           <Form.Item label={'Contenido'}>
             <ReactQuill
               id='faqContent'
-              value={faq.content}
+              value={(faq && faq.content) || ''}
               name={'content'}
               onChange={HandleQuillEditorChange}
               modules={toolbarEditor}
@@ -154,7 +146,7 @@ const Faq = (props) => {
         </Col>
       </Row>
     </Form>
-  )
-}
+  );
+};
 
 export default Faq;

@@ -1,25 +1,5 @@
-import {
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  LoadingOutlined,
-  LockOutlined,
-  MailOutlined,
-} from '@ant-design/icons';
-import {
-  Modal,
-  Tabs,
-  Form,
-  Input,
-  Button,
-  Divider,
-  Typography,
-  Space,
-  Grid,
-  Alert,
-  Spin,
-  Image,
-  Skeleton,
-} from 'antd';
+import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import { Modal, Tabs, Form, Input, Button, Divider, Typography, Space, Grid, Alert, Spin, Image, Skeleton } from 'antd';
 import FormComponent from '../events/registrationForm/form';
 import withContext from '../../Context/withContext';
 import { HelperContext } from '../../Context/HelperContext';
@@ -50,12 +30,7 @@ const ModalAuth = (props) => {
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorRegisterUSer, setErrorRegisterUSer] = useState(false);
   const [form1] = Form.useForm();
-  let {
-    handleChangeTypeModal,
-    typeModal,
-    handleChangeTabModal,
-    tabLogin,
-  } = useContext(HelperContext);
+  let { handleChangeTypeModal, typeModal, handleChangeTabModal, tabLogin } = useContext(HelperContext);
   const intl = useIntl();
   useEffect(() => {
     if (props.tab) {
@@ -63,9 +38,7 @@ const ModalAuth = (props) => {
     }
   }, [props.tab]);
 
-  console.log('PROPS==>', props);
   useEffect(() => {
-    console.log('PROPSORGANIZATION==>', props.organization);
     async function userAuth() {
       app.auth().onAuthStateChanged((user) => {
         if (user) {
@@ -93,16 +66,11 @@ const ModalAuth = (props) => {
   }, []);
 
   const registerUser = async (values) => {
-    console.log('VALUES==>', values);
     setLoading(true);
     try {
       let resp = await UsersApi.createUser(values);
-      if (resp) {
-        console.log('REGISTER USER==>', resp);
-      }
     } catch (error) {
       setErrorRegisterUSer(true);
-      console.log('ERROR REGISTER');
     }
     setLoading(false);
   };
@@ -133,23 +101,18 @@ const ModalAuth = (props) => {
     let loginNormal = false;
     let loginFirst = false;
     setErrorLogin(false);
-   
+
     app
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
       .then((response) => {
-        console.log('RESPONSE==>', response);
         loginNormal = true;
         setErrorLogin(false);
         //setLoading(false);
       })
       .catch(async (e) => {
-        console.log('ERROR==>', e);
         if (props.organization !== 'register') {
-          let user = await EventsApi.getStatusRegister(
-            props.cEvent.value?._id,
-            data.email
-          );
+          let user = await EventsApi.getStatusRegister(props.cEvent.value?._id, data.email);
           if (user.data.length > 0) {
             if (
               user.data[0].properties?.password == data.password ||
@@ -178,7 +141,6 @@ const ModalAuth = (props) => {
         } else {
           let login = await EventsApi.signInWithEmailAndPassword(data);
           let user = await UsersApi.findByEmail(data.email);
-          console.log('USEROBTENIDO==>', user, login);
         }
       });
   };
@@ -192,34 +154,27 @@ const ModalAuth = (props) => {
     props.cUser?.value == null &&
     typeModal == null && (
       <Modal
-        maskStyle={
-          props.organization == 'landing' && { backgroundColor: '#333333' }
-        }
-        onCancel={
-          props.organization == 'register' ? () => props.closeModal() : null
-        }
+        maskStyle={props.organization == 'landing' && { backgroundColor: '#333333' }}
+        onCancel={props.organization == 'register' ? () => props.closeModal() : null}
         bodyStyle={{ paddingRight: '10px', paddingLeft: '10px' }}
         centered
         footer={null}
         zIndex={1000}
         closable={props.organization == 'register' ? true : false}
-        visible={props.organization == 'register' ? props.visible : true}
-      >
+        visible={props.organization == 'register' ? props.visible : true}>
         <Tabs onChange={callback} centered size='large' activeKey={tabLogin}>
           <TabPane
             tab={intl.formatMessage({
               id: 'modal.title.login',
               defaultMessage: 'Iniciar sesión',
             })}
-            key='1'
-          >
+            key='1'>
             <Form
               form={form1}
               onFinish={handleLoginEmailPassword}
               onFinishFailed={onFinishFailed}
               layout='vertical'
-              style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
-            >
+              style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
               {props.organization == 'landing' && (
                 <Form.Item>
                   <Image
@@ -247,8 +202,7 @@ const ModalAuth = (props) => {
                       defaultMessage: 'Ingrese un correo',
                     }),
                   },
-                ]}
-              >
+                ]}>
                 <Input
                   disabled={loading}
                   type='email'
@@ -257,11 +211,7 @@ const ModalAuth = (props) => {
                     id: 'modal.label.email',
                     defaultMessage: 'Correo electrónico',
                   })}
-                  prefix={
-                    <MailOutlined
-                      style={{ fontSize: '24px', color: '#c4c4c4' }}
-                    />
-                  }
+                  prefix={<MailOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
                 />
               </Form.Item>
               <Form.Item
@@ -279,8 +229,7 @@ const ModalAuth = (props) => {
                       defaultMessage: 'Ingrese una contraseña',
                     }),
                   },
-                ]}
-              >
+                ]}>
                 <Input.Password
                   disabled={loading}
                   size='large'
@@ -288,14 +237,8 @@ const ModalAuth = (props) => {
                     id: 'modal.label.password',
                     defaultMessage: 'Contraseña',
                   })}
-                  prefix={
-                    <LockOutlined
-                      style={{ fontSize: '24px', color: '#c4c4c4' }}
-                    />
-                  }
-                  iconRender={(visible) =>
-                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                  }
+                  prefix={<LockOutlined style={{ fontSize: '24px', color: '#c4c4c4' }} />}
+                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                 />
               </Form.Item>
               {!loading && (
@@ -305,8 +248,7 @@ const ModalAuth = (props) => {
                     underline
                     id={'forgotpassword'}
                     type='secondary'
-                    style={{ float: 'right', cursor: 'pointer' }}
-                  >
+                    style={{ float: 'right', cursor: 'pointer' }}>
                     {intl.formatMessage({
                       id: 'modal.option.restore',
                       defaultMessage: 'Olvidé mi contraseña',
@@ -343,8 +285,7 @@ const ModalAuth = (props) => {
                     htmlType='submit'
                     block
                     style={{ backgroundColor: '#52C41A', color: '#FFFFFF' }}
-                    size='large'
-                  >
+                    size='large'>
                     {intl.formatMessage({
                       id: 'modal.title.login',
                       defaultMessage: 'Iniciar sesión',
@@ -354,13 +295,9 @@ const ModalAuth = (props) => {
               )}
               {loading && <LoadingOutlined style={{ fontSize: '50px' }} />}
             </Form>
+            {props.organization !== 'landing' && <Divider style={{ color: '#c4c4c4c' }}>O</Divider>}
             {props.organization !== 'landing' && (
-              <Divider style={{ color: '#c4c4c4c' }}>O</Divider>
-            )}
-            {props.organization !== 'landing' && (
-              <div
-                style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}
-              >
+              <div style={screens.xs ? stylePaddingMobile : stylePaddingDesktop}>
                 {/* <Typography.Paragraph type='secondary'>
                 {intl.formatMessage({
                   id: 'modal.info.options',
@@ -382,8 +319,7 @@ const ModalAuth = (props) => {
                     type='primary'
                     block
                     // style={{ backgroundColor: '#F0F0F0', color: '#8D8B8B', border: 'none' }}
-                    size='large'
-                  >
+                    size='large'>
                     {intl.formatMessage({
                       id: 'modal.option.send',
                       defaultMessage: 'Enviar acceso a mi correo',
@@ -401,8 +337,7 @@ const ModalAuth = (props) => {
                   id: 'modal.title.register',
                   defaultMessage: 'Registrarme',
                 })}
-                key='2'
-              >
+                key='2'>
                 <div
                   // className='asistente-list'
                   style={{
@@ -412,8 +347,7 @@ const ModalAuth = (props) => {
                     paddingRight: '5px',
                     paddingTop: '0px',
                     paddingBottom: '0px',
-                  }}
-                >
+                  }}>
                   {props.organization != 'register' && <FormComponent />}
                   {props.organization == 'register' && (
                     <FormComponent
