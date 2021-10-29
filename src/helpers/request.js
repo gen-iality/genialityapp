@@ -239,7 +239,7 @@ export const EventsApi = {
     return await Actions.edit('/api/events', data, id);
   },
   deleteOne: async (id) => {
-    return await Actions.delete('/api/events/', id);
+    return await Actions.delete('/api/events', id);
   },
   getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`, true);

@@ -12,7 +12,7 @@ import * as userActions from '../redux/user/actions';
 
 import * as eventActions from '../redux/event/actions';
 import MenuOld from '../components/events/shared/menu';
-import { Menu, Drawer, Button, Col, Row, Layout, Space } from 'antd';
+import { Menu, Drawer, Button, Col, Row, Layout, Space, Spin } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, LockOutlined } from '@ant-design/icons';
 import { parseUrl } from '../helpers/constants';
 import withContext from '../Context/withContext';
@@ -55,6 +55,7 @@ class Headers extends Component {
       userEvent: null,
       modalVisible: false,
       tabModal: '1',
+      loadingUser: true,
     };
     this.setEventId = this.setEventId.bind(this);
     this.logout = this.logout.bind(this);
@@ -96,16 +97,16 @@ class Headers extends Component {
 
     // Si no tenemos token, significa que no tenemos usuario.
     if (!evius_token) {
-      this.setState({ user: false, loader: false });
+      this.setState({ user: false, loader: false, loadingUser: false });
       return;
     }
 
     //Si existe el token consultamos la información del usuario
     const data = await getCurrentUser();
-    // console.log('USERDATA==>', data);
+    //console.log('USERDATA==>', data);
 
     if (data) {
-      // console.log("DATA==>",data)
+      //console.log('DATA==>', data);
       const user = await EventsApi.getEventUser(data._id, eventId);
       // console.log('USERDATA2==>', user);
       const photo = user != null ? user.user?.picture : data.picture;
@@ -124,6 +125,7 @@ class Headers extends Component {
           cookie: evius_token,
           loader: false,
           organizations,
+          loadingUser: false,
         },
         () => {
           this.props.addLoginInformation(data);
@@ -132,7 +134,8 @@ class Headers extends Component {
       this.handleMenu(this.props.location);
     } else {
       //Problemas
-      this.setState({ timeout: true, loader: false });
+      console.log('entro');
+      this.setState({ timeout: true, loader: false, loadingUser: false });
     }
   }
   modalClose() {
@@ -245,7 +248,7 @@ class Headers extends Component {
                 )}
               </Row>
 
-              {!this.state.userEvent &&
+              {!this.state.userEvent && !this.state.loadingUser ? (
                 !window.location.href.toString().includes('landing') &&
                 window.location.href.toString().split('/').length == 4 && (
                   <Space>
@@ -263,19 +266,8 @@ class Headers extends Component {
                       Iniciar sesión
                     </Button>
                   </Space>
-                )}
-
-              {window.location.href.toString().includes('events') && !window.location.href.toString().includes('organization')  && (
-                <ModalAuth
-                  tab={this.state.tabModal}
-                  closeModal={this.modalClose}
-                  organization='register'
-                  visible={this.state.modalVisible}
-                />
-              )}
-              {window.location.href.toString().includes('events') && <ModalLoginHelpers organization={1} />}
-              {/* Dropdown de navegacion para el usuario  */}
-              {this.state.userEvent && (
+                )
+              ) : !this.state.loadingUser ? (
                 <UserStatusAndMenu
                   isLoading={this.state.loader}
                   user={this.state.user}
@@ -289,7 +281,36 @@ class Headers extends Component {
                   openMenu={this.openMenu}
                   loginInfo={this.props.loginInfo}
                 />
+              ) : (
+                <Spin />
               )}
+
+              {window.location.href.toString().includes('events') &&
+                !window.location.href.toString().includes('organization') && (
+                  <ModalAuth
+                    tab={this.state.tabModal}
+                    closeModal={this.modalClose}
+                    organization='register'
+                    visible={this.state.modalVisible}
+                  />
+                )}
+              {window.location.href.toString().includes('events') && <ModalLoginHelpers organization={1} />}
+              {/* Dropdown de navegacion para el usuario  */}
+              {/* {this.state.userEvent && (
+                <UserStatusAndMenu
+                  isLoading={this.state.loader}
+                  user={this.state.user}
+                  menuOpen={this.state.menuOpen}
+                  loader={this.state.loader}
+                  photo={photo}
+                  name={name}
+                  userEvent={this.state.userEvent}
+                  eventId={this.state.eventId}
+                  logout={this.logout}
+                  openMenu={this.openMenu}
+                  loginInfo={this.props.loginInfo}
+                />
+              )} */}
             </Row>
           </Menu>
         </Header>

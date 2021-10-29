@@ -65,7 +65,6 @@ const ModalLoginHelpers = (props) => {
     if (typeModal == 'recover') {
       if (!props.organization) {
         const { data } = await EventsApi.getStatusRegister(props.cEvent.value?._id, values.email);
-        //console.log("RESPUESTA REGISTER USER==>",data)
         if (data.length == 0) {
           setRegisterUser(true);
         } else {
