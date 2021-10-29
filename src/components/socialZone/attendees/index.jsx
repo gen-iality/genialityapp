@@ -51,11 +51,14 @@ const AttendeList = function(props) {
           email: attendeeList[key].properties.email,
           properties: attendeeList[key].properties,
           _id: attendeeList[key]._id,
-          imageProfile: attendeeList[key].properties.picture
-            ? attendeeList[key].properties.picture
-            : whatGenderIs(
-                knowMaleOrFemale(attendeeList[key].properties.names && attendeeList[key].properties.names.split(' ')[0])
-              ),
+          imageProfile:
+            attendeeList[key].user.picture || attendeeList[key].properties.picture
+              ? attendeeList[key].user.picture || attendeeList[key].properties.picture
+              : whatGenderIs(
+                  knowMaleOrFemale(
+                    attendeeList[key].properties.names && attendeeList[key].properties.names.split(' ')[0]
+                  )
+                ),
         };
 
         // console.log("attendeeList[key].properties.picture",attendeeList[key].properties.picture)

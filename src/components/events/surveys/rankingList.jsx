@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Avatar, Divider, List, Skeleton } from 'antd';
+import { Row, Divider, List } from 'antd';
 import withContext from '../../../Context/withContext';
+import UsersCard from '../../shared/usersCard';
 
 function RankingList(props) {
   const { cEvent, cHelper } = props;
@@ -51,20 +52,7 @@ function RankingList(props) {
           loading={loading}
           itemLayout='horizontal'
           dataSource={gameRanking}
-          renderItem={(item, key) => (
-            <List.Item style={styleListPlayer} actions={[<a key='list-loadmore-edit'> {item.score} Puntos </a>]}>
-              <Skeleton avatar title={false} loading={loading} active>
-                <List.Item.Meta
-                  avatar={<Avatar>{key + 1}</Avatar>}
-                  title={
-                    <a style={{ fontWeight: '500', fontSize: '14px' }} href='#'>
-                      {formatName(item.name)}
-                    </a>
-                  }
-                />
-              </Skeleton>
-            </List.Item>
-          )}
+          renderItem={(item, key) => <UsersCard type='ranking' item={item} position={key} />}
         />
       </div>
     </div>
