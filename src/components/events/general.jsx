@@ -491,7 +491,7 @@ class General extends Component {
       });
       setTimeout(() => {
         this.setState({ message: {}, modal: false });
-        window.location.replace(`${BaseUrl}/`);
+        window.location.replace(`${BaseUrl}/myprofile`);
       }, 500);
     } catch (error) {
       if (error.response) {
@@ -1029,8 +1029,11 @@ class General extends Component {
                 <Switch
                   name={'video_position'}
                   checked={event.video_position === true || event.video_position === 'true'}
-                  checkedChildren="Arriba" unCheckedChildren="Abajo"
-                  onChange={(checked) => this.setState({ event: { ...this.state.event, video_position: checked ? 'true' : 'false' } })}
+                  checkedChildren='Arriba'
+                  unCheckedChildren='Abajo'
+                  onChange={(checked) =>
+                    this.setState({ event: { ...this.state.event, video_position: checked ? 'true' : 'false' } })
+                  }
                 />
               </div>
 
@@ -1058,7 +1061,7 @@ class General extends Component {
                     className='input'
                     name={'googleanlyticsid'}
                     type='text'
-                    placeholder='UA-XXXXXX-X | G-XXXXXX' 
+                    placeholder='UA-XXXXXX-X | G-XXXXXX'
                     value={event.googleanlyticsid}
                     onChange={this.googleanlyticsid}
                   />
