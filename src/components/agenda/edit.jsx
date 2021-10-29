@@ -347,7 +347,7 @@ class AgendaEdit extends Component {
             date_end_zoom: result.date_end_zoom,
           });
 
-          for (let i = 0; i < selected_document.length; i++) {
+          for (let i = 0; i < selected_document?.length; i++) {
             await DocumentsApi.editOne(event._id, data, selected_document[i]._id);
           }
         } else {
@@ -485,10 +485,11 @@ class AgendaEdit extends Component {
     const datetime_end = date + ' ' + Moment(hour_end).format('HH:mm');
 
     const activity_categories_ids =
-      selectedCategories[0] === undefined ? [] : selectedCategories.map(({ value }) => value);
+    !selectedCategories?  []: selectedCategories[0] === undefined ? [] : selectedCategories.map(({ value }) => value);
 
     const access_restriction_rol_ids = access_restriction_type !== 'OPEN' ? selectedRol.map(({ value }) => value) : [];
-    const host_ids = selectedHosts >= 0 ? [] : selectedHosts.filter((host)=>host!=null).map(({ value }) => value);
+    console.log("HOST SELECTED==>",selectedHosts)
+    const host_ids = (!selectedHosts || selectedHosts >= 0) ? [] : selectedHosts.filter((host)=>host!=null).map(({ value }) => value);
     const type_id = selectedType === undefined ? '' : selectedType.value;
     return {
       name,
