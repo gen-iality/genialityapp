@@ -620,7 +620,7 @@ const FormRegister = ({
       if (type === 'file') {
         input = (
           <Upload
-            accept='application/pdf'
+            accept='application/pdf,image/png, image/jpeg,image/jpg'
             action='https://api.evius.co/api/files/upload/'
             multiple={false}
             listType='text'
