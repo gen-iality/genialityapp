@@ -40,18 +40,35 @@ function GameRanking(props) {
       .collection('juegos/' + gameId + '/puntajes/')
       .orderBy('puntaje', 'desc')
       .limit(10)
-      .onSnapshot(function(querySnapshot) {
+      .onSnapshot(async (querySnapshot) => {
         var puntajes = [];
-        querySnapshot.forEach(function(doc) {
-          const result = doc.data();
+        puntajes = await Promise.all(
+          querySnapshot.docs.map(async (doc) => {
+            const result = doc.data();
 
-          result['score'] = result.puntaje;
-          puntajes.push(result);
-        });
+            let picture = await getDataUser(result.eventUser_id);
+            result['score'] = result.puntaje;
+            result['imageProfile'] = picture;
+            return result;
+          })
+        );
         setGameRanking(puntajes);
       });
   }, [currentUser]);
 
+  const getDataUser = async (iduser) => {
+    let user = await firestore
+      .collection(`${cEvent.value._id}_event_attendees`)
+      .where('account_id', '==', iduser)
+      .get();
+    if (user.docs.length > 0 && cEvent.value.user_properties) {
+      let fieldAvatar = cEvent.value.user_properties.filter((field) => field.type == 'avatar');
+      if (fieldAvatar.length > 0) {
+        return user.docs[0].data().user?.picture;
+      }
+    }
+    return undefined;
+  };
   return (
     <>
       {!(Object.keys(currentUser).length === 0) && (
