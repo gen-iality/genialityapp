@@ -138,7 +138,7 @@ class AgendaEdit extends Component {
     const ticketEvent = [];
     let vimeo_id = '';
     try {
-      const tickets = await eventTicketsApi.getAll(event._id);
+      const tickets = await eventTicketsApi.getAll(event?._id);
       for (let i = 0; tickets.length > i; i++) {
         ticketEvent.push({
           item: tickets[i],
