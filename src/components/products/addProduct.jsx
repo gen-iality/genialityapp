@@ -166,7 +166,7 @@ function AddProduct(props) {
                   props.eventId
                );
                if (newProduct) {
-                  props.history.push(`/event/${props.eventId}/product`);
+                  props.history.push(`/eventadmin/${props.eventId}/product`);
                }
             }
          } catch (e) {
@@ -222,7 +222,7 @@ function AddProduct(props) {
                         Descripción <label style={{ color: 'red' }}>*</label>
                      </label>
                   }>
-                  <EviusReactQuill data={description} onChange={changeDescription} />
+                  <EviusReactQuill data={description} handleChange={changeDescription} />
                   {error != null && error.description && (
                      <small style={{ color: 'red' }}>La descripción del producto es requerida</small>
                   )}
