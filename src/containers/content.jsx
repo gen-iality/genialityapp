@@ -165,7 +165,7 @@ const ContentContainer = () => {
         <Route path='/api/generatorQr/:id' component={QRedirect} />
         <Route exact path='/transition/:event' component={Transition} />
         <Route exact path='/eventfinished' component={EventFinished} />
-        <Route exact path='/' component={RedirectPortal} />
+        {/* <Route exact path='/' component={RedirectPortal} /> */}
 
         <Route
           path='/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver'
@@ -173,7 +173,7 @@ const ContentContainer = () => {
         />
         <Route
           exact
-          path='/events'
+          path='/'
           render={() => (
             <WithFooter>
               <Home />
