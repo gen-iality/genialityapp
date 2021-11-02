@@ -10,7 +10,7 @@ const ModalRegister = ({ register, setRegister, event }) => {
     register == 1
       ? `Se ha mandado un correo de confirmación que te permitirá acceder al evento`
       : register == 2
-      ? `Bienvenido al evento ${event?.name}`
+      ? event?._id!=='617311a60cf67c7edd3d8022'? `Bienvenido al evento ${event?.name}`:`Estás listo para recargarte de ELECTRIC LOVE el próximo 10 de noviembre.`
       : register == 3 && `Su registro ha sido exitoso, click al siguiente enlace para realizar la donación`;
 
   let infoButton =
