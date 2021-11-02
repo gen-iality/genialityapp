@@ -54,36 +54,38 @@ const EventSectionRoutes = (props) => {
     if (props.cEvent.value !== null) {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
-
-      // console.log("router", routePermissions[0].permissions)
-
-      if (
-        routePermissions.length > 0 &&
-        routePermissions[0].permissions === 'assistants' &&
-        props.cUser.value !== null &&
-        props.cEventUser.value == null
-      ) {
+      if (props.cUser.value && !props.cEventUser.value) {
         handleChangeTypeModal('register');
-        return false;
-      } else if (
-        routePermissions.length > 0 &&
-        routePermissions[0].permissions === 'public' &&
-        props.cEventUser.value == null &&
-        eventPrivate.private
-      ) {
-        handleChangeTypeModal('register');
-        // props.setSectionPermissions({ view: true, section: nombresection });
-        return false;
-      } else if (
-        routePermissions.length > 0 &&
-        routePermissions[0].permissions === 'public' &&
-        props.cUser.value !== null &&
-        props.cEventUser.value == null &&
-        !eventPrivate.private
-      ) {
-        handleChangeTypeModal('register');
-        return false;
       }
+
+      //   if (
+      //     routePermissions.length > 0 &&
+      //     routePermissions[0].permissions === 'assistants' &&
+      //     props.cUser.value !== null &&
+      //     props.cEventUser.value == null
+      //   ) {
+      //     handleChangeTypeModal('register');
+      //     return false;
+      //   } else if (
+      //     routePermissions.length > 0 &&
+      //     routePermissions[0].permissions === 'public' &&
+      //     props.cEventUser.value == null &&
+      //     eventPrivate.private
+      //   ) {
+      //     handleChangeTypeModal('register');
+      //     // props.setSectionPermissions({ view: true, section: nombresection });
+      //     return false;
+      //   } else if (
+      //     routePermissions.length > 0 &&
+      //     routePermissions[0].permissions === 'public' &&
+      //     props.cUser.value !== null &&
+      //     props.cEventUser.value == null &&
+      //     !eventPrivate.private
+      //   ) {
+      //     handleChangeTypeModal('register');
+      //     return false;
+      //   }
+      // }
     }
   }
 

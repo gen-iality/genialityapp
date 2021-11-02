@@ -36,6 +36,7 @@ const AgendaActividadDetalle = (props) => {
   const [videoStyles, setVideoStyles] = useState(null);
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
   let [blockActivity, setblockActivity] = useState(false);
+  const [activity, setactivity] = useState('')
 
   const intl = useIntl();
   {
@@ -57,7 +58,6 @@ const AgendaActividadDetalle = (props) => {
         currentemp.platform = platform;
         currentemp.habilitar_ingreso = habilitar_ingreso;
         currentemp.tabs = tabs;
-        console.log('se setea de nuevo');
         handleChangeCurrentActivity(currentemp);
       });
   }
@@ -75,8 +75,8 @@ const AgendaActividadDetalle = (props) => {
     }
 
     getActividad().then((result) => {
-      console.log('result', result);
       handleChangeCurrentActivity(result);
+      setactivity(result)
       orderHost(result.hosts);
       cSurveys.set_current_activity(result);
     });
@@ -99,17 +99,19 @@ const AgendaActividadDetalle = (props) => {
 
   useEffect(() => {
     if (currentActivity) {
-      GetStateMeetingRoom();
       cSurveys.set_current_activity(currentActivity);
       CheckinActiviy(props.cEvent.value._id, currentActivity._id, props.cEventUser, props.cUser);
     }
   }, [currentActivity]);
 
-  useEffect(() => {
-    async function GetStateMeetingRoom() {
-      await listeningStateMeetingRoom(props.cEvent.value._id, currentActivity._id);
-    }
-  }, [currentActivity]);
+  // useEffect(() => {
+  //   if (activity) {
+  //     async function GetStateMeetingRoom() {
+  //       await listeningStateMeetingRoom(props.cEvent.value._id, activity._id);
+  //     }
+  //     GetStateMeetingRoom();
+  //   }
+  // }, [activity]);
 
   useEffect(() => {
     if (chatAttendeChats === '4') {
@@ -146,7 +148,6 @@ const AgendaActividadDetalle = (props) => {
 
   // VALIDAR ACTIVIDADES POR CODIGO
   useEffect(() => {
-    console.log('verificar render');
     if (props.cEvent.value && props.cUser) {
       if (props.cEvent.value?._id == '61200dfb2c0e5301fa5e9d86') {
         if (activitiesCode.includes(props.match.params.activity_id)) {
