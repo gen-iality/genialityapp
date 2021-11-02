@@ -22,7 +22,6 @@ import AditionalInformation from './AditionalInformation';
 import ImageComponentwithContext from './ImageComponent';
 const { setCurrentSurvey, setSurveyVisible, setHasOpenSurveys, unsetCurrentSurvey } = SurveyActions;
 
-
 const AgendaActividadDetalle = (props) => {
   let {
     chatAttendeChats,
@@ -30,7 +29,7 @@ const AgendaActividadDetalle = (props) => {
     isCollapsedMenuRigth,
     currentActivity,
     handleChangeCurrentActivity,
-    setplatformActivity
+    setplatformActivity,
   } = useContext(HelperContext);
   let [orderedHost, setOrderedHost] = useState([]);
   let cSurveys = UseSurveysContext();
@@ -52,12 +51,13 @@ const AgendaActividadDetalle = (props) => {
       .onSnapshot((infoActivity) => {
         if (!infoActivity.exists) return;
         const data = infoActivity.data();
-        const { habilitar_ingreso, meeting_id, platform, tabs } = data;
+        const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
         let currentemp = currentActivity;
         currentemp.meeting_id = meeting_id;
         currentemp.platform = platform;
         currentemp.habilitar_ingreso = habilitar_ingreso;
         currentemp.tabs = tabs;
+        currentemp.avalibleGames = avalibleGames;
         handleChangeCurrentActivity(currentemp);
       });
   }

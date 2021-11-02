@@ -5,29 +5,21 @@ import UsersCard from '../../shared/usersCard';
 import withContext from '../../../Context/withContext';
 
 function GameList(props) {
-  const { cEvent } = props;
+  const { cEvent, cHelper } = props;
   const currentEvent = cEvent.value;
+  const gamesData = cHelper.currentActivity.avalibleGames;
   const [listOfGames, setListOfGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   function getGamesData() {
-    const docRef = firestore.collection('gamesAvailable');
-    const unSuscribe = docRef.where('showGame', '==', true).onSnapshot((querySnapshot) => {
-      let gamesData = [];
-      querySnapshot.forEach((doc) => {
-        gamesData.push({ ...doc.data(), id: doc.id });
-      });
-      setListOfGames(gamesData);
-      setIsLoading(false);
-    });
-    return unSuscribe;
+    const gamesDataFiltered = gamesData.filter((games) => games.showGame === true);
+    setListOfGames(gamesDataFiltered);
+    setIsLoading(false);
   }
 
   useEffect(() => {
-    const unSuscribe = getGamesData();
-
-    return () => unSuscribe();
-  }, []);
+    getGamesData();
+  }, [gamesData]);
 
   return (
     <div style={{ marginTop: 16 }}>
