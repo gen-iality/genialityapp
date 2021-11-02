@@ -60,9 +60,9 @@ export const HelperContextProvider = ({ children }) => {
   const [currentActivity, setcurrenActivity] = useState(null);
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
 
-  function handleChangeCurrentActivity(activity) {
+  const handleChangeCurrentActivity = (activity) => {
     setcurrenActivity(activity);
-  }
+  };
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
