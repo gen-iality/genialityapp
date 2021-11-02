@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Switch, Popover, Avatar, Empty, Image } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { Card, Row, Col, Switch, Popover, Avatar, Empty, Image, Alert } from 'antd';
+import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import Header from '../../../antdComponents/Header';
 import Table from '../../../antdComponents/Table';
 import { getColumnSearchProps } from '../../speakers/getColumnSearch';
@@ -17,21 +17,27 @@ export default function RoomController(props) {
     avalibleGames,
   } = props;
   const [listOfGames, setListOfGames] = useState([]);
+  const [updateMensaje, setUpdatedMensaje] = useState(false);
   let [columnsData, setColumnsData] = useState({});
   const [showavailableGames, setShowavailableGames] = useState(games);
   const [isLoading, setIsLoading] = useState(true);
 
   async function getGamesData() {
-    if (avalibleGames === undefined) {
-      let gamesData = [];
-      const docRef = firestore.collection('gamesAvailable');
-      await docRef.get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          gamesData.push({ ...doc.data(), id: doc.id });
-        });
+    let gamesData = [];
+    const docRef = firestore.collection('gamesAvailable');
+    await docRef.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        gamesData.push({ ...doc.data(), id: doc.id });
       });
+    });
 
+    if (avalibleGames.length === 0) {
       setListOfGames(gamesData);
+      handleGamesSelected('newOrUpdate', '', gamesData);
+    } else if (avalibleGames.length !== gamesData.length) {
+      setListOfGames(gamesData);
+      handleGamesSelected('newOrUpdate', '', gamesData);
+      setUpdatedMensaje(true);
     } else {
       setListOfGames(avalibleGames);
     }
@@ -42,22 +48,6 @@ export default function RoomController(props) {
     getGamesData();
   }, [games, avalibleGames]);
 
-  function whatIsMyStatus(item) {
-    console.log('10. ', avalibleGames);
-    // if (avalibleGames && avalibleGames.length > 0) {
-    //   let itemFilter = avalibleGames.map((avalibleGame) => {
-    //     if (avalibleGame.id === item.id) {
-    //       // console.log('10. ifff');
-    //       return true;
-    //     } else {
-    //       // console.log('10. ifff');
-    //       return false;
-    //     }
-    //   });
-    //   // console.log('10. itemFilter[0] ', itemFilter[0]);
-    //   return itemFilter[0];
-    // }
-  }
   const columns = [
     {
       title: 'Logo',
@@ -78,7 +68,7 @@ export default function RoomController(props) {
               {item.picture ? (
                 <Avatar key={'img' + item._id} src={item.picture} />
               ) : (
-                <Avatar icon={<InfoCircleOutlined />} />
+                <Avatar icon={<GamepadVariantOutline />} />
               )}
             </Popover>
           </Col>
@@ -103,7 +93,10 @@ export default function RoomController(props) {
           <Switch
             checkedChildren='Sí'
             unCheckedChildren='No'
-            onChange={(status) => handleGamesSelected(status, item.id, listOfGames)}
+            onChange={(status) => {
+              handleGamesSelected(status, item.id, listOfGames);
+              setUpdatedMensaje(false);
+            }}
             checked={item.showGame}
             id={`editSwitch${item.index}`}
           />
@@ -160,7 +153,25 @@ export default function RoomController(props) {
         </Row>
         {showavailableGames && (
           <>
-            {' '}
+            {updateMensaje && (
+              <Alert
+                showIcon
+                type='warning'
+                message={'El listado de juegos ha sido actualizado.'}
+                description='Por favor seleccione los juegos que desee visualizar en la zona social de su actividad'
+                className='animate__animated animate__bounceIn animate__faster'
+                style={{
+                  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                  backgroundColor: '#FFFFFF',
+                  color: '#000000',
+                  borderLeft: '5px solid #FAAD14',
+                  fontSize: '14px',
+                  textAlign: 'start',
+                  borderRadius: '5px',
+                  margin: '15px',
+                }}
+              />
+            )}
             <Header
               title={'Juegos disponibles'}
               titleTooltip={'Seleccione los juegos que desea mostrar en la zona social'}

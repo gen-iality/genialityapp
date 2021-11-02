@@ -114,7 +114,7 @@ class RoomManager extends Component {
         platform: configuration.platform ? configuration.platform : null,
         meeting_id: configuration.meeting_id ? configuration.meeting_id : null,
         roomStatus: configuration.habilitar_ingreso,
-        avalibleGames: configuration.avalibleGames,
+        avalibleGames: configuration.avalibleGames || [],
         chat: configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false,
         surveys: configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false,
         games: configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false,
@@ -151,19 +151,19 @@ class RoomManager extends Component {
 
   // Encargado de gestionar los juegos seleccionados
   handleGamesSelected = async (status, itemId, listOfGames) => {
-    const { event_id, activity_id } = this.props;
-    const { service } = this.state;
-    const newData = [];
-    listOfGames.forEach((items) => {
-      if (items.id === itemId) {
-        newData.push({ ...items, showGame: status });
-      } else {
-        newData.push({ ...items });
-      }
-    });
-    this.setState({ avalibleGames: newData }, async () => await this.saveConfig());
-    // const configuration = await service.getConfiguration(event_id, activity_id);
-    // this.setState({ avalibleGames: configuration });
+    if (status === 'newOrUpdate') {
+      this.setState({ avalibleGames: listOfGames }, async () => await this.saveConfig());
+    } else {
+      const newData = [];
+      listOfGames.forEach((items) => {
+        if (items.id === itemId) {
+          newData.push({ ...items, showGame: status });
+        } else {
+          newData.push({ ...items });
+        }
+      });
+      this.setState({ avalibleGames: newData }, async () => await this.saveConfig());
+    }
   };
   // Encargado de gestionar los tabs de la video conferencia
   handleTabsController = (e, tab) => {
