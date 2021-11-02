@@ -7,6 +7,7 @@ import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
 import ModalSpeaker from '../modalSpeakers';
 import DocumentsList from '../../documents/documentsList';
+import { UserOutlined } from '@ant-design/icons';
 const { TabPane } = Tabs;
 const { Title } = Typography;
 
