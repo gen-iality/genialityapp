@@ -259,6 +259,36 @@ const RenderComponent = (props) => {
           case 'game':
             return <Game />;
         }
+
+        case 'zoom':
+          switch (actividad_estado) {
+            case 'open_meeting_room':
+              return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
+
+            case 'closed_meeting_room':
+              return <ImageComponentwithContext />;
+
+            case 'ended_meeting_room':
+              return <VideoActivity />;
+
+            case 'game':
+              return <Game />;
+          }
+
+          case 'dolby':
+            switch (actividad_estado) {
+              case 'open_meeting_room':
+                return <DolbyCard />;
+
+              case 'closed_meeting_room':
+                return <ImageComponentwithContext />;
+
+              case 'ended_meeting_room':
+                return <VideoActivity />;
+
+              case 'game':
+                return <Game />;
+            }
     }
   }
 
