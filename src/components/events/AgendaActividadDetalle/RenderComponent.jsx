@@ -48,6 +48,7 @@ const RenderComponent = (props) => {
   );
 
   async function listeningStateMeetingRoom(event_id, activity_id) {
+    let tempactivty = currentActivity;
     firestore
       .collection('events')
       .doc(event_id)
@@ -66,10 +67,10 @@ const RenderComponent = (props) => {
           HandlePublicPrivate('public');
         }
         handleChangeTabs(tabs);
-        let tempactivty = currentActivity;
         tempactivty.habilitar_ingreso = habilitar_ingreso;
-        handleChangeCurrentActivity(tempactivty);
       });
+
+    handleChangeCurrentActivity(tempactivty);
   }
 
   useEffect(() => {

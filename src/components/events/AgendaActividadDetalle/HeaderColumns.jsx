@@ -38,7 +38,7 @@ const HeaderColumns = (props) => {
         style={{ padding: '4px' }}>
         <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Col>
-            {props.activityState === 'open_meeting_room' ? (
+            {props.activityState === 'open_meeting_room' || props.activityState === 'game' ? (
               <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
             ) : props.activityState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video ? (
               <CaretRightOutlined style={{ fontSize: '30px' }} />
@@ -61,7 +61,7 @@ const HeaderColumns = (props) => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          {props.activityState === 'open_meeting_room'
+          {props.activityState === 'open_meeting_room' || props.activityState === 'game'
             ? 'En vivo'
             : props.activityState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video
             ? 'Grabado'

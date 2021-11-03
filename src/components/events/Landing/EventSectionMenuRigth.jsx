@@ -14,7 +14,7 @@ import DrawerProfile from './DrawerProfile';
 const EventSectionMenuRigth = (props) => {
   let [optionselected, setOptionselected] = useState(1);
   let cEvent = UseEventContext();
-  let { isCollapsedMenuRigth, HandleOpenCloseMenuRigth } = useContext(HelperContext);
+  let { isCollapsedMenuRigth, HandleOpenCloseMenuRigth, tabsGenerals } = useContext(HelperContext);
 
   return (
     <Sider
@@ -27,11 +27,7 @@ const EventSectionMenuRigth = (props) => {
         <div className='Chat-Event' style={{ height: '100%' }}>
           {isCollapsedMenuRigth ? (
             <>
-              <MenuRigth
-                currentActivity={props.currentActivity}
-                tabs={props.tabs}
-                generalTabs={props.generalTabs}
-              />
+              <MenuRigth currentActivity={props.currentActivity} tabs={tabsGenerals} generalTabs={props.generalTabs} />
             </>
           ) : (
             <>
