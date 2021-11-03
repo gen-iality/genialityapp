@@ -56,7 +56,7 @@ export const HelperContextProvider = ({ children }) => {
   const imageforDefaultProfile = 'https://cdn-icons-png.flaticon.com/512/3237/3237447.png';
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
-  const [tabLogin, setTabLogin] = useState('1');
+  const [tabLogin, setTabLogin] = useState('2');
   const [currentActivity, setcurrenActivity] = useState(null);
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
 
