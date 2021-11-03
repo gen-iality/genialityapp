@@ -1,19 +1,21 @@
 import React, { useContext, useEffect } from 'react';
-import { Space } from 'antd';
+import { Space, Grid } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import WithEviusContext from '../../Context/withContext';
 import HelperContext from '../../Context/HelperContext';
 
+const {useBreakpoint}= Grid
 function Game(props) {
   let { theUserHasPlayed } = useContext(HelperContext);
+  const screens = useBreakpoint();
 
   useEffect(() => {
     const evius_body = document.getElementById('evius-body');
-    evius_body.style.cssText = 'overflow-y: hidden;';
+    evius_body.style.cssText = `overflow-y: ${screens.xs || (screens.sm && !screens.md && !screens.lg)  ? 'visible;' : 'hidden;'}`;
     return () => {
       evius_body.style.cssText = 'overflow-y: visible;';
     };
-  }, []);
+  }, [screens]);
 
   const colorTexto = props.cEvent.value?.styles.textMenu;
   const colorFondo = props.cEvent.value?.styles.toolbarDefaultBg;
@@ -75,7 +77,7 @@ function Game(props) {
               allow='autoplay; fullscreen; camera *;microphone *'
               allowFullScreen
               allowusermedia
-              style={{ zIndex: '10', width: '100%', height: '457px' }}></iframe>
+              style={{ zIndex: '10', width: '100%', height: '65vh' }}></iframe>
           )}{' '}
         </>
       ) : (
