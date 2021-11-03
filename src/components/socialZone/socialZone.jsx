@@ -38,6 +38,7 @@ let SocialZone = function(props) {
     totalPrivateMessages,
     setTheUserHasPlayed,
     currentActivity,
+    tabsGenerals,
   } = useContext(HelperContext);
   const [currentUser, setCurrentUser] = useState(null);
   const [totalNewMessages, setTotalNewMessages] = useState(0);
@@ -47,12 +48,7 @@ let SocialZone = function(props) {
   let busquedaRef = useRef();
   let history = useHistory();
 
-  const [tabsSocialzone, settabsSocialzone] = useState({
-    chat:true,
-    games:false,
-    attendees: true,
-    surveys: true,
-  })
+  const [tabsSocialzone, settabsSocialzone] = useState();
 
   const handleChange = async (e) => {
     const { value } = e.target;
@@ -82,10 +78,6 @@ let SocialZone = function(props) {
     history.push(`/landing/${cEvent.value._id}/tickets`);
   }
 
-  useEffect(() => {
-    settabsSocialzone(currentActivity?.tabs);
-  }, [currentActivity])
-
   return (
     <Tabs
       defaultActiveKey='1'
@@ -94,88 +86,85 @@ let SocialZone = function(props) {
       onTabClick={(key) => {
         HandleChatOrAttende(key);
       }}>
-      {(props.generalTabs.publicChat || props.generalTabs.privateChat) && (
+      <TabPane
+        className='asistente-chat-list'
+        tab={
+          <>
+            <Badge
+              onClick={() => HandleChatOrAttende('1')}
+              size='small'
+              // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
+              count={totalPrivateMessages}>
+              <div style={{ color: cEvent.value.styles.textMenu }}> Chats</div>
+            </Badge>
+          </>
+        }
+        key='1'>
+        <ChatList props={props} setCurrentUser={setCurrentUser} generalTabs={props.generalTabs} />
+      </TabPane>
+
+      <>
+        {' '}
         <TabPane
-          className='asistente-chat-list'
+          style={styleTabAttendes}
           tab={
-            <>
-              <Badge
-                onClick={() => HandleChatOrAttende('1')}
-                size='small'
-                // style={{ minWidth: '10px', height: '10px', padding: '0px', color: 'black' }}
-                count={totalPrivateMessages}>
-                <div style={{ color: cEvent.value.styles.textMenu }}> Chats</div>
-              </Badge>
-            </>
-          }
-          key='1'>
-          <ChatList props={props} setCurrentUser={setCurrentUser} generalTabs={props.generalTabs} />
-        </TabPane>
-      )}
-      {props.generalTabs.attendees && (
-        <>
-          {' '}
-          <TabPane
-            style={styleTabAttendes}
-            tab={
-              <div style={{ color: cEvent.value.styles.textMenu }}>
-                <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
-              </div>
-            }
-            key='2'>
-            <Row>
-              <Space size={10} style={{ width: '100%' }}>
-                {!Object.keys(attendeeList).length ? (
-                  ''
-                ) : (
-                  <div
-                    className='control'
-                    style={{ marginBottom: '10px', marginRight: '5px', color: 'white', width: '100%' }}>
-                    <input
-                      style={{ color: cEvent.value.styles.textMenu }}
-                      ref={busquedaRef}
-                      autoFocus
-                      //className='input'
-                      type='text'
-                      name={'name'}
-                      onChange={handleChange}
-                      placeholder='Buscar participante...'
-                    />
-                  </div>
-                )}
-                {!Object.keys(attendeeList).length
-                  ? null
-                  : busqueda !== null && (
-                      <Button
-                        icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
-                        shape='round'
-                        onClick={searhAttende}>
-                        {!isFiltered && 'Buscar'}
-                        {isFiltered && 'Borrar'}
-                      </Button>
-                    )}
-              </Space>
-            </Row>
-            <div className='asistente-list'>
-              {!Object.keys(attendeeList).length ? (
-                <Row justify='center'>
-                  <p>No hay asistentes aún</p>
-                </Row>
-              ) : (
-                <AttendeList
-                  agendarCita={props.agendarCita}
-                  notificacion={props.notificacion}
-                  sendFriendship={props.sendFriendship}
-                  perfil={props.perfil}
-                  section={props.section}
-                  containNetWorking={props.containNetWorking}
-                  busqueda={strAttende}
-                />
-              )}
+            <div style={{ color: cEvent.value.styles.textMenu }}>
+              <FormattedMessage id='tabs.attendees.socialzone' defaultMessage='Asistentes' />
             </div>
-          </TabPane>
-        </>
-      )}
+          }
+          key='2'>
+          <Row>
+            <Space size={10} style={{ width: '100%' }}>
+              {!Object.keys(attendeeList).length ? (
+                ''
+              ) : (
+                <div
+                  className='control'
+                  style={{ marginBottom: '10px', marginRight: '5px', color: 'white', width: '100%' }}>
+                  <input
+                    style={{ color: cEvent.value.styles.textMenu }}
+                    ref={busquedaRef}
+                    autoFocus
+                    //className='input'
+                    type='text'
+                    name={'name'}
+                    onChange={handleChange}
+                    placeholder='Buscar participante...'
+                  />
+                </div>
+              )}
+              {!Object.keys(attendeeList).length
+                ? null
+                : busqueda !== null && (
+                    <Button
+                      icon={!isFiltered ? <SearchOutlined /> : <CloseOutlined />}
+                      shape='round'
+                      onClick={searhAttende}>
+                      {!isFiltered && 'Buscar'}
+                      {isFiltered && 'Borrar'}
+                    </Button>
+                  )}
+            </Space>
+          </Row>
+          <div className='asistente-list'>
+            {!Object.keys(attendeeList).length ? (
+              <Row justify='center'>
+                <p>No hay asistentes aún</p>
+              </Row>
+            ) : (
+              <AttendeList
+                agendarCita={props.agendarCita}
+                notificacion={props.notificacion}
+                sendFriendship={props.sendFriendship}
+                perfil={props.perfil}
+                section={props.section}
+                containNetWorking={props.containNetWorking}
+                busqueda={strAttende}
+              />
+            )}
+          </div>
+        </TabPane>
+      </>
 
       {currentActivity !== null && (
         <TabPane
@@ -219,40 +208,24 @@ let SocialZone = function(props) {
         </TabPane>
       )}
 
-      {tabsSocialzone !== null  && (tabsSocialzone?.games === true || tabsSocialzone?.games === 'true') && (
-        <TabPane
-          className='asistente-survey-list asistente-list'
-          tab={
-            <>
-              <p
-                style={{ marginBottom: '0px', color: cEvent.value.styles.textMenu }}
-                className='lowerTabs__mobile-hidden'>
-                <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
-              </p>
-            </>
-          }
-          key='4'>
-          {/* <Row justify='space-between'>
-            <Col span={4}>
-              <ArrowLeftOutlined
-                style={{ color: cEvent.value.styles.textMenu }}
-                onClick={() => {
-                  props.setMainStage(null);
-                  HandleChatOrAttende('1');
-                }}
-              />
-            </Col>
-            <Col span={14}>
-              <h2 style={{ fontWeight: '700', color: cEvent.value.styles.textMenu }}> Volver a la Conferencia </h2>
-            </Col>
-            <Col span={4}>
-              <VideoCameraOutlined style={{ color: cEvent.value.styles.textMenu }} />
-            </Col>
-          </Row> */}
-
-          <GameRanking currentUser={currentUser} cEvent={cEvent.value} setTheUserHasPlayed={setTheUserHasPlayed} />
-        </TabPane>
-      )}
+      {tabsGenerals !== null &&
+        (tabsGenerals?.games === true || tabsGenerals?.games === 'true') &&
+        currentActivity?.habilitar_ingreso == 'open_meeting_room' && (
+          <TabPane
+            className='asistente-survey-list asistente-list'
+            tab={
+              <>
+                <p
+                  style={{ marginBottom: '0px', color: cEvent.value.styles.textMenu }}
+                  className='lowerTabs__mobile-hidden'>
+                  <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
+                </p>
+              </>
+            }
+            key='4'>
+            <GameRanking currentUser={currentUser} cEvent={cEvent.value} setTheUserHasPlayed={setTheUserHasPlayed} />
+          </TabPane>
+        )}
     </Tabs>
   );
 };

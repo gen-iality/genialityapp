@@ -36,30 +36,11 @@ const AgendaActividadDetalle = (props) => {
   const [videoStyles, setVideoStyles] = useState(null);
   const [videoButtonStyles, setVideoButtonStyles] = useState(null);
   let [blockActivity, setblockActivity] = useState(false);
-  const [activity, setactivity] = useState('')
+  const [activity, setactivity] = useState('');
 
   const intl = useIntl();
   {
     Moment.locale(window.navigator.language);
-  }
-
-  async function listeningStateMeetingRoom(event_id, activity_id) {
-    firestore
-      .collection('events')
-      .doc(event_id)
-      .collection('activities')
-      .doc(activity_id)
-      .onSnapshot((infoActivity) => {
-        if (!infoActivity.exists) return;
-        const data = infoActivity.data();
-        const { habilitar_ingreso, meeting_id, platform, tabs } = data;
-        let currentemp = currentActivity;
-        currentemp.meeting_id = meeting_id;
-        currentemp.platform = platform;
-        currentemp.habilitar_ingreso = habilitar_ingreso;
-        currentemp.tabs = tabs;
-        handleChangeCurrentActivity(currentemp);
-      });
   }
 
   useEffect(() => {
@@ -76,7 +57,7 @@ const AgendaActividadDetalle = (props) => {
 
     getActividad().then((result) => {
       handleChangeCurrentActivity(result);
-      setactivity(result)
+      setactivity(result);
       orderHost(result.hosts);
       cSurveys.set_current_activity(result);
     });
@@ -103,15 +84,6 @@ const AgendaActividadDetalle = (props) => {
       CheckinActiviy(props.cEvent.value._id, currentActivity._id, props.cEventUser, props.cUser);
     }
   }, [currentActivity]);
-
-  // useEffect(() => {
-  //   if (activity) {
-  //     async function GetStateMeetingRoom() {
-  //       await listeningStateMeetingRoom(props.cEvent.value._id, activity._id);
-  //     }
-  //     GetStateMeetingRoom();
-  //   }
-  // }, [activity]);
 
   useEffect(() => {
     if (chatAttendeChats === '4') {
@@ -172,7 +144,7 @@ const AgendaActividadDetalle = (props) => {
     <div className='is-centered'>
       <div className=' container_agenda-information container-calendar2 is-three-fifths'>
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
-          <HeaderColumnswithContext isVisible={true} />
+          {/* <HeaderColumnswithContext isVisible={true} /> */}
           {!blockActivity ? (
             <HCOActividad />
           ) : (
