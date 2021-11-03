@@ -50,12 +50,9 @@ class eventUsersList extends Component {
         attendeeFlattenedData.checkedin_at = attendees[i].checkedin_at ? attendees[i].checkedin_at : '';
         attendeeFlattenedData.created_at = attendees[i].created_at;
         attendeeFlattenedData.updated_at = attendees[i].updated_at;
-        Object.keys(attendeeFlattenedData).map((item) => {
-          attendeeFlattenedData[item] = formatDataToString(attendeeFlattenedData[item]);
-        });
+        attendeesFormatedForTable.push(attendeeFlattenedData);
       }
     }
-    attendeesFormatedForTable.push(attendeeFlattenedData);
 
     //verificacion del tipo de dato de los campos, si se recibe un {...} entonces se pasa a array para evitar errores en la renderizacion de la tabla
     return attendeesFormatedForTable;
