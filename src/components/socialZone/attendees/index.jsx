@@ -41,7 +41,9 @@ const AttendeList = function(props) {
           uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
           idattendpresence: key,
           iduser: attendeeList[key].account_id,
-          name: attendeeList[key].properties.name,
+          name: attendeeList[key].properties.name
+            ? attendeeList[key].properties.name
+            : attendeeList[key].properties.names,
           names: attendeeList[key].properties.names,
           status: attendeeListPresence[key]
             ? attendeeListPresence[key].state
