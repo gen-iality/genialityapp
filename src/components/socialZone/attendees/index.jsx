@@ -37,35 +37,34 @@ const AttendeList = function(props) {
 
     Object.keys(attendeeList).map((key) => {
       if (attendeeListPresence[key]) {
-        let attendeProfile = {
-          uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
-          idattendpresence: key,
-          iduser: attendeeList[key].account_id,
-          name: attendeeList[key].properties.name
-            ? attendeeList[key].properties.name
-            : attendeeList[key].properties.names,
-          names: attendeeList[key].properties.names,
-          status: attendeeListPresence[key]
-            ? attendeeListPresence[key].state
-            : attendeeListPresence[key].last_changed
-            ? attendeeListPresence[key].last_changed
-            : 'offline',
-          email: attendeeList[key].properties.email,
-          properties: attendeeList[key].properties,
-          _id: attendeeList[key]._id,
-          imageProfile: attendeeList[key].properties.picture
-            ? attendeeList[key].properties.picture
-            : whatGenderIs(
-                knowMaleOrFemale(attendeeList[key].properties.names && attendeeList[key].properties.names.split(' ')[0])
-              ),
-        };
-
-        // console.log("attendeeList[key].properties.picture",attendeeList[key].properties.picture)
-
-        if (attendeProfile.status === 'online') {
-          ordenadousers.unshift(attendeProfile);
-        } else if (attendeProfile.status === 'offline') {
-          ordenadousers.push(attendeProfile);
+        if (attendeeList[key].properties) {
+          let attendeProfile = {
+            uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
+            idattendpresence: key,
+            iduser: attendeeList[key].account_id,
+            name: attendeeList[key].properties?.name ? attendeeList[key].properties.name : '',
+            names: attendeeList[key].properties?.names ? attendeeList[key].properties?.names : '',
+            status: attendeeListPresence[key]
+              ? attendeeListPresence[key].state
+              : attendeeListPresence[key].last_changed
+              ? attendeeListPresence[key].last_changed
+              : 'offline',
+            email: attendeeList[key].properties.email,
+            properties: attendeeList[key].properties,
+            _id: attendeeList[key]._id,
+            imageProfile: attendeeList[key].properties.picture
+              ? attendeeList[key].properties.picture
+              : whatGenderIs(
+                  knowMaleOrFemale(
+                    attendeeList[key].properties.names && attendeeList[key].properties.names.split(' ')[0]
+                  )
+                ),
+          };
+          if (attendeProfile.status === 'online') {
+            ordenadousers.unshift(attendeProfile);
+          } else if (attendeProfile.status === 'offline') {
+            ordenadousers.push(attendeProfile);
+          }
         }
       }
 
