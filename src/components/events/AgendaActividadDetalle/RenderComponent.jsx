@@ -19,6 +19,7 @@ const RenderComponent = (props) => {
     handleChangeTabs,
     handleChangeCurrentActivity,
     HandleChatOrAttende,
+    HandlePublicPrivate,
   } = useContext(HelperContext);
   let tabsdefault = {
     attendees: false,
@@ -60,13 +61,14 @@ const RenderComponent = (props) => {
         setactivityState(habilitar_ingreso);
         setmeetingId(meeting_id);
         settabsGeneral(tabs);
-        console.log('como viene game', tabs);
+        if (!tabs.games) {
+          HandleChatOrAttende('1');
+          HandlePublicPrivate('public');
+        }
         handleChangeTabs(tabs);
         let tempactivty = currentActivity;
         tempactivty.habilitar_ingreso = habilitar_ingreso;
         handleChangeCurrentActivity(tempactivty);
-
-        // console.log('aca voy a manejar todo', platform, habilitar_ingreso);
       });
   }
 
@@ -85,11 +87,7 @@ const RenderComponent = (props) => {
       setactivityState('game');
     } else {
       setactivityState('open_meeting_room');
-      HandleChatOrAttende('1');
-      HandlePublicPrivate('public')
     }
-
-    console.log('entra aqui', platform, activityState, chatAttendeChats);
   }, [chatAttendeChats]);
 
   function RenderizarComponente(plataforma, actividad_estado) {
