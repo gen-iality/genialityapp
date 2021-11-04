@@ -27,11 +27,7 @@ const EventSectionMenuRigth = (props) => {
         <div className='Chat-Event' style={{ height: '100%' }}>
           {isCollapsedMenuRigth ? (
             <>
-<<<<<<< HEAD
-              <MenuRigth currentActivity={props.currentActivity} tabs={props.tabs} generalTabs={props.generalTabs} />
-=======
               <MenuRigth currentActivity={props.currentActivity} tabs={tabsGenerals} generalTabs={props.generalTabs} />
->>>>>>> 54f8602017eac478fa3522a30b83be9fe7a984ff
             </>
           ) : (
             <>

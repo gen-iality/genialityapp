@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import withContext from '../../Context/withContext';
 
-const { useBreakpoint } = Grid;
 function Game(props) {
   const { cUser, cHelper } = props;
   const { gameData } = cHelper;

@@ -56,21 +56,18 @@ export const HelperContextProvider = ({ children }) => {
   const imageforDefaultProfile = 'https://cdn-icons-png.flaticon.com/512/3237/3237447.png';
   const [requestSend, setRequestSend] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
-  const [tabLogin, setTabLogin] = useState('1');
+  const [tabLogin, setTabLogin] = useState('2');
   const [visibleLoginEvents, setVisibleLoginEvents] = useState(false);
   const [reloadTemplatesCms, setreloadTemplatesCms] = useState(false);
   const [gameData, setGameData] = useState('');
   const [currentActivity, setcurrenActivity] = useState(null);
-  const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
   const [gameRanking, setGameRanking] = useState([]);
+  const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
+  const [tabsGenerals, settabsGenerals] = useState();
 
   function handleReloadTemplatesCms() {
     setreloadTemplatesCms(!reloadTemplatesCms);
   }
-  const [tabLogin, setTabLogin] = useState('2');
-  const [currentActivity, setcurrenActivity] = useState(null);
-  const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
-  const [tabsGenerals, settabsGenerals] = useState();
 
   const handleChangeTabs = (tabs) => {
     settabsGenerals(tabs);
