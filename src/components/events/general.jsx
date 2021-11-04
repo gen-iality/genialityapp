@@ -17,11 +17,21 @@ import { DateTimePicker } from 'react-widgets';
 import SelectInput from '../shared/selectInput';
 import Loading from '../loaders/loading';
 import DateEvent from './dateEvent';
-import { Switch, Card, Row, Col, message, Tabs, Checkbox, Typography, Input } from 'antd';
+import { Switch, Card, Row, Col, message, Tabs, Checkbox, Typography, Input, Select, Modal, Form, InputNumber } from 'antd';
 import { firestore } from '../../helpers/firebase';
+import Header from '../../antdComponents/Header';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { handleRequestError } from '../../helpers/utils';
 
 Moment.locale('es');
 const { Title } = Typography;
+const { Option } = Select;
+const { confirm } = Modal;
+
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
+};
 
 class General extends Component {
   constructor(props) {
@@ -166,8 +176,16 @@ class General extends Component {
   };
 
   //Cambio en los input
-  handleChange = (e) => {
-    let { name, value } = e.target;
+  handleChange = (e, name) => {
+    console.log(e, e.target, '1')
+    let value = e;
+    if(e.target) {
+      value = e.target;
+      if(e.target.value) {
+        value = e.target.value;
+      }
+    }
+    console.log(name, value, '2');
 
     if (name === 'visibility') {
       value = e.target.checked ? 'PUBLIC' : 'ORGANIZATION';
@@ -379,9 +397,9 @@ class General extends Component {
   //*********** FIN FUNCIONES DEL FORMULARIO
 
   //Envío de datos
-  async submit(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  async submit() {
+    /* e.preventDefault();
+    e.stopPropagation(); */
 
     // creacion o actualizacion de estado en firebase de los tabs de la zona social
     await this.upsertTabs();
@@ -482,32 +500,39 @@ class General extends Component {
   }
   //Delete event
   async deleteEvent() {
-    this.setState({ isLoading: 'Cargando....' });
-    try {
-      await EventsApi.deleteOne(this.state.event._id);
-      this.setState({
-        message: { ...this.state.message, class: 'msg_success', content: 'Evento borrado' },
-        isLoading: false,
-      });
-      setTimeout(() => {
-        this.setState({ message: {}, modal: false });
-        window.location.replace(`${BaseUrl}/myprofile`);
-      }, 500);
-    } catch (error) {
-      if (error.response) {
-        console.error(error.response);
-        this.setState({
-          message: { ...this.state.message, class: 'msg_error', content: JSON.stringify(error.response) },
-          isLoading: false,
-        });
-      } else if (error.request) {
-        console.error(error.request);
-        this.setState({ serverError: true, errorData: { message: error.request, status: 708 } });
-      } else {
-        console.error('Error', error.message);
-        this.setState({ serverError: true, errorData: { message: error.message, status: 708 } });
-      }
-    }
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
+    });
+    confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            /* await EventsApi.deleteOne(this.state.event._id); */
+            message.destroy(loading.key);
+            message.open({
+              type: 'success',
+              content: <> Se eliminó la información correctamente!</>,
+            });
+            window.location.replace(`${BaseUrl}/myprofile`);
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: handleRequestError(e).message,
+            });
+          }
+        };
+        onHandlerRemove();
+      },
+    });
   }
   closeModal = () => {
     this.setState({ modal: false, message: {} });
@@ -563,96 +588,51 @@ class General extends Component {
     } = this.state;
     return (
       <React.Fragment>
-        <div className='columns general'>
-          <div className='column is-8'>
-            <Tabs defaultActiveKey='1'>
-              <Tabs.TabPane tab='General' key='1'>
-                <h2 className='title-section'>Datos del evento</h2>
-                <div className='field'>
-                  <label className='label required has-text-grey-light'>Nombre</label>
-                  <div className='control'>
-                    <input
-                      className='input'
+        <Form
+          onFinish={this.submit}
+          {...formLayout}
+        >
+          <Header title={'Datos del evento'} save form remove={this.deleteEvent} edit={this.state.event._id} />
+          <Tabs defaultActiveKey='1'>
+            <Tabs.TabPane tab='General' key='1'>
+              <Row justify='center' wrap gutter={[8, 8]}>
+                <Col span={16}>
+                  <Form.Item label={'Nombre'} >
+                    <Input
                       name={'name'}
-                      type='text'
-                      placeholder='Nombre del evento'
+                      placeholder={'Nombre del evento'}
                       value={event.name}
-                      onChange={this.handleChange}
+                      onChange={(e) => this.handleChange(e, 'name')}
                     />
-                  </div>
-                </div>
+                  </Form.Item>
 
-                {/* <div className="field">
-                            <label className="label required has-text-grey-light">Contenido de administrador</label>
-                            <div className="control">
-                                <input className="input" name={"adminContenido"} type="text"
-                                    placeholder="Contenido Administrador" value={event.adminContenido}
-                                    onChange={this.handleChange}
-                                />
-                            </div>
-                        </div> */}
-
-                {/* <div className="field">
-                            <label className="label required">Desea mantener activa las fechas ?</label>
-                            <div className="select is-primary">
-                                <select name={"has_date"} value={event.has_date} defaultValue={event.has_date} onChange={this.handleChange}>
-                                    <option>Seleccionar...</option>
-                                    <option value={true}>Si</option>
-                                    <option value={false}>No</option>
-                                </select>
-                            </div>
-                        </div> */}
-
-                {/* <div className="field">
-                            <label className="label required">Desea observar el detalle de la agenda ?</label>
-                            <div className="select is-primary">
-                                <select name={"allow_detail_calendar"} defaultValue={event.allow_detail_calendar} value={event.allow_detail_calendar} onChange={this.handleChange}>
-                                    <option>Seleccionar...</option>
-                                    <option value={true}>Si</option>
-                                    <option value={false}>No</option>
-                                </select>
-                            </div>
-                        </div> */}
-
-                {/* <div className="field">
-                            <label className="label required">Desea Habilitar la traducción del lenguaje en el aplicativo</label>
-                            <div className="select is-primary">
-                                <select name={"enable_language"} defaultValue={event.enable_language} value={event.enable_language} onChange={this.handleChange}>
-                                    <option>Seleccionar...</option>
-                                    <option value={true}>Si</option>
-                                    <option value={false}>No</option>
-                                </select>
-                            </div>
-                        </div> */}
-                {event.app_configuration ? (
-                  <div className='field'>
-                    <label className='label'>Que modulo desea observar en el inicio</label>
-                    <div className='select is-primary'>
-                      <select name='homeSelectedScreen' value={event.homeSelectedScreen} onChange={this.handleChange}>
-                        <option value={null}>Banner de inicio</option>
-                        <option
+                  {event.app_configuration && (
+                    <Form.Item label={'Que modulo desea observar en el inicio'}>
+                      <Select name={'homeSelectedScreen'} value={event.homeSelectedScreen} onChange={(e) => this.handleChange(e, 'homeSelectedScreen')}>
+                        <Option value={null}>Banner de inicio</Option>
+                        <Option
                           value={
                             event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : ''
                           }>
                           {event.app_configuration.ProfileScreen
                             ? event.app_configuration.ProfileScreen.title
                             : 'Favor Seleccionar items del menu para la '}
-                        </option>
-                        <option
+                        </Option>
+                        <Option
                           value={
                             event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.name : ''
                           }>
                           {event.app_configuration.CalendarScreen
                             ? event.app_configuration.CalendarScreen.title
                             : 'Favor Seleccionar items del menu para la '}
-                        </option>
-                        <option
+                        </Option>
+                        <Option
                           value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}>
                           {event.app_configuration.NewsScreen
                             ? event.app_configuration.NewsScreen.title
                             : 'Favor Seleccionar items del menu para la '}
-                        </option>
-                        <option
+                        </Option>
+                        <Option
                           value={
                             event.app_configuration.EventPlaceScreen
                               ? event.app_configuration.EventPlaceScreen.name
@@ -661,499 +641,400 @@ class General extends Component {
                           {event.app_configuration.EventPlaceScreen
                             ? event.app_configuration.EventPlaceScreen.title
                             : 'Favor Seleccionar items del menu para la '}
-                        </option>
-                        <option
+                        </Option>
+                        <Option
                           value={
                             event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.name : ''
                           }>
                           {event.app_configuration.SpeakerScreen
                             ? event.app_configuration.SpeakerScreen.title
                             : 'Favor Seleccionar items del menu para la '}
-                        </option>
-                        <option
+                        </Option>
+                        <Option
                           value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}>
                           {event.app_configuration.SurveyScreen
                             ? event.app_configuration.SurveyScreen.title
                             : 'Favor Seleccionar items del menu para la '}
-                        </option>
-                        <option
+                        </Option>
+                        <Option
                           value={
                             event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.name : ''
                           }>
                           {event.app_configuration.DocumentsScreen
                             ? event.app_configuration.DocumentsScreen.title
                             : 'Favor Seleccionar items del menu para la '}
-                        </option>
-                        <option
+                        </Option>
+                        <Option
                           value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}>
                           {event.app_configuration.WallScreen
                             ? event.app_configuration.WallScreen.title
                             : 'Favor Seleccionar items del menu para la '}
-                        </option>
-                        <option value={event.app_configuration.WebScreen ? event.app_configuration.WebScreen.name : ''}>
+                        </Option>
+                        <Option value={event.app_configuration.WebScreen ? event.app_configuration.WebScreen.name : ''}>
                           {event.app_configuration.WebScreen
                             ? event.app_configuration.WebScreen.title
                             : 'Favor Seleccionar items del menu para la '}
-                        </option>
-                        <option
+                        </Option>
+                        <Option
                           value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}>
                           {event.app_configuration.FaqsScreen
                             ? event.app_configuration.FaqsScreen.title
                             : 'Favor Seleccionar items del menu para la '}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                ) : (
-                  '   '
-                )}
-                <div>
-                  <label className='label'>Tipo de evento</label>
-                  <div className='select is-primary'>
-                    <select value={event.type_event} name='type_event' onChange={this.handleChange}>
-                      <option value=''>Seleccionar...</option>
-                      <option value='physicalEvent'>Evento Fisico</option>
-                      <option value='onlineEvent'>Evento Virtual</option>
-                    </select>
-                  </div>
-                </div>
+                        </Option>
+                      </Select>
+                    </Form.Item>
+                  )}
 
-                {event.type_event === 'onlineEvent' && (
-                  <div>
-                    <label className='label'>Plataforma Streaming del evento</label>
-                    <div className='select is-primary'>
-                      <select defaultValue={event.event_platform} name='event_platform' onChange={this.handleChange}>
-                        {/* <option value="">Seleccionar...</option> */}
-                        <option value='zoom'>Zoom</option>
-                        <option value='zoomExterno'>ZoomExterno</option>
-                        <option value='vimeo'>Vimeo</option>
-                        <option value='bigmarker'>BigMaker</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
-                {event.type_event === 'physicalEvent' && (
-                  <>
-                    <div className='field'>
-                      <label className='label has-text-grey-light'>Dirección</label>
-                      <div className='control'>
-                        <input
-                          className='input'
+                  <Form.Item label={'Tipo de evento'}>
+                    <Select value={event.type_event} name={'type_event'} onChange={(e) => this.handleChange(e, 'type_event')}>
+                      <Option value=''>Seleccionar...</Option>
+                      <Option value='physicalEvent'>Evento Fisico</Option>
+                      <Option value='onlineEvent'>Evento Virtual</Option>
+                    </Select>
+                  </Form.Item>
+
+                  {event.type_event === 'onlineEvent' && (
+                    <Form.Item label={'Plataforma Streaming del evento'}>
+                      <Select defaultValue={event.event_platform} name={'event_platform'} onChange={(e) => this.handleChange(e, 'event_platform')}>
+                        {/* <Option value="">Seleccionar...</Option> */}
+                        <Option value='zoom'>Zoom</Option>
+                        <Option value='zoomExterno'>ZoomExterno</Option>
+                        <Option value='vimeo'>Vimeo</Option>
+                        <Option value='bigmarker'>BigMaker</Option>
+                      </Select>
+                    </Form.Item>
+                  )}
+
+                  {event.type_event === 'physicalEvent' && (
+                    <>
+                      <Form.Item label={'Dirección'}>
+                        <Input
                           name={'address'}
-                          type='text'
-                          placeholder='¿Cuál es la dirección del evento?'
+                          placeholder={'¿Cuál es la dirección del evento?'}
                           value={event.address}
-                          onChange={this.handleChange}
+                          onChange={(e) => this.handleChange(e, 'address')}
                         />
-                      </div>
-                    </div>
-
-                    <div className='field'>
-                      <label className='label has-text-grey-light'>Lugar</label>
-                      <div className='control'>
-                        <input
-                          className='input'
+                      </Form.Item>
+                      
+                      <Form.Item label={'Lugar'}>
+                        <Input
                           name={'venue'}
-                          type='text'
-                          placeholder='Nombre del lugar del evento'
+                          placeholder={'Nombre del lugar del evento'}
                           value={event.venue}
-                          onChange={this.handleChange}
+                          onChange={(e) => this.handleChange(e, 'venue')}
                         />
-                      </div>
+                      </Form.Item>
+                    </>
+                  )}
+
+                  <Form.Item label={'Especificar fechas'}>
+                    <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
+                  </Form.Item>
+
+                  {specificDates === false ? (
+                    <div>
+                      <Row gutter={[8, 8]}>
+                        <Col span={12}>
+                          <Form.Item label={'Fecha Inicio'}>
+                            <DateTimePicker
+                              value={event.date_start}
+                              format={'DD/MM/YYYY'}
+                              time={false}
+                              onChange={(value) => this.changeDate(value, 'date_start')}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                          <Form.Item label={'Hora Inicio'}>
+                            <DateTimePicker
+                              value={event.hour_start}
+                              step={60}
+                              date={false}
+                              onChange={(value) => this.changeDate(value, 'hour_start')}
+                            />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <Row gutter={[8, 8]}>
+                        <Col span={12}>
+                          <Form.Item label={'Fecha Fin'}>
+                            <DateTimePicker
+                              value={event.date_end}
+                              min={this.minDate}
+                              format={'DD/MM/YYYY'}
+                              time={false}
+                              onChange={(value) => this.changeDate(value, 'date_end')}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                          <Form.Item label={'Hora Fin'}>
+                            <DateTimePicker
+                              value={event.hour_end}
+                              step={60}
+                              date={false}
+                              onChange={(value) => this.changeDate(value, 'hour_end')}
+                            />
+                          </Form.Item>
+                        </Col>
+                      </Row>
                     </div>
-                  </>
-                )}
+                  ) : (
+                    <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
+                  )}
 
-                {/* <div className="field">
-                            <label className="label required has-text-grey-light">Id Analiticas</label>
-                            <div className="control">
-                                <input className="input" name={"analytics"} type="text"
-                                    placeholder="Id analiticas" value={event.analytics}
-                                    onChange={this.handleChange} />
-                            </div>
-                        </div> */}
-
-                {/* <div className="field">
-                            <label className="label required has-text-grey-light">link de banner externo</label>
-                            <div className="control">
-                                <input className="input" name={"banner_image_link"} type="text"
-                                    placeholder="Link de banner externo" value={event.banner_image_link}
-                                    onChange={this.handleChange} />
-                            </div>
-                        </div> */}
-                <div>
-                  <label className='label has-text-grey-light' style={{ marginRight: '3%' }}>
-                    Especificar fechas
-                  </label>
-                  <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
-                </div>
-
-                {specificDates === false ? (
-                  <div>
-                    <div className='field'>
-                      <div className='columns is-mobile'>
-                        <div className='column inner-column'>
-                          <div className='field'>
-                            <label className='label has-text-grey-light'>Fecha Inicio</label>
-                            <div className='control'>
-                              <DateTimePicker
-                                value={event.date_start}
-                                format={'DD/MM/YYYY'}
-                                time={false}
-                                onChange={(value) => this.changeDate(value, 'date_start')}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className='column inner-column'>
-                          <div className='field'>
-                            <label className='label has-text-grey-light'>Hora Inicio</label>
-                            <div className='control'>
-                              <DateTimePicker
-                                value={event.hour_start}
-                                step={60}
-                                date={false}
-                                onChange={(value) => this.changeDate(value, 'hour_start')}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className='field'>
-                      <div className='columns is-mobile'>
-                        <div className='column inner-column'>
-                          <div className='field'>
-                            <label className='label has-text-grey-light'>Fecha Fin</label>
-                            <div className='control'>
-                              <DateTimePicker
-                                value={event.date_end}
-                                min={this.minDate}
-                                format={'DD/MM/YYYY'}
-                                time={false}
-                                onChange={(value) => this.changeDate(value, 'date_end')}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className='column inner-column'>
-                          <div className='field'>
-                            <label className='label has-text-grey-light'>Hora Fin</label>
-                            <div className='control'>
-                              <DateTimePicker
-                                value={event.hour_end}
-                                step={60}
-                                date={false}
-                                onChange={(value) => this.changeDate(value, 'hour_end')}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <DateEvent eventId={this.props.event._id} updateEvent={this.props.updateEvent} />
-                )}
-
-                <div className='field'>
-                  <label className='label'>Idioma del evento</label>
-                  <div className='select is-primary'>
-                    <select value={event.language} name='language' onChange={this.handleChange}>
+                  <Form.Item label={'Idioma del evento'}>
+                    <Select value={event.language} name={'language'} onChange={(e) => this.handleChange(e, 'language')}>
                       <option value='es'>Español</option>
                       <option value='en'>English</option>
                       <option value='pt'>Portuguese</option>
-                    </select>
-                  </div>
-                </div>
+                    </Select>
+                  </Form.Item>
 
-                <div className='field'>
-                  <label className='label has-text-grey-light'>Descripción</label>
-                  <EviusReactQuill name='description' data={event.description} handleChange={this.chgTxt} />
-                </div>
-              </Tabs.TabPane>
-              <Tabs.TabPane tab='Avanzado' key='2'>
-                <Row>
-                  <Col xs={24}>
+                  <Form.Item label={'Descripción'}>
+                    <EviusReactQuill name={'description'} data={event.description} handleChange={this.chgTxt} />
+                  </Form.Item>
+
+                  <Form.Item>
+                    <SelectInput
+                      name={'Organizado por:'}
+                      isMulti={false}
+                      selectedOptions={selectedOrganizer}
+                      selectOption={this.selectOrganizer}
+                      options={organizers}
+                      required={true}
+                    />
+                  </Form.Item>
+
+                  <div>
+                    <label style={{ marginTop: '2%' }} className='label'>
+                      Imagen General (para el listado)
+                    </label>
+                    <ImageInput
+                      picture={event.picture}
+                      imageFile={this.state.imageFile}
+                      divClass={'drop-img'}
+                      content={<img src={event.picture} alt={'Imagen Perfil'} />}
+                      classDrop={'dropzone'}
+                      contentDrop={
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                          }}
+                          className={`button is-primary is-inverted is-outlined ${
+                            this.state.imageFile ? 'is-loading' : ''
+                          }`}>
+                          Cambiar foto
+                        </button>
+                      }
+                      contentZone={
+                        <div className='has-text-grey has-text-weight-bold has-text-centered'>
+                          <span>Subir foto</span>
+                          <br />
+                          <small>(Tamaño recomendado: 1280px x 960px)</small>
+                        </div>
+                      }
+                      changeImg={this.changeImg}
+                      errImg={this.state.errImg}
+                      style={{
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        height: 250,
+                        width: '100%',
+                        borderWidth: 2,
+                        borderColor: '#b5b5b5',
+                        borderStyle: 'dashed',
+                        borderRadius: 10,
+                      }}
+                    />
+                    {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
+                  </div>
+
+                  <Form.Item label={'Vídeo'}>
+                    <Input
+                      name={'video'}
+                      placeholder={'¿El evento tiene video promocional?'}
+                      value={event.video}
+                      onChange={(e) => this.handleChange(e, 'video')}
+                    />
+                  </Form.Item>
+
+                  <Form.Item label={'Posición del video'}>
+                    <Switch
+                      name={'video_position'}
+                      checked={event.video_position === true || event.video_position === 'true'}
+                      checkedChildren='Arriba'
+                      unCheckedChildren='Abajo'
+                      onChange={(checked) =>
+                        this.setState({ event: { ...this.state.event, video_position: checked ? 'true' : 'false' } })
+                      }
+                    />
+                  </Form.Item>
+
+                  <Form.Item>
+                    <SelectInput
+                      name={'Categorías:'}
+                      isMulti={true}
+                      max_options={2}
+                      selectedOptions={selectedCategories}
+                      selectOption={this.selectCategory}
+                      options={categories}
+                      required={true}
+                    />
+                  </Form.Item>
+
+                  <Form.Item>
+                    <SelectInput
+                      name={'Tipo'}
+                      isMulti={false}
+                      selectedOptions={selectedType}
+                      selectOption={this.selectType}
+                      options={types}
+                      required={true}
+                    />
+                  </Form.Item>
+
+                  <Form.Item label={'Id Google Analytics'}>
+                    <Input
+                      name={'googleanlyticsid'}
+                      placeholder={'UA-XXXXXX-X | G-XXXXXX'}
+                      value={event.googleanlyticsid}
+                      onChange={this.googleanlyticsid}
+                    />
+                  </Form.Item>
+                  
+                  <Form.Item label={'Id Google Tag Manager'}>
+                    <Input
+                      name={'googletagmanagerid'}
+                      placeholder={'GTM-XXXXXX'}
+                      value={event.googletagmanagerid}
+                      onChange={this.googletagmanagerid}
+                    />
+                  </Form.Item>
+                  
+                  <Form.Item label={'Id Facebook Pixel'}>
+                    <Input
+                      name={'facebookpixelid'}
+                      placeholder='014180041516129'
+                      value={event.facebookpixelid}
+                      onChange={this.facebookpixelid}
+                    />
+                  </Form.Item>
+
+                  <Card title='Zona Social'>
+                    <Row style={{ padding: '8px 0px' }}>
+                      <Col xs={18}>Chat General</Col>
+                      <Col xs={6}>
+                        <Switch
+                          checked={this.state?.tabs?.publicChat}
+                          onChange={(checked) =>
+                            this.setState(
+                              { tabs: { ...this.state.tabs, publicChat: checked } },
+                              async () => await this.upsertTabs()
+                            )
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row style={{ padding: '8px 0px' }}>
+                      <Col xs={18}>Chat Privado</Col>
+                      <Col xs={6}>
+                        <Switch
+                          checked={this.state?.tabs?.privateChat}
+                          onChange={(checked) =>
+                            this.setState(
+                              { tabs: { ...this.state.tabs, privateChat: checked } },
+                              async () => await this.upsertTabs()
+                            )
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row style={{ padding: '8px 0px' }}>
+                      <Col xs={18}>Asistentes</Col>
+                      <Col xs={6}>
+                        <Switch
+                          checked={this.state?.tabs?.attendees}
+                          onChange={(checked) =>
+                            this.setState(
+                              { tabs: { ...this.state.tabs, attendees: checked } },
+                              async () => await this.upsertTabs()
+                            )
+                          }
+                        />
+                      </Col>
+                    </Row>
+                  </Card>
+                </Col>
+              </Row>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab='Avanzado' key='2'>
+              <Row justify='center' wrap gutter={[8, 8]}>
+                <Col span={16}>
+                  <Form.Item label={'Habilitar formulario de registro'}>
                     <Checkbox
                       defaultChecked={event.allow_register || event.allow_register === 'true'}
-                      onChange={this.handleChange}
-                      name='allow_register'>
-                      Habilitar formulario de registro
-                    </Checkbox>
-                  </Col>
-                </Row>
-                {(event.allow_register || event.allow_register === 'true') && (
-                  <Row>
-                    <Col xs={24}>
+                      onChange={(e) => this.handleChange(e, 'allow_register')}
+                      name={'allow_register'}
+                    />
+                  </Form.Item>
+                  {(event.allow_register || event.allow_register === 'true') && (
+                    <div>
                       <Card
                         title={<Title level={4}>{registerForm.name}</Title>}
                         bordered={true}
-                        style={{ width: 300, marginTop: '2%' }}>
-                        <div style={{ marginBottom: '3%' }}></div>
+                        /* style={{ width: 300, marginTop: '2%' }} */>
+                        {/* <div style={{ marginBottom: '3%' }}></div> */}
 
-                        <div style={{ marginTop: '4%' }}>
-                          <label>Cambiar nombre de la sección</label>
+                        <Form.Item label={'Cambiar nombre de la sección'}>
                           <Input
                             defaultValue={registerForm.name}
                             onChange={(e) => {
                               this.setState({ registerForm: { ...registerForm, name: e.target.value } });
                             }}
                           />
-                        </div>
-
-                        <div>
-                          <label>Posición en el menú</label>
-                          <Input
-                            type='number'
+                        </Form.Item>
+                        
+                        <Form.Item label={'Posición en el menú'}>
+                          <InputNumber
+                            /* type='number' */
                             defaultValue={registerForm.position}
                             onChange={(e) => {
-                              this.setState({ registerForm: { ...registerForm, position: e.target.value } });
+                              this.setState({ registerForm: { ...registerForm, position: e.target } });
                             }}
                           />
-                        </div>
+                        </Form.Item>
                       </Card>
-                    </Col>
-                  </Row>
-                )}
+                    </div>
+                  )}
 
-                <Row>
-                  <Col xs={24}>
+                  <Form.Item label={'Mostrar el evento en la página principal de Evius'}>
                     <Checkbox
                       defaultChecked={event.visibility === 'PUBLIC'}
-                      onChange={this.handleChange}
-                      name='visibility'>
-                      Mostrar el evento en la página principal de Evius
-                    </Checkbox>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={24}>
+                      onChange={(e) => this.handleChange(e, 'visibility')}
+                      name={'visibility'} />
+                  </Form.Item>
+                  
+                  <Form.Item label={'El evento requiere pago'}>
                     <Checkbox
                       defaultChecked={event.has_payment || event.has_payment === 'true'}
-                      onChange={this.handleChange}
-                      name={'has_payment'}>
-                      El evento requiere pago
-                    </Checkbox>
-                  </Col>
-                </Row>
-              </Tabs.TabPane>
-            </Tabs>
-          </div>
-          <div className='column is-4'>
-            <div className='field is-grouped'>
-              {event._id && (
-                <button className='button is-text' onClick={this.modalEvent}>
-                  x Eliminar evento
-                </button>
-              )}
-              <button
-                onClick={this.submit}
-                className={`${this.state.loading ? 'is-loading' : ''}button is-primary`}
-                disabled={valid}>
-                Guardar
-              </button>
-            </div>
-            <div className='section-gray'>
-              <SelectInput
-                name={'Organizado por:'}
-                isMulti={false}
-                selectedOptions={selectedOrganizer}
-                selectOption={this.selectOrganizer}
-                options={organizers}
-                required={true}
-              />
-              <div className='field picture'>
-                <label className='label has-text-grey-light'>Imagen General (para el listado) </label>
-                <div className='control'>
-                  <ImageInput
-                    picture={event.picture}
-                    imageFile={this.state.imageFile}
-                    divClass={'drop-img'}
-                    content={<img src={event.picture} alt={'Imagen Perfil'} />}
-                    classDrop={'dropzone'}
-                    contentDrop={
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                        }}
-                        className={`button is-primary is-inverted is-outlined ${
-                          this.state.imageFile ? 'is-loading' : ''
-                        }`}>
-                        Cambiar foto
-                      </button>
-                    }
-                    contentZone={
-                      <div className='has-text-grey has-text-weight-bold has-text-centered'>
-                        <span>Subir foto</span>
-                        <br />
-                        <small>(Tamaño recomendado: 1280px x 960px)</small>
-                      </div>
-                    }
-                    changeImg={this.changeImg}
-                    errImg={this.state.errImg}
-                    style={{
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      position: 'relative',
-                      height: 250,
-                      width: '100%',
-                      borderWidth: 2,
-                      borderColor: '#b5b5b5',
-                      borderStyle: 'dashed',
-                      borderRadius: 10,
-                    }}
-                  />
-                </div>
-                {this.state.fileMsg && <p className='help is-success'>{this.state.fileMsg}</p>}
-              </div>
-              <div className='field'>
-                <label className='label has-text-grey-light'>Video</label>
-                <div className='control'>
-                  <input
-                    className='input'
-                    name={'video'}
-                    type='text'
-                    placeholder='¿El evento tiene video promocional?'
-                    value={event.video}
-                    onChange={this.handleChange}
-                  />
-                </div>
-              </div>
-              <div className='field'>
-                <label style={{ marginTop: '3%' }} className='label has-text-grey-light'>
-                  Posición del video
-                </label>
-                <Switch
-                  name={'video_position'}
-                  checked={event.video_position === true || event.video_position === 'true'}
-                  checkedChildren='Arriba'
-                  unCheckedChildren='Abajo'
-                  onChange={(checked) =>
-                    this.setState({ event: { ...this.state.event, video_position: checked ? 'true' : 'false' } })
-                  }
-                />
-              </div>
-
-              <SelectInput
-                name={'Categorías:'}
-                isMulti={true}
-                max_options={2}
-                selectedOptions={selectedCategories}
-                selectOption={this.selectCategory}
-                options={categories}
-                required={true}
-              />
-              <SelectInput
-                name={'Tipo'}
-                isMulti={false}
-                selectedOptions={selectedType}
-                selectOption={this.selectType}
-                options={types}
-                required={true}
-              />
-              <div className='field'>
-                <label className='label has-text-grey-light'>Id Google Analytics</label>
-                <div className='control'>
-                  <input
-                    className='input'
-                    name={'googleanlyticsid'}
-                    type='text'
-                    placeholder='UA-XXXXXX-X | G-XXXXXX'
-                    value={event.googleanlyticsid}
-                    onChange={this.googleanlyticsid}
-                  />
-                </div>
-              </div>
-              <div className='field'>
-                <label className='label has-text-grey-light'>Id Google Tag Manager</label>
-                <div className='control'>
-                  <input
-                    className='input'
-                    name={'googletagmanagerid'}
-                    type='text'
-                    placeholder='GTM-XXXXXX'
-                    value={event.googletagmanagerid}
-                    onChange={this.googletagmanagerid}
-                  />
-                </div>
-              </div>
-              <div className='field'>
-                <label className='label has-text-grey-light'>Id Facebook Pixel</label>
-                <div className='control'>
-                  <input
-                    className='input'
-                    name={'facebookpixelid'}
-                    type='text'
-                    placeholder='014180041516129'
-                    value={event.facebookpixelid}
-                    onChange={this.facebookpixelid}
-                  />
-                </div>
-              </div>
-
-              <Card title='Zona Social'>
-                <Row style={{ padding: '8px 0px' }}>
-                  <Col xs={18}>Chat General</Col>
-                  <Col xs={6}>
-                    <Switch
-                      checked={this.state?.tabs?.publicChat}
-                      onChange={(checked) =>
-                        this.setState(
-                          { tabs: { ...this.state.tabs, publicChat: checked } },
-                          async () => await this.upsertTabs()
-                        )
-                      }
-                    />
-                  </Col>
-                </Row>
-                <Row style={{ padding: '8px 0px' }}>
-                  <Col xs={18}>Chat Privado</Col>
-                  <Col xs={6}>
-                    <Switch
-                      checked={this.state?.tabs?.privateChat}
-                      onChange={(checked) =>
-                        this.setState(
-                          { tabs: { ...this.state.tabs, privateChat: checked } },
-                          async () => await this.upsertTabs()
-                        )
-                      }
-                    />
-                  </Col>
-                </Row>
-                <Row style={{ padding: '8px 0px' }}>
-                  <Col xs={18}>Asistentes</Col>
-                  <Col xs={6}>
-                    <Switch
-                      checked={this.state?.tabs?.attendees}
-                      onChange={(checked) =>
-                        this.setState(
-                          { tabs: { ...this.state.tabs, attendees: checked } },
-                          async () => await this.upsertTabs()
-                        )
-                      }
-                    />
-                  </Col>
-                </Row>
-              </Card>
-            </div>
-          </div>
-        </div>
-        {timeout && <LogOut />}
-        {serverError && <ErrorServe errorData={errorData} />}
-        <Dialog
-          modal={this.state.modal}
-          title={'Borrar Evento'}
-          content={<p>¿Estas seguro de eliminar este evento?</p>}
-          first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.deleteEvent }}
-          message={this.state.message}
-          isLoading={this.state.isLoading}
-          second={{ title: 'Cancelar', class: '', action: this.closeModal }}
-        />
-
-        {this.state.fileMsgBanner && <p className='help is-success'>{this.state.fileMsgBanner}</p>}
+                      onChange={(e) => this.handleChange(e, 'has_payment')}
+                      name={'has_payment'} />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Tabs.TabPane>
+          </Tabs>
+          {timeout && <LogOut />}
+          {serverError && <ErrorServe errorData={errorData} />}
+          {this.state.fileMsgBanner && <p className='help is-success'>{this.state.fileMsgBanner}</p>}
+        </Form>
+        
+        
+        
       </React.Fragment>
     );
   }
