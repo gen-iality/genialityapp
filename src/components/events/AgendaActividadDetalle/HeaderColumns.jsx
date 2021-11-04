@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import HelperContext from '../../../Context/HelperContext';
 import { useIntl } from 'react-intl';
-import { ArrowLeftOutlined, CaretRightOutlined, CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, CaretRightOutlined, CheckCircleOutlined, ClockCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import WithEviusContext from '../../../Context/withContext';
 import EnVivo from '../../../EnVivo.svg';
 import Moment from 'moment-timezone';
@@ -45,7 +45,7 @@ const HeaderColumns = (props) => {
             ) : props.activityState === 'ended_meeting_room' && currentActivity !== null ? (
               <CheckCircleOutlined style={{ fontSize: '30px' }} />
             ) : props.activityState === '' || props.activityState == null ? (
-              <></>
+              <ClockCircleOutlined  style={{ fontSize: '30px' }}/>
             ) : props.activityState === 'closed_meeting_room' ? (
               <LoadingOutlined style={{ fontSize: '30px' }} />
             ) : (
@@ -55,7 +55,7 @@ const HeaderColumns = (props) => {
         </Row>
         <Row
           style={{
-            height: '2vh',
+            // height: '2vh',
             fontSize: 11,
             fontWeight: 'normal',
             alignItems: 'center',
