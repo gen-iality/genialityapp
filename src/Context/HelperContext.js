@@ -67,10 +67,18 @@ export const HelperContextProvider = ({ children }) => {
   function handleReloadTemplatesCms() {
     setreloadTemplatesCms(!reloadTemplatesCms);
   }
+  const [tabLogin, setTabLogin] = useState('2');
+  const [currentActivity, setcurrenActivity] = useState(null);
+  const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
+  const [tabsGenerals, settabsGenerals] = useState();
 
-  function handleChangeCurrentActivity(activity) {
+  const handleChangeTabs = (tabs) => {
+    settabsGenerals(tabs);
+  };
+
+  const handleChangeCurrentActivity = (activity) => {
     setcurrenActivity(activity);
-  }
+  };
 
   function handleChangeTypeModal(type) {
     setTypeModal(type);
@@ -605,6 +613,8 @@ export const HelperContextProvider = ({ children }) => {
         currentActivity,
         gameRanking,
         setGameRanking,
+        tabsGenerals,
+        handleChangeTabs,
       }}>
       {children}
     </HelperContext.Provider>

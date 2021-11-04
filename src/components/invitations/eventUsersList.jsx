@@ -40,19 +40,18 @@ class eventUsersList extends Component {
     */
   formatAttendeesForTable(attendees) {
     let attendeesFormatedForTable = [];
+    let attendeeFlattenedData = '';
+
     for (let i = 0; attendees.length > i; i++) {
-      let attendeeFlattenedData = attendees[i].properties;
-      attendeeFlattenedData.key = attendees[i]._id;
-      attendeeFlattenedData.ticket = attendees[i].ticket ? attendees[i].ticket.title : '';
-      attendeeFlattenedData.checkedin_at = attendees[i].checkedin_at ? attendees[i].checkedin_at : '';
-      attendeeFlattenedData.created_at = attendees[i].created_at;
-      attendeeFlattenedData.updated_at = attendees[i].updated_at;
-
-      Object.keys(attendeeFlattenedData).map((item) => {
-        attendeeFlattenedData[item] = formatDataToString(attendeeFlattenedData[item]);
-      });
-
-      attendeesFormatedForTable.push(attendeeFlattenedData);
+      if (attendees[i].properties) {
+        attendeeFlattenedData = attendees[i].properties;
+        attendeeFlattenedData.key = attendees[i]._id;
+        attendeeFlattenedData.ticket = attendees[i].ticket ? attendees[i].ticket.title : '';
+        attendeeFlattenedData.checkedin_at = attendees[i].checkedin_at ? attendees[i].checkedin_at : '';
+        attendeeFlattenedData.created_at = attendees[i].created_at;
+        attendeeFlattenedData.updated_at = attendees[i].updated_at;
+        attendeesFormatedForTable.push(attendeeFlattenedData);
+      }
     }
 
     //verificacion del tipo de dato de los campos, si se recibe un {...} entonces se pasa a array para evitar errores en la renderizacion de la tabla

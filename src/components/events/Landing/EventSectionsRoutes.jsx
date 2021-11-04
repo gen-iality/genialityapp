@@ -46,6 +46,7 @@ const EventSectionRoutes = (props) => {
    let { event_id, event_name } = useParams();
    let { eventPrivate, GetPermissionsEvent, handleChangeTypeModal } = useContext(HelperContext);
 
+<<<<<<< HEAD
    //redirigir a evento Cancilleria
    if (event_id === '610976f24e10472fb738d65b') {
       window.location.replace('https://cancilleria.evius.co/landing/610976f24e10472fb738d65b/evento');
@@ -84,6 +85,51 @@ const EventSectionRoutes = (props) => {
          }
       }
    }
+=======
+  //redirigir a evento Cancilleria
+  if (event_id === '610976f24e10472fb738d65b') {
+    window.location.replace('https://cancilleria.evius.co/landing/610976f24e10472fb738d65b/evento');
+  }
+  function ValidateViewPermissions(route, nombresection) {
+    if (props.cEvent.value !== null) {
+      let routePermissions =
+        props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
+
+      if (props.cUser.value && !props.cEventUser.value) {
+        handleChangeTypeModal('register');
+      }
+
+      //   if (
+      //     routePermissions.length > 0 &&
+      //     routePermissions[0].permissions === 'assistants' &&
+      //     props.cUser.value !== null &&
+      //     props.cEventUser.value == null
+      //   ) {
+      //     handleChangeTypeModal('register');
+      //     return false;
+      //   } else if (
+      //     routePermissions.length > 0 &&
+      //     routePermissions[0].permissions === 'public' &&
+      //     props.cEventUser.value == null &&
+      //     eventPrivate.private
+      //   ) {
+      //     handleChangeTypeModal('register');
+      //     // props.setSectionPermissions({ view: true, section: nombresection });
+      //     return false;
+      //   } else if (
+      //     routePermissions.length > 0 &&
+      //     routePermissions[0].permissions === 'public' &&
+      //     props.cUser.value !== null &&
+      //     props.cEventUser.value == null &&
+      //     !eventPrivate.private
+      //   ) {
+      //     handleChangeTypeModal('register');
+      //     return false;
+      //   }
+      // }
+    }
+  }
+>>>>>>> 54f8602017eac478fa3522a30b83be9fe7a984ff
 
    const obtenerFirstSection = () => {
       if (props.cEvent.value == null) return;

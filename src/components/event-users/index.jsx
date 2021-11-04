@@ -340,6 +340,7 @@ class ListEventUser extends Component {
           for (let i = 0; i < updatedAttendees.length; i++) {
             // Arreglo temporal para que se muestre el listado de usuarios sin romperse
             // algunos campos no son string y no se manejan bien
+<<<<<<< HEAD
             //console.log("FIELDS==>",extraFields)
             extraFields.forEach(function(key) {
               if (
@@ -386,6 +387,36 @@ class ListEventUser extends Component {
                 }
               }
             });
+=======
+           //console.log("FIELDS==>",extraFields)
+           extraFields.forEach(function(key) {            
+            if (
+              !(
+                (updatedAttendees[i][key.name] && updatedAttendees[i][key.name].getMonth) ||
+                typeof updatedAttendees[i][key.name] == 'string' ||
+                typeof updatedAttendees[i][key.name] == 'boolean' ||
+                typeof updatedAttendees[i][key.name] == 'number' ||
+                Number(updatedAttendees[i][key.name]) ||
+                updatedAttendees[i][key.name] === null || updatedAttendees[i][key.name] === undefined
+              )
+            ) {                
+              updatedAttendees[i]['properties'][key.name] = updatedAttendees[i].user[key.name] || JSON.stringify(updatedAttendees[i][key.name]);
+            }
+            if(extraFields){
+              let codearea=extraFields?.filter((field)=>field.type=='codearea')                
+            if(codearea[0] && updatedAttendees[i] && Object.keys(updatedAttendees[i]).includes(codearea[0].name) && key.name==codearea[0].name){
+             
+              updatedAttendees[i][codearea[0].name]=updatedAttendees[i]['code']?"(+"+updatedAttendees[i]['code']+")"+updatedAttendees[i].user[codearea[0].name]:"(+0)"+updatedAttendees[i].user[codearea[0].name]
+            }else{
+             //console.log("KEY==>",updatedAttendees[i]['properties'][key.name])
+             if(updatedAttendees[i][key.name]){
+            updatedAttendees[i][key.name] = Array.isArray(updatedAttendees[i]['properties'][key.name])? updatedAttendees[i]['properties'][key.name][0]:  updatedAttendees[i]['properties'][key.name];
+            updatedAttendees[i]["textodeautorizacionparaimplementarenelmeetupfenalcoycolsubsidio"]= self.props.event._id=="60c8affc0b4f4b417d252b29" ? "SI" :""          
+             }
+          }
+          }
+          });
+>>>>>>> 54f8602017eac478fa3522a30b83be9fe7a984ff
 
             if (updatedAttendees[i].payment) {
               updatedAttendees[i].payment =

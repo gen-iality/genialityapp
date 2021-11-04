@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import HelperContext from '../../../Context/HelperContext';
 import { useIntl } from 'react-intl';
-import { ArrowLeftOutlined, CaretRightOutlined, CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, CaretRightOutlined, CheckCircleOutlined, ClockCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import WithEviusContext from '../../../Context/withContext';
 import EnVivo from '../../../EnVivo.svg';
 import Moment from 'moment-timezone';
@@ -38,17 +38,15 @@ const HeaderColumns = (props) => {
         style={{ padding: '4px' }}>
         <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Col>
-            {currentActivity?.habilitar_ingreso === 'open_meeting_room' ? (
+            {props.activityState === 'open_meeting_room' || props.activityState === 'game' ? (
               <img style={{ height: '4vh', width: '4vh' }} src={EnVivo} alt='React Logo' />
-            ) : currentActivity?.habilitar_ingreso === 'ended_meeting_room' &&
-              currentActivity !== null &&
-              currentActivity.video ? (
+            ) : props.activityState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video ? (
               <CaretRightOutlined style={{ fontSize: '30px' }} />
-            ) : currentActivity?.habilitar_ingreso === 'ended_meeting_room' && currentActivity !== null ? (
+            ) : props.activityState === 'ended_meeting_room' && currentActivity !== null ? (
               <CheckCircleOutlined style={{ fontSize: '30px' }} />
-            ) : currentActivity?.habilitar_ingreso === '' || currentActivity?.habilitar_ingreso == null ? (
-              <></>
-            ) : currentActivity?.habilitar_ingreso === 'closed_meeting_room' ? (
+            ) : props.activityState === '' || props.activityState == null ? (
+              <ClockCircleOutlined  style={{ fontSize: '30px' }}/>
+            ) : props.activityState === 'closed_meeting_room' ? (
               <LoadingOutlined style={{ fontSize: '30px' }} />
             ) : (
               ''
@@ -57,21 +55,19 @@ const HeaderColumns = (props) => {
         </Row>
         <Row
           style={{
-            height: '2vh',
+            // height: '2vh',
             fontSize: 11,
             fontWeight: 'normal',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          {currentActivity?.habilitar_ingreso === 'open_meeting_room'
+          {props.activityState === 'open_meeting_room' || props.activityState === 'game'
             ? 'En vivo'
-            : currentActivity?.habilitar_ingreso === 'ended_meeting_room' &&
-              currentActivity !== null &&
-              currentActivity.video
+            : props.activityState === 'ended_meeting_room' && currentActivity !== null && currentActivity.video
             ? 'Grabado'
-            : currentActivity?.habilitar_ingreso === 'ended_meeting_room' && currentActivity !== null
+            : props.activityState === 'ended_meeting_room' && currentActivity !== null
             ? 'Terminada'
-            : currentActivity?.habilitar_ingreso === 'closed_meeting_room'
+            : props.activityState === 'closed_meeting_room'
             ? 'Por iniciar'
             : ''}
         </Row>

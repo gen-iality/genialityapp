@@ -15,6 +15,7 @@ const MenuRigth = (props) => {
     eventPrivate,
     totalPrivateMessages,
     currentActivity,
+    tabsGenerals,
   } = useContext(HelperContext);
 
   const animateIcon = 'animate__animated animate__bounceIn';
@@ -82,50 +83,52 @@ const MenuRigth = (props) => {
                 HandleChatOrAttende('2');
               }}></Menu.Item>
           )}
-          {currentActivity !== null &&
-            currentActivity.tabs &&
-            (currentActivity?.tabs.surveys === 'true' || currentActivity?.tabs.surveys === true) && (
-              <Menu.Item
-                key='3'
-                icon={
-                  <span>
-                    <Badge dot={props.hasOpenSurveys}>
-                      <PieChartOutlined
-                        className={animateIcon + ' animate__delay-3s'}
-                        style={{
-                          fontSize: '30px',
-                          color: props.cEvent.value.styles?.textMenu,
-                        }}
-                      />
-                    </Badge>
-                  </span>
-                }
-                style={{ paddingTop: '20px' }}
-                onClick={() => {
-                  HandleOpenCloseMenuRigth();
-                  HandleChatOrAttende('3');
-                }}></Menu.Item>
-            )}
-          {currentActivity !== null &&
-            currentActivity.tabs &&
-            (currentActivity?.tabs.games === 'true' || currentActivity?.tabs.games === true) && (
-              <Menu.Item
-                key='4'
-                icon={
-                  <GamepadVariantOutline
-                    className={animateIcon + ' animate__delay-4s'}
-                    style={{
-                      fontSize: '32px',
-                      color: props.cEvent.value.styles?.textMenu,
-                    }}
-                  />
-                }
-                style={{ paddingTop: '20px' }}
-                onClick={() => {
-                  HandleOpenCloseMenuRigth();
-                  HandleChatOrAttende('4');
-                }}></Menu.Item>
-            )}
+
+          {currentActivity != null && currentActivity.habilitar_ingreso === 'open_meeting_room' && (
+            <Menu.Item
+              key='3'
+              icon={
+                <span>
+                  <Badge dot={props.hasOpenSurveys}>
+                    <PieChartOutlined
+                      className={animateIcon + ' animate__delay-3s'}
+                      style={{
+                        fontSize: '30px',
+                        color: props.cEvent.value.styles?.textMenu,
+                      }}
+                    />
+                  </Badge>
+                </span>
+              }
+              style={{ paddingTop: '20px' }}
+              onClick={() => {
+                HandleOpenCloseMenuRigth();
+                HandleChatOrAttende('3');
+              }}></Menu.Item>
+          )}
+
+          {currentActivity != null && currentActivity.habilitar_ingreso === 'open_meeting_room' && (
+            <>
+              {tabsGenerals !== null && (tabsGenerals.games === 'true' || tabsGenerals.games === true) && (
+                <Menu.Item
+                  key='4'
+                  icon={
+                    <GamepadVariantOutline
+                      className={animateIcon + ' animate__delay-4s'}
+                      style={{
+                        fontSize: '32px',
+                        color: props.cEvent.value.styles?.textMenu,
+                      }}
+                    />
+                  }
+                  style={{ paddingTop: '20px' }}
+                  onClick={() => {
+                    HandleOpenCloseMenuRigth();
+                    HandleChatOrAttende('4');
+                  }}></Menu.Item>
+              )}
+            </>
+          )}
         </>
       )}
     </Menu>

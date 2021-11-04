@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import withContext from '../../Context/withContext';
 
+const { useBreakpoint } = Grid;
 function Game(props) {
   const { cUser, cHelper } = props;
   const { gameData } = cHelper;
@@ -8,11 +9,13 @@ function Game(props) {
 
   useEffect(() => {
     const evius_body = document.getElementById('evius-body');
-    evius_body.style.cssText = 'overflow-y: hidden;';
+    evius_body.style.cssText = `overflow-y: ${
+      screens.xs || (screens.sm && !screens.md && !screens.lg) ? 'visible;' : 'hidden;'
+    }`;
     return () => {
       evius_body.style.cssText = 'overflow-y: visible;';
     };
-  }, []);
+  }, [screens]);
 
   return (
     <iframe

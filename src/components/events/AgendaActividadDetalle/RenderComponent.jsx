@@ -9,9 +9,18 @@ import { Space } from 'antd';
 import GameDrawer from '../game/gameDrawer';
 import { LoadingOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
+import { firestore } from '../../../helpers/firebase';
+import HeaderColumnswithContext from './HeaderColumns';
 
 const RenderComponent = (props) => {
-  let { currentActivity, chatAttendeChats } = useContext(HelperContext);
+  let {
+    currentActivity,
+    chatAttendeChats,
+    handleChangeTabs,
+    handleChangeCurrentActivity,
+    HandleChatOrAttende,
+    HandlePublicPrivate,
+  } = useContext(HelperContext);
   let tabsdefault = {
     attendees: false,
     chat: true,
@@ -19,8 +28,9 @@ const RenderComponent = (props) => {
     surveys: false,
   };
   const [tabsGeneral, settabsGeneral] = useState(tabsdefault);
-  const [activityState, setactivityState] = useState();
-  const [componentToRender, setcomponentToRender] = useState(<h1>Cargando...</h1>);
+  const [activityState, setactivityState] = useState('');
+  const [platform, setplatform] = useState('');
+  const [meetingId, setmeetingId] = useState('');
 
   const Preloader = () => (
     <Space
@@ -37,206 +47,107 @@ const RenderComponent = (props) => {
     </Space>
   );
 
+  async function listeningStateMeetingRoom(event_id, activity_id) {
+    let tempactivty = currentActivity;
+    firestore
+      .collection('events')
+      .doc(event_id)
+      .collection('activities')
+      .doc(activity_id)
+      .onSnapshot((infoActivity) => {
+        if (!infoActivity.exists) return;
+        const data = infoActivity.data();
+        const { habilitar_ingreso, meeting_id, platform, tabs } = data;
+        setplatform(platform);
+        setactivityState(habilitar_ingreso);
+        setmeetingId(meeting_id);
+        settabsGeneral(tabs);
+        if (!tabs.games) {
+          HandleChatOrAttende('1');
+          HandlePublicPrivate('public');
+        }
+        handleChangeTabs(tabs);
+        tempactivty.habilitar_ingreso = habilitar_ingreso;
+      });
+
+    handleChangeCurrentActivity(tempactivty);
+  }
+
   useEffect(() => {
-    let ComponentRender = <Preloader />;
+    async function GetStateMeetingRoom() {
+      await listeningStateMeetingRoom(props.cEvent.value._id, currentActivity._id);
+    }
 
     if (currentActivity) {
-      setactivityState(currentActivity.habilitar_ingreso ? currentActivity.habilitar_ingreso : 'nothing_state');
-      settabsGeneral(currentActivity.tabs ? currentActivity.tabs : tabsdefault);
-
-      switch (currentActivity.platform) {
-        case 'dolby':
-          switch (activityState) {
-            case 'open_meeting_room':
-              if ((props.cUser.value.name || props.cUser.value.email) == null || undefined || '') {
-                ComponentRender = <DolbyCard />;
-              }
-              break;
-
-            case 'closed_meeting_room':
-              if (chatAttendeChats !== '4') {
-                ComponentRender = <ImageComponentwithContext />;
-              }
-              break;
-
-            case 'ended_meeting_room':
-              if (currentActivity?.video) {
-                ComponentRender = <VideoActivity />;
-              } else {
-                ComponentRender = <ImageComponentwithContext />;
-              }
-              break;
-
-            case 'nothing_state':
-              ComponentRender = '';
-              break;
-          }
-          break;
-
-        case 'zoomExterno':
-          switch (activityState) {
-            case 'open_meeting_room':
-              if (chatAttendeChats !== '4') {
-                ComponentRender = zoomExternoHandleOpen(currentActivity, props.cEventUser.value);
-              } else if (chatAttendeChats == '4') {
-                ComponentRender = (
-                  <>
-                    {zoomExternoHandleOpen(currentActivity, props.cEventUser.value)}
-                    <GameDrawer />
-                  </>
-                );
-              }
-
-            case 'closed_meeting_room':
-              if (chatAttendeChats !== '4') {
-                ComponentRender = <ImageComponentwithContext />;
-              }
-              break;
-
-            case 'ended_meeting_room':
-              if (currentActivity?.video) {
-                ComponentRender = <VideoActivity />;
-              } else {
-                ComponentRender = <ImageComponentwithContext />;
-              }
-              break;
-
-            case 'nothing_state':
-              ComponentRender = '';
-              break;
-          }
-
-          break;
-
-        case 'zoom':
-          switch (activityState) {
-            case 'open_meeting_room':
-              if (chatAttendeChats !== '4') {
-                if (
-                  props.cEventUser?.value &&
-                  (currentActivity?.requires_registration || !currentActivity?.requires_registration)
-                ) {
-                  ComponentRender = (
-                    <ZoomIframe
-                      platform={currentActivity?.platform}
-                      meeting_id={currentActivity?.meeting_id}
-                      generalTabs={tabsGeneral}
-                    />
-                  );
-                } else if (!props.cEventUser?.value && currentActivity?.requires_registration) {
-                  ComponentRender = (
-                    <Alert
-                      message='Advertencia'
-                      description='Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento'
-                      type='warning'
-                      showIcon
-                    />
-                  );
-                }
-              } else if (chatAttendeChats == '4') {
-                ComponentRender = (
-                  <>
-                    {' '}
-                    <ZoomIframe
-                      platform={currentActivity?.platform}
-                      meeting_id={currentActivity?.meeting_id}
-                      generalTabs={tabsGeneral}
-                    />
-                    <GameDrawer />
-                  </>
-                );
-              }
-
-              break;
-
-            case 'closed_meeting_room':
-              if (chatAttendeChats !== '4') {
-                ComponentRender = <ImageComponentwithContext />;
-              }
-              break;
-
-            case 'ended_meeting_room':
-              if (currentActivity?.video) {
-                ComponentRender = <VideoActivity />;
-              } else {
-                ComponentRender = <ImageComponentwithContext />;
-              }
-              break;
-
-            case 'nothing_state':
-              ComponentRender = '';
-              break;
-          }
-
-          break;
-
-        case 'vimeo':
-          switch (activityState) {
-            case 'open_meeting_room':
-              if (chatAttendeChats !== '4') {
-                if (
-                  props.cEventUser?.value &&
-                  (currentActivity?.requires_registration || !currentActivity?.requires_registration)
-                ) {
-                  ComponentRender = (
-                    <ZoomIframe
-                      platform={currentActivity?.platform}
-                      meeting_id={currentActivity?.meeting_id}
-                      generalTabs={tabsGeneral}
-                    />
-                  );
-                } else if (!props.cEventUser?.value && currentActivity?.requires_registration) {
-                  ComponentRender = (
-                    <Alert
-                      message='Advertencia'
-                      description='Debes estar previamente registrado al evento para acceder al espacio en vivo, si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento'
-                      type='warning'
-                      showIcon
-                    />
-                  );
-                }
-              } else if (chatAttendeChats == '4') {
-                ComponentRender = (
-                  <>
-                    {' '}
-                    <ZoomIframe
-                      platform={currentActivity?.platform}
-                      meeting_id={currentActivity?.meeting_id}
-                      generalTabs={tabsGeneral}
-                    />
-                    <GameDrawer />
-                  </>
-                );
-              }
-
-              break;
-
-            case 'closed_meeting_room':
-              if (chatAttendeChats !== '4') {
-                ComponentRender = <ImageComponentwithContext />;
-              }
-              break;
-
-            case 'ended_meeting_room':
-              if (currentActivity?.video) {
-                ComponentRender = <VideoActivity />;
-              } else {
-                ComponentRender = <ImageComponentwithContext />;
-              }
-              break;
-
-            case 'nothing_state':
-              ComponentRender = '';
-              break;
-          }
-
-          break;
-      }
-      setcomponentToRender(ComponentRender);
+      GetStateMeetingRoom();
     }
-  }, [currentActivity, activityState, props.cEventUser.value, chatAttendeChats, tabsGeneral]);
+  }, [currentActivity]);
 
-  return componentToRender;
+  useEffect(() => {
+    if (chatAttendeChats === '4') {
+      setactivityState('game');
+    } else {
+      setactivityState('open_meeting_room');
+    }
+  }, [chatAttendeChats]);
+
+  function RenderizarComponente(plataforma, actividad_estado) {
+    // console.log('si los recibe', plataforma, actividad_estado);
+    switch (plataforma) {
+      case 'vimeo':
+        switch (actividad_estado) {
+          case 'open_meeting_room':
+            return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
+
+          case 'closed_meeting_room':
+            return <ImageComponentwithContext />;
+
+          case 'ended_meeting_room':
+            return <VideoActivity />;
+
+          case 'game':
+            return <GameDrawer />;
+        }
+
+      case 'zoom':
+        switch (actividad_estado) {
+          case 'open_meeting_room':
+            return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
+
+          case 'closed_meeting_room':
+            return <ImageComponentwithContext />;
+
+          case 'ended_meeting_room':
+            return <VideoActivity />;
+
+          case 'game':
+            return <GameDrawer />;
+        }
+
+      case 'dolby':
+        switch (actividad_estado) {
+          case 'open_meeting_room':
+            return <DolbyCard />;
+
+          case 'closed_meeting_room':
+            return <ImageComponentwithContext />;
+
+          case 'ended_meeting_room':
+            return <VideoActivity />;
+
+          case 'game':
+            return <GameDrawer />;
+        }
+    }
+  }
+
+  return (
+    <>
+      {' '}
+      <HeaderColumnswithContext isVisible={true} activityState={activityState} />
+      {RenderizarComponente(platform, activityState)}
+    </>
+  );
 };
 
 export default withRouter(WithEviusContext(RenderComponent));
