@@ -30,7 +30,9 @@ function GameList(props) {
         </h1>
         <Divider style={{ backgroundColor: `${currentEvent.styles.textMenu}` }} />
       </Row>
-      <div className='container-ranking' style={{ marginTop: 16, height: 'auto', overflowY: 'auto' }}>
+      <div
+        className='container-ranking'
+        style={{ marginTop: 16, height: 'auto', overflowY: 'auto', overflowX: 'hidden' }}>
         <List
           loading={isLoading}
           itemLayout='horizontal'

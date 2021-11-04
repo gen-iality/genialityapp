@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { List, Avatar, Badge, Image, Tooltip, Popover, Typography } from 'antd';
 import { MessageTwoTone, EyeOutlined, CrownFilled, PlayCircleTwoTone } from '@ant-design/icons';
+import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import PopoverInfoUser from '../socialZone/hooks/Popover';
 import { HelperContext } from '../../Context/HelperContext';
 import { UseCurrentUser } from '../../Context/userContext';
@@ -275,7 +276,7 @@ function UsersCard(props) {
             setGameData(props.item);
           }}>
           <Tooltip title={'Jugar'}>
-            <PlayCircleTwoTone style={{ fontSize: '24px' }} />
+            <GamepadVariantOutline style={{ fontSize: '32px', color: '#178BF7' }} />
           </Tooltip>
         </a>
       );
