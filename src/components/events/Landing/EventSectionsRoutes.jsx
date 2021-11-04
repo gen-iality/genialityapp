@@ -54,6 +54,7 @@ const EventSectionRoutes = (props) => {
     if (props.cEvent.value !== null) {
       let routePermissions =
         props.cEvent.value && Object.values(props.cEvent.value?.itemsMenu).filter((item) => item.section === route);
+
       if (props.cUser.value && !props.cEventUser.value) {
         handleChangeTypeModal('register');
       }

@@ -281,9 +281,7 @@ const FormRegister = ({
             message.error(textMessage);
           }
         } else {
-          console.log('EVENTO===>', cEvent.value);
           try {
-            console.log('EVENTOTRY===>', cEvent.value);
             let resp = await UsersApi.createOne(snap, cEvent.value?._id);
 
             // CAMPO LISTA  tipo justonebyattendee. cuando un asistente selecciona una opción esta
@@ -362,7 +360,6 @@ const FormRegister = ({
           } catch (err) {
             // textMessage.content = "Error... Intentalo mas tarde";
             textMessage.content = formMessage.errorMessage;
-            console.log('ERROR==>', err);
             textMessage.key = key;
             message.error(textMessage);
           }

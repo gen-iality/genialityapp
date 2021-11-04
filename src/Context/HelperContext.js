@@ -108,12 +108,10 @@ export const HelperContextProvider = ({ children }) => {
   /*ENTRAR A CHAT O ATTENDE EN EL MENU*/
   function HandleChatOrAttende(key) {
     setchatAttendeChats(key);
-    console.log("que llega2",key)
   }
 
   /*ENTRAR A CHAT PUBLICO O PRIVADO*/
   function HandlePublicPrivate(key) {
-    console.log("que llega",key)
     setchatPublicPrivate(key);
     if (key == 'public') {
       createChatRoom('event_' + cEvent.value._id);
@@ -592,7 +590,7 @@ export const HelperContextProvider = ({ children }) => {
         handleChangeCurrentActivity,
         currentActivity,
         tabsGenerals,
-        handleChangeTabs
+        handleChangeTabs,
       }}>
       {children}
     </HelperContext.Provider>

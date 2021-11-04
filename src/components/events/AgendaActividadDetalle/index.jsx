@@ -64,16 +64,12 @@ const AgendaActividadDetalle = (props) => {
 
     props.setTopBanner(false);
     props.setVirtualConference(false);
-    if (isCollapsedMenuRigth) {
-      HandleOpenCloseMenuRigth(false);
-    }
+    HandleOpenCloseMenuRigth();
 
     return () => {
       props.setTopBanner(true);
       props.setVirtualConference(true);
-      if (!isCollapsedMenuRigth) {
-        HandleOpenCloseMenuRigth(true);
-      }
+      HandleOpenCloseMenuRigth();
       handleChangeCurrentActivity(null);
     };
   }, []);
