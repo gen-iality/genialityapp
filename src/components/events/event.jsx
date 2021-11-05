@@ -299,7 +299,7 @@ class Event extends Component {
               />
               <Route
                 path={`${match.url}/tipo-asistentes`}
-                render={() => <TipoAsistentes eventID={this.state.event._id} />}
+                render={() => <TipoAsistentes eventID={this.state.event._id} event={this.state.event} matchUrl={match.url} />}
               />
               {true && (
                 <Route path={`${match.url}/ticket`} render={() => <TicketInfo eventId={this.state.event._id} />} />
