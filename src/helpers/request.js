@@ -373,6 +373,12 @@ export const AttendeeApi = {
 };
 
 export const eventTicketsApi = {
+  byEvent: async (eventId) => {
+    return await Actions.getAll(`api/events/${eventId}/tickets`);
+  },
+  getOne: async (id, eventId) => {
+    return await Actions.get(`api/events/${eventId}/tickets/${id}`);
+  },
   getAll: async (eventId) => {
     return await Actions.getAll(`/api/events/${eventId}/tickets`);
   },
@@ -383,6 +389,9 @@ export const eventTicketsApi = {
     return await Actions.put(`api/events/${eventId}/tickets/${id}`, data);
   },
   delete: async (eventId, id) => {
+    return await Actions.delete(`api/events/${eventId}/tickets`, id);
+  },
+  deleteOne: async (id, eventId) => {
     return await Actions.delete(`api/events/${eventId}/tickets`, id);
   },
 };
@@ -503,7 +512,6 @@ export const TypesApi = {
 export const OrganizationApi = {
   mine: async () => {
     const resp = await Actions.getAll('api/me/organizations');
-    console.log(resp.data);
     let data = resp.data.map((item) => {
       return {
         id: item._id,

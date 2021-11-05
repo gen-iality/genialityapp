@@ -33,7 +33,6 @@ function OrganizationInformation(props) {
 
   async function obtenerTypeEvents() {
     let resp = await TypesApi.getAll();
-    console.log('resp===>', resp);
     if (resp) {
       setTypeEvents(resp);
     }

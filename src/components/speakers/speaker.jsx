@@ -84,7 +84,6 @@ function Speaker(props) {
     if (event) {
       setEvent(event);
     }
-    console.log('EVENT==>', event);
 
     //Filtrado de categorias
     categoriesData = handleSelect(categoriesData);
