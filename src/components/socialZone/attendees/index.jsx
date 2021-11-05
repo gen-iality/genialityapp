@@ -3,23 +3,17 @@ import { List } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import { HelperContext } from '../../../Context/HelperContext';
 import UsersCard from '../../shared/usersCard';
+import { firestore } from '../../../helpers/firebase';
+import WithContext from '../../../Context/withContext';
 
 const AttendeList = function(props) {
   //contextos
-  let [myattendelist, setmyattendelist] = useState();
-  let [loading, setLoading] = useState(false);
-  let [page, setPage] = useState(0);
-  let [filteredlist, setfilteredlist] = useState([]);
-  let [hasMore, setHasMore] = useState(true);
-  let {
-    attendeeListPresence,
-    attendeeList,
-    imageforDefaultProfile,
-    knowMaleOrFemale,
-    maleIcons,
-    femaleicons,
-  } = useContext(HelperContext);
-  const pag = 15;
+  const [attendes, setattendes] = useState([]);
+  const [lastVisible, setlastVisible] = useState();
+
+  let { attendeeListPresence, imageforDefaultProfile, knowMaleOrFemale, maleIcons, femaleicons } = useContext(
+    HelperContext
+  );
 
   function whatGenderIs(gender) {
     // console.log('gender', gender);
@@ -32,108 +26,88 @@ const AttendeList = function(props) {
       : gender == 'unknown' && imageforDefaultProfile;
   }
 
-  useEffect(() => {
-    let ordenadousers = [];
+  // const fetchMoreData = () => {
+  //   let last = this.state.last;
+  //   var next = set.ref
+  //     .collection('users')
+  //     .startAfter(last)
+  //     .limit(12);
+  //   next.get().then(function(documentSnapshots) {
+  //     // Get the last visible document
+  //     var lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+  //     const list = [];
+  //     documentSnapshots.forEach(function(doc) {
+  //       //im fetching only name and avatar url you can get any data
+  //       //from your firestore as you like
+  //       const { name, avatar_full_url } = doc.data();
+  //       list.push({ key: doc.id, name, avatar_full_url });
+  //     });
+  //     //set state with updated array of data
+  //     //also save last fetched data in state
+  //     let updated_list = set.state.list.concat(list);
+  //     set.setState({ list: updated_list, last: lastVisible });
+  //   });
+  // };
 
-    Object.keys(attendeeList).map((key) => {
-      if (attendeeListPresence[key]) {
-        if (attendeeList[key].properties) {
-          let attendeProfile = {
-            uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
-            idattendpresence: key,
-            iduser: attendeeList[key].account_id,
-            name: attendeeList[key].properties?.name ? attendeeList[key].properties.name : '',
-            names: attendeeList[key].properties?.names ? attendeeList[key].properties?.names : '',
-            status: attendeeListPresence[key]
-              ? attendeeListPresence[key].state
-              : attendeeListPresence[key].last_changed
-              ? attendeeListPresence[key].last_changed
-              : 'offline',
-            email: attendeeList[key].properties.email,
-            properties: attendeeList[key].properties,
-            _id: attendeeList[key]._id,
-            imageProfile: attendeeList[key].properties.picture
-              ? attendeeList[key].properties.picture
-              : whatGenderIs(
-                  knowMaleOrFemale(
-                    attendeeList[key].properties.names && attendeeList[key].properties.names.split(' ')[0]
-                  )
-                ),
+  function VerifyStatusUser(state) {
+    return state == 'online' ? 'online' : state == 'offline' ? 'offline' : 'Desconectado';
+  }
+
+  useEffect(() => {
+    let colletion_name = props.cEvent.value._id + '_event_attendees';
+
+    function getUsers() {
+      var first = firestore
+        .collection(colletion_name)
+        .orderBy('state_id', 'asc')
+        .limit(12);
+      let list = {};
+
+      first.get().then(function(documentSnapshots) {
+        var lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+        documentSnapshots.forEach(function(doc) {
+          let attendee = doc.data();
+          list[attendee.user?.uid] = { ...attendee };
+        });
+
+        //recorrer y mapear
+        let userAttendes = [];
+
+        Object.keys(list).forEach((key) => {
+          let userAttende = {};
+          userAttende = {
+            ...list[key],
+            status: VerifyStatusUser(attendeeListPresence[key] ? attendeeListPresence[key].state : null),
+            names: list[key].user?.displayName,
           };
-          if (attendeProfile.status === 'online') {
-            ordenadousers.unshift(attendeProfile);
-          } else if (attendeProfile.status === 'offline') {
-            ordenadousers.push(attendeProfile);
-          }
-        }
-      }
+          userAttendes.push(userAttende);
+        });
+        console.log('userAttend', userAttendes);
+        setattendes(userAttendes);
+      });
+    }
 
-      // imageProfile
-    });
-
-    setmyattendelist(ordenadousers);
-
-    setfilteredlist(ordenadousers.slice(0, pag));
-    setPage(1);
-  }, [attendeeListPresence, attendeeList]);
+    getUsers();
+  }, []);
 
   useEffect(() => {
-    if (props.busqueda == undefined || props.busqueda == '') {
-      myattendelist && setfilteredlist(myattendelist.slice(0, pag));
-    } else {
-      setfilteredlist(myattendelist.filter((a) => a.names.toLowerCase().includes(props.busqueda.toLowerCase())));
-    }
-  }, [props.busqueda]);
+    console.log('ordenadousers', attendes);
+  }, [attendeeListPresence]);
 
-  const handleInfiniteOnLoad = () => {
-    setLoading(true);
-    setHasMore(true);
-
-    if (filteredlist.length == myattendelist.length) {
-      setHasMore(false);
-      setLoading(false);
-      return;
-    }
-
-    let ini = pag * page;
-    let fin = pag * page + pag;
-
-    let newDatos = myattendelist.slice(ini, fin);
-    const datosg = filteredlist.concat(newDatos);
-    let pagP = page;
-    pagP = pagP += 1;
-
-    setfilteredlist(datosg);
-    setPage(pagP++);
-    //
-    setLoading(false);
-    setHasMore(true);
-  };
-
-  const styleListAttende = {
-    background: 'white',
-    color: '#333F44',
-    padding: 5,
-    margin: 4,
-    display: 'flex',
-    borderRadius: '5px',
-    fontWeight: '500',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-  };
   return (
     <InfiniteScroll
       initialLoad={false}
       pageStart={0}
-      loadMore={handleInfiniteOnLoad}
-      hasMore={!loading && hasMore}
+      // loadMore={handleInfiniteOnLoad}
+      // hasMore={!loading && hasMore}
       useWindow={false}>
       <List
         itemLayout='horizontal'
-        dataSource={filteredlist && filteredlist}
+        dataSource={attendes}
         renderItem={(item) => <UsersCard type='attendees' item={item} propsAttendees={props} />}></List>
     </InfiniteScroll>
   );
 };
 
-export default AttendeList;
+export default WithContext(AttendeList);
