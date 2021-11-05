@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import HelperContext from '../../../Context/HelperContext';
 import { useIntl } from 'react-intl';
-import { Button, Tabs, Typography, Badge, Col, Card, List,Avatar,Alert,Row  } from 'antd';
+import { Button, Tabs, Typography, Badge, Col, Card, List, Avatar, Alert, Row } from 'antd';
 import WithEviusContext from '../../../Context/withContext';
 import SurveyList from '../surveys/surveyList';
 import { connect } from 'react-redux';
@@ -16,7 +16,6 @@ const AditionalInformation = (props) => {
   const intl = useIntl();
   const [activeTab, setActiveTab] = useState('description');
   let [idSpeaker, setIdSpeaker] = useState(false);
-
 
   function handleChangeLowerTabs(tab) {
     setActiveTab(tab);
@@ -150,7 +149,7 @@ const AditionalInformation = (props) => {
                   type='warning'
                 />
                 <Row style={{ marginTop: 30 }} justify='center'>
-                  <Button onClick={()=>handleChangeTypeModal("register")}>Registrarme</Button>
+                  <Button onClick={() => handleChangeTypeModal('register')}>Registrarme</Button>
                 </Row>
               </div>
             )}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { List, Result, Card } from 'antd';
-import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
+import GoogleControllerOff from '@2fd/ant-design-icons/lib/GoogleControllerOff';
 import UsersCard from '../../shared/usersCard';
 import withContext from '../../../Context/withContext';
 
@@ -45,7 +45,7 @@ function GameList(props) {
           </Card>
         )}
         locale={{
-          emptyText: <Result icon={<GamepadVariantOutline />} title='No hay juegos disponibles para esta actividad' />,
+          emptyText: <Result icon={<GoogleControllerOff />} title='No hay juegos disponibles para esta actividad' />,
         }}
       />
       {/* </div> */}

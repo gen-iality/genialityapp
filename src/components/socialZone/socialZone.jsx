@@ -210,14 +210,12 @@ let SocialZone = function(props) {
 
       {tabsGenerals !== null &&
         (tabsGenerals?.games === true || tabsGenerals?.games === 'true') &&
-        currentActivity?.habilitar_ingreso == 'open_meeting_room' && (
+        currentActivity?.habilitar_ingreso === 'open_meeting_room' && (
           <TabPane
             className='asistente-survey-list asistente-list'
             tab={
               <>
-                <p
-                  style={{ marginBottom: '0px', color: cEvent.value.styles.textMenu }}
-                  className='lowerTabs__mobile-hidden'>
+                <p style={{ marginBottom: '0px', color: cEvent.value.styles.textMenu }}>
                   <FormattedMessage id='tabs.games.socialzone' defaultMessage='Juegos' />
                 </p>
               </>

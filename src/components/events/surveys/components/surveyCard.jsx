@@ -1,13 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { List, Button, Card, Tag, Result, Row, Col, Typography } from 'antd';
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  ExclamationCircleOutlined,
-  MehOutlined,
-  SyncOutlined,
-} from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import ClipboardTextOff from '@2fd/ant-design-icons/lib/ClipboardTextOff';
 
 const { Title } = Typography;
 
@@ -25,7 +19,7 @@ function SurveyCard(props) {
   return (
     <Card style={{ borderRadius: '10px', marginTop: '6px' }} bodyStyle={bodyStyle}>
       {publishedSurveys && publishedSurveys.length === 0 ? (
-        <Result icon={<MehOutlined />} title='Aún no se han publicado encuestas' />
+        <Result icon={<ClipboardTextOff />} title='Aún no se han publicado encuestas' />
       ) : (
         <List
           style={{ overflowY: 'auto', height: 'auto', overflowX: 'hidden' }}
