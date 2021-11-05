@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Drawer, Avatar, Space } from 'antd';
-import { InfoCircleOutlined, CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
+import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import Game from '../game';
 import GameRanking from '../../events/game/gameRanking';
 import withContext from '../../../Context/withContext';
@@ -51,7 +52,7 @@ function GameDrawer(props) {
                 {gameData.picture ? (
                   <Avatar style={iconStyles} key={'img' + gameData.id} src={gameData.picture} />
                 ) : (
-                  <InfoCircleOutlined style={iconStyles} />
+                  <GamepadVariantOutline style={iconStyles} />
                 )}
                 <Space direction='vertical' size={-3}>
                   {gameData.name}

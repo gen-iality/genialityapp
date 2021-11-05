@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react';
 import withContext from '../../Context/withContext';
+import { Grid } from 'antd';
+
+const { useBreakpoint } = Grid;
 
 function Game(props) {
+  const screens = useBreakpoint();
   const { cUser, cHelper } = props;
   const { gameData } = cHelper;
   const currentUser = cUser.value;
@@ -31,7 +35,7 @@ function Game(props) {
       allow='autoplay; fullscreen; camera *;microphone *'
       allowFullScreen
       allowusermedia
-      style={{ zIndex: '10', width: '100%', height: '457px' }}></iframe>
+      style={{ zIndex: '10', width: '100%', height: '65vh' }}></iframe>
   );
 }
 

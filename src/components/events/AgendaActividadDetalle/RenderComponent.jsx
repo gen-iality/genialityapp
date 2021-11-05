@@ -29,6 +29,7 @@ const RenderComponent = (props) => {
   };
   const [tabsGeneral, settabsGeneral] = useState(tabsdefault);
   const [activityState, setactivityState] = useState('');
+  const [renderGame, setRenderGame] = useState('');
   const [platform, setplatform] = useState('');
   const [meetingId, setmeetingId] = useState('');
 
@@ -57,7 +58,7 @@ const RenderComponent = (props) => {
       .onSnapshot((infoActivity) => {
         if (!infoActivity.exists) return;
         const data = infoActivity.data();
-        const { habilitar_ingreso, meeting_id, platform, tabs } = data;
+        const { habilitar_ingreso, meeting_id, platform, tabs, avalibleGames } = data;
         setplatform(platform);
         setactivityState(habilitar_ingreso);
         setmeetingId(meeting_id);
@@ -68,6 +69,7 @@ const RenderComponent = (props) => {
         }
         handleChangeTabs(tabs);
         tempactivty.habilitar_ingreso = habilitar_ingreso;
+        tempactivty.avalibleGames = avalibleGames;
       });
 
     handleChangeCurrentActivity(tempactivty);
@@ -85,18 +87,27 @@ const RenderComponent = (props) => {
 
   useEffect(() => {
     if (chatAttendeChats === '4') {
-      setactivityState('game');
+      setRenderGame('game');
     } else {
       setactivityState('open_meeting_room');
     }
   }, [chatAttendeChats]);
 
-  function RenderizarComponente(plataforma, actividad_estado) {
-    // console.log('si los recibe', plataforma, actividad_estado);
+  function RenderizarComponente(plataforma, actividad_estado, reder_Game) {
+    // console.log('10. si los recibe', plataforma, actividad_estado);
     switch (plataforma) {
       case 'vimeo':
         switch (actividad_estado) {
           case 'open_meeting_room':
+            switch (reder_Game) {
+              case 'game':
+                return (
+                  <>
+                    <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />
+                    <GameDrawer />
+                  </>
+                );
+            }
             return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
 
           case 'closed_meeting_room':
@@ -104,14 +115,20 @@ const RenderComponent = (props) => {
 
           case 'ended_meeting_room':
             return <VideoActivity />;
-
-          case 'game':
-            return <GameDrawer />;
         }
 
       case 'zoom':
         switch (actividad_estado) {
           case 'open_meeting_room':
+            switch (reder_Game) {
+              case 'game':
+                return (
+                  <>
+                    <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />
+                    <GameDrawer />
+                  </>
+                );
+            }
             return <ZoomIframe platform={platform} meeting_id={meetingId} generalTabs={tabsGeneral} />;
 
           case 'closed_meeting_room':
@@ -119,14 +136,20 @@ const RenderComponent = (props) => {
 
           case 'ended_meeting_room':
             return <VideoActivity />;
-
-          case 'game':
-            return <GameDrawer />;
         }
 
       case 'dolby':
         switch (actividad_estado) {
           case 'open_meeting_room':
+            switch (reder_Game) {
+              case 'game':
+                return (
+                  <>
+                    <DolbyCard />
+                    <GameDrawer />
+                  </>
+                );
+            }
             return <DolbyCard />;
 
           case 'closed_meeting_room':
@@ -134,9 +157,6 @@ const RenderComponent = (props) => {
 
           case 'ended_meeting_room':
             return <VideoActivity />;
-
-          case 'game':
-            return <GameDrawer />;
         }
     }
   }
@@ -145,7 +165,7 @@ const RenderComponent = (props) => {
     <>
       {' '}
       <HeaderColumnswithContext isVisible={true} activityState={activityState} />
-      {RenderizarComponente(platform, activityState)}
+      {RenderizarComponente(platform, activityState, renderGame)}
     </>
   );
 };

@@ -81,11 +81,6 @@ export default function RoomController(props) {
       ...getColumnSearchProps('name', columnsData),
     },
     {
-      title: 'Url',
-      dataIndex: 'baseUrl',
-      ...getColumnSearchProps('email', columnsData),
-    },
-    {
       title: 'Visible',
       dataIndex: 'showGame',
       render(val, item) {

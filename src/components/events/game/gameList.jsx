@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { firestore } from '../../../helpers/firebase';
-import { Row, Divider, List } from 'antd';
+import { List, Result, Card } from 'antd';
+import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import UsersCard from '../../shared/usersCard';
 import withContext from '../../../Context/withContext';
 
+const bodyStyle = { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' };
+
 function GameList(props) {
-  const { cEvent, cHelper } = props;
-  const currentEvent = cEvent.value;
+  const { cHelper } = props;
   const gamesData = cHelper.currentActivity.avalibleGames;
   const [listOfGames, setListOfGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   function getGamesData() {
-    const gamesDataFiltered = gamesData.filter((games) => games.showGame === true);
+    let games = gamesData ? gamesData : [];
+    const gamesDataFiltered = games.filter((games) => games.showGame === true);
     setListOfGames(gamesDataFiltered);
     setIsLoading(false);
   }
@@ -22,25 +24,32 @@ function GameList(props) {
   }, [gamesData]);
 
   return (
-    <div style={{ marginTop: 16 }}>
-      <Row justify='center'>
-        <h1
-          style={{ fontSize: '25px', fontWeight: 'bold', lineHeight: '3px', color: `${currentEvent.styles.textMenu}` }}>
-          Lista de juegos
-        </h1>
-        <Divider style={{ backgroundColor: `${currentEvent.styles.textMenu}` }} />
-      </Row>
-      <div
+    <Card style={{ borderRadius: '10px', marginTop: '6px' }} bodyStyle={bodyStyle}>
+      {/* <div
         className='container-ranking'
-        style={{ marginTop: 16, height: 'auto', overflowY: 'auto', overflowX: 'hidden' }}>
-        <List
-          loading={isLoading}
-          itemLayout='horizontal'
-          dataSource={listOfGames}
-          renderItem={(item) => <UsersCard type='gameList' item={item} />}
-        />
-      </div>
-    </div>
+        style={{ marginTop: 16, height: 'auto', overflowY: 'auto', overflowX: 'hidden' }}> */}
+      <List
+        loading={isLoading}
+        itemLayout='horizontal'
+        dataSource={listOfGames}
+        renderItem={(item) => (
+          <Card
+            className='card-agenda-desktop agendaHover efect-scale'
+            style={{
+              borderRadius: '10px',
+              marginBottom: '8px',
+              border: '1px solid',
+              borderColor: '#0000001c',
+            }}>
+            <UsersCard type='gameList' item={item} />
+          </Card>
+        )}
+        locale={{
+          emptyText: <Result icon={<GamepadVariantOutline />} title='No hay juegos disponibles para esta actividad' />,
+        }}
+      />
+      {/* </div> */}
+    </Card>
   );
 }
 
