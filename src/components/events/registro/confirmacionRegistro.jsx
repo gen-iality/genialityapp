@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { message, Button, Row, Col, Checkbox } from 'antd';
+import { message, Button, Row, Col, Checkbox, Form } from 'antd';
 import EviusReactQuill from '../../shared/eviusReactQuill';
 import { EventsApi } from '../../../helpers/request';
+import Header from '../../../antdComponents/Header';
+
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
+};
 
 function ConfirmacionRegistro(props) {
   console.log('props.event.validateEmail', props.event.validateEmail);
@@ -35,7 +41,31 @@ function ConfirmacionRegistro(props) {
 
   return (
     <>
-      <h1>Mensaje Confirmacion Registro </h1>
+      <Form
+        onFinish={saveData}
+        {...formLayout}
+      >
+        <Header 
+          title={'Confirmación de Registro'}
+          description={'El siguiente mensaje le llegara a las personas luego de haberse registrado al evento'}
+          save
+          form
+        />
+        <Row justify='center' wrap gutter={[8, 8]}>
+          <Col span={18}>
+            <Form.Item label={'Mensaje de Registro'}>
+              <EviusReactQuill data={registrationMessage} handleChange={(e) => setRegistrationMessage(e)} />
+            </Form.Item>
+            <Form.Item label={'Requerir la validación del correo antes de completar el registro'}>
+              <Checkbox
+                defaultChecked={validateEmail}
+                onChange={(e) => setValidateEmail(e.target.checked)}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+      {/* <h1>Mensaje Confirmacion Registro</h1>
       <p>El siguiente mensaje le llegara a las personas luego de haberse registrado al evento</p>
       <Row gutter={[0, 24]}>
         <Col span={12}>
@@ -43,7 +73,7 @@ function ConfirmacionRegistro(props) {
         </Col>
       </Row>
       <Row>
-        {/* Se envia el valor a validEmail a useSate para usarla porteriormente en la funcion saveData */}
+        Se envia el valor a validEmail a useSate para usarla porteriormente en la funcion saveData
         <Checkbox
           defaultChecked={validateEmail}
           style={{ marginRight: '2%' }}
@@ -57,7 +87,7 @@ function ConfirmacionRegistro(props) {
             Guardar
           </Button>
         </Col>
-      </Row>
+      </Row> */}
     </>
   );
 }
