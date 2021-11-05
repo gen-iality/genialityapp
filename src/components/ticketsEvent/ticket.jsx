@@ -11,6 +11,8 @@ const formLayout = {
   wrapperCol: { span: 24 },
 };
 
+const { confirm } = Modal;
+
 const Ticket = (props) => {
   const eventID = props.event._id;
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
