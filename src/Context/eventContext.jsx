@@ -34,6 +34,7 @@ export function CurrentEventProvider({ children }) {
         case 'name':
           eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated);
           dataevent = { status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name };
+          console.log("evne", eventGlobal.data[0])
           break;
       }
       setEventContext(dataevent);
