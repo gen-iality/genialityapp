@@ -70,7 +70,7 @@ const Landing = (props) => {
   let cEventContext = UseEventContext();
   let cUser = UseCurrentUser();
   let cEventUser = UseUserEvent();
-  let { isNotification, ChangeActiveNotification, typeModal,currentActivity } = useContext(HelperContext);
+  let { isNotification, ChangeActiveNotification, typeModal, currentActivity } = useContext(HelperContext);
   const [register, setRegister] = useState(null);
 
   const ButtonRender = (status, activity) => {
@@ -116,7 +116,8 @@ const Landing = (props) => {
   let [totalNewMessages, settotalnewmessages] = useState(0);
 
   useEffect(() => {
-    cEventContext.status === 'LOADED' &&
+    if (cEventContext.status === 'LOADED') {
+      console.log("cEventContext",cEventContext)
       firestore
         .collection('events')
         .doc(cEventContext.value?._id)
@@ -128,7 +129,6 @@ const Landing = (props) => {
           }
         });
 
-    cEventContext.status === 'LOADED' &&
       firestore
         .collection('eventchats/' + cEventContext.value._id + '/userchats/' + cUser.uid + '/' + 'chats/')
         .onSnapshot(function(querySnapshot) {
@@ -143,6 +143,7 @@ const Landing = (props) => {
             }
           });
         });
+    }
   }, [cEventContext.status]);
 
   if (cEventContext.status === 'LOADING' || cEventUser.status === 'LOADING') return <Spin />;
