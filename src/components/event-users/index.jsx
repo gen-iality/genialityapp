@@ -448,6 +448,7 @@ class ListEventUser extends Component {
   };
 
   checkIn = async (id,item) => {
+    console.log("ITEM SCAN==>",item)
     const { qrData } = this.state;
     const { event } = this.props;
     qrData.another = true;   

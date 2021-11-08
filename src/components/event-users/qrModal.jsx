@@ -29,6 +29,7 @@ class QrModal extends Component {
 
     const qrData = {};
     if (pos >= 0) {
+      console.log("LECTOR ACA",data,this.props.usersReq[pos])
       qrData.msg = 'User found';
       qrData.user = this.props.usersReq[pos];
       qrData.another = !!qrData.user.checked_in;
@@ -44,7 +45,7 @@ class QrModal extends Component {
     console.error(err);
   };
   readQr = () => {
-    const { qrData } = this.state;
+    const { qrData } = this.state;    
     if (qrData.user && !qrData.user.checked_in) this.props.checkIn(qrData.user);
     this.setState({ qrData: { ...this.state.qrData, msg: '', user: null } });
     this.setState({ newCC: '' });
@@ -272,7 +273,7 @@ class QrModal extends Component {
                   <button
                     className='button is-success'
                     onClick={() => {
-                      this.props.checkIn(qrData.user._id);
+                      this.props.checkIn(qrData.user._id,qrData.user);
                     }}>
                     Check User
                   </button>
