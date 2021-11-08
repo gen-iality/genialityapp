@@ -72,7 +72,6 @@ const AttendeList = function(props) {
     });
 
     setmyattendelist(ordenadousers);
-    console.log('dataslice', ordenadousers.slice(0, pag));
     setfilteredlist(ordenadousers.slice(0, pag));
     setPage(1);
   }, [attendeeListPresence, attendeeList]);
@@ -99,7 +98,6 @@ const AttendeList = function(props) {
     let fin = pag * page + pag;
 
     let newDatos = myattendelist.slice(ini, fin);
-    console.log('ini', ini, 'fin', fin);
     const datosg = filteredlist.concat(newDatos);
     let pagP = page;
     pagP = pagP += 1;
