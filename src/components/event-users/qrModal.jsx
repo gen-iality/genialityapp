@@ -28,8 +28,7 @@ class QrModal extends Component {
       .indexOf(data);
 
     const qrData = {};
-    if (pos >= 0) {
-      console.log("LECTOR ACA",data,this.props.usersReq[pos])
+    if (pos >= 0) {     
       qrData.msg = 'User found';
       qrData.user = this.props.usersReq[pos];
       qrData.another = !!qrData.user.checked_in;

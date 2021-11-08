@@ -448,7 +448,6 @@ class ListEventUser extends Component {
   };
 
   checkIn = async (id,item) => {
-    console.log("ITEM SCAN==>",item)
     const { qrData } = this.state;
     const { event } = this.props;
     qrData.another = true;   
@@ -513,8 +512,7 @@ class ListEventUser extends Component {
   };
 
   openEditModalUser = (item) => {
-    html.classList.add('is-clipped');
-    console.log('SELECTED ITEM==>', item);
+    html.classList.add('is-clipped');    
     item={...item,checked_in:item.properties?.checked_in || item.checked_in,checkedin_at:item.properties?.checkedin_at || item.checkedin_at}
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
