@@ -33,7 +33,6 @@ const TipoAsistente = (props) => {
   };
 
   const handleInputChange = (e) => {
-    console.log(e.target.value);
     if (tipoAsistente) {
       setTipoAsistente({ ...tipoAsistente, name: e.target.value });
     }

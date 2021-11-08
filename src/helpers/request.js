@@ -723,6 +723,26 @@ export const RolAttApi = {
     return await Actions.create(`api/events/${event}/rolesattendees`, data);
   },
 };
+
+export const MessageApi = {
+  byEvent: async (eventId) => {
+    return await Actions.getAll(`api/events/${eventId}/messages`);
+  },
+  getOne: async (id, eventId) => {
+    /* return await Actions.get(`api/events/${eventId}/messages/`, id); */
+    return await Actions.get(`/api/events/${eventId}/message/${id}/messageUser`);
+  },
+  /* editOne: async (data, id, eventId) => {
+    return await Actions.edit(`/api/events/${eventId}/messages`, data, id);
+  },
+  deleteOne: async (id, eventId) => {
+    return await Actions.delete(`/api/events/${eventId}/messages`, id);
+  },
+  create: async (data, eventId) => {
+    return await Actions.create(`api/events/${eventId}/messages`, data);
+  }, */
+};
+
 export const SpacesApi = {
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/spaces`, true).then(({ data }) => data);

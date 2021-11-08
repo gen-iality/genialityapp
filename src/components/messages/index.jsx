@@ -1,30 +1,25 @@
-import React, { Component } from 'react';
-import { Route, withRouter } from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import InvitationDetail from './invitationDetail';
-import LogOut from '../shared/logOut';
 import InvitationsList from './list';
 
-class Messages extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    const { timeout } = this.state;
-    const { match } = this.props;
-    return (
-      <div className={'invitations'}>
-        <Route exact path={`${match.url}/`} render={() => <InvitationsList eventId={this.props.event._id} />} />
+function Messages (props) {
+  const { match } = props;
+  
+  return (
+    <Fragment>
+      <Switch>
+        <Route exact path={`${match.url}/`} render={() =>
+          <InvitationsList eventId={props.event._id} />} event={props.event} matchUrl={match.url} {...props}/>
         <Route
           exact
           path={`${match.url}/detail/:id`}
-          render={() => <InvitationDetail event={this.props.event} close={this.closeDetail} />}
+          render={() => <InvitationDetail event={props.event} matchUrl={match.url} {...props}
+          />}
         />
-        {timeout && <LogOut />}
-      </div>
-    );
-  }
+      </Switch>
+    </Fragment>
+  );
 }
 
 export default withRouter(Messages);

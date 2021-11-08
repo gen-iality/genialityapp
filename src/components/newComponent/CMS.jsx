@@ -30,6 +30,20 @@ const CMS = (props) => {
     extra,
     addFn,
     editFn,
+    extraFn,
+    extraFnIcon,
+    extraFnTitle,
+    extraFnType,
+    description,
+    form,
+    save,
+    saveMethod,
+    titleTable,
+    noRemove,
+    extraPath,
+    extraPathTitle,
+    extraPathIcon,
+    extraPathType,
   } = props;
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [list, setList] = useState([]);
@@ -88,25 +102,47 @@ const CMS = (props) => {
 
   return (
     <div>
-      <Header title={title} titleTooltip={titleTooltip} back={back} addUrl={addUrl} extra={extra} addFn={addFn} />
+      <Header 
+        title={title} 
+        titleTooltip={titleTooltip} 
+        back={back} 
+        addUrl={addUrl} 
+        extra={extra} 
+        addFn={addFn} 
+        description={description} 
+        form={form}
+        back={back}
+        save={save}
+        saveMethod={saveMethod}
+      />
 
       <Table
         header={columns}
         loading={loading}
         list={list}
-        /* setList={setList} */
+        setList={setList}
         key={key}
         pagination={pagination}
         actions={actions}
         editPath={editPath}
         editFn={editFn}
         remove={remove}
+        noRemove={noRemove}
         search={search}
         setColumnsData={setColumnsData}
         draggable={draggable}
         downloadFile={downloadFile}
         exportData={exportData}
         fileName={fileName}
+        extraFn={extraFn}
+        extraFnIcon={extraFnIcon}
+        extraFnTitle={extraFnTitle}
+        extraFnType={extraFnType}
+        titleTable={titleTable}
+        extraPath={extraPath}
+        extraPathTitle={extraPathTitle}
+        extraPathIcon={extraPathIcon}
+        extraPathType={extraPathType}
       />
     </div>
   );
