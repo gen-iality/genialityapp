@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FormattedMessage } from 'react-intl';
 import Quill from 'react-quill';
 import { Button, Checkbox, Row, Space } from 'antd';
+import EviusReactQuill from '../shared/eviusReactQuill';
 Moment.locale('es-us');
 
 class SendRsvp extends Component {
@@ -254,9 +255,9 @@ class SendRsvp extends Component {
                 </label>
                 <div className='control'>
                   {/* <textarea className="textarea" value={this.state.rsvp.message} onChange={this.handleChange} name={"message"} /> */}
-                  <Quill
-                    value={this.state.rsvp.content_header}
-                    onChange={this.QuillComplement1}
+                  <EviusReactQuill
+                    data={this.state.rsvp.content_header}
+                    handleChange={this.QuillComplement1}
                     name='content_header'
                   />
                 </div>
