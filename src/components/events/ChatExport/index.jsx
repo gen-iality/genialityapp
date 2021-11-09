@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Spin, Popconfirm, Button } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Tag, Spin, Popconfirm, Button, message, Modal, Row, Col, Table as TableA, Tooltip } from 'antd';
+import { QuestionCircleOutlined, ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import XLSX from 'xlsx';
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/database';
+import Header from '../../../antdComponents/Header';
+import Table from '../../../antdComponents/Table';
+import { handleRequestError } from '../../../helpers/utils';
+
+const { confirm } = Modal;
 
 var chatFirebase = app.initializeApp(
   {
@@ -65,19 +70,24 @@ const ChatExport = ({ eventId, event }) => {
   let [datamsjevent, setdatamsjevent] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const renderMensaje = (text, record) => <Tag color='#3895FA'>{record.text}</Tag>;
+  const renderMensaje = (text, record) => (
+    <Tooltip title={record.text} placement='topLeft'>
+      <Tag color='#3895FA'>{record.text}</Tag>
+    </Tooltip>);
   const renderFecha = (text) => <a>{text}</a>;
   const columns = [
     {
       title: 'usuario',
       dataIndex: 'name',
       key: 'name',
+      ellipsis: true,
     },
 
     {
       title: 'Mensaje',
       key: 'text',
       dataIndex: 'text',
+      ellipsis: true,
       render: renderMensaje,
     },
     {
@@ -128,12 +138,39 @@ const ChatExport = ({ eventId, event }) => {
   }
 
   function deleteAllChat() {
-    setLoading(true);
-    datamsjevent.forEach(async (item) => {
-      await deleteSingleChat(eventId, item.chatId);
+    const loading = message.open({
+      key: 'loading',
+      type: 'loading',
+      content: <> Por favor espere miestras borra la información..</>,
     });
-    setdatamsjevent([]);
-    setLoading(false);
+    confirm({
+      title: `¿Está seguro de eliminar la información?`,
+      icon: <ExclamationCircleOutlined />,
+      content: 'Una vez eliminado, no lo podrá recuperar',
+      okText: 'Borrar',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      onOk() {
+        const onHandlerRemove = async () => {
+          try {
+            setLoading(true);
+            datamsjevent.forEach(async (item) => {
+              await deleteSingleChat(eventId, item.chatId);
+            });
+            setdatamsjevent([]);
+            setLoading(false);
+          } catch (e) {
+            message.destroy(loading.key);
+            message.open({
+              type: 'error',
+              content: handleRequestError(e).message,
+            });
+          }
+        };
+        onHandlerRemove();
+      },
+    });
+
   }
 
   function deleteSingleChat(eventId, chatId) {
@@ -153,7 +190,30 @@ const ChatExport = ({ eventId, event }) => {
 
   return (
     <>
-      <div className='column is-narrow has-text-centered export button-c is-centered'>
+      <Header 
+        title={'Comunicaciones Enviadas'}
+      />
+
+      <Table 
+        header={columns}
+        list={datamsjevent}
+        loading={loading}
+        exportData
+        fileName={'ReportChats'}
+        titleTable={(
+          <Row gutter={[8, 8]} wrap>
+            <Col>
+              <Button
+                onClick={deleteAllChat}
+                type='danger'
+                icon={<DeleteOutlined />}>
+                Eliminar Chat
+              </Button>
+            </Col>
+          </Row>
+        )}
+      />
+      {/* <div className='column is-narrow has-text-centered export button-c is-centered'>
         <button onClick={(e) => exportFile(e)} className='button is-primary' style={{ marginRight: 80 }}>
           <span className='icon'>
             <i className='fas fa-download' />
@@ -175,7 +235,7 @@ const ChatExport = ({ eventId, event }) => {
           </Button>
         </Popconfirm>
       </div>
-      {loading ? <Spin /> : <Table columns={columns} dataSource={datamsjevent} />}
+      {loading ? <Spin /> : <TableA columns={columns} dataSource={datamsjevent} />} */}
     </>
   );
 };
