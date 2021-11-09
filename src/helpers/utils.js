@@ -91,8 +91,10 @@ export function parseData2Excel(data, fields,roles=null) {
       : item.checkedin_at
       ? item.checkedin_at
       : '';
-    fields.map(({ name, type, label }) => {
+    fields.map(({ name, type, label, _id}) => {
+      
       let str;
+      if(item?.properties){
       switch (type) {
         case 'number':
           str = item.properties[name] ? item.properties[name].toString() : item?.user[name];
@@ -119,8 +121,8 @@ export function parseData2Excel(data, fields,roles=null) {
               : item.properties[name];
           break;
         default:
-          str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : item?.user? item?.user[name]:'';
-      }
+          str = name === 'id' ? item['_id'] : item?.properties[name] ? item?.properties[name] : item?.user ? item?.user[name]:'';
+      }}
 
       if (type === 'complex' && str) {
         Object.keys(str).map((prop) => {
