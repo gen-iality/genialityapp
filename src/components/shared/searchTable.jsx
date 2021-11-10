@@ -145,7 +145,7 @@ class SearchComponent extends Component {
           <Input
             id='inputSearch'
             type='text'
-            size='large'
+            size={this.props.size ? this.props.size : 'large'}
            // onChange={this.handleFilter}
             onInput={this.handleFilter}
             placeholder={`Buscar ${this.props.placeholder || ''}`}

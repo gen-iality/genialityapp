@@ -44,6 +44,7 @@ const CMS = (props) => {
     extraPathTitle,
     extraPathIcon,
     extraPathType,
+    scroll,
   } = props;
   //API que sería a cual servicio llamar, para hacer los submit y remove y cualquier otra acción
   const [list, setList] = useState([]);
@@ -61,6 +62,7 @@ const CMS = (props) => {
     } else {
       setList(data);
     }
+    console.log(list);
     setLoading(false);
   };
 
@@ -143,6 +145,7 @@ const CMS = (props) => {
         extraPathTitle={extraPathTitle}
         extraPathIcon={extraPathIcon}
         extraPathType={extraPathType}
+        scroll={scroll}
       />
     </div>
   );

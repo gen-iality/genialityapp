@@ -39,6 +39,7 @@ const Table = (props) => {
     extraPathTitle,
     extraPathIcon,
     extraPathType,
+    scroll,
   } = props;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -70,7 +71,7 @@ const Table = (props) => {
                 <Link
                   key={`extraPathAction${item.index}`}
                   id={`extraPathAction${item.index}`}
-                  to={{ pathname: `${extraPath}/${item._id}`, state: { item: item} }}>
+                  to={{ pathname: `${extraPath}/${item._id}`, state: { item: item }}}>
                   <Button 
                     icon={extraPathIcon ? extraPathIcon : <SettingOutlined />}
                     type={extraPathType ? extraPathType : 'primary'} 
@@ -266,6 +267,7 @@ const Table = (props) => {
             }
           </Row>
         )}
+        scroll={scroll}
       />
     </div>
   );

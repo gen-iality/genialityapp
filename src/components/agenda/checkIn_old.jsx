@@ -9,13 +9,11 @@ import CheckSpace from '../event-users/checkSpace';
 import XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import { Activity, RolAttApi } from '../../helpers/request';
-import { Table as TableA, Input, Button, Space, Row, Col } from 'antd';
-import { SearchOutlined, UserAddOutlined, PlusCircleOutlined, DownloadOutlined, UploadOutlined, SendOutlined, QrcodeOutlined } from '@ant-design/icons';
+import { Table, Input, Button, Space } from 'antd';
+import { SearchOutlined, UserAddOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import UserModal from '../modal/modalUser';
 import Moment from 'moment';
-import Header from '../../antdComponents/Header';
-import Table from '../../antdComponents/Table';
 
 const html = document.querySelector('html');
 
@@ -194,7 +192,6 @@ class CheckAgenda extends Component {
     let columnsTable = [];
     let editColumn = {
       title: 'Editar',
-      ellipsis: true,
       key: 'edit',
       render: self.editcomponent,
     };
@@ -203,7 +200,6 @@ class CheckAgenda extends Component {
     columnsTable.push({
       title: 'Chequeado',
       dataIndex: 'checkedin_at',
-      ellipsis: true,
       render: self.checkedincomponent,
     });
 
@@ -211,7 +207,6 @@ class CheckAgenda extends Component {
       columnsTable.push({
         title: properties[i].label ? properties[i].label : properties[i].name,
         dataIndex: properties[i].name,
-        ellipsis: true,
         ...this.getColumnSearchProps(properties[i].name),
       });
     }
@@ -269,7 +264,7 @@ class CheckAgenda extends Component {
     const ws = await XLSX.utils.json_to_sheet(data);
     const wb = await XLSX.utils.book_new();
     await XLSX.utils.book_append_sheet(wb, ws, 'Asistentes');
-    await XLSX.writeFile(wb, `asistentes_actividad_${this.props.location.state.name ? this.props.location.state.name : this.props.location.state.item.name}.xls`);
+    await XLSX.writeFile(wb, `asistentes_actividad_${this.props.location.state.name}.xls`);
   };
 
   //FN Modal, abre y cierra
@@ -444,7 +439,7 @@ class CheckAgenda extends Component {
   //Funcion para enviar la data de los usuarios al componente send.jsx
   goToSendMessage = () => {
     this.props.history.push({
-      pathname: `/eventadmin/${this.props.match.params.id}/invitados`,
+      pathname: `/event/${this.props.match.params.id}/invitados`,
     });
   };
 
@@ -505,72 +500,81 @@ class CheckAgenda extends Component {
             substractSyncQuantity={this.substractSyncQuantity}
           />
         )}
-        <Header 
-          title={`CheckIn: ${this.props.location.state.name ? this.props.location.state.name : this.props.location.state.item.name}`}
-          back
-          description={(
-            <Row gutter={[8, 8]} wrap>
-              <Col>
-                Total: {total}
-              </Col>
-              <Col>
-                Ingresados: {checkIn}
-              </Col>
-            </Row>
-          )}
-        />
-        <Table 
-          header={columnsTable}
-          list={usersData}
-          pagination
-          scroll={{ x: 2500 }}
-          titleTable={(
-            <Row gutter={[8, 8]} wrap>
-              <Col>
-                <Button
-                  onClick={this.checkModal}
-                  type='primary'
-                  icon={<QrcodeOutlined />}>
-                  {'Leer Código QR'}
-                </Button>
-              </Col>
-              <Col>
-                <Button
-                  onClick={this.goToSendMessage}
-                  type='primary'
-                  icon={<SendOutlined />}>
-                  {'Enviar Comunicación/Correo'}
-                </Button>
-              </Col>
-              <Col>
-                <Button
-                  onClick={this.addUser}
-                  type='primary'
-                  icon={<PlusCircleOutlined />}>
-                  {'Agregar Usuario'}
-                </Button>
-              </Col>
-              <Col>
+        <EventContent
+          title={`CheckIn: ${this.props.location.state.name}`}
+          closeAction={this.goBack}
+          classes={'checkin'}>
+          <div className='columns'>
+            <div className='is-flex-touch columns'>
+              {attendees.length > 0 && (
+                <div className='column is-narrow has-text-centered export button-c is-centered'>
+                  <button className='button' onClick={this.exportFile}>
+                    <span className='icon'>
+                      <i className='fas fa-download' />
+                    </span>
+                    <span className='text-button'>Exportar</span>
+                  </button>
+                </div>
+              )}
+              <div className='column is-narrow has-text-centered button-c is-centered'>
+                <button className='button is-inverted' onClick={this.checkModal}>
+                  <span className='icon'>
+                    <i className='fas fa-qrcode'></i>
+                  </span>
+                  <span className='text-button'>Leer Código QR</span>
+                </button>
+              </div>
+              <div className='column is-narrow has-text-centered button-c is-centered'>
+                <Button onClick={() => this.goToSendMessage()}>Enviar comunicación / Correo</Button>
+              </div>
+              <div className='column is-narrow has-text-centered button-c is-centered'>
+                <div className='tags is-centered '>
+                  <span className='tag is-white'>Total</span>
+                  <span className='tag is-light'>{total}</span>
+                </div>
+              </div>
+              <div className='column is-narrow has-text-centered button-c is-centered'>
+                <div className='tags is-centered'>
+                  <span className='tag is-white'>Ingresados</span>
+                  <span className='tag is-primary'>{checkIn}</span>
+                </div>
+              </div>
+              <div className='column is-narrow has-text-centered button-c is-centered'>
+                <button className='button is-inverted' onClick={this.addUser}>
+                  <span className='icon'>
+                    <UserAddOutlined />
+                  </span>
+                  <span className='text-button'>Agregar usuario</span>
+                </button>
+              </div>
+              <div className='column is-narrow has-text-centered button-c is-centered'>
                 <Button
                   onClick={() =>
-                    this.props.history.push(`/eventadmin/${this.props.event._id}/invitados/importar-excel`)
-                  }
-                  type='primary'
-                  icon={<UploadOutlined />}>
-                  {'Importar Usuario'}
+                    this.props.history.push(`/eventAdmin/${this.props.event._id}/invitados/importar-excel`)
+                  }>
+                  Importar Usuario
                 </Button>
-              </Col>
-              <Col>
-                <Button
-                  onClick={this.exportFile}
-                  type='primary'
-                  icon={<DownloadOutlined />}>
-                  {'Exportar'}
-                </Button>
-              </Col>
-            </Row>
+              </div>
+            </div>
+          </div>
+
+          {loading ? (
+            <Fragment>
+              <Loading />
+              <h2 className='has-text-centered'>Cargando...</h2>
+            </Fragment>
+          ) : (
+            <Table
+              scroll={{ x: 1500 }}
+              sticky
+              className='table-striped-rows'
+              pagination={{ position: ['bottomCenter'] }}
+              //rowSelection={rowSelection}
+              columns={columnsTable}
+              dataSource={usersData}
+            />
           )}
-        />
+        </EventContent>
         {qrModal && (
           <CheckSpace
             list={attendees}
