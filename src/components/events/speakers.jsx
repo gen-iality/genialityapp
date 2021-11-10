@@ -163,18 +163,6 @@ class Speakers extends Component {
               <>
                 {category.hasSpeaker && (
                   <>
-                    <div
-                      style={{
-                        width: '98%',
-                        margin: '30px auto',
-                        padding: '5px',
-                        borderRadius: '5px',
-                        backgroundColor: '#FFFFFF',
-                        boxSizing: 'border-box',
-                      }}>
-                      <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
-                    </div>
-
                     {speakersWithCategory.length && (
                       <>
                         {speakersWithCategory[category.order].length && (
@@ -182,57 +170,72 @@ class Speakers extends Component {
                             <div className='calendar-speakers'>
                               {speakersWithCategory[category.order].map((speaker, key) => (
                                 <div key={key}>
-                                  <Card
-                                    onClick={() => {
-                                      if (
-                                        speaker.description !== '<p><br></p>' &&
-                                        speaker.description !== undefined &&
-                                        speaker.description !== null
-                                      ) {
-                                        this.modal(
-                                          eventId,
-                                          speaker._id,
-                                          speaker.image,
-                                          speaker.name,
-                                          speaker.profession,
-                                          speaker.description,
-                                          speaker.category
-                                        );
+                                  {speaker.published && (
+                                    <div
+                                      style={{
+                                        width: '98%',
+                                        margin: '30px auto',
+                                        padding: '5px',
+                                        borderRadius: '5px',
+                                        backgroundColor: '#FFFFFF',
+                                        boxSizing: 'border-box',
+                                      }}>
+                                      <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
+                                    </div>
+                                  )}
+                                  {speaker.published && (
+                                    <Card
+                                      onClick={() => {
+                                        if (
+                                          speaker.description !== '<p><br></p>' &&
+                                          speaker.description !== undefined &&
+                                          speaker.description !== null
+                                        ) {
+                                          this.modal(
+                                            eventId,
+                                            speaker._id,
+                                            speaker.image,
+                                            speaker.name,
+                                            speaker.profession,
+                                            speaker.description,
+                                            speaker.category
+                                          );
+                                        }
+                                      }}
+                                      hoverable={speaker.description ? true : false}
+                                      style={{ paddingTop: '30px', borderRadius: '20px' }}
+                                      cover={
+                                        speaker.image ? (
+                                          <Avatar
+                                            style={{ display: 'block', margin: '0 auto' }}
+                                            size={210}
+                                            src={speaker.image}
+                                          />
+                                        ) : (
+                                          <Avatar
+                                            style={{ display: 'block', margin: '0 auto' }}
+                                            size={210}
+                                            icon={<UserOutlined />}
+                                          />
+                                        )
                                       }
-                                    }}
-                                    hoverable={speaker.description ? true : false}
-                                    style={{ paddingTop: '30px', borderRadius: '20px' }}
-                                    cover={
-                                      speaker.image ? (
-                                        <Avatar
-                                          style={{ display: 'block', margin: '0 auto' }}
-                                          size={210}
-                                          src={speaker.image}
-                                        />
-                                      ) : (
-                                        <Avatar
-                                          style={{ display: 'block', margin: '0 auto' }}
-                                          size={210}
-                                          icon={<UserOutlined />}
-                                        />
-                                      )
-                                    }
-                                    actions={speaker.description && [this.btnViewMore(speaker)]}>
-                                    <Meta
-                                      title={[
-                                        <div style={{ textAlign: 'center' }} key={'speaker-name' + key}>
-                                          <span>{speaker.name}</span>
-                                        </div>,
-                                      ]}
-                                      description={[
-                                        <div
-                                          style={{ minHeight: '100px', textAlign: 'center' }}
-                                          key={'speaker-description' + key}>
-                                          <p>{speaker.profession}</p>
-                                        </div>,
-                                      ]}
-                                    />
-                                  </Card>
+                                      actions={speaker.description && [this.btnViewMore(speaker)]}>
+                                      <Meta
+                                        title={[
+                                          <div style={{ textAlign: 'center' }} key={'speaker-name' + key}>
+                                            <span>{speaker.name}</span>
+                                          </div>,
+                                        ]}
+                                        description={[
+                                          <div
+                                            style={{ minHeight: '100px', textAlign: 'center' }}
+                                            key={'speaker-description' + key}>
+                                            <p>{speaker.profession}</p>
+                                          </div>,
+                                        ]}
+                                      />
+                                    </Card>
+                                  )}
                                 </div>
                               ))}
                             </div>
@@ -255,47 +258,49 @@ class Speakers extends Component {
             {speakersWithoutCategory.length &&
               speakersWithoutCategory.map((speaker, key) => (
                 <div key={key}>
-                  <Card
-                    onClick={() => {
-                      if (
-                        speaker.description !== '<p><br></p>' &&
-                        speaker.description !== undefined &&
-                        speaker.description !== null
-                      ) {
-                        this.modal(
-                          eventId,
-                          speaker._id,
-                          speaker.image,
-                          speaker.name,
-                          speaker.profession,
-                          speaker.description,
-                          speaker.category
-                        );
+                  {speaker.published && (
+                    <Card
+                      onClick={() => {
+                        if (
+                          speaker.description !== '<p><br></p>' &&
+                          speaker.description !== undefined &&
+                          speaker.description !== null
+                        ) {
+                          this.modal(
+                            eventId,
+                            speaker._id,
+                            speaker.image,
+                            speaker.name,
+                            speaker.profession,
+                            speaker.description,
+                            speaker.category
+                          );
+                        }
+                      }}
+                      hoverable={speaker.description ? true : false}
+                      style={{ paddingTop: '30px', borderRadius: '20px' }}
+                      cover={
+                        speaker.image ? (
+                          <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} src={speaker.image} />
+                        ) : (
+                          <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} icon={<UserOutlined />} />
+                        )
                       }
-                    }}
-                    hoverable={speaker.description ? true : false}
-                    style={{ paddingTop: '30px', borderRadius: '20px' }}
-                    cover={
-                      speaker.image ? (
-                        <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} src={speaker.image} />
-                      ) : (
-                        <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} icon={<UserOutlined />} />
-                      )
-                    }
-                    actions={speaker.description && [this.btnViewMore(speaker)]}>
-                    <Meta
-                      title={[
-                        <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
-                          <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{speaker.name}</span>
-                        </div>,
-                      ]}
-                      description={[
-                        <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
-                          <p>{speaker.profession}</p>
-                        </div>,
-                      ]}
-                    />
-                  </Card>
+                      actions={speaker.description && [this.btnViewMore(speaker)]}>
+                      <Meta
+                        title={[
+                          <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
+                            <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{speaker.name}</span>
+                          </div>,
+                        ]}
+                        description={[
+                          <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
+                            <p>{speaker.profession}</p>
+                          </div>,
+                        ]}
+                      />
+                    </Card>
+                  )}
                 </div>
               ))}
           </div>
