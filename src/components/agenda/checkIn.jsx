@@ -9,8 +9,8 @@ import CheckSpace from '../event-users/checkSpace';
 import XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import { Activity, RolAttApi } from '../../helpers/request';
-import { Table as TableA, Input, Button, Space, Row, Col } from 'antd';
-import { SearchOutlined, UserAddOutlined, PlusCircleOutlined, DownloadOutlined, UploadOutlined, SendOutlined, QrcodeOutlined } from '@ant-design/icons';
+import { Table as TableA, Input, Button, Space, Row, Col, Tooltip, Checkbox } from 'antd';
+import { SearchOutlined, UserAddOutlined, PlusCircleOutlined, DownloadOutlined, UploadOutlined, SendOutlined, QrcodeOutlined, EditOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import UserModal from '../modal/modalUser';
 import Moment from 'moment';
@@ -172,7 +172,16 @@ class CheckAgenda extends Component {
       <p>{Moment(item.checkedin_at || item.properties?.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
     ) : (
       <div>
-        <input
+        <Checkbox 
+          id={'checkinUser' + item._id}
+          disabled={item.checkedin_at}
+          name={'checkinUser' + item._id}
+          checked={item.checkedin_at}
+          onChange={() => {
+            self.checkIn(item._id);
+          }}
+        />
+        {/* <input
           className='is-checkradio is-primary is-small'
           id={'checkinUser' + item._id}
           disabled={item.checkedin_at}
@@ -184,7 +193,7 @@ class CheckAgenda extends Component {
             self.checkIn(item._id);
           }}
         />
-        <label htmlFor={'checkinUser' + item._id} />
+        <label htmlFor={'checkinUser' + item._id} /> */}
       </div>
     );
   };
@@ -244,7 +253,16 @@ class CheckAgenda extends Component {
 
   editcomponent = (text, item, index) => {
     return (
-      <span
+      <Tooltip placement='topLeft' title='Editar'>
+        <Button 
+          type={'primary'} 
+          icon={<EditOutlined />} 
+          size='small' 
+          onClick={() => this.openEditModalUser(item)}
+        />
+      </Tooltip>
+      
+      /* <span
         className='icon has-text-grey action_pointer'
         data-tooltip={'Editar'}
         // eslint-disable-next-line no-unused-vars
@@ -253,7 +271,7 @@ class CheckAgenda extends Component {
           this.openEditModalUser(item);
         }}>
         <i className='fas fa-edit' />
-      </span>
+      </span> */
     );
   };
 
