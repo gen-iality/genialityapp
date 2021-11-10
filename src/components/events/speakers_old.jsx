@@ -166,11 +166,11 @@ class Speakers extends Component {
                     {speakersWithCategory.length && (
                       <>
                         {speakersWithCategory[category.order].length && (
-                          <Row wrap gutter={[30, 30]} >
-                            {speakersWithCategory[category.order].map((speaker, key) => (
-                              <Col key={key}>
-                                {speaker.published && (
-                                  <>
+                          <div className='container-calendar-speaker calendar-speakers'>
+                            <div className='calendar-speakers'>
+                              {speakersWithCategory[category.order].map((speaker, key) => (
+                                <div key={key}>
+                                  {speaker.published && (
                                     <div
                                       style={{
                                         width: '98%',
@@ -182,6 +182,8 @@ class Speakers extends Component {
                                       }}>
                                       <span style={{ fontSize: '18px', fontWeight: '700' }}>{category.name}</span>
                                     </div>
+                                  )}
+                                  {speaker.published && (
                                     <Card
                                       onClick={() => {
                                         if (
@@ -201,7 +203,7 @@ class Speakers extends Component {
                                         }
                                       }}
                                       hoverable={speaker.description ? true : false}
-                                      style={{ paddingTop: '30px', borderRadius: '20px', paddingLeft: '50px', paddingRight: '50px', }}
+                                      style={{ paddingTop: '30px', borderRadius: '20px' }}
                                       cover={
                                         speaker.image ? (
                                           <Avatar
@@ -233,12 +235,11 @@ class Speakers extends Component {
                                         ]}
                                       />
                                     </Card>
-                                  </>
-                                  
-                                )}
-                              </Col>
-                            ))}
-                          </Row>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         )}
                       </>
                     )}
@@ -249,12 +250,14 @@ class Speakers extends Component {
           </>
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
-        <div style={{padding: '40px'}}>
-          <Row wrap gutter={[30, 30]}>
-            {/* Mapeo de datos para mostrar los Speakers */}
+        <div
+          className='container-calendar-speaker calendar-speakers'
+          style={{ marginTop: '40px', marginBottom: '40px' }}>
+          {/* Mapeo de datos para mostrar los Speakers */}
+          <div className='calendar-speakers'>
             {speakersWithoutCategory.length &&
               speakersWithoutCategory.map((speaker, key) => (
-                <Col key={key}>
+                <div key={key}>
                   {speaker.published && (
                     <Card
                       onClick={() => {
@@ -275,7 +278,7 @@ class Speakers extends Component {
                         }
                       }}
                       hoverable={speaker.description ? true : false}
-                      style={{ paddingTop: '30px', borderRadius: '20px', paddingLeft: '50px', paddingRight: '50px' }}
+                      style={{ paddingTop: '30px', borderRadius: '20px' }}
                       cover={
                         speaker.image ? (
                           <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} src={speaker.image} />
@@ -298,9 +301,9 @@ class Speakers extends Component {
                       />
                     </Card>
                   )}
-                </Col>
+                </div>
               ))}
-          </Row>
+          </div>
         </div>
 
         {/* Modal de Speakers para mostrar la información del conferencista junto con sus actividades */}
