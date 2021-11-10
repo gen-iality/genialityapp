@@ -201,7 +201,7 @@ class Speakers extends Component {
                                         }
                                       }}
                                       hoverable={speaker.description ? true : false}
-                                      style={{ /* paddingTop: '30px', */ borderRadius: '20px', padding: '40px' }}
+                                      style={{ paddingTop: '30px', borderRadius: '20px', paddingLeft: '50px', paddingRight: '50px', }}
                                       cover={
                                         speaker.image ? (
                                           <Avatar
@@ -275,7 +275,7 @@ class Speakers extends Component {
                         }
                       }}
                       hoverable={speaker.description ? true : false}
-                      style={{ /* paddingTop: '30px', */ borderRadius: '20px', padding: '40px' }}
+                      style={{ paddingTop: '30px', borderRadius: '20px', paddingLeft: '50px', paddingRight: '50px' }}
                       cover={
                         speaker.image ? (
                           <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} src={speaker.image} />
