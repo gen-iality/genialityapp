@@ -20,7 +20,7 @@ function updateAttendees(currentAttendees, snapshot) {
     user.created_at = user.created_at && user.created_at.toDate ? user.created_at.toDate() : null;
     user.updated_at = user.updated_at && user.updated_at.toDate ? user.updated_at.toDate() : null;
     //SE LE SUMA 5 HORAS PARA QUE NOS DE LA HORA EXACTA
-    user.checkedin_at = user.checkedin_at && user.checkedin_at.toDate ? user.checkedin_at.toDate().setHours(user.checkedin_at.toDate().getHours()+5) : null;   
+    user.checkedin_at = user.checkedin_at && user.checkedin_at.toDate ? user.checkedin_at.toDate() : null;   
     switch (change.type) {
       case 'added':
         change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
