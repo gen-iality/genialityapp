@@ -3,9 +3,6 @@ import XLSX from 'xlsx';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import Dropzone from 'react-dropzone';
-import { Row, Col, Button } from 'antd';
-import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
-
 Moment.locale('es');
 momentLocalizer();
 
@@ -88,26 +85,38 @@ class Importacion extends Component {
             datos de tus asistentes.
           </p>
         </div>
-        <h2 className='has-text-grey has-text-weight-bold'>CAMPOS REQUERIDOS</h2>
-        <Row wrap gutter={[8, 8]}>
-          {this.props.extraFields.map((extra, key) => (
-            <Col key={key}>
-              <span className='has-text-grey-light'>{extra.name}</span>
-            </Col>
-          ))}
-        </Row>
-        <Row justify='center' wrap gutter={[8, 8]}>
-          <Col>
-            <Dropzone onDrop={this.handleXlsFile} accept='.xls,.xlsx' className='zone'>
-              <Button type='primary' icon={<UploadOutlined />}>Importar Excel</Button>
-            </Dropzone>
-          </Col>
-          <Col>
-            <Button type='link' icon={<DownloadOutlined />}>
-              Descargar Template
-            </Button>
-          </Col>
-        </Row>
+        <div className='importacion-ejm is-mobile is-gapless'>
+          <div className='columns is-mobile is-multiline'>
+            <div className='column is-12 is-paddingless'>
+              <span className='is-uppercase has-text-weight-bold has-text-grey'>Campos Requeridos</span>
+            </div>
+            <div className='column is-12 is-paddingless'>
+              <div className='ejm-tabla columns is-mobile is-gapless'>
+                {this.props.extraFields.map((extra, key) => {
+                  return (
+                    <div className='column' key={key}>
+                      <span className='has-text-grey-light'>{extra.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className='importacion-btns has-text-centered'>
+          <Dropzone onDrop={this.handleXlsFile} accept='.xls,.xlsx' className='zone'>
+            <button className='button is-primary'>Importar Excel</button>
+          </Dropzone>
+          <p className='help is-danger'>{this.state.errMsg}</p>
+          <button className='button is-text' onClick={this.downloadExcel}>
+            <span className='icon'>
+              <i className='fas fa-cloud-download-alt' aria-hidden='true' />
+            </span>
+            <span>
+              <ins>Descargar Template</ins>
+            </span>
+          </button>
+        </div>
       </React.Fragment>
     );
   }

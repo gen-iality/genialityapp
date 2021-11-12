@@ -6,7 +6,11 @@ import QrReader from 'react-qr-reader';
 import { firestore } from '../../helpers/firebase';
 import { toast } from 'react-toastify';
 import { handleRequestError } from '../../helpers/utils';
-import { Modal } from 'antd';
+import { Modal, Tabs, Form, Select, Row, Col, Input, Button } from 'antd';
+import { CameraOutlined, ExpandOutlined } from '@ant-design/icons';
+
+const { TabPane } = Tabs;
+const { Option } = Select;
 
 class CheckSpace extends Component {
   constructor(props) {
@@ -118,13 +122,97 @@ class CheckSpace extends Component {
     const { qrData, facingMode, gunMsj } = this.state;
     return (
       <div>
-        {/* <Modal
+        <Modal
           title={'Lector QR'}
+          visible={qrData}
           onCancel={this.closeQr}
+          footer={[
+            <>
+              {qrData.user && (
+                <Button type='primary' onClick={this.readOther}>
+                  Leer QR
+                </Button>
+              )}
+            </>,
+            <>
+              {qrData.another && (
+                <Button type='primary' onClick={this.addUser}>
+                  Agregar asistente
+                </Button>
+              )}
+            </>
+          ]}
         >
-
-        </Modal> */}
-        <div className={`modal is-active`}>
+          {!qrData.another && (
+            <React.Fragment>
+              {qrData.user ? (
+                <div>
+                  {qrData.user.checked_in && (
+                    <div>
+                      <h1 className='title'>Usuario Chequeado</h1>
+                      <h2 className='subtitle'>
+                        Fecha: <FormattedDate value={qrData.user.checked_at.toDate()} /> -{' '}
+                        <FormattedTime value={qrData.user.checked_at.toDate()} />
+                      </h2>
+                    </div>
+                  )}
+                  <p>ID: {qrData.user.attendee_id}</p>
+                  <p>Nombre: {qrData.user.properties.names}</p>
+                  <p>Correo: {qrData.user.properties.email}</p>
+                </div>
+              ) : (
+                <React.Fragment>
+                  <Tabs defaultActiveKey='1'>
+                    <TabPane tab={<><CameraOutlined />{'Camara'}</>} key='1'>
+                      <Form.Item>
+                        <Select 
+                          value={facingMode}
+                          onChange={(e) => this.setState({ facingMode: e })}
+                        >
+                          <Option value='user'>Selfie</Option>
+                          <Option value='environment'>Rear</Option>
+                        </Select>
+                      </Form.Item>
+                      <Row justify='center' wrap gutter={8}>
+                        <QrReader
+                          delay={500}
+                          facingMode={facingMode}
+                          onError={this.handleError}
+                          onScan={this.handleScan}
+                          style={{ width: '60%' }}
+                        />
+                      </Row>
+                    </TabPane>
+                    <TabPane tab={<><ExpandOutlined />{'Pistola'}</>} key='2'>
+                      <Form.Item label={'Código'}>
+                        <Input 
+                          name={'searchCC'}
+                          ref={this.txtInput}
+                          value={this.state.newCC}
+                          onChange={this.changeCC}
+                          autoFocus={true}
+                        />
+                        {gunMsj && (
+                          <div className='msg'>
+                            <p className='msg_error'>{gunMsj}</p>
+                          </div>
+                        )}
+                      </Form.Item>
+                      <Row justify='center' wrap gutter={8}>
+                        <Col>
+                          <Button type='primary' onClick={() => this.handleScan(this.state.newCC)}>
+                            Buscar
+                          </Button>
+                        </Col>
+                      </Row>
+                    </TabPane>
+                  </Tabs>
+                </React.Fragment>
+              )}
+            </React.Fragment>
+          )}
+        </Modal>
+        {/* <div className={`modal is-active`}>
           <div className='modal-background' />
           <div className='modal-card'>
             <header className='modal-card-head'>
@@ -247,7 +335,7 @@ class CheckSpace extends Component {
               )}
             </footer>
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }
