@@ -258,37 +258,7 @@ class QrModal extends Component {
               </React.Fragment>
             )}
             <p>{qrData.msg}</p>
-<<<<<<< HEAD
         </Modal>
-=======
-          </section>
-          <footer className='modal-card-foot'>
-            {qrData.user && (
-              <React.Fragment>
-                {!qrData.another && (
-                  <button
-                    className='button is-success'
-                    onClick={() => {
-                      this.props.checkIn(qrData.user._id,qrData.user);
-                    }}>
-                    Check User
-                  </button>
-                )}
-                <button
-                  className='button'
-                  onClick={() => {
-                    this.editQRUser(qrData.user);
-                  }}>
-                  Edit User
-                </button>
-                <button className='button' onClick={this.readQr}>
-                  Read Other
-                </button>
-              </React.Fragment>
-            )}
-          </footer>
-        </div>
->>>>>>> c0c278f984856d9e62f30a1991051ca82c4870d6
       </div>
     );
   }
