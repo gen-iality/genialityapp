@@ -344,7 +344,7 @@ function UsersCard(props) {
 
   return (
     <List.Item
-      onClick={
+      onClick={() => {
         props.type == 'privateChat'
           ? () => {
               HandleGoToChat(
@@ -356,8 +356,8 @@ function UsersCard(props) {
                 null
               );
             }
-          : ''
-      }
+          : '';
+      }}
       className='efect-scale'
       style={props.type == 'privateChat' ? styleListPointer : styleList}
       actions={[actionCapture]}>

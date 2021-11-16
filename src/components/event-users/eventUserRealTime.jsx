@@ -10,7 +10,7 @@ function updateAttendees(currentAttendees, snapshot) {
   snapshot.docChanges().forEach((change) => {
     user = change.doc.data();
   //  console.log("USER==>", user)
-    user = { ...user, ...user.properties };
+      user = { ...user, ...user.properties,checkedin_at:user.checkedin_at };
 
     //por si acas
     if (!user._id) {
@@ -19,6 +19,7 @@ function updateAttendees(currentAttendees, snapshot) {
 
     user.created_at = user.created_at && user.created_at.toDate ? user.created_at.toDate() : null;
     user.updated_at = user.updated_at && user.updated_at.toDate ? user.updated_at.toDate() : null;
+    //SE LE SUMA 5 HORAS PARA QUE NOS DE LA HORA EXACTA
     user.checkedin_at = user.checkedin_at && user.checkedin_at.toDate ? user.checkedin_at.toDate() : null;   
     switch (change.type) {
       case 'added':

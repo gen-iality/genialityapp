@@ -13,7 +13,7 @@ import Quill from 'react-quill';
 import { Button, Checkbox, Row, Space, Col, Form, Input, Modal } from 'antd';
 Moment.locale('es-us');
 import Header from '../../antdComponents/Header';
-import {CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined} from '@ant-design/icons';
+import { CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined } from '@ant-design/icons';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -191,10 +191,8 @@ class SendRsvp extends Component {
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
       <>
-        <Form
-          {...formLayout}
-        >
-          <Header 
+        <Form {...formLayout}>
+          <Header
             title={'Detalle de la comunicación'}
             back
             form
@@ -206,7 +204,7 @@ class SendRsvp extends Component {
           <Row justify='center' wrap gutter={8}>
             <Col span={14}>
               <Form.Item label={`Asunto del correo (Por defecto será el nombre del evento)`}>
-                <Input 
+                <Input
                   name={'subject'}
                   placeholder={'Escribe aquí el asunto del correo'}
                   onChange={(e) => this.handleChange(e)}
@@ -239,11 +237,7 @@ class SendRsvp extends Component {
               </div>
 
               <Form.Item label={'Cabecera del correo'}>
-                <Quill
-                  value={this.state.rsvp.content_header}
-                  onChange={this.QuillComplement1}
-                  name='content_header'
-                />
+                <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' />
               </Form.Item>
 
               <Form.Item label={'Especificar fecha del evento'}>
@@ -253,19 +247,31 @@ class SendRsvp extends Component {
               {include_date && (
                 <Row gutter={[8, 8]} wrap>
                   <Col span={12}>
-                    <p> <CalendarOutlined/> Fecha Inicio</p>
+                    <p>
+                      {' '}
+                      <CalendarOutlined /> Fecha Inicio
+                    </p>
                     <p className='date'>{Moment(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
                   </Col>
                   <Col span={12}>
-                    <p> <FieldTimeOutlined/> Hora</p>
+                    <p>
+                      {' '}
+                      <FieldTimeOutlined /> Hora
+                    </p>
                     <p className='date'>{Moment(this.props.event.datetime_from).format('HH:mm')}</p>
                   </Col>
                   <Col span={12}>
-                    <p> <CalendarOutlined /> Fecha Fin</p>
+                    <p>
+                      {' '}
+                      <CalendarOutlined /> Fecha Fin
+                    </p>
                     <p className='date'>{Moment(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
                   </Col>
                   <Col span={12}>
-                    <p> <FieldTimeOutlined /> Hora</p>
+                    <p>
+                      {' '}
+                      <FieldTimeOutlined /> Hora
+                    </p>
                     <p className='date'>{Moment(this.props.event.datetime_to).format('HH:mm')}</p>
                   </Col>
                 </Row>
@@ -307,11 +313,7 @@ class SendRsvp extends Component {
                       divClass={'rsvp-pic-img'}
                       content={<img src={this.state.rsvp?.image} alt={'Imagen Perfil'} />}
                       classDrop={'dropzone'}
-                      contentDrop={
-                        <Button type='primary'>
-                          Cambiar foto
-                        </Button>
-                      }
+                      contentDrop={<Button type='primary'>Cambiar foto</Button>}
                       contentZone={<div>Subir foto</div>}
                       changeImg={this.changeImg}
                       errImg={this.state.errImg}
@@ -379,15 +381,17 @@ class SendRsvp extends Component {
               </div>
             </Col>
           </Row>
-          <Modal 
+          <Modal
             visible={this.state.modal}
             onCancel={this.closeModal}
             title={'Confirmación'}
             onOk={this.submit}
             cancelText={'Cancelar'}
-            okText={'Envíar'}
-          >
-            <p>Se van a enviar {this.state.selection?.length} {this.state.selection?.length === 1 ? 'invitación' : 'invitaciones'}</p>
+            okText={'Envíar'}>
+            <p>
+              Se van a enviar {this.state.selection?.length}{' '}
+              {this.state.selection?.length === 1 ? 'invitación' : 'invitaciones'}
+            </p>
           </Modal>
           {timeout && <LogOut />}
         </Form>
