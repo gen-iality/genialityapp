@@ -44,7 +44,6 @@ class AddUser extends Component {
     this.setState({ create: true });
     try {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
-      console.log(resp, '-------------------------------------');
       if (resp.message === 'OK') {
         /* this.props.addToList(resp.data); */
         message.class = resp.status === 'CREATED' ? 'msg_success' : 'msg_warning';
@@ -58,7 +57,6 @@ class AddUser extends Component {
         this.closeModal();
       }, 1000);
     } catch (err) {
-      console.log(err, 'errorciño');
       message.class = 'msg_error';
       message.content = 'ERROR...TRYING LATER';
     }
