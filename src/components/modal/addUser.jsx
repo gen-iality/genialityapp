@@ -215,7 +215,7 @@ class AddUser extends Component {
             {Object.keys(this.state.user).length > 0 && this.renderForm()}
             {tickets.length > 0 && (
               <Form.Item label={'Tiquete'}>
-                <Select onChange={(e) => this.onChange(e, 'select', 'ticketid')} name={'ticketid'}>
+                <Select onChange={(e) => this.onChange(e, 'select', 'ticketid')} name={'ticketid'} defaultValue={''}>
                   <Option value={''}>..Seleccione</Option>
                   {tickets.map((item, key) => {
                     return (
