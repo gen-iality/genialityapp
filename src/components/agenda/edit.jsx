@@ -264,8 +264,9 @@ class AgendaEdit extends Component {
   };
 
   //FN general para cambio en input
-  handleChange = async (e) => {
-    let { name, value } = e.target;
+  handleChange = async (e, nameS) => {
+    let { name } = e.target ? e.target : nameS;
+    let { value } = e.target ? e.target : e;
 
     if (name === 'requires_registration') {
       value = e.target.checked;
@@ -396,7 +397,7 @@ class AgendaEdit extends Component {
 
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
-        console.log('Info agenda: ', info);
+        /* console.log('Info agenda: ', info); */
         this.props.history.push(`/eventadmin/${event._id}/agenda`);
       } catch (e) {
         sweetAlert.showError(handleRequestError(e));
@@ -705,7 +706,7 @@ class AgendaEdit extends Component {
                   <SelectAntd
                     name='date'
                     options={this.state.days}
-                    style={{ width: '100%' }}
+                    /* style={{ width: '100%' }} */
                     defaultValue={date}
                     onChange={(value) => this.handleChangeDate(value, 'date')}
                   />
@@ -758,15 +759,13 @@ class AgendaEdit extends Component {
                 <Form.Item label={'Espacio'}>
                   <Row wrap gutter={[8, 8]}>
                     <Col span={23}>
-                      <SelectAntd name={'space_id'} value={space_id} onChange={this.handleChange}>
+                      <SelectAntd name={'space_id'} defaultValue={space_id} onChange={(e) => this.handleChange(e, 'space_id')}>
                         <Option value={''}>Seleccione un lugar/salón ...</Option>
-                        {spaces.map((space) => {
-                          return (
-                            <Option key={space.value} value={space.value}>
-                              {space.label}
-                            </Option>
-                          );
-                        })}
+                        {spaces.map((space) => (
+                          <Option key={space.value} value={space.value}>
+                            {space.label}
+                          </Option>
+                        ))}
                       </SelectAntd>
                     </Col>
                     <Col span={1}>
@@ -776,45 +775,38 @@ class AgendaEdit extends Component {
                     </Col>
                   </Row>
                 </Form.Item>
-                <label className='label'>¿Tiene espacio físico?</label>
-                <Switch
-                  checked={this.state.isPhysical}
-                  checkedChildren='Si'
-                  unCheckedChildren='No'
-                  onChange={this.handlePhysical}
-                />
+                <Form.Item label={'¿Tiene espacio físico?'}>
+                  <Switch
+                    checked={this.state.isPhysical}
+                    checkedChildren='Si'
+                    unCheckedChildren='No'
+                    onChange={this.handlePhysical}
+                  />
+                </Form.Item>
                 {this.state.isPhysical && (
                   <>
-                    <div className='field'>
-                      <label className='label'>Longitud</label>
-                      <div className='control'>
-                        <input
-                          ref={this.longitud}
-                          autoFocus
-                          className='input'
-                          type='number'
-                          name={'length'}
-                          value={length}
-                          onChange={this.handleChange}
-                          placeholder='Ej. 4.677027'
-                        />
-                      </div>
-                    </div>
-                    <div className='field'>
-                      <label className='label'>Latitud</label>
-                      <div className='control'>
-                        <input
-                          ref={this.latitud}
-                          autoFocus
-                          className='input'
-                          type='number'
-                          name={'latitude'}
-                          value={latitude}
-                          onChange={this.handleChange}
-                          placeholder='Ej. -74.094086'
-                        />
-                      </div>
-                    </div>
+                    <Form.Item label={'Longitud'}>
+                      <Input
+                        ref={this.longitud}
+                        autoFocus
+                        type='number'
+                        name={'length'}
+                        value={length}
+                        onChange={(e) => this.handleChange(e)}
+                        placeholder={'Ej. 4.677027'}
+                      />
+                    </Form.Item>
+                    <Form.Item label={'Latitud'}>
+                      <Input
+                        ref={this.latitud}
+                        autoFocus
+                        type='number'
+                        name={'latitude'}
+                        value={latitude}
+                        onChange={(e) => this.handleChange(e)}
+                        placeholder={'Ej. -74.094086'}
+                      />
+                    </Form.Item>
                   </>
                 )}
                 {access_restriction_type !== 'OPEN' && (
@@ -885,8 +877,9 @@ class AgendaEdit extends Component {
                   {image && <img src={image} alt={`activity_${name}`} />}
                 </Form.Item>
                 <Form.Item label={'Capacidad'}>
-                  <InputNumber
+                  <Input
                     min={0}
+                    type='number'
                     name={'capacity'}
                     value={capacity}
                     onChange={this.handleChange}

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Alert } from 'antd';
+import { Card, Row, Col, Alert, Form, Select, Input, Button } from 'antd';
+
+const { Option } = Select;
 
 export default function RoomConfig(props) {
   const [requiresCreateRoom, setRequiresCreateRoom] = useState(false);
@@ -26,18 +28,38 @@ export default function RoomConfig(props) {
     <Card>
       <Row style={{ marginBottom: 24 }}>
         <Col span={24}>
-          <label className='label'>Publicar Actividad</label>
+          <Form.Item label={'Publicar Actividad'}>
+            <Select defaultValue={isPublished} /* value={isPublished} */ name='isPublished' onChange={(e) => handleChange(e, 'isPublished')}>
+              <Option value={true}>Si</Option>
+              <Option value={false}>No</Option>
+            </Select>
+          </Form.Item>
+          {/* <label className='label'>Publicar Actividad</label>
           <div className='select is-primary'>
             <select defaultValue={isPublished} value={isPublished} name='isPublished' onChange={handleChange}>
               <option value={true}>Si</option>
               <option value={false}>No</option>
             </select>
-          </div>
+          </div> */}
         </Col>
       </Row>
       <Row style={{ marginBottom: 24 }}>
         <Col span={24}>
-          <label className='label'>Plataforma Streaming del evento</label>
+          <Form.Item label={'Plataforma Streaming del evento'}>
+            {platform === null || platform === '' ? (
+              <Select defaultValue={platform} /* value={platform} */ name='platform' onChange={(e) => handleChange(e, 'plataform')}>
+                <Option value=''>Seleccionar...</Option>
+                <Option value='zoom'>Zoom</Option>
+                <Option value='zoomExterno'>ZoomExterno</Option>
+                <Option value='vimeo'>Vimeo</Option>
+                <Option value='dolby'>Dolby</Option>
+                <Option value='bigmarker'>BigMaker</Option>
+              </Select>
+            ) : (
+              <>{platform}</>
+            )}
+          </Form.Item>
+          {/* <label className='label'>Plataforma Streaming del evento</label>
           {platform === null || platform === '' ? (
             <div className='select is-primary'>
               <select defaultValue={platform} value={platform} name='platform' onChange={handleChange}>
@@ -51,7 +73,7 @@ export default function RoomConfig(props) {
             </div>
           ) : (
             <>{platform}</>
-          )}
+          )} */}
         </Col>
       </Row>
 
@@ -67,7 +89,17 @@ export default function RoomConfig(props) {
           {!hasVideoconference && (
             <Row style={{ marginBottom: 24 }}>
               <Col span={24}>
-                <label className='label'>Desea seleccionar manualmente el host?</label>
+                <Form.Item label={'Desea seleccionar manualmente el host?'}>
+                  <Select
+                    defaultValue={select_host_manual}
+                    /* value={select_host_manual} */
+                    name='select_host_manual'
+                    onChange={(e) => handleChange(e, 'select_host_manual')}>
+                    <Option value={true}>Si</Option>
+                    <Option value={false}>No</Option>
+                  </Select>
+                </Form.Item>
+                {/* <label className='label'>Desea seleccionar manualmente el host?</label>
                 <div className='select is-primary'>
                   <select
                     defaultValue={false}
@@ -77,7 +109,7 @@ export default function RoomConfig(props) {
                     <option value={true}>Si</option>
                     <option value={false}>No</option>
                   </select>
-                </div>
+                </div> */}
               </Col>
             </Row>
           )}
@@ -87,7 +119,18 @@ export default function RoomConfig(props) {
       {requiresCreateRoom && select_host_manual && !hasVideoconference && (
         <Row style={{ marginBottom: 24 }}>
           <Col span={24}>
-            <label className='label'>Seleccione un host</label>
+            <Form.Item label={'Seleccione un hos'}>
+              <Select defaultValue={host_id} /* value={host_id} */ name='host_id' onChange={(e) => handleChange(e, 'host_id')}>
+                <Option value=''>Seleccione</Option>
+                {host_list.length > 0 &&
+                  host_list.map((host) => (
+                    <Option key={host.host_id} value={host.host_id}>
+                      {host.host_name}
+                    </Option>
+                  ))}
+              </Select>
+            </Form.Item>
+            {/* <label className='label'>Seleccione un host</label>
             <div className='select is-primary'>
               <select defaultValue={false} value={host_id} name='host_id' onChange={handleChange}>
                 <option value=''>Seleccione</option>
@@ -98,7 +141,7 @@ export default function RoomConfig(props) {
                     </option>
                   ))}
               </select>
-            </div>
+            </div> */}
           </Col>
         </Row>
       )}
@@ -106,14 +149,20 @@ export default function RoomConfig(props) {
       <Row style={{ marginBottom: 24 }}>
         <Col span={24}>
           {!hasVideoconference ? (
-            <div className='control'>
+            <Form.Item label={'Ingrese id de videoconferencia'}>
+              <Input type='number' name='meeting_id' onChange={handleChange} value={meeting_id} />
+            </Form.Item>
+            /*<div className='control'>
               <label className='label'>Ingrese id de videoconferencia</label>
               <input type='number' name='meeting_id' onChange={handleChange} value={meeting_id} />
-            </div>
+            </div>*/
           ) : (
             <div className='control'>
-              <label className='label'>Id de videoconferencia</label>
-              <>{meeting_id}</>
+              <Form.Item label={'Id de videoconferencia'}>
+                {meeting_id}
+              </Form.Item>
+              {/* <label className='label'>Id de videoconferencia</label>
+              <>{meeting_id}</> */}
             </div>
           )}
         </Col>
@@ -121,10 +170,13 @@ export default function RoomConfig(props) {
       {requiresCreateRoom && host_name !== null && (
         <Row style={{ marginBottom: 24 }}>
           <Col span={24}>
-            <div className='control'>
+            <Form.Item label={'Host'}>
+              <p>{host_name}</p>
+            </Form.Item>
+            {/* <div className='control'>
               <label className='label'>Host</label>
               <p>{host_name}</p>
-            </div>
+            </div> */}
           </Col>
         </Row>
       )}
@@ -134,22 +186,31 @@ export default function RoomConfig(props) {
           <>
             {requiresCreateRoom && (
               <Col span={16}>
-                <button onClick={createZoomRoom} className='button is-primary'>
+                <Button onClick={createZoomRoom} type='primary'>
                   Crear transmisión
-                </button>
+                </Button>
+               {/*  <button onClick={createZoomRoom} className='button is-primary'>
+                  Crear transmisión
+                </button> */}
               </Col>
             )}
             <Col span={8}>
-              <button onClick={handleClick} className='button is-primary'>
+              <Button onClick={handleClick} type='primary'>
                 Guardar
-              </button>
+              </Button>
+              {/* <button onClick={handleClick} className='button is-primary'>
+                Guardar
+              </button> */}
             </Col>
           </>
         ) : (
           <Col span={16}>
-            <button onClick={deleteZoomRoom} className='button is-danger'>
+            <Button onClick={deleteZoomRoom} danger>
               Eliminar transmisión
-            </button>
+            </Button>
+            {/* <button onClick={deleteZoomRoom} className='button is-danger'>
+              Eliminar transmisión
+            </button> */}
           </Col>
         )}
       </Row>

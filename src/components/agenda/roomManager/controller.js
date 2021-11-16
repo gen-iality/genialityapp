@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Switch, Popover, Avatar, Empty, Image, Alert } from 'antd';
+import { Card, Row, Col, Switch, Popover, Avatar, Empty, Image, Alert, Select, Form } from 'antd';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import Header from '../../../antdComponents/Header';
 import Table from '../../../antdComponents/Table';
 import { getColumnSearchProps } from '../../speakers/getColumnSearch';
 import { firestore } from '../../../helpers/firebase';
+
+const { Option } = Select;
 
 export default function RoomController(props) {
   const {
@@ -110,7 +112,15 @@ export default function RoomController(props) {
       <Card>
         <Row style={{ padding: '8px 0px' }}>
           <Col span={24}>
-            <label className='label'>Estado de videoconferencia</label>
+            <Form.Item label={'Estado de videoconferencia'}>
+              <Select defaultValue={roomStatus} onChange={handleRoomState}>
+                <Option value=''>Sin Estado</Option>
+                <Option value='open_meeting_room'>Conferencia Abierta</Option>
+                <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
+                <Option value='ended_meeting_room'>Conferencia Terminada</Option>
+              </Select>
+            </Form.Item>
+            {/* <label className='label'>Estado de videoconferencia</label>
             <div className='select is-primary'>
               <select defaultValue={roomStatus} onChange={handleRoomState}>
                 <option value=''>Sin Estado</option>
@@ -118,7 +128,22 @@ export default function RoomController(props) {
                 <option value='closed_meeting_room'>Conferencia no Iniciada</option>
                 <option value='ended_meeting_room'>Conferencia Terminada</option>
               </select>
-            </div>
+            </div> */}
+
+            <Form.Item label={'Habilitar Juegos'}>
+              <Switch
+                checked={games}
+                onChange={(checked) => {
+                  handleTabsController(checked, 'games'), setShowavailableGames(!showavailableGames);
+                }}
+              />
+            </Form.Item>
+            {/* <Form.Item label={'Habilitar Chat'}>
+              <Switch checked={chat} onChange={(checked) => handleTabsController(checked, 'chat')} />
+            </Form.Item> */}
+            {/* <Form.Item label={'Habilitar Encuestas'}>
+              <Switch checked={surveys} onChange={(checked) => handleTabsController(checked, 'surveys')} />
+            </Form.Item> */}
           </Col>
         </Row>
 
@@ -138,7 +163,7 @@ export default function RoomController(props) {
             <Switch checked={surveys} onChange={(checked) => handleTabsController(checked, 'surveys')} />
           </Col>
         </Row> */}
-        <Row style={{ padding: '8px 0px' }}>
+        {/* <Row style={{ padding: '8px 0px' }}>
           <Col xs={12} lg={8}>
             Habilitar Juegos
           </Col>
@@ -150,7 +175,7 @@ export default function RoomController(props) {
               }}
             />
           </Col>
-        </Row>
+        </Row> */}
         {showavailableGames && (
           <>
             {updateMensaje && (
