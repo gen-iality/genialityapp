@@ -15,6 +15,7 @@ const Header = ( props ) => {
     remove, //método para eliminar
     save, //boolean, para que aparezca el botón de guardar
     saveMethod, //viene el método para guardar
+    saveName,
     back, //boolean, permite aparecer el icono para volver atrás
     form, //si viene, es para poder saber sí el botón de guardar colocarlo como "submit"
     extra, //código adicional de alguna acción fuera de la estructura en el header
@@ -79,7 +80,7 @@ const Header = ( props ) => {
                 size="middle"
                 htmlType={form ? 'submit' : 'button'}
               >
-                {'Guardar'}
+                {saveName ? saveName : 'Guardar'}
               </Button>
             )
           }

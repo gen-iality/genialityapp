@@ -884,13 +884,6 @@ class ListEventUser extends Component {
                 </Select>
               </Col>
               <Col>
-                <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>
-                  <Button type='primary' icon={<UploadOutlined />}>
-                    Importar usuarios
-                  </Button>
-                </Link>
-              </Col>
-              <Col>
                 {usersReq.length > 0 && (
                   <Button type='primary' icon={<DownloadOutlined />} onClick={this.exportFile}>
                     Exportar
@@ -898,8 +891,15 @@ class ListEventUser extends Component {
                 )}
               </Col>
               <Col>
+                <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>
+                  <Button type='primary' icon={<UploadOutlined />}>
+                    Importar usuarios
+                  </Button>
+                </Link>
+              </Col>
+              <Col>
                 <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addUser}>
-                  {'Agregar'}
+                  {'Agregar Usuario'}
                 </Button>
               </Col>
             </Row>

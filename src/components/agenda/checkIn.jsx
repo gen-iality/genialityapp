@@ -562,10 +562,10 @@ class CheckAgenda extends Component {
               </Col>
               <Col>
                 <Button
-                  onClick={this.addUser}
+                  onClick={this.exportFile}
                   type='primary'
-                  icon={<PlusCircleOutlined />}>
-                  {'Agregar Usuario'}
+                  icon={<DownloadOutlined />}>
+                  {'Exportar'}
                 </Button>
               </Col>
               <Col>
@@ -580,10 +580,10 @@ class CheckAgenda extends Component {
               </Col>
               <Col>
                 <Button
-                  onClick={this.exportFile}
+                  onClick={this.addUser}
                   type='primary'
-                  icon={<DownloadOutlined />}>
-                  {'Exportar'}
+                  icon={<PlusCircleOutlined />}>
+                  {'Agregar Usuario'}
                 </Button>
               </Col>
             </Row>
