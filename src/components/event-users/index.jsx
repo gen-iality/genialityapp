@@ -561,6 +561,7 @@ class ListEventUser extends Component {
   };
 
   openEditModalUser = (item) => {
+<<<<<<< HEAD
     html.classList.add('is-clipped');
     console.log('SELECTED ITEM==>', item);
     item = {
@@ -568,6 +569,10 @@ class ListEventUser extends Component {
       checked_in: item.properties?.checked_in || item.checked_in,
       checkedin_at: item.properties?.checkedin_at || item.checkedin_at,
     };
+=======
+    html.classList.add('is-clipped');    
+    item={...item,checked_in:item.properties?.checked_in || item.checked_in,checkedin_at:item.properties?.checkedin_at || item.checkedin_at}
+>>>>>>> c0c278f984856d9e62f30a1991051ca82c4870d6
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
 

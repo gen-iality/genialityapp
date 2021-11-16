@@ -27,13 +27,14 @@ export function CurrentEventProvider({ children }) {
       let dataevent;
       switch (type) {
         case 'id':
-          eventGlobal = await EventsApi.getOne(event_id || event);
+          eventGlobal = await EventsApi.getOne(event_id);
           dataevent = { status: 'LOADED', value: eventGlobal, nameEvent: event_id || event };
           break;
 
         case 'name':
           eventGlobal = await EventsApi.getOneByNameEvent(eventNameFormated);
           dataevent = { status: 'LOADED', value: eventGlobal.data[0], nameEvent: event_name };
+          console.log("evne", eventGlobal.data[0])
           break;
       }
       setEventContext(dataevent);
@@ -44,6 +45,7 @@ export function CurrentEventProvider({ children }) {
     } else if (event_name) {
       fetchEvent('name');
     }
+
   }, [event_id, event_name, event]);
 
   return (
