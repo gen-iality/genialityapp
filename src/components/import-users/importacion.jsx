@@ -96,14 +96,15 @@ class Importacion extends Component {
             </Col>
           ))}
         </Row>
-        <Row justify='center' wrap gutter={[8, 8]}>
+        <br />
+        <Row justify='center' wrap gutter={[16, 16]}>
           <Col>
             <Dropzone onDrop={this.handleXlsFile} accept='.xls,.xlsx' className='zone'>
               <Button type='primary' icon={<UploadOutlined />}>Importar Excel</Button>
             </Dropzone>
           </Col>
           <Col>
-            <Button type='link' icon={<DownloadOutlined />}>
+            <Button type='link' icon={<DownloadOutlined />} onClick={this.downloadExcel}>
               Descargar Template
             </Button>
           </Col>

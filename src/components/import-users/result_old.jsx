@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import Async from 'async';
 import { Actions } from '../../helpers/request';
-import { Row, Col, Tag, Tabs, Table } from 'antd';
-
-const { TabPane } = Tabs;
-const { Column } = Table;
 
 class Result extends Component {
   constructor(props) {
@@ -151,78 +147,72 @@ class Result extends Component {
     const data = [notok, ok];
     return (
       <React.Fragment>
-        <Row justify='space-between' wrap>
-          <Col>
-            <Tag>{total}</Tag>
-            <span>{'Total'}</span>
-          </Col>
-          <Col>
-            <Tag color='#1cdcb7'>{saved}</Tag>
-            <span>{'Importados'}</span>
-          </Col>
-          <Col>
-            <Tag color='#ff3860'>{fails}</Tag>
-            <span>{'Fallidos'}</span>
-          </Col>
-          <Col>
-            <Tag color='#ffdd57'>{updated}</Tag>
-            <span>{'Actualizados'}</span>
-          </Col>
-        </Row>
+        <div className='columns is-mobile is-gapless'>
+          <div className='column'>
+            <div className='tags'>
+              <span className='tag is-size-7'>{total}</span>
+              <span className='tag is-white is-size-7'>Total</span>
+            </div>
+          </div>
+          <div className='column'>
+            <div className='tags'>
+              <span className='tag is-primary is-size-7'>{saved}</span>
+              <span className='tag is-white is-size-7'>Importados</span>
+            </div>
+          </div>
+          <div className='column'>
+            <div className='tags'>
+              <span className='tag is-danger is-size-7'>{fails}</span>
+              <span className='tag is-white is-size-7'>Fallidos</span>
+            </div>
+          </div>
+          <div className='column'>
+            <div className='tags'>
+              <span className='tag is-warning is-size-7'>{updated}</span>
+              <span className='tag is-white is-size-7'>Actualizados</span>
+            </div>
+          </div>
+        </div>
         {total > 0 && (
           <React.Fragment>
-            <Tabs defaultActiveKey='0'>
-              <TabPane tab='Incorrectos' key='0'>
-                <Table
-                  size='small'
-                  rowKey='index'
-                  dataSource={data[0]}
-                  pagination
-                  /* scroll={{ x: 2500 }} */
-                >
-                  <Column
-                    title={extraFields[0].name}
-                    dataIndex={extraFields[0].name}
-                    ellipsis={true}
-                  />
-                  <Column
-                    title={extraFields[1].name}
-                    dataIndex={extraFields[1].name}
-                    ellipsis={true}
-                  />
-                  <Column
-                    title='Estado'
-                    dataIndex='status'
-                    ellipsis={true}
-                  />
-                </Table>
-              </TabPane>
-              <TabPane tab='Correctos' key='1'>
-                <Table
-                  size='small'
-                  rowKey='index'
-                  dataSource={data[1]}
-                  pagination
-                  /* scroll={{ x: 2500 }} */
-                >
-                  <Column
-                    title={extraFields[0].name}
-                    dataIndex={extraFields[0].name}
-                    ellipsis={true}
-                  />
-                  <Column
-                    title={extraFields[1].name}
-                    dataIndex={extraFields[1].name}
-                    ellipsis={true}
-                  />
-                  <Column
-                    title='Estado'
-                    dataIndex='status'
-                    ellipsis={true}
-                  />
-                </Table>
-              </TabPane>
-            </Tabs>
+            <div className='tabs is-fullwidth'>
+              <ul>
+                <li
+                  className={`${step === 0 ? 'is-active' : ''}`}
+                  onClick={() => {
+                    this.setState({ step: 0 });
+                  }}>
+                  <a>Incorrectos</a>
+                </li>
+                <li
+                  className={`${step === 1 ? 'is-active' : ''}`}
+                  onClick={() => {
+                    this.setState({ step: 1 });
+                  }}>
+                  <a>Correctos</a>
+                </li>
+              </ul>
+            </div>
+            <table className='table def is-fullwidth is-striped'>
+              <thead>
+                <tr>
+                  <th>{extraFields[0].name}</th>
+                  <th>{extraFields[1].name}</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data[step].map((item, key) => {
+                  return (
+                    <tr key={key}>
+                      <td>{item[extraFields[0].name]}</td>
+                      <td>{item[extraFields[1].name]}</td>
+                      <td>{item.status}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </React.Fragment>
         )}
       </React.Fragment>
