@@ -166,9 +166,9 @@ class Speakers extends Component {
                     {speakersWithCategory.length && (
                       <>
                         {speakersWithCategory[category.order].length && (
-                          <Row wrap gutter={[30, 30]} >
+                          <Row wrap gutter={[16, 16]} >
                             {speakersWithCategory[category.order].map((speaker, key) => (
-                              <Col key={key}>
+                              <Col key={key} xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
                                 {speaker.published && (
                                   <>
                                     <div
@@ -250,11 +250,11 @@ class Speakers extends Component {
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
         <div style={{padding: '40px'}}>
-          <Row wrap gutter={[30, 30]}>
+          <Row wrap gutter={[16, 16]}>
             {/* Mapeo de datos para mostrar los Speakers */}
             {speakersWithoutCategory.length &&
               speakersWithoutCategory.map((speaker, key) => (
-                <Col key={key}>
+                <Col key={key} xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
                   {speaker.published && (
                     <Card
                       onClick={() => {
