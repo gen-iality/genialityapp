@@ -708,6 +708,7 @@ class AgendaEdit extends Component {
                     options={this.state.days}
                     /* style={{ width: '100%' }} */
                     defaultValue={date}
+                    value={date}
                     onChange={(value) => this.handleChangeDate(value, 'date')}
                   />
                 </Form.Item>
@@ -759,7 +760,12 @@ class AgendaEdit extends Component {
                 <Form.Item label={'Espacio'}>
                   <Row wrap gutter={[8, 8]}>
                     <Col span={23}>
-                      <SelectAntd name={'space_id'} defaultValue={space_id} onChange={(e) => this.handleChange(e, 'space_id')}>
+                      <SelectAntd 
+                        name={'space_id'} 
+                        defaultValue={space_id} 
+                        /* value={space_id}  */
+                        onChange={(e) => this.handleChange(e, 'space_id')}
+                      >
                         <Option value={''}>Seleccione un lugar/salón ...</Option>
                         {spaces.map((space) => (
                           <Option key={space.value} value={space.value}>
