@@ -62,7 +62,7 @@ const CMS = (props) => {
     } else {
       setList(data);
     }
-    console.log(list);
+    /* console.log(list); */
     setLoading(false);
   };
 
