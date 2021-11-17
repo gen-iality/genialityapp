@@ -36,14 +36,18 @@ const AttendeList = function(props) {
     let ordenadousers = [];
 
     Object.keys(attendeeList).map((key) => {
-      if (attendeeListPresence[key]) {
+      if (attendeeListPresence[key]!=undefined || attendeeListPresence[key]!=null) {
         if (attendeeList[key].properties) {
           let attendeProfile = {
             uid: attendeeList[key].user !== null && attendeeList[key].user.uid,
             idattendpresence: key,
             iduser: attendeeList[key].account_id,
-            name: attendeeList[key].properties?.name ? attendeeList[key].properties.name : '',
-            names: attendeeList[key].properties?.names ? attendeeList[key].properties?.names : '',
+            name: attendeeList[key].properties?.name
+              ? attendeeList[key].properties.name
+              : attendeeList[key].properties?.names,
+            names: attendeeList[key].properties?.names
+              ? attendeeList[key].properties?.names
+              : attendeeList[key].properties?.name,
             status: attendeeListPresence[key]
               ? attendeeListPresence[key].state
               : attendeeListPresence[key].last_changed
@@ -60,6 +64,10 @@ const AttendeList = function(props) {
                   )
                 ),
           };
+
+          console.log("attendeProfile",attendeProfile)
+
+
           if (attendeProfile.status === 'online') {
             ordenadousers.unshift(attendeProfile);
           } else if (attendeProfile.status === 'offline') {
@@ -109,7 +117,6 @@ const AttendeList = function(props) {
     setHasMore(true);
   };
 
-  const loader = <div className='loader'>Cargando ...</div>;
 
   return (
     <InfiniteScroll
