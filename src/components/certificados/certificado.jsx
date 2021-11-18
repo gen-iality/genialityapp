@@ -50,11 +50,10 @@ const Certificado = (props) => {
       getOne();
     }
     getRoles();
-  }, []);
+  }, [locationState.edit]);
 
   const getOne = async () => {
     const data = await CertsApi.getOne(locationState.edit);
-    console.log(data, 'dataCert');
     if(!data.content && data.content === '<p><br></p>') {
       setCertificado({...data, content: initContent});
     }
@@ -156,14 +155,12 @@ const Certificado = (props) => {
   }
 
   const onChangeRol = async (e) => {
-    console.log(e, 'e');
     setRol(roles.find(rol => rol._id === e));
-    console.log(rol, 'rol', roles.find(rol => rol._id === e));
+    setCertificado({...certificado, rol: roles.find(rol => rol._id === e)});
     setCertificado({...certificado, rol: roles.find(rol => rol._id === e)});
   }
 
   const chgTxt = (content) => {
-    console.log(content);
     let contents = content;
     if(contents === '<p><br></p>'){
       contents = initContent;
@@ -177,7 +174,7 @@ const Certificado = (props) => {
   const handleImage = (e) => {
     const file = e.file;
     if (file) {
-      console.log(window.URL.createObjectURL(file.originFileObj));
+      /* console.log(window.URL.createObjectURL(file.originFileObj)); */
       //Si la imagen cumple con el formato se crea el URL para mostrarlo
       setCertificado({...certificado, imageFile: window.URL.createObjectURL(file.originFileObj)})
       //Se crea un elemento Image para convertir la image en Base64 y tener el tipo y el formato
@@ -218,24 +215,24 @@ const Certificado = (props) => {
             value = rolName;
           } else value = oneUser.properties[item.value];
           if(item.tag){
-            content = content.replace(`[${item.tag}]`, value);
+            content = content.replace(`[${item?.tag}]`, value);
           }
         });
         setPreviewCert(content);
-        const body = {content: previewCert, image: certificado.imageData.data ? certificado.imageData.data : certificado.imageData};
+        const body = {content: content, image: certificado.imageData.data ? certificado.imageData.data : certificado.imageData};
         CertsApi.generateCert(body).then((file) => {
-          console.log(file, 'file');
           const blob = new Blob([file.blob], { type: file.type, charset: 'UTF-8' });
           // IE doesn't allow using a blob object directly as link href
           // instead it is necessary to use msSaveOrOpenBlob
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             window.navigator.msSaveOrOpenBlob(blob);
-            return;
+            /* return; */
           }
           const data = window.URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.dataType = 'json';
           link.href = data;
+          /* link.target = '_blank'; */
           link.download = `certificado${certificado.name}.pdf`;
           link.dispatchEvent(new MouseEvent('click'));
           setTimeout(() => {
