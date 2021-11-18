@@ -118,13 +118,14 @@ class DashboardEvent extends Component {
       totalOpened = 0,
       totalSent = 0,
       totalBounced = 0;
-    list.length>0 && list.map((m, index) => {
-      totalClicked += m.total_clicked ? m.total_clicked : 0;
-      totalDeliverd += m.total_delivered ? m.total_delivered : 0;
-      totalOpened += m.total_opened ? m.total_opened : 0;
-      totalSent += m.total_sent ? m.total_sent : 0;
-      totalBounced += m.total_bounced ? m.total_bounced : 0;
-    });
+    list.length > 0 &&
+      list.map((m, index) => {
+        totalClicked += m.total_clicked ? m.total_clicked : 0;
+        totalDeliverd += m.total_delivered ? m.total_delivered : 0;
+        totalOpened += m.total_opened ? m.total_opened : 0;
+        totalSent += m.total_sent ? m.total_sent : 0;
+        totalBounced += m.total_bounced ? m.total_bounced : 0;
+      });
     this.setState({ totalSent, totalClicked, totalDeliverd, totalBounced, totalOpened });
   }
 
@@ -198,25 +199,23 @@ class DashboardEvent extends Component {
       const iframeUrl = `${ApiUrl}/es/event/${eventId}/dashboard?evius_token=${evius_token}`;
       this.setState({ iframeUrl, loading: false });
       totalsMetricasMail(this.props.eventId).then((datametricsMail) => {
-        totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {          
+        totalsMetricasEventsDetails(this.props.eventId).then((dataMetricsGnal) => {
           totalsMetricasActivityDetails(this.props.eventId).then((dataMetricsActivity) => {
             if (dataMetricsActivity.length > 0) {
-            
               this.setState({
                 totalmails: datametricsMail,
                 metricsActivity: dataMetricsActivity,
                 metricsGnal: dataMetricsGnal,
-              });             
+              });
               this.obtenerMetricas(dataMetricsActivity);
               this.totalsMails(datametricsMail);
               this.fetchDataMails().then((resp) => {
                 this.setState(
                   {
                     mailsDetails: resp,
-                    loadingMetrics :false
+                    loadingMetrics: false,
                   },
                   () => {
-                   
                     this.totalsMails(datametricsMail);
                     this.graficRegistros();
                     this.graficAttendees();
@@ -476,7 +475,13 @@ class DashboardEvent extends Component {
                         groupSeparator={'.'} // determina el string usado para separar la unidades de mil de los valores
                         valueStyle={{ fontSize: '36px' }}
                         title='Duración promedio de un usuario'
-                        value={this.state.metricsGnal ? !isNaN(this.state.metricsGnal.avg_time)?this.state.metricsGnal.avg_time: 0:0}
+                        value={
+                          this.state.metricsGnal
+                            ? !isNaN(this.state.metricsGnal.avg_time)
+                              ? this.state.metricsGnal.avg_time
+                              : 0
+                            : 0
+                        }
                         prefix={<FieldTimeOutlined />}
                         suffix='min'
                       />
@@ -585,7 +590,7 @@ class DashboardEvent extends Component {
                       <Statistic
                         valueStyle={{ fontSize: '36px', textAlign: 'center' }}
                         title={<h3 style={{ textAlign: 'center' }}>CAMPAÑAS</h3>}
-                        value={this.state.totalmails ?this.state.totalmails.length:0}
+                        value={this.state.totalmails ? this.state.totalmails.length : 0}
                       />
                     </Card>
                   </Row>
@@ -648,7 +653,7 @@ class DashboardEvent extends Component {
                     <Button
                       shape='round'
                       icon={<NotificationOutlined />}
-                      onClick={() => this.props.history.push(`/event/${this.props.eventId}/messages`)}>
+                      onClick={() => this.props.history.push(`/eventadmin/${this.props.eventId}/messages`)}>
                       Ver correos
                     </Button>
                   </Row>
@@ -665,22 +670,22 @@ class DashboardEvent extends Component {
             </Col>
           </Row>
           <Row justify='start'>
-          <img
-            style={{ height: '200px', width: '1920px', objectFit: 'contain' }}
-            src={
-              'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MetricsBanner%2Fcabezote-sin-texto.jpg?alt=media&token=67e3e7cb-9c5f-489b-9eb0-e3526e204e34' ||
-              'http://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
-            }
-            alt='evius'
-          />
-        </Row>
+            <img
+              style={{ height: '200px', width: '1920px', objectFit: 'contain' }}
+              src={
+                'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MetricsBanner%2Fcabezote-sin-texto.jpg?alt=media&token=67e3e7cb-9c5f-489b-9eb0-e3526e204e34' ||
+                'http://via.placeholder.com/970x250/50D3C9/FFFFFF?text=Banner%20evius'
+              }
+              alt='evius'
+            />
+          </Row>
         </div>
 
         <ReactToPrint
           pageStyle={pageStyle}
           onBeforeGetContent={() => this.displayButton(this)}
           onAfterPrint={() => this.visibleButton(this)}
-          documentTitle={'Métricas del evento ' + this.props.eventName }
+          documentTitle={'Métricas del evento ' + this.props.eventName}
           trigger={() => {
             return (
               <Row justify='end' style={{ paddingTop: '10px' }}>
@@ -697,7 +702,6 @@ class DashboardEvent extends Component {
           }}
           content={() => this.componentRef}
         />
-        
       </>
     ) : (
       <Row justify='center' align='middle'>
