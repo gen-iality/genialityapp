@@ -648,7 +648,7 @@ class DashboardEvent extends Component {
                     <Button
                       shape='round'
                       icon={<NotificationOutlined />}
-                      onClick={() => this.props.history.push(`/event/${this.props.eventId}/messages`)}>
+                      onClick={() => this.props.history.push(`/eventadmin/${this.props.eventId}/messages`)}>
                       Ver correos
                     </Button>
                   </Row>
