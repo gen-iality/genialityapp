@@ -206,7 +206,7 @@ class AgendaEdit extends Component {
     categories = handleSelect(categories);
     types = handleSelect(types);
 
-    if (state.edit) {
+    if (state?.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
 
       this.setState({
@@ -215,6 +215,7 @@ class AgendaEdit extends Component {
         join_url: info.join_url,
         platform: info.platform || event.event_platform,
         info: info,
+        space_id: info.space_id,
         video: info.video,
         name_host: info.name_host,
         date_start_zoom: info.date_start_zoom,
@@ -264,13 +265,16 @@ class AgendaEdit extends Component {
   };
 
   //FN general para cambio en input
-  handleChange = async (e, nameS) => {
-    let { name } = e.target ? e.target : nameS;
-    let { value } = e.target ? e.target : e;
-
+  handleChange = async (value, name) => {
+    if (!name) {
+      name = value.target.name;
+      value = value.target.value;
+    }
     if (name === 'requires_registration') {
       value = e.target.checked;
     }
+
+    console.log(name, value);
     // BACKLOG -> porque host_id se setea siempre que se setea un estado
     this.setState({ [name]: value });
   };
@@ -380,7 +384,7 @@ class AgendaEdit extends Component {
           });
 
           for (let i = 0; i < selected_document?.length; i++) {
-            await DocumentsApi.editOne(event._id, data, selected_document[i]._id);
+            await DocumentsApi.editOne(data, selected_document[i]._id, event._id);
           }
         } else {
           const agenda = await AgendaApi.create(event._id, info);
@@ -760,12 +764,11 @@ class AgendaEdit extends Component {
                 <Form.Item label={'Espacio'}>
                   <Row wrap gutter={[8, 8]}>
                     <Col span={23}>
-                      <SelectAntd 
-                        name={'space_id'} 
-                        defaultValue={space_id} 
+                      <SelectAntd
+                        name={'space_id'}
+                        value={space_id}
                         /* value={space_id}  */
-                        onChange={(e) => this.handleChange(e, 'space_id')}
-                      >
+                        onChange={(e) => this.handleChange(e, 'space_id')}>
                         <Option value={''}>Seleccione un lugar/salón ...</Option>
                         {spaces.map((space) => (
                           <Option key={space.value} value={space.value}>

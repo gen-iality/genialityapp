@@ -38,6 +38,13 @@ class Home extends Component {
     await this.fetchEvent('next');
   }
 
+  FriendLyUrl = (url) => {
+    let slug = url?.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ');
+    slug = url?.replace(/^\s+|\s+$/gm, '');
+    slug = url?.replace(/\s+/g, '-');
+    return slug;
+  };
+
   async fetchEvent(type) {
     try {
       this.setState({ events: [] });

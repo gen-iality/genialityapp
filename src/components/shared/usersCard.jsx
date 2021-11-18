@@ -127,7 +127,7 @@ function UsersCard(props) {
                   // whiteSpace: 'break-spaces'
                 }}
                 key='list-loadmore-edit'>
-                {names || name}
+                {name || names}
               </Text>
             </Popover>
           ) : (
@@ -140,7 +140,7 @@ function UsersCard(props) {
                 // whiteSpace: 'break-spaces'
               }}
               key='list-loadmore-edit'>
-              {names || name}
+              {name || names}
             </Text>
           )}
         </>
