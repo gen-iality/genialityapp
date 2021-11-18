@@ -78,7 +78,7 @@ class EmailPrev extends Component {
                         <i className="fas fa-map-marker-alt fa-3x" />
                     </span>
                     <span>
-                        Ubicación del evento<br />{this.props.event.location.FormattedAddress}
+                        Ubicación del evento<br />{this.props?.event?.location?.FormattedAddress}
                     </span>
                 </div>
                 <p>
