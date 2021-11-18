@@ -3,6 +3,7 @@ import { AgendaApi } from '../../helpers/request';
 import CMS from '../newComponent/CMS';
 import { getColumnSearchProps } from '../speakers/getColumnSearch';
 import { Tag } from 'antd';
+import moment from 'moment';
 
 const Agenda = (props) => {
   let [columnsData, setColumnsData] = useState({});
@@ -11,50 +12,71 @@ const Agenda = (props) => {
     {
       title: 'Fecha y Hora Inicio',
       dataIndex: 'datetime_start',
-      render(record, key) {
-        <p key={key}>{record}</p>;
-      },
+      ellipsis: true,
       ...getColumnSearchProps('datetime_start', columnsData),
+      render(record, key) {
+        return (
+          <div>{moment(record).format('DD/MM/YYYY')}</div>
+        )
+      },
     },
     {
       title: 'Fecha y Hora Fin',
       dataIndex: 'datetime_end',
-      render(record, key) {
-        <p key={key}>{record}</p>;
-      },
+      ellipsis: true,
       ...getColumnSearchProps('datetime_end', columnsData),
+      render(record, key) {
+        return (
+          <div>{moment(record).format('DD/MM/YYYY')}</div>
+        )
+      },
     },
     {
       title: 'Actividad',
       dataIndex: 'name',
+      ellipsis: true,
+      sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps('name', columnsData),
     },
     {
       title: 'Categorias',
       dataIndex: 'activity_categories',
-      ...getColumnSearchProps('activity_categories', columnsData),
+      ellipsis: true,
       render(record) {
-        record.map((item, key) => (
-          <Tag key={key} color={item.color}>
-            {item.name}
-          </Tag>
-        ));
+        return (
+          <>
+            {record.map((item, key) => (
+              <Tag key={key} color={item.color}>
+                {item.name}
+              </Tag>
+            ))}
+          </>
+        )
       },
     },
     {
       title: 'Espacios',
       dataIndex: 'space',
-      ...getColumnSearchProps('space', columnsData),
       render(record) {
-        record !== null && <p>{record.name}</p>;
+        return (
+          <>
+            <p>{record?.name}</p>
+          </>
+        )
       },
     },
     {
       title: 'Conferencistas',
       dataIndex: 'hosts',
-      ...getColumnSearchProps('hosts', columnsData),
+      ellipsis: true,
       render(record) {
-        record.map((item, key) => <p key={key}>{item.name}</p>);
+        return (
+          <>
+            {
+              record.map((item, key) => <Tag key={key}>{item.name}</Tag>)
+            }
+          </>
+        )
       },
     },
   ];
@@ -76,6 +98,7 @@ const Agenda = (props) => {
       actions
       search
       setColumnsData={setColumnsData}
+      scroll={{x: 1200}}
     />
   );
 };

@@ -274,7 +274,7 @@ class AgendaEdit extends Component {
       value = e.target.checked;
     }
 
-    console.log(name, value);
+    /* console.log(name, value); */
     // BACKLOG -> porque host_id se setea siempre que se setea un estado
     this.setState({ [name]: value });
   };
@@ -711,7 +711,7 @@ class AgendaEdit extends Component {
                     name='date'
                     options={this.state.days}
                     /* style={{ width: '100%' }} */
-                    defaultValue={date}
+                    /* defaultValue={date} */
                     value={date}
                     onChange={(value) => this.handleChangeDate(value, 'date')}
                   />
@@ -937,6 +937,7 @@ class AgendaEdit extends Component {
                         <Button icon={<SettingOutlined />} />
                       </Link>
                     </Col>
+                    <br /><br /><br /><br /><br />
                   </Row>
                 </Form.Item>
               </Col>
