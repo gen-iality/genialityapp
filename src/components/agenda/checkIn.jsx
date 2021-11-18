@@ -9,7 +9,7 @@ import CheckSpace from '../event-users/checkSpace';
 import XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import { Activity, RolAttApi } from '../../helpers/request';
-import { Table as TableA, Input, Button, Space, Row, Col, Tooltip, Checkbox } from 'antd';
+import { Table as TableA, Input, Button, Space, Row, Col, Tooltip, Checkbox, Tag } from 'antd';
 import { SearchOutlined, UserAddOutlined, PlusCircleOutlined, DownloadOutlined, UploadOutlined, SendOutlined, QrcodeOutlined, EditOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import UserModal from '../modal/modalUser';
@@ -526,24 +526,28 @@ class CheckAgenda extends Component {
         <Header 
           title={`CheckIn: ${this.props.location.state.name ? this.props.location.state.name : this.props.location.state.item.name}`}
           back
-          description={(
-            <Row gutter={[8, 8]} wrap>
-              <Col>
-                Total: {total}
-              </Col>
-              <Col>
-                Ingresados: {checkIn}
-              </Col>
-            </Row>
-          )}
         />
+
+        <Row gutter={[8, 8]} wrap>
+          <Col>
+            <Tag>
+              <small>Total: {total}</small>
+            </Tag>
+          </Col>
+          <Col>
+            <Tag>
+              <small>Ingresados: {checkIn}</small>
+            </Tag>
+          </Col>
+        </Row>
+
         <Table 
           header={columnsTable}
           list={usersData}
           pagination
           scroll={{ x: 2500 }}
           titleTable={(
-            <Row gutter={[8, 8]} wrap>
+            <Row gutter={[8, 8]} wrap justify='end'>
               <Col>
                 <Button
                   onClick={this.checkModal}

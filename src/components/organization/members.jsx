@@ -3,7 +3,7 @@ import { OrganizationApi, RolAttApi } from '../../helpers/request';
 import { FormattedDate, FormattedTime } from 'react-intl';
 /** export Excel */
 import { useHistory } from 'react-router-dom';
-import { Table, Typography, Button, Row, Col } from 'antd';
+import { Table, Typography, Button, Row, Col, Tag } from 'antd';
 import { UserAddOutlined, DownloadOutlined, LoadingOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { columns } from './tableColums/membersTableColumns';
 import ModalMembers from '../modal/modalMembers';
@@ -104,13 +104,29 @@ function OrgMembers(props) {
     <>
       <Header 
         title={'Miembros'}
+        description={'Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.'}
       />
+
       <p>
         <small>
-          {' '}
-          Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.
-        </small>{' '}
+          Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+        </small>
       </p>
+
+      <p><Tag>Inscritos: {membersData.length || 0}</Tag></p>
+
+      {/* <Title
+        level={5}
+        type='secondary'
+        style={{
+          backgroundColor: '#F5F5F5',
+          textAlign: 'center',
+          borderRadius: 4,
+          paddingLeft: 10,
+          paddingRight: 10,
+        }}>
+        Inscritos: {isLoading ? <LoadingOutlined style={{ fontSize: '15px' }} /> : membersData.length}
+      </Title> */}
 
       <Table
         columns={columns(columnsData, editModalUser)}
@@ -119,51 +135,29 @@ function OrgMembers(props) {
         rowKey='index'
         pagination={false}
         loading={isLoading}
-        title={() => (
-          <Row justify='space-between'>
-            <Row justify='start'>
-              <Title
-                level={5}
-                type='secondary'
-                style={{
-                  backgroundColor: '#F5F5F5',
-                  textAlign: 'center',
-                  borderRadius: 4,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                }}>
-                Inscritos: {isLoading ? <LoadingOutlined style={{ fontSize: '15px' }} /> : membersData.length}
-              </Title>
-
-              <div>
-                <small>
-                  Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
-                </small>
-              </div>
-            </Row>
-            <Row wrap justify='end' gutter={[8, 8]}>
-              <Col>
-                { membersData.length && (
-                  <Button type='primary' icon={<DownloadOutlined />} onClick={exportFile}>
-                    Exportar
-                  </Button>
-                )}
-                {/* <ExportExcel 
-                  columns={columns(columnsData, editModalUser)} 
-                  list={membersData} 
-                  fileName={'memberReport'} 
-                /> */}
-              </Col>
-              <Col>
-                <Button 
-                  type="primary" 
-                  icon={<PlusCircleOutlined />} 
-                  onClick={addUser}
-                >
-                  {'Agregar'}
+        title={() => (  
+          <Row wrap justify='end' gutter={[8, 8]}>
+            <Col>
+              { membersData.length > 0 && (
+                <Button type='primary' icon={<DownloadOutlined />} onClick={exportFile}>
+                  Exportar
                 </Button>
-              </Col>
-            </Row>
+              )}
+              {/* <ExportExcel 
+                columns={columns(columnsData, editModalUser)} 
+                list={membersData} 
+                fileName={'memberReport'} 
+              /> */}
+            </Col>
+            <Col>
+              <Button 
+                type="primary" 
+                icon={<PlusCircleOutlined />} 
+                onClick={addUser}
+              >
+                {'Agregar'}
+              </Button>
+            </Col>
           </Row>
        )}
       />

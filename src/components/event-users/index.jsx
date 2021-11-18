@@ -740,7 +740,7 @@ class ListEventUser extends Component {
         <Header 
           title={'Check In'}
           description={`Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
-          búsqueda. ${<br/>}`}
+          búsqueda.`}
         />
 
         {disabledPersistence && (
@@ -752,49 +752,45 @@ class ListEventUser extends Component {
           </div>
         )}
 
+        {// localChanges &&
+          quantityUsersSync > 0 && localChanges === 'Local' && (
+          <Row gutter={8}>
+            <Col>
+              <p><small>Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</small></p>
+            </Col>
+          </Row>
+        )}
+
+        <Row gutter={8}>
+          <Col>
+            <p>
+              <small>Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} /></small>
+            </p>
+          </Col>
+        </Row>
+
         <Row wrap gutter={[8, 8]}>
           <Col>
-            <span>Inscritos: </span>
             <Tag>
-              {inscritos || 0}
+              <small>Inscritos: 
+              {inscritos || 0}</small> 
             </Tag>
           </Col>
           <Col>
-            <span>Participantes: </span>
             <Tag>
-              {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}
+              <small>Participantes: 
+              {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'} </small>
             </Tag>
           </Col>
           <Col>
             {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
               <>
-                <span>Asistencia por Coeficientes: </span>
                 <Tag>
-                  {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
+                  <small>Asistencia por Coeficientes: 
+                  {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}</small>
                 </Tag>
               </>
             )}
-          </Col>
-          <Col>
-            <Button type='ghost' size='small' icon={<FullscreenOutlined />} onClick={this.showModal}>
-              Expandir
-            </Button>
-          </Col>
-        </Row>
-
-        {// localChanges &&
-          quantityUsersSync > 0 && localChanges === 'Local' && (
-          <Row gutter={8}>
-            <Col>
-              <p>Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</p>
-            </Col>
-          </Row>
-        )}
-        <Row gutter={8}>
-          <Col>
-            <p>
-              Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
-            </p>
           </Col>
         </Row>
 
@@ -851,6 +847,7 @@ class ListEventUser extends Component {
             </div>
           </div>
         )}
+       
 
         <TableA 
           list={users}
@@ -859,6 +856,11 @@ class ListEventUser extends Component {
           loading={this.state.loading}
           titleTable={(
             <Row gutter={[8, 8]}>
+              <Col>
+                <Button type='ghost' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                  Expandir
+                </Button>
+              </Col>
               <Col>
                 <Select
                   name={'type-scanner'}
