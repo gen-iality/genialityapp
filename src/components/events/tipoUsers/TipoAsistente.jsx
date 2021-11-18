@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { eventTicketsApi } from '../../helpers/request';
+import { RolAttApi } from '../../../helpers/request';
 import { useHistory } from 'react-router-dom';
-import { handleRequestError } from '../../helpers/utils';
+import { handleRequestError } from '../../../helpers/utils';
 import { Row, Col, Form, Input, message, Modal, Switch } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import Header from '../../antdComponents/Header';
+import Header from '../../../antdComponents/Header';
 
 const formLayout = {
   labelCol: { span: 24 },
@@ -13,11 +13,11 @@ const formLayout = {
 
 const { confirm } = Modal;
 
-const Ticket = (props) => {
+const TipoAsistente = (props) => {
   const eventID = props.event._id;
   const locationState = props.location.state; //si viene new o edit en el state, si es edit es un id
   const history = useHistory();
-  const [ticket, setTicket] = useState({...ticket, event_id: props.event._id});
+  const [tipoAsistente, setTipoAsistente] = useState({...tipoAsistente, event_id: props.event._id});
 
   useEffect(() => {
     if (locationState.edit) {
@@ -26,14 +26,15 @@ const Ticket = (props) => {
   }, [locationState.edit]);
   
   const getOne = async () => {
-    const data = await eventTicketsApi.getOne(locationState.edit, eventID);
+    const response = await RolAttApi.getOne(eventID, locationState.edit);
+    let data = response.find((tipoAsistentes) => tipoAsistentes._id === locationState.edit);
 
-    setTicket(data);
+    setTipoAsistente(data);
   };
 
   const handleInputChange = (e) => {
-    if (ticket) {
-      setTicket({ ...ticket, title: e.target.value });
+    if (tipoAsistente) {
+      setTipoAsistente({ ...tipoAsistente, name: e.target.value });
     }
   };
 
@@ -45,14 +46,16 @@ const Ticket = (props) => {
     });
     try {
       if (locationState.edit) {
-        await eventTicketsApi.update(eventID, ticket, locationState.edit);
+        /* const data = {
+          name: tipoAsistente.name
+        } */
+        await RolAttApi.editOne(tipoAsistente, locationState.edit, eventID);
       } else {
         const data = {
-          title: ticket.title,
-          allowed_to_vote: ticket.allowed_to_vote,
+          name: tipoAsistente.name,
           event_id: eventID,
         }
-        await eventTicketsApi.create(eventID, data);
+        await RolAttApi.create(data, eventID);
       }
 
       message.destroy(loading.key);
@@ -60,7 +63,7 @@ const Ticket = (props) => {
         type: 'success',
         content: <> Información guardada correctamente!</>,
       });
-      history.push(`${props.matchUrl}/ticketsEvent`);
+      history.push(`${props.matchUrl}/tipo-asistentes`);
     } catch (e) {
       message.destroy(loading.key);
       message.open({
@@ -87,13 +90,13 @@ const Ticket = (props) => {
         onOk() {
           const onHandlerRemove = async () => {
             try {
-              await eventTicketsApi.deleteOne(locationState.edit, eventID);
+              await RolAttApi.deleteOne(locationState.edit, eventID);
               message.destroy(loading.key);
               message.open({
                 type: 'success',
                 content: <> Se eliminó la información correctamente!</>,
               });
-              history.push(`${props.matchUrl}/ticketsEvent`);
+              history.push(`${props.matchUrl}/tipo-asistentes`);
             } catch (e) {
               message.destroy(loading.key);
               message.open({
@@ -108,28 +111,18 @@ const Ticket = (props) => {
     }
   };
 
-
   return (
     <Form onFinish={onSubmit} {...formLayout}>
-      <Header title={'Ticket'} back save form remove={onRemoveId} edit={locationState.edit} />
+      <Header title={'Tipo de Asistente'} back save form remove={onRemoveId} edit={locationState.edit} />
 
       <Row justify='center' wrap gutter={18}>
         <Col>
-          <Form.Item label={'Título'} >
+          <Form.Item label={'Nombre del rol'} >
             <Input 
-              name={'title'} 
-              placeholder={'Título del ticket'} 
-              value={ticket.title} 
+              name={'name'} 
+              placeholder={'Nombre del rol'} 
+              value={tipoAsistente.name} 
               onChange={(e) => handleInputChange(e)}
-            />
-          </Form.Item>
-          <Form.Item label={'Permiso de Voto'} >
-            <Switch
-              name={'allowed_to_vote'} 
-              checked={ticket.allowed_to_vote}
-              checkedChildren='Sí'
-              unCheckedChildren='No'
-              onChange={(checked) => setTicket({...ticket, allowed_to_vote: checked})}
             />
           </Form.Item>
         </Col>
@@ -138,4 +131,4 @@ const Ticket = (props) => {
   )
 }
 
-export default Ticket
+export default TipoAsistente

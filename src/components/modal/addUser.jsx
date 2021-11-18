@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import { UsersApi, eventTicketsApi } from '../../helpers/request';
 import EventModal from '../events/shared/eventModal';
+import { Modal, Form, Input, Select, Checkbox, Button } from 'antd';
+
+const { Option } = Select;
+
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
+};
 
 class AddUser extends Component {
   constructor(props) {
@@ -36,9 +44,8 @@ class AddUser extends Component {
     this.setState({ create: true });
     try {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
-
       if (resp.message === 'OK') {
-        this.props.addToList(resp.data);
+        /* this.props.addToList(resp.data); */
         message.class = resp.status === 'CREATED' ? 'msg_success' : 'msg_warning';
         message.content = 'USER ' + resp.status;
       } else {
@@ -66,9 +73,8 @@ class AddUser extends Component {
       let target = name;
       let value = this.state.user[target];
       let input = (
-        <input
+        <Input
           {...props}
-          className='input'
           type={type}
           key={key}
           name={name}
@@ -81,63 +87,69 @@ class AddUser extends Component {
       if (type === 'boolean') {
         input = (
           <React.Fragment>
-            <input
-              name={name}
-              id={name}
-              className='is-checkradio is-primary is-rtl'
-              type='checkbox'
-              checked={value}
-              onChange={(e) => {
-                this.onChange(e, type);
-              }}
-            />
-            <label className={`label has-text-grey-light is-capitalized ${mandatory ? 'required' : ''}`} htmlFor={name}>
-              {name}
-            </label>
+            <Form.Item label={name} htmlFor={name} style={{textTransform: 'capitalize'}}>
+              <Checkbox
+                name={name}
+                id={name}
+                checked={value}
+                onChange={(e) => {
+                  this.onChange(e, type);
+                }}
+              />
+            </Form.Item>
           </React.Fragment>
         );
       }
       if (type === 'list') {
         input = m.options.map((o, key) => {
           return (
-            <option key={key} value={o.value}>
+            <Option key={key} value={o.value}>
               {o.value}
-            </option>
+            </Option>
           );
         });
         input = (
-          <div className='select'>
-            <select
-              name={name}
-              value={value}
-              onChange={(e) => {
-                this.onChange(e, type);
-              }}>
-              <option value={''}>Seleccione...</option>
-              {input}
-            </select>
-          </div>
+          <Select
+            name={name}
+            value={value}
+            onChange={(e) => {
+              this.onChange(e, type);
+            }}>
+              <Option value={''}>Seleccione...</Option>
+            {input}
+          </Select>
         );
       }
       return (
-        <div key={'g' + key} className='field'>
+        <>
+          {
+            m.type !== 'boolean' && (
+              <Form.Item label={name} htmlFor={key} key={'l' + key} style={{textTransform: 'capitalize'}}>
+                {input}
+              </Form.Item>
+            )
+          }
+        </>
+        /*<div key={'g' + key} className='field'>
           {m.type !== 'boolean' && (
             <label
-              className={`label has-text-grey-light is-capitalized ${mandatory ? 'required' : ''}`}
+              style={{textTransform: 'capitalize'}}
+              className={`label has-text-grey-light ${mandatory ? 'required' : ''}`}
               key={'l' + key}
               htmlFor={key}>
               {name}
             </label>
           )}
           <div className='control'>{input}</div>
-        </div>
+        </div>*/
       );
     });
     return formUI;
   };
 
-  onChange = (e, type) => {
-    const { value, name } = e.target;
+  onChange = (e, type, nameS) => {
+    const { value } = type !== 'select' ? e.target : e;
+    const { name } = type !== 'select' ? e.target : nameS;
     type === 'boolean'
       ? this.setState((prevState) => {
           return { user: { ...this.state.user, [name]: !prevState.user[name] } };
@@ -178,7 +190,45 @@ class AddUser extends Component {
   render() {
     const { tickets } = this.state;
     return (
-      <EventModal modal={this.props.modal} title={'Agregar invitado'} closeModal={this.props.handleModal}>
+      <>
+        <Modal 
+          title={'Agregar invitado'}
+          onCancel={this.props.handleModal}
+          visible={this.props.modal}
+          footer={[
+            <>
+              {this.state.create ? (
+                <div>Creando...</div>
+              ) : (
+                <Button type='primary' onClick={this.handleSubmit} /* disabled={this.state.valid} */>
+                  {this.state.edit ? 'Guardar' : 'Crear'}
+                </Button>
+              )}
+              <div className={'msg'}>
+                <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
+              </div>
+            </>
+          ]}
+        >
+          <Form {...formLayout}>
+            {Object.keys(this.state.user).length > 0 && this.renderForm()}
+            {tickets.length > 0 && (
+              <Form.Item label={'Tiquete'}>
+                <Select onChange={(e) => this.onChange(e, 'select', 'ticketid')} name={'ticketid'} defaultValue={''}>
+                  <Option value={''}>..Seleccione</Option>
+                  {tickets.map((item, key) => {
+                    return (
+                      <Option key={key} value={item._id}>
+                        {item.title}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            )}
+          </Form>
+        </Modal>
+        {/* <EventModal modal={this.props.modal} title={'Agregar invitado'} closeModal={this.props.handleModal}>
         <section className='modal-card-body'>
           {Object.keys(this.state.user).length > 0 && this.renderForm()}
           {tickets.length > 0 && (
@@ -213,7 +263,8 @@ class AddUser extends Component {
             <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
           </div>
         </footer>
-      </EventModal>
+      </EventModal> */}
+      </>
     );
   }
 }

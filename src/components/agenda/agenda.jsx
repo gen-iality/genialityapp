@@ -32,6 +32,7 @@ const Agenda = (props) => {
     {
       title: 'Categorias',
       dataIndex: 'activity_categories',
+      ...getColumnSearchProps('activity_categories', columnsData),
       render(record) {
         record.map((item, key) => (
           <Tag key={key} color={item.color}>
@@ -43,6 +44,7 @@ const Agenda = (props) => {
     {
       title: 'Espacios',
       dataIndex: 'space',
+      ...getColumnSearchProps('space', columnsData),
       render(record) {
         record !== null && <p>{record.name}</p>;
       },
@@ -50,6 +52,7 @@ const Agenda = (props) => {
     {
       title: 'Conferencistas',
       dataIndex: 'hosts',
+      ...getColumnSearchProps('hosts', columnsData),
       render(record) {
         record.map((item, key) => <p key={key}>{item.name}</p>);
       },

@@ -14,18 +14,11 @@ import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } 
 import EventContent from '../events/shared/content';
 import Moment from 'moment';
 import { TicketsApi } from '../../helpers/request';
-import { Button, Card, Checkbox, Col, Drawer, Image, message, Row, Statistic, Table, Typography, Tag, Select, Input, Space, Tooltip } from 'antd';
+import { Button, Card, Checkbox, Col, Drawer, Image, message, Row, Statistic, Table, Typography } from 'antd';
 
 import updateAttendees from './eventUserRealTime';
 import { Link } from 'react-router-dom';
-import { EditOutlined, FullscreenOutlined, PlusCircleOutlined, UploadOutlined, DownloadOutlined, SearchOutlined } from '@ant-design/icons';
-
-import Header from '../../antdComponents/Header';
-import TableA from '../../antdComponents/Table';
-import Highlighter from 'react-highlight-words';
-
-const { Option } = Select;
-
+import { EditOutlined, FullscreenOutlined } from '@ant-design/icons';
 const imgNotFound =
   'https://www.latercera.com/resizer/m0bOOb9drSJfRI-C8RtRL_B4EGE=/375x250/smart/arc-anglerfish-arc2-prod-copesa.s3.amazonaws.com/public/Z2NK6DYAPBHO3BVPUE25LQ22ZA.jpg';
 const { Title } = Typography;
@@ -98,22 +91,13 @@ class ListEventUser extends Component {
       configfast: {},
       isModalVisible: false,
       fieldsForm: [],
-      typeScanner: 'options'
     };
   }
 
   // eslint-disable-next-line no-unused-vars
   editcomponent = (text, item, index) => {
     return (
-      <Tooltip placement='topLeft' title='Editar'>
-        <Button 
-          type={'primary'} 
-          icon={<EditOutlined />} 
-          size='small' 
-          onClick={() => this.openEditModalUser(item)}
-        />
-      </Tooltip>
-      /* <span
+      <span
         className='icon has-text-grey action_pointer'
         data-tooltip={'Editar'}
         // eslint-disable-next-line no-unused-vars
@@ -121,7 +105,7 @@ class ListEventUser extends Component {
           this.openEditModalUser(item);
         }}>
         <EditOutlined />
-      </span> */
+      </span>
     );
   };
 
@@ -160,16 +144,7 @@ class ListEventUser extends Component {
       <p>{Moment(item.checkedin_at || item.properties.checkedin_at).format('D/MMM/YY H:mm:ss A')}</p>
     ) : (
       <div>
-        <Checkbox 
-          id={'checkinUser' + item._id}
-          disabled={item.checkedin_at}
-          name={'checkinUser' + item._id}
-          checked={item.checkedin_at || item.properties?.checkedin_at}
-          onChange={() => {
-            self.checkIn(item._id, item);
-          }}
-        />
-        {/* <Checkbox
+        <Checkbox
           className='is-checkradio is-primary is-small'
           id={'checkinUser' + item._id}
           disabled={item.checkedin_at}
@@ -181,7 +156,7 @@ class ListEventUser extends Component {
             self.checkIn(item._id, item);
           }}
         />
-        <label htmlFor={'checkinUser' + item._id} /> */}
+        <label htmlFor={'checkinUser' + item._id} />
       </div>
     );
   };
@@ -263,8 +238,6 @@ class ListEventUser extends Component {
         title: 'Ingreso',
         dataIndex: 'checkedin_at',
         key: 'checkedin_at',
-        ellipsis: true,
-        ...self.getColumnSearchProps('checkedin_at'),
         render: self.checkedincomponent,
       };
       let editColumn = {
@@ -284,8 +257,6 @@ class ListEventUser extends Component {
             title: item.label,
             dataIndex: item.name,
             key: item.name,
-            ellipsis: true,
-            ...self.getColumnSearchProps(item.name),
             render: (record, key) => {
               return item.type == 'file' ? (
                 <a target='__blank' download={item?.name} href={key[item?.name]}>
@@ -304,8 +275,6 @@ class ListEventUser extends Component {
         title: 'Rol',
         dataIndex: 'rol_id',
         key: 'rol_id',
-        ellipsis: true,
-        ...self.getColumnSearchProps('rol_id'),
         render: self.rol_component,
       };
 
@@ -313,16 +282,12 @@ class ListEventUser extends Component {
         title: 'Creado',
         dataIndex: 'created_at',
         key: 'created_at',
-        ellipsis: true,
-        ...self.getColumnSearchProps('created_at'),
         render: self.created_at_component,
       };
       let updated_at = {
         title: 'Actualizado',
         dataIndex: 'updated_at',
         key: 'updated_at',
-        ellipsis: true,
-        ...self.getColumnSearchProps('updated_at'),
         render: self.updated_at_component,
       };
       columns.push(rol);
@@ -561,8 +526,13 @@ class ListEventUser extends Component {
   };
 
   openEditModalUser = (item) => {
-    html.classList.add('is-clipped');    
-    item={...item,checked_in:item.properties?.checked_in || item.checked_in,checkedin_at:item.properties?.checkedin_at || item.checkedin_at}
+    html.classList.add('is-clipped');
+    console.log('SELECTED ITEM==>', item);
+    item = {
+      ...item,
+      checked_in: item.properties?.checked_in || item.checked_in,
+      checkedin_at: item.properties?.checkedin_at || item.checkedin_at,
+    };
     this.setState({ editUser: true, selectedUser: item, edit: true });
   };
 
@@ -621,8 +591,7 @@ class ListEventUser extends Component {
   };
 
   handleChange = (e) => {
-    console.log(e);
-    this.setState({ typeScanner: e });
+    this.setState({ typeScanner: e.target.value });
     this.checkModal();
   };
 
@@ -636,73 +605,6 @@ class ListEventUser extends Component {
   };
   hideModal = () => {
     this.setState({ isModalVisible: false });
-  };
-
-  getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          ref={(node) => {
-            this.searchInput = node;
-          }}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Space>
-          <Button
-            type='primary'
-            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size='small'
-            style={{ width: 90 }}>
-            Search
-          </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size='small' style={{ width: 90 }}>
-            Reset
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value, record) =>
-      record[dataIndex]
-        ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
-        : '',
-    onFilterDropdownVisibleChange: (visible) => {
-      if (visible) {
-        setTimeout(() => this.searchInput.select(), 100);
-      }
-    },
-    render: (text) =>
-      this.state.searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[this.state.searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
-  });
-
-  handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    this.setState({
-      searchText: selectedKeys[0],
-      searchedColumn: dataIndex,
-    });
-  };
-
-  handleReset = (clearFilters) => {
-    clearFilters();
-    this.setState({ searchText: '' });
   };
 
   render() {
@@ -737,12 +639,6 @@ class ListEventUser extends Component {
 
     return (
       <React.Fragment>
-        <Header 
-          title={'Check In'}
-          description={`Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
-          búsqueda. ${<br/>}`}
-        />
-
         {disabledPersistence && (
           <div style={{ margin: '5%', textAlign: 'center' }}>
             <label>
@@ -752,154 +648,185 @@ class ListEventUser extends Component {
           </div>
         )}
 
-        <Row wrap gutter={[8, 8]}>
-          <Col>
-            <span>Inscritos: </span>
-            <Tag>
-              {inscritos || 0}
-            </Tag>
-          </Col>
-          <Col>
-            <span>Participantes: </span>
-            <Tag>
-              {totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}
-            </Tag>
-          </Col>
-          <Col>
-            {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
-              <>
-                <span>Asistencia por Coeficientes: </span>
-                <Tag>
-                  {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
-                </Tag>
-              </>
-            )}
-          </Col>
-          <Col>
-            <Button type='ghost' size='small' icon={<FullscreenOutlined />} onClick={this.showModal}>
-              Expandir
-            </Button>
-          </Col>
-        </Row>
-
-        {// localChanges &&
-          quantityUsersSync > 0 && localChanges === 'Local' && (
-          <Row gutter={8}>
-            <Col>
-              <p>Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</p>
-            </Col>
-          </Row>
-        )}
-        <Row gutter={8}>
-          <Col>
-            <p>
-              Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+        <EventContent classes='checkin' title={'Check In'}>
+          <div className='checkin-warning '>
+            <p className='is-size-7 is-full-mobile'>
+              Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una
+              búsqueda.
             </p>
-          </Col>
-        </Row>
+          </div>
 
-        {event_stages && event_stages.length > 0 && (
-          <div className='filter'>
-            <button className='button icon-filter'>
-              <span className='icon'>
-                <i className='fas fa-filter'></i>
-              </span>
-              <span className='text-button'>Filtrar</span>
-            </button>
-            <div className='filter-menu'>
-              <p className='filter-help'>Filtra Usuarios por Tiquete</p>
-              <div className='columns'>
-                <div className='column field'>
-                  <div className='control'>
-                    <label className='label'>Etapa</label>
+          <div className='columns checkin-tags-wrapper is-flex-touch'>
+            <div>
+              <div className='tags' style={{ flexWrap: 'nowrap' }}>
+                <span className='tag is-white'>Inscritos:</span>
+                <span className='tag is-light'>{inscritos || 0}</span>
+
+                <span className='tag is-white'>Participantes:</span>
+                <span className='tag is-light'>{totalCheckedIn + '/' + inscritos + ' (' + participantes + '%)'}</span>
+
+                {extraFields.reduce((acc, item) => acc || item.name === 'pesovoto', false) && (
+                  <>
+                    <span className='tag is-white'>Asistencia por Coeficientes:</span>
+                    <span className='tag is-light'>
+                      {totalCheckedInWithWeight + '/100' + ' (' + asistenciaCoeficientes + '%)'}
+                    </span>
+                  </>
+                )}
+                <span className='tag is-white'>
+                  <Button shape='rounds' type='primary' icon={<FullscreenOutlined />} onClick={this.showModal}>
+                    Expandir
+                  </Button>
+                </span>
+              </div>
+            </div>
+            {// localChanges &&
+            quantityUsersSync > 0 && localChanges === 'Local' && (
+              <div className='is-4 column'>
+                <p className='is-size-7'>Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</p>
+              </div>
+            )}
+          </div>
+          <div>
+            <div>
+              <p className='is-size-7 '>
+                Última Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
+              </p>
+            </div>
+          </div>
+          <div className='columns'>
+            <div className='is-flex-touch columns container-options'>
+              <div className='column is-narrow has-text-centered button-c is-centered'>
+                <button className='button is-primary' onClick={this.addUser}>
+                  <span className='icon'>
+                    <i className='fas fa-user-plus'></i>
+                  </span>
+                  <span className='text-button'>Agregar Usuario</span>
+                </button>
+                <Row>
+                  <span style={{ fontSize: 10 }}>
+                    {' '}
+                    <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>Importar usuarios</Link>
+                  </span>
+                </Row>
+              </div>
+              {usersReq.length > 0 && (
+                <div className='column is-narrow has-text-centered export button-c is-centered'>
+                  <button className='button' onClick={this.exportFile}>
+                    <span className='icon'>
+                      <i className='fas fa-download' />
+                    </span>
+                    <span className='text-button'>Exportar</span>
+                  </button>
+                </div>
+              )}
+              <div className='column'>
+                <div className='select is-primary'>
+                  <select
+                    name={'type-scanner'}
+                    value={this.state.typeScanner}
+                    defaultValue={this.state.typeScanner}
+                    onChange={this.handleChange}>
+                    <option key={1} value='options'>
+                      Escanear...
+                    </option>
+                    <option key={2} value='scanner-qr'>
+                      Escanear QR
+                    </option>
+                    <option key={3} value='scanner-document'>
+                      Escanear Documento
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className='search column is-5 is-four-fifths-mobile has-text-left-tablet'>
+              <SearchComponent
+                style={{ marginLeft: '40px' }}
+                placeholder={''}
+                data={usersReq}
+                kind={'user'}
+                event={this.props.event._id}
+                searchResult={this.searchResult}
+                clear={this.state.clearSearch}
+              />
+            </div>
+          </div>
+          {event_stages && event_stages.length > 0 && (
+            <div className='filter'>
+              <button className='button icon-filter'>
+                <span className='icon'>
+                  <i className='fas fa-filter'></i>
+                </span>
+                <span className='text-button'>Filtrar</span>
+              </button>
+              <div className='filter-menu'>
+                <p className='filter-help'>Filtra Usuarios por Tiquete</p>
+                <div className='columns'>
+                  <div className='column field'>
                     <div className='control'>
-                      <div className='select'>
-                        <select value={stage} onChange={this.changeStage} name={'stage'}>
-                          <option value={''}>Escoge la etapa...</option>
-                          {event_stages.map((item, key) => {
-                            return (
-                              <option key={key} value={item.stage_id}>
-                                {item.title}
-                              </option>
-                            );
-                          })}
-                        </select>
+                      <label className='label'>Etapa</label>
+                      <div className='control'>
+                        <div className='select'>
+                          <select value={stage} onChange={this.changeStage} name={'stage'}>
+                            <option value={''}>Escoge la etapa...</option>
+                            {event_stages.map((item, key) => {
+                              return (
+                                <option key={key} value={item.stage_id}>
+                                  {item.title}
+                                </option>
+                              );
+                            })}
+                          </select>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className='column field'>
-                  <div className='control'>
-                    <label className='label'>Tiquete</label>
+                  <div className='column field'>
                     <div className='control'>
-                      <div className='select'>
-                        <select value={ticket} onChange={this.changeTicket} name={'stage'}>
-                          <option value={''}>Escoge el tiquete...</option>
-                          {ticketsOptions.map((item, key) => {
-                            return (
-                              <option key={key} value={item._id}>
-                                {item.title}
-                              </option>
-                            );
-                          })}
-                        </select>
+                      <label className='label'>Tiquete</label>
+                      <div className='control'>
+                        <div className='select'>
+                          <select value={ticket} onChange={this.changeTicket} name={'stage'}>
+                            <option value={''}>Escoge el tiquete...</option>
+                            {ticketsOptions.map((item, key) => {
+                              return (
+                                <option key={key} value={item._id}>
+                                  {item.title}
+                                </option>
+                              );
+                            })}
+                          </select>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-
-        <TableA 
-          list={users}
-          header={this.state.columns}
-          scroll={{x: 2500}}
-          loading={this.state.loading}
-          titleTable={(
-            <Row gutter={[8, 8]}>
-              <Col>
-                <Select
-                  name={'type-scanner'}
-                  value={this.state.typeScanner}
-                  defaultValue={this.state.typeScanner}
-                  onChange={(e) => this.handleChange(e)}
-                  /* style={{ width: 220 }} */
-                >
-                  <Option value='options'>
-                    Escanear...
-                  </Option>
-                  <Option value='scanner-qr'>
-                    Escanear QR
-                  </Option>
-                  <Option value='scanner-document'>
-                    Escanear Documento
-                  </Option>
-                </Select>
-              </Col>
-              <Col>
-                {usersReq.length > 0 && (
-                  <Button type='primary' icon={<DownloadOutlined />} onClick={this.exportFile}>
-                    Exportar
-                  </Button>
-                )}
-              </Col>
-              <Col>
-                <Link to={`/eventAdmin/${this.props.event._id}/invitados/importar-excel`}>
-                  <Button type='primary' icon={<UploadOutlined />}>
-                    Importar usuarios
-                  </Button>
-                </Link>
-              </Col>
-              <Col>
-                <Button type="primary" icon={<PlusCircleOutlined />} size="middle" onClick={this.addUser}>
-                  {'Agregar Usuario'}
-                </Button>
-              </Col>
-            </Row>
           )}
-        />
+          <div className='checkin-table'>
+            {this.state.loading ? (
+              <Fragment>
+                <Loading />
+                <h2 className='has-text-centered'>Cargando...</h2>
+              </Fragment>
+            ) : (
+              <div className='table-wrapper'>
+                <div className='table-container' style={{ height: '60vh' }}>
+                  {this.state.columns && users && (
+                    <Table
+                      size='middle'
+                      //rowKey='_id'
+                      dataSource={users}
+                      columns={this.state.columns}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </EventContent>
 
         {!this.props.loading && editUser && (
           <UserModal

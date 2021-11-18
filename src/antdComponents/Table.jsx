@@ -6,6 +6,7 @@ import { Table as TableAnt, Row, Col, Tooltip, Button } from 'antd';
 import { EditOutlined, DeleteOutlined, DragOutlined, DownloadOutlined, SettingOutlined } from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
 import ExportExcel from '../components/newComponent/ExportExcel';
+import moment from 'moment';
 
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
@@ -21,6 +22,7 @@ const Table = (props) => {
     actions,
     editPath,
     remove,
+    noRemove,
     search,
     setColumnsData,
     setList,
@@ -32,6 +34,12 @@ const Table = (props) => {
     extraFnIcon,
     extraFnType,
     extraFnTitle,
+    titleTable,
+    extraPath,
+    extraPathTitle,
+    extraPathIcon,
+    extraPathType,
+    scroll,
   } = props;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -45,7 +53,7 @@ const Table = (props) => {
         <Row wrap gutter={[8, 8]}>
           <Col>
             {extraFn && (
-              <Tooltip placement='topLeft' title={extraFnTitle && extraFnTitle}>
+              <Tooltip placement='topLeft' title={extraFnTitle}>
                 <Button
                   key={`extraAction${item.index}`}
                   id={`extraAction${item.index}`}
@@ -54,6 +62,22 @@ const Table = (props) => {
                   type={extraFnType ? extraFnType : 'primary'}
                   size='small'
                 />
+              </Tooltip>
+            )}
+          </Col>
+          <Col>
+            {extraPath && (
+              <Tooltip placement='topLeft' title={extraPathTitle}>
+                <Link
+                  key={`extraPathAction${item.index}`}
+                  id={`extraPathAction${item.index}`}
+                  to={{ pathname: `${extraPath}/${item._id}`, state: { item: item }}}>
+                  <Button 
+                    icon={extraPathIcon ? extraPathIcon : <SettingOutlined />}
+                    type={extraPathType ? extraPathType : 'primary'} 
+                    size='small' 
+                  />
+                </Link>
               </Tooltip>
             )}
           </Col>
@@ -99,7 +123,7 @@ const Table = (props) => {
             )}
           </Col>
           <Col>
-            {remove && (
+            {remove && !noRemove && (
               <Tooltip placement='topLeft' title='Eliminar'>
                 <Button
                   key={`removeAction${item.index}`}
@@ -117,7 +141,7 @@ const Table = (props) => {
     },
   };
 
-  if (list) {
+  if (list && list.length) {
     list.map((list, index) => {
       if (!list.index) {
         list.index = index;
@@ -197,9 +221,7 @@ const Table = (props) => {
 
   //FN para el draggable 1/3
   function onSortEnd({ oldIndex, newIndex }) {
-    console.log(oldIndex, newIndex, 'aa');
     if (oldIndex !== newIndex) {
-      console.log(oldIndex, newIndex, 'ab');
       let newData = arrayMove([].concat(list), oldIndex, newIndex).filter((el) => !!el);
       if (newData) {
         newData = newData.map((data, key) => {
@@ -227,16 +249,25 @@ const Table = (props) => {
         columns={header}
         dataSource={list}
         size='small'
-        /* hasData={list && list.length} */
         rowKey={(record) => record.index}
         loading={loading}
         pagination={pagination}
         components={components}
         title={() => (
           <Row wrap justify='end' gutter={[8, 8]}>
-            <Col>{exportData && <ExportExcel columns={header} list={list} fileName={fileName} />}</Col>
+            {
+              exportData && (
+                <Col><ExportExcel columns={header} list={list} fileName={`${fileName}${moment(new Date()).format('YYYY-DD-MM')}`} /></Col>
+              )
+            }
+            {
+              titleTable && (
+                <Col>{titleTable}</Col>
+              )
+            }
           </Row>
         )}
+        scroll={scroll}
       />
     </div>
   );

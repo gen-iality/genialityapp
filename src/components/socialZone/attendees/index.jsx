@@ -72,7 +72,6 @@ const AttendeList = function(props) {
     });
 
     setmyattendelist(ordenadousers);
-
     setfilteredlist(ordenadousers.slice(0, pag));
     setPage(1);
   }, [attendeeListPresence, attendeeList]);
@@ -110,22 +109,13 @@ const AttendeList = function(props) {
     setHasMore(true);
   };
 
-  const styleListAttende = {
-    background: 'white',
-    color: '#333F44',
-    padding: 5,
-    margin: 4,
-    display: 'flex',
-    borderRadius: '5px',
-    fontWeight: '500',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-  };
+  const loader = <div className='loader'>Cargando ...</div>;
+
   return (
     <InfiniteScroll
       initialLoad={false}
       pageStart={0}
-      loadMore={handleInfiniteOnLoad}
+      loadMore={() => handleInfiniteOnLoad()}
       hasMore={!loading && hasMore}
       useWindow={false}>
       <List

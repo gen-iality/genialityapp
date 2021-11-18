@@ -4,10 +4,6 @@ import Importacion from './importacion';
 import Preview from './preview';
 import Result from './result';
 import Async from 'async';
-import Header from '../../antdComponents/Header';
-import { Steps, Divider } from 'antd';
-
-const { Step } = Steps;
 
 class ImportUsers extends Component {
   constructor(props) {
@@ -89,11 +85,6 @@ class ImportUsers extends Component {
     }
   }
 
-  /* onChange = step => {
-    console.log('onChange:', step);
-    this.setState({ step });
-  }; */
-
   render() {
     const layout = [
       <Importacion
@@ -119,54 +110,33 @@ class ImportUsers extends Component {
       />
     ];
     return (
-      <>
-        <Header 
-          title={(
-            <Link to={this.props.matchUrl}>
-              {'Invitados'}
-            </Link>
-          )}
-          back
-          description={'Importación de usuarios - Excel'}
-        />
-        <br />
-        <Steps current={this.state.step} /* onChange={this.onChange} */>
-          <Step title="Importar" />
-          <Step title="Relacionar" />
-          <Step title="Resultado" />
-        </Steps>
-        <br />
-
-        <div className='step-content'>{layout[this.state.step]}</div>
-
-        {/* {<div className={`event-datos modal-import-user`}>
-          <Link to={this.props.matchUrl}>
-            <h2 className='title-section'>Invitados</h2>
-          </Link>
-          <h4 className='subtitle-section'>Importación de usuarios - Excel</h4>
-          <div className='steps'>
-            <div className={`step-item is-completed`}>
-              <div className='step-marker'>1</div>
-              <div className='step-details'>
-                <p className='step-title'>Importar</p>
-              </div>
-            </div>
-            <div className={`step-item ${this.state.step >= 1 ? 'is-completed' : ''}`}>
-              <div className='step-marker'>2</div>
-              <div className='step-details'>
-                <p className='step-title'>Relacionar</p>
-              </div>
-            </div>
-            <div className={`step-item ${this.state.step >= 2 ? 'is-completed' : ''}`}>
-              <div className='step-marker'>3</div>
-              <div className='step-details'>
-                <p className='step-title'>Resultado</p>
-              </div>
+      <div className={`event-datos modal-import-user`}>
+        <Link to={this.props.matchUrl}>
+          <h2 className='title-section'>Invitados</h2>
+        </Link>
+        <h4 className='subtitle-section'>Importación de usuarios - Excel</h4>
+        <div className='steps'>
+          <div className={`step-item is-completed`}>
+            <div className='step-marker'>1</div>
+            <div className='step-details'>
+              <p className='step-title'>Importar</p>
             </div>
           </div>
-          <div className='step-content'>{layout[this.state.step]}</div>
-        </div>} */}
-      </>
+          <div className={`step-item ${this.state.step >= 1 ? 'is-completed' : ''}`}>
+            <div className='step-marker'>2</div>
+            <div className='step-details'>
+              <p className='step-title'>Relacionar</p>
+            </div>
+          </div>
+          <div className={`step-item ${this.state.step >= 2 ? 'is-completed' : ''}`}>
+            <div className='step-marker'>3</div>
+            <div className='step-details'>
+              <p className='step-title'>Resultado</p>
+            </div>
+          </div>
+        </div>
+        <div className='step-content'>{layout[this.state.step]}</div>
+      </div>
     );
   }
 }

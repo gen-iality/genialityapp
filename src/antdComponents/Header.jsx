@@ -1,8 +1,6 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Tooltip, Typography, Row, Col, Button } from 'antd';
 import { PlusCircleOutlined, SaveOutlined, LeftOutlined, DeleteOutlined } from '@ant-design/icons';
-/* import ExportReport from "../components/networking/exportReport"; */
-/* import ExportExcel from '../components/newComponent/ExportExcel'; */
 
 const { Title } = Typography;
 
@@ -17,6 +15,7 @@ const Header = ( props ) => {
     remove, //método para eliminar
     save, //boolean, para que aparezca el botón de guardar
     saveMethod, //viene el método para guardar
+    saveName,
     back, //boolean, permite aparecer el icono para volver atrás
     form, //si viene, es para poder saber sí el botón de guardar colocarlo como "submit"
     extra, //código adicional de alguna acción fuera de la estructura en el header
@@ -81,7 +80,7 @@ const Header = ( props ) => {
                 size="middle"
                 htmlType={form ? 'submit' : 'button'}
               >
-                {'Guardar'}
+                {saveName ? saveName : 'Guardar'}
               </Button>
             )
           }

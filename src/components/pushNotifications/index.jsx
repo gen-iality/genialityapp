@@ -73,9 +73,9 @@ function pushNotification(props) {
         />
       )}
       <Header
-        title={'push Notifications'}
+        title={'Push Notifications'}
         titleTooltip={'Envíe notificaciones push a dispositivos móviles que tenga instalada la app de evius'}
-        description='Se listan solo los usuarios con la app de evius o truni instalada en su dispositivo móvil'
+        description={'Se listan solo los usuarios con la app de evius o truni instalada en su dispositivo móvil'}
         extra={notifyEveryoneButton}
       />
       <Table

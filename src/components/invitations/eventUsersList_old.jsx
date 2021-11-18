@@ -2,14 +2,13 @@ import React, { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { UsersApi, eventTicketsApi } from '../../helpers/request';
 import { Table, Input, Button, Space, Menu, Dropdown, Row, Col } from 'antd';
-import { SearchOutlined, DownOutlined, UserOutlined, DownloadOutlined,  UploadOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { SearchOutlined, DownOutlined, UserOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { parseData2Excel } from '../../helpers/utils';
 import XLSX from 'xlsx';
 import AddUser from '../modal/addUser';
 import ModalAdvise from './modal';
 import { formatDataToString } from '../../helpers/utils';
-import Header from '../../antdComponents/Header';
 
 class eventUsersList extends Component {
   constructor(props) {
@@ -240,7 +239,7 @@ class eventUsersList extends Component {
   //Funcion para enviar la data de los usuarios al componente send.jsx
   goToSendMessage = () => {
     const { attendeesForSendMessage, modalVisible } = this.state;
-    /* console.log('lista', attendeesForSendMessage); */
+    console.log('lista', attendeesForSendMessage);
     //Actualizar el estado del padre
     if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
       this.props.setGuestSelected(attendeesForSendMessage);
@@ -282,44 +281,35 @@ class eventUsersList extends Component {
     };
     return (
       <>
-        <Header 
-          title={'Enviar información o correo a asistentes'}
-          description={`Seleccionados: ${selectedRowKeys.length}`}
-          extra={(
-            <Row wrap gutter={[8, 8]}>
-              <Col>
-                <Button onClick={() => this.goToSendMessage()}>Enviar comunicación / Correo</Button>
-                <ModalAdvise visible={this.state.modalVisible} />
-              </Col>
-              <Col>
-                <Button type='primary' onClick={this.exportFile} icon={<DownloadOutlined />}>
-                  Exportar Usuario
-                </Button>
-              </Col>
-              <Col>
-                <Link to={`${this.props.matchUrl}/importar-excel`} icon={<UploadOutlined />}>
-                  <Button type='primary'>
-                    Importar Usuario
-                  </Button>
-                </Link>
-              </Col>
-              <Col>
-                <Button type='primary' onClick={this.modalUser} icon={<PlusCircleOutlined />}>
-                  Agregar Usuario
-                </Button>
-              </Col>
-            </Row>
-          )}
-        />
-
-        <Table          
-          scroll={{ x: 2500 }}
-          size='small'
-          rowSelection={rowSelection}
-          columns={columnsTable}
-          dataSource={attendeesFormatedForTable}
-        />
-
+        <Row justify='center'>
+          <Col span={8}>
+            <Button onClick={() => this.goToSendMessage()}>Enviar comunicación / Correo</Button>
+            <ModalAdvise visible={this.state.modalVisible} />
+          </Col>
+          <Col span={8}>
+            <Button onClick={this.exportFile}>Exportar</Button>
+          </Col>
+          <Col span={8}>
+            <Dropdown overlay={menu}>
+              <Button>
+                Agregar Usuario <DownOutlined />
+              </Button>
+            </Dropdown>
+          </Col>
+        </Row>
+        <Fragment>
+          <p style={{ marginTop: '2%' }}>Seleccionados: {selectedRowKeys.length}</p>
+          <Table
+            style={{ height: '50px' }}
+            scroll={{ x: 2100 }}
+            sticky
+            pagination={{ position: ['bottomCenter'] }}
+            size='small'
+            rowSelection={rowSelection}
+            columns={columnsTable}
+            dataSource={attendeesFormatedForTable}
+          />
+        </Fragment>
         {this.state.addUser && (
           <AddUser
             handleModal={this.closeModal}

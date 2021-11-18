@@ -10,8 +10,15 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormattedMessage } from 'react-intl';
 import Quill from 'react-quill';
-import { Button, Checkbox, Row, Space } from 'antd';
+import { Button, Checkbox, Row, Space, Col, Form, Input, Modal } from 'antd';
 Moment.locale('es-us');
+import Header from '../../antdComponents/Header';
+import { CalendarOutlined, FieldTimeOutlined, EnvironmentOutlined } from '@ant-design/icons';
+
+const formLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
+};
 
 class SendRsvp extends Component {
   constructor(props) {
@@ -150,7 +157,7 @@ class SendRsvp extends Component {
           include_date: include_date,
         };
       }
-      console.log('Dataenviar', data);
+      /* console.log('Dataenviar', data); */
       await EventsApi.sendRsvp(JSON.stringify(data), event._id);
       toast.success(<FormattedMessage id='toast.email_sent' defaultMessage='Ok!' />);
       this.setState({ disabled: false, redirect: true, url_redirect: '/eventadmin/' + event._id + '/messages' });
@@ -183,45 +190,28 @@ class SendRsvp extends Component {
     const { timeout, disabled, include_date } = this.state;
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     return (
-      <div className='columns event-rsvp'>
-        <div className='column is-8'>
-          <div className='columns is-multiline is-centered'>
-            {/* email subject */}
-            <div className='column is-10'>
-              <div className='box rsvp-subject'>
-                <div className='field'>
-                  <div className='rsvp-subject-txt'>
-                    <label className='label'>
-                      Asunto del correo <br /> <small>(Por defecto será el nombre del evento)</small>
-                    </label>
-                    <i className='fa fa-info-circle info-icon'></i>
-                  </div>
-                  <div className='control'>
-                    <input
-                      className='input'
-                      type='text'
-                      name='subject'
-                      placeholder='Escribe aquí el asunto del correo'
-                      onChange={this.handleChange}
-                      value={this.state.rsvp.subject}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* -- endof email subject */}
+      <>
+        <Form {...formLayout}>
+          <Header
+            title={'Detalle de la comunicación'}
+            back
+            form
+            save
+            saveMethod={() => this.setState({ modal: true })}
+            saveName={'Envíar'}
+          />
 
-            {/* <div className="column is-10">
-                            <div className="rsvp-title has-text-centered">
-                                <h2 className="rsvp-title-txt">
-                                    Hola "INVITADO", has sido invitado a:
-                                    <br />
-                                    <span className="strong">{this.props.event.name}</span>
-                                </h2>
+          <Row justify='center' wrap gutter={8}>
+            <Col span={14}>
+              <Form.Item label={`Asunto del correo (Por defecto será el nombre del evento)`}>
+                <Input
+                  name={'subject'}
+                  placeholder={'Escribe aquí el asunto del correo'}
+                  onChange={(e) => this.handleChange(e)}
+                  value={this.state.rsvp.subject}
+                />
+              </Form.Item>
 
-                            </div>
-        </div> */}
-            <div className='column is-10'>
               <div className='rsvp-pic'>
                 <p className='rsvp-pic-txt'>
                   Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small>
@@ -245,117 +235,57 @@ class SendRsvp extends Component {
                   errImg={this.state.errImg}
                 />
               </div>
-            </div>
 
-            <div className='column is-10'>
-              <div className='field rsvp-desc'>
-                <label className='label'>
-                  Cabecera del correo <br /> <small></small>
-                </label>
-                <div className='control'>
-                  {/* <textarea className="textarea" value={this.state.rsvp.message} onChange={this.handleChange} name={"message"} /> */}
-                  <Quill
-                    value={this.state.rsvp.content_header}
-                    onChange={this.QuillComplement1}
-                    name='content_header'
-                  />
-                </div>
-              </div>
-              <div>
+              <Form.Item label={'Cabecera del correo'}>
+                <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name='content_header' />
+              </Form.Item>
+
+              <Form.Item label={'Especificar fecha del evento'}>
                 <Checkbox style={{ marginRight: '2%' }} defaultChecked={include_date} onChange={this.onChangeDate} />
-                <label>Especificar fecha del evento</label>
-              </div>
-            </div>
+              </Form.Item>
 
-            {include_date && (
-              <div className='column is-10'>
-                <div className='columns is-mobile is-multiline is-centered rsvp-date-wrapper'>
-                  <div className='column is-12'>
-                    <div className='columns is-mobile is-centered'>
-                      <div className='column'>
-                        <div className='columns rsvp-date'>
-                          <div className='column is-two-thirds'>
-                            <p>Fecha Inicio</p>
-                            <p className='date'>{Moment(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
-                          </div>
-                          <div className='column is-one-third'>
-                            <span className='icon is-large has-text-grey-lighter'>
-                              <i className='far fa-calendar-alt fa-2x' />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className='vertical-line'></div>
-                      <div className='column'>
-                        <div className='columns rsvp-date'>
-                          <div className='column is-two-thirds'>
-                            <p>Hora</p>
-                            <p className='date'>{Moment(this.props.event.datetime_from).format('HH:mm')}</p>
-                          </div>
-                          <div className='column is-one-third'>
-                            <span className='icon is-large has-text-grey-lighter'>
-                              <i className='far fa-clock fa-2x' />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='column is-12'>
-                    <div className='columns is-mobile is-centered'>
-                      <div className='column'>
-                        <div className='columns rsvp-date'>
-                          <div className='column is-two-thirds'>
-                            <p>Fecha Fin</p>
-                            <p className='date'>{Moment(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
-                          </div>
-                          <div className='column is-one-third'>
-                            <span className='icon is-large has-text-grey-lighter'>
-                              <i className='far fa-calendar-alt fa-2x' />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className='vertical-line'></div>
-                      <div className='column'>
-                        <div className='columns rsvp-date'>
-                          <div className='column is-two-thirds'>
-                            <p>Hora</p>
-                            <p className='date'>{Moment(this.props.event.datetime_to).format('HH:mm')}</p>
-                          </div>
-                          <div className='column is-one-third'>
-                            <span className='icon is-large has-text-grey-lighter'>
-                              <i className='far fa-clock fa-2x' />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className='column is-10'>
-              <div className='columns is-mobile is-centered rsvp-where'>
-                <div className='column is-2 has-text-centered'>
-                  <span className='icon is-large has-text-grey-lighter'>
-                    <i className='fas fa-map-marker-alt fa-2x' />
-                  </span>
-                </div>
-                <div className='column is-8'>
+              {include_date && (
+                <Row gutter={[8, 8]} wrap>
+                  <Col span={12}>
+                    <p>
+                      {' '}
+                      <CalendarOutlined /> Fecha Inicio
+                    </p>
+                    <p className='date'>{Moment(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
+                  </Col>
+                  <Col span={12}>
+                    <p>
+                      {' '}
+                      <FieldTimeOutlined /> Hora
+                    </p>
+                    <p className='date'>{Moment(this.props.event.datetime_from).format('HH:mm')}</p>
+                  </Col>
+                  <Col span={12}>
+                    <p>
+                      {' '}
+                      <CalendarOutlined /> Fecha Fin
+                    </p>
+                    <p className='date'>{Moment(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
+                  </Col>
+                  <Col span={12}>
+                    <p>
+                      {' '}
+                      <FieldTimeOutlined /> Hora
+                    </p>
+                    <p className='date'>{Moment(this.props.event.datetime_to).format('HH:mm')}</p>
+                  </Col>
+                </Row>
+              )}
+              <Row justify='center'>
+                <Col>
+                  <EnvironmentOutlined />
                   Ubicación del evento
                   <br />
-                  {console.log('Que hay?', this.props.event)}
                   <span className='rsvp-location'>
                     {this.props.event.location !== null && this.props.event.location.FormattedAddress}
                   </span>
-                </div>
-              </div>
-            </div>
-
-            <div className='column is-10'>
+                </Col>
+              </Row>
               <div className='rsvp-pic'>
                 <Space direction='vertical'>
                   <p className='rsvp-pic-txt'>
@@ -383,14 +313,7 @@ class SendRsvp extends Component {
                       divClass={'rsvp-pic-img'}
                       content={<img src={this.state.rsvp?.image} alt={'Imagen Perfil'} />}
                       classDrop={'dropzone'}
-                      contentDrop={
-                        <button
-                          className={`button is-primary is-inverted is-outlined ${
-                            this.state.imageFile ? 'is-loading' : ''
-                          }`}>
-                          Cambiar foto
-                        </button>
-                      }
+                      contentDrop={<Button type='primary'>Cambiar foto</Button>}
                       contentZone={<div>Subir foto</div>}
                       changeImg={this.changeImg}
                       errImg={this.state.errImg}
@@ -398,21 +321,11 @@ class SendRsvp extends Component {
                   </Row>
                 )}
               </div>
-            </div>
 
-            <div className='column is-10'>
-              <div className='field rsvp-desc'>
-                <label className='label'>
-                  Cuerpo de la invitación <br /> <small>(Por defecto será la descripción del evento)</small>
-                </label>
-                <div className='control'>
-                  {/* <textarea className="textarea" value={this.state.rsvp.message} onChange={this.handleChange} name={"message"} /> */}
-                  <Quill value={this.state.rsvp.message} onChange={this.QuillComplement2} name='message' />
-                </div>
-              </div>
-            </div>
+              <Form.Item label={'Cuerpo de la invitación (Por defecto será la descripción del evento)'}>
+                <Quill value={this.state.rsvp.message} onChange={this.QuillComplement2} name='message' />
+              </Form.Item>
 
-            <div className='column is-10'>
               <div className='rsvp-pic'>
                 <p className='rsvp-pic-txt'>
                   Sube una imagen <br />{' '}
@@ -439,66 +352,50 @@ class SendRsvp extends Component {
                   errImg={this.state.errImg}
                 />
               </div>
-            </div>
 
-            <div className='column is-10'>
-              <div className='columns is-centered'>
-                <div className='column has-text-centered'>
-                  <button
-                    className='button is-primary'
-                    onClick={() => {
-                      this.setState({ modal: true });
-                    }}>
-                    Enviar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className='column is-4'>
-          <div className='box rsvp-send'>
-            <div className='columns is-centered-is-multiline'>
-              <div className='column'>
-                <p className='rsvp-send-title'>
-                  Seleccionados <span>{this.state.selection?.length}</span>
-                </p>
-                <p>
-                  {this.state.selection?.map((el) => {
-                    return el.properties.email + ', ';
-                  })}
-                </p>
-              </div>
-            </div>
-
-            <div className='column rsvp-send-users'>
-              {this.state.selection?.map((item, key) => {
-                return (
-                  <p key={key} className='selection'>
-                    {item.email}
+              <div className='box rsvp-send'>
+                <Row gutter={8} wrap justify='center'>
+                  <p className='rsvp-send-title'>
+                    Seleccionados <span>{this.state.selection?.length}</span>
                   </p>
-                );
-              })}
-            </div>
-
-            <div className='column has-text-centered'>
-              <Link to={{ pathname: `${this.props.matchUrl}` }}>
-                <button className='button is-primary'>Editar Seleccionados</button>
-              </Link>
-            </div>
-          </div>
-        </div>
-        <Dialog
-          modal={this.state.modal}
-          title={'Confirmación'}
-          content={<p>Se van a enviar {this.state.selection?.length} invitaciones</p>}
-          first={{ title: 'Enviar', class: 'is-info', action: this.submit, disabled: disabled }}
-          second={{ title: 'Cancelar', class: '', action: this.closeModal }}
-          message={{ class: '', content: '' }}
-        />
-        {timeout && <LogOut />}
-      </div>
+                  <p>
+                    {this.state.selection?.map((el) => {
+                      return el.properties.email + ', ';
+                    })}
+                  </p>
+                </Row>
+                <Row gutter={8} wrap>
+                  {this.state.selection?.map((item, key) => {
+                    return (
+                      <p key={key} className='selection'>
+                        {item.email}
+                      </p>
+                    );
+                  })}
+                </Row>
+                <Row justify='center' gutter={8} wrap>
+                  <Link to={{ pathname: `${this.props.matchUrl}` }}>
+                    <Button type='primary'>Editar Seleccionados</Button>
+                  </Link>
+                </Row>
+              </div>
+            </Col>
+          </Row>
+          <Modal
+            visible={this.state.modal}
+            onCancel={this.closeModal}
+            title={'Confirmación'}
+            onOk={this.submit}
+            cancelText={'Cancelar'}
+            okText={'Envíar'}>
+            <p>
+              Se van a enviar {this.state.selection?.length}{' '}
+              {this.state.selection?.length === 1 ? 'invitación' : 'invitaciones'}
+            </p>
+          </Modal>
+          {timeout && <LogOut />}
+        </Form>
+      </>
     );
   }
 }

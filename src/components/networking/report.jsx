@@ -71,7 +71,7 @@ const Report = (props) => {
       key='_id'
       search
       setColumnsData={setColumnsData}
-      fileName='Employees'
+      fileName={'Employees'}
     />
   );
 }

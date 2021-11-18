@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import ErrorServe from '../modal/serverError';
 import LogOut from '../shared/logOut';
-import { Row, Col, Button, Dropdown, Menu } from 'antd';
-import { UploadOutlined, ExclamationCircleOutlined, ReloadOutlined, DownOutlined } from '@ant-design/icons';
 
 class Preview extends Component {
   constructor(props) {
@@ -137,95 +135,111 @@ class Preview extends Component {
     const self = this;
     return (
       <React.Fragment>
-        <Button 
-          type='primary' 
-          icon={<UploadOutlined />} 
-          disabled={auxArr.length > 0}
-          onClick={() => {
-            this.props.importUsers(list);
-          }}
-        >
-          Importar
-        </Button>
-        {
-          this.state.loading ? (
-            <Row justify='center'>Parsing excel</Row>
+        <div className='is-pulled-left'>
+          <button
+            className='button is-primary'
+            disabled={auxArr.length > 0}
+            onClick={() => {
+              this.props.importUsers(list);
+            }}>
+            Importar
+          </button>
+        </div>
+        {this.state.loading ? (
+          <div>Parsing excel</div>
         ) : (
-          <Row wrap gutter={[16, 16]} >
-            <Col span={14} >
-              <Row wrap gutter={[8, 8]}>
-                {list.map((item, index) => {
-                  return (
-                    <Col key={index}>
-                      <div style={{border: '1px solid', borderColor: 'gray', borderRadius: '5px', padding: '5px'}}>
-                        <div style={{textAlign: 'center'}}>
-                          {!item.used && auxArr.length > 0 && (
-                            <ReloadOutlined />
-                          )}
-                          <span
-                            className={`${
-                              item.used
-                                ? 'has-text-success'
-                                : `${auxArr.length > 0 ? 'has-text-danger' : 'has-text-warning'}`
-                            }`}>
-                            {item.key}
+          <div className='columns'>
+            <div className='column is-7 preview-list'>
+              {list.map((item, index) => {
+                return (
+                  <div className='preview-column' key={index}>
+                    <div className='preview-title'>
+                      <div className='preview-title-left'>
+                        {!item.used && auxArr.length > 0 && (
+                          <span className='icon action_pointer tooltip is-small' data-tooltip='Change Field'>
+                            <i className='fas fa-redo' />
                           </span>
-                          {!item.used && auxArr.length > 0 && (
-                            <Dropdown overlay={(
-                              <Menu>
+                        )}
+                        <span
+                          className={`${
+                            item.used
+                              ? 'has-text-success'
+                              : `${auxArr.length > 0 ? 'has-text-danger' : 'has-text-warning'}`
+                          }`}>
+                          {item.key}
+                        </span>
+                      </div>
+                      {!item.used && auxArr.length > 0 && (
+                        <div className='preview-title-right'>
+                          <div className='dropdown is-right is-hoverable'>
+                            <div className='control dropdown-trigger'>
+                              <button className='button is-text' aria-haspopup='true' aria-controls='dropdown-menu'>
+                                <span className='icon is-small'>
+                                  <i className='fas fa-angle-down' />
+                                </span>
+                              </button>
+                            </div>
+                            <div className='dropdown-menu' id='dropdown-menu' role='menu'>
+                              <div className='dropdown-content'>
                                 {auxArr.map((head, llave) => {
                                   return (
-                                    <Menu.Item>
-                                      <a
-                                        key={llave}
-                                        onClick={() => {
-                                          self.sChange(head, index);
-                                        }}>
-                                        {head.tag}
-                                      </a>
-                                    </Menu.Item>
+                                    <a
+                                      className='dropdown-item'
+                                      key={llave}
+                                      onClick={() => {
+                                        self.sChange(head, index);
+                                      }}>
+                                      {head.tag}
+                                    </a>
                                   );
                                 })}
-                              </Menu>
-                            )} placement="bottomCenter">
-                              <Button type='text' icon={<DownOutlined />} />
-                            </Dropdown>
-                          )}
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          {item.list.slice(0, 2).map((item, j) => {
-                            return <p key={j}>{item}</p>;
-                          })}
-                        </div>
-                      </div>
-                    </Col>
-                  );
-                })}
-              </Row>
-            </Col>
-            <Col span={10}>
+                      )}
+                    </div>
+                    <div className='preview-items'>
+                      {item.list.slice(0, 2).map((item, j) => {
+                        return <p key={j}>{item}</p>;
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className='column preview-warning'>
               {auxArr.length > 0 && (
                 <p className='has-text-grey-light'>
-                  <ExclamationCircleOutlined className='has-text-danger'/>
-                  <span>Los siguientes campos <strong className='has-text-danger'>Obligatorios</strong> no se han definido:{' '}</span>
-                  
-                  <p>
-                    {auxArr.map((item) => {
-                      return <strong key={item.tag}>{item.tag} </strong>;
-                    })}
-                  </p>
+                  <span className='icon is-medium has-text-danger'>
+                    <i className='fas fa-exclamation-circle'></i>
+                  </span>
+                  <span>
+                    <span>
+                      Los siguientes campos <strong className='has-text-danger'>Obligatorios</strong> no se han
+                      definido:{' '}
+                    </span>
+                    <span>
+                      {auxArr.map((item) => {
+                        return <strong key={item.tag}>{item.tag} </strong>;
+                      })}
+                    </span>
+                  </span>
                 </p>
               )}
               {auxArr.length < 0 && (
                 <p className='has-text-grey-light'>
-                  <ExclamationCircleOutlined className='has-text-danger'/>
-                  <span>Tienes algunos campos <strong className='has-text-warning'>Opcionales</strong> sin definir.</span>
+                  <span className='icon is-medium has-text-warning'>
+                    <i className='fas fa-exclamation-circle'></i>
+                  </span>
+                  <span>
+                    Tienes algunos campos <strong className='has-text-warning'>Opcionales</strong> sin definir.
+                  </span>
                 </p>
               )}
-            </Col>
-          </Row>
+            </div>
+          </div>
         )}
-        
         {timeout && <LogOut />}
         {serverError && <ErrorServe errorData={errorData} />}
       </React.Fragment>

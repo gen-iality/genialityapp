@@ -146,7 +146,7 @@ class RoomManager extends Component {
   // Encargado de gestionar los estados de la videoConferencia
   // Estados: open_meeting_room, closed_meeting_room, ended_meeting_room
   handleRoomState = (e) => {
-    this.setState({ roomStatus: e.target.value }, async () => await this.saveConfig());
+    this.setState({ roomStatus: e }, async () => await this.saveConfig());
   };
 
   // Encargado de gestionar los juegos seleccionados
@@ -190,15 +190,19 @@ class RoomManager extends Component {
   };
 
   // Encargado de recibir los cambios de los input y select
-  handleChange = (e) => {
-    if (e.target.name === 'isPublished') {
-      const isPublished = e.target.value === 'true' ? true : false;
-      this.setState({ [e.target.name]: isPublished }, async () => await this.saveConfig());
-    } else if (e.target.name === 'select_host_manual') {
-      const select_host_manual = e.target.value === 'true' ? true : false;
-      this.setState({ [e.target.name]: select_host_manual });
-    } else {
-      this.setState({ [e.target.name]: e.target.value });
+  handleChange = (e, nameS) => {
+    console.log(e, nameS);
+    let { name } = e.target ? e.target : nameS;
+    let { value } = e.target ? e.target : e;
+
+    if (name === 'isPublished') {
+      /* const isPublished = value === 'true' ? true : false; */
+      this.setState({ [name]: value }, async () => await this.saveConfig());
+    } /* else if (name === 'select_host_manual') {
+      const select_host_manual = value === 'true' ? true : false;
+      this.setState({ [name]: value });
+    } */ else {
+      this.setState({ [name]: value });
     }
   };
 

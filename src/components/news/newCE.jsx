@@ -33,7 +33,6 @@ const NewCE = (props) => {
 
   const getNew = async () => {
     const data = await NewsFeed.getOne(props.eventId, locationState.edit);
-    console.log('DATA===>', data);
     setNotice(data);
   };
 

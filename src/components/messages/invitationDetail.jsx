@@ -1,100 +1,52 @@
-import React, { Component } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import { MessageApi } from '../../helpers/request';
 import MessageUser from './messageUser';
 import EmailPrev from './emailPreview';
-import API from '../../helpers/request';
+import {Row, Col, Tabs, Empty} from 'antd';
+import Header from '../../antdComponents/Header';
 
-class InvitationDetail extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      step: 0,
-      users:[]
-    };
-  }
-  
+const { TabPane } = Tabs;
 
-  componentDidMount(){
-    let eventId=this.props.event._id;
-    let idEnvio=this.props.match.params.id;
-    console.log("ID ENVIO==>",idEnvio)
-    if(eventId && idEnvio){
-      getData().then((data)=>{
-        this.setState({users:data})  
-      })
-          
+const InvitationDetail = (props) => {
+  const eventID = props.event._id;
+  const locationState = props.location.state; //si viene item
+  const [users, setUsers] = useState({});
+
+  useEffect(() => {
+    if (locationState.item._id) {
+      getOne();
     }
-      function getData(){
-        return new Promise((resolve, reject) => {
-          API.get(`/api/events/${eventId}/message/${idEnvio}/messageUser`)
-            .then(({ data }) => { 
-              //PERMITE ORDENAR LOS MAILS
-              const ordersMails = [
-                "Delivery",
-                "Open" ,
-                "Click" ,
-                "Send" ,
-                "Complaint",
-                 "Bounce"              
-             ];
-             console.log("RESP==>",data.data)
-              let respOrder;
-              if(data && data.data){
-               respOrder= data.data.sort((a,b)=>ordersMails.indexOf(a.status)-ordersMails.indexOf(b.status))
-              } 
+  }, [locationState.item._id]);
 
-              console.log("RESPORDER==>", respOrder)                  
-              resolve(respOrder);
-            })
-            .catch((e) => {
-              reject(e);
-            });
-        });
-      }
-    }
+  const getOne = async () => {
+    const response = await MessageApi.getOne(locationState.item._id, eventID);
 
-  close = () => {
-    this.props.history.goBack();
+    setUsers(response.data);
   };
 
-  render() {
-    const { item } = this.props.location.state;
-    const {users}=this.state  
-    const layout = [
-    users.length>0 && <MessageUser key='users' users={users.length>0 && users} />,
-      <EmailPrev key='email' event={this.props.event} item={item} />,
-    ];
-    return (
-      <React.Fragment>
-        <nav className='tabs' aria-label='breadcrumbs'>
-          <ul>
-            <li onClick={this.close}>
-              <a>
-                <span className='icon is-medium'>
-                  <i className='far fa-arrow-left fas fa-lg' />
-                </span>
-              </a>
-            </li>
-            <li
-              className={`${this.state.step === 0 ? 'is-active' : ''}`}
-              onClick={() => {
-                this.setState({ step: 0 });
-              }}>
-              <a>Reporte Envios</a>
-            </li>
-            <li
-              className={`${this.state.step === 1 ? 'is-active' : ''}`}
-              onClick={() => {
-                this.setState({ step: 1 });
-              }}>
-              <a>Mensaje Enviado</a>
-            </li>
-          </ul>
-        </nav>
-        {layout[this.state.step]}
-      </React.Fragment>
-    );
-  }
+  return (
+    <Fragment>
+      <Header title={'Detalle de la comunicación'} back />
+
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="Reporte Envios" key="1">
+          <Row justify='center' wrap gutter={[8, 8]}>
+            <Col span={22}>
+              {users.length ? <MessageUser key='users' users={users} /> : <Empty description={'Sin data'}/>}
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tab="Mensaje Enviado" key="2">
+          <Row justify='center' wrap gutter={[8, 8]}>
+            <Col span={22}>
+              {users.length ? <EmailPrev key='email' event={props.event} item={locationState.item} /> : <Empty description={'Sin data'}/>}
+            </Col>
+          </Row>
+        </TabPane>
+      </Tabs>
+    </Fragment>
+  )
 }
 
 export default withRouter(InvitationDetail);

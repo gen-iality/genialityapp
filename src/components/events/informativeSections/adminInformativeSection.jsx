@@ -3,7 +3,8 @@ import EviusReactQuill from '../../shared/eviusReactQuill';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { EventsApi } from '../../../helpers/request';
 import { UseEventContext } from '../../../Context/eventContext';
-import { Form, message, Button } from 'antd';
+import { Form, message, Button, Row, Col } from 'antd';
+import Header from '../../../antdComponents/Header';
 
 export default function AdmininformativeSection1(props) {
   const eventContext = UseEventContext();
@@ -44,7 +45,7 @@ export default function AdmininformativeSection1(props) {
   };
 
   useEffect(() => {
-    if (eventContext.value.itemsMenu.informativeSection1)
+    if (eventContext.value?.itemsMenu.informativeSection1)
       setContent(eventContext.value.itemsMenu.informativeSection1?.markup);
   }, [eventContext.value]);
 
@@ -57,7 +58,27 @@ export default function AdmininformativeSection1(props) {
 
   return (
     <section>
-      <EviusReactQuill name='content' data={content} handleChange={(e) => handleChangeReactQuill(e)} />
+      <Form
+        //initialValues={{ remember: true }}
+        onFinish={onFinish}
+        autoComplete='off'
+      >
+        <Header 
+          title={'Contenido Informativo'}
+          save
+          form
+        />
+
+        <Row justify='center' gutter={8} wrap>
+          <Col span={16}>
+            <Form.Item>
+              <EviusReactQuill name='content' data={content} handleChange={(e) => handleChangeReactQuill(e)} />
+            </Form.Item>
+          </Col>
+        </Row>
+
+      </Form>
+      {/* <EviusReactQuill name='content' data={content} handleChange={(e) => handleChangeReactQuill(e)} />
       <Form
         //initialValues={{ remember: true }}
         onFinish={onFinish}
@@ -67,7 +88,7 @@ export default function AdmininformativeSection1(props) {
             Submit
           </Button>
         </Form.Item>
-      </Form>
+      </Form> */}
     </section>
   );
 }

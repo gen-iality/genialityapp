@@ -32,6 +32,7 @@ const Faq = (props) => {
     let data = response.data.find((faqs) => faqs._id === locationState.edit);
 
     setFaq(data);
+    setFaq(data);//este esta repedito para poder cargar el titulo en caso de que tenga contenido, con uno solo no se porque no vuelve a cargar
     // if (data.content === '<p><br></p>') {
     //   setFaq({ content: '', title: data.title });
     // }
@@ -67,9 +68,7 @@ const Faq = (props) => {
   };
 
   const handleChange = (e) => {
-    if (faq) {
-      setFaq({ ...faq, title: e.target.value });
-    }
+    setFaq({ ...faq, title: e.target.value });
   };
 
   const onRemoveId = () => {

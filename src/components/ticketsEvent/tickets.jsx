@@ -3,7 +3,7 @@ import { eventTicketsApi } from '../../helpers/request';
 import Moment from 'moment';
 import CMS from '../newComponent/CMS';
 
-let Tickets = (props) => {
+const Tickets = (props) => {
   const columns = [
     {
       title: 'Id',
