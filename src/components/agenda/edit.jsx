@@ -208,7 +208,6 @@ class AgendaEdit extends Component {
 
     if (state?.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
-
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
@@ -271,7 +270,7 @@ class AgendaEdit extends Component {
       value = value.target.value;
     }
     if (name === 'requires_registration') {
-      value = e.target.checked;
+      value = value.target.checked;
     }
 
     /* console.log(name, value); */
@@ -998,7 +997,7 @@ class AgendaEdit extends Component {
             <Col span={18}>
               <Checkbox
                 defaultChecked={info && (info.requires_registration || info.requires_registration === 'true')}
-                onChange={this.handleChange}
+                onChange={(e) => this.handleChange(e, 'requires_registration')}
                 name='requires_registration'>
                 La actividad requiere registro
               </Checkbox>
