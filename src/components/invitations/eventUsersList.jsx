@@ -289,32 +289,6 @@ class eventUsersList extends Component {
       <>
         <Header 
           title={'Enviar información o correo a asistentes'}
-          /* description={`Seleccionados: ${selectedRowKeys.length}`} */
-          /* extra={(
-            <Row wrap gutter={[8, 8]}>
-              <Col>
-                <Button onClick={() => this.goToSendMessage()}>Enviar comunicación / Correo</Button>
-                <ModalAdvise visible={this.state.modalVisible} />
-              </Col>
-              <Col>
-                <Button type='primary' onClick={this.exportFile} icon={<DownloadOutlined />}>
-                  Exportar Usuario
-                </Button>
-              </Col>
-              <Col>
-                <Link to={`${this.props.matchUrl}/importar-excel`} icon={<UploadOutlined />}>
-                  <Button type='primary'>
-                    Importar Usuario
-                  </Button>
-                </Link>
-              </Col>
-              <Col>
-                <Button type='primary' onClick={this.modalUser} icon={<PlusCircleOutlined />}>
-                  Agregar Usuario
-                </Button>
-              </Col>
-            </Row>
-          )} */
         />
         <div>
           <small>

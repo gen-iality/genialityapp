@@ -695,7 +695,7 @@ class AgendaEdit extends Component {
                     placeholder={'Nombre de la actividad'}
                   />
                 </Form.Item>
-                <Form.Item label={'Subtítulo'}>
+                {/* <Form.Item label={'Subtítulo'}>
                   <Input
                     className='input'
                     type='text'
@@ -704,7 +704,7 @@ class AgendaEdit extends Component {
                     onChange={this.handleChange}
                     placeholder={'Ej: Salón 1, Zona Norte, Área de juegos'}
                   />
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item label={'Día'}>
                   <SelectAntd
                     name='date'

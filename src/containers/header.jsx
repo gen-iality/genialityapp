@@ -285,7 +285,7 @@ class Headers extends Component {
                 <Spin />
               )}
 
-              {window.location.href.toString().includes('events') &&
+              {(window.location.href.toString().includes('events') || window.location.href.toString().split('/').length == 4)&&
                 !window.location.href.toString().includes('organization') && (
                   <ModalAuth
                     tab={this.state.tabModal}
