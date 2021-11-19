@@ -264,6 +264,7 @@ class ListEventUser extends Component {
         dataIndex: 'checkedin_at',
         key: 'checkedin_at',
         ellipsis: true,
+        sorter: (a, b) => a.checkedin_at - b.checkedin_at,
         ...self.getColumnSearchProps('checkedin_at'),
         render: self.checkedincomponent,
       };
@@ -286,7 +287,7 @@ class ListEventUser extends Component {
             dataIndex: item.name,
             key: item.name,
             ellipsis: true,
-            sorter: (a, b) => a[item.name].length - b[item.name].length,
+            sorter: (a, b) => a[item.name]?.length - b[item.name]?.length,
             ...self.getColumnSearchProps(item.name),
             render: (record, key) => {
               return item.type == 'file' ? (
@@ -858,7 +859,7 @@ class ListEventUser extends Component {
         <TableA 
           list={users}
           header={this.state.columns}
-          scroll={{x: 1500}}
+          scroll={{x: 3200}}
           loading={this.state.loading}
           titleTable={(
             <Row gutter={[8, 8]}>

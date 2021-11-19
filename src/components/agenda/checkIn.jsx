@@ -205,14 +205,16 @@ class CheckAgenda extends Component {
       title: 'Editar',
       ellipsis: true,
       key: 'edit',
+      fixed: 'right',
       render: self.editcomponent,
     };
-    columnsTable.push(editColumn);
+    /* columnsTable.push(editColumn); */
 
     columnsTable.push({
       title: 'Chequeado',
       dataIndex: 'checkedin_at',
       ellipsis: true,
+      sorter: (a, b) => a.checkedin_at - b.checkedin_at,
       render: self.checkedincomponent,
     });
 
@@ -221,9 +223,11 @@ class CheckAgenda extends Component {
         title: properties[i].label ? properties[i].label : properties[i].name,
         dataIndex: properties[i].name,
         ellipsis: true,
+        sorter: (a, b) => a[properties[i].name]?.length - b[properties[i].name]?.length,
         ...this.getColumnSearchProps(properties[i].name),
       });
     }
+    columnsTable.push(editColumn);
 
     this.setState({ columnsTable });
   }
@@ -545,7 +549,7 @@ class CheckAgenda extends Component {
           header={columnsTable}
           list={usersData}
           pagination
-          scroll={{ x: 2500 }}
+          scroll={{ x: 3200 }}
           titleTable={(
             <Row gutter={[8, 8]} wrap justify='end'>
               <Col>
