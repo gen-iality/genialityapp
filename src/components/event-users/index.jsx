@@ -270,9 +270,10 @@ class ListEventUser extends Component {
       let editColumn = {
         title: 'Editar',
         key: 'edit',
+        fixed: 'right',
         render: self.editcomponent,
       };
-      columns.push(editColumn);
+      /* columns.push(editColumn); */
       columns.push(checkInColumn);
 
       let extraColumns = extraFields
@@ -285,6 +286,7 @@ class ListEventUser extends Component {
             dataIndex: item.name,
             key: item.name,
             ellipsis: true,
+            sorter: (a, b) => a[item.name].length - b[item.name].length,
             ...self.getColumnSearchProps(item.name),
             render: (record, key) => {
               return item.type == 'file' ? (
@@ -305,6 +307,7 @@ class ListEventUser extends Component {
         dataIndex: 'rol_id',
         key: 'rol_id',
         ellipsis: true,
+        sorter: (a, b) => a.rol_id.length - b.rol_id.length,
         ...self.getColumnSearchProps('rol_id'),
         render: self.rol_component,
       };
@@ -314,6 +317,7 @@ class ListEventUser extends Component {
         dataIndex: 'created_at',
         key: 'created_at',
         ellipsis: true,
+        sorter: (a, b) => a.created_at - b.created_at,
         ...self.getColumnSearchProps('created_at'),
         render: self.created_at_component,
       };
@@ -322,12 +326,14 @@ class ListEventUser extends Component {
         dataIndex: 'updated_at',
         key: 'updated_at',
         ellipsis: true,
+        sorter: (a, b) => a.updated_at - b.updated_at,
         ...self.getColumnSearchProps('updated_at'),
         render: self.updated_at_component,
       };
       columns.push(rol);
       columns.push(created_at);
       columns.push(updated_at);
+      columns.push(editColumn);
 
       this.setState({ columns: columns });
 
@@ -621,7 +627,7 @@ class ListEventUser extends Component {
   };
 
   handleChange = (e) => {
-    console.log(e);
+    /* console.log(e); */
     this.setState({ typeScanner: e });
     this.checkModal();
   };
@@ -852,7 +858,7 @@ class ListEventUser extends Component {
         <TableA 
           list={users}
           header={this.state.columns}
-          scroll={{x: 2500}}
+          scroll={{x: 1500}}
           loading={this.state.loading}
           titleTable={(
             <Row gutter={[8, 8]}>

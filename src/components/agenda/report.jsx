@@ -15,22 +15,26 @@ const ReportList = ( props ) => {
   const [columnsData, setColumnsData] = useState({});
   const columns = [
     {
-      title: 'Fecha inicio',
-      /* dataIndex: 'datetime_start', */
+      title: 'Fecha inicio', 
+      dataIndex: 'datetime_start',
+      ellipsis: true,
+      /* sorter: (a, b) => a.datetime_start - b.datetime_start, */
       ...getColumnSearchProps('datetime_start', columnsData),
       render: (text) => (
         <>
-          {Moment(text.datetime_start, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm')}            
+          {Moment(text).format('YYYY-MM-DD HH:mm')}            
         </>
       ),
     },
     {
       title: 'Fecha fin',
-      /* dataIndex: 'datetime_end', */
+      dataIndex: 'datetime_end',
+      ellipsis: true,
+      /* sorter: (a, b) => a.datetime_end - b.datetime_end, */
       ...getColumnSearchProps('datetime_end', columnsData),
       render: (text) => (
         <>           
-          {Moment(text.datetime_end, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm')}
+          {Moment(text).format('YYYY-MM-DD HH:mm')}
         </>
       ),
     },
@@ -38,6 +42,7 @@ const ReportList = ( props ) => {
       title: 'Actividad',
       dataIndex: 'name',
       ellipsis: true,
+      sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps('name', columnsData),
     },
     /* {

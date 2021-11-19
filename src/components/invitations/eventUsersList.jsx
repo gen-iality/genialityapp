@@ -74,6 +74,7 @@ class eventUsersList extends Component {
       title: 'Chequeado',
       dataIndex: 'checkedin_at',
       ellipsis: true,
+      sorter: (a, b) => a.checkedin_at.length - b.checkedin_at.length,
       ...this.getColumnSearchProps('checkedin_at'),
     });
 
@@ -91,6 +92,8 @@ class eventUsersList extends Component {
       dataIndex: 'ticket',
       filters: filterTickets,
       ellipsis: true,
+      /* sorter: (a, b) => a.ticket.length - b.ticket.length, */
+      ...this.getColumnSearchProps('ticket'),
       onFilter: (value, record) => record.ticket.indexOf(value) === 0,
     });
 
@@ -100,8 +103,9 @@ class eventUsersList extends Component {
       columnsTable.push({
         title: propertiesTable[i].label ? propertiesTable[i].label : propertiesTable[i].name,
         dataIndex: propertiesTable[i].name,
-        width: 300,
+        /* width: 300, */
         ellipsis: true,
+        sorter: (a, b) => a[propertiesTable[i].name].length - b[propertiesTable[i].name].length,
         ...this.getColumnSearchProps(propertiesTable[i].name),
       });
     }
@@ -111,16 +115,17 @@ class eventUsersList extends Component {
       {
         title: 'Creado',
         dataIndex: 'created_at',
-        width: 300,
+        /* width: 300, */
         ellipsis: true,
+        sorter: (a, b) => a.created_at - b.created_at,
         ...this.getColumnSearchProps('created_at'),
       },
       {
         title: 'Actualizado',
         dataIndex: 'updated_at',
-        width: 300,
+       /*  width: 300, */
         ellipsis: true,
-
+        sorter: (a, b) => a.updated_at - b.updated_at,
         ...this.getColumnSearchProps('updated_at'),
       }
     );
@@ -313,7 +318,7 @@ class eventUsersList extends Component {
         />
 
         <Table          
-          scroll={{ x: 2500 }}
+          scroll={{ x: 1500 }}
           size='small'
           rowSelection={rowSelection}
           columns={columnsTable}

@@ -944,7 +944,7 @@ class AgendaEdit extends Component {
             </Row>
           </Form>
         </TabPane>
-        <TabPane tab='Seleccion de lenguaje' key='2'>
+        {/* <TabPane tab='Seleccion de lenguaje' key='2'>
           <Row justify='center' wrap gutter={12}>
             <Col span={18}>
               {this.props.location.state.edit ? (
@@ -961,7 +961,7 @@ class AgendaEdit extends Component {
               )}
             </Col>
           </Row>
-        </TabPane>
+        </TabPane> */}
         <TabPane tab='Espacio Virtual' key='3'>
           <Row justify='center' wrap gutter={12}>
             <Col span={18}>
