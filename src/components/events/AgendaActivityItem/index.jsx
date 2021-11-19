@@ -336,8 +336,10 @@ function AgendaActivityItem(props) {
                           <p style={{ fontSize: '16px' }}>
                             {meetingState == 'open_meeting_room'
                               ? intl.formatMessage({ id: 'live' })
-                              : meetingState == 'ended_meeting_room' && item.video
+                              : meetingState == 'ended_meeting_room' && item.video && props.event._id!="618d3a983a90686a9016b5d3"
                               ? intl.formatMessage({ id: 'live.ended.video' })
+                              : meetingState == 'ended_meeting_room' && item.video && props.event._id=="618d3a983a90686a9016b5d3"
+                              ? intl.formatMessage({ id: 'live.ended.video.modify' })
                               : meetingState == 'ended_meeting_room'
                               ? intl.formatMessage({ id: 'live.ended' })
                               : meetingState == 'closed_meeting_room'
