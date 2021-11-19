@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { UsersApi, eventTicketsApi } from '../../helpers/request';
-import { Table, Input, Button, Space, Menu, Dropdown, Row, Col } from 'antd';
+import { Table, Input, Button, Space, Menu, Dropdown, Row, Col, Tag } from 'antd';
 import { SearchOutlined, DownOutlined, UserOutlined, DownloadOutlined,  UploadOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { parseData2Excel } from '../../helpers/utils';
@@ -105,7 +105,7 @@ class eventUsersList extends Component {
         dataIndex: propertiesTable[i].name,
         /* width: 300, */
         ellipsis: true,
-        sorter: (a, b) => a[propertiesTable[i].name].length - b[propertiesTable[i].name].length,
+        sorter: (a, b) => a[propertiesTable[i].name]?.length - b[propertiesTable[i].name]?.length,
         ...this.getColumnSearchProps(propertiesTable[i].name),
       });
     }
@@ -289,8 +289,8 @@ class eventUsersList extends Component {
       <>
         <Header 
           title={'Enviar información o correo a asistentes'}
-          description={`Seleccionados: ${selectedRowKeys.length}`}
-          extra={(
+          /* description={`Seleccionados: ${selectedRowKeys.length}`} */
+          /* extra={(
             <Row wrap gutter={[8, 8]}>
               <Col>
                 <Button onClick={() => this.goToSendMessage()}>Enviar comunicación / Correo</Button>
@@ -314,15 +314,45 @@ class eventUsersList extends Component {
                 </Button>
               </Col>
             </Row>
-          )}
+          )} */
         />
+        <div>
+          <small>
+            <Tag>Seleccionados: {selectedRowKeys.length}</Tag> 
+          </small>
+        </div>
 
         <Table          
-          scroll={{ x: 1500 }}
+          scroll={{ x: 3200 }}
           size='small'
           rowSelection={rowSelection}
           columns={columnsTable}
           dataSource={attendeesFormatedForTable}
+          title={() => (
+            <Row wrap gutter={[8, 8]} justify='end'>
+              <Col>
+                <Button onClick={() => this.goToSendMessage()}>Enviar comunicación / Correo</Button>
+                <ModalAdvise visible={this.state.modalVisible} />
+              </Col>
+              <Col>
+                <Button type='primary' onClick={this.exportFile} icon={<DownloadOutlined />}>
+                  Exportar Usuario
+                </Button>
+              </Col>
+              <Col>
+                <Link to={`${this.props.matchUrl}/importar-excel`} icon={<UploadOutlined />}>
+                  <Button type='primary'>
+                    Importar Usuario
+                  </Button>
+                </Link>
+              </Col>
+              <Col>
+                <Button type='primary' onClick={this.modalUser} icon={<PlusCircleOutlined />}>
+                  Agregar Usuario
+                </Button>
+              </Col>
+            </Row>
+          )}
         />
 
         {this.state.addUser && (
