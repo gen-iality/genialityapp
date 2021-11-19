@@ -166,11 +166,11 @@ class Speakers extends Component {
                     {speakersWithCategory.length && (
                       <>
                         {speakersWithCategory[category.order].length && (
-                          <Row wrap gutter={[16, 16]} >
+                          <Row wrap gutter={[16, 16]} justify='center'>
                             {speakersWithCategory[category.order].map((speaker, key) => (
-                              <Col key={key} xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
+                              <>
                                 {speaker.published && (
-                                  <>
+                                  <Col key={key} xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
                                     <div
                                       style={{
                                         width: '98%',
@@ -233,10 +233,10 @@ class Speakers extends Component {
                                         ]}
                                       />
                                     </Card>
-                                  </>
                                   
+                                  </Col>
                                 )}
-                              </Col>
+                              </>
                             ))}
                           </Row>
                         )}
@@ -250,55 +250,57 @@ class Speakers extends Component {
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
         <div style={{padding: '40px'}}>
-          <Row wrap gutter={[16, 16]}>
+          <Row wrap gutter={[16, 16]} justify='center'>
             {/* Mapeo de datos para mostrar los Speakers */}
             {speakersWithoutCategory.length &&
               speakersWithoutCategory.map((speaker, key) => (
-                <Col key={key} xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
+                <>
                   {speaker.published && (
-                    <Card
-                      onClick={() => {
-                        if (
-                          speaker.description !== '<p><br></p>' &&
-                          speaker.description !== undefined &&
-                          speaker.description !== null
-                        ) {
-                          this.modal(
-                            eventId,
-                            speaker._id,
-                            speaker.image,
-                            speaker.name,
-                            speaker.profession,
-                            speaker.description,
-                            speaker.category
-                          );
+                    <Col key={key} xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
+                      <Card
+                        onClick={() => {
+                          if (
+                            speaker.description !== '<p><br></p>' &&
+                            speaker.description !== undefined &&
+                            speaker.description !== null
+                          ) {
+                            this.modal(
+                              eventId,
+                              speaker._id,
+                              speaker.image,
+                              speaker.name,
+                              speaker.profession,
+                              speaker.description,
+                              speaker.category
+                            );
+                          }
+                        }}
+                        hoverable={speaker.description ? true : false}
+                        style={{ paddingTop: '30px', borderRadius: '20px', paddingLeft: '50px', paddingRight: '50px' }}
+                        cover={
+                          speaker.image ? (
+                            <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} src={speaker.image} />
+                          ) : (
+                            <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} icon={<UserOutlined />} />
+                          )
                         }
-                      }}
-                      hoverable={speaker.description ? true : false}
-                      style={{ paddingTop: '30px', borderRadius: '20px', paddingLeft: '50px', paddingRight: '50px' }}
-                      cover={
-                        speaker.image ? (
-                          <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} src={speaker.image} />
-                        ) : (
-                          <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} icon={<UserOutlined />} />
-                        )
-                      }
-                      actions={speaker.description && [this.btnViewMore(speaker)]}>
-                      <Meta
-                        title={[
-                          <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
-                            <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{speaker.name}</span>
-                          </div>,
-                        ]}
-                        description={[
-                          <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
-                            <p>{speaker.profession}</p>
-                          </div>,
-                        ]}
-                      />
-                    </Card>
+                        actions={speaker.description && [this.btnViewMore(speaker)]}>
+                        <Meta
+                          title={[
+                            <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
+                              <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{speaker.name}</span>
+                            </div>,
+                          ]}
+                          description={[
+                            <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
+                              <p>{speaker.profession}</p>
+                            </div>,
+                          ]}
+                        />
+                      </Card>
+                    </Col>
                   )}
-                </Col>
+                </>
               ))}
           </Row>
         </div>
