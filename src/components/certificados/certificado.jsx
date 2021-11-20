@@ -3,7 +3,7 @@ import { CertsApi, RolAttApi } from '../../helpers/request';
 import { useHistory } from 'react-router-dom';
 import { handleRequestError } from '../../helpers/utils';
 import { Row, Col, Form, Input, message, Modal, Select, Button, Upload, Image } from 'antd';
-import { ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, UploadOutlined, ExclamationOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
 import ReactQuill from 'react-quill';
 import { toolbarEditor } from '../../helpers/constants';
@@ -32,6 +32,7 @@ const Certificado = (props) => {
   const [certificado, setCertificado] = useState({content: initContent, imageFile: imageFile, imageData: imageFile, image: imageFile});
   const [roles, setRoles] = useState([]);
   const [rol, setRol] = useState({});
+  const [previewCert, setPreviewCert] = useState({});
   const tags = [
     { tag: 'event.name', label: 'Nombre del Evento', value: 'name' },
     { tag: 'event.start', label: 'Fecha Inicio del Evento', value: 'datetime_from' },
@@ -43,7 +44,6 @@ const Certificado = (props) => {
     { tag: 'ticket.name', label: 'Nombre del tiquete', value: 'ticket.title' },
     { tag: 'rol.name', label: 'Nombre del Rol' },
   ];
-  const [previewCert, setPreviewCert] = useState({});
   
   useEffect(() => {
     if(locationState.edit) {
@@ -57,9 +57,10 @@ const Certificado = (props) => {
     if(!data.content && data.content === '<p><br></p>') {
       setCertificado({...data, content: initContent});
     }
-    if(!data.rol) {
+    /* if(!data.rol) {
       setRol({});
-    }
+    } */
+    setCertificado({...data, imageFile: data.background});
     setCertificado({...data, imageFile: data.background});
   }
 
@@ -157,7 +158,6 @@ const Certificado = (props) => {
   const onChangeRol = async (e) => {
     setRol(roles.find(rol => rol._id === e));
     setCertificado({...certificado, rol: roles.find(rol => rol._id === e)});
-    /* setCertificado({...certificado, rol: roles.find(rol => rol._id === e)}); */
   }
 
   const chgTxt = (content) => {
@@ -219,7 +219,7 @@ const Certificado = (props) => {
           }
         });
         setPreviewCert(content);
-        const body = {content: content, image: certificado.imageData.data ? certificado.imageData.data : certificado.imageData};
+        const body = {content: content, image: certificado.imageFile?.data ? certificado.imageFile?.data : imageFile};
         CertsApi.generateCert(body).then((file) => {
           const blob = new Blob([file.blob], { type: file.type, charset: 'UTF-8' });
           // IE doesn't allow using a blob object directly as link href
@@ -252,6 +252,13 @@ const Certificado = (props) => {
     >
       <Header 
         title={'Certificado'}
+        description={(
+          <>
+            <ExclamationOutlined style={{color: 'orange'}} className='animate__animated animate__pulse animate__infinite'/>
+              {'Para tener una vista más exacta del certificado por favor presione el botón de generar'}
+            <br /><br />
+          </>
+        )}
         back
         save
         form
@@ -273,7 +280,7 @@ const Certificado = (props) => {
                 </Upload>
               </Col>
               <Col>
-                <Button type='primary' onClick={generate}>{'Vista Previa'}</Button>
+                <Button type='primary' onClick={generate}>{'Generar'}</Button>
               </Col>
             </Row>
           </Form.Item>
@@ -299,7 +306,7 @@ const Certificado = (props) => {
                   name={'rol'}
                   onChange={(e) => {onChangeRol(e)}}
                   placeholder={'Seleccione Rol'}
-                  value={rol._id}
+                  value={certificado.rol?._id || rol._id}
                 >
                   {
                     roles.map(rol => (
@@ -325,8 +332,14 @@ const Certificado = (props) => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item label={'Imagen de Fondo'} />
-              {/* </Form.Item> */}
+              <Form.Item label={'Imagen de Fondo'} tooltip={(
+                <>
+                  {'Si desea volver a tener la imagen anterior presione el siguiente botón'}
+                  <Button type='primary' onClick={() => setCertificado({...certificado, imageFile: imageFile, imageData: imageFile, image: imageFile})}>
+                    {'Cambiar a Imagen Original'}
+                  </Button>
+                </>
+              )}/>
                 <Image 
                   src={certificado.imageFile.data ? certificado.imageFile.data : imageFile} 
                   alt={'Imagen Certificado'} 
@@ -334,12 +347,11 @@ const Certificado = (props) => {
                 />
             </Col>
           </Row>
-          {/* {previewCert} */}
           
           <Form.Item label={'Certificado'}>
             <div className='editor-certificado'>
               <div style={{border: '1px solid', width: '800px', position: 'relative', margin: 'auto'}}>
-                <div className='texto-certificado'>
+                <div /* className='texto-certificado' */>
                   <ReactQuill
                     id='certContent'
                     value={certificado.content}
