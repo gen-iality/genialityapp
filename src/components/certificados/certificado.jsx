@@ -157,7 +157,7 @@ const Certificado = (props) => {
   const onChangeRol = async (e) => {
     setRol(roles.find(rol => rol._id === e));
     setCertificado({...certificado, rol: roles.find(rol => rol._id === e)});
-    setCertificado({...certificado, rol: roles.find(rol => rol._id === e)});
+    /* setCertificado({...certificado, rol: roles.find(rol => rol._id === e)}); */
   }
 
   const chgTxt = (content) => {
@@ -226,14 +226,14 @@ const Certificado = (props) => {
           // instead it is necessary to use msSaveOrOpenBlob
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             window.navigator.msSaveOrOpenBlob(blob);
-            /* return; */
+            return;
           }
           const data = window.URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.dataType = 'json';
           link.href = data;
-          /* link.target = '_blank'; */
-          link.download = `certificado${certificado.name}.pdf`;
+          link.target = '_blank';
+          /* link.download = `certificado${certificado.name}.pdf`; */
           link.dispatchEvent(new MouseEvent('click'));
           setTimeout(() => {
             // For Firefox it is necessary to delay revoking the ObjectURL
@@ -282,14 +282,6 @@ const Certificado = (props) => {
       
       <Row justify='center' wrap gutter={12}>
         <Col span={20}>
-          {/* <Form.Item label={'Nombre'} >
-            <Input 
-              value={certificado.name}
-              name={'name'}
-              placeholder={'Nombre del certificado'}
-              onChange={(e) => handleChange(e)}
-            />
-          </Form.Item> */}
           <Row wrap gutter={[16, 16]}>
             <Col span={12}>
               <Form.Item label={'Nombre'} >
@@ -307,10 +299,11 @@ const Certificado = (props) => {
                   name={'rol'}
                   onChange={(e) => {onChangeRol(e)}}
                   placeholder={'Seleccione Rol'}
+                  value={rol._id}
                 >
                   {
                     roles.map(rol => (
-                      <Option key={rol._id} >{rol.name}</Option>
+                      <Option key={rol._id} value={rol._id}>{rol.name}</Option>
                     ))
                   }
                 </Select>
@@ -332,14 +325,16 @@ const Certificado = (props) => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item label={'Imagen de Fondo'}>
-              </Form.Item>
+              <Form.Item label={'Imagen de Fondo'} />
+              {/* </Form.Item> */}
                 <Image 
                   src={certificado.imageFile.data ? certificado.imageFile.data : imageFile} 
                   alt={'Imagen Certificado'} 
+                  preview={previewCert}
                 />
             </Col>
           </Row>
+          {/* {previewCert} */}
           
           <Form.Item label={'Certificado'}>
             <div className='editor-certificado'>
