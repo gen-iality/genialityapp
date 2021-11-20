@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 //custom
 import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../helpers/request';
 import Moment from 'moment';
-import { Card, Avatar, Button, Modal, Row, Col } from 'antd';
+import { Card, Avatar, Button, Modal, Row, Col, Tooltip } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import withContext from '../../Context/withContext';
 
@@ -170,7 +170,7 @@ class Speakers extends Component {
                             {speakersWithCategory[category.order].map((speaker, key) => (
                               <>
                                 {speaker.published && (
-                                  <Col key={key} xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
+                                  <Col key={key} xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
                                     <div
                                       style={{
                                         width: '98%',
@@ -204,31 +204,29 @@ class Speakers extends Component {
                                       style={{ paddingTop: '30px', borderRadius: '20px', paddingLeft: '50px', paddingRight: '50px', }}
                                       cover={
                                         speaker.image ? (
-                                          <Avatar
-                                            style={{ display: 'block', margin: '0 auto' }}
-                                            size={210}
-                                            src={speaker.image}
-                                          />
+                                          <Avatar style={{ display: 'block', margin: 'auto' }} size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }} /* size={210} */ src={speaker.image} />
                                         ) : (
-                                          <Avatar
-                                            style={{ display: 'block', margin: '0 auto' }}
-                                            size={210}
-                                            icon={<UserOutlined />}
-                                          />
+                                          <Avatar style={{ display: 'block', margin: 'auto' }} size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }} /* size={210} */ icon={<UserOutlined />} />
                                         )
                                       }
                                       actions={speaker.description && [this.btnViewMore(speaker)]}>
                                       <Meta
                                         title={[
-                                          <div style={{ textAlign: 'center' }} key={'speaker-name' + key}>
-                                            <span>{speaker.name}</span>
+                                          <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
+                                            <p style={{fontSize: '18px', fontWeight: 'bold', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>
+                                              <Tooltip placement='bottomLeft' title={speaker.name}>
+                                                {speaker.name}
+                                              </Tooltip>
+                                            </p>
                                           </div>,
                                         ]}
                                         description={[
-                                          <div
-                                            style={{ minHeight: '100px', textAlign: 'center' }}
-                                            key={'speaker-description' + key}>
-                                            <p>{speaker.profession}</p>
+                                          <div key={'speaker-description  ' + key} style={{ maxHeight: '100px', textAlign: 'center' }}>
+                                            <p style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>
+                                              <Tooltip placement='bottomLeft' title={speaker.profession}>
+                                                <span>{speaker.profession}</span>
+                                              </Tooltip>
+                                            </p>
                                           </div>,
                                         ]}
                                       />
@@ -256,7 +254,7 @@ class Speakers extends Component {
               speakersWithoutCategory.map((speaker, key) => (
                 <>
                   {speaker.published && (
-                    <Col key={key} xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
+                    <Col key={key} xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
                       <Card
                         onClick={() => {
                           if (
@@ -279,21 +277,29 @@ class Speakers extends Component {
                         style={{ paddingTop: '30px', borderRadius: '20px', paddingLeft: '50px', paddingRight: '50px' }}
                         cover={
                           speaker.image ? (
-                            <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} src={speaker.image} />
+                            <Avatar style={{ display: 'block', margin: 'auto' }} size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }} /* size={210} */ src={speaker.image} />
                           ) : (
-                            <Avatar style={{ display: 'block', margin: '0 auto' }} size={210} icon={<UserOutlined />} />
+                            <Avatar style={{ display: 'block', margin: 'auto' }} size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }} /* size={210} */ icon={<UserOutlined />} />
                           )
                         }
                         actions={speaker.description && [this.btnViewMore(speaker)]}>
                         <Meta
                           title={[
                             <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
-                              <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{speaker.name}</span>
+                              <p style={{fontSize: '18px', fontWeight: 'bold', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>
+                                <Tooltip placement='bottomLeft' title={speaker.name}>
+                                  {speaker.name}
+                                </Tooltip>
+                              </p>
                             </div>,
                           ]}
                           description={[
-                            <div key={'speaker-description  ' + key} style={{ minHeight: '100px', textAlign: 'center' }}>
-                              <p>{speaker.profession}</p>
+                            <div key={'speaker-description  ' + key} style={{ maxHeight: '100px', textAlign: 'center' }}>
+                              <p style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>
+                                <Tooltip placement='bottomLeft' title={speaker.profession}>
+                                  <span>{speaker.profession}</span>
+                                </Tooltip>
+                              </p>
                             </div>,
                           ]}
                         />
