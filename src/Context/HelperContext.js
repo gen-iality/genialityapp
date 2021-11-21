@@ -388,6 +388,7 @@ export const HelperContextProvider = ({ children }) => {
     firestore
       .collection(colletion_name)
       .orderBy('state_id', 'asc')
+      .limit(100)
       .onSnapshot(function(querySnapshot) {
         let list = {};
 
