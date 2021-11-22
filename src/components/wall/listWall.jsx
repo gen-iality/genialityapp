@@ -36,7 +36,11 @@ class WallList extends Component {
       commenting: null,
       displayedComments: {},
       event: this.props.cEvent.value || {},
+      itemcomment:null,
+      comment:null  
     };
+    this.setItemComment=this.setItemComment.bind(this);
+    this.setComment=this.setComment.bind(this);
   }
 
   innerCreateComment = async (post, comment) => {
@@ -48,6 +52,17 @@ class WallList extends Component {
 
     this.innershowComments(post.id, post.comments + 1);
   };
+  setItemComment(id){
+    this.setState({
+      itemcomment:id
+    })
+  }
+
+  setComment(comment){
+    this.setState({
+      comment
+    })
+  }
 
   innershowComments = async (postId, commentsCount) => {
     let newdisplayedComments = { ...this.state.displayedComments };
@@ -164,7 +179,12 @@ class WallList extends Component {
                     style={{ marginBottom: '20px' }}
                     actions={[
                      this.props.cEventUser.value!==null && <CommentEditor
-                        key='text'
+                        key={`comment-${item.id}`}
+                        item={item}
+                        setItemComment={this.setItemComment}
+                        itemcomment={this.state.itemcomment}
+                        comment={this.state.comment}
+                        setComment={this.setComment}
                         onSubmit={(comment) => {
                           this.innerCreateComment(item, comment);
                         }}

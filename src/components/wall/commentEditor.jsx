@@ -3,9 +3,7 @@ import { Button, Form, Input, Row, Col, Modal } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import { AuthUrl } from '../../helpers/constants';
 
-let onChange = (setComment, e) => {
-  setComment(e.target.value);
-};
+
 
 let innerOnSubmit = (onSubmit, comment, setComment, user, setVisibleNoUser) => {
   if (!user) {
@@ -18,9 +16,13 @@ let innerOnSubmit = (onSubmit, comment, setComment, user, setVisibleNoUser) => {
 };
 
 const { TextArea } = Input;
-const CommentEditor = ({ onSubmit, user }) => {
-  let [comment, setComment] = useState('');
+const CommentEditor = ({ onSubmit, user,item,setItemComment,itemcomment,setComment,comment }) => {
   let [visibleNoUser, setVisibleNoUser] = useState(false);
+
+  let onChange = ( e) => {
+    setComment(e.target.value);   
+    setItemComment(item.id);
+  };
 
   return (
     <>
@@ -35,8 +37,8 @@ const CommentEditor = ({ onSubmit, user }) => {
             <Col span={21}>
               <TextArea
                 placeholder='Escribe un comentario...'
-                onChange={onChange.bind(null, setComment)}
-                value={comment}
+                onChange={onChange}
+                value={itemcomment&& item.id==itemcomment ? comment:''}
                 autoSize
                 id='comment'
                 allowClear
