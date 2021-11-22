@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { List, Avatar, Badge, Image, Tooltip, Popover, Typography } from 'antd';
-import { MessageTwoTone, EyeOutlined, CrownFilled } from '@ant-design/icons';
+import { MessageTwoTone, EyeOutlined, CrownFilled, FileImageOutlined } from '@ant-design/icons';
 import PopoverInfoUser from '../socialZone/hooks/Popover';
 import { HelperContext } from '../../Context/HelperContext';
 import { UseCurrentUser } from '../../Context/userContext';
@@ -37,7 +37,6 @@ const styleListPointer = {
 };
 
 function UsersCard(props) {
-  console.log('🚀 ~ file: usersCard.jsx ~ line 40 ~ UsersCard ~ props', props);
   let cUser = UseCurrentUser();
   let {
     createNewOneToOneChat,
@@ -50,9 +49,9 @@ function UsersCard(props) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [avatar, setAvatar] = useState('');
-  const { names, name, imageProfile, status, uid, participants, ultimo_mensaje, score, time } = props.item;
+  const { names, name, imageProfile, status, uid, participants, ultimo_mensaje, score, time, timestamp } = props.item;
 
-  const isAnImage = ultimo_mensaje.includes('https://firebasestorage.googleapis.com');
+  const isAnImage = ultimo_mensaje ? ultimo_mensaje.includes('https://firebasestorage.googleapis.com') : false;
 
   function getPrivateChatImg() {
     let userLogo = null;
@@ -174,7 +173,7 @@ function UsersCard(props) {
   function privateChats() {
     setActionCapture(() => {
       /** Validar que la hora se guarde en firebase */
-      return time && <span>{time}</span>;
+      return time || timestamp && <span>{time || timestamp}</span>;
     });
     setTitle(() => {
       return (
@@ -192,10 +191,11 @@ function UsersCard(props) {
       );
     });
     setDescription(() => {
-      console.log('🚀 ~ file: usersCard.jsx ~ line 196 ~ setDescription ~ ultimo_mensaje', ultimo_mensaje);
       return ultimo_mensaje ? (
         isAnImage ? (
-          <img src={ultimo_mensaje} alt='MessageImg' width='50' height='50' style={{ border: '2px solid #52C41A'}} />
+          <Text ellipsis={{ rows: 1 }} style={{ color: '#52C41A', width: '90%' }}>
+          <FileImageOutlined /> Imagen
+        </Text>
         ) : (
           <Text ellipsis={{ rows: 1 }} style={{ color: '#52C41A', width: '90%' }}>
             {ultimo_mensaje}
@@ -299,7 +299,8 @@ function UsersCard(props) {
 
   useEffect(() => {
     initComponent();
-  }, []);
+  }, [props]);
+  console.log("Log. - file: usersCard.jsx - line 301 - props", props);
 
   return (
     <List.Item

@@ -6,7 +6,7 @@ import { UseEventContext } from './eventContext';
 import { UseCurrentUser } from './userContext';
 import { UseUserEvent } from './eventUserContext';
 import { notification, Button, Row, Col } from 'antd';
-import { MessageOutlined, SendOutlined } from '@ant-design/icons';
+import { MessageOutlined, SendOutlined, FileImageOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { createChatInitalPrivate, createChatRoom } from '../components/networking/agendaHook';
 import { getGender } from 'gender-detection-from-name';
@@ -134,9 +134,9 @@ export const HelperContextProvider = ({ children }) => {
   }
 
   const openNotification = (data) => {
-    const imageUrl = data.ultimo_mensaje
-    const isAnImage = imageUrl.includes('https://firebasestorage.googleapis.com')
-    
+    const imageUrl = data.ultimo_mensaje;
+    const isAnImage = imageUrl ? imageUrl.includes('https://firebasestorage.googleapis.com') : false;
+
     const btn = (
       <Button
         style={{ backgroundColor: '#1CDCB7', borderColor: 'white', color: 'white', fontWeight: '700' }}
@@ -169,8 +169,11 @@ export const HelperContextProvider = ({ children }) => {
           <Col>{moment().format('h:mm A')}</Col>
         </Row>
       ),
-      description: (isAnImage ? <img src={data.ultimo_mensaje}
-        alt="MessageImg" width="100" height="100" /> : <Row style={{ color: 'grey' }}>{data.ultimo_mensaje}</Row>),
+      description: isAnImage ? (
+        <div style={{ color: 'grey' }}><FileImageOutlined /> Imagen</div>
+      ) : (
+        <Row style={{ color: 'grey' }}>{data.ultimo_mensaje}</Row>
+      ),
       duration: 8,
       icon: <MessageOutlined style={{ color: '#1CDCB7' }} />,
       btn,
@@ -371,16 +374,18 @@ export const HelperContextProvider = ({ children }) => {
 
           list.push(data);
         });
-
+        
         let totalNewMessages = 0;
         list.map((privateuser) => {
           let countsmsj =
-            privateuser?.participants &&
-            privateuser.participants.filter((participant) => participant.idparticipant !== cUser.value.uid);
+          privateuser?.participants &&
+          privateuser.participants.filter((participant) => participant.idparticipant !== cUser.value.uid);
           if (countsmsj && countsmsj[0]?.countmessajes != undefined) {
             totalNewMessages = totalNewMessages + countsmsj[0].countmessajes;
           }
         });
+          console.log("Log. - file: HelperContext.js - line 387 - list", list);
+
         settotalPrivateMessages(totalNewMessages);
         setPrivatechatlist(list);
       });
