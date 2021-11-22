@@ -13,7 +13,6 @@ function formatAMPM(hoy) {
 }
 
 export const createChatRoom = (idroom) => {
-  console.log('creando este chat para ver de one');
   let refchatroom = firestoreeviuschat.collection('messages' + idroom).doc('initial');
   refchatroom
     .get()
