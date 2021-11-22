@@ -37,6 +37,7 @@ const styleListPointer = {
 };
 
 function UsersCard(props) {
+  console.log('🚀 ~ file: usersCard.jsx ~ line 40 ~ UsersCard ~ props', props);
   let cUser = UseCurrentUser();
   let {
     createNewOneToOneChat,
@@ -50,6 +51,8 @@ function UsersCard(props) {
   const [description, setDescription] = useState('');
   const [avatar, setAvatar] = useState('');
   const { names, name, imageProfile, status, uid, participants, ultimo_mensaje, score, time } = props.item;
+
+  const isAnImage = ultimo_mensaje.includes('https://firebasestorage.googleapis.com');
 
   function getPrivateChatImg() {
     let userLogo = null;
@@ -171,7 +174,7 @@ function UsersCard(props) {
   function privateChats() {
     setActionCapture(() => {
       /** Validar que la hora se guarde en firebase */
-      return time && <span>{moment(time.seconds * 1000).format('h:mm A')}</span>;
+      return time && <span>{time}</span>;
     });
     setTitle(() => {
       return (
@@ -189,10 +192,15 @@ function UsersCard(props) {
       );
     });
     setDescription(() => {
+      console.log('🚀 ~ file: usersCard.jsx ~ line 196 ~ setDescription ~ ultimo_mensaje', ultimo_mensaje);
       return ultimo_mensaje ? (
-        <Text ellipsis={{ rows: 1 }} style={{ color: '#52C41A', width: '90%' }}>
-          {ultimo_mensaje}
-        </Text>
+        isAnImage ? (
+          <img src={ultimo_mensaje} alt='MessageImg' width='50' height='50' style={{ border: '2px solid #52C41A'}} />
+        ) : (
+          <Text ellipsis={{ rows: 1 }} style={{ color: '#52C41A', width: '90%' }}>
+            {ultimo_mensaje}
+          </Text>
+        )
       ) : (
         <Text ellipsis={{ rows: 1 }} style={{ color: '#CCCCCC', width: '90%' }}>
           No hay mensajes nuevos

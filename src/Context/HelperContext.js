@@ -134,6 +134,9 @@ export const HelperContextProvider = ({ children }) => {
   }
 
   const openNotification = (data) => {
+    const imageUrl = data.ultimo_mensaje
+    const isAnImage = imageUrl.includes('https://firebasestorage.googleapis.com')
+    
     const btn = (
       <Button
         style={{ backgroundColor: '#1CDCB7', borderColor: 'white', color: 'white', fontWeight: '700' }}
@@ -166,7 +169,8 @@ export const HelperContextProvider = ({ children }) => {
           <Col>{moment().format('h:mm A')}</Col>
         </Row>
       ),
-      description: <Row style={{ color: 'grey' }}>{data.ultimo_mensaje}</Row>,
+      description: (isAnImage ? <img src={data.ultimo_mensaje}
+        alt="MessageImg" width="100" height="100" /> : <Row style={{ color: 'grey' }}>{data.ultimo_mensaje}</Row>),
       duration: 8,
       icon: <MessageOutlined style={{ color: '#1CDCB7' }} />,
       btn,
