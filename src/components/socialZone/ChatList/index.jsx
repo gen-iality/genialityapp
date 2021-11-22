@@ -100,7 +100,7 @@ const ChatList = (props) => {
             title='chatevius'
             className='ChatEviusLan'
             src={
-              'https://chatevius.web.app?nombre=' +
+              'https://chatevius.netlify.app?nombre=' +
               userNameActive +
               '&chatid=event_' +
               cEvent.value?._id +
@@ -148,7 +148,7 @@ const ChatList = (props) => {
                 title='chatevius'
                 className='ChatEviusLan'
                 src={
-                  'https://chatevius.web.app?iduser=' +
+                  'https://chatevius.netlify.app?iduser=' +
                   chatActual?.idotheruser +
                   '&chatid=' +
                   chatActual?.chatid +
