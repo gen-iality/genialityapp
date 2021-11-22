@@ -122,7 +122,7 @@ export const getCurrentUser = () => {
     //   return;
     // }
 
-    if (!token) {
+    if (!token || token=="undefined") {
       resolve(null);
     } else {
       try {
@@ -146,7 +146,8 @@ export const getCurrentUser = () => {
               progress: undefined,
             });
             setTimeout(() => {
-              window.location.href = '/';
+              Cookie.remove('evius_token');
+              // window.location.href = `/landing/${eventId}`;
             }, 5000);
             //this.setState({ timeout: true, loader: false })
           } else {
