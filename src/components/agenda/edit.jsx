@@ -884,7 +884,7 @@ class AgendaEdit extends Component {
                   </Dropzone>
                   {image && <img src={image} alt={`activity_${name}`} />}
                 </Form.Item>
-                <Form.Item label={'Capacidad'}>
+                {/* <Form.Item label={'Capacidad'}>
                   <Input
                     min={0}
                     type='number'
@@ -893,7 +893,7 @@ class AgendaEdit extends Component {
                     onChange={this.handleChange}
                     placeholder={'Cupo total'}
                   />
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item label={'Categorías'}>
                   <Row wrap gutter={[8, 8]}>
                     <Col span={23}>
@@ -936,7 +936,7 @@ class AgendaEdit extends Component {
                         <Button icon={<SettingOutlined />} />
                       </Link>
                     </Col>
-                    <br /><br /><br /><br /><br />
+                    <br /><br /><br /><br /><br /><br /><br />
                   </Row>
                 </Form.Item>
               </Col>
