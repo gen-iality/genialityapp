@@ -154,7 +154,7 @@ class Speakers extends Component {
     } = this.state;
 
     let eventId = this.props.cEvent.value._id;
-    console.log('Marlon', this.props.cEvent.value);
+    
     let eventColor = this.props.cEvent.value.styles.toolbarDefaultBg; // outline:`5px dotted ${eventColor}`, outlineOffset:'10px' a los avatar
 
     return (
