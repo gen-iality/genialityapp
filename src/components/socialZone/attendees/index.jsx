@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { List } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import { HelperContext } from '../../../Context/HelperContext';
+import { UseCurrentUser } from '../../../Context/userContext';
 import UsersCard from '../../shared/usersCard';
 
 const AttendeList = function(props) {
@@ -19,6 +20,7 @@ const AttendeList = function(props) {
     maleIcons,
     femaleicons,
   } = useContext(HelperContext);
+  let cUser = UseCurrentUser();
   const pag = 15;
 
   function whatGenderIs(gender) {
@@ -74,9 +76,10 @@ const AttendeList = function(props) {
 
       // imageProfile
     });
-
-    setmyattendelist(ordenadousers);
-    setfilteredlist(ordenadousers.slice(0, pag));
+    const userId = cUser.value._id
+    const removeCurrentUserFromList = ordenadousers.filter((users)=> users.iduser !== userId)
+    setmyattendelist(removeCurrentUserFromList);
+    setfilteredlist(removeCurrentUserFromList.slice(0, pag));
     setPage(1);
   }, [attendeeListPresence, attendeeList]);
 
