@@ -129,7 +129,7 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                   title='chatevius'
                   className='ChatEviusLan'
                   src={
-                    'https://chatevius.web.app?nombre=' +
+                    'https://chatevius.netlify.app?nombre=' +
                     userName +
                     '&chatid=' +
                     currentRoom +
@@ -141,13 +141,13 @@ function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
                   }></iframe>
               )
 
-              // https://chatevius.web.app?nombre=Pruebas Mocionsoft&chatid=6XNNGi7NCpQXHwOmU6xy
+              // https://chatevius.netlify.app?nombre=Pruebas Mocionsoft&chatid=6XNNGi7NCpQXHwOmU6xy
 
               // <iframe
               //   title='chatevius'
               //   className='ChatEvius'
               //   style={{ width: 400, height: 373 }}
-              //   src={'https://chatevius.web.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
+              //   src={'https://chatevius.netlify.app?nombre=' + userName + '&chatid=' + currentRoom}></iframe>
               }
             </Col>
           </Row>
