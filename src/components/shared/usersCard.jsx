@@ -49,7 +49,7 @@ function UsersCard(props) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [avatar, setAvatar] = useState('');
-  const { names, name, imageProfile, status, uid, participants, ultimo_mensaje, score, time, timestamp } = props.item;
+  const { names, name, imageProfile, status, uid, participants, ultimo_mensaje, score, time } = props.item;
 
   const isAnImage = ultimo_mensaje ? ultimo_mensaje.includes('https://firebasestorage.googleapis.com') : false;
 
@@ -173,7 +173,7 @@ function UsersCard(props) {
   function privateChats() {
     setActionCapture(() => {
       /** Validar que la hora se guarde en firebase */
-      return time || timestamp && <span>{time || timestamp}</span>;
+      return time && <span>{time}</span>;
     });
     setTitle(() => {
       return (
@@ -300,7 +300,6 @@ function UsersCard(props) {
   useEffect(() => {
     initComponent();
   }, [props]);
-  console.log("Log. - file: usersCard.jsx - line 301 - props", props);
 
   return (
     <List.Item

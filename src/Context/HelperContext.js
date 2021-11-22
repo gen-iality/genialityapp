@@ -384,7 +384,6 @@ export const HelperContextProvider = ({ children }) => {
             totalNewMessages = totalNewMessages + countsmsj[0].countmessajes;
           }
         });
-          console.log("Log. - file: HelperContext.js - line 387 - list", list);
 
         settotalPrivateMessages(totalNewMessages);
         setPrivatechatlist(list);
