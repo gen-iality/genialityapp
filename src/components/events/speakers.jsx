@@ -154,6 +154,8 @@ class Speakers extends Component {
     } = this.state;
 
     let eventId = this.props.cEvent.value._id;
+    
+    let eventColor = this.props.cEvent.value.styles.toolbarDefaultBg; // outline:`5px dotted ${eventColor}`, outlineOffset:'10px' a los avatar
 
     return (
       <>
@@ -201,19 +203,40 @@ class Speakers extends Component {
                                         }
                                       }}
                                       hoverable={speaker.description ? true : false}
-                                      style={{ paddingTop: '30px', borderRadius: '20px', paddingLeft: '50px', paddingRight: '50px', }}
+                                      style={{
+                                        paddingTop: '30px',
+                                        borderRadius: '20px',
+                                        paddingLeft: '50px',
+                                        paddingRight: '50px',
+                                        minHeight: '428px',
+                                      }}
                                       cover={
                                         speaker.image ? (
-                                          <Avatar style={{ display: 'block', margin: 'auto' }} size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }} /* size={210} */ src={speaker.image} />
+                                          <Avatar
+                                            style={{ display: 'block', margin: 'auto' }}
+                                            size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                                            /* size={210} */ src={speaker.image}
+                                          />
                                         ) : (
-                                          <Avatar style={{ display: 'block', margin: 'auto' }} size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }} /* size={210} */ icon={<UserOutlined />} />
+                                          <Avatar
+                                            style={{ display: 'block', margin: 'auto' }}
+                                            size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                                            /* size={210} */ icon={<UserOutlined />}
+                                          />
                                         )
                                       }
                                       actions={speaker.description && [this.btnViewMore(speaker)]}>
                                       <Meta
                                         title={[
                                           <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
-                                            <p style={{fontSize: '18px', fontWeight: 'bold', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>
+                                            <p
+                                              style={{
+                                                fontSize: '18px',
+                                                fontWeight: 'bold',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                              }}>
                                               <Tooltip placement='bottomLeft' title={speaker.name}>
                                                 {speaker.name}
                                               </Tooltip>
@@ -221,8 +244,15 @@ class Speakers extends Component {
                                           </div>,
                                         ]}
                                         description={[
-                                          <div key={'speaker-description  ' + key} style={{ maxHeight: '100px', textAlign: 'center' }}>
-                                            <p style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>
+                                          <div
+                                            key={'speaker-description  ' + key}
+                                            style={{ maxHeight: '100px', textAlign: 'center' }}>
+                                            <p
+                                              style={{
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                              }}>
                                               <Tooltip placement='bottomLeft' title={speaker.profession}>
                                                 <span>{speaker.profession}</span>
                                               </Tooltip>
@@ -231,7 +261,6 @@ class Speakers extends Component {
                                         ]}
                                       />
                                     </Card>
-                                  
                                   </Col>
                                 )}
                               </>
@@ -247,7 +276,7 @@ class Speakers extends Component {
           </>
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
-        <div style={{padding: '40px'}}>
+        <div style={{ padding: '40px' }}>
           <Row wrap gutter={[16, 16]} justify='center'>
             {/* Mapeo de datos para mostrar los Speakers */}
             {speakersWithoutCategory.length &&
@@ -274,19 +303,40 @@ class Speakers extends Component {
                           }
                         }}
                         hoverable={speaker.description ? true : false}
-                        style={{ paddingTop: '30px', borderRadius: '20px', paddingLeft: '50px', paddingRight: '50px' }}
+                        style={{
+                          paddingTop: '30px',
+                          borderRadius: '20px',
+                          paddingLeft: '50px',
+                          paddingRight: '50px',
+                          minHeight: '428px',
+                        }}
                         cover={
                           speaker.image ? (
-                            <Avatar style={{ display: 'block', margin: 'auto' }} size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }} /* size={210} */ src={speaker.image} />
+                            <Avatar
+                              style={{ display: 'block', margin: 'auto' }}
+                              size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                              /* size={210} */ src={speaker.image}
+                            />
                           ) : (
-                            <Avatar style={{ display: 'block', margin: 'auto' }} size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }} /* size={210} */ icon={<UserOutlined />} />
+                            <Avatar
+                              style={{ display: 'block', margin: 'auto' }}
+                              size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                              /* size={210} */ icon={<UserOutlined />}
+                            />
                           )
                         }
                         actions={speaker.description && [this.btnViewMore(speaker)]}>
                         <Meta
                           title={[
                             <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
-                              <p style={{fontSize: '18px', fontWeight: 'bold', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>
+                              <p
+                                style={{
+                                  fontSize: '18px',
+                                  fontWeight: 'bold',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                  overflow: 'hidden',
+                                }}>
                                 <Tooltip placement='bottomLeft' title={speaker.name}>
                                   {speaker.name}
                                 </Tooltip>
@@ -294,8 +344,10 @@ class Speakers extends Component {
                             </div>,
                           ]}
                           description={[
-                            <div key={'speaker-description  ' + key} style={{ maxHeight: '100px', textAlign: 'center' }}>
-                              <p style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>
+                            <div
+                              key={'speaker-description  ' + key}
+                              style={{ maxHeight: '100px', textAlign: 'center' }}>
+                              <p style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
                                 <Tooltip placement='bottomLeft' title={speaker.profession}>
                                   <span>{speaker.profession}</span>
                                 </Tooltip>
