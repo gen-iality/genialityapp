@@ -48,7 +48,7 @@ class WallList extends Component {
     await this.setState({ commenting: null });
     message.success('Comentario creado.');
     const dataPost = await saveFirebase.createComment(post.id, this.state.event._id, comment, this.props.cUser.value);
-    this.setState({ dataPost });
+   // this.setState({ dataPost });
 
     this.innershowComments(post.id, post.comments + 1);
   };
@@ -66,7 +66,7 @@ class WallList extends Component {
 
   innershowComments = async (postId, commentsCount) => {
     let newdisplayedComments = { ...this.state.displayedComments };
-
+    this.state.displayedComments[postId]
     //Mostramos los comentarios
     if (!this.state.displayedComments[postId]) {
       let content = (
@@ -125,14 +125,13 @@ class WallList extends Component {
         if (snapshot.empty) {
           this.setState({ dataPost: dataPost });
         }
-      console.log("snapshot===>",snapshot.docs.length)
+   
        dataPost= await Promise.all(snapshot.docs.map(async(doc) => {
-          var data = doc.data();         
-          console.log("dataPosts==>",doc.data());              
+          var data = doc.data();                     
             let picture= await this.getDataUser(doc.data().author)
             return {...doc.data(), id: doc.id ,picture:picture };      
         }));
-        console.log("DATA ACA====>",dataPost)
+        
         this.setState({ dataPost: dataPost });
       });
     } catch (e) {
@@ -180,11 +179,7 @@ class WallList extends Component {
                     actions={[
                      this.props.cEventUser.value!==null && <CommentEditor
                         key={`comment-${item.id}`}
-                        item={item}
-                        setItemComment={this.setItemComment}
-                        itemcomment={this.state.itemcomment}
-                        comment={this.state.comment}
-                        setComment={this.setComment}
+                        item={item}                        
                         onSubmit={(comment) => {
                           this.innerCreateComment(item, comment);
                         }}

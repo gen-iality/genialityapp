@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Form, Input, Row, Col, Modal } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import { AuthUrl } from '../../helpers/constants';
+import HelperContext from '../../Context/HelperContext';
+
 
 
 
@@ -16,13 +18,19 @@ let innerOnSubmit = (onSubmit, comment, setComment, user, setVisibleNoUser) => {
 };
 
 const { TextArea } = Input;
-const CommentEditor = ({ onSubmit, user,item,setItemComment,itemcomment,setComment,comment }) => {
+const CommentEditor = ({ onSubmit, user,item,...props }) => {
   let [visibleNoUser, setVisibleNoUser] = useState(false);
+  let {setComment,comment,setItemComment,itemcomment}=useContext(HelperContext)
 
   let onChange = ( e) => {  
-    setComment(e.target.value);   
-    e.target.value!==""?setItemComment(item.id):setItemComment(null);
+    setComment(e.target.value);
+    if( itemcomment!==item.id){
+      setItemComment(item.id);
+    }   
+   
   };
+
+  console.log("PROPS ACA==>",props)
 
   return (
     <>
@@ -38,9 +46,9 @@ const CommentEditor = ({ onSubmit, user,item,setItemComment,itemcomment,setComme
               <TextArea
                 placeholder='Escribe un comentario...'
                 onChange={onChange}
-                value={itemcomment&& item.id==itemcomment ? comment:''}
+                value={ itemcomment&& item.id== itemcomment ? comment:''}
                 autoSize
-                autoFocus={itemcomment&& item.id==itemcomment}
+                autoFocus={ itemcomment&& item.id== itemcomment}
                 id='comment'
                 allowClear
                 showCount
