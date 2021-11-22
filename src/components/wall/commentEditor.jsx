@@ -19,9 +19,9 @@ const { TextArea } = Input;
 const CommentEditor = ({ onSubmit, user,item,setItemComment,itemcomment,setComment,comment }) => {
   let [visibleNoUser, setVisibleNoUser] = useState(false);
 
-  let onChange = ( e) => {
+  let onChange = ( e) => {  
     setComment(e.target.value);   
-    setItemComment(item.id);
+    e.target.value!==""?setItemComment(item.id):setItemComment(null);
   };
 
   return (
@@ -40,6 +40,7 @@ const CommentEditor = ({ onSubmit, user,item,setItemComment,itemcomment,setComme
                 onChange={onChange}
                 value={itemcomment&& item.id==itemcomment ? comment:''}
                 autoSize
+                autoFocus={itemcomment&& item.id==itemcomment}
                 id='comment'
                 allowClear
                 showCount
