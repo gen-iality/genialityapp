@@ -162,21 +162,31 @@ class CertificadoLanding extends Component {
           <Col xs={22} sm={22} md={8} lg={8} xl={8} style={{ margin: '0 auto' }}>
             <Card>
               {/* Alert informativo de certificados disponibles */}
-              <Alert message='Certificados disponibles' type='success' />
-              {checkedInUsers.map((user, key) => (
-                <div key={key}>
-                  <br />
-                  {/* Nombre de evento */}
+              {this.props.cUser.value.rol_id == '619d0c9161162b7bd16fcb82' ||
+              this.props.cUser.value.rol_id == '619d0c8a4c361c44e83f4312' ? (
+                <>
+                  <Alert message='Certificados disponibles' type='success' />
+                  {checkedInUsers.map((user, key) => (
+                    <div key={key}>
+                      <br />
+                      {/* Nombre de evento */}
 
-                  {/* Importacion del boton para descargar certificado */}
-                  <IconText
-                    text='Descargar Certificado'
-                    icon={DownloadOutlined}
-                    onSubmit={() => this.generateCert(user)}
-                  />
-                  <br />
-                </div>
-              ))}
+                      {/* Importacion del boton para descargar certificado */}
+                      <IconText
+                        text='Descargar Certificado'
+                        icon={DownloadOutlined}
+                        onSubmit={() => this.generateCert(user)}
+                      />
+                      <br />
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <h1
+                  style={{
+                    fontSize: '27px',
+                  }}>{`Hola ${this.props.cUser.value.displayName} 👋, los certificados solo estan Disponibles para usuarios Universo y Super Heróe  `}</h1>
+              )}
             </Card>
           </Col>
         )}
@@ -185,7 +195,14 @@ class CertificadoLanding extends Component {
           (!this.props.cUser.value._id && <p>Debes ingresar con tu usuario para descargar el certificado</p>)}
 
         {this.props.cUser.value && this.props.cUser.value._id && checkedInUsers && checkedInUsers.length <= 0 && (
-          <h1 style={{ justifyContent: 'center', fontSize: '27px', alignItems: 'center', display: 'flex', fontWeight:"bold" }}>
+          <h1
+            style={{
+              justifyContent: 'center',
+              fontSize: '27px',
+              alignItems: 'center',
+              display: 'flex',
+              fontWeight: 'bold',
+            }}>
             Debes estar registrado en el evento para poder descargar tu certificado{' '}
           </h1>
         )}

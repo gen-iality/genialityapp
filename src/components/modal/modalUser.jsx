@@ -172,7 +172,7 @@ class UserModal extends Component {
         console.log("10. resp ", resp)
       }else{
         console.log("se va por aca",this.props.cEvent)
-        resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id);
+        resp = await UsersApi.createOne(snap, this.props.cEvent?.value?._id ||  this.props.cEvent?.value?.idEvent);
         console.log("10. USERADD==>",resp)
       }
       if (this.props.byActivity && resp.data._id) {      

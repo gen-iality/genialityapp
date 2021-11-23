@@ -66,7 +66,7 @@ const AgendaActividadDetalle = (props) => {
     props.setVirtualConference(false);
     HandleOpenCloseMenuRigth();
 
-    console.log("buscar rol=>>",props.cEventUser.value.rol_id)
+    console.log('buscar rol=>>', props.cEventUser.value.user.rol_id);
 
     return () => {
       props.setTopBanner(true);
@@ -74,8 +74,6 @@ const AgendaActividadDetalle = (props) => {
       HandleOpenCloseMenuRigth();
       handleChangeCurrentActivity(null);
     };
-
-
   }, []);
 
   useEffect(() => {
@@ -146,7 +144,23 @@ const AgendaActividadDetalle = (props) => {
         <Card style={{ padding: '1 !important' }} className='agenda_information'>
           {/* <HeaderColumnswithContext isVisible={true} /> */}
           {!blockActivity ? (
-            <HCOActividad />
+            <>
+              {props.match.params.activity_id === '61992d5f020bde260e068402' &&
+              props.cEventUser.value.user.rol_id !== '619d0c9161162b7bd16fcb82' ? (
+                <Alert
+                  showIcon
+                  style={{ width: '100%', marginTop: 40, marginBottom: 40, textAlign: 'center', fontSize: '19px' }}
+                  message={
+                    <>
+                      {`Hola ${props.cEventUser.value.user.displayName} 👋, Este espacio esta reservado solo para usuarios UNIVERSO`}
+                    </>
+                  }
+                  type='warning'
+                />
+              ) : (
+                <HCOActividad />
+              )}
+            </>
           ) : (
             <>
               <Row>

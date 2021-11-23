@@ -93,7 +93,7 @@ const ContentContainer = () => {
           </NewEventProvider>
         </PrivateRoute>
 
-        <PrivateRoute path='/eventadmin/:event_id'>
+        <PrivateRoute path='/eventadmin/:event'>
           <CurrentEventProvider>
             <CurrentUserEventProvider>
               <CurrentUserProvider>
