@@ -172,7 +172,7 @@ class Speakers extends Component {
                             {speakersWithCategory[category.order].map((speaker, key) => (
                               <>
                                 {speaker.published && (
-                                  <Col key={key} xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
+                                  <Col key={key} xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
                                     <div
                                       style={{
                                         width: '98%',
@@ -276,14 +276,14 @@ class Speakers extends Component {
           </>
         )}
         {/* Mapeo de datos para mostrar los Speakers */}
-        <div style={{ padding: '40px' }}>
-          <Row wrap gutter={[16, 16]} justify='center'>
+        {/* <div style={{ padding: '40px' }}> */}
+          <Row wrap gutter={[16, 16]} justify='center' style={{ padding: '40px' }}>
             {/* Mapeo de datos para mostrar los Speakers */}
             {speakersWithoutCategory.length &&
               speakersWithoutCategory.map((speaker, key) => (
                 <>
                   {speaker.published && (
-                    <Col key={key} xs={24} sm={12} md={8} lg={8} xl={8} xxl={8}>
+                    <Col key={key} xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
                       <Card
                         onClick={() => {
                           if (
@@ -361,7 +361,7 @@ class Speakers extends Component {
                 </>
               ))}
           </Row>
-        </div>
+        {/* </div> */}
 
         {/* Modal de Speakers para mostrar la información del conferencista junto con sus actividades */}
 
