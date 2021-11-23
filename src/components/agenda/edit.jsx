@@ -411,7 +411,7 @@ class AgendaEdit extends Component {
         sweetAlert.hideLoading();
         sweetAlert.showSuccess('Información guardada');
         /* console.log('Info agenda: ', info); */
-        /* this.props.history.push(`/eventadmin/${event._id}/agenda`); */
+        this.props.history.push(`/eventadmin/${event._id}/agenda`);
       } catch (e) {
         sweetAlert.showError(handleRequestError(e));
       }
@@ -689,11 +689,11 @@ class AgendaEdit extends Component {
             form
             remove={this.remove}
             edit={this.props.location.state.edit}
-            extra={
+            /* extra={
               <Button type='primary' onClick={this.submit2}>
                 Duplicar para traducir
               </Button>
-            }
+            } */
           />
           <Tabs defaultActiveKey='1'>
             <TabPane tab='Agenda' key='1'>
@@ -1071,6 +1071,18 @@ class AgendaEdit extends Component {
                     La actividad requiere registro
                   </Checkbox>
                   <br /><br />
+                  {/* <RoomController
+                    platform={platform}
+                    roomStatus={roomStatus}
+                    avalibleGames={avalibleGames}
+                    attendees={attendees}
+                    chat={chat}
+                    surveys={surveys}
+                    games={games}
+                    handleRoomState={this.handleRoomState}
+                    handleGamesSelected={this.handleGamesSelected}
+                    handleTabsController={this.handleTabsController}
+                  /> */}
                   <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
                   {this.state.isExternal && (
                     <SurveyExternal

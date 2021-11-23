@@ -417,7 +417,21 @@ class RoomManager extends Component {
     const { event_id, activity_id, activity_name } = this.props;
     return (
       <>
-        <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={this.handleTab}>
+        <RoomConfig
+          isPublished={isPublished}
+          host_id={host_id}
+          host_name={host_name}
+          host_list={host_list}
+          meeting_id={meeting_id}
+          platform={platform}
+          select_host_manual={select_host_manual}
+          hasVideoconference={hasVideoconference}
+          handleChange={this.handleChange}
+          handleClick={this.handleClickSaveConfig}
+          createZoomRoom={this.createZoomRoom}
+          deleteZoomRoom={this.deleteZoomRoom}
+        />
+        {/* <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={this.handleTab}>
           <TabPane tab='Configuración' key='config'>
             {loading ? (
               <Spin />
@@ -456,7 +470,7 @@ class RoomManager extends Component {
               />
             )}
           </TabPane>
-        </Tabs>
+        </Tabs> */}
         {/* <Card title={activity_name}>
           {typeof event_id === 'undefined' || typeof activity_id === 'undefined' || activity_id === false ? (
             <>

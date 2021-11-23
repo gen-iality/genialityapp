@@ -167,6 +167,21 @@ export default function RoomConfig(props) {
           )}
         </Col>
       </Row>
+      
+      {/* Este es el que se va a trabajar */}
+      {/* <Row style={{ marginBottom: 24 }}>
+        <Col span={24}>
+          <Form.Item label={'Estado de videoconferencia'}>
+            <Select defaultValue={roomStatus} onChange={handleRoomState}>
+              <Option value=''>Sin Estado</Option>
+              <Option value='open_meeting_room'>Conferencia Abierta</Option>
+              <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
+              <Option value='ended_meeting_room'>Conferencia Terminada</Option>
+            </Select>
+          </Form.Item>
+        </Col>
+      </Row> */}
+
       {requiresCreateRoom && host_name !== null && (
         <Row style={{ marginBottom: 24 }}>
           <Col span={24}>
@@ -196,7 +211,7 @@ export default function RoomConfig(props) {
             )}
             <Col span={8}>
               <Button onClick={handleClick} type='primary'>
-                Guardar
+                Guardar Configuración
               </Button>
               {/* <button onClick={handleClick} className='button is-primary'>
                 Guardar

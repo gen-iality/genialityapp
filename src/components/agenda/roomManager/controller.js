@@ -107,14 +107,14 @@ export default function RoomController(props) {
       <Card>
         <Row style={{ padding: '8px 0px' }}>
           <Col span={24}>
-            <Form.Item label={'Estado de videoconferencia'}>
+            {/* <Form.Item label={'Estado de videoconferencia'}>
               <Select defaultValue={roomStatus} onChange={handleRoomState}>
                 <Option value=''>Sin Estado</Option>
                 <Option value='open_meeting_room'>Conferencia Abierta</Option>
                 <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
                 <Option value='ended_meeting_room'>Conferencia Terminada</Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
             {/* <label className='label'>Estado de videoconferencia</label>
             <div className='select is-primary'>
               <select defaultValue={roomStatus} onChange={handleRoomState}>
