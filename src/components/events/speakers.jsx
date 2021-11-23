@@ -3,11 +3,12 @@ import React, { Component } from 'react';
 //custom
 import { SpeakersApi, ActivityBySpeaker, CategoriesAgendaApi } from '../../helpers/request';
 import Moment from 'moment';
-import { Card, Avatar, Button, Modal, Row, Col, Tooltip } from 'antd';
+import { Card, Avatar, Button, Modal, Row, Col, Tooltip, Typography,  } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import withContext from '../../Context/withContext';
 
 const { Meta } = Card;
+const { Paragraph, Text, Title  } = Typography;
 
 class Speakers extends Component {
   constructor(props) {
@@ -227,7 +228,7 @@ class Speakers extends Component {
                                       }
                                       actions={speaker.description && [this.btnViewMore(speaker)]}>
                                       <Meta
-                                        title={[
+                                        /* title={[
                                           <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
                                             <p
                                               style={{
@@ -242,12 +243,18 @@ class Speakers extends Component {
                                               </Tooltip>
                                             </p>
                                           </div>,
-                                        ]}
+                                        ]} */
                                         description={[
                                           <div
                                             key={'speaker-description  ' + key}
-                                            style={{ maxHeight: '100px', textAlign: 'center' }}>
-                                            <p
+                                            style={{ minHeight: '100px', textAlign: 'center' }}>
+                                              <Title level={4} >
+                                                {speaker.name}
+                                              </Title>
+                                              <Paragraph>
+                                                {speaker.profession}
+                                              </Paragraph>
+                                            {/* <p
                                               style={{
                                                 textOverflow: 'ellipsis',
                                                 whiteSpace: 'nowrap',
@@ -256,7 +263,7 @@ class Speakers extends Component {
                                               <Tooltip placement='bottomLeft' title={speaker.profession}>
                                                 <span>{speaker.profession}</span>
                                               </Tooltip>
-                                            </p>
+                                            </p> */}
                                           </div>,
                                         ]}
                                       />
@@ -327,8 +334,11 @@ class Speakers extends Component {
                         }
                         actions={speaker.description && [this.btnViewMore(speaker)]}>
                         <Meta
-                          title={[
+                          /* title={[
                             <div style={{ textAlign: 'center' }} key={'speaker-name  ' + key}>
+                              <Title level={4} >
+                                {speaker.name}
+                              </Title>
                               <p
                                 style={{
                                   fontSize: '18px',
@@ -342,16 +352,22 @@ class Speakers extends Component {
                                 </Tooltip>
                               </p>
                             </div>,
-                          ]}
+                          ]} */
                           description={[
                             <div
                               key={'speaker-description  ' + key}
-                              style={{ maxHeight: '100px', textAlign: 'center' }}>
-                              <p style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+                              style={{ minHeight: '100px', textAlign: 'center' }}>
+                                <Title level={4} >
+                                  {speaker.name}
+                                </Title>
+                                <Paragraph>
+                                  {speaker.profession}
+                                </Paragraph>
+                              {/* <p style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
                                 <Tooltip placement='bottomLeft' title={speaker.profession}>
                                   <span>{speaker.profession}</span>
                                 </Tooltip>
-                              </p>
+                              </p> */}
                             </div>,
                           ]}
                         />
