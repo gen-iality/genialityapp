@@ -207,21 +207,21 @@ class Speakers extends Component {
                                       style={{
                                         paddingTop: '30px',
                                         borderRadius: '20px',
-                                        paddingLeft: '50px',
-                                        paddingRight: '50px',
+                                        /* paddingLeft: '50px',
+                                        paddingRight: '50px', */
                                         minHeight: '428px',
                                       }}
                                       cover={
                                         speaker.image ? (
                                           <Avatar
                                             style={{ display: 'block', margin: 'auto' }}
-                                            size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                                            size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
                                             /* size={210} */ src={speaker.image}
                                           />
                                         ) : (
                                           <Avatar
                                             style={{ display: 'block', margin: 'auto' }}
-                                            size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                                            size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
                                             /* size={210} */ icon={<UserOutlined />}
                                           />
                                         )
@@ -313,21 +313,21 @@ class Speakers extends Component {
                         style={{
                           paddingTop: '30px',
                           borderRadius: '20px',
-                          paddingLeft: '50px',
-                          paddingRight: '50px',
+                          /* paddingLeft: '50px',
+                          paddingRight: '50px', */
                           minHeight: '428px',
                         }}
                         cover={
                           speaker.image ? (
                             <Avatar
                               style={{ display: 'block', margin: 'auto' }}
-                              size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                              size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
                               /* size={210} */ src={speaker.image}
                             />
                           ) : (
                             <Avatar
                               style={{ display: 'block', margin: 'auto' }}
-                              size={{ xs: 160, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
+                              size={{ xs: 130, sm: 160, md: 120, lg: 170, xl: 210, xxl: 210 }}
                               /* size={210} */ icon={<UserOutlined />}
                             />
                           )
