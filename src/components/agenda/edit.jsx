@@ -105,9 +105,7 @@ class AgendaEdit extends Component {
       nameDocuments: [],
       tickets: [],
       selectedTicket: [],
-      platform: '',
       vimeo_id: '',
-      name_host: '',
       isExternal: false,
       service: new Service(firestore),
       externalSurveyID: '',
@@ -141,17 +139,6 @@ class AgendaEdit extends Component {
     this.selectTickets = this.selectTickets.bind(this);
   }
   static contextType = AgendaContext;
-
-  updateRoomManager(data) {
-    this.setState({
-      habilitar_ingreso: data.habilitar_ingreso,
-      host_id: data.host_id,
-      host_name: data.host_name,
-      platform: data.platform,
-      date_end_zoom: data.date_end_zoom,
-      date_start_zoom: data.date_start_zoom,
-    });
-  }
 
   // VALIDAR SI TIENE ENCUESTAS EXTERNAS
   validateRoom = async () => {
@@ -275,9 +262,6 @@ class AgendaEdit extends Component {
         date_start_zoom: info.date_start_zoom,
         date_end_zoom: info.date_end_zoom,
         requires_registration: info.requires_registration || false,
-        isPublished: info.published || true,
-        avalibleGames: info.avalibleGames || [],
-        habilitar_ingreso: info.habilitar_ingreso || '',
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
@@ -716,7 +700,6 @@ class AgendaEdit extends Component {
       host_id,
       host_name,
       avalibleGames,
-      habilitar_ingreso,
     } = this.context;
 
     const roomInfo = {
@@ -800,20 +783,14 @@ class AgendaEdit extends Component {
 
   render() {
     const {
-      info,
-      loading,
       name,
-      subtitle,
       nameDocuments,
       selected_document,
       date,
       hour_start,
       hour_end,
       image,
-      access_restriction_type,
-      capacity,
       space_id,
-      selectedRol,
       selectedHosts,
       selectedType,
       selectedCategories,
@@ -822,9 +799,7 @@ class AgendaEdit extends Component {
       spaces,
       categories,
       types,
-      roles,
       isLoading,
-      platform,
       date_start_zoom,
       date_end_zoom,
       length,
