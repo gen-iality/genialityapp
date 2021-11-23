@@ -18,6 +18,7 @@ export default function RoomController(props) {
     games,
     avalibleGames,
   } = props;
+  console.log(props, 'propssssssss');
   const [listOfGames, setListOfGames] = useState([]);
   const [updateMensaje, setUpdatedMensaje] = useState(false);
   let [columnsData, setColumnsData] = useState({});
@@ -48,7 +49,7 @@ export default function RoomController(props) {
 
   useEffect(() => {
     getGamesData();
-  }, [games, avalibleGames]);
+  }, [avalibleGames]);
 
   const columns = [
     {

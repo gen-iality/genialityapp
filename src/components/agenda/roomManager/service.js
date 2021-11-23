@@ -23,8 +23,9 @@ class Service {
   };
 
   createOrUpdateActivity = (event_id, activity_id, roomInfo, tabs) => {
+    console.log(event_id, activity_id, roomInfo, tabs, 'service');
     const tabsSchema = { attendees: false, chat: true, games: false, surveys: false };
-    const { roomStatus, platform, meeting_id, isPublished, host_id, host_name, avalibleGames } = roomInfo;
+    const { roomState, habilitar_ingreso, platform, meeting_id, isPublished, host_id, host_name, avalibleGames } = roomInfo;
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
       this.validateHasVideoconference(event_id, activity_id).then((existActivity) => {
@@ -35,7 +36,7 @@ class Service {
             .collection('activities')
             .doc(activity_id)
             .update({
-              habilitar_ingreso: roomStatus,
+              habilitar_ingreso,
               platform,
               meeting_id,
               tabs,
@@ -43,6 +44,7 @@ class Service {
               host_id,
               host_name,
               avalibleGames,
+              roomState
             })
             .then(() => resolve({ message: 'Configuracion actualizada', state: 'updated' }));
         } else {
@@ -52,7 +54,7 @@ class Service {
             .collection('activities')
             .doc(activity_id)
             .set({
-              habilitar_ingreso: roomStatus,
+              habilitar_ingreso,
               platform,
               meeting_id,
               isPublished,
@@ -60,6 +62,7 @@ class Service {
               host_name,
               tabs: tabsSchema,
               avalibleGames,
+              roomState
             })
             .then(() => resolve({ message: 'Configuracion Creada', state: 'created' }));
         }

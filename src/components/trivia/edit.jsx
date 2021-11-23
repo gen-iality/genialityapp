@@ -98,7 +98,7 @@ class triviaEdit extends Component {
       });
     }
     //Se consultan las api para traer en primera los datos de la encuesta para actualizar y en segunda los datos la agenda
-    if (this.props.location.state) {
+    if (this.props.location.state.edit) {
       const surveyId = this.props.location.state.edit;
 
       //Se obtiene el estado y la confiugracion de la encuesta de Firebase
@@ -151,6 +151,7 @@ class triviaEdit extends Component {
       this.getQuestions();
     } else {
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
+      console.log(dataAgenda, 'dataAgenda');
       this.setState({
         dataAgenda: dataAgenda.data,
       });

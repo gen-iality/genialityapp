@@ -11,6 +11,7 @@ import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
 import { DeleteOutlined, ExclamationCircleOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import Header from '../../antdComponents/Header';
+import RoomController from '../agenda/roomManager/controller';
 // En revision vista previa
 //import ZoomComponent from '../events/zoomComponent';
 
@@ -107,6 +108,17 @@ class AgendaEdit extends Component {
       //Estado para determinar si una actividad requiere registro para ser accedida
       requires_registration: false,
       isPublished: true,
+      avalibleGames: [],
+      roomStatus: null,
+      /* platform,
+      meeting_id, */
+      chat: false,
+      surveys: false,
+      games: false,
+      attendees: false,
+      host_id: null,
+      host_name: null,
+      habilitar_ingreso: '',
     };
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
@@ -121,6 +133,18 @@ class AgendaEdit extends Component {
       this.setState({
         isExternal: configuration.platform && configuration.platform === 'zoomExterno' ? true : false,
         externalSurveyID: configuration.meeting_id ? configuration.meeting_id : null,
+        isPublished: typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true,
+        platform: configuration.platform ? configuration.platform : null,
+        meeting_id: configuration.meeting_id ? configuration.meeting_id : null,
+        roomStatus: configuration.roomStatus || null,
+        avalibleGames: configuration.avalibleGames || [],
+        chat: configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false,
+        surveys: configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false,
+        games: configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false,
+        attendees: configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false,
+        host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
+        host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null,
+        habilitar_ingreso: configuration.habilitar_ingreso ? configuration.habilitar_ingreso : ''
       });
     }
   };
@@ -137,6 +161,7 @@ class AgendaEdit extends Component {
     let days = [];
     const ticketEvent = [];
     let vimeo_id = '';
+    console.log('intentando que cambie', this.state.platform)
     try {
       const tickets = await eventTicketsApi.getAll(event?._id);
       for (let i = 0; tickets.length > i; i++) {
@@ -150,7 +175,7 @@ class AgendaEdit extends Component {
       vimeo_id = event.vimeo_id ? event.vimeo_id : '';
       this.setState({
         tickets: ticketEvent,
-        platform: event.event_platform,
+        /* platform: event.event_platform, */
         vimeo_id: vimeo_id,
       });
 
@@ -208,12 +233,12 @@ class AgendaEdit extends Component {
 
     if (state?.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
-      /* console.log(info, info.isPublished); */
+      console.log(info.platform, event.event_platform, '**************************platform');
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
-        platform: info.platform || event.event_platform,
+        platform: info.platform/*  || event.event_platform */,
         info: info,
         space_id: info.space_id || '',
         video: info.video,
@@ -222,6 +247,8 @@ class AgendaEdit extends Component {
         date_end_zoom: info.date_end_zoom,
         requires_registration: info.requires_registration || false,
         isPublished: info.published || true,
+        avalibleGames: info.avalibleGames || [],
+        habilitar_ingreso: info.habilitar_ingreso || ''
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
@@ -260,6 +287,12 @@ class AgendaEdit extends Component {
     this.validateRoom();
   }
 
+  async componentDidUpdate(prevProps) {
+    if(prevProps){
+
+    }
+  }
+
   handlePhysical = () => {
     let isPhysical = this.state.isPhysical;
     this.setState({ isPhysical: !isPhysical });
@@ -274,18 +307,16 @@ class AgendaEdit extends Component {
     if (name === 'requires_registration') {
       value = value.target.checked;
     }
-    /* let { name } = e.target ? e.target : nameS;
-    let { value } = e.target ? e.target : e; */
 
-    /* if (name === 'isPublished') {
+    if (name === 'isPublished') {
       this.setState({ [name]: value }, async () => await this.saveConfig());
     } else {
       this.setState({ [name]: value });
-    } */
+    }
 
     /* console.log(name, value); */
     // BACKLOG -> porque host_id se setea siempre que se setea un estado
-    this.setState({ [name]: value });
+    //this.setState({ [name]: value });
   };
   //FN para cambio en campo de fecha
   handleChangeDate = (value, name) => {
@@ -642,6 +673,88 @@ class AgendaEdit extends Component {
 
   handleVideoConference = () => {
     //Verificar si existe el campo si no se crea
+  };
+
+  prepareData = () => {
+    const {
+      roomStatus,
+      platform,
+      meeting_id,
+      chat,
+      surveys,
+      games,
+      attendees,
+      isPublished,
+      host_id,
+      host_name,
+      avalibleGames,
+      habilitar_ingreso,
+    } = this.state;
+    
+    const roomInfo = { roomStatus, platform, meeting_id, isPublished, host_id, host_name, avalibleGames, habilitar_ingreso };
+    const tabs = { chat, surveys, games, attendees };
+    return { roomInfo, tabs };
+  };
+
+  // Método para guarda la información de la configuración
+  saveConfig = async () => {
+    /* const { event_id, activity_id } = this.props; */
+
+    /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
+    const { roomInfo, tabs } = this.prepareData();
+    const { service } = this.state;
+    console.log(roomInfo, tabs, 'campos-------------')
+    try {
+      const result = await service.createOrUpdateActivity(this.props.event._id, this.state.activity_id, roomInfo, tabs);
+      if (result) message.success(result.message);
+      return result;
+    } catch (err) {
+      message.error('Error Config', err);
+    }
+  };
+
+  handleGamesSelected = async (status, itemId, listOfGames) => {
+    if (status === 'newOrUpdate') {
+      this.setState({ avalibleGames: listOfGames }, async () => await this.saveConfig());
+    } else {
+      const newData = [];
+      listOfGames.forEach((items) => {
+        if (items.id === itemId) {
+          newData.push({ ...items, showGame: status });
+        } else {
+          newData.push({ ...items });
+        }
+      });
+      this.setState({ avalibleGames: newData }, async () => await this.saveConfig());
+    }
+  };
+
+  // Encargado de gestionar los tabs de la video conferencia
+  handleTabsController = (e, tab) => {
+    const valueTab = e;
+    const { chat, surveys, games, attendees } = this.state;
+    const tabs = { chat, surveys, games, attendees };
+
+    //
+    // return true;
+
+    if (tab === 'chat') {
+      tabs.chat = valueTab;
+      this.setState({ chat: valueTab }, async () => await this.saveConfig());
+    } else if (tab === 'surveys') {
+      tabs.surveys = valueTab;
+      this.setState({ surveys: valueTab }, async () => await this.saveConfig());
+    } else if (tab === 'games') {
+      tabs.games = valueTab;
+      this.setState({ games: valueTab }, async () => await this.saveConfig());
+    } else if (tab === 'attendees') {
+      tabs.attendees = valueTab;
+      this.setState({ attendees: valueTab }, async () => await this.saveConfig());
+    }
+  };
+
+  handleRoomState = (e) => {
+    this.setState({ roomStatus: e }, async () => await this.saveConfig());
   };
 
   render() {
@@ -1071,25 +1184,26 @@ class AgendaEdit extends Component {
                     La actividad requiere registro
                   </Checkbox>
                   <br /><br />
-                  {/* <RoomController
-                    platform={platform}
-                    roomStatus={roomStatus}
-                    avalibleGames={avalibleGames}
-                    attendees={attendees}
-                    chat={chat}
-                    surveys={surveys}
-                    games={games}
+                  <RoomController
+                    platform={this.state.platform}
+                    roomStatus={this.state.roomStatus}
+                    avalibleGames={this.state.avalibleGames}
+                    attendees={this.state.attendees}
+                    chat={this.state.chat}
+                    surveys={this.state.surveys}
+                    games={this.state.games}
                     handleRoomState={this.handleRoomState}
                     handleGamesSelected={this.handleGamesSelected}
                     handleTabsController={this.handleTabsController}
-                  /> */}
+                  />
                   <SurveyManager event_id={this.props.event._id} activity_id={this.state.activity_id} />
                   {this.state.isExternal && (
                     <SurveyExternal
-                    isExternal={this.state.isExternal}
-                    meeting_id={this.state.externalSurveyID}
-                    event_id={this.props.event._id}
-                    activity_id={this.state.activity_id}
+                      isExternal={this.state.isExternal}
+                      meeting_id={this.state.externalSurveyID}
+                      event_id={this.props.event._id}
+                      activity_id={this.state.activity_id}
+                      roomStatus={this.state.roomStatus}
                     />
                   )}
                   {/* <Button onClick={this.submit} type='primary'>

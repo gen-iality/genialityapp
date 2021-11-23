@@ -18,6 +18,8 @@ export default function RoomConfig(props) {
     host_id,
     hasVideoconference,
     deleteZoomRoom,
+    roomStatus,
+    handleRoomState,
   } = props;
 
   useEffect(() => {
@@ -26,6 +28,19 @@ export default function RoomConfig(props) {
 
   return (
     <Card>
+      {/* Este es el que se va a trabajar */}
+      <Row style={{ marginBottom: 24 }}>
+        <Col span={24}>
+          <Form.Item label={'Estado de videoconferencia'}>
+            <Select defaultValue={roomStatus} value={roomStatus} onChange={handleRoomState}>
+              <Option value=''>Sin Estado</Option>
+              <Option value='open_meeting_room'>Conferencia Abierta</Option>
+              <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
+              <Option value='ended_meeting_room'>Conferencia Terminada</Option>
+            </Select>
+          </Form.Item>
+        </Col>
+      </Row>
       {/* <Row style={{ marginBottom: 24 }}>
         <Col span={24}> */}
           {/* <Form.Item label={'Publicar Actividad'}>
@@ -167,20 +182,6 @@ export default function RoomConfig(props) {
           )}
         </Col>
       </Row>
-      
-      {/* Este es el que se va a trabajar */}
-      {/* <Row style={{ marginBottom: 24 }}>
-        <Col span={24}>
-          <Form.Item label={'Estado de videoconferencia'}>
-            <Select defaultValue={roomStatus} onChange={handleRoomState}>
-              <Option value=''>Sin Estado</Option>
-              <Option value='open_meeting_room'>Conferencia Abierta</Option>
-              <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
-              <Option value='ended_meeting_room'>Conferencia Terminada</Option>
-            </Select>
-          </Form.Item>
-        </Col>
-      </Row> */}
 
       {requiresCreateRoom && host_name !== null && (
         <Row style={{ marginBottom: 24 }}>

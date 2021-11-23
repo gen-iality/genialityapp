@@ -80,7 +80,7 @@ export default class SurveyManager extends Component {
               <Col xs={12} lg={8}>
                 <label className='label'>Encuesta</label>
               </Col>
-              <Col xs={4} lg={2}>
+              <Col xs={4} lg={3}>
                 <label className='label'>Publicar</label>
               </Col>
               <Col xs={4} lg={2}>

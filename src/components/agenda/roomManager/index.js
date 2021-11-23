@@ -122,6 +122,7 @@ class RoomManager extends Component {
         attendees: configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false,
         host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
         host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null,
+        habilitar_ingreso: configuration.habilitar_ingreso ? configuration.habilitar_ingreso : ''
       });
 
       // Si en firebase ya esta inicializado el campo platfom y meeting_id se habilita el tab controller
@@ -430,6 +431,7 @@ class RoomManager extends Component {
           handleClick={this.handleClickSaveConfig}
           createZoomRoom={this.createZoomRoom}
           deleteZoomRoom={this.deleteZoomRoom}
+          handleRoomState={this.handleRoomState}
         />
         {/* <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={this.handleTab}>
           <TabPane tab='Configuración' key='config'>

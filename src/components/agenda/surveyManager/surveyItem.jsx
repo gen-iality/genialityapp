@@ -7,7 +7,7 @@ export default function SurveyItem({ survey, onChange }) {
       <Col xs={12} lg={8}>
         {survey.name}
       </Col>
-      <Col xs={4} lg={2}>
+      <Col xs={4} lg={3}>
         <Switch
           checked={survey.isPublished === 'true' || survey.isPublished === true}
           onChange={(checked) => onChange(survey.survey_id, { isPublished: checked ? 'true' : 'false' })}
