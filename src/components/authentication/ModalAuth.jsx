@@ -53,6 +53,12 @@ const ModalAuth = (props) => {
       });
     }
     userAuth();
+
+    if(props.cEvent.value?._id==="61816f5a039c0f2db65384a2"){
+      handleChangeTabModal('1');
+    }
+
+
     return () => {
       form1.resetFields();
     };

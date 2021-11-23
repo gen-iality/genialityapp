@@ -83,8 +83,9 @@ class TipoAsistentes extends Component {
   removeItem = (deleteID) => {
     sweetAlert.twoButton(`Está seguro de borrar este tipo de asistente`, 'warning', true, 'Borrar', async (result) => {
       try {
-        if (result.value) {
-          sweetAlert.showLoading('Espera (:', 'Borrando...');
+        if (result) {
+          // sweetAlert.showLoading('Espera (:', 'Borrando...');
+          console.log("deleteID",deleteID)
           await RolAttApi.deleteOne(deleteID, this.props.eventID);
           this.setState(() => ({ id: '', name: '' }));
           this.fetchItems();

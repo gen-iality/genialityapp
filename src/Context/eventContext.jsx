@@ -40,7 +40,10 @@ export function CurrentEventProvider({ children }) {
       setEventContext(dataevent);
     }
 
-    if (event_id || event) {
+    console.log("event_id",event_id)
+
+
+    if (event_id) {
       fetchEvent('id');
     } else if (event_name) {
       fetchEvent('name');
