@@ -13,7 +13,7 @@ import withContext from '../../Context/withContext';
 const Editor = ({ onSubmit, submitting, value, loadingsave,errimage,errNote,refText}) => (
 
     <Form ref={refText} onFinish={onSubmit}>
-    <Form.Item name="post" rules={[{ required: true, message: 'Por favor ingrese una nota' }]}>
+    <Form.Item name="post">
       <TextArea  placeholder='¿Qué está pasando?' rows={4} />
     </Form.Item>
     {errimage && (
@@ -21,7 +21,7 @@ const Editor = ({ onSubmit, submitting, value, loadingsave,errimage,errNote,refT
         <Alert type='error' message='Formato de archivo incorrecto!' />
       </div>
     )}
-    {errNote &&   <div  style={{marginBottom:30}} ><Alert type='error' message="Ingrese una texto válido!" /></div>}
+    {errNote &&   <div  style={{marginBottom:30}} ><Alert type='error' message="Ingrese una texto válido o una imagen!" /></div>}
 
     <Form.Item>
       {!loadingsave && (
@@ -85,14 +85,14 @@ class CreatePost extends Component {
 
   //Funcion para guardar el post y enviar el mensaje de publicacion
   async savePost(values) {
-    console.log("VALUES==>",values)
-    if(values.post){
+    
+    if(values.post || this.state.image){
     this.setState({
       loadingsave: true,
     });
     let data = {
       urlImage: this.state.image,
-      post: values.post,
+      post: values.post || '',
       author: this.props.cUser.value._id,
       datePost: new Date(),
       likes: 0,

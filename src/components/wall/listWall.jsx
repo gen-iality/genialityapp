@@ -9,6 +9,7 @@ import { saveFirebase } from './helpers';
 import withContext from '../../Context/withContext';
 import Moment from 'moment';
 import { firestore } from '../../helpers/firebase';
+import { WallContextProvider } from '../../Context/WallContext';
 
 const IconText = ({ icon, text, onSubmit, color, megusta }) => (
   <Button htmlType='submit' type='text' onClick={onSubmit} style={{ color: megusta == 1 ? color : 'gray' }}>
@@ -35,34 +36,19 @@ class WallList extends Component {
       user: undefined,
       commenting: null,
       displayedComments: {},
-      event: this.props.cEvent.value || {},
-      itemcomment:null,
-      comment:null  
+      event: this.props.cEvent.value || {},     
     };
-    this.setItemComment=this.setItemComment.bind(this);
-    this.setComment=this.setComment.bind(this);
+    
   }
 
   innerCreateComment = async (post, comment) => {
     await this.setState({ commenting: post.id });
     await this.setState({ commenting: null });
-    message.success('Comentario creado.');
-    const dataPost = await saveFirebase.createComment(post.id, this.state.event._id, comment, this.props.cUser.value);
+    message.success('Comentario creado.');    
+    const dataPost = await saveFirebase.createComment(post.id, this.props.cEvent.value._id, comment, this.props.cUser.value);
    // this.setState({ dataPost });
-
     this.innershowComments(post.id, post.comments + 1);
-  };
-  setItemComment(id){
-    this.setState({
-      itemcomment:id
-    })
-  }
-
-  setComment(comment){
-    this.setState({
-      comment
-    })
-  }
+  }; 
 
   innershowComments = async (postId, commentsCount) => {
     let newdisplayedComments = { ...this.state.displayedComments };
@@ -111,7 +97,6 @@ class WallList extends Component {
 
   //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
   getPosts() {
-    console.log('GETPOST', this.props.cEvent.value._id);
 
     try {
       let adminPostRef = firestore
@@ -138,9 +123,9 @@ class WallList extends Component {
       console.log(e);
     }
   }
-  componentDidUpdate(prevProps) {
-    if (prevProps.dataPost !== this.props.dataPost) {
-      this.setState({ dataPost: this.props.dataPost });
+  componentDidUpdate(prevProps,prevState) {
+    if (prevState.dataPost !== this.state.dataPost) {
+      this.setState({ dataPost: this.state.dataPost });
     }
   }
 
@@ -148,7 +133,7 @@ class WallList extends Component {
     this.setState({ currentCommet: null });
   }
 
-  render() {
+  render(){
     const { dataPost } = this.state;
     return (
       <Fragment>
@@ -164,14 +149,14 @@ class WallList extends Component {
             />
           )}
 
-          {this.state.dataPost && this.state.dataPost.length > 0 && (
-            <>
+          {dataPost && dataPost.length > 0 && (
+            <WallContextProvider>          
               <List
                 itemLayout='vertical'
                 size='small'
                 style={{ texteAling: 'left', marginBottom: '20px' }}
                 // Aqui se llama al array del state
-                dataSource={this.state.dataPost}
+                dataSource={dataPost}
                 // Aqui se mapea al array del state
                 renderItem={(item) => (
                   <Card
@@ -180,8 +165,9 @@ class WallList extends Component {
                      this.props.cEventUser.value!==null && <CommentEditor
                         key={`comment-${item.id}`}
                         item={item}                        
-                        onSubmit={(comment) => {
+                        onSubmit={(comment) => {                                               
                           this.innerCreateComment(item, comment);
+                         
                         }}
                         user={this.props.cUser}
                       />
@@ -290,7 +276,7 @@ class WallList extends Component {
                   </Card>
                 )}
               />
-            </>
+            </WallContextProvider>
           )}
         </div>
       </Fragment>

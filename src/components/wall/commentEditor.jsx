@@ -1,89 +1,102 @@
-import React, { useContext, useState } from 'react';
-import { Button, Form, Input, Row, Col, Modal } from 'antd';
-import { SendOutlined } from '@ant-design/icons';
-import { AuthUrl } from '../../helpers/constants';
-import HelperContext from '../../Context/HelperContext';
+import React, { useContext, useState } from "react";
+import { Button, Form, Input, Row, Col, Modal } from "antd";
+import { SendOutlined } from "@ant-design/icons";
+import { AuthUrl } from "../../helpers/constants";
+import WallContext, {WallContextProvider} from "../../Context/WallContext";
 
-
-
-
-let innerOnSubmit = (onSubmit, comment, setComment, user, setVisibleNoUser) => {
+/*let innerOnSubmit = (onSubmit, comment, setComment, user, setVisibleNoUser) => {
   if (!user) {
     setVisibleNoUser(true);
     return;
   } else {
     onSubmit(comment);
-    setComment("")
+   // setComment("")
   }
-};
+};*/
 
 const { TextArea } = Input;
-const CommentEditor = ({ onSubmit, user,item,...props }) => {
+const CommentEditor = ({ onSubmit, item }) => {
   let [visibleNoUser, setVisibleNoUser] = useState(false);
-  let {setComment,comment,setItemComment,itemcomment}=useContext(HelperContext)
+ 
 
-  let onChange = ( e) => {  
-    setComment(e.target.value);
-    if( itemcomment!==item.id){
-      setItemComment(item.id);
-    }   
-   
-  };
-
-  console.log("PROPS ACA==>",props)
-
-  return (
-    <>
-      {true && (
-        <Form.Item >
-          <Row
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop:20
-            }}>
-            <Col span={21}>
-              <TextArea
-                placeholder='Escribe un comentario...'
-                onChange={onChange}
-                value={ itemcomment&& item.id== itemcomment ? comment:''}
-                autoSize
-                autoFocus={ itemcomment&& item.id== itemcomment}
-                id='comment'
-                allowClear
-                showCount
-                maxLength={500}
-              />
-            </Col>
-            <Button
-              id='submitButton'
-              htmlType='submit'
-              type='primary'
-              onClick={innerOnSubmit.bind(null, onSubmit, comment, setComment, user, setVisibleNoUser)}
-              style={{ color: 'white' }}
-              icon={<SendOutlined />}
-            />
-          </Row>
-        </Form.Item>
-      )}
-
-      <Modal
-        title='Necesitas estar autenticad@'
-        visible={visibleNoUser}
-        cancelButtonProps={{ hidden: true }}
-        onOk={() => {
-          setVisibleNoUser(false);
-        }}>
-        <p>
-          <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado, inicia sesión para poder realizar
-          publicaciones &nbsp;&nbsp;
-          <Button type='primary'>
-            <a href={AuthUrl}>Ir a Ingreso</a>
-          </Button>
-        </p>
-      </Modal>
-    </>
+  return (   
+    <RenderEditor onSubmit={onSubmit} item={item} visibleNoUser={visibleNoUser}  />   
   );
 };
+
+
+const RenderEditor=({wallcontext,onSubmit,visibleNoUser,item})=>{
+  const {comment, setComment,itemcomment, setItemComment}=useContext(WallContext)  
+  return   <>
+  {" "}
+  {
+    <Form onFinish={(values)=>{onSubmit(comment);setComment('')}}>
+      <Form.Item name="comment">
+        <Row
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: 20,
+          }}
+        >
+          <Col span={21}>
+            <TextArea
+              onChange={(e) => {
+                setComment(e.target.value);
+                if (itemcomment !== item.id) {
+                  setItemComment(item.id);
+                }
+              }}
+              placeholder="Escribe un comentario..."
+              autoSize
+              value={
+                itemcomment &&
+                item.id == itemcomment
+                  ? comment
+                  : ""
+              }
+              autoFocus={
+                itemcomment &&
+                item.id == itemcomment
+              }
+              id="comment"
+              allowClear
+              showCount
+              maxLength={500}
+            />
+          </Col>
+          <Button
+            id="submitButton"
+            htmlType="submit"
+            type="primary"
+            style={{ color: "white" }}
+            icon={<SendOutlined />}
+          />
+        </Row>
+      </Form.Item>
+      <Form.Item name="id" initialValue={item.id || ""}>
+        <Input type="hidden" />
+      </Form.Item>
+    </Form>
+  }
+  <Modal
+    title="Necesitas estar autenticad@"
+    visible={visibleNoUser}
+    cancelButtonProps={{ hidden: true }}
+    onOk={() => {
+      setVisibleNoUser(false);
+    }}
+  >
+    <p>
+      <b>Para públicar:</b> Para públicar un mensaje debes estar
+      autenticado, inicia sesión para poder realizar publicaciones
+      &nbsp;&nbsp;
+      <Button type="primary">
+        <a href={AuthUrl}>Ir a Ingreso</a>
+      </Button>
+    </p>
+  </Modal>
+</>
+}
 
 export default CommentEditor;

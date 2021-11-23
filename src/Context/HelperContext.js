@@ -60,8 +60,7 @@ export const HelperContextProvider = ({ children }) => {
   const [currentActivity, setcurrenActivity] = useState(null);
   const [theUserHasPlayed, setTheUserHasPlayed] = useState(null);
   const [tabsGenerals, settabsGenerals] = useState();
-  const [comment, setComment] = useState(null);
-  const [itemcomment,setItemComment]=useState(null);
+  
 
   const handleChangeTabs = (tabs) => {
     settabsGenerals(tabs);
@@ -601,11 +600,7 @@ export const HelperContextProvider = ({ children }) => {
         handleChangeCurrentActivity,
         currentActivity,
         tabsGenerals,
-        handleChangeTabs,
-        itemcomment,
-        setItemComment,
-        comment, 
-        setComment
+        handleChangeTabs        
       }}>
       {children}
     </HelperContext.Provider>
