@@ -17,6 +17,7 @@ import EventOrganization from '../components/eventOrganization';
 import Organization from '../components/organization';
 import { NewEventProvider } from '../Context/newEventContext';
 import MainProfile from '../components/profile/main';
+import { AgendaContextProvider } from '../Context/AgendaContext';
 
 //Code splitting
 const Home = asyncComponent(() => import('../components/home'));
@@ -157,7 +158,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
           <CurrentUserProvider>
             <HelperContextProvider>
               <SurveysProvider>
-                {Cookie.get('evius_token') ? <Component {...props} /> : <ForbiddenPage />}
+                <AgendaContextProvider>
+                  {Cookie.get('evius_token') ? <Component {...props} /> : <ForbiddenPage />}
+                </AgendaContextProvider>
               </SurveysProvider>
             </HelperContextProvider>
           </CurrentUserProvider>

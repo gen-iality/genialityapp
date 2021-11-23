@@ -6,7 +6,23 @@ import { DateTimePicker } from 'react-widgets';
 import Select from 'react-select';
 import Creatable from 'react-select';
 import Loading from '../loaders/loading';
-import { Tabs, message, Row, Col, Checkbox, Space, Typography, Button, Form, Input, Switch, Empty, Card, Image, Modal } from 'antd';
+import {
+  Tabs,
+  message,
+  Row,
+  Col,
+  Checkbox,
+  Space,
+  Typography,
+  Button,
+  Form,
+  Input,
+  Switch,
+  Empty,
+  Card,
+  Image,
+  Modal,
+} from 'antd';
 import RoomManager from './roomManager';
 import SurveyManager from './surveyManager';
 import { DeleteOutlined, ExclamationCircleOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
@@ -34,6 +50,7 @@ import AgendaLanguaje from './language/index';
 import { firestore } from '../../helpers/firebase';
 import SurveyExternal from './surveyExternal';
 import Service from './roomManager/service';
+import AgendaContext from '../../Context/AgendaContext';
 const { TabPane } = Tabs;
 const { Confirm } = Modal;
 
@@ -123,6 +140,18 @@ class AgendaEdit extends Component {
     this.name = React.createRef();
     this.selectTickets = this.selectTickets.bind(this);
   }
+  static contextType = AgendaContext;
+
+  updateRoomManager(data) {
+    this.setState({
+      habilitar_ingreso: data.habilitar_ingreso,
+      host_id: data.host_id,
+      host_name: data.host_name,
+      platform: data.platform,
+      date_end_zoom: data.date_end_zoom,
+      date_start_zoom: data.date_start_zoom,
+    });
+  }
 
   // VALIDAR SI TIENE ENCUESTAS EXTERNAS
   validateRoom = async () => {
@@ -144,7 +173,7 @@ class AgendaEdit extends Component {
         attendees: configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false,
         host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
         host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null,
-        habilitar_ingreso: configuration.habilitar_ingreso ? configuration.habilitar_ingreso : ''
+        habilitar_ingreso: configuration.habilitar_ingreso ? configuration.habilitar_ingreso : '',
       });
     }
   };
@@ -161,7 +190,7 @@ class AgendaEdit extends Component {
     let days = [];
     const ticketEvent = [];
     let vimeo_id = '';
-    console.log('intentando que cambie', this.state.platform)
+    console.log('intentando que cambie', this.state.platform);
     try {
       const tickets = await eventTicketsApi.getAll(event?._id);
       for (let i = 0; tickets.length > i; i++) {
@@ -232,13 +261,13 @@ class AgendaEdit extends Component {
     types = handleSelect(types);
 
     if (state?.edit) {
+      this.context.setActivityEdit(state.edit);
       const info = await AgendaApi.getOne(state.edit, event._id);
-      console.log(info.platform, event.event_platform, '**************************platform');
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
-        platform: info.platform/*  || event.event_platform */,
+        platform: info.platform /*  || event.event_platform */,
         info: info,
         space_id: info.space_id || '',
         video: info.video,
@@ -248,7 +277,7 @@ class AgendaEdit extends Component {
         requires_registration: info.requires_registration || false,
         isPublished: info.published || true,
         avalibleGames: info.avalibleGames || [],
-        habilitar_ingreso: info.habilitar_ingreso || ''
+        habilitar_ingreso: info.habilitar_ingreso || '',
       });
 
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ''));
@@ -288,8 +317,7 @@ class AgendaEdit extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if(prevProps){
-
+    if (prevProps) {
     }
   }
 
@@ -689,9 +717,17 @@ class AgendaEdit extends Component {
       host_name,
       avalibleGames,
       habilitar_ingreso,
-    } = this.state;
-    
-    const roomInfo = { roomStatus, platform, meeting_id, isPublished, host_id, host_name, avalibleGames, habilitar_ingreso };
+    } = this.context;
+
+    const roomInfo = {
+      platform,
+      meeting_id,
+      isPublished,
+      host_id,
+      host_name,
+      avalibleGames,
+      habilitar_ingreso: roomStatus,
+    };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };
   };
@@ -703,7 +739,7 @@ class AgendaEdit extends Component {
     /* Se valida si hay cambios pendientes por guardar en la fecha/hora de la actividad */
     const { roomInfo, tabs } = this.prepareData();
     const { service } = this.state;
-    console.log(roomInfo, tabs, 'campos-------------')
+    console.log(roomInfo, tabs, 'campos-------------');
     try {
       const result = await service.createOrUpdateActivity(this.props.event._id, this.state.activity_id, roomInfo, tabs);
       if (result) message.success(result.message);
@@ -725,6 +761,7 @@ class AgendaEdit extends Component {
           newData.push({ ...items });
         }
       });
+      this.context.setAvailableGames(newData);
       this.setState({ avalibleGames: newData }, async () => await this.saveConfig());
     }
   };
@@ -732,7 +769,7 @@ class AgendaEdit extends Component {
   // Encargado de gestionar los tabs de la video conferencia
   handleTabsController = (e, tab) => {
     const valueTab = e;
-    const { chat, surveys, games, attendees } = this.state;
+    const { chat, surveys, games, attendees } = this.context;
     const tabs = { chat, surveys, games, attendees };
 
     //
@@ -740,15 +777,19 @@ class AgendaEdit extends Component {
 
     if (tab === 'chat') {
       tabs.chat = valueTab;
+      this.context.setChat(valueTab);
       this.setState({ chat: valueTab }, async () => await this.saveConfig());
     } else if (tab === 'surveys') {
       tabs.surveys = valueTab;
+      this.context.setSurveys(valueTab);
       this.setState({ surveys: valueTab }, async () => await this.saveConfig());
     } else if (tab === 'games') {
       tabs.games = valueTab;
+      this.context.setGames(valueTab);
       this.setState({ games: valueTab }, async () => await this.saveConfig());
     } else if (tab === 'attendees') {
       tabs.attendees = valueTab;
+      this.context.setAttendees(valueTab);
       this.setState({ attendees: valueTab }, async () => await this.saveConfig());
     }
   };
@@ -1014,9 +1055,21 @@ class AgendaEdit extends Component {
                     {image && <img src={image} alt={`activity_${name}`} />} */}
                     <Card style={{ textAlign: 'center' }}>
                       <Form.Item noStyle>
-                        <p>Dimensiones: <b><small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small></b> </p>
-                        <p><small>Se recomienda que la imagen debe tener dimensiones iguales (cuadradas) para su mejor funcionamiento</small></p>
-                        <p><small>La imagen tarda unos segundos en cargar</small></p>
+                        <p>
+                          Dimensiones:{' '}
+                          <b>
+                            <small>600px X 400px, 400px X 600px, 200px X 200px, 400px X 400px ...</small>
+                          </b>{' '}
+                        </p>
+                        <p>
+                          <small>
+                            Se recomienda que la imagen debe tener dimensiones iguales (cuadradas) para su mejor
+                            funcionamiento
+                          </small>
+                        </p>
+                        <p>
+                          <small>La imagen tarda unos segundos en cargar</small>
+                        </p>
                         <Dropzone
                           style={{ fontSize: '21px', fontWeight: 'bold' }}
                           onDrop={this.changeImg}
@@ -1030,13 +1083,11 @@ class AgendaEdit extends Component {
                               </Button>
                             </Col>
                             <Col>
-                              {
-                                image && (
-                                  <Button danger id='btnRemImg' onClick={() => this.setState({image: ''})}>
-                                    {'Eliminar imagen'}
-                                  </Button>
-                                )
-                              }
+                              {image && (
+                                <Button danger id='btnRemImg' onClick={() => this.setState({ image: '' })}>
+                                  {'Eliminar imagen'}
+                                </Button>
+                              )}
                             </Col>
                           </Row>
                         </Dropzone>
@@ -1051,7 +1102,11 @@ class AgendaEdit extends Component {
                     </Card>
                   </Form.Item>
                   <Form.Item label={'Publicar Actividad'}>
-                    <SelectAntd defaultValue={isPublished} value={isPublished} name='isPublished' onChange={(e) => this.handleChange(e, 'isPublished')}>
+                    <SelectAntd
+                      defaultValue={isPublished}
+                      value={isPublished}
+                      name='isPublished'
+                      onChange={(e) => this.handleChange(e, 'isPublished')}>
                       {/* <Option value={''}>Seleccinar opción...</Option> */}
                       <Option value={true}>Si</Option>
                       <Option value={false}>No</Option>
@@ -1109,7 +1164,13 @@ class AgendaEdit extends Component {
                           <Button icon={<SettingOutlined />} />
                         </Link>
                       </Col>
-                      <br /><br /><br /><br /><br /><br /><br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
                     </Row>
                   </Form.Item>
                 </Col>
@@ -1145,6 +1206,7 @@ class AgendaEdit extends Component {
                     date_end_zoom={date_end_zoom}
                     date_activity={this.state.date}
                     pendingChangesSave={this.state.pendingChangesSave}
+                    updateRoomManager={this.updateRoomManager}
                   />
                   {/* {loading ? (
                     <Loading />
@@ -1177,22 +1239,15 @@ class AgendaEdit extends Component {
             <TabPane tab='Avanzado' key='4'>
               <Row justify='center' wrap gutter={12}>
                 <Col span={20}>
-                  <Checkbox
+                  {/* <Checkbox
                     defaultChecked={info && (info.requires_registration || info.requires_registration === 'true')}
                     onChange={(e) => this.handleChange(e, 'requires_registration')}
                     name='requires_registration'>
                     La actividad requiere registro
-                  </Checkbox>
-                  <br /><br />
+                  </Checkbox>*/}
+                  <br />
+                  <br />
                   <RoomController
-                    platform={this.state.platform}
-                    roomStatus={this.state.roomStatus}
-                    avalibleGames={this.state.avalibleGames}
-                    attendees={this.state.attendees}
-                    chat={this.state.chat}
-                    surveys={this.state.surveys}
-                    games={this.state.games}
-                    handleRoomState={this.handleRoomState}
                     handleGamesSelected={this.handleGamesSelected}
                     handleTabsController={this.handleTabsController}
                   />

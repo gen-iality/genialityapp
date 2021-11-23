@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Alert, Form, Select, Input, Button } from 'antd';
+import AgendaContext from '../../../Context/AgendaContext';
 
 const { Option } = Select;
 
@@ -7,24 +8,36 @@ export default function RoomConfig(props) {
   const [requiresCreateRoom, setRequiresCreateRoom] = useState(false);
   const {
     platform,
-    handleChange,
     host_name,
-    handleClick,
     meeting_id,
+    host_id,
     isPublished,
+    roomStatus,
+    setRoomStatus,
+    setPlatform,
+    setMeetingId,
+  } = useContext(AgendaContext);
+  const {
+    handleClick,
     createZoomRoom,
     select_host_manual,
     host_list,
-    host_id,
     hasVideoconference,
     deleteZoomRoom,
-    roomStatus,
-    handleRoomState,
+    handleChange,
+    saveConfig,
   } = props;
 
   useEffect(() => {
     setRequiresCreateRoom(platform === 'zoom' || platform === 'zoomExterno');
   }, [platform]);
+
+  useEffect(() => {
+    saveConfiguration();
+    async function saveConfiguration() {
+      await saveConfig();
+    }
+  }, [roomStatus]);
 
   return (
     <Card>
@@ -32,7 +45,11 @@ export default function RoomConfig(props) {
       <Row style={{ marginBottom: 24 }}>
         <Col span={24}>
           <Form.Item label={'Estado de videoconferencia'}>
-            <Select defaultValue={roomStatus} value={roomStatus} onChange={handleRoomState}>
+            <Select
+              value={roomStatus}
+              onChange={(value) => {
+                setRoomStatus(value);
+              }}>
               <Option value=''>Sin Estado</Option>
               <Option value='open_meeting_room'>Conferencia Abierta</Option>
               <Option value='closed_meeting_room'>Conferencia no Iniciada</Option>
@@ -43,26 +60,26 @@ export default function RoomConfig(props) {
       </Row>
       {/* <Row style={{ marginBottom: 24 }}>
         <Col span={24}> */}
-          {/* <Form.Item label={'Publicar Actividad'}>
+      {/* <Form.Item label={'Publicar Actividad'}>
             <Select defaultValue={isPublished} value={isPublished} name='isPublished' onChange={(e) => handleChange(e, 'isPublished')}>
               <Option value={true}>Si</Option>
               <Option value={false}>No</Option>
             </Select>
           </Form.Item> */}
-          {/* <label className='label'>Publicar Actividad</label>
+      {/* <label className='label'>Publicar Actividad</label>
           <div className='select is-primary'>
             <select defaultValue={isPublished} value={isPublished} name='isPublished' onChange={handleChange}>
               <option value={true}>Si</option>
               <option value={false}>No</option>
             </select>
           </div> */}
-        {/* </Col>
+      {/* </Col>
       </Row> */}
       <Row style={{ marginBottom: 24 }}>
         <Col span={24}>
           <Form.Item label={'Plataforma Streaming del evento'}>
             {platform === null || platform === '' ? (
-              <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => handleChange(e, 'platform')}>
+              <Select defaultValue={platform} value={platform} name='platform' onChange={(e) => setPlatform(e)}>
                 <Option value={null}>Seleccionar...</Option>
                 <Option value='zoom'>Zoom</Option>
                 <Option value='zoomExterno'>ZoomExterno</Option>
@@ -135,7 +152,11 @@ export default function RoomConfig(props) {
         <Row style={{ marginBottom: 24 }}>
           <Col span={24}>
             <Form.Item label={'Seleccione un host'}>
-              <Select defaultValue={host_id} value={host_id} name='host_id' onChange={(e) => handleChange(e, 'host_id')}>
+              <Select
+                defaultValue={host_id}
+                value={host_id}
+                name='host_id'
+                onChange={(e) => handleChange(e, 'host_id')}>
                 <Option value=''>Seleccione</Option>
                 {host_list.length > 0 &&
                   host_list.map((host) => (
@@ -165,17 +186,20 @@ export default function RoomConfig(props) {
         <Col span={24}>
           {!hasVideoconference ? (
             <Form.Item label={'Ingrese id de videoconferencia'}>
-              <Input type='number' name='meeting_id' onChange={(e) => handleChange(e)} value={meeting_id} />
+              <Input
+                type='number'
+                name='meeting_id'
+                onChange={(e) => setMeetingId(e.target.value)}
+                value={meeting_id}
+              />
             </Form.Item>
+          ) : (
             /*<div className='control'>
               <label className='label'>Ingrese id de videoconferencia</label>
               <input type='number' name='meeting_id' onChange={handleChange} value={meeting_id} />
             </div>*/
-          ) : (
             <div className='control'>
-              <Form.Item label={'Id de videoconferencia'}>
-                {meeting_id}
-              </Form.Item>
+              <Form.Item label={'Id de videoconferencia'}>{meeting_id}</Form.Item>
               {/* <label className='label'>Id de videoconferencia</label>
               <>{meeting_id}</> */}
             </div>
@@ -205,7 +229,7 @@ export default function RoomConfig(props) {
                 <Button onClick={createZoomRoom} type='primary'>
                   Crear transmisión
                 </Button>
-               {/*  <button onClick={createZoomRoom} className='button is-primary'>
+                {/*  <button onClick={createZoomRoom} className='button is-primary'>
                   Crear transmisión
                 </button> */}
               </Col>

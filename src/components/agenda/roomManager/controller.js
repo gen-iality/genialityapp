@@ -1,23 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Card, Row, Col, Switch, Popover, Avatar, Empty, Image, Alert, Select, Form } from 'antd';
 import GamepadVariantOutline from '@2fd/ant-design-icons/lib/GamepadVariantOutline';
 import Header from '../../../antdComponents/Header';
 import Table from '../../../antdComponents/Table';
 import { getColumnSearchProps } from '../../speakers/getColumnSearch';
 import { firestore } from '../../../helpers/firebase';
+import AgendaContext from '../../../Context/AgendaContext';
 
 const { Option } = Select;
 
 export default function RoomController(props) {
-  const {
-    handleRoomState,
-    handleTabsController,
-    handleGamesSelected,
-    roomStatus,
-    surveys,
-    games,
-    avalibleGames,
-  } = props;
+  const { roomStatus, surveys, games, avalibleGames } = useContext(AgendaContext);
+  const { handleTabsController, handleGamesSelected } = props;
+
   console.log(props, 'propssssssss');
   const [listOfGames, setListOfGames] = useState([]);
   const [updateMensaje, setUpdatedMensaje] = useState(false);

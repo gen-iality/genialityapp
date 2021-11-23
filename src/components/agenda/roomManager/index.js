@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Card, Tabs, Alert, Spin, message as Message, message } from 'antd';
-import RoomController from './controller';
 import RoomConfig from './config';
 import Service from './service';
 import Moment from 'moment';
 import * as Cookie from 'js-cookie';
+import AgendaContext from '../../../Context/AgendaContext';
 
 const { TabPane } = Tabs;
 
@@ -20,13 +20,6 @@ class RoomManager extends Component {
       hasVideoconference: false,
       activeTab: 'config',
       loading: false,
-
-      // Configuracion de sala
-      platform: null,
-      meeting_id: null,
-      roomStatus: null,
-      host_id: null,
-      host_name: null,
       //juegos disponibles
       avalibleGames: [],
 
@@ -66,6 +59,7 @@ class RoomManager extends Component {
       attendees: false,
     };
   }
+  static contextType = AgendaContext;
 
   componentDidMount = async () => {
     const { event_id, activity_id } = this.props;
@@ -109,28 +103,12 @@ class RoomManager extends Component {
     const hasVideoconference = await service.validateHasVideoconference(event_id, activity_id);
 
     if (hasVideoconference) {
-      const configuration = await service.getConfiguration(event_id, activity_id);
-      this.setState({
-        isPublished: typeof configuration.isPublished !== 'undefined' ? configuration.isPublished : true,
-        platform: configuration.platform ? configuration.platform : null,
-        meeting_id: configuration.meeting_id ? configuration.meeting_id : null,
-        roomStatus: configuration.habilitar_ingreso,
-        avalibleGames: configuration.avalibleGames || [],
-        chat: configuration.tabs && configuration.tabs.chat ? configuration.tabs.chat : false,
-        surveys: configuration.tabs && configuration.tabs.surveys ? configuration.tabs.surveys : false,
-        games: configuration.tabs && configuration.tabs.games ? configuration.tabs.games : false,
-        attendees: configuration.tabs && configuration.tabs.attendees ? configuration.tabs.attendees : false,
-        host_id: typeof configuration.host_id !== 'undefined' ? configuration.host_id : null,
-        host_name: typeof configuration.host_name !== 'undefined' ? configuration.host_name : null,
-        habilitar_ingreso: configuration.habilitar_ingreso ? configuration.habilitar_ingreso : ''
-      });
-
       // Si en firebase ya esta inicializado el campo platfom y meeting_id se habilita el tab controller
       if (
-        configuration.platform !== null &&
-        configuration.platform !== '' &&
-        configuration.meeting_id !== null &&
-        configuration.meeting_id !== ''
+        this.context.platform !== null &&
+        this.context.platform !== '' &&
+        this.context.meeting_id !== null &&
+        this.context.meeting_id !== ''
       ) {
         this.setState({ hasVideoconference: true, activeTab: 'controller' });
       }
@@ -197,20 +175,7 @@ class RoomManager extends Component {
     let { name } = e.target ? e.target : nameS;
     let { value } = e.target ? e.target : e;
 
-    if(nameS === 'platform') {
-      this.setState({ [nameS]: e });
-    } else {
-      this.setState({ [name]: value});
-    }
-    //if (name === 'isPublished') {
-      /* const isPublished = value === 'true' ? true : false; */
-    //  this.setState({ [name]: value }, async () => await this.saveConfig());
-    //} /* else if (name === 'select_host_manual') {
-    //  const select_host_manual = value === 'true' ? true : false;
-    //  this.setState({ [name]: value });
-    //} */ else {
-    //  this.setState({ [name]: value });
-    //}
+    this.setState({ [name]: value });
   };
 
   //Preparacion de la data para guardar en firebase
@@ -227,23 +192,32 @@ class RoomManager extends Component {
       host_id,
       host_name,
       avalibleGames,
-    } = this.state;
-    const roomInfo = { roomStatus, platform, meeting_id, isPublished, host_id, host_name, avalibleGames };
+    } = this.context;
+    const roomInfo = {
+      habilitar_ingreso: roomStatus,
+      platform,
+      meeting_id,
+      isPublished,
+      host_id,
+      host_name,
+      avalibleGames,
+    };
     const tabs = { chat, surveys, games, attendees };
     return { roomInfo, tabs };
   };
 
   // Se usa al eliminar una sala de zoom, elimnar la informacion asociada a ella, se mantiene la configuración de la misma
   restartData = () => {
+    this.context.setPlatform(null);
+    this.context.setMeetingId('');
+    this.context.setHostId(null);
+    this.context.setHostName(null);
+    this.context.setRoomStatus('');
     this.setState(
       {
-        platform: null,
-        meeting_id: '',
-        host_id: null,
-        host_name: null,
         hasVideoconference: false,
-        roomStatus: '',
       },
+
       async () => await this.saveConfig()
     );
   };
@@ -273,7 +247,10 @@ class RoomManager extends Component {
       const { service, platform, meeting_id } = this.state;
 
       // Validación de los campos requeridos
-      if (!meeting_id && (platform === '' || platform === null) || !platform && (meeting_id === '' || meeting_id === null)) {
+      if (
+        (!meeting_id && (platform === '' || platform === null)) ||
+        (!platform && (meeting_id === '' || meeting_id === null))
+      ) {
         message.warning('Seleccione una plataforma e ingrese el id de la videoconferencia');
         return false;
       }
@@ -315,7 +292,8 @@ class RoomManager extends Component {
     this.validateForCreateZoomRoom();
     const evius_token = Cookie.get('evius_token');
     const { activity_id, activity_name, event_id, date_start_zoom, date_end_zoom } = this.props;
-    const { select_host_manual, host_id, host_ids } = this.state;
+    const { select_host_manual, host_ids } = this.state;
+    const { host_id } = this.context;
 
     // Se valida si es el host se selecciona de manera manual o automáticamente
     // Si la seleccion del host es manual se envia el campo host_id con el id del host tipo string
@@ -342,11 +320,11 @@ class RoomManager extends Component {
       typeof response.zoom_host_name !== 'undefined'
     ) {
       const { meeting_id, zoom_host_id, zoom_host_name } = response;
+      this.context.setMeetingId(meeting_id);
+      this.context.setHostId(zoom_host_id);
+      this.context.setHostName(zoom_host_name);
       this.setState(
         {
-          meeting_id,
-          host_id: zoom_host_id,
-          host_name: zoom_host_name,
           hasVideoconference: true,
         },
         async () => await this.saveConfig()
@@ -397,133 +375,19 @@ class RoomManager extends Component {
   };
 
   render() {
-    const {
-      activeTab,
-      hasVideoconference,
-      platform,
-      host_name,
-      roomStatus,
-      loading,
-      chat,
-      surveys,
-      games,
-      attendees,
-      meeting_id,
-      isPublished,
-      select_host_manual,
-      host_list,
-      host_id,
-      avalibleGames,
-    } = this.state;
-    const { event_id, activity_id, activity_name } = this.props;
+    const { hasVideoconference, select_host_manual, host_list } = this.state;
     return (
       <>
         <RoomConfig
-          isPublished={isPublished}
-          host_id={host_id}
-          host_name={host_name}
           host_list={host_list}
-          meeting_id={meeting_id}
-          platform={platform}
           select_host_manual={select_host_manual}
           hasVideoconference={hasVideoconference}
           handleChange={this.handleChange}
           handleClick={this.handleClickSaveConfig}
           createZoomRoom={this.createZoomRoom}
           deleteZoomRoom={this.deleteZoomRoom}
-          handleRoomState={this.handleRoomState}
+          saveConfig={this.saveConfig}
         />
-        {/* <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={this.handleTab}>
-          <TabPane tab='Configuración' key='config'>
-            {loading ? (
-              <Spin />
-            ) : (
-              <RoomConfig
-                isPublished={isPublished}
-                host_id={host_id}
-                host_name={host_name}
-                host_list={host_list}
-                meeting_id={meeting_id}
-                platform={platform}
-                select_host_manual={select_host_manual}
-                hasVideoconference={hasVideoconference}
-                handleChange={this.handleChange}
-                handleClick={this.handleClickSaveConfig}
-                createZoomRoom={this.createZoomRoom}
-                deleteZoomRoom={this.deleteZoomRoom}
-              />
-            )}
-          </TabPane>
-          <TabPane tab='Controlador' key='controller'>
-            {loading ? (
-              <Spin />
-            ) : (
-              <RoomController
-                platform={platform}
-                roomStatus={roomStatus}
-                avalibleGames={avalibleGames}
-                attendees={attendees}
-                chat={chat}
-                surveys={surveys}
-                games={games}
-                handleRoomState={this.handleRoomState}
-                handleGamesSelected={this.handleGamesSelected}
-                handleTabsController={this.handleTabsController}
-              />
-            )}
-          </TabPane>
-        </Tabs> */}
-        {/* <Card title={activity_name}>
-          {typeof event_id === 'undefined' || typeof activity_id === 'undefined' || activity_id === false ? (
-            <>
-              <Alert
-                message='Primero cree la actividad y luego podrá crear una conferencia virtual asociada'
-                type='warning'
-              />
-            </>
-          ) : (
-            <Tabs defaultActiveKey={activeTab} activeKey={activeTab} onChange={this.handleTab}>
-              <TabPane tab='Configuración' key='config'>
-                {loading ? (
-                  <Spin />
-                ) : (
-                  <RoomConfig
-                    isPublished={isPublished}
-                    host_id={host_id}
-                    host_name={host_name}
-                    host_list={host_list}
-                    meeting_id={meeting_id}
-                    platform={platform}
-                    select_host_manual={select_host_manual}
-                    hasVideoconference={hasVideoconference}
-                    handleChange={this.handleChange}
-                    handleClick={this.handleClickSaveConfig}
-                    createZoomRoom={this.createZoomRoom}
-                    deleteZoomRoom={this.deleteZoomRoom}
-                  />
-                )}
-              </TabPane>
-              <TabPane tab='Controlador' key='controller'>
-                {loading ? (
-                  <Spin />
-                ) : (
-                  <RoomController
-                    platform={platform}
-                    roomStatus={roomStatus}
-                    avalibleGames={avalibleGames}
-                    attendees={attendees}
-                    chat={chat}
-                    surveys={surveys}
-                    games={games}
-                    handleRoomState={this.handleRoomState}
-                    handleGamesSelected={this.handleGamesSelected}
-                    handleTabsController={this.handleTabsController}
-                  />
-                )}
-              </TabPane>
-            </Tabs>
-          )}
-        </Card> */}
       </>
     );
   }
