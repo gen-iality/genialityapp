@@ -185,7 +185,7 @@ class CertificadoLanding extends Component {
                 <h1
                   style={{
                     fontSize: '27px',
-                  }}>{`Hola ${this.props.cUser.value.displayName} 👋, los certificados solo estan Disponibles para usuarios Universo y Super Heróe  `}</h1>
+                  }}>{`Hola ${this.props.cUser.value.displayName} 👋, los certificados solo estan Disponibles para usuarios con paquete Universo y Super Heróe  `}</h1>
               )}
             </Card>
           </Col>

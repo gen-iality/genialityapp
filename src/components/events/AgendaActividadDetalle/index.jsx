@@ -152,7 +152,7 @@ const AgendaActividadDetalle = (props) => {
                   style={{ width: '100%', marginTop: 40, marginBottom: 40, textAlign: 'center', fontSize: '19px' }}
                   message={
                     <>
-                      {`Hola ${props.cEventUser.value.user.displayName} 👋, Este espacio esta reservado solo para usuarios UNIVERSO`}
+                      {`Hola ${props.cEventUser.value.user.displayName} 👋, Este contenido es exclusivo para usuarios con paquete UNIVERSO`}
                     </>
                   }
                   type='warning'
